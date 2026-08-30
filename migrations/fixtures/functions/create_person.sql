@@ -1,8 +1,17 @@
 drop function if exists create_person;
 
-CREATE or replace FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
-    LANGUAGE plpgsql
-    AS $$
+create or replace function create_person(
+  person_id bigint,
+  inout p person,
+  is_member boolean,
+  is_trainer boolean,
+  is_admin boolean,
+  send_invitation boolean,
+  join_date timestamptz
+)
+  returns person
+  language plpgsql
+as $$
 begin
   if person_id is null then
     insert into person (

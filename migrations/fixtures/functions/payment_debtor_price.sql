@@ -1,19 +1,19 @@
-drop function if exists public.payment_debtor_price;
+drop function if exists payment_debtor_price;
 
-CREATE or replace FUNCTION public.payment_debtor_price(p public.payment_debtor, out amount numeric(19,4), out currency text)
-  LANGUAGE sql STABLE
-AS $$
-SELECT
+create or replace function payment_debtor_price(p payment_debtor, out amount numeric(19,4), out currency text)
+  language sql stable
+as $$
+select
   sum(payment_recipient.amount) / (
-    SELECT count(*) AS count
-    FROM public.payment_debtor
-    WHERE p.payment_id = payment_debtor.payment_id
+    select count(*) as count
+    from payment_debtor
+    where p.payment_id = payment_debtor.payment_id
   )::numeric(19,4) as amount,
   min(account.currency)::text as currency
-FROM payment_recipient
-  JOIN account ON payment_recipient.account_id = account.id
-WHERE payment_recipient.payment_id = p.payment_id;
+from payment_recipient
+  join account on payment_recipient.account_id = account.id
+where payment_recipient.payment_id = p.payment_id;
 $$;
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor) IS '@simpleCollections only';
-GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor) TO anonymous;
+comment on function payment_debtor_price is '@simpleCollections only';
+grant all on function payment_debtor_price to anonymous;

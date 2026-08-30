@@ -17,18 +17,18 @@ $$;
 
 create or replace function app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint)
   returns void language sql security definer
-  set search_path = pg_catalog, pg_temp as $$
+  set search_path = pg_catalog, public, pg_temp as $$
   with recursive affected as (
-    select id from public.event_instance where id = p_instance_id
+    select id from event_instance where id = p_instance_id
     union all
     select child.id
-    from public.event_instance child
+    from event_instance child
     join affected parent on child.parent_id = parent.id
   ), desired as (
     select id, app_private.event_instance_manager_person_ids(id) as person_ids
     from affected
   )
-  update public.event_instance instance
+  update event_instance instance
   set manager_person_ids = desired.person_ids
   from desired
   where instance.id = desired.id

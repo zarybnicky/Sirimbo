@@ -1,6 +1,6 @@
 do $$
 begin
-  create type public.event_instance_range_scope as enum ('all', 'top_level', 'mine', 'relevant');
+  create type event_instance_range_scope as enum ('all', 'top_level', 'mine', 'relevant');
 exception when duplicate_object then null;
 end
 $$;
@@ -53,5 +53,5 @@ create or replace function event_instances_for_range(
   ;
 $$ stable language sql;
 
-COMMENT ON FUNCTION event_instances_for_range IS '@simpleCollections only';
-GRANT ALL ON FUNCTION event_instances_for_range TO anonymous;
+comment on function event_instances_for_range is '@simpleCollections only';
+grant all on function event_instances_for_range to anonymous;

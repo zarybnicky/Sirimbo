@@ -1,11 +1,11 @@
 create or replace function app_private.refresh_event_instance_stats(p_instance_id bigint)
   returns void
   language sql volatile security definer
-  set search_path = pg_catalog, pg_temp
+  set search_path = pg_catalog, public, pg_temp
 as $$
-  select 1 from public.event_instance where id = p_instance_id for no key update;
+  select 1 from event_instance where id = p_instance_id for no key update;
 
-  update public.event_instance instance
+  update event_instance instance
   set stats = actual.stats
   from (
     select jsonb_build_object(
@@ -14,7 +14,7 @@ as $$
       'ATTENDED', count(*) filter (where status = 'attended')::int,
       'NOT_EXCUSED', count(*) filter (where status = 'not-excused')::int
     ) as stats
-    from public.event_instance_registration
+    from event_instance_registration
     where instance_id = p_instance_id
       and person_id is not null
       and registration_status = 'active'

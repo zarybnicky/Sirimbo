@@ -1,7 +1,7 @@
-CREATE or replace FUNCTION app_private.tg_transaction__effective_date() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
+create or replace function app_private.tg_transaction__effective_date() returns trigger
+    language plpgsql security definer
+    set search_path to pg_catalog, public, pg_temp
+    as $$
 begin
   if NEW.effective_date is null then
     NEW.effective_date = (select coalesce(
@@ -14,7 +14,7 @@ begin
 end;
 $$;
 
-CREATE or replace TRIGGER _300_effective_date
-  BEFORE INSERT OR UPDATE ON transaction
-  FOR EACH ROW
-  EXECUTE PROCEDURE app_private.tg_transaction__effective_date();
+create or replace trigger _300_effective_date
+  before insert or update on transaction
+  for each row
+  execute procedure app_private.tg_transaction__effective_date();

@@ -1,15 +1,15 @@
 
 create or replace function app_private.queue_announcement_notifications(in_announcement_id bigint)
-returns void
-language plpgsql
-security definer
-set search_path to pg_catalog, public, pg_temp
+  returns void
+  language plpgsql
+  security definer
+  set search_path to pg_catalog, public, pg_temp
 as $$
 declare
   v_user_ids bigint[];
 begin
   if not exists (
-    select from public.announcement
+    select from announcement
     where id = in_announcement_id and status = 'published'
   ) then
     return;
@@ -71,14 +71,14 @@ begin
   );
 end;
 $$;
-comment on function app_private.queue_announcement_notifications is '@omit';
+
 grant all on function app_private.queue_announcement_notifications to anonymous;
 
 create or replace function app_private.tg_announcement__after_write()
-returns trigger
-language plpgsql
-security definer
-set search_path to pg_catalog, public, pg_temp
+  returns trigger
+  language plpgsql
+  security definer
+  set search_path to pg_catalog, public, pg_temp
 as $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
@@ -101,10 +101,10 @@ end;
 $$;
 
 create or replace function app_private.tg_announcement_audience__after_write()
-returns trigger
-language plpgsql
-security definer
-set search_path to pg_catalog, public, pg_temp
+  returns trigger
+  language plpgsql
+  security definer
+  set search_path to pg_catalog, public, pg_temp
 as $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare

@@ -1,7 +1,7 @@
-create or replace view public.activity_timeline_item as
+create or replace view activity_timeline_item as
 select
   null::text as id,
-  null::public.activity_timeline_kind as kind,
+  null::activity_timeline_kind as kind,
   null::timestamptz as sort_at,
   null::date as activity_date,
   null::bigint as person_id,
@@ -31,7 +31,7 @@ select
   null::text as competition_external_id
 where false;
 
-comment on view public.activity_timeline_item is $$
+comment on view activity_timeline_item is $$
 @primaryKey id
 @interface mode:single type:kind
 @type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
@@ -45,13 +45,13 @@ comment on view public.activity_timeline_item is $$
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 $$;
 
-grant select on public.activity_timeline_item to anonymous;
+grant select on activity_timeline_item to anonymous;
 
-CREATE OR REPLACE FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds activity_timeline_kind[] DEFAULT NULL::activity_timeline_kind[], p_event_types event_type[] DEFAULT NULL::event_type[])
- RETURNS SETOF activity_timeline_item
- LANGUAGE plpgsql
- STABLE
-AS $function$
+create or replace function activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds activity_timeline_kind[] DEFAULT NULL::activity_timeline_kind[], p_event_types event_type[] DEFAULT NULL::event_type[])
+ returns setof activity_timeline_item
+ language plpgsql
+ stable
+as $function$
 declare
   include_event_attendance boolean;
   include_competition_brief boolean;

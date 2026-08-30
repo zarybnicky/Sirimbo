@@ -10,6 +10,10 @@ namespace GraphileWorker {
       user_ids: number[];
     };
 
+    delete_file: {
+      object_key: string;
+    };
+
     create_lesson_payments: never;
     refresh_memberships: never;
     refresh_account_balances: never;

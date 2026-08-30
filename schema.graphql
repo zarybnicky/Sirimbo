@@ -366,6 +366,35 @@ type Aktuality {
   atKdo: BigInt
   atPreview: String!
   atText: String!
+
+  """Reads and enables pagination through a set of `ArticleAttachment`."""
+  attachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ArticleAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `ArticleAttachment`."""
+    orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ArticleAttachmentsConnection!
   createdAt: Datetime
   id: BigInt!
   isVisible: Boolean!
@@ -483,6 +512,37 @@ type Announcement {
     orderBy: [AnnouncementAudiencesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementAudiencesConnection!
 
+  """
+  Reads and enables pagination through a set of `AnnouncementAttachment`.
+  """
+  attachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AnnouncementAttachment`."""
+    orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementAttachmentsConnection!
+
   """Reads a single `User` that is related to this `Announcement`."""
   author: User
   authorId: BigInt
@@ -496,6 +556,83 @@ type Announcement {
   tenantId: BigInt!
   title: String!
   updatedAt: Datetime
+}
+
+type AnnouncementAttachment {
+  """
+  Reads a single `Announcement` that is related to this `AnnouncementAttachment`.
+  """
+  announcement: Announcement
+  announcementId: BigInt!
+
+  """
+  Reads a single `File` that is related to this `AnnouncementAttachment`.
+  """
+  file: File
+  fileId: BigInt!
+  inline: Boolean!
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `AnnouncementAttachment` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input AnnouncementAttachmentCondition {
+  """Checks for equality with the object’s `announcementId` field."""
+  announcementId: BigInt
+
+  """Checks for equality with the object’s `fileId` field."""
+  fileId: BigInt
+
+  """Checks for equality with the object’s `inline` field."""
+  inline: Boolean
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `AnnouncementAttachment` values."""
+type AnnouncementAttachmentsConnection {
+  """
+  A list of edges which contains the `AnnouncementAttachment` and cursor to aid in pagination.
+  """
+  edges: [AnnouncementAttachmentsEdge!]!
+
+  """A list of `AnnouncementAttachment` objects."""
+  nodes: [AnnouncementAttachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `AnnouncementAttachment` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `AnnouncementAttachment` edge in the connection."""
+type AnnouncementAttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AnnouncementAttachment` at the end of the edge."""
+  node: AnnouncementAttachment!
+}
+
+"""Methods to use when ordering `AnnouncementAttachment`."""
+enum AnnouncementAttachmentsOrderBy {
+  ANNOUNCEMENT_ID_ASC
+  ANNOUNCEMENT_ID_DESC
+  FILE_ID_ASC
+  FILE_ID_DESC
+  INLINE_ASC
+  INLINE_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
 }
 
 type AnnouncementAudience {
@@ -757,6 +894,92 @@ type ArchiveCohortPayload {
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
+}
+
+type ArticleAttachment {
+  aktualityId: BigInt!
+
+  """
+  Reads a single `Aktuality` that is related to this `ArticleAttachment`.
+  """
+  article: Aktuality
+
+  """Reads a single `File` that is related to this `ArticleAttachment`."""
+  file: File
+  fileId: BigInt!
+  inline: Boolean!
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `ArticleAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ArticleAttachmentCondition {
+  """Checks for equality with the object’s `aktualityId` field."""
+  aktualityId: BigInt
+
+  """Checks for equality with the object’s `fileId` field."""
+  fileId: BigInt
+
+  """Checks for equality with the object’s `inline` field."""
+  inline: Boolean
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""A connection to a list of `ArticleAttachment` values."""
+type ArticleAttachmentsConnection {
+  """
+  A list of edges which contains the `ArticleAttachment` and cursor to aid in pagination.
+  """
+  edges: [ArticleAttachmentsEdge!]!
+
+  """A list of `ArticleAttachment` objects."""
+  nodes: [ArticleAttachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ArticleAttachment` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `ArticleAttachment` edge in the connection."""
+type ArticleAttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ArticleAttachment` at the end of the edge."""
+  node: ArticleAttachment!
+}
+
+"""Methods to use when ordering `ArticleAttachment`."""
+enum ArticleAttachmentsOrderBy {
+  AKTUALITY_ID_ASC
+  AKTUALITY_ID_DESC
+  FILE_ID_ASC
+  FILE_ID_DESC
+  INLINE_ASC
+  INLINE_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+"""An input for mutations affecting `ArticleTypeInputRecord`"""
+input ArticleTypeInputRecordInput {
+  body: String
+  id: BigInt
+  isVisible: Boolean
+  preview: String
+  title: String
+  titlePhotoUrl: String
 }
 
 type Attachment {
@@ -4082,6 +4305,163 @@ enum EventType {
   RESERVATION
 }
 
+type File {
+  """
+  Reads and enables pagination through a set of `AnnouncementAttachment`.
+  """
+  announcementAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AnnouncementAttachment`."""
+    orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementAttachmentsConnection!
+
+  """Reads and enables pagination through a set of `ArticleAttachment`."""
+  articleAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ArticleAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `ArticleAttachment`."""
+    orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ArticleAttachmentsConnection!
+  byteSize: BigInt
+  contentType: String
+  createdAt: Datetime!
+  id: BigInt!
+  name: String!
+  objectKey: String!
+  tenantId: BigInt!
+  uploadedAt: Datetime
+  uploadedBy: BigInt
+
+  """Reads a single `User` that is related to this `File`."""
+  userByUploadedBy: User
+}
+
+"""
+A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input FileCondition {
+  """Checks for equality with the object’s `byteSize` field."""
+  byteSize: BigInt
+
+  """Checks for equality with the object’s `contentType` field."""
+  contentType: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `objectKey` field."""
+  objectKey: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `uploadedAt` field."""
+  uploadedAt: Datetime
+
+  """Checks for equality with the object’s `uploadedBy` field."""
+  uploadedBy: BigInt
+}
+
+"""A connection to a list of `File` values."""
+type FilesConnection {
+  """
+  A list of edges which contains the `File` and cursor to aid in pagination.
+  """
+  edges: [FilesEdge!]!
+
+  """A list of `File` objects."""
+  nodes: [File!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `File` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `File` edge in the connection."""
+type FilesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `File` at the end of the edge."""
+  node: File!
+}
+
+"""Methods to use when ordering `File`."""
+enum FilesOrderBy {
+  BYTE_SIZE_ASC
+  BYTE_SIZE_DESC
+  CONTENT_TYPE_ASC
+  CONTENT_TYPE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  OBJECT_KEY_ASC
+  OBJECT_KEY_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPLOADED_AT_ASC
+  UPLOADED_AT_DESC
+  UPLOADED_BY_ASC
+  UPLOADED_BY_DESC
+}
+
 type FormResponse {
   createdAt: Datetime!
   data: JSON!
@@ -5198,6 +5578,12 @@ type Mutation {
     """
     input: UpsertAnnouncementInput!
   ): UpsertAnnouncementPayload
+  upsertArticle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpsertArticleInput!
+  ): UpsertArticlePayload
 }
 
 """All input for the `otpLogin` mutation."""
@@ -6353,6 +6739,40 @@ type Query {
   """Get a single `Announcement`."""
   announcement(id: BigInt!): Announcement
 
+  """Get a single `AnnouncementAttachment`."""
+  announcementAttachment(announcementId: BigInt!, fileId: BigInt!, tenantId: BigInt!): AnnouncementAttachment
+
+  """
+  Reads and enables pagination through a set of `AnnouncementAttachment`.
+  """
+  announcementAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AnnouncementAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AnnouncementAttachment`."""
+    orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AnnouncementAttachmentsConnection
+
   """Reads and enables pagination through a set of `Announcement`."""
   announcements(
     """Read all values in the set after (below) this cursor."""
@@ -6381,6 +6801,38 @@ type Query {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection
+
+  """Get a single `ArticleAttachment`."""
+  articleAttachment(aktualityId: BigInt!, fileId: BigInt!, tenantId: BigInt!): ArticleAttachment
+
+  """Reads and enables pagination through a set of `ArticleAttachment`."""
+  articleAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ArticleAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `ArticleAttachment`."""
+    orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ArticleAttachmentsConnection
 
   """Get a single `Attachment`."""
   attachment(objectName: String!): Attachment
@@ -6615,6 +7067,41 @@ type Query {
 
   """Get a single `EventSeries`."""
   eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
+
+  """Get a single `File`."""
+  file(id: BigInt!): File
+
+  """Get a single `File`."""
+  fileByObjectKey(objectKey: String!): File
+
+  """Reads and enables pagination through a set of `File`."""
+  files(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FileCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `File`."""
+    orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FilesConnection
 
   """Get a single `FormResponse`."""
   formResponse(id: BigInt!): FormResponse
@@ -7760,6 +8247,35 @@ type Tenant {
     """The method to use when ordering `EventSeries`."""
     orderBy: [EventSeriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): EventSeriesConnection!
+
+  """Reads and enables pagination through a set of `File`."""
+  files(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FileCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `File`."""
+    orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FilesConnection!
 
   """Reads and enables pagination through a set of `FormResponse`."""
   formResponses(
@@ -9541,6 +10057,7 @@ type UpdateUserProxyPayload {
 
 """All input for the `upsertAnnouncement` mutation."""
 input UpsertAnnouncementInput {
+  attachments: [BigInt]
   audiences: [AnnouncementAudienceTypeInputRecordInput]
 
   """
@@ -9569,6 +10086,38 @@ type UpsertAnnouncementPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
+}
+
+"""All input for the `upsertArticle` mutation."""
+input UpsertArticleInput {
+  attachments: [BigInt]
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  info: ArticleTypeInputRecordInput
+}
+
+"""The output of our `upsertArticle` mutation."""
+type UpsertArticlePayload {
+  aktuality: Aktuality
+
+  """An edge for our `Aktuality`. May be used by Relay 1."""
+  aktualityEdge(
+    """The method to use when ordering `Aktuality`."""
+    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AktualitiesEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `User` that is related to this `Aktuality`."""
+  userByAtKdo: User
 }
 
 type User {
@@ -9678,6 +10227,35 @@ type User {
     """The method to use when ordering `EventExternalRegistration`."""
     orderBy: [EventExternalRegistrationsOrderBy!]
   ): [EventExternalRegistration!]!
+
+  """Reads and enables pagination through a set of `File`."""
+  filesByUploadedBy(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FileCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `File`."""
+    orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FilesConnection!
   id: BigInt!
   lastActiveAt: Datetime
   lastLogin: Datetime

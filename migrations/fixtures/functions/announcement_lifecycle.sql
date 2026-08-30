@@ -2,8 +2,8 @@ create or replace function app_private.announcement_status_next(
   ts timestamptz,
   scheduled_since timestamptz,
   scheduled_until timestamptz,
-  current_status public.announcement_status
-) returns public.announcement_status
+  current_status announcement_status
+) returns announcement_status
   language sql immutable
 as $$
   select case
@@ -11,7 +11,7 @@ as $$
     when scheduled_until is not null and ts >= scheduled_until then 'archived'
     when scheduled_since is not null and ts < scheduled_since then 'scheduled'
     else 'published'
-  end::public.announcement_status;
+  end::announcement_status;
 $$;
 
 create or replace function app_private.tg_announcement__status()
@@ -27,7 +27,7 @@ begin
 end;
 $$;
 
-drop trigger if exists _300_status on public.announcement;
+drop trigger if exists _300_status on announcement;
 create trigger _300_status
-  before insert or update of status, scheduled_since, scheduled_until on public.announcement
+  before insert or update of status, scheduled_since, scheduled_until on announcement
   for each row execute function app_private.tg_announcement__status();

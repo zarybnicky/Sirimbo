@@ -1,8 +1,29 @@
+drop function if exists upsert_announcement;
+drop type if exists announcement_type_input;
+drop type if exists announcement_audience_type_input;
+
+create type announcement_type_input as (
+  id bigint,
+  title text,
+  body text,
+  is_sticky boolean,
+  scheduled_since timestamptz,
+  scheduled_until timestamptz,
+  status announcement_status
+);
+
+create type announcement_audience_type_input as (
+  id bigint,
+  cohort_id bigint,
+  audience_role announcement_audience_role
+);
+
 create or replace function upsert_announcement(
   info announcement_type_input,
-  audiences announcement_audience_type_input[] default null
-) returns announcement
-language plpgsql
+  audiences announcement_audience_type_input[] default null,
+  attachments bigint[] default null
+)
+  returns announcement language plpgsql
 as $$
 declare
   result announcement;
@@ -19,6 +40,34 @@ begin
       info.scheduled_until
     ) returning * into result;
   else
+    select * into result from announcement where id = info.id;
+    if not found then
+      raise exception 'Announcement with id % not found', info.id;
+    end if;
+  end if;
+
+  if attachments is not null then
+    select coalesce(array_agg(id), '{}'::bigint[])
+    into attachments
+    from file
+    where id = any(attachments)
+      and tenant_id = result.tenant_id
+      and uploaded_at is not null;
+
+    delete from announcement_attachment
+    where announcement_id = result.id
+      and not inline
+      and file_id <> all(attachments);
+
+    insert into announcement_attachment (tenant_id, announcement_id, file_id, inline)
+    select result.tenant_id, result.id, file_id, false
+    from unnest(attachments) input(file_id)
+    on conflict (tenant_id, announcement_id, file_id)
+    do update set inline = false;
+  end if;
+
+  if info.id is not null then
+    -- Make sure the update trigger re-populates inline references
     update announcement set
       title = info.title,
       body = info.body,
@@ -28,10 +77,6 @@ begin
       scheduled_until = info.scheduled_until
     where id = info.id
     returning * into result;
-
-    if not found then
-      raise exception 'Announcement with id % not found', info.id;
-    end if;
   end if;
 
   if audiences is not null then

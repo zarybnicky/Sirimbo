@@ -22,10 +22,12 @@ ALTER TABLE ONLY public.announcement_audience
 ALTER TABLE ONLY public.announcement_audience
     ADD CONSTRAINT announcement_audience_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.announcement_audience TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY admin_all ON public.announcement_audience TO administrator USING (true);
+CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.announcement_audience FOR SELECT TO member USING (true);
+CREATE POLICY trainer_manage ON public.announcement_audience TO trainer USING (true);
 
+CREATE TRIGGER _600_notify_announcement_audience_delete AFTER DELETE ON public.announcement_audience REFERENCING OLD TABLE AS oldtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
 CREATE TRIGGER _600_notify_announcement_audience_insert AFTER INSERT ON public.announcement_audience REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
 CREATE TRIGGER _600_notify_announcement_audience_update AFTER UPDATE ON public.announcement_audience REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
 

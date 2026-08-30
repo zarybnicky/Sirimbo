@@ -1,4 +1,9 @@
-CREATE or replace FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$
+create or replace function app_private.tg_event_instance__delete_payment_on_cancellation()
+  returns trigger
+  language plpgsql
+  security definer
+  set search_path = pg_catalog, public, pg_temp
+as $$
 declare
   payment_id bigint;
 begin
@@ -9,10 +14,10 @@ begin
     from event_instance i
     where i.type='lesson'
       and i.id = NEW.id
-      and not i.is_cancelled
       and i.since < now()
+      and not i.is_cancelled
       and not exists (
-        select * from payment where event_instance_id=i.id
+        select * from payment where event_instance_id = i.id
       );
 
     update payment set status ='unpaid' where id = payment_id;
@@ -23,10 +28,10 @@ begin
 end;
 $$;
 
-DROP TRIGGER IF EXISTS _500_delete_on_cancellation on public.event_instance;
+drop trigger if exists _500_delete_on_cancellation on event_instance;
 
-CREATE TRIGGER _500_delete_on_cancellation
-  AFTER UPDATE OF is_cancelled ON public.event_instance
-  FOR EACH ROW
-  WHEN (OLD.is_cancelled IS DISTINCT FROM NEW.is_cancelled)
-  EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
+create trigger _500_delete_on_cancellation
+  after update of is_cancelled on event_instance
+  for each row
+  when (old.is_cancelled is distinct from new.is_cancelled)
+  execute function app_private.tg_event_instance__delete_payment_on_cancellation();

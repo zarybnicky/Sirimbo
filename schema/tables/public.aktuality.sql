@@ -31,7 +31,10 @@ CREATE POLICY public_view ON public.aktuality FOR SELECT USING (is_visible);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_author BEFORE INSERT OR UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__author();
+CREATE TRIGGER _500_sync_attachments_insert AFTER INSERT ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__sync_attachments();
+CREATE TRIGGER _500_sync_attachments_update BEFORE UPDATE OF at_preview, at_text, title_photo_url ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__sync_attachments();
 
+CREATE UNIQUE INDEX aktuality_tenant_id_id_idx ON public.aktuality USING btree (tenant_id, id);
 CREATE INDEX idx_23753_aktuality_at_kdo_fkey ON public.aktuality USING btree (at_kdo);
 CREATE INDEX idx_23753_at_timestamp_add ON public.aktuality USING btree (created_at);
 CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);

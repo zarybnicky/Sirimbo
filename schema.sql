@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 0Ibj4DdhiH91vhbbdeRYl4Zxi5HS6bwmKET6OxFOZ0Tyjx1buXQoglvF4GeCtZ0
+\restrict N2KXDbjV1FXDle7PKoHjqUa032TffLm1Ygve9GZaTkUr17rZKRxkg7pcPoNptNY
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -393,6 +393,18 @@ CREATE TYPE public.announcement_audience_type_input AS (
 
 
 --
+-- Name: announcement_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.announcement_status AS ENUM (
+    'draft',
+    'scheduled',
+    'published',
+    'archived'
+);
+
+
+--
 -- Name: announcement_type_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -400,11 +412,10 @@ CREATE TYPE public.announcement_type_input AS (
 	id bigint,
 	title text,
 	body text,
-	is_locked boolean,
-	is_visible boolean,
 	is_sticky boolean,
 	scheduled_since timestamp with time zone,
-	scheduled_until timestamp with time zone
+	scheduled_until timestamp with time zone,
+	status public.announcement_status
 );
 
 
@@ -417,6 +428,20 @@ CREATE TYPE public.application_form_status AS ENUM (
     'sent',
     'approved',
     'rejected'
+);
+
+
+--
+-- Name: article_type_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.article_type_input AS (
+	id bigint,
+	title text,
+	preview text,
+	body text,
+	title_photo_url text,
+	is_visible boolean
 );
 
 
@@ -896,6 +921,22 @@ CREATE TYPE public.transaction_source AS ENUM (
 
 
 --
+-- Name: announcement_status_next(timestamp with time zone, timestamp with time zone, timestamp with time zone, public.announcement_status); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.announcement_status_next(ts timestamp with time zone, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone, current_status public.announcement_status) RETURNS public.announcement_status
+    LANGUAGE sql IMMUTABLE
+    AS $$
+  select case
+    when current_status in ('draft', 'archived') then current_status
+    when scheduled_until is not null and ts >= scheduled_until then 'archived'
+    when scheduled_since is not null and ts < scheduled_since then 'scheduled'
+    else 'published'
+  end::announcement_status;
+$$;
+
+
+--
 -- Name: can_trainer_edit_instance(bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1063,23 +1104,28 @@ $$;
 CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
     LANGUAGE sql
     AS $$
-  UPDATE public.user_proxy SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE user_proxy SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  UPDATE public.couple SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE couple SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  UPDATE public.cohort_membership SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE cohort_membership SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  UPDATE public.tenant_membership SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE tenant_membership SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  UPDATE public.tenant_trainer SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE tenant_trainer SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
-  UPDATE public.tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
+  UPDATE tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
+
+  UPDATE announcement
+  SET status = app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status)
+  WHERE status IN ('scheduled', 'published')
+    AND status IS DISTINCT FROM app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status);
 $$;
 
 
@@ -1355,25 +1401,15 @@ $_$;
 
 CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  v_is_visible boolean;
-  v_since timestamptz;
-  v_until timestamptz;
   v_user_ids bigint[];
 begin
-  select is_visible, scheduled_since, scheduled_until
-  into v_is_visible, v_since, v_until
-  from announcement
-  where id = in_announcement_id;
-
-  if not found then
-    return;
-  end if;
-
-  if not (v_is_visible
-      and (v_since is null or v_since <= now())
-      and (v_until is null or v_until > now())) then
+  if not exists (
+    select from announcement
+    where id = in_announcement_id and status = 'published'
+  ) then
     return;
   end if;
 
@@ -1614,12 +1650,12 @@ $$;
 CREATE FUNCTION app_private.relationship_status_next(ts timestamp with time zone, range tstzrange, current public.relationship_status) RETURNS public.relationship_status
     LANGUAGE sql IMMUTABLE
     AS $$
-  SELECT CASE
-    WHEN ts < lower(range) THEN 'pending'
-    WHEN NOT upper_inf(range) AND ts >= upper(range) THEN 'expired'
-    WHEN range @> ts THEN 'active'
-    ELSE current
-  END
+  select case
+    when ts < lower(range) then 'pending'
+    when not upper_inf(range) and ts >= upper(range) then 'expired'
+    when range @> ts then 'active'
+    else current
+  end
 $$;
 
 
@@ -1678,44 +1714,69 @@ $$;
 
 
 --
+-- Name: tg_aktuality__sync_attachments(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_aktuality__sync_attachments() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+declare
+  file_ids bigint[];
+begin
+  select coalesce(array_agg(distinct file.id), '{}'::bigint[])
+  into file_ids
+  from regexp_matches(
+    concat_ws(' ', new.at_preview, new.at_text, new.title_photo_url),
+    '/f/([0-9]+)/',
+    'g'
+  ) match(parts)
+  join file on file.id::text = match.parts[1]
+    and file.tenant_id = new.tenant_id
+    and file.uploaded_at is not null;
+
+  delete from article_attachment
+  where aktuality_id = new.id
+    and inline
+    and file_id <> all(file_ids);
+
+  insert into article_attachment (tenant_id, aktuality_id, file_id, inline)
+  select new.tenant_id, new.id, input.file_id, true
+  from unnest(file_ids) input(file_id)
+  on conflict (tenant_id, aktuality_id, file_id) do nothing;
+
+  return new;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION tg_aktuality__sync_attachments(); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.tg_aktuality__sync_attachments() IS 'Synchronizes inline file references from article content.';
+
+
+--
 -- Name: tg_announcement__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
 CREATE FUNCTION app_private.tg_announcement__after_write() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
   rec record;
-  old_row record;
-  was_published boolean;
-  is_published boolean;
 begin
   for rec in
     select * from newtable
   loop
-    is_published := coalesce(rec.is_visible, false)
-      and (rec.scheduled_since is null or rec.scheduled_since <= now())
-      and (rec.scheduled_until is null or rec.scheduled_until > now());
-
-    if TG_OP = 'INSERT' then
-      was_published := false;
-    else
-      select * into old_row
-      from oldtable
-      where id = rec.id;
-
-      if not found then
-        was_published := false;
-      else
-        was_published := coalesce(old_row.is_visible, false)
-          and (old_row.scheduled_since is null or old_row.scheduled_since <= now())
-          and (old_row.scheduled_until is null or old_row.scheduled_until > now());
+    if rec.status = 'published' then
+      if TG_OP = 'INSERT' then
+        perform app_private.queue_announcement_notifications(rec.id);
+      elsif not exists (select from oldtable where id = rec.id and status = 'published') then
+        perform app_private.queue_announcement_notifications(rec.id);
       end if;
-    end if;
-
-    if is_published and not was_published then
-      perform app_private.queue_announcement_notifications(rec.id);
     end if;
   end loop;
 
@@ -1741,26 +1802,79 @@ $$;
 
 
 --
+-- Name: tg_announcement__status(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_announcement__status() RETURNS trigger
+    LANGUAGE plpgsql
+    SET search_path TO 'pg_catalog', 'public', 'app_private'
+    AS $$
+begin
+  new.status = app_private.announcement_status_next(
+    now(), new.scheduled_since, new.scheduled_until, new.status
+  );
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_announcement__sync_attachments(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_announcement__sync_attachments() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+declare
+  file_ids bigint[];
+begin
+  select coalesce(array_agg(distinct file.id), '{}'::bigint[])
+  into file_ids
+  from regexp_matches(coalesce(new.body, ''), '/f/([0-9]+)/', 'g') match(parts)
+  join file on file.id::text = match.parts[1]
+    and file.tenant_id = new.tenant_id
+    and file.uploaded_at is not null;
+
+  delete from announcement_attachment
+  where announcement_id = new.id
+    and inline
+    and file_id <> all(file_ids);
+
+  insert into announcement_attachment (tenant_id, announcement_id, file_id, inline)
+  select new.tenant_id, new.id, input.file_id, true
+  from unnest(file_ids) input(file_id)
+  on conflict (tenant_id, announcement_id, file_id) do nothing;
+
+  return new;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION tg_announcement__sync_attachments(); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.tg_announcement__sync_attachments() IS 'Synchronizes inline file references from announcement content.';
+
+
+--
 -- Name: tg_announcement_audience__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
 CREATE FUNCTION app_private.tg_announcement_audience__after_write() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 -- @plpgsql_check_options: oldtable = oldtable, newtable = newtable
 declare
   rec record;
 begin
   if TG_OP = 'DELETE' then
-    for rec in (
-      select distinct announcement_id from oldtable
-    ) loop
+    for rec in (select distinct announcement_id from oldtable) loop
       perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   else
-    for rec in (
-      select distinct announcement_id from newtable
-    ) loop
+    for rec in (select distinct announcement_id from newtable) loop
       perform app_private.queue_announcement_notifications(rec.announcement_id);
     end loop;
   end if;
@@ -2035,6 +2149,24 @@ $$;
 
 
 --
+-- Name: tg_file__delete(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_file__delete() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  perform graphile_worker.add_job(
+    'delete_file',
+    json_build_object('object_key', old.object_key)
+  );
+  return old;
+end;
+$$;
+
+
+--
 -- Name: tg_payment__fill_accounting_period(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2178,6 +2310,69 @@ begin
   new.u_login := trim(new.u_login);
   return new;
 end;
+$$;
+
+
+--
+-- Name: visible_announcement_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.visible_announcement_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  with eligible as (
+    select announcement.id
+    from announcement
+    where pg_catalog.pg_has_role(pg_catalog.current_setting('role'), 'member', 'member')
+      and announcement.tenant_id = (select current_tenant_id())
+      and announcement.status in ('published', 'archived')
+  )
+  select eligible.id
+  from eligible
+  where not exists (
+    select from announcement_audience where announcement_id = eligible.id
+  )
+  union all
+  select announcement_id
+  from announcement_audience join eligible on eligible.id = announcement_id
+  where (
+    cohort_id in (
+      select cohort_id from current_cohort_membership where person_id = any ((select current_person_ids())::bigint[])
+    )
+    or audience_role = 'member' and exists (
+      select from current_tenant_membership where person_id = any ((select current_person_ids())::bigint[])
+    )
+    or audience_role = 'trainer' and exists (
+      select from current_tenant_trainer where person_id = any ((select current_person_ids())::bigint[])
+    )
+    or audience_role = 'administrator' and exists (
+      select from current_tenant_administrator where person_id = any ((select current_person_ids())::bigint[])
+    )
+  );
+$$;
+
+
+--
+-- Name: visible_file_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select f.file_id
+  from announcement_attachment f
+  join app_private.visible_announcement_ids() a(id) on a.id = f.announcement_id
+  where f.tenant_id = (select current_tenant_id())
+
+  union all
+
+  select f.file_id
+  from article_attachment f
+  join aktuality a on id = f.aktuality_id and a.tenant_id = f.tenant_id
+  where a.tenant_id = (select current_tenant_id())
+    and a.is_visible;
 $$;
 
 
@@ -4303,76 +4498,6 @@ $$;
 
 
 --
--- Name: announcement; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.announcement (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    author_id bigint,
-    title text NOT NULL,
-    body text NOT NULL,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    is_sticky boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone,
-    scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone
-);
-
-
---
--- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.announcement IS '@omit create';
-
-
---
--- Name: my_announcements(boolean, boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_announcements(sticky boolean DEFAULT false, archive boolean DEFAULT false, order_by_updated boolean DEFAULT false) RETURNS SETOF public.announcement
-    LANGUAGE sql STABLE
-    AS $$
-with audience_claims as (
-  select
-    (select array_agg(cohort_id) from current_cohort_membership cm where cm.person_id = any (current_person_ids())) as cohort_ids,
-    (exists (select 1 from current_tenant_membership where person_id = any (current_person_ids()))) as is_member,
-    (exists (select 1 from current_tenant_trainer where person_id = any (current_person_ids()))) as is_trainer,
-    (exists (select 1 from current_tenant_administrator where person_id = any (current_person_ids()))) as is_admin
-)
-select a.*
-from announcement a
-cross join audience_claims ac
-where a.is_sticky = sticky
-  and a.is_visible = case when sticky then true else not archive end
-  and (archive or (a.scheduled_since is null or a.scheduled_since <= now()))
-  and (archive or (a.scheduled_until is null or a.scheduled_until >= now()))
-  and (
-    exists (
-      select 1
-      from announcement_audience aa
-      where aa.announcement_id = a.id and (
-        (aa.cohort_id is not null and aa.cohort_id = any (ac.cohort_ids))
-          or (aa.audience_role = 'member' and ac.is_member)
-          or (aa.audience_role = 'trainer' and ac.is_trainer)
-          or (aa.audience_role = 'administrator' and ac.is_admin)
-      )
-    ) or not exists (
-      select 1
-      from announcement_audience aa_all
-      where aa_all.announcement_id = a.id
-    )
-  )
-order by
-  case when order_by_updated then a.updated_at else a.created_at end desc,
-  a.created_at desc;
-$$;
-
-
---
 -- Name: my_tenants_array(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -6300,116 +6425,239 @@ $$;
 
 
 --
--- Name: upsert_announcement(public.announcement_type_input, public.announcement_audience_type_input[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: announcement; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[] DEFAULT NULL::public.announcement_audience_type_input[]) RETURNS public.announcement
+CREATE TABLE public.announcement (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    author_id bigint,
+    title text NOT NULL,
+    body text NOT NULL,
+    is_sticky boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone,
+    status public.announcement_status DEFAULT 'draft'::public.announcement_status NOT NULL,
+    CONSTRAINT announcement_schedule_check CHECK (((scheduled_since IS NULL) OR (scheduled_until IS NULL) OR (scheduled_since < scheduled_until)))
+);
+
+
+--
+-- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.announcement IS '@omit create';
+
+
+--
+-- Name: upsert_announcement(public.announcement_type_input, public.announcement_audience_type_input[], bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[] DEFAULT NULL::public.announcement_audience_type_input[], attachments bigint[] DEFAULT NULL::bigint[]) RETURNS public.announcement
     LANGUAGE plpgsql
     AS $$
 declare
-  v_announcement announcement;
+  result announcement;
 begin
+  if info.id is null then
+    insert into announcement (
+      title, body, status, is_sticky, scheduled_since, scheduled_until
+    ) values (
+      info.title,
+      info.body,
+      coalesce(info.status, 'draft'),
+      coalesce(info.is_sticky, false),
+      info.scheduled_since,
+      info.scheduled_until
+    ) returning * into result;
+  else
+    select * into result from announcement where id = info.id;
+    if not found then
+      raise exception 'Announcement with id % not found', info.id;
+    end if;
+  end if;
+
+  if attachments is not null then
+    select coalesce(array_agg(id), '{}'::bigint[])
+    into attachments
+    from file
+    where id = any(attachments)
+      and tenant_id = result.tenant_id
+      and uploaded_at is not null;
+
+    delete from announcement_attachment
+    where announcement_id = result.id
+      and not inline
+      and file_id <> all(attachments);
+
+    insert into announcement_attachment (tenant_id, announcement_id, file_id, inline)
+    select result.tenant_id, result.id, file_id, false
+    from unnest(attachments) input(file_id)
+    on conflict (tenant_id, announcement_id, file_id)
+    do update set inline = false;
+  end if;
+
   if info.id is not null then
+    -- Make sure the update trigger re-populates inline references
     update announcement set
       title = info.title,
       body = info.body,
-      is_locked = coalesce(info.is_locked, false),
-      is_visible = coalesce(info.is_visible, true),
+      status = coalesce(info.status, status),
       is_sticky = coalesce(info.is_sticky, false),
       scheduled_since = info.scheduled_since,
       scheduled_until = info.scheduled_until
     where id = info.id
-    returning * into v_announcement;
-
-    if not found then
-      raise exception 'Announcement with id % not found', info.id;
-    end if;
-  else
-    insert into announcement (
-      title,
-      body,
-      is_locked,
-      is_visible,
-      is_sticky,
-      scheduled_since,
-      scheduled_until
-    )
-    values (
-      info.title,
-      info.body,
-      coalesce(info.is_locked, false),
-      coalesce(info.is_visible, true),
-      coalesce(info.is_sticky, false),
-      info.scheduled_since,
-      info.scheduled_until
-    )
-    returning * into v_announcement;
+    returning * into result;
   end if;
 
   if audiences is not null then
-    with audience_input as (
-      select distinct
-        (a).id as id,
-        (a).cohort_id as cohort_id,
-        (a).audience_role as audience_role
-      from unnest(audiences) a
+    with input as (
+      select distinct (item).id, (item).cohort_id, (item).audience_role
+      from unnest(audiences) item
     )
-    delete from announcement_audience aa
-    using audience_input ai
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ai.id
-      and ai.id is not null
-      and ai.cohort_id is null
-      and ai.audience_role is null;
+    delete from announcement_audience audience
+    using input
+    where audience.announcement_id = result.id
+      and audience.id = input.id
+      and input.id is not null
+      and input.cohort_id is null
+      and input.audience_role is null;
 
-    with audience_input as (
-      select distinct
-        (a).id as id,
-        (a).cohort_id as cohort_id,
-        (a).audience_role as audience_role
-      from unnest(audiences) a
+    with input as (
+      select distinct (item).id, (item).cohort_id, (item).audience_role
+      from unnest(audiences) item
     )
-    update announcement_audience aa
-    set cohort_id = ai.cohort_id,
-        audience_role = ai.audience_role
-    from audience_input ai
-    where aa.announcement_id = v_announcement.id
-      and aa.id = ai.id
-      and ai.id is not null
-      and ((ai.cohort_id is not null and ai.audience_role is null) or (ai.cohort_id is null and ai.audience_role is not null))
-      and (
-        aa.cohort_id is distinct from ai.cohort_id or
-        aa.audience_role is distinct from ai.audience_role
-      );
+    update announcement_audience audience
+    set cohort_id = input.cohort_id,
+        audience_role = input.audience_role
+    from input
+    where audience.announcement_id = result.id
+      and audience.id = input.id
+      and input.id is not null
+      and ((input.cohort_id is not null) <> (input.audience_role is not null))
+      and (audience.cohort_id, audience.audience_role)
+        is distinct from (input.cohort_id, input.audience_role);
 
-    with audience_input as (
-      select distinct
-        (a).cohort_id as cohort_id
-      from unnest(audiences) a
-      where (a).id is null
-        and (a).cohort_id is not null
-        and (a).audience_role is null
+    with input as (
+      select distinct (item).cohort_id
+      from unnest(audiences) item
+      where (item).id is null
+        and (item).cohort_id is not null
+        and (item).audience_role is null
     )
     insert into announcement_audience (announcement_id, cohort_id)
-    select v_announcement.id, ai.cohort_id
-    from audience_input ai
+    select result.id, input.cohort_id
+    from input
     on conflict (announcement_id, cohort_id) do nothing;
 
-    with audience_input as (
-      select distinct
-        (a).audience_role as audience_role
-      from unnest(audiences) a
-      where (a).id is null
-        and (a).cohort_id is null
-        and (a).audience_role is not null
+    with input as (
+      select distinct (item).audience_role
+      from unnest(audiences) item
+      where (item).id is null
+        and (item).cohort_id is null
+        and (item).audience_role is not null
     )
     insert into announcement_audience (announcement_id, audience_role)
-    select v_announcement.id, ai.audience_role
-    from audience_input ai
+    select result.id, input.audience_role
+    from input
     on conflict (announcement_id, audience_role) do nothing;
   end if;
 
-  return v_announcement;
+  return result;
+end;
+$$;
+
+
+--
+-- Name: aktuality; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.aktuality (
+    id bigint CONSTRAINT aktuality_at_id_not_null NOT NULL,
+    at_kdo bigint,
+    at_kat text DEFAULT '1'::text NOT NULL,
+    at_jmeno text NOT NULL,
+    at_text text NOT NULL,
+    at_preview text NOT NULL,
+    at_foto bigint,
+    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now(),
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    title_photo_url text,
+    is_visible boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: COLUMN aktuality.at_kat; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
+
+
+--
+-- Name: upsert_article(public.article_type_input, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.upsert_article(info public.article_type_input, attachments bigint[] DEFAULT NULL::bigint[]) RETURNS public.aktuality
+    LANGUAGE plpgsql
+    AS $$
+declare
+  result aktuality;
+begin
+  if info.id is null then
+    insert into aktuality (
+      at_jmeno, at_preview, at_text, title_photo_url, is_visible
+    ) values (
+      info.title,
+      coalesce(info.preview, ''),
+      coalesce(info.body, ''),
+      info.title_photo_url,
+      coalesce(info.is_visible, true)
+    ) returning * into result;
+  else
+    select * into result from aktuality where id = info.id;
+
+    if not found then
+      raise exception 'Article with id % not found', info.id;
+    end if;
+  end if;
+
+  if attachments is not null then
+    select coalesce(array_agg(id), '{}'::bigint[])
+    into attachments
+    from file
+    where id = any(attachments)
+      and tenant_id = result.tenant_id
+      and uploaded_at is not null;
+
+    delete from article_attachment
+    where aktuality_id = result.id
+      and not inline
+      and file_id <> all(attachments);
+
+    insert into article_attachment (tenant_id, aktuality_id, file_id, inline)
+    select result.tenant_id, result.id, file_id, false
+    from unnest(attachments) input(file_id)
+    on conflict (tenant_id, aktuality_id, file_id)
+    do update set inline = false;
+  end if;
+
+  if info.id is not null then
+    -- Make sure the update trigger re-populates inline references
+    update aktuality set
+      at_jmeno = info.title,
+      at_preview = coalesce(info.preview, ''),
+      at_text = coalesce(info.body, ''),
+      title_photo_url = info.title_photo_url,
+      is_visible = coalesce(info.is_visible, true)
+    where id = info.id
+    returning * into result;
+  end if;
+
+  return result;
 end;
 $$;
 
@@ -7600,33 +7848,6 @@ ALTER TABLE public.accounting_period ALTER COLUMN id ADD GENERATED BY DEFAULT AS
 
 
 --
--- Name: aktuality; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.aktuality (
-    id bigint CONSTRAINT aktuality_at_id_not_null NOT NULL,
-    at_kdo bigint,
-    at_kat text DEFAULT '1'::text NOT NULL,
-    at_jmeno text NOT NULL,
-    at_text text NOT NULL,
-    at_preview text NOT NULL,
-    at_foto bigint,
-    updated_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now(),
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    title_photo_url text,
-    is_visible boolean DEFAULT true NOT NULL
-);
-
-
---
--- Name: COLUMN aktuality.at_kat; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
-
-
---
 -- Name: aktuality_at_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -7643,6 +7864,25 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.id;
+
+
+--
+-- Name: announcement_attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.announcement_attachment (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    announcement_id bigint NOT NULL,
+    file_id bigint NOT NULL,
+    inline boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: TABLE announcement_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.announcement_attachment IS '@omit create,update,delete';
 
 
 --
@@ -7693,6 +7933,25 @@ ALTER TABLE public.announcement ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDEN
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: article_attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.article_attachment (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    aktuality_id bigint NOT NULL,
+    file_id bigint NOT NULL,
+    inline boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: TABLE article_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.article_attachment IS '@omit create,update,delete';
 
 
 --
@@ -8140,6 +8399,44 @@ COMMENT ON TABLE public.event_series IS '@behavior -query:resource:list -query:r
 
 ALTER TABLE public.event_series ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME public.event_series_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: file; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    object_key text NOT NULL,
+    name text NOT NULL,
+    content_type text,
+    byte_size bigint,
+    uploaded_by bigint DEFAULT public.current_user_id(),
+    uploaded_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE file; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.file IS '@omit create,update,delete';
+
+
+--
+-- Name: file_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.file ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.file_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -9297,6 +9594,14 @@ ALTER TABLE ONLY public.accounting_period
 
 
 --
+-- Name: announcement_attachment announcement_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_attachment
+    ADD CONSTRAINT announcement_attachment_pkey PRIMARY KEY (tenant_id, announcement_id, file_id);
+
+
+--
 -- Name: announcement_audience announcement_audience_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9310,6 +9615,14 @@ ALTER TABLE ONLY public.announcement_audience
 
 ALTER TABLE ONLY public.announcement
     ADD CONSTRAINT announcement_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: article_attachment article_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.article_attachment
+    ADD CONSTRAINT article_attachment_pkey PRIMARY KEY (tenant_id, aktuality_id, file_id);
 
 
 --
@@ -9486,6 +9799,22 @@ ALTER TABLE ONLY public.event_series
 
 ALTER TABLE ONLY public.event_series
     ADD CONSTRAINT event_series_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
+-- Name: file file_object_key_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file
+    ADD CONSTRAINT file_object_key_key UNIQUE (object_key);
+
+
+--
+-- Name: file file_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file
+    ADD CONSTRAINT file_pkey PRIMARY KEY (id);
 
 
 --
@@ -10163,6 +10492,20 @@ CREATE INDEX accounting_period_tenant_id_idx ON public.accounting_period USING b
 
 
 --
+-- Name: aktuality_tenant_id_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX aktuality_tenant_id_id_idx ON public.aktuality USING btree (tenant_id, id);
+
+
+--
+-- Name: announcement_attachment_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_attachment_file_idx ON public.announcement_attachment USING btree (tenant_id, file_id);
+
+
+--
 -- Name: announcement_audience_announcement_cohort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10205,10 +10548,31 @@ CREATE INDEX announcement_created_at_idx ON public.announcement USING btree (cre
 
 
 --
+-- Name: announcement_status_created_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX announcement_status_created_at_idx ON public.announcement USING btree (tenant_id, status, is_sticky, created_at DESC);
+
+
+--
+-- Name: announcement_tenant_id_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX announcement_tenant_id_id_idx ON public.announcement USING btree (tenant_id, id);
+
+
+--
 -- Name: announcement_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX announcement_tenant_id_idx ON public.announcement USING btree (tenant_id);
+
+
+--
+-- Name: article_attachment_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX article_attachment_file_idx ON public.article_attachment USING btree (tenant_id, file_id);
 
 
 --
@@ -10538,6 +10902,13 @@ CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USI
 --
 
 CREATE INDEX event_lesson_demand_trainer_id_idx ON public.event_lesson_demand USING btree (trainer_id);
+
+
+--
+-- Name: file_tenant_id_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX file_tenant_id_id_idx ON public.file USING btree (tenant_id, id);
 
 
 --
@@ -11220,6 +11591,13 @@ CREATE TRIGGER _300_effective_date BEFORE INSERT OR UPDATE ON public.transaction
 
 
 --
+-- Name: announcement _300_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _300_status BEFORE INSERT OR UPDATE OF status, scheduled_since, scheduled_until ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__status();
+
+
+--
 -- Name: users _300_trim_login; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11297,6 +11675,41 @@ CREATE TRIGGER _500_send AFTER INSERT ON public.person_invitation FOR EACH ROW E
 
 
 --
+-- Name: aktuality _500_sync_attachments_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_sync_attachments_insert AFTER INSERT ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__sync_attachments();
+
+
+--
+-- Name: announcement _500_sync_attachments_insert; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_sync_attachments_insert AFTER INSERT ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__sync_attachments();
+
+
+--
+-- Name: aktuality _500_sync_attachments_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_sync_attachments_update BEFORE UPDATE OF at_preview, at_text, title_photo_url ON public.aktuality FOR EACH ROW EXECUTE FUNCTION app_private.tg_aktuality__sync_attachments();
+
+
+--
+-- Name: announcement _500_sync_attachments_update; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_sync_attachments_update BEFORE UPDATE OF body ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__sync_attachments();
+
+
+--
+-- Name: announcement_audience _600_notify_announcement_audience_delete; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _600_notify_announcement_audience_delete AFTER DELETE ON public.announcement_audience REFERENCING OLD TABLE AS oldtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement_audience__after_write();
+
+
+--
 -- Name: announcement_audience _600_notify_announcement_audience_insert; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11322,6 +11735,13 @@ CREATE TRIGGER _600_notify_announcement_insert AFTER INSERT ON public.announceme
 --
 
 CREATE TRIGGER _600_notify_announcement_update AFTER UPDATE ON public.announcement REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
+
+
+--
+-- Name: file _900_delete_object; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_delete_object AFTER DELETE ON public.file FOR EACH ROW EXECUTE FUNCTION app_private.tg_file__delete();
 
 
 --
@@ -11931,6 +12351,38 @@ ALTER TABLE ONLY public.aktuality
 
 
 --
+-- Name: announcement_attachment announcement_attachment_announcement_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_attachment
+    ADD CONSTRAINT announcement_attachment_announcement_fk FOREIGN KEY (tenant_id, announcement_id) REFERENCES public.announcement(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT announcement_attachment_announcement_fk ON announcement_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT announcement_attachment_announcement_fk ON public.announcement_attachment IS '@fieldName announcement
+@foreignFieldName attachments';
+
+
+--
+-- Name: announcement_attachment announcement_attachment_file_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.announcement_attachment
+    ADD CONSTRAINT announcement_attachment_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT announcement_attachment_file_fk ON announcement_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT announcement_attachment_file_fk ON public.announcement_attachment IS '@fieldName file
+@foreignFieldName announcementAttachments';
+
+
+--
 -- Name: announcement_audience announcement_audience_announcement_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11968,6 +12420,40 @@ ALTER TABLE ONLY public.announcement
 
 ALTER TABLE ONLY public.announcement
     ADD CONSTRAINT announcement_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: article_attachment article_attachment_article_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.article_attachment
+    ADD CONSTRAINT article_attachment_article_fk FOREIGN KEY (tenant_id, aktuality_id) REFERENCES public.aktuality(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT article_attachment_article_fk ON article_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT article_attachment_article_fk ON public.article_attachment IS '
+@fieldName article
+@foreignFieldName attachments';
+
+
+--
+-- Name: article_attachment article_attachment_file_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.article_attachment
+    ADD CONSTRAINT article_attachment_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT article_attachment_file_fk ON article_attachment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT article_attachment_file_fk ON public.article_attachment IS '
+@fieldName file
+@foreignFieldName articleAttachments';
 
 
 --
@@ -12336,6 +12822,22 @@ ALTER TABLE ONLY public.event_series
 
 COMMENT ON CONSTRAINT event_series_tenant_id_fkey ON public.event_series IS '@fieldName tenant
 @foreignFieldName eventSeries';
+
+
+--
+-- Name: file file_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file
+    ADD CONSTRAINT file_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: file file_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file
+    ADD CONSTRAINT file_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
 
 --
@@ -12869,14 +13371,28 @@ CREATE POLICY admin_all ON public.aktuality TO administrator USING (true);
 -- Name: announcement admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.announcement TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.announcement TO administrator USING (true);
+
+
+--
+-- Name: announcement_attachment admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.announcement_attachment TO administrator USING (true);
 
 
 --
 -- Name: announcement_audience admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.announcement_audience TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.announcement_audience TO administrator USING (true);
+
+
+--
+-- Name: article_attachment admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.article_attachment TO administrator USING (true);
 
 
 --
@@ -12961,6 +13477,13 @@ CREATE POLICY admin_all ON public.event_lesson_demand TO administrator USING (tr
 --
 
 CREATE POLICY admin_all ON public.event_series TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: file admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.file TO administrator USING (true);
 
 
 --
@@ -13148,10 +13671,22 @@ CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: announcement_attachment; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.announcement_attachment ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: announcement_audience; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.announcement_audience ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: article_attachment; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.article_attachment ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: attachment; Type: ROW SECURITY; Schema: public; Owner: -
@@ -13214,14 +13749,28 @@ CREATE POLICY current_tenant ON public.aktuality AS RESTRICTIVE USING ((tenant_i
 -- Name: announcement current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: announcement_attachment current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.announcement_attachment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
 -- Name: announcement_audience current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY current_tenant ON public.announcement_audience AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: article_attachment current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.article_attachment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13285,6 +13834,13 @@ CREATE POLICY current_tenant ON public.event_instance_trainer AS RESTRICTIVE USI
 --
 
 CREATE POLICY current_tenant ON public.event_series AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: file current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.file AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13462,6 +14018,12 @@ CREATE POLICY event_share_view ON public.person FOR SELECT TO anonymous USING ((
 
 
 --
+-- Name: file; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.file ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: form_responses; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -13513,7 +14075,15 @@ CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
 -- Name: announcement member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING ((id IN ( SELECT app_private.visible_announcement_ids() AS visible_announcement_ids)));
+
+
+--
+-- Name: announcement_attachment member_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY member_view ON public.announcement_attachment FOR SELECT USING ((announcement_id IN ( SELECT announcement.id
+   FROM public.announcement)));
 
 
 --
@@ -13673,6 +14243,14 @@ CREATE POLICY public_view ON public.aktuality FOR SELECT USING (is_visible);
 
 
 --
+-- Name: article_attachment public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.article_attachment FOR SELECT USING ((aktuality_id IN ( SELECT aktuality.id
+   FROM public.aktuality)));
+
+
+--
 -- Name: attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13817,6 +14395,29 @@ CREATE POLICY trainer_insert ON public.event_instance_registration FOR INSERT TO
 
 
 --
+-- Name: announcement_attachment trainer_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_manage ON public.announcement_attachment TO trainer USING ((announcement_id IN ( SELECT announcement.id
+   FROM public.announcement
+  WHERE (announcement.author_id = ( SELECT public.current_user_id() AS current_user_id)))));
+
+
+--
+-- Name: announcement_audience trainer_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_manage ON public.announcement_audience TO trainer USING (true);
+
+
+--
+-- Name: announcement trainer_manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY trainer_manage_own ON public.announcement TO trainer USING ((author_id = ( SELECT public.current_user_id() AS current_user_id)));
+
+
+--
 -- Name: event_external_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13863,6 +14464,13 @@ CREATE POLICY trainer_update ON public.event_instance_registration FOR UPDATE TO
 --
 
 ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: file uploader_manage; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY uploader_manage ON public.file TO trainer USING ((uploaded_by = ( SELECT public.current_user_id() AS current_user_id)));
+
 
 --
 -- Name: user_proxy; Type: ROW SECURITY; Schema: public; Owner: -
@@ -13936,6 +14544,14 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN
 --
 
 CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (true);
+
+
+--
+-- Name: file visible; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY visible ON public.file FOR SELECT USING ((id IN ( SELECT visible.id
+   FROM app_private.visible_file_ids() visible(id))));
 
 
 --
@@ -14156,6 +14772,20 @@ REVOKE ALL ON FUNCTION app_private.tg_event_instance_target_cohort__reconcile() 
 --
 
 REVOKE ALL ON FUNCTION app_private.tg_event_instance_trainer__refresh_manager_person_ids() FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION visible_announcement_ids(); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.visible_announcement_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION visible_file_ids(); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.visible_file_ids() TO anonymous;
 
 
 --
@@ -14541,20 +15171,6 @@ GRANT ALL ON FUNCTION public.login(login text, passwd text) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.move_event_instance(id bigint, since timestamp with time zone, until timestamp with time zone, trainer_person_id bigint, location_id bigint, location_text text) TO anonymous;
-
-
---
--- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.announcement TO anonymous;
-
-
---
--- Name: FUNCTION my_announcements(sticky boolean, archive boolean, order_by_updated boolean); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_announcements(sticky boolean, archive boolean, order_by_updated boolean) TO anonymous;
 
 
 --
@@ -14958,10 +15574,31 @@ GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value j
 
 
 --
--- Name: FUNCTION upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[]); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[]) TO anonymous;
+GRANT ALL ON TABLE public.announcement TO anonymous;
+
+
+--
+-- Name: FUNCTION upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[], attachments bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.upsert_announcement(info public.announcement_type_input, audiences public.announcement_audience_type_input[], attachments bigint[]) TO anonymous;
+
+
+--
+-- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.aktuality TO anonymous;
+
+
+--
+-- Name: FUNCTION upsert_article(info public.article_type_input, attachments bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.upsert_article(info public.article_type_input, attachments bigint[]) TO anonymous;
 
 
 --
@@ -15252,13 +15889,6 @@ GRANT ALL ON TABLE public.accounting_period TO anonymous;
 
 
 --
--- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.aktuality TO anonymous;
-
-
---
 -- Name: SEQUENCE aktuality_at_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -15266,10 +15896,24 @@ GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE announcement_attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.announcement_attachment TO anonymous;
+
+
+--
 -- Name: TABLE announcement_audience; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.announcement_audience TO anonymous;
+
+
+--
+-- Name: TABLE article_attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.article_attachment TO anonymous;
 
 
 --
@@ -15441,6 +16085,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.event_series_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE file; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.file TO anonymous;
+
+
+--
 -- Name: TABLE form_responses; Type: ACL; Schema: public; Owner: -
 --
 
@@ -15535,5 +16186,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 0Ibj4DdhiH91vhbbdeRYl4Zxi5HS6bwmKET6OxFOZ0Tyjx1buXQoglvF4GeCtZ0
+\unrestrict N2KXDbjV1FXDle7PKoHjqUa032TffLm1Ygve9GZaTkUr17rZKRxkg7pcPoNptNY
 

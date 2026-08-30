@@ -365,6 +365,8 @@ export type Aktuality = {
   atKdo: Maybe<Scalars['BigInt']['output']>;
   atPreview: Scalars['String']['output'];
   atText: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `ArticleAttachment`. */
+  attachments: ArticleAttachmentsConnection;
   createdAt: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['BigInt']['output'];
   isVisible: Scalars['Boolean']['output'];
@@ -373,6 +375,17 @@ export type Aktuality = {
   updatedAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
+};
+
+
+export type AktualityAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ArticleAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
 };
 
 /**
@@ -442,6 +455,8 @@ export type Announcement = {
   __typename?: 'Announcement';
   /** Reads and enables pagination through a set of `AnnouncementAudience`. */
   announcementAudiences: AnnouncementAudiencesConnection;
+  /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
+  attachments: AnnouncementAttachmentsConnection;
   /** Reads a single `User` that is related to this `Announcement`. */
   author: Maybe<User>;
   authorId: Maybe<Scalars['BigInt']['output']>;
@@ -467,6 +482,80 @@ export type AnnouncementAnnouncementAudiencesArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementAudiencesOrderBy>>;
 };
+
+
+export type AnnouncementAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementAttachmentsOrderBy>>;
+};
+
+export type AnnouncementAttachment = {
+  __typename?: 'AnnouncementAttachment';
+  /** Reads a single `Announcement` that is related to this `AnnouncementAttachment`. */
+  announcement: Maybe<Announcement>;
+  announcementId: Scalars['BigInt']['output'];
+  /** Reads a single `File` that is related to this `AnnouncementAttachment`. */
+  file: Maybe<File>;
+  fileId: Scalars['BigInt']['output'];
+  inline: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `AnnouncementAttachment` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type AnnouncementAttachmentCondition = {
+  /** Checks for equality with the object’s `announcementId` field. */
+  announcementId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `fileId` field. */
+  fileId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `inline` field. */
+  inline?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** A connection to a list of `AnnouncementAttachment` values. */
+export type AnnouncementAttachmentsConnection = {
+  __typename?: 'AnnouncementAttachmentsConnection';
+  /** A list of edges which contains the `AnnouncementAttachment` and cursor to aid in pagination. */
+  edges: Array<AnnouncementAttachmentsEdge>;
+  /** A list of `AnnouncementAttachment` objects. */
+  nodes: Array<AnnouncementAttachment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AnnouncementAttachment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AnnouncementAttachment` edge in the connection. */
+export type AnnouncementAttachmentsEdge = {
+  __typename?: 'AnnouncementAttachmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `AnnouncementAttachment` at the end of the edge. */
+  node: AnnouncementAttachment;
+};
+
+/** Methods to use when ordering `AnnouncementAttachment`. */
+export type AnnouncementAttachmentsOrderBy =
+  | 'ANNOUNCEMENT_ID_ASC'
+  | 'ANNOUNCEMENT_ID_DESC'
+  | 'FILE_ID_ASC'
+  | 'FILE_ID_DESC'
+  | 'INLINE_ASC'
+  | 'INLINE_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type AnnouncementAudience = {
   __typename?: 'AnnouncementAudience';
@@ -694,6 +783,79 @@ export type ArchiveCohortPayload = {
 /** The output of our `archiveCohort` mutation. */
 export type ArchiveCohortPayloadCohortEdgeArgs = {
   orderBy?: Array<CohortsOrderBy>;
+};
+
+export type ArticleAttachment = {
+  __typename?: 'ArticleAttachment';
+  aktualityId: Scalars['BigInt']['output'];
+  /** Reads a single `Aktuality` that is related to this `ArticleAttachment`. */
+  article: Maybe<Aktuality>;
+  /** Reads a single `File` that is related to this `ArticleAttachment`. */
+  file: Maybe<File>;
+  fileId: Scalars['BigInt']['output'];
+  inline: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `ArticleAttachment` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ArticleAttachmentCondition = {
+  /** Checks for equality with the object’s `aktualityId` field. */
+  aktualityId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `fileId` field. */
+  fileId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `inline` field. */
+  inline?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** A connection to a list of `ArticleAttachment` values. */
+export type ArticleAttachmentsConnection = {
+  __typename?: 'ArticleAttachmentsConnection';
+  /** A list of edges which contains the `ArticleAttachment` and cursor to aid in pagination. */
+  edges: Array<ArticleAttachmentsEdge>;
+  /** A list of `ArticleAttachment` objects. */
+  nodes: Array<ArticleAttachment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ArticleAttachment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `ArticleAttachment` edge in the connection. */
+export type ArticleAttachmentsEdge = {
+  __typename?: 'ArticleAttachmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `ArticleAttachment` at the end of the edge. */
+  node: ArticleAttachment;
+};
+
+/** Methods to use when ordering `ArticleAttachment`. */
+export type ArticleAttachmentsOrderBy =
+  | 'AKTUALITY_ID_ASC'
+  | 'AKTUALITY_ID_DESC'
+  | 'FILE_ID_ASC'
+  | 'FILE_ID_DESC'
+  | 'INLINE_ASC'
+  | 'INLINE_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
+
+/** An input for mutations affecting `ArticleTypeInputRecord` */
+export type ArticleTypeInputRecordInput = {
+  body?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  preview?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Attachment = {
@@ -3477,6 +3639,115 @@ export type EventType =
   | 'LESSON'
   | 'RESERVATION';
 
+export type File = {
+  __typename?: 'File';
+  /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
+  announcementAttachments: AnnouncementAttachmentsConnection;
+  /** Reads and enables pagination through a set of `ArticleAttachment`. */
+  articleAttachments: ArticleAttachmentsConnection;
+  byteSize: Maybe<Scalars['BigInt']['output']>;
+  contentType: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  name: Scalars['String']['output'];
+  objectKey: Scalars['String']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  uploadedAt: Maybe<Scalars['Datetime']['output']>;
+  uploadedBy: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `User` that is related to this `File`. */
+  userByUploadedBy: Maybe<User>;
+};
+
+
+export type FileAnnouncementAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementAttachmentsOrderBy>>;
+};
+
+
+export type FileArticleAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ArticleAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
+};
+
+/** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FileCondition = {
+  /** Checks for equality with the object’s `byteSize` field. */
+  byteSize?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `contentType` field. */
+  contentType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `objectKey` field. */
+  objectKey?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uploadedAt` field. */
+  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `uploadedBy` field. */
+  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** A connection to a list of `File` values. */
+export type FilesConnection = {
+  __typename?: 'FilesConnection';
+  /** A list of edges which contains the `File` and cursor to aid in pagination. */
+  edges: Array<FilesEdge>;
+  /** A list of `File` objects. */
+  nodes: Array<File>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `File` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `File` edge in the connection. */
+export type FilesEdge = {
+  __typename?: 'FilesEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `File` at the end of the edge. */
+  node: File;
+};
+
+/** Methods to use when ordering `File`. */
+export type FilesOrderBy =
+  | 'BYTE_SIZE_ASC'
+  | 'BYTE_SIZE_DESC'
+  | 'CONTENT_TYPE_ASC'
+  | 'CONTENT_TYPE_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
+  | 'NATURAL'
+  | 'OBJECT_KEY_ASC'
+  | 'OBJECT_KEY_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPLOADED_AT_ASC'
+  | 'UPLOADED_AT_DESC'
+  | 'UPLOADED_BY_ASC'
+  | 'UPLOADED_BY_DESC';
+
 export type FormResponse = {
   __typename?: 'FormResponse';
   createdAt: Scalars['Datetime']['output'];
@@ -4025,6 +4296,7 @@ export type Mutation = {
   /** Updates a single `UserProxy` using a unique key and a patch. */
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
   upsertAnnouncement: Maybe<UpsertAnnouncementPayload>;
+  upsertArticle: Maybe<UpsertArticlePayload>;
 };
 
 
@@ -4547,6 +4819,12 @@ export type MutationUpdateUserProxyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpsertAnnouncementArgs = {
   input: UpsertAnnouncementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpsertArticleArgs = {
+  input: UpsertArticleInput;
 };
 
 /** All input for the `otpLogin` mutation. */
@@ -5410,8 +5688,16 @@ export type Query = {
   aktuality: Maybe<Aktuality>;
   /** Get a single `Announcement`. */
   announcement: Maybe<Announcement>;
+  /** Get a single `AnnouncementAttachment`. */
+  announcementAttachment: Maybe<AnnouncementAttachment>;
+  /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
+  announcementAttachments: Maybe<AnnouncementAttachmentsConnection>;
   /** Reads and enables pagination through a set of `Announcement`. */
   announcements: Maybe<AnnouncementsConnection>;
+  /** Get a single `ArticleAttachment`. */
+  articleAttachment: Maybe<ArticleAttachment>;
+  /** Reads and enables pagination through a set of `ArticleAttachment`. */
+  articleAttachments: Maybe<ArticleAttachmentsConnection>;
   /** Get a single `Attachment`. */
   attachment: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Text`. */
@@ -5455,6 +5741,12 @@ export type Query = {
   eventSeries: Maybe<EventSeries>;
   /** Get a single `EventSeries`. */
   eventSeriesByTenantIdAndId: Maybe<EventSeries>;
+  /** Get a single `File`. */
+  file: Maybe<File>;
+  /** Get a single `File`. */
+  fileByObjectKey: Maybe<File>;
+  /** Reads and enables pagination through a set of `File`. */
+  files: Maybe<FilesConnection>;
   /** Get a single `FormResponse`. */
   formResponse: Maybe<FormResponse>;
   /** Reads and enables pagination through a set of `FormResponse`. */
@@ -5572,6 +5864,26 @@ export type QueryAnnouncementArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAnnouncementAttachmentArgs = {
+  announcementId: Scalars['BigInt']['input'];
+  fileId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAnnouncementAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<AnnouncementAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AnnouncementAttachmentsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -5580,6 +5892,26 @@ export type QueryAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArticleAttachmentArgs = {
+  aktualityId: Scalars['BigInt']['input'];
+  fileId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArticleAttachmentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ArticleAttachmentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
 };
 
 
@@ -5769,6 +6101,30 @@ export type QueryEventSeriesArgs = {
 export type QueryEventSeriesByTenantIdAndIdArgs = {
   id: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFileArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFileByObjectKeyArgs = {
+  objectKey: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFilesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FileCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
 };
 
 
@@ -6551,6 +6907,8 @@ export type Tenant = {
   eventLessonDemandsList: Array<EventLessonDemand>;
   /** Reads and enables pagination through a set of `EventSeries`. */
   eventSeries: EventSeriesConnection;
+  /** Reads and enables pagination through a set of `File`. */
+  files: FilesConnection;
   /** Reads and enables pagination through a set of `FormResponse`. */
   formResponses: FormResponsesConnection;
   id: Scalars['BigInt']['output'];
@@ -6738,6 +7096,17 @@ export type TenantEventSeriesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventSeriesOrderBy>>;
+};
+
+
+export type TenantFilesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FileCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
 };
 
 
@@ -8151,6 +8520,7 @@ export type UpdateUserProxyPayload = {
 
 /** All input for the `upsertAnnouncement` mutation. */
 export type UpsertAnnouncementInput = {
+  attachments?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   audiences?: InputMaybe<Array<InputMaybe<AnnouncementAudienceTypeInputRecordInput>>>;
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
@@ -8181,6 +8551,38 @@ export type UpsertAnnouncementPayloadAnnouncementEdgeArgs = {
   orderBy?: Array<AnnouncementsOrderBy>;
 };
 
+/** All input for the `upsertArticle` mutation. */
+export type UpsertArticleInput = {
+  attachments?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  info?: InputMaybe<ArticleTypeInputRecordInput>;
+};
+
+/** The output of our `upsertArticle` mutation. */
+export type UpsertArticlePayload = {
+  __typename?: 'UpsertArticlePayload';
+  aktuality: Maybe<Aktuality>;
+  /** An edge for our `Aktuality`. May be used by Relay 1. */
+  aktualityEdge: Maybe<AktualitiesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `User` that is related to this `Aktuality`. */
+  userByAtKdo: Maybe<User>;
+};
+
+
+/** The output of our `upsertArticle` mutation. */
+export type UpsertArticlePayloadAktualityEdgeArgs = {
+  orderBy?: Array<AktualitiesOrderBy>;
+};
+
 export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Aktuality`. */
@@ -8192,6 +8594,8 @@ export type User = {
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsByCreatedByList: Array<EventExternalRegistration>;
+  /** Reads and enables pagination through a set of `File`. */
+  filesByUploadedBy: FilesConnection;
   id: Scalars['BigInt']['output'];
   lastActiveAt: Maybe<Scalars['Datetime']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
@@ -8247,6 +8651,17 @@ export type UserEventExternalRegistrationsByCreatedByListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventExternalRegistrationsOrderBy>>;
+};
+
+
+export type UserFilesByUploadedByArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FileCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FilesOrderBy>>;
 };
 
 
@@ -8438,12 +8853,18 @@ export type GraphCacheKeysConfig = {
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
   Announcement?: (data: WithTypename<Announcement>) => null | string,
+  AnnouncementAttachment?: (data: WithTypename<AnnouncementAttachment>) => null | string,
+  AnnouncementAttachmentsConnection?: (data: WithTypename<AnnouncementAttachmentsConnection>) => null | string,
+  AnnouncementAttachmentsEdge?: (data: WithTypename<AnnouncementAttachmentsEdge>) => null | string,
   AnnouncementAudience?: (data: WithTypename<AnnouncementAudience>) => null | string,
   AnnouncementAudiencesConnection?: (data: WithTypename<AnnouncementAudiencesConnection>) => null | string,
   AnnouncementAudiencesEdge?: (data: WithTypename<AnnouncementAudiencesEdge>) => null | string,
   AnnouncementsConnection?: (data: WithTypename<AnnouncementsConnection>) => null | string,
   AnnouncementsEdge?: (data: WithTypename<AnnouncementsEdge>) => null | string,
   ArchiveCohortPayload?: (data: WithTypename<ArchiveCohortPayload>) => null | string,
+  ArticleAttachment?: (data: WithTypename<ArticleAttachment>) => null | string,
+  ArticleAttachmentsConnection?: (data: WithTypename<ArticleAttachmentsConnection>) => null | string,
+  ArticleAttachmentsEdge?: (data: WithTypename<ArticleAttachmentsEdge>) => null | string,
   Attachment?: (data: WithTypename<Attachment>) => null | string,
   AttachmentDirectoriesConnection?: (data: WithTypename<AttachmentDirectoriesConnection>) => null | string,
   AttachmentDirectoriesEdge?: (data: WithTypename<AttachmentDirectoriesEdge>) => null | string,
@@ -8514,6 +8935,9 @@ export type GraphCacheKeysConfig = {
   EventSeries?: (data: WithTypename<EventSeries>) => null | string,
   EventSeriesConnection?: (data: WithTypename<EventSeriesConnection>) => null | string,
   EventSeriesEdge?: (data: WithTypename<EventSeriesEdge>) => null | string,
+  File?: (data: WithTypename<File>) => null | string,
+  FilesConnection?: (data: WithTypename<FilesConnection>) => null | string,
+  FilesEdge?: (data: WithTypename<FilesEdge>) => null | string,
   FormResponse?: (data: WithTypename<FormResponse>) => null | string,
   FormResponsesConnection?: (data: WithTypename<FormResponsesConnection>) => null | string,
   FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
@@ -8588,6 +9012,7 @@ export type GraphCacheKeysConfig = {
   UpdateTenantTrainerPayload?: (data: WithTypename<UpdateTenantTrainerPayload>) => null | string,
   UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
   UpsertAnnouncementPayload?: (data: WithTypename<UpsertAnnouncementPayload>) => null | string,
+  UpsertArticlePayload?: (data: WithTypename<UpsertArticlePayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
   UserProxy?: (data: WithTypename<UserProxy>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
@@ -8601,7 +9026,11 @@ export type GraphCacheResolvers = {
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
+    announcementAttachment?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAttachmentArgs, WithTypename<AnnouncementAttachment> | string>,
+    announcementAttachments?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    articleAttachment?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentArgs, WithTypename<ArticleAttachment> | string>,
+    articleAttachments?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
@@ -8626,6 +9055,9 @@ export type GraphCacheResolvers = {
     eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventConflict> | string>>,
     eventSeries?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesArgs, WithTypename<EventSeries> | string>,
     eventSeriesByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesByTenantIdAndIdArgs, WithTypename<EventSeries> | string>,
+    file?: GraphCacheResolver<WithTypename<Query>, QueryFileArgs, WithTypename<File> | string>,
+    fileByObjectKey?: GraphCacheResolver<WithTypename<Query>, QueryFileByObjectKeyArgs, WithTypename<File> | string>,
+    files?: GraphCacheResolver<WithTypename<Query>, QueryFilesArgs, WithTypename<FilesConnection> | string>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
@@ -8806,6 +9238,7 @@ export type GraphCacheResolvers = {
     atKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     atPreview?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
+    attachments?: GraphCacheResolver<WithTypename<Aktuality>, AktualityAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -8816,6 +9249,7 @@ export type GraphCacheResolvers = {
   },
   Announcement?: {
     announcementAudiences?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
+    attachments?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
     author?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<User> | string>,
     authorId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     body?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -8828,6 +9262,24 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     title?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  AnnouncementAttachment?: {
+    announcement?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, WithTypename<Announcement> | string>,
+    announcementId?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    file?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, WithTypename<File> | string>,
+    fileId?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    inline?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  AnnouncementAttachmentsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachmentsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachment> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  AnnouncementAttachmentsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsEdge>, Record<string, never>, WithTypename<AnnouncementAttachment> | string>
   },
   AnnouncementAudience?: {
     announcement?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Announcement> | string>,
@@ -8863,6 +9315,24 @@ export type GraphCacheResolvers = {
     cohort?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
     cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortsEdge> | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<CohortGroup> | string>
+  },
+  ArticleAttachment?: {
+    aktualityId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    article?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, WithTypename<Aktuality> | string>,
+    file?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, WithTypename<File> | string>,
+    fileId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    inline?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  ArticleAttachmentsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Array<WithTypename<ArticleAttachmentsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Array<WithTypename<ArticleAttachment> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  ArticleAttachmentsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, WithTypename<ArticleAttachment> | string>
   },
   Attachment?: {
     directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9397,6 +9867,30 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<EventSeriesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<EventSeriesEdge>, Record<string, never>, WithTypename<EventSeries> | string>
   },
+  File?: {
+    announcementAttachments?: GraphCacheResolver<WithTypename<File>, FileAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
+    articleAttachments?: GraphCacheResolver<WithTypename<File>, FileArticleAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
+    byteSize?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    contentType?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    name?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    objectKey?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    uploadedAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    uploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    userByUploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, WithTypename<User> | string>
+  },
+  FilesConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Array<WithTypename<FilesEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Array<WithTypename<File> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  FilesEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FilesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FilesEdge>, Record<string, never>, WithTypename<File> | string>
+  },
   FormResponse?: {
     createdAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     data?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['JSON']['output'] | string>,
@@ -9760,6 +10254,7 @@ export type GraphCacheResolvers = {
     eventInstancesList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventLessonDemandsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventLessonDemandsListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     eventSeries?: GraphCacheResolver<WithTypename<Tenant>, TenantEventSeriesArgs, WithTypename<EventSeriesConnection> | string>,
+    files?: GraphCacheResolver<WithTypename<Tenant>, TenantFilesArgs, WithTypename<FilesConnection> | string>,
     formResponses?: GraphCacheResolver<WithTypename<Tenant>, TenantFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
@@ -10005,12 +10500,19 @@ export type GraphCacheResolvers = {
     author?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, Record<string, never>, WithTypename<User> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  UpsertArticlePayload?: {
+    aktuality?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<Aktuality> | string>,
+    aktualityEdge?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, UpsertArticlePayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    userByAtKdo?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<User> | string>
+  },
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
+    filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FilesConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     lastActiveAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -10135,7 +10637,8 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantSettingsKey?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantSettingsKeyArgs, Maybe<WithTypename<UpdateTenantSettingsKeyPayload>>>,
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
   updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>,
-  upsertAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpsertAnnouncementArgs, Maybe<WithTypename<UpsertAnnouncementPayload>>>
+  upsertAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpsertAnnouncementArgs, Maybe<WithTypename<UpsertAnnouncementPayload>>>,
+  upsertArticle?: GraphCacheOptimisticMutationResolver<MutationUpsertArticleArgs, Maybe<WithTypename<UpsertArticlePayload>>>
 };
 
 export type GraphCacheUpdaters = {
@@ -10145,7 +10648,11 @@ export type GraphCacheUpdaters = {
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
+    announcementAttachment?: GraphCacheUpdateResolver<{ announcementAttachment: Maybe<WithTypename<AnnouncementAttachment>> }, QueryAnnouncementAttachmentArgs>,
+    announcementAttachments?: GraphCacheUpdateResolver<{ announcementAttachments: Maybe<WithTypename<AnnouncementAttachmentsConnection>> }, QueryAnnouncementAttachmentsArgs>,
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
+    articleAttachment?: GraphCacheUpdateResolver<{ articleAttachment: Maybe<WithTypename<ArticleAttachment>> }, QueryArticleAttachmentArgs>,
+    articleAttachments?: GraphCacheUpdateResolver<{ articleAttachments: Maybe<WithTypename<ArticleAttachmentsConnection>> }, QueryArticleAttachmentsArgs>,
     attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
     attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
     attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
@@ -10170,6 +10677,9 @@ export type GraphCacheUpdaters = {
     eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventOverlapsTrainerReportListArgs>,
     eventSeries?: GraphCacheUpdateResolver<{ eventSeries: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesArgs>,
     eventSeriesByTenantIdAndId?: GraphCacheUpdateResolver<{ eventSeriesByTenantIdAndId: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesByTenantIdAndIdArgs>,
+    file?: GraphCacheUpdateResolver<{ file: Maybe<WithTypename<File>> }, QueryFileArgs>,
+    fileByObjectKey?: GraphCacheUpdateResolver<{ fileByObjectKey: Maybe<WithTypename<File>> }, QueryFileByObjectKeyArgs>,
+    files?: GraphCacheUpdateResolver<{ files: Maybe<WithTypename<FilesConnection>> }, QueryFilesArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
@@ -10297,7 +10807,8 @@ export type GraphCacheUpdaters = {
     updateTenantSettingsKey?: GraphCacheUpdateResolver<{ updateTenantSettingsKey: Maybe<WithTypename<UpdateTenantSettingsKeyPayload>> }, MutationUpdateTenantSettingsKeyArgs>,
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
     updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>,
-    upsertAnnouncement?: GraphCacheUpdateResolver<{ upsertAnnouncement: Maybe<WithTypename<UpsertAnnouncementPayload>> }, MutationUpsertAnnouncementArgs>
+    upsertAnnouncement?: GraphCacheUpdateResolver<{ upsertAnnouncement: Maybe<WithTypename<UpsertAnnouncementPayload>> }, MutationUpsertAnnouncementArgs>,
+    upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>
   },
   Subscription?: object,
   Account?: {
@@ -10440,6 +10951,7 @@ export type GraphCacheUpdaters = {
     atKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atPreview?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atText?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
+    attachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, AktualityAttachmentsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
@@ -10450,6 +10962,7 @@ export type GraphCacheUpdaters = {
   },
   Announcement?: {
     announcementAudiences?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementAnnouncementAudiencesArgs>,
+    attachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementAttachmentsArgs>,
     author?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     authorId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     body?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
@@ -10462,6 +10975,24 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     title?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>
+  },
+  AnnouncementAttachment?: {
+    announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
+    announcementId?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
+    file?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
+    fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
+    inline?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>
+  },
+  AnnouncementAttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>
+  },
+  AnnouncementAttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsEdge>>, Record<string, never>>
   },
   AnnouncementAudience?: {
     announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudience>>, Record<string, never>>,
@@ -10497,6 +11028,24 @@ export type GraphCacheUpdaters = {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
     cohortEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, ArchiveCohortPayloadCohortEdgeArgs>,
     cohortGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>
+  },
+  ArticleAttachment?: {
+    aktualityId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
+    article?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
+    file?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
+    fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
+    inline?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>
+  },
+  ArticleAttachmentsConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>
+  },
+  ArticleAttachmentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>
   },
   Attachment?: {
     directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
@@ -11031,6 +11580,30 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeriesEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeriesEdge>>, Record<string, never>>
   },
+  File?: {
+    announcementAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileAnnouncementAttachmentsArgs>,
+    articleAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileArticleAttachmentsArgs>,
+    byteSize?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    contentType?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    objectKey?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>
+  },
+  FilesConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>
+  },
+  FilesEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesEdge>>, Record<string, never>>
+  },
   FormResponse?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
     data?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
@@ -11394,6 +11967,7 @@ export type GraphCacheUpdaters = {
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstancesListArgs>,
     eventLessonDemandsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventLessonDemandsListArgs>,
     eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventSeriesArgs>,
+    files?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantFilesArgs>,
     formResponses?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantFormResponsesArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     membershipApplicationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantMembershipApplicationsListArgs>,
@@ -11639,12 +12213,19 @@ export type GraphCacheUpdaters = {
     author?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertAnnouncementPayload>>, Record<string, never>>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertAnnouncementPayload>>, Record<string, never>>
   },
+  UpsertArticlePayload?: {
+    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>,
+    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, UpsertArticlePayloadAktualityEdgeArgs>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>,
+    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>
+  },
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,
+    filesByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserFilesByUploadedByArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastActiveAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastLogin?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

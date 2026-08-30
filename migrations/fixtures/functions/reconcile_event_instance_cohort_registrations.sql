@@ -127,8 +127,8 @@ begin
 end;
 $$;
 
-drop trigger if exists _500_reconcile_registrations on public.event_instance_target_cohort;
+drop trigger if exists _500_reconcile_registrations on event_instance_target_cohort;
 create trigger _500_reconcile_registrations
   after insert or delete or update of instance_id, cohort_id
-  on public.event_instance_target_cohort
+  on event_instance_target_cohort
   for each row execute function app_private.tg_event_instance_target_cohort__reconcile();

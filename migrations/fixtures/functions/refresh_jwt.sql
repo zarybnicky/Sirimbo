@@ -1,7 +1,12 @@
-CREATE or replace FUNCTION refresh_jwt() RETURNS jwt_token
-    LANGUAGE sql STABLE SECURITY DEFINER
-    AS $$
-  SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+create or replace function refresh_jwt() returns jwt_token
+  language sql
+  stable
+  security definer
+  set search_path = pg_catalog, public, pg_temp
+as $$
+  select app_private.create_jwt_token(users)
+  from users
+  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$;
 
-GRANT ALL ON FUNCTION public.refresh_jwt() TO anonymous;
+grant all on function refresh_jwt to anonymous;

@@ -4,13 +4,13 @@ CREATE TABLE public.announcement (
     author_id bigint,
     title text NOT NULL,
     body text NOT NULL,
-    is_locked boolean DEFAULT false NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
     is_sticky boolean DEFAULT false NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone,
     scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone
+    scheduled_until timestamp with time zone,
+    status public.announcement_status DEFAULT 'draft'::public.announcement_status NOT NULL,
+    CONSTRAINT announcement_schedule_check CHECK (((scheduled_since IS NULL) OR (scheduled_until IS NULL) OR (scheduled_since < scheduled_until)))
 );
 
 COMMENT ON TABLE public.announcement IS '@omit create';
@@ -25,15 +25,21 @@ ALTER TABLE ONLY public.announcement
 ALTER TABLE ONLY public.announcement
     ADD CONSTRAINT announcement_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.announcement TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING (true);
+CREATE POLICY admin_all ON public.announcement TO administrator USING (true);
+CREATE POLICY current_tenant ON public.announcement AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY member_view ON public.announcement FOR SELECT TO member USING ((id IN ( SELECT app_private.visible_announcement_ids() AS visible_announcement_ids)));
+CREATE POLICY trainer_manage_own ON public.announcement TO trainer USING ((author_id = ( SELECT public.current_user_id() AS current_user_id)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_author BEFORE INSERT OR UPDATE ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__author();
+CREATE TRIGGER _300_status BEFORE INSERT OR UPDATE OF status, scheduled_since, scheduled_until ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__status();
+CREATE TRIGGER _500_sync_attachments_insert AFTER INSERT ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__sync_attachments();
+CREATE TRIGGER _500_sync_attachments_update BEFORE UPDATE OF body ON public.announcement FOR EACH ROW EXECUTE FUNCTION app_private.tg_announcement__sync_attachments();
 CREATE TRIGGER _600_notify_announcement_insert AFTER INSERT ON public.announcement REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
 CREATE TRIGGER _600_notify_announcement_update AFTER UPDATE ON public.announcement REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_announcement__after_write();
 
 CREATE INDEX announcement_author_id_idx ON public.announcement USING btree (author_id);
 CREATE INDEX announcement_created_at_idx ON public.announcement USING btree (created_at);
+CREATE INDEX announcement_status_created_at_idx ON public.announcement USING btree (tenant_id, status, is_sticky, created_at DESC);
+CREATE UNIQUE INDEX announcement_tenant_id_id_idx ON public.announcement USING btree (tenant_id, id);
 CREATE INDEX announcement_tenant_id_idx ON public.announcement USING btree (tenant_id);

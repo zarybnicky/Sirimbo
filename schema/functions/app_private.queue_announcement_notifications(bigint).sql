@@ -1,24 +1,14 @@
 CREATE FUNCTION app_private.queue_announcement_notifications(in_announcement_id bigint) RETURNS void
     LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  v_is_visible boolean;
-  v_since timestamptz;
-  v_until timestamptz;
   v_user_ids bigint[];
 begin
-  select is_visible, scheduled_since, scheduled_until
-  into v_is_visible, v_since, v_until
-  from announcement
-  where id = in_announcement_id;
-
-  if not found then
-    return;
-  end if;
-
-  if not (v_is_visible
-      and (v_since is null or v_since <= now())
-      and (v_until is null or v_until > now())) then
+  if not exists (
+    select from announcement
+    where id = in_announcement_id and status = 'published'
+  ) then
     return;
   end if;
 

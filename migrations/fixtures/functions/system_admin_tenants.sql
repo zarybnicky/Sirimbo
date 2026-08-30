@@ -14,10 +14,10 @@ returns table (
   session_count_last_30_days bigint,
   session_count_per_trainer_last_30_days double precision
 )
-language plpgsql
-stable
-security definer
-set search_path = public, pg_temp
+  language plpgsql
+  stable
+  security definer
+  set search_path = pg_catalog, public, pg_temp
 as $$
 begin
   if not app_private.is_system_admin(current_user_id()) then

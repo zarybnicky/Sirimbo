@@ -65,6 +65,7 @@ export type AnnouncementsOrderBy =
 
 /** All input for the `upsertAnnouncement` mutation. */
 export type UpsertAnnouncementInput = {
+  attachments?: Array<string | null | undefined> | null | undefined;
   audiences?: Array<AnnouncementAudienceTypeInputRecordInput | null | undefined> | null | undefined;
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the

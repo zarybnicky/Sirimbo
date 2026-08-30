@@ -1,8 +1,8 @@
-CREATE or replace FUNCTION public.register_using_invitation(email text, passwd text, token uuid, login text default null)
-  RETURNS login_result
-  LANGUAGE plpgsql SECURITY DEFINER
-  SET search_path TO pg_catalog, public, pg_temp
-  AS $$
+create or replace function register_using_invitation(email text, passwd text, token uuid, login text default null)
+  returns login_result
+  language plpgsql security definer
+  set search_path to pg_catalog, public, pg_temp
+  as $$
 declare
   invitation person_invitation;
   v_salt text;
@@ -35,4 +35,4 @@ begin
 end
 $$;
 
-GRANT ALL ON FUNCTION public.register_using_invitation TO anonymous;
+grant all on function register_using_invitation to anonymous;
