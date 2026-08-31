@@ -6,22 +6,45 @@ import { buttonCls } from '@/ui/style';
 import { Spinner } from '@/ui/Spinner';
 
 type BaseSubmitButtonProps = React.ComponentPropsWithRef<'button'> & {
-  action?: AsyncState<unknown>;
   state?: AsyncState<unknown>['status'];
   variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
 };
 
+type SubmitAction = AsyncState<unknown> & {
+  execute: () => Promise<unknown>;
+};
+
 export type SubmitButtonProps<T extends FieldValues = FieldValues> =
-  Omit<BaseSubmitButtonProps, 'state'> & { control?: Control<T> };
+  | (Omit<BaseSubmitButtonProps, 'state'> & {
+      action?: SubmitAction;
+      control?: never;
+    })
+  | (Omit<BaseSubmitButtonProps, 'state'> & {
+      action?: never;
+      control: Control<T>;
+    });
 
 export function SubmitButton<T extends FieldValues>({
   control,
+  action,
+  onClick,
+  type,
   ...props
 }: SubmitButtonProps<T>) {
   return control ? (
-    <FormStateSubmitButton {...props} control={control} />
+    <FormStateSubmitButton
+      {...props}
+      control={control}
+      type={type}
+      onClick={onClick}
+    />
   ) : (
-    <BaseSubmitButton {...props} />
+    <BaseSubmitButton
+      {...props}
+      state={action?.status}
+      type={type ?? (action ? 'button' : undefined)}
+      onClick={action?.execute ?? onClick}
+    />
   );
 }
 
@@ -51,8 +74,7 @@ function FormStateSubmitButton<T extends FieldValues>({
 }
 
 function BaseSubmitButton({
-  action,
-  state: submitState = action?.status ?? 'not-requested',
+  state: submitState = 'not-requested',
   disabled,
   className,
   children = 'Uložit',
@@ -75,7 +97,7 @@ function BaseSubmitButton({
 
   return (
     <button
-      type={type ?? (action !== undefined ? 'button' : 'submit')}
+      type={type ?? 'submit'}
       {...props}
       disabled={submitState === 'loading' || disabled}
       className={buttonCls({

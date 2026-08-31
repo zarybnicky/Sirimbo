@@ -9,7 +9,7 @@ export function TestEmailButton() {
   const sendEmail = useAsyncCallback(sendTestEmail);
 
   return (
-    <SubmitButton action={sendEmail} onClick={sendEmail.execute}>
+    <SubmitButton action={sendEmail}>
       <Mail />
       Poslat testovací e-mail
     </SubmitButton>
