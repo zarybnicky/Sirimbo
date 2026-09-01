@@ -40,7 +40,9 @@ function canOpenRegistrations({
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
   return (
     canManageInstance({ auth, item }) ||
+    !!item.registrationInfo?.my ||
     (!!(item.isPublic || item.isVisible) &&
+      !item.isLocked &&
       (!auth.isExternal ||
         !item.capacity ||
         (item.registrationInfo?.remainingCapacity ?? 0) > 0))
