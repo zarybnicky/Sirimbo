@@ -27,6 +27,7 @@ export function EventRegistrationForm({
   instanceId,
   enableDetails,
   enableNotes,
+  readOnly,
   personId,
   coupleId,
   registration,
@@ -37,6 +38,7 @@ export function EventRegistrationForm({
   instanceId: string;
   enableDetails: boolean;
   enableNotes: boolean;
+  readOnly: boolean;
   personId: string | null;
   coupleId: string | null;
   registration?: EventInstanceRegistrationFragment;
@@ -111,6 +113,7 @@ export function EventRegistrationForm({
       {showNotes && (
         <TextAreaElement
           control={control}
+          disabled={readOnly}
           label="Poznámky k registraci, požadavky na stravu apod."
           name="note"
         />
@@ -126,23 +129,28 @@ export function EventRegistrationForm({
               name={`lessonCounts.${index}`}
               trainer={trainer}
               current={requestCounts[trainer.id] ?? 0}
+              readOnly={readOnly}
             />
           ))}
         </fieldset>
       )}
 
-      <div className="flex justify-between gap-2">
-        {registration && (
-          <SubmitButton variant="outline" action={cancel}>
-            Zrušit přihlášku
-          </SubmitButton>
-        )}
-        {(!registration || hasFields) && (
-          <SubmitButton className="ml-auto" control={control} disabled={result.fetching}>
-            {registration ? 'Uložit' : 'Přihlásit'}
-          </SubmitButton>
-        )}
-      </div>
+      {readOnly ? (
+        <div className="text-sm text-neutral-11">Přihlášky jsou uzamčené.</div>
+      ) : (
+        <div className="flex justify-between gap-2">
+          {registration && (
+            <SubmitButton variant="outline" action={cancel}>
+              Zrušit přihlášku
+            </SubmitButton>
+          )}
+          {(!registration || hasFields) && (
+            <SubmitButton className="ml-auto" control={control} disabled={result.fetching}>
+              {registration ? 'Uložit' : 'Přihlásit'}
+            </SubmitButton>
+          )}
+        </div>
+      )}
     </form>
   );
 }
@@ -152,11 +160,13 @@ function LessonRequestField({
   name,
   trainer,
   current,
+  readOnly,
 }: {
   control: Control<FormValues>;
   name: `lessonCounts.${number}`;
   trainer: EventInstanceTrainerFragment;
   current: number;
+  readOnly: boolean;
 }) {
   const { field } = useController({ control, name });
   const value = field.value ?? 0;
@@ -177,7 +187,7 @@ function LessonRequestField({
           type="button"
           className={buttonCls({ size: 'icon', variant: 'outline' })}
           aria-label={`Snížit počet lekcí s ${label}`}
-          disabled={value === 0}
+          disabled={readOnly || value === 0}
           onClick={() => field.onChange(value - 1)}
         >
           <Minus />
@@ -187,7 +197,7 @@ function LessonRequestField({
           type="button"
           className={buttonCls({ size: 'icon', variant: 'outline' })}
           aria-label={`Zvýšit počet lekcí s ${label}`}
-          disabled={max !== null && value >= max}
+          disabled={readOnly || (max !== null && value >= max)}
           onClick={() => field.onChange(value + 1)}
         >
           <Plus />

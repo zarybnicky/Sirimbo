@@ -68,6 +68,7 @@ function useRegistrationCandidates(
   const couples = isManager ? (tenant?.couplesList ?? []) : auth.couples;
   const capacityLeft =
     instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
+  const canRegister = isManager || !instance.isLocked;
   const candidates: Registrant[] = [
     ...[...new Map(people.map((x) => [x.id, x])).values()]
       .filter((x) => !registeredPeople.has(x.id))
@@ -92,7 +93,7 @@ function useRegistrationCandidates(
         coupleId: couple.id,
       })),
   ]
-    .filter(() => isManager || capacityLeft >= 1)
+    .filter(() => canRegister && (isManager || capacityLeft >= 1))
     .toSorted((a, b) => a.label.localeCompare(b.label));
 
   return {
@@ -178,6 +179,7 @@ function RegistrationsDialogContent({
     : undefined;
   const i = selectedRegistration ? registrations.indexOf(selectedRegistration) : -1;
   const simpleRegistration = instance.type === 'LESSON' || instance.type === 'GROUP';
+  const readOnly = !!instance.isLocked && !isManager;
 
   const registerImmediately = useAsyncCallback(async (candidate: Registrant) => {
     const result = await setRegistration({
@@ -321,6 +323,7 @@ function RegistrationsDialogContent({
         instanceId={instance.id}
         enableDetails={!simpleRegistration}
         enableNotes={!!instance.enableNotes}
+        readOnly={readOnly}
         personId={selected.personId}
         coupleId={selected.coupleId}
         registration={selectedRegistration}
