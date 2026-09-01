@@ -51,7 +51,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     execute: async ({ item: { id }, mutate, router }) => {
       await mutate(DeleteAnnouncementDocument, { id });
       if (router.pathname === `/nastenka/${id}`) {
-        await router.replace('/nastenka');
+        router.replace('/nastenka');
       }
     },
   },

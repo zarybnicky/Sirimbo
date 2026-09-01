@@ -92,7 +92,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         }),
         execute: async ({ item, mutate, router }) => {
           await mutate(DeleteArticleDocument, { id: item.id });
-          await router.replace('/aktuality');
+          router.replace('/aktuality');
         },
       },
     ],

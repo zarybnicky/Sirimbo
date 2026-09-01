@@ -47,7 +47,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     execute: async ({ item: { id }, mutate, router }) => {
       await mutate(DeleteCoupleDocument, { id });
       if (router.pathname === `/pary/${id}`) {
-        await router.replace('/pary');
+        router.replace('/pary');
       }
     },
   },
