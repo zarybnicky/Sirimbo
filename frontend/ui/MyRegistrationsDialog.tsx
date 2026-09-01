@@ -68,7 +68,6 @@ function useRegistrationCandidates(
   const couples = isManager ? (tenant?.couplesList ?? []) : auth.couples;
   const capacityLeft =
     instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
-  const canRegister = isManager || !instance.isLocked;
   const candidates: Registrant[] = [
     ...[...new Map(people.map((x) => [x.id, x])).values()]
       .filter((x) => !registeredPeople.has(x.id))
@@ -93,7 +92,7 @@ function useRegistrationCandidates(
         coupleId: couple.id,
       })),
   ]
-    .filter(() => canRegister && (isManager || capacityLeft >= 1))
+    .filter(() => isManager || (!instance.isLocked && capacityLeft >= 1))
     .toSorted((a, b) => a.label.localeCompare(b.label));
 
   return {
