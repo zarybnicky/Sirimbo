@@ -15,7 +15,6 @@ type HeroArticle = {
   summary: string | null;
   img: string;
   inset: boolean;
-  background?: string;
 };
 
 export function Hero({
@@ -44,7 +43,6 @@ export function Hero({
         summary:
           'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
         inset: true,
-        background: '#E32A3A',
         img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1788092007301-WhatsApp%20Image%202026-08-26%20at%2014.24.57.jpeg',
         // img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
       },
@@ -145,15 +143,30 @@ export function Hero({
                 {x.name}
               </div>
             )}
-            <div className="h-[60vh]">
+            <div className={cn('relative h-[60dvh] overflow-hidden', x.inset && 'isolate bg-neutral-12')}>
+              {x.inset && (
+                <>
+                  <Image
+                    aria-hidden="true"
+                    className="scale-125 object-cover opacity-70 blur-3xl saturate-150 contrast-110"
+                    src={x.img}
+                    alt=""
+                    fill
+                    sizes="100vw"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-[radial-gradient(ellipse_72%_95%_at_50%_110%,rgb(255_255_255/0.28),transparent_58%),linear-gradient(90deg,rgb(0_0_0/0.62),transparent_28%_72%,rgb(0_0_0/0.62)),linear-gradient(180deg,rgb(0_0_0/0.36),transparent_34%,rgb(0_0_0/0.58))]"
+                  />
+                </>
+              )}
               <Image
                 className={cn(
-                  'transition-transform duration-300 group-hover:scale-110',
-                  x.inset ? 'object-contain' : 'object-cover object-[50%_35%]',
+                  'transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none',
+                  x.inset
+                    ? 'z-10 object-contain px-[clamp(0.5rem,2.5vw,2.5rem)] py-[clamp(0.25rem,1.25vw,1rem)] drop-shadow-[0_1.25rem_2.5rem_rgb(0_0_0/0.5)]'
+                    : 'object-cover object-[50%_35%]',
                 )}
-                style={{
-                  backgroundColor: x.background ?? undefined,
-                }}
                 src={x.img}
                 alt={x.name}
                 fill
