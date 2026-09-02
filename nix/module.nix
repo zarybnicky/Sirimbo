@@ -147,6 +147,7 @@ in {
         requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
+        # environment = config.my.seaweedfs.buckets.olymp.environment // { ... };
         environment = {
           DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
           NODE_ENV = if cfg.backend.debug then "development" else "production";
@@ -245,6 +246,7 @@ in {
         requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
+        # environment = config.my.seaweedfs.buckets.olymp.environment // { ... };
         environment = {
           DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
           SMTP_AUTH = if cfg.smtp.auth then "1" else "";
