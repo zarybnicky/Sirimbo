@@ -27,20 +27,25 @@ spec:
               value: {{ .Values.postgresql.user | quote }}
             - name: PGDATABASE
               value: {{ .Values.postgresql.database | quote }}
-            - name: S3_HOST
+
+            - name: S3_LOCAL_HOST
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
-            - name: S3_PORT
-              value: {{ .Values.s3.port | quote }}
-            - name: S3_REGION
-              value: {{ .Values.s3.region | quote }}
             - name: S3_BUCKET
               value: {{ .Values.s3.bucket | quote }}
-            - name: S3_ACCESS_KEY_ID
+
+            - name: AWS_ENDPOINT_URL_S3
+              value: "http://$(S3_LOCAL_HOST):{{ .Values.s3.port }}"
+            - name: AWS_REGION
+              value: {{ .Values.s3.region | quote }}
+            - name: AWS_ACCESS_KEY_ID
               value: {{ .Values.s3.accessKeyId | quote }}
-            - name: S3_SECRET_ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
               value: {{ .Values.s3.secretAccessKey | quote }}
+            - name: AWS_EC2_METADATA_DISABLED
+              value: "true"
+
             - name: GRAPHQL_BACKEND
               value: {{ .Values.runtime.graphqlBackend | quote }}
             - name: JWT_SECRET

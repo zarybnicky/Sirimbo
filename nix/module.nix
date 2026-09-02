@@ -150,24 +150,26 @@ in {
         environment = {
           DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
           NODE_ENV = if cfg.backend.debug then "development" else "production";
-          PGDATABASE = cfg.backend.database;
-          PGHOST = "/run/postgresql";
           PORT = toString cfg.backend.port;
           DOMAIN = cfg.backend.domain;
-          SSL = if cfg.backend.ssl then "1" else "";
           STATE_DIR = cfg.stateDir;
+          JWT_SECRET = cfg.backend.jwtSecret;
+
+          PGDATABASE = cfg.backend.database;
+          PGHOST = "/run/postgresql";
+
           SMTP_AUTH = if cfg.smtp.auth then "1" else "";
           SMTP_TLS = if cfg.smtp.tls then "1" else "";
           SMTP_HOST = cfg.smtp.host;
           SMTP_PORT = toString cfg.smtp.port;
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
+
           AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
           AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
-          JWT_SECRET = cfg.backend.jwtSecret;
+          AWS_REGION = cfg.s3.region;
+          AWS_ENDPOINT_URL_S3 = cfg.s3.endpoint;
           S3_BUCKET = cfg.s3.bucket;
-          S3_REGION = cfg.s3.region;
-          S3_ENDPOINT = cfg.s3.endpoint;
           S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
@@ -253,6 +255,13 @@ in {
           SMTP_PASS = cfg.smtp.pass;
           WDSF_AUTH = cfg.wdsfAuth;
           RUIAN_ADDRESS_SOURCE = toString pkgs.ruian-address-cache;
+
+          AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
+          AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
+          AWS_REGION = cfg.s3.region;
+          AWS_ENDPOINT_URL_S3 = cfg.s3.endpoint;
+          S3_BUCKET = cfg.s3.bucket;
+          S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
