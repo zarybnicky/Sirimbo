@@ -9,11 +9,10 @@ export function TenantSelect() {
 
   const [tenantId, setTenantId] = useAtom(tenantIdAtom);
   const options = React.useMemo(() => {
-    return Object.values(tenantCatalog).map(({ id, name }) => ({
-      value: id.toString(),
-      label: name,
-    }));
-  }, []);
+    return Object.values(tenantCatalog)
+      .filter((x) => auth.isSystemAdmin || auth.tenantIds.includes(x.id))
+      .map(({ id, name }) => ({ value: id.toString(), label: name }));
+  }, [auth.isSystemAdmin, auth.tenantIds]);
 
   const onChange = React.useCallback(
     (tenantId: string) => {
