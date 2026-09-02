@@ -25,8 +25,12 @@ export function RegistrationForm() {
   const [error, setError] = React.useState('');
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');
-    const message = await registerAction(values);
-    if (message) setError(message);
+    const result = await registerAction(values);
+    if ('error' in result) {
+      setError(result.error);
+    } else {
+      window.location.assign(result.redirectTo);
+    }
   };
 
   return (

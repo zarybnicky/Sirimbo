@@ -31,8 +31,12 @@ export function LoginForm() {
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');
-    const message = await loginAction(values, from);
-    if (message) setError(message);
+    const result = await loginAction(values, from);
+    if ('error' in result) {
+      setError(result.error);
+    } else {
+      window.location.assign(result.redirectTo);
+    }
   };
 
   return (

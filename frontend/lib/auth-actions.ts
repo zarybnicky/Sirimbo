@@ -10,45 +10,64 @@ import {
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
 import { getRequestTenant } from '@/lib/server/tenant';
-import { redirect } from 'next/navigation';
 
-export async function loginAction(values: LoginMutationVariables, from?: string | null) {
+type AuthActionResult = { error: string } | { redirectTo: string };
+
+export async function loginAction(
+  values: LoginMutationVariables,
+  from?: string | null,
+): Promise<AuthActionResult> {
   try {
     const data = await executeGraphql(LoginDocument, values);
     const result = data.login?.result;
-    if (!result?.jwt) return 'Přihlášení se nezdařilo';
+    if (!result?.jwt) return { error: 'Přihlášení se nezdařilo' };
 
     await setSessionCookie(result.jwt);
   } catch (error) {
-    return error instanceof Error ? error.message : 'Přihlášení se nezdařilo';
+    return {
+      error: error instanceof Error ? error.message : 'Přihlášení se nezdařilo',
+    };
   }
   const tenant = await getRequestTenant();
-  redirect(from || (tenant.config.publicSite ? '/dashboard' : '/rozpis'));
+  const fallback = tenant.config.publicSite ? '/dashboard' : '/rozpis';
+  return {
+    redirectTo: from?.startsWith('/') && !from.startsWith('//') ? from : fallback,
+  };
 }
 
-export async function registerAction(input: RegisterWithoutInvitationInput) {
+export async function registerAction(
+  input: RegisterWithoutInvitationInput,
+): Promise<AuthActionResult> {
   try {
     const data = await executeGraphql(RegisterWithoutInvitationDocument, { input });
     const jwt = data.registerWithoutInvitation?.result?.jwt;
-    if (!jwt) return 'Registraci se nepodařilo dokončit';
+    if (!jwt) return { error: 'Registraci se nepodařilo dokončit' };
 
     await setSessionCookie(jwt);
   } catch (error) {
-    return error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit';
+    return {
+      error:
+        error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit',
+    };
   }
-  redirect('/profil');
+  return { redirectTo: '/profil' };
 }
 
-export async function registerUsingInvitationAction(input: RegisterUsingInvitationInput) {
+export async function registerUsingInvitationAction(
+  input: RegisterUsingInvitationInput,
+): Promise<AuthActionResult> {
   try {
     const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
     const result = data.registerUsingInvitation?.result;
-    if (!result?.jwt) return 'Registraci se nepodařilo dokončit';
+    if (!result?.jwt) return { error: 'Registraci se nepodařilo dokončit' };
 
     await setSessionCookie(result.jwt);
   } catch (error) {
-    return error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit';
+    return {
+      error:
+        error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit',
+    };
   }
   const tenant = await getRequestTenant();
-  redirect(tenant.config.publicSite ? '/dashboard' : '/rozpis');
+  return { redirectTo: tenant.config.publicSite ? '/dashboard' : '/rozpis' };
 }

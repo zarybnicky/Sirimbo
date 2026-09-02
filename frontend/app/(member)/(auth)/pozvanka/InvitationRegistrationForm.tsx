@@ -35,8 +35,12 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
   const [error, setError] = React.useState('');
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');
-    const message = await registerUsingInvitationAction(values);
-    if (message) setError(message);
+    const result = await registerUsingInvitationAction(values);
+    if ('error' in result) {
+      setError(result.error);
+    } else {
+      window.location.assign(result.redirectTo);
+    }
   };
 
   return (
