@@ -7,7 +7,9 @@ CREATE TABLE public.file (
     byte_size bigint,
     uploaded_by bigint DEFAULT public.current_user_id(),
     uploaded_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    display_name text,
+    is_public boolean DEFAULT false NOT NULL
 );
 
 COMMENT ON TABLE public.file IS '@omit create,update,delete';
@@ -32,4 +34,5 @@ CREATE POLICY visible ON public.file FOR SELECT USING ((id IN ( SELECT visible.i
 
 CREATE TRIGGER _900_delete_object AFTER DELETE ON public.file FOR EACH ROW EXECUTE FUNCTION app_private.tg_file__delete();
 
+CREATE INDEX file_public_idx ON public.file USING btree (tenant_id, id) WHERE is_public;
 CREATE UNIQUE INDEX file_tenant_id_id_idx ON public.file USING btree (tenant_id, id);

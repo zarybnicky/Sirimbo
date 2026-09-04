@@ -4205,7 +4205,9 @@ type File {
   byteSize: BigInt
   contentType: String
   createdAt: Datetime!
+  displayName: String
   id: BigInt!
+  isPublic: Boolean!
   name: String!
   objectKey: String!
   tenantId: BigInt!
@@ -4229,8 +4231,14 @@ input FileCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
+  """Checks for equality with the object’s `displayName` field."""
+  displayName: String
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `isPublic` field."""
+  isPublic: Boolean
 
   """Checks for equality with the object’s `name` field."""
   name: String
@@ -4282,8 +4290,12 @@ enum FilesOrderBy {
   CONTENT_TYPE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
+  DISPLAY_NAME_ASC
+  DISPLAY_NAME_DESC
   ID_ASC
   ID_DESC
+  IS_PUBLIC_ASC
+  IS_PUBLIC_DESC
   NAME_ASC
   NAME_DESC
   NATURAL

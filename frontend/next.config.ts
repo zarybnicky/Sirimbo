@@ -137,7 +137,6 @@ export default compose(
       { source: '/graphql', destination: `${graphqlServer}/graphql` },
       { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
       { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
-      { source: '/member/download', destination: `${graphqlServer}/member/download` },
       { source: '/galerie/:path*', destination: `${graphqlServer}/galerie/:path*` },
       { source: '/system-admin/:path*', destination: `${graphqlServer}/system-admin/:path*` },
     ];

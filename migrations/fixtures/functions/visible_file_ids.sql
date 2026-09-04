@@ -4,12 +4,19 @@ create or replace function app_private.visible_file_ids()
   security definer
   set search_path = pg_catalog, public, pg_temp
 as $$
+  select id
+  from file
+  where tenant_id = (select current_tenant_id())
+    and is_public
+
+  union
+
   select f.file_id
   from announcement_attachment f
   join app_private.visible_announcement_ids() a(id) on a.id = f.announcement_id
   where f.tenant_id = (select current_tenant_id())
 
-  union all
+  union
 
   select f.file_id
   from article_attachment f

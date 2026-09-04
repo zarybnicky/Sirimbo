@@ -14,7 +14,7 @@ import { postgraphile } from 'postgraphile';
 import preset from './graphile.config.ts';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
 import { createServer } from 'node:http';
-import { authContext, withPgClientAndPgSettings } from './auth.ts';
+import { authContext } from './auth.ts';
 
 const app = express();
 
@@ -34,21 +34,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.text({ type: 'application/graphql' }));
 
 app.use(authContext());
-
-app.get('/member/download', async function (req, res) {
-  await withPgClientAndPgSettings(req, async (client) => {
-    const { rows } = await client.query<{ d_path: string; d_filename: string }>({
-      text: 'select * from dokumenty where id=$1',
-      values: [req.query.id],
-    });
-    if (rows.length < 1) {
-      res.status(404).send('Nenalezeno');
-    } else {
-      const { d_path, d_filename } = rows[0];
-      res.download(process.env.STATE_DIR + d_path, d_filename);
-    }
-  });
-});
 
 const server = createServer(app);
 server.on('error', (e) => {

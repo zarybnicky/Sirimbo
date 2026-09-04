@@ -2,12 +2,19 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
     LANGUAGE sql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
+  select id
+  from file
+  where tenant_id = (select current_tenant_id())
+    and is_public
+
+  union
+
   select f.file_id
   from announcement_attachment f
   join app_private.visible_announcement_ids() a(id) on a.id = f.announcement_id
   where f.tenant_id = (select current_tenant_id())
 
-  union all
+  union
 
   select f.file_id
   from article_attachment f

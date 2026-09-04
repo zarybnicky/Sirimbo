@@ -1055,17 +1055,6 @@ CREATE TABLE public.announcement_audience (
   CHECK ((cohort_id IS NULL) <> (audience_role IS NULL))
 );
 
-CREATE TABLE public.attachment (
-  object_name text NOT NULL PRIMARY KEY,
-  preview_object_name text,
-  uploaded_by bigint DEFAULT public.current_user_id() REFERENCES public.users (id)
-    ON DELETE SET NULL,
-  uploaded_at timestamp with time zone DEFAULT now() NOT NULL,
-  thumbhash text,
-  width int,
-  height int
-);
-
 CREATE TABLE public.dokumenty (
   id bigint CONSTRAINT dokumenty_d_id_not_null NOT NULL PRIMARY KEY,
   d_path text NOT NULL,
@@ -1116,7 +1105,9 @@ CREATE TABLE public.file (
   uploaded_by bigint DEFAULT public.current_user_id() REFERENCES public.users (id)
     ON DELETE SET NULL,
   uploaded_at timestamp with time zone,
-  created_at timestamp with time zone DEFAULT now() NOT NULL
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  display_name text,
+  is_public boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE public.announcement_attachment (

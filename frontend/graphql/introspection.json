@@ -7922,7 +7922,26 @@
             "args": []
           },
           {
+            "name": "displayName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "isPublic",
             "type": {
               "kind": "NON_NULL",
               "ofType": {

@@ -3501,7 +3501,9 @@ export type File = {
   byteSize: Maybe<Scalars['BigInt']['output']>;
   contentType: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
+  displayName: Maybe<Scalars['String']['output']>;
   id: Scalars['BigInt']['output'];
+  isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   objectKey: Scalars['String']['output'];
   tenantId: Scalars['BigInt']['output'];
@@ -3541,8 +3543,12 @@ export type FileCondition = {
   contentType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `displayName` field. */
+  displayName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `objectKey` field. */
@@ -3585,8 +3591,12 @@ export type FilesOrderBy =
   | 'CONTENT_TYPE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
+  | 'DISPLAY_NAME_ASC'
+  | 'DISPLAY_NAME_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IS_PUBLIC_ASC'
+  | 'IS_PUBLIC_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
@@ -9623,7 +9633,9 @@ export type GraphCacheResolvers = {
     byteSize?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     contentType?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    displayName?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    isPublic?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     objectKey?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -11291,7 +11303,9 @@ export type GraphCacheUpdaters = {
     byteSize?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     contentType?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    displayName?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     objectKey?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,

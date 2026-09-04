@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict bX3G1gKBkzLkw0BenR7aJGacVcGdnuMnB9IJXt1HMKcGS3bSGFfN4yT8AJPAR1X
+\restrict 5w81ehaLxchbdYDpM46aypX5ERxMzzizYuWJWTeiQEvUwhCeOrJjjvA7ezdoogX
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -2357,12 +2357,19 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
     LANGUAGE sql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
+  select id
+  from file
+  where tenant_id = (select current_tenant_id())
+    and is_public
+
+  union
+
   select f.file_id
   from announcement_attachment f
   join app_private.visible_announcement_ids() a(id) on a.id = f.announcement_id
   where f.tenant_id = (select current_tenant_id())
 
-  union all
+  union
 
   select f.file_id
   from article_attachment f
@@ -3076,82 +3083,6 @@ $_$;
 
 
 --
--- Name: attachment_directories(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.attachment_directories() RETURNS SETOF text
-    LANGUAGE sql STABLE
-    AS $_$
-  SELECT distinct regexp_replace(object_name, '/[^/]*$', '') from attachment;
-$_$;
-
-
---
--- Name: FUNCTION attachment_directories(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.attachment_directories() IS '@sortable';
-
-
---
--- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_user_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
-$$;
-
-
---
--- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.current_user_id() IS '@omit';
-
-
---
--- Name: attachment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attachment (
-    object_name text NOT NULL,
-    preview_object_name text,
-    uploaded_by bigint DEFAULT public.current_user_id(),
-    uploaded_at timestamp with time zone DEFAULT now() NOT NULL,
-    thumbhash text,
-    width integer,
-    height integer
-);
-
-
---
--- Name: TABLE attachment; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.attachment IS '@omit update,delete';
-
-
---
--- Name: attachment_directory(public.attachment); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.attachment_directory(attachment public.attachment) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  SELECT regexp_replace(attachment.object_name, '/[^/]*$', '');
-$_$;
-
-
---
--- Name: FUNCTION attachment_directory(attachment public.attachment); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS '@filterable';
-
-
---
 -- Name: change_password(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3837,6 +3768,24 @@ $$;
 --
 
 COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
+
+
+--
+-- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_user_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
+$$;
+
+
+--
+-- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_user_id() IS '@omit';
 
 
 --
@@ -8416,7 +8365,9 @@ CREATE TABLE public.file (
     byte_size bigint,
     uploaded_by bigint DEFAULT public.current_user_id(),
     uploaded_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    display_name text,
+    is_public boolean DEFAULT false NOT NULL
 );
 
 
@@ -9622,14 +9573,6 @@ ALTER TABLE ONLY public.article_attachment
 
 
 --
--- Name: attachment attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attachment
-    ADD CONSTRAINT attachment_pkey PRIMARY KEY (object_name);
-
-
---
 -- Name: cohort_group cohort_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10572,13 +10515,6 @@ CREATE INDEX article_attachment_file_idx ON public.article_attachment USING btre
 
 
 --
--- Name: attachment_uploaded_by_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX attachment_uploaded_by_idx ON public.attachment USING btree (uploaded_by);
-
-
---
 -- Name: cohort_cohort_group_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10898,6 +10834,13 @@ CREATE INDEX event_lesson_demand_tenant_id_idx ON public.event_lesson_demand USI
 --
 
 CREATE INDEX event_lesson_demand_trainer_id_idx ON public.event_lesson_demand USING btree (trainer_id);
+
+
+--
+-- Name: file_public_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX file_public_idx ON public.file USING btree (tenant_id, id) WHERE is_public;
 
 
 --
@@ -12453,14 +12396,6 @@ COMMENT ON CONSTRAINT article_attachment_file_fk ON public.article_attachment IS
 
 
 --
--- Name: attachment attachment_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.attachment
-    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(id) ON DELETE SET NULL;
-
-
---
 -- Name: cohort cohort_cohort_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13392,13 +13327,6 @@ CREATE POLICY admin_all ON public.article_attachment TO administrator USING (tru
 
 
 --
--- Name: attachment admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.attachment TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: cohort admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13683,12 +13611,6 @@ ALTER TABLE public.announcement_audience ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.article_attachment ENABLE ROW LEVEL SECURITY;
-
---
--- Name: attachment; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.attachment ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: cohort; Type: ROW SECURITY; Schema: public; Owner: -
@@ -14244,13 +14166,6 @@ CREATE POLICY public_view ON public.aktuality FOR SELECT USING (is_visible);
 
 CREATE POLICY public_view ON public.article_attachment FOR SELECT USING ((aktuality_id IN ( SELECT aktuality.id
    FROM public.aktuality)));
-
-
---
--- Name: attachment public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (true);
 
 
 --
@@ -14862,34 +14777,6 @@ GRANT ALL ON FUNCTION public.archive_cohort(cohort_id bigint) TO administrator;
 
 
 --
--- Name: FUNCTION attachment_directories(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.attachment_directories() TO anonymous;
-
-
---
--- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
-
-
---
--- Name: TABLE attachment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.attachment TO anonymous;
-
-
---
--- Name: FUNCTION attachment_directory(attachment public.attachment); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.attachment_directory(attachment public.attachment) TO anonymous;
-
-
---
 -- Name: FUNCTION change_password(new_pass text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -14999,6 +14886,13 @@ GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
 
 
 --
@@ -16182,5 +16076,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict bX3G1gKBkzLkw0BenR7aJGacVcGdnuMnB9IJXt1HMKcGS3bSGFfN4yT8AJPAR1X
+\unrestrict 5w81ehaLxchbdYDpM46aypX5ERxMzzizYuWJWTeiQEvUwhCeOrJjjvA7ezdoogX
 
