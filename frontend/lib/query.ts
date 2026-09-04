@@ -172,7 +172,6 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
 
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
-    Attachment: (x) => x.objectName || null,
     AddressDomain: () => null,
     DatetimeRange: () => null,
     DatetimeRangeBound: () => null,
