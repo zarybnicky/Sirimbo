@@ -3,7 +3,6 @@ import { fileBucket, fileStorage } from '@/lib/server/file-storage';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { sameOrigin } from '@/lib/server/session';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -42,7 +41,7 @@ export async function POST(request: NextRequest) {
   let file: FileRow;
   try {
     file = await withRequestPgClient(async (client, settings) => {
-      const objectKey = `${settings['jwt.claims.tenant_id']}/${randomUUID()}`;
+      const objectKey = `${settings['jwt.claims.tenant_id']}/${Date.now()}-${name}`;
       const result = await client.query<FileRow>(
         `insert into file (object_key, name, content_type, byte_size)
          values ($1, $2, $3, $4)

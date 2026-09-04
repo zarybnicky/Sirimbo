@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict N2KXDbjV1FXDle7PKoHjqUa032TffLm1Ygve9GZaTkUr17rZKRxkg7pcPoNptNY
+\restrict bX3G1gKBkzLkw0BenR7aJGacVcGdnuMnB9IJXt1HMKcGS3bSGFfN4yT8AJPAR1X
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -2175,20 +2175,18 @@ CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 declare
-  v_now  timestamptz := CURRENT_TIMESTAMP;
-  since  timestamptz;
+  v_now timestamptz := current_timestamp;
+  since timestamptz;
 begin
   if NEW.tenant_id is null then
     raise exception 'payment.tenant_id must be set before tg_payment__fill_accounting_period';
   end if;
 
   if NEW.accounting_period_id is null then
-    select ap.id
-    into NEW.accounting_period_id
-    from public.accounting_period ap
-    where ap.tenant_id = NEW.tenant_id
-      and ap.range @> v_now
-    order by lower(ap.range) desc
+    select id into NEW.accounting_period_id
+    from accounting_period
+    where tenant_id = NEW.tenant_id and range @> v_now
+    order by lower(range) desc
     limit 1;
 
     if not found then
@@ -2198,22 +2196,20 @@ begin
       end;
 
       begin
-        insert into public.accounting_period (tenant_id, name, since, until)
+        insert into accounting_period (tenant_id, name, since, until)
         values (
           NEW.tenant_id,
           'Školní rok ' || extract(year from since),
           since,
-          since + interval '12 months' - interval '1 day'
+          since + interval '12 months'
         )
         returning id into NEW.accounting_period_id;
       exception
         when exclusion_violation or unique_violation then
-          select ap.id
-          into NEW.accounting_period_id
-          from public.accounting_period ap
-          where ap.tenant_id = NEW.tenant_id
-            and ap.range @> v_now
-          order by lower(ap.range) desc
+          select id into NEW.accounting_period_id
+          from accounting_period
+          where tenant_id = NEW.tenant_id and range @> v_now
+          order by lower(range) desc
           limit 1;
 
           if not found then
@@ -16186,5 +16182,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict N2KXDbjV1FXDle7PKoHjqUa032TffLm1Ygve9GZaTkUr17rZKRxkg7pcPoNptNY
+\unrestrict bX3G1gKBkzLkw0BenR7aJGacVcGdnuMnB9IJXt1HMKcGS3bSGFfN4yT8AJPAR1X
 

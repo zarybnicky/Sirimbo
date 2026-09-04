@@ -1,7 +1,15 @@
-CREATE FUNCTION app_private.tg_payment__fill_accounting_period() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
+--! Previous: sha1:b36764f99671aab04a196359a3331b7c7261922d
+--! Hash: sha1:756b279bd80b272d38031c8c615dda37621f9d3c
+
+--! split: 1-current.sql
+update accounting_period
+set until = since + interval '12 months'
+where until = since + interval '12 months' - interval '1 day';
+
+create or replace function app_private.tg_payment__fill_accounting_period() returns trigger
+  language plpgsql security definer
+  set search_path to pg_catalog, public, pg_temp
+as $$
 declare
   v_now timestamptz := current_timestamp;
   since timestamptz;
@@ -50,3 +58,24 @@ begin
   return NEW;
 end
 $$;
+insert into file (
+  tenant_id,
+  object_key,
+  name,
+  uploaded_by,
+  uploaded_at,
+  created_at
+)
+
+select
+  case split_part(object_name, '/', 1)
+    when 'tkolymp' then 1
+    when 'kometa' then 2
+  end,
+  object_name,
+  regexp_replace(object_name, '^[^/]+/[0-9]+-', ''),
+  uploaded_by,
+  uploaded_at,
+  uploaded_at
+from attachment
+on conflict (object_key) do nothing;

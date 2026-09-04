@@ -374,10 +374,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
       },
 
-      createAttachment(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['attachments']);
-      },
-
       createPerson(_result, _args, cache, _info) {
         for (const field of cache
           .inspectFields('Query')
