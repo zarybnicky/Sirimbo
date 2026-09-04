@@ -864,9 +864,7 @@ export type Attachment = {
   height: Maybe<Scalars['Int']['output']>;
   objectName: Scalars['String']['output'];
   previewObjectName: Maybe<Scalars['String']['output']>;
-  publicUrl: Scalars['String']['output'];
   thumbhash: Maybe<Scalars['String']['output']>;
-  uploadUrl: Scalars['String']['output'];
   uploadedAt: Scalars['Datetime']['output'];
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `User` that is related to this `Attachment`. */
@@ -9339,9 +9337,7 @@ export type GraphCacheResolvers = {
     height?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int']['output'] | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    publicUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
     thumbhash?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    uploadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>,
@@ -11052,9 +11048,7 @@ export type GraphCacheUpdaters = {
     height?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     previewObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    publicUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     thumbhash?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    uploadUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
     userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,

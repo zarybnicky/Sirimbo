@@ -987,9 +987,7 @@ type Attachment {
   height: Int
   objectName: String!
   previewObjectName: String
-  publicUrl: String!
   thumbhash: String
-  uploadUrl: String!
   uploadedAt: Datetime!
   uploadedBy: BigInt
 

@@ -8,7 +8,6 @@ import { makeV4Preset } from 'postgraphile/presets/v4';
 import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
 import currentUserPlugin from './plugins/current-user.ts';
-import filePlugin from './plugins/file.ts';
 import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
 
@@ -26,7 +25,6 @@ const preset: GraphileConfig.Preset = {
 
   disablePlugins: ['NodePlugin', 'QueryQueryPlugin', 'MutationPayloadQueryPlugin'],
   plugins: [
-    ...filePlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,
     OTELPlugin,
