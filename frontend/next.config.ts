@@ -54,6 +54,7 @@ export default compose(
   },
 
   images: {
+    contentDispositionType: 'inline',
     remotePatterns: [
       { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
       { protocol: 'https', hostname: 'files.rozpisovnik.cz' },
