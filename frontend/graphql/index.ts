@@ -858,118 +858,6 @@ export type ArticleTypeInputRecordInput = {
   titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Attachment = {
-  __typename?: 'Attachment';
-  directory: Maybe<Scalars['String']['output']>;
-  height: Maybe<Scalars['Int']['output']>;
-  objectName: Scalars['String']['output'];
-  previewObjectName: Maybe<Scalars['String']['output']>;
-  thumbhash: Maybe<Scalars['String']['output']>;
-  uploadedAt: Scalars['Datetime']['output'];
-  uploadedBy: Maybe<Scalars['BigInt']['output']>;
-  /** Reads a single `User` that is related to this `Attachment`. */
-  userByUploadedBy: Maybe<User>;
-  width: Maybe<Scalars['Int']['output']>;
-};
-
-/**
- * A condition to be used against `Attachment` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type AttachmentCondition = {
-  /** Checks for equality with the object’s `directory` field. */
-  directory?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `height` field. */
-  height?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `previewObjectName` field. */
-  previewObjectName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `thumbhash` field. */
-  thumbhash?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `uploadedAt` field. */
-  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `uploadedBy` field. */
-  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `width` field. */
-  width?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** A connection to a list of `String` values. */
-export type AttachmentDirectoriesConnection = {
-  __typename?: 'AttachmentDirectoriesConnection';
-  /** A list of edges which contains the `String` and cursor to aid in pagination. */
-  edges: Array<Maybe<AttachmentDirectoriesEdge>>;
-  /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']['output']>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `String` edge in the connection. */
-export type AttachmentDirectoriesEdge = {
-  __typename?: 'AttachmentDirectoriesEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `String` at the end of the edge. */
-  node: Maybe<Scalars['String']['output']>;
-};
-
-/** An input for mutations affecting `Attachment` */
-export type AttachmentInput = {
-  height?: InputMaybe<Scalars['Int']['input']>;
-  objectName: Scalars['String']['input'];
-  previewObjectName?: InputMaybe<Scalars['String']['input']>;
-  thumbhash?: InputMaybe<Scalars['String']['input']>;
-  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
-  width?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** A connection to a list of `Attachment` values. */
-export type AttachmentsConnection = {
-  __typename?: 'AttachmentsConnection';
-  /** A list of edges which contains the `Attachment` and cursor to aid in pagination. */
-  edges: Array<AttachmentsEdge>;
-  /** A list of `Attachment` objects. */
-  nodes: Array<Attachment>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Attachment` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Attachment` edge in the connection. */
-export type AttachmentsEdge = {
-  __typename?: 'AttachmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Attachment` at the end of the edge. */
-  node: Attachment;
-};
-
-/** Methods to use when ordering `Attachment`. */
-export type AttachmentsOrderBy =
-  | 'HEIGHT_ASC'
-  | 'HEIGHT_DESC'
-  | 'NATURAL'
-  | 'OBJECT_NAME_ASC'
-  | 'OBJECT_NAME_DESC'
-  | 'PREVIEW_OBJECT_NAME_ASC'
-  | 'PREVIEW_OBJECT_NAME_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'THUMBHASH_ASC'
-  | 'THUMBHASH_DESC'
-  | 'UPLOADED_AT_ASC'
-  | 'UPLOADED_AT_DESC'
-  | 'UPLOADED_BY_ASC'
-  | 'UPLOADED_BY_DESC'
-  | 'WIDTH_ASC'
-  | 'WIDTH_DESC';
-
 export type AttendanceType =
   | 'ATTENDED'
   | 'NOT_EXCUSED'
@@ -1632,39 +1520,6 @@ export type CreateAktualityPayload = {
 /** The output of our create `Aktuality` mutation. */
 export type CreateAktualityPayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
-};
-
-/** All input for the create `Attachment` mutation. */
-export type CreateAttachmentInput = {
-  /** The `Attachment` to be created by this mutation. */
-  attachment: AttachmentInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `Attachment` mutation. */
-export type CreateAttachmentPayload = {
-  __typename?: 'CreateAttachmentPayload';
-  /** The `Attachment` that was created by this mutation. */
-  attachment: Maybe<Attachment>;
-  /** An edge for our `Attachment`. May be used by Relay 1. */
-  attachmentEdge: Maybe<AttachmentsEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `User` that is related to this `Attachment`. */
-  userByUploadedBy: Maybe<User>;
-};
-
-
-/** The output of our create `Attachment` mutation. */
-export type CreateAttachmentPayloadAttachmentEdgeArgs = {
-  orderBy?: Array<AttachmentsOrderBy>;
 };
 
 /** All input for the create `Cohort` mutation. */
@@ -4147,8 +4002,6 @@ export type Mutation = {
   confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality: Maybe<CreateAktualityPayload>;
-  /** Creates a single `Attachment`. */
-  createAttachment: Maybe<CreateAttachmentPayload>;
   /** Creates a single `Cohort`. */
   createCohort: Maybe<CreateCohortPayload>;
   /** Creates a single `CohortMembership`. */
@@ -4319,12 +4172,6 @@ export type MutationConfirmMembershipApplicationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAktualityArgs = {
   input: CreateAktualityInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateAttachmentArgs = {
-  input: CreateAttachmentInput;
 };
 
 
@@ -5696,12 +5543,6 @@ export type Query = {
   articleAttachment: Maybe<ArticleAttachment>;
   /** Reads and enables pagination through a set of `ArticleAttachment`. */
   articleAttachments: Maybe<ArticleAttachmentsConnection>;
-  /** Get a single `Attachment`. */
-  attachment: Maybe<Attachment>;
-  /** Reads and enables pagination through a set of `Text`. */
-  attachmentDirectories: Maybe<AttachmentDirectoriesConnection>;
-  /** Reads and enables pagination through a set of `Attachment`. */
-  attachments: Maybe<AttachmentsConnection>;
   /** Get a single `Cohort`. */
   cohort: Maybe<Cohort>;
   /** Get a single `Cohort`. */
@@ -5910,34 +5751,6 @@ export type QueryArticleAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAttachmentArgs = {
-  objectName: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAttachmentDirectoriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<AttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
 
@@ -8585,8 +8398,6 @@ export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtKdo: AktualitiesConnection;
-  /** Reads and enables pagination through a set of `Attachment`. */
-  attachmentsByUploadedBy: AttachmentsConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
   authoredAnnouncements: AnnouncementsConnection;
   createdAt: Scalars['Datetime']['output'];
@@ -8619,17 +8430,6 @@ export type UserAktualitiesByAtKdoArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
-};
-
-
-export type UserAttachmentsByUploadedByArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<AttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
 
@@ -8863,11 +8663,6 @@ export type GraphCacheKeysConfig = {
   ArticleAttachment?: (data: WithTypename<ArticleAttachment>) => null | string,
   ArticleAttachmentsConnection?: (data: WithTypename<ArticleAttachmentsConnection>) => null | string,
   ArticleAttachmentsEdge?: (data: WithTypename<ArticleAttachmentsEdge>) => null | string,
-  Attachment?: (data: WithTypename<Attachment>) => null | string,
-  AttachmentDirectoriesConnection?: (data: WithTypename<AttachmentDirectoriesConnection>) => null | string,
-  AttachmentDirectoriesEdge?: (data: WithTypename<AttachmentDirectoriesEdge>) => null | string,
-  AttachmentsConnection?: (data: WithTypename<AttachmentsConnection>) => null | string,
-  AttachmentsEdge?: (data: WithTypename<AttachmentsEdge>) => null | string,
   Category?: (data: WithTypename<Category>) => null | string,
   ChangePasswordPayload?: (data: WithTypename<ChangePasswordPayload>) => null | string,
   Cohort?: (data: WithTypename<Cohort>) => null | string,
@@ -8880,7 +8675,6 @@ export type GraphCacheKeysConfig = {
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
-  CreateAttachmentPayload?: (data: WithTypename<CreateAttachmentPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
@@ -9029,9 +8823,6 @@ export type GraphCacheResolvers = {
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     articleAttachment?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentArgs, WithTypename<ArticleAttachment> | string>,
     articleAttachments?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
-    attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
-    attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
-    attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
     cohort?: GraphCacheResolver<WithTypename<Query>, QueryCohortArgs, WithTypename<Cohort> | string>,
     cohortByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryCohortByTenantIdAndIdArgs, WithTypename<Cohort> | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupArgs, WithTypename<CohortGroup> | string>,
@@ -9332,37 +9123,6 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, WithTypename<ArticleAttachment> | string>
   },
-  Attachment?: {
-    directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    height?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int']['output'] | string>,
-    objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    thumbhash?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String']['output'] | string>,
-    uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    uploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>,
-    width?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  AttachmentDirectoriesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Array<WithTypename<AttachmentDirectoriesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  AttachmentDirectoriesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AttachmentDirectoriesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AttachmentDirectoriesEdge>, Record<string, never>, Scalars['String']['output'] | string>
-  },
-  AttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AttachmentsConnection>, Record<string, never>, Array<WithTypename<AttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AttachmentsConnection>, Record<string, never>, Array<WithTypename<Attachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AttachmentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  AttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AttachmentsEdge>, Record<string, never>, WithTypename<Attachment> | string>
-  },
   Category?: {
     ageGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
     baseDanceProgramId?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -9475,12 +9235,6 @@ export type GraphCacheResolvers = {
     aktualityEdge?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, CreateAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
-  },
-  CreateAttachmentPayload?: {
-    attachment?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, WithTypename<Attachment> | string>,
-    attachmentEdge?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, CreateAttachmentPayloadAttachmentEdgeArgs, WithTypename<AttachmentsEdge> | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    userByUploadedBy?: GraphCacheResolver<WithTypename<CreateAttachmentPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10504,7 +10258,6 @@ export type GraphCacheResolvers = {
   },
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
-    attachmentsByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserAttachmentsByUploadedByArgs, WithTypename<AttachmentsConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
@@ -10551,7 +10304,6 @@ export type GraphCacheOptimisticUpdaters = {
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
   createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
-  createAttachment?: GraphCacheOptimisticMutationResolver<MutationCreateAttachmentArgs, Maybe<WithTypename<CreateAttachmentPayload>>>,
   createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
@@ -10649,9 +10401,6 @@ export type GraphCacheUpdaters = {
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
     articleAttachment?: GraphCacheUpdateResolver<{ articleAttachment: Maybe<WithTypename<ArticleAttachment>> }, QueryArticleAttachmentArgs>,
     articleAttachments?: GraphCacheUpdateResolver<{ articleAttachments: Maybe<WithTypename<ArticleAttachmentsConnection>> }, QueryArticleAttachmentsArgs>,
-    attachment?: GraphCacheUpdateResolver<{ attachment: Maybe<WithTypename<Attachment>> }, QueryAttachmentArgs>,
-    attachmentDirectories?: GraphCacheUpdateResolver<{ attachmentDirectories: Maybe<WithTypename<AttachmentDirectoriesConnection>> }, QueryAttachmentDirectoriesArgs>,
-    attachments?: GraphCacheUpdateResolver<{ attachments: Maybe<WithTypename<AttachmentsConnection>> }, QueryAttachmentsArgs>,
     cohort?: GraphCacheUpdateResolver<{ cohort: Maybe<WithTypename<Cohort>> }, QueryCohortArgs>,
     cohortByTenantIdAndId?: GraphCacheUpdateResolver<{ cohortByTenantIdAndId: Maybe<WithTypename<Cohort>> }, QueryCohortByTenantIdAndIdArgs>,
     cohortGroup?: GraphCacheUpdateResolver<{ cohortGroup: Maybe<WithTypename<CohortGroup>> }, QueryCohortGroupArgs>,
@@ -10721,7 +10470,6 @@ export type GraphCacheUpdaters = {
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
     createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
-    createAttachment?: GraphCacheUpdateResolver<{ createAttachment: Maybe<WithTypename<CreateAttachmentPayload>> }, MutationCreateAttachmentArgs>,
     createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
@@ -11043,37 +10791,6 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>
   },
-  Attachment?: {
-    directory?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    height?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    objectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    previewObjectName?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    thumbhash?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>,
-    width?: GraphCacheUpdateResolver<Maybe<WithTypename<Attachment>>, Record<string, never>>
-  },
-  AttachmentDirectoriesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesConnection>>, Record<string, never>>
-  },
-  AttachmentDirectoriesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentDirectoriesEdge>>, Record<string, never>>
-  },
-  AttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsConnection>>, Record<string, never>>
-  },
-  AttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AttachmentsEdge>>, Record<string, never>>
-  },
   Category?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     baseDanceProgramId?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
@@ -11186,12 +10903,6 @@ export type GraphCacheUpdaters = {
     aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, CreateAktualityPayloadAktualityEdgeArgs>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>
-  },
-  CreateAttachmentPayload?: {
-    attachment?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
-    attachmentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, CreateAttachmentPayloadAttachmentEdgeArgs>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>,
-    userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAttachmentPayload>>, Record<string, never>>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
@@ -12215,7 +11926,6 @@ export type GraphCacheUpdaters = {
   },
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
-    attachmentsByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAttachmentsByUploadedByArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,
