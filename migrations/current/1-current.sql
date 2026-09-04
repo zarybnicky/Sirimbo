@@ -2,6 +2,15 @@ drop function if exists public.attachment_directories();
 drop function if exists public.attachment_directory(public.attachment);
 drop table if exists public.attachment;
 
+update file
+set content_type = case
+  when name ~* '\.jpe?g$' then 'image/jpeg'
+  when name ~* '\.png$' then 'image/png'
+  when name ~* '\.pdf$' then 'application/pdf'
+end
+where content_type is null
+  and name ~* '\.(jpe?g|png|pdf)$';
+
 update aktuality article
 set title_photo_url =
   '/f/' || file.id || '/' ||
