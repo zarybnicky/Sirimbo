@@ -81,34 +81,6 @@ in {
       };
     };
 
-    s3 = {
-      bucket = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} S3 bucket";
-      };
-      region = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} S3 region";
-      };
-      endpoint = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} S3 endpoint";
-      };
-      publicEndpoint = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        description = "${pkgName} publicly accessible endpoint (Cloudflare URL)";
-        default = null;
-      };
-      accessKeyId = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} AWS_ACCESS_KEY_ID";
-      };
-      secretAccessKey = lib.mkOption {
-        type = lib.types.str;
-        description = "${pkgName} AWS_SECRET_ACCESS_KEY";
-      };
-    };
-
     otel = {
       endpoint = lib.mkOption {
         type = lib.types.str;
@@ -147,8 +119,7 @@ in {
         requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
-        # environment = config.my.seaweedfs.buckets.olymp.environment // { ... };
-        environment = {
+        environment = config.my.seaweedfs.buckets.olymp.environment // {
           DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
           NODE_ENV = if cfg.backend.debug then "development" else "production";
           PORT = toString cfg.backend.port;
@@ -165,13 +136,6 @@ in {
           SMTP_PORT = toString cfg.smtp.port;
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
-
-          AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
-          AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
-          AWS_REGION = cfg.s3.region;
-          AWS_ENDPOINT_URL_S3 = cfg.s3.endpoint;
-          S3_BUCKET = cfg.s3.bucket;
-          S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
@@ -246,8 +210,7 @@ in {
         requires = [ "network-online.target" "postgresql.service" ];
         wantedBy = [ "multi-user.target" ];
 
-        # environment = config.my.seaweedfs.buckets.olymp.environment // { ... };
-        environment = {
+        environment = config.my.seaweedfs.buckets.olymp.environment // {
           DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
           SMTP_AUTH = if cfg.smtp.auth then "1" else "";
           SMTP_TLS = if cfg.smtp.tls then "1" else "";
@@ -257,13 +220,6 @@ in {
           SMTP_PASS = cfg.smtp.pass;
           WDSF_AUTH = cfg.wdsfAuth;
           RUIAN_ADDRESS_SOURCE = toString pkgs.ruian-address-cache;
-
-          AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
-          AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
-          AWS_REGION = cfg.s3.region;
-          AWS_ENDPOINT_URL_S3 = cfg.s3.endpoint;
-          S3_BUCKET = cfg.s3.bucket;
-          S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
