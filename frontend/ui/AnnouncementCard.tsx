@@ -5,6 +5,7 @@ import { cardCls, typographyCls } from './style';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
 import { ActionGroup } from './ActionGroup';
+import { FileAttachments } from '@/ui/FileAttachments';
 
 interface Props {
   item: AnnouncementFragment;
@@ -65,6 +66,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
           )}
         </>
       )}
+      {expanded && <FileAttachments attachments={item.explicitAttachments.nodes} />}
     </div>
   );
 }

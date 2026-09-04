@@ -24,6 +24,7 @@ import { isTruthy } from '../../lib/truthyFilter';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CohortListDocument } from '@/graphql/Cohorts';
+import { FilePicker } from '@/ui/forms/FilePicker';
 
 const ROLE_OPTIONS: {
   value: AnnouncementAudienceRole;
@@ -60,6 +61,7 @@ const Form = z.object({
   scheduledUntil: z.date().nullable().optional(),
   audienceRoles: z.array(z.enum(AUDIENCE_ROLE_VALUES)).prefault([]),
   cohortIds: z.array(z.string()).prefault([]),
+  attachmentIds: z.array(z.string()).prefault([]),
 });
 
 export function AnnouncementForm({
@@ -78,9 +80,11 @@ export function AnnouncementForm({
       status: 'DRAFT' as const,
       audienceRoles: [],
       cohortIds: [],
+      attachmentIds: [],
     },
     resolver: zodResolver(Form),
   });
+  const { field: attachmentIds } = useController({ control, name: 'attachmentIds' });
   React.useEffect(() => {
     reset(
       {
@@ -95,6 +99,10 @@ export function AnnouncementForm({
           [],
         cohortIds:
           data?.announcementAudiences.nodes.map((x) => x.cohortId).filter(isTruthy) ?? [],
+        attachmentIds:
+          data?.explicitAttachments.nodes
+            .map((attachment) => attachment.file?.id)
+            .filter(isTruthy) ?? [],
       },
       {
         keepDirtyValues: true,
@@ -143,6 +151,7 @@ export function AnnouncementForm({
           scheduledUntil: values.scheduledUntil?.toISOString(),
         },
         audiences: newAudiences,
+        attachments: values.attachmentIds,
       },
     });
     if (!result.error) {
@@ -195,6 +204,8 @@ export function AnnouncementForm({
       </div>
 
       <AnnouncementAudienceEditor control={control} />
+
+      <FilePicker value={attachmentIds.value ?? []} onChange={attachmentIds.onChange} />
 
       <SubmitButton control={control} />
     </form>

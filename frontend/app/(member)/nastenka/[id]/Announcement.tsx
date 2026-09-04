@@ -7,6 +7,7 @@ import { PageHeader } from '@/ui/TitleBar';
 import React from 'react';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
+import { FileAttachments } from '@/ui/FileAttachments';
 
 export function Announcement({ id }: { id: string }) {
   const [editing, setEditing] = React.useState(false);
@@ -41,7 +42,10 @@ export function Announcement({ id }: { id: string }) {
       ) : editing ? (
         <AnnouncementForm id={data.id} data={data} onSuccess={stopEditing} />
       ) : (
-        <RichTextView className="max-w-none" value={data.body} />
+        <>
+          <RichTextView className="max-w-none" value={data.body} />
+          <FileAttachments attachments={data.explicitAttachments.nodes} />
+        </>
       )}
     </div>
   );

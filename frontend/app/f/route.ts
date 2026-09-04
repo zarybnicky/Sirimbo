@@ -12,6 +12,7 @@ export const runtime = 'nodejs';
 type FileRow = {
   id: string;
   object_key: string;
+  url: string;
 };
 
 export async function POST(request: NextRequest) {
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
       const result = await client.query<FileRow>(
         `insert into file (object_key, name, content_type, byte_size)
          values ($1, $2, $3, $4)
-         returning id, object_key`,
+         returning id, object_key, url`,
         [objectKey, name, contentType, byteSize],
       );
       return result.rows[0]!;
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
     {
       id: file.id,
       name,
-      url: `/f/${file.id}/${encodeURIComponent(name)}`,
+      url: file.url,
     },
     { status: 201 },
   );

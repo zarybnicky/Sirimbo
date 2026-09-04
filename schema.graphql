@@ -4214,6 +4214,9 @@ type File {
   uploadedAt: Datetime
   uploadedBy: BigInt
 
+  """Application route used to download the file."""
+  url: String!
+
   """Reads a single `User` that is related to this `File`."""
   userByUploadedBy: User
 }
@@ -4254,6 +4257,9 @@ input FileCondition {
 
   """Checks for equality with the object’s `uploadedBy` field."""
   uploadedBy: BigInt
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
 }
 
 """A connection to a list of `File` values."""
@@ -4309,6 +4315,8 @@ enum FilesOrderBy {
   UPLOADED_AT_DESC
   UPLOADED_BY_ASC
   UPLOADED_BY_DESC
+  URL_ASC
+  URL_DESC
 }
 
 type FormResponse {

@@ -3509,6 +3509,8 @@ export type File = {
   tenantId: Scalars['BigInt']['output'];
   uploadedAt: Maybe<Scalars['Datetime']['output']>;
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
+  /** Application route used to download the file. */
+  url: Scalars['String']['output'];
   /** Reads a single `User` that is related to this `File`. */
   userByUploadedBy: Maybe<User>;
 };
@@ -3559,6 +3561,8 @@ export type FileCondition = {
   uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `uploadedBy` field. */
   uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `url` field. */
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -3609,7 +3613,9 @@ export type FilesOrderBy =
   | 'UPLOADED_AT_ASC'
   | 'UPLOADED_AT_DESC'
   | 'UPLOADED_BY_ASC'
-  | 'UPLOADED_BY_DESC';
+  | 'UPLOADED_BY_DESC'
+  | 'URL_ASC'
+  | 'URL_DESC';
 
 export type FormResponse = {
   __typename?: 'FormResponse';
@@ -9641,6 +9647,7 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    url?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, WithTypename<User> | string>
   },
   FilesConnection?: {
@@ -11311,6 +11318,7 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    url?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>
   },
   FilesConnection?: {

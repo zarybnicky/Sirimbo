@@ -28,6 +28,13 @@ fragment Announcement on Announcement {
       ...AnnouncementAudience
     }
   }
+  explicitAttachments: attachments(condition: {inline: false}) {
+    nodes {
+      file {
+        ...File
+      }
+    }
+  }
 }
 
 query StickyAnnouncements($orderBy: AnnouncementsOrderBy = UPDATED_AT_DESC) {
