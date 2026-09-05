@@ -66,3 +66,5 @@ create or replace trigger _100_timestamps
 create or replace trigger _100_timestamps
   before insert or update on tenant_location
   for each row execute function app_private.tg__timestamps();
+
+--! include functions/competition_reports.sql
