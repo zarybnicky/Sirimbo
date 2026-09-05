@@ -13,6 +13,8 @@ CREATE TABLE public.aktuality (
     is_visible boolean DEFAULT true NOT NULL
 );
 
+COMMENT ON TABLE public.aktuality IS '@omit create,update
+@behavior -query:resource:list';
 COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
 
 GRANT ALL ON TABLE public.aktuality TO anonymous;

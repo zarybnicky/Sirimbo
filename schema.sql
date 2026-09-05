@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 5w81ehaLxchbdYDpM46aypX5ERxMzzizYuWJWTeiQEvUwhCeOrJjjvA7ezdoogX
+\restrict wrbMFtkISnjcqVUAvbJ4ePoXx3ZPZJGzGmkbFig5fJbjFdQifgW9w8lh2ARiHqf
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -1666,10 +1666,32 @@ $$;
 CREATE FUNCTION app_private.tg__timestamps() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
+declare
+  ignored text[];
 begin
-  NEW.created_at = (case when TG_OP = 'INSERT' then NOW() else OLD.created_at end);
-  NEW.updated_at = (case when TG_OP = 'UPDATE' and OLD.updated_at >= NOW() then OLD.updated_at + interval '1 millisecond' else NOW() end);
-  return NEW;
+  if tg_op = 'UPDATE' then
+    -- Don't bump updated_at for no-op updates
+    if new is not distinct from old then
+      return new;
+    end if;
+
+    select coalesce(array_agg(attribute.attname::text order by attribute.attnum), '{}') || tg_argv
+      into ignored
+    from pg_catalog.pg_attribute as attribute
+    where attribute.attrelid = tg_relid
+      and attribute.attnum > 0
+      and not attribute.attisdropped
+      and attribute.attgenerated <> '';
+
+    -- Ignore generated columns and any independent state named by the trigger
+    if ignored <> '{}' and to_jsonb(new) - ignored is not distinct from to_jsonb(old) - ignored then
+      return new;
+    end if;
+  end if;
+
+  new.created_at = case when tg_op = 'INSERT' then now() else old.created_at end;
+  new.updated_at = now();
+  return new;
 end;
 $$;
 
@@ -2397,35 +2419,6 @@ $$;
 
 
 --
--- Name: frontier_fetch_due(boolean); Type: FUNCTION; Schema: crawler; Owner: -
---
-
-CREATE FUNCTION crawler.frontier_fetch_due(allow_refetch boolean) RETURNS TABLE(id bigint, federation text, kind text, key text, discovered_at timestamp with time zone, last_fetched_at timestamp with time zone, next_fetch_at timestamp with time zone, due_at timestamp with time zone)
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT
-    f.id,
-    f.federation,
-    f.kind,
-    f.key,
-    f.discovered_at,
-    f.last_fetched_at,
-    f.next_fetch_at,
-    coalesce(f.next_fetch_at, f.discovered_at) AS due_at
-  FROM crawler.frontier f
-  WHERE (f.next_fetch_at IS NULL OR f.next_fetch_at <= now())
-    AND (
-      f.fetch_status IN ('pending', 'transient')
-      OR (
-        coalesce(allow_refetch, false)
-        AND f.fetch_status = 'ok'
-        AND f.process_status = 'ok'
-      )
-    );
-$$;
-
-
---
 -- Name: reserve_request(text); Type: FUNCTION; Schema: crawler; Owner: -
 --
 
@@ -3097,28 +3090,16 @@ $$;
 -- Name: competition_brief(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week'::text, now()))::date + 4), p_until date DEFAULT ((date_trunc('week'::text, now()))::date + 7), p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with params as (
-    select
-      coalesce(p_since, date_trunc('week', now())::date + 5) as since,
-      coalesce(p_until, date_trunc('week', now())::date + 7) as until
-  ),
-  scoped_people as (
+  with scoped_people as (
     select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from public.current_tenant_membership tm
-    join public.person p on p.id = tm.person_id
+    from current_tenant_membership tm
+    join person p on p.id = tm.person_id
     where (p_person_ids is null or p.id = any(p_person_ids))
-      and (
-        p_cohort_id is null
-        or exists (
-          select 1
-          from public.current_cohort_membership cm
-          where cm.person_id = p.id
-            and cm.cohort_id = p_cohort_id
-        )
-      )
+      and (p_cohort_id is null
+       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
   federated_people as (
     select
@@ -3135,6 +3116,7 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     join federated.person fp
       on fp.federation = ids.federation
      and fp.external_id = ids.external_id
+     and ids.external_id <> 0
   )
   select
     fp.person_id,
@@ -3161,10 +3143,7 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from params
-  join federated.competition comp
-    on comp.start_date >= params.since
-   and comp.start_date < params.until
+  from federated.competition comp
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
   join federated.competition_entry ce
@@ -3179,6 +3158,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     join federated.dance d on d.code = dpd.dance_code
     where dpd.program_id = cat.base_dance_program_id
   ) dances on true
+  where comp.start_date >= p_since
+    and comp.start_date < p_until
   order by
     comp.start_date,
     comp.check_in_end nulls last,
@@ -3200,28 +3181,39 @@ COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohor
 -- Name: competition_report(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('week'::text, now()))::date - 2), p_until date DEFAULT (date_trunc('week'::text, now()))::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with params as (
+  with scoped_competitions as (
+    select *
+    from federated.competition
+    where start_date >= p_since
+      and start_date < p_until
+  ),
+  latest_rounds as (
+    select distinct on (r.competition_id)
+      r.id,
+      r.competition_id
+    from federated.competition_round r
+    join scoped_competitions comp on comp.id = r.competition_id
+    order by r.competition_id, r.round_index desc, (r.round_key = 'F') desc, r.id desc
+  ),
+  competition_dances as (
     select
-      coalesce(p_since, date_trunc('week', now())::date - 2) as since,
-      coalesce(p_until, date_trunc('week', now())::date) as until
+      r.competition_id,
+      array_agg(d.name order by rd.dance_order) as dances
+    from latest_rounds r
+    join federated.round_dance rd on rd.round_id = r.id
+    join federated.dance d on d.code = rd.dance_code
+    group by r.competition_id
   ),
   scoped_people as (
     select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from public.current_tenant_membership tm
-    join public.person p on p.id = tm.person_id
+    from current_tenant_membership tm
+    join person p on p.id = tm.person_id
     where (p_person_ids is null or p.id = any(p_person_ids))
-      and (
-        p_cohort_id is null
-        or exists (
-          select 1
-          from public.current_cohort_membership cm
-          where cm.person_id = p.id
-            and cm.cohort_id = p_cohort_id
-        )
-      )
+      and (p_cohort_id is null
+       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
   federated_people as (
     select
@@ -3238,6 +3230,7 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     join federated.person fp
       on fp.federation = ids.federation
      and fp.external_id = ids.external_id
+     and ids.external_id <> 0
   )
   select
     fp.person_id,
@@ -3254,7 +3247,7 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     comp.start_date as competition_date,
     comp.check_in_end,
     cat as category,
-    dances.dances,
+    coalesce(dances.dances, '{}'::text[]) as dances,
     comp.participants_total as participants,
     cr.ranking,
     cr.ranking_to,
@@ -3264,22 +3257,14 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from params
-  join federated.competition comp
-    on comp.start_date >= params.since
-   and comp.start_date < params.until
+  from scoped_competitions comp
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
   join federated.competition_result cr on cr.competition_id = comp.id
   join federated.competitor c on c.id = cr.competitor_id
   join federated.competitor_component cc on cc.competitor_id = c.id
   join federated_people fp on fp.federated_person_id = cc.person_id
-  left join lateral (
-    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
-    from federated.dance_program_dance dpd
-    join federated.dance d on d.code = dpd.dance_code
-    where dpd.program_id = cat.base_dance_program_id
-  ) dances on true
+  left join competition_dances dances on dances.competition_id = comp.id
   order by
     comp.start_date,
     fp.person_name,
@@ -6536,6 +6521,14 @@ CREATE TABLE public.aktuality (
 
 
 --
+-- Name: TABLE aktuality; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.aktuality IS '@omit create,update
+@behavior -query:resource:list';
+
+
+--
 -- Name: COLUMN aktuality.at_kat; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -7040,7 +7033,7 @@ CREATE TABLE crawler.frontier (
     fetch_status crawler.fetch_status DEFAULT 'pending'::crawler.fetch_status NOT NULL,
     process_status crawler.process_status DEFAULT 'pending'::crawler.process_status NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
-    next_fetch_at timestamp with time zone,
+    next_fetch_at timestamp with time zone DEFAULT now() NOT NULL,
     meta jsonb DEFAULT '{}'::jsonb NOT NULL,
     last_process_error text,
     last_process_error_at timestamp with time zone,
@@ -8367,7 +8360,8 @@ CREATE TABLE public.file (
     uploaded_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     display_name text,
-    is_public boolean DEFAULT false NOT NULL
+    is_public boolean DEFAULT false NOT NULL,
+    url text GENERATED ALWAYS AS (((('/f/'::text || id) || '/'::text) || name)) STORED NOT NULL
 );
 
 
@@ -10130,6 +10124,13 @@ CREATE INDEX platby_raw_tenant_id_idx ON app_private.platby_raw USING btree (ten
 
 
 --
+-- Name: frontier_failure_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX frontier_failure_idx ON crawler.frontier USING btree (federation, kind, id) WHERE ((fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (process_status = 'error'::crawler.process_status));
+
+
+--
 -- Name: frontier_federation_kind_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
@@ -10169,6 +10170,13 @@ CREATE INDEX frontier_process_pending_ok_pick_idx ON crawler.frontier USING btre
 --
 
 CREATE INDEX json_response_content_hash_idx ON crawler.json_response USING btree (content_hash);
+
+
+--
+-- Name: json_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE INDEX json_response_frontier_fetched_desc_idx ON crawler.json_response USING btree (frontier_id, fetched_at DESC, id DESC);
 
 
 --
@@ -11316,14 +11324,14 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_external_
 -- Name: event_instance _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('manager_person_ids', 'stats');
 
 
 --
 -- Name: event_instance_registration _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, instance_id, parent_registration_id, couple_id, person_id, target_cohort_id, status, note, attendance_note, registration_status, source, created_at, updated_at ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('attendance_created_at', 'attendance_updated_at');
 
 
 --
@@ -11337,14 +11345,14 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_
 -- Name: event_instance_trainer _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, instance_id, person_id, created_at, updated_at, lessons_offered ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
 -- Name: event_lesson_demand _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, trainer_id, registration_id, lesson_count, created_at, updated_at ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_lesson_demand FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -11369,6 +11377,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.membership_appl
 
 
 --
+-- Name: otp_token _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.otp_token FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: payment _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11380,6 +11395,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.payment FOR EAC
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: person_invitation _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -11401,6 +11423,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.scoreboard_manu
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
+-- Name: tenant_location _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_location FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -11435,7 +11464,7 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR 
 -- Name: users _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('last_login', 'last_active_at', 'last_version');
 
 
 --
@@ -16076,5 +16105,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5w81ehaLxchbdYDpM46aypX5ERxMzzizYuWJWTeiQEvUwhCeOrJjjvA7ezdoogX
+\unrestrict wrbMFtkISnjcqVUAvbJ4ePoXx3ZPZJGzGmkbFig5fJbjFdQifgW9w8lh2ARiHqf
 

@@ -22,5 +22,7 @@ ALTER TABLE ONLY public.otp_token
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.otp_token FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
 CREATE INDEX otp_token_tenant_id_idx ON public.otp_token USING btree (tenant_id);
 CREATE INDEX otp_token_user_id_idx ON public.otp_token USING btree (user_id);

@@ -1,25 +1,13 @@
-CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week'::text, now()))::date + 4), p_until date DEFAULT ((date_trunc('week'::text, now()))::date + 7), p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with params as (
-    select
-      coalesce(p_since, date_trunc('week', now())::date + 5) as since,
-      coalesce(p_until, date_trunc('week', now())::date + 7) as until
-  ),
-  scoped_people as (
+  with scoped_people as (
     select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from public.current_tenant_membership tm
-    join public.person p on p.id = tm.person_id
+    from current_tenant_membership tm
+    join person p on p.id = tm.person_id
     where (p_person_ids is null or p.id = any(p_person_ids))
-      and (
-        p_cohort_id is null
-        or exists (
-          select 1
-          from public.current_cohort_membership cm
-          where cm.person_id = p.id
-            and cm.cohort_id = p_cohort_id
-        )
-      )
+      and (p_cohort_id is null
+       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
   federated_people as (
     select
@@ -36,6 +24,7 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     join federated.person fp
       on fp.federation = ids.federation
      and fp.external_id = ids.external_id
+     and ids.external_id <> 0
   )
   select
     fp.person_id,
@@ -62,10 +51,7 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from params
-  join federated.competition comp
-    on comp.start_date >= params.since
-   and comp.start_date < params.until
+  from federated.competition comp
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
   join federated.competition_entry ce
@@ -80,6 +66,8 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT NULL::date, p_unti
     join federated.dance d on d.code = dpd.dance_code
     where dpd.program_id = cat.base_dance_program_id
   ) dances on true
+  where comp.start_date >= p_since
+    and comp.start_date < p_until
   order by
     comp.start_date,
     comp.check_in_end nulls last,

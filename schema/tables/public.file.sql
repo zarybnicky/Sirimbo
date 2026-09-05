@@ -9,7 +9,8 @@ CREATE TABLE public.file (
     uploaded_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     display_name text,
-    is_public boolean DEFAULT false NOT NULL
+    is_public boolean DEFAULT false NOT NULL,
+    url text GENERATED ALWAYS AS (((('/f/'::text || id) || '/'::text) || name)) STORED NOT NULL
 );
 
 COMMENT ON TABLE public.file IS '@omit create,update,delete';

@@ -1,10 +1,32 @@
 CREATE FUNCTION app_private.tg__timestamps() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
+declare
+  ignored text[];
 begin
-  NEW.created_at = (case when TG_OP = 'INSERT' then NOW() else OLD.created_at end);
-  NEW.updated_at = (case when TG_OP = 'UPDATE' and OLD.updated_at >= NOW() then OLD.updated_at + interval '1 millisecond' else NOW() end);
-  return NEW;
+  if tg_op = 'UPDATE' then
+    -- Don't bump updated_at for no-op updates
+    if new is not distinct from old then
+      return new;
+    end if;
+
+    select coalesce(array_agg(attribute.attname::text order by attribute.attnum), '{}') || tg_argv
+      into ignored
+    from pg_catalog.pg_attribute as attribute
+    where attribute.attrelid = tg_relid
+      and attribute.attnum > 0
+      and not attribute.attisdropped
+      and attribute.attgenerated <> '';
+
+    -- Ignore generated columns and any independent state named by the trigger
+    if ignored <> '{}' and to_jsonb(new) - ignored is not distinct from to_jsonb(old) - ignored then
+      return new;
+    end if;
+  end if;
+
+  new.created_at = case when tg_op = 'INSERT' then now() else old.created_at end;
+  new.updated_at = now();
+  return new;
 end;
 $$;
 

@@ -61,7 +61,7 @@ CREATE POLICY trainer_insert ON public.event_instance FOR INSERT TO trainer WITH
 CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(id));
 CREATE POLICY trainer_update ON public.event_instance FOR UPDATE TO trainer USING (app_private.can_trainer_edit_instance(id));
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('manager_person_ids', 'stats');
 CREATE TRIGGER _200_validate_parent BEFORE INSERT OR UPDATE OF tenant_id, parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__validate_parent();
 CREATE TRIGGER _500_delete_on_cancellation AFTER UPDATE OF is_cancelled ON public.event_instance FOR EACH ROW WHEN ((old.is_cancelled IS DISTINCT FROM new.is_cancelled)) EXECUTE FUNCTION app_private.tg_event_instance__delete_payment_on_cancellation();
 CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDATE OF parent_id ON public.event_instance FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance__refresh_manager_person_ids();

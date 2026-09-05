@@ -33,7 +33,7 @@ CREATE POLICY event_share_view ON public.event_instance_trainer FOR SELECT TO an
 CREATE POLICY member_view ON public.event_instance_trainer FOR SELECT TO member USING (true);
 CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
 
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE OF tenant_id, instance_id, person_id, created_at, updated_at, lessons_offered ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF instance_id, person_id ON public.event_instance_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_trainer__refresh_manager_person_ids();
 
 CREATE INDEX event_instance_trainer_instance_id_idx ON public.event_instance_trainer USING btree (instance_id);

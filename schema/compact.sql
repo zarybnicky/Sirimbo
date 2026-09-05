@@ -1107,7 +1107,8 @@ CREATE TABLE public.file (
   uploaded_at timestamp with time zone,
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   display_name text,
-  is_public boolean DEFAULT false NOT NULL
+  is_public boolean DEFAULT false NOT NULL,
+  url text GENERATED ALWAYS AS ((('/f/'::text || id) || '/'::text) || name) STORED NOT NULL
 );
 
 CREATE TABLE public.announcement_attachment (
@@ -1327,7 +1328,7 @@ CREATE TABLE crawler.frontier (
   fetch_status crawler.fetch_status DEFAULT CAST('pending' AS crawler.fetch_status) NOT NULL,
   process_status crawler.process_status DEFAULT CAST('pending' AS crawler.process_status) NOT NULL,
   error_count int DEFAULT 0 NOT NULL,
-  next_fetch_at timestamp with time zone,
+  next_fetch_at timestamp with time zone DEFAULT now() NOT NULL,
   meta jsonb DEFAULT '{}'::jsonb NOT NULL,
   last_process_error text,
   last_process_error_at timestamp with time zone,

@@ -1,25 +1,36 @@
-CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_until date DEFAULT NULL::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
+CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('week'::text, now()))::date - 2), p_until date DEFAULT (date_trunc('week'::text, now()))::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with params as (
+  with scoped_competitions as (
+    select *
+    from federated.competition
+    where start_date >= p_since
+      and start_date < p_until
+  ),
+  latest_rounds as (
+    select distinct on (r.competition_id)
+      r.id,
+      r.competition_id
+    from federated.competition_round r
+    join scoped_competitions comp on comp.id = r.competition_id
+    order by r.competition_id, r.round_index desc, (r.round_key = 'F') desc, r.id desc
+  ),
+  competition_dances as (
     select
-      coalesce(p_since, date_trunc('week', now())::date - 2) as since,
-      coalesce(p_until, date_trunc('week', now())::date) as until
+      r.competition_id,
+      array_agg(d.name order by rd.dance_order) as dances
+    from latest_rounds r
+    join federated.round_dance rd on rd.round_id = r.id
+    join federated.dance d on d.code = rd.dance_code
+    group by r.competition_id
   ),
   scoped_people as (
     select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from public.current_tenant_membership tm
-    join public.person p on p.id = tm.person_id
+    from current_tenant_membership tm
+    join person p on p.id = tm.person_id
     where (p_person_ids is null or p.id = any(p_person_ids))
-      and (
-        p_cohort_id is null
-        or exists (
-          select 1
-          from public.current_cohort_membership cm
-          where cm.person_id = p.id
-            and cm.cohort_id = p_cohort_id
-        )
-      )
+      and (p_cohort_id is null
+       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
   federated_people as (
     select
@@ -36,6 +47,7 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     join federated.person fp
       on fp.federation = ids.federation
      and fp.external_id = ids.external_id
+     and ids.external_id <> 0
   )
   select
     fp.person_id,
@@ -52,7 +64,7 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     comp.start_date as competition_date,
     comp.check_in_end,
     cat as category,
-    dances.dances,
+    coalesce(dances.dances, '{}'::text[]) as dances,
     comp.participants_total as participants,
     cr.ranking,
     cr.ranking_to,
@@ -62,22 +74,14 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT NULL::date, p_unt
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from params
-  join federated.competition comp
-    on comp.start_date >= params.since
-   and comp.start_date < params.until
+  from scoped_competitions comp
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
   join federated.competition_result cr on cr.competition_id = comp.id
   join federated.competitor c on c.id = cr.competitor_id
   join federated.competitor_component cc on cc.competitor_id = c.id
   join federated_people fp on fp.federated_person_id = cc.person_id
-  left join lateral (
-    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
-    from federated.dance_program_dance dpd
-    join federated.dance d on d.code = dpd.dance_code
-    where dpd.program_id = cat.base_dance_program_id
-  ) dances on true
+  left join competition_dances dances on dances.competition_id = comp.id
   order by
     comp.start_date,
     fp.person_name,

@@ -8,7 +8,7 @@ CREATE TABLE crawler.frontier (
     fetch_status crawler.fetch_status DEFAULT 'pending'::crawler.fetch_status NOT NULL,
     process_status crawler.process_status DEFAULT 'pending'::crawler.process_status NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
-    next_fetch_at timestamp with time zone,
+    next_fetch_at timestamp with time zone DEFAULT now() NOT NULL,
     meta jsonb DEFAULT '{}'::jsonb NOT NULL,
     last_process_error text,
     last_process_error_at timestamp with time zone,
@@ -25,6 +25,7 @@ ALTER TABLE ONLY crawler.frontier
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 
+CREATE INDEX frontier_failure_idx ON crawler.frontier USING btree (federation, kind, id) WHERE ((fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (process_status = 'error'::crawler.process_status));
 CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (federation, kind);
 CREATE INDEX frontier_federation_kind_next_fetch_at_idx ON crawler.frontier USING btree (federation, kind, next_fetch_at) WHERE ((fetch_status = ANY (ARRAY['pending'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR ((fetch_status = 'ok'::crawler.fetch_status) AND (process_status = 'ok'::crawler.process_status)));
 CREATE INDEX frontier_last_response_id_idx ON crawler.frontier USING btree (last_response_id) WHERE (last_response_id IS NOT NULL);
