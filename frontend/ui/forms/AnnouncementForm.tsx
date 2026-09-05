@@ -171,6 +171,7 @@ export function AnnouncementForm({
         control={control}
         name="body"
         label="Text"
+        enableImageUpload
       />
 
       <div className="grid gap-2 sm:grid-cols-2">

@@ -20,6 +20,7 @@ type RichTextEditorProps<T extends FieldValues> = {
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
+  enableImageUpload?: boolean;
 };
 
 export function RichTextEditor<T extends FieldValues>({
@@ -29,6 +30,7 @@ export function RichTextEditor<T extends FieldValues>({
   className,
   helperText,
   initialState,
+  enableImageUpload,
 }: RichTextEditorProps<T>) {
   const { field, fieldState } = useController({ name, control });
 
@@ -41,6 +43,7 @@ export function RichTextEditor<T extends FieldValues>({
           onChange={field.onChange}
           onBlur={field.onBlur}
           initialState={initialState}
+          enableImageUpload={enableImageUpload}
         />
         {fieldState.error && <FieldErrorIcon />}
       </div>

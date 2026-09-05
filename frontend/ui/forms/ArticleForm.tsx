@@ -134,12 +134,14 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         initialState={data?.atPreview}
         name="atPreview"
         label="Shrnutí"
+        enableImageUpload
       />
       <RichTextEditor
         control={control}
         initialState={data?.atText}
         name="atText"
         label="Text"
+        enableImageUpload
       />
       <FilePicker value={attachmentIds.value ?? []} onChange={attachmentIds.onChange} />
       <SubmitButton control={control} />

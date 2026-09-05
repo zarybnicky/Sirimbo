@@ -304,6 +304,36 @@ function ImagePreview({ src }: { src: string }) {
   );
 }
 
+export function ImageLibraryDialog({
+  open,
+  onOpenChange,
+  onSelect,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (file: FileFragment) => void;
+}) {
+  const [{ data, fetching }] = useQuery({ query: FileListDocument });
+  const files = (data?.files?.nodes ?? []).filter(
+    (file) => file.uploadedAt && file.contentType?.startsWith('image/'),
+  );
+
+  return (
+    <FileLibrary
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Vybrat obrázek"
+      files={files}
+      fetching={fetching}
+      isSelected={() => false}
+      onSelect={(file) => {
+        onSelect(file);
+        onOpenChange(false);
+      }}
+    />
+  );
+}
+
 function FileLibrary({
   files,
   fetching,
@@ -319,7 +349,7 @@ function FileLibrary({
   isSelected: (file: FileFragment) => boolean;
   onSelect: (file: FileFragment) => void;
   title?: string;
-  children: React.ReactElement;
+  children?: React.ReactElement;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
@@ -334,7 +364,7 @@ function FileLibrary({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger.Plain asChild>{children}</DialogTrigger.Plain>
+      {children && <DialogTrigger.Plain asChild>{children}</DialogTrigger.Plain>}
 
       <DialogContent className="grid-rows-[auto_auto_minmax(0,1fr)] sm:max-w-3xl">
         <DialogTitle>{title}</DialogTitle>
