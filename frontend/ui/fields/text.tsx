@@ -1,5 +1,10 @@
-import { cn } from '@/lib/cn';
-import { FieldErrorIcon, FieldHelper, type FieldHelperProps, FieldLabel } from '@/ui/form';
+import {
+  FieldErrorIcon,
+  FieldHelper,
+  type FieldHelperProps,
+  FieldLabel,
+} from '@/ui/form';
+import { inputCls, inputGroupCls } from '@/ui/style';
 import React from 'react';
 import {
   type Control,
@@ -15,6 +20,13 @@ type Extras = {
   helperText?: React.ReactNode;
   prefix?: React.ReactNode;
 };
+
+export function InputGroup({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={inputGroupCls({ className })} {...props} />;
+}
 
 export type TextFieldElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,
@@ -47,14 +59,7 @@ export function TextField({
           name={name}
           type={type}
           {...props}
-          className={cn(
-            'block w-full sm:text-sm rounded-md',
-            'bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7',
-            'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
-            'read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9',
-            'focus:outline-hidden focus:ring-accent-7 focus:border-accent-8',
-            inputClassName,
-          )}
+          className={inputCls({ className: inputClassName })}
         />
         {error && <FieldErrorIcon />}
       </div>

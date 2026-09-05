@@ -21,7 +21,7 @@ import { z } from 'zod';
 import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckboxElement } from '../fields/checkbox';
-import { FilePicker } from '@/ui/forms/FilePicker';
+import { FilePicker, ImageUrlField } from '@/ui/forms/FilePicker';
 import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
@@ -126,7 +126,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
       <FormError error={result.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
-      <TextFieldElement control={control} name="titlePhotoUrl" label="URL hlavní fotky" />
+      <ImageUrlField control={control} name="titlePhotoUrl" label="Titulní fotka" />
       <CheckboxElement control={control} name="isVisible" value="1" label="Veřejný" />
 
       <RichTextEditor

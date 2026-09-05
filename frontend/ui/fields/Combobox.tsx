@@ -10,7 +10,8 @@ import {
 import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from '@/lib/cn';
-import { buttonCls } from '@/ui/style';
+import { buttonCls, inputCls } from '@/ui/style';
+import { InputGroup } from '@/ui/fields/text';
 import { rankItem } from '@tanstack/match-sorter-utils';
 
 type Item = { id: string | null; label: string };
@@ -177,29 +178,39 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
 }) {
   return (
     <Command
-      className="border rounded-md bg-neutral-1 h-full max-h-full relative"
+      className="rounded-md border border-accent-7 bg-neutral-1 h-full max-h-full relative"
       filter={(value, search) => rankItem(value, search).rank}
     >
-      <div className="relative border-b" cmdk-input-wrapper="">
-        <Search className="absolute left-3 top-[.8rem] size-4 shrink-0 opacity-50" />
+      <InputGroup
+        className="-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none"
+        cmdk-input-wrapper=""
+      >
+        <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
+          <Search className="size-4" aria-hidden="true" />
+        </span>
         <Command.Input
           autoFocus
           placeholder="Vyhledat.."
-          className={cn(
-            'flex h-10 pl-10 w-full border-none bg-transparent py-2 text-sm outline-hidden',
-            'disabled:cursor-not-allowed disabled:opacity-50 focus:ring-transparent',
-          )}
+          className={inputCls({
+            className:
+              'h-10 min-w-0 grow disabled:cursor-not-allowed disabled:opacity-50',
+          })}
         />
         {value && (
           <button
             type="button"
-            className="absolute right-0 top-0 h-full py-2 px-3 border-l border-neutral-8 focus:outline-hidden"
+            className={buttonCls({
+              variant: 'outline',
+              size: 'none',
+              className: 'w-10 shrink-0 [&_svg]:size-4',
+            })}
             onClick={() => onChange(null)}
           >
-            <XCircle className="size-4 shrink-0 opacity-50" />
+            <XCircle />
+            <span className="sr-only">Vymazat výběr</span>
           </button>
         )}
-      </div>
+      </InputGroup>
 
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
       <Command.List

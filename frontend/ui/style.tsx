@@ -34,6 +34,24 @@ export const buttonCls = tv({
   },
 });
 
+export const inputCls = tv({
+  base: [
+    'block w-full rounded-md sm:text-sm',
+    'bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7',
+    'disabled:bg-neutral-2 disabled:border-neutral-7 disabled:text-neutral-11 disabled:placeholder:text-neutral-9',
+    'read-only:bg-neutral-2 read-only:border-neutral-7 read-only:text-neutral-11 read-only:placeholder:text-neutral-9',
+    'focus:outline-hidden focus:ring-accent-7 focus:border-accent-8',
+  ],
+});
+
+export const inputGroupCls = tv({
+  base: [
+    'isolate flex rounded-md shadow-xs',
+    '*:-ml-px *:rounded-none *:shadow-none [&>*:first-child]:ml-0 [&>*:first-child]:rounded-l-md [&>*:last-child]:rounded-r-md',
+    '[&>*:focus]:z-10 [&>*:focus-within]:z-10',
+  ],
+});
+
 export const cardCls = tv({
   base: 'group bg-neutral-1 relative border border-neutral-6 shadow-xs sm:rounded-lg p-3 mb-1',
 });

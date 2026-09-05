@@ -1,6 +1,6 @@
-import { FieldLabel } from '@/ui/form';
-import { buttonCls } from '@/ui/style';
-import { TextField } from '@/ui/fields/text';
+import { FieldHelper, FieldLabel } from '@/ui/form';
+import { buttonCls, inputCls } from '@/ui/style';
+import { InputGroup } from '@/ui/fields/text';
 import {
   formatDatePickerValue,
   parseDatePickerValue,
@@ -38,19 +38,22 @@ export function DatePickerElement<T extends FieldValues>({
   valueMode = 'date-object',
 }: DateInputProps<T> & Extras) {
   const { field, fieldState } = useController<T>({ control, name });
-  const inputValue = formatDatePickerValue(field.value as Date | string | null, valueMode);
+  const inputValue = formatDatePickerValue(
+    field.value as Date | string | null,
+    valueMode,
+  );
 
   return (
     <div className={className}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="flex items-start gap-2">
-        <TextField
-          className="min-w-0 flex-1"
-          type="date"
+      <InputGroup>
+        <input
+          id={name}
           name={name}
+          type="date"
           value={inputValue}
-          helperText={helperText}
-          error={fieldState.error}
+          aria-invalid={fieldState.invalid || undefined}
+          className={inputCls({ className: 'min-w-0 grow' })}
           onBlur={field.onBlur}
           onChange={(e) => {
             field.onChange(parseDatePickerValue(e.currentTarget.value, valueMode));
@@ -60,8 +63,9 @@ export function DatePickerElement<T extends FieldValues>({
           <button
             type="button"
             className={buttonCls({
-              variant: 'none',
-              className: 'shrink-0 px-2 shadow-none',
+              variant: 'outline',
+              size: 'none',
+              className: 'w-10 shrink-0 [&_svg]:size-4',
             })}
             aria-label="Vymazat datum"
             title="Vymazat datum"
@@ -73,7 +77,8 @@ export function DatePickerElement<T extends FieldValues>({
             <X />
           </button>
         )}
-      </div>
+      </InputGroup>
+      <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );
 }

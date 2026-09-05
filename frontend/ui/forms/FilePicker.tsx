@@ -2,9 +2,18 @@
 import { FileListDocument, type FileFragment } from '@/graphql/File';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
-import { buttonCls } from '@/ui/style';
+import { FieldHelper, FieldLabel } from '@/ui/form';
+import { InputGroup } from '@/ui/fields/text';
+import { buttonCls, inputCls } from '@/ui/style';
 import { Check, FileText, FolderOpen, Paperclip, Search, Upload, X } from 'lucide-react';
+import Image from 'next/image';
 import React from 'react';
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from 'react-hook-form';
 import { useQuery } from 'urql';
 
 type Props = {
@@ -12,12 +21,28 @@ type Props = {
   onChange: (value: string[]) => void;
 };
 
+type UploadedFile = Pick<FileFragment, 'id' | 'name' | 'url'>;
+
+async function uploadFile(source: File): Promise<UploadedFile> {
+  const response = await fetch('/f', {
+    method: 'POST',
+    headers: {
+      'content-type': source.type || 'application/octet-stream',
+      'x-file-name': encodeURIComponent(source.name),
+    },
+    body: source,
+  });
+  if (!response.ok) throw new Error('Upload failed');
+  return response.json();
+}
+
 export function FilePicker({ value, onChange }: Props) {
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [error, setError] = React.useState<string>();
 
   const files = (data?.files?.nodes ?? []).filter((file) => file.uploadedAt);
+  const selected = new Set(value);
   const filesById = new Map(files.map((file) => [file.id, file]));
   const selectedFiles = value.flatMap((id) => {
     const file = filesById.get(id);
@@ -31,22 +56,11 @@ export function FilePicker({ value, onChange }: Props) {
     setUploading(true);
     setError(undefined);
 
-    const results = await Promise.allSettled(
-      sources.map(async (source) => {
-        const response = await fetch('/f', {
-          method: 'POST',
-          headers: {
-            'content-type': source.type || 'application/octet-stream',
-            'x-file-name': encodeURIComponent(source.name),
-          },
-          body: source,
-        });
-        if (!response.ok) throw new Error('Upload failed');
-        return (await response.json()) as { id: string };
-      }),
-    );
+    const results = await Promise.allSettled(sources.map(uploadFile));
 
-    const uploadedIds = results.flatMap((x) => x.status === 'fulfilled' ? [x.value.id] : []);
+    const uploadedIds = results.flatMap((x) =>
+      x.status === 'fulfilled' ? [x.value.id] : [],
+    );
     if (uploadedIds.length > 0) {
       onChange([...new Set([...value, ...uploadedIds])]);
       refresh({ requestPolicy: 'network-only' });
@@ -111,9 +125,20 @@ export function FilePicker({ value, onChange }: Props) {
         <FileLibrary
           files={files}
           fetching={fetching}
-          value={value}
-          onChange={onChange}
-        />
+          isSelected={(file) => selected.has(file.id)}
+          onSelect={(file) =>
+            onChange(
+              selected.has(file.id)
+                ? value.filter((id) => id !== file.id)
+                : [...value, file.id],
+            )
+          }
+        >
+          <button type="button" className={buttonCls({ variant: 'outline', size: 'sm' })}>
+            <FolderOpen />
+            Vybrat existující
+          </button>
+        </FileLibrary>
       </div>
 
       {error && <p className="text-sm text-danger-11">{error}</p>}
@@ -121,19 +146,164 @@ export function FilePicker({ value, onChange }: Props) {
   );
 }
 
+export function ImageUrlField<T extends FieldValues>({
+  control,
+  name,
+  label,
+}: {
+  control: Control<T>;
+  name: Path<T>;
+  label: React.ReactNode;
+}) {
+  const { field, fieldState } = useController({ control, name });
+  const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
+  const [uploading, setUploading] = React.useState(false);
+  const [libraryOpen, setLibraryOpen] = React.useState(false);
+  const [error, setError] = React.useState<string>();
+  const value = typeof field.value === 'string' ? field.value : '';
+  const files = (data?.files?.nodes ?? []).filter(
+    (file) => file.uploadedAt && file.contentType?.startsWith('image/'),
+  );
+
+  const upload = async (input: FileList | null) => {
+    const source = input?.[0];
+    if (!source) return;
+
+    setUploading(true);
+    setError(undefined);
+    try {
+      const uploaded = await uploadFile(source);
+      field.onChange(uploaded.url);
+      refresh({ requestPolicy: 'network-only' });
+    } catch {
+      setError('Obrázek se nepodařilo nahrát.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <InputGroup>
+        <input
+          ref={field.ref}
+          id={name}
+          name={field.name}
+          value={value}
+          onBlur={field.onBlur}
+          onChange={(event) => {
+            setError(undefined);
+            field.onChange(event);
+          }}
+          inputMode="url"
+          aria-invalid={fieldState.invalid || undefined}
+          className={inputCls({ className: 'min-w-0 grow' })}
+        />
+
+        <label
+          className={cn(
+            buttonCls({
+              variant: 'outline',
+              size: 'none',
+              className: 'w-10 shrink-0 cursor-pointer [&_svg]:size-4',
+            }),
+            uploading && 'pointer-events-none text-neutral-9 opacity-60',
+          )}
+          title="Nahrát obrázek"
+        >
+          <Upload aria-hidden="true" />
+          <span className="sr-only">
+            {uploading ? 'Nahrávám obrázek' : 'Nahrát obrázek'}
+          </span>
+          <input
+            className="sr-only"
+            type="file"
+            accept="image/*"
+            disabled={uploading}
+            onChange={(event) => {
+              void upload(event.currentTarget.files);
+              event.currentTarget.value = '';
+            }}
+          />
+        </label>
+
+        <FileLibrary
+          open={libraryOpen}
+          onOpenChange={setLibraryOpen}
+          title="Vybrat obrázek"
+          files={files}
+          fetching={fetching}
+          isSelected={(file) => file.url === value}
+          onSelect={(file) => {
+            setError(undefined);
+            field.onChange(file.url);
+            setLibraryOpen(false);
+          }}
+        >
+          <button
+            type="button"
+            className={buttonCls({
+              variant: 'outline',
+              size: 'none',
+              className: 'w-10 shrink-0 [&_svg]:size-4',
+            })}
+            title="Vybrat existující obrázek"
+          >
+            <FolderOpen aria-hidden="true" />
+            <span className="sr-only">Vybrat existující obrázek</span>
+          </button>
+        </FileLibrary>
+      </InputGroup>
+
+      <FieldHelper error={fieldState.error} helperText={error} />
+      {value && <ImagePreview key={value} src={value} />}
+    </div>
+  );
+}
+
+function ImagePreview({ src }: { src: string }) {
+  const [failed, setFailed] = React.useState(false);
+
+  return (
+    <div className="relative mt-2 h-32 max-w-sm">
+      {failed ? (
+        <p className="text-sm text-danger-11">Náhled obrázku se nepodařilo načíst.</p>
+      ) : (
+        <Image
+          fill
+          unoptimized
+          sizes="24rem"
+          className="rounded-md object-contain object-left"
+          src={src}
+          alt="Náhled hlavní fotky"
+          onError={() => setFailed(true)}
+        />
+      )}
+    </div>
+  );
+}
+
 function FileLibrary({
   files,
   fetching,
-  value,
-  onChange,
+  isSelected,
+  onSelect,
+  title = 'Vybrat soubory',
+  children,
+  open,
+  onOpenChange,
 }: {
   files: FileFragment[];
   fetching: boolean;
-  value: string[];
-  onChange: (value: string[]) => void;
+  isSelected: (file: FileFragment) => boolean;
+  onSelect: (file: FileFragment) => void;
+  title?: string;
+  children: React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const [search, setSearch] = React.useState('');
-  const selected = new Set(value);
   const query = search.trim().toLocaleLowerCase();
   const visibleFiles = files.filter(
     (file) =>
@@ -143,31 +313,27 @@ function FileLibrary({
   );
 
   return (
-    <Dialog>
-      <DialogTrigger.Plain asChild>
-        <button
-          type="button"
-          className={buttonCls({ variant: 'outline', size: 'sm' })}
-        >
-          <FolderOpen />
-          Vybrat existující
-        </button>
-      </DialogTrigger.Plain>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger.Plain asChild>{children}</DialogTrigger.Plain>
 
       <DialogContent className="grid-rows-[auto_auto_minmax(0,1fr)] sm:max-w-3xl">
-        <DialogTitle>Vybrat soubory</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
 
-        <label className="relative block">
+        <label className="block">
           <span className="sr-only">Hledat soubory</span>
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-10" />
-          <input
-            autoFocus
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.currentTarget.value)}
-            placeholder="Hledat podle názvu"
-            className="w-full rounded-md border border-neutral-6 bg-neutral-2 py-2 pl-9 pr-3 text-sm text-neutral-12 outline-hidden focus:border-accent-8 focus:ring-2 focus:ring-accent-7"
-          />
+          <InputGroup>
+            <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
+              <Search className="size-4" aria-hidden="true" />
+            </span>
+            <input
+              autoFocus
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              placeholder="Hledat podle názvu"
+              className={inputCls({ className: 'min-w-0 grow' })}
+            />
+          </InputGroup>
         </label>
 
         <div className="min-h-48 overflow-y-auto overscroll-contain">
@@ -180,25 +346,19 @@ function FileLibrary({
           ) : (
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
               {visibleFiles.map((file) => {
-                const isSelected = selected.has(file.id);
+                const selected = isSelected(file);
                 return (
                   <li key={file.id}>
                     <button
                       type="button"
-                      aria-pressed={isSelected}
+                      aria-pressed={selected}
                       className={cn(
                         'relative flex size-full flex-col overflow-hidden rounded-md border bg-neutral-2 text-left outline-hidden',
-                        isSelected
+                        selected
                           ? 'border-accent-9 ring-2 ring-accent-7'
                           : 'border-neutral-5 hover:border-neutral-7 focus-visible:border-accent-8 focus-visible:ring-2 focus-visible:ring-accent-7',
                       )}
-                      onClick={() =>
-                        onChange(
-                          isSelected
-                            ? value.filter((id) => id !== file.id)
-                            : [...value, file.id],
-                        )
-                      }
+                      onClick={() => onSelect(file)}
                     >
                       <span className="flex aspect-4/3 w-full items-center justify-center bg-neutral-3">
                         {file.contentType?.startsWith('image/') ? (
@@ -222,7 +382,7 @@ function FileLibrary({
                           </span>
                         )}
                       </span>
-                      {isSelected && (
+                      {selected && (
                         <span className="absolute right-2 top-2 rounded-full bg-accent-9 p-1 text-accent-0 shadow-sm">
                           <Check className="size-3" />
                         </span>
