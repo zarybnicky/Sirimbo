@@ -419,38 +419,6 @@ export type AktualityCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-/** An input for mutations affecting `Aktuality` */
-export type AktualityInput = {
-  atFoto?: InputMaybe<Scalars['BigInt']['input']>;
-  atJmeno: Scalars['String']['input'];
-  atKat?: InputMaybe<Scalars['String']['input']>;
-  atKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  atPreview: Scalars['String']['input'];
-  atText: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
-export type AktualityPatch = {
-  atFoto?: InputMaybe<Scalars['BigInt']['input']>;
-  atJmeno?: InputMaybe<Scalars['String']['input']>;
-  atKat?: InputMaybe<Scalars['String']['input']>;
-  atKdo?: InputMaybe<Scalars['BigInt']['input']>;
-  atPreview?: InputMaybe<Scalars['String']['input']>;
-  atText?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  titlePhotoUrl?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 export type Announcement = {
   __typename?: 'Announcement';
   /** Reads and enables pagination through a set of `AnnouncementAudience`. */
@@ -1488,39 +1456,6 @@ export type CouplesOrderBy =
   | 'UPDATED_AT_DESC'
   | 'WOMAN_ID_ASC'
   | 'WOMAN_ID_DESC';
-
-/** All input for the create `Aktuality` mutation. */
-export type CreateAktualityInput = {
-  /** The `Aktuality` to be created by this mutation. */
-  aktuality: AktualityInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `Aktuality` mutation. */
-export type CreateAktualityPayload = {
-  __typename?: 'CreateAktualityPayload';
-  /** The `Aktuality` that was created by this mutation. */
-  aktuality: Maybe<Aktuality>;
-  /** An edge for our `Aktuality`. May be used by Relay 1. */
-  aktualityEdge: Maybe<AktualitiesEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `User` that is related to this `Aktuality`. */
-  userByAtKdo: Maybe<User>;
-};
-
-
-/** The output of our create `Aktuality` mutation. */
-export type CreateAktualityPayloadAktualityEdgeArgs = {
-  orderBy?: Array<AktualitiesOrderBy>;
-};
 
 /** All input for the create `Cohort` mutation. */
 export type CreateCohortInput = {
@@ -4016,8 +3951,6 @@ export type Mutation = {
   archiveCohort: Maybe<ArchiveCohortPayload>;
   changePassword: Maybe<ChangePasswordPayload>;
   confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
-  /** Creates a single `Aktuality`. */
-  createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Cohort`. */
   createCohort: Maybe<CreateCohortPayload>;
   /** Creates a single `CohortMembership`. */
@@ -4114,8 +4047,6 @@ export type Mutation = {
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
   /** Allows system administrators to update tenant metadata without switching tenant context. */
   systemAdminUpdateTenant: Maybe<SystemAdminUpdateTenantPayload>;
-  /** Updates a single `Aktuality` using a unique key and a patch. */
-  updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Announcement` using a unique key and a patch. */
   updateAnnouncement: Maybe<UpdateAnnouncementPayload>;
   updateAttendance: Maybe<UpdateAttendancePayload>;
@@ -4182,12 +4113,6 @@ export type MutationChangePasswordArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationConfirmMembershipApplicationArgs = {
   input: ConfirmMembershipApplicationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateAktualityArgs = {
-  input: CreateAktualityInput;
 };
 
 
@@ -4524,12 +4449,6 @@ export type MutationSyncCohortMembershipsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSystemAdminUpdateTenantArgs = {
   input: SystemAdminUpdateTenantInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAktualityArgs = {
-  input: UpdateAktualityInput;
 };
 
 
@@ -7705,40 +7624,6 @@ export type TransactionsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
-/** All input for the `updateAktuality` mutation. */
-export type UpdateAktualityInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-  /** An object where the defined keys will be set on the `Aktuality` being updated. */
-  patch: AktualityPatch;
-};
-
-/** The output of our update `Aktuality` mutation. */
-export type UpdateAktualityPayload = {
-  __typename?: 'UpdateAktualityPayload';
-  /** The `Aktuality` that was updated by this mutation. */
-  aktuality: Maybe<Aktuality>;
-  /** An edge for our `Aktuality`. May be used by Relay 1. */
-  aktualityEdge: Maybe<AktualitiesEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** Reads a single `User` that is related to this `Aktuality`. */
-  userByAtKdo: Maybe<User>;
-};
-
-
-/** The output of our update `Aktuality` mutation. */
-export type UpdateAktualityPayloadAktualityEdgeArgs = {
-  orderBy?: Array<AktualitiesOrderBy>;
-};
-
 /** All input for the `updateAnnouncement` mutation. */
 export type UpdateAnnouncementInput = {
   /**
@@ -8690,7 +8575,6 @@ export type GraphCacheKeysConfig = {
   CohortsEdge?: (data: WithTypename<CohortsEdge>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
-  CreateAktualityPayload?: (data: WithTypename<CreateAktualityPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
@@ -8799,7 +8683,6 @@ export type GraphCacheKeysConfig = {
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
   TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
-  UpdateAktualityPayload?: (data: WithTypename<UpdateAktualityPayload>) => null | string,
   UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
   UpdateAttendancePayload?: (data: WithTypename<UpdateAttendancePayload>) => null | string,
   UpdateCohortMembershipPayload?: (data: WithTypename<UpdateCohortMembershipPayload>) => null | string,
@@ -9245,12 +9128,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     woman?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     womanId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>
-  },
-  CreateAktualityPayload?: {
-    aktuality?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
-    aktualityEdge?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, CreateAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    userByAtKdo?: GraphCacheResolver<WithTypename<CreateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10152,12 +10029,6 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, WithTypename<Transaction> | string>
   },
-  UpdateAktualityPayload?: {
-    aktuality?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
-    aktualityEdge?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, UpdateAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
-    clientMutationId?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    userByAtKdo?: GraphCacheResolver<WithTypename<UpdateAktualityPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   UpdateAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, UpdateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
@@ -10322,7 +10193,6 @@ export type GraphCacheOptimisticUpdaters = {
   archiveCohort?: GraphCacheOptimisticMutationResolver<MutationArchiveCohortArgs, Maybe<WithTypename<ArchiveCohortPayload>>>,
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
-  createAktuality?: GraphCacheOptimisticMutationResolver<MutationCreateAktualityArgs, Maybe<WithTypename<CreateAktualityPayload>>>,
   createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
@@ -10379,7 +10249,6 @@ export type GraphCacheOptimisticUpdaters = {
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
   systemAdminUpdateTenant?: GraphCacheOptimisticMutationResolver<MutationSystemAdminUpdateTenantArgs, Maybe<WithTypename<SystemAdminUpdateTenantPayload>>>,
-  updateAktuality?: GraphCacheOptimisticMutationResolver<MutationUpdateAktualityArgs, Maybe<WithTypename<UpdateAktualityPayload>>>,
   updateAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpdateAnnouncementArgs, Maybe<WithTypename<UpdateAnnouncementPayload>>>,
   updateAttendance?: GraphCacheOptimisticMutationResolver<MutationUpdateAttendanceArgs, Maybe<WithTypename<UpdateAttendancePayload>>>,
   updateCohort?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
@@ -10488,7 +10357,6 @@ export type GraphCacheUpdaters = {
     archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
-    createAktuality?: GraphCacheUpdateResolver<{ createAktuality: Maybe<WithTypename<CreateAktualityPayload>> }, MutationCreateAktualityArgs>,
     createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
@@ -10545,7 +10413,6 @@ export type GraphCacheUpdaters = {
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
     systemAdminUpdateTenant?: GraphCacheUpdateResolver<{ systemAdminUpdateTenant: Maybe<WithTypename<SystemAdminUpdateTenantPayload>> }, MutationSystemAdminUpdateTenantArgs>,
-    updateAktuality?: GraphCacheUpdateResolver<{ updateAktuality: Maybe<WithTypename<UpdateAktualityPayload>> }, MutationUpdateAktualityArgs>,
     updateAnnouncement?: GraphCacheUpdateResolver<{ updateAnnouncement: Maybe<WithTypename<UpdateAnnouncementPayload>> }, MutationUpdateAnnouncementArgs>,
     updateAttendance?: GraphCacheUpdateResolver<{ updateAttendance: Maybe<WithTypename<UpdateAttendancePayload>> }, MutationUpdateAttendanceArgs>,
     updateCohort?: GraphCacheUpdateResolver<{ updateCohort: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortArgs>,
@@ -10916,12 +10783,6 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     womanId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>
-  },
-  CreateAktualityPayload?: {
-    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
-    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, CreateAktualityPayloadAktualityEdgeArgs>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>,
-    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAktualityPayload>>, Record<string, never>>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
@@ -11822,12 +11683,6 @@ export type GraphCacheUpdaters = {
   TransactionsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>
-  },
-  UpdateAktualityPayload?: {
-    aktuality?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
-    aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, UpdateAktualityPayloadAktualityEdgeArgs>,
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>,
-    userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAktualityPayload>>, Record<string, never>>
   },
   UpdateAnnouncementPayload?: {
     announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,

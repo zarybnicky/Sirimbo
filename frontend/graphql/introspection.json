@@ -4009,65 +4009,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CreateAktualityPayload",
-        "fields": [
-          {
-            "name": "aktuality",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Aktuality",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "aktualityEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AktualitiesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "userByAtKdo",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "CreateCohortMembershipPayload",
         "fields": [
           {
@@ -8790,26 +8731,6 @@
             ]
           },
           {
-            "name": "createAktuality",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CreateAktualityPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "createCohort",
             "type": {
               "kind": "OBJECT",
@@ -9914,26 +9835,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "SystemAdminUpdateTenantPayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "updateAktuality",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpdateAktualityPayload",
               "ofType": null
             },
             "args": [
@@ -19063,65 +18964,6 @@
                 "kind": "OBJECT",
                 "ofType": null
               }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpdateAktualityPayload",
-        "fields": [
-          {
-            "name": "aktuality",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Aktuality",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "aktualityEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AktualitiesEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "userByAtKdo",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
             },
             "args": []
           }

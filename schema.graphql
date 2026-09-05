@@ -448,40 +448,6 @@ input AktualityCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `Aktuality`"""
-input AktualityInput {
-  atFoto: BigInt
-  atJmeno: String!
-  atKat: String
-  atKdo: BigInt
-  atPreview: String!
-  atText: String!
-  createdAt: Datetime
-  id: BigInt
-  isVisible: Boolean
-  tenantId: BigInt
-  titlePhotoUrl: String
-  updatedAt: Datetime
-}
-
-"""
-Represents an update to a `Aktuality`. Fields that are set will be updated.
-"""
-input AktualityPatch {
-  atFoto: BigInt
-  atJmeno: String
-  atKat: String
-  atKdo: BigInt
-  atPreview: String
-  atText: String
-  createdAt: Datetime
-  id: BigInt
-  isVisible: Boolean
-  tenantId: BigInt
-  titlePhotoUrl: String
-  updatedAt: Datetime
-}
-
 type Announcement {
   """Reads and enables pagination through a set of `AnnouncementAudience`."""
   announcementAudiences(
@@ -1796,39 +1762,6 @@ enum CouplesOrderBy {
   UPDATED_AT_DESC
   WOMAN_ID_ASC
   WOMAN_ID_DESC
-}
-
-"""All input for the create `Aktuality` mutation."""
-input CreateAktualityInput {
-  """The `Aktuality` to be created by this mutation."""
-  aktuality: AktualityInput!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our create `Aktuality` mutation."""
-type CreateAktualityPayload {
-  """The `Aktuality` that was created by this mutation."""
-  aktuality: Aktuality
-
-  """An edge for our `Aktuality`. May be used by Relay 1."""
-  aktualityEdge(
-    """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AktualitiesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
 }
 
 """All input for the create `Cohort` mutation."""
@@ -4796,14 +4729,6 @@ type Mutation {
     input: ConfirmMembershipApplicationInput!
   ): ConfirmMembershipApplicationPayload
 
-  """Creates a single `Aktuality`."""
-  createAktuality(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateAktualityInput!
-  ): CreateAktualityPayload
-
   """Creates a single `Cohort`."""
   createCohort(
     """
@@ -5221,14 +5146,6 @@ type Mutation {
     """
     input: SystemAdminUpdateTenantInput!
   ): SystemAdminUpdateTenantPayload
-
-  """Updates a single `Aktuality` using a unique key and a patch."""
-  updateAktuality(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAktualityInput!
-  ): UpdateAktualityPayload
 
   """Updates a single `Announcement` using a unique key and a patch."""
   updateAnnouncement(
@@ -9112,42 +9029,6 @@ enum TransactionsOrderBy {
 A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
 """
 scalar UUID
-
-"""All input for the `updateAktuality` mutation."""
-input UpdateAktualityInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Aktuality` being updated.
-  """
-  patch: AktualityPatch!
-}
-
-"""The output of our update `Aktuality` mutation."""
-type UpdateAktualityPayload {
-  """The `Aktuality` that was updated by this mutation."""
-  aktuality: Aktuality
-
-  """An edge for our `Aktuality`. May be used by Relay 1."""
-  aktualityEdge(
-    """The method to use when ordering `Aktuality`."""
-    orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AktualitiesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
-}
 
 """All input for the `updateAnnouncement` mutation."""
 input UpdateAnnouncementInput {

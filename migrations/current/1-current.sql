@@ -68,3 +68,6 @@ create or replace trigger _100_timestamps
   for each row execute function app_private.tg__timestamps();
 
 --! include functions/competition_reports.sql
+
+comment on table aktuality is '@omit create,update
+@behavior -query:resource:list';

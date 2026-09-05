@@ -2,9 +2,8 @@
 
 import {
   ArticleDocument,
-  CreateArticleDocument,
   DeleteArticleDocument,
-  UpdateArticleDocument,
+  UpsertArticleDocument,
 } from '@/graphql/Articles';
 import { useActions } from '@/lib/actions';
 import { ErrorPage } from '@/ui/ErrorPage';
@@ -19,9 +18,11 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckboxElement } from '../fields/checkbox';
+import { FilePicker } from '@/ui/forms/FilePicker';
+import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
@@ -32,6 +33,7 @@ const Form = z.object({
     z.string().nullable().default(null),
   ),
   isVisible: z.boolean().prefault(true),
+  attachmentIds: z.array(z.string()).prefault([]),
 });
 
 type FormValues = z.infer<typeof Form>;
@@ -42,12 +44,13 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   const data = query.data?.aktuality;
   const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 
-  const [createResult, create] = useMutation(CreateArticleDocument);
-  const [updateResult, update] = useMutation(UpdateArticleDocument);
+  const [result, upsert] = useMutation(UpsertArticleDocument);
 
   const { reset, control, handleSubmit } = useForm({
+    defaultValues: { attachmentIds: [] },
     resolver: zodResolver(Form),
   });
+  const { field: attachmentIds } = useController({ control, name: 'attachmentIds' });
   React.useEffect(() => {
     reset(
       {
@@ -56,6 +59,10 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         atText: data?.atText ?? '',
         titlePhotoUrl: data?.titlePhotoUrl ?? '',
         isVisible: data?.isVisible ?? true,
+        attachmentIds:
+          data?.explicitAttachments.nodes
+            .map((attachment) => attachment.file?.id)
+            .filter(isTruthy) ?? [],
       },
       {
         keepDirtyValues: true,
@@ -65,19 +72,27 @@ export function ArticleForm({ id = '' }: { id?: string }) {
     );
   }, [data, reset]);
 
-  const onSubmit = async (patch: FormValues) => {
-    if (id) {
-      await update({ id, patch });
-    } else {
-      const result = await create({ input: patch });
-      if (!result.error) {
-        const id = result.data?.createAktuality?.aktuality?.id;
-        toast.success('Přidáno.');
-        if (id) {
-          router.replace(`/aktuality/${id}`);
-        } else {
-          reset();
-        }
+  const onSubmit = async (values: FormValues) => {
+    const result = await upsert({
+      input: {
+        info: {
+          id: id || undefined,
+          title: values.atJmeno,
+          preview: values.atPreview,
+          body: values.atText,
+          titlePhotoUrl: values.titlePhotoUrl,
+          isVisible: values.isVisible,
+        },
+        attachments: values.attachmentIds,
+      },
+    });
+    if (!result.error && !id) {
+      const newId = result.data?.upsertArticle?.aktuality?.id;
+      toast.success('Přidáno.');
+      if (newId) {
+        router.replace(`/aktuality/${newId}`);
+      } else {
+        reset();
       }
     }
   };
@@ -109,7 +124,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         <ActionGroup actions={actions} />
       </TitleBar>
 
-      <FormError error={createResult.error || updateResult.error} />
+      <FormError error={result.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <TextFieldElement control={control} name="titlePhotoUrl" label="URL hlavní fotky" />
       <CheckboxElement control={control} name="isVisible" value="1" label="Veřejný" />
@@ -126,6 +141,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         name="atText"
         label="Text"
       />
+      <FilePicker value={attachmentIds.value ?? []} onChange={attachmentIds.onChange} />
       <SubmitButton control={control} />
     </form>
   );

@@ -9,6 +9,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 import { stripHtml } from '@/lib/stripHtml';
+import { FileAttachments } from '@/ui/FileAttachments';
 
 type ArticlePageProps = {
   params: Promise<{
@@ -92,6 +93,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       )}
       <RichTextView value={item.atText} />
+      <FileAttachments attachments={item.explicitAttachments.nodes} />
     </>
   );
 }

@@ -9,6 +9,13 @@ fragment Article on Aktuality {
   updatedAt
   titlePhotoUrl
   isVisible
+  explicitAttachments: attachments(condition: {inline: false}) {
+    nodes {
+      file {
+        ...File
+      }
+    }
+  }
 }
 
 query Article($id: BigInt!) {
@@ -28,16 +35,8 @@ query Articles($first: Int, $offset: Int, $visibleOnly: Boolean) {
   }
 }
 
-mutation CreateArticle($input: AktualityInput!) {
-  createAktuality(input: {aktuality: $input}) {
-    aktuality {
-      ...Article
-    }
-  }
-}
-
-mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
-  updateAktuality(input: {id: $id, patch: $patch}) {
+mutation UpsertArticle($input: UpsertArticleInput!) {
+  upsertArticle(input: $input) {
     aktuality {
       ...Article
     }
