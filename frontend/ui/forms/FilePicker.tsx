@@ -1,11 +1,19 @@
-/* eslint-disable @next/next/no-img-element */
 import { FileListDocument, type FileFragment } from '@/graphql/File';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { InputGroup } from '@/ui/fields/text';
 import { buttonCls, inputCls } from '@/ui/style';
-import { Check, FileText, FolderOpen, Paperclip, Search, Upload, X } from 'lucide-react';
+import {
+  Check,
+  FileText,
+  FolderOpen,
+  LockOpen,
+  Paperclip,
+  Search,
+  Upload,
+  X,
+} from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import {
@@ -22,6 +30,19 @@ type Props = {
 };
 
 type UploadedFile = Pick<FileFragment, 'id' | 'name' | 'url'>;
+
+const uploadedAtFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+});
+
+function formatFileSize(value: string) {
+  const bytes = Number(value);
+  if (bytes < 1_000_000) return `${Math.ceil(bytes / 1000)} kB`;
+  return `${(bytes / 1_000_000).toLocaleString('cs-CZ', {
+    maximumFractionDigits: 1,
+  })} MB`;
+}
 
 async function uploadFile(source: File): Promise<UploadedFile> {
   const response = await fetch('/f', {
@@ -272,7 +293,6 @@ function ImagePreview({ src }: { src: string }) {
       ) : (
         <Image
           fill
-          unoptimized
           sizes="24rem"
           className="rounded-md object-contain object-left"
           src={src}
@@ -360,13 +380,14 @@ function FileLibrary({
                       )}
                       onClick={() => onSelect(file)}
                     >
-                      <span className="flex aspect-4/3 w-full items-center justify-center bg-neutral-3">
+                      <span className="relative flex aspect-4/3 w-full shrink-0 items-center justify-center overflow-hidden bg-neutral-3">
                         {file.contentType?.startsWith('image/') ? (
-                          <img
+                          <Image
+                            fill
                             src={file.url}
                             alt=""
-                            loading="lazy"
-                            className="size-full object-cover"
+                            sizes="(min-width: 768px) 11rem, (min-width: 640px) 33vw, 50vw"
+                            className="object-cover"
                           />
                         ) : (
                           <FileText className="size-10 text-neutral-9" />
@@ -381,6 +402,28 @@ function FileLibrary({
                             {file.name}
                           </span>
                         )}
+                        <span className="mt-0.5 flex flex-wrap gap-x-1 text-[11px] leading-tight text-neutral-9">
+                          {file.uploadedAt && (
+                            <time dateTime={file.uploadedAt}>
+                              {uploadedAtFormatter.format(new Date(file.uploadedAt))}
+                            </time>
+                          )}
+                          {file.byteSize && (
+                            <>
+                              <span aria-hidden="true">·</span>
+                              <span>{formatFileSize(file.byteSize)}</span>
+                            </>
+                          )}
+                          {file.isPublic && (
+                            <>
+                              <span aria-hidden="true">·</span>
+                              <span className="inline-flex items-center" title="Veřejný soubor">
+                                <LockOpen className="size-3" aria-hidden="true" />
+                                <span className="sr-only">Veřejný soubor</span>
+                              </span>
+                            </>
+                          )}
+                        </span>
                       </span>
                       {selected && (
                         <span className="absolute right-2 top-2 rounded-full bg-accent-9 p-1 text-accent-0 shadow-sm">

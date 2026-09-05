@@ -5,10 +5,12 @@ fragment File on File {
   url
   contentType
   uploadedAt
+  byteSize
+  isPublic
 }
 
 query FileList {
-  files(first: 500, orderBy: [DISPLAY_NAME_ASC, NAME_ASC, ID_ASC]) {
+  files(first: 500, orderBy: [UPLOADED_AT_DESC, ID_DESC]) {
     nodes {
       ...File
     }

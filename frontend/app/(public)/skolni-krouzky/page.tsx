@@ -56,7 +56,7 @@ export default function SkolniKrouzkyPage() {
       <div className="my-8 relative min-h-[50vh]">
         <Image
           className="object-contain"
-          src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-OlympDance-uvodni-foto.jpg"
+          src="/f/22/OlympDance-uvodni-foto.jpg"
           alt="Společné foto závěrečného vystoupení Olymp Dance"
           fill
           sizes="(min-width: 600px) 520px, calc(100vw - 1rem)"

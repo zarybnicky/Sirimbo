@@ -33,7 +33,7 @@ export default function LocationsPage() {
           <Image
             className="object-cover"
             alt="Taneční sál v Tanečním centru při FZŠ Holečkova v Olomouci"
-            src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
+            src="/f/23/Saly-Holeckova.jpg"
             fill
             sizes="(min-width: 600px) 520px, calc(100vw - 1rem)"
           />
@@ -54,7 +54,7 @@ export default function LocationsPage() {
           <Image
             className="object-cover"
             alt="Tělocvična Slovanského gymnázia používaná pro tréninky TK Olymp"
-            src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
+            src="/f/21/Saly-SGO.jpg"
             fill
             sizes="(min-width: 600px) 520px, calc(100vw - 1rem)"
           />

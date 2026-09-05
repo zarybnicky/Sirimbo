@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import type { FileFragment } from '@/graphql/File';
 import { Paperclip } from 'lucide-react';
+import Image from 'next/image';
 
 export function FileAttachments({
   attachments,
@@ -28,12 +28,15 @@ export function FileAttachments({
                 target="_blank"
                 rel="noreferrer"
               >
-                <img
-                  className="aspect-4/3 w-full object-contain"
-                  src={file.url}
-                  alt={file.displayName ?? file.name}
-                  loading="lazy"
-                />
+                <span className="relative block aspect-4/3 w-full">
+                  <Image
+                    fill
+                    className="object-contain"
+                    src={file.url}
+                    alt={file.displayName ?? file.name}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                  />
+                </span>
                 <span className="block truncate border-t border-neutral-5 px-2 py-1.5 text-sm">
                   {file.displayName ?? file.name}
                 </span>

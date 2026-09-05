@@ -43,8 +43,8 @@ export function Hero({
         summary:
           'Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.',
         inset: true,
-        img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1788092007301-WhatsApp%20Image%202026-08-26%20at%2014.24.57.jpeg',
-        // img: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1749072837164-0016-DSC_0009%201.jpg',
+        // img: '/f/42/0016-DSC_0009%201.jpg',
+        img: '/f/66/WhatsApp%20Image%202026-08-26%20at%2014.24.57.jpeg',
       },
       ...mappedData.filter((x) => x.id !== '467' && x.id !== '468' && x.id !== '470'),
     ] as HeroArticle[];
