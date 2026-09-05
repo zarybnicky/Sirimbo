@@ -1,19 +1,15 @@
 'use client';
 
-import {
-  SetEventSharingDocument,
-  type EventWithTrainerFragment,
-} from '@/graphql/Event';
-import { buttonCls } from '@/ui/style';
+import { SetEventSharingDocument, type EventWithTrainerFragment } from '@/graphql/Event';
+import { InputGroup } from '@/ui/fields/text';
+import { buttonCls, inputCls } from '@/ui/style';
 import { DialogDescription, DialogTitle } from '@/ui/dialog';
 import { Copy, Link2Off } from 'lucide-react';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 
-export default function EventShareDialog({
-  item,
-}: { item: EventWithTrainerFragment }) {
+export default function EventShareDialog({ item }: { item: EventWithTrainerFragment }) {
   const [{ fetching }, setSharing] = useMutation(SetEventSharingDocument);
   const [token, setToken] = React.useState(item.shareToken);
 
@@ -42,31 +38,37 @@ export default function EventShareDialog({
 
       {path ? (
         <>
-          <div className="rounded-md border border-neutral-5 bg-neutral-2 p-3">
-            <p className="break-all font-mono text-sm text-neutral-12">{path}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
+          <InputGroup>
+            <input
+              readOnly
+              value={path}
+              aria-label="Odkaz ke sdílení"
+              className={inputCls({ className: 'min-w-0 grow font-mono' })}
+            />
             <button
               type="button"
-              className={buttonCls({ variant: 'primary' })}
+              className={buttonCls({
+                variant: 'primary',
+                className: 'shrink-0',
+              })}
               onClick={async () => {
                 await navigator.clipboard.writeText(`${window.location.origin}${path}`);
                 toast.success('Odkaz zkopírován.');
               }}
+              title="Kopírovat odkaz"
             >
               <Copy />
-              Kopírovat odkaz
             </button>
-            <button
-              type="button"
-              className={buttonCls({ variant: 'outline' })}
-              disabled={fetching}
-              onClick={() => changeSharing(false)}
-            >
-              <Link2Off />
-              Zrušit sdílení
-            </button>
-          </div>
+          </InputGroup>
+          <button
+            type="button"
+            className={buttonCls({ variant: 'outline' })}
+            disabled={fetching}
+            onClick={() => changeSharing(false)}
+          >
+            <Link2Off />
+            Zrušit sdílení
+          </button>
         </>
       ) : (
         <button

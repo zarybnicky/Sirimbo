@@ -1,5 +1,7 @@
 import { cn } from '@/lib/cn';
-import { TextField } from '@/ui/fields/text';
+import { InputGroup } from '@/ui/fields/text';
+import { FieldHelper } from '@/ui/form';
+import { inputCls } from '@/ui/style';
 import {
   addHours,
   addMilliseconds,
@@ -41,6 +43,10 @@ export function DateTimeRangeField({
   const endDate = format(untilDate, 'yyyy-MM-dd');
   const endTime = format(untilDate, 'HH:mm');
   const showEndDate = type === 'CAMP' || !isSameDay(sinceDate, untilDate);
+  const rangeError =
+    untilDate < sinceDate
+      ? { type: 'validate', message: 'Konec události je dřiv než začátek' }
+      : undefined;
 
   const setSince = (date: string, time: string) => {
     const nextSince = parseLocalDateTime(date, time);
@@ -57,64 +63,85 @@ export function DateTimeRangeField({
   };
 
   return (
-    <div
-      className={cn(
-        'flex min-w-0 flex-1 gap-2',
-        type === 'CAMP' ? 'flex-col' : 'flex-wrap items-baseline',
-        className,
-      )}
-    >
-      <div className="flex flex-wrap items-baseline gap-2">
-        <TextField
-          type="date"
-          value={startDate}
-          aria-label={type === 'CAMP' ? 'Začátek (datum)' : 'Datum'}
-          onChange={(event) => setSince(event.target.value, startTime)}
-        />
-        <TextField
-          type="time"
-          step={60}
-          value={startTime}
-          required
-          aria-label="Začátek"
-          onChange={(event) => setSince(startDate, event.target.value)}
-          error={
-            untilDate < sinceDate
-              ? { type: '', message: 'Konec události je dřiv než začátek' }
-              : undefined
-          }
-        />
-        {!showEndDate && (
-          <TextField
-            type="time"
-            step={60}
-            value={endTime}
-            required
-            aria-label="Konec"
-            onChange={(event) => setUntil(startDate, event.target.value)}
-          />
+    <div className={cn('min-w-0 flex-1', className)}>
+      <div className={cn('flex gap-2', type === 'CAMP' ? 'flex-col' : 'flex-wrap')}>
+        {showEndDate ? (
+          <InputGroup className="w-full sm:w-auto">
+            <input
+              type="date"
+              value={startDate}
+              aria-label={type === 'CAMP' ? 'Začátek (datum)' : 'Datum'}
+              onChange={(event) => setSince(event.currentTarget.value, startTime)}
+              className={inputCls({ className: 'min-w-0 grow basis-36' })}
+            />
+            <input
+              type="time"
+              step={60}
+              value={startTime}
+              required
+              aria-label="Začátek"
+              onChange={(event) => setSince(startDate, event.currentTarget.value)}
+              className={inputCls({ className: 'min-w-0 grow basis-24' })}
+            />
+          </InputGroup>
+        ) : (
+          <>
+            <input
+              type="date"
+              value={startDate}
+              aria-label="Datum"
+              onChange={(event) => setSince(event.currentTarget.value, startTime)}
+              className={inputCls({ className: 'w-40 shadow-xs' })}
+            />
+            <InputGroup className="w-56 max-w-full">
+              <input
+                type="time"
+                step={60}
+                value={startTime}
+                required
+                aria-label="Začátek"
+                onChange={(event) => setSince(startDate, event.currentTarget.value)}
+                className={inputCls({ className: 'min-w-0' })}
+              />
+              <input
+                type="time"
+                step={60}
+                value={endTime}
+                required
+                aria-label="Konec"
+                aria-invalid={rangeError ? true : undefined}
+                onChange={(event) => setUntil(startDate, event.currentTarget.value)}
+                className={inputCls({ className: 'min-w-0' })}
+              />
+            </InputGroup>
+          </>
+        )}
+
+        {showEndDate && (
+          <InputGroup className="w-full sm:w-auto">
+            <input
+              type="date"
+              value={endDate}
+              required={type === 'CAMP'}
+              aria-label="Konec (datum)"
+              aria-invalid={rangeError ? true : undefined}
+              onChange={(event) => setUntil(event.currentTarget.value, endTime)}
+              className={inputCls({ className: 'min-w-0 grow basis-36' })}
+            />
+            <input
+              type="time"
+              step={60}
+              value={endTime}
+              required
+              aria-label="Konec"
+              aria-invalid={rangeError ? true : undefined}
+              onChange={(event) => setUntil(endDate, event.currentTarget.value)}
+              className={inputCls({ className: 'min-w-0 grow basis-24' })}
+            />
+          </InputGroup>
         )}
       </div>
-
-      {showEndDate && (
-        <div className="flex flex-wrap items-baseline gap-2">
-          <TextField
-            type="date"
-            value={endDate}
-            required={type === 'CAMP'}
-            aria-label="Konec (datum)"
-            onChange={(event) => setUntil(event.target.value, endTime)}
-          />
-          <TextField
-            type="time"
-            step={60}
-            value={endTime}
-            required
-            aria-label="Konec"
-            onChange={(event) => setUntil(endDate, event.target.value)}
-          />
-        </div>
-      )}
+      <FieldHelper error={rangeError} />
     </div>
   );
 }

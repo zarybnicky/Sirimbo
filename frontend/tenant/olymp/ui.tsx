@@ -126,13 +126,13 @@ function Sponsors() {
   return (
     <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-center justify-center text-center text-neutral-11">
       {[
-        { image: LogoCsts },
-        { image: LogoNsa, label: '' },
-        { image: LogoOlomouc },
-        { image: LogoKraj },
-        { image: LogoProstejov, label: 'Město Prostějov' },
+        { key: 'csts', image: LogoCsts },
+        { key: 'nsa', image: LogoNsa, label: '' },
+        { key: 'olomouc', image: LogoOlomouc },
+        { key: 'kraj', image: LogoKraj },
+        { key: 'prostejov', image: LogoProstejov, label: 'Město Prostějov' },
       ].map((x) => (
-        <div key={x.label} className="grow flex lg:flex-1 flex-col items-center gap-1">
+        <div key={x.key} className="grow flex lg:flex-1 flex-col items-center gap-1">
           <Image
             alt={x.label ?? ''}
             className="w-full h-auto max-w-50 max-h-30 min-h-15 object-contain"
