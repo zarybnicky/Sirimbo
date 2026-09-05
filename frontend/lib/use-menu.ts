@@ -122,12 +122,6 @@ export function useMemberMenu(): MenuStructItem[] {
                 href: '/crm',
                 requireAdmin: true,
               },
-              {
-                type: 'link' as const,
-                title: 'Upload (WIP)',
-                href: '/upload',
-                requireAdmin: true,
-              },
             ]
           : []),
         ...(enableStarletImport

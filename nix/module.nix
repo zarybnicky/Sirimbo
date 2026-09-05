@@ -111,7 +111,6 @@ in {
         "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -"
         "d ${cfg.stateDir}/gallery 0755 ${cfg.user} ${cfg.user} -"
         "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
-        "d ${cfg.stateDir}/uploads 0755 ${cfg.user} ${cfg.user} -"
       ];
 
       systemd.services.rozpisovnik-api = {
