@@ -20,7 +20,7 @@ WITH frontier_status AS (
       AS process_ready,
     max(last_fetched_at) AS latest,
     count(*) FILTER (
-      WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
+      WHERE next_fetch_at <= now()
         AND (
           fetch_status IN ('pending', 'transient')
           OR (
@@ -335,26 +335,46 @@ WITH allowed_loaders AS (
     :loaderFederations::text[],
     :loaderKinds::text[]
   ) AS input(federation, kind)
+), active_fetches AS MATERIALIZED (
+  SELECT frontier_id
+  FROM crawler.frontier_fetch_job
+  WHERE state IN ('ready', 'delayed', 'locked')
 ), ranked AS (
   SELECT
-    df.id,
-    df.federation,
-    df.kind,
-    df.key,
-    df.due_at,
-    df.last_fetched_at,
+    candidate.*,
     row_number() OVER (
-      PARTITION BY df.federation, df.kind
-      ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id
+      PARTITION BY candidate.federation, candidate.kind
+      ORDER BY candidate.next_fetch_at, candidate.last_fetched_at NULLS FIRST, candidate.id
     ) AS rn
-  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
-  JOIN allowed_loaders USING (federation, kind)
-  WHERE NOT EXISTS (
-    SELECT 1
-    FROM crawler.frontier_fetch_job j
-    WHERE j.frontier_id = df.id
-      AND j.state IN ('ready', 'delayed', 'locked')
-  )
+  FROM allowed_loaders loader
+  CROSS JOIN LATERAL (
+    SELECT
+      f.id,
+      f.federation,
+      f.kind,
+      f.key,
+      f.next_fetch_at,
+      f.last_fetched_at
+    FROM crawler.frontier f
+    WHERE f.federation = loader.federation
+      AND f.kind = loader.kind
+      AND f.next_fetch_at <= now()
+      AND (
+        f.fetch_status IN ('pending', 'transient')
+        OR (
+          coalesce(:allowRefetch::boolean, false)
+          AND f.fetch_status = 'ok'
+          AND f.process_status = 'ok'
+        )
+      )
+      AND NOT EXISTS (
+        SELECT 1
+        FROM active_fetches active
+        WHERE active.frontier_id = f.id
+      )
+    ORDER BY f.next_fetch_at, f.last_fetched_at NULLS FIRST, f.id
+    LIMIT :capacity
+  ) candidate
 )
 SELECT
   id AS "id!",
@@ -362,7 +382,7 @@ SELECT
   kind AS "kind!",
   key AS "key!"
 FROM ranked
-ORDER BY rn, due_at, last_fetched_at NULLS FIRST, id
+ORDER BY rn, next_fetch_at, last_fetched_at NULLS FIRST, id
 LIMIT :capacity;
 
 /* @name GetNextPendingProcess */

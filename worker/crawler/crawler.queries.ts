@@ -84,7 +84,7 @@ export interface IGetCrawlerStatusQuery {
   result: IGetCrawlerStatusResult;
 }
 
-const getCrawlerStatusIR: any = {"usedParamSet":{"allowRefetch":true,"federation":true,"kind":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":843,"b":855}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1027,"b":1037},{"a":1069,"b":1079},{"a":1399,"b":1409},{"a":1441,"b":1451}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1091,"b":1095},{"a":1121,"b":1125},{"a":1463,"b":1467},{"a":1493,"b":1497}]}],"statement":"WITH frontier_status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    count(*) FILTER (WHERE key <> '')::int AS key_count,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS done,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int\n      AS process_ready,\n    max(last_fetched_at) AS latest,\n    count(*) FILTER (\n      WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())\n        AND (\n          fetch_status IN ('pending', 'transient')\n          OR (\n            coalesce(:allowRefetch::boolean, false)\n            AND fetch_status = 'ok'\n            AND process_status = 'ok'\n          )\n        )\n    )::int AS fetch_due\n  FROM crawler.frontier\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n  GROUP BY federation, kind\n), fetch_jobs AS (\n  SELECT\n    federation,\n    kind,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued_fetch,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked_fetch\n  FROM crawler.frontier_fetch_job\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND state IN ('ready', 'delayed', 'locked')\n  GROUP BY federation, kind\n)\nSELECT\n  fs.federation AS \"federation!\",\n  fs.kind AS \"kind!\",\n  fs.total AS \"total!\",\n  coalesce(key_samples.keys, '-')\n    || CASE WHEN fs.key_count > 3 THEN ', ...' ELSE '' END AS \"keys!\",\n  fs.fetch_pending AS \"fetch_pending!\",\n  fs.fetch_transient AS \"fetch_transient!\",\n  fs.fetch_error AS \"fetch_error!\",\n  fs.done AS \"done!\",\n  fs.process_error AS \"process_error!\",\n  fs.latest,\n  fs.fetch_due AS \"fetch_due!\",\n  fs.process_ready AS \"process_ready!\",\n  coalesce(fj.queued_fetch, 0)::int AS \"queued_fetch!\",\n  coalesce(fj.locked_fetch, 0)::int AS \"locked_fetch!\"\nFROM frontier_status fs\nLEFT JOIN LATERAL (\n  SELECT string_agg(sample.key, ', ' ORDER BY sample.key) AS keys\n  FROM (\n    SELECT f.key\n    FROM crawler.frontier f\n    WHERE f.federation = fs.federation\n      AND f.kind = fs.kind\n      AND f.key <> ''\n    ORDER BY f.key\n    LIMIT 3\n  ) sample\n) key_samples ON true\nLEFT JOIN fetch_jobs fj USING (federation, kind)\nORDER BY fs.federation, fs.kind"};
+const getCrawlerStatusIR: any = {"usedParamSet":{"allowRefetch":true,"federation":true,"kind":true},"params":[{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":816,"b":828}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1000,"b":1010},{"a":1042,"b":1052},{"a":1372,"b":1382},{"a":1414,"b":1424}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1064,"b":1068},{"a":1094,"b":1098},{"a":1436,"b":1440},{"a":1466,"b":1470}]}],"statement":"WITH frontier_status AS (\n  SELECT\n    federation,\n    kind,\n    count(*)::int AS total,\n    count(*) FILTER (WHERE key <> '')::int AS key_count,\n    count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,\n    count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,\n    count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,\n    count(*) FILTER (WHERE process_status = 'ok')::int AS done,\n    count(*) FILTER (WHERE process_status = 'error')::int AS process_error,\n    count(*) FILTER (WHERE process_status = 'pending' AND fetch_status = 'ok')::int\n      AS process_ready,\n    max(last_fetched_at) AS latest,\n    count(*) FILTER (\n      WHERE next_fetch_at <= now()\n        AND (\n          fetch_status IN ('pending', 'transient')\n          OR (\n            coalesce(:allowRefetch::boolean, false)\n            AND fetch_status = 'ok'\n            AND process_status = 'ok'\n          )\n        )\n    )::int AS fetch_due\n  FROM crawler.frontier\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n  GROUP BY federation, kind\n), fetch_jobs AS (\n  SELECT\n    federation,\n    kind,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued_fetch,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked_fetch\n  FROM crawler.frontier_fetch_job\n  WHERE (:federation::text IS NULL OR federation = :federation)\n    AND (:kind::text IS NULL OR kind = :kind)\n    AND state IN ('ready', 'delayed', 'locked')\n  GROUP BY federation, kind\n)\nSELECT\n  fs.federation AS \"federation!\",\n  fs.kind AS \"kind!\",\n  fs.total AS \"total!\",\n  coalesce(key_samples.keys, '-')\n    || CASE WHEN fs.key_count > 3 THEN ', ...' ELSE '' END AS \"keys!\",\n  fs.fetch_pending AS \"fetch_pending!\",\n  fs.fetch_transient AS \"fetch_transient!\",\n  fs.fetch_error AS \"fetch_error!\",\n  fs.done AS \"done!\",\n  fs.process_error AS \"process_error!\",\n  fs.latest,\n  fs.fetch_due AS \"fetch_due!\",\n  fs.process_ready AS \"process_ready!\",\n  coalesce(fj.queued_fetch, 0)::int AS \"queued_fetch!\",\n  coalesce(fj.locked_fetch, 0)::int AS \"locked_fetch!\"\nFROM frontier_status fs\nLEFT JOIN LATERAL (\n  SELECT string_agg(sample.key, ', ' ORDER BY sample.key) AS keys\n  FROM (\n    SELECT f.key\n    FROM crawler.frontier f\n    WHERE f.federation = fs.federation\n      AND f.kind = fs.kind\n      AND f.key <> ''\n    ORDER BY f.key\n    LIMIT 3\n  ) sample\n) key_samples ON true\nLEFT JOIN fetch_jobs fj USING (federation, kind)\nORDER BY fs.federation, fs.kind"};
 
 /**
  * Query generated from SQL:
@@ -104,7 +104,7 @@ const getCrawlerStatusIR: any = {"usedParamSet":{"allowRefetch":true,"federation
  *       AS process_ready,
  *     max(last_fetched_at) AS latest,
  *     count(*) FILTER (
- *       WHERE (next_fetch_at IS NULL OR next_fetch_at <= now())
+ *       WHERE next_fetch_at <= now()
  *         AND (
  *           fetch_status IN ('pending', 'transient')
  *           OR (
@@ -621,7 +621,7 @@ export interface IGetFrontierDetailResult {
   last_fetched_at: Date | null;
   last_process_error: string | null;
   meta: Json;
-  next_fetch_at: Date | null;
+  next_fetch_at: Date;
   process_status: process_status;
   response_content: Json | null;
   response_error: string | null;
@@ -769,7 +769,7 @@ export interface IGetPendingFetchQuery {
   result: IGetPendingFetchResult;
 }
 
-const getPendingFetchIR: any = {"usedParamSet":{"loaderFederations":true,"loaderKinds":true,"allowRefetch":true,"capacity":true},"params":[{"name":"loaderFederations","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":88}]},{"name":"loaderKinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":114}]},{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":449,"b":461}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":845,"b":853}]}],"statement":"WITH allowed_loaders AS (\n  SELECT federation, kind\n  FROM unnest(\n    :loaderFederations::text[],\n    :loaderKinds::text[]\n  ) AS input(federation, kind)\n), ranked AS (\n  SELECT\n    df.id,\n    df.federation,\n    df.kind,\n    df.key,\n    df.due_at,\n    df.last_fetched_at,\n    row_number() OVER (\n      PARTITION BY df.federation, df.kind\n      ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id\n    ) AS rn\n  FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df\n  JOIN allowed_loaders USING (federation, kind)\n  WHERE NOT EXISTS (\n    SELECT 1\n    FROM crawler.frontier_fetch_job j\n    WHERE j.frontier_id = df.id\n      AND j.state IN ('ready', 'delayed', 'locked')\n  )\n)\nSELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\"\nFROM ranked\nORDER BY rn, due_at, last_fetched_at NULLS FIRST, id\nLIMIT :capacity"};
+const getPendingFetchIR: any = {"usedParamSet":{"loaderFederations":true,"loaderKinds":true,"allowRefetch":true,"capacity":true},"params":[{"name":"loaderFederations","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":88}]},{"name":"loaderKinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":114}]},{"name":"allowRefetch","required":false,"transform":{"type":"scalar"},"locs":[{"a":921,"b":933}]},{"name":"capacity","required":false,"transform":{"type":"scalar"},"locs":[{"a":1243,"b":1251},{"a":1435,"b":1443}]}],"statement":"WITH allowed_loaders AS (\n  SELECT federation, kind\n  FROM unnest(\n    :loaderFederations::text[],\n    :loaderKinds::text[]\n  ) AS input(federation, kind)\n), active_fetches AS MATERIALIZED (\n  SELECT frontier_id\n  FROM crawler.frontier_fetch_job\n  WHERE state IN ('ready', 'delayed', 'locked')\n), ranked AS (\n  SELECT\n    candidate.*,\n    row_number() OVER (\n      PARTITION BY candidate.federation, candidate.kind\n      ORDER BY candidate.next_fetch_at, candidate.last_fetched_at NULLS FIRST, candidate.id\n    ) AS rn\n  FROM allowed_loaders loader\n  CROSS JOIN LATERAL (\n    SELECT\n      f.id,\n      f.federation,\n      f.kind,\n      f.key,\n      f.next_fetch_at,\n      f.last_fetched_at\n    FROM crawler.frontier f\n    WHERE f.federation = loader.federation\n      AND f.kind = loader.kind\n      AND f.next_fetch_at <= now()\n      AND (\n        f.fetch_status IN ('pending', 'transient')\n        OR (\n          coalesce(:allowRefetch::boolean, false)\n          AND f.fetch_status = 'ok'\n          AND f.process_status = 'ok'\n        )\n      )\n      AND NOT EXISTS (\n        SELECT 1\n        FROM active_fetches active\n        WHERE active.frontier_id = f.id\n      )\n    ORDER BY f.next_fetch_at, f.last_fetched_at NULLS FIRST, f.id\n    LIMIT :capacity\n  ) candidate\n)\nSELECT\n  id AS \"id!\",\n  federation AS \"federation!\",\n  kind AS \"kind!\",\n  key AS \"key!\"\nFROM ranked\nORDER BY rn, next_fetch_at, last_fetched_at NULLS FIRST, id\nLIMIT :capacity"};
 
 /**
  * Query generated from SQL:
@@ -780,26 +780,46 @@ const getPendingFetchIR: any = {"usedParamSet":{"loaderFederations":true,"loader
  *     :loaderFederations::text[],
  *     :loaderKinds::text[]
  *   ) AS input(federation, kind)
+ * ), active_fetches AS MATERIALIZED (
+ *   SELECT frontier_id
+ *   FROM crawler.frontier_fetch_job
+ *   WHERE state IN ('ready', 'delayed', 'locked')
  * ), ranked AS (
  *   SELECT
- *     df.id,
- *     df.federation,
- *     df.kind,
- *     df.key,
- *     df.due_at,
- *     df.last_fetched_at,
+ *     candidate.*,
  *     row_number() OVER (
- *       PARTITION BY df.federation, df.kind
- *       ORDER BY df.due_at, df.last_fetched_at NULLS FIRST, df.id
+ *       PARTITION BY candidate.federation, candidate.kind
+ *       ORDER BY candidate.next_fetch_at, candidate.last_fetched_at NULLS FIRST, candidate.id
  *     ) AS rn
- *   FROM crawler.frontier_fetch_due(:allowRefetch::boolean) df
- *   JOIN allowed_loaders USING (federation, kind)
- *   WHERE NOT EXISTS (
- *     SELECT 1
- *     FROM crawler.frontier_fetch_job j
- *     WHERE j.frontier_id = df.id
- *       AND j.state IN ('ready', 'delayed', 'locked')
- *   )
+ *   FROM allowed_loaders loader
+ *   CROSS JOIN LATERAL (
+ *     SELECT
+ *       f.id,
+ *       f.federation,
+ *       f.kind,
+ *       f.key,
+ *       f.next_fetch_at,
+ *       f.last_fetched_at
+ *     FROM crawler.frontier f
+ *     WHERE f.federation = loader.federation
+ *       AND f.kind = loader.kind
+ *       AND f.next_fetch_at <= now()
+ *       AND (
+ *         f.fetch_status IN ('pending', 'transient')
+ *         OR (
+ *           coalesce(:allowRefetch::boolean, false)
+ *           AND f.fetch_status = 'ok'
+ *           AND f.process_status = 'ok'
+ *         )
+ *       )
+ *       AND NOT EXISTS (
+ *         SELECT 1
+ *         FROM active_fetches active
+ *         WHERE active.frontier_id = f.id
+ *       )
+ *     ORDER BY f.next_fetch_at, f.last_fetched_at NULLS FIRST, f.id
+ *     LIMIT :capacity
+ *   ) candidate
  * )
  * SELECT
  *   id AS "id!",
@@ -807,7 +827,7 @@ const getPendingFetchIR: any = {"usedParamSet":{"loaderFederations":true,"loader
  *   kind AS "kind!",
  *   key AS "key!"
  * FROM ranked
- * ORDER BY rn, due_at, last_fetched_at NULLS FIRST, id
+ * ORDER BY rn, next_fetch_at, last_fetched_at NULLS FIRST, id
  * LIMIT :capacity
  * ```
  */
