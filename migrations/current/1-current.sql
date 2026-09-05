@@ -71,3 +71,41 @@ create or replace trigger _100_timestamps
 
 comment on table aktuality is '@omit create,update
 @behavior -query:resource:list';
+
+alter table crawler.frontier alter column next_fetch_at set default now();
+
+update crawler.frontier set next_fetch_at = discovered_at where next_fetch_at is null;
+
+alter table crawler.frontier alter column next_fetch_at set not null;
+
+create or replace function crawler.frontier_fetch_due(allow_refetch boolean)
+returns table (
+  id bigint,
+  federation text,
+  kind text,
+  key text,
+  discovered_at timestamptz,
+  last_fetched_at timestamptz,
+  next_fetch_at timestamptz,
+  due_at timestamptz
+) language sql stable as $$
+  select
+    f.id,
+    f.federation,
+    f.kind,
+    f.key,
+    f.discovered_at,
+    f.last_fetched_at,
+    f.next_fetch_at,
+    f.next_fetch_at as due_at
+  from crawler.frontier f
+  where f.next_fetch_at <= now()
+    and (
+      f.fetch_status in ('pending', 'transient')
+      or (
+        coalesce(allow_refetch, false)
+        and f.fetch_status = 'ok'
+        and f.process_status = 'ok'
+      )
+    );
+$$;
