@@ -80,4 +80,10 @@ alter table crawler.frontier alter column next_fetch_at set not null;
 
 drop function if exists crawler.frontier_fetch_due(boolean);
 
+create index if not exists json_response_frontier_fetched_desc_idx
+  on crawler.json_response (frontier_id, fetched_at desc, id desc);
 
+create index if not exists frontier_failure_idx
+  on crawler.frontier (federation, kind, id)
+  where fetch_status in ('error', 'transient')
+     or process_status = 'error';
