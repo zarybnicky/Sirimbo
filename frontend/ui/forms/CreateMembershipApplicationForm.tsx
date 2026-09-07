@@ -15,6 +15,7 @@ import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/lib/auth';
 import { countryOptions } from '@/lib/countries';
+import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
 import { Check, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useMutation } from 'urql';
@@ -49,9 +50,15 @@ export function CreateMembershipApplicationForm({
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { reset, control, handleSubmit } = useForm({
+  const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
   });
+
+  const fillBirthDate = () => {
+    if (getValues('birthDate')) return;
+    const birthDate = parseCzechBirthNumber(getValues('taxIdentificationNumber'));
+    if (birthDate) setValue('birthDate', birthDate, { shouldDirty: true });
+  };
   const [createResult, create] = useMutation(CreateMembershipApplicationDocument);
   const [updateResult, update] = useMutation(UpdateMembershipApplicationDocument);
   const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
@@ -132,6 +139,8 @@ export function CreateMembershipApplicationForm({
           name="taxIdentificationNumber"
           label="Rodné číslo"
           placeholder="1111119999"
+          inputMode="numeric"
+          onBlur={fillBirthDate}
         />
 
         <CstsIdFieldElement control={control} name="cstsId" />

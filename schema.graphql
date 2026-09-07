@@ -4146,8 +4146,6 @@ type File {
   tenantId: BigInt!
   uploadedAt: Datetime
   uploadedBy: BigInt
-
-  """Application route used to download the file."""
   url: String!
 
   """Reads a single `User` that is related to this `File`."""

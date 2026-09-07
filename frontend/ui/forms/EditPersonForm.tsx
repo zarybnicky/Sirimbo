@@ -7,6 +7,7 @@ import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
+import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -73,9 +74,15 @@ const Form = z.object({
 
 export function EditPersonForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
+  const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
   });
+
+  const fillBirthDate = () => {
+    if (getValues('birthDate')) return;
+    const birthDate = parseCzechBirthNumber(getValues('taxIdentificationNumber'));
+    if (birthDate) setValue('birthDate', birthDate, { shouldDirty: true });
+  };
   const [result, update] = useMutation(UpdatePersonDocument);
   const [query] = useQuery({ query: PersonDocument, variables: { id } });
   const data = query.data?.person;
@@ -156,6 +163,8 @@ export function EditPersonForm({ id }: { id: string }) {
         name="taxIdentificationNumber"
         label="Rodné číslo"
         placeholder="1111119999"
+        inputMode="numeric"
+        onBlur={fillBirthDate}
       />
 
       <CstsIdFieldElement control={control} name="cstsId" />

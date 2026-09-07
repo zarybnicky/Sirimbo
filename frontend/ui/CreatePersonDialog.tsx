@@ -21,6 +21,7 @@ import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
+import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FieldLabel, FormError } from '@/ui/form';
 import { ChevronDown, Plus } from 'lucide-react';
@@ -112,6 +113,12 @@ export function CreatePersonDialog() {
   const { control, handleSubmit, getValues, setValue, reset, trigger } = useForm({
     resolver: zodResolver(Form),
   });
+
+  const fillBirthDate = () => {
+    if (getValues('birthDate')) return;
+    const birthDate = parseCzechBirthNumber(getValues('taxIdentificationNumber'));
+    if (birthDate) setValue('birthDate', birthDate, { shouldDirty: true });
+  };
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
     variables: { archived: false },
@@ -293,6 +300,8 @@ export function CreatePersonDialog() {
               name="taxIdentificationNumber"
               label="Rodné číslo"
               placeholder="1111119999"
+              inputMode="numeric"
+              onBlur={fillBirthDate}
             />
 
             <CstsIdFieldElement control={control} name="cstsId" />
