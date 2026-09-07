@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === "production") {
     environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || process.env.NODE_ENV,
     ignoreErrors: [
       /ResizeObserver loop/,
+      /Maximum call stack size exceeded/,
       /attempted to hard navigate to the same URL/,
     ],
     dsn: SENTRY_DSN || 'https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825',

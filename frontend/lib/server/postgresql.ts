@@ -1,10 +1,7 @@
 import 'server-only';
 
-import { SESSION_COOKIE } from '@/lib/session-cookies';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import type { PreparedQuery } from '@pgtyped/runtime';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 import { Pool, type PoolClient } from 'pg';
 
 declare global {
@@ -49,51 +46,10 @@ export async function withTransaction<TResult>(
   }
 }
 
-const asInt = (x: any) => typeof x === 'number' ? x : !x ? Number.NaN : Number.parseInt(x.toString(), 10);
-
 export async function withRequestPgClient<TResult>(
   callback: (client: PoolClient, settings: Record<string, string>) => Promise<TResult>,
 ) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  let claims: jwt.JwtPayload | undefined;
-
-  if (token) {
-    try {
-      claims = jwt.verify(token, process.env.JWT_SECRET!, {
-        algorithms: ['HS256'],
-        ignoreExpiration: true,
-      }) as jwt.JwtPayload;
-    } catch (error) {
-      if (!(error instanceof jwt.JsonWebTokenError)) throw error;
-    }
-  }
-
-  const tenant = await getRequestTenant();
-  const settings: Record<string, string> = {
-    role: 'anonymous',
-    'jwt.claims.tenant_id': tenant.id.toString(),
-  };
-
-  if (claims) {
-    settings.role = claims.is_system_admin
-      ? 'system_admin'
-      : claims.admin_tenant_ids?.map(asInt).includes(tenant.id)
-        ? 'administrator'
-        : claims.trainer_tenant_ids?.map(asInt).includes(tenant.id)
-          ? 'trainer'
-          : claims.member_tenant_ids?.map(asInt).includes(tenant.id)
-            ? 'member'
-            : 'anonymous';
-
-    for (const [key, value] of Object.entries(claims)) {
-      if (!['exp', 'aud', 'iat', 'iss', 'tenant_id'].includes(key)) {
-        settings[`jwt.claims.${key}`] = Array.isArray(value)
-          ? `{${value.join(',')}}`
-          : String(value);
-      }
-    }
-  }
+  const { settings } = await getRequestContext();
 
   return withTransaction(async (client) => {
     const entries = Object.entries(settings);
