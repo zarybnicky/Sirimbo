@@ -39,12 +39,12 @@ export async function GET() {
          has_sequence_privilege(current_user, 'public.file_id_seq', 'USAGE') as can_use_file_sequence`,
     );
 
-    return {
+    return NextResponse.json({
       sessionCookiePresent: cookieStore.has(SESSION_COOKIE),
       tenantCookie: cookieStore.get('tenant_id')?.value ?? null,
       host: headerStore.get('x-forwarded-host') ?? headerStore.get('host'),
       request: settings,
       database: result.rows[0]!,
-    };
+    });
   });
 }
