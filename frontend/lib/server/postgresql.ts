@@ -76,11 +76,11 @@ export async function withRequestPgClient<TResult>(
   if (claims) {
     settings.role = claims.is_system_admin
       ? 'system_admin'
-      : claims.admin_tenant_ids?.includes(tenant.id)
+      : claims.admin_tenant_ids?.map(Number.parseInt).includes(tenant.id)
         ? 'administrator'
-        : claims.trainer_tenant_ids?.includes(tenant.id)
+        : claims.trainer_tenant_ids?.map(Number.parseInt).includes(tenant.id)
           ? 'trainer'
-          : claims.member_tenant_ids?.includes(tenant.id)
+          : claims.member_tenant_ids?.map(Number.parseInt).includes(tenant.id)
             ? 'member'
             : 'anonymous';
 
