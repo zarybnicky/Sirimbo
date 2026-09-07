@@ -122,7 +122,7 @@ function AnnouncementListPage({
           <div className="flex flex-wrap justify-between items-baseline gap-4">
             <div className="flex flex-col gap-1">
               {authorName && <div>{authorName}</div>}
-              <div className="flex items-center gap-1 text-xs text-neutral-11">
+              <div className="flex items-center gap-1 text-xs">
                 <time
                   dateTime={item.createdAt}
                   title={numericFullFormatter.format(new Date(item.createdAt))}

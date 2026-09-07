@@ -20,6 +20,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
   const stopEditing = React.useCallback(() => setEditing(false), []);
   const actions = useAnnouncementActions(item, startEditing);
   const isTitleOnly = mode === 'titleOnly';
+  const isEmpty = !item.body.trim();
 
   if (editing) {
     return (
@@ -50,7 +51,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
 
       <AnnouncementMeta item={item} />
 
-      {isTitleOnly ? (
+      {isTitleOnly || isEmpty ? (
         expanded ? (
           <RichTextView value={item.body} />
         ) : null
@@ -66,7 +67,7 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
           )}
         </>
       )}
-      {expanded && <FileAttachments attachments={item.explicitAttachments.nodes} />}
+      {(expanded || (!isTitleOnly && isEmpty)) && <FileAttachments attachments={item.explicitAttachments.nodes} />}
     </div>
   );
 }

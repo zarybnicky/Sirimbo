@@ -13,8 +13,8 @@ export function FileAttachments({
   if (files.length === 0) return null;
 
   return (
-    <div className="mt-4 border-t border-neutral-5 pt-3">
-      <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-10">
+    <div className="mt-3 border-t border-neutral-5 pt-3">
+      <h4 className="mb-1 text-xs font-semibold uppercase text-neutral-10">
         Přílohy
       </h4>
 

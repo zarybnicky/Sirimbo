@@ -1,4 +1,4 @@
-import { Pencil } from 'lucide-react';
+import { Paperclip, Pencil } from 'lucide-react';
 import type { AnnouncementFragment, AnnouncementStatus } from '@/graphql/Announcement';
 import {
   announcementActions,
@@ -62,6 +62,7 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
   const authorName = item.author
     ? [item.author?.uJmeno, item.author?.uPrijmeni].filter(Boolean).join(' ')
     : undefined;
+  const attachmentCount = item.explicitAttachments.nodes.length;
 
   return (
     <>
@@ -90,6 +91,13 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
           </>
         )}
         <AnnouncementStatusBadge status={item.status} />
+        {attachmentCount > 0 && (
+          <>
+            <span>-</span>
+            <Paperclip aria-hidden className="size-3.5" />
+            <span>{attachmentCount}</span>
+          </>
+        )}
       </div>
 
       {item.announcementAudiences.nodes.length > 0 && (
