@@ -3,13 +3,57 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    allow:
+      - dependency-type: direct
     cooldown:
       default-days: 14
+    commit-message:
+      prefix: "[skip ci] "
+    open-pull-requests-limit: 10
+    versioning-strategy: "increase-if-necessary"
+    ignore:
+      - dependency-name: "eslint"
+    groups:
+      dependencies:
+        dependency-type: "production"
+      dev-dependencies-eslint:
+        patterns:
+          - "eslint"
+      dev-dependencies-typescript:
+        patterns:
+          - "@types/*"
+          - "typescript"
 
   - package-ecosystem: "nix"
     directory: "/"
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-type: direct
     cooldown:
       default-days: 14
+    commit-message:
+      prefix: "[skip ci] "
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: direct
+    cooldown:
+      default-days: 14
+    commit-message:
+      prefix: "[skip ci] "
+
+  - package-ecosystem: "github-actions"
+    directory: "/deploy"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: direct
+    cooldown:
+      default-days: 14
+    commit-message:
+      prefix: "[skip ci] "
