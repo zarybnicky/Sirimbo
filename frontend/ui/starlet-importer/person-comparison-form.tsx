@@ -17,11 +17,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
-import {
-  CreateCoupleDocument,
-  UpdateCoupleDocument,
-  UpdateTenantMembershipDocument,
-} from '@/graphql/Memberships';
+import { UpdateTenantMembershipDocument } from '@/graphql/Memberships';
 import { useTenantId } from '@/lib/auth';
 import { capitalize } from '@/ui/format';
 
@@ -123,7 +119,7 @@ export function PersonComparisonForm() {
     () => deduplicateStudents(coursesWithStudents),
     [coursesWithStudents],
   );
-  const [tasks, views, couplesToCreate, couplesToDelete] = useMemo(
+  const [tasks, views] = useMemo(
     () => compare(persons || [], students, cohorts || []),
     [persons, students, cohorts],
   );
@@ -132,8 +128,6 @@ export function PersonComparisonForm() {
   const update = useMutation(UpdatePersonDocument)[1];
   const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
-  const createCouple = useMutation(CreateCoupleDocument)[1];
-  const updateCouple = useMutation(UpdateCoupleDocument)[1];
 
   const onSubmit = useAsyncCallback(async () => {
     for (const [task, student, person, cohortIds] of tasks) {
@@ -253,48 +247,10 @@ export function PersonComparisonForm() {
     }
   });
 
-  const onSubmitCouples = useAsyncCallback(async () => {
-    for (const [manId, womenIds] of couplesToCreate) {
-      for (const womanId of womenIds) {
-        const result = await createCouple({
-          input: {
-            couple: { manId, womanId, since: new Date().toISOString(), status: 'ACTIVE' },
-          },
-        });
-        if (result.error) throw result.error;
-      }
-    }
-    for (const coupleId of couplesToDelete) {
-      const result = await updateCouple({
-        input: {
-          id: coupleId,
-          patch: { until: new Date().toISOString(), status: 'EXPIRED' },
-        },
-      });
-      if (result.error) throw result.error;
-    }
-  });
-
   if (coursesWithStudents.length === 0) return null;
 
   return (
     <>
-      {/*coursesWithStudents
-        .map(course => [course, detectCouples(course)] as const)
-        .map(([course, [couples, solos]]) => (
-        <React.Fragment key={course.course.key}>
-          <h3>{course.course.code}</h3>
-          <p>
-            {'Páry: '}
-            {[...couples].join(', ')}
-          </p>
-          <p>
-            {'Sólo: '}
-            {[...solos].join(', ')}
-          </p>
-        </React.Fragment>
-        ))*/}
-
       <h3>Problémy při sjednocení přihlášek</h3>
       <ul>
         {problematic.map(([name, candidates]) => (
@@ -355,22 +311,6 @@ export function PersonComparisonForm() {
 
       {tasks.length > 0 && (
         <SubmitButton className="mb-2" action={onSubmit}>
-          Synchronizovat
-        </SubmitButton>
-      )}
-
-      <h3>5. Páry</h3>
-
-      <ul>
-        {couplesToCreate.size > 0 && <li>{couplesToCreate.size} párů k vytvoření</li>}
-        {couplesToDelete.length > 0 && <li>{couplesToDelete.length} párů k archivaci</li>}
-        {couplesToCreate.size === 0 && couplesToDelete.length === 0 && (
-          <li>✅ Žádné úpravy nejsou potřeba</li>
-        )}
-      </ul>
-
-      {(couplesToCreate.size > 0 || couplesToDelete.length > 0) && (
-        <SubmitButton className="mb-2" action={onSubmitCouples}>
           Synchronizovat
         </SubmitButton>
       )}
@@ -491,49 +431,7 @@ function compare(
       </li>,
     );
   }
-
-  const studentsByRefKey = new Map<string, DeduplicatedStudent>();
-  for (const student of students) {
-    for (const refKey of student.ref_keys) {
-      studentsByRefKey.set(refKey, student);
-    }
-  }
-  const couplesToCreate = new Map<string, Set<string>>();
-  const couplesToDelete: string[] = [];
-  studentLoop: for (const student of students) {
-    const person = studentToPerson.get(student.ref_keys[0]!);
-    if (!person) continue;
-    const partnerIds = (
-      person.gender === 'MAN'
-        ? (person.activeCouplesList?.map((c) => c.woman?.id) ?? [])
-        : (person.activeCouplesList?.map((c) => c.man?.id) ?? [])
-    ).filter(isTruthy);
-
-    const processedPartnerIds = new Set();
-    for (const partnerRefKey of student.partner_ref_keys) {
-      const partner = studentToPerson.get(partnerRefKey);
-      if (!partner) continue studentLoop;
-
-      processedPartnerIds.add(partner.id);
-
-      if (partnerIds.includes(partner.id)) continue;
-
-      const [manId, womanId] =
-        person.gender === 'MAN' ? [person.id, partner.id] : [partner.id, person.id];
-      const partners = couplesToCreate.get(manId) || new Set();
-      partners.add(womanId);
-      couplesToCreate.set(manId, partners);
-    }
-    for (const partnerId of partnerIds.filter((x) => !processedPartnerIds.has(x))) {
-      const coupleId =
-        person.gender === 'MAN'
-          ? person.activeCouplesList?.find((c) => c.woman?.id === partnerId)?.id
-          : person.activeCouplesList?.find((c) => c.man?.id === partnerId)?.id;
-      if (coupleId) couplesToDelete.push(coupleId);
-    }
-  }
-
-  return [tasks, views, couplesToCreate, couplesToDelete] as const;
+  return [tasks, views] as const;
 }
 
 function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person[]) {
