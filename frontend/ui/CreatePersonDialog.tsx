@@ -182,7 +182,6 @@ export function CreatePersonDialog() {
       setValue('tiktokUsername', null);
       setValue('facebookUrl', null);
       setValue('websiteUrl', null);
-      // eslint-disable-next-line react-hook-form/no-nested-object-setvalue
       setValue('cohortIds', []);
       setCohortPickerOpen(false);
     }

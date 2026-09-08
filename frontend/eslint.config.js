@@ -4,8 +4,7 @@ import tailwind from 'eslint-plugin-tailwindcss';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import deMorgan from 'eslint-plugin-de-morgan';
-import { fixupPluginRules } from '@eslint/compat';
-import reactHookForm from 'eslint-plugin-react-hook-form';
+import reactHookForm from 'oxlint-plugin-react-hook-form';
 import { importX } from 'eslint-plugin-import-x';
 
 // eslint-disable-next-line import-x/no-unused-modules
@@ -17,15 +16,7 @@ export default defineConfig([
   deMorgan.configs.recommended,
   importX.flatConfigs.recommended,
   importX.flatConfigs.typescript,
-
-  {
-    plugins: {
-      'react-hook-form': fixupPluginRules(reactHookForm),
-    },
-    rules: {
-      ...reactHookForm.configs.recommended.rules,
-    },
-  },
+  reactHookForm.configs['react-compiler'],
 
   {
     settings: {

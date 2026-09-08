@@ -17,9 +17,6 @@ updates:
     groups:
       dependencies:
         dependency-type: "production"
-      dev-dependencies-eslint:
-        patterns:
-          - "eslint"
       dev-dependencies-typescript:
         patterns:
           - "@types/*"
