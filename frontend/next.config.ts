@@ -39,7 +39,7 @@ export default compose(
   typedRoutes: true,
   transpilePackages: ['html-react-parser'],
 
-  output: 'standalone',
+  output: process.env.VERCEL ? undefined : 'standalone',
   bundlePagesRouterDependencies: true,
   experimental: {
     scrollRestoration: true,
