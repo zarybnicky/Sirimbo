@@ -17,7 +17,10 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
-import { UpdateTenantMembershipDocument } from '@/graphql/Memberships';
+import {
+  CreateTenantMembershipDocument,
+  UpdateTenantMembershipDocument,
+} from '@/graphql/Memberships';
 import { useTenantId } from '@/lib/auth';
 import { capitalize } from '@/ui/format';
 
@@ -84,6 +87,7 @@ type Person = {
     conscriptionNumber: string | null;
   } | null;
   externalIds: (string | null)[] | null;
+  isMember: boolean | null;
   isTrainer: boolean | null;
   isAdmin: boolean | null;
   activeCouplesList:
@@ -105,8 +109,19 @@ export function PersonComparisonForm() {
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
   const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
+  const [{ data: formerPersonQuery }] = useQuery({
+    query: PersonListDocument,
+    variables: { membershipState: 'FORMER' },
+  });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
-  const persons = personQuery?.people?.nodes;
+  const persons = useMemo(() => {
+    const byId = new Map(
+      [...(personQuery?.people?.nodes ?? []), ...(formerPersonQuery?.people?.nodes ?? [])].map(
+        (person) => [person.id, person],
+      ),
+    );
+    return [...byId.values()];
+  }, [personQuery, formerPersonQuery]);
   const cohorts = cohortQuery?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
@@ -126,6 +141,7 @@ export function PersonComparisonForm() {
 
   const create = useMutation(CreatePersonDocument)[1];
   const update = useMutation(UpdatePersonDocument)[1];
+  const createMembership = useMutation(CreateTenantMembershipDocument)[1];
   const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
@@ -199,6 +215,12 @@ export function PersonComparisonForm() {
           },
         });
         if (updateResult.error) throw updateResult.error;
+        if (!person!.isMember) {
+          const membershipResult = await createMembership({
+            input: { tenantMembership: { personId: person!.id, tenantId } },
+          });
+          if (membershipResult.error) throw membershipResult.error;
+        }
         const syncResult = await syncCohorts({
           input: {
             personId: person!.id,
@@ -236,15 +258,6 @@ export function PersonComparisonForm() {
             if (membershipResult.error) throw membershipResult.error;
           }
         }
-        const updateResult = await update({
-          input: {
-            id: person!.id,
-            patch: {
-              externalIds: [],
-            },
-          },
-        });
-        if (updateResult.error) throw updateResult.error;
       }
     }
   });
@@ -340,11 +353,17 @@ function compare(
   const managedCohorts = cohorts.filter((cohort) => cohort.externalIds?.length);
 
   const peopleByNormalName = new Map<string, Person[]>();
+  const peopleByExternalId = new Map<string, Person>();
   for (const person of people) {
     const normalName = getNormalizedName(person.firstName, person.lastName);
     const people = peopleByNormalName.get(normalName) || [];
     people.push(person);
     peopleByNormalName.set(normalName, people);
+    for (const externalId of person.externalIds ?? []) {
+      if (externalId && !peopleByExternalId.has(externalId)) {
+        peopleByExternalId.set(externalId, person);
+      }
+    }
   }
   const studentToPerson = new Map<string, Person>();
   const processedPeople = new Set<string>();
@@ -354,7 +373,8 @@ function compare(
     );
 
     const person =
-      candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined;
+      student.ref_keys.map((x) => peopleByExternalId.get(x)).find((x) => x && !processedPeople.has(x.id)) ??
+      (candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined);
 
     if (!person) {
       const cohortIds = managedCohorts
@@ -423,16 +443,18 @@ function compare(
     }
   }
   for (const person of people) {
+    const currentCohortIds = new Set(person.cohortIds || []);
     if (
       processedPeople.has(person.id) ||
       person.isAdmin ||
       person.isTrainer ||
-      !person.externalIds?.length
+      !person.isMember ||
+      !person.externalIds?.length ||
+      !managedCohorts.some((cohort) => currentCohortIds.has(cohort.id))
     ) {
       continue;
     }
     const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
-    const currentCohortIds = new Set(person.cohortIds || []);
     const unmanagedCohortIds = cohorts
       .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
       .map((cohort) => cohort.id);
@@ -462,10 +484,17 @@ function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person
     (person) =>
       [new Date(person.birthDate || '1900-01-01').getFullYear(), person] as const,
   );
+  const matchingBirthYear = byBirthYears.filter((x) => x[0] === student.year);
+  const missingBirthYear = byBirthYears.filter((x) => x[0] === 1900);
+  const matchesEmail = (person: Person) =>
+    !!student.email && person.email?.trim().toLowerCase() === student.email;
   return [
-    student.year ? byBirthYears.find((x) => x[0] === student.year) : undefined,
-    byBirthYears.find((x) => x[0] === 1900),
-    !student.year ? byBirthYears.find(Boolean) : undefined,
+    student.year ? matchingBirthYear.find((x) => matchesEmail(x[1])) : undefined,
+    student.year ? matchingBirthYear[0] : undefined,
+    missingBirthYear.find((x) => matchesEmail(x[1])),
+    missingBirthYear[0],
+    !student.year ? byBirthYears.find((x) => matchesEmail(x[1])) : undefined,
+    !student.year ? byBirthYears[0] : undefined,
   ]
     .filter(isTruthy)
     .map((x) => x[1])

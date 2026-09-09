@@ -6,6 +6,8 @@ import {
   PeopleWithInvitationDocument,
   PeopleWithoutInvitationDocument,
 } from '@/graphql/Invitation';
+import { UserListDocument } from '@/graphql/CurrentUser';
+import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { useActionMap } from '@/lib/actions';
 import { personInvitationActions } from '@/lib/actions/personInvitation';
 import { ActionRow } from '@/ui/ActionRow';
@@ -24,19 +26,40 @@ export function Invitations() {
     query: PeopleWithoutInvitationDocument,
   });
   const [{ data: withInvitation }] = useQuery({ query: PeopleWithInvitationDocument });
+  const [{ data: userQuery }] = useQuery({ query: UserListDocument });
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
+  const [, createUserProxy] = useMutation(CreateUserProxyDocument);
   const invitations =
     withInvitation?.peopleWithoutAccessWithInvitationList?.flatMap(
       (person) => person.personInvitationsList,
     ) ?? [];
   const invitationActionMap = useActionMap(personInvitationActions, invitations);
 
+  const usersByEmail = new Map<string, string[]>();
+  for (const user of userQuery?.users?.nodes ?? []) {
+    const email = user.uEmail.trim().toLowerCase();
+    usersByEmail.set(email, [...(usersByEmail.get(email) ?? []), user.id]);
+  }
+
+  const bulkLinkAccounts = useAsyncCallback(async () => {
+    for (const person of withAnotherAccount?.peopleWithoutAccessWithExistingAccountList ?? []) {
+      if (!person.email) continue;
+      const userIds = usersByEmail.get(person.email.trim().toLowerCase()) ?? [];
+      if (userIds.length !== 1) continue;
+      const result = await createUserProxy({
+        input: { userProxy: { personId: person.id, userId: userIds[0]! } },
+      });
+      if (result.error) throw result.error;
+    }
+  });
+
   const bulkSendInvitations = useAsyncCallback(async () => {
     const sent = new Set<string>();
     for (const person of withoutInvitation?.peopleWithoutAccessOrInvitationList || []) {
       if (!person.email) continue;
-      if (sent.has(person.email)) continue;
-      sent.add(person.email);
+      const email = person.email.trim().toLowerCase();
+      if (sent.has(email)) continue;
+      sent.add(email);
       const result = await sendInvitation({
         input: {
           personInvitation: {
@@ -61,11 +84,16 @@ export function Invitations() {
               Osoby bez přístupu do systému - s jiným existujícím účtem podle e-mailu,
               stačí přiřadit
             </h2>
+            <SubmitButton type="button" action={bulkLinkAccounts}>
+              Přiřadit jednoznačné účty
+            </SubmitButton>
             <ul>
               {withAnotherAccount?.peopleWithoutAccessWithExistingAccountList?.map(
                 (x) => (
                   <li key={x.id}>
-                    <Link href={`/clenove/${x.id}`}>{x.name}</Link>
+                    <Link href={`/clenove/${x.id}`}>{x.name}</Link> ({x.email})
+                    {(usersByEmail.get(x.email?.trim().toLowerCase() ?? '') ?? []).length >
+                      1 && ' - více uživatelských účtů se stejným e-mailem'}
                   </li>
                 ),
               )}
