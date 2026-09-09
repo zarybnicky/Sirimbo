@@ -210,29 +210,31 @@ export function PersonComparisonForm() {
         const syncResult = await syncCohorts({
           input: {
             personId: person!.id,
-            cohortIds: [],
+            cohortIds,
           },
         });
         if (syncResult.error) throw syncResult.error;
-        const membershipsResult = await client
-          .query(PersonMembershipsDocument, { id: person!.id })
-          .toPromise();
-        if (membershipsResult.error) throw membershipsResult.error;
-        const memberships = membershipsResult.data!;
-        const currentMembership = memberships.person?.tenantMembershipsList.find(
-          (x) => x.tenantId === tenantId,
-        );
-        if (currentMembership) {
-          const membershipResult = await updateMembership({
-            input: {
-              id: currentMembership.id,
-              patch: {
-                status: 'EXPIRED',
-                until: new Date().toISOString(),
+        if (cohortIds.length === 0) {
+          const membershipsResult = await client
+            .query(PersonMembershipsDocument, { id: person!.id })
+            .toPromise();
+          if (membershipsResult.error) throw membershipsResult.error;
+          const memberships = membershipsResult.data!;
+          const currentMembership = memberships.person?.tenantMembershipsList.find(
+            (x) => x.tenantId === tenantId && x.status === 'ACTIVE',
+          );
+          if (currentMembership) {
+            const membershipResult = await updateMembership({
+              input: {
+                id: currentMembership.id,
+                patch: {
+                  status: 'EXPIRED',
+                  until: new Date().toISOString(),
+                },
               },
-            },
-          });
-          if (membershipResult.error) throw membershipResult.error;
+            });
+            if (membershipResult.error) throw membershipResult.error;
+          }
         }
         const updateResult = await update({
           input: {
@@ -335,6 +337,7 @@ function compare(
     Person | null,
     string[],
   ][] = [];
+  const managedCohorts = cohorts.filter((cohort) => cohort.externalIds?.length);
 
   const peopleByNormalName = new Map<string, Person[]>();
   for (const person of people) {
@@ -354,7 +357,7 @@ function compare(
       candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined;
 
     if (!person) {
-      const cohortIds = cohorts
+      const cohortIds = managedCohorts
         .filter((x) => student.course_names.includes(x.name))
         .map((x) => x.id);
       tasks.push(['create', student, null, cohortIds]);
@@ -375,8 +378,12 @@ function compare(
 
     const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null;
     const courseList = new Set(student.course_names);
+    const currentCohortIds = new Set(person.cohortIds || []);
+    const unmanagedCohortIds = cohorts
+      .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
+      .map((cohort) => cohort.id);
     const cohortList = new Set(
-      cohorts.filter((x) => (person.cohortIds || []).includes(x.id)).map((x) => x.name),
+      managedCohorts.filter((cohort) => currentCohortIds.has(cohort.id)).map((x) => x.name),
     );
 
     let willUpdate = false;
@@ -390,9 +397,12 @@ function compare(
       cohortList.symmetricDifference(courseList).size > 0
     ) {
       willUpdate = true;
-      const cohortIds = cohorts
-        .filter((x) => student.course_names.includes(x.name))
-        .map((x) => x.id);
+      const cohortIds = [
+        ...managedCohorts
+          .filter((x) => student.course_names.includes(x.name))
+          .map((x) => x.id),
+        ...unmanagedCohortIds,
+      ];
       tasks.push(['update', student, person, cohortIds]);
     }
     if (willUpdate) {
@@ -413,10 +423,21 @@ function compare(
     }
   }
   for (const person of people) {
-    if (processedPeople.has(person.id) || person.isAdmin || person.isTrainer) continue;
+    if (
+      processedPeople.has(person.id) ||
+      person.isAdmin ||
+      person.isTrainer ||
+      !person.externalIds?.length
+    ) {
+      continue;
+    }
     const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
+    const currentCohortIds = new Set(person.cohortIds || []);
+    const unmanagedCohortIds = cohorts
+      .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
+      .map((cohort) => cohort.id);
 
-    tasks.push(['archive', null, person, []]);
+    tasks.push(['archive', null, person, unmanagedCohortIds]);
     views.push(
       <li key={person.id} className="my-0">
         ❌
@@ -425,7 +446,9 @@ function compare(
             <Link href={`/clenove/${person.id}`}>
               {person.name} ({birthYear})
             </Link>{' '}
-            Osoba bude archivována
+            {unmanagedCohortIds.length > 0
+              ? 'Externě spravovaná členství budou ukončena. Osoba zůstane členem v ostatních skupinách.'
+              : 'Osoba bude archivována'}
           </li>
         </ul>
       </li>,
