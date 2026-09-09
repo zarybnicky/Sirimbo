@@ -488,17 +488,16 @@ function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person
   const missingBirthYear = byBirthYears.filter((x) => x[0] === 1900);
   const matchesEmail = (person: Person) =>
     !!student.email && person.email?.trim().toLowerCase() === student.email;
-  return [
-    student.year ? matchingBirthYear.find((x) => matchesEmail(x[1])) : undefined,
-    student.year ? matchingBirthYear[0] : undefined,
-    missingBirthYear.find((x) => matchesEmail(x[1])),
-    missingBirthYear[0],
-    !student.year ? byBirthYears.find((x) => matchesEmail(x[1])) : undefined,
-    !student.year ? byBirthYears[0] : undefined,
-  ]
-    .filter(isTruthy)
-    .map((x) => x[1])
-    .find(Boolean);
+  const matchingEmail = candidates.filter(matchesEmail);
+
+  return (
+    (student.year ? matchingBirthYear.find((x) => matchesEmail(x[1]))?.[1] : undefined) ??
+    (student.year ? matchingBirthYear[0]?.[1] : undefined) ??
+    (matchingEmail.length === 1 ? matchingEmail[0] : undefined) ??
+    missingBirthYear.find((x) => matchesEmail(x[1]))?.[1] ??
+    missingBirthYear[0]?.[1] ??
+    (!student.year ? candidates[0] : undefined)
+  );
 }
 
 async function fetchCoursesWithStudents(courses: string[]) {
