@@ -3,7 +3,6 @@ type DeploymentResponse = {
   deploymentId: string | null;
 };
 
-// eslint-disable-next-line import-x/no-unused-modules
 export function GET() {
   return Response.json(
     {

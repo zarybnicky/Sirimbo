@@ -182,7 +182,7 @@ async function backtestJsonResponses(
             formatException(e),
             options.verbose ? JSON.stringify(row.content, null, 2) : undefined,
           ].join('\n');
-          throw new Error(message);
+          throw new Error(message, { cause: e });
         }
 
         try {
@@ -194,7 +194,7 @@ async function backtestJsonResponses(
             formatException(e),
             options.verbose ? JSON.stringify(row.content, null, 2) : undefined,
           ].join('\n');
-          throw new Error(message);
+          throw new Error(message, { cause: e });
         }
         count++;
       }

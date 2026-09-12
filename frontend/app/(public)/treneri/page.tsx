@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { typographyCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';

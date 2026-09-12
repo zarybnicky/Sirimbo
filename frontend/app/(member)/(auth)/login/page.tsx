@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 
 import { LoginForm } from './LoginForm';
 import { cardCls } from '@/ui/style';

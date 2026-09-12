@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { Mail, Phone } from 'lucide-react';
 import { PageHeader } from '@/ui/TitleBar';
 import { cardCls } from '@/ui/style';

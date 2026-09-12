@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { InvitationInfoDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { ErrorPage } from '@/ui/ErrorPage';

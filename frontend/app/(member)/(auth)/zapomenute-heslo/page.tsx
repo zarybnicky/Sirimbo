@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 
 import { cardCls } from '@/ui/style';
 import { Metadata } from 'next';

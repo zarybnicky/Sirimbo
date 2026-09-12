@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 'use client';
 
 import { Layout } from '@/ui/Layout';

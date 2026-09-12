@@ -11,7 +11,6 @@ const compose =
   (config: NextConfig): NextConfig =>
     plugins.reduceRight((acc, fn) => fn(acc), config);
 
-// eslint-disable-next-line import-x/no-unused-modules
 export default compose(
   bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' }),
   (cfg: NextConfig) =>

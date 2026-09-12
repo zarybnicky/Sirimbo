@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestTenant } from '@/lib/server/tenant';

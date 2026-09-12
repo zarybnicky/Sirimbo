@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';
 import type { Metadata } from 'next';

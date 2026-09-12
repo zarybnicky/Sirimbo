@@ -4,7 +4,6 @@ import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
 import importPlugin from 'eslint-plugin-import-x';
 
-// eslint-disable-next-line import-x/no-unused-modules
 export default defineConfig([
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -37,13 +36,6 @@ export default defineConfig([
       '@typescript-eslint/triple-slash-reference': 'off',
 
       'import-x/no-named-as-default-member': 'off',
-      'import-x/no-unused-modules': [
-        'warn',
-        {
-          unusedExports: true,
-          ignoreUnusedTypeExports: false,
-        },
-      ],
     },
   },
 ]);

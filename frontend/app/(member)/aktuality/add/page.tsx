@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { ArticleForm } from '@/ui/forms/ArticleForm';
 import type { Metadata } from 'next';
 

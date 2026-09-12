@@ -78,7 +78,7 @@ export async function fetchResponse<T>(
   let parsed: T | null = null;
   let raw: unknown = null;
   let error: string | null = null;
-  let fetchStatus: fetch_status = 'ok';
+  let fetchStatus: fetch_status;
 
   try {
     const resp = await impit.fetch(url, {

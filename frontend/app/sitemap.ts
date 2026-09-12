@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { ArticlesDocument } from '@/graphql/Articles';
 import { CohortGroupListDocument } from '@/graphql/CohortGroup';
 import { CohortListDocument } from '@/graphql/Cohorts';

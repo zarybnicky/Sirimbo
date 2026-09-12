@@ -3,7 +3,6 @@ import { getRequestTenant } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import type { ReactNode } from 'react';
 
-/* eslint-disable import-x/no-unused-modules */
 export default async function PublicLayout({ children }: { children: ReactNode }) {
   const tenant = await getRequestTenant();
   const structuredData = getTenantStructuredData(tenant);

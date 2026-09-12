@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';

@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { defaultTenant, getTenant, hostToTenant } from './tenant/catalog';
 
-// eslint-disable-next-line import-x/no-unused-modules
 export const config = {
   matcher: [
     {
@@ -11,7 +10,6 @@ export const config = {
   ],
 };
 
-// eslint-disable-next-line import-x/no-unused-modules
 export function proxy(request: NextRequest) {
   const forwardedHost = request.headers.get('x-forwarded-host');
   const hostHeader = forwardedHost ?? request.headers.get('host') ?? request.nextUrl.host;

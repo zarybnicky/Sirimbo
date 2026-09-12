@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { EventWithAttendanceDocument } from '@/graphql/Event';
 import { executeGraphql } from '@/lib/server/graphql';
 import { stripHtml } from '@/lib/stripHtml';

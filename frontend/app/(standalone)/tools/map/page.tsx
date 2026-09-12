@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import type { Metadata } from 'next';
 import { runQuery } from '@/lib/server/postgresql';
 import { competitionEventLocations } from '../tools.queries';

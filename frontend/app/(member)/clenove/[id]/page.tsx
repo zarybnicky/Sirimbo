@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { PersonView } from '@/ui/PersonView';
 import { CornerLeftUp } from 'lucide-react';
 import type { Metadata } from 'next';

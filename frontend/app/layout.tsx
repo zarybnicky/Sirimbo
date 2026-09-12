@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 
 import { getRequestAuth, getRequestTenant } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';

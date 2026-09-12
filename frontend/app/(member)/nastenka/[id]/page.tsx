@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import type { Metadata } from 'next';
 import { Announcement } from './Announcement';
 

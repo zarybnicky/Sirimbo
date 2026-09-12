@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { Layout } from '@/ui/Layout';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';

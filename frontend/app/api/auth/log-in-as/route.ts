@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { LogInAsDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie, sameOrigin } from '@/lib/server/session';

@@ -6,8 +6,8 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import deMorgan from 'eslint-plugin-de-morgan';
 import reactHookForm from 'oxlint-plugin-react-hook-form';
 import { importX } from 'eslint-plugin-import-x';
+import tsParser from '@typescript-eslint/parser';
 
-// eslint-disable-next-line import-x/no-unused-modules
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -19,7 +19,16 @@ export default defineConfig([
   reactHookForm.configs['react-compiler'],
 
   {
+    files: ['**/*.{js,mjs,cjs,jsx}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+
+  {
     settings: {
+      react: { version: '19' },
       tailwindcss: {
         cssConfigPath: './style/index.css',
       },
@@ -79,14 +88,6 @@ export default defineConfig([
 
       'import-x/no-named-as-default': 'off',
       'import-x/no-named-as-default-member': 'off',
-      'import-x/no-unused-modules': [
-        'warn',
-        {
-          unusedExports: true,
-          ignoreExports: ['graphql/*.ts'],
-          ignoreUnusedTypeExports: true,
-        },
-      ],
 
       'unicorn/catch-error-name': 'off',
       'unicorn/prevent-abbreviations': 'off',

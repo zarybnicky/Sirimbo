@@ -2,7 +2,6 @@ import { init, captureRequestError } from '@sentry/nextjs';
 import { z } from 'zod';
 import { cs } from 'zod/locales';
 
-// eslint-disable-next-line import-x/no-unused-modules
 export async function register() {
   z.config(cs());
 
@@ -20,7 +19,6 @@ export async function register() {
   }
 }
 
-// eslint-disable-next-line import-x/no-unused-modules
 export const onRequestError = async (...args: [any, any, any]) => {
   if (process.env.NODE_ENV === "production") {
     captureRequestError(...args);

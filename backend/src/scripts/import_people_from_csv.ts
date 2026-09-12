@@ -826,7 +826,9 @@ async function main() {
         }
       } catch (error) {
         await client.query('ROLLBACK');
-        throw new Error(`Row ${rowNumber}: ${(error as Error).message}`);
+        throw new Error(`Row ${rowNumber}: ${(error as Error).message}`, {
+          cause: error,
+        });
       }
     }
 

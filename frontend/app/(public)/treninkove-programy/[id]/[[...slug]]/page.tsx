@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { CohortGroupDocument } from '@/graphql/CohortGroup';
 import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';

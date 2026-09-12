@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { EventSeriesDocument } from '@/graphql/Event';
 import { executeGraphql } from '@/lib/server/graphql';
 import { Layout } from '@/ui/Layout';

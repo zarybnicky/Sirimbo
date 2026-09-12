@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { runQuery } from '@/lib/server/postgresql';
 import { notFound, redirect } from 'next/navigation';
 import { eventSeriesEvents } from './akce.queries';

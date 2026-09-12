@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { ServiceCard } from '@/ui/ServiceCard';
 import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';

@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { cn } from '@/lib/cn';
 import { PageHeader } from '@/ui/TitleBar';
 import Image from 'next/image';

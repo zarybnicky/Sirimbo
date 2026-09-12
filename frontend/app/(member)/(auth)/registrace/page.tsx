@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 
 import { getRequestTenant } from '@/lib/server/tenant';
 import { ErrorPage } from '@/ui/ErrorPage';

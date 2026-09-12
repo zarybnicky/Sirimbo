@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { getRequestTenant } from '@/lib/server/tenant';
 import type { MetadataRoute } from 'next';
 

@@ -12,6 +12,9 @@ nodeLinker: isolated
 peerDependencyRules:
   allowedVersions:
     "@graphql-codegen/typescript-urql-graphcache>@urql/exchange-graphcache": "9"
+    "eslint-plugin-import>eslint": "10"
+    "eslint-plugin-jsx-a11y>eslint": "10"
+    "eslint-plugin-react>eslint": "10"
     "next-urql>urql": "5"
     "nunjucks>chokidar": "4"
     "@pgtyped/cli>typescript": "6"

@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 import { fileBucket, fileStorage } from '@/lib/server/file-storage';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { sameOrigin } from '@/lib/server/session';

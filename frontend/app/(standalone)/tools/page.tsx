@@ -27,7 +27,6 @@ const classDances = [
   ['', 'C, B, A, M, P', 'Wa, Ta, Va, Qs, Sf, Qs', 'Sa, Ch, Ru, Pd, Ji', '10T'],
 ] as const;
 
-/* eslint-disable import-x/no-unused-modules */
 export default function ToolsPage() {
   return (
     <main className="min-h-screen bg-neutral-1 text-neutral-12">

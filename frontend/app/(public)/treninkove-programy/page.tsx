@@ -1,4 +1,3 @@
-/* eslint-disable import-x/no-unused-modules */
 
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
