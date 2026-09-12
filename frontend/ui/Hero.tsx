@@ -52,13 +52,12 @@ export function Hero({
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const scrollFrameRef = React.useRef<number | null>(null);
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeArticleId, setActiveArticleId] = React.useState<string>();
   const [reducedMotion, setReducedMotion] = React.useState(false);
-
-  React.useEffect(() => {
-    if (activeIndex < articles.length) return;
-    setActiveIndex(0);
-  }, [activeIndex, articles.length]);
+  const activeIndex = Math.max(
+    0,
+    articles.findIndex((article) => article.id === activeArticleId),
+  );
 
   React.useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -78,9 +77,9 @@ export function Hero({
         left: nextIndex * scroller.clientWidth,
         behavior: reducedMotion ? 'auto' : 'smooth',
       });
-      setActiveIndex(nextIndex);
+      setActiveArticleId(articles[nextIndex]?.id);
     },
-    [articles.length, reducedMotion],
+    [articles, reducedMotion],
   );
 
   const syncActiveIndex = React.useCallback(() => {
@@ -92,9 +91,12 @@ export function Hero({
       Math.max(0, Math.round(scroller.scrollLeft / scroller.clientWidth)),
     );
     if (Number.isFinite(nextIndex)) {
-      setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+      const nextArticleId = articles[nextIndex]?.id;
+      setActiveArticleId((current) =>
+        current === nextArticleId ? current : nextArticleId,
+      );
     }
-  }, [articles.length]);
+  }, [articles]);
 
   const handleScroll = React.useCallback(() => {
     if (scrollFrameRef.current !== null) return;

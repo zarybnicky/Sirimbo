@@ -134,13 +134,12 @@ function TenantTurnover() {
   const [accountOrder, setAccountOrder] = React.useState<string[]>([]);
   const [nextOffset, setNextOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [initialized, setInitialized] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   const fetchPage = React.useCallback(
     async (offset: number) => {
-      setLoading(true);
       const result = await client
         .query(TenantTurnoverPageDocument, {
           offset,
@@ -204,6 +203,7 @@ function TenantTurnover() {
   );
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchPage(0);
   }, [fetchPage]);
 
@@ -331,6 +331,7 @@ function TenantTurnover() {
             className={buttonCls({ variant: 'outline' })}
             onClick={() => {
               if (!loading) {
+                setLoading(true);
                 void fetchPage(nextOffset);
               }
             }}

@@ -29,9 +29,6 @@ export function AnnouncementList() {
     return sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC';
   }, [sort]);
 
-  React.useEffect(() => {
-    setPages([undefined]);
-  }, [sort]);
   const handleLoadMore = React.useCallback((endCursor: number) => {
     setPages((xs) => [...xs, endCursor]);
   }, []);
@@ -52,7 +49,13 @@ export function AnnouncementList() {
             Přidat příspěvek
           </Link>
         )}
-        <AnnouncementSortControls sort={sort} onChange={setSort} />
+        <AnnouncementSortControls
+          sort={sort}
+          onChange={(value) => {
+            setSort(value);
+            setPages([undefined]);
+          }}
+        />
 
         <TextField
           type="search"

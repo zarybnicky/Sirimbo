@@ -152,6 +152,7 @@ export function CreatePersonDialog() {
       setValue('websiteUrl', person.websiteUrl || null);
       setValue('sendInvitation', false);
       setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Keep it aligned with the asynchronously selected person.
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
       void trigger();
     }
@@ -183,6 +184,7 @@ export function CreatePersonDialog() {
       setValue('facebookUrl', null);
       setValue('websiteUrl', null);
       setValue('cohortIds', []);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset both the form and its related state.
       setCohortPickerOpen(false);
     }
   }, [open, reset, setValue, setCohortPickerOpen]);

@@ -85,6 +85,7 @@ function BaseSubmitButton({
   const [state, setState] = React.useState<'NORMAL' | 'LOADING' | 'LOADED'>('NORMAL');
   React.useEffect(() => {
     if (submitState === 'loading') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setState('LOADING');
     } else if (submitState !== 'success') {
       setState('NORMAL');

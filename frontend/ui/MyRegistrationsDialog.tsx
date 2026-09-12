@@ -138,8 +138,8 @@ function RegistrationsDialogContent({
   onClose: () => void;
 }) {
   const auth = useAuth();
-  const [page, setPage] = React.useState<Page>();
-  const [selected, setSelected] = React.useState<Registrant>();
+  const [selectedPage, setPage] = React.useState<Page>();
+  const [selectedRegistrant, setSelected] = React.useState<Registrant>();
   const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id: instance.id },
@@ -156,22 +156,20 @@ function RegistrationsDialogContent({
     error: candidateError,
     loading: candidatesLoading,
   } = useRegistrationCandidates(instance, allRegistrations, isManager);
-
-  React.useEffect(() => {
-    if (!query.data || page) return;
-    const initialRegistration = registrations.find((r) => r.id === initialRegistrationId);
-    if (initialRegistration) {
-      setSelected(registrant(initialRegistration));
-      setPage('editor');
-    } else if (registrations.length > 1) {
-      setPage('overview');
-    } else if (registrations[0]) {
-      setSelected(registrant(registrations[0]));
-      setPage('editor');
-    } else {
-      setPage('candidates');
-    }
-  }, [initialRegistrationId, page, query.data, registrations]);
+  const initialRegistration = registrations.find((r) => r.id === initialRegistrationId);
+  const initialRegistrant = initialRegistration
+    ? registrant(initialRegistration)
+    : registrations[0]
+      ? registrant(registrations[0])
+      : undefined;
+  const page =
+    selectedPage ??
+    (initialRegistration || registrations.length === 1
+      ? 'editor'
+      : registrations.length > 1
+        ? 'overview'
+        : 'candidates');
+  const selected = selectedPage === undefined ? initialRegistrant : selectedRegistrant;
 
   const selectedRegistration = selected
     ? registrations.find((r) => registrantKey(r.personId, r.coupleId) === selected.id)

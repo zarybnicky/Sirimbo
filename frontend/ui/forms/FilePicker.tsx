@@ -177,6 +177,7 @@ export function ImageUrlField<T extends FieldValues>({
   label: React.ReactNode;
 }) {
   const { field, fieldState } = useController({ control, name });
+  const {ref: inputRef } = field;
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [libraryOpen, setLibraryOpen] = React.useState(false);
@@ -208,7 +209,7 @@ export function ImageUrlField<T extends FieldValues>({
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <InputGroup>
         <input
-          ref={field.ref}
+          ref={inputRef}
           id={name}
           name={field.name}
           value={value}

@@ -84,10 +84,6 @@ export function MyAnnouncements() {
     },
   });
 
-  React.useEffect(() => {
-    setPage(1);
-  }, [state, sort]);
-
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex gap-6 flex-wrap grow-0 h-min justify-between items-baseline relative">
@@ -106,7 +102,10 @@ export function MyAnnouncements() {
                 name="announcement-state"
                 value={id}
                 checked={state === id}
-                onChange={() => setState(id)}
+                onChange={() => {
+                  setState(id);
+                  setPage(1);
+                }}
               />
               <span
                 className={cn(
@@ -123,7 +122,14 @@ export function MyAnnouncements() {
             </label>
           ))}
         </div>
-        <AnnouncementSortControls sort={sort} onChange={setSort} className="mb-3" />
+        <AnnouncementSortControls
+          sort={sort}
+          onChange={(value) => {
+            setSort(value);
+            setPage(1);
+          }}
+          className="mb-3"
+        />
       </div>
 
       <div className="space-y-2 rounded-lg">

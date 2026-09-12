@@ -47,29 +47,59 @@ function rangeFor(mode: TimelineMode, pages: number) {
     : { since: subtract(now, 8 * pages, 'week'), until: now };
 }
 
+type ActivityTimelineProps = {
+  defaultMode?: TimelineMode;
+  personIds?: string[];
+  cohortId?: string;
+  includeJudging?: boolean;
+};
+
 export function ActivityTimeline({
   defaultMode = 'past',
   personIds,
   cohortId,
   includeJudging = false,
-}: {
-  defaultMode?: TimelineMode;
-  personIds?: string[];
-  cohortId?: string;
-  includeJudging?: boolean;
-}) {
+}: ActivityTimelineProps) {
   const [mode, setMode] = React.useState<TimelineMode>(defaultMode);
+  const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
+
+  return (
+    <ActivityTimelineScope
+      key={scopeKey}
+      mode={mode}
+      setMode={setMode}
+      personIds={personIds}
+      cohortId={cohortId}
+      includeJudging={includeJudging}
+    />
+  );
+}
+
+function ActivityTimelineScope({
+  mode,
+  setMode,
+  personIds,
+  cohortId,
+  includeJudging,
+}: Omit<ActivityTimelineProps, 'defaultMode'> & {
+  mode: TimelineMode;
+  setMode: React.Dispatch<React.SetStateAction<TimelineMode>>;
+}) {
   const [pages, setPages] = React.useState(1);
   const availableFilters = React.useMemo(
     () => (includeJudging ? [...BASE_FILTERS, JUDGING_FILTER] : BASE_FILTERS),
     [includeJudging],
   );
-  const [filters, setFilters] = React.useState<TimelineFilter[]>(() =>
+  const [selectedFilters, setSelectedFilters] = React.useState<TimelineFilter[]>(() =>
     availableFilters
       .map(([value]) => value)
       .filter((x) => (cohortId ? x !== 'LESSON' : true)),
   );
-  const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
+  const filters = selectedFilters.filter(
+    (filter) =>
+      availableFilters.some(([value]) => value === filter) &&
+      (!cohortId || filter !== 'LESSON'),
+  );
   const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
   const eventTypes = filters.filter(
     (x): x is EventType => x !== 'COMPETITION' && x !== 'JUDGING' && x !== 'BIRTHDAY',
@@ -85,18 +115,18 @@ export function ActivityTimeline({
     kinds.push('BIRTHDAY');
   }
 
-  React.useEffect(() => setPages(1), [scopeKey]);
-  React.useEffect(() => {
-    setFilters((value) =>
-      value.filter(
-        (filter) => availableFilters.some(([x]) => x === filter) && (!cohortId || filter !== 'LESSON'),
-      ),
-    );
-  }, [availableFilters, cohortId]);
-
   const toggleFilter = (filter: TimelineFilter) => {
     setPages(1);
-    setFilters((x) => x.includes(filter) ? x.filter((y) => y !== filter) : [...x, filter]);
+    setSelectedFilters((value) => {
+      const available = value.filter(
+        (item) =>
+          availableFilters.some(([option]) => option === item) &&
+          (!cohortId || item !== 'LESSON'),
+      );
+      return available.includes(filter)
+        ? available.filter((item) => item !== filter)
+        : [...available, filter];
+    });
   };
 
   const [{ data, fetching, error }] = useQuery({

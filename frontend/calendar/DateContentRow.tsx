@@ -218,6 +218,7 @@ function DateContentRow({
 
   React.useEffect(() => {
     if (range[0]?.getMonth() !== previousDate.getMonth()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional two-pass DOM measurement.
       setRenderForMeasure(true);
     }
     setPreviousDate(range[0]!);

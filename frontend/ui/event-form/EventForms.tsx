@@ -144,7 +144,10 @@ function EventEditor({
   );
 
   React.useEffect(() => {
-    if (!canSplit && splitLessons) setSplitLessons(false);
+    if (!canSplit && splitLessons) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Clear the state when lesson splitting becomes invalid.
+      setSplitLessons(false);
+    }
   }, [canSplit, splitLessons]);
 
   const onSubmit = async (values: EventFormType) => {

@@ -60,6 +60,7 @@ export default function Editor(props: EditorProps) {
   React.useEffect(() => {
     if (editor) {
       editor.setData(realInitial);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronize form with CKEditor
       setValue(realInitial);
     }
   }, [editor, realInitial]);
