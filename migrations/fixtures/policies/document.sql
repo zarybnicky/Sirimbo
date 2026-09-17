@@ -12,8 +12,6 @@ create policy current_tenant on document_node as restrictive
   using (tenant_id = (select current_tenant_id()));
 create policy admin_all on document_node to administrator using (true);
 create policy trainer_all on document_node to trainer using (true);
--- Row-level security on `document` applies inside this subquery, so nodes are
--- visible exactly when their document is.
 create policy member_view on document_node for select to member
   using (document_id in (select id from document));
 
