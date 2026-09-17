@@ -1,0 +1,147 @@
+fragment DocumentNodeTag on DocumentNodeTag {
+  __typename
+  id
+  personId
+  coupleId
+  cohortId
+  eventInstanceId
+  competitionId
+  danceCode
+  taggedMonth
+  person {
+    id
+    name
+  }
+  cohort {
+    ...CohortBasic
+  }
+}
+
+fragment DocumentNode on DocumentNode {
+  __typename
+  id
+  parentId
+  ordering
+  listType
+  content
+  documentNodeTags {
+    nodes {
+      ...DocumentNodeTag
+    }
+  }
+}
+
+fragment DocumentBasic on Document {
+  __typename
+  id
+  kind
+  title
+  showToMembers
+  updatedAt
+}
+
+fragment Document on Document {
+  ...DocumentBasic
+  eventInstanceId
+  eventSeriesId
+  cohortId
+  documentNodes(orderBy: [ORDERING_ASC]) {
+    nodes {
+      ...DocumentNode
+    }
+  }
+}
+
+query EventInstanceDocuments($instanceId: BigInt!) {
+  documents(condition: {eventInstanceId: $instanceId}, orderBy: [CREATED_AT_ASC]) {
+    nodes {
+      ...DocumentBasic
+    }
+  }
+}
+
+query EventSeriesDocuments($seriesId: BigInt!) {
+  documents(condition: {eventSeriesId: $seriesId}, orderBy: [CREATED_AT_ASC]) {
+    nodes {
+      ...DocumentBasic
+    }
+  }
+}
+
+query CohortDocuments($cohortId: BigInt!) {
+  documents(condition: {cohortId: $cohortId}, orderBy: [CREATED_AT_ASC]) {
+    nodes {
+      ...DocumentBasic
+    }
+  }
+}
+
+query Document($id: BigInt!) {
+  document(id: $id) {
+    ...Document
+  }
+}
+
+query OrphanedDocuments {
+  orphanedDocumentsList {
+    ...DocumentBasic
+  }
+}
+
+mutation CreateDocument($document: DocumentInput!) {
+  createDocument(input: {document: $document}) {
+    document {
+      ...Document
+    }
+  }
+}
+
+mutation UpdateDocument($id: BigInt!, $patch: DocumentPatch!) {
+  updateDocument(input: {id: $id, patch: $patch}) {
+    document {
+      ...DocumentBasic
+    }
+  }
+}
+
+mutation DeleteDocument($id: BigInt!) {
+  deleteDocument(input: {id: $id}) {
+    __typename
+  }
+}
+
+mutation CreateDocumentNode($node: DocumentNodeInput!) {
+  createDocumentNode(input: {documentNode: $node}) {
+    documentNode {
+      ...DocumentNode
+    }
+  }
+}
+
+mutation UpdateDocumentNode($id: UUID!, $patch: DocumentNodePatch!) {
+  updateDocumentNode(input: {id: $id, patch: $patch}) {
+    documentNode {
+      ...DocumentNode
+    }
+  }
+}
+
+mutation DeleteDocumentNode($id: UUID!) {
+  deleteDocumentNode(input: {id: $id}) {
+    __typename
+  }
+}
+
+mutation CreateDocumentNodeTag($tag: DocumentNodeTagInput!) {
+  createDocumentNodeTag(input: {documentNodeTag: $tag}) {
+    documentNodeTag {
+      ...DocumentNodeTag
+    }
+  }
+}
+
+mutation DeleteDocumentNodeTag($id: BigInt!) {
+  deleteDocumentNodeTag(input: {id: $id}) {
+    __typename
+  }
+}

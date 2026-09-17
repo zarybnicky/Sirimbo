@@ -24,16 +24,17 @@ create table if not exists document (
 
   constraint document_tenant_id_id_key unique (tenant_id, id),
   constraint document_subject_check
-    check (num_nonnulls(event_instance_id, event_series_id, cohort_id) = 1),
+    check (num_nonnulls(event_instance_id, event_series_id, cohort_id) <= 1),
 
   foreign key (tenant_id) references tenant (id) on delete cascade,
   foreign key (created_by) references users (id) on delete set null,
+  -- The column list keeps `set null` off tenant_id, which is not nullable.
   foreign key (tenant_id, event_instance_id)
-    references event_instance (tenant_id, id) on delete cascade,
+    references event_instance (tenant_id, id) on delete set null (event_instance_id),
   foreign key (tenant_id, event_series_id)
-    references event_series (tenant_id, id) on delete cascade,
+    references event_series (tenant_id, id) on delete set null (event_series_id),
   foreign key (tenant_id, cohort_id)
-    references cohort (tenant_id, id) on delete cascade
+    references cohort (tenant_id, id) on delete set null (cohort_id)
 );
 
 create table if not exists document_node (
@@ -65,19 +66,31 @@ create table if not exists document_node_tag (
   person_id bigint,
   couple_id bigint,
   cohort_id bigint,
+  event_instance_id bigint,
+  competition_id bigint,
+  dance_code text,
+  tagged_month date,
   created_at timestamp with time zone not null default now(),
 
   constraint document_node_tag_target_check
-    check (num_nonnulls(person_id, couple_id, cohort_id) = 1),
+    check (num_nonnulls(person_id, couple_id, cohort_id, event_instance_id,
+                        competition_id, dance_code, tagged_month) = 1),
+  constraint document_node_tag_month_check
+    check (tagged_month is null or extract(day from tagged_month) = 1),
   constraint document_node_tag_unique
-    unique nulls not distinct (node_id, person_id, couple_id, cohort_id),
+    unique nulls not distinct (node_id, person_id, couple_id, cohort_id,
+                               event_instance_id, competition_id, dance_code, tagged_month),
 
   foreign key (tenant_id) references tenant (id) on delete cascade,
   foreign key (tenant_id, node_id)
     references document_node (tenant_id, id) on delete cascade,
   foreign key (person_id) references person (id) on delete cascade,
   foreign key (couple_id) references couple (id) on delete cascade,
-  foreign key (tenant_id, cohort_id) references cohort (tenant_id, id) on delete cascade
+  foreign key (tenant_id, cohort_id) references cohort (tenant_id, id) on delete cascade,
+  foreign key (tenant_id, event_instance_id)
+    references event_instance (tenant_id, id) on delete cascade,
+  foreign key (competition_id) references federated.competition (id) on delete cascade,
+  foreign key (dance_code) references federated.dance (code) on delete cascade
 );
 
 create index if not exists document_event_instance_id_idx
@@ -98,6 +111,14 @@ create index if not exists document_node_tag_couple_id_idx
   on document_node_tag (couple_id) where couple_id is not null;
 create index if not exists document_node_tag_cohort_id_idx
   on document_node_tag (cohort_id) where cohort_id is not null;
+create index if not exists document_node_tag_event_instance_id_idx
+  on document_node_tag (event_instance_id) where event_instance_id is not null;
+create index if not exists document_node_tag_competition_id_idx
+  on document_node_tag (competition_id) where competition_id is not null;
+create index if not exists document_node_tag_dance_code_idx
+  on document_node_tag (dance_code) where dance_code is not null;
+create index if not exists document_node_tag_tagged_month_idx
+  on document_node_tag (tagged_month) where tagged_month is not null;
 
 drop trigger if exists _100_timestamps on document;
 create trigger _100_timestamps before insert or update on document
@@ -111,4 +132,5 @@ alter table document enable row level security;
 alter table document_node enable row level security;
 alter table document_node_tag enable row level security;
 
+--!include functions/orphaned_documents.sql
 --!include policies/document.sql
