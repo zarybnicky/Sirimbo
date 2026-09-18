@@ -1,10 +1,8 @@
 'use client';
 
 import {
-  CohortDocumentsDocument,
+  type DocumentBasicFragment,
   DocumentDocument,
-  EventInstanceDocumentsDocument,
-  EventSeriesDocumentsDocument,
   TagDancesDocument,
   UpsertDocumentDocument,
 } from '@/graphql/Document';
@@ -27,33 +25,21 @@ export type DocumentSubject =
   | { eventSeriesId: string }
   | { cohortId: string };
 
-export function DocumentTabs({ subject }: { subject: DocumentSubject }) {
+// The caller already holds these: `documents` is a relation on EventInstance,
+// EventSeries and Cohort alike, so whatever query drew the page can spread
+// DocumentBasic and hand them over.
+export function DocumentTabs({
+  subject,
+  documents,
+  onCreated,
+}: {
+  subject: DocumentSubject;
+  documents: DocumentBasicFragment[];
+  onCreated?: () => void;
+}) {
   const [selected, setSelected] = React.useState<string | null>(null);
   const [, upsert] = useMutation(UpsertDocumentDocument);
   const candidates = useTagCandidates();
-
-  const byInstance = 'eventInstanceId' in subject;
-  const bySeries = 'eventSeriesId' in subject;
-
-  const [instanceDocs, refetchInstance] = useQuery({
-    query: EventInstanceDocumentsDocument,
-    variables: { instanceId: byInstance ? subject.eventInstanceId : '' },
-    pause: !byInstance,
-  });
-  const [seriesDocs, refetchSeries] = useQuery({
-    query: EventSeriesDocumentsDocument,
-    variables: { seriesId: bySeries ? subject.eventSeriesId : '' },
-    pause: !bySeries,
-  });
-  const [cohortDocs, refetchCohort] = useQuery({
-    query: CohortDocumentsDocument,
-    variables: { cohortId: 'cohortId' in subject ? subject.cohortId : '' },
-    pause: byInstance || bySeries,
-  });
-
-  const list = byInstance ? instanceDocs : bySeries ? seriesDocs : cohortDocs;
-  const refetchList = byInstance ? refetchInstance : bySeries ? refetchSeries : refetchCohort;
-  const documents = React.useMemo(() => list.data?.documents?.nodes ?? [], [list.data]);
 
   const create = React.useCallback(async () => {
     const result = await upsert({
@@ -62,9 +48,9 @@ export function DocumentTabs({ subject }: { subject: DocumentSubject }) {
     const created = result.data?.upsertDocument?.document;
     if (created) {
       setSelected(created.id);
-      refetchList({ requestPolicy: 'network-only' });
+      onCreated?.();
     }
-  }, [subject, upsert, refetchList]);
+  }, [subject, upsert, onCreated]);
 
   const options = React.useMemo(
     () =>
@@ -193,9 +179,7 @@ function useTagCandidates() {
   return React.useCallback(
     (char: string, query: string) => {
       const kinds =
-        char === '@'
-          ? new Set(['person', 'couple', 'cohort', 'event'])
-          : new Set(['discipline', 'dance', 'month']);
+        char === '@' ? new Set(['person', 'cohort']) : new Set(['discipline', 'dance', 'month']);
       const pool = all.filter((candidate) => kinds.has(candidate.kind));
       if (!query) {
         return pool.slice(0, 10);

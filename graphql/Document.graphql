@@ -55,30 +55,6 @@ fragment Document on Document {
   }
 }
 
-query EventInstanceDocuments($instanceId: BigInt!) {
-  documents(condition: {eventInstanceId: $instanceId}, orderBy: [CREATED_AT_ASC]) {
-    nodes {
-      ...DocumentBasic
-    }
-  }
-}
-
-query EventSeriesDocuments($seriesId: BigInt!) {
-  documents(condition: {eventSeriesId: $seriesId}, orderBy: [CREATED_AT_ASC]) {
-    nodes {
-      ...DocumentBasic
-    }
-  }
-}
-
-query CohortDocuments($cohortId: BigInt!) {
-  documents(condition: {cohortId: $cohortId}, orderBy: [CREATED_AT_ASC]) {
-    nodes {
-      ...DocumentBasic
-    }
-  }
-}
-
 query Document($id: BigInt!) {
   document(id: $id) {
     ...Document
@@ -92,56 +68,6 @@ query TagDances {
       name
       discipline
     }
-  }
-}
-
-query OrphanedDocuments {
-  orphanedDocumentsList {
-    ...DocumentBasic
-  }
-}
-
-mutation CreateDocument($document: DocumentInput!) {
-  createDocument(input: {document: $document}) {
-    document {
-      ...Document
-    }
-  }
-}
-
-mutation UpdateDocument($id: BigInt!, $patch: DocumentPatch!) {
-  updateDocument(input: {id: $id, patch: $patch}) {
-    document {
-      ...DocumentBasic
-    }
-  }
-}
-
-mutation DeleteDocument($id: BigInt!) {
-  deleteDocument(input: {id: $id}) {
-    __typename
-  }
-}
-
-mutation CreateDocumentNode($node: DocumentNodeInput!) {
-  createDocumentNode(input: {documentNode: $node}) {
-    documentNode {
-      ...DocumentNode
-    }
-  }
-}
-
-mutation UpdateDocumentNode($id: UUID!, $patch: DocumentNodePatch!) {
-  updateDocumentNode(input: {id: $id, patch: $patch}) {
-    documentNode {
-      ...DocumentNode
-    }
-  }
-}
-
-mutation DeleteDocumentNode($id: UUID!) {
-  deleteDocumentNode(input: {id: $id}) {
-    __typename
   }
 }
 

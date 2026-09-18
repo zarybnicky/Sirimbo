@@ -1,17 +1,14 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 
-export const TAG_KINDS = [
-  'person',
-  'couple',
-  'cohort',
-  'event',
-  'competition',
-  'dance',
-  'month',
-  'discipline',
-] as const;
-
-export type TagKind = (typeof TAG_KINDS)[number];
+export type TagKind =
+  | 'person'
+  | 'couple'
+  | 'cohort'
+  | 'event'
+  | 'competition'
+  | 'dance'
+  | 'month'
+  | 'discipline';
 
 // `@` picks out someone or something with a page of its own; `#` classifies.
 export const TAG_PREFIX: Record<TagKind, string> = {

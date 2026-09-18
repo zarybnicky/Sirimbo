@@ -10,14 +10,13 @@ export type TagCandidate = {
 };
 
 export type SuggestionState = {
-  char: string;
   items: TagCandidate[];
   selected: number;
   rect: DOMRect | null;
   onPick: (candidate: TagCandidate) => void;
 };
 
-export type TagSuggestionOptions = {
+type TagSuggestionOptions = {
   char: string;
   items: (query: string) => TagCandidate[];
   onChange: (state: SuggestionState | null) => void;
@@ -50,7 +49,6 @@ export const TagSuggestion = Extension.create<TagSuggestionOptions>({
       }
       const props = current;
       onChange({
-        char,
         items: props.items,
         selected,
         rect: props.clientRect?.() ?? null,

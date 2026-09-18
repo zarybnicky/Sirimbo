@@ -5,7 +5,7 @@ import { v7 as uuidv7 } from 'uuid';
 export const NODE_ID_ATTRIBUTE = 'uuid';
 export const NODE_ID_TYPES = ['listItem'];
 
-export type NodeIdOptions = {
+type NodeIdOptions = {
   types: string[];
   attributeName: string;
   generateId: () => string;
