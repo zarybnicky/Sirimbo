@@ -7250,29 +7250,6 @@ type Query {
   """Get a single `Document`."""
   document(id: BigInt!): Document
 
-  """Get a single `DocumentNode`."""
-  documentNode(id: UUID!): DocumentNode
-
-  """Get a single `DocumentNodeTag`."""
-  documentNodeTag(id: BigInt!): DocumentNodeTag
-
-  """Reads a set of `Document`."""
-  documentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: DocumentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Document`."""
-    orderBy: [DocumentsOrderBy!]
-  ): [Document!]
-
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 

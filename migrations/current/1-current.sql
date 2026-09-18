@@ -107,12 +107,12 @@ create table if not exists document_node_tag (
 -- Writes go through upsert_document, and nodes and tags are only ever reached
 -- from a document or from a tagged entity, so the generated surface is cut back
 -- to what is actually called.
-comment on table document is '@omit create,update
-@simpleCollections only';
-comment on table document_node is '@omit create,update,delete,all
-@simpleCollections only';
-comment on table document_node_tag is '@omit create,update,delete,all
-@simpleCollections only';
+comment on table document is '@simpleCollections only
+@behavior -insert -update -query:resource:list -query:resource:connection';
+comment on table document_node is '@simpleCollections only
+@behavior -insert -update -delete -query:resource:single -query:resource:list -query:resource:connection';
+comment on table document_node_tag is '@simpleCollections only
+@behavior -insert -update -delete -query:resource:single -query:resource:list -query:resource:connection';
 
 -- The composite uniques exist for the tenant-scoped foreign keys, not as
 -- accessors; without this each one generates its own by-key query and mutation.
@@ -191,8 +191,8 @@ create or replace view dance as
   select code, name, discipline from federated.dance;
 
 comment on view dance is '@primaryKey code
-@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@behavior -insert -update -delete';
 
 grant select on dance to anonymous;
 
