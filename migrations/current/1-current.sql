@@ -6,6 +6,9 @@ begin
   if not exists (select 1 from pg_catalog.pg_type where typname = 'document_list_type') then
     create type document_list_type as enum ('bullet', 'ordered');
   end if;
+  if not exists (select 1 from pg_catalog.pg_type where typname = 'discipline') then
+    create type discipline as enum ('stt', 'lat', 'conditioning', 'practice');
+  end if;
 end
 $$;
 
@@ -70,16 +73,17 @@ create table if not exists document_node_tag (
   competition_id bigint,
   dance_code text,
   tagged_month date,
+  discipline discipline,
   created_at timestamp with time zone not null default now(),
 
   constraint document_node_tag_target_check
     check (num_nonnulls(person_id, couple_id, cohort_id, event_instance_id,
-                        competition_id, dance_code, tagged_month) = 1),
+                        competition_id, dance_code, tagged_month, discipline) = 1),
   constraint document_node_tag_month_check
     check (tagged_month is null or extract(day from tagged_month) = 1),
   constraint document_node_tag_unique
-    unique nulls not distinct (node_id, person_id, couple_id, cohort_id,
-                               event_instance_id, competition_id, dance_code, tagged_month),
+    unique nulls not distinct (node_id, person_id, couple_id, cohort_id, event_instance_id,
+                               competition_id, dance_code, tagged_month, discipline),
 
   foreign key (tenant_id) references tenant (id) on delete cascade,
   foreign key (tenant_id, node_id)
@@ -119,6 +123,8 @@ create index if not exists document_node_tag_dance_code_idx
   on document_node_tag (dance_code) where dance_code is not null;
 create index if not exists document_node_tag_tagged_month_idx
   on document_node_tag (tagged_month) where tagged_month is not null;
+create index if not exists document_node_tag_discipline_idx
+  on document_node_tag (discipline) where discipline is not null;
 
 drop trigger if exists _100_timestamps on document;
 create trigger _100_timestamps before insert or update on document
@@ -132,5 +138,7 @@ alter table document enable row level security;
 alter table document_node enable row level security;
 alter table document_node_tag enable row level security;
 
+--!include functions/document_node_tags.sql
+--!include functions/upsert_document.sql
 --!include functions/orphaned_documents.sql
 --!include policies/document.sql

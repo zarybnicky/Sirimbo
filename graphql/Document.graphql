@@ -8,6 +8,7 @@ fragment DocumentNodeTag on DocumentNodeTag {
   competitionId
   danceCode
   taggedMonth
+  discipline
   person {
     id
     name
@@ -132,16 +133,10 @@ mutation DeleteDocumentNode($id: UUID!) {
   }
 }
 
-mutation CreateDocumentNodeTag($tag: DocumentNodeTagInput!) {
-  createDocumentNodeTag(input: {documentNodeTag: $tag}) {
-    documentNodeTag {
-      ...DocumentNodeTag
+mutation UpsertDocument($input: UpsertDocumentInput!) {
+  upsertDocument(input: $input) {
+    document {
+      ...Document
     }
-  }
-}
-
-mutation DeleteDocumentNodeTag($id: BigInt!) {
-  deleteDocumentNodeTag(input: {id: $id}) {
-    __typename
   }
 }

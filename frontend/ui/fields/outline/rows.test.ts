@@ -5,12 +5,18 @@ import { describe, test } from 'node:test';
 import { outlineExtensions } from './extensions.ts';
 import { nodeIdPlugin } from './node-id.ts';
 import { outlineToRows, rowsToOutline, type OutlineRow } from './rows.ts';
+import { tagText } from './tag-node.ts';
 
 const schema = getSchema(outlineExtensions);
 
 const text = (value: string) => ({
   type: 'paragraph',
   content: [{ type: 'text', text: value }],
+});
+
+const tag = (kind: string, refId: string, label: string) => ({
+  type: 'tag',
+  attrs: { kind, refId, label },
 });
 
 function stateWith(doc: unknown, generateId: () => string) {
@@ -87,6 +93,62 @@ describe('outline rows', () => {
     const after = state.apply(state.tr.insertText('x', 3));
 
     assert.deepEqual(listItemIds(after), ['generated-1']);
+  });
+});
+
+describe('tags', () => {
+  const withTags = {
+    type: 'doc',
+    content: [
+      {
+        type: 'bulletList',
+        content: [
+          {
+            type: 'listItem',
+            attrs: { uuid: 'a' },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: 'Work on ' },
+                  tag('dance', 'W', 'Waltz'),
+                  { type: 'text', text: ' with ' },
+                  tag('person', '42', 'Petr'),
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  test('the schema keeps tag nodes instead of dropping them', () => {
+    // toJSON hands back null-prototype attrs; cloning normalises them.
+    const parsed = structuredClone(schema.nodeFromJSON(withTags).toJSON());
+    const inline = parsed.content[0].content[0].content[0].content;
+
+    assert.deepEqual(
+      inline.filter((child: { type: string }) => child.type === 'tag'),
+      [tag('dance', 'W', 'Waltz'), tag('person', '42', 'Petr')],
+    );
+  });
+
+  test('tags survive the row round trip inside node content', () => {
+    const rows = outlineToRows(withTags);
+
+    assert.equal(rows.length, 1);
+    assert.deepEqual(outlineToRows(rowsToOutline(rows)), rows);
+    assert.deepEqual(
+      rows[0]!.content.content?.filter((child) => child.type === 'tag'),
+      [tag('dance', 'W', 'Waltz'), tag('person', '42', 'Petr')],
+    );
+  });
+
+  test('renders a prefix per kind', () => {
+    assert.equal(tagText({ kind: 'person', refId: '42', label: 'Petr' }), '@Petr');
+    assert.equal(tagText({ kind: 'dance', refId: 'W', label: 'Waltz' }), '#Waltz');
+    assert.equal(tagText({ kind: 'month', refId: '2026-10-01', label: null }), '#2026-10-01');
   });
 });
 

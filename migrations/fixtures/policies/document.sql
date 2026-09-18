@@ -17,11 +17,13 @@ create policy member_view on document_node for select to member
 
 select app_private.drop_policies('public.document_node_tag');
 
+-- Tags are derived from node content by a trigger, so nobody writes them directly.
 create policy current_tenant on document_node_tag as restrictive
   using (tenant_id = (select current_tenant_id()));
-create policy admin_all on document_node_tag to administrator using (true);
-create policy trainer_all on document_node_tag to trainer using (true);
+create policy admin_view on document_node_tag for select to administrator using (true);
+create policy trainer_view on document_node_tag for select to trainer using (true);
 create policy member_view on document_node_tag for select to member
   using (node_id in (select id from document_node));
 
-grant all on table document, document_node, document_node_tag to anonymous;
+grant all on table document, document_node to anonymous;
+grant select on table document_node_tag to anonymous;
