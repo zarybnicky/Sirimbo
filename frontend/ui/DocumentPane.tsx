@@ -2,6 +2,7 @@
 
 import { type DocumentFragment, DocumentDocument, UpsertDocumentDocument } from '@/graphql/Document';
 import { useAuth } from '@/lib/auth';
+import { FormError } from '@/ui/form';
 import { useTagCandidates } from '@/ui/fields/outline/candidates';
 import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
 import type { OutlineRow } from '@/ui/fields/outline/rows';
@@ -30,14 +31,15 @@ function DocumentView({ id }: { id: string }) {
 
 function DocumentEditor({ id }: { id: string }) {
   const { doc, rows } = useDocumentRows(id);
-  const [, upsert] = useMutation(UpsertDocumentDocument);
+  const [saveState, upsert] = useMutation(UpsertDocumentDocument);
   const candidates = useTagCandidates();
+  const [rejected, setRejected] = React.useState<Error | null>(null);
 
-  const save = useDebounced((next: OutlineRow[]) => {
+  const save = useDebounced(async (next: OutlineRow[]) => {
     if (!doc) {
       return;
     }
-    void upsert({
+    const result = await upsert({
       input: {
         doc: {
           id: doc.id,
@@ -55,13 +57,20 @@ function DocumentEditor({ id }: { id: string }) {
         })),
       },
     });
+    setRejected(result.error ?? null);
   }, 800);
 
   if (!doc) {
     return null;
   }
 
-  return <OutlineEditor key={id} rows={rows} onChange={save} candidates={candidates} />;
+  return (
+    <>
+      <FormError error={rejected} />
+      <OutlineEditor key={id} rows={rows} onChange={save} candidates={candidates} />
+      {saveState.fetching && <p className="mt-1 text-xs text-neutral-10">Ukládám…</p>}
+    </>
+  );
 }
 
 function useDocumentRows(id: string) {
@@ -96,19 +105,36 @@ export function useCreateDocument(subject: DocumentSubject) {
   return [fetching, create] as const;
 }
 
-function useDebounced<T>(fn: (value: T) => void, delay: number) {
+// Unmounting has to flush rather than cancel: switching tab within the debounce
+// window would otherwise drop whatever was typed last.
+function useDebounced<T>(fn: (value: T) => void | Promise<void>, delay: number) {
   const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const pending = React.useRef<{ value: T } | null>(null);
   const latest = React.useRef(fn);
 
   React.useEffect(() => {
     latest.current = fn;
   });
-  React.useEffect(() => () => clearTimeout(timer.current), []);
+
+  React.useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+      if (pending.current) {
+        void latest.current(pending.current.value);
+        pending.current = null;
+      }
+    },
+    [],
+  );
 
   return React.useCallback(
     (value: T) => {
       clearTimeout(timer.current);
-      timer.current = setTimeout(() => latest.current(value), delay);
+      pending.current = { value };
+      timer.current = setTimeout(() => {
+        pending.current = null;
+        void latest.current(value);
+      }, delay);
     },
     [delay],
   );
