@@ -6,6 +6,7 @@ import { outlineExtensions } from './extensions.ts';
 import { nodeIdPlugin } from './node-id.ts';
 import { outlineToRows, rowsToOutline, type OutlineRow } from './rows.ts';
 import { tagText } from './tag-node.ts';
+import { monthCandidates } from './suggestion.ts';
 
 const schema = getSchema(outlineExtensions);
 
@@ -149,6 +150,18 @@ describe('tags', () => {
     assert.equal(tagText({ kind: 'person', refId: '42', label: 'Petr' }), '@Petr');
     assert.equal(tagText({ kind: 'dance', refId: 'W', label: 'Waltz' }), '#Waltz');
     assert.equal(tagText({ kind: 'month', refId: '2026-10-01', label: null }), '#2026-10-01');
+  });
+});
+
+describe('month candidates', () => {
+  test('counts backwards from the current month, pinned to the first', () => {
+    const months = monthCandidates(new Date('2026-02-17T12:00:00Z'), 4);
+
+    assert.deepEqual(
+      months.map((month) => month.refId),
+      ['2026-02-01', '2026-01-01', '2025-12-01', '2025-11-01'],
+    );
+    assert.deepEqual(months[0]!.label, '2026-02');
   });
 });
 
