@@ -1067,6 +1067,64 @@ type Cohort {
   colorRgb: String!
   description: String!
 
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
+
+  """Reads and enables pagination through a set of `Document`."""
+  documents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection!
+
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
   """
@@ -1624,6 +1682,35 @@ type ConfirmMembershipApplicationPayload {
 type Couple {
   createdAt: Datetime!
 
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
+
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
   """
@@ -1882,6 +1969,133 @@ type CreateCreditTransactionForPersonPayload {
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TransactionsEdge
+}
+
+"""All input for the create `Document` mutation."""
+input CreateDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Document` to be created by this mutation."""
+  document: DocumentInput!
+}
+
+"""All input for the create `DocumentNode` mutation."""
+input CreateDocumentNodeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `DocumentNode` to be created by this mutation."""
+  documentNode: DocumentNodeInput!
+}
+
+"""The output of our create `DocumentNode` mutation."""
+type CreateDocumentNodePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Document` that is related to this `DocumentNode`."""
+  document: Document
+
+  """The `DocumentNode` that was created by this mutation."""
+  documentNode: DocumentNode
+
+  """An edge for our `DocumentNode`. May be used by Relay 1."""
+  documentNodeEdge(
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodesEdge
+
+  """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
+  parent: DocumentNode
+}
+
+"""All input for the create `DocumentNodeTag` mutation."""
+input CreateDocumentNodeTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `DocumentNodeTag` to be created by this mutation."""
+  documentNodeTag: DocumentNodeTagInput!
+}
+
+"""The output of our create `DocumentNodeTag` mutation."""
+type CreateDocumentNodeTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `DocumentNodeTag`."""
+  cohort: Cohort
+
+  """Reads a single `Couple` that is related to this `DocumentNodeTag`."""
+  couple: Couple
+
+  """The `DocumentNodeTag` that was created by this mutation."""
+  documentNodeTag: DocumentNodeTag
+
+  """An edge for our `DocumentNodeTag`. May be used by Relay 1."""
+  documentNodeTagEdge(
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsEdge
+
+  """
+  Reads a single `EventInstance` that is related to this `DocumentNodeTag`.
+  """
+  eventInstance: EventInstance
+
+  """
+  Reads a single `DocumentNode` that is related to this `DocumentNodeTag`.
+  """
+  node: DocumentNode
+
+  """Reads a single `Person` that is related to this `DocumentNodeTag`."""
+  person: Person
+}
+
+"""The output of our create `Document` mutation."""
+type CreateDocumentPayload {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `Document`."""
+  cohort: Cohort
+
+  """The `Document` that was created by this mutation."""
+  document: Document
+
+  """An edge for our `Document`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentsEdge
+
+  """Reads a single `EventInstance` that is related to this `Document`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventSeries` that is related to this `Document`."""
+  eventSeries: EventSeries
 }
 
 """All input for the create `EventExternalRegistration` mutation."""
@@ -2412,6 +2626,183 @@ type DeleteCouplePayload {
   woman: Person
 }
 
+"""All input for the `deleteDocumentByTenantIdAndId` mutation."""
+input DeleteDocumentByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+  tenantId: BigInt!
+}
+
+"""All input for the `deleteDocument` mutation."""
+input DeleteDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""
+All input for the `deleteDocumentNodeByTenantIdAndDocumentIdAndId` mutation.
+"""
+input DeleteDocumentNodeByTenantIdAndDocumentIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  documentId: BigInt!
+  id: UUID!
+  tenantId: BigInt!
+}
+
+"""All input for the `deleteDocumentNodeByTenantIdAndId` mutation."""
+input DeleteDocumentNodeByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+  tenantId: BigInt!
+}
+
+"""All input for the `deleteDocumentNode` mutation."""
+input DeleteDocumentNodeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""The output of our delete `DocumentNode` mutation."""
+type DeleteDocumentNodePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Document` that is related to this `DocumentNode`."""
+  document: Document
+
+  """The `DocumentNode` that was deleted by this mutation."""
+  documentNode: DocumentNode
+
+  """An edge for our `DocumentNode`. May be used by Relay 1."""
+  documentNodeEdge(
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodesEdge
+
+  """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
+  parent: DocumentNode
+}
+
+"""
+All input for the `deleteDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDiscipline` mutation.
+"""
+input DeleteDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDisciplineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  cohortId: BigInt!
+  competitionId: BigInt!
+  coupleId: BigInt!
+  danceCode: String!
+  discipline: Discipline!
+  eventInstanceId: BigInt!
+  nodeId: UUID!
+  personId: BigInt!
+  taggedMonth: Date!
+}
+
+"""All input for the `deleteDocumentNodeTag` mutation."""
+input DeleteDocumentNodeTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `DocumentNodeTag` mutation."""
+type DeleteDocumentNodeTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `DocumentNodeTag`."""
+  cohort: Cohort
+
+  """Reads a single `Couple` that is related to this `DocumentNodeTag`."""
+  couple: Couple
+
+  """The `DocumentNodeTag` that was deleted by this mutation."""
+  documentNodeTag: DocumentNodeTag
+
+  """An edge for our `DocumentNodeTag`. May be used by Relay 1."""
+  documentNodeTagEdge(
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsEdge
+
+  """
+  Reads a single `EventInstance` that is related to this `DocumentNodeTag`.
+  """
+  eventInstance: EventInstance
+
+  """
+  Reads a single `DocumentNode` that is related to this `DocumentNodeTag`.
+  """
+  node: DocumentNode
+
+  """Reads a single `Person` that is related to this `DocumentNodeTag`."""
+  person: Person
+}
+
+"""The output of our delete `Document` mutation."""
+type DeleteDocumentPayload {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `Document`."""
+  cohort: Cohort
+
+  """The `Document` that was deleted by this mutation."""
+  document: Document
+
+  """An edge for our `Document`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentsEdge
+
+  """Reads a single `EventInstance` that is related to this `Document`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventSeries` that is related to this `Document`."""
+  eventSeries: EventSeries
+}
+
 """All input for the `deleteEventExternalRegistration` mutation."""
 input DeleteEventExternalRegistrationInput {
   """
@@ -2867,6 +3258,578 @@ type DeleteUserProxyPayload {
   userProxy: UserProxy
 }
 
+enum Discipline {
+  CONDITIONING
+  LAT
+  PRACTICE
+  STT
+}
+
+type Document {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """Reads a single `Cohort` that is related to this `Document`."""
+  cohort: Cohort
+  cohortId: BigInt
+  createdAt: Datetime!
+  createdBy: BigInt
+
+  """Reads a single `EventInstance` that is related to this `Document`."""
+  eventInstance: EventInstance
+  eventInstanceId: BigInt
+
+  """Reads a single `EventSeries` that is related to this `Document`."""
+  eventSeries: EventSeries
+  eventSeriesId: BigInt
+  id: BigInt!
+  kind: DocumentKind!
+
+  """Reads and enables pagination through a set of `DocumentNode`."""
+  nodes(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodesConnection!
+  showToMembers: Boolean!
+  tenantId: BigInt!
+  title: String
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `Document` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input DocumentCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `createdBy` field."""
+  createdBy: BigInt
+
+  """Checks for equality with the object’s `eventInstanceId` field."""
+  eventInstanceId: BigInt
+
+  """Checks for equality with the object’s `eventSeriesId` field."""
+  eventSeriesId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: DocumentKind
+
+  """Checks for equality with the object’s `showToMembers` field."""
+  showToMembers: Boolean
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `Document`"""
+input DocumentInput {
+  cohortId: BigInt
+  createdAt: Datetime
+  createdBy: BigInt
+  eventInstanceId: BigInt
+  eventSeriesId: BigInt
+  id: BigInt
+  kind: DocumentKind
+  showToMembers: Boolean
+  tenantId: BigInt
+  title: String
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `DocumentInputRecord`"""
+input DocumentInputRecordInput {
+  cohortId: BigInt
+  eventInstanceId: BigInt
+  eventSeriesId: BigInt
+  id: BigInt
+  kind: DocumentKind
+  showToMembers: Boolean
+  title: String
+}
+
+enum DocumentKind {
+  EVALUATION
+  PLAN
+}
+
+enum DocumentListType {
+  BULLET
+  ORDERED
+}
+
+type DocumentNode {
+  """Reads and enables pagination through a set of `DocumentNode`."""
+  children(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodesConnection!
+  content: JSON!
+  createdAt: Datetime!
+
+  """Reads a single `Document` that is related to this `DocumentNode`."""
+  document: Document
+  documentId: BigInt!
+  id: UUID!
+  listType: DocumentListType!
+  ordering: BigFloat!
+
+  """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
+  parent: DocumentNode
+  parentId: UUID
+
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  tags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
+  tenantId: BigInt!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `DocumentNode` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input DocumentNodeCondition {
+  """Checks for equality with the object’s `content` field."""
+  content: JSON
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `documentId` field."""
+  documentId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `listType` field."""
+  listType: DocumentListType
+
+  """Checks for equality with the object’s `ordering` field."""
+  ordering: BigFloat
+
+  """Checks for equality with the object’s `parentId` field."""
+  parentId: UUID
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `DocumentNode`"""
+input DocumentNodeInput {
+  content: JSON
+  createdAt: Datetime
+  documentId: BigInt!
+  id: UUID
+  listType: DocumentListType
+  ordering: BigFloat
+  parentId: UUID
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `DocumentNodeInputRecord`"""
+input DocumentNodeInputRecordInput {
+  content: JSON
+  id: UUID
+  listType: DocumentListType
+  ordering: BigFloat
+  parentId: UUID
+}
+
+"""
+Represents an update to a `DocumentNode`. Fields that are set will be updated.
+"""
+input DocumentNodePatch {
+  content: JSON
+  createdAt: Datetime
+  documentId: BigInt
+  id: UUID
+  listType: DocumentListType
+  ordering: BigFloat
+  parentId: UUID
+  tenantId: BigInt
+  updatedAt: Datetime
+}
+
+type DocumentNodeTag {
+  """Reads a single `Cohort` that is related to this `DocumentNodeTag`."""
+  cohort: Cohort
+  cohortId: BigInt
+  competitionId: BigInt
+
+  """Reads a single `Couple` that is related to this `DocumentNodeTag`."""
+  couple: Couple
+  coupleId: BigInt
+  createdAt: Datetime!
+  danceCode: String
+  discipline: Discipline
+
+  """
+  Reads a single `EventInstance` that is related to this `DocumentNodeTag`.
+  """
+  eventInstance: EventInstance
+  eventInstanceId: BigInt
+  id: BigInt!
+
+  """
+  Reads a single `DocumentNode` that is related to this `DocumentNodeTag`.
+  """
+  node: DocumentNode
+  nodeId: UUID!
+
+  """Reads a single `Person` that is related to this `DocumentNodeTag`."""
+  person: Person
+  personId: BigInt
+  taggedMonth: Date
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `DocumentNodeTag` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input DocumentNodeTagCondition {
+  """Checks for equality with the object’s `cohortId` field."""
+  cohortId: BigInt
+
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+
+  """Checks for equality with the object’s `coupleId` field."""
+  coupleId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `danceCode` field."""
+  danceCode: String
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: Discipline
+
+  """Checks for equality with the object’s `eventInstanceId` field."""
+  eventInstanceId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `nodeId` field."""
+  nodeId: UUID
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `taggedMonth` field."""
+  taggedMonth: Date
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""An input for mutations affecting `DocumentNodeTag`"""
+input DocumentNodeTagInput {
+  cohortId: BigInt
+  competitionId: BigInt
+  coupleId: BigInt
+  createdAt: Datetime
+  danceCode: String
+  discipline: Discipline
+  eventInstanceId: BigInt
+  id: BigInt
+  nodeId: UUID!
+  personId: BigInt
+  taggedMonth: Date
+  tenantId: BigInt
+}
+
+"""
+Represents an update to a `DocumentNodeTag`. Fields that are set will be updated.
+"""
+input DocumentNodeTagPatch {
+  cohortId: BigInt
+  competitionId: BigInt
+  coupleId: BigInt
+  createdAt: Datetime
+  danceCode: String
+  discipline: Discipline
+  eventInstanceId: BigInt
+  id: BigInt
+  nodeId: UUID
+  personId: BigInt
+  taggedMonth: Date
+  tenantId: BigInt
+}
+
+"""A connection to a list of `DocumentNodeTag` values."""
+type DocumentNodeTagsConnection {
+  """
+  A list of edges which contains the `DocumentNodeTag` and cursor to aid in pagination.
+  """
+  edges: [DocumentNodeTagsEdge!]!
+
+  """A list of `DocumentNodeTag` objects."""
+  nodes: [DocumentNodeTag!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `DocumentNodeTag` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `DocumentNodeTag` edge in the connection."""
+type DocumentNodeTagsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `DocumentNodeTag` at the end of the edge."""
+  node: DocumentNodeTag!
+}
+
+"""Methods to use when ordering `DocumentNodeTag`."""
+enum DocumentNodeTagsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  COUPLE_ID_ASC
+  COUPLE_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DANCE_CODE_ASC
+  DANCE_CODE_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  EVENT_INSTANCE_ID_ASC
+  EVENT_INSTANCE_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  NODE_ID_ASC
+  NODE_ID_DESC
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TAGGED_MONTH_ASC
+  TAGGED_MONTH_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+"""A connection to a list of `DocumentNode` values."""
+type DocumentNodesConnection {
+  """
+  A list of edges which contains the `DocumentNode` and cursor to aid in pagination.
+  """
+  edges: [DocumentNodesEdge!]!
+
+  """A list of `DocumentNode` objects."""
+  nodes: [DocumentNode!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `DocumentNode` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `DocumentNode` edge in the connection."""
+type DocumentNodesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `DocumentNode` at the end of the edge."""
+  node: DocumentNode!
+}
+
+"""Methods to use when ordering `DocumentNode`."""
+enum DocumentNodesOrderBy {
+  CONTENT_ASC
+  CONTENT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DOCUMENT_ID_ASC
+  DOCUMENT_ID_DESC
+  ID_ASC
+  ID_DESC
+  LIST_TYPE_ASC
+  LIST_TYPE_DESC
+  NATURAL
+  ORDERING_ASC
+  ORDERING_DESC
+  PARENT_ID_ASC
+  PARENT_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""
+Represents an update to a `Document`. Fields that are set will be updated.
+"""
+input DocumentPatch {
+  cohortId: BigInt
+  createdAt: Datetime
+  createdBy: BigInt
+  eventInstanceId: BigInt
+  eventSeriesId: BigInt
+  id: BigInt
+  kind: DocumentKind
+  showToMembers: Boolean
+  tenantId: BigInt
+  title: String
+  updatedAt: Datetime
+}
+
+"""A connection to a list of `Document` values."""
+type DocumentsConnection {
+  """
+  A list of edges which contains the `Document` and cursor to aid in pagination.
+  """
+  edges: [DocumentsEdge!]!
+
+  """A list of `Document` objects."""
+  nodes: [Document!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Document` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Document` edge in the connection."""
+type DocumentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Document` at the end of the edge."""
+  node: Document!
+}
+
+"""Methods to use when ordering `Document`."""
+enum DocumentsOrderBy {
+  COHORT_ID_ASC
+  COHORT_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  CREATED_BY_ASC
+  CREATED_BY_DESC
+  EVENT_INSTANCE_ID_ASC
+  EVENT_INSTANCE_ID_DESC
+  EVENT_SERIES_ID_ASC
+  EVENT_SERIES_ID_DESC
+  ID_ASC
+  ID_DESC
+  KIND_ASC
+  KIND_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SHOW_TO_MEMBERS_ASC
+  SHOW_TO_MEMBERS_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TITLE_ASC
+  TITLE_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 enum EventCapacityUnit {
   PEOPLE
   REGISTRATIONS
@@ -3094,6 +4057,64 @@ type EventInstance {
   ): [EventInstance!]!
   createdAt: Datetime!
   description: String
+
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
+
+  """Reads and enables pagination through a set of `Document`."""
+  documents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection!
   enableNotes: Boolean
 
   """
@@ -3949,6 +4970,35 @@ enum EventRegistrationSource {
 type EventSeries {
   createdAt: Datetime!
 
+  """Reads and enables pagination through a set of `Document`."""
+  documents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection!
+
   """Reads and enables pagination through a set of `EventInstance`."""
   eventsList(
     """
@@ -4757,6 +5807,30 @@ type Mutation {
     input: CreateCreditTransactionForPersonInput!
   ): CreateCreditTransactionForPersonPayload
 
+  """Creates a single `Document`."""
+  createDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDocumentInput!
+  ): CreateDocumentPayload
+
+  """Creates a single `DocumentNode`."""
+  createDocumentNode(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDocumentNodeInput!
+  ): CreateDocumentNodePayload
+
+  """Creates a single `DocumentNodeTag`."""
+  createDocumentNodeTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDocumentNodeTagInput!
+  ): CreateDocumentNodeTagPayload
+
   """Creates a single `EventExternalRegistration`."""
   createEventExternalRegistration(
     """
@@ -4890,6 +5964,62 @@ type Mutation {
     """
     input: DeleteCoupleInput!
   ): DeleteCouplePayload
+
+  """Deletes a single `Document` using a unique key."""
+  deleteDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentInput!
+  ): DeleteDocumentPayload
+
+  """Deletes a single `Document` using a unique key."""
+  deleteDocumentByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentByTenantIdAndIdInput!
+  ): DeleteDocumentPayload
+
+  """Deletes a single `DocumentNode` using a unique key."""
+  deleteDocumentNode(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentNodeInput!
+  ): DeleteDocumentNodePayload
+
+  """Deletes a single `DocumentNode` using a unique key."""
+  deleteDocumentNodeByTenantIdAndDocumentIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentNodeByTenantIdAndDocumentIdAndIdInput!
+  ): DeleteDocumentNodePayload
+
+  """Deletes a single `DocumentNode` using a unique key."""
+  deleteDocumentNodeByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentNodeByTenantIdAndIdInput!
+  ): DeleteDocumentNodePayload
+
+  """Deletes a single `DocumentNodeTag` using a unique key."""
+  deleteDocumentNodeTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentNodeTagInput!
+  ): DeleteDocumentNodeTagPayload
+
+  """Deletes a single `DocumentNodeTag` using a unique key."""
+  deleteDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDiscipline(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDisciplineInput!
+  ): DeleteDocumentNodeTagPayload
 
   """Deletes a single `EventExternalRegistration` using a unique key."""
   deleteEventExternalRegistration(
@@ -5191,6 +6321,62 @@ type Mutation {
     input: UpdateCoupleInput!
   ): UpdateCouplePayload
 
+  """Updates a single `Document` using a unique key and a patch."""
+  updateDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentInput!
+  ): UpdateDocumentPayload
+
+  """Updates a single `Document` using a unique key and a patch."""
+  updateDocumentByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentByTenantIdAndIdInput!
+  ): UpdateDocumentPayload
+
+  """Updates a single `DocumentNode` using a unique key and a patch."""
+  updateDocumentNode(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentNodeInput!
+  ): UpdateDocumentNodePayload
+
+  """Updates a single `DocumentNode` using a unique key and a patch."""
+  updateDocumentNodeByTenantIdAndDocumentIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentNodeByTenantIdAndDocumentIdAndIdInput!
+  ): UpdateDocumentNodePayload
+
+  """Updates a single `DocumentNode` using a unique key and a patch."""
+  updateDocumentNodeByTenantIdAndId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentNodeByTenantIdAndIdInput!
+  ): UpdateDocumentNodePayload
+
+  """Updates a single `DocumentNodeTag` using a unique key and a patch."""
+  updateDocumentNodeTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentNodeTagInput!
+  ): UpdateDocumentNodeTagPayload
+
+  """Updates a single `DocumentNodeTag` using a unique key and a patch."""
+  updateDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDiscipline(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDisciplineInput!
+  ): UpdateDocumentNodeTagPayload
+
   """Updates a single `EventInstance` using a unique key and a patch."""
   updateEventInstance(
     """
@@ -5348,6 +6534,16 @@ type Mutation {
     """
     input: UpsertArticleInput!
   ): UpsertArticlePayload
+
+  """
+  Saves a document and the whole of its outline. Tags follow from node content.
+  """
+  upsertDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpsertDocumentInput!
+  ): UpsertDocumentPayload
 }
 
 """All input for the `otpLogin` mutation."""
@@ -5864,6 +7060,35 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
   ): [PersonCstsProgressRecord!]
+
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
   email: String
 
   """
@@ -6664,6 +7889,114 @@ type Query {
   cstsAthlete(idt: Int): String
   currentClaims: JSON
 
+  """Get a single `Document`."""
+  document(id: BigInt!): Document
+
+  """Get a single `Document`."""
+  documentByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Document
+
+  """Get a single `DocumentNode`."""
+  documentNode(id: UUID!): DocumentNode
+
+  """Get a single `DocumentNode`."""
+  documentNodeByTenantIdAndDocumentIdAndId(documentId: BigInt!, id: UUID!, tenantId: BigInt!): DocumentNode
+
+  """Get a single `DocumentNode`."""
+  documentNodeByTenantIdAndId(id: UUID!, tenantId: BigInt!): DocumentNode
+
+  """Get a single `DocumentNodeTag`."""
+  documentNodeTag(id: BigInt!): DocumentNodeTag
+
+  """Get a single `DocumentNodeTag`."""
+  documentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDiscipline(cohortId: BigInt!, competitionId: BigInt!, coupleId: BigInt!, danceCode: String!, discipline: Discipline!, eventInstanceId: BigInt!, nodeId: UUID!, personId: BigInt!, taggedMonth: Date!): DocumentNodeTag
+
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection
+
+  """Reads and enables pagination through a set of `DocumentNode`."""
+  documentNodes(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodesConnection
+
+  """Reads and enables pagination through a set of `Document`."""
+  documents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection
+
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
@@ -6869,6 +8202,13 @@ type Query {
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]
+  orphanedDocumentsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [Document!]
 
   """Get a single `Payment`."""
   payment(id: BigInt!): Payment
@@ -7790,6 +9130,93 @@ type Tenant {
   czDic: String!
   czIco: String!
   description: String!
+
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTags(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeTagCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsConnection!
+
+  """Reads and enables pagination through a set of `DocumentNode`."""
+  documentNodes(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentNodeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentNodesConnection!
+
+  """Reads and enables pagination through a set of `Document`."""
+  documents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection!
 
   """
   Reads and enables pagination through a set of `EventExternalRegistration`.
@@ -9229,6 +10656,218 @@ type UpdateCouplePayload {
   woman: Person
 }
 
+"""All input for the `updateDocumentByTenantIdAndId` mutation."""
+input UpdateDocumentByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Document` being updated.
+  """
+  patch: DocumentPatch!
+  tenantId: BigInt!
+}
+
+"""All input for the `updateDocument` mutation."""
+input UpdateDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Document` being updated.
+  """
+  patch: DocumentPatch!
+}
+
+"""
+All input for the `updateDocumentNodeByTenantIdAndDocumentIdAndId` mutation.
+"""
+input UpdateDocumentNodeByTenantIdAndDocumentIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  documentId: BigInt!
+  id: UUID!
+
+  """
+  An object where the defined keys will be set on the `DocumentNode` being updated.
+  """
+  patch: DocumentNodePatch!
+  tenantId: BigInt!
+}
+
+"""All input for the `updateDocumentNodeByTenantIdAndId` mutation."""
+input UpdateDocumentNodeByTenantIdAndIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+
+  """
+  An object where the defined keys will be set on the `DocumentNode` being updated.
+  """
+  patch: DocumentNodePatch!
+  tenantId: BigInt!
+}
+
+"""All input for the `updateDocumentNode` mutation."""
+input UpdateDocumentNodeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+
+  """
+  An object where the defined keys will be set on the `DocumentNode` being updated.
+  """
+  patch: DocumentNodePatch!
+}
+
+"""The output of our update `DocumentNode` mutation."""
+type UpdateDocumentNodePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Document` that is related to this `DocumentNode`."""
+  document: Document
+
+  """The `DocumentNode` that was updated by this mutation."""
+  documentNode: DocumentNode
+
+  """An edge for our `DocumentNode`. May be used by Relay 1."""
+  documentNodeEdge(
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodesEdge
+
+  """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
+  parent: DocumentNode
+}
+
+"""
+All input for the `updateDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDiscipline` mutation.
+"""
+input UpdateDocumentNodeTagByNodeIdAndPersonIdAndCoupleIdAndCohortIdAndEventInstanceIdAndCompetitionIdAndDanceCodeAndTaggedMonthAndDisciplineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  cohortId: BigInt!
+  competitionId: BigInt!
+  coupleId: BigInt!
+  danceCode: String!
+  discipline: Discipline!
+  eventInstanceId: BigInt!
+  nodeId: UUID!
+
+  """
+  An object where the defined keys will be set on the `DocumentNodeTag` being updated.
+  """
+  patch: DocumentNodeTagPatch!
+  personId: BigInt!
+  taggedMonth: Date!
+}
+
+"""All input for the `updateDocumentNodeTag` mutation."""
+input UpdateDocumentNodeTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `DocumentNodeTag` being updated.
+  """
+  patch: DocumentNodeTagPatch!
+}
+
+"""The output of our update `DocumentNodeTag` mutation."""
+type UpdateDocumentNodeTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `DocumentNodeTag`."""
+  cohort: Cohort
+
+  """Reads a single `Couple` that is related to this `DocumentNodeTag`."""
+  couple: Couple
+
+  """The `DocumentNodeTag` that was updated by this mutation."""
+  documentNodeTag: DocumentNodeTag
+
+  """An edge for our `DocumentNodeTag`. May be used by Relay 1."""
+  documentNodeTagEdge(
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodeTagsEdge
+
+  """
+  Reads a single `EventInstance` that is related to this `DocumentNodeTag`.
+  """
+  eventInstance: EventInstance
+
+  """
+  Reads a single `DocumentNode` that is related to this `DocumentNodeTag`.
+  """
+  node: DocumentNode
+
+  """Reads a single `Person` that is related to this `DocumentNodeTag`."""
+  person: Person
+}
+
+"""The output of our update `Document` mutation."""
+type UpdateDocumentPayload {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `Document`."""
+  cohort: Cohort
+
+  """The `Document` that was updated by this mutation."""
+  document: Document
+
+  """An edge for our `Document`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentsEdge
+
+  """Reads a single `EventInstance` that is related to this `Document`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventSeries` that is related to this `Document`."""
+  eventSeries: EventSeries
+}
+
 """All input for the `updateEventInstanceByTenantIdAndId` mutation."""
 input UpdateEventInstanceByTenantIdAndIdInput {
   """
@@ -9795,6 +11434,45 @@ type UpsertArticlePayload {
   userByAtKdo: User
 }
 
+"""All input for the `upsertDocument` mutation."""
+input UpsertDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  doc: DocumentInputRecordInput
+  nodes: [DocumentNodeInputRecordInput]
+}
+
+"""The output of our `upsertDocument` mutation."""
+type UpsertDocumentPayload {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Cohort` that is related to this `Document`."""
+  cohort: Cohort
+  document: Document
+
+  """An edge for our `Document`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentsEdge
+
+  """Reads a single `EventInstance` that is related to this `Document`."""
+  eventInstance: EventInstance
+
+  """Reads a single `EventSeries` that is related to this `Document`."""
+  eventSeries: EventSeries
+}
+
 type User {
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtKdo(
@@ -9853,6 +11531,35 @@ type User {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection!
+
+  """Reads and enables pagination through a set of `Document`."""
+  authoredDocuments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentsConnection!
   createdAt: Datetime!
 
   """

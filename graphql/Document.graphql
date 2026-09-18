@@ -16,6 +16,9 @@ fragment DocumentNodeTag on DocumentNodeTag {
   cohort {
     ...CohortBasic
   }
+  couple {
+    id
+  }
 }
 
 fragment DocumentNode on DocumentNode {
@@ -25,7 +28,7 @@ fragment DocumentNode on DocumentNode {
   ordering
   listType
   content
-  documentNodeTags {
+  tags {
     nodes {
       ...DocumentNodeTag
     }
@@ -46,7 +49,7 @@ fragment Document on Document {
   eventInstanceId
   eventSeriesId
   cohortId
-  documentNodes(orderBy: [ORDERING_ASC]) {
+  nodes(orderBy: [ORDERING_ASC]) {
     nodes {
       ...DocumentNode
     }

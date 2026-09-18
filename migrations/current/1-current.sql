@@ -29,14 +29,16 @@ create table if not exists document (
   constraint document_subject_check
     check (num_nonnulls(event_instance_id, event_series_id, cohort_id) <= 1),
 
-  foreign key (tenant_id) references tenant (id) on delete cascade,
-  foreign key (created_by) references users (id) on delete set null,
+  constraint document_tenant_fkey foreign key (tenant_id)
+    references tenant (id) on delete cascade,
+  constraint document_author_fkey foreign key (created_by)
+    references users (id) on delete set null,
   -- The column list keeps `set null` off tenant_id, which is not nullable.
-  foreign key (tenant_id, event_instance_id)
+  constraint document_event_instance_fkey foreign key (tenant_id, event_instance_id)
     references event_instance (tenant_id, id) on delete set null (event_instance_id),
-  foreign key (tenant_id, event_series_id)
+  constraint document_event_series_fkey foreign key (tenant_id, event_series_id)
     references event_series (tenant_id, id) on delete set null (event_series_id),
-  foreign key (tenant_id, cohort_id)
+  constraint document_cohort_fkey foreign key (tenant_id, cohort_id)
     references cohort (tenant_id, id) on delete set null (cohort_id)
 );
 
@@ -55,10 +57,11 @@ create table if not exists document_node (
   constraint document_node_tenant_document_id_key unique (tenant_id, document_id, id),
   constraint document_node_parent_not_self check (parent_id is null or parent_id <> id),
 
-  foreign key (tenant_id) references tenant (id) on delete cascade,
-  foreign key (tenant_id, document_id)
+  constraint document_node_tenant_fkey foreign key (tenant_id)
+    references tenant (id) on delete cascade,
+  constraint document_node_document_fkey foreign key (tenant_id, document_id)
     references document (tenant_id, id) on delete cascade,
-  foreign key (tenant_id, document_id, parent_id)
+  constraint document_node_parent_fkey foreign key (tenant_id, document_id, parent_id)
     references document_node (tenant_id, document_id, id) on delete cascade
 );
 
@@ -85,17 +88,49 @@ create table if not exists document_node_tag (
     unique nulls not distinct (node_id, person_id, couple_id, cohort_id, event_instance_id,
                                competition_id, dance_code, tagged_month, discipline),
 
-  foreign key (tenant_id) references tenant (id) on delete cascade,
-  foreign key (tenant_id, node_id)
+  constraint document_node_tag_tenant_fkey foreign key (tenant_id)
+    references tenant (id) on delete cascade,
+  constraint document_node_tag_node_fkey foreign key (tenant_id, node_id)
     references document_node (tenant_id, id) on delete cascade,
-  foreign key (person_id) references person (id) on delete cascade,
-  foreign key (couple_id) references couple (id) on delete cascade,
-  foreign key (tenant_id, cohort_id) references cohort (tenant_id, id) on delete cascade,
-  foreign key (tenant_id, event_instance_id)
+  constraint document_node_tag_person_fkey foreign key (person_id)
+    references person (id) on delete cascade,
+  constraint document_node_tag_couple_fkey foreign key (couple_id)
+    references couple (id) on delete cascade,
+  constraint document_node_tag_cohort_fkey foreign key (tenant_id, cohort_id)
+    references cohort (tenant_id, id) on delete cascade,
+  constraint document_node_tag_event_instance_fkey foreign key (tenant_id, event_instance_id)
     references event_instance (tenant_id, id) on delete cascade,
-  foreign key (competition_id) references federated.competition (id) on delete cascade,
-  foreign key (dance_code) references federated.dance (code) on delete cascade
+  constraint document_node_tag_competition_fkey foreign key (competition_id)
+    references federated.competition (id) on delete cascade,
+  constraint document_node_tag_dance_fkey foreign key (dance_code)
+    references federated.dance (code) on delete cascade
 );
+
+-- Composite keys otherwise surface as tenantCohort, documentNodesByTenantIdAndDocumentId
+-- and the like, so each relation is named the way the rest of the schema names them.
+comment on constraint document_tenant_fkey on document is '@fieldName tenant';
+comment on constraint document_author_fkey on document is '@fieldName author
+@foreignFieldName authoredDocuments';
+comment on constraint document_event_instance_fkey on document is '@fieldName eventInstance
+@foreignFieldName documents';
+comment on constraint document_event_series_fkey on document is '@fieldName eventSeries
+@foreignFieldName documents';
+comment on constraint document_cohort_fkey on document is '@fieldName cohort
+@foreignFieldName documents';
+
+comment on constraint document_node_tenant_fkey on document_node is '@fieldName tenant';
+comment on constraint document_node_document_fkey on document_node is '@fieldName document
+@foreignFieldName nodes';
+comment on constraint document_node_parent_fkey on document_node is '@fieldName parent
+@foreignFieldName children';
+
+comment on constraint document_node_tag_tenant_fkey on document_node_tag is '@fieldName tenant';
+comment on constraint document_node_tag_node_fkey on document_node_tag is '@fieldName node
+@foreignFieldName tags';
+comment on constraint document_node_tag_cohort_fkey on document_node_tag is '@fieldName cohort
+@foreignFieldName documentNodeTags';
+comment on constraint document_node_tag_event_instance_fkey on document_node_tag is '@fieldName eventInstance
+@foreignFieldName documentNodeTags';
 
 create index if not exists document_event_instance_id_idx
   on document (event_instance_id) where event_instance_id is not null;
