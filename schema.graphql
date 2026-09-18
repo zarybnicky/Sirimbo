@@ -3448,11 +3448,6 @@ enum DocumentKind {
   PLAN
 }
 
-enum DocumentListType {
-  BULLET
-  ORDERED
-}
-
 type DocumentNode {
   """Reads and enables pagination through a set of `DocumentNode`."""
   children(
@@ -3489,7 +3484,6 @@ type DocumentNode {
   document: Document
   documentId: BigInt!
   id: UUID!
-  listType: DocumentListType!
   ordering: BigFloat!
 
   """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
@@ -3545,9 +3539,6 @@ input DocumentNodeCondition {
   """Checks for equality with the object’s `id` field."""
   id: UUID
 
-  """Checks for equality with the object’s `listType` field."""
-  listType: DocumentListType
-
   """Checks for equality with the object’s `ordering` field."""
   ordering: BigFloat
 
@@ -3567,7 +3558,6 @@ input DocumentNodeInput {
   createdAt: Datetime
   documentId: BigInt!
   id: UUID
-  listType: DocumentListType
   ordering: BigFloat
   parentId: UUID
   tenantId: BigInt
@@ -3578,7 +3568,6 @@ input DocumentNodeInput {
 input DocumentNodeInputRecordInput {
   content: JSON
   id: UUID
-  listType: DocumentListType
   ordering: BigFloat
   parentId: UUID
 }
@@ -3591,7 +3580,6 @@ input DocumentNodePatch {
   createdAt: Datetime
   documentId: BigInt
   id: UUID
-  listType: DocumentListType
   ordering: BigFloat
   parentId: UUID
   tenantId: BigInt
@@ -3802,8 +3790,6 @@ enum DocumentNodesOrderBy {
   DOCUMENT_ID_DESC
   ID_ASC
   ID_DESC
-  LIST_TYPE_ASC
-  LIST_TYPE_DESC
   NATURAL
   ORDERING_ASC
   ORDERING_DESC

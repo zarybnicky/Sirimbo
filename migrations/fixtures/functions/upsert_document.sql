@@ -16,7 +16,6 @@ create type document_node_input as (
   id uuid,
   parent_id uuid,
   ordering numeric,
-  list_type document_list_type,
   content jsonb
 );
 
@@ -56,19 +55,17 @@ begin
 
   -- Parents are attached in a second pass, so the payload does not have to
   -- arrive in any particular order to satisfy the self-referencing key.
-  insert into document_node (id, tenant_id, document_id, parent_id, ordering, list_type, content)
+  insert into document_node (id, tenant_id, document_id, parent_id, ordering, content)
   select
     input.id,
     saved.tenant_id,
     saved.id,
     null,
     coalesce(input.ordering, 1),
-    coalesce(input.list_type, 'bullet'),
     coalesce(input.content, '{"type":"paragraph","content":[]}'::jsonb)
   from unnest(nodes) input
   on conflict (id) do update set
     ordering = excluded.ordering,
-    list_type = excluded.list_type,
     content = excluded.content;
 
   update document_node node set parent_id = input.parent_id

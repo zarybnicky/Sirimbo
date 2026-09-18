@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { outlineExtensions } from './extensions.ts';
 import { nodeIdPlugin } from './node-id.ts';
-import { outlineToRows, rowsToOutline, type OutlineRow } from './rows.ts';
+import { listTypeOf, outlineToRows, rowsToOutline, type OutlineRow } from './rows.ts';
 import { tagText } from './tag-node.ts';
 import { monthCandidates } from './suggestion.ts';
 
@@ -13,6 +13,12 @@ const schema = getSchema(outlineExtensions);
 const text = (value: string) => ({
   type: 'paragraph',
   content: [{ type: 'text', text: value }],
+});
+
+const item = (value: string, listType: 'bullet' | 'ordered' = 'bullet') => ({
+  type: 'listItem',
+  attrs: { listType },
+  content: [text(value)],
 });
 
 const tag = (kind: string, refId: string, label: string) => ({
@@ -41,15 +47,31 @@ describe('outline rows', () => {
   // Depth-first, so a parent always precedes its children and the
   // self-referencing foreign key is satisfied by insertion order alone.
   const rows: OutlineRow[] = [
-    { id: 'a', parentId: null, ordering: 1, listType: 'bullet', content: text('Warm-up') },
-    { id: 'b', parentId: null, ordering: 2, listType: 'bullet', content: text('STT block') },
-    { id: 'c', parentId: 'b', ordering: 1, listType: 'ordered', content: text('Waltz') },
-    { id: 'e', parentId: 'c', ordering: 1, listType: 'bullet', content: text('Natural turn') },
-    { id: 'd', parentId: 'b', ordering: 2, listType: 'ordered', content: text('Tango') },
+    { id: 'a', parentId: null, ordering: 1, content: item('Warm-up') },
+    { id: 'b', parentId: null, ordering: 2, content: item('STT block') },
+    { id: 'c', parentId: 'b', ordering: 1, content: item('Waltz', 'ordered') },
+    { id: 'e', parentId: 'c', ordering: 1, content: item('Natural turn') },
+    { id: 'd', parentId: 'b', ordering: 2, content: item('Tango', 'ordered') },
   ];
 
   test('round-trips nesting, ordering and list type', () => {
     assert.deepEqual(outlineToRows(rowsToOutline(rows)), rows);
+  });
+
+  test('keeps ordered and unordered lists apart without a column', () => {
+    const round = outlineToRows(rowsToOutline(rows));
+
+    assert.deepEqual(
+      round.map((row) => [row.id, listTypeOf(row)]),
+      [
+        ['a', 'bullet'],
+        ['b', 'bullet'],
+        ['c', 'ordered'],
+        ['e', 'bullet'],
+        ['d', 'ordered'],
+      ],
+    );
+    assert.equal(rowsToOutline(rows).content?.[0]?.type, 'bulletList');
   });
 
   test('emits every parent before its children', () => {
@@ -64,8 +86,8 @@ describe('outline rows', () => {
 
   test('renumbers ordering from the document order', () => {
     const rows: OutlineRow[] = [
-      { id: 'a', parentId: null, ordering: 40, listType: 'bullet', content: text('second') },
-      { id: 'b', parentId: null, ordering: 10, listType: 'bullet', content: text('first') },
+      { id: 'a', parentId: null, ordering: 40, content: item('second') },
+      { id: 'b', parentId: null, ordering: 10, content: item('first') },
     ];
 
     assert.deepEqual(
@@ -141,7 +163,7 @@ describe('tags', () => {
     assert.equal(rows.length, 1);
     assert.deepEqual(outlineToRows(rowsToOutline(rows)), rows);
     assert.deepEqual(
-      rows[0]!.content.content?.filter((child) => child.type === 'tag'),
+      rows[0]!.content.content?.[0]?.content?.filter((child) => child.type === 'tag'),
       [tag('dance', 'W', 'Waltz'), tag('person', '42', 'Petr')],
     );
   });

@@ -3,9 +3,6 @@ begin
   if not exists (select 1 from pg_catalog.pg_type where typname = 'document_kind') then
     create type document_kind as enum ('plan', 'evaluation');
   end if;
-  if not exists (select 1 from pg_catalog.pg_type where typname = 'document_list_type') then
-    create type document_list_type as enum ('bullet', 'ordered');
-  end if;
   if not exists (select 1 from pg_catalog.pg_type where typname = 'discipline') then
     create type discipline as enum ('stt', 'lat', 'conditioning', 'practice');
   end if;
@@ -48,7 +45,6 @@ create table if not exists document_node (
   document_id bigint not null,
   parent_id uuid,
   ordering numeric not null default 1,
-  list_type document_list_type not null default 'bullet',
   content jsonb not null default '{"type":"paragraph","content":[]}'::jsonb,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),

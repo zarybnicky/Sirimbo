@@ -26,7 +26,6 @@ fragment DocumentNode on DocumentNode {
   id
   parentId
   ordering
-  listType
   content
   tags {
     nodes {
