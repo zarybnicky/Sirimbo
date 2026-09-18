@@ -54,7 +54,9 @@ begin
   end if;
 
   -- Parents are attached in a second pass, so the payload does not have to
-  -- arrive in any particular order to satisfy the self-referencing key.
+  -- arrive in any particular order to satisfy the self-referencing key. Content
+  -- is whatever block the editor stores, so there is no default worth inventing;
+  -- a null is a not-null violation naming the column.
   insert into document_node (id, tenant_id, document_id, parent_id, ordering, content)
   select
     input.id,
@@ -62,7 +64,7 @@ begin
     saved.id,
     null,
     coalesce(input.ordering, 1),
-    coalesce(input.content, '{"type":"paragraph","content":[]}'::jsonb)
+    input.content
   from unnest(nodes) input
   on conflict (id) do update set
     ordering = excluded.ordering,

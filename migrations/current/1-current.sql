@@ -45,7 +45,7 @@ create table if not exists document_node (
   document_id bigint not null,
   parent_id uuid,
   ordering numeric not null default 1,
-  content jsonb not null default '{"type":"paragraph","content":[]}'::jsonb,
+  content jsonb not null,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),
 
