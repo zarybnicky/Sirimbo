@@ -9,6 +9,7 @@ import { useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
+import { DocumentPane, useCreateDocument } from '@/ui/DocumentPane';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
@@ -28,7 +29,7 @@ export function TrainingGroup({
   initialCohort: NonNullable<CohortWithMembersQuery['entity']>;
 }) {
   const auth = useAuth();
-  const [{ data }] = useQuery({
+  const [{ data }, refetch] = useQuery({
     query: CohortWithMembersDocument,
     variables: { id: initialCohort.id },
   });
@@ -48,6 +49,16 @@ export function TrainingGroup({
     [cohort.description],
   );
   const actions = useActions(cohortActions, cohort);
+  const subject = React.useMemo(
+    () => ({ cohortId: initialCohort.id }),
+    [initialCohort.id],
+  );
+  const [creatingPlan, createDocument] = useCreateDocument(subject);
+  const addPlan = React.useCallback(async () => {
+    if (await createDocument('Nový plán')) {
+      refetch({ requestPolicy: 'network-only' });
+    }
+  }, [createDocument, refetch]);
 
   return (
     <>
@@ -55,6 +66,32 @@ export function TrainingGroup({
 
       <h6 className="mb-2 font-bold">{cohort.location}</h6>
       <RichTextView value={description} />
+
+      {(auth.isTrainerOrAdmin || (cohort.documentsList ?? []).length > 0) && (
+        <section className="my-4">
+          <div className="flex items-baseline justify-between">
+            <h3 className={typographyCls({ variant: 'section', className: 'my-3' })}>
+              Plány
+            </h3>
+            {auth.isTrainerOrAdmin && (
+              <button
+                type="button"
+                onClick={addPlan}
+                disabled={creatingPlan}
+                className="text-sm text-accent-11 hover:underline disabled:opacity-50"
+              >
+                + Plán
+              </button>
+            )}
+          </div>
+          {(cohort.documentsList ?? []).map((doc) => (
+            <article key={doc.id} className="mb-4">
+              <h4 className="mb-1 font-bold">{doc.title || 'Plán'}</h4>
+              <DocumentPane id={doc.id} />
+            </article>
+          ))}
+        </section>
+      )}
 
       {auth.isLoggedIn && (
         <>

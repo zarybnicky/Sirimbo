@@ -7,6 +7,7 @@ import {
   type EventSeriesQuery,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
+import { DocumentPane, useCreateDocument } from '@/ui/DocumentPane';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
@@ -30,7 +31,7 @@ export function EventSeries({
   initialSeries: NonNullable<EventSeriesQuery['eventSeries']>;
 }) {
   const auth = useAuth();
-  const [{ data, error }] = useQuery({
+  const [{ data, error }, refetch] = useQuery({
     query: EventSeriesDocument,
     variables: { id: initialSeries.id },
   });
@@ -40,6 +41,18 @@ export function EventSeries({
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
+  const subject = React.useMemo(
+    () => ({ eventSeriesId: initialSeries.id }),
+    [initialSeries.id],
+  );
+  const [creatingPlan, createDocument] = useCreateDocument(subject);
+  const addPlan = React.useCallback(async () => {
+    const created = await createDocument('Nový plán');
+    if (created) {
+      refetch({ requestPolicy: 'network-only' });
+      setVariant(`doc-${created}`);
+    }
+  }, [createDocument, refetch, setVariant]);
   const tabs = React.useMemo(() => {
     const tabs: {
       id: string;
@@ -58,6 +71,13 @@ export function EventSeries({
       title: 'Termíny',
       contents: () => <EventInstances instances={series.eventsList} />,
     });
+    for (const doc of series.documentsList ?? []) {
+      tabs.push({
+        id: `doc-${doc.id}`,
+        title: doc.title || 'Plán',
+        contents: () => <DocumentPane id={doc.id} />,
+      });
+    }
     return tabs;
   }, [auth.isTrainerOrAdmin, series]);
 
@@ -66,7 +86,19 @@ export function EventSeries({
       <PageHeader title={title} />
       <FormError error={error} />
       {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
-      {series.eventsList.length > 0 ? (
+      {auth.isTrainerOrAdmin && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={addPlan}
+            disabled={creatingPlan}
+            className="text-sm text-accent-11 hover:underline disabled:opacity-50"
+          >
+            + Plán
+          </button>
+        </div>
+      )}
+      {tabs.length > 0 ? (
         <div className="max-w-full">
           <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
         </div>
