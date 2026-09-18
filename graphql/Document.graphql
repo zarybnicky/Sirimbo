@@ -86,6 +86,16 @@ query Document($id: BigInt!) {
   }
 }
 
+query TagDances {
+  dances(orderBy: [NAME_ASC]) {
+    nodes {
+      code
+      name
+      discipline
+    }
+  }
+}
+
 query OrphanedDocuments {
   orphanedDocumentsList {
     ...DocumentBasic

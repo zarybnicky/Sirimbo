@@ -173,6 +173,15 @@ alter table document enable row level security;
 alter table document_node enable row level security;
 alter table document_node_tag enable row level security;
 
+-- The aggregator stays unexposed; `public` takes only what the club API needs.
+create or replace view dance as
+  select code, name, discipline from federated.dance;
+
+comment on view dance is '@primaryKey code
+@omit create,update,delete';
+
+grant select on dance to anonymous;
+
 --!include functions/document_node_tags.sql
 --!include functions/upsert_document.sql
 --!include functions/orphaned_documents.sql

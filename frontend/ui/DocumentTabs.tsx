@@ -5,6 +5,7 @@ import {
   DocumentDocument,
   EventInstanceDocumentsDocument,
   EventSeriesDocumentsDocument,
+  TagDancesDocument,
   UpsertDocumentDocument,
 } from '@/graphql/Document';
 import { CohortListDocument } from '@/graphql/Cohorts';
@@ -56,7 +57,7 @@ export function DocumentTabs({ subject }: { subject: DocumentSubject }) {
 
   const create = React.useCallback(async () => {
     const result = await upsert({
-      input: { doc: { kind: 'plan', title: 'Nový plán', ...subject }, nodes: [] },
+      input: { doc: { kind: 'PLAN', title: 'Nový plán', ...subject }, nodes: [] },
     });
     const created = result.data?.upsertDocument?.document;
     if (created) {
@@ -114,7 +115,7 @@ function DocumentPane({
         id: node.id,
         parentId: node.parentId ?? null,
         ordering: Number(node.ordering),
-        listType: node.listType === 'ordered' ? 'ordered' : 'bullet',
+        listType: node.listType === 'ORDERED' ? 'ordered' : 'bullet',
         content: node.content,
       })),
     [doc],
@@ -123,12 +124,12 @@ function DocumentPane({
   const save = useDebounced((next: OutlineRow[]) => {
     void upsert({
       input: {
-        doc: { id, kind: doc?.kind ?? 'plan', title: doc?.title ?? null, ...subject },
+        doc: { id, kind: doc?.kind ?? 'PLAN', title: doc?.title ?? null, ...subject },
         nodes: next.map((row) => ({
           id: row.id,
           parentId: row.parentId,
           ordering: row.ordering.toString(),
-          listType: row.listType,
+          listType: row.listType === 'ordered' ? 'ORDERED' : 'BULLET',
           content: row.content,
         })),
       },
@@ -160,12 +161,13 @@ function useDebounced<T>(fn: (value: T) => void, delay: number) {
   );
 }
 
-// People and cohorts are small enough to load once and rank in the browser, the
-// way the rest of the app filters lists. Dances and competitions live in the
-// federated schema, which the API does not expose, so they are not offered yet.
+// People, cohorts and dances are small enough to load once and rank in the
+// browser, the way the rest of the app filters lists. Competitions are not
+// offered: they belong to the aggregator, which the club API does not expose.
 function useTagCandidates() {
   const [{ data: people }] = useQuery({ query: FullPersonListDocument });
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument, variables: {} });
+  const [{ data: dances }] = useQuery({ query: TagDancesDocument });
 
   const all = React.useMemo<TagCandidate[]>(
     () => [
@@ -179,16 +181,23 @@ function useTagCandidates() {
         refId: cohort.id,
         label: cohort.name,
       })),
+      ...(dances?.dances?.nodes ?? []).map((dance) => ({
+        kind: 'dance' as const,
+        refId: dance.code,
+        label: dance.name ?? dance.code,
+      })),
       ...DISCIPLINE_CANDIDATES,
       ...monthCandidates(new Date()),
     ],
-    [people, cohorts],
+    [people, cohorts, dances],
   );
 
   return React.useCallback(
     (char: string, query: string) => {
       const kinds =
-        char === '@' ? new Set(['person', 'couple', 'cohort', 'event']) : new Set(['discipline', 'month']);
+        char === '@'
+          ? new Set(['person', 'couple', 'cohort', 'event'])
+          : new Set(['discipline', 'dance', 'month']);
       const pool = all.filter((candidate) => kinds.has(candidate.kind));
       if (!query) {
         return pool.slice(0, 10);

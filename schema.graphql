@@ -2420,6 +2420,65 @@ type CreateUserProxyPayload {
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
+type Dance {
+  code: String!
+  discipline: String
+  name: String
+}
+
+"""
+A condition to be used against `Dance` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input DanceCondition {
+  """Checks for equality with the object’s `code` field."""
+  code: String
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""A connection to a list of `Dance` values."""
+type DancesConnection {
+  """
+  A list of edges which contains the `Dance` and cursor to aid in pagination.
+  """
+  edges: [DancesEdge!]!
+
+  """A list of `Dance` objects."""
+  nodes: [Dance!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Dance` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Dance` edge in the connection."""
+type DancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Dance` at the end of the edge."""
+  node: Dance!
+}
+
+"""Methods to use when ordering `Dance`."""
+enum DancesOrderBy {
+  CODE_ASC
+  CODE_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """A calendar date in YYYY-MM-DD format."""
 scalar Date
 
@@ -7888,6 +7947,38 @@ type Query {
   couple(id: BigInt!): Couple
   cstsAthlete(idt: Int): String
   currentClaims: JSON
+
+  """Get a single `Dance`."""
+  dance(code: String!): Dance
+
+  """Reads and enables pagination through a set of `Dance`."""
+  dances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Dance`."""
+    orderBy: [DancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DancesConnection
 
   """Get a single `Document`."""
   document(id: BigInt!): Document
