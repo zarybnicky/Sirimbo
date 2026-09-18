@@ -2593,7 +2593,6 @@ export type Document = {
   eventSeries: Maybe<EventSeries>;
   eventSeriesId: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['BigInt']['output'];
-  kind: DocumentKind;
   /** Reads and enables pagination through a set of `DocumentNode`. */
   nodesList: Array<DocumentNode>;
   showToMembers: Scalars['Boolean']['output'];
@@ -2627,8 +2626,6 @@ export type DocumentCondition = {
   eventSeriesId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `kind` field. */
-  kind?: InputMaybe<DocumentKind>;
   /** Checks for equality with the object’s `showToMembers` field. */
   showToMembers?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -2645,14 +2642,9 @@ export type DocumentInputRecordInput = {
   eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
   eventSeriesId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  kind?: InputMaybe<DocumentKind>;
   showToMembers?: InputMaybe<Scalars['Boolean']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
-
-export type DocumentKind =
-  | 'EVALUATION'
-  | 'PLAN';
 
 export type DocumentNode = {
   __typename?: 'DocumentNode';
@@ -2853,8 +2845,6 @@ export type DocumentsOrderBy =
   | 'EVENT_SERIES_ID_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'KIND_ASC'
-  | 'KIND_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -9913,7 +9903,6 @@ export type GraphCacheResolvers = {
     eventSeries?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, WithTypename<EventSeries> | string>,
     eventSeriesId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    kind?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, DocumentKind | string>,
     nodesList?: GraphCacheResolver<WithTypename<Document>, DocumentNodesListArgs, Array<WithTypename<DocumentNode> | string>>,
     showToMembers?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -11664,7 +11653,6 @@ export type GraphCacheUpdaters = {
     eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     eventSeriesId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
-    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     nodesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, DocumentNodesListArgs>,
     showToMembers?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,

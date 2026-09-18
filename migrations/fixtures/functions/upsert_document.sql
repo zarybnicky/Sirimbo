@@ -4,7 +4,6 @@ drop type if exists document_node_input;
 
 create type document_input as (
   id bigint,
-  kind document_kind,
   title text,
   event_instance_id bigint,
   event_series_id bigint,
@@ -27,9 +26,8 @@ declare
   saved document;
 begin
   if doc.id is null then
-    insert into document (kind, title, event_instance_id, event_series_id, cohort_id, show_to_members)
+    insert into document (title, event_instance_id, event_series_id, cohort_id, show_to_members)
     values (
-      coalesce(doc.kind, 'plan'),
       doc.title,
       doc.event_instance_id,
       doc.event_series_id,
@@ -39,7 +37,6 @@ begin
     returning * into saved;
   else
     update document set
-      kind = coalesce(doc.kind, document.kind),
       title = doc.title,
       event_instance_id = doc.event_instance_id,
       event_series_id = doc.event_series_id,

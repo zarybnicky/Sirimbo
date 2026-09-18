@@ -35,7 +35,6 @@ fragment DocumentNode on DocumentNode {
 fragment DocumentBasic on Document {
   __typename
   id
-  kind
   title
   showToMembers
   updatedAt

@@ -5802,17 +5802,6 @@
             "args": []
           },
           {
-            "name": "kind",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "nodesList",
             "type": {
               "kind": "NON_NULL",

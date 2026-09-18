@@ -3010,7 +3010,6 @@ type Document {
   eventSeries: EventSeries
   eventSeriesId: BigInt
   id: BigInt!
-  kind: DocumentKind!
 
   """Reads and enables pagination through a set of `DocumentNode`."""
   nodesList(
@@ -3057,9 +3056,6 @@ input DocumentCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `kind` field."""
-  kind: DocumentKind
-
   """Checks for equality with the object’s `showToMembers` field."""
   showToMembers: Boolean
 
@@ -3079,14 +3075,8 @@ input DocumentInputRecordInput {
   eventInstanceId: BigInt
   eventSeriesId: BigInt
   id: BigInt
-  kind: DocumentKind
   showToMembers: Boolean
   title: String
-}
-
-enum DocumentKind {
-  EVALUATION
-  PLAN
 }
 
 type DocumentNode {
@@ -3329,8 +3319,6 @@ enum DocumentsOrderBy {
   EVENT_SERIES_ID_DESC
   ID_ASC
   ID_DESC
-  KIND_ASC
-  KIND_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
