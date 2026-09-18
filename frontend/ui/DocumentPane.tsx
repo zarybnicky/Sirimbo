@@ -1,6 +1,7 @@
 'use client';
 
-import { DocumentDocument, UpsertDocumentDocument } from '@/graphql/Document';
+import { type DocumentFragment, DocumentDocument, UpsertDocumentDocument } from '@/graphql/Document';
+import { useAuth } from '@/lib/auth';
 import { useTagCandidates } from '@/ui/fields/outline/candidates';
 import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
 import type { OutlineRow } from '@/ui/fields/outline/rows';
@@ -12,22 +13,25 @@ export type DocumentSubject =
   | { eventSeriesId: string }
   | { cohortId: string };
 
+// Trainers and administrators may write; a member reading a shared plan gets the
+// same rendering without an editor, a save path or the candidate queries.
 export function DocumentPane({ id }: { id: string }) {
-  const [{ data }] = useQuery({ query: DocumentDocument, variables: { id } });
+  const auth = useAuth();
+  return auth.isTrainerOrAdmin ? <DocumentEditor id={id} /> : <DocumentView id={id} />;
+}
+
+function DocumentView({ id }: { id: string }) {
+  const { doc, rows } = useDocumentRows(id);
+  if (!doc) {
+    return null;
+  }
+  return <OutlineEditor key={id} rows={rows} editable={false} />;
+}
+
+function DocumentEditor({ id }: { id: string }) {
+  const { doc, rows } = useDocumentRows(id);
   const [, upsert] = useMutation(UpsertDocumentDocument);
   const candidates = useTagCandidates();
-  const doc = data?.document;
-
-  const rows = React.useMemo<OutlineRow[]>(
-    () =>
-      (doc?.nodesList ?? []).map((node) => ({
-        id: node.id,
-        parentId: node.parentId ?? null,
-        ordering: Number(node.ordering),
-        content: node.content,
-      })),
-    [doc],
-  );
 
   const save = useDebounced((next: OutlineRow[]) => {
     if (!doc) {
@@ -58,6 +62,24 @@ export function DocumentPane({ id }: { id: string }) {
   }
 
   return <OutlineEditor key={id} rows={rows} onChange={save} candidates={candidates} />;
+}
+
+function useDocumentRows(id: string) {
+  const [{ data }] = useQuery({ query: DocumentDocument, variables: { id } });
+  const doc = data?.document as DocumentFragment | null | undefined;
+
+  const rows = React.useMemo<OutlineRow[]>(
+    () =>
+      (doc?.nodesList ?? []).map((node) => ({
+        id: node.id,
+        parentId: node.parentId ?? null,
+        ordering: Number(node.ordering),
+        content: node.content,
+      })),
+    [doc],
+  );
+
+  return { doc, rows };
 }
 
 export function useCreateDocument(subject: DocumentSubject) {

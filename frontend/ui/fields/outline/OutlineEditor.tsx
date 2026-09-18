@@ -10,8 +10,10 @@ import { TAG_PREFIX } from './tag-node.ts';
 
 export type OutlineEditorProps = {
   rows: OutlineRow[];
-  onChange: (rows: OutlineRow[]) => void;
-  candidates: (char: string, query: string) => TagCandidate[];
+  // Both absent in view mode: nothing is written, and no candidates are fetched
+  // for a picker that can never open.
+  onChange?: (rows: OutlineRow[]) => void;
+  candidates?: (char: string, query: string) => TagCandidate[];
   editable?: boolean;
   className?: string;
 };
@@ -35,18 +37,22 @@ export function OutlineEditor({
     content: initialContent,
     extensions: [
       ...outlineExtensions,
-      TagSuggestion.configure({
-        char: '@',
-        items: (query) => candidates('@', query),
-        onChange: setSuggestion,
-      }),
-      TagSuggestion.extend({ name: 'tagSuggestionHash' }).configure({
-        char: '#',
-        items: (query) => candidates('#', query),
-        onChange: setSuggestion,
-      }),
+      ...(editable && candidates
+        ? [
+            TagSuggestion.configure({
+              char: '@',
+              items: (query) => candidates('@', query),
+              onChange: setSuggestion,
+            }),
+            TagSuggestion.extend({ name: 'tagSuggestionHash' }).configure({
+              char: '#',
+              items: (query) => candidates('#', query),
+              onChange: setSuggestion,
+            }),
+          ]
+        : []),
     ],
-    onUpdate: ({ editor: instance }) => onChange(outlineToRows(instance.getJSON())),
+    onUpdate: ({ editor: instance }) => onChange?.(outlineToRows(instance.getJSON())),
     editorProps: {
       attributes: {
         class: cn(
