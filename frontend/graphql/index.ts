@@ -6743,6 +6743,7 @@ export type SystemAdminTenantsRecord = {
   origins: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   sessionCountLast30Days: Maybe<Scalars['BigInt']['output']>;
   sessionCountPerTrainerLast30Days: Maybe<Scalars['Float']['output']>;
+  settings: Maybe<Scalars['String']['output']>;
   trainerCount: Maybe<Scalars['BigInt']['output']>;
 };
 
@@ -6760,6 +6761,7 @@ export type SystemAdminUpdateTenantInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  settings?: InputMaybe<Scalars['JSON']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
@@ -10114,6 +10116,7 @@ export type GraphCacheResolvers = {
     origins?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     sessionCountLast30Days?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     sessionCountPerTrainerLast30Days?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['Float']['output'] | string>,
+    settings?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
     trainerCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
   SystemAdminUpdateTenantPayload?: {
@@ -11805,6 +11808,7 @@ export type GraphCacheUpdaters = {
     origins?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
     sessionCountLast30Days?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
     sessionCountPerTrainerLast30Days?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
+    settings?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>,
     trainerCount?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminTenantsRecord>>, Record<string, never>>
   },
   SystemAdminUpdateTenantPayload?: {

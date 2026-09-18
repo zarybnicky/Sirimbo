@@ -7751,6 +7751,7 @@ type SystemAdminTenantsRecord {
   origins: [String]
   sessionCountLast30Days: BigInt
   sessionCountPerTrainerLast30Days: Float
+  settings: String
   trainerCount: BigInt
 }
 
@@ -7769,6 +7770,7 @@ input SystemAdminUpdateTenantInput {
   description: String
   name: String
   origins: [String]
+  settings: JSON
   tenantId: BigInt
 }
 

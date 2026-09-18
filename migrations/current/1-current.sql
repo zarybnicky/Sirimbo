@@ -52,3 +52,6 @@ as $$
   );
 $$;
 grant all on function access_credential_is_allowed(access_credential) to anonymous;
+
+--!include functions/system_admin_tenants.sql
+--!include functions/system_admin_update_tenant.sql

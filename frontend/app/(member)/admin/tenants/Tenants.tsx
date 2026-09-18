@@ -116,7 +116,6 @@ export function Tenants() {
 
       {!fetching && !error && tenants.length > 0 && (
         <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
-
           <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
             <DataGrid
               columns={columns}
@@ -179,6 +178,14 @@ const TenantFormSchema = z.object({
   origins: z.string().optional(),
   czIco: z.string().optional(),
   czDic: z.string().optional(),
+  settings: z.string().refine((value) => {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed);
+    } catch {
+      return false;
+    }
+  }, 'Nastavení musí být JSON objekt.'),
 });
 
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
@@ -253,6 +260,7 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
           .filter(Boolean),
         czIco: values.czIco ?? '',
         czDic: values.czDic ?? '',
+        settings: values.settings,
       },
     });
     if (!result.error) onSuccess();
@@ -280,6 +288,12 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
         <TextFieldElement control={control} name="czIco" label="IČO" />
         <TextFieldElement control={control} name="czDic" label="DIČ" />
       </div>
+      <TextAreaElement
+        control={control}
+        name="settings"
+        label="Nastavení (JSON)"
+        className="font-mono"
+      />
 
       <SubmitButton control={control}>Uložit změny</SubmitButton>
     </form>
@@ -294,6 +308,7 @@ function createFormState(tenant: SystemAdminTenantsRecord): TenantFormValues {
     origins: tenant.origins?.join(', ') ?? '',
     czIco: tenant.czIco || '',
     czDic: tenant.czDic || '',
+    settings: tenant.settings || '{}',
   };
 }
 

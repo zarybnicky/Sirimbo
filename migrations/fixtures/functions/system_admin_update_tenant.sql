@@ -1,4 +1,5 @@
-create or replace function system_admin_update_tenant(
+drop function if exists system_admin_update_tenant;
+create function system_admin_update_tenant(
   tenant_id bigint,
   name text default null,
   description text default null,
@@ -6,7 +7,8 @@ create or replace function system_admin_update_tenant(
   origins text[] default null,
   address address_domain default null,
   cz_ico text default null,
-  cz_dic text default null
+  cz_dic text default null,
+  settings jsonb default null
 )
 returns tenant
 language plpgsql
@@ -36,6 +38,12 @@ begin
 
   if not found then
     raise exception 'tenant % not found', tenant_id using errcode = 'P0002';
+  end if;
+
+  if settings is not null then
+    update tenant_settings ts
+    set settings = system_admin_update_tenant.settings
+    where ts.tenant_id = system_admin_update_tenant.tenant_id;
   end if;
 
   return v_tenant;

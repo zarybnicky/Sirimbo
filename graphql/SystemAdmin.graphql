@@ -17,6 +17,7 @@ query SystemAdminTenants {
         region
         postalCode
       }
+      settings
       membershipCount
       trainerCount
       administratorCount

@@ -1,4 +1,5 @@
-create or replace function system_admin_tenants()
+drop function if exists system_admin_tenants;
+create function system_admin_tenants()
 returns table (
   id bigint,
   name text,
@@ -8,6 +9,7 @@ returns table (
   cz_ico text,
   cz_dic text,
   address address_domain,
+  settings text,
   membership_count bigint,
   trainer_count bigint,
   administrator_count bigint,
@@ -35,17 +37,19 @@ begin
     t.cz_ico,
     t.cz_dic,
     t.address,
+    coalesce(ts.settings::text, '{}'),
     membership_counts.membership_count,
     staffing.trainer_count,
     administrators.administrator_count,
     load.session_count_last_30_days,
     load.session_count_per_trainer_last_30_days
   from tenant t
+  left join tenant_settings ts on ts.tenant_id = t.id
   cross join lateral (
     select count(*) as membership_count from tenant_membership tm where tm.tenant_id = t.id and tm.status = 'active'
   ) as membership_counts
   cross join lateral (
-    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id where tt.status = 'active'
+    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id and tt.status = 'active'
   ) as staffing
   cross join lateral (
     select count(*) as administrator_count from tenant_administrator ta where ta.tenant_id = t.id and ta.status = 'active'

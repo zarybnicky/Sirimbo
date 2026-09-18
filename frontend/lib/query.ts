@@ -337,6 +337,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       systemAdminUpdateTenant(_result, args, cache, _info) {
         if (args.input.tenantId)
           cache.invalidate({ __typename: 'Tenant', id: args.input.tenantId });
+        invalidateQueryFields(cache, ['systemAdminTenants']);
       },
 
       deleteCouple(_result, args, cache, _info) {

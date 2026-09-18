@@ -16238,6 +16238,14 @@
             "args": []
           },
           {
+            "name": "settings",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "trainerCount",
             "type": {
               "kind": "SCALAR",
