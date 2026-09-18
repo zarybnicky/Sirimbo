@@ -24,14 +24,14 @@ export async function GET(request: Request) {
 
   const { rows } = await withTransaction(async (client) => {
     await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenantId]);
-    return client.query<{ id: string; uid: string }>(
-      `select c.id::text, c.uid from access_credential c
-         where c.tenant_id = $1 and access_credential_is_allowed(c)
-         order by c.id`,
+    return client.query<{ uid: string }>(
+      `select c.uid from access_credential c
+       where c.tenant_id = $1 and access_credential_is_allowed(c)
+       order by c.id`,
       [tenantId],
     );
   });
-  const body = JSON.stringify({ tenantId, credentials: rows });
+  const body = JSON.stringify({ tenantId, credentials: rows.map(x => x.uid) });
   const etag = `"${createHash('sha256').update(body).digest('hex')}"`;
   const matches = request.headers
     .get('if-none-match')
