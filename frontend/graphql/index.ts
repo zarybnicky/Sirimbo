@@ -877,6 +877,10 @@ export type Cohort = {
   cohortSubscriptionsList: Array<CohortSubscription>;
   colorRgb: Scalars['String']['output'];
   description: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  documentNodeTagsList: Array<DocumentNodeTag>;
+  /** Reads and enables pagination through a set of `Document`. */
+  documentsList: Array<Document>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -920,6 +924,22 @@ export type CohortCohortSubscriptionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
+};
+
+
+export type CohortDocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
+};
+
+
+export type CohortDocumentsListArgs = {
+  condition?: InputMaybe<DocumentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentsOrderBy>>;
 };
 
 
@@ -1357,6 +1377,8 @@ export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
 export type Couple = {
   __typename?: 'Couple';
   createdAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  documentNodeTagsList: Array<DocumentNodeTag>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -1372,6 +1394,14 @@ export type Couple = {
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
   womanId: Scalars['BigInt']['output'];
+};
+
+
+export type CoupleDocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
 };
 
 
@@ -1866,6 +1896,35 @@ export type CreateUserProxyPayload = {
   userProxy: Maybe<UserProxy>;
 };
 
+export type Dance = {
+  __typename?: 'Dance';
+  code: Scalars['String']['output'];
+  discipline: Maybe<Scalars['String']['output']>;
+  name: Maybe<Scalars['String']['output']>;
+};
+
+/** A condition to be used against `Dance` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DanceCondition = {
+  /** Checks for equality with the object’s `code` field. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `discipline` field. */
+  discipline?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Methods to use when ordering `Dance`. */
+export type DancesOrderBy =
+  | 'CODE_ASC'
+  | 'CODE_DESC'
+  | 'DISCIPLINE_ASC'
+  | 'DISCIPLINE_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC';
+
 /** A range of `Datetime`. */
 export type DatetimeRange = {
   __typename?: 'DatetimeRange';
@@ -2049,6 +2108,36 @@ export type DeleteCouplePayload = {
   man: Maybe<Person>;
   /** Reads a single `Person` that is related to this `Couple`. */
   woman: Maybe<Person>;
+};
+
+/** All input for the `deleteDocument` mutation. */
+export type DeleteDocumentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+};
+
+/** The output of our delete `Document` mutation. */
+export type DeleteDocumentPayload = {
+  __typename?: 'DeleteDocumentPayload';
+  /** Reads a single `User` that is related to this `Document`. */
+  author: Maybe<User>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Cohort` that is related to this `Document`. */
+  cohort: Maybe<Cohort>;
+  /** The `Document` that was deleted by this mutation. */
+  document: Maybe<Document>;
+  /** Reads a single `EventInstance` that is related to this `Document`. */
+  eventInstance: Maybe<EventInstance>;
+  /** Reads a single `EventSeries` that is related to this `Document`. */
+  eventSeries: Maybe<EventSeries>;
 };
 
 /** All input for the `deleteEventExternalRegistration` mutation. */
@@ -2482,6 +2571,302 @@ export type DeleteUserProxyPayload = {
   userProxy: Maybe<UserProxy>;
 };
 
+export type Discipline =
+  | 'CONDITIONING'
+  | 'LAT'
+  | 'PRACTICE'
+  | 'STT';
+
+export type Document = {
+  __typename?: 'Document';
+  /** Reads a single `User` that is related to this `Document`. */
+  author: Maybe<User>;
+  /** Reads a single `Cohort` that is related to this `Document`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  createdBy: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `EventInstance` that is related to this `Document`. */
+  eventInstance: Maybe<EventInstance>;
+  eventInstanceId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `EventSeries` that is related to this `Document`. */
+  eventSeries: Maybe<EventSeries>;
+  eventSeriesId: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
+  kind: DocumentKind;
+  /** Reads and enables pagination through a set of `DocumentNode`. */
+  nodesList: Array<DocumentNode>;
+  showToMembers: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  title: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type DocumentNodesListArgs = {
+  condition?: InputMaybe<DocumentNodeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Document` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type DocumentCondition = {
+  /** Checks for equality with the object’s `cohortId` field. */
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdBy` field. */
+  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `eventInstanceId` field. */
+  eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `eventSeriesId` field. */
+  eventSeriesId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<DocumentKind>;
+  /** Checks for equality with the object’s `showToMembers` field. */
+  showToMembers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `DocumentInputRecord` */
+export type DocumentInputRecordInput = {
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  eventSeriesId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  kind?: InputMaybe<DocumentKind>;
+  showToMembers?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DocumentKind =
+  | 'EVALUATION'
+  | 'PLAN';
+
+export type DocumentNode = {
+  __typename?: 'DocumentNode';
+  /** Reads and enables pagination through a set of `DocumentNode`. */
+  childrenList: Array<DocumentNode>;
+  content: Scalars['JSON']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  /** Reads a single `Document` that is related to this `DocumentNode`. */
+  document: Maybe<Document>;
+  documentId: Scalars['BigInt']['output'];
+  id: Scalars['UUID']['output'];
+  ordering: Scalars['BigFloat']['output'];
+  /** Reads a single `DocumentNode` that is related to this `DocumentNode`. */
+  parent: Maybe<DocumentNode>;
+  parentId: Maybe<Scalars['UUID']['output']>;
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  tagsList: Array<DocumentNodeTag>;
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type DocumentNodeChildrenListArgs = {
+  condition?: InputMaybe<DocumentNodeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodesOrderBy>>;
+};
+
+
+export type DocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
+};
+
+/**
+ * A condition to be used against `DocumentNode` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type DocumentNodeCondition = {
+  /** Checks for equality with the object’s `content` field. */
+  content?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `documentId` field. */
+  documentId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `ordering` field. */
+  ordering?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Checks for equality with the object’s `parentId` field. */
+  parentId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `DocumentNodeInputRecord` */
+export type DocumentNodeInputRecordInput = {
+  content?: InputMaybe<Scalars['JSON']['input']>;
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  ordering?: InputMaybe<Scalars['BigFloat']['input']>;
+  parentId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type DocumentNodeTag = {
+  __typename?: 'DocumentNodeTag';
+  /** Reads a single `Cohort` that is related to this `DocumentNodeTag`. */
+  cohort: Maybe<Cohort>;
+  cohortId: Maybe<Scalars['BigInt']['output']>;
+  competitionId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `Couple` that is related to this `DocumentNodeTag`. */
+  couple: Maybe<Couple>;
+  coupleId: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  danceCode: Maybe<Scalars['String']['output']>;
+  discipline: Maybe<Discipline>;
+  /** Reads a single `EventInstance` that is related to this `DocumentNodeTag`. */
+  eventInstance: Maybe<EventInstance>;
+  eventInstanceId: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
+  /** Reads a single `DocumentNode` that is related to this `DocumentNodeTag`. */
+  node: Maybe<DocumentNode>;
+  nodeId: Scalars['UUID']['output'];
+  /** Reads a single `Person` that is related to this `DocumentNodeTag`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  taggedMonth: Maybe<Scalars['Date']['output']>;
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `DocumentNodeTag` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type DocumentNodeTagCondition = {
+  /** Checks for equality with the object’s `cohortId` field. */
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `competitionId` field. */
+  competitionId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `coupleId` field. */
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `danceCode` field. */
+  danceCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `discipline` field. */
+  discipline?: InputMaybe<Discipline>;
+  /** Checks for equality with the object’s `eventInstanceId` field. */
+  eventInstanceId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `nodeId` field. */
+  nodeId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `taggedMonth` field. */
+  taggedMonth?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Methods to use when ordering `DocumentNodeTag`. */
+export type DocumentNodeTagsOrderBy =
+  | 'COHORT_ID_ASC'
+  | 'COHORT_ID_DESC'
+  | 'COMPETITION_ID_ASC'
+  | 'COMPETITION_ID_DESC'
+  | 'COUPLE_ID_ASC'
+  | 'COUPLE_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DANCE_CODE_ASC'
+  | 'DANCE_CODE_DESC'
+  | 'DISCIPLINE_ASC'
+  | 'DISCIPLINE_DESC'
+  | 'EVENT_INSTANCE_ID_ASC'
+  | 'EVENT_INSTANCE_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NATURAL'
+  | 'NODE_ID_ASC'
+  | 'NODE_ID_DESC'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TAGGED_MONTH_ASC'
+  | 'TAGGED_MONTH_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
+
+/** Methods to use when ordering `DocumentNode`. */
+export type DocumentNodesOrderBy =
+  | 'CONTENT_ASC'
+  | 'CONTENT_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DOCUMENT_ID_ASC'
+  | 'DOCUMENT_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NATURAL'
+  | 'ORDERING_ASC'
+  | 'ORDERING_DESC'
+  | 'PARENT_ID_ASC'
+  | 'PARENT_ID_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
+/** A `Document` edge in the connection. */
+export type DocumentsEdge = {
+  __typename?: 'DocumentsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Document` at the end of the edge. */
+  node: Document;
+};
+
+/** Methods to use when ordering `Document`. */
+export type DocumentsOrderBy =
+  | 'COHORT_ID_ASC'
+  | 'COHORT_ID_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'CREATED_BY_ASC'
+  | 'CREATED_BY_DESC'
+  | 'EVENT_INSTANCE_ID_ASC'
+  | 'EVENT_INSTANCE_ID_DESC'
+  | 'EVENT_SERIES_ID_ASC'
+  | 'EVENT_SERIES_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'KIND_ASC'
+  | 'KIND_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'SHOW_TO_MEMBERS_ASC'
+  | 'SHOW_TO_MEMBERS_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'TITLE_ASC'
+  | 'TITLE_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
 export type EventCapacityUnit =
   | 'PEOPLE'
   | 'REGISTRATIONS';
@@ -2661,6 +3046,10 @@ export type EventInstance = {
   childEventInstancesList: Array<EventInstance>;
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  documentNodeTagsList: Array<DocumentNodeTag>;
+  /** Reads and enables pagination through a set of `Document`. */
+  documentsList: Array<Document>;
   enableNotes: Maybe<Scalars['Boolean']['output']>;
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsByInstanceIdList: Array<EventExternalRegistration>;
@@ -2721,6 +3110,22 @@ export type EventInstanceChildEventInstancesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
+};
+
+
+export type EventInstanceDocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
+};
+
+
+export type EventInstanceDocumentsListArgs = {
+  condition?: InputMaybe<DocumentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentsOrderBy>>;
 };
 
 
@@ -3319,12 +3724,22 @@ export type EventRegistrationSource =
 export type EventSeries = {
   __typename?: 'EventSeries';
   createdAt: Scalars['Datetime']['output'];
+  /** Reads and enables pagination through a set of `Document`. */
+  documentsList: Array<Document>;
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventsList: Array<EventInstance>;
   id: Scalars['BigInt']['output'];
   name: Maybe<Scalars['String']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type EventSeriesDocumentsListArgs = {
+  condition?: InputMaybe<DocumentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentsOrderBy>>;
 };
 
 
@@ -3444,7 +3859,6 @@ export type File = {
   tenantId: Scalars['BigInt']['output'];
   uploadedAt: Maybe<Scalars['Datetime']['output']>;
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
-  /** Application route used to download the file. */
   url: Scalars['String']['output'];
   /** Reads a single `User` that is related to this `File`. */
   userByUploadedBy: Maybe<User>;
@@ -3991,6 +4405,8 @@ export type Mutation = {
   deleteCohortMembership: Maybe<DeleteCohortMembershipPayload>;
   /** Deletes a single `Couple` using a unique key. */
   deleteCouple: Maybe<DeleteCouplePayload>;
+  /** Deletes a single `Document` using a unique key. */
+  deleteDocument: Maybe<DeleteDocumentPayload>;
   /** Deletes a single `EventExternalRegistration` using a unique key. */
   deleteEventExternalRegistration: Maybe<DeleteEventExternalRegistrationPayload>;
   /** Deletes a single `EventInstance` using a unique key. */
@@ -4095,6 +4511,8 @@ export type Mutation = {
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
   upsertAnnouncement: Maybe<UpsertAnnouncementPayload>;
   upsertArticle: Maybe<UpsertArticlePayload>;
+  /** Saves a document and the whole of its outline. Tags follow from node content. */
+  upsertDocument: Maybe<UpsertDocumentPayload>;
 };
 
 
@@ -4239,6 +4657,12 @@ export type MutationDeleteCohortMembershipArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCoupleArgs = {
   input: DeleteCoupleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDocumentArgs = {
+  input: DeleteDocumentInput;
 };
 
 
@@ -4607,6 +5031,12 @@ export type MutationUpsertArticleArgs = {
   input: UpsertArticleInput;
 };
 
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpsertDocumentArgs = {
+  input: UpsertDocumentInput;
+};
+
 /** All input for the `otpLogin` mutation. */
 export type OtpLoginInput = {
   /**
@@ -4972,6 +5402,8 @@ export type Person = {
   cstsCandidatesList: Maybe<Array<PersonCstsCandidatesRecord>>;
   cstsId: Maybe<Scalars['Int']['output']>;
   cstsProgressList: Maybe<Array<PersonCstsProgressRecord>>;
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  documentNodeTagsList: Array<DocumentNodeTag>;
   email: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
@@ -5074,6 +5506,14 @@ export type PersonCstsCandidatesListArgs = {
 export type PersonCstsProgressListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type PersonDocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
 };
 
 
@@ -5496,6 +5936,12 @@ export type Query = {
   couple: Maybe<Couple>;
   cstsAthlete: Maybe<Scalars['String']['output']>;
   currentClaims: Maybe<Scalars['JSON']['output']>;
+  /** Get a single `Dance`. */
+  dance: Maybe<Dance>;
+  /** Reads a set of `Dance`. */
+  dancesList: Maybe<Array<Dance>>;
+  /** Get a single `Document`. */
+  document: Maybe<Document>;
   /** Get a single `EventInstance`. */
   eventInstance: Maybe<EventInstance>;
   /** Get a single `EventInstance`. */
@@ -5533,6 +5979,7 @@ export type Query = {
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
   membershipApplicationsList: Maybe<Array<MembershipApplication>>;
+  orphanedDocumentsList: Maybe<Array<Document>>;
   /** Get a single `Payment`. */
   payment: Maybe<Payment>;
   /** Get a single `Payment`. */
@@ -5755,6 +6202,27 @@ export type QueryCstsAthleteArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDanceArgs = {
+  code: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDancesListArgs = {
+  condition?: InputMaybe<DanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DancesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDocumentArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEventInstanceArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -5922,6 +6390,13 @@ export type QueryMembershipApplicationsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<MembershipApplicationsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOrphanedDocumentsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6637,6 +7112,12 @@ export type Tenant = {
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
   description: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `DocumentNodeTag`. */
+  documentNodeTagsList: Array<DocumentNodeTag>;
+  /** Reads and enables pagination through a set of `DocumentNode`. */
+  documentNodesList: Array<DocumentNode>;
+  /** Reads and enables pagination through a set of `Document`. */
+  documentsList: Array<Document>;
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -6772,6 +7253,30 @@ export type TenantCohortsListArgs = {
 export type TenantCouplesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type TenantDocumentNodeTagsListArgs = {
+  condition?: InputMaybe<DocumentNodeTagCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodeTagsOrderBy>>;
+};
+
+
+export type TenantDocumentNodesListArgs = {
+  condition?: InputMaybe<DocumentNodeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentNodesOrderBy>>;
+};
+
+
+export type TenantDocumentsListArgs = {
+  condition?: InputMaybe<DocumentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentsOrderBy>>;
 };
 
 
@@ -8295,12 +8800,52 @@ export type UpsertArticlePayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
 };
 
+/** All input for the `upsertDocument` mutation. */
+export type UpsertDocumentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  doc?: InputMaybe<DocumentInputRecordInput>;
+  nodes?: InputMaybe<Array<InputMaybe<DocumentNodeInputRecordInput>>>;
+};
+
+/** The output of our `upsertDocument` mutation. */
+export type UpsertDocumentPayload = {
+  __typename?: 'UpsertDocumentPayload';
+  /** Reads a single `User` that is related to this `Document`. */
+  author: Maybe<User>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Cohort` that is related to this `Document`. */
+  cohort: Maybe<Cohort>;
+  document: Maybe<Document>;
+  /** An edge for our `Document`. May be used by Relay 1. */
+  documentEdge: Maybe<DocumentsEdge>;
+  /** Reads a single `EventInstance` that is related to this `Document`. */
+  eventInstance: Maybe<EventInstance>;
+  /** Reads a single `EventSeries` that is related to this `Document`. */
+  eventSeries: Maybe<EventSeries>;
+};
+
+
+/** The output of our `upsertDocument` mutation. */
+export type UpsertDocumentPayloadDocumentEdgeArgs = {
+  orderBy?: Array<DocumentsOrderBy>;
+};
+
 export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
   authoredAnnouncements: AnnouncementsConnection;
+  /** Reads and enables pagination through a set of `Document`. */
+  authoredDocumentsList: Array<Document>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsByCreatedByList: Array<EventExternalRegistration>;
@@ -8342,6 +8887,14 @@ export type UserAuthoredAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
+};
+
+
+export type UserAuthoredDocumentsListArgs = {
+  condition?: InputMaybe<DocumentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DocumentsOrderBy>>;
 };
 
 
@@ -8590,6 +9143,7 @@ export type GraphCacheKeysConfig = {
   CreateTenantMembershipPayload?: (data: WithTypename<CreateTenantMembershipPayload>) => null | string,
   CreateTenantTrainerPayload?: (data: WithTypename<CreateTenantTrainerPayload>) => null | string,
   CreateUserProxyPayload?: (data: WithTypename<CreateUserProxyPayload>) => null | string,
+  Dance?: (data: WithTypename<Dance>) => null | string,
   DatetimeRange?: (data: WithTypename<DatetimeRange>) => null | string,
   DatetimeRangeBound?: (data: WithTypename<DatetimeRangeBound>) => null | string,
   DeleteAktualityPayload?: (data: WithTypename<DeleteAktualityPayload>) => null | string,
@@ -8597,6 +9151,7 @@ export type GraphCacheKeysConfig = {
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
   DeleteCohortPayload?: (data: WithTypename<DeleteCohortPayload>) => null | string,
   DeleteCouplePayload?: (data: WithTypename<DeleteCouplePayload>) => null | string,
+  DeleteDocumentPayload?: (data: WithTypename<DeleteDocumentPayload>) => null | string,
   DeleteEventExternalRegistrationPayload?: (data: WithTypename<DeleteEventExternalRegistrationPayload>) => null | string,
   DeleteEventInstancePayload?: (data: WithTypename<DeleteEventInstancePayload>) => null | string,
   DeleteEventSeriesPayload?: (data: WithTypename<DeleteEventSeriesPayload>) => null | string,
@@ -8611,6 +9166,10 @@ export type GraphCacheKeysConfig = {
   DeleteTenantTrainerPayload?: (data: WithTypename<DeleteTenantTrainerPayload>) => null | string,
   DeleteTransactionPayload?: (data: WithTypename<DeleteTransactionPayload>) => null | string,
   DeleteUserProxyPayload?: (data: WithTypename<DeleteUserProxyPayload>) => null | string,
+  Document?: (data: WithTypename<Document>) => null | string,
+  DocumentNode?: (data: WithTypename<DocumentNode>) => null | string,
+  DocumentNodeTag?: (data: WithTypename<DocumentNodeTag>) => null | string,
+  DocumentsEdge?: (data: WithTypename<DocumentsEdge>) => null | string,
   EventConflict?: (data: WithTypename<EventConflict>) => null | string,
   EventExternalRegistration?: (data: WithTypename<EventExternalRegistration>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
@@ -8704,6 +9263,7 @@ export type GraphCacheKeysConfig = {
   UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
   UpsertAnnouncementPayload?: (data: WithTypename<UpsertAnnouncementPayload>) => null | string,
   UpsertArticlePayload?: (data: WithTypename<UpsertArticlePayload>) => null | string,
+  UpsertDocumentPayload?: (data: WithTypename<UpsertDocumentPayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
   UserProxy?: (data: WithTypename<UserProxy>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
@@ -8732,6 +9292,9 @@ export type GraphCacheResolvers = {
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['String']['output'] | string>,
     currentClaims?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JSON']['output'] | string>,
+    dance?: GraphCacheResolver<WithTypename<Query>, QueryDanceArgs, WithTypename<Dance> | string>,
+    dancesList?: GraphCacheResolver<WithTypename<Query>, QueryDancesListArgs, Array<WithTypename<Dance> | string>>,
+    document?: GraphCacheResolver<WithTypename<Query>, QueryDocumentArgs, WithTypename<Document> | string>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
     eventInstanceByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceByTenantIdAndIdArgs, WithTypename<EventInstance> | string>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationArgs, WithTypename<EventInstanceRegistration> | string>,
@@ -8754,6 +9317,7 @@ export type GraphCacheResolvers = {
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String']['output'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
+    orphanedDocumentsList?: GraphCacheResolver<WithTypename<Query>, QueryOrphanedDocumentsListArgs, Array<WithTypename<Document> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryPaymentByTenantIdAndIdArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
@@ -9044,6 +9608,8 @@ export type GraphCacheResolvers = {
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     colorRgb?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
+    documentNodeTagsList?: GraphCacheResolver<WithTypename<Cohort>, CohortDocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
+    documentsList?: GraphCacheResolver<WithTypename<Cohort>, CohortDocumentsListArgs, Array<WithTypename<Document> | string>>,
     eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
@@ -9117,6 +9683,7 @@ export type GraphCacheResolvers = {
   },
   Couple?: {
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    documentNodeTagsList?: GraphCacheResolver<WithTypename<Couple>, CoupleDocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -9209,6 +9776,11 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
+  Dance?: {
+    code?: GraphCacheResolver<WithTypename<Dance>, Record<string, never>, Scalars['String']['output'] | string>,
+    discipline?: GraphCacheResolver<WithTypename<Dance>, Record<string, never>, Scalars['String']['output'] | string>,
+    name?: GraphCacheResolver<WithTypename<Dance>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   DatetimeRange?: {
     end?: GraphCacheResolver<WithTypename<DatetimeRange>, Record<string, never>, WithTypename<DatetimeRangeBound> | string>,
     start?: GraphCacheResolver<WithTypename<DatetimeRange>, Record<string, never>, WithTypename<DatetimeRangeBound> | string>
@@ -9245,6 +9817,14 @@ export type GraphCacheResolvers = {
     couple?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Couple> | string>,
     man?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Person> | string>,
     woman?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Person> | string>
+  },
+  DeleteDocumentPayload?: {
+    author?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, WithTypename<User> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    document?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, WithTypename<Document> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventSeries?: GraphCacheResolver<WithTypename<DeleteDocumentPayload>, Record<string, never>, WithTypename<EventSeries> | string>
   },
   DeleteEventExternalRegistrationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteEventExternalRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9322,6 +9902,61 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, WithTypename<UserProxy> | string>
   },
+  Document?: {
+    author?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, WithTypename<User> | string>,
+    cohort?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    createdBy?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    eventSeries?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, WithTypename<EventSeries> | string>,
+    eventSeriesId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, DocumentKind | string>,
+    nodesList?: GraphCacheResolver<WithTypename<Document>, DocumentNodesListArgs, Array<WithTypename<DocumentNode> | string>>,
+    showToMembers?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    title?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['String']['output'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  DocumentNode?: {
+    childrenList?: GraphCacheResolver<WithTypename<DocumentNode>, DocumentNodeChildrenListArgs, Array<WithTypename<DocumentNode> | string>>,
+    content?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['JSON']['output'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    document?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, WithTypename<Document> | string>,
+    documentId?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['UUID']['output'] | string>,
+    ordering?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
+    parent?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, WithTypename<DocumentNode> | string>,
+    parentId?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['UUID']['output'] | string>,
+    tagsList?: GraphCacheResolver<WithTypename<DocumentNode>, DocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
+    tenantId?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<DocumentNode>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  DocumentNodeTag?: {
+    cohort?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, WithTypename<Cohort> | string>,
+    cohortId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    competitionId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    couple?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, WithTypename<Couple> | string>,
+    coupleId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    createdAt?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    danceCode?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['String']['output'] | string>,
+    discipline?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Discipline | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventInstanceId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, WithTypename<DocumentNode> | string>,
+    nodeId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['UUID']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    taggedMonth?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['Date']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<DocumentNodeTag>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  DocumentsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<DocumentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<DocumentsEdge>, Record<string, never>, WithTypename<Document> | string>
+  },
   EventConflict?: {
     firstEventName?: GraphCacheResolver<WithTypename<EventConflict>, Record<string, never>, Scalars['String']['output'] | string>,
     firstInstance?: GraphCacheResolver<WithTypename<EventConflict>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -9365,6 +10000,8 @@ export type GraphCacheResolvers = {
     childEventInstancesList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceChildEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
+    documentNodeTagsList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceDocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
+    documentsList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceDocumentsListArgs, Array<WithTypename<Document> | string>>,
     enableNotes?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     eventExternalRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
@@ -9494,6 +10131,7 @@ export type GraphCacheResolvers = {
   },
   EventSeries?: {
     createdAt?: GraphCacheResolver<WithTypename<EventSeries>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    documentsList?: GraphCacheResolver<WithTypename<EventSeries>, EventSeriesDocumentsListArgs, Array<WithTypename<Document> | string>>,
     eventsList?: GraphCacheResolver<WithTypename<EventSeries>, EventSeriesEventsListArgs, Array<WithTypename<EventInstance> | string>>,
     id?: GraphCacheResolver<WithTypename<EventSeries>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<EventSeries>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9687,6 +10325,7 @@ export type GraphCacheResolvers = {
     cstsCandidatesList?: GraphCacheResolver<WithTypename<Person>, PersonCstsCandidatesListArgs, Array<WithTypename<PersonCstsCandidatesRecord> | string>>,
     cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
     cstsProgressList?: GraphCacheResolver<WithTypename<Person>, PersonCstsProgressListArgs, Array<WithTypename<PersonCstsProgressRecord> | string>>,
+    documentNodeTagsList?: GraphCacheResolver<WithTypename<Person>, PersonDocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
@@ -9892,6 +10531,9 @@ export type GraphCacheResolvers = {
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
+    documentNodeTagsList?: GraphCacheResolver<WithTypename<Tenant>, TenantDocumentNodeTagsListArgs, Array<WithTypename<DocumentNodeTag> | string>>,
+    documentNodesList?: GraphCacheResolver<WithTypename<Tenant>, TenantDocumentNodesListArgs, Array<WithTypename<DocumentNode> | string>>,
+    documentsList?: GraphCacheResolver<WithTypename<Tenant>, TenantDocumentsListArgs, Array<WithTypename<Document> | string>>,
     eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
@@ -10146,9 +10788,19 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<User> | string>
   },
+  UpsertDocumentPayload?: {
+    author?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, WithTypename<User> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    cohort?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, WithTypename<Cohort> | string>,
+    document?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, WithTypename<Document> | string>,
+    documentEdge?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, UpsertDocumentPayloadDocumentEdgeArgs, WithTypename<DocumentsEdge> | string>,
+    eventInstance?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
+    eventSeries?: GraphCacheResolver<WithTypename<UpsertDocumentPayload>, Record<string, never>, WithTypename<EventSeries> | string>
+  },
   User?: {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    authoredDocumentsList?: GraphCacheResolver<WithTypename<User>, UserAuthoredDocumentsListArgs, Array<WithTypename<Document> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FilesConnection> | string>,
@@ -10214,6 +10866,7 @@ export type GraphCacheOptimisticUpdaters = {
   deleteCohortByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortByTenantIdAndIdArgs, Maybe<WithTypename<DeleteCohortPayload>>>,
   deleteCohortMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortMembershipArgs, Maybe<WithTypename<DeleteCohortMembershipPayload>>>,
   deleteCouple?: GraphCacheOptimisticMutationResolver<MutationDeleteCoupleArgs, Maybe<WithTypename<DeleteCouplePayload>>>,
+  deleteDocument?: GraphCacheOptimisticMutationResolver<MutationDeleteDocumentArgs, Maybe<WithTypename<DeleteDocumentPayload>>>,
   deleteEventExternalRegistration?: GraphCacheOptimisticMutationResolver<MutationDeleteEventExternalRegistrationArgs, Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>>,
   deleteEventInstance?: GraphCacheOptimisticMutationResolver<MutationDeleteEventInstanceArgs, Maybe<WithTypename<DeleteEventInstancePayload>>>,
   deleteEventInstanceByTenantIdAndId?: GraphCacheOptimisticMutationResolver<MutationDeleteEventInstanceByTenantIdAndIdArgs, Maybe<WithTypename<DeleteEventInstancePayload>>>,
@@ -10274,7 +10927,8 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
   updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>,
   upsertAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpsertAnnouncementArgs, Maybe<WithTypename<UpsertAnnouncementPayload>>>,
-  upsertArticle?: GraphCacheOptimisticMutationResolver<MutationUpsertArticleArgs, Maybe<WithTypename<UpsertArticlePayload>>>
+  upsertArticle?: GraphCacheOptimisticMutationResolver<MutationUpsertArticleArgs, Maybe<WithTypename<UpsertArticlePayload>>>,
+  upsertDocument?: GraphCacheOptimisticMutationResolver<MutationUpsertDocumentArgs, Maybe<WithTypename<UpsertDocumentPayload>>>
 };
 
 export type GraphCacheUpdaters = {
@@ -10299,6 +10953,9 @@ export type GraphCacheUpdaters = {
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['String']['output']> }, QueryCstsAthleteArgs>,
     currentClaims?: GraphCacheUpdateResolver<{ currentClaims: Maybe<Scalars['JSON']['output']> }, Record<string, never>>,
+    dance?: GraphCacheUpdateResolver<{ dance: Maybe<WithTypename<Dance>> }, QueryDanceArgs>,
+    dancesList?: GraphCacheUpdateResolver<{ dancesList: Maybe<Array<WithTypename<Dance>>> }, QueryDancesListArgs>,
+    document?: GraphCacheUpdateResolver<{ document: Maybe<WithTypename<Document>> }, QueryDocumentArgs>,
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
     eventInstanceByTenantIdAndId?: GraphCacheUpdateResolver<{ eventInstanceByTenantIdAndId: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceByTenantIdAndIdArgs>,
     eventInstanceRegistration?: GraphCacheUpdateResolver<{ eventInstanceRegistration: Maybe<WithTypename<EventInstanceRegistration>> }, QueryEventInstanceRegistrationArgs>,
@@ -10321,6 +10978,7 @@ export type GraphCacheUpdaters = {
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']['output']> }, QueryInvitationNameArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
+    orphanedDocumentsList?: GraphCacheUpdateResolver<{ orphanedDocumentsList: Maybe<Array<WithTypename<Document>>> }, QueryOrphanedDocumentsListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentByTenantIdAndId?: GraphCacheUpdateResolver<{ paymentByTenantIdAndId: Maybe<WithTypename<Payment>> }, QueryPaymentByTenantIdAndIdArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
@@ -10378,6 +11036,7 @@ export type GraphCacheUpdaters = {
     deleteCohortByTenantIdAndId?: GraphCacheUpdateResolver<{ deleteCohortByTenantIdAndId: Maybe<WithTypename<DeleteCohortPayload>> }, MutationDeleteCohortByTenantIdAndIdArgs>,
     deleteCohortMembership?: GraphCacheUpdateResolver<{ deleteCohortMembership: Maybe<WithTypename<DeleteCohortMembershipPayload>> }, MutationDeleteCohortMembershipArgs>,
     deleteCouple?: GraphCacheUpdateResolver<{ deleteCouple: Maybe<WithTypename<DeleteCouplePayload>> }, MutationDeleteCoupleArgs>,
+    deleteDocument?: GraphCacheUpdateResolver<{ deleteDocument: Maybe<WithTypename<DeleteDocumentPayload>> }, MutationDeleteDocumentArgs>,
     deleteEventExternalRegistration?: GraphCacheUpdateResolver<{ deleteEventExternalRegistration: Maybe<WithTypename<DeleteEventExternalRegistrationPayload>> }, MutationDeleteEventExternalRegistrationArgs>,
     deleteEventInstance?: GraphCacheUpdateResolver<{ deleteEventInstance: Maybe<WithTypename<DeleteEventInstancePayload>> }, MutationDeleteEventInstanceArgs>,
     deleteEventInstanceByTenantIdAndId?: GraphCacheUpdateResolver<{ deleteEventInstanceByTenantIdAndId: Maybe<WithTypename<DeleteEventInstancePayload>> }, MutationDeleteEventInstanceByTenantIdAndIdArgs>,
@@ -10438,7 +11097,8 @@ export type GraphCacheUpdaters = {
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
     updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>,
     upsertAnnouncement?: GraphCacheUpdateResolver<{ upsertAnnouncement: Maybe<WithTypename<UpsertAnnouncementPayload>> }, MutationUpsertAnnouncementArgs>,
-    upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>
+    upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>,
+    upsertDocument?: GraphCacheUpdateResolver<{ upsertDocument: Maybe<WithTypename<UpsertDocumentPayload>> }, MutationUpsertDocumentArgs>
   },
   Subscription?: object,
   Account?: {
@@ -10699,6 +11359,8 @@ export type GraphCacheUpdaters = {
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortCohortSubscriptionsListArgs>,
     colorRgb?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    documentNodeTagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortDocumentNodeTagsListArgs>,
+    documentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortDocumentsListArgs>,
     eventInstanceRegistrationsByTargetCohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceRegistrationsByTargetCohortIdArgs>,
     eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceRegistrationsByTargetCohortIdListArgs>,
     eventInstanceTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventInstanceTargetCohortsListArgs>,
@@ -10772,6 +11434,7 @@ export type GraphCacheUpdaters = {
   },
   Couple?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    documentNodeTagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleDocumentNodeTagsListArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
@@ -10864,6 +11527,11 @@ export type GraphCacheUpdaters = {
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>,
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateUserProxyPayload>>, Record<string, never>>
   },
+  Dance?: {
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<Dance>>, Record<string, never>>,
+    discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<Dance>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Dance>>, Record<string, never>>
+  },
   DatetimeRange?: {
     end?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRange>>, Record<string, never>>,
     start?: GraphCacheUpdateResolver<Maybe<WithTypename<DatetimeRange>>, Record<string, never>>
@@ -10900,6 +11568,14 @@ export type GraphCacheUpdaters = {
     couple?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>
+  },
+  DeleteDocumentPayload?: {
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>,
+    document?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>,
+    eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteDocumentPayload>>, Record<string, never>>
   },
   DeleteEventExternalRegistrationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>, Record<string, never>>,
@@ -10977,6 +11653,61 @@ export type GraphCacheUpdaters = {
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>,
     userProxy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteUserProxyPayload>>, Record<string, never>>
   },
+  Document?: {
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    eventSeriesId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    nodesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, DocumentNodesListArgs>,
+    showToMembers?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    title?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>
+  },
+  DocumentNode?: {
+    childrenList?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, DocumentNodeChildrenListArgs>,
+    content?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    document?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    documentId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    parent?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    parentId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    tagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, DocumentNodeTagsListArgs>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNode>>, Record<string, never>>
+  },
+  DocumentNodeTag?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    coupleId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    danceCode?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    eventInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    nodeId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    taggedMonth?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentNodeTag>>, Record<string, never>>
+  },
+  DocumentsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<DocumentsEdge>>, Record<string, never>>
+  },
   EventConflict?: {
     firstEventName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventConflict>>, Record<string, never>>,
     firstInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventConflict>>, Record<string, never>>,
@@ -11020,6 +11751,8 @@ export type GraphCacheUpdaters = {
     childEventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceChildEventInstancesListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
+    documentNodeTagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceDocumentNodeTagsListArgs>,
+    documentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceDocumentsListArgs>,
     enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     eventExternalRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs>,
@@ -11149,6 +11882,7 @@ export type GraphCacheUpdaters = {
   },
   EventSeries?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, Record<string, never>>,
+    documentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, EventSeriesDocumentsListArgs>,
     eventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, EventSeriesEventsListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, Record<string, never>>,
@@ -11342,6 +12076,7 @@ export type GraphCacheUpdaters = {
     cstsCandidatesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsCandidatesListArgs>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cstsProgressList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCstsProgressListArgs>,
+    documentNodeTagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonDocumentNodeTagsListArgs>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceRegistrationsListArgs>,
@@ -11547,6 +12282,9 @@ export type GraphCacheUpdaters = {
     czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
+    documentNodeTagsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantDocumentNodeTagsListArgs>,
+    documentNodesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantDocumentNodesListArgs>,
+    documentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantDocumentsListArgs>,
     eventExternalRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventExternalRegistrationsListArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsListArgs>,
@@ -11801,9 +12539,19 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>,
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>
   },
+  UpsertDocumentPayload?: {
+    author?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>,
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>,
+    document?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>,
+    documentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, UpsertDocumentPayloadDocumentEdgeArgs>,
+    eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>,
+    eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertDocumentPayload>>, Record<string, never>>
+  },
   User?: {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
+    authoredDocumentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredDocumentsListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,
     filesByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserFilesByUploadedByArgs>,
