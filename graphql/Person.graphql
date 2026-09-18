@@ -64,6 +64,9 @@ fragment PersonWithLinks on Person {
   userProxiesList {
     ...UserProxy
   }
+  accessCredentialsList(orderBy: CREATED_AT_DESC) {
+    ...AccessCredential
+  }
   personInvitationsList(condition: { usedAt: null }) {
     id
     email

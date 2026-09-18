@@ -24,6 +24,8 @@ import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
+import { accessCredentialActions } from '@/lib/actions/accessCredential';
+import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -46,6 +48,10 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
     item.tenantTrainersList,
   );
   const userProxyActionMap = useActionMap(userProxyActions, item.userProxiesList ?? []);
+  const credentialActionMap = useActionMap(
+    accessCredentialActions,
+    item.accessCredentialsList,
+  );
   const invitationActionMap = useActionMap(
     personInvitationActions,
     item.personInvitationsList ?? [],
@@ -174,6 +180,28 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
 
           {auth.isAdmin && (
             <>
+              <div className="flex justify-between items-baseline flex-wrap gap-4">
+                <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
+                <Dialog>
+                  <DialogTrigger.Add size="sm" />
+                  <DialogContent>
+                    <CreateAccessCredentialForm personId={item.id} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+              {item.accessCredentialsList.map((card) => (
+                <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
+                  <div className="grow flex flex-wrap items-baseline justify-between gap-2 text-sm py-1">
+                    <span className={card.isAllowed ? '' : 'line-through'}>
+                      <b>{card.uid}</b>
+                      {card.label && ` · ${card.label}`}
+                    </span>
+                    <span>
+                      {formatOpenDateRange(card)}
+                    </span>
+                  </div>
+                </ActionRow>
+              ))}
               <div className="flex justify-between items-baseline flex-wrap gap-4">
                 <h3 className="text-lg font-semibold mt-4 mb-2">Pozvánky</h3>
                 <Dialog>

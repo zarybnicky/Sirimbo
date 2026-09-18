@@ -1,3 +1,114 @@
+type AccessCredential {
+  createdAt: Datetime!
+  createdBy: BigInt
+  id: BigInt!
+  isAllowed: Boolean
+  label: String!
+
+  """Reads a single `Person` that is related to this `AccessCredential`."""
+  person: Person
+  personId: BigInt!
+  since: Datetime!
+  tenantId: BigInt!
+  uid: String!
+  until: Datetime
+  updatedAt: Datetime!
+
+  """Reads a single `User` that is related to this `AccessCredential`."""
+  userByCreatedBy: User
+}
+
+"""
+A condition to be used against `AccessCredential` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccessCredentialCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `createdBy` field."""
+  createdBy: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `label` field."""
+  label: String
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `since` field."""
+  since: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `uid` field."""
+  uid: String
+
+  """Checks for equality with the object’s `until` field."""
+  until: Datetime
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `AccessCredential`"""
+input AccessCredentialInput {
+  createdAt: Datetime
+  createdBy: BigInt
+  label: String
+  personId: BigInt!
+  since: Datetime
+  tenantId: BigInt
+  uid: String!
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `AccessCredential`. Fields that are set will be updated.
+"""
+input AccessCredentialPatch {
+  createdAt: Datetime
+  createdBy: BigInt
+  label: String
+  personId: BigInt
+  since: Datetime
+  tenantId: BigInt
+  uid: String
+  until: Datetime
+  updatedAt: Datetime
+}
+
+"""Methods to use when ordering `AccessCredential`."""
+enum AccessCredentialsOrderBy {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  CREATED_BY_ASC
+  CREATED_BY_DESC
+  ID_ASC
+  ID_DESC
+  LABEL_ASC
+  LABEL_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SINCE_ASC
+  SINCE_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  UID_ASC
+  UID_DESC
+  UNTIL_ASC
+  UNTIL_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 type Account {
   assets(since: Datetime, until: Datetime): BigFloat
   balance: BigFloat
@@ -1762,6 +1873,36 @@ enum CouplesOrderBy {
   UPDATED_AT_DESC
   WOMAN_ID_ASC
   WOMAN_ID_DESC
+}
+
+"""All input for the create `AccessCredential` mutation."""
+input CreateAccessCredentialInput {
+  """The `AccessCredential` to be created by this mutation."""
+  accessCredential: AccessCredentialInput!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our create `AccessCredential` mutation."""
+type CreateAccessCredentialPayload {
+  """The `AccessCredential` that was created by this mutation."""
+  accessCredential: AccessCredential
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `AccessCredential`."""
+  person: Person
+
+  """Reads a single `User` that is related to this `AccessCredential`."""
+  userByCreatedBy: User
 }
 
 """All input for the create `Cohort` mutation."""
@@ -4727,6 +4868,14 @@ type Mutation {
     input: ConfirmMembershipApplicationInput!
   ): ConfirmMembershipApplicationPayload
 
+  """Creates a single `AccessCredential`."""
+  createAccessCredential(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAccessCredentialInput!
+  ): CreateAccessCredentialPayload
+
   """Creates a single `Cohort`."""
   createCohort(
     """
@@ -5144,6 +5293,14 @@ type Mutation {
     """
     input: SystemAdminUpdateTenantInput!
   ): SystemAdminUpdateTenantPayload
+
+  """Updates a single `AccessCredential` using a unique key and a patch."""
+  updateAccessCredential(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccessCredentialInput!
+  ): UpdateAccessCredentialPayload
 
   """Updates a single `Announcement` using a unique key and a patch."""
   updateAnnouncement(
@@ -5761,6 +5918,23 @@ enum PeopleOrderBy {
 }
 
 type Person {
+  """Reads and enables pagination through a set of `AccessCredential`."""
+  accessCredentialsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccessCredentialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccessCredential`."""
+    orderBy: [AccessCredentialsOrderBy!]
+  ): [AccessCredential!]!
+
   """Reads and enables pagination through a set of `Account`."""
   accountsList(
     """
@@ -6438,6 +6612,26 @@ input PriceInput {
 
 """The root query type which gives access points into the data universe."""
 type Query {
+  """Get a single `AccessCredential`."""
+  accessCredential(id: BigInt!): AccessCredential
+
+  """Reads a set of `AccessCredential`."""
+  accessCredentialsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccessCredentialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccessCredential`."""
+    orderBy: [AccessCredentialsOrderBy!]
+  ): [AccessCredential!]
+
   """Reads a set of `Account`."""
   accountsList(
     """
@@ -7595,6 +7789,23 @@ type SystemAdminUpdateTenantPayload {
 }
 
 type Tenant {
+  """Reads and enables pagination through a set of `AccessCredential`."""
+  accessCredentialsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccessCredentialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccessCredential`."""
+    orderBy: [AccessCredentialsOrderBy!]
+  ): [AccessCredential!]!
+
   """Reads and enables pagination through a set of `Account`."""
   accountsList(
     """
@@ -9028,6 +9239,39 @@ A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/
 """
 scalar UUID
 
+"""All input for the `updateAccessCredential` mutation."""
+input UpdateAccessCredentialInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `AccessCredential` being updated.
+  """
+  patch: AccessCredentialPatch!
+}
+
+"""The output of our update `AccessCredential` mutation."""
+type UpdateAccessCredentialPayload {
+  """The `AccessCredential` that was updated by this mutation."""
+  accessCredential: AccessCredential
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `AccessCredential`."""
+  person: Person
+
+  """Reads a single `User` that is related to this `AccessCredential`."""
+  userByCreatedBy: User
+}
+
 """All input for the `updateAnnouncement` mutation."""
 input UpdateAnnouncementInput {
   """
@@ -9796,6 +10040,23 @@ type UpsertArticlePayload {
 }
 
 type User {
+  """Reads and enables pagination through a set of `AccessCredential`."""
+  accessCredentialsByCreatedByList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccessCredentialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AccessCredential`."""
+    orderBy: [AccessCredentialsOrderBy!]
+  ): [AccessCredential!]!
+
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtKdo(
     """Read all values in the set after (below) this cursor."""

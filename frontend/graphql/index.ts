@@ -44,6 +44,104 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+export type AccessCredential = {
+  __typename?: 'AccessCredential';
+  createdAt: Scalars['Datetime']['output'];
+  createdBy: Maybe<Scalars['BigInt']['output']>;
+  id: Scalars['BigInt']['output'];
+  isAllowed: Maybe<Scalars['Boolean']['output']>;
+  label: Scalars['String']['output'];
+  /** Reads a single `Person` that is related to this `AccessCredential`. */
+  person: Maybe<Person>;
+  personId: Scalars['BigInt']['output'];
+  since: Scalars['Datetime']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  uid: Scalars['String']['output'];
+  until: Maybe<Scalars['Datetime']['output']>;
+  updatedAt: Scalars['Datetime']['output'];
+  /** Reads a single `User` that is related to this `AccessCredential`. */
+  userByCreatedBy: Maybe<User>;
+};
+
+/**
+ * A condition to be used against `AccessCredential` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AccessCredentialCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdBy` field. */
+  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `label` field. */
+  label?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `uid` field. */
+  uid?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `AccessCredential` */
+export type AccessCredentialInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  personId: Scalars['BigInt']['input'];
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  uid: Scalars['String']['input'];
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Represents an update to a `AccessCredential`. Fields that are set will be updated. */
+export type AccessCredentialPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  uid?: InputMaybe<Scalars['String']['input']>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `AccessCredential`. */
+export type AccessCredentialsOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'CREATED_BY_ASC'
+  | 'CREATED_BY_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'LABEL_ASC'
+  | 'LABEL_DESC'
+  | 'NATURAL'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC'
+  | 'UID_ASC'
+  | 'UID_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC';
+
 export type Account = {
   __typename?: 'Account';
   assets: Maybe<Scalars['BigFloat']['output']>;
@@ -1456,6 +1554,33 @@ export type CouplesOrderBy =
   | 'UPDATED_AT_DESC'
   | 'WOMAN_ID_ASC'
   | 'WOMAN_ID_DESC';
+
+/** All input for the create `AccessCredential` mutation. */
+export type CreateAccessCredentialInput = {
+  /** The `AccessCredential` to be created by this mutation. */
+  accessCredential: AccessCredentialInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our create `AccessCredential` mutation. */
+export type CreateAccessCredentialPayload = {
+  __typename?: 'CreateAccessCredentialPayload';
+  /** The `AccessCredential` that was created by this mutation. */
+  accessCredential: Maybe<AccessCredential>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Person` that is related to this `AccessCredential`. */
+  person: Maybe<Person>;
+  /** Reads a single `User` that is related to this `AccessCredential`. */
+  userByCreatedBy: Maybe<User>;
+};
 
 /** All input for the create `Cohort` mutation. */
 export type CreateCohortInput = {
@@ -3444,7 +3569,6 @@ export type File = {
   tenantId: Scalars['BigInt']['output'];
   uploadedAt: Maybe<Scalars['Datetime']['output']>;
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
-  /** Application route used to download the file. */
   url: Scalars['String']['output'];
   /** Reads a single `User` that is related to this `File`. */
   userByUploadedBy: Maybe<User>;
@@ -3951,6 +4075,8 @@ export type Mutation = {
   archiveCohort: Maybe<ArchiveCohortPayload>;
   changePassword: Maybe<ChangePasswordPayload>;
   confirmMembershipApplication: Maybe<ConfirmMembershipApplicationPayload>;
+  /** Creates a single `AccessCredential`. */
+  createAccessCredential: Maybe<CreateAccessCredentialPayload>;
   /** Creates a single `Cohort`. */
   createCohort: Maybe<CreateCohortPayload>;
   /** Creates a single `CohortMembership`. */
@@ -4047,6 +4173,8 @@ export type Mutation = {
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
   /** Allows system administrators to update tenant metadata without switching tenant context. */
   systemAdminUpdateTenant: Maybe<SystemAdminUpdateTenantPayload>;
+  /** Updates a single `AccessCredential` using a unique key and a patch. */
+  updateAccessCredential: Maybe<UpdateAccessCredentialPayload>;
   /** Updates a single `Announcement` using a unique key and a patch. */
   updateAnnouncement: Maybe<UpdateAnnouncementPayload>;
   updateAttendance: Maybe<UpdateAttendancePayload>;
@@ -4113,6 +4241,12 @@ export type MutationChangePasswordArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationConfirmMembershipApplicationArgs = {
   input: ConfirmMembershipApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAccessCredentialArgs = {
+  input: CreateAccessCredentialInput;
 };
 
 
@@ -4449,6 +4583,12 @@ export type MutationSyncCohortMembershipsArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSystemAdminUpdateTenantArgs = {
   input: SystemAdminUpdateTenantInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAccessCredentialArgs = {
+  input: UpdateAccessCredentialInput;
 };
 
 
@@ -4954,6 +5094,8 @@ export type PeopleOrderBy =
 
 export type Person = {
   __typename?: 'Person';
+  /** Reads and enables pagination through a set of `AccessCredential`. */
+  accessCredentialsList: Array<AccessCredential>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
   activeCouplesList: Maybe<Array<Couple>>;
@@ -5016,6 +5158,14 @@ export type Person = {
   userProxiesList: Array<UserProxy>;
   wdsfId: Maybe<Scalars['Int']['output']>;
   websiteUrl: Maybe<Scalars['String']['output']>;
+};
+
+
+export type PersonAccessCredentialsListArgs = {
+  condition?: InputMaybe<AccessCredentialCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
 };
 
 
@@ -5459,6 +5609,10 @@ export type PriceInput = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  /** Get a single `AccessCredential`. */
+  accessCredential: Maybe<AccessCredential>;
+  /** Reads a set of `AccessCredential`. */
+  accessCredentialsList: Maybe<Array<AccessCredential>>;
   /** Reads a set of `Account`. */
   accountsList: Maybe<Array<Account>>;
   activityTimelineList: Maybe<Array<ActivityTimelineItem>>;
@@ -5588,6 +5742,21 @@ export type Query = {
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
   wdsfAthlete: Maybe<Scalars['String']['output']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccessCredentialArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccessCredentialsListArgs = {
+  condition?: InputMaybe<AccessCredentialCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
 };
 
 
@@ -6615,6 +6784,8 @@ export type SystemAdminUpdateTenantPayloadTenantEdgeArgs = {
 
 export type Tenant = {
   __typename?: 'Tenant';
+  /** Reads and enables pagination through a set of `AccessCredential`. */
+  accessCredentialsList: Array<AccessCredential>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
   address: Maybe<AddressDomain>;
@@ -6690,6 +6861,14 @@ export type Tenant = {
   transactions: TransactionsConnection;
   /** Reads and enables pagination through a set of `User`. */
   users: UsersConnection;
+};
+
+
+export type TenantAccessCredentialsListArgs = {
+  condition?: InputMaybe<AccessCredentialCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
 };
 
 
@@ -7624,6 +7803,34 @@ export type TransactionsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
+/** All input for the `updateAccessCredential` mutation. */
+export type UpdateAccessCredentialInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
+  /** An object where the defined keys will be set on the `AccessCredential` being updated. */
+  patch: AccessCredentialPatch;
+};
+
+/** The output of our update `AccessCredential` mutation. */
+export type UpdateAccessCredentialPayload = {
+  __typename?: 'UpdateAccessCredentialPayload';
+  /** The `AccessCredential` that was updated by this mutation. */
+  accessCredential: Maybe<AccessCredential>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Person` that is related to this `AccessCredential`. */
+  person: Maybe<Person>;
+  /** Reads a single `User` that is related to this `AccessCredential`. */
+  userByCreatedBy: Maybe<User>;
+};
+
 /** All input for the `updateAnnouncement` mutation. */
 export type UpdateAnnouncementInput = {
   /**
@@ -8297,6 +8504,8 @@ export type UpsertArticlePayloadAktualityEdgeArgs = {
 
 export type User = {
   __typename?: 'User';
+  /** Reads and enables pagination through a set of `AccessCredential`. */
+  accessCredentialsByCreatedByList: Array<AccessCredential>;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
@@ -8320,6 +8529,14 @@ export type User = {
   updatedAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `UserProxy`. */
   userProxiesList: Array<UserProxy>;
+};
+
+
+export type UserAccessCredentialsByCreatedByListArgs = {
+  condition?: InputMaybe<AccessCredentialCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
 };
 
 
@@ -8541,6 +8758,7 @@ export type UsersOrderBy =
 export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __typename: NonNullable<T['__typename']> };
 
 export type GraphCacheKeysConfig = {
+  AccessCredential?: (data: WithTypename<AccessCredential>) => null | string,
   Account?: (data: WithTypename<Account>) => null | string,
   ActivityBirthday?: (data: WithTypename<ActivityBirthday>) => null | string,
   ActivityCompetitionBrief?: (data: WithTypename<ActivityCompetitionBrief>) => null | string,
@@ -8575,6 +8793,7 @@ export type GraphCacheKeysConfig = {
   CohortsEdge?: (data: WithTypename<CohortsEdge>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
+  CreateAccessCredentialPayload?: (data: WithTypename<CreateAccessCredentialPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
@@ -8683,6 +8902,7 @@ export type GraphCacheKeysConfig = {
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
   TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
+  UpdateAccessCredentialPayload?: (data: WithTypename<UpdateAccessCredentialPayload>) => null | string,
   UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
   UpdateAttendancePayload?: (data: WithTypename<UpdateAttendancePayload>) => null | string,
   UpdateCohortMembershipPayload?: (data: WithTypename<UpdateCohortMembershipPayload>) => null | string,
@@ -8712,6 +8932,8 @@ export type GraphCacheKeysConfig = {
 
 export type GraphCacheResolvers = {
   Query?: {
+    accessCredential?: GraphCacheResolver<WithTypename<Query>, QueryAccessCredentialArgs, WithTypename<AccessCredential> | string>,
+    accessCredentialsList?: GraphCacheResolver<WithTypename<Query>, QueryAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
     activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
@@ -8785,6 +9007,21 @@ export type GraphCacheResolvers = {
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
     users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>,
     wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['String']['output'] | string>
+  },
+  AccessCredential?: {
+    createdAt?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    createdBy?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    isAllowed?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    label?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    since?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    uid?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
+    until?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    userByCreatedBy?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, WithTypename<User> | string>
   },
   Account?: {
     assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat']['output'] | string>,
@@ -9128,6 +9365,12 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     woman?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     womanId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  CreateAccessCredentialPayload?: {
+    accessCredential?: GraphCacheResolver<WithTypename<CreateAccessCredentialPayload>, Record<string, never>, WithTypename<AccessCredential> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<CreateAccessCredentialPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<CreateAccessCredentialPayload>, Record<string, never>, WithTypename<Person> | string>,
+    userByCreatedBy?: GraphCacheResolver<WithTypename<CreateAccessCredentialPayload>, Record<string, never>, WithTypename<User> | string>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -9673,6 +9916,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<PeopleEdge>, Record<string, never>, WithTypename<Person> | string>
   },
   Person?: {
+    accessCredentialsList?: GraphCacheResolver<WithTypename<Person>, PersonAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Person>, PersonAccountsListArgs, Array<WithTypename<Account> | string>>,
     activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
     address?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -9878,6 +10122,7 @@ export type GraphCacheResolvers = {
     tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantsEdge> | string>
   },
   Tenant?: {
+    accessCredentialsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
     aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
@@ -10029,6 +10274,12 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, WithTypename<Transaction> | string>
   },
+  UpdateAccessCredentialPayload?: {
+    accessCredential?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, WithTypename<AccessCredential> | string>,
+    clientMutationId?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, WithTypename<Person> | string>,
+    userByCreatedBy?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, WithTypename<User> | string>
+  },
   UpdateAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
     announcementEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, UpdateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
@@ -10147,6 +10398,7 @@ export type GraphCacheResolvers = {
     userByAtKdo?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<User> | string>
   },
   User?: {
+    accessCredentialsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserAccessCredentialsByCreatedByListArgs, Array<WithTypename<AccessCredential> | string>>,
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -10193,6 +10445,7 @@ export type GraphCacheOptimisticUpdaters = {
   archiveCohort?: GraphCacheOptimisticMutationResolver<MutationArchiveCohortArgs, Maybe<WithTypename<ArchiveCohortPayload>>>,
   changePassword?: GraphCacheOptimisticMutationResolver<MutationChangePasswordArgs, Maybe<WithTypename<ChangePasswordPayload>>>,
   confirmMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationConfirmMembershipApplicationArgs, Maybe<WithTypename<ConfirmMembershipApplicationPayload>>>,
+  createAccessCredential?: GraphCacheOptimisticMutationResolver<MutationCreateAccessCredentialArgs, Maybe<WithTypename<CreateAccessCredentialPayload>>>,
   createCohort?: GraphCacheOptimisticMutationResolver<MutationCreateCohortArgs, Maybe<WithTypename<CreateCohortPayload>>>,
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
@@ -10249,6 +10502,7 @@ export type GraphCacheOptimisticUpdaters = {
   submitForm?: GraphCacheOptimisticMutationResolver<MutationSubmitFormArgs, Maybe<WithTypename<SubmitFormPayload>>>,
   syncCohortMemberships?: GraphCacheOptimisticMutationResolver<MutationSyncCohortMembershipsArgs, Maybe<WithTypename<SyncCohortMembershipsPayload>>>,
   systemAdminUpdateTenant?: GraphCacheOptimisticMutationResolver<MutationSystemAdminUpdateTenantArgs, Maybe<WithTypename<SystemAdminUpdateTenantPayload>>>,
+  updateAccessCredential?: GraphCacheOptimisticMutationResolver<MutationUpdateAccessCredentialArgs, Maybe<WithTypename<UpdateAccessCredentialPayload>>>,
   updateAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpdateAnnouncementArgs, Maybe<WithTypename<UpdateAnnouncementPayload>>>,
   updateAttendance?: GraphCacheOptimisticMutationResolver<MutationUpdateAttendanceArgs, Maybe<WithTypename<UpdateAttendancePayload>>>,
   updateCohort?: GraphCacheOptimisticMutationResolver<MutationUpdateCohortArgs, Maybe<WithTypename<UpdateCohortPayload>>>,
@@ -10279,6 +10533,8 @@ export type GraphCacheOptimisticUpdaters = {
 
 export type GraphCacheUpdaters = {
   Query?: {
+    accessCredential?: GraphCacheUpdateResolver<{ accessCredential: Maybe<WithTypename<AccessCredential>> }, QueryAccessCredentialArgs>,
+    accessCredentialsList?: GraphCacheUpdateResolver<{ accessCredentialsList: Maybe<Array<WithTypename<AccessCredential>>> }, QueryAccessCredentialsListArgs>,
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
     activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
@@ -10357,6 +10613,7 @@ export type GraphCacheUpdaters = {
     archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,
     changePassword?: GraphCacheUpdateResolver<{ changePassword: Maybe<WithTypename<ChangePasswordPayload>> }, MutationChangePasswordArgs>,
     confirmMembershipApplication?: GraphCacheUpdateResolver<{ confirmMembershipApplication: Maybe<WithTypename<ConfirmMembershipApplicationPayload>> }, MutationConfirmMembershipApplicationArgs>,
+    createAccessCredential?: GraphCacheUpdateResolver<{ createAccessCredential: Maybe<WithTypename<CreateAccessCredentialPayload>> }, MutationCreateAccessCredentialArgs>,
     createCohort?: GraphCacheUpdateResolver<{ createCohort: Maybe<WithTypename<CreateCohortPayload>> }, MutationCreateCohortArgs>,
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
@@ -10413,6 +10670,7 @@ export type GraphCacheUpdaters = {
     submitForm?: GraphCacheUpdateResolver<{ submitForm: Maybe<WithTypename<SubmitFormPayload>> }, MutationSubmitFormArgs>,
     syncCohortMemberships?: GraphCacheUpdateResolver<{ syncCohortMemberships: Maybe<WithTypename<SyncCohortMembershipsPayload>> }, MutationSyncCohortMembershipsArgs>,
     systemAdminUpdateTenant?: GraphCacheUpdateResolver<{ systemAdminUpdateTenant: Maybe<WithTypename<SystemAdminUpdateTenantPayload>> }, MutationSystemAdminUpdateTenantArgs>,
+    updateAccessCredential?: GraphCacheUpdateResolver<{ updateAccessCredential: Maybe<WithTypename<UpdateAccessCredentialPayload>> }, MutationUpdateAccessCredentialArgs>,
     updateAnnouncement?: GraphCacheUpdateResolver<{ updateAnnouncement: Maybe<WithTypename<UpdateAnnouncementPayload>> }, MutationUpdateAnnouncementArgs>,
     updateAttendance?: GraphCacheUpdateResolver<{ updateAttendance: Maybe<WithTypename<UpdateAttendancePayload>> }, MutationUpdateAttendanceArgs>,
     updateCohort?: GraphCacheUpdateResolver<{ updateCohort: Maybe<WithTypename<UpdateCohortPayload>> }, MutationUpdateCohortArgs>,
@@ -10441,6 +10699,21 @@ export type GraphCacheUpdaters = {
     upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>
   },
   Subscription?: object,
+  AccessCredential?: {
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    isAllowed?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    label?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    uid?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>
+  },
   Account?: {
     assets?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountAssetsArgs>,
     balance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
@@ -10783,6 +11056,12 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     womanId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>
+  },
+  CreateAccessCredentialPayload?: {
+    accessCredential?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAccessCredentialPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAccessCredentialPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAccessCredentialPayload>>, Record<string, never>>,
+    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAccessCredentialPayload>>, Record<string, never>>
   },
   CreateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCohortMembershipPayload>>, Record<string, never>>,
@@ -11328,6 +11607,7 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleEdge>>, Record<string, never>>
   },
   Person?: {
+    accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccessCredentialsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsListArgs>,
     activeCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonActiveCouplesListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -11533,6 +11813,7 @@ export type GraphCacheUpdaters = {
     tenantEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, SystemAdminUpdateTenantPayloadTenantEdgeArgs>
   },
   Tenant?: {
+    accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccessCredentialsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     aktualities?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAktualitiesArgs>,
@@ -11684,6 +11965,12 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>
   },
+  UpdateAccessCredentialPayload?: {
+    accessCredential?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>,
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>,
+    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>
+  },
   UpdateAnnouncementPayload?: {
     announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, Record<string, never>>,
     announcementEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAnnouncementPayload>>, UpdateAnnouncementPayloadAnnouncementEdgeArgs>,
@@ -11802,6 +12089,7 @@ export type GraphCacheUpdaters = {
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>
   },
   User?: {
+    accessCredentialsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAccessCredentialsByCreatedByListArgs>,
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

@@ -327,6 +327,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createUserProxy(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId });
       },
+      createAccessCredential(_result, args, cache) {
+        cache.invalidate({ __typename: 'Person', id: args.input.accessCredential.personId });
+      },
       createTenantLocation(result, _args, cache, _info) {
         const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
