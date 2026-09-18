@@ -97,7 +97,7 @@ function DocumentPane({
 
   const rows = React.useMemo<OutlineRow[]>(
     () =>
-      (doc?.nodes?.nodes ?? []).map((node) => ({
+      (doc?.nodesList ?? []).map((node) => ({
         id: node.id,
         parentId: node.parentId ?? null,
         ordering: Number(node.ordering),
@@ -165,7 +165,7 @@ function useTagCandidates() {
         refId: cohort.id,
         label: cohort.name,
       })),
-      ...(dances?.dances?.nodes ?? []).map((dance) => ({
+      ...(dances?.dancesList ?? []).map((dance) => ({
         kind: 'dance' as const,
         refId: dance.code,
         label: dance.name ?? dance.code,

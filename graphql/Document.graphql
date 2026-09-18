@@ -27,10 +27,8 @@ fragment DocumentNode on DocumentNode {
   parentId
   ordering
   content
-  tags {
-    nodes {
-      ...DocumentNodeTag
-    }
+  tagsList {
+    ...DocumentNodeTag
   }
 }
 
@@ -48,10 +46,8 @@ fragment Document on Document {
   eventInstanceId
   eventSeriesId
   cohortId
-  nodes(orderBy: [ORDERING_ASC]) {
-    nodes {
-      ...DocumentNode
-    }
+  nodesList(orderBy: [ORDERING_ASC]) {
+    ...DocumentNode
   }
 }
 
@@ -62,12 +58,10 @@ query Document($id: BigInt!) {
 }
 
 query TagDances {
-  dances(orderBy: [NAME_ASC]) {
-    nodes {
-      code
-      name
-      discipline
-    }
+  dancesList(orderBy: [NAME_ASC]) {
+    code
+    name
+    discipline
   }
 }
 

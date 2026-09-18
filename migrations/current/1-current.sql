@@ -104,6 +104,23 @@ create table if not exists document_node_tag (
 
 -- Composite keys otherwise surface as tenantCohort, documentNodesByTenantIdAndDocumentId
 -- and the like, so each relation is named the way the rest of the schema names them.
+-- Writes go through upsert_document, and nodes and tags are only ever reached
+-- from a document or from a tagged entity, so the generated surface is cut back
+-- to what is actually called.
+comment on table document is '@omit create,update
+@simpleCollections only';
+comment on table document_node is '@omit create,update,delete,all
+@simpleCollections only';
+comment on table document_node_tag is '@omit create,update,delete,all
+@simpleCollections only';
+
+-- The composite uniques exist for the tenant-scoped foreign keys, not as
+-- accessors; without this each one generates its own by-key query and mutation.
+comment on constraint document_tenant_id_id_key on document is '@omit';
+comment on constraint document_node_tenant_id_id_key on document_node is '@omit';
+comment on constraint document_node_tenant_document_id_key on document_node is '@omit';
+comment on constraint document_node_tag_unique on document_node_tag is '@omit';
+
 comment on constraint document_tenant_fkey on document is '@fieldName tenant';
 comment on constraint document_author_fkey on document is '@fieldName author
 @foreignFieldName authoredDocuments';
@@ -174,7 +191,8 @@ create or replace view dance as
   select code, name, discipline from federated.dance;
 
 comment on view dance is '@primaryKey code
-@omit create,update,delete';
+@omit create,update,delete
+@simpleCollections only';
 
 grant select on dance to anonymous;
 
