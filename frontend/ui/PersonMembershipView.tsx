@@ -5,6 +5,7 @@ import {
   formatCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
+  dateTimeFormatter,
   moneyFormatter,
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
@@ -26,9 +27,11 @@ import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
+import { mifareCodeToLabel } from '@/lib/access-credentials';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
+  const { enableStarletImport } = useTenantConfig();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
   const tenantId = useTenantId();
   const cohortMembershipActionMap = useActionMap(
@@ -181,28 +184,6 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           {auth.isAdmin && (
             <>
               <div className="flex justify-between items-baseline flex-wrap gap-4">
-                <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
-                <Dialog>
-                  <DialogTrigger.Add size="sm" />
-                  <DialogContent>
-                    <CreateAccessCredentialForm personId={item.id} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-              {item.accessCredentialsList.map((card) => (
-                <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
-                  <div className="grow flex flex-wrap items-baseline justify-between gap-2 text-sm py-1">
-                    <span className={card.isAllowed ? '' : 'line-through'}>
-                      <b>{card.uid}</b>
-                      {card.label && ` · ${card.label}`}
-                    </span>
-                    <span>
-                      {formatOpenDateRange(card)}
-                    </span>
-                  </div>
-                </ActionRow>
-              ))}
-              <div className="flex justify-between items-baseline flex-wrap gap-4">
                 <h3 className="text-lg font-semibold mt-4 mb-2">Pozvánky</h3>
                 <Dialog>
                   <DialogTrigger.Add size="sm" />
@@ -225,6 +206,63 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                   </div>
                 </ActionRow>
               ))}
+            </>
+          )}
+
+          {auth.isAdmin && enableStarletImport && (
+            <>
+              <div className="flex justify-between items-baseline flex-wrap gap-4">
+                <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
+                <Dialog>
+                  <DialogTrigger.Add size="sm" />
+                  <DialogContent>
+                    <CreateAccessCredentialForm personId={item.id} />
+                  </DialogContent>
+                </Dialog>
+              </div>
+              {item.accessCredentialsList.map((card) => (
+                <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
+                  <div className="grow flex flex-wrap items-baseline justify-between gap-2 text-sm py-1">
+                    <span className={card.isAllowed ? '' : 'line-through'}>
+                      <b>{card.label}</b>
+                      <code className="ml-2 text-neutral-11">{card.code}</code>
+                    </span>
+                    <span className="text-right">
+                      <span>{formatOpenDateRange(card)}</span>
+                      <span className="block text-neutral-11">
+                        {card.lastUsed
+                          ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
+                          : 'Nikdy nepoužita'}
+                      </span>
+                    </span>
+                  </div>
+                </ActionRow>
+              ))}
+              {item.accessEventsList.length > 0 && (
+                <>
+                  <h3 className="text-lg font-semibold mt-4 mb-2">Poslední průchody</h3>
+                  <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
+                    {item.accessEventsList.map((event) => (
+                      <div
+                        key={event.id}
+                        className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
+                      >
+                        <span>
+                          <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
+                          {' · '}
+                          {mifareCodeToLabel(event.code)}
+                          <code className="ml-2 text-neutral-11">{event.code}</code>
+                        </span>
+                        <span className="text-neutral-11">
+                          {dateTimeFormatter.format(new Date(event.occurredAt))}
+                          {' · '}
+                          {event.device}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           )}
         </>

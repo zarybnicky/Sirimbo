@@ -67,6 +67,9 @@ fragment PersonWithLinks on Person {
   accessCredentialsList(orderBy: CREATED_AT_DESC) {
     ...AccessCredential
   }
+  accessEventsList(orderBy: OCCURRED_AT_DESC, first: 20) {
+    ...AccessEvent
+  }
   personInvitationsList(condition: { usedAt: null }) {
     id
     email

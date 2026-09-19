@@ -328,7 +328,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId });
       },
       createAccessCredential(_result, args, cache) {
-        cache.invalidate({ __typename: 'Person', id: args.input.accessCredential.personId });
+        cache.invalidate({
+          __typename: 'Person',
+          id: args.input.accessCredential.personId,
+        });
+        invalidateQueryFields(cache, ['accessCredentialsList']);
       },
       createTenantLocation(result, _args, cache, _info) {
         const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
@@ -425,7 +429,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       updatePayment(_result, _args, cache) {
         invalidateQueryFields(cache, ['paymentDebtorsList']);
       },
-
     },
   },
 };

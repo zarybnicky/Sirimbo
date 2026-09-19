@@ -128,6 +128,12 @@ export function useMemberMenu(): MenuStructItem[] {
           ? [
               {
                 type: 'link' as const,
+                title: 'Přístupy',
+                href: '/pristupy',
+                requireAdmin: true,
+              },
+              {
+                type: 'link' as const,
                 title: 'Import z evidence',
                 href: '/starlet-import',
                 requireAdmin: true,

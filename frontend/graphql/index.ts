@@ -46,17 +46,19 @@ export type Scalars = {
 
 export type AccessCredential = {
   __typename?: 'AccessCredential';
+  code: Scalars['String']['output'];
   createdAt: Scalars['Datetime']['output'];
   createdBy: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['BigInt']['output'];
   isAllowed: Maybe<Scalars['Boolean']['output']>;
+  kind: AccessCredentialKind;
   label: Scalars['String']['output'];
+  lastUsed: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Person` that is related to this `AccessCredential`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt']['output'];
   since: Scalars['Datetime']['output'];
   tenantId: Scalars['BigInt']['output'];
-  uid: Scalars['String']['output'];
   until: Maybe<Scalars['Datetime']['output']>;
   updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `AccessCredential`. */
@@ -68,12 +70,16 @@ export type AccessCredential = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type AccessCredentialCondition = {
+  /** Checks for equality with the object’s `code` field. */
+  code?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdBy` field. */
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<AccessCredentialKind>;
   /** Checks for equality with the object’s `label` field. */
   label?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -82,8 +88,6 @@ export type AccessCredentialCondition = {
   since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `uid` field. */
-  uid?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -92,38 +96,47 @@ export type AccessCredentialCondition = {
 
 /** An input for mutations affecting `AccessCredential` */
 export type AccessCredentialInput = {
+  code: Scalars['String']['input'];
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
-  label?: InputMaybe<Scalars['String']['input']>;
+  kind?: InputMaybe<AccessCredentialKind>;
+  label: Scalars['String']['input'];
   personId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  uid: Scalars['String']['input'];
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type AccessCredentialKind =
+  | 'MIFARE';
+
 /** Represents an update to a `AccessCredential`. Fields that are set will be updated. */
 export type AccessCredentialPatch = {
+  code?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
+  kind?: InputMaybe<AccessCredentialKind>;
   label?: InputMaybe<Scalars['String']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  uid?: InputMaybe<Scalars['String']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Methods to use when ordering `AccessCredential`. */
 export type AccessCredentialsOrderBy =
+  | 'CODE_ASC'
+  | 'CODE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'CREATED_BY_ASC'
   | 'CREATED_BY_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'KIND_ASC'
+  | 'KIND_DESC'
   | 'LABEL_ASC'
   | 'LABEL_DESC'
   | 'NATURAL'
@@ -135,12 +148,84 @@ export type AccessCredentialsOrderBy =
   | 'SINCE_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
-  | 'UID_ASC'
-  | 'UID_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+export type AccessEvent = {
+  __typename?: 'AccessEvent';
+  allowed: Scalars['Boolean']['output'];
+  code: Scalars['String']['output'];
+  device: Scalars['String']['output'];
+  externalId: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  kind: AccessCredentialKind;
+  occurredAt: Scalars['Datetime']['output'];
+  /** Reads a single `Person` that is related to this `AccessEvent`. */
+  person: Maybe<Person>;
+  personId: Maybe<Scalars['BigInt']['output']>;
+  reason: Scalars['String']['output'];
+  receivedAt: Scalars['Datetime']['output'];
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `AccessEvent` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AccessEventCondition = {
+  /** Checks for equality with the object’s `allowed` field. */
+  allowed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `device` field. */
+  device?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `externalId` field. */
+  externalId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<AccessCredentialKind>;
+  /** Checks for equality with the object’s `occurredAt` field. */
+  occurredAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `personId` field. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `receivedAt` field. */
+  receivedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Methods to use when ordering `AccessEvent`. */
+export type AccessEventsOrderBy =
+  | 'ALLOWED_ASC'
+  | 'ALLOWED_DESC'
+  | 'CODE_ASC'
+  | 'CODE_DESC'
+  | 'DEVICE_ASC'
+  | 'DEVICE_DESC'
+  | 'EXTERNAL_ID_ASC'
+  | 'EXTERNAL_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'KIND_ASC'
+  | 'KIND_DESC'
+  | 'NATURAL'
+  | 'OCCURRED_AT_ASC'
+  | 'OCCURRED_AT_DESC'
+  | 'PERSON_ID_ASC'
+  | 'PERSON_ID_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'REASON_ASC'
+  | 'REASON_DESC'
+  | 'RECEIVED_AT_ASC'
+  | 'RECEIVED_AT_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 export type Account = {
   __typename?: 'Account';
@@ -4171,7 +4256,6 @@ export type Mutation = {
   setLessonDemand: Maybe<SetLessonDemandPayload>;
   submitForm: Maybe<SubmitFormPayload>;
   syncCohortMemberships: Maybe<SyncCohortMembershipsPayload>;
-  /** Allows system administrators to update tenant metadata without switching tenant context. */
   systemAdminUpdateTenant: Maybe<SystemAdminUpdateTenantPayload>;
   /** Updates a single `AccessCredential` using a unique key and a patch. */
   updateAccessCredential: Maybe<UpdateAccessCredentialPayload>;
@@ -5096,6 +5180,8 @@ export type Person = {
   __typename?: 'Person';
   /** Reads and enables pagination through a set of `AccessCredential`. */
   accessCredentialsList: Array<AccessCredential>;
+  /** Reads and enables pagination through a set of `AccessEvent`. */
+  accessEventsList: Array<AccessEvent>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
   activeCouplesList: Maybe<Array<Couple>>;
@@ -5166,6 +5252,14 @@ export type PersonAccessCredentialsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
+};
+
+
+export type PersonAccessEventsListArgs = {
+  condition?: InputMaybe<AccessEventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessEventsOrderBy>>;
 };
 
 
@@ -5613,6 +5707,12 @@ export type Query = {
   accessCredential: Maybe<AccessCredential>;
   /** Reads a set of `AccessCredential`. */
   accessCredentialsList: Maybe<Array<AccessCredential>>;
+  /** Get a single `AccessEvent`. */
+  accessEvent: Maybe<AccessEvent>;
+  /** Get a single `AccessEvent`. */
+  accessEventByTenantIdAndExternalId: Maybe<AccessEvent>;
+  /** Reads a set of `AccessEvent`. */
+  accessEventsList: Maybe<Array<AccessEvent>>;
   /** Reads a set of `Account`. */
   accountsList: Maybe<Array<Account>>;
   activityTimelineList: Maybe<Array<ActivityTimelineItem>>;
@@ -5712,7 +5812,7 @@ export type Query = {
   scoreboardEntriesList: Maybe<Array<ScoreboardRecord>>;
   /** Get a single `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustment: Maybe<ScoreboardManualAdjustment>;
-  /** Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators. */
+  /** Reads and enables pagination through a set of `SystemAdminTenantsRecord`. */
   systemAdminTenants: Maybe<SystemAdminTenantsConnection>;
   /** Get a single `Tenant`. */
   tenant: Maybe<Tenant>;
@@ -5757,6 +5857,28 @@ export type QueryAccessCredentialsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccessEventArgs = {
+  id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccessEventByTenantIdAndExternalIdArgs = {
+  externalId: Scalars['String']['input'];
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAccessEventsListArgs = {
+  condition?: InputMaybe<AccessEventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessEventsOrderBy>>;
 };
 
 
@@ -6788,6 +6910,8 @@ export type Tenant = {
   __typename?: 'Tenant';
   /** Reads and enables pagination through a set of `AccessCredential`. */
   accessCredentialsList: Array<AccessCredential>;
+  /** Reads and enables pagination through a set of `AccessEvent`. */
+  accessEventsList: Array<AccessEvent>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
   address: Maybe<AddressDomain>;
@@ -6871,6 +6995,14 @@ export type TenantAccessCredentialsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AccessCredentialsOrderBy>>;
+};
+
+
+export type TenantAccessEventsListArgs = {
+  condition?: InputMaybe<AccessEventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessEventsOrderBy>>;
 };
 
 
@@ -8761,6 +8893,7 @@ export type WithTypename<T extends { __typename?: any }> = Partial<T> & { __type
 
 export type GraphCacheKeysConfig = {
   AccessCredential?: (data: WithTypename<AccessCredential>) => null | string,
+  AccessEvent?: (data: WithTypename<AccessEvent>) => null | string,
   Account?: (data: WithTypename<Account>) => null | string,
   ActivityBirthday?: (data: WithTypename<ActivityBirthday>) => null | string,
   ActivityCompetitionBrief?: (data: WithTypename<ActivityCompetitionBrief>) => null | string,
@@ -8936,6 +9069,9 @@ export type GraphCacheResolvers = {
   Query?: {
     accessCredential?: GraphCacheResolver<WithTypename<Query>, QueryAccessCredentialArgs, WithTypename<AccessCredential> | string>,
     accessCredentialsList?: GraphCacheResolver<WithTypename<Query>, QueryAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
+    accessEvent?: GraphCacheResolver<WithTypename<Query>, QueryAccessEventArgs, WithTypename<AccessEvent> | string>,
+    accessEventByTenantIdAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryAccessEventByTenantIdAndExternalIdArgs, WithTypename<AccessEvent> | string>,
+    accessEventsList?: GraphCacheResolver<WithTypename<Query>, QueryAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
     activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
@@ -9011,19 +9147,35 @@ export type GraphCacheResolvers = {
     wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['String']['output'] | string>
   },
   AccessCredential?: {
+    code?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     createdBy?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isAllowed?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, AccessCredentialKind | string>,
     label?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
+    lastUsed?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     since?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    uid?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
     until?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     userByCreatedBy?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, WithTypename<User> | string>
+  },
+  AccessEvent?: {
+    allowed?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    code?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    device?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    externalId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    id?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, AccessCredentialKind | string>,
+    occurredAt?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    reason?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    receivedAt?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
   Account?: {
     assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat']['output'] | string>,
@@ -9919,6 +10071,7 @@ export type GraphCacheResolvers = {
   },
   Person?: {
     accessCredentialsList?: GraphCacheResolver<WithTypename<Person>, PersonAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
+    accessEventsList?: GraphCacheResolver<WithTypename<Person>, PersonAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Person>, PersonAccountsListArgs, Array<WithTypename<Account> | string>>,
     activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
     address?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<AddressDomain> | string>,
@@ -10126,6 +10279,7 @@ export type GraphCacheResolvers = {
   },
   Tenant?: {
     accessCredentialsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
+    accessEventsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
     aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
@@ -10538,6 +10692,9 @@ export type GraphCacheUpdaters = {
   Query?: {
     accessCredential?: GraphCacheUpdateResolver<{ accessCredential: Maybe<WithTypename<AccessCredential>> }, QueryAccessCredentialArgs>,
     accessCredentialsList?: GraphCacheUpdateResolver<{ accessCredentialsList: Maybe<Array<WithTypename<AccessCredential>>> }, QueryAccessCredentialsListArgs>,
+    accessEvent?: GraphCacheUpdateResolver<{ accessEvent: Maybe<WithTypename<AccessEvent>> }, QueryAccessEventArgs>,
+    accessEventByTenantIdAndExternalId?: GraphCacheUpdateResolver<{ accessEventByTenantIdAndExternalId: Maybe<WithTypename<AccessEvent>> }, QueryAccessEventByTenantIdAndExternalIdArgs>,
+    accessEventsList?: GraphCacheUpdateResolver<{ accessEventsList: Maybe<Array<WithTypename<AccessEvent>>> }, QueryAccessEventsListArgs>,
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
     activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
@@ -10703,19 +10860,35 @@ export type GraphCacheUpdaters = {
   },
   Subscription?: object,
   AccessCredential?: {
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     isAllowed?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     label?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
+    lastUsed?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
-    uid?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>,
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessCredential>>, Record<string, never>>
+  },
+  AccessEvent?: {
+    allowed?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    device?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    externalId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    occurredAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    reason?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    receivedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>
   },
   Account?: {
     assets?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountAssetsArgs>,
@@ -11611,6 +11784,7 @@ export type GraphCacheUpdaters = {
   },
   Person?: {
     accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccessCredentialsListArgs>,
+    accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccessEventsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsListArgs>,
     activeCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonActiveCouplesListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -11818,6 +11992,7 @@ export type GraphCacheUpdaters = {
   },
   Tenant?: {
     accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccessCredentialsListArgs>,
+    accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccessEventsListArgs>,
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAccountsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     aktualities?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantAktualitiesArgs>,

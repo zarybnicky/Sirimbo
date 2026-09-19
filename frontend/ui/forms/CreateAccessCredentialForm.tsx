@@ -7,20 +7,50 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  mifareCodeSchema,
+  mifareCodeToLabel,
+  mifareLabelSchema,
+  mifareLabelToCode,
+} from '@/lib/access-credentials';
 
 const Form = z
   .object({
-    uid: z.string().trim().min(1, 'Vyplňte UID karty nebo tokenu.'),
-    label: z.string(),
+    kind: z.literal('MIFARE'),
+    label: mifareLabelSchema,
+    code: mifareCodeSchema,
     since: z.date(),
     until: z.date().nullish(),
+  })
+  .superRefine((value, ctx) => {
+    const label = mifareLabelSchema.safeParse(value.label);
+    const code = mifareCodeSchema.safeParse(value.code);
+    if (label.success && code.success && mifareLabelToCode(label.data) !== code.data) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['code'],
+        message: 'UID karty a čtečky neodpovídají.',
+      });
+    }
   });
 
-export function CreateAccessCredentialForm({ personId }: { personId: string }) {
+export function CreateAccessCredentialForm({
+  personId,
+  initialValue,
+}: {
+  personId: string;
+  initialValue?: { kind: 'MIFARE'; label: string; code: string };
+}) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { uid: '', label: '', since: new Date(), until: null },
+    defaultValues: {
+      kind: 'MIFARE' as const,
+      label: initialValue?.label ?? '',
+      code: initialValue?.code ?? '',
+      since: new Date(),
+      until: null,
+    },
   });
   const [result, create] = useMutation(CreateAccessCredentialDocument);
 
@@ -29,8 +59,9 @@ export function CreateAccessCredentialForm({ personId }: { personId: string }) {
       input: {
         accessCredential: {
           personId,
-          uid: values.uid,
+          kind: values.kind,
           label: values.label,
+          code: values.code,
           since: values.since.toISOString(),
           until: values.until?.toISOString() ?? null,
         },
@@ -42,15 +73,35 @@ export function CreateAccessCredentialForm({ personId }: { personId: string }) {
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
-      <TextFieldElement control={control} name="uid" label="UID karty / tokenu" />
-      <TextFieldElement control={control} name="label" label="Popis (volitelný)" />
-      <DatePickerElement control={control} name="since" label="Platné od" />
-      <DatePickerElement
+      <TextFieldElement
         control={control}
-        name="until"
-        label="Platné do"
-        clearable
+        name="label"
+        label="ID uvedené na kartě"
+        inputMode="numeric"
+        onChange={(event) => {
+          const label = mifareLabelSchema.safeParse(event.currentTarget.value);
+          setValue('code', label.success ? mifareLabelToCode(label.data) : '', {
+            shouldValidate: true,
+          });
+        }}
       />
+      <TextFieldElement
+        control={control}
+        name="code"
+        label="UID ze čtečky"
+        inputClassName="font-mono uppercase"
+        onChange={(event) => {
+          event.currentTarget.value = event.currentTarget.value.toUpperCase();
+          const code = mifareCodeSchema.safeParse(event.currentTarget.value);
+          if (code.success) {
+            setValue('label', mifareCodeToLabel(code.data), {
+              shouldValidate: true,
+            });
+          }
+        }}
+      />
+      <DatePickerElement control={control} name="since" label="Platné od" />
+      <DatePickerElement control={control} name="until" label="Platné do" clearable />
       <SubmitButton control={control}>Přidat kartu</SubmitButton>
     </form>
   );
