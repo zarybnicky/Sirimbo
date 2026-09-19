@@ -10,7 +10,7 @@ import {
 } from '@/ui/format';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
-import { useAuth, useTenantId } from '@/lib/auth';
+import { useAuth, useTenantId, useTenantConfig } from '@/lib/auth';
 import Link from 'next/link';
 import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
