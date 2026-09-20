@@ -2892,59 +2892,6 @@
             ]
           },
           {
-            "name": "documentsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Document",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "eventInstanceRegistrationsByTargetCohortId",
             "type": {
               "kind": "NON_NULL",
@@ -5102,37 +5049,10 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "document",
             "type": {
               "kind": "OBJECT",
               "name": "Document",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventSeries",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
               "ofType": null
             },
             "args": []
@@ -5721,23 +5641,6 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "cohortId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -5750,40 +5653,6 @@
           },
           {
             "name": "createdBy",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstanceId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "eventSeries",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventSeriesId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -5886,6 +5755,17 @@
           },
           {
             "name": "updatedAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "version",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -6198,6 +6078,23 @@
           },
           {
             "name": "eventInstanceId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "eventSeries",
+            "type": {
+              "kind": "OBJECT",
+              "name": "EventSeries",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventSeriesId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -6760,59 +6657,6 @@
                   "kind": "NON_NULL",
                   "ofType": {
                     "name": "DocumentNodeTag",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "documentsList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Document",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -8459,7 +8303,7 @@
             "args": []
           },
           {
-            "name": "documentsList",
+            "name": "documentNodeTagsList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -8467,7 +8311,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "Document",
+                    "name": "DocumentNodeTag",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -10177,6 +10021,26 @@
             ]
           },
           {
+            "name": "deleteDocumentByTenantId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteDocumentPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "deleteEventExternalRegistration",
             "type": {
               "kind": "OBJECT",
@@ -10741,6 +10605,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "SaveEventsPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "saveOutline",
+            "type": {
+              "kind": "OBJECT",
+              "name": "SaveOutlinePayload",
               "ofType": null
             },
             "args": [
@@ -11381,26 +11265,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "UpsertArticlePayload",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "upsertDocument",
-            "type": {
-              "kind": "OBJECT",
-              "name": "UpsertDocumentPayload",
               "ofType": null
             },
             "args": [
@@ -14532,6 +14396,100 @@
             ]
           },
           {
+            "name": "documentByTenantId",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Document",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "documentNodePathList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "DocumentNode",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "node",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
+            "name": "documentSubtreeList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "DocumentNode",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "root",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "eventInstance",
             "type": {
               "kind": "OBJECT",
@@ -15322,36 +15280,6 @@
             ]
           },
           {
-            "name": "orphanedDocumentsList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "Document",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
-          },
-          {
             "name": "payment",
             "type": {
               "kind": "OBJECT",
@@ -15869,6 +15797,15 @@
                 }
               }
             ]
+          },
+          {
+            "name": "tenantDocument",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Document",
+              "ofType": null
+            },
+            "args": []
           },
           {
             "name": "tenantLocation",
@@ -16435,6 +16372,65 @@
               }
             },
             "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SaveOutlinePayload",
+        "fields": [
+          {
+            "name": "author",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "document",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Document",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "documentEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DocumentsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -17743,6 +17739,15 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "document",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Document",
+              "ofType": null
             },
             "args": []
           },
@@ -21261,92 +21266,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UpsertDocumentPayload",
-        "fields": [
-          {
-            "name": "author",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "clientMutationId",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "document",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Document",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "documentEdge",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DocumentsEdge",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "LIST",
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "Any"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventSeries",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
               "ofType": null
             },
             "args": []

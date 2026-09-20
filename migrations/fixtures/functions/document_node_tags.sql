@@ -12,7 +12,7 @@ begin
   -- `$.**` reaches the same object by more than one path, hence distinct.
   insert into document_node_tag (
     tenant_id, node_id, person_id, couple_id, cohort_id,
-    event_instance_id, competition_id, dance_code, tagged_month, discipline
+    event_instance_id, event_series_id, competition_id, dance_code, tagged_month, discipline
   )
   select distinct
     new.tenant_id,
@@ -21,6 +21,7 @@ begin
     case when kind = 'couple' then ref::bigint end,
     case when kind = 'cohort' then ref::bigint end,
     case when kind = 'event' then ref::bigint end,
+    case when kind = 'series' then ref::bigint end,
     case when kind = 'competition' then ref::bigint end,
     case when kind = 'dance' then ref end,
     case when kind = 'month' then ref::date end,
@@ -29,7 +30,7 @@ begin
     select tag->'props'->>'kind' as kind, tag->'props'->>'refId' as ref
     from jsonb_path_query(new.content, '$.** ? (@.type == "tag")') tag
   ) mention
-  where kind in ('person', 'couple', 'cohort', 'event', 'competition',
+  where kind in ('person', 'couple', 'cohort', 'event', 'series', 'competition',
                  'dance', 'month', 'discipline')
     and ref is not null and ref <> ''
   on conflict do nothing;

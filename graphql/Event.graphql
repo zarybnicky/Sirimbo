@@ -27,9 +27,6 @@ query EventSeries($id: BigInt!) {
   eventSeries(id: $id) {
     id
     name
-    documentsList(orderBy: [CREATED_AT_ASC]) {
-      ...DocumentBasic
-    }
     eventsList(condition: { parentId: null }, orderBy: SINCE_ASC) {
       ...EventInstance
     }
@@ -255,9 +252,6 @@ fragment EventPage on EventInstance {
 query EventWithAttendance($id: BigInt!) {
   event: eventInstance(id: $id) {
     ...EventPage
-    documentsList(orderBy: [CREATED_AT_ASC]) {
-      ...DocumentBasic
-    }
     eventInstanceRegistrationsByInstanceId(condition: { registrationStatus: ACTIVE }) {
       nodes {
         ...EventRegistrationAttendance

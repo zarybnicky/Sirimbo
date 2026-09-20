@@ -11,28 +11,20 @@ create table if not exists document (
   tenant_id bigint not null default current_tenant_id(),
   title text,
   created_by bigint default current_user_id(),
-  event_instance_id bigint,
-  event_series_id bigint,
-  cohort_id bigint,
+  version bigint not null default 1,
   show_to_members boolean not null default false,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),
 
+  -- One tree per tenant. What a subtree is about is carried by its tags, not by
+  -- the container.
+  constraint document_one_per_tenant unique (tenant_id),
   constraint document_tenant_id_id_key unique (tenant_id, id),
-  constraint document_subject_check
-    check (num_nonnulls(event_instance_id, event_series_id, cohort_id) <= 1),
 
   constraint document_tenant_fkey foreign key (tenant_id)
     references tenant (id) on delete cascade,
   constraint document_author_fkey foreign key (created_by)
-    references users (id) on delete set null,
-  -- The column list keeps `set null` off tenant_id, which is not nullable.
-  constraint document_event_instance_fkey foreign key (tenant_id, event_instance_id)
-    references event_instance (tenant_id, id) on delete set null (event_instance_id),
-  constraint document_event_series_fkey foreign key (tenant_id, event_series_id)
-    references event_series (tenant_id, id) on delete set null (event_series_id),
-  constraint document_cohort_fkey foreign key (tenant_id, cohort_id)
-    references cohort (tenant_id, id) on delete set null (cohort_id)
+    references users (id) on delete set null
 );
 
 create table if not exists document_node (
@@ -65,6 +57,7 @@ create table if not exists document_node_tag (
   couple_id bigint,
   cohort_id bigint,
   event_instance_id bigint,
+  event_series_id bigint,
   competition_id bigint,
   dance_code text,
   tagged_month date,
@@ -72,13 +65,14 @@ create table if not exists document_node_tag (
   created_at timestamp with time zone not null default now(),
 
   constraint document_node_tag_target_check
-    check (num_nonnulls(person_id, couple_id, cohort_id, event_instance_id,
+    check (num_nonnulls(person_id, couple_id, cohort_id, event_instance_id, event_series_id,
                         competition_id, dance_code, tagged_month, discipline) = 1),
   constraint document_node_tag_month_check
     check (tagged_month is null or extract(day from tagged_month) = 1),
   constraint document_node_tag_unique
     unique nulls not distinct (node_id, person_id, couple_id, cohort_id, event_instance_id,
-                               competition_id, dance_code, tagged_month, discipline),
+                               event_series_id, competition_id, dance_code, tagged_month,
+                               discipline),
 
   constraint document_node_tag_tenant_fkey foreign key (tenant_id)
     references tenant (id) on delete cascade,
@@ -92,6 +86,8 @@ create table if not exists document_node_tag (
     references cohort (tenant_id, id) on delete cascade,
   constraint document_node_tag_event_instance_fkey foreign key (tenant_id, event_instance_id)
     references event_instance (tenant_id, id) on delete cascade,
+  constraint document_node_tag_event_series_fkey foreign key (tenant_id, event_series_id)
+    references event_series (tenant_id, id) on delete cascade,
   constraint document_node_tag_competition_fkey foreign key (competition_id)
     references federated.competition (id) on delete cascade,
   constraint document_node_tag_dance_fkey foreign key (dance_code)
@@ -120,12 +116,6 @@ comment on constraint document_node_tag_unique on document_node_tag is '@omit';
 comment on constraint document_tenant_fkey on document is '@fieldName tenant';
 comment on constraint document_author_fkey on document is '@fieldName author
 @foreignFieldName authoredDocuments';
-comment on constraint document_event_instance_fkey on document is '@fieldName eventInstance
-@foreignFieldName documents';
-comment on constraint document_event_series_fkey on document is '@fieldName eventSeries
-@foreignFieldName documents';
-comment on constraint document_cohort_fkey on document is '@fieldName cohort
-@foreignFieldName documents';
 
 comment on constraint document_node_tenant_fkey on document_node is '@fieldName tenant';
 comment on constraint document_node_document_fkey on document_node is '@fieldName document
@@ -140,13 +130,8 @@ comment on constraint document_node_tag_cohort_fkey on document_node_tag is '@fi
 @foreignFieldName documentNodeTags';
 comment on constraint document_node_tag_event_instance_fkey on document_node_tag is '@fieldName eventInstance
 @foreignFieldName documentNodeTags';
-
-create index if not exists document_event_instance_id_idx
-  on document (event_instance_id) where event_instance_id is not null;
-create index if not exists document_event_series_id_idx
-  on document (event_series_id) where event_series_id is not null;
-create index if not exists document_cohort_id_idx
-  on document (cohort_id) where cohort_id is not null;
+comment on constraint document_node_tag_event_series_fkey on document_node_tag is '@fieldName eventSeries
+@foreignFieldName documentNodeTags';
 
 create index if not exists document_node_document_ordering_idx
   on document_node (document_id, parent_id, ordering);
@@ -161,6 +146,8 @@ create index if not exists document_node_tag_cohort_id_idx
   on document_node_tag (cohort_id) where cohort_id is not null;
 create index if not exists document_node_tag_event_instance_id_idx
   on document_node_tag (event_instance_id) where event_instance_id is not null;
+create index if not exists document_node_tag_event_series_id_idx
+  on document_node_tag (event_series_id) where event_series_id is not null;
 create index if not exists document_node_tag_competition_id_idx
   on document_node_tag (competition_id) where competition_id is not null;
 create index if not exists document_node_tag_dance_code_idx
@@ -193,6 +180,5 @@ comment on view dance is '@primaryKey code
 grant select on dance to anonymous;
 
 --!include functions/document_node_tags.sql
---!include functions/upsert_document.sql
---!include functions/orphaned_documents.sql
+--!include functions/outline.sql
 --!include policies/document.sql

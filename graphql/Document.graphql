@@ -5,54 +5,38 @@ fragment DocumentNodeTag on DocumentNodeTag {
   coupleId
   cohortId
   eventInstanceId
+  eventSeriesId
   competitionId
   danceCode
   taggedMonth
   discipline
-  person {
-    id
-    name
-  }
-  cohort {
-    ...CohortBasic
-  }
-  couple {
-    id
-  }
 }
 
-fragment DocumentNode on DocumentNode {
+fragment OutlineNode on DocumentNode {
   __typename
   id
   parentId
   ordering
   content
-  tagsList {
-    ...DocumentNodeTag
+}
+
+query TenantOutline {
+  tenantDocument {
+    id
+    title
+    version
   }
 }
 
-fragment DocumentBasic on Document {
-  __typename
-  id
-  title
-  showToMembers
-  updatedAt
-}
-
-fragment Document on Document {
-  ...DocumentBasic
-  eventInstanceId
-  eventSeriesId
-  cohortId
-  nodesList(orderBy: [ORDERING_ASC]) {
-    ...DocumentNode
+query Outline($root: UUID) {
+  documentSubtreeList(root: $root) {
+    ...OutlineNode
   }
 }
 
-query Document($id: BigInt!) {
-  document(id: $id) {
-    ...Document
+query OutlineBreadcrumb($node: UUID!) {
+  documentNodePathList(node: $node) {
+    ...OutlineNode
   }
 }
 
@@ -64,10 +48,11 @@ query TagDances {
   }
 }
 
-mutation UpsertDocument($input: UpsertDocumentInput!) {
-  upsertDocument(input: $input) {
+mutation SaveOutline($input: SaveOutlineInput!) {
+  saveOutline(input: $input) {
     document {
-      ...Document
+      id
+      version
     }
   }
 }

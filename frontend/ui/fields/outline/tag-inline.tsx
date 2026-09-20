@@ -6,6 +6,7 @@ export type TagKind =
   | 'couple'
   | 'cohort'
   | 'event'
+  | 'series'
   | 'competition'
   | 'dance'
   | 'month'
@@ -17,6 +18,7 @@ export const TAG_PREFIX: Record<TagKind, string> = {
   couple: '@',
   cohort: '@',
   event: '@',
+  series: '@',
   competition: '#',
   dance: '#',
   month: '#',

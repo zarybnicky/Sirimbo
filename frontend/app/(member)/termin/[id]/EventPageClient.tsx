@@ -11,7 +11,6 @@ import {
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { useActions } from '@/lib/actions';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
-import { DocumentPane, useCreateDocument } from '@/ui/DocumentPane';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
@@ -34,7 +33,7 @@ export function EventPageClient({
   hasShareToken: boolean;
 }) {
   const auth = useAuth();
-  const [{ data, fetching }, refetch] = useQuery({
+  const [{ data, fetching }] = useQuery({
     query: EventWithAttendanceDocument,
     variables: { id },
     pause: !/^\d{1,18}$/.test(id),
@@ -49,15 +48,6 @@ export function EventPageClient({
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
-  const subject = React.useMemo(() => ({ eventInstanceId: id }), [id]);
-  const [creatingPlan, createDocument] = useCreateDocument(subject);
-  const addPlan = React.useCallback(async () => {
-    const created = await createDocument('Nový plán');
-    if (created) {
-      refetch({ requestPolicy: 'network-only' });
-      setVariant(`doc-${created}`);
-    }
-  }, [createDocument, refetch, setVariant]);
 
   const tabs = React.useMemo(() => {
     const tabs: {
@@ -144,17 +134,6 @@ export function EventPageClient({
       );
     }
 
-    for (const doc of instance.documentsList ?? []) {
-      tabs.push({
-        id: `doc-${doc.id}`,
-        title: doc.title || 'Plán',
-        contents: () => (
-          <div className="col-popout">
-            <DocumentPane id={doc.id} />
-          </div>
-        ),
-      });
-    }
     return tabs;
   }, [auth.isTrainerOrAdmin, auth.user?.id, hasShareToken, instance]);
 
@@ -178,18 +157,6 @@ export function EventPageClient({
           </div>
         )}
       </div>
-      {auth.isTrainerOrAdmin && instance && (
-        <div className="col-feature flex justify-end">
-          <button
-            type="button"
-            onClick={addPlan}
-            disabled={creatingPlan}
-            className="text-sm text-accent-11 hover:underline disabled:opacity-50"
-          >
-            + Plán
-          </button>
-        </div>
-      )}
       <TabMenu
         className="col-feature"
         selected={variant}

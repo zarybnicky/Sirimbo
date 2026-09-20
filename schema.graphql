@@ -1084,23 +1084,6 @@ type Cohort {
     orderBy: [DocumentNodeTagsOrderBy!]
   ): [DocumentNodeTag!]!
 
-  """Reads and enables pagination through a set of `Document`."""
-  documentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: DocumentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Document`."""
-    orderBy: [DocumentsOrderBy!]
-  ): [Document!]!
-
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
   """
@@ -2496,6 +2479,16 @@ type DeleteCouplePayload {
   woman: Person
 }
 
+"""All input for the `deleteDocumentByTenantId` mutation."""
+input DeleteDocumentByTenantIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  tenantId: BigInt!
+}
+
 """All input for the `deleteDocument` mutation."""
 input DeleteDocumentInput {
   """
@@ -2517,17 +2510,8 @@ type DeleteDocumentPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Cohort` that is related to this `Document`."""
-  cohort: Cohort
-
   """The `Document` that was deleted by this mutation."""
   document: Document
-
-  """Reads a single `EventInstance` that is related to this `Document`."""
-  eventInstance: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `Document`."""
-  eventSeries: EventSeries
 }
 
 """All input for the `deleteEventExternalRegistration` mutation."""
@@ -2995,20 +2979,8 @@ enum Discipline {
 type Document {
   """Reads a single `User` that is related to this `Document`."""
   author: User
-
-  """Reads a single `Cohort` that is related to this `Document`."""
-  cohort: Cohort
-  cohortId: BigInt
   createdAt: Datetime!
   createdBy: BigInt
-
-  """Reads a single `EventInstance` that is related to this `Document`."""
-  eventInstance: EventInstance
-  eventInstanceId: BigInt
-
-  """Reads a single `EventSeries` that is related to this `Document`."""
-  eventSeries: EventSeries
-  eventSeriesId: BigInt
   id: BigInt!
 
   """Reads and enables pagination through a set of `DocumentNode`."""
@@ -3031,6 +3003,7 @@ type Document {
   tenantId: BigInt!
   title: String
   updatedAt: Datetime!
+  version: BigInt!
 }
 
 """
@@ -3038,20 +3011,11 @@ A condition to be used against `Document` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input DocumentCondition {
-  """Checks for equality with the object’s `cohortId` field."""
-  cohortId: BigInt
-
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
   """Checks for equality with the object’s `createdBy` field."""
   createdBy: BigInt
-
-  """Checks for equality with the object’s `eventInstanceId` field."""
-  eventInstanceId: BigInt
-
-  """Checks for equality with the object’s `eventSeriesId` field."""
-  eventSeriesId: BigInt
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -3067,16 +3031,9 @@ input DocumentCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-}
 
-"""An input for mutations affecting `DocumentInputRecord`"""
-input DocumentInputRecordInput {
-  cohortId: BigInt
-  eventInstanceId: BigInt
-  eventSeriesId: BigInt
-  id: BigInt
-  showToMembers: Boolean
-  title: String
+  """Checks for equality with the object’s `version` field."""
+  version: BigInt
 }
 
 type DocumentNode {
@@ -3159,14 +3116,6 @@ input DocumentNodeCondition {
   updatedAt: Datetime
 }
 
-"""An input for mutations affecting `DocumentNodeInputRecord`"""
-input DocumentNodeInputRecordInput {
-  content: JSON
-  id: UUID
-  ordering: BigFloat
-  parentId: UUID
-}
-
 type DocumentNodeTag {
   """Reads a single `Cohort` that is related to this `DocumentNodeTag`."""
   cohort: Cohort
@@ -3185,6 +3134,12 @@ type DocumentNodeTag {
   """
   eventInstance: EventInstance
   eventInstanceId: BigInt
+
+  """
+  Reads a single `EventSeries` that is related to this `DocumentNodeTag`.
+  """
+  eventSeries: EventSeries
+  eventSeriesId: BigInt
   id: BigInt!
 
   """
@@ -3226,6 +3181,9 @@ input DocumentNodeTagCondition {
   """Checks for equality with the object’s `eventInstanceId` field."""
   eventInstanceId: BigInt
 
+  """Checks for equality with the object’s `eventSeriesId` field."""
+  eventSeriesId: BigInt
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -3258,6 +3216,8 @@ enum DocumentNodeTagsOrderBy {
   DISCIPLINE_DESC
   EVENT_INSTANCE_ID_ASC
   EVENT_INSTANCE_ID_DESC
+  EVENT_SERIES_ID_ASC
+  EVENT_SERIES_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -3307,16 +3267,10 @@ type DocumentsEdge {
 
 """Methods to use when ordering `Document`."""
 enum DocumentsOrderBy {
-  COHORT_ID_ASC
-  COHORT_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   CREATED_BY_ASC
   CREATED_BY_DESC
-  EVENT_INSTANCE_ID_ASC
-  EVENT_INSTANCE_ID_DESC
-  EVENT_SERIES_ID_ASC
-  EVENT_SERIES_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -3330,6 +3284,8 @@ enum DocumentsOrderBy {
   TITLE_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+  VERSION_ASC
+  VERSION_DESC
 }
 
 enum EventCapacityUnit {
@@ -3576,23 +3532,6 @@ type EventInstance {
     """The method to use when ordering `DocumentNodeTag`."""
     orderBy: [DocumentNodeTagsOrderBy!]
   ): [DocumentNodeTag!]!
-
-  """Reads and enables pagination through a set of `Document`."""
-  documentsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: DocumentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Document`."""
-    orderBy: [DocumentsOrderBy!]
-  ): [Document!]!
   enableNotes: Boolean
 
   """
@@ -4448,12 +4387,12 @@ enum EventRegistrationSource {
 type EventSeries {
   createdAt: Datetime!
 
-  """Reads and enables pagination through a set of `Document`."""
-  documentsList(
+  """Reads and enables pagination through a set of `DocumentNodeTag`."""
+  documentNodeTagsList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: DocumentCondition
+    condition: DocumentNodeTagCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -4461,9 +4400,9 @@ type EventSeries {
     """Skip the first `n` values."""
     offset: Int
 
-    """The method to use when ordering `Document`."""
-    orderBy: [DocumentsOrderBy!]
-  ): [Document!]!
+    """The method to use when ordering `DocumentNodeTag`."""
+    orderBy: [DocumentNodeTagsOrderBy!]
+  ): [DocumentNodeTag!]!
 
   """Reads and enables pagination through a set of `EventInstance`."""
   eventsList(
@@ -5415,6 +5354,14 @@ type Mutation {
     input: DeleteDocumentInput!
   ): DeleteDocumentPayload
 
+  """Deletes a single `Document` using a unique key."""
+  deleteDocumentByTenantId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentByTenantIdInput!
+  ): DeleteDocumentPayload
+
   """Deletes a single `EventExternalRegistration` using a unique key."""
   deleteEventExternalRegistration(
     """
@@ -5628,6 +5575,16 @@ type Mutation {
     """
     input: SaveEventsInput!
   ): SaveEventsPayload
+
+  """
+  Saves one subtree of the tenant outline, rejecting a save based on a stale version.
+  """
+  saveOutline(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SaveOutlineInput!
+  ): SaveOutlinePayload
   setEventInstanceRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -5872,16 +5829,6 @@ type Mutation {
     """
     input: UpsertArticleInput!
   ): UpsertArticlePayload
-
-  """
-  Saves a document and the whole of its outline. Tags follow from node content.
-  """
-  upsertDocument(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpsertDocumentInput!
-  ): UpsertDocumentPayload
 }
 
 """All input for the `otpLogin` mutation."""
@@ -5902,6 +5849,14 @@ type OtpLoginPayload {
   """
   clientMutationId: String
   result: Result
+}
+
+"""An input for mutations affecting `OutlineNodeInputRecord`"""
+input OutlineNodeInputRecordInput {
+  content: JSON
+  id: UUID
+  ordering: BigFloat
+  parentId: UUID
 }
 
 """Information about pagination in a connection."""
@@ -7238,6 +7193,25 @@ type Query {
   """Get a single `Document`."""
   document(id: BigInt!): Document
 
+  """Get a single `Document`."""
+  documentByTenantId(tenantId: BigInt!): Document
+  documentNodePathList(
+    """Only read the first `n` values of the set."""
+    first: Int
+    node: UUID
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [DocumentNode!]
+  documentSubtreeList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    root: UUID
+  ): [DocumentNode!]
+
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
@@ -7443,13 +7417,6 @@ type Query {
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]
   ): [MembershipApplication!]
-  orphanedDocumentsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Document!]
 
   """Get a single `Payment`."""
   payment(id: BigInt!): Payment
@@ -7582,6 +7549,9 @@ type Query {
 
   """Get a single `TenantAdministrator`."""
   tenantAdministrator(id: BigInt!): TenantAdministrator
+
+  """The tenant's outline, once it exists."""
+  tenantDocument: Document
 
   """Get a single `TenantLocation`."""
   tenantLocation(id: BigInt!): TenantLocation
@@ -7805,6 +7775,38 @@ type SaveEventsPayload {
   """
   clientMutationId: String
   eventInstances: [EventInstance!]
+}
+
+"""All input for the `saveOutline` mutation."""
+input SaveOutlineInput {
+  baseVersion: BigInt
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  nodes: [OutlineNodeInputRecordInput]
+  root: UUID
+}
+
+"""The output of our `saveOutline` mutation."""
+type SaveOutlinePayload {
+  """Reads a single `User` that is related to this `Document`."""
+  author: User
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  document: Document
+
+  """An edge for our `Document`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentsEdge
 }
 
 type ScoreboardManualAdjustment {
@@ -8371,6 +8373,9 @@ type Tenant {
   czDic: String!
   czIco: String!
   description: String!
+
+  """Reads a single `Document` that is related to this `Tenant`."""
+  document: Document
 
   """Reads and enables pagination through a set of `DocumentNodeTag`."""
   documentNodeTagsList(
@@ -10425,45 +10430,6 @@ type UpsertArticlePayload {
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
-}
-
-"""All input for the `upsertDocument` mutation."""
-input UpsertDocumentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  doc: DocumentInputRecordInput
-  nodes: [DocumentNodeInputRecordInput]
-}
-
-"""The output of our `upsertDocument` mutation."""
-type UpsertDocumentPayload {
-  """Reads a single `User` that is related to this `Document`."""
-  author: User
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """Reads a single `Cohort` that is related to this `Document`."""
-  cohort: Cohort
-  document: Document
-
-  """An edge for our `Document`. May be used by Relay 1."""
-  documentEdge(
-    """The method to use when ordering `Document`."""
-    orderBy: [DocumentsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): DocumentsEdge
-
-  """Reads a single `EventInstance` that is related to this `Document`."""
-  eventInstance: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `Document`."""
-  eventSeries: EventSeries
 }
 
 type User {
