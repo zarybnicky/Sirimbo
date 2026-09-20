@@ -1,0 +1,33 @@
+/* BlockNote ships its own palette; this maps it onto the Radix scale the rest of
+   the app uses, so the editor inherits light and dark mode with everything else
+   rather than carrying a second theme. */
+.bn-outline {
+  --bn-colors-editor-text: var(--color-neutral-12);
+  --bn-colors-editor-background: transparent;
+
+  --bn-colors-menu-text: var(--color-neutral-12);
+  --bn-colors-menu-background: var(--color-neutral-2);
+
+  --bn-colors-tooltip-text: var(--color-neutral-12);
+  --bn-colors-tooltip-background: var(--color-neutral-3);
+
+  --bn-colors-hovered-text: var(--color-neutral-12);
+  --bn-colors-hovered-background: var(--color-neutral-4);
+
+  --bn-colors-selected-text: var(--color-accent-12);
+  --bn-colors-selected-background: var(--color-accent-5);
+
+  --bn-colors-disabled-text: var(--color-neutral-9);
+  --bn-colors-disabled-background: var(--color-neutral-3);
+
+  --bn-colors-border: var(--color-neutral-6);
+  --bn-colors-side-menu: var(--color-neutral-9);
+  --bn-colors-shadow: var(--color-neutral-5);
+
+  --bn-font-family: inherit;
+}
+
+/* The editor sits inside page layout rather than owning the viewport. */
+.bn-outline .bn-editor {
+  padding-inline: 0;
+}

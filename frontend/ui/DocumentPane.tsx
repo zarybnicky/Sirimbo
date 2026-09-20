@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { FormError } from '@/ui/form';
 import { useTagCandidates } from '@/ui/fields/outline/candidates';
 import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
-import type { OutlineRow } from '@/ui/fields/outline/rows';
+import type { OutlineRow } from '@/ui/fields/outline/blocks';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 

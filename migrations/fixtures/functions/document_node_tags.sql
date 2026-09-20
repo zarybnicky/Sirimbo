@@ -26,7 +26,7 @@ begin
     case when kind = 'month' then ref::date end,
     case when kind = 'discipline' then ref::discipline end
   from (
-    select tag->'attrs'->>'kind' as kind, tag->'attrs'->>'refId' as ref
+    select tag->'props'->>'kind' as kind, tag->'props'->>'refId' as ref
     from jsonb_path_query(new.content, '$.** ? (@.type == "tag")') tag
   ) mention
   where kind in ('person', 'couple', 'cohort', 'event', 'competition',

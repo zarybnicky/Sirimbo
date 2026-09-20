@@ -6,10 +6,32 @@ import { formatCoupleName } from '@/ui/format';
 import { rankItem } from '@tanstack/match-sorter-utils';
 import React from 'react';
 import { useQuery } from 'urql';
-import { DISCIPLINE_CANDIDATES, monthCandidates, type TagCandidate } from './suggestion.ts';
+import type { TagKind } from './tag-inline.tsx';
+
+export type TagCandidate = {
+  kind: TagKind;
+  refId: string;
+  label: string;
+};
 
 const AT_KINDS = new Set(['person', 'couple', 'cohort']);
 const HASH_KINDS = new Set(['discipline', 'dance', 'month']);
+
+// Neither needs a lookup: a fixed vocabulary, and the months around today.
+const DISCIPLINE_CANDIDATES: TagCandidate[] = [
+  { kind: 'discipline', refId: 'stt', label: 'STT' },
+  { kind: 'discipline', refId: 'lat', label: 'LAT' },
+  { kind: 'discipline', refId: 'conditioning', label: 'Kondice' },
+  { kind: 'discipline', refId: 'practice', label: 'Praxe' },
+];
+
+export function monthCandidates(today: Date, span = 12): TagCandidate[] {
+  return Array.from({ length: span }, (_, offset) => {
+    const date = new Date(Date.UTC(today.getFullYear(), today.getMonth() - offset, 1));
+    const refId = date.toISOString().slice(0, 10);
+    return { kind: 'month' as const, refId, label: refId.slice(0, 7) };
+  });
+}
 
 // Small enough to load once and rank in the browser, the way the rest of the app
 // filters lists. Competitions are absent on purpose: they belong to the
