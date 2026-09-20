@@ -35,14 +35,19 @@ export function blocksToRows(blocks: AnyBlock[]): OutlineRow[] {
   return rows;
 }
 
+// A subtree loaded on its own still names the parent it hangs from, which is not
+// in the excerpt; those rows are the ones to start from.
 export function rowsToBlocks(rows: OutlineRow[]): PartialBlock[] {
+  const present = new Set(rows.map((row) => row.id));
   const byParent = new Map<string | null, OutlineRow[]>();
   for (const row of rows) {
-    const siblings = byParent.get(row.parentId);
+    const parentId =
+      row.parentId !== null && present.has(row.parentId) ? row.parentId : null;
+    const siblings = byParent.get(parentId);
     if (siblings) {
       siblings.push(row);
     } else {
-      byParent.set(row.parentId, [row]);
+      byParent.set(parentId, [row]);
     }
   }
   for (const siblings of byParent.values()) {
@@ -59,9 +64,32 @@ export function rowsToBlocks(rows: OutlineRow[]): PartialBlock[] {
   return blocks.length > 0 ? blocks : [{ type: 'bulletListItem' }];
 }
 
+// The v4 preset hands JSON columns over as strings, and takes them back the same
+// way, so the tree is only a tree between these two.
+export function nodeToRow(node: {
+  id: string;
+  parentId?: string | null;
+  ordering: unknown;
+  content: unknown;
+}): OutlineRow {
+  return {
+    id: node.id,
+    parentId: node.parentId ?? null,
+    ordering: Number(node.ordering),
+    content: parseContent(node.content),
+  };
+}
+
+function parseContent(content: unknown): Record<string, unknown> {
+  return (typeof content === 'string' ? JSON.parse(content) : content) as Record<
+    string,
+    unknown
+  >;
+}
+
 // Enough of a node to label it in a breadcrumb or a list.
-export function nodeText(content: Record<string, unknown>): string {
-  const inline = content.content;
+export function nodeText(raw: unknown): string {
+  const inline = parseContent(raw).content;
   if (!Array.isArray(inline)) {
     return '';
   }

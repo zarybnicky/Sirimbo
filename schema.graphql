@@ -281,6 +281,39 @@ enum ActivityTimelineKind {
   JUDGING
 }
 
+"""All input for the `addOutlineNode` mutation."""
+input AddOutlineNodeInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  content: JSON
+  parent: UUID
+}
+
+"""The output of our `addOutlineNode` mutation."""
+type AddOutlineNodePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Document` that is related to this `DocumentNode`."""
+  document: Document
+  documentNode: DocumentNode
+
+  """An edge for our `DocumentNode`. May be used by Relay 1."""
+  documentNodeEdge(
+    """The method to use when ordering `DocumentNode`."""
+    orderBy: [DocumentNodesOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentNodesEdge
+
+  """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
+  parent: DocumentNode
+}
+
 type AddressDomain {
   city: String
   conscriptionNumber: String
@@ -3033,6 +3066,14 @@ input DocumentCondition {
 }
 
 type DocumentNode {
+  ancestorsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [DocumentNode!]
+
   """Reads and enables pagination through a set of `DocumentNode`."""
   childrenList(
     """
@@ -3061,6 +3102,13 @@ type DocumentNode {
   """Reads a single `DocumentNode` that is related to this `DocumentNode`."""
   parent: DocumentNode
   parentId: UUID
+  subtreeList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [DocumentNode!]
 
   """Reads and enables pagination through a set of `DocumentNodeTag`."""
   tagsList(
@@ -3227,6 +3275,15 @@ enum DocumentNodeTagsOrderBy {
   TAGGED_MONTH_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
+}
+
+"""A `DocumentNode` edge in the connection."""
+type DocumentNodesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `DocumentNode` at the end of the edge."""
+  node: DocumentNode!
 }
 
 """Methods to use when ordering `DocumentNode`."""
@@ -5157,6 +5214,13 @@ type MoveEventInstancePayload {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Appends one node under `parent`, or at the top level when it is null."""
+  addOutlineNode(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: AddOutlineNodeInput!
+  ): AddOutlineNodePayload
   archiveCohort(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7189,6 +7253,23 @@ type Query {
 
   """Get a single `Document`."""
   documentByTenantId(tenantId: BigInt!): Document
+  documentMentionsList(
+    cohort: BigInt
+    competition: BigInt
+    couple: BigInt
+    dance: String
+    discipline: Discipline
+    eventInstance: BigInt
+    eventSeries: BigInt
+
+    """Only read the first `n` values of the set."""
+    first: Int
+    month: Date
+
+    """Skip the first `n` values."""
+    offset: Int
+    person: BigInt
+  ): [DocumentNode!]
   documentNodePathList(
     """Only read the first `n` values of the set."""
     first: Int

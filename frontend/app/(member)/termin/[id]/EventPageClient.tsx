@@ -15,6 +15,7 @@ import { EventAttendance } from '@/ui/EventAttendance';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
+import { OutlineMentions } from '@/ui/OutlineMentions';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatEventType, formatEventName } from '@/ui/format';
@@ -147,6 +148,9 @@ export function EventPageClient({
             actions={actions}
             primary={primaryAction}
           />
+        )}
+        {instance && (
+          <OutlineMentions subject={{ kind: 'event', id: instance.id, label: title }} />
         )}
         {!fetching && !instance && (
           <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">

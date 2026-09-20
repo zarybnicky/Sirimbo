@@ -20,6 +20,7 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { OutlineMentions } from '@/ui/OutlineMentions';
 import { useAuth } from '@/lib/auth';
 
 export function TrainingGroup({
@@ -55,6 +56,10 @@ export function TrainingGroup({
 
       <h6 className="mb-2 font-bold">{cohort.location}</h6>
       <RichTextView value={description} />
+
+      <OutlineMentions
+        subject={{ kind: 'cohort', id: cohort.id, label: cohort.name }}
+      />
 
 
       {auth.isLoggedIn && (

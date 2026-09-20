@@ -1,4 +1,5 @@
 drop function if exists save_outline;
+drop function if exists add_outline_node;
 drop type if exists outline_node_input;
 
 -- Read-only, so it is a query rather than a mutation. A tenant that has never
@@ -33,42 +34,111 @@ begin
 end;
 $$;
 
--- A node and everything under it. A null root means every root of the tenant's
--- tree, which is how the whole outline is loaded.
-create or replace function document_subtree(root uuid default null)
+-- A node together with everything under it. That is the unit a tag marks, so it
+-- is also what a mention of the tagged entity shows.
+create or replace function document_node_subtree(node document_node)
   returns setof document_node
   language sql stable
 as $$
   with recursive tree as (
-    select node.* from document_node node
-    where case when root is null then node.parent_id is null else node.id = root end
+    select self.* from document_node self where self.id = node.id
     union all
     select child.* from document_node child join tree on child.parent_id = tree.id
   )
   select * from tree;
 $$;
 
-comment on function document_subtree(uuid) is '@simpleCollections only';
+comment on function document_node_subtree(document_node) is '@simpleCollections only';
 
 -- The ancestors of a node, outermost first, for a breadcrumb. The node itself is
 -- not included.
-create or replace function document_node_path(node uuid)
+create or replace function document_node_ancestors(node document_node)
   returns setof document_node
   language sql stable
 as $$
   with recursive up as (
-    select id, parent_id, 0 as depth from document_node where id = node
+    select node.parent_id as id, 1 as depth
     union all
-    select parent.id, parent.parent_id, up.depth + 1
-    from document_node parent join up on parent.id = up.parent_id
+    select parent.parent_id, up.depth + 1
+    from document_node parent join up on parent.id = up.id
+    where parent.parent_id is not null
   )
   select ancestor.*
   from up join document_node ancestor on ancestor.id = up.id
-  where up.depth > 0
   order by up.depth desc;
 $$;
 
+comment on function document_node_ancestors(document_node) is '@simpleCollections only';
+
+-- Loads one subtree by id. A null root means every root of the tenant's tree,
+-- which is how the whole outline is loaded.
+create or replace function document_subtree(root uuid default null)
+  returns setof document_node
+  language sql stable
+as $$
+  select descendant.*
+  from document_node node
+  cross join lateral document_node_subtree(node) descendant
+  where case when root is null then node.parent_id is null else node.id = root end;
+$$;
+
+comment on function document_subtree(uuid) is '@simpleCollections only';
+
+-- The same breadcrumb as the computed column, for a node the caller only has an
+-- id for.
+create or replace function document_node_path(node uuid)
+  returns setof document_node
+  language sql stable
+as $$
+  select ancestor.*
+  from document_node self
+  cross join lateral document_node_ancestors(self) ancestor
+  where self.id = node;
+$$;
+
 comment on function document_node_path(uuid) is '@simpleCollections only';
+
+-- The nodes tagged with one subject, outermost first and never nested inside
+-- one another: a tag already covers the whole subtree under it, so a node whose
+-- ancestor carries the same tag would only be shown twice.
+--
+-- A tag row holds exactly one reference, so row equality matches a single
+-- subject; passing two filters at once asks for a tag that cannot exist and
+-- correctly returns nothing.
+create or replace function document_mentions(
+  person bigint default null,
+  couple bigint default null,
+  cohort bigint default null,
+  event_instance bigint default null,
+  event_series bigint default null,
+  competition bigint default null,
+  dance text default null,
+  month date default null,
+  discipline discipline default null
+) returns setof document_node
+  language sql stable
+as $$
+  with tagged as (
+    select node.*
+    from document_node node
+    join document_node_tag tag on tag.node_id = node.id
+    where (tag.person_id, tag.couple_id, tag.cohort_id, tag.event_instance_id,
+           tag.event_series_id, tag.competition_id, tag.dance_code, tag.tagged_month,
+           tag.discipline)
+          is not distinct from
+          (person, couple, cohort, event_instance, event_series, competition, dance,
+           month, discipline)
+  )
+  select tagged.* from tagged
+  where not exists (
+    select 1 from document_node_ancestors(tagged) ancestor
+    where ancestor.id in (select id from tagged)
+  )
+  order by tagged.created_at;
+$$;
+
+comment on function document_mentions(bigint, bigint, bigint, bigint, bigint, bigint,
+                                      text, date, discipline) is '@simpleCollections only';
 
 create type outline_node_input as (
   id uuid,
@@ -115,9 +185,12 @@ begin
     ordering = excluded.ordering,
     content = excluded.content;
 
+  -- The zoomed root keeps its place in the tree: the editor only ever saw the
+  -- subtree, so the payload calls it top level.
   update document_node node set parent_id = input.parent_id
   from unnest(nodes) input
   where node.id = input.id
+    and node.id is distinct from root
     and node.parent_id is distinct from input.parent_id;
 
   delete from document_node
@@ -133,7 +206,42 @@ $$;
 comment on function save_outline(uuid, bigint, outline_node_input[]) is
   'Saves one subtree of the tenant outline, rejecting a save based on a stale version.';
 
+-- Appending a single node does not need the caller to hold the tree, so a quick
+-- add from a page that only shows mentions never has to load the outline. It
+-- still bumps the version: an editor that has the tree open must refetch rather
+-- than delete a node it never saw.
+create function add_outline_node(parent uuid, content jsonb)
+  returns document_node
+  language plpgsql
+as $$
+declare
+  target document;
+  added document_node;
+begin
+  target := app_private.ensure_tenant_document(1);
+
+  insert into document_node (document_id, parent_id, ordering, content)
+  select target.id, parent, coalesce(max(sibling.ordering), 0) + 1, add_outline_node.content
+  from document_node sibling
+  where sibling.document_id = target.id
+    and sibling.parent_id is not distinct from parent
+  returning * into added;
+
+  update document set version = version + 1 where id = target.id;
+  return added;
+end;
+$$;
+
+comment on function add_outline_node(uuid, jsonb) is
+  'Appends one node under `parent`, or at the top level when it is null.';
+
+grant execute on function app_private.ensure_tenant_document(bigint) to anonymous;
 grant execute on function tenant_document() to anonymous;
+grant execute on function document_node_subtree(document_node) to anonymous;
+grant execute on function document_node_ancestors(document_node) to anonymous;
 grant execute on function document_subtree(uuid) to anonymous;
 grant execute on function document_node_path(uuid) to anonymous;
+grant execute on function document_mentions(bigint, bigint, bigint, bigint, bigint,
+  bigint, text, date, discipline) to anonymous;
 grant execute on function save_outline(uuid, bigint, outline_node_input[]) to anonymous;
+grant execute on function add_outline_node(uuid, jsonb) to anonymous;

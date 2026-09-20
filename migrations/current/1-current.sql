@@ -95,13 +95,13 @@ create table if not exists document_node_tag (
 
 -- Composite keys otherwise surface as tenantCohort, documentNodesByTenantIdAndDocumentId
 -- and the like, so each relation is named the way the rest of the schema names them.
--- Writes go through upsert_document, and nodes and tags are only ever reached
--- from a document or from a tagged entity, so the generated surface is cut back
--- to what is actually called.
+-- Writes go through save_outline and add_outline_node, and nodes and tags are
+-- only ever reached from a document or from a tagged entity, so the generated
+-- surface is cut back to what is actually called.
 comment on table document is '@simpleCollections only
 @behavior -insert -update -query:resource:list -query:resource:connection';
 comment on table document_node is '@simpleCollections only
-@behavior -insert -update -delete -query:resource:single -query:resource:list -query:resource:connection';
+@behavior -insert -update -delete -connection -query:resource:single -query:resource:list';
 comment on table document_node_tag is '@simpleCollections only
 @behavior -insert -update -delete -query:resource:single -query:resource:list -query:resource:connection';
 

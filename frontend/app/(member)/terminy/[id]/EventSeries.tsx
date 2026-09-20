@@ -8,6 +8,7 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { TabMenu } from '@/ui/TabMenu';
+import { OutlineMentions } from '@/ui/OutlineMentions';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
@@ -65,6 +66,7 @@ export function EventSeries({
     <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
       <PageHeader title={title} />
       <FormError error={error} />
+      <OutlineMentions subject={{ kind: 'series', id: series.id, label: title }} />
       {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
       {tabs.length > 0 ? (
         <div className="max-w-full">

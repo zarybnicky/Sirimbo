@@ -8,7 +8,7 @@ import {
 import { FormError } from '@/ui/form';
 import { useTagCandidates } from '@/ui/fields/outline/candidates';
 import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
-import type { OutlineRow } from '@/ui/fields/outline/blocks';
+import { nodeToRow, type OutlineRow } from '@/ui/fields/outline/blocks';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 
@@ -29,12 +29,7 @@ export function OutlinePane({ root, editable }: { root?: string; editable: boole
 
   const rows = React.useMemo<OutlineRow[]>(
     () =>
-      (data?.documentSubtreeList ?? []).map((node) => ({
-        id: node.id,
-        parentId: node.parentId ?? null,
-        ordering: Number(node.ordering),
-        content: node.content,
-      })),
+      (data?.documentSubtreeList ?? []).map(nodeToRow),
     [data],
   );
 
@@ -50,7 +45,7 @@ export function OutlinePane({ root, editable }: { root?: string; editable: boole
           id: row.id,
           parentId: row.parentId,
           ordering: row.ordering.toString(),
-          content: row.content,
+          content: JSON.stringify(row.content),
         })),
       },
     });

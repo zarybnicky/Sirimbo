@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
-import { blocksToRows, nodeText, rowsToBlocks, type OutlineRow } from './blocks.ts';
+import {
+  blocksToRows,
+  nodeText,
+  nodeToRow,
+  rowsToBlocks,
+  type OutlineRow,
+} from './blocks.ts';
 
 const text = (value: string) => [{ type: 'text', text: value, styles: {} }];
 
@@ -91,12 +97,48 @@ describe('outline blocks', () => {
   test('an empty outline seeds one item, since BlockNote will not mount on nothing', () => {
     assert.deepEqual(rowsToBlocks([]), [{ type: 'bulletListItem' }]);
   });
+
+  test('a subtree renders from its own root, whose parent is outside the excerpt', () => {
+    const rows: OutlineRow[] = [
+      { id: 'c', parentId: 'b', ordering: 1, content: block('c', text('root')) },
+      { id: 'e', parentId: 'c', ordering: 1, content: block('e', text('under it')) },
+    ];
+
+    assert.deepEqual(
+      blocksToRows(rowsToBlocks(rows) as unknown as Fixture[]).map((row) => [
+        row.id,
+        row.parentId,
+      ]),
+      [
+        ['c', null],
+        ['e', 'c'],
+      ],
+    );
+  });
+});
+
+describe('rows off the wire', () => {
+  test('content arrives as a JSON string, since that is how the API sends it', () => {
+    const node = block('c', text('Warm-up'));
+
+    assert.deepEqual(nodeToRow({ id: 'c', parentId: null, ordering: '3', content: JSON.stringify(node) }), {
+      id: 'c',
+      parentId: null,
+      ordering: 3,
+      content: node,
+    });
+  });
+
+  test('a null parent comes back as null, not undefined', () => {
+    assert.equal(nodeToRow({ id: 'c', ordering: 1, content: '{}' }).parentId, null);
+  });
 });
 
 describe('node text', () => {
   test('reads text and tag labels, for breadcrumbs', () => {
     const node = block('c', [...text('Work on '), tag('dance', 'W', 'Waltz')]);
     assert.equal(nodeText(node), 'Work on Waltz');
+    assert.equal(nodeText(JSON.stringify(node)), 'Work on Waltz');
   });
 
   test('falls back to the reference when a tag has no label', () => {

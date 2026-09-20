@@ -26,6 +26,30 @@ query OutlineBreadcrumb($node: UUID!) {
   }
 }
 
+query OutlineMentions(
+  $person: BigInt
+  $couple: BigInt
+  $cohort: BigInt
+  $eventInstance: BigInt
+  $eventSeries: BigInt
+) {
+  documentMentionsList(
+    person: $person
+    couple: $couple
+    cohort: $cohort
+    eventInstance: $eventInstance
+    eventSeries: $eventSeries
+  ) {
+    ...OutlineNode
+    ancestorsList {
+      ...OutlineNode
+    }
+    subtreeList {
+      ...OutlineNode
+    }
+  }
+}
+
 query TagDances {
   dancesList(orderBy: [NAME_ASC]) {
     code
@@ -39,6 +63,14 @@ mutation SaveOutline($input: SaveOutlineInput!) {
     document {
       id
       version
+    }
+  }
+}
+
+mutation AddOutlineNode($input: AddOutlineNodeInput!) {
+  addOutlineNode(input: $input) {
+    documentNode {
+      ...OutlineNode
     }
   }
 }

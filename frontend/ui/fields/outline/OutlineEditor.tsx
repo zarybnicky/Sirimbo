@@ -37,6 +37,14 @@ export function OutlineEditor({
     initialContent,
   });
 
+  // A view only editor has no caret to protect, so it follows the rows it is
+  // given; an editable one would fight whoever is typing.
+  React.useEffect(() => {
+    if (!editable) {
+      editor.replaceBlocks(editor.document, rowsToBlocks(rows));
+    }
+  }, [editable, editor, rows]);
+
   const insertTag = React.useCallback(
     (candidate: TagCandidate) => {
       editor.insertInlineContent([
