@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
-import { blocksToRows, rowsToBlocks, type OutlineRow } from './blocks.ts';
+import { blocksToRows, nodeText, rowsToBlocks, type OutlineRow } from './blocks.ts';
 
 const text = (value: string) => [{ type: 'text', text: value, styles: {} }];
 
@@ -90,5 +90,20 @@ describe('outline blocks', () => {
 
   test('an empty outline seeds one item, since BlockNote will not mount on nothing', () => {
     assert.deepEqual(rowsToBlocks([]), [{ type: 'bulletListItem' }]);
+  });
+});
+
+describe('node text', () => {
+  test('reads text and tag labels, for breadcrumbs', () => {
+    const node = block('c', [...text('Work on '), tag('dance', 'W', 'Waltz')]);
+    assert.equal(nodeText(node), 'Work on Waltz');
+  });
+
+  test('falls back to the reference when a tag has no label', () => {
+    assert.equal(nodeText(block('m', [tag('month', '2026-10-01', '')])), '2026-10-01');
+  });
+
+  test('is empty for a block with no inline content', () => {
+    assert.equal(nodeText({ type: 'image', props: {} }), '');
   });
 });

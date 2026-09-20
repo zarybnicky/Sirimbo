@@ -146,6 +146,12 @@ export function useMemberMenu(): MenuStructItem[] {
           href: '/admin/tenants',
           requireSystemAdmin: true,
         },
+        {
+          type: 'link',
+          title: 'Outline',
+          href: '/outline',
+          requireSystemAdmin: true,
+        },
       ],
     },
   ];

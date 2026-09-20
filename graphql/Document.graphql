@@ -1,17 +1,3 @@
-fragment DocumentNodeTag on DocumentNodeTag {
-  __typename
-  id
-  personId
-  coupleId
-  cohortId
-  eventInstanceId
-  eventSeriesId
-  competitionId
-  danceCode
-  taggedMonth
-  discipline
-}
-
 fragment OutlineNode on DocumentNode {
   __typename
   id

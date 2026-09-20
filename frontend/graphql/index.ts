@@ -2580,7 +2580,6 @@ export type Document = {
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `DocumentNode`. */
   nodesList: Array<DocumentNode>;
-  showToMembers: Scalars['Boolean']['output'];
   tenantId: Scalars['BigInt']['output'];
   title: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['Datetime']['output'];
@@ -2606,8 +2605,6 @@ export type DocumentCondition = {
   createdBy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `showToMembers` field. */
-  showToMembers?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `title` field. */
@@ -2813,8 +2810,6 @@ export type DocumentsOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'SHOW_TO_MEMBERS_ASC'
-  | 'SHOW_TO_MEMBERS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TITLE_ASC'
@@ -9887,7 +9882,6 @@ export type GraphCacheResolvers = {
     createdBy?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     nodesList?: GraphCacheResolver<WithTypename<Document>, DocumentNodesListArgs, Array<WithTypename<DocumentNode> | string>>,
-    showToMembers?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     title?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['String']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Document>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -11632,7 +11626,6 @@ export type GraphCacheUpdaters = {
     createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     nodesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, DocumentNodesListArgs>,
-    showToMembers?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     title?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Document>>, Record<string, never>>,

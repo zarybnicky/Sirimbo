@@ -12,7 +12,6 @@ create table if not exists document (
   title text,
   created_by bigint default current_user_id(),
   version bigint not null default 1,
-  show_to_members boolean not null default false,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now(),
 

@@ -58,3 +58,17 @@ export function rowsToBlocks(rows: OutlineRow[]): PartialBlock[] {
   // BlockNote will not mount on an empty document.
   return blocks.length > 0 ? blocks : [{ type: 'bulletListItem' }];
 }
+
+// Enough of a node to label it in a breadcrumb or a list.
+export function nodeText(content: Record<string, unknown>): string {
+  const inline = content.content;
+  if (!Array.isArray(inline)) {
+    return '';
+  }
+  return inline
+    .map((part: { type?: string; text?: string; props?: { label?: string; refId?: string } }) =>
+      part.type === 'text' ? (part.text ?? '') : (part.props?.label || part.props?.refId || ''),
+    )
+    .join('')
+    .trim();
+}
