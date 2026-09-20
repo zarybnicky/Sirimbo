@@ -6,6 +6,25 @@ fragment OutlineNode on DocumentNode {
   content
 }
 
+# A tag marks the node it sits on together with everything under it, so a mention
+# carries that subtree and the trail of where it sits.
+fragment DocumentMention on DocumentNodeTag {
+  __typename
+  id
+  cohortId
+  eventInstanceId
+  eventSeriesId
+  node {
+    ...OutlineNode
+    ancestorsList {
+      ...OutlineNode
+    }
+    subtreeList {
+      ...OutlineNode
+    }
+  }
+}
+
 query TenantOutline {
   tenantDocument {
     id
@@ -26,30 +45,6 @@ query OutlineBreadcrumb($node: UUID!) {
   }
 }
 
-query OutlineMentions(
-  $person: BigInt
-  $couple: BigInt
-  $cohort: BigInt
-  $eventInstance: BigInt
-  $eventSeries: BigInt
-) {
-  documentMentionsList(
-    person: $person
-    couple: $couple
-    cohort: $cohort
-    eventInstance: $eventInstance
-    eventSeries: $eventSeries
-  ) {
-    ...OutlineNode
-    ancestorsList {
-      ...OutlineNode
-    }
-    subtreeList {
-      ...OutlineNode
-    }
-  }
-}
-
 query TagDances {
   dancesList(orderBy: [NAME_ASC]) {
     code
@@ -67,10 +62,18 @@ mutation SaveOutline($input: SaveOutlineInput!) {
   }
 }
 
+# The tags come back so the cache knows whose mention list just grew.
 mutation AddOutlineNode($input: AddOutlineNodeInput!) {
   addOutlineNode(input: $input) {
     documentNode {
       ...OutlineNode
+      tagsList {
+        __typename
+        id
+        cohortId
+        eventInstanceId
+        eventSeriesId
+      }
     }
   }
 }

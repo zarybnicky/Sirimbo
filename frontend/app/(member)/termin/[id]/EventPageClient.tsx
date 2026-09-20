@@ -150,7 +150,10 @@ export function EventPageClient({
           />
         )}
         {instance && (
-          <OutlineMentions subject={{ kind: 'event', id: instance.id, label: title }} />
+          <OutlineMentions
+            subject={{ kind: 'event', id: instance.id, label: title }}
+            tags={instance.documentNodeTagsList}
+          />
         )}
         {!fetching && !instance && (
           <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">

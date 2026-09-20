@@ -5967,7 +5967,6 @@ export type Query = {
   document: Maybe<Document>;
   /** Get a single `Document`. */
   documentByTenantId: Maybe<Document>;
-  documentMentionsList: Maybe<Array<DocumentNode>>;
   documentNodePathList: Maybe<Array<DocumentNode>>;
   documentSubtreeList: Maybe<Array<DocumentNode>>;
   /** Get a single `EventInstance`. */
@@ -6254,22 +6253,6 @@ export type QueryDocumentArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryDocumentByTenantIdArgs = {
   tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDocumentMentionsListArgs = {
-  cohort?: InputMaybe<Scalars['BigInt']['input']>;
-  competition?: InputMaybe<Scalars['BigInt']['input']>;
-  couple?: InputMaybe<Scalars['BigInt']['input']>;
-  dance?: InputMaybe<Scalars['String']['input']>;
-  discipline?: InputMaybe<Discipline>;
-  eventInstance?: InputMaybe<Scalars['BigInt']['input']>;
-  eventSeries?: InputMaybe<Scalars['BigInt']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  month?: InputMaybe<Scalars['Date']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  person?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 
@@ -9355,7 +9338,6 @@ export type GraphCacheResolvers = {
     dancesList?: GraphCacheResolver<WithTypename<Query>, QueryDancesListArgs, Array<WithTypename<Dance> | string>>,
     document?: GraphCacheResolver<WithTypename<Query>, QueryDocumentArgs, WithTypename<Document> | string>,
     documentByTenantId?: GraphCacheResolver<WithTypename<Query>, QueryDocumentByTenantIdArgs, WithTypename<Document> | string>,
-    documentMentionsList?: GraphCacheResolver<WithTypename<Query>, QueryDocumentMentionsListArgs, Array<WithTypename<DocumentNode> | string>>,
     documentNodePathList?: GraphCacheResolver<WithTypename<Query>, QueryDocumentNodePathListArgs, Array<WithTypename<DocumentNode> | string>>,
     documentSubtreeList?: GraphCacheResolver<WithTypename<Query>, QueryDocumentSubtreeListArgs, Array<WithTypename<DocumentNode> | string>>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
@@ -11023,7 +11005,6 @@ export type GraphCacheUpdaters = {
     dancesList?: GraphCacheUpdateResolver<{ dancesList: Maybe<Array<WithTypename<Dance>>> }, QueryDancesListArgs>,
     document?: GraphCacheUpdateResolver<{ document: Maybe<WithTypename<Document>> }, QueryDocumentArgs>,
     documentByTenantId?: GraphCacheUpdateResolver<{ documentByTenantId: Maybe<WithTypename<Document>> }, QueryDocumentByTenantIdArgs>,
-    documentMentionsList?: GraphCacheUpdateResolver<{ documentMentionsList: Maybe<Array<WithTypename<DocumentNode>>> }, QueryDocumentMentionsListArgs>,
     documentNodePathList?: GraphCacheUpdateResolver<{ documentNodePathList: Maybe<Array<WithTypename<DocumentNode>>> }, QueryDocumentNodePathListArgs>,
     documentSubtreeList?: GraphCacheUpdateResolver<{ documentSubtreeList: Maybe<Array<WithTypename<DocumentNode>>> }, QueryDocumentSubtreeListArgs>,
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,

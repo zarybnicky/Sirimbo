@@ -7253,23 +7253,6 @@ type Query {
 
   """Get a single `Document`."""
   documentByTenantId(tenantId: BigInt!): Document
-  documentMentionsList(
-    cohort: BigInt
-    competition: BigInt
-    couple: BigInt
-    dance: String
-    discipline: Discipline
-    eventInstance: BigInt
-    eventSeries: BigInt
-
-    """Only read the first `n` values of the set."""
-    first: Int
-    month: Date
-
-    """Skip the first `n` values."""
-    offset: Int
-    person: BigInt
-  ): [DocumentNode!]
   documentNodePathList(
     """Only read the first `n` values of the set."""
     first: Int

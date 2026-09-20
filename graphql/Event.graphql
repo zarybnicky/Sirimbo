@@ -27,6 +27,9 @@ query EventSeries($id: BigInt!) {
   eventSeries(id: $id) {
     id
     name
+    documentNodeTagsList(orderBy: [CREATED_AT_ASC]) {
+      ...DocumentMention
+    }
     eventsList(condition: { parentId: null }, orderBy: SINCE_ASC) {
       ...EventInstance
     }
@@ -244,6 +247,9 @@ query EventPayments($id: BigInt!) {
 fragment EventPage on EventInstance {
   ...EventWithTrainer
   description
+  documentNodeTagsList(orderBy: [CREATED_AT_ASC]) {
+    ...DocumentMention
+  }
   externalRegistrations: eventExternalRegistrationsByInstanceIdList {
     ...EventExternalRegistration
   }

@@ -66,7 +66,10 @@ export function EventSeries({
     <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
       <PageHeader title={title} />
       <FormError error={error} />
-      <OutlineMentions subject={{ kind: 'series', id: series.id, label: title }} />
+      <OutlineMentions
+        subject={{ kind: 'series', id: series.id, label: title }}
+        tags={series.documentNodeTagsList}
+      />
       {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
       {tabs.length > 0 ? (
         <div className="max-w-full">

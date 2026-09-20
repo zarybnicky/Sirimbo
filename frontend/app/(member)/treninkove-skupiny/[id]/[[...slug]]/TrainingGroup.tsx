@@ -59,6 +59,7 @@ export function TrainingGroup({
 
       <OutlineMentions
         subject={{ kind: 'cohort', id: cohort.id, label: cohort.name }}
+        tags={cohort.documentNodeTagsList}
       />
 
 

@@ -41,6 +41,9 @@ fragment CstsProgressRecord on PersonCstsProgressRecord {
 query CohortWithMembers($id: BigInt!) {
   entity: cohort(id: $id) {
     ...Cohort
+    documentNodeTagsList(orderBy: [CREATED_AT_ASC]) {
+      ...DocumentMention
+    }
     cohortMembershipsList(condition: {status: ACTIVE}) {
       ...CohortMembership
       person {

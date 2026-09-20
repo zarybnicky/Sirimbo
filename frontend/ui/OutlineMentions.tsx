@@ -1,62 +1,56 @@
 'use client';
 
-import { AddOutlineNodeDocument, OutlineMentionsDocument } from '@/graphql/Document';
+import { AddOutlineNodeDocument, type DocumentMentionFragment } from '@/graphql/Document';
 import { useAuth } from '@/lib/auth';
 import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
 import { nodeText, nodeToRow } from '@/ui/fields/outline/blocks';
+import type { TagKind } from '@/ui/fields/outline/tag-inline';
 import { buttonCls, typographyCls } from '@/ui/style';
 import Link from 'next/link';
 import React from 'react';
-import { useMutation, useQuery } from 'urql';
-
-// The tag kinds that have a page to hang a mention list off. The editor names a
-// tag by its kind; the query names the column that kind is projected into.
-const SUBJECT_ARGUMENT = {
-  person: 'person',
-  couple: 'couple',
-  cohort: 'cohort',
-  event: 'eventInstance',
-  series: 'eventSeries',
-} as const;
+import { useMutation } from 'urql';
 
 export type OutlineSubject = {
-  kind: keyof typeof SUBJECT_ARGUMENT;
+  kind: Extract<TagKind, 'cohort' | 'event' | 'series'>;
   id: string;
   label: string;
 };
 
-// A tag covers the node it sits on together with everything under it, so each
-// mention is shown as that whole subtree, preceded by where it sits in the
-// outline. Read only: editing happens on the outline itself.
-export function OutlineMentions({ subject }: { subject: OutlineSubject }) {
+// The tags come from the tagged entity's own query, so this only arranges them.
+// A tag covers the node it sits on together with everything under it, which is
+// why each mention is shown as that whole subtree, preceded by where it sits.
+export function OutlineMentions({
+  subject,
+  tags,
+}: {
+  subject: OutlineSubject;
+  tags: readonly DocumentMentionFragment[];
+}) {
   const auth = useAuth();
-  const [{ data }, refetch] = useQuery({
-    query: OutlineMentionsDocument,
-    variables: { [SUBJECT_ARGUMENT[subject.kind]]: subject.id },
-    pause: !auth.isSystemAdmin,
-  });
   const [addState, add] = useMutation(AddOutlineNodeDocument);
 
-  // Stable across renders: the view only editor follows the rows it is handed,
-  // so a fresh array each render would have it replace its content on every one.
-  const mentions = React.useMemo(
-    () =>
-      (data?.documentMentionsList ?? []).map((mention) => ({
-        id: mention.id,
-        ancestors: mention.ancestorsList ?? [],
-        rows: (mention.subtreeList ?? []).map(nodeToRow),
-      })),
-    [data],
-  );
+  const mentions = React.useMemo(() => {
+    const nodes = tags.map((tag) => tag.node).filter((node) => node !== null);
+    const tagged = new Set(nodes.map((node) => node.id));
+
+    // A node whose ancestor carries the same tag is already on screen inside it.
+    return nodes
+      .filter((node) => !node.ancestorsList?.some((ancestor) => tagged.has(ancestor.id)))
+      .map((node) => ({
+        id: node.id,
+        ancestors: node.ancestorsList ?? [],
+        rows: (node.subtreeList ?? []).map(nodeToRow),
+      }));
+  }, [tags]);
 
   if (!auth.isSystemAdmin) {
     return null;
   }
 
-  // The new node carries the tag inline; the database projects it back out, so
-  // the note appears here on the next read without anything else being written.
-  const addNote = async () => {
-    await add({
+  // The tag rides inside the new node's content; the database projects it back
+  // out, so nothing else has to be written to make the note show up here.
+  const addNote = () =>
+    add({
       input: {
         parent: null,
         content: JSON.stringify({
@@ -72,8 +66,6 @@ export function OutlineMentions({ subject }: { subject: OutlineSubject }) {
         }),
       },
     });
-    refetch({ requestPolicy: 'network-only' });
-  };
 
   return (
     <div className="grid gap-4">
@@ -94,7 +86,10 @@ export function OutlineMentions({ subject }: { subject: OutlineSubject }) {
       )}
 
       {mentions.map((mention) => (
-        <article key={mention.id} className="rounded-lg border border-neutral-4 bg-neutral-2 p-3">
+        <article
+          key={mention.id}
+          className="rounded-lg border border-neutral-4 bg-neutral-2 p-3"
+        >
           <nav className="mb-1 flex flex-wrap items-center gap-1 text-xs text-neutral-11">
             {mention.ancestors.map((ancestor) => (
               <React.Fragment key={ancestor.id}>

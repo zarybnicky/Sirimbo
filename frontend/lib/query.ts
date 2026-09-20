@@ -226,6 +226,22 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   },
   updates: {
     Mutation: {
+      // A normalized cache cannot know that a new tag belongs in a list it
+      // already holds, so the tagged entity's mention list is invalidated. The
+      // tags come from the database's own projection of the node's content.
+      addOutlineNode(result, _args, cache, _info) {
+        for (const tag of result.addOutlineNode?.documentNode?.tagsList ?? []) {
+          for (const [__typename, id] of [
+            ['Cohort', tag.cohortId],
+            ['EventInstance', tag.eventInstanceId],
+            ['EventSeries', tag.eventSeriesId],
+          ] as const) {
+            if (id) {
+              cache.invalidate({ __typename, id }, 'documentNodeTagsList');
+            }
+          }
+        }
+      },
       createMembershipApplication(_result, _args, cache, _info) {
         cache.invalidate('Query', 'membershipApplicationsList');
       },

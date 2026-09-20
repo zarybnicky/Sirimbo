@@ -1,4 +1,5 @@
 drop function if exists save_outline;
+drop function if exists document_mentions;
 drop function if exists add_outline_node;
 drop type if exists outline_node_input;
 
@@ -97,48 +98,6 @@ as $$
 $$;
 
 comment on function document_node_path(uuid) is '@simpleCollections only';
-
--- The nodes tagged with one subject, outermost first and never nested inside
--- one another: a tag already covers the whole subtree under it, so a node whose
--- ancestor carries the same tag would only be shown twice.
---
--- A tag row holds exactly one reference, so row equality matches a single
--- subject; passing two filters at once asks for a tag that cannot exist and
--- correctly returns nothing.
-create or replace function document_mentions(
-  person bigint default null,
-  couple bigint default null,
-  cohort bigint default null,
-  event_instance bigint default null,
-  event_series bigint default null,
-  competition bigint default null,
-  dance text default null,
-  month date default null,
-  discipline discipline default null
-) returns setof document_node
-  language sql stable
-as $$
-  with tagged as (
-    select node.*
-    from document_node node
-    join document_node_tag tag on tag.node_id = node.id
-    where (tag.person_id, tag.couple_id, tag.cohort_id, tag.event_instance_id,
-           tag.event_series_id, tag.competition_id, tag.dance_code, tag.tagged_month,
-           tag.discipline)
-          is not distinct from
-          (person, couple, cohort, event_instance, event_series, competition, dance,
-           month, discipline)
-  )
-  select tagged.* from tagged
-  where not exists (
-    select 1 from document_node_ancestors(tagged) ancestor
-    where ancestor.id in (select id from tagged)
-  )
-  order by tagged.created_at;
-$$;
-
-comment on function document_mentions(bigint, bigint, bigint, bigint, bigint, bigint,
-                                      text, date, discipline) is '@simpleCollections only';
 
 create type outline_node_input as (
   id uuid,
@@ -241,7 +200,5 @@ grant execute on function document_node_subtree(document_node) to anonymous;
 grant execute on function document_node_ancestors(document_node) to anonymous;
 grant execute on function document_subtree(uuid) to anonymous;
 grant execute on function document_node_path(uuid) to anonymous;
-grant execute on function document_mentions(bigint, bigint, bigint, bigint, bigint,
-  bigint, text, date, discipline) to anonymous;
 grant execute on function save_outline(uuid, bigint, outline_node_input[]) to anonymous;
 grant execute on function add_outline_node(uuid, jsonb) to anonymous;
