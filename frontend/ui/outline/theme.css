@@ -31,3 +31,64 @@
 .bn-outline .bn-editor {
   padding-inline: 0;
 }
+
+/* Folding. The control goes inside bn-block-content, beside the inline content,
+   which is where BlockNote puts its own toggle — the list markers are drawn by
+   rules wanting `.bn-block > .bn-block-content` as a direct child, so that div
+   has to stay exactly where it is. */
+.bn-outline .outline-foldable {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.bn-outline .outline-fold {
+  /* No gutter on a leaf; where there is one it is always reserved, so the text
+     does not jump when the chevron fades in on hover. */
+  flex: 0 0 0;
+  overflow: hidden;
+  height: 1.4rem;
+  opacity: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--color-neutral-10);
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+.bn-outline .outline-fold::before {
+  content: '▶';
+  font-size: 0.55rem;
+  line-height: 1.4rem;
+  display: block;
+  transition: transform 120ms ease;
+}
+
+.bn-outline .outline-foldable[data-folded='false'] .outline-fold::before {
+  transform: rotate(90deg);
+}
+
+.bn-outline .bn-block:has(> .bn-block-group) > .bn-block-content .outline-fold {
+  flex-basis: 0.9rem;
+}
+
+/* Only where there is something to fold, and always once it is folded. */
+.bn-outline .bn-block:has(> .bn-block-group):hover > .bn-block-content .outline-fold,
+.bn-outline .outline-foldable[data-folded='true'] .outline-fold {
+  opacity: 1;
+}
+
+.bn-outline
+  .bn-block:has(> .bn-block-content > .outline-foldable[data-folded='true'])
+  > .bn-block-group {
+  display: none;
+}
+
+/* A folded item has to read as more than a leaf, so its marker gets a ring. */
+.bn-outline
+  .bn-block:has(> .bn-block-content > .outline-foldable[data-folded='true'])
+  > .bn-block-content::before {
+  border-radius: 9999px;
+  box-shadow: 0 0 0 0.2rem var(--color-neutral-5, rgb(0 0 0 / 12%));
+}

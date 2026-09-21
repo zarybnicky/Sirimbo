@@ -105,7 +105,14 @@ export function OutlineEditor({
 
       // Groups have to stay contiguous: the menu keys its sections by group
       // name, so appending would open a second "Media" section and collide.
-      const items = getDefaultReactSlashMenuItems(editor);
+      // Every list item folds now, so the toggle block is a second way to do
+      // the same thing. The type stays in the schema for content that has one.
+      // Matched through the dictionary the item was built from: the React
+      // variant of a menu item drops the stable key and keeps only the title.
+      const toggleTitle = editor.dictionary.slash_menu.toggle_list.title;
+      const items = getDefaultReactSlashMenuItems(editor).filter(
+        (item) => item.title !== toggleTitle,
+      );
       const lastOfGroup = items.findLastIndex((item) => item.group === youtube.group);
       items.splice(lastOfGroup === -1 ? items.length : lastOfGroup + 1, 0, youtube);
 
