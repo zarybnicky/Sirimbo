@@ -1,4 +1,3 @@
-import { BlockNoteSchema, defaultInlineContentSpecs } from '@blocknote/core';
 import { createReactInlineContentSpec } from '@blocknote/react';
 
 export type TagKind =
@@ -63,7 +62,3 @@ export const Tag = createReactInlineContentSpec(
     ),
   },
 );
-
-export const outlineSchema = BlockNoteSchema.create({
-  inlineContentSpecs: { ...defaultInlineContentSpecs, tag: Tag },
-});

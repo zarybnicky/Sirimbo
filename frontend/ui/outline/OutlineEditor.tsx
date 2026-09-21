@@ -1,13 +1,19 @@
 'use client';
 
 import { cn } from '@/lib/cn';
+import { filterSuggestionItems } from '@blocknote/core';
 import { BlockNoteView } from '@blocknote/ariakit';
-import { SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
+import {
+  getDefaultReactSlashMenuItems,
+  SuggestionMenuController,
+  useCreateBlockNote,
+} from '@blocknote/react';
 import React from 'react';
 import { blocksToRows, rowsToBlocks, type OutlineRow } from './blocks.ts';
 import type { TagCandidate } from './candidates.ts';
 import { pauseHiddenMedia } from './pause-hidden-media.ts';
-import { outlineSchema, TAG_PREFIX } from './tags.tsx';
+import { outlineSchema } from './schema.tsx';
+import { TAG_PREFIX } from './tags.tsx';
 import '@blocknote/core/style.css';
 import '@blocknote/ariakit/style.css';
 import './theme.css';
@@ -78,6 +84,36 @@ export function OutlineEditor({
     [editor],
   );
 
+  // The default menu knows nothing about a block added here, so this one
+  // replaces it — hence `slashMenu={false}` on the view below, or the two would
+  // both claim the trigger and neither would open.
+  const slashItems = React.useCallback(
+    async (query: string) => {
+      // The block asks for the link itself; a URL typed into the query here
+      // would not survive, since its own slashes and colon re-trigger the menu.
+      const youtube = {
+        title: 'YouTube',
+        subtext: 'Vložit video',
+        group: 'Media',
+        onItemClick: () =>
+          editor.insertBlocks(
+            [{ type: 'youtube' }],
+            editor.getTextCursorPosition().block,
+            'after',
+          ),
+      };
+
+      // Groups have to stay contiguous: the menu keys its sections by group
+      // name, so appending would open a second "Media" section and collide.
+      const items = getDefaultReactSlashMenuItems(editor);
+      const lastOfGroup = items.findLastIndex((item) => item.group === youtube.group);
+      items.splice(lastOfGroup === -1 ? items.length : lastOfGroup + 1, 0, youtube);
+
+      return filterSuggestionItems(items, query);
+    },
+    [editor],
+  );
+
   const items = React.useCallback(
     async (char: string, query: string) => {
       const found = await (candidates?.(char, query) ?? []);
@@ -95,8 +131,19 @@ export function OutlineEditor({
       editor={editor}
       editable={editable}
       className={cn('bn-outline', className)}
+      slashMenu={false}
       onChange={() => onChange?.(blocksToRows(editor.document))}
     >
+      {editable && (
+        <SuggestionMenuController
+          triggerCharacter="/"
+          getItems={slashItems}
+          // What the default controller does, kept: `/` in a table cell is text.
+          shouldOpen={({ selection }) =>
+            !selection.$from.parent.type.isInGroup('tableContent')
+          }
+        />
+      )}
       {editable && candidates && (
         <>
           <SuggestionMenuController

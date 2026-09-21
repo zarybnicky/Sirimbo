@@ -24,7 +24,20 @@ export function pauseHiddenMedia(root: HTMLElement): () => void {
 // block group beside it.
 function pauseWithin(wrapper: HTMLElement) {
   const hidden = wrapper.closest('.bn-block')?.querySelector(':scope > .bn-block-group');
-  for (const media of hidden?.querySelectorAll('video, audio') ?? []) {
+  if (!hidden) {
+    return;
+  }
+
+  for (const media of hidden.querySelectorAll('video, audio')) {
     (media as HTMLMediaElement).pause();
+  }
+
+  // An embed is someone else's document, so it is asked rather than told. The
+  // player keeps its position, which tearing the iframe down would lose.
+  for (const frame of hidden.querySelectorAll('iframe')) {
+    frame.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }),
+      '*',
+    );
   }
 }
