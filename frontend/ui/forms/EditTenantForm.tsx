@@ -1,5 +1,5 @@
 import { CurrentTenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
-import { RichTextEditor } from '@/ui/fields/richtext';
+import { BlockNoteEditor } from '@/ui/fields/blocknote';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const Form = z.object({
   name: z.string(),
   bankAccount: z.string(),
+  czIco: z.string(),
+  czDic: z.string(),
   description: z.string(),
 });
 
@@ -47,7 +49,12 @@ export function EditTenantForm() {
         label="Číslo účtu"
         required
       />
-      <RichTextEditor
+      <div className="grid gap-2 sm:grid-cols-2">
+        <TextFieldElement control={control} name="czIco" label="IČO" />
+        <TextFieldElement control={control} name="czDic" label="DIČ" />
+      </div>
+      <BlockNoteEditor
+        key={data?.tenant?.id ?? 'loading'}
         control={control}
         initialState={data?.tenant?.description}
         name="description"

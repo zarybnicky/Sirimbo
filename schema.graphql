@@ -7878,7 +7878,7 @@ type SystemAdminTenantsRecord {
   bankAccount: String
   czDic: String
   czIco: String
-  description: String
+  description: JSON
   id: BigInt
   membershipCount: BigInt
   name: String
@@ -7901,7 +7901,6 @@ input SystemAdminUpdateTenantInput {
   clientMutationId: String
   czDic: String
   czIco: String
-  description: String
   name: String
   origins: [String]
   settings: JSON
@@ -8153,7 +8152,7 @@ type Tenant {
   ): [Couple!]
   czDic: String!
   czIco: String!
-  description: String!
+  description: JSON!
 
   """
   Reads and enables pagination through a set of `EventExternalRegistration`.
@@ -8965,7 +8964,7 @@ input TenantPatch {
   bankAccount: String
   czDic: String
   czIco: String
-  description: String
+  description: JSON
   id: BigInt
   name: String
   origins: [String]

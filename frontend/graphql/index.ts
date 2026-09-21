@@ -6858,7 +6858,7 @@ export type SystemAdminTenantsRecord = {
   bankAccount: Maybe<Scalars['String']['output']>;
   czDic: Maybe<Scalars['String']['output']>;
   czIco: Maybe<Scalars['String']['output']>;
-  description: Maybe<Scalars['String']['output']>;
+  description: Maybe<Scalars['JSON']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
   membershipCount: Maybe<Scalars['BigInt']['output']>;
   name: Maybe<Scalars['String']['output']>;
@@ -6880,7 +6880,6 @@ export type SystemAdminUpdateTenantInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   czDic?: InputMaybe<Scalars['String']['input']>;
   czIco?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   settings?: InputMaybe<Scalars['JSON']['input']>;
@@ -6933,7 +6932,7 @@ export type Tenant = {
   couplesList: Maybe<Array<Couple>>;
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
-  description: Scalars['String']['output'];
+  description: Scalars['JSON']['output'];
   /** Reads and enables pagination through a set of `EventExternalRegistration`. */
   eventExternalRegistrationsList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -7570,7 +7569,7 @@ export type TenantPatch = {
   bankAccount?: InputMaybe<Scalars['String']['input']>;
   czDic?: InputMaybe<Scalars['String']['input']>;
   czIco?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -10262,7 +10261,7 @@ export type GraphCacheResolvers = {
     bankAccount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
     czDic?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
-    description?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    description?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['JSON']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     membershipCount?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<SystemAdminTenantsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10293,7 +10292,7 @@ export type GraphCacheResolvers = {
     couplesList?: GraphCacheResolver<WithTypename<Tenant>, TenantCouplesListArgs, Array<WithTypename<Couple> | string>>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
-    description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
+    description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['JSON']['output'] | string>,
     eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,

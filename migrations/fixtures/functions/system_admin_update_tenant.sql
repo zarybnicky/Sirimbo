@@ -1,8 +1,10 @@
 drop function if exists system_admin_update_tenant;
+
+-- Only tenant_settings still needs a definer here: its restrictive current-tenant
+-- policy is what a cross-tenant write cannot satisfy.
 create function system_admin_update_tenant(
   tenant_id bigint,
   name text default null,
-  description text default null,
   bank_account text default null,
   origins text[] default null,
   address address_domain default null,
@@ -27,7 +29,6 @@ begin
   update tenant t
   set
     name = coalesce(system_admin_update_tenant.name, t.name),
-    description = coalesce(system_admin_update_tenant.description, t.description),
     bank_account = coalesce(system_admin_update_tenant.bank_account, t.bank_account),
     origins = coalesce(system_admin_update_tenant.origins, t.origins),
     address = coalesce(system_admin_update_tenant.address, t.address),

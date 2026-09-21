@@ -2,6 +2,8 @@ fragment Tenant on Tenant {
   id
   name
   bankAccount
+  czIco
+  czDic
   description
   tenantAdministratorsList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
     ...TenantAdministrator

@@ -1,7 +1,7 @@
 'use client';
 
 import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
-import { RichTextView } from '@/ui/RichTextView';
+import { BlockNoteDocument } from '@/ui/outline/BlockNoteDocument';
 import { PageHeader, TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { formatOpenDateRange, moneyFormatter } from '@/ui/format';
@@ -57,7 +57,7 @@ export function Club() {
     <>
       <PageHeader title="Klub" actions={tenantActions} />
 
-      <RichTextView value={tenant.tenant.description} />
+      <BlockNoteDocument value={tenant.tenant.description} editable={false} />
 
       <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
         Trenéři

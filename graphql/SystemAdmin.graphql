@@ -3,7 +3,6 @@ query SystemAdminTenants {
     nodes {
       id
       name
-      description
       bankAccount
       origins
       czIco
@@ -32,7 +31,6 @@ mutation SystemAdminUpdateTenant($input: SystemAdminUpdateTenantInput!) {
     tenant {
       id
       name
-      description
       bankAccount
       origins
       czIco

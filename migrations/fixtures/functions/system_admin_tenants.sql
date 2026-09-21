@@ -3,7 +3,7 @@ create function system_admin_tenants()
 returns table (
   id bigint,
   name text,
-  description text,
+  description jsonb,
   bank_account text,
   origins text[],
   cz_ico text,

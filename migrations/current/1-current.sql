@@ -113,5 +113,40 @@ as $$
 $$;
 grant all on function access_credential_last_used(access_credential) to anonymous;
 
+do $$
+begin
+  if (
+    select data_type from information_schema.columns
+    where table_schema = 'public' and table_name = 'tenant' and column_name = 'description'
+  ) is distinct from 'jsonb' then
+    alter table tenant alter column description drop default;
+    -- Any existing HTML is kept as literal text rather than dropped.
+    alter table tenant alter column description type jsonb using
+      case when btrim(description) = '' then '[]'::jsonb
+      else jsonb_build_array(jsonb_build_object(
+        'type', 'paragraph',
+        'content', jsonb_build_array(jsonb_build_object(
+          'type', 'text', 'text', description, 'styles', jsonb_build_object()))))
+      end;
+    alter table tenant alter column description set default '[]'::jsonb;
+  end if;
+end;
+$$;
+
+revoke all on table tenant from anonymous;
+grant select on table tenant to anonymous;
+grant update (name, description, bank_account, cz_ico, cz_dic, address)
+  on table tenant to administrator;
+-- findTenantId resolves hostnames against origins, so a club cannot set its own.
+grant update (origins) on table tenant to system_admin;
+
+select app_private.drop_policies('public.tenant');
+
+create policy public_view on tenant for select to anonymous using (true);
+create policy admin_all on tenant to administrator
+  using (id = current_tenant_id()) with check (id = current_tenant_id());
+create policy system_admin_all on tenant to system_admin
+  using (true) with check (true);
+
 --!include functions/system_admin_tenants.sql
 --!include functions/system_admin_update_tenant.sql

@@ -1,8 +1,9 @@
 'use client';
 
-import { AddressDomain, SystemAdminTenantsRecord } from '@/graphql';
+import { AddressDomain } from '@/graphql';
 import {
   SystemAdminTenantsDocument,
+  type SystemAdminTenantsQuery,
   SystemAdminUpdateTenantDocument,
 } from '@/graphql/SystemAdmin';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -36,7 +37,11 @@ function useMediaQuery(query: string) {
 
 const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
 
-const columns: Column<SystemAdminTenantsRecord>[] = [
+type TenantRow = NonNullable<
+  SystemAdminTenantsQuery['systemAdminTenants']
+>['nodes'][number];
+
+const columns: Column<TenantRow>[] = [
   {
     key: '__actions',
     name: '',
@@ -173,7 +178,6 @@ export function Tenants() {
 
 const TenantFormSchema = z.object({
   name: z.string().min(1, 'Název je povinný'),
-  description: z.string().optional(),
   bankAccount: z.string().optional(),
   origins: z.string().optional(),
   czIco: z.string().optional(),
@@ -191,7 +195,7 @@ const TenantFormSchema = z.object({
 type TenantFormValues = z.infer<typeof TenantFormSchema>;
 
 type TenantCardProps = {
-  tenant: SystemAdminTenantsRecord;
+  tenant: TenantRow;
 };
 
 function TenantCard({ tenant }: TenantCardProps) {
@@ -202,12 +206,6 @@ function TenantCard({ tenant }: TenantCardProps) {
       <div className="flex items-center justify-between">
         <div className="text-base font-semibold">{tenant.name}</div>
       </div>
-
-      {tenant.description && (
-        <p className="whitespace-pre-wrap text-sm text-neutral-12">
-          {tenant.description}
-        </p>
-      )}
 
       <dl className="text-sm text-neutral-12">
         <dt>Bankovní účet</dt>
@@ -227,7 +225,7 @@ function TenantCard({ tenant }: TenantCardProps) {
 }
 
 type TenantEditDialogProps = {
-  tenant: SystemAdminTenantsRecord;
+  tenant: TenantRow;
 };
 
 function TenantEditDialog({ tenant }: TenantEditDialogProps) {
@@ -252,7 +250,6 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
       input: {
         tenantId: tenant.id,
         name: values.name,
-        description: values.description ?? '',
         bankAccount: values.bankAccount ?? '',
         origins: (values.origins ?? '')
           .split(',')
@@ -271,12 +268,6 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
       <FormError error={result.error} />
 
       <TextFieldElement control={control} name="name" label="Název" required />
-      <TextAreaElement
-        control={control}
-        name="description"
-        label="Popis"
-        className="min-h-24"
-      />
       <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
       <TextFieldElement
         control={control}
@@ -300,10 +291,9 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   );
 }
 
-function createFormState(tenant: SystemAdminTenantsRecord): TenantFormValues {
+function createFormState(tenant: TenantRow): TenantFormValues {
   return {
     name: tenant.name || '',
-    description: tenant.description || '',
     bankAccount: tenant.bankAccount || '',
     origins: tenant.origins?.join(', ') ?? '',
     czIco: tenant.czIco || '',
