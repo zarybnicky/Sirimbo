@@ -168,3 +168,25 @@ create policy admin_own on tenant_settings to administrator using (true) with ch
 -- A system administrator works across tenants; everyone else stays in theirs.
 create policy current_tenant on tenant_settings as restrictive
   using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));
+
+-- Each of these rows confers a role in a tenant, and `admin_all using (true)`
+-- predates the system_admin role, so a club administrator could write rows for
+-- any tenant -- including making themselves an administrator of another club.
+-- Reads stay open: a person's roles are listed across tenants.
+select app_private.drop_policies('public.tenant_administrator');
+create policy public_view on tenant_administrator for select using (true);
+create policy admin_all on tenant_administrator to administrator
+  using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'))
+  with check (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));
+
+select app_private.drop_policies('public.tenant_trainer');
+create policy public_view on tenant_trainer for select using (true);
+create policy admin_all on tenant_trainer to administrator
+  using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'))
+  with check (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));
+
+select app_private.drop_policies('public.tenant_membership');
+create policy view_visible_person on tenant_membership for select using (true);
+create policy admin_all on tenant_membership to administrator
+  using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'))
+  with check (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));
