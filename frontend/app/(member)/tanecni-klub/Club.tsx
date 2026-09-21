@@ -128,7 +128,10 @@ export function Club() {
 
           {tenant.tenant.tenantLocationsList.map((item) => (
             <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
-              <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
+              <div className="grow py-1">
+                <div className="gap-2 flex text-sm font-bold">{item.name}</div>
+                <BlockNoteDocument value={item.description} editable={false} />
+              </div>
             </ActionRow>
           ))}
 

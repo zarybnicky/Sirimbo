@@ -190,3 +190,24 @@ create policy view_visible_person on tenant_membership for select using (true);
 create policy admin_all on tenant_membership to administrator
   using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'))
   with check (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));
+
+do $$
+begin
+  if (
+    select data_type from information_schema.columns
+    where table_schema = 'public' and table_name = 'tenant_location' and column_name = 'description'
+  ) is distinct from 'jsonb' then
+    alter table tenant_location alter column description drop default;
+    -- Any existing text is kept rather than dropped.
+    alter table tenant_location alter column description type jsonb using
+      case when btrim(description) = '' then '[]'::jsonb
+      else jsonb_build_array(jsonb_build_object(
+        'type', 'paragraph',
+        'content', jsonb_build_array(jsonb_build_object(
+          'type', 'text', 'text', description, 'styles', jsonb_build_object()))))
+      end;
+    alter table tenant_location alter column description set default '[]'::jsonb;
+  end if;
+end;
+$$;
+

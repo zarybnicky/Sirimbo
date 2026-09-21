@@ -3,6 +3,7 @@ import {
   TenantLocationDocument,
   UpdateTenantLocationDocument,
 } from '@/graphql/Tenant';
+import { BlockNoteEditor } from '@/ui/fields/blocknote';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -15,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
-  description: z.string().nullish(),
+  description: z.string().prefault('[]'),
   isPublic: z.boolean().prefault(false),
   address: z
     .object({
@@ -49,7 +50,7 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
     if (item) {
       reset({
         name: item.name,
-        description: item.description,
+        description: item.description ?? '[]',
         isPublic: !!item.isPublic,
         address: {
           street: item.address?.street || '',
@@ -81,7 +82,13 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
       <FormError error={createResult.error || updateResult.error} />
 
       <TextFieldElement control={control} name="name" label="Jméno" />
-      <TextFieldElement control={control} name="description" label="Popis" />
+      <BlockNoteEditor
+        key={item?.id ?? 'new'}
+        control={control}
+        initialState={item?.description}
+        name="description"
+        label="Popis"
+      />
 
       <div className="grid gap-2 md:grid-cols-[2fr_1fr_1fr]">
         <TextFieldElement control={control} name="address.street" label="Ulice" />
