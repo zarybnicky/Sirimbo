@@ -6,6 +6,7 @@ import { SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import React from 'react';
 import { blocksToRows, rowsToBlocks, type OutlineRow } from './blocks.ts';
 import type { TagCandidate } from './candidates.ts';
+import { pauseHiddenMedia } from './pause-hidden-media.ts';
 import { outlineSchema, TAG_PREFIX } from './tags.tsx';
 import '@blocknote/core/style.css';
 import '@blocknote/ariakit/style.css';
@@ -39,6 +40,25 @@ export function OutlineEditor({
     initialContent,
     uploadFile,
   });
+
+  // Collapsing a toggle only hides its children, so anything playing inside them
+  // has to be stopped by hand until folding drops the subtree outright.
+  React.useEffect(() => {
+    let detach: (() => void) | undefined;
+    const attach = (root: HTMLElement | undefined) => {
+      detach ??= root ? pauseHiddenMedia(root) : undefined;
+    };
+
+    // Which of these lands first depends on whether the view mounted the editor
+    // before this effect ran, so both are covered and the first one wins.
+    attach(editor.domElement);
+    const unsubscribe = editor.onMount(({ editor: mounted }) => attach(mounted.domElement));
+
+    return () => {
+      unsubscribe();
+      detach?.();
+    };
+  }, [editor]);
 
   // A view only editor has no caret to protect, so it follows the rows it is
   // given; an editable one would fight whoever is typing.
