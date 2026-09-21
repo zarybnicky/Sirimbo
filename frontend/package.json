@@ -113,7 +113,7 @@
     "eslint-plugin-import-x": "^4.17.1",
     "oxlint-plugin-react-hook-form": "^0.3.3",
     "eslint-plugin-tailwindcss": "~4.4.0",
-    "eslint-plugin-unicorn": "^65.0.1",
+    "eslint-plugin-unicorn": "^74.0.0",
     "node-gyp": "^13.0.2",
     "prettier": "^3.9.6",
     "typescript": "~6.0.3",
