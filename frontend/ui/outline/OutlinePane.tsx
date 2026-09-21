@@ -5,10 +5,11 @@ import {
   SaveOutlineDocument,
   TenantOutlineDocument,
 } from '@/graphql/Document';
+import { useDebounced } from '@/lib/use-debounced';
 import { FormError } from '@/ui/form';
-import { useTagCandidates } from '@/ui/fields/outline/candidates';
-import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
-import { nodeToRow, type OutlineRow } from '@/ui/fields/outline/blocks';
+import { useTagCandidates } from '@/ui/outline/candidates';
+import { OutlineEditor } from '@/ui/outline/OutlineEditor';
+import { nodeToRow, type OutlineRow } from '@/ui/outline/blocks';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 
@@ -16,7 +17,9 @@ import { useMutation, useQuery } from 'urql';
 // in node cannot disturb anything outside it. A rejected save means someone else
 // moved the tree on; the version comes back with the error.
 export function OutlinePane({ root, editable }: { root?: string; editable: boolean }) {
-  const [{ data: tenant }] = useQuery({ query: TenantOutlineDocument });
+  const [{ data: tenant, fetching: loadingVersion }] = useQuery({
+    query: TenantOutlineDocument,
+  });
   const [{ data }, refetch] = useQuery({
     query: OutlineDocument,
     variables: { root: root ?? null },
@@ -25,16 +28,17 @@ export function OutlinePane({ root, editable }: { root?: string; editable: boole
   const candidates = useTagCandidates();
   const [rejected, setRejected] = React.useState<Error | null>(null);
 
-  const version = tenant?.tenantDocument?.version;
+  // A tenant that has never saved has no document yet, so there is no version to
+  // disagree with; the first save creates one holding this.
+  const version = tenant?.tenantDocument?.version ?? '1';
 
   const rows = React.useMemo<OutlineRow[]>(
-    () =>
-      (data?.documentSubtreeList ?? []).map(nodeToRow),
+    () => (data?.documentSubtreeList ?? []).map(nodeToRow),
     [data],
   );
 
   const persist = useDebounced(async (next: OutlineRow[]) => {
-    if (version === undefined) {
+    if (loadingVersion) {
       return;
     }
     const result = await save({
@@ -71,40 +75,5 @@ export function OutlinePane({ root, editable }: { root?: string; editable: boole
       />
       {saveState.fetching && <p className="mt-1 text-xs text-neutral-10">Ukládám…</p>}
     </>
-  );
-}
-
-// Unmounting has to flush rather than cancel: navigating away within the
-// debounce window would otherwise drop whatever was typed last.
-function useDebounced<T>(fn: (value: T) => void | Promise<void>, delay: number) {
-  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const pending = React.useRef<{ value: T } | null>(null);
-  const latest = React.useRef(fn);
-
-  React.useEffect(() => {
-    latest.current = fn;
-  });
-
-  React.useEffect(
-    () => () => {
-      clearTimeout(timer.current);
-      if (pending.current) {
-        void latest.current(pending.current.value);
-        pending.current = null;
-      }
-    },
-    [],
-  );
-
-  return React.useCallback(
-    (value: T) => {
-      clearTimeout(timer.current);
-      pending.current = { value };
-      timer.current = setTimeout(() => {
-        pending.current = null;
-        void latest.current(value);
-      }, delay);
-    },
-    [delay],
   );
 }

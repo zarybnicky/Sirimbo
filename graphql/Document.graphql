@@ -45,6 +45,70 @@ query OutlineBreadcrumb($node: UUID!) {
   }
 }
 
+# Enough of an instance for formatEventCandidate: out of context it is named by
+# when it happens and who is in it.
+fragment TagEventCandidate on EventInstance {
+  __typename
+  id
+  name
+  type
+  since
+  locationText
+  location {
+    id
+    name
+  }
+  trainersList {
+    id
+    person {
+      id
+      name
+    }
+  }
+  targetCohortsList {
+    id
+    cohort {
+      id
+      name
+    }
+  }
+  registrationsList: eventInstanceRegistrationsByInstanceIdList(
+    condition: { registrationStatus: ACTIVE }
+  ) {
+    id
+    person {
+      id
+      name
+    }
+    couple {
+      id
+      man {
+        id
+        name
+        lastName
+      }
+      woman {
+        id
+        name
+        lastName
+      }
+    }
+  }
+}
+
+# Too many events to load up front, so these two are searched as the menu is
+# typed into; the rest of the tag kinds are small enough to rank in the browser.
+query TagEventCandidates($query: String, $count: Int) {
+  eventInstanceCandidatesList(query: $query, count: $count) {
+    ...TagEventCandidate
+  }
+  eventSeriesCandidatesList(query: $query, count: $count) {
+    __typename
+    id
+    name
+  }
+}
+
 query TagDances {
   dancesList(orderBy: [NAME_ASC]) {
     code
@@ -56,6 +120,7 @@ query TagDances {
 mutation SaveOutline($input: SaveOutlineInput!) {
   saveOutline(input: $input) {
     document {
+      __typename
       id
       version
     }

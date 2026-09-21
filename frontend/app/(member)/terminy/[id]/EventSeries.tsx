@@ -8,7 +8,7 @@ import {
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { TabMenu } from '@/ui/TabMenu';
-import { OutlineMentions } from '@/ui/OutlineMentions';
+import { OutlineMentions } from '@/ui/outline/OutlineMentions';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
 import { formatEventType, fullDateFormatter } from '@/ui/format';

@@ -20,7 +20,7 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { OutlineMentions } from '@/ui/OutlineMentions';
+import { OutlineMentions } from '@/ui/outline/OutlineMentions';
 import { useAuth } from '@/lib/auth';
 
 export function TrainingGroup({

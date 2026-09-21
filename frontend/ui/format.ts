@@ -117,6 +117,45 @@ export const numericFullFormatter = new Intl.DateTimeFormat('cs-CZ', {
   hour12: false,
 });
 
+// formatEventName is written for a reader who already knows when and where: it
+// labels the event's own page and its block in the calendar. A picker has none of
+// that, and a name is no help there — most group lessons have none, and the ones
+// that do share it with hundreds of others. So a candidate names itself by when
+// it happens and who is in it.
+export function formatEventCandidate(instance: {
+  name?: string | null;
+  type?: EventType | null;
+  since: string;
+  locationText?: string | null;
+  location?: { name: string } | null;
+  trainersList?: ({ person?: MaybePerson } | null)[] | null;
+  targetCohortsList?: ({ cohort?: { name: string } | null } | null)[] | null;
+  registrationsList?: MaybeRegistration[] | null;
+}): string {
+  const since = new Date(instance.since);
+  const thisYear = since.getFullYear() === new Date().getFullYear();
+
+  // A private lesson is known by who booked it, a group one by the cohort, and a
+  // reservation by the trainer offering it — the same order formatEventName uses.
+  const who = (
+    instance.type === 'LESSON'
+      ? (instance.registrationsList ?? []).map(formatRegistrant)
+      : [
+          ...(instance.targetCohortsList ?? []).map((target) => target?.cohort?.name),
+          ...(instance.trainersList ?? []).map((trainer) => trainer?.person?.name),
+        ]
+  ).filter(Boolean);
+
+  return [
+    `${(thisYear ? dayFormatter : numericDateWithYearFormatter).format(since)} ${shortTimeFormatter.format(since)}`,
+    instance.name || formatEventType(instance.type),
+    who.length > 3 ? `${who.slice(0, 3).join(', ')} +${who.length - 3}` : who.join(', '),
+    instance.location?.name || instance.locationText,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
 export const moneyFormatter = {
   format(
     price: {

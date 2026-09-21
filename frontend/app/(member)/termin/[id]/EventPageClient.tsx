@@ -15,7 +15,7 @@ import { EventAttendance } from '@/ui/EventAttendance';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
-import { OutlineMentions } from '@/ui/OutlineMentions';
+import { OutlineMentions } from '@/ui/outline/OutlineMentions';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatEventType, formatEventName } from '@/ui/format';

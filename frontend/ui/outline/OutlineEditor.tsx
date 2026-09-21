@@ -6,17 +6,17 @@ import { SuggestionMenuController, useCreateBlockNote } from '@blocknote/react';
 import React from 'react';
 import { blocksToRows, rowsToBlocks, type OutlineRow } from './blocks.ts';
 import type { TagCandidate } from './candidates.ts';
-import { outlineSchema, TAG_PREFIX } from './tag-inline.tsx';
+import { outlineSchema, TAG_PREFIX } from './tags.tsx';
 import '@blocknote/core/style.css';
 import '@blocknote/ariakit/style.css';
-import './outline-theme.css';
+import './theme.css';
 
 export type OutlineEditorProps = {
   rows: OutlineRow[];
   // Both absent in view mode: nothing is written, and no candidates are fetched
   // for a picker that can never open.
   onChange?: (rows: OutlineRow[]) => void;
-  candidates?: (char: string, query: string) => TagCandidate[];
+  candidates?: (char: string, query: string) => Promise<TagCandidate[]>;
   editable?: boolean;
   className?: string;
 };
@@ -56,12 +56,14 @@ export function OutlineEditor({
   );
 
   const items = React.useCallback(
-    async (char: string, query: string) =>
-      (candidates?.(char, query) ?? []).map((candidate) => ({
+    async (char: string, query: string) => {
+      const found = await (candidates?.(char, query) ?? []);
+      return found.map((candidate) => ({
         title: `${TAG_PREFIX[candidate.kind]}${candidate.label}`,
         subtext: candidate.kind,
         onItemClick: () => insertTag(candidate),
-      })),
+      }));
+    },
     [candidates, insertTag],
   );
 

@@ -7275,6 +7275,16 @@ type Query {
 
   """Get a single `EventInstance`."""
   eventInstanceByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventInstance
+  eventInstanceCandidatesList(
+    count: Int
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    query: String
+  ): [EventInstance!]
 
   """Get a single `EventInstanceRegistration`."""
   eventInstanceRegistration(id: BigInt!): EventInstanceRegistration
@@ -7384,6 +7394,16 @@ type Query {
 
   """Get a single `EventSeries`."""
   eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
+  eventSeriesCandidatesList(
+    count: Int
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    query: String
+  ): [EventSeries!]
 
   """Get a single `File`."""
   file(id: BigInt!): File

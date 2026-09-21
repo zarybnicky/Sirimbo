@@ -5973,6 +5973,7 @@ export type Query = {
   eventInstance: Maybe<EventInstance>;
   /** Get a single `EventInstance`. */
   eventInstanceByTenantIdAndId: Maybe<EventInstance>;
+  eventInstanceCandidatesList: Maybe<Array<EventInstance>>;
   /** Get a single `EventInstanceRegistration`. */
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -5988,6 +5989,7 @@ export type Query = {
   eventSeries: Maybe<EventSeries>;
   /** Get a single `EventSeries`. */
   eventSeriesByTenantIdAndId: Maybe<EventSeries>;
+  eventSeriesCandidatesList: Maybe<Array<EventSeries>>;
   /** Get a single `File`. */
   file: Maybe<File>;
   /** Get a single `File`. */
@@ -6286,6 +6288,15 @@ export type QueryEventInstanceByTenantIdAndIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEventInstanceCandidatesListArgs = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEventInstanceRegistrationArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -6365,6 +6376,15 @@ export type QueryEventSeriesArgs = {
 export type QueryEventSeriesByTenantIdAndIdArgs = {
   id: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSeriesCandidatesListArgs = {
+  count?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -9342,6 +9362,7 @@ export type GraphCacheResolvers = {
     documentSubtreeList?: GraphCacheResolver<WithTypename<Query>, QueryDocumentSubtreeListArgs, Array<WithTypename<DocumentNode> | string>>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
     eventInstanceByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceByTenantIdAndIdArgs, WithTypename<EventInstance> | string>,
+    eventInstanceCandidatesList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceCandidatesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationArgs, WithTypename<EventInstanceRegistration> | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
@@ -9351,6 +9372,7 @@ export type GraphCacheResolvers = {
     eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventConflict> | string>>,
     eventSeries?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesArgs, WithTypename<EventSeries> | string>,
     eventSeriesByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesByTenantIdAndIdArgs, WithTypename<EventSeries> | string>,
+    eventSeriesCandidatesList?: GraphCacheResolver<WithTypename<Query>, QueryEventSeriesCandidatesListArgs, Array<WithTypename<EventSeries> | string>>,
     file?: GraphCacheResolver<WithTypename<Query>, QueryFileArgs, WithTypename<File> | string>,
     fileByObjectKey?: GraphCacheResolver<WithTypename<Query>, QueryFileByObjectKeyArgs, WithTypename<File> | string>,
     files?: GraphCacheResolver<WithTypename<Query>, QueryFilesArgs, WithTypename<FilesConnection> | string>,
@@ -11009,6 +11031,7 @@ export type GraphCacheUpdaters = {
     documentSubtreeList?: GraphCacheUpdateResolver<{ documentSubtreeList: Maybe<Array<WithTypename<DocumentNode>>> }, QueryDocumentSubtreeListArgs>,
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
     eventInstanceByTenantIdAndId?: GraphCacheUpdateResolver<{ eventInstanceByTenantIdAndId: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceByTenantIdAndIdArgs>,
+    eventInstanceCandidatesList?: GraphCacheUpdateResolver<{ eventInstanceCandidatesList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstanceCandidatesListArgs>,
     eventInstanceRegistration?: GraphCacheUpdateResolver<{ eventInstanceRegistration: Maybe<WithTypename<EventInstanceRegistration>> }, QueryEventInstanceRegistrationArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<{ eventInstanceRegistrations: Maybe<WithTypename<EventInstanceRegistrationsConnection>> }, QueryEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<{ eventInstanceRegistrationsList: Maybe<Array<WithTypename<EventInstanceRegistration>>> }, QueryEventInstanceRegistrationsListArgs>,
@@ -11018,6 +11041,7 @@ export type GraphCacheUpdaters = {
     eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventOverlapsTrainerReportListArgs>,
     eventSeries?: GraphCacheUpdateResolver<{ eventSeries: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesArgs>,
     eventSeriesByTenantIdAndId?: GraphCacheUpdateResolver<{ eventSeriesByTenantIdAndId: Maybe<WithTypename<EventSeries>> }, QueryEventSeriesByTenantIdAndIdArgs>,
+    eventSeriesCandidatesList?: GraphCacheUpdateResolver<{ eventSeriesCandidatesList: Maybe<Array<WithTypename<EventSeries>>> }, QueryEventSeriesCandidatesListArgs>,
     file?: GraphCacheUpdateResolver<{ file: Maybe<WithTypename<File>> }, QueryFileArgs>,
     fileByObjectKey?: GraphCacheUpdateResolver<{ fileByObjectKey: Maybe<WithTypename<File>> }, QueryFileByObjectKeyArgs>,
     files?: GraphCacheUpdateResolver<{ files: Maybe<WithTypename<FilesConnection>> }, QueryFilesArgs>,

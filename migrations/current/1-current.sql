@@ -178,6 +178,7 @@ comment on view dance is '@primaryKey code
 
 grant select on dance to anonymous;
 
+--!include functions/event_candidates.sql
 --!include functions/document_node_tags.sql
 --!include functions/outline.sql
 --!include policies/document.sql

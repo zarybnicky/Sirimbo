@@ -14704,6 +14704,50 @@
             ]
           },
           {
+            "name": "eventInstanceCandidatesList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "EventInstance",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "count",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "query",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "eventInstanceRegistration",
             "type": {
               "kind": "OBJECT",
@@ -15121,6 +15165,50 @@
                     "kind": "SCALAR",
                     "name": "Any"
                   }
+                }
+              }
+            ]
+          },
+          {
+            "name": "eventSeriesCandidatesList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "EventSeries",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "count",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "query",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]

@@ -2,9 +2,10 @@
 
 import { AddOutlineNodeDocument, type DocumentMentionFragment } from '@/graphql/Document';
 import { useAuth } from '@/lib/auth';
-import { OutlineEditor } from '@/ui/fields/outline/OutlineEditor';
-import { nodeText, nodeToRow } from '@/ui/fields/outline/blocks';
-import type { TagKind } from '@/ui/fields/outline/tag-inline';
+import { OutlineBreadcrumb } from '@/ui/outline/OutlineBreadcrumb';
+import { OutlineEditor } from '@/ui/outline/OutlineEditor';
+import { nodeToRow } from '@/ui/outline/blocks';
+import type { TagKind } from '@/ui/outline/tags';
 import { buttonCls, typographyCls } from '@/ui/style';
 import Link from 'next/link';
 import React from 'react';
@@ -90,19 +91,11 @@ export function OutlineMentions({
           key={mention.id}
           className="rounded-lg border border-neutral-4 bg-neutral-2 p-3"
         >
-          <nav className="mb-1 flex flex-wrap items-center gap-1 text-xs text-neutral-11">
-            {mention.ancestors.map((ancestor) => (
-              <React.Fragment key={ancestor.id}>
-                <Link href={`/outline/${ancestor.id}`} className="underline">
-                  {nodeText(ancestor.content) || 'Bez názvu'}
-                </Link>
-                <span aria-hidden>›</span>
-              </React.Fragment>
-            ))}
+          <OutlineBreadcrumb ancestors={mention.ancestors} className="mb-1 text-xs">
             <Link href={`/outline/${mention.id}`} className="underline">
               Otevřít
             </Link>
-          </nav>
+          </OutlineBreadcrumb>
           <OutlineEditor rows={mention.rows} editable={false} />
         </article>
       ))}
