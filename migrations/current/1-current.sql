@@ -148,5 +148,23 @@ create policy admin_all on tenant to administrator
 create policy system_admin_all on tenant to system_admin
   using (true) with check (true);
 
---!include functions/system_admin_tenants.sql
---!include functions/system_admin_update_tenant.sql
+drop function if exists system_admin_tenants;
+drop function if exists system_admin_update_tenant;
+
+comment on table tenant is '@omit create,delete
+@behavior -singularRelation:resource:single -query:resource:connection
+@simpleCollections only';
+
+comment on table tenant_membership is '@simpleCollections both
+@behavior -query:resource:list -query:resource:connection';
+comment on table tenant_trainer is '@simpleCollections both
+@behavior -query:resource:list -query:resource:connection';
+comment on table tenant_administrator is '@simpleCollections both
+@behavior -query:resource:list -query:resource:connection';
+
+select app_private.drop_policies('public.tenant_settings');
+
+create policy admin_own on tenant_settings to administrator using (true) with check (true);
+-- A system administrator works across tenants; everyone else stays in theirs.
+create policy current_tenant on tenant_settings as restrictive
+  using (tenant_id = current_tenant_id() or pg_has_role(current_user, 'system_admin', 'usage'));

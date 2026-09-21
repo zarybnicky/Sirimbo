@@ -2,10 +2,11 @@
 
 import { AddressDomain } from '@/graphql';
 import {
-  SystemAdminTenantsDocument,
-  type SystemAdminTenantsQuery,
-  SystemAdminUpdateTenantDocument,
+  AdminTenantsDocument,
+  type AdminTenantsQuery,
+  ReplaceTenantSettingsDocument,
 } from '@/graphql/SystemAdmin';
+import { UpdateTenantDocument } from '@/graphql/Tenant';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
@@ -35,11 +36,7 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-const decimalFormatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
-
-type TenantRow = NonNullable<
-  SystemAdminTenantsQuery['systemAdminTenants']
->['nodes'][number];
+type TenantRow = NonNullable<AdminTenantsQuery['tenantsList']>[number];
 
 const columns: Column<TenantRow>[] = [
   {
@@ -61,23 +58,22 @@ const columns: Column<TenantRow>[] = [
   },
   { key: 'id', name: 'ID', frozen: true },
   { key: 'name', name: 'Jméno' },
-  { key: 'membershipCount', name: 'Členové' },
-  { key: 'trainerCount', name: 'Trenéři' },
-  { key: 'administratorCount', name: 'Správci' },
-  { key: 'sessionCountLast30Days', name: 'Lekce / 30 dní' },
   {
-    key: 'sessionCountPerTrainerLast30Days',
-    name: 'Lekce / trenér / 30 dní',
-    renderCell({ row }) {
-      const v = Number(row.sessionCountPerTrainerLast30Days ?? 0);
-      return Number.isFinite(v) ? decimalFormatter.format(v) : '—';
-    },
+    key: 'memberships',
+    name: 'Členové',
+    renderCell: ({ row }) => row.memberships.totalCount,
+  },
+  { key: 'trainers', name: 'Trenéři', renderCell: ({ row }) => row.trainers.totalCount },
+  {
+    key: 'administrators',
+    name: 'Správci',
+    renderCell: ({ row }) => row.administrators.totalCount,
   },
 ];
 
 export function Tenants() {
-  const [{ data, fetching, error }] = useQuery({ query: SystemAdminTenantsDocument });
-  const tenants = React.useMemo(() => data?.systemAdminTenants?.nodes ?? [], [data]);
+  const [{ data, fetching, error }] = useQuery({ query: AdminTenantsDocument });
+  const tenants = React.useMemo(() => data?.tenantsList ?? [], [data]);
 
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const selected = React.useMemo(
@@ -234,7 +230,8 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
     resolver: zodResolver(TenantFormSchema),
     defaultValues,
   });
-  const [result, updateTenant] = useMutation(SystemAdminUpdateTenantDocument);
+  const [result, updateTenant] = useMutation(UpdateTenantDocument);
+  const [settingsResult, replaceSettings] = useMutation(ReplaceTenantSettingsDocument);
   const { onSuccess } = useFormResult();
 
   React.useEffect(() => {
@@ -246,26 +243,33 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
   }, [tenant, reset]);
 
   const onSubmit = async (values: TenantFormValues) => {
-    const result = await updateTenant({
+    const updated = await updateTenant({
       input: {
-        tenantId: tenant.id,
-        name: values.name,
-        bankAccount: values.bankAccount ?? '',
-        origins: (values.origins ?? '')
-          .split(',')
-          .map((value) => value.trim())
-          .filter(Boolean),
-        czIco: values.czIco ?? '',
-        czDic: values.czDic ?? '',
-        settings: values.settings,
+        id: tenant.id,
+        patch: {
+          name: values.name,
+          bankAccount: values.bankAccount ?? '',
+          origins: (values.origins ?? '')
+            .split(',')
+            .map((value) => value.trim())
+            .filter(Boolean),
+          czIco: values.czIco ?? '',
+          czDic: values.czDic ?? '',
+        },
       },
     });
-    if (!result.error) onSuccess();
+    if (updated.error) return;
+
+    const saved = await replaceSettings({
+      tenantId: tenant.id,
+      settings: values.settings,
+    });
+    if (!saved.error) onSuccess();
   };
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+      <FormError error={result.error ?? settingsResult.error} />
 
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
@@ -298,7 +302,7 @@ function createFormState(tenant: TenantRow): TenantFormValues {
     origins: tenant.origins?.join(', ') ?? '',
     czIco: tenant.czIco || '',
     czDic: tenant.czDic || '',
-    settings: tenant.settings || '{}',
+    settings: tenant.tenantSettingsList[0]?.settings ?? '{}',
   };
 }
 

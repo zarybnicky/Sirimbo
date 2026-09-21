@@ -1,49 +1,41 @@
-query SystemAdminTenants {
-  systemAdminTenants {
-    nodes {
-      id
-      name
-      bankAccount
-      origins
-      czIco
-      czDic
-      address {
-        street
-        conscriptionNumber
-        orientationNumber
-        district
-        city
-        region
-        postalCode
-      }
+query AdminTenants {
+  tenantsList(orderBy: [NAME_ASC]) {
+    id
+    name
+    bankAccount
+    origins
+    czIco
+    czDic
+    address {
+      street
+      conscriptionNumber
+      orientationNumber
+      district
+      city
+      region
+      postalCode
+    }
+    tenantSettingsList {
+      tenantId
       settings
-      membershipCount
-      trainerCount
-      administratorCount
-      sessionCountLast30Days
-      sessionCountPerTrainerLast30Days
+    }
+    memberships: tenantMemberships(condition: { status: ACTIVE }) {
+      totalCount
+    }
+    trainers: tenantTrainers(condition: { status: ACTIVE }) {
+      totalCount
+    }
+    administrators: tenantAdministrators(condition: { status: ACTIVE }) {
+      totalCount
     }
   }
 }
 
-mutation SystemAdminUpdateTenant($input: SystemAdminUpdateTenantInput!) {
-  systemAdminUpdateTenant(input: $input) {
-    tenant {
-      id
-      name
-      bankAccount
-      origins
-      czIco
-      czDic
-      address {
-        street
-        conscriptionNumber
-        orientationNumber
-        district
-        city
-        region
-        postalCode
-      }
+mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
+  updateTenantSetting(input: { tenantId: $tenantId, patch: { settings: $settings } }) {
+    tenantSetting {
+      tenantId
+      settings
     }
   }
 }
