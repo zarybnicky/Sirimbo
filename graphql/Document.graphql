@@ -4,6 +4,8 @@ fragment OutlineNode on DocumentNode {
   parentId
   ordering
   content
+  version
+  visibility
 }
 
 # A tag marks the node it sits on together with everything under it, so a mention
@@ -22,14 +24,6 @@ fragment DocumentMention on DocumentNodeTag {
     subtreeList {
       ...OutlineNode
     }
-  }
-}
-
-query TenantOutline {
-  tenantDocument {
-    id
-    title
-    version
   }
 }
 
@@ -117,12 +111,12 @@ query TagDances {
   }
 }
 
+# The saved nodes come back carrying their new versions, which is what the editor
+# needs to keep saving.
 mutation SaveOutline($input: SaveOutlineInput!) {
   saveOutline(input: $input) {
-    document {
-      __typename
-      id
-      version
+    documentNodes {
+      ...OutlineNode
     }
   }
 }

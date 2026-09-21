@@ -1,10 +1,13 @@
 drop function if exists save_outline;
 drop function if exists document_mentions;
 drop function if exists add_outline_node;
+drop function if exists app_private.ensure_tenant_document;
 drop type if exists outline_node_input;
 
 -- Read-only, so it is a query rather than a mutation. A tenant that has never
--- saved has no row yet, and the first save creates one.
+-- saved has no row yet, and the first save creates one. Nothing hangs off it but
+-- the nodes: concurrency is per node, so there is no document-wide version to
+-- agree on.
 create or replace function tenant_document() returns document
   language sql stable
 as $$
@@ -13,9 +16,7 @@ $$;
 
 comment on function tenant_document() is 'The tenant''s outline, once it exists.';
 
--- A tree that does not exist yet has no version to disagree with, so it is
--- created holding whatever version the caller saved against.
-create or replace function app_private.ensure_tenant_document(base_version bigint)
+create or replace function app_private.ensure_tenant_document()
   returns document
   language plpgsql
 as $$
@@ -27,7 +28,7 @@ begin
     return found_document;
   end if;
 
-  insert into document (title, version) values ('Outline', base_version)
+  insert into document (title) values ('Outline')
   on conflict (tenant_id) do update set title = document.title
   returning * into found_document;
 
@@ -103,72 +104,98 @@ create type outline_node_input as (
   id uuid,
   parent_id uuid,
   ordering numeric,
-  content jsonb
+  content jsonb,
+  version bigint
 );
 
--- Saves one subtree. `root` null saves the whole tree. The delete is scoped to
--- what was under `root` when the save began, so editing a zoomed-in subtree
--- cannot touch anything outside it.
+-- Saves the nodes the editor is holding. Each carries the version it was loaded
+-- at, so two people working on different parts of the outline never collide, and
+-- a node with no version is one the editor has just created. Every node names its
+-- own parent, the zoomed-in root included -- the caller knows where its root
+-- hangs, and `root` is here only to keep a deletion inside that subtree.
 --
--- Folding must not narrow what is sent: a collapsed subtree is still part of the
--- payload, it is only left unrendered. Anything within scope and absent from the
--- payload is taken to be deleted.
-create function save_outline(root uuid, base_version bigint, nodes outline_node_input[])
-  returns document
+-- Absence means nothing: a node the editor never rendered -- a collapsed subtree,
+-- or anything outside a zoomed-in root -- is simply not in `nodes`. Deletions are
+-- named in `deleted`, which is what lets folding drop blocks from the editor
+-- entirely rather than hiding them.
+create function save_outline(root uuid, nodes outline_node_input[], deleted uuid[] default '{}')
+  returns setof document_node
   language plpgsql
 as $$
 declare
   saved document;
+  stale uuid[];
+  fresh uuid[];
   scope_ids uuid[];
 begin
-  saved := app_private.ensure_tenant_document(base_version);
+  saved := app_private.ensure_tenant_document();
 
-  if saved.version <> base_version then
+  select coalesce(array_agg(input.id), '{}'::uuid[]) into stale
+  from unnest(nodes) input
+  join document_node node on node.id = input.id
+  where input.version is not null and node.version <> input.version;
+
+  if cardinality(stale) > 0 then
     raise exception 'OUTLINE_STALE' using
       errcode = '40001',
-      detail = format('document is at version %s, save was based on %s',
-                      saved.version, base_version);
+      detail = format('%s node(s) moved on since they were loaded: %s',
+                      cardinality(stale), array_to_string(stale, ', '));
   end if;
 
-  -- Captured before any write, so a node moved within the tree is still judged
-  -- against where it started.
+  -- Which of these are new has to be settled before they are written, and it is
+  -- only those whose audience is still open to inheritance below.
+  select coalesce(array_agg(input.id), '{}'::uuid[]) into fresh
+  from unnest(nodes) input
+  where not exists (select 1 from document_node node where node.id = input.id);
+
+  -- One statement: the parent key is deferred, so children may arrive before the
+  -- parents they hang from.
+  insert into document_node (id, tenant_id, document_id, parent_id, ordering, content)
+  select input.id, saved.tenant_id, saved.id, input.parent_id,
+         coalesce(input.ordering, 1), input.content
+  from unnest(nodes) input
+  on conflict (id) do update set
+    parent_id = excluded.parent_id,
+    ordering = excluded.ordering,
+    content = excluded.content,
+    -- An editor that saves without having changed anything should not invalidate
+    -- everyone else's copy.
+    version = case
+      when (document_node.parent_id, document_node.ordering, document_node.content)
+           is distinct from (excluded.parent_id, excluded.ordering, excluded.content)
+      then document_node.version + 1
+      else document_node.version
+    end;
+
+  -- A new child may have been written before its parent, in which case it could
+  -- not inherit yet. Only the new ones: a node that already existed keeps the
+  -- audience it was given, which is the whole point of the column.
+  update document_node child set visibility = parent.visibility
+  from document_node parent
+  where child.parent_id = parent.id
+    and child.visibility <> parent.visibility
+    and child.id = any (fresh);
+
+  -- Scoped all the same, so a zoomed-in editor cannot delete outside its subtree.
   select coalesce(array_agg(id), '{}'::uuid[]) into scope_ids
   from document_subtree(root);
 
-  -- Parents are attached in a second pass, so the payload does not have to
-  -- arrive in any particular order to satisfy the self-referencing key.
-  insert into document_node (id, tenant_id, document_id, parent_id, ordering, content)
-  select input.id, saved.tenant_id, saved.id, null, coalesce(input.ordering, 1), input.content
-  from unnest(nodes) input
-  on conflict (id) do update set
-    ordering = excluded.ordering,
-    content = excluded.content;
-
-  -- The zoomed root keeps its place in the tree: the editor only ever saw the
-  -- subtree, so the payload calls it top level.
-  update document_node node set parent_id = input.parent_id
-  from unnest(nodes) input
-  where node.id = input.id
-    and node.id is distinct from root
-    and node.parent_id is distinct from input.parent_id;
-
   delete from document_node
   where document_id = saved.id
-    and id = any (scope_ids)
-    and not exists (select 1 from unnest(nodes) input where input.id = document_node.id);
+    and id = any (deleted)
+    and id = any (scope_ids);
 
-  update document set version = version + 1 where id = saved.id returning * into saved;
-  return saved;
+  return query
+    select node.* from document_node node
+    join unnest(nodes) input on input.id = node.id;
 end;
 $$;
 
-comment on function save_outline(uuid, bigint, outline_node_input[]) is
-  'Saves one subtree of the tenant outline, rejecting a save based on a stale version.';
+comment on function save_outline(uuid, outline_node_input[], uuid[]) is
+  'Saves the nodes an outline editor holds, rejecting any that moved on since they were loaded.';
 
 -- Appending a single node does not need the caller to hold the tree, so a quick
--- add from a page that only shows mentions never has to load the outline. It
--- still bumps the version: an editor that has the tree open must refetch rather
--- than delete a node it never saw.
+-- add from a page that only shows mentions never has to load the outline.
 create function add_outline_node(parent uuid, content jsonb)
   returns document_node
   language plpgsql
@@ -177,7 +204,7 @@ declare
   target document;
   added document_node;
 begin
-  target := app_private.ensure_tenant_document(1);
+  target := app_private.ensure_tenant_document();
 
   insert into document_node (document_id, parent_id, ordering, content)
   select target.id, parent, coalesce(max(sibling.ordering), 0) + 1, add_outline_node.content
@@ -186,7 +213,6 @@ begin
     and sibling.parent_id is not distinct from parent
   returning * into added;
 
-  update document set version = version + 1 where id = target.id;
   return added;
 end;
 $$;
@@ -194,11 +220,11 @@ $$;
 comment on function add_outline_node(uuid, jsonb) is
   'Appends one node under `parent`, or at the top level when it is null.';
 
-grant execute on function app_private.ensure_tenant_document(bigint) to anonymous;
+grant execute on function app_private.ensure_tenant_document() to anonymous;
 grant execute on function tenant_document() to anonymous;
 grant execute on function document_node_subtree(document_node) to anonymous;
 grant execute on function document_node_ancestors(document_node) to anonymous;
 grant execute on function document_subtree(uuid) to anonymous;
 grant execute on function document_node_path(uuid) to anonymous;
-grant execute on function save_outline(uuid, bigint, outline_node_input[]) to anonymous;
+grant execute on function save_outline(uuid, outline_node_input[], uuid[]) to anonymous;
 grant execute on function add_outline_node(uuid, jsonb) to anonymous;

@@ -17,6 +17,7 @@ export type OutlineEditorProps = {
   // for a picker that can never open.
   onChange?: (rows: OutlineRow[]) => void;
   candidates?: (char: string, query: string) => Promise<TagCandidate[]>;
+  uploadFile?: (file: File) => Promise<string>;
   editable?: boolean;
   className?: string;
 };
@@ -25,6 +26,7 @@ export function OutlineEditor({
   rows,
   onChange,
   candidates,
+  uploadFile,
   editable = true,
   className,
 }: OutlineEditorProps) {
@@ -35,6 +37,7 @@ export function OutlineEditor({
   const editor = useCreateBlockNote({
     schema: outlineSchema,
     initialContent,
+    uploadFile,
   });
 
   // A view only editor has no caret to protect, so it follows the rows it is

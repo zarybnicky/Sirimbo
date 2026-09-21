@@ -242,17 +242,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           }
         }
       },
-      // The first save is what creates the tenant's document, and a cache that
-      // had none cannot know this is the one tenantDocument now answers with.
-      saveOutline(result, _args, cache, _info) {
-        const saved = result.saveOutline?.document;
-        if (saved) {
-          cache.link('Query', 'tenantDocument', {
-            __typename: 'Document',
-            id: saved.id,
-          });
-        }
-      },
       createMembershipApplication(_result, _args, cache, _info) {
         cache.invalidate('Query', 'membershipApplicationsList');
       },

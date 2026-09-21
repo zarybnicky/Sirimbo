@@ -48,3 +48,37 @@ drop trigger if exists _500_sync_tags_update on document_node;
 create trigger _500_sync_tags_update
   after update of content on document_node
   for each row execute function app_private.tg_document_node__sync_tags();
+
+-- The same projection again, for the files a node embeds. It is what makes an
+-- uploaded file reachable from the node that uses it -- and an unreferenced
+-- upload findable -- without the content having to be parsed at read time.
+create or replace function app_private.tg_document_node__sync_files()
+  returns trigger
+  language plpgsql
+  security definer
+  set search_path to pg_catalog, public, pg_temp
+as $$
+begin
+  delete from document_node_file where node_id = new.id;
+
+  insert into document_node_file (tenant_id, node_id, file_id)
+  select distinct new.tenant_id, new.id, (regexp_match(embedded, '^/f/(\d+)/'))[1]::bigint
+  from (
+    select url #>> '{}' from jsonb_path_query(new.content, '$.**.url') url
+  ) reference(embedded)
+  where embedded ~ '^/f/\d+/'
+  on conflict do nothing;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists _500_sync_files_insert on document_node;
+create trigger _500_sync_files_insert
+  after insert on document_node
+  for each row execute function app_private.tg_document_node__sync_files();
+
+drop trigger if exists _500_sync_files_update on document_node;
+create trigger _500_sync_files_update
+  after update of content on document_node
+  for each row execute function app_private.tg_document_node__sync_files();

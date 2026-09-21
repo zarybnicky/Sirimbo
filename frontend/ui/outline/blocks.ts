@@ -11,6 +11,10 @@ export type OutlineRow = {
   // The block this row stands for, without its children: BlockNote's
   // {id, type, props, content} lines up with the row as stored.
   content: Record<string, unknown>;
+  // The version it was loaded at, and null for a block the editor has just made.
+  // Blocks coming back out of the editor carry none — BlockNote knows nothing
+  // about it — so whoever saves them supplies it.
+  version: string | null;
 };
 
 // Depth first, so a parent always precedes its children and the
@@ -26,6 +30,7 @@ export function blocksToRows(blocks: AnyBlock[]): OutlineRow[] {
         parentId,
         ordering: index + 1,
         content: withoutChildren as Record<string, unknown>,
+        version: null,
       });
       walk(children ?? [], block.id);
     }
@@ -71,12 +76,14 @@ export function nodeToRow(node: {
   parentId?: string | null;
   ordering: unknown;
   content: unknown;
+  version?: unknown;
 }): OutlineRow {
   return {
     id: node.id,
     parentId: node.parentId ?? null,
     ordering: Number(node.ordering),
     content: parseContent(node.content),
+    version: node.version === undefined ? null : String(node.version),
   };
 }
 

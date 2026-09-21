@@ -71,8 +71,8 @@ describe('outline blocks', () => {
 
   test('renumbers ordering from document order', () => {
     const rows: OutlineRow[] = [
-      { id: 'a', parentId: null, ordering: 40, content: block('a', text('second')) },
-      { id: 'b', parentId: null, ordering: 10, content: block('b', text('first')) },
+      { id: 'a', parentId: null, ordering: 40, content: block('a', text('second')), version: '1' },
+      { id: 'b', parentId: null, ordering: 10, content: block('b', text('first')), version: '1' },
     ];
 
     assert.deepEqual(
@@ -100,8 +100,8 @@ describe('outline blocks', () => {
 
   test('a subtree renders from its own root, whose parent is outside the excerpt', () => {
     const rows: OutlineRow[] = [
-      { id: 'c', parentId: 'b', ordering: 1, content: block('c', text('root')) },
-      { id: 'e', parentId: 'c', ordering: 1, content: block('e', text('under it')) },
+      { id: 'c', parentId: 'b', ordering: 1, content: block('c', text('root')), version: '1' },
+      { id: 'e', parentId: 'c', ordering: 1, content: block('e', text('under it')), version: '1' },
     ];
 
     assert.deepEqual(
@@ -121,12 +121,16 @@ describe('rows off the wire', () => {
   test('content arrives as a JSON string, since that is how the API sends it', () => {
     const node = block('c', text('Warm-up'));
 
-    assert.deepEqual(nodeToRow({ id: 'c', parentId: null, ordering: '3', content: JSON.stringify(node) }), {
-      id: 'c',
-      parentId: null,
-      ordering: 3,
-      content: node,
-    });
+    assert.deepEqual(
+      nodeToRow({
+        id: 'c',
+        parentId: null,
+        ordering: '3',
+        content: JSON.stringify(node),
+        version: '7',
+      }),
+      { id: 'c', parentId: null, ordering: 3, content: node, version: '7' },
+    );
   });
 
   test('a null parent comes back as null, not undefined', () => {
