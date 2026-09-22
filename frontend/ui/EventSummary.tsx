@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
+import { startOf } from 'date-arithmetic';
 
 export function EventSummary({ instance }: { instance: EventWithTrainerFragment }) {
   const actions = useActions(eventInstanceActions, instance);
@@ -25,7 +26,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
 
   const primaryActions = React.useMemo(() => {
     return [
-      new Date(instance.since) > new Date()
+      startOf(new Date(instance.since), 'day') > startOf(new Date(), 'day')
         ? 'eventInstance.registrations'
         : 'eventInstance.attendance',
       'eventInstance.edit',
