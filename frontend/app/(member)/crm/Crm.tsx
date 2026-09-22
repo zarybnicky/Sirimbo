@@ -16,7 +16,7 @@ export function Crm() {
   const dataset = React.useMemo(() => {
     return (data?.formResponses?.nodes || []).map((x) => ({
       ...x,
-      data: JSON.parse(x.data as any),
+      data: typeof x.data === 'string' ? JSON.parse(x.data) : x.data,
     }));
   }, [data?.formResponses?.nodes]);
 

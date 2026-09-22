@@ -296,13 +296,15 @@ function TenantEditDialog({ tenant }: TenantEditDialogProps) {
 }
 
 function createFormState(tenant: TenantRow): TenantFormValues {
+  const settings = tenant.tenantSettingsList[0]?.settings;
   return {
     name: tenant.name || '',
     bankAccount: tenant.bankAccount || '',
     origins: tenant.origins?.join(', ') ?? '',
     czIco: tenant.czIco || '',
     czDic: tenant.czDic || '',
-    settings: tenant.tenantSettingsList[0]?.settings ?? '{}',
+    settings:
+      typeof settings === 'string' ? settings : JSON.stringify(settings ?? {}, null, 2),
   };
 }
 
