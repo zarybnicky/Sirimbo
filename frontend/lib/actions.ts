@@ -1,13 +1,15 @@
 import React, { type ComponentType, useMemo } from 'react';
 import type { AuthState } from '@/lib/auth';
-import { useAuth } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
+import { TenantConfig } from '@/tenant/types';
 
 export type ActionContext<T> = {
   auth: AuthState;
+  tenant: TenantConfig;
   client: Client;
   router: {
     pathname: string | null;
@@ -134,6 +136,7 @@ function useBase() {
   const client = useClient();
   const router = useRouter();
   const pathname = usePathname();
+  const tenant = useTenantConfig();
 
   return useMemo(() => {
     async function mutate<D, V extends Record<string, unknown>>(
@@ -148,6 +151,7 @@ function useBase() {
       auth,
       client,
       mutate,
+      tenant,
       router: { pathname, push: router.push, replace: router.replace },
     };
   }, [auth, client, router, pathname]);

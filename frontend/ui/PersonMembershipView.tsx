@@ -222,18 +222,15 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               </div>
               {item.accessCredentialsList.map((card) => (
                 <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
-                  <div className="grow flex flex-wrap items-baseline justify-between gap-2 text-sm py-1">
+                  <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
                     <span className={card.isAllowed ? '' : 'line-through'}>
                       <b>{card.label}</b>
                       <code className="ml-2 text-neutral-11">{card.code}</code>
                     </span>
-                    <span className="text-right">
-                      <span>{formatOpenDateRange(card)}</span>
-                      <span className="block text-neutral-11">
-                        {card.lastUsed
-                          ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
-                          : 'Nikdy nepoužita'}
-                      </span>
+                    <span className="text-right text-neutral-11">
+                      {card.lastUsed
+                        ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
+                        : 'Nikdy nepoužita'}
                     </span>
                   </div>
                 </ActionRow>

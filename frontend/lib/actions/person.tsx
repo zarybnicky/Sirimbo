@@ -10,6 +10,7 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
+import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
 
 export const personActions = defineActions<PersonBasicFragment>()([
   {
@@ -82,6 +83,14 @@ export const personActions = defineActions<PersonBasicFragment>()([
         input: { tenantAdministrator: { personId: item.id } },
       });
     },
+  },
+  {
+    id: 'person.addAccessCredential',
+    group: 'add',
+    label: 'Přidat přístupovou kartu',
+    icon: UserPlus,
+    visible: ({ auth, tenant }) => auth.isAdmin && (tenant.enableStarletImport ?? false),
+    render: ({ item }) => <CreateAccessCredentialForm personId={item.id} />,
   },
   {
     id: 'person.delete',

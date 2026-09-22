@@ -9,7 +9,7 @@ import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { ActionRow } from '@/ui/ActionRow';
 import { Combobox } from '@/ui/fields/Combobox';
-import { dateTimeFormatter, formatOpenDateRange } from '@/ui/format';
+import { dateTimeFormatter } from '@/ui/format';
 import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
@@ -39,18 +39,18 @@ export function AccessCards() {
   );
   const credentialsByPerson = React.useMemo(() => {
     const result = new Map<string, (typeof credentials)[number][]>();
-    for (const credential of credentials) {
-      if (!credential.person) continue;
-      const personCredentials = result.get(credential.person.id) ?? [];
-      personCredentials.push(credential);
-      result.set(credential.person.id, personCredentials);
+    for (const x of credentials) {
+      if (!x.person) continue;
+      const personCredentials = result.get(x.person.id) ?? [];
+      personCredentials.push(x);
+      result.set(x.person.id, personCredentials);
     }
     return result;
   }, [credentials]);
   const allowedCodes = new Set(
     credentials
-      .filter((credential) => credential.isAllowed)
-      .map((credential) => `${credential.kind}:${credential.code}`),
+      .filter((x) => x.isAllowed)
+      .map((x) => `${x.kind}:${x.code}`),
   );
   const events = data?.accessEventsList ?? [];
 
@@ -67,26 +67,26 @@ export function AccessCards() {
               {person.label}
             </Link>
             <div className="space-y-1">
-              {personCredentials.map((credential) => (
-                <ActionRow key={credential.id} actions={actionMap.get(credential.id)!}>
-                  <div className="flex grow flex-wrap items-baseline justify-between gap-2 py-1 text-sm">
-                    <span className={credential.isAllowed ? '' : 'line-through'}>
-                      <b>{credential.label}</b>
-                      <code className="ml-2 text-neutral-11">{credential.code}</code>
+              {personCredentials.map((x) => (
+                <ActionRow key={x.id} actions={actionMap.get(x.id)!}>
+                  <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
+                    <span className={x.isAllowed ? '' : 'line-through'}>
+                      <b>{x.label}</b>
+                      <code className="ml-2 text-neutral-11">({x.code})</code>
                     </span>
                     <span className="text-right text-neutral-11">
-                      <span>{formatOpenDateRange(credential)}</span>
-                      <span className="block">
-                        {credential.lastUsed
-                          ? `Naposledy ${dateTimeFormatter.format(new Date(credential.lastUsed))}`
-                          : 'Nikdy nepoužita'}
-                      </span>
+                      {x.lastUsed
+                        ? `Naposledy ${dateTimeFormatter.format(new Date(x.lastUsed))}`
+                        : 'Nikdy nepoužita'}
                     </span>
                   </div>
                 </ActionRow>
               ))}
               {personCredentials.length === 0 && (
-                <span className="text-sm text-neutral-11">Bez přístupové karty</span>
+                <div className="flex gap-3 items-center text-sm text-neutral-11">
+                  <div>Bez přístupové karty</div>
+                  <AssignCard personId={person.id} people={people} />
+                </div>
               )}
             </div>
           </div>
@@ -153,33 +153,39 @@ export function AccessCards() {
 
 function AssignCard({
   event,
+  personId: initialPersonId,
   people,
 }: {
-  event: AccessEventFragment;
+  event?: AccessEventFragment;
+  personId?: string;
   people: { id: string; label: string }[];
 }) {
   const [personId, setPersonId] = React.useState<string | null>();
+  const finalPersonId = initialPersonId ?? personId;
   return (
     <Dialog>
-      <DialogTrigger size="sm" text="Přiřadit" />
+      <DialogTrigger size="xs" text="Přidat" />
       <DialogContent>
-        <DialogTitle>Přiřadit kartu {mifareCodeToLabel(event.code)}</DialogTitle>
-        <Combobox
-          value={personId}
-          onChange={setPersonId}
-          options={people}
-          label="Osoba"
-          placeholder="Vyberte osobu"
-        />
-        {personId && (
+        <DialogTitle>
+          {event ? `Přiřadit kartu ${mifareCodeToLabel(event.code)}` : 'Přidat kartu'}
+        </DialogTitle>
+        {!initialPersonId && (
+          <Combobox
+            value={personId}
+            onChange={setPersonId}
+            options={people}
+            label="Osoba"
+            placeholder="Vyberte osobu"
+          />
+        )}
+        {finalPersonId && (
           <CreateAccessCredentialForm
             key={personId}
-            personId={personId}
-            initialValue={{
-              kind: event.kind,
+            personId={finalPersonId}
+            initialValue={event ? {
               label: mifareCodeToLabel(event.code),
               code: event.code,
-            }}
+            } : undefined}
           />
         )}
       </DialogContent>

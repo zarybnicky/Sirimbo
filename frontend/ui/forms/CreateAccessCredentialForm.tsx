@@ -16,7 +16,6 @@ import {
 
 const Form = z
   .object({
-    kind: z.literal('MIFARE'),
     label: mifareLabelSchema,
     code: mifareCodeSchema,
     since: z.date(),
@@ -39,13 +38,15 @@ export function CreateAccessCredentialForm({
   initialValue,
 }: {
   personId: string;
-  initialValue?: { kind: 'MIFARE'; label: string; code: string };
+  initialValue?: {
+    label: string;
+    code: string;
+  };
 }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
-      kind: 'MIFARE' as const,
       label: initialValue?.label ?? '',
       code: initialValue?.code ?? '',
       since: new Date(),
@@ -59,7 +60,7 @@ export function CreateAccessCredentialForm({
       input: {
         accessCredential: {
           personId,
-          kind: values.kind,
+          kind: 'MIFARE',
           label: values.label,
           code: values.code,
           since: values.since.toISOString(),
