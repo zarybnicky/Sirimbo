@@ -154,7 +154,7 @@ function useBase() {
       tenant,
       router: { pathname, push: router.push, replace: router.replace },
     };
-  }, [auth, client, router, pathname]);
+  }, [auth, client, router, pathname, tenant]);
 }
 
 export function useActions<T extends object, Ids extends string>(
