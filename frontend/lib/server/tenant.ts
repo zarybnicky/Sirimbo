@@ -9,10 +9,26 @@ import { cookies, headers } from 'next/headers';
 
 const asInt = (x: any) => typeof x === 'number' ? x : !x ? Number.NaN : Number.parseInt(x.toString(), 10);
 
+export type JwtClaims = jwt.JwtPayload & {
+  exp: number;
+  user_id: string;
+  tenant_id: string;
+  email: string;
+  my_person_ids: string[];
+  my_tenant_ids: string[];
+  my_cohort_ids: string[];
+  my_couple_ids: string[];
+  is_system_admin: boolean;
+  guest_tenant_ids: string[];
+  member_tenant_ids: string[];
+  trainer_tenant_ids: string[];
+  admin_tenant_ids: string[];
+};
+
 export type RequestContext = {
   token: string | undefined;
   tenant: TenantCatalogEntry;
-  claims: jwt.JwtPayload | undefined;
+  claims: JwtClaims | undefined;
   settings: Record<string, string>;
 };
 
@@ -38,14 +54,14 @@ export async function getRequestAuth(): Promise<RequestAuthState> {
 export async function getRequestContext(): Promise<RequestContext> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
-  let claims: jwt.JwtPayload | undefined;
+  let claims: JwtClaims | undefined;
 
   if (token) {
     try {
       claims = jwt.verify(token, process.env.JWT_SECRET!, {
         algorithms: ['HS256'],
         ignoreExpiration: true,
-      }) as jwt.JwtPayload;
+      }) as JwtClaims;
     } catch (error) {
       if (!(error instanceof jwt.JsonWebTokenError)) throw error;
     }

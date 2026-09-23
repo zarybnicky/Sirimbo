@@ -1,13 +1,11 @@
 'use client';
 
-import { useAuth } from '@/lib/auth';
 import { registerUsingInvitationAction } from '@/lib/auth-actions';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { cardCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { redirect } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -25,9 +23,6 @@ type Props = {
 };
 
 export function InvitationRegistrationForm({ token, email, name }: Props) {
-  const auth = useAuth();
-  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
-
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
     defaultValues: { token: token ?? '', email: email ?? '', passwd: '' },

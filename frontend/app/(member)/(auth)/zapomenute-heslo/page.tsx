@@ -2,7 +2,7 @@
 import { cardCls } from '@/ui/style';
 import { Metadata } from 'next';
 import { ForgottenPasswordForm } from './ForgottenPasswordForm';
-import { getRequestAuth } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ForgottenPasswordPage() {
-  const { user } = await getRequestAuth();
-  if (user) redirect(user.userProxiesList.length > 0 ? '/dashboard' : '/profil');
+  const { claims } = await getRequestContext();
+  if (claims?.user_id) redirect('/dashboard');
 
   return (
     <div className={cardCls({ className: 'p-4 max-w-lg' })}>

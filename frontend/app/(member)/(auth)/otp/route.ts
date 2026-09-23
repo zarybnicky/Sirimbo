@@ -16,7 +16,9 @@ export async function GET(request: NextRequest) {
     const from = request.nextUrl.searchParams.get('from');
     const destination = !result.usr?.userProxiesList.length
       ? '/profil'
-      : from || '/dashboard';
+      : from?.startsWith('/') && !from.startsWith('//') && !from.startsWith('/\\')
+        ? from
+        : '/dashboard';
     return NextResponse.redirect(new URL(destination, request.url));
   } catch {
     return NextResponse.redirect(new URL('/otp/invalid', request.url));

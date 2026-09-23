@@ -1,5 +1,4 @@
-
-import { getRequestAuth, getRequestContext } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { ErrorPage } from '@/ui/ErrorPage';
 import type { Metadata } from 'next';
 import { RegistrationForm } from './RegistrationForm';
@@ -10,11 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterPage() {
-  const [{ tenant }, { user }] = await Promise.all([
-    getRequestContext(),
-    getRequestAuth(),
-  ]);
-  if (user) redirect(user.userProxiesList.length > 0 ? '/dashboard' : '/profil');
+  const { tenant, claims } = await getRequestContext();
+  if (claims?.user_id) redirect('/dashboard');
 
   return tenant.config.enableRegistration ? (
     <RegistrationForm />

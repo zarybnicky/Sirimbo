@@ -5,7 +5,6 @@ import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { TabMenu } from '@/ui/TabMenu';
 import { useAuth, useAuthLoading } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 import { parseAsString, useQueryState } from 'nuqs';
 
 const tabs = [
@@ -36,7 +35,6 @@ export function Dashboard() {
   );
 
   if (authLoading || !auth.user) return null;
-  if (auth.personIds.length === 0) redirect('/profil');
 
   return (
     <div className="col-full-width p-4 lg:py-8 h-full bg-neutral-2">

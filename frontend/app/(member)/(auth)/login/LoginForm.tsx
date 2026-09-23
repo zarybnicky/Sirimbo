@@ -3,11 +3,11 @@
 import { loginAction } from '@/lib/auth-actions';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
-import { useAuth, useTenantConfig } from '@/lib/auth';
+import { useTenantConfig } from '@/lib/auth';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import React from 'react';
@@ -18,9 +18,6 @@ const Form = z.object({
 });
 
 export function LoginForm() {
-  const auth = useAuth();
-  if (auth.user) redirect(auth.personIds.length > 0 ? '/dashboard' : '/profil');
-
   const { enableRegistration } = useTenantConfig();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
