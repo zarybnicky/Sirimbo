@@ -11,12 +11,13 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { countryOptions } from '@/lib/countries';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { sanitizeUnicode } from '../format';
 
 const Form = z.object({
-  firstName: z.string().min(1, 'Zadejte jméno'),
-  lastName: z.string().min(1, 'Zadejte příjmení'),
-  prefixTitle: z.string().prefault(''),
-  suffixTitle: z.string().prefault(''),
+  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
+  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
+  suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   nationality: z.string().min(1, 'Vyberte národnost'),
   birthDate: z.string().nullish(),
   taxIdentificationNumber: z

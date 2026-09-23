@@ -22,13 +22,14 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { sanitizeUnicode } from '../format';
 
 const Form = z.object({
-  prefixTitle: z.string().prefault(''),
-  firstName: z.string(),
-  lastName: z.string(),
-  suffixTitle: z.string().prefault(''),
-  gender: z.enum(['MAN', 'WOMAN']),
+  prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
+  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
+  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
+  gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
   email: z.email().nullish(),
   phone: z.string().min(9).max(14).nullish(),

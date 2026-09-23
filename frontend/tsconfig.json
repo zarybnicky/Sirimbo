@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2024",
     "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "types": ["node", "d3", "d3-sankey", "date-arithmetic", "facebook-pixel", "file-saver", "iban", "leaflet", "react", "react-dom", "pg"],
     "strict": true,

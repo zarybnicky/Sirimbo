@@ -212,3 +212,12 @@ export function capitalize(x: string | undefined | null) {
   if (!x) return '';
   return x.slice(0, 1).toUpperCase() + x.slice(1);
 }
+
+const FORBIDDEN_CHARS = /[\p{Cc}\p{Cs}\p{Co}]/gu;
+const RGI_EMOJI = /\p{RGI_Emoji}/gv;
+
+export const sanitizeUnicode = (s: string | undefined | null) =>
+  s
+    ?.replaceAll(RGI_EMOJI, "")
+    .replaceAll(FORBIDDEN_CHARS, "")
+    .normalize("NFC") ?? '';

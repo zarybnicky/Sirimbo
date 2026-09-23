@@ -6,14 +6,8 @@ import { resolveEventVenueLocations } from './eventVenueLocation.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 const rangeKeyRe = /^(\d{4})-(\d{2})$/;
-const text = z.string().transform((value) => value.trim());
-const optionalText = z
-  .string()
-  .nullish()
-  .transform((value) => {
-    const text = value?.trim();
-    return text ?? '';
-  });
+const text = z.string().overwrite((x) => x.trim());
+const optionalText = z.string().nullish().transform((x) => x?.trim()?? '');
 
 function parseRangeKey(key: string) {
   const match = rangeKeyRe.exec(key);

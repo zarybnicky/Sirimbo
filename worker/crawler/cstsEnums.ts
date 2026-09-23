@@ -6,11 +6,11 @@ export const numberAsEnum = <T extends string>(enumDict: { [key in T]: number })
     z
       .number()
       .refine((x) => Object.values(enumDict).includes(x))
-      .transform((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
+      .transform<T>((x) => Object.entries(enumDict).find(([_, n]) => x === n)?.[0]! as T),
     z
       .string()
       .refine((x) => Object.keys(enumDict).includes(x))
-      .transform((x) => x as T),
+      .transform<T>((x) => x as T),
   ]);
 
 type RanklistCompetitorPointsType =
@@ -284,6 +284,6 @@ export const competitionClassType: { [key in CompetitionClassType]: number } = {
   Gold: 12,
 };
 
-export const cstsCompetitionClass = numberAsEnum(competitionClassType).transform((x) =>
+export const cstsCompetitionClass = numberAsEnum(competitionClassType).overwrite((x) =>
   x === 'S' ? 'M' : x,
 );

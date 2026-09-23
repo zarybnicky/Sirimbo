@@ -49,7 +49,7 @@ const athleteSchema = z.object({
   idt: z.number(),
   name: z.string(),
   age: z.string(),
-  sex: z.enum(['M', 'F', 'male', 'female']).transform((x): gender => {
+  sex: z.enum(['M', 'F', 'male', 'female']).transform<gender>((x) => {
     switch (x) {
       case 'M':
       case 'male':

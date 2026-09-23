@@ -33,6 +33,7 @@ import { z } from 'zod';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { sanitizeUnicode } from './format';
 
 const url = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),
@@ -53,10 +54,10 @@ function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.c
 }
 
 const Form = z.object({
-  prefixTitle: z.string().prefault(''),
-  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno'),
-  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení'),
-  suffixTitle: z.string().prefault(''),
+  prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
+  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
+  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
   cstsId: z.number().int().positive().nullable().optional(),

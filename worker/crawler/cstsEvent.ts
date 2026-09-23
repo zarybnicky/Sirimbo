@@ -32,9 +32,9 @@ const competitionSchema = z.object({
   competitionId: z.number(),
   age: z
     .string()
-    .transform((x) => x.replace(' ', '_'))
+    .overwrite((x) => x.replace(' ', '_'))
     .refine((x) => Object.keys(ageGroup).includes(x))
-    .transform((x) => x as AgeGroup),
+    .transform<AgeGroup>((x) => x as AgeGroup),
   chairPersonId: z.number(),
   checkInEnd: z.iso.time().optional(),
   completedAt: z.iso.datetime({ offset: true }).optional(),
@@ -46,10 +46,10 @@ const competitionSchema = z.object({
   date: z.iso.date(),
   discipline: z
     .string()
-    .transform((x) => x.replace('+', '_'))
-    .transform((x) => (x === 'TenDances' ? 'TenDance' : x))
+    .overwrite((x) => x.replace('+', '_'))
+    .overwrite((x) => (x === 'TenDances' ? 'TenDance' : x))
     .refine((x) => Object.keys(disciplineType).includes(x))
-    .transform((x) => x as DisciplineType),
+    .transform<DisciplineType>((x) => x as DisciplineType),
   grade: numberAsEnum(competitionType),
   excused: z.number(),
   registered: z.number(),
