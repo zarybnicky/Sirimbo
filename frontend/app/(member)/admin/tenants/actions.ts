@@ -1,20 +1,22 @@
 'use server';
 
-import { withRequestPgClient } from '@/lib/server/postgresql';
+import { withTransaction } from '@/lib/server/postgresql';
+import { getRequestContext } from '@/lib/server/tenant';
 
 export async function sendTestEmail() {
-  await withRequestPgClient(async (client, settings) => {
-    if (settings.role !== 'system_admin') throw new Error('FORBIDDEN');
+  const { claims } = await getRequestContext();
+  if (!claims || claims.role !== 'system_admin') throw new Error('FORBIDDEN');
 
+  await withTransaction(async (client) => {
     await client.query('select graphile_worker.add_job($1, $2::json)', [
       'send_email',
       JSON.stringify({
         options: {
-          to: settings['jwt.claims.email']?.trim(),
+          to: claims.email.trim(),
           subject: '[Rozpisovník] Test e-mail',
           text: [
             `Sent: ${new Date().toISOString()}`,
-            `User: ${settings['jwt.claims.user_id'] || 'unknown'}`,
+            `User: ${claims.user_id}`,
           ].join('\n'),
         },
       }),

@@ -6,6 +6,7 @@ import { SESSION_COOKIE } from '@/lib/session-cookies';
 import { defaultTenant, getTenant, hostToTenant, type TenantCatalogEntry } from '@/tenant/catalog';
 import jwt from 'jsonwebtoken';
 import { cookies, headers } from 'next/headers';
+import { cache } from 'react';
 
 const asInt = (x: any) => typeof x === 'number' ? x : !x ? Number.NaN : Number.parseInt(x.toString(), 10);
 
@@ -29,10 +30,10 @@ export type RequestContext = {
   token: string | undefined;
   tenant: TenantCatalogEntry;
   claims: JwtClaims | undefined;
-  settings: Record<string, string>;
+  pgSettings: Record<string, string>;
 };
 
-export async function getRequestAuth(): Promise<RequestAuthState> {
+export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
   const cookieStore = await cookies();
 
   if (!cookieStore.has(SESSION_COOKIE)) {
@@ -49,9 +50,9 @@ export async function getRequestAuth(): Promise<RequestAuthState> {
     claims,
     user: data.getCurrentUser,
   };
-}
+});
 
-export async function getRequestContext(): Promise<RequestContext> {
+export const getRequestContext = cache(async (): Promise<RequestContext> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   let claims: JwtClaims | undefined;
@@ -69,14 +70,14 @@ export async function getRequestContext(): Promise<RequestContext> {
 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
   const tenant = cookieTenant ?? await getRequestHostTenant();
-  const settings: Record<string, string> = {
+  const pgSettings: Record<string, string> = {
     role: 'anonymous',
     'jwt.claims.user_id': '',
     'jwt.claims.tenant_id': tenant.id.toString(),
   };
 
   if (claims) {
-    settings.role = claims.is_system_admin
+    pgSettings.role = claims.is_system_admin
       ? 'system_admin'
       : claims.admin_tenant_ids?.map(asInt).includes(tenant.id)
         ? 'administrator'
@@ -88,15 +89,15 @@ export async function getRequestContext(): Promise<RequestContext> {
 
     for (const [key, value] of Object.entries(claims)) {
       if (!['exp', 'aud', 'iat', 'iss', 'tenant_id'].includes(key)) {
-        settings[`jwt.claims.${key}`] = Array.isArray(value)
+        pgSettings[`jwt.claims.${key}`] = Array.isArray(value)
           ? `{${value.join(',')}}`
           : String(value);
       }
     }
   }
 
-  return { tenant, claims, settings, token };
-}
+  return { token, tenant, claims, pgSettings };
+});
 
 async function getRequestHostTenant() {
   const headerStore = await headers();

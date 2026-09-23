@@ -21,6 +21,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
-  const { settings } = await getRequestContext();
-  return NextResponse.json(settings);
+  const { pgSettings } = await getRequestContext();
+  return NextResponse.json(pgSettings);
 }

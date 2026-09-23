@@ -1,4 +1,6 @@
 
+import { getRequestContext } from '@/lib/server/tenant';
+import { sameOrigin } from '@/lib/server/session';
 import type { NextRequest } from 'next/server';
 
 const UPSTREAM = 'https://evidence.tsstarlet.com';
@@ -6,6 +8,16 @@ const UPSTREAM = 'https://evidence.tsstarlet.com';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  if (!sameOrigin(req)) {
+    return Response.json({ error: 'Invalid origin' }, { status: 403 });
+  }
+
+  const { claims, tenant } = await getRequestContext();
+  const isAdmin = claims?.is_system_admin || claims?.admin_tenant_ids.includes(tenant.id.toString());
+  if (!tenant.config.enableStarletImport || !isAdmin) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
   const body = await req.json().catch(() => null);
 
   const isLogin = !!body && typeof body === 'object' && body.query === '';

@@ -47,10 +47,10 @@ export async function withTransaction<TResult>(
 export async function withRequestPgClient<TResult>(
   callback: (client: PoolClient, settings: Record<string, string>) => Promise<TResult>,
 ) {
-  const { settings } = await getRequestContext();
+  const { pgSettings } = await getRequestContext();
 
   return withTransaction(async (client) => {
-    const entries = Object.entries(settings);
+    const entries = Object.entries(pgSettings);
     await client.query(
       `select set_config(name, value, true)
        from unnest($1::text[], $2::text[]) as setting(name, value)`,
@@ -59,6 +59,6 @@ export async function withRequestPgClient<TResult>(
         entries.map(([, value]) => value),
       ],
     );
-    return callback(client, settings);
+    return callback(client, pgSettings);
   });
 }
