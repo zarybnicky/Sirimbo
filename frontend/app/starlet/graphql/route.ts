@@ -1,4 +1,3 @@
-
 import { getRequestContext } from '@/lib/server/tenant';
 import { sameOrigin } from '@/lib/server/session';
 import type { NextRequest } from 'next/server';
@@ -12,9 +11,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
-  const { claims, tenant } = await getRequestContext();
-  const isAdmin = claims?.is_system_admin || claims?.admin_tenant_ids.includes(tenant.id.toString());
-  if (!tenant.config.enableStarletImport || !isAdmin) {
+  const { auth, tenant } = await getRequestContext();
+  if (!tenant.config.enableStarletImport || !auth.isAdmin) {
     return Response.json({ error: 'Forbidden' }, { status: 403 });
   }
 

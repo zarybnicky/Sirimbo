@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-  const { claims } = await getRequestContext();
-  if (claims?.user_id) redirect('/dashboard');
+  const { auth } = await getRequestContext();
+  if (auth.isLoggedIn) redirect('/dashboard');
 
   return (
     <div className={cardCls()}>

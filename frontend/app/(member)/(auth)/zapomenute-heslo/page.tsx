@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ForgottenPasswordPage() {
-  const { claims } = await getRequestContext();
-  if (claims?.user_id) redirect('/dashboard');
+  const { auth } = await getRequestContext();
+  if (auth.isLoggedIn) redirect('/dashboard');
 
   return (
     <div className={cardCls({ className: 'p-4 max-w-lg' })}>

@@ -1,5 +1,11 @@
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
-import type { RequestAuthState, SessionClaims } from '@/lib/auth';
+import type { RequestAuthState } from '@/lib/auth';
+import {
+  parseCurrentClaims,
+  resolveAuth,
+  type JwtClaims,
+  type ResolvedAuth,
+} from '@/lib/auth-claims';
 import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
@@ -8,28 +14,10 @@ import jwt from 'jsonwebtoken';
 import { cookies, headers } from 'next/headers';
 import { cache } from 'react';
 
-const asInt = (x: any) => typeof x === 'number' ? x : !x ? Number.NaN : Number.parseInt(x.toString(), 10);
-
-export type JwtClaims = jwt.JwtPayload & {
-  exp: number;
-  user_id: string;
-  tenant_id: string;
-  email: string;
-  my_person_ids: string[];
-  my_tenant_ids: string[];
-  my_cohort_ids: string[];
-  my_couple_ids: string[];
-  is_system_admin: boolean;
-  guest_tenant_ids: string[];
-  member_tenant_ids: string[];
-  trainer_tenant_ids: string[];
-  admin_tenant_ids: string[];
-};
-
 export type RequestContext = {
   token: string | undefined;
   tenant: TenantCatalogEntry;
-  claims: JwtClaims | undefined;
+  auth: ResolvedAuth;
   pgSettings: Record<string, string>;
 };
 
@@ -41,10 +29,7 @@ export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
   }
 
   const data = await executeGraphql(CurrentUserDocument, { versionId: buildId });
-  const claims =
-    typeof data.currentClaims === 'string'
-      ? (JSON.parse(data.currentClaims) as SessionClaims)
-      : (data.currentClaims as SessionClaims | null);
+  const claims = parseCurrentClaims(data.currentClaims);
 
   return {
     claims,
@@ -70,23 +55,13 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
   const tenant = cookieTenant ?? await getRequestHostTenant();
+  const auth = resolveAuth(claims, tenant.id.toString());
   const pgSettings: Record<string, string> = {
-    role: 'anonymous',
-    'jwt.claims.user_id': '',
+    role: auth.role,
     'jwt.claims.tenant_id': tenant.id.toString(),
   };
 
   if (claims) {
-    pgSettings.role = claims.is_system_admin
-      ? 'system_admin'
-      : claims.admin_tenant_ids?.map(asInt).includes(tenant.id)
-        ? 'administrator'
-        : claims.trainer_tenant_ids?.map(asInt).includes(tenant.id)
-          ? 'trainer'
-          : claims.member_tenant_ids?.map(asInt).includes(tenant.id)
-            ? 'member'
-            : 'anonymous';
-
     for (const [key, value] of Object.entries(claims)) {
       if (!['exp', 'aud', 'iat', 'iss', 'tenant_id'].includes(key)) {
         pgSettings[`jwt.claims.${key}`] = Array.isArray(value)
@@ -96,7 +71,7 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
     }
   }
 
-  return { token, tenant, claims, pgSettings };
+  return { token, tenant, auth, pgSettings };
 });
 
 async function getRequestHostTenant() {

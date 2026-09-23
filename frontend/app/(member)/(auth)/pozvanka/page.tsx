@@ -17,8 +17,8 @@ export default async function InvitationPage({
 }: {
   searchParams: Promise<{ token?: string | string[] }>;
 }) {
-  const { claims } = await getRequestContext();
-  if (claims?.user_id) redirect('/dashboard');
+  const { auth } = await getRequestContext();
+  if (auth.isLoggedIn) redirect('/dashboard');
 
   const search = await searchParams;
   const token = Array.isArray(search.token) ? search.token[0] : search.token;

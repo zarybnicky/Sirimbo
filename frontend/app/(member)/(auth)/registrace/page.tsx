@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterPage() {
-  const { tenant, claims } = await getRequestContext();
-  if (claims?.user_id) redirect('/dashboard');
+  const { tenant, auth } = await getRequestContext();
+  if (auth.isLoggedIn) redirect('/dashboard');
 
   return tenant.config.enableRegistration ? (
     <RegistrationForm />

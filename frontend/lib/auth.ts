@@ -1,4 +1,9 @@
 import { atom, createStore, type PrimitiveAtom, useAtomValue } from 'jotai';
+import {
+  resolveAuth,
+  type JwtClaims,
+  type ResolvedAuth,
+} from '@/lib/auth-claims';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
@@ -6,23 +11,15 @@ import { SESSION_COOKIE, SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next/client';
 
-export type SessionClaims = {
-  guest_tenant_ids: number[];
-  member_tenant_ids: number[];
-  trainer_tenant_ids: number[];
-  admin_tenant_ids: number[];
-  is_system_admin: boolean;
-};
-
 export type RequestAuthState = {
-  claims: SessionClaims | null;
+  claims: JwtClaims | null;
   user: UserAuthFragment | null;
 };
 
 export const authAtom = atom<RequestAuthState>({ claims: null, user: null });
 export const tenantAtom = atom<TenantCatalogEntry>(defaultTenant);
 
-export interface AuthState {
+export interface AuthState extends ResolvedAuth {
   user: null | {
     id: string;
     uLogin: string | null;
@@ -30,34 +27,15 @@ export interface AuthState {
   };
   persons: PersonFragment[];
   couples: CoupleFragment[];
-  personIds: string[];
-  tenantIds: number[];
-  isExternal: boolean;
-  isGuest: boolean;
-  isMember: boolean;
-  isTrainer: boolean;
-  isAdmin: boolean;
-  isSystemAdmin: boolean;
-  isTrainerOrAdmin: boolean;
-  isLoggedIn: boolean;
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;
 }
 
 const defaultAuthState: AuthState = {
+  ...resolveAuth(null, defaultTenant.id.toString()),
   user: null,
   persons: [],
   couples: [],
-  personIds: [],
-  tenantIds: [],
-  isExternal: true,
-  isGuest: false,
-  isMember: false,
-  isTrainer: false,
-  isAdmin: false,
-  isSystemAdmin: false,
-  isTrainerOrAdmin: false,
-  isLoggedIn: false,
   isMyPerson: () => false,
   isMyCouple: () => false,
 };
@@ -133,52 +111,18 @@ export const tokenAtom = atom<string | null, [string | null], void>(
   },
 );
 
-function resolveAuthState(
-  claims: SessionClaims | null,
-  user: UserAuthFragment | null,
-  tenantId: number,
-) {
+const authHelpersAtom = atom<AuthState>((get) => {
+  const { claims, user } = get(authAtom);
   if (!user || !claims) return defaultAuthState;
-
+  const auth = resolveAuth(claims, get(tenantIdAtom));
   const persons = user.userProxiesList.flatMap((x) => (x.person ? [x.person] : []));
-  const isGuest = claims.guest_tenant_ids.includes(tenantId);
-  const isMember = claims.member_tenant_ids.includes(tenantId);
-  const isTrainer = claims.trainer_tenant_ids.includes(tenantId);
-  const isAdmin = claims.admin_tenant_ids.includes(tenantId);
-  const isSystemAdmin = claims.is_system_admin;
-
-  const tenantIds = new Set([
-    ...claims.guest_tenant_ids,
-    ...claims.member_tenant_ids,
-    ...claims.trainer_tenant_ids,
-    ...claims.admin_tenant_ids,
-  ]);
-
   return {
+    ...auth,
     user,
     persons,
     couples: persons.flatMap((x) => x.allCouplesList || []),
-    personIds: persons.map((x) => x.id),
-    tenantIds: [...tenantIds],
-    isLoggedIn: true,
-    isExternal: persons.length === 0,
-    isGuest,
-    isMember,
-    isTrainer,
-    isTrainerOrAdmin: isTrainer || isAdmin,
-    isAdmin: isAdmin || isSystemAdmin,
-    isSystemAdmin,
-  };
-}
-
-const authHelpersAtom = atom<AuthState>((get) => {
-  const { claims, user } = get(authAtom);
-  const auth = resolveAuthState(claims, user, get(tenantAtom).id);
-  return {
-    ...auth,
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
-    isMyCouple: (id: string | null | undefined) =>
-      !!id && auth.couples.some((x) => x.id === id),
+    isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
   };
 });
 

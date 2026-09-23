@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const { claims } = await getRequestContext();
-  if (claims?.my_person_ids.length === 0) redirect('/profil');
+  const { auth } = await getRequestContext();
+  if (auth.isLoggedIn && auth.isExternal) redirect('/profil');
 
   return (
     <Layout requireMember className="grow content relative content-stretch">

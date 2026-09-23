@@ -7,8 +7,8 @@ import {
   authAtom,
   sessionPresentAtom,
   tokenAtom,
-  type SessionClaims,
 } from '@/lib/auth';
+import { parseCurrentClaims } from '@/lib/auth-claims';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { buildId } from '@/lib/build-id';
 
@@ -29,10 +29,7 @@ export const SessionRefresher = React.memo(function SessionRefresher() {
   React.useEffect(() => {
     if (!fetching && data) {
       setRequestAuth({
-        claims:
-          typeof data.currentClaims === 'string'
-            ? (JSON.parse(data.currentClaims) as SessionClaims)
-            : (data.currentClaims as SessionClaims | null),
+        claims: parseCurrentClaims(data.currentClaims),
         user: data.getCurrentUser,
       });
     }
