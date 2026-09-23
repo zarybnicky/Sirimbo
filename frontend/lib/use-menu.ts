@@ -1,14 +1,11 @@
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { canAccess, type AccessRequirements, type ResolvedAuth } from '@/lib/auth-claims';
 import type { TenantConfig } from '@/tenant/types';
-import type { LinkProps } from 'next/link';
-
-type Route = LinkProps['href'];
 
 export type MenuLink = AccessRequirements & {
   type: 'link';
   title: string;
-  href: Route;
+  href: string;
   className?: string;
 };
 
@@ -20,7 +17,7 @@ export type MenuStructItem =
     }
   | MenuLink;
 
-export function getHrefs(x: MenuStructItem): Route[] {
+export function getHrefs(x: MenuStructItem): string[] {
   return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
 }
 

@@ -3,7 +3,6 @@ import { buildId } from '@/lib/build-id';
 import { cn } from '@/lib/cn';
 import { sidebarWidthAtom } from '@/lib/ui';
 import {
-  getHrefs,
   type MenuLink,
   type MenuStructItem,
   topMenu,
@@ -13,7 +12,7 @@ import { getTenantUi } from '@/tenant/ui';
 import { TenantSelect } from '@/ui/TenantSelect';
 import { useSetAtom } from 'jotai';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 type SidebarProps = {
@@ -189,11 +188,15 @@ type SidebarLinkProps = {
 
 function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const pathname = usePathname() ?? '';
-  const inPath = getHrefs(item).some((x) => {
-    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
-    if (!y) return false;
-    return y === '/' ? false : pathname.startsWith(y);
-  });
+  const searchParams = useSearchParams();
+  const [href, query] = item.href.split('?');
+  const inPath =
+    !!href &&
+    (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)) &&
+    (!query ||
+      [...new URLSearchParams(query)].every(
+        ([name, value]) => searchParams?.get(name) === value,
+      ));
 
   return (
     <Link

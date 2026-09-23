@@ -71,9 +71,9 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
 
 function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: string }) {
   const inPath = getHrefs(item).some((x) => {
-    const y = typeof x === 'object' ? ('pathname' in x ? x.pathname : '') : x;
+    const [y] = x.split('?');
     if (!y) return false;
-    return y === '/' ? pathname === '/' : pathname.startsWith(y);
+    return y === '/' ? pathname === '/' : pathname === y || pathname.startsWith(`${y}/`);
   });
 
   const classes = cn(
