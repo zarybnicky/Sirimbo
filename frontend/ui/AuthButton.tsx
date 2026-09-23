@@ -49,17 +49,11 @@ export function AuthButton() {
           ) : (
             <React.Fragment key={item.title}>
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
-              {item.children
-                .filter(
-                  (item) =>
-                    (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                    (!item.requireAdmin || auth.isAdmin),
-                )
-                .map((item) => (
-                  <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
-                    {item.title}
-                  </DropdownMenuLink>
-                ))}
+              {item.children.map((item) => (
+                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+                  {item.title}
+                </DropdownMenuLink>
+              ))}
             </React.Fragment>
           ),
         )}

@@ -1,5 +1,6 @@
 'use client';
 
+import { canAccess, type AuthRequirements } from '@/lib/auth-claims';
 import { getTenantUi } from '@/tenant/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useAuth, useAuthLoading, useTenantConfig, useTenantId } from '@/lib/auth';
@@ -9,16 +10,11 @@ import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-type LayoutProps = {
+type LayoutProps = AuthRequirements & {
   hideTopMenuIfLoggedIn?: boolean;
   showTopMenu?: boolean;
   children?: React.ReactNode;
   hideCta?: boolean;
-  requireUser?: boolean;
-  requireMember?: boolean;
-  requireAdmin?: boolean;
-  requireTrainer?: boolean;
-  requireSystemAdmin?: boolean;
   className?: string;
 };
 
@@ -27,12 +23,8 @@ export const Layout = React.memo(function Layout({
   showTopMenu,
   hideTopMenuIfLoggedIn,
   hideCta,
-  requireUser,
-  requireMember,
-  requireAdmin,
-  requireTrainer,
-  requireSystemAdmin,
   className,
+  ...requirements
 }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
@@ -45,12 +37,7 @@ export const Layout = React.memo(function Layout({
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
-  const missingPermission =
-    (requireUser && !auth.isLoggedIn) ||
-    (requireMember && !auth.isMember && !auth.isTrainerOrAdmin) ||
-    (requireTrainer && !auth.isTrainerOrAdmin) ||
-    (requireAdmin && !auth.isAdmin) ||
-    (requireSystemAdmin && !auth.isSystemAdmin);
+  const missingPermission = !canAccess(auth, requirements);
 
   React.useEffect(() => {
     if (!authLoading && missingPermission && !auth.user) {

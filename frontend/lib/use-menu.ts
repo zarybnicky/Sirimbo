@@ -1,15 +1,17 @@
-import { useTenantConfig } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
+import {
+  canAccess,
+  type AuthRequirements,
+  type ResolvedAuth,
+} from '@/lib/auth-claims';
 import type { LinkProps } from 'next/link';
 
 type Route = LinkProps['href'];
 
-export type MenuLink = {
+export type MenuLink = AuthRequirements & {
   type: 'link';
   title: string;
   href: Route;
-  requireTrainer?: boolean;
-  requireAdmin?: boolean;
-  requireSystemAdmin?: boolean;
   className?: string;
 };
 
@@ -23,6 +25,22 @@ export type MenuStructItem =
 
 export function getHrefs(x: MenuStructItem): Route[] {
   return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
+}
+
+function filterMenu(
+  items: readonly MenuStructItem[],
+  auth: ResolvedAuth,
+): MenuStructItem[] {
+  const result: MenuStructItem[] = [];
+  for (const item of items) {
+    if (item.type === 'link') {
+      if (canAccess(auth, item)) result.push(item);
+    } else {
+      const children = item.children.filter((x) => canAccess(auth, x));
+      if (children.length > 0) result.push({ ...item, children });
+    }
+  }
+  return result;
 }
 
 export const topMenu: MenuStructItem[] = [
@@ -59,8 +77,9 @@ export const topMenu: MenuStructItem[] = [
 ];
 
 export function useMemberMenu(): MenuStructItem[] {
+  const auth = useAuth();
   const { publicSite, enableStarletImport } = useTenantConfig();
-  return [
+  return filterMenu([
     {
       type: 'link',
       title: 'Nástěnka',
@@ -154,5 +173,5 @@ export function useMemberMenu(): MenuStructItem[] {
         },
       ],
     },
-  ];
+  ], auth);
 }

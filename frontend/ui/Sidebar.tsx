@@ -74,30 +74,9 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           <div className="space-y-1 pt-3 mr-1 relative">
             {auth.user ? (
               <>
-                {memberMenu
-                  .map((item) =>
-                    item.type === 'link'
-                      ? item
-                      : {
-                          ...item,
-                          children: item.children.filter(
-                            (child) =>
-                              (!child.requireTrainer || auth.isTrainerOrAdmin) &&
-                              (!child.requireAdmin || auth.isAdmin) &&
-                              (!child.requireSystemAdmin || auth.isSystemAdmin),
-                          ),
-                        },
-                  )
-                  .filter((item): item is MenuStructItem =>
-                    item.type === 'link'
-                      ? (!item.requireTrainer || auth.isTrainerOrAdmin) &&
-                        (!item.requireAdmin || auth.isAdmin) &&
-                        (!item.requireSystemAdmin || auth.isSystemAdmin)
-                      : item.children.length > 0,
-                  )
-                  .map((item) => (
-                    <SidebarSection key={item.title} item={item} />
-                  ))}
+                {memberMenu.map((item) => (
+                  <SidebarSection key={item.title} item={item} />
+                ))}
 
                 <div className="w-full flex px-2">
                   <button

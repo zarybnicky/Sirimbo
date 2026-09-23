@@ -62,3 +62,21 @@ export function resolveAuth(
 }
 
 export type ResolvedAuth = ReturnType<typeof resolveAuth>;
+
+export type AuthRequirements = {
+  requireUser?: boolean;
+  requireMember?: boolean;
+  requireTrainer?: boolean;
+  requireAdmin?: boolean;
+  requireSystemAdmin?: boolean;
+};
+
+export function canAccess(auth: ResolvedAuth, x: AuthRequirements) {
+  return (
+    (!x.requireUser || auth.isLoggedIn) &&
+    (!x.requireMember || auth.isMember || auth.isTrainerOrAdmin) &&
+    (!x.requireTrainer || auth.isTrainerOrAdmin) &&
+    (!x.requireAdmin || auth.isAdmin) &&
+    (!x.requireSystemAdmin || auth.isSystemAdmin)
+  );
+}
