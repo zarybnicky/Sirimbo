@@ -52,6 +52,8 @@ export const SessionRefresher = React.memo(function SessionRefresher() {
   }, [sessionPresent, setSessionPresent, token]);
 
   React.useEffect(() => {
+    if (!token && !sessionPresent) return;
+
     const launchQuery = () => {
       if (
         typeof document === 'undefined' ||
@@ -63,7 +65,7 @@ export const SessionRefresher = React.memo(function SessionRefresher() {
     };
     const interval = setInterval(launchQuery, 30_000);
     return () => clearInterval(interval);
-  }, [refetch]);
+  }, [refetch, sessionPresent, token]);
 
   return null;
 });

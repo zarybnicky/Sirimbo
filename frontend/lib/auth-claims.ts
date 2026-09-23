@@ -27,11 +27,11 @@ export function parseCurrentClaims(value: unknown): JwtClaims | null {
 export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: string) {
   const isSystemAdmin = claims?.is_system_admin ?? false;
   const isAdmin =
-    isSystemAdmin || (claims?.admin_tenant_ids.includes(tenantId) ?? false);
+    isSystemAdmin || (claims?.admin_tenant_ids?.includes(tenantId) ?? false);
   const isTrainer =
-    isAdmin || (claims?.trainer_tenant_ids.includes(tenantId) ?? false);
-  const isMember = claims?.member_tenant_ids.includes(tenantId) ?? false;
-  const isGuest = claims?.guest_tenant_ids.includes(tenantId) ?? false;
+    isAdmin || (claims?.trainer_tenant_ids?.includes(tenantId) ?? false);
+  const isMember = claims?.member_tenant_ids?.includes(tenantId) ?? false;
+  const isGuest = claims?.guest_tenant_ids?.includes(tenantId) ?? false;
 
   const role = isSystemAdmin
     ? 'system_admin'
@@ -48,7 +48,7 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: stri
     email: claims?.email,
     userId: claims?.user_id,
     personIds: claims?.my_person_ids ?? [],
-    tenantIds: claims?.my_tenant_ids.map(Number) ?? [],
+    tenantIds: claims?.my_tenant_ids?.map(Number) ?? [],
     cohortIds: claims?.my_cohort_ids ?? [],
     coupleIds: claims?.my_couple_ids ?? [],
     isExternal: !claims?.my_person_ids.length,
