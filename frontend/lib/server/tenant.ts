@@ -10,6 +10,7 @@ import { cookies, headers } from 'next/headers';
 const asInt = (x: any) => typeof x === 'number' ? x : !x ? Number.NaN : Number.parseInt(x.toString(), 10);
 
 export type RequestContext = {
+  token: string | undefined;
   tenant: TenantCatalogEntry;
   claims: jwt.JwtPayload | undefined;
   settings: Record<string, string>;
@@ -34,11 +35,6 @@ export async function getRequestAuth(): Promise<RequestAuthState> {
   };
 }
 
-export async function getRequestTenant() {
-  const { tenant } = await getRequestContext();
-  return tenant;
-}
-
 export async function getRequestContext(): Promise<RequestContext> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
@@ -59,6 +55,7 @@ export async function getRequestContext(): Promise<RequestContext> {
   const tenant = cookieTenant ?? await getRequestHostTenant();
   const settings: Record<string, string> = {
     role: 'anonymous',
+    'jwt.claims.user_id': '',
     'jwt.claims.tenant_id': tenant.id.toString(),
   };
 
@@ -82,7 +79,7 @@ export async function getRequestContext(): Promise<RequestContext> {
     }
   }
 
-  return { tenant, claims, settings };
+  return { tenant, claims, settings, token };
 }
 
 async function getRequestHostTenant() {

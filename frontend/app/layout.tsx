@@ -1,5 +1,5 @@
 
-import { getRequestAuth, getRequestTenant } from '@/lib/server/tenant';
+import { getRequestAuth, getRequestContext } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';
@@ -13,7 +13,7 @@ import '../style/leaflet.css';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { name, config } = await getRequestTenant();
+  const { tenant: { name, config } } = await getRequestContext();
   const { seo, publicSite, origin } = config;
   const linkTags = seo.additionalLinkTags ?? [];
 
@@ -88,7 +88,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export async function generateViewport(): Promise<Viewport> {
-  const tenant = await getRequestTenant();
+  const { tenant } = await getRequestContext();
 
   return {
     themeColor: tenant.config.seo.themeColor,
@@ -96,8 +96,8 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [tenant, auth, cookieStore] = await Promise.all([
-    getRequestTenant(),
+  const [{ tenant }, auth, cookieStore] = await Promise.all([
+    getRequestContext(),
     getRequestAuth(),
     cookies(),
   ]);

@@ -1,7 +1,7 @@
 import { EventWithAttendanceDocument } from '@/graphql/Event';
 import { executeGraphql } from '@/lib/server/graphql';
 import { stripHtml } from '@/lib/stripHtml';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { EventPageClient } from './EventPageClient';
@@ -22,10 +22,10 @@ const loadEvent = cache(async (id: string, share: string) => {
 });
 
 async function resolvePage(props: PageProps) {
-  const [{ id }, search, tenant] = await Promise.all([
+  const [{ id }, search, { tenant }] = await Promise.all([
     props.params,
     props.searchParams,
-    getRequestTenant(),
+    getRequestContext(),
   ]);
   const token = Array.isArray(search.share) ? search.share[0] : search.share;
   const shareToken = /^[A-Za-z0-9_-]{32}$/.test(token ?? '') ? token : undefined;

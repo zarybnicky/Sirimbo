@@ -1,10 +1,9 @@
 import 'server-only';
 
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { print } from 'graphql';
-import { cookies } from 'next/headers';
 
 type GraphqlError = {
   message: string;
@@ -31,9 +30,7 @@ export async function executeGraphql<
   variables?: TVariables,
   headers?: Record<string, string>,
 ) {
-  const tenant = await getRequestTenant();
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const { tenant, token } = await getRequestContext();
   const response = await fetch(graphqlUrl(), {
     method: 'POST',
     cache: 'no-store',

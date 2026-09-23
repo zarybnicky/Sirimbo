@@ -1,4 +1,4 @@
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function StarletImportPage() {
-  const tenant = await getRequestTenant();
+  const { tenant } = await getRequestContext();
   if (!tenant.config.enableStarletImport) notFound();
 
   return (

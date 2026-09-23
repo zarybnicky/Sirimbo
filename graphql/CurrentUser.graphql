@@ -2,7 +2,7 @@ fragment UserAuth on User {
   id
   uLogin
   uEmail
-  userProxiesList {
+  userProxiesList(condition: { status: ACTIVE }) {
     id
     person {
       ...Person

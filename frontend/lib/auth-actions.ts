@@ -9,7 +9,6 @@ import {
 } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
-import { getRequestTenant } from '@/lib/server/tenant';
 
 type AuthActionResult = { error: string } | { redirectTo: string };
 
@@ -28,10 +27,8 @@ export async function loginAction(
       error: error instanceof Error ? error.message : 'Přihlášení se nezdařilo',
     };
   }
-  const tenant = await getRequestTenant();
-  const fallback = tenant.config.publicSite ? '/dashboard' : '/rozpis';
   return {
-    redirectTo: from?.startsWith('/') && !from.startsWith('//') ? from : fallback,
+    redirectTo: from?.startsWith('/') && !from.startsWith('//') ? from : '/dashboard',
   };
 }
 
@@ -68,6 +65,5 @@ export async function registerUsingInvitationAction(
         error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit',
     };
   }
-  const tenant = await getRequestTenant();
-  return { redirectTo: tenant.config.publicSite ? '/dashboard' : '/rozpis' };
+  return { redirectTo: '/dashboard' };
 }

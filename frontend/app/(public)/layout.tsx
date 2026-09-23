@@ -1,10 +1,10 @@
+import { getRequestContext } from '@/lib/server/tenant';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
-import { getRequestTenant } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import type { ReactNode } from 'react';
 
 export default async function PublicLayout({ children }: { children: ReactNode }) {
-  const tenant = await getRequestTenant();
+  const { tenant } = await getRequestContext();
   const structuredData = getTenantStructuredData(tenant);
 
   return (

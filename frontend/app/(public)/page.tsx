@@ -1,6 +1,6 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { CallToAction } from '@/ui/CallToAction';
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [tenant, data] = await Promise.all([
-    getRequestTenant(),
+  const [{ tenant }, data] = await Promise.all([
+    getRequestContext(),
     executeGraphql(ArticlesDocument, {
       first: 6,
       offset: 0,

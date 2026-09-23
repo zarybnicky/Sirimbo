@@ -1,10 +1,10 @@
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import type { MetadataRoute } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  const tenant = await getRequestTenant();
+  const { tenant } = await getRequestContext();
 
   return {
     rules: {

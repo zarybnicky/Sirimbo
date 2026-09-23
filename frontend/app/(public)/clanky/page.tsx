@@ -1,6 +1,6 @@
 import { ArticlesDocument } from '@/graphql/Articles';
 import { executeGraphql } from '@/lib/server/graphql';
-import { getRequestTenant } from '@/lib/server/tenant';
+import { getRequestContext } from '@/lib/server/tenant';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { Pagination } from '@/ui/Pagination';
@@ -38,13 +38,13 @@ export async function generateMetadata({
 
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const currentPage = await getCurrentPage(searchParams);
-  const [{ aktualities }, tenant] = await Promise.all([
+  const [{ aktualities }, { tenant }] = await Promise.all([
     executeGraphql(ArticlesDocument, {
       first: pageSize,
       offset: (currentPage - 1) * pageSize,
       visibleOnly: true,
     }),
-    getRequestTenant(),
+    getRequestContext(),
   ]);
   return (
     <>
