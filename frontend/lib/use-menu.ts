@@ -1,14 +1,11 @@
 import { useAuth, useTenantConfig } from '@/lib/auth';
-import {
-  canAccess,
-  type AuthRequirements,
-  type ResolvedAuth,
-} from '@/lib/auth-claims';
+import { canAccess, type AccessRequirements, type ResolvedAuth } from '@/lib/auth-claims';
+import type { TenantConfig } from '@/tenant/types';
 import type { LinkProps } from 'next/link';
 
 type Route = LinkProps['href'];
 
-export type MenuLink = AuthRequirements & {
+export type MenuLink = AccessRequirements & {
   type: 'link';
   title: string;
   href: Route;
@@ -30,13 +27,14 @@ export function getHrefs(x: MenuStructItem): Route[] {
 function filterMenu(
   items: readonly MenuStructItem[],
   auth: ResolvedAuth,
+  tenant: TenantConfig,
 ): MenuStructItem[] {
   const result: MenuStructItem[] = [];
   for (const item of items) {
     if (item.type === 'link') {
-      if (canAccess(auth, item)) result.push(item);
+      if (canAccess(auth, tenant, item)) result.push(item);
     } else {
-      const children = item.children.filter((x) => canAccess(auth, x));
+      const children = item.children.filter((x) => canAccess(auth, tenant, x));
       if (children.length > 0) result.push({ ...item, children });
     }
   }
@@ -76,102 +74,97 @@ export const topMenu: MenuStructItem[] = [
   { type: 'link', title: 'Kontakt', href: '/kontakt' },
 ];
 
+const memberMenu: MenuStructItem[] = [
+  {
+    type: 'link',
+    title: 'Nástěnka',
+    href: '/dashboard?tab=myAnnouncements',
+  },
+  {
+    type: 'link',
+    title: 'Stálá nástěnka',
+    className: 'lg:hidden',
+    href: '/dashboard?tab=stickyAnnouncements',
+    requirePublicSite: true,
+  },
+  { type: 'link', title: 'Profil', href: '/profil' },
+  {
+    type: 'menu',
+    title: 'Tréninky',
+    children: [
+      {
+        type: 'link',
+        title: 'Moje tréninky',
+        href: '/dashboard?tab=myLessons',
+      },
+      { type: 'link', title: 'Kalendář', href: '/rozpis' },
+      { type: 'link', title: 'Seznam akcí', href: '/akce' },
+    ],
+  },
+  {
+    type: 'menu',
+    title: 'Taneční klub',
+    children: [
+      { type: 'link', title: 'Klub', href: '/tanecni-klub' },
+      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+      { type: 'link', title: 'Páry', href: '/pary' },
+      { type: 'link', title: 'Členové', href: '/clenove' },
+      { type: 'link', title: 'Žebříček', href: '/zebricek' },
+    ],
+  },
+  {
+    type: 'menu',
+    title: 'Správa',
+    children: [
+      { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
+      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
+      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
+      {
+        type: 'link',
+        title: 'Články',
+        href: '/aktuality',
+        requireTrainer: true,
+        requirePublicSite: true,
+      },
+      {
+        type: 'link',
+        title: 'Vyplněné formuláře',
+        href: '/crm',
+        requireAdmin: true,
+        requirePublicSite: true,
+      },
+      {
+        type: 'link',
+        title: 'Přístupy',
+        href: '/pristupy',
+        requireAdmin: true,
+        requireStarletImport: true,
+      },
+      {
+        type: 'link',
+        title: 'Import z evidence',
+        href: '/starlet-import',
+        requireAdmin: true,
+        requireStarletImport: true,
+      },
+    ],
+  },
+  {
+    type: 'menu',
+    title: 'Systém',
+    children: [
+      {
+        type: 'link',
+        title: 'Tenanti',
+        href: '/admin/tenants',
+        requireSystemAdmin: true,
+      },
+    ],
+  },
+];
+
 export function useMemberMenu(): MenuStructItem[] {
   const auth = useAuth();
-  const { publicSite, enableStarletImport } = useTenantConfig();
-  return filterMenu([
-    {
-      type: 'link',
-      title: 'Nástěnka',
-      href: '/dashboard?tab=myAnnouncements',
-    },
-    ...(publicSite
-      ? [
-          {
-            type: 'link' as const,
-            title: 'Stálá nástěnka',
-            className: 'lg:hidden',
-            href: '/dashboard?tab=stickyAnnouncements',
-          },
-        ]
-      : []),
-    { type: 'link', title: 'Profil', href: '/profil' },
-    {
-      type: 'menu',
-      title: 'Tréninky',
-      children: [
-        {
-          type: 'link',
-          title: 'Moje tréninky',
-          href: '/dashboard?tab=myLessons',
-        },
-        { type: 'link', title: 'Kalendář', href: '/rozpis' },
-        { type: 'link', title: 'Seznam akcí', href: '/akce' },
-      ],
-    },
-    {
-      type: 'menu',
-      title: 'Taneční klub',
-      children: [
-        { type: 'link', title: 'Klub', href: '/tanecni-klub' },
-        { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
-        { type: 'link', title: 'Páry', href: '/pary' },
-        { type: 'link', title: 'Členové', href: '/clenove' },
-        { type: 'link', title: 'Žebříček', href: '/zebricek' },
-      ],
-    },
-    {
-      type: 'menu',
-      title: 'Správa',
-      children: [
-        { type: 'link', title: 'Pozvánky', href: '/pozvanky', requireAdmin: true },
-        { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
-        { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
-        ...(publicSite
-          ? [
-              {
-                type: 'link' as const,
-                title: 'Články',
-                href: '/aktuality',
-                requireTrainer: true,
-              },
-              {
-                type: 'link' as const,
-                title: 'Vyplněné formuláře',
-                href: '/crm',
-                requireAdmin: true,
-              },
-            ]
-          : []),
-        ...(enableStarletImport
-          ? [
-              {
-                type: 'link' as const,
-                title: 'Přístupy',
-                href: '/pristupy',
-                requireAdmin: true,
-              },
-              {
-                type: 'link' as const,
-                title: 'Import z evidence',
-                href: '/starlet-import',
-                requireAdmin: true,
-              },
-            ]
-          : []),
-      ],
-    },
-    {
-      type: 'menu',
-      title: 'Systém',
-      children: [
-        {
-          type: 'link',
-          title: 'Tenanti',
-          href: '/admin/tenants',
-          requireSystemAdmin: true,
-        },
-      ],
-    },
-  ], auth);
+  const tenant = useTenantConfig();
+  return filterMenu(memberMenu, auth, tenant);
 }

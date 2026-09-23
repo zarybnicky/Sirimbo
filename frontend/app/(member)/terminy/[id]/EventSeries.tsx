@@ -46,7 +46,7 @@ export function EventSeries({
       title: React.ReactNode;
       contents: () => React.ReactNode;
     }[] = [];
-    if (auth.isTrainerOrAdmin) {
+    if (auth.isTrainer) {
       tabs.push({
         id: 'attendance',
         title: 'Účast',
@@ -59,7 +59,7 @@ export function EventSeries({
       contents: () => <EventInstances instances={series.eventsList} />,
     });
     return tabs;
-  }, [auth.isTrainerOrAdmin, series]);
+  }, [auth.isTrainer, series]);
 
   return (
     <div className="col-feature min-h-[60vh] p-4 lg:pb-8">

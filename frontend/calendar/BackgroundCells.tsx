@@ -60,7 +60,7 @@ function BackgroundCells({
   const { onSelectSlot } = useAtomValue(dragListenersAtom);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainerOrAdmin) return;
+    if (!auth.isTrainer) return;
 
     const selector = new Selection(() => rowRef.current, {
       shouldSelect(point) {
@@ -170,7 +170,7 @@ function BackgroundCells({
     });
 
     return () => selector.teardown();
-  }, [auth.isTrainerOrAdmin, onSelectSlot, range, resource, rowRef]);
+  }, [auth.isTrainer, onSelectSlot, range, resource, rowRef]);
 
   return (
     <div

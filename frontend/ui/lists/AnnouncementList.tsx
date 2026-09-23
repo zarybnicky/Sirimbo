@@ -38,7 +38,7 @@ export function AnnouncementList() {
       <div className="px-1 my-2 flex gap-2 items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase flex-1">Nástěnka</div>
 
-        {auth.isTrainerOrAdmin && (
+        {auth.isTrainer && (
           <Link
             href="/nastenka/add"
             className={buttonCls({

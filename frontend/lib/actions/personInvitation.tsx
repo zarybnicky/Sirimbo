@@ -12,7 +12,7 @@ export const personInvitationActions = defineActions<PersonInvitationActionItem>
     id: 'personinvitation.copyLink',
     label: 'Kopírovat odkaz',
     icon: Copy,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     execute: async ({ item }) => {
       await navigator.clipboard.writeText(
         `${window.location.origin}/pozvanka?token=${item.accessToken}`,
@@ -24,7 +24,7 @@ export const personInvitationActions = defineActions<PersonInvitationActionItem>
     label: 'Zrušit pozvánku',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     execute: async ({ item, mutate }) => {
       await mutate(DeleteInvitationDocument, { input: { id: item.id } });
     },

@@ -27,7 +27,7 @@ export function TrainingGroups() {
     <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
       {auth.user && (
         <TitleBar title="Tréninkové skupiny">
-          {auth.isTrainerOrAdmin && (
+          {auth.isTrainer && (
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}

@@ -14,7 +14,8 @@ export const paymentActions = defineActions<{ id: string; status: PaymentStatus 
     id: 'payment.markAsPaid',
     label: 'Označit jako zaplacenou',
     icon: HandCoins,
-    visible: ({ auth, item }) => auth.isAdmin && item.status === 'UNPAID',
+    requireAdmin: true,
+    visible: ({ item }) => item.status === 'UNPAID',
     execute: async ({ item, mutate }) => {
       await mutate(MarkAsPaidDocument, { id: item.id });
     },
@@ -24,7 +25,7 @@ export const paymentActions = defineActions<{ id: string; status: PaymentStatus 
     label: 'Smazat platbu',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm: 'Opravdu chcete smazat platbu?',
     execute: async ({ item, mutate }) => {
       await mutate(DeletePaymentDocument, { id: item.id });

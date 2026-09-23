@@ -19,14 +19,14 @@ export const cohortMembershipActions = defineActions<Item>()([
     id: 'cohortMembership.edit',
     label: 'Upravit členství',
     icon: Pencil,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <EditCohortMembershipForm id={item.id} />,
   },
   {
     id: 'cohortMembership.endToday',
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm: ({ item }) =>
       `Opravdu chcete členovi ${item.person?.name} ukončit členství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -40,7 +40,7 @@ export const cohortMembershipActions = defineActions<Item>()([
     label: 'Smazat členství',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm:
       'Opravdu chcete členství NENÁVRATNĚ smazat, včetně všech přiřazených? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {

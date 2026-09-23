@@ -61,7 +61,7 @@ export function EventRegistrations({
                   ? r.person.name || ''
                   : formatCoupleName(r.couple)}
               </div>
-              {auth.isTrainerOrAdmin && (
+              {auth.isTrainer && (
                 <div className="mt-1 text-sm text-neutral-11">
                   {r.requests.map((request) => (
                     <div key={request.id}>
@@ -92,7 +92,7 @@ export function EventRegistrations({
               {r.prefixTitle} {r.firstName} {r.lastName}{' '}
               {r.suffixTitle}
             </div>
-            {auth.isTrainerOrAdmin && r.note && (
+            {auth.isTrainer && r.note && (
               <div className="mt-1 whitespace-pre-wrap text-sm text-neutral-11">
                 {r.note}
               </div>

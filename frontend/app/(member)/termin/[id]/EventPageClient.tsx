@@ -89,7 +89,7 @@ export function EventPageClient({
       });
     }
 
-    if (instance?.type === 'CAMP' && auth.isTrainerOrAdmin) {
+    if (instance?.type === 'CAMP' && auth.isTrainer) {
       tabs.push(
         {
           id: 'lessons',
@@ -111,7 +111,7 @@ export function EventPageClient({
         },
       );
     }
-    if (auth.isTrainerOrAdmin) {
+    if (auth.isTrainer) {
       tabs.push(
         {
           id: 'attendance',
@@ -134,7 +134,7 @@ export function EventPageClient({
       );
     }
     return tabs;
-  }, [auth.isTrainerOrAdmin, auth.user?.id, hasShareToken, instance]);
+  }, [auth.isTrainer, auth.user?.id, hasShareToken, instance]);
 
   return (
     <Layout hideTopMenuIfLoggedIn>

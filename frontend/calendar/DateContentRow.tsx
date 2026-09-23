@@ -56,7 +56,7 @@ function DateContentRow({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainerOrAdmin) return;
+    if (!auth.isTrainer) return;
 
     const selector = new Selection(() => containerRef.current, {
       validContainers: [],
@@ -213,7 +213,7 @@ function DateContentRow({
     onMove,
     onResize,
     store,
-    auth.isTrainerOrAdmin,
+    auth.isTrainer,
   ]);
 
   React.useEffect(() => {

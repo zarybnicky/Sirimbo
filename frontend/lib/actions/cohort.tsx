@@ -16,14 +16,16 @@ export const cohortActions = defineActions<CohortActionItem>()([
     group: 'primary',
     label: 'Upravit',
     icon: Pencil,
-    visible: ({ auth, item }) => auth.isAdmin && !!item.id,
+    requireAdmin: true,
+    visible: ({ item }) => !!item.id,
     render: ({ item }) => <CohortForm id={item.id} />,
   },
   {
     id: 'cohort.export',
     label: 'Export členů',
     icon: Download,
-    visible: ({ auth, item }) => auth.isTrainerOrAdmin && !!item.id,
+    requireTrainer: true,
+    visible: ({ item }) => !!item.id,
     execute: async ({ item, client }) => {
       await exportCohort(client, [item.id], item.name);
     },
@@ -32,7 +34,8 @@ export const cohortActions = defineActions<CohortActionItem>()([
     id: 'cohort.copyEmails',
     label: 'Kopírovat e-maily',
     icon: Copy,
-    visible: ({ auth, item }) => auth.isTrainerOrAdmin && !!item.id,
+    requireTrainer: true,
+    visible: ({ item }) => !!item.id,
     execute: async ({ item, client }) => {
       const result = await client
         .query(PersonListDocument, { inCohorts: [item.id] })

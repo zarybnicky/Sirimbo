@@ -10,8 +10,9 @@ export const accessCredentialActions = defineActions<AccessCredentialFragment>()
     id: 'accessCredential.revoke',
     label: 'Zneplatnit kartu',
     icon: Unplug,
-    visible: ({ auth, item }) =>
-      auth.isAdmin && (!item.until || new Date(item.until) > new Date()),
+    requireAdmin: true,
+    requireStarletImport: true,
+    visible: ({ item }) => !item.until || new Date(item.until) > new Date(),
     confirm: 'Opravdu chcete zneplatnit tuto kartu?',
     execute: async ({ item, mutate }) => {
       await mutate(EndAccessCredentialDocument, {

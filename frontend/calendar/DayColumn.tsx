@@ -108,7 +108,7 @@ function DayColumn({
   }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainerOrAdmin) return;
+    if (!auth.isTrainer) return;
 
     const selector = new Selection(() => columnRef.current, {
       shouldSelect(point) {
@@ -198,10 +198,10 @@ function DayColumn({
     });
 
     return () => selector.teardown();
-  }, [onSelectSlot, resource, slotMetrics, auth.isTrainerOrAdmin]);
+  }, [onSelectSlot, resource, slotMetrics, auth.isTrainer]);
 
   useLayoutEffect(() => {
-    if (!auth.isTrainerOrAdmin) return;
+    if (!auth.isTrainer) return;
 
     const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
@@ -422,7 +422,7 @@ function DayColumn({
     onResize,
     onRemove,
     onDropFromOutside,
-    auth.isTrainerOrAdmin,
+    auth.isTrainer,
     store,
     setDragSubject,
     setExternalDragSubject,

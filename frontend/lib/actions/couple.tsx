@@ -14,7 +14,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     group: 'primary',
     label: 'Upravit',
     icon: Pencil,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <EditCoupleForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-2xl',
@@ -24,7 +24,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     id: 'couple.endToday',
     label: 'Ukončit k dnešnímu datu',
     icon: Unplug,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm: ({ item }) =>
       `Opravdu chcete partnerství ${formatCoupleName(item)} ukončit ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -41,7 +41,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm:
       'Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.',
     execute: async ({ item: { id }, mutate, router }) => {

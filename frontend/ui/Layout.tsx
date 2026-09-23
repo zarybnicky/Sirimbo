@@ -1,6 +1,6 @@
 'use client';
 
-import { canAccess, type AuthRequirements } from '@/lib/auth-claims';
+import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import { getTenantUi } from '@/tenant/ui';
 import { ErrorPage } from '@/ui/ErrorPage';
 import { useAuth, useAuthLoading, useTenantConfig, useTenantId } from '@/lib/auth';
@@ -10,7 +10,7 @@ import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-type LayoutProps = AuthRequirements & {
+type LayoutProps = AccessRequirements & {
   hideTopMenuIfLoggedIn?: boolean;
   showTopMenu?: boolean;
   children?: React.ReactNode;
@@ -30,14 +30,14 @@ export const Layout = React.memo(function Layout({
   const auth = useAuth();
   const authLoading = useAuthLoading();
   const tenantId = useTenantId();
-  const { publicSite } = useTenantConfig();
+  const tenant = useTenantConfig();
   const { Footer } = getTenantUi(tenantId);
 
   const router = useRouter();
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
-  const missingPermission = !canAccess(auth, requirements);
+  const missingPermission = !canAccess(auth, tenant, requirements);
 
   React.useEffect(() => {
     if (!authLoading && missingPermission && !auth.user) {
@@ -45,9 +45,9 @@ export const Layout = React.memo(function Layout({
     }
   }, [router, auth.user, authLoading, missingPermission, url]);
 
-  showTopMenu = publicSite ? showTopMenu : false;
+  showTopMenu = tenant.publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !!publicSite && !auth.user;
+    showTopMenu = !!tenant.publicSite && !auth.user;
   }
   if (missingPermission) {
     children = authLoading ? null : auth.user ? (

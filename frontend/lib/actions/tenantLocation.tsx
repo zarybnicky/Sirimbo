@@ -7,7 +7,7 @@ export const tenantLocationActions = defineActions<{ id: string }>()([
     id: 'tenantLocation.edit',
     label: 'Upravit',
     icon: Pencil,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <EditTenantLocationForm id={item.id} />,
   },
 ]);

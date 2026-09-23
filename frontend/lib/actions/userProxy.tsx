@@ -13,14 +13,15 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     id: 'userProxy.edit',
     label: 'Upravit platnost',
     icon: Pencil,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <EditUserProxyForm id={item.id} />,
   },
   {
     id: 'userProxy.logInAs',
     label: 'Přihlásit se jako...',
     icon: LogIn,
-    visible: ({ auth, item }) => auth.isAdmin && !!item.user,
+    requireAdmin: true,
+    visible: ({ item }) => !!item.user,
     execute: async ({ item, router }) => {
       if (!item.user) return;
       const response = await fetch('/api/auth/log-in-as', {
@@ -39,7 +40,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     id: 'userProxy.endToday',
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm: 'Opravdu chcete ukončit platnost těchto přihlašovacích údajů?',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateUserProxyDocument, {
@@ -52,7 +53,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm:
       'Opravdu chcete přístupové údaje NENÁVRATNĚ smazat, včetně všech přiřazených dat?',
     execute: async ({ item, mutate }) => {

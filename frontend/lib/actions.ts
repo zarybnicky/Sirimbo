@@ -5,7 +5,8 @@ import { Client, TypedDocumentNode, useClient } from 'urql';
 import { usePathname, useRouter } from 'next/navigation';
 import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
-import { TenantConfig } from '@/tenant/types';
+import type { TenantConfig } from '@/tenant/types';
+import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 
 export type ActionContext<T> = {
   auth: AuthState;
@@ -31,7 +32,7 @@ type Href = string;
 const resolve = <T, V>(v: Resolvable<T, V>, ctx: ActionContext<T>): V =>
   typeof v === 'function' ? (v as (c: ActionContext<T>) => V)(ctx) : v;
 
-export type Action<T, Id extends string = string> = {
+export type Action<T, Id extends string = string> = AccessRequirements & {
   id: Id;
   label: Resolvable<T, string>;
   icon?: Resolvable<T, Icon>;
@@ -127,6 +128,7 @@ function forItem<T, const A extends readonly Action<T>[]>(
   ctx: ActionContext<T>,
 ): ResolvedAction<IdOf<A>>[] {
   return actions
+    .filter((a) => canAccess(ctx.auth, ctx.tenant, a))
     .filter((a) => resolve(a.visible, ctx) ?? true)
     .map((a) => resolveOne(a, ctx));
 }

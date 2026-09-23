@@ -29,7 +29,7 @@ export const personActions = defineActions<PersonBasicFragment>()([
     id: 'person.createCreditTransaction',
     label: 'Přidat/vyplatit kredit',
     icon: Coins,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <CreateCreditTransactionForm personId={item.id} />,
   },
   {
@@ -37,7 +37,7 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat do páru',
     icon: Plus,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <CreateCoupleForm person={item} />,
   },
   {
@@ -45,7 +45,7 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat do skupiny',
     icon: Plus,
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     render: ({ item }) => <AddToCohortForm person={item} />,
   },
   {
@@ -53,7 +53,8 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat jako člena',
     icon: UserPlus,
-    visible: ({ auth, item }) => auth.isAdmin && !item.isMember,
+    requireAdmin: true,
+    visible: ({ item }) => !item.isMember,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantMembershipDocument, {
         input: { tenantMembership: { personId: item.id } },
@@ -65,7 +66,8 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat jako trenéra',
     icon: UserPlus,
-    visible: ({ auth, item }) => auth.isAdmin && !item.isTrainer,
+    requireAdmin: true,
+    visible: ({ item }) => !item.isTrainer,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantTrainerDocument, {
         input: { tenantTrainer: { personId: item.id } },
@@ -77,7 +79,8 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat jako správce',
     icon: UserPlus,
-    visible: ({ auth, item }) => auth.isAdmin && !item.isAdmin,
+    requireAdmin: true,
+    visible: ({ item }) => !item.isAdmin,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantAdministratorDocument, {
         input: { tenantAdministrator: { personId: item.id } },
@@ -89,7 +92,8 @@ export const personActions = defineActions<PersonBasicFragment>()([
     group: 'add',
     label: 'Přidat přístupovou kartu',
     icon: UserPlus,
-    visible: ({ auth, tenant }) => auth.isAdmin && (tenant.enableStarletImport ?? false),
+    requireAdmin: true,
+    requireStarletImport: true,
     render: ({ item }) => <CreateAccessCredentialForm personId={item.id} />,
   },
   {
@@ -97,7 +101,8 @@ export const personActions = defineActions<PersonBasicFragment>()([
     label: 'Smazat osobu',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth, item }) => auth.isAdmin && !item.externalIds,
+    requireAdmin: true,
+    visible: ({ item }) => !item.externalIds,
     confirm: ({ item }) =>
       `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
     execute: async ({ item: { id }, mutate, router }) => {

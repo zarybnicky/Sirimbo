@@ -309,7 +309,7 @@ export function Calendar({
 
       <CalendarConflictsIndicator range={range} />
 
-      {auth.isTrainerOrAdmin && (
+      {auth.isTrainer && (
         <Dialog
           open={!!creating}
           onOpenChange={(open) => {

@@ -51,7 +51,7 @@ export function CohortList() {
           </Dialog>
         )}
 
-        {auth.isTrainerOrAdmin && (
+        {auth.isTrainer && (
           <div className="mt-2 w-full flex gap-2 justify-end">
             <button
               type="button"

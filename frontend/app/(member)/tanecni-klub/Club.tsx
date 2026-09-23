@@ -44,7 +44,7 @@ export function Club() {
         group: 'primary',
         label: 'Upravit klub',
         icon: Pencil,
-        visible: ({ auth }) => auth.isAdmin,
+        requireAdmin: true,
         render: () => <EditTenantForm />,
       },
     ],

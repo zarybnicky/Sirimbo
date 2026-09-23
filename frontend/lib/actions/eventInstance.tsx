@@ -198,7 +198,7 @@ export const eventExternalRegistrationActions = defineActions<{ id: string }>()(
     label: 'Smazat',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     execute: async ({ item, mutate }) => {
       await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },

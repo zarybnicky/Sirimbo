@@ -1,3 +1,5 @@
+import type { TenantConfig } from '@/tenant/types';
+
 export type JwtClaims = {
   user_id: string;
   tenant_id: string;
@@ -22,15 +24,14 @@ export function parseCurrentClaims(value: unknown): JwtClaims | null {
   ) as JwtClaims;
 }
 
-export function resolveAuth(
-  claims: JwtClaims | null | undefined,
-  tenantId: string,
-) {
-  const isGuest = claims?.guest_tenant_ids.includes(tenantId) ?? false;
-  const isMember = claims?.member_tenant_ids.includes(tenantId) ?? false;
-  const isTrainer = claims?.trainer_tenant_ids.includes(tenantId) ?? false;
-  const isAdmin = claims?.admin_tenant_ids.includes(tenantId) ?? false;
+export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: string) {
   const isSystemAdmin = claims?.is_system_admin ?? false;
+  const isAdmin =
+    isSystemAdmin || (claims?.admin_tenant_ids.includes(tenantId) ?? false);
+  const isTrainer =
+    isAdmin || (claims?.trainer_tenant_ids.includes(tenantId) ?? false);
+  const isMember = claims?.member_tenant_ids.includes(tenantId) ?? false;
+  const isGuest = claims?.guest_tenant_ids.includes(tenantId) ?? false;
 
   const role = isSystemAdmin
     ? 'system_admin'
@@ -54,29 +55,36 @@ export function resolveAuth(
     isGuest,
     isMember,
     isTrainer,
-    isAdmin: isAdmin || isSystemAdmin,
+    isAdmin,
     isSystemAdmin,
-    isTrainerOrAdmin: isTrainer || isAdmin || isSystemAdmin,
     isLoggedIn: !!claims,
   };
 }
 
 export type ResolvedAuth = ReturnType<typeof resolveAuth>;
 
-export type AuthRequirements = {
+export type AccessRequirements = {
   requireUser?: boolean;
   requireMember?: boolean;
   requireTrainer?: boolean;
   requireAdmin?: boolean;
   requireSystemAdmin?: boolean;
+  requirePublicSite?: boolean;
+  requireStarletImport?: boolean;
 };
 
-export function canAccess(auth: ResolvedAuth, x: AuthRequirements) {
+export function canAccess(
+  auth: ResolvedAuth,
+  tenant: TenantConfig,
+  x: AccessRequirements,
+) {
   return (
     (!x.requireUser || auth.isLoggedIn) &&
-    (!x.requireMember || auth.isMember || auth.isTrainerOrAdmin) &&
-    (!x.requireTrainer || auth.isTrainerOrAdmin) &&
+    (!x.requireMember || auth.isMember || auth.isTrainer) &&
+    (!x.requireTrainer || auth.isTrainer) &&
     (!x.requireAdmin || auth.isAdmin) &&
-    (!x.requireSystemAdmin || auth.isSystemAdmin)
+    (!x.requireSystemAdmin || auth.isSystemAdmin) &&
+    (!x.requirePublicSite || !!tenant.publicSite) &&
+    (!x.requireStarletImport || !!tenant.enableStarletImport)
   );
 }

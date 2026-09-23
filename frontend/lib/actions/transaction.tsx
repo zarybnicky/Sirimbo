@@ -8,7 +8,7 @@ export const transactionActions = defineActions<{ id: string }>()([
     label: 'Smazat transakci',
     icon: Trash2,
     variant: 'danger',
-    visible: ({ auth }) => auth.isAdmin,
+    requireAdmin: true,
     confirm: 'Opravdu chcete smazat transakci?',
     execute: async ({ item, mutate }) => {
       await mutate(DeleteTransactionDocument, { id: item.id });

@@ -202,7 +202,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
           'relative group min-w-[200px] w-full sm:w-72 p-1 pt-2 rounded-lg border-accent-7 border flex flex-col gap-y-px',
       })}
     >
-      {auth.isTrainerOrAdmin && (
+      {auth.isTrainer && (
         <Dialog modal={false}>
           <DialogTrigger.Add
             display="none"

@@ -49,7 +49,7 @@ export function CampSchedule({
   const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id },
-    pause: !auth.isTrainerOrAdmin,
+    pause: !auth.isTrainer,
   });
   const registrations = query.data?.event?.registrationsList ?? emptyRegistrations;
   const requestCount = registrations.reduce((n, x) => n + x.requests.length, 0);
@@ -139,7 +139,7 @@ export function CampSchedule({
     if (result.error) throw result.error;
   });
   const requestError = query.error || scheduleRequest.error || removeLesson.error;
-  const canShowRequests = auth.isTrainerOrAdmin && requestCount > 0;
+  const canShowRequests = auth.isTrainer && requestCount > 0;
   const showRequests = requestsOpen && canShowRequests;
 
   const dragPreview = React.useRef<HTMLDivElement>(null);
