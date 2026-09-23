@@ -92,13 +92,14 @@ create index if not exists access_event_person_idx
 create index if not exists access_event_credential_idx
   on access_event (tenant_id, kind, code, occurred_at desc);
 
-grant select on access_event to administrator;
+grant all on access_event to anonymous;
 alter table access_event enable row level security;
 
 select app_private.drop_policies('public.access_event');
 create policy current_tenant on access_event as restrictive
   using (tenant_id = current_tenant_id());
 create policy admin_view on access_event for select to administrator using (true);
+create policy my_view on access_event for select using (person_id = any(current_person_ids()));
 
 create or replace function access_credential_last_used(c access_credential) returns timestamptz
 language sql stable
