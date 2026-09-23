@@ -10,7 +10,7 @@ export default function ArticlesLayout({ children }: { children: ReactNode }) {
   const detail = useSelectedLayoutSegment();
 
   return (
-    <Layout requireMember>
+    <Layout requireTrainer requirePublicSite>
       <WithSidebar sidebar={<ArticleList />}>{detail ? children : undefined}</WithSidebar>
     </Layout>
   );

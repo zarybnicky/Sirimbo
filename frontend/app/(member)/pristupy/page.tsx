@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AccessCardsPage() {
   return (
-    <Layout requireAdmin>
+    <Layout requireAdmin requireStarletImport>
       <AccessCards />
     </Layout>
   );

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CrmPage() {
   return (
-    <Layout requireAdmin>
+    <Layout requireAdmin requirePublicSite>
       <Crm />
     </Layout>
   );
