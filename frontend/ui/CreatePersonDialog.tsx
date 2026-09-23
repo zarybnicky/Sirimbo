@@ -33,7 +33,7 @@ import { z } from 'zod';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { sanitizeUnicode } from './format';
+import { sanitizeUnicode } from '@/lib/sanitize';
 
 const url = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),

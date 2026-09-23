@@ -22,7 +22,7 @@ import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { sanitizeUnicode } from '../format';
+import { sanitizeUnicode } from '@/lib/sanitize';
 
 const Form = z.object({
   prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),

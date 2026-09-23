@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RichTextEditor } from '@/ui/fields/richtext';
-import { sanitizeUnicode } from '../format';
+import { sanitizeUnicode } from '@/lib/sanitize';
 
 const url = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() ? value.trim() : null),

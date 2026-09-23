@@ -11,7 +11,7 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { countryOptions } from '@/lib/countries';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { sanitizeUnicode } from '../format';
+import { sanitizeUnicode } from '@/lib/sanitize';
 
 const Form = z.object({
   firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),

@@ -8,6 +8,7 @@ import {
   type LoginMutationVariables,
 } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
+import { sanitizeReturnURL } from '@/lib/sanitize';
 import { setSessionCookie } from '@/lib/server/session';
 
 type AuthActionResult = { error: string } | { redirectTo: string };
@@ -27,9 +28,8 @@ export async function loginAction(
       error: error instanceof Error ? error.message : 'Přihlášení se nezdařilo',
     };
   }
-  return {
-    redirectTo: from?.startsWith('/') && !from.startsWith('//') ? from : '/dashboard',
-  };
+  const redirectTo = sanitizeReturnURL(from, 'https://app.invalid') ?? '/dashboard';
+  return { redirectTo };
 }
 
 export async function registerAction(

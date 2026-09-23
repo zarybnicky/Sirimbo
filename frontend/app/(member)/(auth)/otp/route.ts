@@ -1,4 +1,5 @@
 import { OtpLoginDocument } from '@/graphql/CurrentUser';
+import { sanitizeReturnURL } from '@/lib/sanitize';
 import { executeGraphql } from '@/lib/server/graphql';
 import { setSessionCookie } from '@/lib/server/session';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -13,12 +14,8 @@ export async function GET(request: NextRequest) {
     }
 
     await setSessionCookie(result.jwt);
-    const from = request.nextUrl.searchParams.get('from');
-    const destination = !result.usr?.userProxiesList.length
-      ? '/profil'
-      : from?.startsWith('/') && !from.startsWith('//') && !from.startsWith('/\\')
-        ? from
-        : '/dashboard';
+    const { origin, searchParams } = request.nextUrl;
+    const destination = sanitizeReturnURL(searchParams.get('from'), origin) ?? '/dashboard';
     return NextResponse.redirect(new URL(destination, request.url));
   } catch {
     return NextResponse.redirect(new URL('/otp/invalid', request.url));
