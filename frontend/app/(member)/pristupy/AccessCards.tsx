@@ -25,6 +25,7 @@ import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
+import { SelectField, type SelectOption } from '@/ui/fields/select';
 import { SubmitButton } from '@/ui/submit';
 import { Clock3, CreditCard, KeyRound } from 'lucide-react';
 import Link from 'next/link';
@@ -38,12 +39,30 @@ const compactDateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
   timeStyle: 'short',
 });
 
-function activityClassName(timestamp?: string) {
-  if (!timestamp) return 'text-danger-10';
+type ActivityStatus = 'never' | '<30' | '<90' | '>90';
+type AccessStatus = 'none' | ActivityStatus;
+type AccessFacet = 'all' | AccessStatus;
+const facetOrder: readonly AccessFacet[] = ['all', 'none', 'never', '<30', '<90', '>90'];
+const facetLabels = {
+  all: 'Všichni',
+  never: 'Nikdy',
+  '<30': 'Během posledních 30 dní',
+  '<90': 'Před 30 až 90 dny',
+  '>90': 'Před více než 90 dny',
+} satisfies Record<Exclude<AccessFacet, 'none'>, string>;
+
+function activityStatus(timestamp?: string): ActivityStatus {
+  if (!timestamp) return 'never';
   const days = (Date.now() - Date.parse(timestamp)) / 86_400_000;
-  if (days > 90) return 'text-danger-10';
-  if (days > 30) return 'text-neutral-11';
-  return 'text-green-11';
+  return days < 30 ? '<30' : days < 90 ? '<90' : '>90';
+}
+
+function activityClassName(status: AccessStatus) {
+  return status === '<30'
+    ? 'text-green-11'
+    : status === '<90'
+      ? 'text-neutral-11'
+      : 'text-danger-10';
 }
 
 const normalizeEmail = (email?: string | null) => email?.trim().toLowerCase() ?? '';
@@ -59,7 +78,50 @@ type AccessPerson = PersonBasicFragment & {
 
 type ActionMap = ReadonlyMap<string, readonly ResolvedAction[]>;
 
-const noCredentials: readonly AccessCredentialFragment[] = [];
+type AccessRow = {
+  person: AccessPerson;
+  credentials: readonly AccessCredentialFragment[];
+  accountCount: number;
+  cardCount: number;
+  lastWebActivity?: string;
+  lastCardActivity?: string;
+  webStatus: AccessStatus;
+  cardStatus: AccessStatus;
+  hasOnlyExpiredAccounts: boolean;
+};
+
+function summarizeAccess(
+  person: AccessPerson,
+  credentials: readonly AccessCredentialFragment[],
+): AccessRow {
+  const userProxies = person.userProxiesList;
+  const users = userProxies.flatMap(({ status, user }) =>
+    status === 'ACTIVE' ? (user ?? []) : [],
+  );
+  const accountCount = new Set(users.map((x) => x.id)).size;
+  const cardCount = credentials.filter((x) => x.isAllowed).length;
+  const lastWebActivity = users
+    .flatMap((x) => x.lastActiveAt ?? [])
+    .toSorted()
+    .at(-1);
+  const lastCardActivity = credentials
+    .flatMap((x) => x.lastUsed ?? [])
+    .toSorted()
+    .at(-1);
+
+  return {
+    person,
+    credentials,
+    accountCount,
+    cardCount,
+    lastWebActivity,
+    lastCardActivity,
+    webStatus: accountCount ? activityStatus(lastWebActivity) : 'none',
+    cardStatus: cardCount ? activityStatus(lastCardActivity) : 'none',
+    hasOnlyExpiredAccounts:
+      userProxies.length > 0 && userProxies.every((x) => x.status === 'EXPIRED'),
+  };
+}
 
 const tabs = [
   { id: 'people', title: 'Osoby', contents: () => <PeopleAccessTab /> },
@@ -87,6 +149,8 @@ export function AccessCards() {
 
 function PeopleAccessTab() {
   const { enableStarletImport = false } = useTenantConfig();
+  const [webFacet, setWebFacet] = React.useState<AccessFacet>('all');
+  const [cardFacet, setCardFacet] = React.useState<AccessFacet>('all');
   const [{ data, error }] = useQuery({
     query: PeopleAccessOverviewDocument,
     variables: { includeCredentials: enableStarletImport },
@@ -104,6 +168,37 @@ function PeopleAccessTab() {
     () => Map.groupBy(credentials, (x) => x.person?.id),
     [credentials],
   );
+  const accessRows = React.useMemo(
+    () =>
+      people.map((person) =>
+        summarizeAccess(person, credentialsByPerson.get(person.id) ?? []),
+      ),
+    [credentialsByPerson, people],
+  );
+  const facetCounts = React.useMemo(
+    () => ({
+      web: Map.groupBy(accessRows, (row) => row.webStatus),
+      card: Map.groupBy(accessRows, (row) => row.cardStatus),
+    }),
+    [accessRows],
+  );
+  const filteredRows = React.useMemo(
+    () =>
+      accessRows.filter(
+        (row) =>
+          (webFacet === 'all' || row.webStatus === webFacet) &&
+          (cardFacet === 'all' || row.cardStatus === cardFacet),
+      ),
+    [accessRows, cardFacet, webFacet],
+  );
+  const webFacetOptions = facetOrder.map((value) => ({
+    value,
+    label: `${value === 'none' ? 'Bez účtu' : facetLabels[value]} (${value === 'all' ? accessRows.length : (facetCounts.web.get(value)?.length ?? 0)})`,
+  })) satisfies SelectOption<AccessFacet>[];
+  const cardFacetOptions = facetOrder.map((value) => ({
+    value,
+    label: `${value === 'none' ? 'Bez aktivní karty' : facetLabels[value]} (${value === 'all' ? accessRows.length : (facetCounts.card.get(value)?.length ?? 0)})`,
+  })) satisfies SelectOption<AccessFacet>[];
   const usersByEmail = React.useMemo(
     () => Map.groupBy(data?.users?.nodes ?? [], (x) => normalizeEmail(x.uEmail)),
     [data?.users?.nodes],
@@ -113,11 +208,8 @@ function PeopleAccessTab() {
     const invitable: (AccessPerson & { email: string })[] = [];
     const withoutEmail: AccessPerson[] = [];
 
-    for (const person of people) {
-      const hasAccount = person.userProxiesList.some(
-        (x) => x.status === 'ACTIVE' && x.user,
-      );
-      if (hasAccount || person.personInvitationsList.length > 0) continue;
+    for (const { person, accountCount } of accessRows) {
+      if (accountCount > 0 || person.personInvitationsList.length > 0) continue;
 
       const email = person.email?.trim();
       if (!email) {
@@ -134,7 +226,7 @@ function PeopleAccessTab() {
     }
 
     return { assignable, invitable, withoutEmail };
-  }, [people, usersByEmail]);
+  }, [accessRows, usersByEmail]);
   const userProxies = React.useMemo(
     () => people.flatMap((x) => x.userProxiesList),
     [people],
@@ -199,6 +291,24 @@ function PeopleAccessTab() {
           />
         </div>
       )}
+      <div className="mb-2 grid gap-2 sm:max-w-xl sm:grid-cols-2">
+        <SelectField
+          label="Poslední přihlášení"
+          value={webFacet}
+          onChange={setWebFacet}
+          options={webFacetOptions}
+          selectClassName="py-1.5 text-xs"
+        />
+        {enableStarletImport && (
+          <SelectField
+            label="Poslední vstup kartou"
+            value={cardFacet}
+            onChange={setCardFacet}
+            options={cardFacetOptions}
+            selectClassName="py-1.5 text-xs"
+          />
+        )}
+      </div>
       <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
         <div
           className={cn(
@@ -220,19 +330,20 @@ function PeopleAccessTab() {
           <span className="sr-only">Akce</span>
         </div>
 
-        {people.map((person) => (
+        {filteredRows.map((row) => (
           <PersonAccessRow
-            key={person.id}
-            person={person}
-            credentials={credentialsByPerson.get(person.id) ?? noCredentials}
+            key={row.person.id}
+            row={row}
             showCredentials={enableStarletImport}
             userActionMap={userProxyActionMap}
             invitationActionMap={invitationActionMap}
             credentialActionMap={credentialActionMap}
           />
         ))}
-        {people.length === 0 && (
-          <p className="px-3 py-2 text-sm text-neutral-11">Žádné osoby.</p>
+        {filteredRows.length === 0 && (
+          <p className="px-3 py-2 text-sm text-neutral-11">
+            {people.length === 0 ? 'Žádné osoby.' : 'Žádné osoby pro vybrané filtry.'}
+          </p>
         )}
       </div>
     </>
@@ -272,37 +383,30 @@ function AccessWarning({
 }
 
 const PersonAccessRow = React.memo(function PersonAccessRow({
-  person,
-  credentials,
+  row,
   showCredentials,
   userActionMap,
   invitationActionMap,
   credentialActionMap,
 }: Readonly<{
-  person: AccessPerson;
-  credentials: readonly AccessCredentialFragment[];
+  row: AccessRow;
   showCredentials: boolean;
   userActionMap: ActionMap;
   invitationActionMap: ActionMap;
   credentialActionMap: ActionMap;
 }>) {
-  const userProxies = person.userProxiesList;
+  const {
+    person,
+    credentials,
+    accountCount,
+    cardCount,
+    lastWebActivity,
+    lastCardActivity,
+    webStatus,
+    cardStatus,
+    hasOnlyExpiredAccounts,
+  } = row;
   const invitations = person.personInvitationsList;
-  const users = userProxies.flatMap(({ status, user }) =>
-    status === 'ACTIVE' ? (user ?? []) : [],
-  );
-  const accountCount = new Set(users.map((x) => x.id)).size;
-  const cardCount = credentials.filter((x) => x.isAllowed).length;
-  const lastWebActivity = users
-    .flatMap((x) => x.lastActiveAt ?? [])
-    .toSorted()
-    .at(-1);
-  const lastCardActivity = credentials
-    .flatMap((x) => x.lastUsed ?? [])
-    .toSorted()
-    .at(-1);
-  const hasOnlyExpiredAccounts =
-    userProxies.length > 0 && userProxies.every((x) => x.status === 'EXPIRED');
 
   return (
     <div
@@ -342,7 +446,7 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             <span
               className={cn(
                 'ml-1 flex min-w-0 items-center gap-1',
-                activityClassName(lastWebActivity),
+                activityClassName(webStatus),
               )}
             >
               <Clock3 className="size-3 shrink-0" aria-hidden="true" />
@@ -391,7 +495,7 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             <span
               className={cn(
                 'ml-1 flex min-w-0 items-center gap-1',
-                activityClassName(lastCardActivity),
+                activityClassName(cardStatus),
               )}
             >
               <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
