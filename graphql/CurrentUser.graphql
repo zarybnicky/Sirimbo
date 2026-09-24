@@ -13,8 +13,9 @@ fragment UserAuth on User {
   }
 }
 
-query CurrentUser($versionId: String) {
+query CurrentUser($versionId: String, $withRefreshJwt: Boolean! = false) {
   currentClaims
+  refreshJwt @include(if: $withRefreshJwt)
   getCurrentUser(versionId: $versionId) {
     ...UserAuth
   }

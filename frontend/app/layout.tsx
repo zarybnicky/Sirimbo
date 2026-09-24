@@ -6,6 +6,7 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
+import { isDeepStrictEqual } from 'node:util';
 
 import '../style/index.css';
 import 'leaflet/dist/leaflet.css';
@@ -96,11 +97,16 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [{ tenant }, auth, cookieStore] = await Promise.all([
+  const [context, auth, cookieStore] = await Promise.all([
     getRequestContext(),
     getRequestAuth(),
     cookies(),
   ]);
+  const { tenant } = context;
+  const initialSessionStale =
+    !!context.claims &&
+    !!auth.claims &&
+    !isDeepStrictEqual(context.claims, auth.claims);
 
   return (
     <html lang="cs" data-tenant={tenant.id} suppressHydrationWarning>
@@ -108,6 +114,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <NuqsAdapter>
           <Providers
             initialAuth={auth}
+            initialSessionStale={initialSessionStale}
             initialTenant={tenant}
             initialUiCookie={cookieStore.get(UI_COOKIE)?.value}
           >

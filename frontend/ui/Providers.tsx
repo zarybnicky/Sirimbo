@@ -21,11 +21,13 @@ import { SessionRefresher } from './SessionRefresher';
 export function Providers({
   children,
   initialAuth,
+  initialSessionStale,
   initialTenant,
   initialUiCookie,
 }: {
   children: React.ReactNode;
   initialAuth: RequestAuthState;
+  initialSessionStale: boolean;
   initialTenant: TenantCatalogEntry;
   initialUiCookie?: string;
 }) {
@@ -55,7 +57,7 @@ export function Providers({
           <UpdateNotifier />
           <FillYourProfileReminder />
           <ErrorNotifier />
-          <SessionRefresher />
+          <SessionRefresher initialSessionStale={initialSessionStale} />
           <ToastContainer limit={3} />
         </ConfirmProvider>
       </UrqlProvider>

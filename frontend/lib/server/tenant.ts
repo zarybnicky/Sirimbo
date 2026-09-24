@@ -16,6 +16,7 @@ import { cache } from 'react';
 
 export type RequestContext = {
   token: string | undefined;
+  claims: JwtClaims | null;
   tenant: TenantCatalogEntry;
   auth: ResolvedAuth;
   pgSettings: Record<string, string>;
@@ -44,10 +45,17 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
 
   if (token) {
     try {
-      claims = jwt.verify(token, process.env.JWT_SECRET!, {
+      const payload = jwt.verify(token, process.env.JWT_SECRET!, {
         algorithms: ['HS256'],
         ignoreExpiration: true,
       }) as JwtClaims;
+      claims = parseCurrentClaims(
+        Object.fromEntries(
+          Object.entries(payload).filter(
+            ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
+          ),
+        ),
+      ) ?? undefined;
     } catch (error) {
       if (!(error instanceof jwt.JsonWebTokenError)) throw error;
     }
@@ -63,7 +71,7 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
 
   if (claims) {
     for (const [key, value] of Object.entries(claims)) {
-      if (!['exp', 'aud', 'iat', 'iss', 'tenant_id'].includes(key)) {
+      if (key !== 'tenant_id') {
         pgSettings[`jwt.claims.${key}`] = Array.isArray(value)
           ? `{${value.join(',')}}`
           : String(value);
@@ -71,7 +79,7 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
     }
   }
 
-  return { token, tenant, auth, pgSettings };
+  return { token, claims: claims ?? null, tenant, auth, pgSettings };
 });
 
 async function getRequestHostTenant() {

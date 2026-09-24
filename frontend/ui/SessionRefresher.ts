@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { CurrentUserDocument } from '@/graphql/CurrentUser';
-import { useQuery } from 'urql';
 import {
   authLoadingAtom,
   clearLegacySession,
@@ -8,32 +6,38 @@ import {
   sessionPresentAtom,
   tokenAtom,
 } from '@/lib/auth';
-import { parseCurrentClaims } from '@/lib/auth-claims';
+import { refreshSessionAction } from '@/lib/auth-actions';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { buildId } from '@/lib/build-id';
+import { useRouter } from 'next/navigation';
 
-export const SessionRefresher = React.memo(function SessionRefresher() {
+export const SessionRefresher = React.memo(function SessionRefresher({
+  initialSessionStale,
+}: {
+  initialSessionStale: boolean;
+}) {
+  const router = useRouter();
   const token = useAtomValue(tokenAtom);
   const [sessionPresent, setSessionPresent] = useAtom(sessionPresentAtom);
   const setAuthLoading = useSetAtom(authLoadingAtom);
   const setRequestAuth = useSetAtom(authAtom);
+  const initialRefreshStarted = React.useRef(false);
 
-  const [{ data, fetching }, refetch] = useQuery({
-    query: CurrentUserDocument,
-    pause: !token && !sessionPresent,
-    variables: { versionId: buildId },
-  });
-
-  React.useEffect(() => setAuthLoading(fetching), [fetching, setAuthLoading]);
+  const refreshSession = React.useCallback(async () => {
+    setRequestAuth(await refreshSessionAction());
+  }, [setRequestAuth]);
 
   React.useEffect(() => {
-    if (!fetching && data) {
-      setRequestAuth({
-        claims: parseCurrentClaims(data.currentClaims),
-        user: data.getCurrentUser,
-      });
-    }
-  }, [data, fetching, setRequestAuth]);
+    if (!token) setAuthLoading(false);
+  }, [setAuthLoading, token]);
+
+  React.useEffect(() => {
+    if (!initialSessionStale || initialRefreshStarted.current) return;
+    initialRefreshStarted.current = true;
+
+    void refreshSession()
+      .then(() => router.refresh())
+      .catch(() => {});
+  }, [initialSessionStale, refreshSession, router]);
 
   React.useEffect(() => {
     if (!token || sessionPresent) return;
@@ -47,25 +51,26 @@ export const SessionRefresher = React.memo(function SessionRefresher() {
         if (!response.ok) return;
         clearLegacySession();
         setSessionPresent(true);
+        router.refresh();
       })
       .catch(() => {});
-  }, [sessionPresent, setSessionPresent, token]);
+  }, [router, sessionPresent, setSessionPresent, token]);
 
   React.useEffect(() => {
     if (!token && !sessionPresent) return;
 
-    const launchQuery = () => {
+    const refresh = () => {
       if (
         typeof document === 'undefined' ||
         document.visibilityState === undefined ||
         document.visibilityState === 'visible'
       ) {
-        refetch({ requestPolicy: 'network-only' });
+        void refreshSession().catch(() => {});
       }
     };
-    const interval = setInterval(launchQuery, 30_000);
+    const interval = setInterval(refresh, 30_000);
     return () => clearInterval(interval);
-  }, [refetch, sessionPresent, token]);
+  }, [refreshSession, sessionPresent, token]);
 
   return null;
 });
