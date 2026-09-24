@@ -25,7 +25,7 @@ export function InvitationAcceptanceForm({ token, name, accountEmail }: Props) {
       <div className="grid gap-2 p-4">
         <h4 className="text-2xl">Přijmout pozvánku</h4>
         <FormError error={accept.error} />
-        <p>Pozvánku přijmete do právě přihlášeného účtu.</p>
+        <p>Pozvánku přijmete pod účtem uvedeným níže.</p>
         <TextField name="name" label="Osoba" value={name} readOnly />
         <TextField
           name="accountEmail"

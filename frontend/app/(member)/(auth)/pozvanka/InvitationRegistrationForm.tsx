@@ -46,7 +46,10 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
 
         <FormError error={error} />
 
-        <p>Přišla vám pozvánka do klubového systému. Vyberte e-mail a nastavte si heslo.</p>
+        <p>
+          Při registraci můžete použít i jiný e-mail, než na který pozvánka přišla.
+          Zadejte e-mail, kterým se chcete přihlašovat, a zvolte si heslo.
+        </p>
 
         {name && <TextField name="name" label="Osoba" value={name} readOnly />}
 
@@ -70,14 +73,14 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
           Registrovat
         </SubmitButton>
         <p className="text-sm text-neutral-11">
-          Už účet máte?{' '}
+          Máte už účet?{' '}
           <Link
             className="text-accent-11 underline"
             href={`/login?from=${encodeURIComponent(`/pozvanka?token=${token}`)}`}
           >
             Přihlaste se
           </Link>{' '}
-          a přijměte pozvánku do něj.
+          a přijměte pozvánku pod svým účtem.
         </p>
       </form>
     </div>
