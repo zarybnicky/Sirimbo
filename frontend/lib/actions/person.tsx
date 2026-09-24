@@ -1,4 +1,4 @@
-import { Coins, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
+import { Coins, Link2, MailPlus, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument, type PersonBasicFragment } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
@@ -10,7 +10,10 @@ import {
   CreateTenantTrainerDocument,
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
-import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
+import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
+import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
+import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import { DialogTitle } from '@/ui/dialog';
 
 export const personActions = defineActions<PersonBasicFragment>()([
   {
@@ -88,13 +91,32 @@ export const personActions = defineActions<PersonBasicFragment>()([
     },
   },
   {
+    id: 'person.linkUser',
+    label: 'Přiřadit existující účet',
+    icon: Link2,
+    requireAdmin: true,
+    render: ({ item }) => <LinkUserToPersonForm person={item} />,
+  },
+  {
+    id: 'person.invite',
+    label: 'Pozvat e-mailem',
+    icon: MailPlus,
+    requireAdmin: true,
+    render: ({ item }) => <CreateInvitationForm person={item} />,
+  },
+  {
     id: 'person.addAccessCredential',
     group: 'add',
     label: 'Přidat přístupovou kartu',
     icon: UserPlus,
     requireAdmin: true,
     requireStarletImport: true,
-    render: ({ item }) => <CreateAccessCredentialForm personId={item.id} />,
+    render: ({ item }) => (
+      <>
+        <DialogTitle>Přidat kartu</DialogTitle>
+        <AccessCredentialForm personId={item.id} />
+      </>
+    ),
   },
   {
     id: 'person.delete',

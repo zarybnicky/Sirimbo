@@ -78,7 +78,7 @@ export function EventAttendance({ id }: { id: string }) {
                     Poslední účast:{' '}
                     {x.lastAttended
                       ? dateTimeFormatter.format(new Date(x.lastAttended))
-                      : '—'}
+                      : '-'}
                   </div>
                 )}
               </td>

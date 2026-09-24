@@ -11,7 +11,7 @@ import { authAtom, storeRef } from '@/lib/auth';
 export const userProxyActions = defineActions<UserProxyFragment>()([
   {
     id: 'userProxy.edit',
-    label: 'Upravit platnost',
+    label: ({ item }) => ['Upravit účet', item.user?.uEmail].filter(Boolean).join(' · '),
     icon: Pencil,
     requireAdmin: true,
     render: ({ item }) => <EditUserProxyForm id={item.id} />,
@@ -38,7 +38,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
   },
   {
     id: 'userProxy.endToday',
-    label: 'Ukončit ke dnešnímu datu',
+    label: ({ item }) => ['Ukončit přístup', item.user?.uEmail].filter(Boolean).join(' · '),
     icon: Unplug,
     requireAdmin: true,
     confirm: 'Opravdu chcete ukončit platnost těchto přihlašovacích údajů?',

@@ -1,4 +1,8 @@
-import { CreateAccessCredentialDocument } from '@/graphql/AccessCredential';
+import {
+  CreateAccessCredentialDocument,
+  type AccessCredentialFragment,
+  UpdateAccessCredentialDocument,
+} from '@/graphql/AccessCredential';
 import { TextFieldElement } from '@/ui/fields/text';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
@@ -33,47 +37,55 @@ const Form = z
     }
   });
 
-export function CreateAccessCredentialForm({
+export function AccessCredentialForm({
   personId,
   initialValue,
+  credential,
 }: {
-  personId: string;
+  personId?: string;
   initialValue?: {
     label: string;
     code: string;
   };
+  credential?: AccessCredentialFragment;
 }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
-      label: initialValue?.label ?? '',
-      code: initialValue?.code ?? '',
-      since: new Date(),
-      until: null,
+      label: credential?.label ?? initialValue?.label ?? '',
+      code: credential?.code ?? initialValue?.code ?? '',
+      since: credential ? new Date(credential.since) : new Date(),
+      until: credential?.until ? new Date(credential.until) : null,
     },
   });
-  const [result, create] = useMutation(CreateAccessCredentialDocument);
+  const [createResult, create] = useMutation(CreateAccessCredentialDocument);
+  const [updateResult, update] = useMutation(UpdateAccessCredentialDocument);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    const result = await create({
-      input: {
-        accessCredential: {
-          personId,
-          kind: 'MIFARE',
-          label: values.label,
-          code: values.code,
-          since: values.since.toISOString(),
-          until: values.until?.toISOString() ?? null,
-        },
-      },
-    });
+    const value = {
+      label: values.label,
+      code: values.code,
+      since: values.since.toISOString(),
+      until: values.until?.toISOString() ?? null,
+    };
+    const result = credential
+      ? await update({ id: credential.id, patch: value })
+      : await create({
+          input: {
+            accessCredential: {
+              ...value,
+              personId: personId!,
+              kind: 'MIFARE',
+            },
+          },
+        });
     if (!result.error) onSuccess();
   };
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+      <FormError error={createResult.error ?? updateResult.error} />
       <TextFieldElement
         control={control}
         name="label"
@@ -103,7 +115,9 @@ export function CreateAccessCredentialForm({
       />
       <DatePickerElement control={control} name="since" label="Platné od" />
       <DatePickerElement control={control} name="until" label="Platné do" clearable />
-      <SubmitButton control={control}>Přidat kartu</SubmitButton>
+      <SubmitButton control={control}>
+        {credential ? 'Uložit změny' : 'Přidat kartu'}
+      </SubmitButton>
     </form>
   );
 }

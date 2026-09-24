@@ -12,8 +12,8 @@ import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth, useTenantId, useTenantConfig } from '@/lib/auth';
 import Link from 'next/link';
-import { AddToPersonButton } from '@/ui/AddToPersonButton';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
@@ -26,7 +26,7 @@ import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
-import { CreateAccessCredentialForm } from '@/ui/forms/CreateAccessCredentialForm';
+import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
@@ -165,7 +165,14 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
         <>
           <div className="flex justify-between items-baseline flex-wrap gap-4">
             <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
-            <AddToPersonButton person={item} />
+            {auth.isAdmin && (
+              <Dialog>
+                <DialogTrigger.Add size="sm" text="Přidat k registrovanému uživateli" />
+                <DialogContent>
+                  <LinkUserToPersonForm person={item} />
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
 
           {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
@@ -216,7 +223,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                 <Dialog>
                   <DialogTrigger.Add size="sm" />
                   <DialogContent>
-                    <CreateAccessCredentialForm personId={item.id} />
+                    <AccessCredentialForm personId={item.id} />
                   </DialogContent>
                 </Dialog>
               </div>

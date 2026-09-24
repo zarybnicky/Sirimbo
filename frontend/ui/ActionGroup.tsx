@@ -99,7 +99,7 @@ export function ActionGroup<Id extends string = string>({
     ResolvedAction<Id>,
     { render: () => React.ReactNode }
   > | null>(null);
-  const [pending, setPending] = useState<Id | null>(null);
+  const [pending, setPending] = useState<string | null>(null);
   const openingDialogFromDropdown = useRef(false);
 
   if (actions.length === 0) return null;
@@ -130,7 +130,7 @@ export function ActionGroup<Id extends string = string>({
         return;
       }
     }
-    setPending(action.id);
+    setPending(action.key);
     try {
       await action.execute();
     } finally {
@@ -146,7 +146,7 @@ export function ActionGroup<Id extends string = string>({
       {primaryActions.map((a) => (
         'href' in a ? (
           <Link
-            key={a.id}
+            key={a.key}
             href={a.href}
             className={buttonCls({ variant: 'outline', size: 'sm' })}
           >
@@ -155,9 +155,9 @@ export function ActionGroup<Id extends string = string>({
           </Link>
         ) : (
           <button
-            key={a.id}
+            key={a.key}
             type="button"
-            disabled={pending === a.id}
+            disabled={pending === a.key}
             className={buttonCls({ variant: 'outline', size: 'sm' })}
             onClick={() => fire(a)}
           >
@@ -193,7 +193,7 @@ export function ActionGroup<Id extends string = string>({
             {items.map((a) => (
               'href' in a ? (
                 <DropdownMenuLink
-                  key={a.id}
+                  key={a.key}
                   href={a.href}
                   className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
                 >
@@ -202,8 +202,8 @@ export function ActionGroup<Id extends string = string>({
                 </DropdownMenuLink>
               ) : (
                 <DropdownMenuButton
-                  key={a.id}
-                  disabled={pending === a.id}
+                  key={a.key}
+                  disabled={pending === a.key}
                   onSelect={() => fire(a, { fromDropdown: true })}
                   className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
                 >

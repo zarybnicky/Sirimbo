@@ -61,6 +61,7 @@ export type Action<T, Id extends string = string> = AccessRequirements & {
 
 export type ResolvedAction<Id extends string = string> = {
   id: Id;
+  key: string;
   label: string;
   icon?: Icon;
   variant?: 'default' | 'danger';
@@ -89,9 +90,14 @@ export const defineActions =
 
 type IdOf<A extends readonly { id: string }[]> = A[number]['id'];
 
-function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
+function resolveOne<T, Id extends string>(
+  a: Action<T, Id>,
+  ctx: ActionContext<T>,
+  key: string,
+): ResolvedAction<Id> {
   const base = {
     id: a.id,
+    key,
     label: resolve(a.label, ctx),
     icon: a.icon ? resolve(a.icon, ctx) : undefined,
     variant: a.variant,
@@ -126,11 +132,12 @@ function resolveOne<T>(a: Action<T>, ctx: ActionContext<T>): ResolvedAction {
 function forItem<T, const A extends readonly Action<T>[]>(
   actions: A,
   ctx: ActionContext<T>,
+  key?: string,
 ): ResolvedAction<IdOf<A>>[] {
   return actions
     .filter((a) => canAccess(ctx.auth, ctx.tenant, a))
     .filter((a) => resolve(a.visible, ctx) ?? true)
-    .map((a) => resolveOne(a, ctx));
+    .map((a) => resolveOne(a, ctx, key ? `${key}:${a.id}` : a.id));
 }
 
 function useBase() {
@@ -178,7 +185,13 @@ export function useActionMap<T extends { id: string }, Ids extends string>(
   const base = useBase();
 
   return useMemo(
-    () => new Map(items.map((item) => [item.id, forItem(actions, { ...base, item })])),
+    () =>
+      new Map(
+        items.map((item) => [
+          item.id,
+          forItem(actions, { ...base, item }, item.id),
+        ]),
+      ),
     [actions, base, items],
   );
 }

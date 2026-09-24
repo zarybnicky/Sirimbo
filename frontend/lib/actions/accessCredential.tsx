@@ -1,14 +1,29 @@
-import { Unplug } from 'lucide-react';
+import { Pencil, Unplug } from 'lucide-react';
 import {
   EndAccessCredentialDocument,
   type AccessCredentialFragment,
 } from '@/graphql/AccessCredential';
 import { defineActions } from '@/lib/actions';
+import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
+import { DialogTitle } from '@/ui/dialog';
 
 export const accessCredentialActions = defineActions<AccessCredentialFragment>()([
   {
+    id: 'accessCredential.edit',
+    label: ({ item }) => `Upravit kartu · ${item.label}`,
+    icon: Pencil,
+    requireAdmin: true,
+    requireStarletImport: true,
+    render: ({ item }) => (
+      <>
+        <DialogTitle>Upravit kartu</DialogTitle>
+        <AccessCredentialForm credential={item} />
+      </>
+    ),
+  },
+  {
     id: 'accessCredential.revoke',
-    label: 'Zneplatnit kartu',
+    label: ({ item }) => `Zneplatnit kartu · ${item.label}`,
     icon: Unplug,
     requireAdmin: true,
     requireStarletImport: true,
