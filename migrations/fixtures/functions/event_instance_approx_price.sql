@@ -2,14 +2,16 @@ create or replace function event_instance_approx_price(v_instance event_instance
   returns table (amount numeric(19,4), currency text)
   language sql stable
 as $$
-  with stats as (
+  with stats as materialized (
     select
-      (select count(distinct registration.person_id)
-       from event_instance_registration registration
-       where registration.instance_id = v_instance.id
-         and registration.person_id is not null
-         and registration.registration_status = 'active')::bigint as num_participants,
+      count(*) as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
+    from event_instance_registration registration
+    where
+      v_instance.type = 'lesson'
+      and registration.instance_id = v_instance.id
+      and registration.person_id is not null
+      and registration.registration_status = 'active'
   )
   select
     sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
