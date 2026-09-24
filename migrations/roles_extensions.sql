@@ -14,8 +14,8 @@ DROP EXTENSION IF EXISTS plpgsql_check;
 create extension if not exists plpgsql_check;
 
 revoke all on schema public from public;
-alter default privileges for role :DATABASE_OWNER revoke all on sequences from public;
-alter default privileges for role :DATABASE_OWNER revoke all on functions from public;
+alter default privileges revoke all on sequences from public;
+alter default privileges revoke all on functions from public;
 
 grant all on schema public to postgres;
 grant all on schema public to :DATABASE_OWNER;
@@ -40,3 +40,5 @@ alter default privileges for role :DATABASE_OWNER in schema public
   grant usage, select on sequences to anonymous;
 alter default privileges for role :DATABASE_OWNER in schema public
   grant execute on functions to anonymous;
+alter default privileges in schema public grant usage, select on sequences to anonymous;
+alter default privileges in schema public grant execute on functions to anonymous;

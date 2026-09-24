@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict wrbMFtkISnjcqVUAvbJ4ePoXx3ZPZJGzGmkbFig5fJbjFdQifgW9w8lh2ARiHqf
+\restrict llYPNO1wkWsrPQyLldozMMFzAGAbydbgSz6DCY1t2uOlZuQe9P9CfOFUxOlzyDq
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -331,6 +331,15 @@ CREATE TYPE federated.scoring_method AS ENUM (
     'skating_marks',
     'skating_places',
     'ajs-3.0'
+);
+
+
+--
+-- Name: access_credential_kind; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.access_credential_kind AS ENUM (
+    'MIFARE'
 );
 
 
@@ -2269,10 +2278,21 @@ CREATE FUNCTION app_private.tg_tenant_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
-  if NEW.status = 'expired' then
-    update cohort_membership set status = 'expired', until = NEW.until where cohort_membership.person_id = NEW.person_id;
+  if new.status = 'expired' and not exists (
+    select from tenant_membership
+    where id <> new.id
+      and tenant_id = new.tenant_id
+      and person_id = new.person_id
+      and active_range @> new.until
+  ) then
+    update cohort_membership
+    set status = 'expired', until = new.until
+    where tenant_id = new.tenant_id
+      and person_id = new.person_id
+      and since < new.until
+      and (until is null or until > new.until);
   end if;
-  return NEW;
+  return new;
 end;
 $$;
 
@@ -2482,6 +2502,94 @@ CREATE FUNCTION federated.class_rank(class text) RETURNS integer
     when 'Novice' then 1
     else 0
   end;
+$$;
+
+
+--
+-- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_user_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
+$$;
+
+
+--
+-- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_user_id() IS '@omit';
+
+
+--
+-- Name: access_credential; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.access_credential (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    kind public.access_credential_kind DEFAULT 'MIFARE'::public.access_credential_kind NOT NULL,
+    label text NOT NULL,
+    code text NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    valid_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    created_by bigint DEFAULT public.current_user_id(),
+    CONSTRAINT access_credential_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
+    CONSTRAINT access_credential_label_check CHECK (((label <> ''::text) AND (label = btrim(label)))),
+    CONSTRAINT access_credential_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE access_credential; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.access_credential IS '@omit delete
+@simpleCollections only';
+
+
+--
+-- Name: COLUMN access_credential.valid_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.access_credential.valid_range IS '@omit';
+
+
+--
+-- Name: access_credential_is_allowed(public.access_credential); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.access_credential_is_allowed(c public.access_credential) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select c.valid_range @> now() and (
+    exists (select 1 from current_tenant_membership r where r.person_id = c.person_id)
+    or exists (select 1 from current_tenant_trainer r where r.person_id = c.person_id)
+    or exists (select 1 from current_tenant_administrator r where r.person_id = c.person_id)
+  );
+$$;
+
+
+--
+-- Name: access_credential_last_used(public.access_credential); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.access_credential_last_used(c public.access_credential) RETURNS timestamp with time zone
+    LANGUAGE sql STABLE
+    AS $$
+  select max(e.occurred_at)
+  from access_event e
+  where e.tenant_id = c.tenant_id
+    and e.kind = c.kind
+    and e.code = c.code
+    and e.allowed
+    and c.valid_range @> e.occurred_at;
 $$;
 
 
@@ -3756,44 +3864,28 @@ COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
 
 
 --
--- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_user_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
-$$;
-
-
---
--- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.current_user_id() IS '@omit';
-
-
---
 -- Name: event_instance_approx_price(public.event_instance); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.event_instance_approx_price(v_instance public.event_instance) RETURNS TABLE(amount numeric, currency text)
     LANGUAGE sql STABLE
     AS $$
-  with stats as (
+  with stats as materialized (
     select
-      (select count(distinct registration.person_id)
-       from public.event_instance_registration registration
-       where registration.instance_id = v_instance.id
-         and registration.person_id is not null
-         and registration.registration_status = 'active')::bigint as num_participants,
+      count(*) as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
+    from event_instance_registration registration
+    where
+      v_instance.type = 'lesson'
+      and registration.instance_id = v_instance.id
+      and registration.person_id is not null
+      and registration.registration_status = 'active'
   )
   select
     sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
     tt.currency as currency
   from stats s
-  join lateral public.event_instance_trainers(v_instance) tt on true
+  join lateral event_instance_trainers(v_instance) tt on true
   where
     s.num_participants > 0
     and s.duration > 0
@@ -5962,9 +6054,9 @@ $_$;
 -- Name: system_admin_tenants(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
+CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, settings text, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
     LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   if not app_private.is_system_admin(current_user_id()) then
@@ -5982,27 +6074,22 @@ begin
     t.cz_ico,
     t.cz_dic,
     t.address,
+    coalesce(ts.settings::text, '{}'),
     membership_counts.membership_count,
     staffing.trainer_count,
     administrators.administrator_count,
     load.session_count_last_30_days,
     load.session_count_per_trainer_last_30_days
-  from public.tenant t
+  from tenant t
+  left join tenant_settings ts on ts.tenant_id = t.id
   cross join lateral (
-    select
-      count(*) filter (where tm.status = 'active') as membership_count
-    from public.tenant_membership tm
-    where tm.tenant_id = t.id
+    select count(*) as membership_count from tenant_membership tm where tm.tenant_id = t.id and tm.status = 'active'
   ) as membership_counts
   cross join lateral (
-    select count(*) filter (where tt.status = 'active') as trainer_count
-    from public.tenant_trainer tt
-    where tt.tenant_id = t.id
+    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id and tt.status = 'active'
   ) as staffing
   cross join lateral (
-    select count(*) filter (where ta.status = 'active') as administrator_count
-    from public.tenant_administrator ta
-    where ta.tenant_id = t.id
+    select count(*) as administrator_count from tenant_administrator ta where ta.tenant_id = t.id and ta.status = 'active'
   ) as administrators
   cross join lateral (
     select
@@ -6011,7 +6098,7 @@ begin
         when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
         else 0::double precision
       end as session_count_per_trainer_last_30_days
-    from public.event_instance ei
+    from event_instance ei
     where ei.tenant_id = t.id
       and coalesce(ei.is_cancelled, false) = false
       and ei.since >= now() - interval '30 days'
@@ -6022,29 +6109,22 @@ $$;
 
 
 --
--- Name: FUNCTION system_admin_tenants(); Type: COMMENT; Schema: public; Owner: -
+-- Name: system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text, jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.system_admin_tenants() IS 'Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators.';
-
-
---
--- Name: system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text DEFAULT NULL::text, description text DEFAULT NULL::text, bank_account text DEFAULT NULL::text, origins text[] DEFAULT NULL::text[], address public.address_domain DEFAULT NULL::public.address_type, cz_ico text DEFAULT NULL::text, cz_dic text DEFAULT NULL::text) RETURNS public.tenant
+CREATE FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text DEFAULT NULL::text, description text DEFAULT NULL::text, bank_account text DEFAULT NULL::text, origins text[] DEFAULT NULL::text[], address public.address_domain DEFAULT NULL::public.address_type, cz_ico text DEFAULT NULL::text, cz_dic text DEFAULT NULL::text, settings jsonb DEFAULT NULL::jsonb) RETURNS public.tenant
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'public', 'pg_temp'
     AS $$
 declare
-  v_tenant public.tenant;
+  v_tenant tenant;
 begin
   if not app_private.is_system_admin(current_user_id()) then
     raise exception 'permission denied for system admin tenant update'
       using errcode = '42501';
   end if;
 
-  update public.tenant t
+  update tenant t
   set
     name = coalesce(system_admin_update_tenant.name, t.name),
     description = coalesce(system_admin_update_tenant.description, t.description),
@@ -6060,16 +6140,15 @@ begin
     raise exception 'tenant % not found', tenant_id using errcode = 'P0002';
   end if;
 
+  if settings is not null then
+    update tenant_settings ts
+    set settings = system_admin_update_tenant.settings
+    where ts.tenant_id = system_admin_update_tenant.tenant_id;
+  end if;
+
   return v_tenant;
 end;
 $$;
-
-
---
--- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text) IS 'Allows system administrators to update tenant metadata without switching tenant context.';
 
 
 --
@@ -7731,6 +7810,64 @@ CREATE TABLE federated.round_dance (
     dance_program_id bigint NOT NULL,
     dance_code text NOT NULL,
     dance_order integer NOT NULL
+);
+
+
+--
+-- Name: access_credential_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.access_credential ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.access_credential_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: access_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.access_event (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    external_id text NOT NULL,
+    device text NOT NULL,
+    kind public.access_credential_kind NOT NULL,
+    code text NOT NULL,
+    person_id bigint,
+    occurred_at timestamp with time zone NOT NULL,
+    received_at timestamp with time zone DEFAULT now() NOT NULL,
+    allowed boolean NOT NULL,
+    reason text DEFAULT ''::text NOT NULL,
+    CONSTRAINT access_event_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
+    CONSTRAINT access_event_device_check CHECK (((device <> ''::text) AND (device = btrim(device)))),
+    CONSTRAINT access_event_external_id_check CHECK (((external_id <> ''::text) AND (external_id = btrim(external_id))))
+);
+
+
+--
+-- Name: TABLE access_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.access_event IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
+-- Name: access_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.access_event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.access_event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
 
 
@@ -9479,6 +9616,38 @@ ALTER TABLE ONLY federated.round_dance
 
 
 --
+-- Name: access_credential access_credential_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_credential
+    ADD CONSTRAINT access_credential_no_overlap EXCLUDE USING gist (tenant_id WITH =, kind WITH =, code WITH =, valid_range WITH &&);
+
+
+--
+-- Name: access_credential access_credential_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_credential
+    ADD CONSTRAINT access_credential_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: access_event access_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: access_event access_event_tenant_id_external_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_tenant_id_external_id_key UNIQUE (tenant_id, external_id);
+
+
+--
 -- Name: account account_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10418,6 +10587,27 @@ CREATE INDEX ranklist_entry_snapshot_id_ranking_idx ON federated.ranklist_entry 
 
 
 --
+-- Name: access_credential_person_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX access_credential_person_idx ON public.access_credential USING btree (tenant_id, person_id);
+
+
+--
+-- Name: access_event_credential_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX access_event_credential_idx ON public.access_event USING btree (tenant_id, kind, code, occurred_at DESC);
+
+
+--
+-- Name: access_event_person_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX access_event_person_idx ON public.access_event USING btree (tenant_id, person_id, occurred_at DESC);
+
+
+--
 -- Name: account_balances_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11255,6 +11445,13 @@ CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE 
 --
 
 CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: access_credential _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -12276,6 +12473,46 @@ ALTER TABLE ONLY federated.round_dance
 
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON DELETE CASCADE;
+
+
+--
+-- Name: access_credential access_credential_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_credential
+    ADD CONSTRAINT access_credential_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: access_credential access_credential_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_credential
+    ADD CONSTRAINT access_credential_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: access_credential access_credential_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_credential
+    ADD CONSTRAINT access_credential_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: access_event access_event_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: access_event access_event_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -13309,6 +13546,18 @@ CREATE POLICY view_my ON app_private.platby_item FOR SELECT TO member USING ((pi
 
 
 --
+-- Name: access_credential; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.access_credential ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: access_event; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.access_event ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: account; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -13519,6 +13768,19 @@ CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
 
 
 --
+-- Name: access_credential admin_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_insert ON public.access_credential FOR INSERT TO administrator WITH CHECK (((EXISTS ( SELECT 1
+   FROM public.tenant_membership r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
+   FROM public.tenant_trainer r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
+   FROM public.tenant_administrator r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id))))));
+
+
+--
 -- Name: account admin_manage; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -13605,6 +13867,33 @@ CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING 
 
 
 --
+-- Name: access_credential admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrator WITH CHECK (((EXISTS ( SELECT 1
+   FROM public.tenant_membership r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
+   FROM public.tenant_trainer r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
+   FROM public.tenant_administrator r
+  WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id))))));
+
+
+--
+-- Name: access_credential admin_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_view ON public.access_credential FOR SELECT TO administrator USING (true);
+
+
+--
+-- Name: access_event admin_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_view ON public.access_event FOR SELECT TO administrator USING (true);
+
+
+--
 -- Name: aktuality; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -13670,6 +13959,20 @@ ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: access_credential current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
+
+--
+-- Name: access_event current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.access_event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+
 
 --
 -- Name: account current_tenant; Type: POLICY; Schema: public; Owner: -
@@ -14131,6 +14434,13 @@ ALTER TABLE public.membership_application ENABLE ROW LEVEL SECURITY;
 --
 
 CREATE POLICY my_tenant ON public.cohort_membership AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: access_event my_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY my_view ON public.access_event FOR SELECT USING ((person_id = ANY (public.current_person_ids())));
 
 
 --
@@ -14736,6 +15046,34 @@ GRANT ALL ON FUNCTION app_private.visible_person_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
+
+
+--
+-- Name: TABLE access_credential; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.access_credential TO anonymous;
+
+
+--
+-- Name: FUNCTION access_credential_is_allowed(c public.access_credential); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.access_credential_is_allowed(c public.access_credential) TO anonymous;
+
+
+--
+-- Name: FUNCTION access_credential_last_used(c public.access_credential); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.access_credential_last_used(c public.access_credential) TO anonymous;
+
+
+--
 -- Name: TABLE account; Type: ACL; Schema: public; Owner: -
 --
 
@@ -14915,13 +15253,6 @@ GRANT ALL ON FUNCTION public.current_couple_ids() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_person_ids() TO anonymous;
-
-
---
--- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
 
 
 --
@@ -15437,10 +15768,10 @@ GRANT ALL ON FUNCTION public.system_admin_tenants() TO anonymous;
 
 
 --
--- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text, settings jsonb); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text) TO anonymous;
+GRANT ALL ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text, settings jsonb) TO anonymous;
 
 
 --
@@ -15801,6 +16132,13 @@ GRANT SELECT ON TABLE federated.round_dance TO anonymous;
 
 
 --
+-- Name: TABLE access_event; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.access_event TO anonymous;
+
+
+--
 -- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
 --
 
@@ -16105,5 +16443,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict wrbMFtkISnjcqVUAvbJ4ePoXx3ZPZJGzGmkbFig5fJbjFdQifgW9w8lh2ARiHqf
+\unrestrict llYPNO1wkWsrPQyLldozMMFzAGAbydbgSz6DCY1t2uOlZuQe9P9CfOFUxOlzyDq
 

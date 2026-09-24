@@ -1,6 +1,6 @@
-CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
+CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, settings text, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
     LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
   if not app_private.is_system_admin(current_user_id()) then
@@ -18,27 +18,22 @@ begin
     t.cz_ico,
     t.cz_dic,
     t.address,
+    coalesce(ts.settings::text, '{}'),
     membership_counts.membership_count,
     staffing.trainer_count,
     administrators.administrator_count,
     load.session_count_last_30_days,
     load.session_count_per_trainer_last_30_days
-  from public.tenant t
+  from tenant t
+  left join tenant_settings ts on ts.tenant_id = t.id
   cross join lateral (
-    select
-      count(*) filter (where tm.status = 'active') as membership_count
-    from public.tenant_membership tm
-    where tm.tenant_id = t.id
+    select count(*) as membership_count from tenant_membership tm where tm.tenant_id = t.id and tm.status = 'active'
   ) as membership_counts
   cross join lateral (
-    select count(*) filter (where tt.status = 'active') as trainer_count
-    from public.tenant_trainer tt
-    where tt.tenant_id = t.id
+    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id and tt.status = 'active'
   ) as staffing
   cross join lateral (
-    select count(*) filter (where ta.status = 'active') as administrator_count
-    from public.tenant_administrator ta
-    where ta.tenant_id = t.id
+    select count(*) as administrator_count from tenant_administrator ta where ta.tenant_id = t.id and ta.status = 'active'
   ) as administrators
   cross join lateral (
     select
@@ -47,7 +42,7 @@ begin
         when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
         else 0::double precision
       end as session_count_per_trainer_last_30_days
-    from public.event_instance ei
+    from event_instance ei
     where ei.tenant_id = t.id
       and coalesce(ei.is_cancelled, false) = false
       and ei.since >= now() - interval '30 days'
@@ -55,7 +50,5 @@ begin
   order by t.name;
 end;
 $$;
-
-COMMENT ON FUNCTION public.system_admin_tenants() IS 'Lists tenants with aggregate membership, staffing, and recent session statistics for system administrators.';
 
 GRANT ALL ON FUNCTION public.system_admin_tenants() TO anonymous;
