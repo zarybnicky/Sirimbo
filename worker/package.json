@@ -29,7 +29,7 @@
     "html-to-text": "~10.0.1",
     "impit": "^0.14.5",
     "mjml": "^5.4.0",
-    "nodemailer": "~9.0.6",
+    "nodemailer": "~9.1.1",
     "pg": "8.22.0",
     "pg-cursor": "^2.22.0",
     "proj4": "^2.22.0",
