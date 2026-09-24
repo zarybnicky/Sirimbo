@@ -1812,6 +1812,11 @@ input ConfirmMembershipApplicationInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
+  cohortIds: [BigInt]
+  isAdmin: Boolean
+  isMember: Boolean
+  isTrainer: Boolean
+  joinDate: Datetime
 }
 
 """The output of our `confirmMembershipApplication` mutation."""

@@ -1516,6 +1516,11 @@ export type ConfirmMembershipApplicationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohortIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  isMember?: InputMaybe<Scalars['Boolean']['input']>;
+  isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
+  joinDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** The output of our `confirmMembershipApplication` mutation. */

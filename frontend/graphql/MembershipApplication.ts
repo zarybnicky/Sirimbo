@@ -20,6 +20,11 @@ export type ConfirmMembershipApplicationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: string | null | undefined;
+  cohortIds?: Array<string | null | undefined> | null | undefined;
+  isAdmin?: boolean | null | undefined;
+  isMember?: boolean | null | undefined;
+  isTrainer?: boolean | null | undefined;
+  joinDate?: string | null | undefined;
 };
 
 /** All input for the create `MembershipApplication` mutation. */

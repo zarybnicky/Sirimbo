@@ -5,27 +5,33 @@ import {
   type MembershipApplicationFragment,
   UpdateMembershipApplicationDocument,
 } from '@/graphql/MembershipApplication';
-import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import { CohortListDocument } from '@/graphql/Cohorts';
+import {
+  RadioButtonGroupElement,
+  VerticalCheckboxButtonGroupElement,
+} from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
-import { FormError, useFormResult } from '@/ui/form';
+import { FieldLabel, FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useAuth } from '@/lib/auth';
 import { countryOptions } from '@/lib/countries';
 import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
-import { Check, Trash2 } from 'lucide-react';
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { Check, ChevronDown, Trash2 } from 'lucide-react';
 import React from 'react';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sanitizeUnicode } from '@/lib/sanitize';
 
-const Form = z.object({
+const ApplicationForm = z.object({
   prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
   lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
@@ -47,6 +53,14 @@ const Form = z.object({
   note: z.string().prefault(''),
 });
 
+const Form = ApplicationForm.extend({
+  isMember: z.boolean(),
+  isTrainer: z.boolean(),
+  isAdmin: z.boolean(),
+  joinDate: z.date(),
+  cohortIds: z.array(z.string()),
+});
+
 export function CreateMembershipApplicationForm({
   data,
   onCreate,
@@ -58,11 +72,17 @@ export function CreateMembershipApplicationForm({
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { reset, control, handleSubmit, getValues, setValue } = useForm({
+  const { control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
-      email: data?.email ?? auth.user?.uEmail ?? '',
-      note: data?.note ?? '',
+      ...(data
+        ? ApplicationForm.partial().parse({ ...data, email: data.email ?? '' })
+        : { email: auth.user?.uEmail ?? '', note: '' }),
+      isMember: true,
+      isTrainer: false,
+      isAdmin: false,
+      joinDate: new Date(),
+      cohortIds: [],
     },
   });
 
@@ -75,29 +95,31 @@ export function CreateMembershipApplicationForm({
   const [updateResult, update] = useMutation(UpdateMembershipApplicationDocument);
   const [confirmResult, confirm] = useMutation(ConfirmMembershipApplicationDocument);
   const [deleteResult, del] = useMutation(DeleteMembershipApplicationDocument);
-
-  React.useEffect(() => {
-    if (data) {
-      reset(Form.partial().parse({ ...data, email: data.email ?? '' }), {
-        keepDirtyValues: true,
-        keepTouched: true,
-        keepErrors: true,
-      });
-    }
-  }, [reset, data]);
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListDocument,
+    variables: { archived: false },
+    pause: !data || !auth.isAdmin,
+  });
+  const cohortOptions = React.useMemo(
+    () => cohorts?.cohortsList?.map((cohort) => ({ id: cohort.id, label: cohort.name })) ?? [],
+    [cohorts],
+  );
+  const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
+  const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!auth.user) return;
+    const application = ApplicationForm.parse(values);
 
     let result;
     let createdId: string | undefined;
     if (data) {
-      result = await update({ input: { id: data.id, patch: values } });
+      result = await update({ input: { id: data.id, patch: application } });
     } else {
       result = await create({
         input: {
           membershipApplication: {
-            ...values,
+            ...application,
             createdBy: auth.user.id,
           },
         },
@@ -113,10 +135,20 @@ export function CreateMembershipApplicationForm({
   const onConfirm = async (values: z.infer<typeof Form>) => {
     if (!data) return;
 
-    const updateResult = await update({ input: { id: data.id, patch: values } });
+    const application = ApplicationForm.parse(values);
+    const updateResult = await update({ input: { id: data.id, patch: application } });
     if (updateResult.error) return;
 
-    const result = await confirm({ input: { applicationId: data.id } });
+    const result = await confirm({
+      input: {
+        applicationId: data.id,
+        isMember: values.isMember,
+        isTrainer: values.isTrainer,
+        isAdmin: values.isAdmin,
+        joinDate: values.joinDate.toISOString(),
+        cohortIds: values.cohortIds,
+      },
+    });
     if (!result.error) {
       onSuccess();
       onRemove?.();
@@ -227,6 +259,68 @@ export function CreateMembershipApplicationForm({
             label="Poznámka k přihlášce"
           />
         </div>
+
+        {data && auth.isAdmin && (
+          <div className="col-full grid gap-2 border-t border-neutral-6 pt-3 lg:grid-cols-2">
+            <div>
+              <CheckboxElement
+                control={control}
+                name="isMember"
+                label="Člen klubu"
+              />
+              <CheckboxElement control={control} name="isTrainer" label="Trenér" />
+              <CheckboxElement control={control} name="isAdmin" label="Správce" />
+            </div>
+
+            <div className="grid gap-2">
+              <DatePickerElement
+                control={control}
+                name="joinDate"
+                label="Datum vstupu do klubu"
+              />
+
+              <Collapsible.Root
+                open={cohortPickerOpen}
+                onOpenChange={setCohortPickerOpen}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
+                  <Collapsible.Trigger asChild>
+                    <button
+                      type="button"
+                      className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
+                      aria-expanded={cohortPickerOpen}
+                      aria-controls="membership-application-cohorts"
+                    >
+                      <span>
+                        {cohortPickerOpen
+                          ? 'Skrýt'
+                          : selectedCohortCount > 0
+                            ? `Vybráno ${selectedCohortCount}`
+                            : 'Zobrazit'}
+                      </span>
+                      <ChevronDown
+                        className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                  </Collapsible.Trigger>
+                </div>
+                <Collapsible.Content
+                  forceMount
+                  id="membership-application-cohorts"
+                  className="[&[data-state=closed]>div]:hidden"
+                >
+                  <VerticalCheckboxButtonGroupElement
+                    control={control}
+                    name="cohortIds"
+                    options={cohortOptions}
+                    className="mt-2"
+                  />
+                </Collapsible.Content>
+              </Collapsible.Root>
+            </div>
+          </div>
+        )}
       </fieldset>
 
       <div className="col-full flex flex-wrap justify-between gap-3 pt-2">
