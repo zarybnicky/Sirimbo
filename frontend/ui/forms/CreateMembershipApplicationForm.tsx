@@ -23,7 +23,7 @@ import { useAuth } from '@/lib/auth';
 import { countryOptions } from '@/lib/countries';
 import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { Check, ChevronDown, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, Trash2, X } from 'lucide-react';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -158,6 +158,21 @@ export function CreateMembershipApplicationForm({
   const onDelete = async () => {
     if (!data) return;
     const result = await del({ input: { id: data.id } });
+    if (!result.error) {
+      onSuccess();
+      onRemove?.();
+    }
+  };
+
+  const onReject = async () => {
+    if (!data) return;
+
+    const result = await update({
+      input: {
+        id: data.id,
+        patch: { note: getValues('note'), status: 'REJECTED' },
+      },
+    });
     if (!result.error) {
       onSuccess();
       onRemove?.();
@@ -344,7 +359,16 @@ export function CreateMembershipApplicationForm({
           </SubmitButton>
         </div>
 
-        {data && (
+        {data && auth.isAdmin ? (
+          <button
+            type="button"
+            onClick={onReject}
+            className={buttonCls({ variant: 'outline' })}
+          >
+            <X />
+            Zamítnout přihlášku
+          </button>
+        ) : data ? (
           <button
             type="button"
             onClick={onDelete}
@@ -353,7 +377,7 @@ export function CreateMembershipApplicationForm({
             <Trash2 />
             Smazat přihlášku
           </button>
-        )}
+        ) : null}
       </div>
     </form>
   );

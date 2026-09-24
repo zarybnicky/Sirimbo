@@ -229,6 +229,14 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createMembershipApplication(_result, _args, cache, _info) {
         cache.invalidate('Query', 'membershipApplicationsList');
       },
+      updateMembershipApplication(_result, args, cache, _info) {
+        if (args.input.patch.status === 'REJECTED') {
+          cache.invalidate({
+            __typename: 'MembershipApplication',
+            id: args.input.id,
+          });
+        }
+      },
       confirmMembershipApplication(_result, args, cache, _info) {
         cache.invalidate({
           __typename: 'MembershipApplication',
