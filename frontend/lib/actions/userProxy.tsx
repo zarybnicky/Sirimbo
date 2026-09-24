@@ -6,7 +6,6 @@ import {
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
-import { authAtom, storeRef } from '@/lib/auth';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
   {
@@ -22,7 +21,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     icon: LogIn,
     requireAdmin: true,
     visible: ({ item }) => !!item.user,
-    execute: async ({ item, router }) => {
+    execute: async ({ item }) => {
       if (!item.user) return;
       const response = await fetch('/api/auth/log-in-as', {
         method: 'POST',
@@ -31,9 +30,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
       });
       if (!response.ok) throw new Error('Přihlášení selhalo');
 
-      storeRef.current.set(authAtom, { claims: null, user: null });
-      storeRef.resetUrqlClient();
-      router.replace('/dashboard');
+      window.location.replace('/dashboard');
     },
   },
   {

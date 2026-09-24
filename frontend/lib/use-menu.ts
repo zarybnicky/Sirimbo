@@ -92,7 +92,7 @@ const memberMenu: MenuStructItem[] = [
       {
         type: 'link',
         title: 'Moje tréninky',
-        href: '/dashboard?tab=myLessons',
+        href: '/dashboard',
       },
       { type: 'link', title: 'Kalendář', href: '/rozpis' },
       { type: 'link', title: 'Seznam akcí', href: '/akce' },

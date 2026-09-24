@@ -1,10 +1,13 @@
 import { getRequestContext } from '@/lib/server/tenant';
 import type { TenantCatalogEntry } from '@/tenant/catalog';
 import { Layout } from '@/ui/Layout';
+import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 export default async function PublicLayout({ children }: { children: ReactNode }) {
   const { tenant } = await getRequestContext();
+  if (!tenant.config.publicSite) redirect('/dashboard');
+
   const structuredData = getTenantStructuredData(tenant);
 
   return (

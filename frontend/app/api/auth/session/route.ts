@@ -1,6 +1,5 @@
 import { setSessionCookie, sameOrigin } from '@/lib/server/session';
 import { NextResponse, type NextRequest } from 'next/server';
-import { getRequestContext } from '@/lib/server/tenant';
 
 export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) {
@@ -14,13 +13,4 @@ export async function POST(request: NextRequest) {
 
   await setSessionCookie(token);
   return NextResponse.json({ ok: true });
-}
-
-export async function GET(request: NextRequest) {
-  if (!sameOrigin(request)) {
-    return NextResponse.json({ error: 'Invalid origin' }, { status: 403 });
-  }
-
-  const { pgSettings } = await getRequestContext();
-  return NextResponse.json(pgSettings);
 }

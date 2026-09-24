@@ -3,6 +3,7 @@ import { cn } from '@/lib/cn';
 import type { FieldError, Path } from 'react-hook-form';
 import { typographyCls } from '@/ui/style';
 import { AlertCircle } from 'lucide-react';
+import { getErrorMessage } from '@/lib/errors';
 
 interface FormResultContext {
   onSuccess: () => void;
@@ -49,17 +50,6 @@ export function FieldHelper({ error, helperText }: FieldHelperProps) {
   );
 }
 
-const errorTranslation: { [key: string]: string } = {
-  INVALID_CREDENTIALS: 'Nesprávné jméno nebo heslo',
-  ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',
-  INVALID_PASSWORD: 'Nesprávné heslo',
-  ACCOUNT_DISABLED: 'Účet byl zablokován',
-  ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
-  INVITATION_NOT_FOUND: 'Pozvánka není platná',
-  INVITATION_ALREADY_USED: 'Pozvánka již byla použita',
-  INVALID_EMAIL: 'E-mail neodpovídá pozvánce',
-};
-
 export function FormError({
   error: e,
   default: def,
@@ -79,10 +69,11 @@ export function FormError({
   if (!error) {
     return null;
   }
+  const translated = typeof error === 'string' ? getErrorMessage(error) : undefined;
 
   return (
     <div className="col-full rounded-lg bg-danger-9 px-4 py-2 text-white">
-      {errorTranslation[error as any] || (
+      {translated || (
         <>
           <div className="font-bold">
             {def || 'Něco se nepovedlo, zkuste to prosím znovu'}

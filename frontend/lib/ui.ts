@@ -7,6 +7,12 @@ import { z } from 'zod';
 const SIDEBAR_MIN_WIDTH = 224;
 const SIDEBAR_MAX_WIDTH = 448;
 
+export function clampSidebarWidth(width: number) {
+  return Math.round(
+    Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width)),
+  );
+}
+
 const uiStateSchema = z.object({
   sidebarWidth: z.number().int().min(SIDEBAR_MIN_WIDTH).max(SIDEBAR_MAX_WIDTH).nullable(),
 });
@@ -49,9 +55,7 @@ export const uiAtom = atomWithStorage(UI_COOKIE, defaultUiState, cookieStorage);
 export const sidebarWidthAtom = atom(
   (get) => get(uiAtom).sidebarWidth,
   (get, set, width: number) => {
-    const sidebarWidth = Math.round(
-      Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, width)),
-    );
+    const sidebarWidth = clampSidebarWidth(width);
     set(uiAtom, { ...get(uiAtom), sidebarWidth });
   },
 );

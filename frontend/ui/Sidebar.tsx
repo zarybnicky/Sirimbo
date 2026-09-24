@@ -1,7 +1,7 @@
 import { signOut, useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
 import { buildId } from '@/lib/build-id';
 import { cn } from '@/lib/cn';
-import { sidebarWidthAtom } from '@/lib/ui';
+import { clampSidebarWidth, sidebarWidthAtom } from '@/lib/ui';
 import {
   type MenuLink,
   type MenuStructItem,
@@ -23,22 +23,24 @@ type SidebarProps = {
 
 export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const pathname = usePathname();
+  const search = useSearchParams()?.toString();
   const auth = useAuth();
   const tenantId = useTenantId();
   const { publicSite, copyrightLine } = useTenantConfig();
   const memberMenu = useMemberMenu();
   const { SidebarLogo } = getTenantUi(tenantId);
 
-  React.useEffect(() => setIsOpen(false), [pathname, setIsOpen]);
+  React.useEffect(() => setIsOpen(false), [pathname, search, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
-    const updateDetailView = () => {
-      if (window.matchMedia('(min-width: 768px)').matches) setIsOpen(false);
+    const desktop = window.matchMedia('(min-width: 64rem)');
+    const closeOnDesktop = () => {
+      if (desktop.matches) setIsOpen(false);
     };
-    updateDetailView();
-    window.addEventListener('resize', updateDetailView);
-    return () => window.removeEventListener('resize', updateDetailView);
+    closeOnDesktop();
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
   }, [setIsOpen]);
 
   return (
@@ -129,10 +131,14 @@ function SidebarResizeHandle() {
     pointerId: number;
     startX: number;
     startWidth: number;
+    width: number | null;
+    sidebar: HTMLElement;
   } | null>(null);
 
   const finishDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (drag.current?.pointerId !== event.pointerId) return;
+    const current = drag.current;
+    if (current?.pointerId !== event.pointerId) return;
+    if (current.width !== null) setWidth(current.width);
     drag.current = null;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
@@ -161,11 +167,17 @@ function SidebarResizeHandle() {
           pointerId: event.pointerId,
           startX: event.clientX,
           startWidth: parent.getBoundingClientRect().width,
+          width: null,
+          sidebar: parent,
         };
       }}
       onPointerMove={(event) => {
         if (drag.current?.pointerId !== event.pointerId) return;
-        setWidth(drag.current.startWidth + event.clientX - drag.current.startX);
+        const width = clampSidebarWidth(
+          drag.current.startWidth + event.clientX - drag.current.startX,
+        );
+        drag.current.width = width;
+        drag.current.sidebar.style.setProperty('--sidebar-width', `${width}px`);
       }}
       onPointerUp={finishDrag}
       onPointerCancel={finishDrag}
@@ -190,13 +202,15 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
   const pathname = usePathname() ?? '';
   const searchParams = useSearchParams();
   const [href, query] = item.href.split('?');
+  const queryMatches = query
+    ? [...new URLSearchParams(query)].every(
+        ([name, value]) => searchParams?.get(name) === value,
+      )
+    : !searchParams?.has('tab');
   const inPath =
     !!href &&
     (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)) &&
-    (!query ||
-      [...new URLSearchParams(query)].every(
-        ([name, value]) => searchParams?.get(name) === value,
-      ));
+    queryMatches;
 
   return (
     <Link
