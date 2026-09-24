@@ -4,8 +4,8 @@ import {
   CreateInvitationDocument,
   InvitationOverviewDocument,
 } from '@/graphql/Invitation';
-import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { useActionMap } from '@/lib/actions';
+import { personActions } from '@/lib/actions/person';
 import { personInvitationActions } from '@/lib/actions/personInvitation';
 import { ActionRow } from '@/ui/ActionRow';
 import { fullDateFormatter } from '@/ui/format';
@@ -19,7 +19,6 @@ import { useMutation, useQuery } from 'urql';
 export function Invitations() {
   const [{ data: overview }] = useQuery({ query: InvitationOverviewDocument });
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
-  const [, createUserProxy] = useMutation(CreateUserProxyDocument);
   const report = React.useMemo(() => {
     const usersByEmail = new Map<string, string[]>();
     for (const user of overview?.users?.nodes ?? []) {
@@ -32,10 +31,14 @@ export function Invitations() {
     const withInvitation = [];
     for (const person of overview?.people?.nodes ?? []) {
       if (person.userProxiesList.length > 0) continue;
+      const userIds = usersByEmail.get(person.email?.trim().toLowerCase() ?? '') ?? [];
       if (person.personInvitationsList.length > 0) {
         withInvitation.push(person);
-      } else if (usersByEmail.has(person.email?.trim().toLowerCase() ?? '')) {
-        withAnotherAccount.push(person);
+      } else if (userIds.length > 0) {
+        withAnotherAccount.push({
+          ...person,
+          matchingUserId: userIds.length === 1 ? userIds[0] : undefined,
+        });
       } else {
         withoutInvitation.push(person);
       }
@@ -49,17 +52,13 @@ export function Invitations() {
       invitations: withInvitation.flatMap((x) => x.personInvitationsList),
     };
   }, [overview?.people?.nodes, overview?.users?.nodes]);
+  const personActionMap = useActionMap(personActions, report.withAnotherAccount);
   const invitationActionMap = useActionMap(personInvitationActions, report.invitations);
 
   const bulkLinkAccounts = useAsyncCallback(async () => {
-    for (const person of report.withAnotherAccount) {
-      if (!person.email) continue;
-      const userIds = report.usersByEmail.get(person.email.trim().toLowerCase()) ?? [];
-      if (userIds.length !== 1) continue;
-      const result = await createUserProxy({
-        input: { userProxy: { personId: person.id, userId: userIds[0]! } },
-      });
-      if (result.error) throw result.error;
+    for (const actions of personActionMap.values()) {
+      const action = actions.find((x) => x.id === 'person.assignUserByEmail');
+      if (action && 'execute' in action) await action.execute();
     }
   });
 

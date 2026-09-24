@@ -4,10 +4,10 @@ import { FileQuestion, RefreshCw, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { buttonCls, typographyCls } from '@/ui/style';
 
-type StatusPageProps = {
+type StatusPageProps = Readonly<{
   reset?: () => void;
   status: 'error' | 'not-found';
-};
+}>;
 
 const content = {
   error: {

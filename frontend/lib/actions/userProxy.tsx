@@ -41,6 +41,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     label: ({ item }) => ['Ukončit přístup', item.user?.uEmail].filter(Boolean).join(' · '),
     icon: Unplug,
     requireAdmin: true,
+    visible: ({ item }) => item.status === 'ACTIVE',
     confirm: 'Opravdu chcete ukončit platnost těchto přihlašovacích údajů?',
     execute: async ({ item, mutate }) => {
       await mutate(UpdateUserProxyDocument, {

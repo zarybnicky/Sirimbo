@@ -8,6 +8,7 @@ import {
   CreateTenantAdministratorDocument,
   CreateTenantMembershipDocument,
   CreateTenantTrainerDocument,
+  CreateUserProxyDocument,
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
@@ -15,7 +16,12 @@ import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { DialogTitle } from '@/ui/dialog';
 
-export const personActions = defineActions<PersonBasicFragment>()([
+export type PersonActionItem = PersonBasicFragment & {
+  canInvite?: boolean;
+  matchingUserId?: string;
+};
+
+export const personActions = defineActions<PersonActionItem>()([
   {
     id: 'person.edit',
     group: 'primary',
@@ -98,10 +104,25 @@ export const personActions = defineActions<PersonBasicFragment>()([
     render: ({ item }) => <LinkUserToPersonForm person={item} />,
   },
   {
+    id: 'person.assignUserByEmail',
+    label: 'Přiřadit účet podle e-mailu',
+    icon: Link2,
+    requireAdmin: true,
+    visible: ({ item }) => !!item.matchingUserId,
+    execute: async ({ item, mutate }) => {
+      await mutate(CreateUserProxyDocument, {
+        input: {
+          userProxy: { personId: item.id, userId: item.matchingUserId! },
+        },
+      });
+    },
+  },
+  {
     id: 'person.invite',
     label: 'Pozvat e-mailem',
     icon: MailPlus,
     requireAdmin: true,
+    visible: ({ item }) => item.canInvite !== false,
     render: ({ item }) => <CreateInvitationForm person={item} />,
   },
   {

@@ -24,11 +24,9 @@ query InvitationOverview {
   }
   people(condition: { membership: {} }) {
     nodes {
-      id
-      name
-      email
+      ...PersonBasic
       createdAt
-      userProxiesList(condition: { status: ACTIVE }) {
+      userProxiesList {
         id
       }
       personInvitationsList(condition: { usedAt: null }) {

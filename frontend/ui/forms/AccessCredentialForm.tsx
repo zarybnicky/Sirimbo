@@ -1,13 +1,15 @@
 import {
-  CreateAccessCredentialDocument,
   type AccessCredentialFragment,
+  AccessCredentialPeopleDocument,
+  CreateAccessCredentialDocument,
   UpdateAccessCredentialDocument,
 } from '@/graphql/AccessCredential';
 import { TextFieldElement } from '@/ui/fields/text';
 import { DatePickerElement } from '@/ui/fields/date';
+import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,9 +19,11 @@ import {
   mifareLabelSchema,
   mifareLabelToCode,
 } from '@/lib/access-credentials';
+import React from 'react';
 
 const Form = z
   .object({
+    personId: z.string().min(1, 'Vyberte osobu'),
     label: mifareLabelSchema,
     code: mifareCodeSchema,
     since: z.date(),
@@ -41,18 +45,23 @@ export function AccessCredentialForm({
   personId,
   initialValue,
   credential,
-}: {
+}: Readonly<{
   personId?: string;
   initialValue?: {
     label: string;
     code: string;
   };
   credential?: AccessCredentialFragment;
-}) {
+}>) {
   const { onSuccess } = useFormResult();
+  const [{ data }] = useQuery({
+    query: AccessCredentialPeopleDocument,
+    pause: !!credential,
+  });
   const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
+      personId: credential?.person?.id ?? personId ?? '',
       label: credential?.label ?? initialValue?.label ?? '',
       code: credential?.code ?? initialValue?.code ?? '',
       since: credential ? new Date(credential.since) : new Date(),
@@ -61,6 +70,10 @@ export function AccessCredentialForm({
   });
   const [createResult, create] = useMutation(CreateAccessCredentialDocument);
   const [updateResult, update] = useMutation(UpdateAccessCredentialDocument);
+  const people = React.useMemo(
+    () => data?.people?.nodes.map((x) => ({ id: x.id, label: x.name })) ?? [],
+    [data?.people?.nodes],
+  );
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const value = {
@@ -75,7 +88,7 @@ export function AccessCredentialForm({
           input: {
             accessCredential: {
               ...value,
-              personId: personId!,
+              personId: values.personId,
               kind: 'MIFARE',
             },
           },
@@ -86,6 +99,15 @@ export function AccessCredentialForm({
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={createResult.error ?? updateResult.error} />
+      {!credential && (
+        <ComboboxElement
+          control={control}
+          name="personId"
+          label="Osoba"
+          placeholder="Vyberte osobu"
+          options={people}
+        />
+      )}
       <TextFieldElement
         control={control}
         name="label"
