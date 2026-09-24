@@ -14,26 +14,3 @@ mutation DeleteInvitation($input: DeletePersonInvitationInput!) {
     __typename
   }
 }
-
-query InvitationOverview {
-  users {
-    nodes {
-      id
-      uEmail
-    }
-  }
-  people(condition: { membership: {} }) {
-    nodes {
-      ...PersonBasic
-      createdAt
-      userProxiesList(condition: { status: ACTIVE }) {
-        id
-      }
-      personInvitationsList(condition: { usedAt: null }) {
-        id
-        createdAt
-        accessToken
-      }
-    }
-  }
-}

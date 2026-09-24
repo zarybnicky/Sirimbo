@@ -18,7 +18,7 @@ import { DialogTitle } from '@/ui/dialog';
 
 export type PersonActionItem = PersonBasicFragment & {
   canInvite?: boolean;
-  matchingUserId?: string;
+  matchingUserIds?: string[];
 };
 
 export const personActions = defineActions<PersonActionItem>()([
@@ -105,16 +105,18 @@ export const personActions = defineActions<PersonActionItem>()([
   },
   {
     id: 'person.assignUserByEmail',
-    label: 'Přiřadit účet podle e-mailu',
+    label: 'Přiřadit účty podle e-mailu',
     icon: Link2,
     requireAdmin: true,
-    visible: ({ item }) => !!item.matchingUserId,
+    visible: ({ item }) => !!item.matchingUserIds?.length,
     execute: async ({ item, mutate }) => {
-      await mutate(CreateUserProxyDocument, {
-        input: {
-          userProxy: { personId: item.id, userId: item.matchingUserId! },
-        },
-      });
+      await Promise.all(
+        item.matchingUserIds!.map((userId) =>
+          mutate(CreateUserProxyDocument, {
+            input: { userProxy: { personId: item.id, userId } },
+          }),
+        ),
+      );
     },
   },
   {
