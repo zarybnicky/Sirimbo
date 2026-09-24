@@ -60,6 +60,10 @@ fragment EventWithTrainer on EventInstance {
     remainingCapacity
     my
   }
+  approxPriceList {
+    amount
+    currency
+  }
   trainersList: eventInstanceTrainersByInstanceIdList {
     id
     personId
@@ -165,16 +169,6 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   }
   requests: eventLessonDemandsByRegistrationIdList {
     ...EventLessonDemand
-  }
-}
-
-query EventApproxPrice($id: BigInt!) {
-  eventInstance(id: $id) {
-    id
-    approxPriceList {
-      amount
-      currency
-    }
   }
 }
 

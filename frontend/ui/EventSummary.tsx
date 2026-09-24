@@ -1,4 +1,4 @@
-import { EventApproxPriceDocument, EventWithTrainerFragment } from '@/graphql/Event';
+import { EventWithTrainerFragment } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import {
   formatEventName,
@@ -12,7 +12,6 @@ import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
 import { startOf } from 'date-arithmetic';
@@ -23,6 +22,11 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
   const registrationCount = instance.registrationInfo?.registrations ?? 0;
   const locationLabel = instance.location?.name || instance.locationText;
   const cohorts = instance.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
+  const priceString = (instance.approxPriceList ?? [])
+    .filter(isTruthy)
+    .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
+    .map((price) => moneyFormatter.format(price))
+    .join(', ');
 
   const primaryActions = React.useMemo(() => {
     return [
@@ -90,7 +94,12 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
         </div>
       )}
 
-      {instance.type === 'LESSON' && <EventPriceView id={instance.id} />}
+      {priceString && (
+        <div className="flex items-center gap-2">
+          <Coins className="size-4 text-accent-11 shrink-0" />
+          {priceString + ' / osobu'}
+        </div>
+      )}
 
       <div className="flex items-center gap-2">
         <Users className="size-4 text-accent-11 shrink-0" />
@@ -112,27 +121,6 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
         primary={primaryActions}
         actions={actions}
       />
-    </div>
-  );
-}
-
-function EventPriceView({ id }: { id: string }) {
-  const [response] = useQuery({
-    query: EventApproxPriceDocument,
-    variables: { id },
-  });
-
-  const priceString = (response.data?.eventInstance?.approxPriceList ?? [])
-    .filter(isTruthy)
-    .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
-    .map((price) => moneyFormatter.format(price))
-    .join(', ');
-
-  if (!priceString) return null;
-  return (
-    <div className="flex items-center gap-2" key="money">
-      <Coins className="size-4 text-accent-11 shrink-0" />
-      {priceString + ' / osobu'}
     </div>
   );
 }
