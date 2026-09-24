@@ -12,6 +12,7 @@ import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { personActions } from '@/lib/actions/person';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
+import { cn } from '@/lib/cn';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Combobox } from '@/ui/fields/Combobox';
 import { dateTimeFormatter } from '@/ui/format';
@@ -29,6 +30,14 @@ const compactDateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
   dateStyle: 'short',
   timeStyle: 'short',
 });
+
+function activityClassName(timestamp?: string) {
+  if (!timestamp) return 'text-danger-10';
+  const days = (Date.now() - Date.parse(timestamp)) / 86_400_000;
+  if (days > 90) return 'text-danger-10';
+  if (days > 30) return 'text-neutral-11';
+  return 'text-green-11';
+}
 
 type AccessPerson = PersonBasicFragment & {
   label: string;
@@ -97,7 +106,7 @@ export function AccessCards() {
       },
       {
         id: 'events',
-        title: 'Události',
+        title: 'Přístupy',
         contents: () => (
           <EventsTab people={people} credentials={credentials} events={events} />
         ),
@@ -171,18 +180,28 @@ const PeopleTab = React.memo(function PeopleTab({
             >
               <KeyRound className="size-3.5 shrink-0 text-accent-11" aria-hidden="true" />
               <b
-                className={`tabular-nums ${person.accountCount === 0 ? 'text-danger-10' : 'text-neutral-12'}`}
+                className={cn(
+                  'tabular-nums',
+                  person.accountCount === 0 ? 'text-danger-10' : 'text-neutral-12',
+                )}
               >
                 {person.accountCount}
               </b>
-              <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
-              {person.lastWebActivity ? (
-                <time className="truncate leading-tight" dateTime={person.lastWebActivity}>
-                  {compactDateTimeFormatter.format(new Date(person.lastWebActivity))}
-                </time>
-              ) : (
-                '-'
-              )}
+              <span
+                className={cn(
+                  'ml-1 flex min-w-0 items-center gap-1',
+                  activityClassName(person.lastWebActivity),
+                )}
+              >
+                <Clock3 className="size-3 shrink-0" aria-hidden="true" />
+                {person.lastWebActivity ? (
+                  <time className="truncate leading-tight" dateTime={person.lastWebActivity}>
+                    {compactDateTimeFormatter.format(new Date(person.lastWebActivity))}
+                  </time>
+                ) : (
+                  '-'
+                )}
+              </span>
             </div>
           </div>
           <div className="col-start-2 row-start-2 flex min-w-0 items-center gap-1 text-xs text-neutral-11 sm:col-start-3 sm:row-start-1">
@@ -192,18 +211,28 @@ const PeopleTab = React.memo(function PeopleTab({
             >
               <CreditCard className="size-3.5 shrink-0 text-accent-11" aria-hidden="true" />
               <b
-                className={`tabular-nums ${person.cardCount === 0 ? 'text-danger-10' : 'text-neutral-12'}`}
+                className={cn(
+                  'tabular-nums',
+                  person.cardCount === 0 ? 'text-danger-10' : 'text-neutral-12',
+                )}
               >
                 {person.cardCount}
               </b>
-              <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
-              {person.lastCardActivity ? (
-                <time className="truncate leading-tight" dateTime={person.lastCardActivity}>
-                  {compactDateTimeFormatter.format(new Date(person.lastCardActivity))}
-                </time>
-              ) : (
-                '—'
-              )}
+              <span
+                className={cn(
+                  'ml-1 flex min-w-0 items-center gap-1',
+                  activityClassName(person.lastCardActivity),
+                )}
+              >
+                <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
+                {person.lastCardActivity ? (
+                  <time className="truncate leading-tight" dateTime={person.lastCardActivity}>
+                    {compactDateTimeFormatter.format(new Date(person.lastCardActivity))}
+                  </time>
+                ) : (
+                  '-'
+                )}
+              </span>
             </div>
           </div>
         </div>
