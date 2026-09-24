@@ -1,1 +1,2 @@
 --!include functions/register_using_invitation.sql
+--!include functions/confirm_membership_application.sql

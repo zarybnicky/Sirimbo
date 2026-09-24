@@ -45,9 +45,10 @@ const Form = z.object({
 
 export function CreateMembershipApplicationForm({
   data,
+  onCreate,
 }: {
-  disabled?: boolean;
   data?: MembershipApplicationFragment;
+  onCreate?: (id: string) => void;
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
@@ -62,10 +63,10 @@ export function CreateMembershipApplicationForm({
   };
   const [createResult, create] = useMutation(CreateMembershipApplicationDocument);
   const [updateResult, update] = useMutation(UpdateMembershipApplicationDocument);
-  const confirm = useMutation(ConfirmMembershipApplicationDocument)[1];
-  const del = useMutation(DeleteMembershipApplicationDocument)[1];
+  const [confirmResult, confirm] = useMutation(ConfirmMembershipApplicationDocument);
+  const [deleteResult, del] = useMutation(DeleteMembershipApplicationDocument);
 
-  const disabled = auth.isAdmin;
+  const disabled = auth.isAdmin && !!data;
 
   React.useEffect(() => {
     if (data) {
@@ -78,7 +79,10 @@ export function CreateMembershipApplicationForm({
   }, [reset, data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
+    if (!auth.user) return;
+
     let result;
+    let createdId: string | undefined;
     if (data) {
       result = await update({ input: { id: data.id, patch: values } });
     } else {
@@ -86,18 +90,41 @@ export function CreateMembershipApplicationForm({
         input: {
           membershipApplication: {
             ...values,
-            createdBy: auth.user?.id!,
+            createdBy: auth.user.id,
           },
         },
       });
+      createdId = result.data?.createMembershipApplication?.membershipApplication?.id;
     }
+    if (!result.error) {
+      onSuccess();
+      if (createdId) onCreate?.(createdId);
+    }
+  };
+
+  const onConfirm = async () => {
+    if (!data) return;
+    const result = await confirm({ input: { applicationId: data.id } });
+    if (!result.error) onSuccess();
+  };
+
+  const onDelete = async () => {
+    if (!data) return;
+    const result = await del({ input: { id: data.id } });
     if (!result.error) onSuccess();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="grid lg:grid-cols-2 gap-2" disabled={disabled}>
-        <FormError error={createResult.error || updateResult.error} />
+        <FormError
+          error={
+            createResult.error ||
+            updateResult.error ||
+            confirmResult.error ||
+            deleteResult.error
+          }
+        />
 
         <TextFieldElement
           control={control}
@@ -178,14 +205,7 @@ export function CreateMembershipApplicationForm({
       <div className="col-full flex justify-between">
         {data && auth.isAdmin ? (
           <>
-            <button
-              className={buttonCls()}
-              type="button"
-              onClick={async () => {
-                await confirm({ input: { applicationId: data.id } });
-                onSuccess();
-              }}
-            >
+            <button className={buttonCls()} type="button" onClick={onConfirm}>
               <Check />
               Potvrdit jako člena
             </button>
@@ -193,10 +213,7 @@ export function CreateMembershipApplicationForm({
             <button
               className={buttonCls({ variant: 'outline' })}
               type="button"
-              onClick={async () => {
-                await del({ input: { id: data.id } });
-                onSuccess();
-              }}
+              onClick={onDelete}
             >
               <Trash2 />
               Smazat přihlášku
@@ -207,7 +224,7 @@ export function CreateMembershipApplicationForm({
             {data && (
               <button
                 type="button"
-                onClick={() => del({ input: { id: data.id } })}
+                onClick={onDelete}
                 className={buttonCls({ variant: 'outline' })}
               >
                 <Trash2 />

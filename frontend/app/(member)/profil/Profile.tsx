@@ -7,7 +7,6 @@ import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipAppl
 import { PersonView } from '@/ui/PersonView';
 import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { useAuth, useAuthLoading, useTenantConfig } from '@/lib/auth';
 import { LockKeyhole } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -48,34 +47,32 @@ export function Profile() {
     }));
 
     if (enableRegistration) {
-      tabs.push({
-        id: 'applications',
-        title: 'Přihlášky člena',
-        contents: () => (
-          <>
-            {data?.membershipApplicationsList?.map((application) => (
-              <Dialog key={application.id}>
-                <DialogTrigger.Edit
-                  text={`${application.firstName} ${application.lastName}`}
-                />
-                <DialogContent>
-                  <CreateMembershipApplicationForm data={application} />
-                </DialogContent>
-              </Dialog>
-            ))}
-            <Dialog>
-              <DialogTrigger.Add text="Přihláška nového člena" />
-              <DialogContent>
-                <CreateMembershipApplicationForm />
-              </DialogContent>
-            </Dialog>
-          </>
-        ),
-      });
+      const applications = data?.membershipApplicationsList ?? [];
+      tabs.push(
+        ...applications.map((application) => ({
+          id: `application-${application.id}`,
+          title: `${application.firstName} ${application.lastName}`,
+          contents: () => <CreateMembershipApplicationForm data={application} />,
+        })),
+        {
+          id: 'new-application',
+          title: 'Nová přihláška',
+          contents: () => (
+            <CreateMembershipApplicationForm
+              onCreate={(id) => setVariant(`application-${id}`)}
+            />
+          ),
+        },
+      );
     }
 
     return tabs;
-  }, [auth.persons, data?.membershipApplicationsList, enableRegistration]);
+  }, [
+    auth.persons,
+    data?.membershipApplicationsList,
+    enableRegistration,
+    setVariant,
+  ]);
 
   if (authLoading || !auth.user) return null;
 
