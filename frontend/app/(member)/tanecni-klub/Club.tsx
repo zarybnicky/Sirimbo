@@ -1,6 +1,6 @@
 'use client';
 
-import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
+import { PendingMembershipApplicationsDocument } from '@/graphql/MembershipApplication';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader, TitleBar } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -24,7 +24,9 @@ import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
 export function Club() {
   const auth = useAuth();
   const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-  const [{ data: applications }] = useQuery({ query: MyMembershipApplicationsDocument });
+  const [{ data: applications }] = useQuery({
+    query: PendingMembershipApplicationsDocument,
+  });
   const administratorActionMap = useActionMap(
     tenantAdministratorActions,
     tenant?.tenant?.tenantAdministratorsList ?? [],

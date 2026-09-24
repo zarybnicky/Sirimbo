@@ -4,11 +4,12 @@ import {
   DeleteMembershipApplicationDocument,
   type MembershipApplicationFragment,
   UpdateMembershipApplicationDocument,
-} from '@/graphql/CurrentUser';
+} from '@/graphql/MembershipApplication';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
+import { TextAreaElement } from '@/ui/fields/textarea';
 import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
@@ -31,8 +32,11 @@ const Form = z.object({
   suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
-  email: z.email().nullish(),
-  phone: z.string().min(9).max(14).nullish(),
+  email: z.email({ error: 'Zadejte platný e-mail' }),
+  phone: z.preprocess(
+    (value) => (value === '' ? null : value),
+    z.string().min(9).max(14).nullish(),
+  ),
   cstsId: z.number().int().positive().nullable().optional(),
   wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
@@ -40,20 +44,26 @@ const Form = z.object({
     .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
   nationality: z.string(),
-  bio: z.string().prefault(''),
+  note: z.string().prefault(''),
 });
 
 export function CreateMembershipApplicationForm({
   data,
   onCreate,
+  onRemove,
 }: {
   data?: MembershipApplicationFragment;
   onCreate?: (id: string) => void;
+  onRemove?: () => void;
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
   const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
+    defaultValues: {
+      email: data?.email ?? auth.user?.uEmail ?? '',
+      note: data?.note ?? '',
+    },
   });
 
   const fillBirthDate = () => {
@@ -66,11 +76,9 @@ export function CreateMembershipApplicationForm({
   const [confirmResult, confirm] = useMutation(ConfirmMembershipApplicationDocument);
   const [deleteResult, del] = useMutation(DeleteMembershipApplicationDocument);
 
-  const disabled = auth.isAdmin && !!data;
-
   React.useEffect(() => {
     if (data) {
-      reset(Form.partial().optional().parse(data), {
+      reset(Form.partial().parse({ ...data, email: data.email ?? '' }), {
         keepDirtyValues: true,
         keepTouched: true,
         keepErrors: true,
@@ -102,21 +110,31 @@ export function CreateMembershipApplicationForm({
     }
   };
 
-  const onConfirm = async () => {
+  const onConfirm = async (values: z.infer<typeof Form>) => {
     if (!data) return;
+
+    const updateResult = await update({ input: { id: data.id, patch: values } });
+    if (updateResult.error) return;
+
     const result = await confirm({ input: { applicationId: data.id } });
-    if (!result.error) onSuccess();
+    if (!result.error) {
+      onSuccess();
+      onRemove?.();
+    }
   };
 
   const onDelete = async () => {
     if (!data) return;
     const result = await del({ input: { id: data.id } });
-    if (!result.error) onSuccess();
+    if (!result.error) {
+      onSuccess();
+      onRemove?.();
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <fieldset className="grid lg:grid-cols-2 gap-2" disabled={disabled}>
+      <fieldset className="grid lg:grid-cols-2 gap-2">
         <FormError
           error={
             createResult.error ||
@@ -147,6 +165,7 @@ export function CreateMembershipApplicationForm({
           type="email"
           label="E-mail"
           autoComplete="email"
+          required
         />
         <TextFieldElement
           control={control}
@@ -200,40 +219,46 @@ export function CreateMembershipApplicationForm({
             options={countryOptions}
           />
         </div>
+
+        <div className="col-full">
+          <TextAreaElement
+            control={control}
+            name="note"
+            label="Poznámka k přihlášce"
+          />
+        </div>
       </fieldset>
 
-      <div className="col-full flex justify-between">
-        {data && auth.isAdmin ? (
-          <>
-            <button className={buttonCls()} type="button" onClick={onConfirm}>
+      <div className="col-full flex flex-wrap justify-between gap-3 pt-2">
+        <div className="flex gap-2">
+          {data && auth.isAdmin && (
+            <button
+              className={buttonCls()}
+              type="button"
+              onClick={handleSubmit(onConfirm)}
+            >
               <Check />
               Potvrdit jako člena
             </button>
+          )}
 
-            <button
-              className={buttonCls({ variant: 'outline' })}
-              type="button"
-              onClick={onDelete}
-            >
-              <Trash2 />
-              Smazat přihlášku
-            </button>
-          </>
-        ) : (
-          <>
-            {data && (
-              <button
-                type="button"
-                onClick={onDelete}
-                className={buttonCls({ variant: 'outline' })}
-              >
-                <Trash2 />
-                Smazat přihlášku
-              </button>
-            )}
+          <SubmitButton
+            control={control}
+            variant={data && auth.isAdmin ? 'outline' : undefined}
+          >
+            {data ? 'Uložit změny' : 'Odeslat přihlášku'}
+          </SubmitButton>
+        </div>
 
-            <SubmitButton control={control} disabled={disabled} />
-          </>
+        {data && (
+          <button
+            type="button"
+            onClick={onDelete}
+            className={buttonCls({ variant: 'outline' })}
+          >
+            <Trash2 />
+            Smazat přihlášku
+          </button>
         )}
       </div>
     </form>

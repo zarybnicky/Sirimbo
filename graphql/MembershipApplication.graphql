@@ -1,0 +1,62 @@
+fragment MembershipApplication on MembershipApplication {
+  nationality
+  note
+  phone
+  prefixTitle
+  status
+  suffixTitle
+  taxIdentificationNumber
+  birthDate
+  tenantId
+  wdsfId
+  cstsId
+  email
+  firstName
+  gender
+  id
+  lastName
+}
+
+query MyMembershipApplications($createdBy: BigInt!) {
+  membershipApplicationsList(condition: { status: SENT, createdBy: $createdBy }) {
+    ...MembershipApplication
+  }
+}
+
+query PendingMembershipApplications {
+  membershipApplicationsList(condition: { status: SENT }) {
+    ...MembershipApplication
+  }
+}
+
+mutation CreateMembershipApplication($input: CreateMembershipApplicationInput!) {
+  createMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation UpdateMembershipApplication($input: UpdateMembershipApplicationInput!) {
+  updateMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation DeleteMembershipApplication($input: DeleteMembershipApplicationInput!) {
+  deleteMembershipApplication(input: $input) {
+    membershipApplication {
+      ...MembershipApplication
+    }
+  }
+}
+
+mutation ConfirmMembershipApplication($input: ConfirmMembershipApplicationInput!) {
+  confirmMembershipApplication(input: $input) {
+    person {
+      ...Person
+    }
+  }
+}

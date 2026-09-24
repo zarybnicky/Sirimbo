@@ -1,6 +1,6 @@
 'use client';
 
-import { MyMembershipApplicationsDocument } from '@/graphql/CurrentUser';
+import { MyMembershipApplicationsDocument } from '@/graphql/MembershipApplication';
 import { useActions } from '@/lib/actions';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
@@ -21,6 +21,7 @@ export function Profile() {
   const { enableRegistration } = useTenantConfig();
   const [{ data }] = useQuery({
     query: MyMembershipApplicationsDocument,
+    variables: { createdBy: auth.user?.id ?? '' },
     pause: authLoading || !auth.user || !enableRegistration,
   });
   const [variant, setVariant] = useQueryState(
@@ -52,7 +53,12 @@ export function Profile() {
         ...applications.map((application) => ({
           id: `application-${application.id}`,
           title: `${application.firstName} ${application.lastName}`,
-          contents: () => <CreateMembershipApplicationForm data={application} />,
+          contents: () => (
+            <CreateMembershipApplicationForm
+              data={application}
+              onRemove={() => setVariant('new-application')}
+            />
+          ),
         })),
         {
           id: 'new-application',
