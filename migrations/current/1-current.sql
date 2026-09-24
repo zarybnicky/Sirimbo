@@ -117,3 +117,4 @@ grant all on function access_credential_last_used(access_credential) to anonymou
 --!include functions/system_admin_tenants.sql
 --!include functions/system_admin_update_tenant.sql
 --!include functions/event_instance_approx_price.sql
+--!include functions/tg_tenant_membership__on_status.sql

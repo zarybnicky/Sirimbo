@@ -437,14 +437,14 @@ function EventsTab() {
           <span>
             <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
             {' · '}
-            {mifareCodeToLabel(event.code)}
-            <code className="ml-2 text-neutral-11">{event.code}</code>
-            {event.person && (
+            {event.person ? (
+              <Link className="underline" href={`/clenove/${event.person.id}`}>
+                {event.person.name}
+              </Link>
+            ) : (
               <>
-                {' · '}
-                <Link className="underline" href={`/clenove/${event.person.id}`}>
-                  {event.person.name}
-                </Link>
+                {mifareCodeToLabel(event.code)}
+                <code className="ml-2 text-neutral-11">{event.code}</code>
               </>
             )}
           </span>
