@@ -50,7 +50,10 @@ function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.c
   if (typeof value !== 'string') return null;
   const i = value.toLowerCase().indexOf(`${platform}/`);
   const text = i !== -1 ? value.slice(i + platform.length + 1) : value;
-  return text.trim().replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null;
+  return sanitizeUnicode(text)
+    .trim()
+    .replace(/^@+/, '')
+    .split(/[/?#]/, 1)[0]?.trim() || null;
 }
 
 const Form = z.object({
@@ -66,7 +69,7 @@ const Form = z.object({
     .string()
     .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
-  nationality: z.string(),
+  nationality: z.string().min(1, 'Vyberte národnost'),
   bio: z.string().prefault(''),
   email: z.email().optional(),
   phone: z.string().optional(),

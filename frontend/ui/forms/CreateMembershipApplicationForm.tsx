@@ -39,17 +39,14 @@ const ApplicationForm = z.object({
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
   email: z.email({ error: 'Zadejte platný e-mail' }),
-  phone: z.preprocess(
-    (value) => (value === '' ? null : value),
-    z.string().min(9).max(14).nullish(),
-  ),
+  phone: z.string().min(9).max(14),
   cstsId: z.number().int().positive().nullable().optional(),
   wdsfId: z.number().int().positive().nullable().optional(),
   taxIdentificationNumber: z
     .string()
     .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
-  nationality: z.string(),
+  nationality: z.string().min(1, 'Vyberte národnost'),
   note: z.string().prefault(''),
 });
 
@@ -76,7 +73,11 @@ export function CreateMembershipApplicationForm({
     resolver: zodResolver(Form),
     defaultValues: {
       ...(data
-        ? ApplicationForm.partial().parse({ ...data, email: data.email ?? '' })
+        ? ApplicationForm.partial().parse({
+            ...data,
+            email: data.email ?? '',
+            phone: data.phone ?? undefined,
+          })
         : { email: auth.user?.uEmail ?? '', note: '' }),
       isMember: true,
       isTrainer: false,
@@ -220,6 +221,7 @@ export function CreateMembershipApplicationForm({
           type="tel"
           label="Telefon"
           autoComplete="tel"
+          required
         />
 
         <DatePickerElement
@@ -235,15 +237,6 @@ export function CreateMembershipApplicationForm({
           placeholder="1111119999"
           inputMode="numeric"
           onBlur={fillBirthDate}
-        />
-
-        <CstsIdFieldElement control={control} name="cstsId" />
-        <TextFieldElement
-          control={control}
-          name="wdsfId"
-          type="number"
-          label="WDSF MIN"
-          placeholder="10000000"
         />
 
         <div className="col-full">
@@ -277,6 +270,15 @@ export function CreateMembershipApplicationForm({
 
         {data && auth.isAdmin && (
           <div className="col-full grid gap-2 border-t border-neutral-6 pt-3 lg:grid-cols-2">
+            <CstsIdFieldElement control={control} name="cstsId" />
+            <TextFieldElement
+              control={control}
+              name="wdsfId"
+              type="number"
+              label="WDSF MIN"
+              placeholder="10000000"
+            />
+
             <div>
               <CheckboxElement
                 control={control}
@@ -347,7 +349,7 @@ export function CreateMembershipApplicationForm({
               onClick={handleSubmit(onConfirm)}
             >
               <Check />
-              Potvrdit jako člena
+              Potvrdit
             </button>
           )}
 
@@ -366,7 +368,7 @@ export function CreateMembershipApplicationForm({
             className={buttonCls({ variant: 'outline' })}
           >
             <X />
-            Zamítnout přihlášku
+            Zamítnout
           </button>
         ) : data ? (
           <button

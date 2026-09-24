@@ -56,13 +56,13 @@ const Form = z.object({
   ),
   facebookUrl: url,
   websiteUrl: url,
-  cstsId: z.number().int().positive().nullable().optional(),
-  wdsfId: z.number().int().positive().nullable().optional(),
+  cstsId: z.number().int().positive().nullish(),
+  wdsfId: z.number().int().positive().nullish(),
   taxIdentificationNumber: z
     .string()
     .regex(/^(?:\d{9,10})?$/, 'Neplatné rodné číslo')
     .nullish(),
-  nationality: z.string(),
+  nationality: z.string().min(1, 'Vyberte národnost'),
   bio: z.string().prefault(''),
   note: z.string().prefault(''),
   address: z.object({
