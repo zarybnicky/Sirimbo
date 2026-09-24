@@ -1,6 +1,6 @@
 'use server';
 
-import { RegisterUsingInvitationInput, RegisterWithoutInvitationInput } from '@/graphql';
+import type { RegisterUsingInvitationInput, RegisterWithoutInvitationInput } from '@/graphql';
 import {
   LoginDocument,
   RegisterUsingInvitationDocument,
@@ -50,19 +50,19 @@ export async function registerAction(
   return { redirectTo: '/profil' };
 }
 
-export async function registerUsingInvitationAction(
+export async function acceptInvitationAction(
   input: RegisterUsingInvitationInput,
 ): Promise<AuthActionResult> {
   try {
     const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
     const result = data.registerUsingInvitation?.result;
-    if (!result?.jwt) return { error: 'Registraci se nepodařilo dokončit' };
+    if (!result?.jwt) return { error: 'Pozvánku se nepodařilo přijmout' };
 
     await setSessionCookie(result.jwt);
   } catch (error) {
     return {
       error:
-        error instanceof Error ? error.message : 'Registraci se nepodařilo dokončit',
+        error instanceof Error ? error.message : 'Pozvánku se nepodařilo přijmout',
     };
   }
   return { redirectTo: '/dashboard' };

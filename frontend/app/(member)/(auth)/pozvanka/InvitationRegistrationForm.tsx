@@ -1,11 +1,12 @@
 'use client';
 
-import { registerUsingInvitationAction } from '@/lib/auth-actions';
+import { acceptInvitationAction } from '@/lib/auth-actions';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { cardCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -30,7 +31,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
   const [error, setError] = React.useState('');
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');
-    const result = await registerUsingInvitationAction(values);
+    const result = await acceptInvitationAction(values);
     if ('error' in result) {
       setError(result.error);
     } else {
@@ -45,9 +46,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
 
         <FormError error={error} />
 
-        <p>
-          Přišla vám pozvánka do klubového systému. Nastavte si heslo a vytvořte si účet.
-        </p>
+        <p>Přišla vám pozvánka do klubového systému. Vyberte e-mail a nastavte si heslo.</p>
 
         {name && <TextField name="name" label="Osoba" value={name} readOnly />}
 
@@ -56,7 +55,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
           name="email"
           label="E-mail"
           autoComplete="email"
-          readOnly
+          required
         />
 
         <TextFieldElement
@@ -66,11 +65,20 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
           label="Heslo"
           autoComplete="new-password"
           required
-          disabled={!email}
         />
-        <SubmitButton control={control} className="w-full my-2" disabled={!email}>
+        <SubmitButton control={control} className="w-full my-2">
           Registrovat
         </SubmitButton>
+        <p className="text-sm text-neutral-11">
+          Už účet máte?{' '}
+          <Link
+            className="text-accent-11 underline"
+            href={`/login?from=${encodeURIComponent(`/pozvanka?token=${token}`)}`}
+          >
+            Přihlaste se
+          </Link>{' '}
+          a přijměte pozvánku do něj.
+        </p>
       </form>
     </div>
   );

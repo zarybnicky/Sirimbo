@@ -4,8 +4,8 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { ErrorPage } from '@/ui/ErrorPage';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { InvitationAcceptanceForm } from './InvitationAcceptanceForm';
 import { InvitationRegistrationForm } from './InvitationRegistrationForm';
 
 export const metadata: Metadata = {
@@ -18,7 +18,6 @@ export default async function InvitationPage({
   searchParams: Promise<{ token?: string | string[] }>;
 }) {
   const { auth } = await getRequestContext();
-  if (auth.isLoggedIn) redirect('/dashboard');
 
   const search = await searchParams;
   const token = Array.isArray(search.token) ? search.token[0] : search.token;
@@ -26,13 +25,23 @@ export default async function InvitationPage({
     ? await executeGraphql(InvitationInfoDocument, { token })
     : null;
 
-  return token && invitation?.invitationInfo && invitation.invitationName ? (
-    <InvitationRegistrationForm
-      token={token}
-      email={invitation.invitationInfo}
-      name={invitation.invitationName}
-    />
-  ) : (
+  if (token && invitation?.invitationInfo && invitation.invitationName) {
+    return auth.isLoggedIn ? (
+      <InvitationAcceptanceForm
+        token={token}
+        name={invitation.invitationName}
+        accountEmail={auth.email ?? ''}
+      />
+    ) : (
+      <InvitationRegistrationForm
+        token={token}
+        email={invitation.invitationInfo}
+        name={invitation.invitationName}
+      />
+    );
+  }
+
+  return (
     <ErrorPage
       error="Neplatná pozvánka"
       details={

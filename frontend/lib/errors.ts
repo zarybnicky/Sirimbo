@@ -4,7 +4,7 @@ const errorMessages: Record<string, string> = {
   INVITATION_ALREADY_USED: 'Pozvánka již byla použita',
   INVALID_EMAIL: 'Zadejte e-mail',
   'duplicate key value violates unique constraint "users_email_key"':
-    'Zřejmě již v systému máte účet. Přihlaste se a vyplňte si přihlášku v sekci "Profil".',
+    'Zřejmě již v systému máte účet. Přihlaste se prosím.',
 };
 
 export function getErrorMessage(error: string) {
