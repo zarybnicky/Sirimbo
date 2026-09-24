@@ -16,14 +16,14 @@
     <mj-section mj-class="blue-section">
       <mj-column width="100%">
         <mj-text mj-class="bold-text" color="#FFF" padding-left="25px" padding-right="25px">
-          Někdo vás pozval do systému {{tenant}}
+          Pozvánka do systému {{tenant}}
         </mj-text>
       </mj-column>
     </mj-section>
 
     <mj-section mj-class="white-section">
       <mj-column width="100%">
-        <mj-text>Nyní se můžete registrovat, popř. přijmout pozvánku pod existujícím účtem, pokud již nějaký máte.</mj-text>
+        <mj-text>Po otevření pozvánky si můžete vytvořit účet. Pokud už účet máte, stačí se přihlásit.</mj-text>
         <mj-text>V systému pak můžete prozkoumat informace na nástěnce, přihlašovat se na tréninky nebo na akce klubu.</mj-text>
 
         <mj-button mj-class="text" background-color="#be9f69" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="{{invitationLink}}" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Přijmout pozvánku</mj-button>
@@ -33,7 +33,7 @@
 
     <mj-section mj-class="white-section">
       <mj-column width="100%">
-        <mj-text>Poté do systému vstoupíte na adrese:</mj-text>
+        <mj-text>Do systému se můžete kdykoli vrátit na adrese:</mj-text>
 
         <mj-button mj-class="text" background-color="#be9f69" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="{{homeLink}}" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">{{ domain }}</mj-button>
       </mj-column>
