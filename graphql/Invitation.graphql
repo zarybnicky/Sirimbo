@@ -15,33 +15,27 @@ mutation DeleteInvitation($input: DeletePersonInvitationInput!) {
   }
 }
 
-query PeopleWithAnotherAccount {
-  peopleWithoutAccessWithExistingAccountList {
-    id
-    name
-    email
-  }
-}
-
-query PeopleWithoutInvitation {
-  peopleWithoutAccessOrInvitationList {
-    id
-    name
-    email
-    createdAt
-  }
-}
-
-query PeopleWithInvitation {
-  peopleWithoutAccessWithInvitationList {
-    id
-    name
-    email
-    createdAt
-    personInvitationsList {
+query InvitationOverview {
+  users {
+    nodes {
       id
+      uEmail
+    }
+  }
+  people(condition: { membership: {} }) {
+    nodes {
+      id
+      name
+      email
       createdAt
-      accessToken
+      userProxiesList(condition: { status: ACTIVE }) {
+        id
+      }
+      personInvitationsList(condition: { usedAt: null }) {
+        id
+        createdAt
+        accessToken
+      }
     }
   }
 }

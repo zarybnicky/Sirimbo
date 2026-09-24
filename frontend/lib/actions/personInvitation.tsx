@@ -9,7 +9,7 @@ export type PersonInvitationActionItem = {
 
 export const personInvitationActions = defineActions<PersonInvitationActionItem>()([
   {
-    id: 'personinvitation.copyLink',
+    id: 'personInvitation.copyLink',
     label: 'Kopírovat odkaz',
     icon: Copy,
     requireAdmin: true,

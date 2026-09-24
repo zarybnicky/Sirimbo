@@ -10,6 +10,10 @@ import type { PersonBasicFragment } from '@/graphql/Person';
 import { useActionMap, type ResolvedAction } from '@/lib/actions';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { personActions } from '@/lib/actions/person';
+import {
+  personInvitationActions,
+  type PersonInvitationActionItem,
+} from '@/lib/actions/personInvitation';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { cn } from '@/lib/cn';
@@ -20,7 +24,7 @@ import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
-import { Clock3, CreditCard, KeyRound } from 'lucide-react';
+import { Clock3, CreditCard, KeyRound, Mail, MailPlus, MailX } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import * as React from 'react';
@@ -43,6 +47,7 @@ type AccessPerson = PersonBasicFragment & {
   label: string;
   userProxies: UserProxyFragment[];
   credentials: AccessCredentialFragment[];
+  invitations: PersonInvitationActionItem[];
   accountCount: number;
   cardCount: number;
   lastWebActivity?: string;
@@ -79,6 +84,7 @@ export function AccessCards() {
           label: person.name,
           userProxies: person.userProxiesList,
           credentials: personCredentials,
+          invitations: person.personInvitationsList,
           accountCount: new Set(users.map((x) => x.id)).size,
           cardCount: personCredentials.filter((x) => x.isAllowed).length,
           lastWebActivity: users
@@ -139,7 +145,12 @@ const PeopleTab = React.memo(function PeopleTab({
     () => people.flatMap((x) => x.userProxies),
     [people],
   );
+  const invitations = React.useMemo(
+    () => people.flatMap((x) => x.invitations),
+    [people],
+  );
   const userProxyActionMap = useActionMap(userProxyActions, userProxies);
+  const invitationActionMap = useActionMap(personInvitationActions, invitations);
   const credentialActionMap = useActionMap(accessCredentialActions, credentials);
   const personActionMap = useActionMap(personActions, people);
 
@@ -171,6 +182,7 @@ const PeopleTab = React.memo(function PeopleTab({
             person={person}
             personActionMap={personActionMap}
             userActionMap={userProxyActionMap}
+            invitationActionMap={invitationActionMap}
             credentialActionMap={credentialActionMap}
           />
           <div className="col-start-1 row-start-2 flex min-w-0 items-center gap-1 text-xs text-neutral-11 sm:col-start-2 sm:row-start-1">
@@ -187,21 +199,46 @@ const PeopleTab = React.memo(function PeopleTab({
               >
                 {person.accountCount}
               </b>
-              <span
-                className={cn(
-                  'ml-1 flex min-w-0 items-center gap-1',
-                  activityClassName(person.lastWebActivity),
-                )}
-              >
-                <Clock3 className="size-3 shrink-0" aria-hidden="true" />
-                {person.lastWebActivity ? (
-                  <time className="truncate leading-tight" dateTime={person.lastWebActivity}>
-                    {compactDateTimeFormatter.format(new Date(person.lastWebActivity))}
-                  </time>
-                ) : (
-                  '-'
-                )}
-              </span>
+              {person.accountCount > 0 ? (
+                <span
+                  className={cn(
+                    'ml-1 flex min-w-0 items-center gap-1',
+                    activityClassName(person.lastWebActivity),
+                  )}
+                >
+                  <Clock3 className="size-3 shrink-0" aria-hidden="true" />
+                  {person.lastWebActivity ? (
+                    <time
+                      className="truncate leading-tight"
+                      dateTime={person.lastWebActivity}
+                    >
+                      {compactDateTimeFormatter.format(
+                        new Date(person.lastWebActivity),
+                      )}
+                    </time>
+                  ) : (
+                    '-'
+                  )}
+                </span>
+              ) : person.invitations.length > 0 ? (
+                <span
+                  className="ml-1 flex min-w-0 items-center gap-1 text-accent-11"
+                  title={`Počet nevyužitých pozvánek: ${person.invitations.length}`}
+                >
+                  <Mail className="size-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate">Pozvánka odeslána</span>
+                </span>
+              ) : person.email ? (
+                <span className="ml-1 flex min-w-0 items-center gap-1 text-neutral-9">
+                  <MailPlus className="size-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate">Bez pozvánky</span>
+                </span>
+              ) : (
+                <span className="ml-1 flex min-w-0 items-center gap-1 text-danger-10">
+                  <MailX className="size-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate">Chybí e-mail</span>
+                </span>
+              )}
             </div>
           </div>
           <div className="col-start-2 row-start-2 flex min-w-0 items-center gap-1 text-xs text-neutral-11 sm:col-start-3 sm:row-start-1">
@@ -305,23 +342,30 @@ function AccessMenu({
   person,
   personActionMap,
   userActionMap,
+  invitationActionMap,
   credentialActionMap,
 }: {
   person: AccessPerson;
   personActionMap: ActionMap;
   userActionMap: ActionMap;
+  invitationActionMap: ActionMap;
   credentialActionMap: ActionMap;
 }) {
   const personActions = personActionMap.get(person.id) ?? [];
   const actions: ResolvedAction[] = [
-    ...personActions.filter((action) =>
-      ['person.linkUser', 'person.invite'].includes(action.id),
+    ...personActions.filter(
+      ({ id }) =>
+        id === 'person.linkUser' ||
+        (id === 'person.invite' &&
+          person.accountCount === 0 &&
+          person.invitations.length === 0),
     ),
     ...person.userProxies.flatMap((proxy) =>
       (userActionMap.get(proxy.id) ?? []).filter((x) =>
         ['userProxy.edit', 'userProxy.endToday'].includes(x.id),
       ),
     ),
+    ...person.invitations.flatMap((x) => invitationActionMap.get(x.id) ?? []),
     ...personActions.filter((x) => x.id === 'person.addAccessCredential'),
     ...person.credentials.flatMap((x) => credentialActionMap.get(x.id) ?? []),
   ];

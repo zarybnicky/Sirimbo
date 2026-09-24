@@ -2,11 +2,8 @@
 
 import {
   CreateInvitationDocument,
-  PeopleWithAnotherAccountDocument,
-  PeopleWithInvitationDocument,
-  PeopleWithoutInvitationDocument,
+  InvitationOverviewDocument,
 } from '@/graphql/Invitation';
-import { UserListDocument } from '@/graphql/CurrentUser';
 import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { useActionMap } from '@/lib/actions';
 import { personInvitationActions } from '@/lib/actions/personInvitation';
@@ -15,36 +12,49 @@ import { fullDateFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { PageHeader } from '@/ui/TitleBar';
 import Link from 'next/link';
+import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 
 export function Invitations() {
-  const [{ data: withAnotherAccount }] = useQuery({
-    query: PeopleWithAnotherAccountDocument,
-  });
-  const [{ data: withoutInvitation }] = useQuery({
-    query: PeopleWithoutInvitationDocument,
-  });
-  const [{ data: withInvitation }] = useQuery({ query: PeopleWithInvitationDocument });
-  const [{ data: userQuery }] = useQuery({ query: UserListDocument });
+  const [{ data: overview }] = useQuery({ query: InvitationOverviewDocument });
   const [, sendInvitation] = useMutation(CreateInvitationDocument);
   const [, createUserProxy] = useMutation(CreateUserProxyDocument);
-  const invitations =
-    withInvitation?.peopleWithoutAccessWithInvitationList?.flatMap(
-      (person) => person.personInvitationsList,
-    ) ?? [];
-  const invitationActionMap = useActionMap(personInvitationActions, invitations);
+  const report = React.useMemo(() => {
+    const usersByEmail = new Map<string, string[]>();
+    for (const user of overview?.users?.nodes ?? []) {
+      const email = user.uEmail.trim().toLowerCase();
+      usersByEmail.set(email, [...(usersByEmail.get(email) ?? []), user.id]);
+    }
 
-  const usersByEmail = new Map<string, string[]>();
-  for (const user of userQuery?.users?.nodes ?? []) {
-    const email = user.uEmail.trim().toLowerCase();
-    usersByEmail.set(email, [...(usersByEmail.get(email) ?? []), user.id]);
-  }
+    const withAnotherAccount = [];
+    const withoutInvitation = [];
+    const withInvitation = [];
+    for (const person of overview?.people?.nodes ?? []) {
+      if (person.userProxiesList.length > 0) continue;
+      if (person.personInvitationsList.length > 0) {
+        withInvitation.push(person);
+      } else if (usersByEmail.has(person.email?.trim().toLowerCase() ?? '')) {
+        withAnotherAccount.push(person);
+      } else {
+        withoutInvitation.push(person);
+      }
+    }
+
+    return {
+      usersByEmail,
+      withAnotherAccount,
+      withoutInvitation,
+      withInvitation,
+      invitations: withInvitation.flatMap((x) => x.personInvitationsList),
+    };
+  }, [overview?.people?.nodes, overview?.users?.nodes]);
+  const invitationActionMap = useActionMap(personInvitationActions, report.invitations);
 
   const bulkLinkAccounts = useAsyncCallback(async () => {
-    for (const person of withAnotherAccount?.peopleWithoutAccessWithExistingAccountList ?? []) {
+    for (const person of report.withAnotherAccount) {
       if (!person.email) continue;
-      const userIds = usersByEmail.get(person.email.trim().toLowerCase()) ?? [];
+      const userIds = report.usersByEmail.get(person.email.trim().toLowerCase()) ?? [];
       if (userIds.length !== 1) continue;
       const result = await createUserProxy({
         input: { userProxy: { personId: person.id, userId: userIds[0]! } },
@@ -55,7 +65,7 @@ export function Invitations() {
 
   const bulkSendInvitations = useAsyncCallback(async () => {
     const sent = new Set<string>();
-    for (const person of withoutInvitation?.peopleWithoutAccessOrInvitationList || []) {
+    for (const person of report.withoutInvitation) {
       if (!person.email) continue;
       const email = person.email.trim().toLowerCase();
       if (sent.has(email)) continue;
@@ -77,8 +87,7 @@ export function Invitations() {
       <PageHeader title="Přehled pozvánek" />
 
       <div className="prose prose-accent">
-        {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length >
-          0 && (
+        {report.withAnotherAccount.length > 0 && (
           <>
             <h2>
               Osoby bez přístupu do systému - s jiným existujícím účtem podle e-mailu,
@@ -88,29 +97,23 @@ export function Invitations() {
               Přiřadit jednoznačné účty
             </SubmitButton>
             <ul>
-              {withAnotherAccount?.peopleWithoutAccessWithExistingAccountList?.map(
-                (x) => (
-                  <li key={x.id}>
-                    <Link href={`/clenove/${x.id}`}>{x.name}</Link> ({x.email})
-                    {(usersByEmail.get(x.email?.trim().toLowerCase() ?? '') ?? []).length >
-                      1 && ' - více uživatelských účtů se stejným e-mailem'}
-                  </li>
-                ),
-              )}
+              {report.withAnotherAccount.map((x) => (
+                <li key={x.id}>
+                  <Link href={`/clenove/${x.id}`}>{x.name}</Link> ({x.email})
+                  {(report.usersByEmail.get(x.email?.trim().toLowerCase() ?? '') ?? [])
+                    .length > 1 && ' - více uživatelských účtů se stejným e-mailem'}
+                </li>
+              ))}
             </ul>
           </>
         )}
 
-        {(
-          withoutInvitation?.peopleWithoutAccessOrInvitationList?.filter(
-            (x) => !x.email,
-          ) || []
-        ).length > 0 && (
+        {report.withoutInvitation.some((x) => !x.email) && (
           <>
             <h2>Osoby bez přístupu do systému - ještě nepozvaní, bez e-mailu</h2>
             <ul>
-              {withoutInvitation?.peopleWithoutAccessOrInvitationList
-                ?.filter((x) => !x.email)
+              {report.withoutInvitation
+                .filter((x) => !x.email)
                 .map((x) => (
                   <li key={x.id}>
                     <Link href={`/clenove/${x.id}`}>{x.name}</Link>
@@ -123,11 +126,7 @@ export function Invitations() {
           </>
         )}
 
-        {(
-          withoutInvitation?.peopleWithoutAccessOrInvitationList?.filter(
-            (x) => x.email,
-          ) || []
-        ).length > 0 && (
+        {report.withoutInvitation.some((x) => x.email) && (
           <>
             <h2>Osoby bez přístupu do systému - ještě nepozvaní</h2>
 
@@ -136,8 +135,8 @@ export function Invitations() {
             </SubmitButton>
 
             <ul>
-              {withoutInvitation?.peopleWithoutAccessOrInvitationList
-                ?.filter((x) => x.email)
+              {report.withoutInvitation
+                .filter((x) => x.email)
                 .map((x) => (
                   <li key={x.id}>
                     <Link href={`/clenove/${x.id}`}>{x.name}</Link>
@@ -149,12 +148,12 @@ export function Invitations() {
           </>
         )}
 
-        {(withInvitation?.peopleWithoutAccessWithInvitationList || []).length > 0 && (
+        {report.withInvitation.length > 0 && (
           <>
             <h2>Osoby bez přístupu do systému - již pozvaní</h2>
             <ul>
-              {withInvitation?.peopleWithoutAccessWithInvitationList
-                ?.toSorted((x, y) => x.createdAt.localeCompare(y.createdAt))
+              {report.withInvitation
+                .toSorted((x, y) => x.createdAt.localeCompare(y.createdAt))
                 .map((x) => (
                   <li key={x.id}>
                     <div>
@@ -182,12 +181,9 @@ export function Invitations() {
           </>
         )}
 
-        {(withAnotherAccount?.peopleWithoutAccessWithExistingAccountList || []).length ===
-          0 &&
-          (withoutInvitation?.peopleWithoutAccessOrInvitationList || []).length === 0 &&
-          (withInvitation?.peopleWithoutAccessWithInvitationList || []).length === 0 && (
-            <div>✅ Všechny v pořádku</div>
-          )}
+        {report.withAnotherAccount.length === 0 &&
+          report.withoutInvitation.length === 0 &&
+          report.withInvitation.length === 0 && <div>✅ Všechny v pořádku</div>}
       </div>
     </>
   );
