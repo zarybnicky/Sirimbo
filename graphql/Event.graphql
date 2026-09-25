@@ -27,10 +27,7 @@ query EventSeries($id: BigInt!) {
   eventSeries(id: $id) {
     id
     name
-    eventsList(condition: { parentId: null }, orderBy: SINCE_ASC) {
-      ...EventInstance
-    }
-    attendanceEventsList: eventsList(orderBy: SINCE_ASC) {
+    eventsList(orderBy: SINCE_ASC) {
       ...EventInstance
     }
   }

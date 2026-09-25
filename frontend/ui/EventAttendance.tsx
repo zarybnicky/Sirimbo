@@ -44,9 +44,7 @@ export function EventAttendance({ id }: { id: string }) {
     <div className="prose prose-accent max-w-none">
       <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Docházka">
         {event.seriesId && (
-          <Link href={`/terminy/${event.seriesId}?tab=attendance`}>
-            Zpět na seznam termínů
-          </Link>
+          <Link href={`/terminy/${event.seriesId}`}>Zpět na seznam termínů</Link>
         )}
       </nav>
       <table className="mt-0">
