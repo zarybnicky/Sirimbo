@@ -45,7 +45,15 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
         {location && (
           <>
             <dt>Místo konání</dt>
-            <dd>{location}</dd>
+            <dd>
+              {instance.location ? (
+                <Link className="underline" href={`/lokality/${instance.location.id}`}>
+                  {instance.location.name}
+                </Link>
+              ) : (
+                location
+              )}
+            </dd>
           </>
         )}
 

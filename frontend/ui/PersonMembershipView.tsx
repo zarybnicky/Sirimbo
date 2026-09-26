@@ -256,6 +256,17 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                     <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
                     <span className="text-neutral-11">
                       {dateTimeFormatter.format(new Date(event.occurredAt))}
+                      {event.tenantLocation && (
+                        <>
+                          {' · '}
+                          <Link
+                            className="underline"
+                            href={`/lokality/${event.tenantLocation.id}`}
+                          >
+                            {event.tenantLocation.name}
+                          </Link>
+                        </>
+                      )}
                       {' · '}
                       {event.device}
                     </span>

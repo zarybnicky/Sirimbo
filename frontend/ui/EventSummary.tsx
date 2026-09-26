@@ -80,7 +80,13 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
       {locationLabel && (
         <div className="flex items-center gap-2">
           <MapPin className="size-4 text-accent-11 shrink-0" />
-          {locationLabel}
+          {instance.location ? (
+            <Link className="underline" href={`/lokality/${instance.location.id}`}>
+              {instance.location.name}
+            </Link>
+          ) : (
+            locationLabel
+          )}
         </div>
       )}
 

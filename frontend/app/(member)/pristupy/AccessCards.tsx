@@ -560,7 +560,17 @@ function EventsTab() {
             )}
           </span>
           <span className="ml-auto text-neutral-11">
-            {dateTimeFormatter.format(new Date(event.occurredAt))} · {event.device}
+            {dateTimeFormatter.format(new Date(event.occurredAt))}
+            {event.tenantLocation && (
+              <>
+                {' · '}
+                <Link className="underline" href={`/lokality/${event.tenantLocation.id}`}>
+                  {event.tenantLocation.name}
+                </Link>
+              </>
+            )}
+            {' · '}
+            {event.device}
             {event.reason && ` · ${event.reason}`}
           </span>
           {!event.allowed && !allowedCodes.has(`${event.kind}:${event.code}`) && (
