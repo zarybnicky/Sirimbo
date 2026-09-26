@@ -36,7 +36,6 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN
    FROM app_private.visible_person_ids() v(person_id)))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 
 CREATE INDEX couple_man_active_idx ON public.couple USING btree (man_id) INCLUDE (id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX couple_man_active_lookup ON public.couple USING btree (man_id, since, until, id) INCLUDE (woman_id, status) WHERE (status = 'active'::public.relationship_status);

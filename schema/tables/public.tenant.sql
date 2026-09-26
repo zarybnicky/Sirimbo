@@ -10,14 +10,22 @@ CREATE TABLE public.tenant (
 );
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single -query:resource:list -query:resource:connection
+@behavior -singularRelation:resource:single -query:resource:connection
 @simpleCollections only';
 
-GRANT ALL ON TABLE public.tenant TO anonymous;
+GRANT SELECT ON TABLE public.tenant TO anonymous;
+GRANT ALL ON TABLE public.tenant TO system_admin;
+GRANT UPDATE(name) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(cz_ico) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(cz_dic) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(address) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(description) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(bank_account) ON TABLE public.tenant TO administrator;
 ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.tenant
     ADD CONSTRAINT tenant_pkey PRIMARY KEY (id);
 
-CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = public.current_tenant_id()));
-CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
+CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING ((id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY system_admin_all ON public.tenant TO system_admin USING (true);

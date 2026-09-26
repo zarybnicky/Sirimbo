@@ -4,11 +4,13 @@ CREATE FUNCTION public.register_using_invitation(email text, passwd text, token 
     AS $$
 declare
   invitation person_invitation;
+  v_user_id bigint := current_user_id();
   v_salt text;
   usr users;
   jwt jwt_token;
+  v_registered boolean := false;
 begin
-  select * into invitation from person_invitation where access_token=token;
+  select * into invitation from person_invitation where access_token=token for update;
 
   if invitation is null then
     raise exception 'INVITATION_NOT_FOUND' using errcode = '28000';
@@ -16,13 +18,24 @@ begin
   if invitation.used_at is not null then
     raise exception 'INVITATION_ALREADY_USED' using errcode = '28P01';
   end if;
-  if email is null or email = '' then
-    raise exception 'INVALID_EMAIL' using errcode = '28P01';
+
+  if v_user_id is null then
+    if email is null or email = '' then
+      raise exception 'INVALID_EMAIL' using errcode = '28P01';
+    end if;
+
+    v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
+    insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+    v_registered := true;
+  else
+    select * into usr from users where id=v_user_id;
+    if usr is null then
+      raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    end if;
   end if;
 
-  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
-  insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
-  insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
+  perform set_config('jwt.claims.user_id', usr.id::text, true);
+  insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id) on conflict do nothing;
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
@@ -30,6 +43,12 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  if v_registered then
+    insert into security_event (user_id, kind, method)
+    values (usr.id, 'registration', 'manual');
+  end if;
+  insert into security_event (user_id, person_id, kind, method)
+  values (usr.id, invitation.person_id, 'invitation_accepted', 'manual');
   return (usr, jwt);
 end
 $$;

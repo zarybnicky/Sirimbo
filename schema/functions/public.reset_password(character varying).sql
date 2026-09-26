@@ -6,13 +6,16 @@ declare
   v_tenant tenant;
   v_user users;
   v_token otp_token;
-  v_payload jsonb := null;
+  v_payload jsonb := jsonb_build_array();
 begin
   for v_user in (select * from users where u_email = email) loop
     insert into otp_token (user_id)
     values (v_user.id) returning * into v_token;
 
-    v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
+    insert into security_event (user_id, kind, method)
+    values (v_user.id, 'password_reset_requested', 'manual');
+
+    v_payload := v_payload || jsonb_build_object(
       'login', v_user.u_login,
       'email', v_user.u_email,
       'token', v_token.access_token,

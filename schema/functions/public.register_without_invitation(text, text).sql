@@ -15,6 +15,8 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'registration', 'manual');
   return (usr, jwt);
 end
 $$;

@@ -11,6 +11,7 @@ CREATE TABLE public.access_credential (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     created_by bigint DEFAULT public.current_user_id(),
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
     CONSTRAINT access_credential_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
     CONSTRAINT access_credential_label_check CHECK (((label <> ''::text) AND (label = btrim(label)))),
     CONSTRAINT access_credential_until_gt_since CHECK ((until > since))
@@ -51,6 +52,8 @@ CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrat
 CREATE POLICY admin_view ON public.access_credential FOR SELECT TO administrator USING (true);
 CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__credential();
 
 CREATE INDEX access_credential_person_idx ON public.access_credential USING btree (tenant_id, person_id);

@@ -30,7 +30,9 @@ ALTER TABLE ONLY public.user_proxy
 CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
 CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = public.current_user_id()));
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__user_proxy();
 
 CREATE INDEX user_proxy_person_id_idx ON public.user_proxy USING btree (person_id);
 CREATE INDEX user_proxy_user_id_idx ON public.user_proxy USING btree (user_id);

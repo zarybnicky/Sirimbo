@@ -13,7 +13,7 @@ CREATE TABLE public.tenant_administrator (
     CONSTRAINT tenant_administrator_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
 
@@ -29,11 +29,13 @@ ALTER TABLE ONLY public.tenant_administrator
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true);
+CREATE POLICY system_admin_all ON public.tenant_administrator TO system_admin USING (true);
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('administrator_granted', 'administrator_revoked');
 
 CREATE INDEX tenant_administrator_active_by_person ON public.tenant_administrator USING btree (person_id) INCLUDE (tenant_id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX tenant_administrator_active_by_tenant ON public.tenant_administrator USING btree (tenant_id) INCLUDE (person_id) WHERE (status = 'active'::public.relationship_status);

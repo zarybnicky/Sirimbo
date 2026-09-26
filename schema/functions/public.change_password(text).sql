@@ -1,7 +1,10 @@
 CREATE FUNCTION public.change_password(new_pass text) RETURNS void
-    LANGUAGE sql STRICT
+    LANGUAGE plpgsql STRICT
     AS $$
-  update users set u_pass = new_pass where id = current_user_id();
+begin
+  update users set u_pass = new_pass
+  where id = current_user_id();
+end;
 $$;
 
 GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;

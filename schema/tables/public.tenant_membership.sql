@@ -11,7 +11,7 @@ CREATE TABLE public.tenant_membership (
     CONSTRAINT tenant_membership_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
 
@@ -27,12 +27,14 @@ ALTER TABLE ONLY public.tenant_membership
 ALTER TABLE ONLY public.tenant_membership
     ADD CONSTRAINT tenant_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.tenant_membership TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_membership TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY system_admin_all ON public.tenant_membership TO system_admin USING (true);
 CREATE POLICY view_visible_person ON public.tenant_membership FOR SELECT USING (true);
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
 CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('membership_granted', 'membership_revoked');
 
 CREATE INDEX tenant_membership_active_by_person ON public.tenant_membership USING btree (person_id) INCLUDE (tenant_id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX tenant_membership_active_by_tenant ON public.tenant_membership USING btree (tenant_id) INCLUDE (person_id) WHERE (status = 'active'::public.relationship_status);

@@ -24,7 +24,7 @@ CREATE TABLE public.tenant_trainer (
     CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
 
@@ -40,11 +40,13 @@ ALTER TABLE ONLY public.tenant_trainer
 ALTER TABLE ONLY public.tenant_trainer
     ADD CONSTRAINT tenant_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
+CREATE POLICY system_admin_all ON public.tenant_trainer TO system_admin USING (true);
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('trainer_granted', 'trainer_revoked');
 
 CREATE INDEX tenant_trainer_active_by_person ON public.tenant_trainer USING btree (person_id) INCLUDE (tenant_id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX tenant_trainer_active_by_tenant ON public.tenant_trainer USING btree (tenant_id) INCLUDE (person_id) WHERE (status = 'active'::public.relationship_status);

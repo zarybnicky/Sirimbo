@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict llYPNO1wkWsrPQyLldozMMFzAGAbydbgSz6DCY1t2uOlZuQe9P9CfOFUxOlzyDq
+\restrict 5WRt1bcLlJEfAMkF1akWdf7lEWSeEgCKmWeagGn00PvWclLhR7sZp9g8eKCpwEI
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -1131,6 +1131,9 @@ CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
   UPDATE tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
+  UPDATE access_credential SET status = app_private.relationship_status_next(now(), valid_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), valid_range, status);
+
   UPDATE announcement
   SET status = app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status)
   WHERE status IN ('scheduled', 'published')
@@ -1277,7 +1280,7 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 
 
@@ -1915,21 +1918,6 @@ $$;
 
 
 --
--- Name: tg_auth_details__refresh(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_auth_details__refresh() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-BEGIN
-  perform graphile_worker.add_job('refresh_auth_details', job_key := 'refresh_auth_details');
-  return null;
-END
-$$;
-
-
---
 -- Name: tg_cohort_membership__on_status(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2271,6 +2259,147 @@ $$;
 
 
 --
+-- Name: tg_relationship__status(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_relationship__status() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  new.status := app_private.relationship_status_next(
+    now(), tstzrange(new.since, new.until, '[)'), new.status
+  );
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_security_event__credential(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_security_event__credential() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  if tg_op = 'DELETE' then
+    if old.status = 'active' then
+      insert into security_event (person_id, kind, method)
+      values (old.person_id, 'access_credential_ended', 'manual');
+    end if;
+    return old;
+  end if;
+
+  if tg_op = 'INSERT' and new.status = 'active' then
+    insert into security_event (person_id, kind, method, effective_at)
+    values (new.person_id, 'access_credential_issued', 'manual', new.since);
+  elsif tg_op = 'UPDATE'
+     and new.status is distinct from old.status
+     and new.status in ('active', 'expired') then
+    insert into security_event (person_id, kind, method, effective_at)
+    values (
+      new.person_id,
+      case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end,
+      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      case when new.status = 'active' then new.since else new.until end
+    );
+  end if;
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_security_event__password(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_security_event__password() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  insert into security_event (user_id, kind, method)
+  values (new.id, 'password_changed', 'manual');
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_security_event__range(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_security_event__range() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  if tg_op = 'DELETE' then
+    if old.status = 'active' then
+      insert into security_event (person_id, kind, method)
+      values (old.person_id, tg_argv[1], 'manual');
+    end if;
+    return old;
+  end if;
+
+  if tg_op = 'INSERT' and new.status = 'active' then
+    insert into security_event (person_id, kind, method, effective_at)
+    values (new.person_id, tg_argv[0], 'manual', new.since);
+  elsif tg_op = 'UPDATE'
+     and new.status is distinct from old.status
+     and new.status in ('active', 'expired') then
+    insert into security_event (person_id, kind, method, effective_at)
+    values (
+      new.person_id,
+      case when new.status = 'active' then tg_argv[0] else tg_argv[1] end,
+      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      case when new.status = 'active' then new.since else new.until end
+    );
+  end if;
+  return new;
+end;
+$$;
+
+
+--
+-- Name: tg_security_event__user_proxy(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_security_event__user_proxy() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  if tg_op = 'DELETE' then
+    if old.status = 'active' then
+      insert into security_event (user_id, person_id, kind, method)
+      values (old.user_id, old.person_id, 'person_unlinked', 'manual');
+    end if;
+    return old;
+  end if;
+
+  if tg_op = 'INSERT' and new.status = 'active' then
+    insert into security_event (user_id, person_id, kind, method, effective_at)
+    values (new.user_id, new.person_id, 'person_linked', 'manual', new.since);
+  elsif tg_op = 'UPDATE'
+     and new.status is distinct from old.status
+     and new.status in ('active', 'expired') then
+    insert into security_event (user_id, person_id, kind, method, effective_at)
+    values (
+      new.user_id,
+      new.person_id,
+      case when new.status = 'active' then 'person_linked' else 'person_unlinked' end,
+      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      case when new.status = 'active' then new.since else new.until end
+    );
+  end if;
+  return new;
+end;
+$$;
+
+
+--
 -- Name: tg_tenant_membership__on_status(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2540,6 +2669,7 @@ CREATE TABLE public.access_credential (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     created_by bigint DEFAULT public.current_user_id(),
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
     CONSTRAINT access_credential_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
     CONSTRAINT access_credential_label_check CHECK (((label <> ''::text) AND (label = btrim(label)))),
     CONSTRAINT access_credential_until_gt_since CHECK ((until > since))
@@ -3188,9 +3318,12 @@ $_$;
 --
 
 CREATE FUNCTION public.change_password(new_pass text) RETURNS void
-    LANGUAGE sql STRICT
+    LANGUAGE plpgsql STRICT
     AS $$
-  update users set u_pass = new_pass where id = current_user_id();
+begin
+  update users set u_pass = new_pass
+  where id = current_user_id();
+end;
 $$;
 
 
@@ -3460,31 +3593,53 @@ COMMENT ON COLUMN public.person.search_name IS '@omit';
 
 
 --
--- Name: confirm_membership_application(bigint); Type: FUNCTION; Schema: public; Owner: -
+-- Name: confirm_membership_application(bigint, boolean, boolean, boolean, timestamp with time zone, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.confirm_membership_application(application_id bigint) RETURNS public.person
+CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_member boolean DEFAULT true, is_trainer boolean DEFAULT false, is_admin boolean DEFAULT false, join_date timestamp with time zone DEFAULT now(), cohort_ids bigint[] DEFAULT ARRAY[]::bigint[]) RETURNS public.person
     LANGUAGE sql
     AS $$
-  with t_person as (
+  with application as materialized (
+    select *
+    from membership_application
+    where id = application_id and status = 'sent'
+    for update
+  ), t_person as (
     insert into person (
       first_name, last_name, gender, birth_date, nationality, tax_identification_number,
-      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
-    ) select
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone,
+      note
+    )
+    select
       first_name, last_name, gender, birth_date, nationality, tax_identification_number,
-      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone
-    from membership_application where id = application_id and status='sent'
+      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone,
+      note
+    from application
     returning *
   ), appl as (
-     update membership_application set status='approved' where id=application_id
+    update membership_application
+    set status = 'approved'
+    where id = (select id from application)
   ), member as (
-    insert into tenant_membership (tenant_id, person_id)
-    values (current_tenant_id(), (select id from t_person))
-    returning *
+    insert into tenant_membership (tenant_id, person_id, since)
+    select current_tenant_id(), id, join_date from t_person where is_member
+  ), trainer as (
+    insert into tenant_trainer (tenant_id, person_id, since)
+    select current_tenant_id(), id, join_date from t_person where is_trainer
+  ), administrator as (
+    insert into tenant_administrator (tenant_id, person_id, since)
+    select current_tenant_id(), id, join_date from t_person where is_admin
+  ), cohorts as (
+    insert into cohort_membership (cohort_id, person_id, since)
+    select cohort_id, t_person.id, join_date
+    from t_person
+    cross join unnest(coalesce(cohort_ids, array[]::bigint[])) selected(cohort_id)
   ), proxy as (
     insert into user_proxy (person_id, user_id)
-    values ((select id from t_person), (select created_by from membership_application where id = application_id))
-  ) select * from t_person;
+    select t_person.id, application.created_by
+    from t_person cross join application
+  )
+  select * from t_person;
 $$;
 
 
@@ -4346,7 +4501,7 @@ CREATE TABLE public.tenant (
 --
 
 COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single -query:resource:list -query:resource:connection
+@behavior -singularRelation:resource:single -query:resource:connection
 @simpleCollections only';
 
 
@@ -4425,13 +4580,20 @@ $$;
 --
 
 CREATE FUNCTION public.log_in_as(id bigint) RETURNS public.login_result
-    LANGUAGE sql STRICT SECURITY DEFINER
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $_$
-  select (
-    (select (users.*)::users from users where users.id = $1),
-    (select app_private.create_jwt_token(users.*) from users where users.id = $1)
-  );
+declare
+  v_id alias for $1;
+  usr users;
+  jwt jwt_token;
+begin
+  select * into strict usr from users where users.id = v_id;
+  jwt := app_private.create_jwt_token(usr);
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'impersonation', 'manual');
+  return (usr, jwt);
+end;
 $_$;
 
 
@@ -4466,6 +4628,8 @@ begin
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'login_succeeded', 'password');
   return (usr, jwt);
 end;
 $$;
@@ -4565,6 +4729,8 @@ begin
 
   update users set last_login = now() where id = usr.id;
   update otp_token set used_at = now() where id = v_token.id;
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'login_succeeded', 'otp');
   return (usr, jwt);
 end;
 $$;
@@ -4977,11 +5143,13 @@ CREATE FUNCTION public.register_using_invitation(email text, passwd text, token 
     AS $$
 declare
   invitation person_invitation;
+  v_user_id bigint := current_user_id();
   v_salt text;
   usr users;
   jwt jwt_token;
+  v_registered boolean := false;
 begin
-  select * into invitation from person_invitation where access_token=token;
+  select * into invitation from person_invitation where access_token=token for update;
 
   if invitation is null then
     raise exception 'INVITATION_NOT_FOUND' using errcode = '28000';
@@ -4989,13 +5157,24 @@ begin
   if invitation.used_at is not null then
     raise exception 'INVITATION_ALREADY_USED' using errcode = '28P01';
   end if;
-  if email is null or email = '' then
-    raise exception 'INVALID_EMAIL' using errcode = '28P01';
+
+  if v_user_id is null then
+    if email is null or email = '' then
+      raise exception 'INVALID_EMAIL' using errcode = '28P01';
+    end if;
+
+    v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
+    insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+    v_registered := true;
+  else
+    select * into usr from users where id=v_user_id;
+    if usr is null then
+      raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    end if;
   end if;
 
-  v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
-  insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
-  insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id);
+  perform set_config('jwt.claims.user_id', usr.id::text, true);
+  insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id) on conflict do nothing;
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
   perform set_config('jwt.claims.user_id', jwt.user_id::text, true);
@@ -5003,6 +5182,12 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  if v_registered then
+    insert into security_event (user_id, kind, method)
+    values (usr.id, 'registration', 'manual');
+  end if;
+  insert into security_event (user_id, person_id, kind, method)
+  values (usr.id, invitation.person_id, 'invitation_accepted', 'manual');
   return (usr, jwt);
 end
 $$;
@@ -5029,6 +5214,8 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'registration', 'manual');
   return (usr, jwt);
 end
 $$;
@@ -5094,13 +5281,16 @@ declare
   v_tenant tenant;
   v_user users;
   v_token otp_token;
-  v_payload jsonb := null;
+  v_payload jsonb := jsonb_build_array();
 begin
   for v_user in (select * from users where u_email = email) loop
     insert into otp_token (user_id)
     values (v_user.id) returning * into v_token;
 
-    v_payload := coalesce(v_payload, jsonb_build_array()) || jsonb_build_object(
+    insert into security_event (user_id, kind, method)
+    values (v_user.id, 'password_reset_requested', 'manual');
+
+    v_payload := v_payload || jsonb_build_object(
       'login', v_user.u_login,
       'email', v_user.u_email,
       'token', v_token.access_token,
@@ -6204,7 +6394,7 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 
 
@@ -6270,7 +6460,7 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@simpleCollections only
+COMMENT ON TABLE public.tenant_membership IS '@simpleCollections both
 @behavior -query:resource:list -query:resource:connection';
 
 
@@ -6414,9 +6604,8 @@ CREATE TABLE public.tenant_settings (
 -- Name: TABLE tenant_settings; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_settings IS '@simpleCollections only
-@omit create,delete
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.tenant_settings IS '@omit create,delete
+@behavior -query:resource:list -query:resource:connection -singularRelation:resource:list';
 
 
 --
@@ -7843,6 +8032,7 @@ CREATE TABLE public.access_event (
     received_at timestamp with time zone DEFAULT now() NOT NULL,
     allowed boolean NOT NULL,
     reason text DEFAULT ''::text NOT NULL,
+    location_id bigint,
     CONSTRAINT access_event_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
     CONSTRAINT access_event_device_check CHECK (((device <> ''::text) AND (device = btrim(device)))),
     CONSTRAINT access_event_external_id_check CHECK (((external_id <> ''::text) AND (external_id = btrim(external_id))))
@@ -8783,6 +8973,47 @@ CREATE SEQUENCE public.scoreboard_manual_adjustment_id_seq
 --
 
 ALTER SEQUENCE public.scoreboard_manual_adjustment_id_seq OWNED BY public.scoreboard_manual_adjustment.id;
+
+
+--
+-- Name: security_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.security_event (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    user_id bigint,
+    person_id bigint,
+    actor_user_id bigint DEFAULT public.current_user_id(),
+    kind text NOT NULL,
+    method text NOT NULL,
+    occurred_at timestamp with time zone DEFAULT now() NOT NULL,
+    effective_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT security_event_method_check CHECK ((method = ANY (ARRAY['password'::text, 'otp'::text, 'manual'::text, 'scheduled'::text])))
+);
+
+
+--
+-- Name: TABLE security_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.security_event IS '@omit create,update,delete
+@simpleCollections only
+@behavior -query:resource:list -query:resource:connection -query:resource:single';
+
+
+--
+-- Name: security_event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.security_event ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.security_event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -10048,6 +10279,14 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
 
 
 --
+-- Name: security_event security_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.security_event
+    ADD CONSTRAINT security_event_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tenant_administrator tenant_administrator_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10598,6 +10837,13 @@ CREATE INDEX access_credential_person_idx ON public.access_credential USING btre
 --
 
 CREATE INDEX access_event_credential_idx ON public.access_event USING btree (tenant_id, kind, code, occurred_at DESC);
+
+
+--
+-- Name: access_event_location_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX access_event_location_idx ON public.access_event USING btree (tenant_id, location_id, occurred_at DESC);
 
 
 --
@@ -11252,6 +11498,34 @@ CREATE INDEX scoreboard_manual_adjustment_tenant_id_idx ON public.scoreboard_man
 
 
 --
+-- Name: security_event_actor_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX security_event_actor_user_id_idx ON public.security_event USING btree (actor_user_id);
+
+
+--
+-- Name: security_event_person_occurred_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX security_event_person_occurred_at_idx ON public.security_event USING btree (person_id, occurred_at DESC);
+
+
+--
+-- Name: security_event_tenant_occurred_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX security_event_tenant_occurred_at_idx ON public.security_event USING btree (tenant_id, occurred_at DESC);
+
+
+--
+-- Name: security_event_user_occurred_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX security_event_user_occurred_at_idx ON public.security_event USING btree (user_id, occurred_at DESC);
+
+
+--
 -- Name: tenant_administrator_active_by_person; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11445,6 +11719,41 @@ CREATE UNIQUE INDEX users_login_key ON public.users USING btree (u_login) WHERE 
 --
 
 CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: access_credential _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
+
+
+--
+-- Name: tenant_administrator _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
+
+
+--
+-- Name: tenant_membership _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
+
+
+--
+-- Name: tenant_trainer _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
+
+
+--
+-- Name: user_proxy _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 
 
 --
@@ -11707,41 +12016,6 @@ CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.transaction F
 
 
 --
--- Name: cohort_membership _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
-
-
---
--- Name: couple _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
-
-
---
--- Name: tenant_administrator _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
-
-
---
--- Name: tenant_membership _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
-
-
---
--- Name: tenant_trainer _200_refresh_auth_details; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _200_refresh_auth_details AFTER INSERT OR DELETE OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_auth_details__refresh();
-
-
---
 -- Name: event_instance _200_validate_parent; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -11921,6 +12195,48 @@ CREATE TRIGGER _900_fix_balance_accounts AFTER INSERT OR DELETE OR UPDATE OF ope
 --
 
 CREATE TRIGGER _900_fix_balance_entries AFTER INSERT OR DELETE OR UPDATE OF amount OR TRUNCATE ON public.posting FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();
+
+
+--
+-- Name: access_credential _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__credential();
+
+
+--
+-- Name: tenant_administrator _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('administrator_granted', 'administrator_revoked');
+
+
+--
+-- Name: tenant_membership _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('membership_granted', 'membership_revoked');
+
+
+--
+-- Name: tenant_trainer _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('trainer_granted', 'trainer_revoked');
+
+
+--
+-- Name: user_proxy _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__user_proxy();
+
+
+--
+-- Name: users _900_security_event; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_security_event AFTER UPDATE OF u_pass ON public.users FOR EACH ROW WHEN ((old.u_pass IS DISTINCT FROM new.u_pass)) EXECUTE FUNCTION app_private.tg_security_event__password();
 
 
 --
@@ -12497,6 +12813,14 @@ ALTER TABLE ONLY public.access_credential
 
 ALTER TABLE ONLY public.access_credential
     ADD CONSTRAINT access_credential_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: access_event access_event_location_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id);
 
 
 --
@@ -13254,6 +13578,52 @@ ALTER TABLE ONLY public.scoreboard_manual_adjustment
 
 
 --
+-- Name: security_event security_event_actor_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.security_event
+    ADD CONSTRAINT security_event_actor_user_id_fkey FOREIGN KEY (actor_user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: CONSTRAINT security_event_actor_user_id_fkey ON security_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT security_event_actor_user_id_fkey ON public.security_event IS '@behavior -manyRelation:resource:list -manyRelation:resource:connection';
+
+
+--
+-- Name: security_event security_event_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.security_event
+    ADD CONSTRAINT security_event_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON DELETE SET NULL;
+
+
+--
+-- Name: security_event security_event_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.security_event
+    ADD CONSTRAINT security_event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT security_event_tenant_id_fkey ON security_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT security_event_tenant_id_fkey ON public.security_event IS '@behavior -manyRelation:resource:list -manyRelation:resource:connection';
+
+
+--
+-- Name: security_event security_event_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.security_event
+    ADD CONSTRAINT security_event_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
 -- Name: tenant_administrator tenant_administrator_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13713,14 +14083,14 @@ CREATE POLICY admin_all ON public.scoreboard_manual_adjustment TO administrator 
 -- Name: tenant admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = public.current_tenant_id()));
+CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
 -- Name: tenant_administrator admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13734,14 +14104,14 @@ CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
 -- Name: tenant_membership admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_membership TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_membership TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
 -- Name: tenant_trainer admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING (true);
+CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13856,7 +14226,7 @@ CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.
 -- Name: tenant_settings admin_own; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_own ON public.tenant_settings TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_own ON public.tenant_settings TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -13891,6 +14261,13 @@ CREATE POLICY admin_view ON public.access_credential FOR SELECT TO administrator
 --
 
 CREATE POLICY admin_view ON public.access_event FOR SELECT TO administrator USING (true);
+
+
+--
+-- Name: security_event admin_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_view ON public.security_event FOR SELECT TO administrator USING (true);
 
 
 --
@@ -14150,17 +14527,17 @@ CREATE POLICY current_tenant ON public.scoreboard_manual_adjustment AS RESTRICTI
 
 
 --
+-- Name: security_event current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.security_event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: tenant_location current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_settings current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.tenant_settings AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -14541,7 +14918,7 @@ CREATE POLICY public_view ON public.event_series FOR SELECT TO anonymous USING (
 -- Name: tenant public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
+CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING ((id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -14579,6 +14956,54 @@ CREATE POLICY register_public ON public.event_external_registration FOR INSERT T
 --
 
 ALTER TABLE public.scoreboard_manual_adjustment ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: security_event; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.security_event ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: security_event self_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY self_view ON public.security_event FOR SELECT TO member USING (((user_id = ( SELECT public.current_user_id() AS current_user_id)) OR (person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[]))));
+
+
+--
+-- Name: tenant system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.tenant TO system_admin USING (true);
+
+
+--
+-- Name: tenant_administrator system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.tenant_administrator TO system_admin USING (true);
+
+
+--
+-- Name: tenant_membership system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.tenant_membership TO system_admin USING (true);
+
+
+--
+-- Name: tenant_settings system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.tenant_settings TO system_admin USING (true);
+
+
+--
+-- Name: tenant_trainer system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.tenant_trainer TO system_admin USING (true);
+
 
 --
 -- Name: tenant; Type: ROW SECURITY; Schema: public; Owner: -
@@ -15179,10 +15604,10 @@ GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
--- Name: FUNCTION confirm_membership_application(application_id bigint); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION confirm_membership_application(application_id bigint, is_member boolean, is_trainer boolean, is_admin boolean, join_date timestamp with time zone, cohort_ids bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigint) TO administrator;
+GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigint, is_member boolean, is_trainer boolean, is_admin boolean, join_date timestamp with time zone, cohort_ids bigint[]) TO administrator;
 
 
 --
@@ -15371,7 +15796,50 @@ GRANT ALL ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp wit
 -- Name: TABLE tenant; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.tenant TO anonymous;
+GRANT SELECT ON TABLE public.tenant TO anonymous;
+GRANT ALL ON TABLE public.tenant TO system_admin;
+
+
+--
+-- Name: COLUMN tenant.name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(name) ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: COLUMN tenant.cz_ico; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(cz_ico) ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: COLUMN tenant.cz_dic; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(cz_dic) ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: COLUMN tenant.address; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(address) ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: COLUMN tenant.description; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(description) ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: COLUMN tenant.bank_account; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT UPDATE(bank_account) ON TABLE public.tenant TO administrator;
 
 
 --
@@ -16132,6 +16600,13 @@ GRANT SELECT ON TABLE federated.round_dance TO anonymous;
 
 
 --
+-- Name: SEQUENCE access_credential_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.access_credential_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE access_event; Type: ACL; Schema: public; Owner: -
 --
 
@@ -16139,10 +16614,31 @@ GRANT ALL ON TABLE public.access_event TO anonymous;
 
 
 --
+-- Name: SEQUENCE access_event_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.access_event_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE account_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.account_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE accounting_period; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.accounting_period TO anonymous;
+
+
+--
+-- Name: SEQUENCE accounting_period_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.accounting_period_id_seq TO anonymous;
 
 
 --
@@ -16167,6 +16663,20 @@ GRANT ALL ON TABLE public.announcement_audience TO anonymous;
 
 
 --
+-- Name: SEQUENCE announcement_audience_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.announcement_audience_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE announcement_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.announcement_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE article_attachment; Type: ACL; Schema: public; Owner: -
 --
 
@@ -16181,10 +16691,45 @@ GRANT ALL ON TABLE public.cohort_group TO anonymous;
 
 
 --
+-- Name: SEQUENCE cohort_group_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.cohort_group_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE cohort_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.cohort_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE cohort_membership; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
+
+
+--
+-- Name: SEQUENCE cohort_membership_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.cohort_membership_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE cohort_subscription_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.cohort_subscription_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE couple_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.couple_id_seq TO anonymous;
 
 
 --
@@ -16314,6 +16859,27 @@ GRANT INSERT(instance_id) ON TABLE public.event_external_registration TO anonymo
 
 
 --
+-- Name: SEQUENCE event_external_registration_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_external_registration_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE event_instance_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_instance_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE event_instance_registration_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_instance_registration_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE event_instance_target_cohort; Type: ACL; Schema: public; Owner: -
 --
 
@@ -16325,6 +16891,20 @@ GRANT ALL ON TABLE public.event_instance_target_cohort TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.event_instance_target_cohort_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE event_instance_trainer_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_instance_trainer_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE event_lesson_demand_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_lesson_demand_id_seq TO anonymous;
 
 
 --
@@ -16349,10 +16929,52 @@ GRANT ALL ON TABLE public.file TO anonymous;
 
 
 --
+-- Name: SEQUENCE file_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.file_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE form_responses; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.form_responses TO anonymous;
+
+
+--
+-- Name: SEQUENCE form_responses_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.form_responses_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE membership_application_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.membership_application_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE otp_token_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.otp_token_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE payment_debtor_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.payment_debtor_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE payment_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.payment_id_seq TO anonymous;
 
 
 --
@@ -16363,10 +16985,38 @@ GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 
 
 --
+-- Name: SEQUENCE payment_recipient_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.payment_recipient_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE person_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.person_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE person_invitation; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.person_invitation TO anonymous;
+
+
+--
+-- Name: SEQUENCE person_invitation_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.person_invitation_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE posting_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.posting_id_seq TO anonymous;
 
 
 --
@@ -16380,7 +17030,36 @@ GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO anonymous;
 -- Name: SEQUENCE scoreboard_manual_adjustment_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
+GRANT SELECT,USAGE ON SEQUENCE public.scoreboard_manual_adjustment_id_seq TO anonymous;
 GRANT USAGE ON SEQUENCE public.scoreboard_manual_adjustment_id_seq TO administrator;
+
+
+--
+-- Name: TABLE security_event; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.security_event TO member;
+
+
+--
+-- Name: SEQUENCE security_event_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.security_event_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE tenant_administrator_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.tenant_administrator_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE tenant_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.tenant_id_seq TO anonymous;
 
 
 --
@@ -16391,10 +17070,45 @@ GRANT ALL ON TABLE public.tenant_location TO anonymous;
 
 
 --
+-- Name: SEQUENCE tenant_location_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.tenant_location_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE tenant_membership_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.tenant_membership_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE tenant_trainer_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.tenant_trainer_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE transaction_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.transaction_id_seq TO anonymous;
+
+
+--
 -- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.user_proxy TO anonymous;
+
+
+--
+-- Name: SEQUENCE user_proxy_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.user_proxy_id_seq TO anonymous;
 
 
 --
@@ -16422,14 +17136,14 @@ ALTER DEFAULT PRIVILEGES FOR ROLE olymp IN SCHEMA federated GRANT SELECT ON TABL
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
+ALTER DEFAULT PRIVILEGES FOR ROLE olymp IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO anonymous;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
+--
+
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES TO anonymous;
-
-
---
--- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
---
-
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS TO anonymous;
 
 
 --
@@ -16443,5 +17157,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict llYPNO1wkWsrPQyLldozMMFzAGAbydbgSz6DCY1t2uOlZuQe9P9CfOFUxOlzyDq
+\unrestrict 5WRt1bcLlJEfAMkF1akWdf7lEWSeEgCKmWeagGn00PvWclLhR7sZp9g8eKCpwEI
 

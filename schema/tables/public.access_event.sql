@@ -10,6 +10,7 @@ CREATE TABLE public.access_event (
     received_at timestamp with time zone DEFAULT now() NOT NULL,
     allowed boolean NOT NULL,
     reason text DEFAULT ''::text NOT NULL,
+    location_id bigint,
     CONSTRAINT access_event_code_check CHECK (((code <> ''::text) AND (code = btrim(code)))),
     CONSTRAINT access_event_device_check CHECK (((device <> ''::text) AND (device = btrim(device)))),
     CONSTRAINT access_event_external_id_check CHECK (((external_id <> ''::text) AND (external_id = btrim(external_id))))
@@ -26,6 +27,8 @@ ALTER TABLE ONLY public.access_event
 ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_tenant_id_external_id_key UNIQUE (tenant_id, external_id);
 ALTER TABLE ONLY public.access_event
+    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id);
+ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
 ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
@@ -35,4 +38,5 @@ CREATE POLICY current_tenant ON public.access_event AS RESTRICTIVE USING ((tenan
 CREATE POLICY my_view ON public.access_event FOR SELECT USING ((person_id = ANY (public.current_person_ids())));
 
 CREATE INDEX access_event_credential_idx ON public.access_event USING btree (tenant_id, kind, code, occurred_at DESC);
+CREATE INDEX access_event_location_idx ON public.access_event USING btree (tenant_id, location_id, occurred_at DESC);
 CREATE INDEX access_event_person_idx ON public.access_event USING btree (tenant_id, person_id, occurred_at DESC);
