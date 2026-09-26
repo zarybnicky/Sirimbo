@@ -20,6 +20,9 @@ fragment Cohort on Cohort {
 query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolean) {
   cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible, isArchived: $archived}, orderBy: [ORDERING_ASC]) {
     ...Cohort
+    cohortMembershipsList(condition: {status: ACTIVE}) {
+      id
+    }
   }
 }
 

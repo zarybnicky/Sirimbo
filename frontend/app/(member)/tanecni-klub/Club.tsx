@@ -128,7 +128,7 @@ export function Club() {
       ? [
           {
             id: 'administrators',
-            title: `Správci (${club.tenantTrainersList.length})`,
+            title: `Správci (${club.tenantAdministratorsList.length})`,
             contents: () => (
               <>
                 {club.tenantAdministratorsList.map((item) => (
