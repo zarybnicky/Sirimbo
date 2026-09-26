@@ -1,13 +1,10 @@
 'use client';
 
 import type { AttendanceType } from '@/graphql';
-import {
-  EventSeriesDocument,
-  type EventInstanceFragment,
-  type EventSeriesQuery,
-} from '@/graphql/Event';
+import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/cn';
+import { isTruthy } from '@/lib/truthyFilter';
 import { PageHeader } from '@/ui/TitleBar';
 import { FormError } from '@/ui/form';
 import {
@@ -17,6 +14,7 @@ import {
 } from '@/ui/format';
 import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 import { useQuery } from 'urql';
 
 const attendanceLabels: Record<AttendanceType, { icon: LucideIcon; className: string }> =
@@ -25,6 +23,64 @@ const attendanceLabels: Record<AttendanceType, { icon: LucideIcon; className: st
     UNKNOWN: { icon: HelpCircle, className: 'bg-neutral-2 text-neutral-11' },
     NOT_EXCUSED: { icon: X, className: 'bg-danger-3 text-danger-11' },
   };
+
+type SeriesInstance = NonNullable<EventSeriesQuery['eventSeries']>['eventsList'][number];
+type Detail = {
+  name: string;
+  key: string;
+  label: string;
+  href?: string;
+  missing?: string;
+} | null;
+
+function eventDetails(event: SeriesInstance): Detail[] {
+  const time = shortTimeFormatter.formatRange(
+    new Date(event.since),
+    new Date(event.until),
+  );
+  const trainers = event.trainersList
+    .map((x) => x.person?.name)
+    .filter(Boolean)
+    .join(', ');
+  const trainerKey = event.trainersList
+    .map((x) => x.personId)
+    .toSorted()
+    .join(',');
+
+  return [
+    { name: 'Čas', key: time, label: time },
+    event.type
+      ? { name: 'Typ', key: event.type, label: formatEventType(event.type) }
+      : null,
+    event.location
+      ? {
+          name: 'Místo konání',
+          key: `location:${event.location.id}`,
+          label: event.location.name,
+          href: `/lokality/${event.location.id}`,
+          missing: 'Místo neurčeno',
+        }
+      : event.locationText
+        ? {
+            name: 'Místo konání',
+            key: `text:${event.locationText}`,
+            label: event.locationText,
+            missing: 'Místo neurčeno',
+          }
+        : null,
+    trainers
+      ? { name: 'Trenéři', key: trainerKey, label: trainers, missing: 'Bez trenéra' }
+      : null,
+  ];
+}
+
+function majority(values: Detail[]) {
+  const counts = new Map<string, number>();
+  for (const value of values) {
+    if (value) counts.set(value.key, (counts.get(value.key) ?? 0) + 1);
+  }
+  return values.find((x) => x && (counts.get(x.key) ?? 0) > values.length / 2) ?? null;
+}
 
 export function EventSeries({
   initialSeries,
@@ -37,20 +93,42 @@ export function EventSeries({
     variables: { id: initialSeries.id },
   });
   const series = data?.eventSeries ?? initialSeries;
+  const rows = series.eventsList.map(eventDetails);
+  const common =
+    rows[0]?.map((_, i) => majority(rows.map((row) => row[i] ?? null))) ?? [];
 
   return (
     <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
       <PageHeader title={series.name || 'Termíny'} />
+      <dl className="mb-4 text-sm tabular">
+        {common.filter(isTruthy).map((detail) => (
+          <React.Fragment key={detail.key}>
+            <dt>{detail.name}</dt>
+            <dd>
+              {detail.href ? (
+                <Link className="underline" href={detail.href}>
+                  {detail.label}
+                </Link>
+              ) : (
+                detail.label
+              )}
+            </dd>
+          </React.Fragment>
+        ))}
+      </dl>
+
       <FormError error={error} />
       {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
       {series.eventsList.length > 0 ? (
-        <div className="grid grid-cols-[max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1 lg:grid-cols-[max-content_max-content_minmax(0,1fr)_auto]">
-          {series.eventsList.map((instance) => (
+        <div className="grid grid-cols-[max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1">
+          {series.eventsList.map((instance, i) => (
             <EventRow
               key={instance.id}
               instance={instance}
+              details={rows[i]!}
               seriesName={series.name}
               showAttendance={auth.isTrainer}
+              common={common}
             />
           ))}
         </div>
@@ -61,19 +139,26 @@ export function EventSeries({
 
 function EventRow({
   instance,
+  details,
   seriesName,
   showAttendance,
+  common,
 }: Readonly<{
-  instance: EventInstanceFragment;
+  instance: SeriesInstance;
+  details: Detail[];
   seriesName: string | null;
   showAttendance: boolean;
+  common: Detail[];
 }>) {
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const name = instance.name?.trim();
-  const displayName =
-    name === seriesName?.trim() ? null : name || formatEventType(instance.type);
-  const location = instance.location?.name || instance.locationText;
+  const displayName = name === seriesName?.trim() ? null : name;
+  const inlineDetails = details.flatMap((detail, i) => {
+    if (detail?.key === common[i]?.key) return [];
+    const label = detail?.label ?? common[i]?.missing;
+    return label ? [label] : [];
+  });
   const stats =
     typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
 
@@ -90,27 +175,22 @@ function EventRow({
       >
         {numericDateWithYearFormatter.formatRange(start, end)}
       </span>
-      <span
-        className={cn(
-          'tabular-nums text-neutral-11',
-          instance.isCancelled && 'line-through text-neutral-10',
-        )}
-      >
-        {shortTimeFormatter.formatRange(start, end)}
-      </span>
-
-      {(displayName || location) && (
+      {(displayName || inlineDetails.length > 0) && (
         <div
           className={cn(
-            'col-span-3 row-start-2 min-w-0 text-neutral-11 lg:col-span-1 lg:col-start-3 lg:row-start-1',
+            'min-w-0 text-neutral-11',
             instance.isCancelled && 'line-through text-neutral-10',
           )}
         >
           {displayName && (
             <span className="font-medium text-neutral-12">{displayName}</span>
           )}
-          {displayName && location ? ' · ' : null}
-          {location}
+          {inlineDetails.map((detail, index) => (
+            <span key={index}>
+              {displayName || index > 0 ? ' · ' : null}
+              {detail}
+            </span>
+          ))}
         </div>
       )}
 
@@ -118,7 +198,7 @@ function EventRow({
       (!instance.isCancelled ||
         (stats?.ATTENDED ?? 0) > 0 ||
         (stats?.NOT_EXCUSED ?? 0) > 0) ? (
-        <div className="col-start-3 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums lg:col-start-4">
+        <div className="col-start-3 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums">
           {Object.entries(attendanceLabels).map(([status, { icon: Icon, className }]) => (
             <span
               key={status}

@@ -29,6 +29,13 @@ query EventSeries($id: BigInt!) {
     name
     eventsList(orderBy: SINCE_ASC) {
       ...EventInstance
+      trainersList: eventInstanceTrainersByInstanceIdList {
+        personId
+        person {
+          id
+          name
+        }
+      }
     }
   }
 }
