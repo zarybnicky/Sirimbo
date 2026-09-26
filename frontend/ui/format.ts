@@ -1,4 +1,4 @@
-import type { EventType } from '@/graphql';
+import { AddressDomain, EventType } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 
 type MaybePerson =
@@ -131,7 +131,8 @@ export const moneyFormatter = {
       currency: price.currency ?? 'CZK',
       style: 'currency',
     });
-    const amount = typeof price.amount === 'string' ? Number.parseFloat(price.amount) : price.amount;
+    const amount =
+      typeof price.amount === 'string' ? Number.parseFloat(price.amount) : price.amount;
     return formatter.format(amount);
   },
 };
@@ -211,4 +212,24 @@ export function describePosting(
 export function capitalize(x: string | undefined | null) {
   if (!x) return '';
   return x.slice(0, 1).toUpperCase() + x.slice(1);
+}
+
+export function formatAddress(address?: AddressDomain | null) {
+  if (!address) return '';
+
+  const streetParts = [
+    address.street,
+    [address.conscriptionNumber, address.orientationNumber].filter(Boolean).join('/'),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return [
+    streetParts,
+    address.district,
+    [address.postalCode, address.city].filter(Boolean).join(' '),
+    address.region,
+  ]
+    .filter(Boolean)
+    .join(', ');
 }

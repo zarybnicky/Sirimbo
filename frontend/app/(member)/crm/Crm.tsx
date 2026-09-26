@@ -16,7 +16,7 @@ export function Crm() {
   const dataset = React.useMemo(() => {
     return (data?.formResponses?.nodes || []).map((x) => ({
       ...x,
-      data: JSON.parse(x.data as any),
+      data: typeof x.data === 'string' ? JSON.parse(x.data) : x.data,
     }));
   }, [data?.formResponses?.nodes]);
 
@@ -30,8 +30,7 @@ export function Crm() {
 
   const [state, setState] = React.useState('');
   const currentData = React.useMemo(() => {
-    const selected = state || types[0];
-    return dataset.filter((x) => x.type === selected);
+    return dataset.filter((x) => x.type === (state || types[0]));
   }, [types, state, dataset]);
 
   const columns = React.useMemo(() => {

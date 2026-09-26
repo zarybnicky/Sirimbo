@@ -346,10 +346,14 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
       },
-      systemAdminUpdateTenant(_result, args, cache, _info) {
+      updateTenant(_result, args, cache, _info) {
+        if (args.input.id) cache.invalidate({ __typename: 'Tenant', id: args.input.id });
+        invalidateQueryFields(cache, ['tenantsList', 'getCurrentTenant']);
+      },
+      updateTenantSetting(_result, args, cache, _info) {
         if (args.input.tenantId)
           cache.invalidate({ __typename: 'Tenant', id: args.input.tenantId });
-        invalidateQueryFields(cache, ['systemAdminTenants']);
+        invalidateQueryFields(cache, ['tenantsList']);
       },
 
       deleteCouple(_result, args, cache, _info) {

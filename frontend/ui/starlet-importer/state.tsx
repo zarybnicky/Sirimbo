@@ -32,7 +32,7 @@ export const starletTokenAtom = atom(
   },
 );
 
-const baseStarletRawSettingsAtom = atom<string | undefined>();
+const baseStarletRawSettingsAtom = atom<unknown>();
 const baseStarletSettingsAtom = atom<{
   auth?: { login: string; password: string };
   folders: [string, string][];
@@ -46,15 +46,15 @@ const baseStarletSettingsAtom = atom<{
 
 export const starletSettingsAtom = atom(
   (get) => get(baseStarletSettingsAtom),
-  (get, set, settingsString: string) => {
-    if (settingsString === get(baseStarletRawSettingsAtom)) return;
-    set(baseStarletRawSettingsAtom, settingsString);
-    set(baseStarletSettingsAtom, parseSettings(settingsString));
+  (get, set, raw: unknown) => {
+    if (raw === get(baseStarletRawSettingsAtom)) return;
+    set(baseStarletRawSettingsAtom, raw);
+    set(baseStarletSettingsAtom, parseSettings(raw));
   },
 );
 
-function parseSettings(settingsString: string) {
-  const settings = JSON.parse(settingsString);
+function parseSettings(raw: unknown) {
+  const settings = typeof raw === 'string' ? JSON.parse(raw) : raw;
   return {
     auth: settings?.['evidenceAuth'] as { login: string; password: string },
     folders: (settings?.['evidenceFolders']?.map((x: any) =>

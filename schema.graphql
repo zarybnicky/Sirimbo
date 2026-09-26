@@ -2337,6 +2337,12 @@ type CreateTenantAdministratorPayload {
 
   """The `TenantAdministrator` that was created by this mutation."""
   tenantAdministrator: TenantAdministrator
+
+  """An edge for our `TenantAdministrator`. May be used by Relay 1."""
+  tenantAdministratorEdge(
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsEdge
 }
 
 """All input for the create `TenantLocation` mutation."""
@@ -2388,6 +2394,12 @@ type CreateTenantMembershipPayload {
 
   """The `TenantMembership` that was created by this mutation."""
   tenantMembership: TenantMembership
+
+  """An edge for our `TenantMembership`. May be used by Relay 1."""
+  tenantMembershipEdge(
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsEdge
 }
 
 """All input for the create `TenantTrainer` mutation."""
@@ -2415,6 +2427,12 @@ type CreateTenantTrainerPayload {
 
   """The `TenantTrainer` that was created by this mutation."""
   tenantTrainer: TenantTrainer
+
+  """An edge for our `TenantTrainer`. May be used by Relay 1."""
+  tenantTrainerEdge(
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantTrainersEdge
 }
 
 """All input for the create `UserProxy` mutation."""
@@ -2956,6 +2974,12 @@ type DeleteTenantAdministratorPayload {
 
   """The `TenantAdministrator` that was deleted by this mutation."""
   tenantAdministrator: TenantAdministrator
+
+  """An edge for our `TenantAdministrator`. May be used by Relay 1."""
+  tenantAdministratorEdge(
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsEdge
 }
 
 """All input for the `deleteTenantLocationByTenantIdAndId` mutation."""
@@ -3014,6 +3038,12 @@ type DeleteTenantMembershipPayload {
 
   """The `TenantMembership` that was deleted by this mutation."""
   tenantMembership: TenantMembership
+
+  """An edge for our `TenantMembership`. May be used by Relay 1."""
+  tenantMembershipEdge(
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsEdge
 }
 
 """All input for the `deleteTenantTrainer` mutation."""
@@ -3039,6 +3069,12 @@ type DeleteTenantTrainerPayload {
 
   """The `TenantTrainer` that was deleted by this mutation."""
   tenantTrainer: TenantTrainer
+
+  """An edge for our `TenantTrainer`. May be used by Relay 1."""
+  tenantTrainerEdge(
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantTrainersEdge
 }
 
 """All input for the `deleteTransactionByTenantIdAndId` mutation."""
@@ -6296,6 +6332,35 @@ type Person {
   taxIdentificationNumber: String
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
+  tenantAdministrators(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAdministratorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsConnection!
+
+  """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -6313,6 +6378,35 @@ type Person {
   ): [TenantAdministrator!]!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
+  tenantMemberships(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsConnection!
+
+  """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -6328,6 +6422,35 @@ type Person {
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]
   ): [TenantMembership!]!
+
+  """Reads and enables pagination through a set of `TenantTrainer`."""
+  tenantTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantTrainerCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantTrainersConnection!
 
   """Reads and enables pagination through a set of `TenantTrainer`."""
   tenantTrainersList(
@@ -7349,6 +7472,23 @@ type Query {
 
   """Get a single `TenantTrainer`."""
   tenantTrainer(id: BigInt!): TenantTrainer
+
+  """Reads a set of `Tenant`."""
+  tenantsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Tenant`."""
+    orderBy: [TenantsOrderBy!]
+  ): [Tenant!]
   trainerGroupAttendanceCompletionList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -8511,6 +8651,35 @@ type Tenant {
   ): [ScoreboardManualAdjustment!]!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
+  tenantAdministrators(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAdministratorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsConnection!
+
+  """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -8545,6 +8714,35 @@ type Tenant {
   ): [TenantLocation!]!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
+  tenantMemberships(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsConnection!
+
+  """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -8564,22 +8762,34 @@ type Tenant {
   """Reads a single `TenantSetting` that is related to this `Tenant`."""
   tenantSetting: TenantSetting
 
-  """Reads and enables pagination through a set of `TenantSetting`."""
-  tenantSettingsList(
+  """Reads and enables pagination through a set of `TenantTrainer`."""
+  tenantTrainers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: TenantSettingCondition
+    condition: TenantTrainerCondition
 
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Skip the first `n` values."""
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
 
-    """The method to use when ordering `TenantSetting`."""
-    orderBy: [TenantSettingsOrderBy!]
-  ): [TenantSetting!]!
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantTrainersConnection!
 
   """Reads and enables pagination through a set of `TenantTrainer`."""
   tenantTrainersList(
@@ -8738,6 +8948,34 @@ input TenantAdministratorPatch {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `TenantAdministrator` values."""
+type TenantAdministratorsConnection {
+  """
+  A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination.
+  """
+  edges: [TenantAdministratorsEdge!]!
+
+  """A list of `TenantAdministrator` objects."""
+  nodes: [TenantAdministrator!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantAdministrator` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantAdministrator` edge in the connection."""
+type TenantAdministratorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantAdministrator` at the end of the edge."""
+  node: TenantAdministrator!
+}
+
 """Methods to use when ordering `TenantAdministrator`."""
 enum TenantAdministratorsOrderBy {
   CREATED_AT_ASC
@@ -8763,6 +9001,35 @@ enum TenantAdministratorsOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+"""
+A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input TenantCondition {
+  """Checks for equality with the object’s `address` field."""
+  address: AddressDomainInput
+
+  """Checks for equality with the object’s `bankAccount` field."""
+  bankAccount: String
+
+  """Checks for equality with the object’s `czDic` field."""
+  czDic: String
+
+  """Checks for equality with the object’s `czIco` field."""
+  czIco: String
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `origins` field."""
+  origins: [String]
 }
 
 type TenantLocation {
@@ -8939,6 +9206,34 @@ input TenantMembershipPatch {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `TenantMembership` values."""
+type TenantMembershipsConnection {
+  """
+  A list of edges which contains the `TenantMembership` and cursor to aid in pagination.
+  """
+  edges: [TenantMembershipsEdge!]!
+
+  """A list of `TenantMembership` objects."""
+  nodes: [TenantMembership!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantMembership` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantMembership` edge in the connection."""
+type TenantMembershipsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantMembership` at the end of the edge."""
+  node: TenantMembership!
+}
+
 """Methods to use when ordering `TenantMembership`."""
 enum TenantMembershipsOrderBy {
   CREATED_AT_ASC
@@ -8979,18 +9274,6 @@ input TenantPatch {
 type TenantSetting {
   settings: JSON!
   tenantId: BigInt!
-}
-
-"""
-A condition to be used against `TenantSetting` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input TenantSettingCondition {
-  """Checks for equality with the object’s `settings` field."""
-  settings: JSON
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
 }
 
 """
@@ -9166,6 +9449,32 @@ input TenantTrainerPatch {
   tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
+}
+
+"""A connection to a list of `TenantTrainer` values."""
+type TenantTrainersConnection {
+  """
+  A list of edges which contains the `TenantTrainer` and cursor to aid in pagination.
+  """
+  edges: [TenantTrainersEdge!]!
+
+  """A list of `TenantTrainer` objects."""
+  nodes: [TenantTrainer!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TenantTrainer` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `TenantTrainer` edge in the connection."""
+type TenantTrainersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantTrainer` at the end of the edge."""
+  node: TenantTrainer!
 }
 
 """Methods to use when ordering `TenantTrainer`."""
@@ -9913,6 +10222,12 @@ type UpdateTenantAdministratorPayload {
 
   """The `TenantAdministrator` that was updated by this mutation."""
   tenantAdministrator: TenantAdministrator
+
+  """An edge for our `TenantAdministrator`. May be used by Relay 1."""
+  tenantAdministratorEdge(
+    """The method to use when ordering `TenantAdministrator`."""
+    orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantAdministratorsEdge
 }
 
 """All input for the `updateTenant` mutation."""
@@ -10001,6 +10316,12 @@ type UpdateTenantMembershipPayload {
 
   """The `TenantMembership` that was updated by this mutation."""
   tenantMembership: TenantMembership
+
+  """An edge for our `TenantMembership`. May be used by Relay 1."""
+  tenantMembershipEdge(
+    """The method to use when ordering `TenantMembership`."""
+    orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantMembershipsEdge
 }
 
 """The output of our update `Tenant` mutation."""
@@ -10040,6 +10361,12 @@ type UpdateTenantSettingPayload {
 
   """The `TenantSetting` that was updated by this mutation."""
   tenantSetting: TenantSetting
+
+  """An edge for our `TenantSetting`. May be used by Relay 1."""
+  tenantSettingEdge(
+    """The method to use when ordering `TenantSetting`."""
+    orderBy: [TenantSettingsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantSettingsEdge
 }
 
 """All input for the `updateTenantSettingsKey` mutation."""
@@ -10097,6 +10424,12 @@ type UpdateTenantTrainerPayload {
 
   """The `TenantTrainer` that was updated by this mutation."""
   tenantTrainer: TenantTrainer
+
+  """An edge for our `TenantTrainer`. May be used by Relay 1."""
+  tenantTrainerEdge(
+    """The method to use when ordering `TenantTrainer`."""
+    orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TenantTrainersEdge
 }
 
 """All input for the `updateUserProxy` mutation."""
