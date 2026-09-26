@@ -110,6 +110,22 @@ query TenantLocation($id: BigInt!) {
   }
 }
 
+query TenantLocationPage($id: BigInt!, $start: Datetime!) {
+  tenantLocation(id: $id) {
+    ...TenantLocation
+    accessEventsList(first: 20, orderBy: OCCURRED_AT_DESC) {
+      ...AccessEvent
+    }
+  }
+  events: eventInstancesForRangeList(
+    first: 10
+    startRange: $start
+    locationIds: [$id]
+  ) {
+    ...EventWithTrainer
+  }
+}
+
 mutation UpdateTenantLocation($input: UpdateTenantLocationInput!) {
   updateTenantLocation(input: $input) {
     tenantLocation {

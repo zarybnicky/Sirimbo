@@ -49,9 +49,7 @@ export function Couple({ id }: { id: string }) {
         <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
       </div>
 
-      <div className="mt-6">
-        <ActivityTimeline personIds={personIds} includeJudging />
-      </div>
+      <ActivityTimeline personIds={personIds} includeJudging />
     </>
   );
 }

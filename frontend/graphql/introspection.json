@@ -14631,13 +14631,6 @@
             },
             "args": [
               {
-                "name": "anyParent",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
                 "name": "endRange",
                 "type": {
                   "kind": "SCALAR",
@@ -14652,14 +14645,17 @@
                 }
               },
               {
-                "name": "offset",
+                "name": "locationIds",
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
                 }
               },
               {
-                "name": "onlyMine",
+                "name": "offset",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"

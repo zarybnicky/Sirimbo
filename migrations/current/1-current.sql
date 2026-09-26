@@ -30,3 +30,4 @@ alter table security_event
   alter column method type security_event_method using method::security_event_method;
 
 --!include functions/security_events.sql
+--!include functions/event_instances_for_range.sql

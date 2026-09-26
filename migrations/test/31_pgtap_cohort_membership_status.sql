@@ -402,7 +402,7 @@ SELECT tap.is(
   (
     SELECT count(*)::int
     FROM event_instances_for_range(
-      null, '-infinity'::timestamptz, null, null, null, false, false, 9900001
+      null, '-infinity'::timestamptz, null, null, null, 9900001
     )
   ),
   1,
@@ -441,22 +441,17 @@ VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
-WITH expected(scope, only_mine, any_parent, ids) AS (VALUES
-  ('all'::event_instance_range_scope, false, true, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
-  ('top_level', false, true, ARRAY[9900001,9900003,9900004]),
-  ('mine', false, true, ARRAY[9900001,9900004]),
-  ('relevant', false, true, ARRAY[9900001,9900002,9900003,9900004]),
-  (null, true, true, ARRAY[9900001,9900004]),
-  (null, false, false, ARRAY[9900001,9900003,9900004])
+WITH expected(scope, ids) AS (VALUES
+  ('all'::event_instance_range_scope, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
+  ('top_level', ARRAY[9900001,9900003,9900004]),
+  ('mine', ARRAY[9900001,9900004]),
+  ('relevant', ARRAY[9900001,9900002,9900003,9900004])
 )
 SELECT tap.ok(NOT EXISTS (
   SELECT FROM expected
   WHERE ids IS DISTINCT FROM (
     SELECT array_agg(id ORDER BY id)
-    FROM event_instances_for_range(null, '-infinity',
-      only_mine => expected.only_mine,
-      any_parent => expected.any_parent,
-      scope => expected.scope)
+    FROM event_instances_for_range(null, '-infinity', scope => expected.scope)
     WHERE id BETWEEN 9900001 AND 9900005
   )
 ), 'event range scopes and legacy aliases select the expected events');
@@ -752,14 +747,14 @@ SELECT tap.ok(
   ) AND EXISTS (
     SELECT 1
     FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, false, false, 9900001
+      null, now(), now() + interval '1 day', null, null, 9900001
     ) child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
   )
   AND NOT EXISTS (
     SELECT 1
     FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, false, false, null
+      null, now(), now() + interval '1 day', null, null, null
     ) root
     WHERE root.id = (SELECT id FROM _scheduled_lesson)
   ),

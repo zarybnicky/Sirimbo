@@ -19,14 +19,14 @@ begin
   if tg_op = 'DELETE' then
     if old.status = 'active' then
       insert into security_event (person_id, kind, method)
-      values (old.person_id, tg_argv[1], 'manual');
+      values (old.person_id, tg_argv[1]::security_event_kind, 'manual');
     end if;
     return old;
   end if;
 
   if tg_op = 'INSERT' and new.status = 'active' then
     insert into security_event (person_id, kind, method, effective_at)
-    values (new.person_id, tg_argv[0], 'manual', new.since);
+    values (new.person_id, tg_argv[0]::security_event_kind, 'manual', new.since);
   elsif tg_op = 'UPDATE'
      and new.status is distinct from old.status
      and new.status in ('active', 'expired') then

@@ -79,7 +79,12 @@ export function Club() {
 
           {club.tenantLocationsList.map((item) => (
             <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
-              <div className="grow gap-2 flex text-sm font-bold py-1">{item.name}</div>
+              <Link
+                className="grow py-1 text-sm font-bold underline"
+                href={`/lokality/${item.id}`}
+              >
+                {item.name}
+              </Link>
             </ActionRow>
           ))}
         </>

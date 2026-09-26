@@ -92,14 +92,14 @@ export function Tenants() {
       )}
 
       {!fetching && !error && tenants.length === 0 && (
-        <div className="mt-6 rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
+        <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
           Nebyly nalezeny žádné kluby.
         </div>
       )}
 
       <FormError error={error} />
       {!fetching && !error && tenants.length > 0 && (
-        <div className="mt-6 grid gap-4 lg:grid-cols-[3fr_1fr]">
+        <div className="grid gap-4 lg:grid-cols-[3fr_1fr]">
           <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
             <DataGrid
               columns={columns}

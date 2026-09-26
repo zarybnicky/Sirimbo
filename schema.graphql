@@ -7213,15 +7213,14 @@ type Query {
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]
   eventInstancesForRangeList(
-    anyParent: Boolean
     endRange: Datetime
 
     """Only read the first `n` values of the set."""
     first: Int
+    locationIds: [BigInt]
 
     """Skip the first `n` values."""
     offset: Int
-    onlyMine: Boolean
     onlyType: EventType
     parentId: BigInt
     participantIds: [BigInt]

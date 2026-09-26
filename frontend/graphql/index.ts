@@ -6206,11 +6206,10 @@ export type QueryEventInstanceRegistrationsListArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventInstancesForRangeListArgs = {
-  anyParent?: InputMaybe<Scalars['Boolean']['input']>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   onlyType?: InputMaybe<EventType>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
