@@ -31,6 +31,9 @@ as $$
   UPDATE tenant_administrator SET status = app_private.relationship_status_next(now(), active_range, status)
   WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), active_range, status);
 
+  UPDATE access_credential SET status = app_private.relationship_status_next(now(), valid_range, status)
+  WHERE status IS DISTINCT FROM app_private.relationship_status_next(now(), valid_range, status);
+
   UPDATE announcement
   SET status = app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status)
   WHERE status IN ('scheduled', 'published')

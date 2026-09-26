@@ -26,6 +26,8 @@ begin
 
   update users set last_login = now() where id = usr.id;
   update otp_token set used_at = now() where id = v_token.id;
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'login_succeeded', 'otp');
   return (usr, jwt);
 end;
 $$;

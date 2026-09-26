@@ -25,6 +25,8 @@ begin
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
   update users set last_login = now() where id = usr.id;
+  insert into security_event (user_id, kind, method)
+  values (usr.id, 'login_succeeded', 'password');
   return (usr, jwt);
 end;
 $$;

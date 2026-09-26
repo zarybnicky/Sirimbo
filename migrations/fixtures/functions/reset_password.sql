@@ -12,6 +12,9 @@ begin
     insert into otp_token (user_id)
     values (v_user.id) returning * into v_token;
 
+    insert into security_event (user_id, kind, method)
+    values (v_user.id, 'password_reset_requested', 'manual');
+
     v_payload := v_payload || jsonb_build_object(
       'login', v_user.u_login,
       'email', v_user.u_email,

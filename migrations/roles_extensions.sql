@@ -38,7 +38,4 @@ grant member to administrator;
 grant all on schema public to anonymous;
 alter default privileges for role :DATABASE_OWNER in schema public
   grant usage, select on sequences to anonymous;
-alter default privileges for role :DATABASE_OWNER in schema public
-  grant execute on functions to anonymous;
 alter default privileges in schema public grant usage, select on sequences to anonymous;
-alter default privileges in schema public grant execute on functions to anonymous;

@@ -54,6 +54,4 @@ as $$
   select * from t_person;
 $$;
 
-grant all on function confirm_membership_application(
-  bigint, boolean, boolean, boolean, timestamptz, bigint[]
-) to administrator;
+grant all on function confirm_membership_application to administrator;

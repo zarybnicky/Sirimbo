@@ -15,6 +15,7 @@ export type AccessCredentialInput = {
   label: string;
   personId: string;
   since?: string | null | undefined;
+  status?: RelationshipStatus | null | undefined;
   tenantId?: string | null | undefined;
   until?: string | null | undefined;
   updatedAt?: string | null | undefined;
@@ -32,6 +33,7 @@ export type AccessCredentialPatch = {
   label?: string | null | undefined;
   personId?: string | null | undefined;
   since?: string | null | undefined;
+  status?: RelationshipStatus | null | undefined;
   tenantId?: string | null | undefined;
   until?: string | null | undefined;
   updatedAt?: string | null | undefined;

@@ -9,6 +9,7 @@ declare
   v_salt text;
   usr users;
   jwt jwt_token;
+  v_registered boolean := false;
 begin
   select * into invitation from person_invitation where access_token=token for update;
 
@@ -26,6 +27,7 @@ begin
 
     v_salt := encode(digest('######TK.-.OLYMP######', 'md5'), 'hex');
     insert into users (u_login, u_email, u_pass) values (trim(login), email, encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex')) returning * into usr;
+    v_registered := true;
   else
     select * into usr from users where id=v_user_id;
     if usr is null then
@@ -33,6 +35,7 @@ begin
     end if;
   end if;
 
+  perform set_config('jwt.claims.user_id', usr.id::text, true);
   insert into user_proxy (user_id, person_id) values (usr.id, invitation.person_id) on conflict do nothing;
   update person_invitation set used_at=now() where access_token=token;
   jwt := app_private.create_jwt_token(usr);
@@ -41,6 +44,12 @@ begin
   perform set_config('jwt.claims.my_tenant_ids', jwt.my_tenant_ids::text, true);
   perform set_config('jwt.claims.my_cohort_ids', jwt.my_cohort_ids::text, true);
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
+  if v_registered then
+    insert into security_event (user_id, kind, method)
+    values (usr.id, 'registration', 'manual');
+  end if;
+  insert into security_event (user_id, person_id, kind, method)
+  values (usr.id, invitation.person_id, 'invitation_accepted', 'manual');
   return (usr, jwt);
 end
 $$;
