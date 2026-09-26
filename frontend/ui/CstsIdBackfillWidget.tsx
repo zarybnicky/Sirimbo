@@ -5,10 +5,11 @@ import {
 } from '@/graphql/Person';
 import { CstsPersonLink } from '@/ui/csts-links';
 import { formatAgeGroup } from '@/ui/format';
-import { buttonCls, typographyCls } from '@/ui/style';
+import { buttonCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
+import { FormError } from './form';
 
 type Person = NonNullable<
   NonNullable<MissingCstsIdCandidatesQuery['people']>['nodes'][number]
@@ -88,16 +89,8 @@ export function CstsIdBackfillWidget() {
   );
 
   return (
-    <section className="mt-6">
-      <h2 className={typographyCls({ variant: 'section', className: 'my-3' })}>
-        Doplnit ČSTS IDT
-      </h2>
-
-      {(error || mutationError) && (
-        <div className="mb-2 rounded-md border border-accent-6 bg-accent-2 p-2 text-sm text-accent-11">
-          {(mutationError ?? error)?.message}
-        </div>
-      )}
+    <>
+      <FormError error={mutationError ?? error} />
 
       {fetching && !data ? (
         <div className="text-sm text-neutral-11">Načítám kandidáty...</div>
@@ -198,7 +191,7 @@ export function CstsIdBackfillWidget() {
           })}
         </div>
       )}
-    </section>
+    </>
   );
 }
 

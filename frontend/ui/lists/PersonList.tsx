@@ -140,7 +140,7 @@ export function PersonList() {
         <TextField
           type="search"
           className="w-full mt-2"
-          placeholder="Jméno, email, telefon, sociální sítě"
+          placeholder="Jméno, email, telefon"
           value={search || ''}
           onChange={(e) => setSearch(e.currentTarget.value)}
         />

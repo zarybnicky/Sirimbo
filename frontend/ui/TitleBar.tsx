@@ -31,7 +31,8 @@ export function TitleBar({
   );
 }
 
-type PageHeaderProps<Id extends string = string> = {
+
+type PageHeaderProps<Id extends string = string> = Parameters<typeof typographyCls>[0] & {
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
   groups?: Record<'add', Id[]>;
@@ -47,6 +48,7 @@ export function PageHeader<Id extends string = string>({
   actions,
   primary,
   groups,
+  variant = 'heading',
 }: PageHeaderProps<Id>) {
   const parent = breadcrumbs?.at(-2);
 
@@ -84,7 +86,7 @@ export function PageHeader<Id extends string = string>({
 
       <div className="flex flex-wrap-reverse justify-between gap-2 items-center">
         <div className="min-w-0">
-          <h1 className={typographyCls({ variant: 'heading', spacing: 'default' })}>
+          <h1 className={typographyCls({ variant, spacing: 'default' })}>
             {title}
           </h1>
         </div>
