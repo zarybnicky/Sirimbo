@@ -1,5 +1,5 @@
 import { Coins, Link2, MailPlus, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
-import { DeletePersonDocument, type PersonBasicFragment } from '@/graphql/Person';
+import { DeletePersonDocument } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { defineActions } from '@/lib/actions';
@@ -15,8 +15,16 @@ import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
 import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
 import { DialogTitle } from '@/ui/dialog';
+import { GenderType } from '@/graphql';
 
-export type PersonActionItem = PersonBasicFragment & {
+export type PersonActionItem = {
+  id: string;
+  name: string;
+  gender: GenderType;
+  externalIds?: (string | null)[] | null;
+  isMember: boolean | null;
+  isTrainer: boolean | null;
+  isAdmin: boolean | null;
   canInvite?: boolean;
   matchingUserIds?: string[];
 };
@@ -55,7 +63,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat do skupiny',
     icon: Plus,
     requireAdmin: true,
-    render: ({ item }) => <AddToCohortForm person={item} />,
+    render: ({ item }) => <AddToCohortForm personId={item.id} />,
   },
   {
     id: 'person.addMember',
@@ -101,7 +109,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přiřadit existující účet',
     icon: Link2,
     requireAdmin: true,
-    render: ({ item }) => <LinkUserToPersonForm person={item} />,
+    render: ({ item }) => <LinkUserToPersonForm personId={item.id} />,
   },
   {
     id: 'person.assignUserByEmail',
@@ -125,7 +133,7 @@ export const personActions = defineActions<PersonActionItem>()([
     icon: MailPlus,
     requireAdmin: true,
     visible: ({ item }) => item.canInvite !== false,
-    render: ({ item }) => <CreateInvitationForm person={item} />,
+    render: ({ item }) => <CreateInvitationForm personId={item.id} />,
   },
   {
     id: 'person.addAccessCredential',

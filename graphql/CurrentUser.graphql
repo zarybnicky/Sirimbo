@@ -50,7 +50,7 @@ query UserDetail($id: BigInt!) {
       status
       personId
       person {
-        ...Person
+        ...PersonBasic
       }
     }
   }

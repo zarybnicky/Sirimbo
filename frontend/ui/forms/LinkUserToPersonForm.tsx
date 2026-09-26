@@ -15,7 +15,7 @@ const Form = z.object({
   userId: z.string().min(1, 'Vyberte uživatelský účet'),
 });
 
-export function LinkUserToPersonForm({ person }: { person: { id: string } }) {
+export function LinkUserToPersonForm({ personId }: { personId: string; }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
@@ -34,7 +34,7 @@ export function LinkUserToPersonForm({ person }: { person: { id: string } }) {
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     const response = await create({
-      input: { userProxy: { personId: person.id, userId: values.userId } },
+      input: { userProxy: { personId, userId: values.userId } },
     });
     if (!response.error) onSuccess();
   };

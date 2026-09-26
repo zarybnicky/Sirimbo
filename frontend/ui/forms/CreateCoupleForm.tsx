@@ -1,5 +1,5 @@
 import { CreateCoupleDocument } from '@/graphql/Memberships';
-import { type PersonBasicFragment, PersonListDocument } from '@/graphql/Person';
+import { PersonListDocument } from '@/graphql/Person';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -8,6 +8,7 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { GenderType } from '@/graphql';
 
 const Form = z.object({
   man: z.string().min(1, 'Vyberte partnera'),
@@ -17,7 +18,10 @@ const Form = z.object({
 export function CreateCoupleForm({
   person: initialPerson,
 }: {
-  person?: PersonBasicFragment;
+  person?: {
+    id: string;
+    gender: GenderType;
+  };
 }) {
   const { onSuccess } = useFormResult();
   const [result, doCreate] = useMutation(CreateCoupleDocument);

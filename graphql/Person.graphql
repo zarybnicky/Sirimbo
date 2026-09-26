@@ -4,10 +4,6 @@ fragment PersonBasic on Person {
   firstName
   lastName
   gender
-  birthDate
-  email
-  phone
-  taxIdentificationNumber
   externalIds
   isMember
   isTrainer
@@ -16,6 +12,10 @@ fragment PersonBasic on Person {
 
 fragment Person on Person {
   ...PersonBasic
+  phone
+  email
+  birthDate
+  taxIdentificationNumber
   cstsId
   wdsfId
   nationality
@@ -86,7 +86,7 @@ query Person($id: BigInt!) {
 
 query PersonPayments($id: BigInt!) {
   person(id: $id) {
-    ...Person
+    ...PersonBasic
     unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
       id
       price {
@@ -159,8 +159,21 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
     }
   ) {
     nodes {
-      ...Person
-      externalIds
+      ...PersonBasic
+      phone
+      email
+      birthDate
+      taxIdentificationNumber
+      address {
+        city
+        conscriptionNumber
+        district
+        orientationNumber
+        postalCode
+        region
+        street
+      }
+      cohortIds
       cohortMembershipsList {
         id
         cohort {

@@ -170,7 +170,13 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
 }
 
 fragment EventRegistrant on Person {
-  ...PersonBasic
+  id
+  firstName
+  lastName
+  phone
+  email
+  birthDate
+  taxIdentificationNumber
   cohortMembershipsList {
     id
     cohort {

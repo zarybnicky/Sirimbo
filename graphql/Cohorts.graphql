@@ -44,7 +44,7 @@ query CohortWithMembers($id: BigInt!) {
     cohortMembershipsList(condition: {status: ACTIVE}) {
       ...CohortMembership
       person {
-        ...Person
+        ...PersonBasic
         id
         birthDate
         cstsProgressList {

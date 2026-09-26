@@ -87,7 +87,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" />
             <DialogContent>
-              <AddToCohortForm person={item} />
+              <AddToCohortForm personId={item.id} />
             </DialogContent>
           </Dialog>
         )}
@@ -168,7 +168,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
               <Dialog>
                 <DialogTrigger.Add size="sm" text="Přidat k registrovanému uživateli" />
                 <DialogContent>
-                  <LinkUserToPersonForm person={item} />
+                  <LinkUserToPersonForm personId={item.id} />
                 </DialogContent>
               </Dialog>
             )}
@@ -194,7 +194,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                 <Dialog>
                   <DialogTrigger.Add size="sm" />
                   <DialogContent>
-                    <CreateInvitationForm person={item} />
+                    <CreateInvitationForm personId={item.id} />
                   </DialogContent>
                 </Dialog>
               </div>

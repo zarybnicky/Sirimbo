@@ -72,6 +72,9 @@ function peopleCount(count: number) {
 }
 
 type AccessPerson = PersonBasicFragment & {
+  id: string;
+  name: string;
+  email: string | null;
   userProxiesList: UserProxyFragment[];
   personInvitationsList: PersonInvitationActionItem[];
 };
@@ -356,7 +359,11 @@ function AccessWarning({
   action,
 }: Readonly<{
   message: string;
-  people: readonly Pick<PersonBasicFragment, 'id' | 'name' | 'email'>[];
+  people: {
+    id: string;
+    name: string;
+    email: string | null;
+  }[];
   action?: React.ReactNode;
 }>) {
   if (people.length === 0) return null;
