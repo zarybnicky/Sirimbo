@@ -6811,8 +6811,8 @@ export type SecurityEvent = {
   /** When the change takes effect. */
   effectiveAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
-  kind: Scalars['String']['output'];
-  method: Scalars['String']['output'];
+  kind: SecurityEventKind;
+  method: SecurityEventMethod;
   occurredAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `SecurityEvent`. */
   person: Maybe<Person>;
@@ -6835,9 +6835,9 @@ export type SecurityEventCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `kind` field. */
-  kind?: InputMaybe<Scalars['String']['input']>;
+  kind?: InputMaybe<SecurityEventKind>;
   /** Checks for equality with the object’s `method` field. */
-  method?: InputMaybe<Scalars['String']['input']>;
+  method?: InputMaybe<SecurityEventMethod>;
   /** Checks for equality with the object’s `occurredAt` field. */
   occurredAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -6847,6 +6847,31 @@ export type SecurityEventCondition = {
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
+
+export type SecurityEventKind =
+  | 'ACCESS_CREDENTIAL_ENDED'
+  | 'ACCESS_CREDENTIAL_ISSUED'
+  | 'ADMINISTRATOR_GRANTED'
+  | 'ADMINISTRATOR_REVOKED'
+  | 'IMPERSONATION'
+  | 'INVITATION_ACCEPTED'
+  | 'LOGIN_FAILED'
+  | 'LOGIN_SUCCEEDED'
+  | 'MEMBERSHIP_GRANTED'
+  | 'MEMBERSHIP_REVOKED'
+  | 'PASSWORD_CHANGED'
+  | 'PASSWORD_RESET_REQUESTED'
+  | 'PERSON_LINKED'
+  | 'PERSON_UNLINKED'
+  | 'REGISTRATION'
+  | 'TRAINER_GRANTED'
+  | 'TRAINER_REVOKED';
+
+export type SecurityEventMethod =
+  | 'MANUAL'
+  | 'OTP'
+  | 'PASSWORD'
+  | 'SCHEDULED';
 
 /** Methods to use when ordering `SecurityEvent`. */
 export type SecurityEventsOrderBy =
@@ -10591,8 +10616,8 @@ export type GraphCacheResolvers = {
     actorUserId?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     effectiveAt?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    kind?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['String']['output'] | string>,
-    method?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, SecurityEventKind | string>,
+    method?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, SecurityEventMethod | string>,
     occurredAt?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<SecurityEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,

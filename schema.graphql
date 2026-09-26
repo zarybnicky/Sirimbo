@@ -7869,8 +7869,8 @@ type SecurityEvent {
   """When the change takes effect."""
   effectiveAt: Datetime!
   id: BigInt!
-  kind: String!
-  method: String!
+  kind: SecurityEventKind!
+  method: SecurityEventMethod!
   occurredAt: Datetime!
 
   """Reads a single `Person` that is related to this `SecurityEvent`."""
@@ -7898,10 +7898,10 @@ input SecurityEventCondition {
   id: BigInt
 
   """Checks for equality with the object’s `kind` field."""
-  kind: String
+  kind: SecurityEventKind
 
   """Checks for equality with the object’s `method` field."""
-  method: String
+  method: SecurityEventMethod
 
   """Checks for equality with the object’s `occurredAt` field."""
   occurredAt: Datetime
@@ -7914,6 +7914,33 @@ input SecurityEventCondition {
 
   """Checks for equality with the object’s `userId` field."""
   userId: BigInt
+}
+
+enum SecurityEventKind {
+  ACCESS_CREDENTIAL_ENDED
+  ACCESS_CREDENTIAL_ISSUED
+  ADMINISTRATOR_GRANTED
+  ADMINISTRATOR_REVOKED
+  IMPERSONATION
+  INVITATION_ACCEPTED
+  LOGIN_FAILED
+  LOGIN_SUCCEEDED
+  MEMBERSHIP_GRANTED
+  MEMBERSHIP_REVOKED
+  PASSWORD_CHANGED
+  PASSWORD_RESET_REQUESTED
+  PERSON_LINKED
+  PERSON_UNLINKED
+  REGISTRATION
+  TRAINER_GRANTED
+  TRAINER_REVOKED
+}
+
+enum SecurityEventMethod {
+  MANUAL
+  OTP
+  PASSWORD
+  SCHEDULED
 }
 
 """Methods to use when ordering `SecurityEvent`."""
