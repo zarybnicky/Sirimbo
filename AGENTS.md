@@ -16,7 +16,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). Multi-tenancy and JWT enrichment are handled in `backend/src/auth.ts`.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
-- `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql` (again: avoid committing regenerated outputs unless the task requires it).
+- `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql`.
 - `e2e/`: Playwright smoke tests and auth fixtures.
 - `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/1-current.sql` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
 - `schema.sql`: pg_dump of the live database, including extensions and RLS policies. Use it together with `schema/split.py` to keep the `schema/` tree synchronized.
@@ -47,7 +47,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## GraphQL stack
 - PostGraphile auto-exposes the PostgreSQL schema with additional fields and filters from custom plugins (S3 file URLs, current-user helpers, and person membership filters).
-- The frontend consumes the API via URQL. Operation documents reside in `graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Keep documents and generated types aligned, but avoid committing regenerated artifacts unless asked.
+- The frontend consumes the API via URQL. Operation documents reside in `graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Avoid hand-editing generated files!
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
 ## Worker and crawler model

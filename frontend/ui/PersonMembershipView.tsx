@@ -27,7 +27,6 @@ import { ActionRow } from '@/ui/ActionRow';
 import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
-import { mifareCodeToLabel } from '@/lib/access-credentials';
 
 export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
@@ -242,31 +241,27 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
                   </div>
                 </ActionRow>
               ))}
-              {item.accessEventsList.length > 0 && (
-                <>
-                  <h3 className="text-lg font-semibold mt-4 mb-2">Poslední průchody</h3>
-                  <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
-                    {item.accessEventsList.map((event) => (
-                      <div
-                        key={event.id}
-                        className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
-                      >
-                        <span>
-                          <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
-                          {' · '}
-                          {mifareCodeToLabel(event.code)}
-                          <code className="ml-2 text-neutral-11">{event.code}</code>
-                        </span>
-                        <span className="text-neutral-11">
-                          {dateTimeFormatter.format(new Date(event.occurredAt))}
-                          {' · '}
-                          {event.device}
-                        </span>
-                      </div>
-                    ))}
+            </>
+          )}
+
+          {item.accessEventsList.length > 0 && (
+            <>
+              <h3 className="text-lg font-semibold mt-4 mb-2">Poslední průchody</h3>
+              <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
+                {item.accessEventsList.map((event) => (
+                  <div
+                    key={event.id}
+                    className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
+                  >
+                    <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
+                    <span className="text-neutral-11">
+                      {dateTimeFormatter.format(new Date(event.occurredAt))}
+                      {' · '}
+                      {event.device}
+                    </span>
                   </div>
-                </>
-              )}
+                ))}
+              </div>
             </>
           )}
         </>

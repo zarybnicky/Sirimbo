@@ -161,6 +161,8 @@ export type AccessEvent = {
   externalId: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   kind: AccessCredentialKind;
+  /** Location resolved when the access event is received. */
+  locationId: Maybe<Scalars['BigInt']['output']>;
   occurredAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `AccessEvent`. */
   person: Maybe<Person>;
@@ -168,6 +170,8 @@ export type AccessEvent = {
   reason: Scalars['String']['output'];
   receivedAt: Scalars['Datetime']['output'];
   tenantId: Scalars['BigInt']['output'];
+  /** Reads a single `TenantLocation` that is related to this `AccessEvent`. */
+  tenantLocation: Maybe<TenantLocation>;
 };
 
 /**
@@ -187,6 +191,8 @@ export type AccessEventCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `kind` field. */
   kind?: InputMaybe<AccessCredentialKind>;
+  /** Checks for equality with the object’s `locationId` field. */
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `occurredAt` field. */
   occurredAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -213,6 +219,8 @@ export type AccessEventsOrderBy =
   | 'ID_DESC'
   | 'KIND_ASC'
   | 'KIND_DESC'
+  | 'LOCATION_ID_ASC'
+  | 'LOCATION_ID_DESC'
   | 'NATURAL'
   | 'OCCURRED_AT_ASC'
   | 'OCCURRED_AT_DESC'
@@ -7569,6 +7577,8 @@ export type TenantCondition = {
 
 export type TenantLocation = {
   __typename?: 'TenantLocation';
+  /** Reads and enables pagination through a set of `AccessEvent`. */
+  accessEventsList: Array<AccessEvent>;
   address: Maybe<AddressDomain>;
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
@@ -7579,6 +7589,14 @@ export type TenantLocation = {
   name: Scalars['String']['output'];
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type TenantLocationAccessEventsListArgs = {
+  condition?: InputMaybe<AccessEventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AccessEventsOrderBy>>;
 };
 
 
@@ -9416,12 +9434,14 @@ export type GraphCacheResolvers = {
     externalId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, AccessCredentialKind | string>,
+    locationId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     occurredAt?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     reason?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     receivedAt?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    tenantId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>
+    tenantId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    tenantLocation?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   Account?: {
     assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat']['output'] | string>,
@@ -11175,12 +11195,14 @@ export type GraphCacheUpdaters = {
     externalId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     kind?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     occurredAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     reason?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
     receivedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>,
+    tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>
   },
   Account?: {
     assets?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountAssetsArgs>,

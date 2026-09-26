@@ -22,7 +22,7 @@ const EventBatch = z.object({
     .max(500),
 });
 
-async function tenantIdFor(request: Request) {
+async function accessContextFor(request: Request) {
   const bearer = request.headers.get('authorization')?.match(/^Bearer (\S+)$/i)?.[1];
   if (!bearer) return;
 
@@ -31,7 +31,9 @@ async function tenantIdFor(request: Request) {
      where settings->>'accessCredentialToken' = $1 limit 2`,
     [bearer],
   );
-  return rows.length === 1 ? rows[0]?.tenantId : undefined;
+  return rows.length === 1
+    ? { tenantId: rows[0]!.tenantId, locationId: '12' }
+    : undefined;
 }
 
 function unauthorized() {
@@ -45,8 +47,9 @@ function unauthorized() {
 }
 
 export async function GET(request: Request) {
-  const tenantId = await tenantIdFor(request);
-  if (!tenantId) return unauthorized();
+  const context = await accessContextFor(request);
+  if (!context) return unauthorized();
+  const { tenantId } = context;
 
   const { rows } = await withTransaction(async (client) => {
     await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenantId]);
@@ -89,8 +92,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const tenantId = await tenantIdFor(request);
-  if (!tenantId) return unauthorized();
+  const context = await accessContextFor(request);
+  if (!context) return unauthorized();
+  const { tenantId } = context;
 
   let json: unknown;
   try {
@@ -115,11 +119,12 @@ export async function POST(request: Request) {
     await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenantId]);
     const result = await client.query(
       `insert into access_event (
-         external_id, device, kind, code, person_id, occurred_at, allowed, reason
+         external_id, device, location_id, kind, code, person_id, occurred_at, allowed, reason
        )
        select
          event.id,
          event.device,
+         $2::bigint,
          event.kind::access_credential_kind,
          event.code,
          (
@@ -142,7 +147,7 @@ export async function POST(request: Request) {
          reason text
        )
        on conflict (tenant_id, external_id) do nothing`,
-      [JSON.stringify(events)],
+      [JSON.stringify(events), context.locationId],
     );
     return result.rowCount ?? 0;
   });

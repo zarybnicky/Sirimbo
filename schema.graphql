@@ -129,6 +129,9 @@ type AccessEvent {
   externalId: String!
   id: BigInt!
   kind: AccessCredentialKind!
+
+  """Location resolved when the access event is received."""
+  locationId: BigInt
   occurredAt: Datetime!
 
   """Reads a single `Person` that is related to this `AccessEvent`."""
@@ -137,6 +140,9 @@ type AccessEvent {
   reason: String!
   receivedAt: Datetime!
   tenantId: BigInt!
+
+  """Reads a single `TenantLocation` that is related to this `AccessEvent`."""
+  tenantLocation: TenantLocation
 }
 
 """
@@ -161,6 +167,9 @@ input AccessEventCondition {
 
   """Checks for equality with the object’s `kind` field."""
   kind: AccessCredentialKind
+
+  """Checks for equality with the object’s `locationId` field."""
+  locationId: BigInt
 
   """Checks for equality with the object’s `occurredAt` field."""
   occurredAt: Datetime
@@ -192,6 +201,8 @@ enum AccessEventsOrderBy {
   ID_DESC
   KIND_ASC
   KIND_DESC
+  LOCATION_ID_ASC
+  LOCATION_ID_DESC
   NATURAL
   OCCURRED_AT_ASC
   OCCURRED_AT_DESC

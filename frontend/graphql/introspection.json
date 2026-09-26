@@ -237,6 +237,14 @@
             "args": []
           },
           {
+            "name": "locationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "occurredAt",
             "type": {
               "kind": "NON_NULL",
@@ -294,6 +302,15 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
             },
             "args": []
           }
