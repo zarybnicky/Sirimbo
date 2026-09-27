@@ -66,6 +66,6 @@ SELECT tap.is(
   'occurrence trainer lists are independent'
 );
 
-SELECT tap.finish();
+SELECT tap.finish(true);
 
 ROLLBACK;

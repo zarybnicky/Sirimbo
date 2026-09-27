@@ -4,7 +4,7 @@ create policy current_tenant on event_instance as restrictive
   using (tenant_id = (select current_tenant_id()));
 create policy admin_same_tenant on event_instance to administrator using (true);
 create policy trainer_select on event_instance for select to trainer
-  using (app_private.can_trainer_edit_instance(id));
+  using (cardinality(manager_person_ids) = 0 or manager_person_ids && (select current_person_ids()));
 create policy trainer_insert on event_instance for insert to trainer
   with check (parent_id is null or app_private.can_trainer_edit_instance(parent_id));
 create policy trainer_update on event_instance for update to trainer

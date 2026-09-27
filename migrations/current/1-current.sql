@@ -1,1 +1,10 @@
-
+--!include functions/current_account_ids.sql
+--!include functions/visible_payment_ids.sql
+--!include policies/accounting.sql
+--!include functions/payment_debtor_price.sql
+--!include policies/event_instance.sql
+--!include policies/event_instance_trainer.sql
+--!include policies/event_external_registration.sql
+--!include policies/event_lesson_demand.sql
+--!include policies/announcement.sql
+--!include functions/save_events.sql

@@ -273,28 +273,6 @@ begin
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
   end loop;
 
-  delete from event_instance_trainer e
-  where e.instance_id = any(v_saved_event_ids)
-    and not exists (
-      select 1
-      from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
-      where trainer.person_id = e.person_id
-    );
-
-  with desired as (
-    select distinct on (trainer.person_id) trainer.person_id, trainer.lessons_offered
-    from unnest(coalesce(trainers, '{}'::event_trainer_input[]))
-      with ordinality trainer(person_id, lessons_offered, position)
-    order by trainer.person_id, trainer.position
-  )
-  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
-  select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
-  from event_instance stored_event
-  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
-  cross join desired
-  on conflict (instance_id, person_id) do update
-  set lessons_offered = excluded.lessons_offered;
-
   with desired as (
     select distinct i.cohort_id
     from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
@@ -313,6 +291,29 @@ begin
       select 1
       from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
       where i.cohort_id = e.cohort_id
+    );
+
+  -- Keep the caller's trainer assignment until all edits and replacements are saved.
+  with desired as (
+    select distinct on (trainer.person_id) trainer.person_id, trainer.lessons_offered
+    from unnest(coalesce(trainers, '{}'::event_trainer_input[]))
+      with ordinality trainer(person_id, lessons_offered, position)
+    order by trainer.person_id, trainer.position
+  )
+  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
+  select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
+  from event_instance stored_event
+  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
+  cross join desired
+  on conflict (instance_id, person_id) do update
+  set lessons_offered = excluded.lessons_offered;
+
+  delete from event_instance_trainer e
+  where e.instance_id = any(v_saved_event_ids)
+    and not exists (
+      select 1
+      from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
+      where trainer.person_id = e.person_id
     );
 
   return query

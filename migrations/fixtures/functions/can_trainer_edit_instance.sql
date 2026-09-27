@@ -1,7 +1,7 @@
 create or replace function app_private.can_trainer_edit_instance(iid bigint)
   returns boolean
   language sql stable security definer leakproof parallel safe
-  set search_path = pg_catalog, pg_temp
+  set search_path = pg_catalog, public, pg_temp
 as $$
   with recursive chain as (
     select i.id, i.parent_id from event_instance i where i.id = iid

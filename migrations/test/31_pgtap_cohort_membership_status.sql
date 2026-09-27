@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(27);
+SELECT tap.plan(33);
 
 -- Fixtures
 -- People:
@@ -703,7 +703,12 @@ SELECT tap.ok(
       AND child.summary = ''
       AND child.files_legacy = ''
       AND 2900002 = any(child.manager_person_ids)
-  ) AND EXISTS (
+  ),
+  'event save preserves scheduled lesson settings and managers'
+);
+
+SELECT tap.ok(
+  EXISTS (
     SELECT 1
     FROM event_series series
     JOIN _created_series_lesson created ON created.series_id = series.id
@@ -717,19 +722,34 @@ SELECT tap.ok(
             instance.has_public_details, instance.is_locked, instance.enable_notes)
             IS DISTINCT FROM (true, false, false, false, false)
       )
-  ) AND EXISTS (
+  ),
+  'event save creates a series with two instances and default settings'
+);
+
+SELECT tap.ok(
+  EXISTS (
     SELECT 1
     FROM event_instance_target_cohort target
     WHERE target.instance_id = (SELECT id FROM _scheduled_lesson)
       AND target.cohort_id = 800002
-  ) AND EXISTS (
+  ),
+  'event save preserves the scheduled lesson cohort target'
+);
+
+SELECT tap.ok(
+  EXISTS (
     SELECT 1
     FROM event_instance_trainer trainer
     WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
       AND trainer.person_id = 2900002
       AND trainer.lessons_offered = 2
       AND event_instance_trainer_lessons_remaining(trainer) = 0
-  ) AND EXISTS (
+  ),
+  'scheduled trainer has two offered lessons and no remaining lessons'
+);
+
+SELECT tap.ok(
+  EXISTS (
     SELECT 1
     FROM event_instance_registration registration
     WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
@@ -744,21 +764,30 @@ SELECT tap.ok(
           AND trainer.instance_id = registration.instance_id
           AND trainer.person_id = 2900002
       )
-  ) AND EXISTS (
+  ),
+  'event save preserves managed registration and lesson demand'
+);
+
+SELECT tap.ok(
+  EXISTS (
     SELECT 1
     FROM event_instances_for_range(
       null, now(), now() + interval '1 day', null, null, 9900001
     ) child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
-  )
-  AND NOT EXISTS (
+  ),
+  'parent-scoped range includes the scheduled lesson'
+);
+
+SELECT tap.ok(
+  NOT EXISTS (
     SELECT 1
     FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, null
+      null, now(), now() + interval '1 day', scope => 'top_level'
     ) root
     WHERE root.id = (SELECT id FROM _scheduled_lesson)
   ),
-  'event save makes a managed lesson with registration and scoped range'
+  'root-scoped range excludes the scheduled lesson'
 );
 
 SELECT tap.lives_ok(
@@ -1070,6 +1099,6 @@ SELECT tap.ok(
   'an assigned trainer can detach an instance through the normal update policy'
 );
 
-SELECT tap.finish();
+SELECT tap.finish(true);
 
 ROLLBACK;

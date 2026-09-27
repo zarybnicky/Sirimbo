@@ -8,7 +8,7 @@ BEGIN
 END
 $$;
 
-SELECT tap.plan(8);
+SELECT tap.plan(11);
 
 INSERT INTO tenant (id, name)
 VALUES (1200, 'Announcement RLS Test')
@@ -132,7 +132,24 @@ SELECT tap.is(
   'new trainer announcements receive the current user as author'
 );
 
+SELECT tap.throws_ok(
+  $$insert into announcement_audience (announcement_id, audience_role) values (920004, 'member')$$,
+  '42501'::char(5), null,
+  'trainer cannot add an audience to another author announcement'
+);
+WITH changed AS (
+  DELETE FROM announcement_audience WHERE announcement_id = 920004 RETURNING id
+)
+SELECT tap.is(count(*), 0::bigint, 'trainer cannot delete another author audience') FROM changed;
+SELECT tap.lives_ok($$
+  select upsert_announcement(
+    jsonb_populate_record(null::announcement_type_input,
+      '{"id":920005,"title":"Updated through UI mutation","body":"","status":"draft"}'),
+    ARRAY[ROW(null,null,'member')::announcement_audience_type_input]
+  )
+$$, 'upsert_announcement still saves an owned announcement and audience');
+
 RESET ROLE;
-SELECT tap.finish();
+SELECT tap.finish(true);
 
 ROLLBACK;

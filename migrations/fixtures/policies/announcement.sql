@@ -13,7 +13,8 @@ select app_private.drop_policies('public.announcement_audience');
 create policy current_tenant on announcement_audience as restrictive
   using (tenant_id = (select current_tenant_id()));
 create policy admin_all on announcement_audience to administrator using (true);
-create policy trainer_manage on announcement_audience to trainer using (true);
+create policy trainer_manage on announcement_audience to trainer
+  using (announcement_id in (select id from announcement where author_id = (select current_user_id())));
 create policy member_view on announcement_audience for select to member using (true);
 
 grant all on table announcement, announcement_audience to anonymous;
