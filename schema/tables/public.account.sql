@@ -28,7 +28,7 @@ ALTER TABLE ONLY public.account
 
 CREATE POLICY admin_manage ON public.account TO administrator USING (true);
 CREATE POLICY current_tenant ON public.account AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.account FOR SELECT TO member USING ((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.account FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _900_fix_balance_accounts AFTER INSERT OR DELETE OR UPDATE OF opening_balance OR TRUNCATE ON public.account FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_account_balances__update();

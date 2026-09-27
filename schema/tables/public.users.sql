@@ -30,9 +30,11 @@ ALTER TABLE ONLY public.users
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
-CREATE POLICY manage_own ON public.users USING ((id = public.current_user_id())) WITH CHECK ((id = public.current_user_id()));
+CREATE POLICY admin_all ON public.users TO administrator USING (true);
+CREATE POLICY manage_own ON public.users USING ((id = ( SELECT public.current_user_id() AS current_user_id)));
+CREATE POLICY view_shared_person ON public.users FOR SELECT USING ((id = ANY (ARRAY( SELECT user_proxy.user_id
+   FROM public.user_proxy
+  WHERE (user_proxy.status = 'active'::public.relationship_status)))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('last_login', 'last_active_at', 'last_version');
 CREATE TRIGGER _200_encrypt_password BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__encrypt_password();

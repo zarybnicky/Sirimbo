@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict plIorjXY0rcSts4rUZfbcRt2zO9RVO4d1zPtnot43IcHTX3PHgnWecgeF0V3CUB
+\restrict wRGzoG0GCcGEh9svofSq4ynreUFkn5FZIH3t5126XiMCmffntewJdf0np2uFgnF
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -2619,6 +2619,24 @@ $$;
 
 
 --
+-- Name: visible_payment_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.visible_payment_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select payment_id from public.payment_debtor
+  where tenant_id = (select current_tenant_id())
+    and person_id = any ((select current_person_ids())::bigint[])
+  union
+  select payment_id from public.payment_recipient
+  where tenant_id = (select current_tenant_id())
+    and account_id = any (array(select current_account_ids()));
+$$;
+
+
+--
 -- Name: visible_person_ids(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2632,6 +2650,23 @@ CREATE FUNCTION app_private.visible_person_ids() RETURNS SETOF bigint
   union all
   -- members visible only if viewer is in tenant (any role)
   select person_id from current_tenant_membership WHERE (SELECT current_tenant_id() = ANY (my_tenants_array()))
+$$;
+
+
+--
+-- Name: visible_user_proxy_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.visible_user_proxy_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select id from user_proxy
+  where status = 'active'
+    and person_id in (
+      select person_id from user_proxy
+      where user_id = (select current_user_id()) and status = 'active'
+    );
 $$;
 
 
@@ -3341,6 +3376,48 @@ COMMENT ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p
 
 
 --
+-- Name: announcement; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.announcement (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    author_id bigint,
+    title text NOT NULL,
+    body text NOT NULL,
+    is_sticky boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone,
+    status public.announcement_status DEFAULT 'draft'::public.announcement_status NOT NULL,
+    CONSTRAINT announcement_schedule_check CHECK (((scheduled_since IS NULL) OR (scheduled_until IS NULL) OR (scheduled_since < scheduled_until)))
+);
+
+
+--
+-- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.announcement IS '@omit create';
+
+
+--
+-- Name: announcement_author_name(public.announcement); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.announcement_author_name(a public.announcement) RETURNS text
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select concat_ws(' ', nullif(u.u_jmeno, ''), nullif(u.u_prijmeni, ''))
+  from announcement stored
+  join users u on u.id = stored.author_id
+  where stored.id = a.id;
+$$;
+
+
+--
 -- Name: cohort; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4035,6 +4112,25 @@ CREATE FUNCTION public.csts_athlete(idt integer) RETURNS text
     AS $$
   select canonical_name from federated.person where federation = 'csts' and external_id = idt;
 $$;
+
+
+--
+-- Name: current_account_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_account_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select id from account
+  where person_id = any ((select current_person_ids())::bigint[]);
+$$;
+
+
+--
+-- Name: FUNCTION current_account_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_account_ids() IS '@omit';
 
 
 --
@@ -4844,18 +4940,32 @@ COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS 
 --
 
 CREATE FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) RETURNS record
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
-SELECT
+select
   sum(payment_recipient.amount) / (
-    SELECT count(*) AS count
-    FROM public.payment_debtor
-    WHERE p.payment_id = payment_debtor.payment_id
+    select count(*) as count
+    from payment_debtor
+    where p.payment_id = payment_debtor.payment_id
   )::numeric(19,4) as amount,
   min(account.currency)::text as currency
-FROM payment_recipient
-  JOIN account ON payment_recipient.account_id = account.id
-WHERE payment_recipient.payment_id = p.payment_id;
+from payment_recipient
+  join account on payment_recipient.account_id = account.id
+where payment_recipient.payment_id = p.payment_id
+  -- Calculate the complete bill only for an authorized stored debtor.
+  and exists (
+    select from payment_debtor d
+    where d.id = p.id and d.payment_id = p.payment_id
+      and d.tenant_id = (select current_tenant_id())
+      and (
+        (select pg_has_role(coalesce(nullif(current_setting('role'), 'none'), session_user), 'administrator', 'member'))
+        or (
+          (select pg_has_role(coalesce(nullif(current_setting('role'), 'none'), session_user), 'member', 'member'))
+          and d.person_id = any ((select current_person_ids())::bigint[])
+        )
+      )
+  );
 $$;
 
 
@@ -5717,28 +5827,6 @@ begin
     cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
   end loop;
 
-  delete from event_instance_trainer e
-  where e.instance_id = any(v_saved_event_ids)
-    and not exists (
-      select 1
-      from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
-      where trainer.person_id = e.person_id
-    );
-
-  with desired as (
-    select distinct on (trainer.person_id) trainer.person_id, trainer.lessons_offered
-    from unnest(coalesce(trainers, '{}'::event_trainer_input[]))
-      with ordinality trainer(person_id, lessons_offered, position)
-    order by trainer.person_id, trainer.position
-  )
-  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
-  select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
-  from event_instance stored_event
-  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
-  cross join desired
-  on conflict (instance_id, person_id) do update
-  set lessons_offered = excluded.lessons_offered;
-
   with desired as (
     select distinct i.cohort_id
     from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
@@ -5757,6 +5845,29 @@ begin
       select 1
       from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
       where i.cohort_id = e.cohort_id
+    );
+
+  -- Keep the caller's trainer assignment until all edits and replacements are saved.
+  with desired as (
+    select distinct on (trainer.person_id) trainer.person_id, trainer.lessons_offered
+    from unnest(coalesce(trainers, '{}'::event_trainer_input[]))
+      with ordinality trainer(person_id, lessons_offered, position)
+    order by trainer.person_id, trainer.position
+  )
+  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
+  select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
+  from event_instance stored_event
+  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
+  cross join desired
+  on conflict (instance_id, person_id) do update
+  set lessons_offered = excluded.lessons_offered;
+
+  delete from event_instance_trainer e
+  where e.instance_id = any(v_saved_event_ids)
+    and not exists (
+      select 1
+      from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
+      where trainer.person_id = e.person_id
     );
 
   return query
@@ -6685,33 +6796,6 @@ CREATE FUNCTION public.update_tenant_settings_key(path text[], new_value jsonb) 
   where tenant_id=current_tenant_id()
   returning *;
 $$;
-
-
---
--- Name: announcement; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.announcement (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    author_id bigint,
-    title text NOT NULL,
-    body text NOT NULL,
-    is_sticky boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone,
-    scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone,
-    status public.announcement_status DEFAULT 'draft'::public.announcement_status NOT NULL,
-    CONSTRAINT announcement_schedule_check CHECK (((scheduled_since IS NULL) OR (scheduled_until IS NULL) OR (scheduled_since < scheduled_until)))
-);
-
-
---
--- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.announcement IS '@omit create';
 
 
 --
@@ -14352,7 +14436,7 @@ CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
 -- Name: users admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY admin_all ON public.users TO administrator USING (true);
 
 
 --
@@ -14504,13 +14588,6 @@ CREATE POLICY admin_view ON public.security_event FOR SELECT TO administrator US
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: users all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
-
-
---
 -- Name: announcement; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -14656,6 +14733,13 @@ CREATE POLICY current_tenant ON public.dokumenty AS RESTRICTIVE USING ((tenant_i
 
 
 --
+-- Name: event_external_registration current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_external_registration AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: event_instance current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14681,6 +14765,13 @@ CREATE POLICY current_tenant ON public.event_instance_target_cohort AS RESTRICTI
 --
 
 CREATE POLICY current_tenant ON public.event_instance_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: event_lesson_demand current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.event_lesson_demand AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -14786,6 +14877,13 @@ CREATE POLICY current_tenant ON public.transaction AS RESTRICTIVE USING ((tenant
 --
 
 CREATE POLICY delete_my ON public.event_instance_registration FOR DELETE USING (((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])) OR (couple_id = ANY (( SELECT public.current_couple_ids() AS current_couple_ids)::bigint[]))));
+
+
+--
+-- Name: membership_application delete_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY delete_my ON public.membership_application FOR DELETE USING (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
 
 
 --
@@ -14898,6 +14996,13 @@ CREATE POLICY insert_my ON public.event_instance_registration FOR INSERT WITH CH
 
 
 --
+-- Name: membership_application insert_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY insert_my ON public.membership_application FOR INSERT WITH CHECK (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
+
+
+--
 -- Name: membership_application manage_admin; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14905,17 +15010,10 @@ CREATE POLICY manage_admin ON public.membership_application TO administrator USI
 
 
 --
--- Name: membership_application manage_my; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY manage_my ON public.membership_application USING ((created_by = public.current_user_id()));
-
-
---
 -- Name: users manage_own; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY manage_own ON public.users USING ((id = public.current_user_id())) WITH CHECK ((id = public.current_user_id()));
+CREATE POLICY manage_own ON public.users USING ((id = ( SELECT public.current_user_id() AS current_user_id)));
 
 
 --
@@ -14929,7 +15027,7 @@ CREATE POLICY member_read ON public.scoreboard_manual_adjustment FOR SELECT USIN
 -- Name: account member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.account FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.account FOR SELECT TO member USING ((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));
 
 
 --
@@ -15003,35 +15101,36 @@ CREATE POLICY member_view ON public.event_series FOR SELECT TO member USING ((EX
 -- Name: payment member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.payment FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.payment FOR SELECT TO member USING ((id = ANY (ARRAY( SELECT app_private.visible_payment_ids() AS visible_payment_ids))));
 
 
 --
 -- Name: payment_debtor member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.payment_debtor FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.payment_debtor FOR SELECT TO member USING ((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));
 
 
 --
 -- Name: payment_recipient member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING ((account_id = ANY (ARRAY( SELECT public.current_account_ids() AS current_account_ids))));
 
 
 --
 -- Name: posting member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.posting FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.posting FOR SELECT TO member USING ((account_id = ANY (ARRAY( SELECT public.current_account_ids() AS current_account_ids))));
 
 
 --
 -- Name: transaction member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.transaction FOR SELECT TO member USING (((id = ANY (ARRAY( SELECT posting.transaction_id
+   FROM public.posting))) OR (payment_id = ANY (ARRAY( SELECT app_private.visible_payment_ids() AS visible_payment_ids)))));
 
 
 --
@@ -15329,7 +15428,9 @@ CREATE POLICY trainer_manage ON public.announcement_attachment TO trainer USING 
 -- Name: announcement_audience trainer_manage; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_manage ON public.announcement_audience TO trainer USING (true);
+CREATE POLICY trainer_manage ON public.announcement_audience TO trainer USING ((announcement_id IN ( SELECT announcement.id
+   FROM public.announcement
+  WHERE (announcement.author_id = ( SELECT public.current_user_id() AS current_user_id)))));
 
 
 --
@@ -15343,21 +15444,21 @@ CREATE POLICY trainer_manage_own ON public.announcement TO trainer USING ((autho
 -- Name: event_external_registration trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
+CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
 
 
 --
 -- Name: event_instance_trainer trainer_same_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
+CREATE POLICY trainer_same_tenant ON public.event_instance_trainer TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
 
 
 --
 -- Name: event_instance trainer_select; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USING (app_private.can_trainer_edit_instance(id));
+CREATE POLICY trainer_select ON public.event_instance FOR SELECT TO trainer USING (((cardinality(manager_person_ids) = 0) OR (manager_person_ids && ( SELECT public.current_person_ids() AS current_person_ids))));
 
 
 --
@@ -15388,6 +15489,13 @@ CREATE POLICY trainer_update ON public.event_instance_registration FOR UPDATE TO
 ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: membership_application update_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY update_my ON public.membership_application FOR UPDATE USING (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status])))) WITH CHECK (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
+
+
+--
 -- Name: file uploader_manage; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15414,10 +15522,26 @@ CREATE POLICY view_all ON public.cohort_membership FOR SELECT USING (true);
 
 
 --
+-- Name: membership_application view_my; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_my ON public.membership_application FOR SELECT USING ((created_by = ( SELECT public.current_user_id() AS current_user_id)));
+
+
+--
 -- Name: user_proxy view_personal; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = public.current_user_id()));
+CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING (((user_id = ( SELECT public.current_user_id() AS current_user_id)) OR (id = ANY (ARRAY( SELECT app_private.visible_user_proxy_ids() AS visible_user_proxy_ids)))));
+
+
+--
+-- Name: users view_shared_person; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY view_shared_person ON public.users FOR SELECT USING ((id = ANY (ARRAY( SELECT user_proxy.user_id
+   FROM public.user_proxy
+  WHERE (user_proxy.status = 'active'::public.relationship_status)))));
 
 
 --
@@ -15620,6 +15744,13 @@ REVOKE ALL ON FUNCTION app_private.event_share_claims(p_tenant_id bigint, p_shar
 
 
 --
+-- Name: FUNCTION normalize_name(text); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.normalize_name(text) TO anonymous;
+
+
+--
 -- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -15645,6 +15776,13 @@ GRANT ALL ON FUNCTION app_private.refresh_event_instance_manager_person_ids(p_in
 --
 
 REVOKE ALL ON FUNCTION app_private.refresh_event_instance_stats(p_instance_id bigint) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION relationship_status_next(ts timestamp with time zone, range tstzrange, current public.relationship_status); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.relationship_status_next(ts timestamp with time zone, range tstzrange, current public.relationship_status) TO administrator;
 
 
 --
@@ -15711,10 +15849,24 @@ GRANT ALL ON FUNCTION app_private.visible_file_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION visible_payment_ids(); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.visible_payment_ids() TO anonymous;
+
+
+--
 -- Name: FUNCTION visible_person_ids(); Type: ACL; Schema: app_private; Owner: -
 --
 
 GRANT ALL ON FUNCTION app_private.visible_person_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION visible_user_proxy_ids(); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.visible_user_proxy_ids() TO anonymous;
 
 
 --
@@ -15799,6 +15951,20 @@ GRANT SELECT ON TABLE public.activity_timeline_item TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[], p_cohort_id bigint, p_kinds public.activity_timeline_kind[], p_event_types public.event_type[]) TO anonymous;
+
+
+--
+-- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.announcement TO anonymous;
+
+
+--
+-- Name: FUNCTION announcement_author_name(a public.announcement); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.announcement_author_name(a public.announcement) TO anonymous;
 
 
 --
@@ -15904,6 +16070,13 @@ GRANT ALL ON FUNCTION public.create_person(person_id bigint, INOUT p public.pers
 --
 
 GRANT ALL ON FUNCTION public.csts_athlete(idt integer) TO anonymous;
+
+
+--
+-- Name: FUNCTION current_account_ids(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_account_ids() TO anonymous;
 
 
 --
@@ -16536,13 +16709,6 @@ GRANT ALL ON TABLE public.tenant_settings TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.update_tenant_settings_key(path text[], new_value jsonb) TO administrator;
-
-
---
--- Name: TABLE announcement; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.announcement TO anonymous;
 
 
 --
@@ -17418,5 +17584,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict plIorjXY0rcSts4rUZfbcRt2zO9RVO4d1zPtnot43IcHTX3PHgnWecgeF0V3CUB
+\unrestrict wRGzoG0GCcGEh9svofSq4ynreUFkn5FZIH3t5126XiMCmffntewJdf0np2uFgnF
 

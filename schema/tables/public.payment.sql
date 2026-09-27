@@ -38,7 +38,7 @@ ALTER TABLE ONLY public.payment
 
 CREATE POLICY admin_manage ON public.payment TO administrator USING (true);
 CREATE POLICY current_tenant ON public.payment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.payment FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.payment FOR SELECT TO member USING ((id = ANY (ARRAY( SELECT app_private.visible_payment_ids() AS visible_payment_ids))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR EACH ROW EXECUTE FUNCTION app_private.tg_payment__fill_accounting_period();

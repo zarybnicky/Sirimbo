@@ -28,7 +28,7 @@ ALTER TABLE ONLY public.user_proxy
     ADD CONSTRAINT user_proxy_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.user_proxy TO administrator USING (true);
-CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING ((user_id = public.current_user_id()));
+CREATE POLICY view_personal ON public.user_proxy FOR SELECT USING (((user_id = ( SELECT public.current_user_id() AS current_user_id)) OR (id = ANY (ARRAY( SELECT app_private.visible_user_proxy_ids() AS visible_user_proxy_ids)))));
 
 CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.user_proxy FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

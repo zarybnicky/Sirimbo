@@ -52,8 +52,11 @@ ALTER TABLE ONLY public.membership_application
     ADD CONSTRAINT membership_application_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY current_tenant ON public.membership_application AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY delete_my ON public.membership_application FOR DELETE USING (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
+CREATE POLICY insert_my ON public.membership_application FOR INSERT WITH CHECK (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
 CREATE POLICY manage_admin ON public.membership_application TO administrator USING (true);
-CREATE POLICY manage_my ON public.membership_application USING ((created_by = public.current_user_id()));
+CREATE POLICY update_my ON public.membership_application FOR UPDATE USING (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status])))) WITH CHECK (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
+CREATE POLICY view_my ON public.membership_application FOR SELECT USING ((created_by = ( SELECT public.current_user_id() AS current_user_id)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.membership_application FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

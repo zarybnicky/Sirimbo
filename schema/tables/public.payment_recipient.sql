@@ -24,7 +24,7 @@ ALTER TABLE ONLY public.payment_recipient
 
 CREATE POLICY admin_manage ON public.payment_recipient TO administrator USING (true);
 CREATE POLICY current_tenant ON public.payment_recipient AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING (true);
+CREATE POLICY member_view ON public.payment_recipient FOR SELECT TO member USING ((account_id = ANY (ARRAY( SELECT public.current_account_ids() AS current_account_ids))));
 
 CREATE INDEX payment_recipient_account_id_idx ON public.payment_recipient USING btree (account_id);
 CREATE INDEX payment_recipient_payment_id_idx ON public.payment_recipient USING btree (payment_id);

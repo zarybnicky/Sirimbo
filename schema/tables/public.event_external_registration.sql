@@ -48,10 +48,11 @@ CREATE POLICY admin_all ON public.event_external_registration TO administrator U
 CREATE POLICY admin_my ON public.event_external_registration TO member USING ((( SELECT (NOT instance.is_locked)
    FROM public.event_instance instance
   WHERE (event_external_registration.instance_id = instance.id)) AND (created_by = public.current_user_id())));
+CREATE POLICY current_tenant ON public.event_external_registration AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY register_public ON public.event_external_registration FOR INSERT TO anonymous WITH CHECK (( SELECT instance.is_public
    FROM public.event_instance instance
   WHERE (event_external_registration.instance_id = instance.id)));
-CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id)) WITH CHECK (true);
+CREATE POLICY trainer_same_tenant ON public.event_external_registration TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
 CREATE POLICY view_visible_instance ON public.event_external_registration FOR SELECT TO member USING ((instance_id IN ( SELECT event_instance.id
    FROM public.event_instance)));
 

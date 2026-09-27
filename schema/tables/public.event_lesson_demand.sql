@@ -29,6 +29,7 @@ ALTER TABLE ONLY public.event_lesson_demand
     ADD CONSTRAINT event_lesson_demand_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_instance_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.event_lesson_demand TO administrator USING (true);
+CREATE POLICY current_tenant ON public.event_lesson_demand AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY view_visible_instance ON public.event_lesson_demand FOR SELECT USING ((registration_id IN ( SELECT event_instance_registration.id
    FROM public.event_instance_registration)));
 
