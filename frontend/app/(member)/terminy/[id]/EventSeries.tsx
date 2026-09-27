@@ -48,6 +48,9 @@ function eventDetails(event: SeriesInstance): Detail[] {
     .map((x) => x.personId)
     .toSorted()
     .join(',');
+  const cohorts = event.targetCohortsList
+    .flatMap((x) => (x.cohort ? [x.cohort] : []))
+    .toSorted((a, b) => a.id.localeCompare(b.id));
 
   return [
     { name: 'Čas', key: time, label: time },
@@ -72,6 +75,14 @@ function eventDetails(event: SeriesInstance): Detail[] {
         : null,
     trainers
       ? { name: 'Trenéři', key: trainerKey, label: trainers, missing: 'Bez trenéra' }
+      : null,
+    cohorts.length > 0
+      ? {
+          name: 'Skupiny',
+          key: cohorts.map((x) => x.id).join(','),
+          label: cohorts.map((x) => x.name).join(', '),
+          missing: 'Bez skupiny',
+        }
       : null,
   ];
 }

@@ -36,6 +36,13 @@ query EventSeries($id: BigInt!) {
           name
         }
       }
+      targetCohortsList {
+        cohortId
+        cohort {
+          id
+          name
+        }
+      }
     }
   }
 }

@@ -55,13 +55,6 @@ export function Club() {
         requireAdmin: true,
         render: () => <TenantForm />,
       },
-      {
-        id: 'tenant.addLocation',
-        label: 'Přidat místo',
-        icon: PinIcon,
-        requireAdmin: true,
-        render: () => <LocationForm />,
-      },
     ],
     tenant?.tenant,
   );
@@ -79,11 +72,21 @@ export function Club() {
           <h2 className="mb-2 text-lg font-bold">O klubu</h2>
           {club.description?.trim() ? (
             <RichTextView value={club.description} />
-          ) : (
-            <p className="text-sm text-neutral-10">Informace nejsou vyplněné.</p>
-          )}
+          ) : auth.isAdmin ? (
+            <p className="text-sm text-neutral-10">(Nevyplněno)</p>
+          ) : null}
 
-          <h2 className="mt-4 mb-2 text-lg font-bold">Místa</h2>
+          <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="mb-2 text-lg font-bold">Místa</h2>
+            {auth.isAdmin && (
+              <Dialog>
+                <DialogTrigger.Add size="sm" />
+                <DialogContent>
+                  <LocationForm />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
 
           {club.locationsList.length > 0 ? (
             club.locationsList.map((item) => (
@@ -116,7 +119,7 @@ export function Club() {
               </ActionRow>
             ))
           ) : (
-            <p className="text-sm text-neutral-10">Nejsou přidané žádná místa.</p>
+            <p className="text-sm text-neutral-10">Nejsou přidána žádná místa.</p>
           )}
         </>
       ),

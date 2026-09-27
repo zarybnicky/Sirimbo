@@ -69,6 +69,29 @@ export function Location({
         breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }, { label: location.name }]}
       />
 
+      <h2 className="mb-2 text-lg font-bold">Právě probíhá</h2>
+      {ongoingEvents.length > 0 ? (
+        <div className="flex flex-col gap-1">
+          {ongoingEvents.map((event) => (
+            <EventButton key={event.id} instance={event} viewer="auto" showDate />
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-neutral-10">Nic právě neprobíhá.</p>
+      )}
+
+      {upcomingEvents.length > 0 && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Nadcházející</h2>
+          <div className="flex flex-col gap-1">
+            {upcomingEvents.map((event) => (
+              <EventButton key={event.id} instance={event} viewer="auto" showDate />
+            ))}
+          </div>
+        </>
+      )}
+
+      <h2 className="mt-4 mb-2 text-lg font-bold">Fotografie</h2>
       {coverImage && (
         <a
           href={coverImage.url}
@@ -112,34 +135,21 @@ export function Location({
         </div>
       )}
 
-      <h2 className="mb-2 text-lg font-bold">Adresa</h2>
+      {!coverImage && images.length === 0 && (
+        <p className="text-sm text-neutral-10">Nejsou nahrané žádné fotografie.</p>
+      )}
+
+      <h2 className="mt-4 mb-2 text-lg font-bold">O místě</h2>
+      {location.description?.trim() ? (
+        <RichTextView className="mb-2" value={location.description} />
+      ) : (
+        <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
+      )}
+
       {location.address ? (
         <LocationAddress address={location.address} />
       ) : (
-        <p className="text-sm text-neutral-10">Adresa není vyplněná.</p>
-      )}
-      <RichTextView value={location.description} />
-
-      <h2 className="mt-4 mb-2 text-lg font-bold">Právě probíhá</h2>
-      {ongoingEvents.length > 0 ? (
-        <div className="flex flex-col gap-1">
-          {ongoingEvents.map((event) => (
-            <EventButton key={event.id} instance={event} viewer="auto" showDate />
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-neutral-10">Nic právě neprobíhá.</p>
-      )}
-
-      {upcomingEvents.length > 0 && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Nadcházející</h2>
-          <div className="flex flex-col gap-1">
-            {upcomingEvents.map((event) => (
-              <EventButton key={event.id} instance={event} viewer="auto" showDate />
-            ))}
-          </div>
-        </>
+        <p className="text-sm text-neutral-10">(Adresa nevyplněna)</p>
       )}
 
       {location.accessEventsList.length > 0 && (
