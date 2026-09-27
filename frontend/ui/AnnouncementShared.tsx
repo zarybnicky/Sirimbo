@@ -1,9 +1,6 @@
 import { Paperclip, Pencil } from 'lucide-react';
 import type { AnnouncementFragment, AnnouncementStatus } from '@/graphql/Announcement';
-import {
-  announcementActions,
-  canManageAnnouncement,
-} from '@/lib/actions/announcement';
+import { announcementActions, canManageAnnouncement } from '@/lib/actions/announcement';
 import { type Action, useActions } from '@/lib/actions';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
@@ -26,13 +23,7 @@ export function AnnouncementStatusBadge({
   const label = STATUS_LABEL[status];
   if (!label) return null;
 
-  return (
-    <span
-      className={badgeCls({ variant: 'accent', className })}
-    >
-      {label}
-    </span>
-  );
+  return <span className={badgeCls({ variant: 'accent', className })}>{label}</span>;
 }
 
 export function useAnnouncementActions(
@@ -59,11 +50,6 @@ export function useAnnouncementActions(
 }
 
 export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
-  const authorName = item.author
-    ? [item.author?.uJmeno, item.author?.uPrijmeni].filter(Boolean).join(' ')
-    : undefined;
-  const attachmentCount = item.explicitAttachments.nodes.length;
-
   return (
     <>
       <div className="flex items-center gap-1 text-sm text-neutral-11">
@@ -84,18 +70,18 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
             </time>
           </>
         )}
-        {authorName && (
+        {item.authorName && (
           <>
             <span>-</span>
-            <span>{authorName}</span>
+            <span>{item.authorName}</span>
           </>
         )}
         <AnnouncementStatusBadge status={item.status} />
-        {attachmentCount > 0 && (
+        {item.explicitAttachments.nodes.length > 0 && (
           <>
             <span>-</span>
             <Paperclip aria-hidden className="size-3.5" />
-            <span>{attachmentCount}</span>
+            <span>{item.explicitAttachments.nodes.length}</span>
           </>
         )}
       </div>

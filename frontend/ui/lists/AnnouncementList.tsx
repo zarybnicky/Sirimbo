@@ -112,45 +112,39 @@ function AnnouncementListPage({
   const hasMore = !!data?.announcements?.pageInfo.hasNextPage;
 
   const nodes = React.useMemo(() => {
-    return (data?.announcements?.nodes || []).map((item) => {
-      const authorName = item.author
-        ? [item.author.uJmeno, item.author.uPrijmeni].filter(Boolean).join(' ')
-        : undefined;
-
-      return {
-        id: item.id,
-        title: item.title,
-        status: item.status,
-        subtitle: (
-          <div className="flex flex-wrap justify-between items-baseline gap-4">
-            <div className="flex flex-col gap-1">
-              {authorName && <div>{authorName}</div>}
-              <div className="flex items-center gap-1 text-xs">
-                <time
-                  dateTime={item.createdAt}
-                  title={numericFullFormatter.format(new Date(item.createdAt))}
-                >
-                  {numericDateWithYearFormatter.format(new Date(item.createdAt))}
-                </time>
-                {item.updatedAt !== null && (
-                  <>
-                    <span>-</span>
-                    <time
-                      dateTime={item.updatedAt}
-                      title={numericFullFormatter.format(new Date(item.updatedAt))}
-                    >
-                      Upraveno
-                    </time>
-                  </>
-                )}
-              </div>
+    return (data?.announcements?.nodes || []).map((item) => ({
+      id: item.id,
+      title: item.title,
+      status: item.status,
+      subtitle: (
+        <div className="flex flex-wrap justify-between items-baseline gap-4">
+          <div className="flex flex-col gap-1">
+            {item.authorName && <div>{item.authorName}</div>}
+            <div className="flex items-center gap-1 text-xs">
+              <time
+                dateTime={item.createdAt}
+                title={numericFullFormatter.format(new Date(item.createdAt))}
+              >
+                {numericDateWithYearFormatter.format(new Date(item.createdAt))}
+              </time>
+              {item.updatedAt !== null && (
+                <>
+                  <span>-</span>
+                  <time
+                    dateTime={item.updatedAt}
+                    title={numericFullFormatter.format(new Date(item.updatedAt))}
+                  >
+                    Upraveno
+                  </time>
+                </>
+              )}
             </div>
-            <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
           </div>
-        ),
-        href: `/nastenka/${item.id}`,
-      };
-    });
+          <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
+        </div>
+      ),
+      href: `/nastenka/${item.id}`,
+    }));
   }, [data]);
 
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);

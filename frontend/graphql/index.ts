@@ -626,6 +626,8 @@ export type Announcement = {
   /** Reads a single `User` that is related to this `Announcement`. */
   author: Maybe<User>;
   authorId: Maybe<Scalars['BigInt']['output']>;
+  /** Author display name without exposing the author login account. */
+  authorName: Maybe<Scalars['String']['output']>;
   body: Scalars['String']['output'];
   createdAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
@@ -9875,6 +9877,7 @@ export type GraphCacheResolvers = {
     attachments?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
     author?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<User> | string>,
     authorId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    authorName?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
     body?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -11682,6 +11685,7 @@ export type GraphCacheUpdaters = {
     attachments?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementAttachmentsArgs>,
     author?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     authorId?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
+    authorName?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     body?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, Record<string, never>>,

@@ -740,6 +740,9 @@ type Announcement {
   """Reads a single `User` that is related to this `Announcement`."""
   author: User
   authorId: BigInt
+
+  """Author display name without exposing the author login account."""
+  authorName: String
   body: String!
   createdAt: Datetime!
   id: BigInt!

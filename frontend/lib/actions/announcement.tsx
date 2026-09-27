@@ -8,7 +8,7 @@ import {
 } from '@/graphql/Announcement';
 
 export function canManageAnnouncement({ auth, item }: ActionContext<AnnouncementFragment>) {
-  return auth.isAdmin || (auth.isTrainer && item.author?.id === auth.user?.id);
+  return auth.isAdmin || (auth.isTrainer && item.authorId === auth.user?.id);
 }
 
 export const announcementActions = defineActions<AnnouncementFragment>()([

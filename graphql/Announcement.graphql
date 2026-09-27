@@ -18,11 +18,8 @@ fragment Announcement on Announcement {
   scheduledUntil
   status
   isSticky
-  author {
-    id
-    uJmeno
-    uPrijmeni
-  }
+  authorId
+  authorName
   announcementAudiences {
     nodes {
       ...AnnouncementAudience
