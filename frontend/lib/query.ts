@@ -401,7 +401,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createCohort(_result, _args, cache, _info) {
-        cache.invalidate('Query', 'getCurrentTenant');
         invalidateQueryFields(cache, ['cohortsList']);
       },
 

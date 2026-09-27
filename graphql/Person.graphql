@@ -85,6 +85,9 @@ query Person($id: BigInt!) {
 }
 
 query PersonPayments($id: BigInt!) {
+  tenant: getCurrentTenant {
+    bankAccount
+  }
   person(id: $id) {
     ...PersonBasic
     unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {

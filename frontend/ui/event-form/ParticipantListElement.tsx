@@ -9,7 +9,7 @@ import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatCoupleName } from '@/ui/format';
 import { cn } from '@/lib/cn';
 import { useQuery } from 'urql';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { EventFormOptionsDocument } from '@/graphql/Event';
 
 export function ParticipantListElement({
   control,
@@ -22,7 +22,7 @@ export function ParticipantListElement({
 }) {
   const [open, setOpen] = React.useState<'couple' | 'person' | null>(null);
   const { fields, append, remove } = useFieldArray({ name: 'registrations', control });
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data: tenant }] = useQuery({ query: EventFormOptionsDocument });
 
   const possibleCouples = React.useMemo(
     () =>
@@ -36,8 +36,8 @@ export function ParticipantListElement({
 
   const possiblePeople = React.useMemo(
     () =>
-      (tenant?.tenant?.tenantMembershipsList ?? []).flatMap(({ person, status }) =>
-        status === 'ACTIVE' && person ? [{ id: person.id, label: person.name }] : [],
+      (tenant?.tenant?.tenantMembershipsList ?? []).flatMap(({ person }) =>
+        person ? [{ id: person.id, label: person.name }] : [],
       ),
     [tenant],
   );

@@ -1,4 +1,4 @@
-import { CurrentTenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
+import { TenantFormDocument, UpdateTenantDocument } from '@/graphql/Tenant';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
@@ -16,7 +16,7 @@ const Form = z.object({
 });
 
 export function TenantForm() {
-  const [{ data }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data }] = useQuery({ query: TenantFormDocument });
   const { onSuccess } = useFormResult();
   const [result, update] = useMutation(UpdateTenantDocument);
 

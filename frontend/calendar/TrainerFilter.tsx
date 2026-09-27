@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { trainerIdsFilterAtom } from '@/calendar/state';
 import { useQuery } from 'urql';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { TrainerOptionsDocument } from '@/graphql/Tenant';
 import {
   DropdownMenu,
   DropdownMenuButton,
@@ -28,7 +28,7 @@ export function TrainerFilter({
 }) {
   const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
   const [{ data: tenant }] = useQuery({
-    query: CurrentTenantDocument,
+    query: TrainerOptionsDocument,
     pause: availableTrainers !== undefined,
   });
   const trainers =

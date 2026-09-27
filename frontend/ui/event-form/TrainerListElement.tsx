@@ -9,7 +9,7 @@ import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
 import { useQuery } from 'urql';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { EventFormOptionsDocument } from '@/graphql/Event';
 
 export function TrainerListElement({
   control,
@@ -23,7 +23,7 @@ export function TrainerListElement({
   const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
   const [type, value] = useWatch({ control, name: ['type', 'trainers'] });
 
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data: tenant }] = useQuery({ query: EventFormOptionsDocument });
   const trainers = React.useMemo(
     () =>
       (tenant?.tenant?.tenantTrainersList ?? []).flatMap(({ person }) =>

@@ -1,4 +1,4 @@
-import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { EventFormOptionsDocument } from '@/graphql/Event';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import React from 'react';
@@ -10,7 +10,7 @@ export function LocationField({ control }: { control: EventFormControl }) {
   const locationId = useWatch({ control, name: 'locationId' });
   const { field: locationText } = useController({ control, name: 'locationText' });
   const { onChange: setLocationText, value: locationTextValue } = locationText;
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data: tenant }] = useQuery({ query: EventFormOptionsDocument });
   const locationOptions = React.useMemo(
     () => [
       { id: 'none', label: 'Žádné' },

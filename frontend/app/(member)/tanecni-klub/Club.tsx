@@ -12,7 +12,7 @@ import { useAuth } from '@/lib/auth';
 import { Pencil, PinIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
+import { ClubDocument } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { locationActions } from '@/lib/actions/location';
@@ -28,7 +28,7 @@ export function Club() {
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
+  const [{ data: tenant }] = useQuery({ query: ClubDocument });
   const [{ data: applications }] = useQuery({
     query: PendingMembershipApplicationsDocument,
   });

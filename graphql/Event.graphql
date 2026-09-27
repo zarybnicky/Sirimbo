@@ -351,6 +351,39 @@ query EventRegistrationCandidates {
   }
 }
 
+query EventFormOptions {
+  tenant: getCurrentTenant {
+    locationsList: tenantLocationsList {
+      id
+      name
+    }
+    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      person {
+        id
+        name
+      }
+    }
+    tenantMembershipsList(condition: { status: ACTIVE }) {
+      person {
+        id
+        name
+      }
+    }
+    couplesList {
+      id
+      status
+      man {
+        id
+        name
+      }
+      woman {
+        id
+        name
+      }
+    }
+  }
+}
+
 query CampTrainerOverview($id: BigInt!) {
   eventInstance(id: $id) {
     id

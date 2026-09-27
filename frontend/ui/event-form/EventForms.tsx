@@ -4,11 +4,11 @@ import {
 } from '@/calendar/eventDefaults';
 import {
   EventRegistrationsDocument,
+  EventFormOptionsDocument,
   SaveEventsDocument,
   type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { useTenantConfig } from '@/lib/auth';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
@@ -106,7 +106,7 @@ function EventEditor({
   const { onSuccess } = useFormResult();
   const [result, saveEvents] = useMutation(SaveEventsDocument);
   const [{ data: tenant }] = useQuery({
-    query: CurrentTenantDocument,
+    query: EventFormOptionsDocument,
     pause: mode === 'edit',
   });
   const [splitLessons, setSplitLessons] = React.useState(false);
@@ -135,7 +135,7 @@ function EventEditor({
           : [],
       ),
       ...(tenant?.tenant?.tenantMembershipsList ?? []).flatMap((membership) =>
-        membership.status === 'ACTIVE' && membership.person?.id
+        membership.person?.id
           ? [{ id: `person:${membership.person.id}`, label: membership.person.name }]
           : [],
       ),

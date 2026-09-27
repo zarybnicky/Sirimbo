@@ -1,6 +1,5 @@
 import { PostingFragment } from '@/graphql/Payment';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
-import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
@@ -21,8 +20,6 @@ import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { useQuery } from 'urql';
 
 export function PersonPaymentsView({ id }: { id: string }) {
-  const [{ data: tenant }] = useQuery({ query: CurrentTenantDocument });
-
   const [query] = useQuery({
     query: PersonPaymentsDocument,
     variables: { id },
@@ -46,7 +43,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
             <dt>Částka</dt>
             <dd>{moneyFormatter.format(x.price)}</dd>
             <dt>Účet</dt>
-            <dd>1806875329/0800</dd>
+            <dd>{query.data?.tenant?.bankAccount || '-'}</dd>
             <dt>Variabilní symbol</dt>
             <dd>{x.payment?.variableSymbol}</dd>
             <dt>Specifický symbol</dt>
@@ -64,10 +61,10 @@ export function PersonPaymentsView({ id }: { id: string }) {
             )}
           </dl>
 
-          {tenant?.tenant?.bankAccount && x.price?.amount && (
+          {query.data?.tenant?.bankAccount && x.price?.amount && (
             <div className="border-4 border-transparent dark:border-white w-fit">
               <QRPayment
-                acc={tenant.tenant.bankAccount}
+                acc={query.data.tenant.bankAccount}
                 am={x.price.amount}
                 cc={x.price.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}

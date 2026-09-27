@@ -1,31 +1,3 @@
-fragment Tenant on Tenant {
-  id
-  name
-  bankAccount
-  czIco
-  czDic
-  description
-  tenantAdministratorsList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-    ...TenantAdministrator
-  }
-  tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-    ...TenantTrainer
-  }
-  tenantMembershipsList(condition: { status: ACTIVE }) {
-    ...TenantMembership
-  }
-  locationsList: tenantLocationsList {
-    ...LocationSummary
-  }
-  cohortsList {
-    id
-    name
-  }
-  couplesList {
-    ...Couple
-  }
-}
-
 fragment LocationSummary on TenantLocation {
   id
   name
@@ -78,9 +50,41 @@ mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
   }
 }
 
-query CurrentTenant {
+query Club {
   tenant: getCurrentTenant {
-    ...Tenant
+    id
+    description
+    tenantAdministratorsList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      ...TenantAdministrator
+    }
+    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      ...TenantTrainer
+    }
+    locationsList: tenantLocationsList {
+      ...LocationSummary
+    }
+  }
+}
+
+query TenantForm {
+  tenant: getCurrentTenant {
+    id
+    name
+    bankAccount
+    description
+  }
+}
+
+query TrainerOptions {
+  tenant: getCurrentTenant {
+    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      person {
+        id
+        name
+        firstName
+        lastName
+      }
+    }
   }
 }
 
