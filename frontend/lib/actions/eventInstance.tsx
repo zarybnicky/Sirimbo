@@ -17,7 +17,7 @@ import {
 import { type ActionContext, defineActions } from '@/lib/actions';
 import { EditEventForm } from '@/ui/event-form/EventForms';
 import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
-import { EditEventInstanceDescriptionForm } from '@/ui/forms/EditEventInstanceDescriptionForm';
+import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm.tsx';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
@@ -57,9 +57,7 @@ function registrationActionLabel({
     return `Přihlášky (${item.registrationInfo?.registrations ?? 0})`;
   }
 
-  return !auth.isLoggedIn || !item.registrationInfo?.my
-    ? 'Přihlásit'
-    : 'Moje přihlášky';
+  return !auth.isLoggedIn || !item.registrationInfo?.my ? 'Přihlásit' : 'Moje přihlášky';
 }
 
 export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
@@ -92,7 +90,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
     visible: canManageInstance,
-    render: ({ item }) => <EditEventInstanceDescriptionForm id={item.id} />,
+    render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
     },

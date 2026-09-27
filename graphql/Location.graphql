@@ -1,0 +1,56 @@
+fragment Location on TenantLocation {
+  id
+  tenantId
+  name
+  description
+  isPublic
+  coverImageId
+  coverImage {
+    ...File
+  }
+  imagesList {
+    fileId
+    file {
+      ...File
+    }
+  }
+  address {
+    city
+    conscriptionNumber
+    district
+    orientationNumber
+    postalCode
+    region
+    street
+  }
+}
+
+query Location($id: BigInt!) {
+  location: tenantLocation(id: $id) {
+    ...Location
+  }
+}
+
+query LocationPage($id: BigInt!, $start: Datetime!) {
+  location: tenantLocation(id: $id) {
+    ...Location
+    accessEventsList(first: 20, orderBy: OCCURRED_AT_DESC) {
+      ...AccessEvent
+    }
+  }
+  events: eventInstancesForRangeList(
+    first: 10
+    startRange: $start
+    locationIds: [$id]
+  ) {
+    ...EventWithTrainer
+  }
+}
+
+mutation UpsertLocation($input: UpsertLocationInput!) {
+  upsertLocation(input: $input) {
+    tenantLocation {
+      ...Location
+    }
+  }
+}

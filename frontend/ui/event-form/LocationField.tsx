@@ -14,7 +14,7 @@ export function LocationField({ control }: { control: EventFormControl }) {
   const locationOptions = React.useMemo(
     () => [
       { id: 'none', label: 'Žádné' },
-      ...(tenant?.tenant?.tenantLocationsList?.map((location) => ({
+      ...(tenant?.tenant?.locationsList?.map((location) => ({
         id: location.id,
         label: location.name,
       })) ?? []),

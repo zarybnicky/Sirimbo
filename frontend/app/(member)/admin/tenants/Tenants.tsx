@@ -10,7 +10,7 @@ import { type Column, DataGrid } from 'react-data-grid';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { useQuery } from 'urql';
 import { formatAddress } from '@/ui/format.ts';
-import { TenantEditForm } from '@/ui/forms/EditTenantFormFull.tsx';
+import { TenantAdminEdit } from '@/ui/forms/TenantAdminForm.tsx';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -39,7 +39,7 @@ const columns: Column<TenantFullFragment>[] = [
         <Dialog>
           <DialogTrigger.Edit text="" size="md" variant="none" />
           <DialogContent>
-            <TenantEditForm tenant={row} />
+            <TenantAdminEdit tenant={row} />
           </DialogContent>
         </Dialog>
       );

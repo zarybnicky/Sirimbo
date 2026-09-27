@@ -40,8 +40,9 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
   const item = query.data?.tenantTrainer;
 
   React.useEffect(() => {
-    if (item) {
-      reset({
+    if (!item) return;
+    reset(
+      {
         since: item.since ? new Date(item.since) : null,
         until: item.until ? new Date(item.until) : null,
         memberPrice: Number.parseFloat(item.memberPrice45MinAmount || '0') || null,
@@ -51,8 +52,13 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
         createPayoutPayments: item.createPayoutPayments,
         isVisible: item.isVisible,
         isExternal: item.isExternal,
-      });
-    }
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

@@ -31,12 +31,15 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
   const item = query.data?.tenantMembership;
 
   React.useEffect(() => {
-    if (item) {
-      reset({
-        since: item.since ? new Date(item.since) : undefined,
-        until: item.until ? new Date(item.until) : undefined,
-      });
-    }
+    if (!item) return;
+    reset({
+      since: item.since ? new Date(item.since) : undefined,
+      until: item.until ? new Date(item.until) : undefined,
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

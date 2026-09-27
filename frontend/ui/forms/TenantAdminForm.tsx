@@ -30,7 +30,7 @@ const TenantFormSchema = z.object({
   }, 'Nastavení musí být JSON objekt.'),
 });
 
-export function TenantEditForm({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
+export function TenantAdminEdit({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(TenantFormSchema),
     defaultValues: {

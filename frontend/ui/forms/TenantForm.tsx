@@ -15,7 +15,7 @@ const Form = z.object({
   description: z.string(),
 });
 
-export function EditTenantForm() {
+export function TenantForm() {
   const [{ data }] = useQuery({ query: CurrentTenantDocument });
   const { onSuccess } = useFormResult();
   const [result, update] = useMutation(UpdateTenantDocument);

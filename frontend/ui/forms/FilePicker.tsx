@@ -1,4 +1,4 @@
-import { FileListDocument, type FileFragment } from '@/graphql/File';
+import { type FileFragment, FileListDocument } from '@/graphql/File';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { FieldHelper, FieldLabel } from '@/ui/form';
@@ -23,13 +23,20 @@ import {
   useController,
 } from 'react-hook-form';
 import { useQuery } from 'urql';
+import { isTruthy } from '@/lib/truthyFilter.ts';
 
 type Props = {
   value: string[];
   onChange: (value: string[]) => void;
+  imagesOnly?: boolean;
+  title?: string;
 };
 
-type UploadedFile = Pick<FileFragment, 'id' | 'name' | 'url'>;
+type UploadedFile = {
+  id: string;
+  name: string;
+  url: string;
+};
 
 const uploadedAtFormatter = new Intl.DateTimeFormat('cs-CZ', {
   dateStyle: 'short',
@@ -57,18 +64,17 @@ async function uploadFile(source: File): Promise<UploadedFile> {
   return response.json();
 }
 
-export function FilePicker({ value, onChange }: Props) {
+export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }: Props) {
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [error, setError] = React.useState<string>();
 
-  const files = (data?.files?.nodes ?? []).filter((file) => file.uploadedAt);
+  const files = (data?.files?.nodes ?? []).filter(
+    (x) => x.uploadedAt && (!imagesOnly || x.contentType?.startsWith('image/')),
+  );
   const selected = new Set(value);
   const filesById = new Map(files.map((file) => [file.id, file]));
-  const selectedFiles = value.flatMap((id) => {
-    const file = filesById.get(id);
-    return file ? [file] : [];
-  });
+  const selectedFiles = value.map((id) => filesById.get(id)).filter(isTruthy);
 
   const upload = async (input: FileList | null) => {
     const sources = [...(input ?? [])];
@@ -78,7 +84,6 @@ export function FilePicker({ value, onChange }: Props) {
     setError(undefined);
 
     const results = await Promise.allSettled(sources.map(uploadFile));
-
     const uploadedIds = results.flatMap((x) =>
       x.status === 'fulfilled' ? [x.value.id] : [],
     );
@@ -94,7 +99,7 @@ export function FilePicker({ value, onChange }: Props) {
 
   return (
     <section className="space-y-2 rounded-md border border-neutral-6 bg-neutral-1 p-2">
-      <h3 className="text-sm font-semibold text-neutral-12">Přílohy</h3>
+      <h3 className="text-sm font-semibold text-neutral-12">{title}</h3>
 
       {selectedFiles.length > 0 && (
         <ul className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
@@ -130,11 +135,12 @@ export function FilePicker({ value, onChange }: Props) {
           )}
         >
           <Upload />
-          {uploading ? 'Nahrávám…' : 'Nahrát soubory'}
+          {uploading ? 'Nahrávám…' : imagesOnly ? 'Nahrát obrázky' : 'Nahrát soubory'}
           <input
             className="sr-only"
             type="file"
             multiple
+            accept={imagesOnly ? 'image/*' : undefined}
             disabled={uploading}
             onChange={(event) => {
               void upload(event.currentTarget.files);
@@ -144,6 +150,7 @@ export function FilePicker({ value, onChange }: Props) {
         </label>
 
         <FileLibrary
+          title={imagesOnly ? 'Vybrat obrázky' : undefined}
           files={files}
           fetching={fetching}
           isSelected={(file) => selected.has(file.id)}
@@ -177,7 +184,7 @@ export function ImageUrlField<T extends FieldValues>({
   label: React.ReactNode;
 }) {
   const { field, fieldState } = useController({ control, name });
-  const {ref: inputRef } = field;
+  const { ref: inputRef } = field;
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [libraryOpen, setLibraryOpen] = React.useState(false);
@@ -448,7 +455,10 @@ function FileLibrary({
                           {file.isPublic && (
                             <>
                               <span aria-hidden="true">·</span>
-                              <span className="inline-flex items-center" title="Veřejný soubor">
+                              <span
+                                className="inline-flex items-center"
+                                title="Veřejný soubor"
+                              >
                                 <LockOpen className="size-3" aria-hidden="true" />
                                 <span className="sr-only">Veřejný soubor</span>
                               </span>

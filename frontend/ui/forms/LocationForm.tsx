@@ -1,22 +1,23 @@
-import {
-  CreateTenantLocationDocument,
-  TenantLocationDocument,
-  UpdateTenantLocationDocument,
-} from '@/graphql/Tenant';
+import { LocationDocument, UpsertLocationDocument } from '@/graphql/Location';
+import { FileListDocument } from '@/graphql/File';
 import { CheckboxElement } from '@/ui/fields/checkbox';
+import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
+import { FilePicker } from '@/ui/forms/FilePicker';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
   description: z.string().nullish(),
   isPublic: z.boolean().prefault(false),
+  imageIds: z.array(z.string()).prefault([]),
+  coverImageId: z.string().nullish(),
   address: z
     .object({
       city: z.string().nullish(),
@@ -30,27 +31,45 @@ const Form = z.object({
     .nullish(),
 });
 
-export function EditTenantLocationForm({ id = '' }: { id?: string }) {
+export function LocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
+    defaultValues: { imageIds: [], coverImageId: null },
   });
   const [query] = useQuery({
-    query: TenantLocationDocument,
+    query: LocationDocument,
     variables: { id },
     pause: !id,
   });
-  const [createResult, create] = useMutation(CreateTenantLocationDocument);
-  const [updateResult, update] = useMutation(UpdateTenantLocationDocument);
+  const [{ data: fileData }] = useQuery({ query: FileListDocument });
+  const [result, upsert] = useMutation(UpsertLocationDocument);
+  const imageIds = useController({ control, name: 'imageIds' }).field;
+  const coverImageId = useController({ control, name: 'coverImageId' }).field;
 
-  const item = query.data?.tenantLocation;
+  const item = query.data?.location;
+  const filesById = new Map(
+    [
+      ...(fileData?.files?.nodes ?? []),
+      ...(item?.imagesList.flatMap((x) => (x.file ? [x.file] : [])) ?? []),
+    ].map((file) => [file.id, file]),
+  );
+  const coverOptions = (imageIds.value ?? []).flatMap((id) => {
+    const file = filesById.get(id);
+    return file ? [{ id, label: file.displayName ?? file.name }] : [];
+  });
 
   React.useEffect(() => {
-    if (item) {
-      reset({
+    if (!item) return;
+    reset(
+      {
         name: item.name,
         description: item.description,
-        isPublic: !!item.isPublic,
+        isPublic: item.isPublic,
+        imageIds: item.imagesList.map((x) => x.fileId),
+        coverImageId: item.imagesList.some((x) => x.fileId === item.coverImageId)
+          ? item.coverImageId
+          : null,
         address: {
           street: item.address?.street || '',
           conscriptionNumber: item.address?.conscriptionNumber || '',
@@ -60,25 +79,33 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
           postalCode: item.address?.postalCode || '',
           region: item.address?.region || '',
         },
-      });
-    }
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    if (!Object.values(values.address || {}).some(Boolean)) {
-      values.address = null;
+    const { imageIds, coverImageId, ...location } = values;
+    if (!Object.values(location.address || {}).some(Boolean)) {
+      location.address = null;
     }
-    const result = await (id
-      ? update({ input: { id, patch: { ...values, isPublic: !!values.isPublic } } })
-      : create({
-          input: { tenantLocation: { ...values, isPublic: !!values.isPublic } },
-        }));
-    if (!result.error) onSuccess();
+    const saved = await upsert({
+      input: {
+        details: { id: id || undefined, ...location },
+        imageIds,
+        coverImageId,
+      },
+    });
+    if (!saved.error) onSuccess();
   };
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={createResult.error || updateResult.error} />
+      <FormError error={result.error} />
 
       <TextFieldElement control={control} name="name" label="Jméno" />
       <TextFieldElement control={control} name="description" label="Popis" />
@@ -107,6 +134,29 @@ export function EditTenantLocationForm({ id = '' }: { id?: string }) {
       <TextField label="Země" value="Česká republika" disabled />
 
       <CheckboxElement control={control} name="isPublic" label="Veřejné" />
+
+      <FilePicker
+        value={imageIds.value ?? []}
+        onChange={(value) => {
+          imageIds.onChange(value);
+          if (coverImageId.value && !value.includes(coverImageId.value)) {
+            coverImageId.onChange(null);
+          }
+        }}
+        imagesOnly
+        title="Fotografie"
+      />
+
+      {coverOptions.length > 0 && (
+        <ComboboxElement
+          control={control}
+          name="coverImageId"
+          label="Úvodní fotografie"
+          placeholder="Bez úvodní fotografie"
+          options={coverOptions}
+          helperText="Vyberte z fotografií místa."
+        />
+      )}
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton control={control}>Uložit změny</SubmitButton>

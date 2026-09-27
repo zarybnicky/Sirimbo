@@ -11,19 +11,24 @@ fragment Tenant on Tenant {
   tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
     ...TenantTrainer
   }
-  tenantLocationsList {
-    ...TenantLocation
+  tenantMembershipsList(condition: { status: ACTIVE }) {
+    ...TenantMembership
+  }
+  locationsList: tenantLocationsList {
+    ...LocationSummary
   }
   cohortsList {
     id
     name
   }
-  tenantMembershipsList(condition: { status: ACTIVE }) {
-    ...TenantMembership
-  }
   couplesList {
     ...Couple
   }
+}
+
+fragment LocationSummary on TenantLocation {
+  id
+  name
 }
 
 fragment TenantFull on Tenant {
@@ -73,23 +78,6 @@ mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
   }
 }
 
-
-fragment TenantLocation on TenantLocation {
-  id
-  name
-  description
-  isPublic
-  address {
-    city
-    conscriptionNumber
-    district
-    orientationNumber
-    postalCode
-    region
-    street
-  }
-}
-
 query CurrentTenant {
   tenant: getCurrentTenant {
     ...Tenant
@@ -100,44 +88,6 @@ mutation UpdateTenant($input: UpdateTenantInput!) {
   updateTenant(input: $input) {
     tenant {
       ...TenantFull
-    }
-  }
-}
-
-query TenantLocation($id: BigInt!) {
-  tenantLocation(id: $id) {
-    ...TenantLocation
-  }
-}
-
-query TenantLocationPage($id: BigInt!, $start: Datetime!) {
-  tenantLocation(id: $id) {
-    ...TenantLocation
-    accessEventsList(first: 20, orderBy: OCCURRED_AT_DESC) {
-      ...AccessEvent
-    }
-  }
-  events: eventInstancesForRangeList(
-    first: 10
-    startRange: $start
-    locationIds: [$id]
-  ) {
-    ...EventWithTrainer
-  }
-}
-
-mutation UpdateTenantLocation($input: UpdateTenantLocationInput!) {
-  updateTenantLocation(input: $input) {
-    tenantLocation {
-      ...TenantLocation
-    }
-  }
-}
-
-mutation CreateTenantLocation($input: CreateTenantLocationInput!) {
-  createTenantLocation(input: $input) {
-    tenantLocation {
-      ...TenantLocation
     }
   }
 }

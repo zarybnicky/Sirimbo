@@ -247,8 +247,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'MembershipApplication', id: args.input.id });
       },
 
-      deletePayment(_result, _args, cache, _info) {
-        cache.invalidate('Query', 'EventPayments');
+      deletePayment(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Payment', id: args.input.id });
       },
 
       updateCohort(_result, args, cache, _info) {
@@ -342,8 +342,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         });
         invalidateQueryFields(cache, ['accessCredentialsList']);
       },
-      createTenantLocation(result, _args, cache, _info) {
-        const tenantId = result.createTenantLocation?.tenantLocation?.tenantId;
+      upsertLocation(result, _args, cache, _info) {
+        const tenantId = result.upsertLocation?.tenantLocation?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
       },
       updateTenant(_result, args, cache, _info) {
@@ -401,7 +401,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createCohort(_result, _args, cache, _info) {
-        cache.invalidate('getCurrentTenant', 'cohortsList');
+        cache.invalidate('Query', 'getCurrentTenant');
+        invalidateQueryFields(cache, ['cohortsList']);
       },
 
       syncCohortMemberships(_result, args, cache, _info) {

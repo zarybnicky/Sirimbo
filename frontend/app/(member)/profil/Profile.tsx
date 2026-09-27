@@ -3,7 +3,7 @@
 import { MyMembershipApplicationsDocument } from '@/graphql/MembershipApplication';
 import { useActions } from '@/lib/actions';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
-import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
+import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { PersonView } from '@/ui/PersonView';
 import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
@@ -54,7 +54,7 @@ export function Profile() {
           id: `application-${application.id}`,
           title: `${application.firstName} ${application.lastName}`,
           contents: () => (
-            <CreateMembershipApplicationForm
+            <MembershipApplicationForm
               data={application}
               onRemove={() => setVariant('new-application')}
             />
@@ -64,7 +64,7 @@ export function Profile() {
           id: 'new-application',
           title: 'Nová přihláška',
           contents: () => (
-            <CreateMembershipApplicationForm
+            <MembershipApplicationForm
               onCreate={(id) => setVariant(`application-${id}`)}
             />
           ),
@@ -73,12 +73,7 @@ export function Profile() {
     }
 
     return tabs;
-  }, [
-    auth.persons,
-    data?.membershipApplicationsList,
-    enableRegistration,
-    setVariant,
-  ]);
+  }, [auth.persons, data?.membershipApplicationsList, enableRegistration, setVariant]);
 
   if (authLoading || !auth.user) return null;
 

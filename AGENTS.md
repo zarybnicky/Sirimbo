@@ -13,7 +13,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Backend and worker code run as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
 
 ## High-level structure
-- `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). Multi-tenancy and JWT enrichment are handled in `backend/src/auth.ts`.
+- `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). `backend/src/auth.ts` resolves the request tenant, verifies JWTs, and maps their claims to database settings.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
 - `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql`.
@@ -23,7 +23,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `schema/`: Auto-split DDL organized by domain/type/table/function/view for review purposes only.
 
 ## Frontend tenancy model
-- Tenant host mapping lives in `frontend/tenant/catalog.ts`; `frontend/proxy.ts` keeps the `tenant_id` cookie aligned with the current host.
+- Tenant host mapping lives in `frontend/tenant/catalog.ts`. `frontend/proxy.ts` preserves a valid `tenant_id` cookie; otherwise it selects the host's tenant or the default tenant.
 - Tenant-specific assets/config live under `frontend/tenant/{olymp,kometa,starlet}`. `frontend/tenant/ui.pages.ts` wires those configs to dynamically loaded tenant UI components.
 - Shared tenant metadata/types sit in `frontend/tenant/types.ts`; use these helpers when adding new tenant-aware UI.
 - Pages and components should read the active tenant configuration rather than hard-coding IDs. `frontend/lib/query.ts` injects the active `x-tenant-id` header for URQL requests.
@@ -35,8 +35,15 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
   - builds `pgSettings` so Postgres row-level security sees `jwt.claims.tenant_id`, memberships, and role claims.
 - `backend/src/graphile.config.ts` forwards request `pgSettings` into Grafast/PostGraphile and configures the PostGraphile schema.
 - `current_tenant_id()` (defined in `migrations/committed/000026.sql`) returns the active tenant ID from the current PostgreSQL session (defaulting to `1`). Nearly every table includes a `tenant_id` column defaulting to this function.
-- Membership tables (`tenant_membership`, `tenant_trainer`, `tenant_administrator`) along with `tenant_settings` and RLS policies guard per-tenant access. The `app_private.auth_details` view aggregates per-person memberships for JWT enrichment.
-- When extending tenancy logic, update the database policies first, then ensure `loadUserFromSession` populates the corresponding JWT claims.
+- `app_private.create_jwt_token(users)`, maintained in `migrations/fixtures/functions/create_jwt_token.sql`, builds claims directly from `user_proxy`, active tenant/cohort memberships, active couples, and system-admin status. The old `auth_details` views and refresh jobs have been removed.
+- `loadUserFromSession` accepts a bearer token or the `rozpisovnik` cookie. It chooses the database role from the token's system-admin flag and tenant-specific role arrays, then copies claims into `jwt.claims.*` settings. The request tenant overrides the token's `tenant_id`; memberships are not reloaded on each request. Bearer token use on the frontend is deprecated, stays available for potential external consumers.
+- Both backend verification and `frontend/lib/server/tenant.ts` currently use `ignoreExpiration: true`. JWTs contain a seven-day expiry, but verification does not enforce it - intentionally postponed, will be relevant soon.
+- Event-share access is resolved separately through `app_private.event_share_claims`, which populates `jwt.claims.shared.*` settings for the request.
+- When adding claims, update the `jwt_token` composite type, `create_jwt_token`, frontend claim types, and any required anonymous defaults. Check both backend and frontend database-context builders; both map claim arrays to PostgreSQL array literals.
+
+## Session refresh and RLS patterns
+- Web login and refresh actions in `frontend/lib/auth-actions.ts` set an HttpOnly session cookie. `current_claims()` and `refresh_jwt()` rebuild claims from the database; `SessionRefresher` checks for changes every 30 seconds while the page is visible. Legacy browser-token migration remains in place; see `TODO-auth.md`.
+- For example, `current_person_ids()` and related helpers read session claims. `app_private.visible_person_ids()` instead derives a set of visible people from current-tenant membership views; person and couple policies use uncorrelated `IN (SELECT ...)` lookups against that set. Its fixture is `migrations/fixtures/functions/visible_person_ids.sql`.
 
 ## Database entities worth knowing
 - `tenant`: master tenant records with allowed `origins` for host matching.

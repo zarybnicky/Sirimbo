@@ -22,7 +22,25 @@ as $$
   from article_attachment f
   join aktuality a on id = f.aktuality_id and a.tenant_id = f.tenant_id
   where a.tenant_id = (select current_tenant_id())
-    and a.is_visible;
+    and a.is_visible
+
+  union
+
+  select image.file_id
+  from tenant_location_image image
+  join tenant_location location
+    on location.tenant_id = image.tenant_id
+    and location.id = image.location_id
+  where image.tenant_id = (select current_tenant_id())
+    and location.is_public
+
+  union
+
+  select cover_image_id
+  from tenant_location
+  where tenant_id = (select current_tenant_id())
+    and is_public
+    and cover_image_id is not null;
 $$;
 
 grant execute on function app_private.visible_file_ids() to anonymous;

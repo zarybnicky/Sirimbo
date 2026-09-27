@@ -92,12 +92,15 @@ export function EditPersonForm({ id }: { id: string }) {
   const data = query.data?.person;
 
   React.useEffect(() => {
-    if (data) {
-      reset({
-        ...data,
-        birthDate: data.birthDate ?? null,
-      } as unknown as any);
-    }
+    if (!data) return;
+    reset({
+      ...data,
+      birthDate: data.birthDate ?? null,
+    } as unknown as any, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [reset, data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

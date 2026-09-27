@@ -1,11 +1,8 @@
 'use client';
 
-import {
-  TenantLocationPageDocument,
-  type TenantLocationPageQuery,
-} from '@/graphql/Tenant';
+import { LocationPageDocument, type LocationPageQuery } from '@/graphql/Location';
 import { useActions } from '@/lib/actions';
-import { tenantLocationActions } from '@/lib/actions/tenantLocation';
+import { locationActions } from '@/lib/actions/location';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { EventButton } from '@/ui/EventButton';
 import { dateTimeFormatter } from '@/ui/format';
@@ -13,6 +10,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { ExternalLink, MapPin } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -23,7 +21,7 @@ export function Location({
   initialData,
   start,
 }: {
-  initialData: TenantLocationPageQuery;
+  initialData: LocationPageQuery;
   start: string;
 }) {
   const auth = useAuth();
@@ -36,20 +34,24 @@ export function Location({
   }, []);
 
   const [{ data }] = useQuery({
-    query: TenantLocationPageDocument,
+    query: LocationPageDocument,
     variables: {
-      id: initialData.tenantLocation!.id,
+      id: initialData.location!.id,
       start: new Date(now).toISOString(),
     },
   });
   const result = data ?? initialData;
-  const location = result.tenantLocation!;
+  const location = result.location!;
   const events = result.events ?? [];
-  const actions = useActions(tenantLocationActions, location);
+  const actions = useActions(locationActions, location);
   const ongoingEvents = events.filter(
     (x) => new Date(x.since).getTime() <= now && new Date(x.until).getTime() > now,
   );
   const upcomingEvents = events.filter((x) => new Date(x.since).getTime() > now);
+  const coverImage = location.coverImage;
+  const images = location.imagesList.flatMap((x) =>
+    x.file && x.file.id !== coverImage?.id ? [x.file] : [],
+  );
 
   return (
     <>
@@ -65,6 +67,49 @@ export function Location({
         actions={actions}
         breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }, { label: location.name }]}
       />
+
+      {coverImage && (
+        <a
+          href={coverImage.url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Otevřít fotografii místa ${location.name}`}
+          className="relative mb-2 block aspect-2/1 max-h-128 overflow-hidden rounded-md bg-neutral-3"
+        >
+          <Image
+            fill
+            unoptimized
+            src={coverImage.url}
+            alt=""
+            sizes="100vw"
+            className="object-cover transition-transform hover:scale-102"
+          />
+        </a>
+      )}
+
+      {images.length > 0 && (
+        <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-3">
+          {images.map((image) => (
+            <a
+              key={image.id}
+              href={image.url}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Otevřít fotografii místa ${location.name}`}
+              className="relative aspect-4/3 overflow-hidden rounded-md bg-neutral-3"
+            >
+              <Image
+                fill
+                unoptimized
+                src={image.url}
+                alt=""
+                sizes="(min-width: 768px) 33vw, 50vw"
+                className="object-cover transition-transform hover:scale-102"
+              />
+            </a>
+          ))}
+        </div>
+      )}
 
       <h2 className="mb-2 text-lg font-bold">Adresa</h2>
       {location.address ? (

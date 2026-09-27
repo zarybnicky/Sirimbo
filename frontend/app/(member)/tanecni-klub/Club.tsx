@@ -5,9 +5,9 @@ import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { moneyFormatter } from '@/ui/format';
-import { CreateMembershipApplicationForm } from '@/ui/forms/CreateMembershipApplicationForm';
-import { EditTenantLocationForm } from '@/ui/forms/EditLocationForm';
-import { EditTenantForm } from '@/ui/forms/EditTenantForm';
+import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
+import { LocationForm } from '@/ui/forms/LocationForm';
+import { TenantForm } from '@/ui/forms/TenantForm.tsx';
 import { useAuth } from '@/lib/auth';
 import { Pencil, PinIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ import { useQuery } from 'urql';
 import { CurrentTenantDocument } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
-import { tenantLocationActions } from '@/lib/actions/tenantLocation';
+import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
 import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
@@ -41,8 +41,8 @@ export function Club() {
     tenant?.tenant?.tenantTrainersList ?? [],
   );
   const locationActionMap = useActionMap(
-    tenantLocationActions,
-    tenant?.tenant?.tenantLocationsList ?? [],
+    locationActions,
+    tenant?.tenant?.locationsList ?? [],
   );
   const tenantActions = useActions(
     [
@@ -52,15 +52,15 @@ export function Club() {
         label: 'Upravit klub',
         icon: Pencil,
         requireAdmin: true,
-        render: () => <EditTenantForm />,
+        render: () => <TenantForm />,
       },
       {
         id: 'tenant.addLocation',
         label: 'Přidat lokalitu',
         icon: PinIcon,
         requireAdmin: true,
-        render: () => <EditTenantLocationForm />
-      }
+        render: () => <LocationForm />,
+      },
     ],
     tenant?.tenant,
   );
@@ -77,7 +77,7 @@ export function Club() {
         <>
           <RichTextView value={club.description} />
 
-          {club.tenantLocationsList.map((item) => (
+          {club.locationsList.map((item) => (
             <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
               <Link
                 className="grow py-1 text-sm font-bold underline"
@@ -167,7 +167,7 @@ export function Club() {
                             text={`${item.firstName} ${item.lastName}`}
                           />
                           <DialogContent>
-                            <CreateMembershipApplicationForm data={item} />
+                            <MembershipApplicationForm data={item} />
                           </DialogContent>
                         </Dialog>
                       ))}

@@ -36,8 +36,6 @@ const Form = z.object({
   attachmentIds: z.array(z.string()).prefault([]),
 });
 
-type FormValues = z.infer<typeof Form>;
-
 export function ArticleForm({ id = '' }: { id?: string }) {
   const router = useRouter();
   const [query] = useQuery({ query: ArticleDocument, variables: { id }, pause: !id });
@@ -60,9 +58,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         titlePhotoUrl: data?.titlePhotoUrl ?? '',
         isVisible: data?.isVisible ?? true,
         attachmentIds:
-          data?.explicitAttachments.nodes
-            .map((attachment) => attachment.file?.id)
-            .filter(isTruthy) ?? [],
+          data?.explicitAttachments.nodes.map((x) => x.file?.id).filter(isTruthy) ?? [],
       },
       {
         keepDirtyValues: true,
@@ -72,7 +68,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
     );
   }, [data, reset]);
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: z.infer<typeof Form>) => {
     const result = await upsert({
       input: {
         info: {

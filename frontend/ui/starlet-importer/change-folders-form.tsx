@@ -4,7 +4,7 @@ import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { starletSettingsAtom, starletTokenAtom } from './state';
@@ -38,6 +38,10 @@ export function ChangeFoldersForm() {
     reset({
       folders: Object.fromEntries(prevFolders.map((x) => [x[0], true] as const)),
       seasons: Object.fromEntries(prevSeasons.map((x) => [x[0], true] as const)),
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

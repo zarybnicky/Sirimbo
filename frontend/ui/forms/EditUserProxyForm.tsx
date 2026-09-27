@@ -24,12 +24,18 @@ export function EditUserProxyForm({ id }: { id: string }) {
   const item = query.data?.userProxy;
 
   React.useEffect(() => {
-    if (item) {
-      reset({
+    if (!item) return;
+    reset(
+      {
         since: item.since ? new Date(item.since) : undefined,
         until: item.until ? new Date(item.until) : undefined,
-      });
-    }
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

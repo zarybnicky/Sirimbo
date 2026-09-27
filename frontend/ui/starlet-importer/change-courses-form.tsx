@@ -35,6 +35,10 @@ export function ChangeCoursesForm() {
   useEffect(() => {
     reset({
       courses: Object.fromEntries(prevCourses.map((x) => [x[0], true] as const)),
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

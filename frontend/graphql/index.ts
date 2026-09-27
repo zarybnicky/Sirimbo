@@ -2023,6 +2023,8 @@ export type CreateTenantLocationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `File` that is related to this `TenantLocation`. */
+  coverImage: Maybe<File>;
   /** The `TenantLocation` that was created by this mutation. */
   tenantLocation: Maybe<TenantLocation>;
 };
@@ -2623,6 +2625,8 @@ export type DeleteTenantLocationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `File` that is related to this `TenantLocation`. */
+  coverImage: Maybe<File>;
   /** The `TenantLocation` that was deleted by this mutation. */
   tenantLocation: Maybe<TenantLocation>;
 };
@@ -3717,6 +3721,8 @@ export type File = {
   displayName: Maybe<Scalars['String']['output']>;
   id: Scalars['BigInt']['output'];
   isPublic: Scalars['Boolean']['output'];
+  /** Reads and enables pagination through a set of `TenantLocationImage`. */
+  locationImagesList: Array<TenantLocationImage>;
   name: Scalars['String']['output'];
   objectKey: Scalars['String']['output'];
   tenantId: Scalars['BigInt']['output'];
@@ -3747,6 +3753,14 @@ export type FileArticleAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
+};
+
+
+export type FileLocationImagesListArgs = {
+  condition?: InputMaybe<TenantLocationImageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TenantLocationImagesOrderBy>>;
 };
 
 /** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -3947,6 +3961,15 @@ export type IntervalInput = {
   seconds?: InputMaybe<Scalars['Float']['input']>;
   /** A quantity of years. */
   years?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An input for mutations affecting `LocationDetailsInputRecord` */
+export type LocationDetailsInputRecordInput = {
+  address?: InputMaybe<AddressDomainInput>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** All input for the `logInAs` mutation. */
@@ -4375,6 +4398,7 @@ export type Mutation = {
   updateUserProxy: Maybe<UpdateUserProxyPayload>;
   upsertAnnouncement: Maybe<UpsertAnnouncementPayload>;
   upsertArticle: Maybe<UpsertArticlePayload>;
+  upsertLocation: Maybe<UpsertLocationPayload>;
 };
 
 
@@ -4897,6 +4921,12 @@ export type MutationUpsertAnnouncementArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpsertArticleArgs = {
   input: UpsertArticleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpsertLocationArgs = {
+  input: UpsertLocationInput;
 };
 
 /** All input for the `otpLogin` mutation. */
@@ -5939,6 +5969,10 @@ export type Query = {
   tenantLocation: Maybe<TenantLocation>;
   /** Get a single `TenantLocation`. */
   tenantLocationByTenantIdAndId: Maybe<TenantLocation>;
+  /** Get a single `TenantLocationImage`. */
+  tenantLocationImage: Maybe<TenantLocationImage>;
+  /** Reads a set of `TenantLocationImage`. */
+  tenantLocationImagesList: Maybe<Array<TenantLocationImage>>;
   /** Get a single `TenantMembership`. */
   tenantMembership: Maybe<TenantMembership>;
   /** Get a single `TenantSetting`. */
@@ -6467,6 +6501,23 @@ export type QueryTenantLocationArgs = {
 export type QueryTenantLocationByTenantIdAndIdArgs = {
   id: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTenantLocationImageArgs = {
+  fileId: Scalars['BigInt']['input'];
+  locationId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTenantLocationImagesListArgs = {
+  condition?: InputMaybe<TenantLocationImageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TenantLocationImagesOrderBy>>;
 };
 
 
@@ -7691,11 +7742,16 @@ export type TenantLocation = {
   /** Reads and enables pagination through a set of `AccessEvent`. */
   accessEventsList: Array<AccessEvent>;
   address: Maybe<AddressDomain>;
+  /** Reads a single `File` that is related to this `TenantLocation`. */
+  coverImage: Maybe<File>;
+  coverImageId: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['Datetime']['output'];
   description: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventInstancesList: Array<EventInstance>;
   id: Scalars['BigInt']['output'];
+  /** Reads and enables pagination through a set of `TenantLocationImage`. */
+  imagesList: Array<TenantLocationImage>;
   isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   tenantId: Scalars['BigInt']['output'];
@@ -7718,6 +7774,14 @@ export type TenantLocationEventInstancesListArgs = {
   orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
 };
 
+
+export type TenantLocationImagesListArgs = {
+  condition?: InputMaybe<TenantLocationImageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TenantLocationImagesOrderBy>>;
+};
+
 /**
  * A condition to be used against `TenantLocation` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
@@ -7725,6 +7789,8 @@ export type TenantLocationEventInstancesListArgs = {
 export type TenantLocationCondition = {
   /** Checks for equality with the object’s `address` field. */
   address?: InputMaybe<AddressDomainInput>;
+  /** Checks for equality with the object’s `coverImageId` field. */
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
@@ -7741,9 +7807,46 @@ export type TenantLocationCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type TenantLocationImage = {
+  __typename?: 'TenantLocationImage';
+  /** Reads a single `File` that is related to this `TenantLocationImage`. */
+  file: Maybe<File>;
+  fileId: Scalars['BigInt']['output'];
+  /** Reads a single `TenantLocation` that is related to this `TenantLocationImage`. */
+  location: Maybe<TenantLocation>;
+  locationId: Scalars['BigInt']['output'];
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `TenantLocationImage` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type TenantLocationImageCondition = {
+  /** Checks for equality with the object’s `fileId` field. */
+  fileId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `locationId` field. */
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Methods to use when ordering `TenantLocationImage`. */
+export type TenantLocationImagesOrderBy =
+  | 'FILE_ID_ASC'
+  | 'FILE_ID_DESC'
+  | 'LOCATION_ID_ASC'
+  | 'LOCATION_ID_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
+
 /** An input for mutations affecting `TenantLocation` */
 export type TenantLocationInput = {
   address?: InputMaybe<AddressDomainInput>;
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7755,6 +7858,7 @@ export type TenantLocationInput = {
 /** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
 export type TenantLocationPatch = {
   address?: InputMaybe<AddressDomainInput>;
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
@@ -7763,10 +7867,21 @@ export type TenantLocationPatch = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A `TenantLocation` edge in the connection. */
+export type TenantLocationsEdge = {
+  __typename?: 'TenantLocationsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `TenantLocation` at the end of the edge. */
+  node: TenantLocation;
+};
+
 /** Methods to use when ordering `TenantLocation`. */
 export type TenantLocationsOrderBy =
   | 'ADDRESS_ASC'
   | 'ADDRESS_DESC'
+  | 'COVER_IMAGE_ID_ASC'
+  | 'COVER_IMAGE_ID_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
@@ -8765,6 +8880,8 @@ export type UpdateTenantLocationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `File` that is related to this `TenantLocation`. */
+  coverImage: Maybe<File>;
   /** The `TenantLocation` that was updated by this mutation. */
   tenantLocation: Maybe<TenantLocation>;
 };
@@ -9002,6 +9119,39 @@ export type UpsertArticlePayload = {
 /** The output of our `upsertArticle` mutation. */
 export type UpsertArticlePayloadAktualityEdgeArgs = {
   orderBy?: Array<AktualitiesOrderBy>;
+};
+
+/** All input for the `upsertLocation` mutation. */
+export type UpsertLocationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
+  details?: InputMaybe<LocationDetailsInputRecordInput>;
+  imageIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+};
+
+/** The output of our `upsertLocation` mutation. */
+export type UpsertLocationPayload = {
+  __typename?: 'UpsertLocationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  /** Reads a single `File` that is related to this `TenantLocation`. */
+  coverImage: Maybe<File>;
+  tenantLocation: Maybe<TenantLocation>;
+  /** An edge for our `TenantLocation`. May be used by Relay 1. */
+  tenantLocationEdge: Maybe<TenantLocationsEdge>;
+};
+
+
+/** The output of our `upsertLocation` mutation. */
+export type UpsertLocationPayloadTenantLocationEdgeArgs = {
+  orderBy?: Array<TenantLocationsOrderBy>;
 };
 
 export type User = {
@@ -9409,6 +9559,8 @@ export type GraphCacheKeysConfig = {
   TenantAdministratorsConnection?: (data: WithTypename<TenantAdministratorsConnection>) => null | string,
   TenantAdministratorsEdge?: (data: WithTypename<TenantAdministratorsEdge>) => null | string,
   TenantLocation?: (data: WithTypename<TenantLocation>) => null | string,
+  TenantLocationImage?: (data: WithTypename<TenantLocationImage>) => null | string,
+  TenantLocationsEdge?: (data: WithTypename<TenantLocationsEdge>) => null | string,
   TenantMembership?: (data: WithTypename<TenantMembership>) => null | string,
   TenantMembershipsConnection?: (data: WithTypename<TenantMembershipsConnection>) => null | string,
   TenantMembershipsEdge?: (data: WithTypename<TenantMembershipsEdge>) => null | string,
@@ -9444,6 +9596,7 @@ export type GraphCacheKeysConfig = {
   UpdateUserProxyPayload?: (data: WithTypename<UpdateUserProxyPayload>) => null | string,
   UpsertAnnouncementPayload?: (data: WithTypename<UpsertAnnouncementPayload>) => null | string,
   UpsertArticlePayload?: (data: WithTypename<UpsertArticlePayload>) => null | string,
+  UpsertLocationPayload?: (data: WithTypename<UpsertLocationPayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
   UserProxy?: (data: WithTypename<UserProxy>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
@@ -9519,6 +9672,8 @@ export type GraphCacheResolvers = {
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationArgs, WithTypename<TenantLocation> | string>,
     tenantLocationByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationByTenantIdAndIdArgs, WithTypename<TenantLocation> | string>,
+    tenantLocationImage?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationImageArgs, WithTypename<TenantLocationImage> | string>,
+    tenantLocationImagesList?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
     tenantMembership?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipArgs, WithTypename<TenantMembership> | string>,
     tenantSetting?: GraphCacheResolver<WithTypename<Query>, QueryTenantSettingArgs, WithTypename<TenantSetting> | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainerArgs, WithTypename<TenantTrainer> | string>,
@@ -9978,6 +10133,7 @@ export type GraphCacheResolvers = {
   },
   CreateTenantLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    coverImage?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<File> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<CreateTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   CreateTenantMembershipPayload?: {
@@ -10088,6 +10244,7 @@ export type GraphCacheResolvers = {
   },
   DeleteTenantLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    coverImage?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<File> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<DeleteTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   DeleteTenantMembershipPayload?: {
@@ -10311,6 +10468,7 @@ export type GraphCacheResolvers = {
     displayName?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    locationImagesList?: GraphCacheResolver<WithTypename<File>, FileLocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
     name?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     objectKey?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -10765,14 +10923,28 @@ export type GraphCacheResolvers = {
   TenantLocation?: {
     accessEventsList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     address?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<AddressDomain> | string>,
+    coverImage?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, WithTypename<File> | string>,
+    coverImageId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstancesList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     id?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    imagesList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
     isPublic?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  TenantLocationImage?: {
+    file?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, WithTypename<File> | string>,
+    fileId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    location?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, WithTypename<TenantLocation> | string>,
+    locationId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>
+  },
+  TenantLocationsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantLocationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantLocationsEdge>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   TenantMembership?: {
     createdAt?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -10958,6 +11130,7 @@ export type GraphCacheResolvers = {
   },
   UpdateTenantLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    coverImage?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<File> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<UpdateTenantLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>
   },
   UpdateTenantMembershipPayload?: {
@@ -11003,6 +11176,12 @@ export type GraphCacheResolvers = {
     aktualityEdge?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, UpsertArticlePayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<User> | string>
+  },
+  UpsertLocationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    coverImage?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, Record<string, never>, WithTypename<File> | string>,
+    tenantLocation?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, Record<string, never>, WithTypename<TenantLocation> | string>,
+    tenantLocationEdge?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, UpsertLocationPayloadTenantLocationEdgeArgs, WithTypename<TenantLocationsEdge> | string>
   },
   User?: {
     accessCredentialsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserAccessCredentialsByCreatedByListArgs, Array<WithTypename<AccessCredential> | string>>,
@@ -11136,7 +11315,8 @@ export type GraphCacheOptimisticUpdaters = {
   updateTenantTrainer?: GraphCacheOptimisticMutationResolver<MutationUpdateTenantTrainerArgs, Maybe<WithTypename<UpdateTenantTrainerPayload>>>,
   updateUserProxy?: GraphCacheOptimisticMutationResolver<MutationUpdateUserProxyArgs, Maybe<WithTypename<UpdateUserProxyPayload>>>,
   upsertAnnouncement?: GraphCacheOptimisticMutationResolver<MutationUpsertAnnouncementArgs, Maybe<WithTypename<UpsertAnnouncementPayload>>>,
-  upsertArticle?: GraphCacheOptimisticMutationResolver<MutationUpsertArticleArgs, Maybe<WithTypename<UpsertArticlePayload>>>
+  upsertArticle?: GraphCacheOptimisticMutationResolver<MutationUpsertArticleArgs, Maybe<WithTypename<UpsertArticlePayload>>>,
+  upsertLocation?: GraphCacheOptimisticMutationResolver<MutationUpsertLocationArgs, Maybe<WithTypename<UpsertLocationPayload>>>
 };
 
 export type GraphCacheUpdaters = {
@@ -11208,6 +11388,8 @@ export type GraphCacheUpdaters = {
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantLocation?: GraphCacheUpdateResolver<{ tenantLocation: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationArgs>,
     tenantLocationByTenantIdAndId?: GraphCacheUpdateResolver<{ tenantLocationByTenantIdAndId: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationByTenantIdAndIdArgs>,
+    tenantLocationImage?: GraphCacheUpdateResolver<{ tenantLocationImage: Maybe<WithTypename<TenantLocationImage>> }, QueryTenantLocationImageArgs>,
+    tenantLocationImagesList?: GraphCacheUpdateResolver<{ tenantLocationImagesList: Maybe<Array<WithTypename<TenantLocationImage>>> }, QueryTenantLocationImagesListArgs>,
     tenantMembership?: GraphCacheUpdateResolver<{ tenantMembership: Maybe<WithTypename<TenantMembership>> }, QueryTenantMembershipArgs>,
     tenantSetting?: GraphCacheUpdateResolver<{ tenantSetting: Maybe<WithTypename<TenantSetting>> }, QueryTenantSettingArgs>,
     tenantTrainer?: GraphCacheUpdateResolver<{ tenantTrainer: Maybe<WithTypename<TenantTrainer>> }, QueryTenantTrainerArgs>,
@@ -11308,7 +11490,8 @@ export type GraphCacheUpdaters = {
     updateTenantTrainer?: GraphCacheUpdateResolver<{ updateTenantTrainer: Maybe<WithTypename<UpdateTenantTrainerPayload>> }, MutationUpdateTenantTrainerArgs>,
     updateUserProxy?: GraphCacheUpdateResolver<{ updateUserProxy: Maybe<WithTypename<UpdateUserProxyPayload>> }, MutationUpdateUserProxyArgs>,
     upsertAnnouncement?: GraphCacheUpdateResolver<{ upsertAnnouncement: Maybe<WithTypename<UpsertAnnouncementPayload>> }, MutationUpsertAnnouncementArgs>,
-    upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>
+    upsertArticle?: GraphCacheUpdateResolver<{ upsertArticle: Maybe<WithTypename<UpsertArticlePayload>> }, MutationUpsertArticleArgs>,
+    upsertLocation?: GraphCacheUpdateResolver<{ upsertLocation: Maybe<WithTypename<UpsertLocationPayload>> }, MutationUpsertLocationArgs>
   },
   Subscription?: object,
   AccessCredential?: {
@@ -11757,6 +11940,7 @@ export type GraphCacheUpdaters = {
   },
   CreateTenantLocationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>,
     tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateTenantLocationPayload>>, Record<string, never>>
   },
   CreateTenantMembershipPayload?: {
@@ -11867,6 +12051,7 @@ export type GraphCacheUpdaters = {
   },
   DeleteTenantLocationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>,
     tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteTenantLocationPayload>>, Record<string, never>>
   },
   DeleteTenantMembershipPayload?: {
@@ -12090,6 +12275,7 @@ export type GraphCacheUpdaters = {
     displayName?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    locationImagesList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileLocationImagesListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     objectKey?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
@@ -12544,14 +12730,28 @@ export type GraphCacheUpdaters = {
   TenantLocation?: {
     accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationAccessEventsListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    coverImageId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     eventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationEventInstancesListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    imagesList?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationImagesListArgs>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>
+  },
+  TenantLocationImage?: {
+    file?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
+    fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>
+  },
+  TenantLocationsEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationsEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationsEdge>>, Record<string, never>>
   },
   TenantMembership?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
@@ -12737,6 +12937,7 @@ export type GraphCacheUpdaters = {
   },
   UpdateTenantLocationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>,
     tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateTenantLocationPayload>>, Record<string, never>>
   },
   UpdateTenantMembershipPayload?: {
@@ -12782,6 +12983,12 @@ export type GraphCacheUpdaters = {
     aktualityEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, UpsertArticlePayloadAktualityEdgeArgs>,
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>,
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertArticlePayload>>, Record<string, never>>
+  },
+  UpsertLocationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertLocationPayload>>, Record<string, never>>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertLocationPayload>>, Record<string, never>>,
+    tenantLocation?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertLocationPayload>>, Record<string, never>>,
+    tenantLocationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpsertLocationPayload>>, UpsertLocationPayloadTenantLocationEdgeArgs>
   },
   User?: {
     accessCredentialsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAccessCredentialsByCreatedByListArgs>,

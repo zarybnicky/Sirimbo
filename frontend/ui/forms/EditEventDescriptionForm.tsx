@@ -1,7 +1,4 @@
-import {
-  EventDescriptionDocument,
-  UpdateEventDocument,
-} from '@/graphql/Event';
+import { EventDescriptionDocument, UpdateEventDocument } from '@/graphql/Event';
 import { TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
@@ -17,32 +14,35 @@ const Form = z.object({
   description: z.string(),
 });
 
-export function EditEventInstanceDescriptionForm({ id }: { id: string }) {
+export function EditEventDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues } = useForm({
     shouldUnregister: false,
     resolver: zodResolver(Form),
   });
   const [result, update] = useMutation(UpdateEventDocument);
-  const [{ data }] = useQuery({
-    query: EventDescriptionDocument,
-    variables: { id },
-  });
+  const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
   const instance = data?.eventInstance;
   const values = getValues();
 
   React.useEffect(() => {
-    if (instance && !getValues('summary') && !getValues('description')) {
-      reset({
+    if (!instance || getValues('summary') || getValues('description')) return;
+    reset(
+      {
         summary: instance.summary ?? '',
         description: instance.description ?? '',
-      });
-    }
+      },
+      {
+        keepDirtyValues: true,
+        keepTouched: true,
+        keepErrors: true,
+      },
+    );
   }, [reset, getValues, instance]);
 
-  const onSubmit = async (values: z.infer<typeof Form>) => {
-    const result = await update({ id, patch: values });
+  const onSubmit = async (patch: z.infer<typeof Form>) => {
+    const result = await update({ id, patch });
     if (!result.error) onSuccess();
   };
 

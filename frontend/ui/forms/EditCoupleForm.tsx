@@ -25,12 +25,15 @@ export function EditCoupleForm({ id }: { id: string }) {
   const item = query.data?.couple;
 
   React.useEffect(() => {
-    if (item) {
-      reset({
-        since: item.since ? new Date(item.since) : null,
-        until: item.until ? new Date(item.until) : null,
-      });
-    }
+    if (!item) return;
+    reset({
+      since: item.since ? new Date(item.since) : null,
+      until: item.until ? new Date(item.until) : null,
+    }, {
+      keepDirtyValues: true,
+      keepTouched: true,
+      keepErrors: true,
+    });
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

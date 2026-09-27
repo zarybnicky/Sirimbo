@@ -423,7 +423,7 @@ query EventRange(
 
 mutation SaveEvents($input: SaveEventsInput!) {
   saveEvents(input: $input) {
-    events: eventInstances {
+    eventInstances {
       id
     }
   }

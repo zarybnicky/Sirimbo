@@ -33,8 +33,14 @@ import { sanitizeUnicode } from '@/lib/sanitize';
 
 const ApplicationForm = z.object({
   prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
-  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
-  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  firstName: z
+    .string({ error: 'Zadejte jméno' })
+    .min(1, 'Zadejte jméno')
+    .overwrite(sanitizeUnicode),
+  lastName: z
+    .string({ error: 'Zadejte příjmení' })
+    .min(1, 'Zadejte příjmení')
+    .overwrite(sanitizeUnicode),
   suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
@@ -58,7 +64,7 @@ const Form = ApplicationForm.extend({
   cohortIds: z.array(z.string()),
 });
 
-export function CreateMembershipApplicationForm({
+export function MembershipApplicationForm({
   data,
   onCreate,
   onRemove,
@@ -102,7 +108,9 @@ export function CreateMembershipApplicationForm({
     pause: !data || !auth.isAdmin,
   });
   const cohortOptions = React.useMemo(
-    () => cohorts?.cohortsList?.map((cohort) => ({ id: cohort.id, label: cohort.name })) ?? [],
+    () =>
+      cohorts?.cohortsList?.map((cohort) => ({ id: cohort.id, label: cohort.name })) ??
+      [],
     [cohorts],
   );
   const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
@@ -261,11 +269,7 @@ export function CreateMembershipApplicationForm({
         </div>
 
         <div className="col-full">
-          <TextAreaElement
-            control={control}
-            name="note"
-            label="Poznámka k přihlášce"
-          />
+          <TextAreaElement control={control} name="note" label="Poznámka k přihlášce" />
         </div>
 
         {data && auth.isAdmin && (
@@ -280,11 +284,7 @@ export function CreateMembershipApplicationForm({
             />
 
             <div>
-              <CheckboxElement
-                control={control}
-                name="isMember"
-                label="Člen klubu"
-              />
+              <CheckboxElement control={control} name="isMember" label="Člen klubu" />
               <CheckboxElement control={control} name="isTrainer" label="Trenér" />
               <CheckboxElement control={control} name="isAdmin" label="Správce" />
             </div>
