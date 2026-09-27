@@ -1,6 +1,19 @@
 fragment LocationSummary on TenantLocation {
   id
   name
+  coverImage {
+    id
+    url
+  }
+  address {
+    city
+    conscriptionNumber
+    district
+    orientationNumber
+    postalCode
+    region
+    street
+  }
 }
 
 fragment TenantFull on Tenant {

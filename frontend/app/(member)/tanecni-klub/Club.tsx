@@ -4,13 +4,14 @@ import { PendingMembershipApplicationsDocument } from '@/graphql/MembershipAppli
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { moneyFormatter } from '@/ui/format';
+import { formatAddress, moneyFormatter } from '@/ui/format';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { LocationForm } from '@/ui/forms/LocationForm';
 import { TenantForm } from '@/ui/forms/TenantForm.tsx';
 import { useAuth } from '@/lib/auth';
 import { Pencil, PinIcon } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useQuery } from 'urql';
 import { ClubDocument } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
@@ -56,7 +57,7 @@ export function Club() {
       },
       {
         id: 'tenant.addLocation',
-        label: 'Přidat lokalitu',
+        label: 'Přidat místo',
         icon: PinIcon,
         requireAdmin: true,
         render: () => <LocationForm />,
@@ -75,18 +76,48 @@ export function Club() {
       title: 'Informace',
       contents: () => (
         <>
-          <RichTextView value={club.description} />
+          <h2 className="mb-2 text-lg font-bold">O klubu</h2>
+          {club.description?.trim() ? (
+            <RichTextView value={club.description} />
+          ) : (
+            <p className="text-sm text-neutral-10">Informace nejsou vyplněné.</p>
+          )}
 
-          {club.locationsList.map((item) => (
-            <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
-              <Link
-                className="grow py-1 text-sm font-bold underline"
-                href={`/lokality/${item.id}`}
-              >
-                {item.name}
-              </Link>
-            </ActionRow>
-          ))}
+          <h2 className="mt-4 mb-2 text-lg font-bold">Místa</h2>
+
+          {club.locationsList.length > 0 ? (
+            club.locationsList.map((item) => (
+              <ActionRow key={item.id} actions={locationActionMap.get(item.id)!}>
+                <Link
+                  className="flex min-w-0 items-center gap-3"
+                  href={`/lokality/${item.id}`}
+                >
+                  <span className="relative flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded bg-neutral-3">
+                    {item.coverImage ? (
+                      <Image
+                        fill
+                        unoptimized
+                        src={item.coverImage.url}
+                        alt=""
+                        sizes="80px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <PinIcon className="size-5 text-neutral-9" aria-hidden="true" />
+                    )}
+                  </span>
+                  <span className="min-w-0 text-sm">
+                    <span className="font-bold underline">{item.name}</span>
+                    <span className="block truncate text-neutral-11">
+                      {formatAddress(item.address)}
+                    </span>
+                  </span>
+                </Link>
+              </ActionRow>
+            ))
+          ) : (
+            <p className="text-sm text-neutral-10">Nejsou přidané žádná místa.</p>
+          )}
         </>
       ),
     },
@@ -102,26 +133,24 @@ export function Club() {
                   '?'
                 ) : (
                   <Link
-                    className="underline font-bold grow basis-40"
+                    className="underline font-bold w-fit min-w-0"
                     href={`/clenove/${item.person.id}`}
                   >
                     {item.person.name}
                   </Link>
                 )}
                 {auth.isAdmin && (
-                  <>
-                    <div className="self-end">
-                      {moneyFormatter.format({
-                        amount: item.memberPrice45MinAmount,
-                        currency: item.currency,
-                      }) || '-'}{' '}
-                      {item.guestPrice45MinAmount &&
-                      item.memberPrice45MinAmount !== item.guestPrice45MinAmount
-                        ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
-                        : ''}
-                      {' / 45min'}
-                    </div>
-                  </>
+                  <div className="self-end">
+                    {moneyFormatter.format({
+                      amount: item.memberPrice45MinAmount,
+                      currency: item.currency,
+                    }) || '-'}{' '}
+                    {item.guestPrice45MinAmount &&
+                    item.memberPrice45MinAmount !== item.guestPrice45MinAmount
+                      ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
+                      : ''}
+                    {' / 45min'}
+                  </div>
                 )}
               </div>
             </ActionRow>

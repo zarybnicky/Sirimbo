@@ -3,3 +3,4 @@ libs/graphql/*.ts
 pnpm-lock.yaml
 introspection.json
 dbdoc/
+.next/

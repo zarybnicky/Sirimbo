@@ -306,6 +306,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
         }
       },
+      updateEventSeries(result, _args, cache, _info) {
+        for (const event of result.updateEventSeries?.eventSeries?.eventsList ?? []) {
+          cache.invalidate({ __typename: 'EventInstance', id: event.id });
+        }
+      },
 
       createCouple(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.couple.manId });

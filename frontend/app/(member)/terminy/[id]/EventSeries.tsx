@@ -3,6 +3,8 @@
 import type { AttendanceType } from '@/graphql';
 import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
+import { useActions } from '@/lib/actions';
+import { eventSeriesActions } from '@/lib/actions/eventSeries';
 import { cn } from '@/lib/cn';
 import { isTruthy } from '@/lib/truthyFilter';
 import { PageHeader } from '@/ui/TitleBar';
@@ -93,13 +95,14 @@ export function EventSeries({
     variables: { id: initialSeries.id },
   });
   const series = data?.eventSeries ?? initialSeries;
+  const actions = useActions(eventSeriesActions, series);
   const rows = series.eventsList.map(eventDetails);
   const common =
     rows[0]?.map((_, i) => majority(rows.map((row) => row[i] ?? null))) ?? [];
 
   return (
     <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
-      <PageHeader title={series.name || 'Termíny'} />
+      <PageHeader title={series.name || 'Termíny'} actions={actions} />
       <dl className="mb-4 text-sm tabular">
         {common.filter(isTruthy).map((detail) => (
           <React.Fragment key={detail.key}>

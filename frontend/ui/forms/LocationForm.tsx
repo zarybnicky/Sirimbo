@@ -2,6 +2,7 @@ import { LocationDocument, UpsertLocationDocument } from '@/graphql/Location';
 import { FileListDocument } from '@/graphql/File';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxElement } from '@/ui/fields/Combobox';
+import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { FilePicker } from '@/ui/forms/FilePicker';
@@ -108,7 +109,12 @@ export function LocationForm({ id = '' }: { id?: string }) {
       <FormError error={result.error} />
 
       <TextFieldElement control={control} name="name" label="Jméno" />
-      <TextFieldElement control={control} name="description" label="Popis" />
+      <RichTextEditor
+        control={control}
+        initialState={item?.description}
+        name="description"
+        label="Popis"
+      />
 
       <div className="grid gap-2 md:grid-cols-[2fr_1fr_1fr]">
         <TextFieldElement control={control} name="address.street" label="Ulice" />

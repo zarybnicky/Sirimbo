@@ -42,12 +42,13 @@ export function Location({
   });
   const result = data ?? initialData;
   const location = result.location!;
-  const events = result.events ?? [];
   const actions = useActions(locationActions, location);
-  const ongoingEvents = events.filter(
+  const ongoingEvents = (result.events ?? []).filter(
     (x) => new Date(x.since).getTime() <= now && new Date(x.until).getTime() > now,
   );
-  const upcomingEvents = events.filter((x) => new Date(x.since).getTime() > now);
+  const upcomingEvents = (result.events ?? []).filter(
+    (x) => new Date(x.since).getTime() > now,
+  );
   const coverImage = location.coverImage;
   const images = location.imagesList.flatMap((x) =>
     x.file && x.file.id !== coverImage?.id ? [x.file] : [],
@@ -60,7 +61,7 @@ export function Location({
         subtitle={
           auth.isAdmin ? (
             <span className={badgeCls()}>
-              {location.isPublic ? 'Veřejná' : 'Neveřejná'}
+              {location.isPublic ? 'Viditelná členům' : 'Skrytá'}
             </span>
           ) : undefined
         }
@@ -88,7 +89,7 @@ export function Location({
       )}
 
       {images.length > 0 && (
-        <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-3">
+        <div className="mb-2 grid grid-cols-2 gap-2 md:grid-cols-3">
           {images.map((image) => (
             <a
               key={image.id}

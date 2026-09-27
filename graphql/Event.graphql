@@ -40,6 +40,18 @@ query EventSeries($id: BigInt!) {
   }
 }
 
+mutation UpdateEventSeries($id: BigInt!, $patch: EventSeriesPatch!) {
+  updateEventSeries(input: { id: $id, patch: $patch }) {
+    eventSeries {
+      id
+      name
+      eventsList {
+        id
+      }
+    }
+  }
+}
+
 fragment EventWithTrainer on EventInstance {
   ...EventInstance
   seriesId
