@@ -6,11 +6,12 @@ CREATE TABLE public.tenant_location (
     is_public boolean DEFAULT true NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    cover_image_id bigint
 );
 
 COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+@behavior -query:resource:list -query:resource:connection -queryField:resource:connection';
 
 GRANT ALL ON TABLE public.tenant_location TO anonymous;
 ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
@@ -20,6 +21,8 @@ ALTER TABLE ONLY public.tenant_location
 ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.tenant_location
+    ADD CONSTRAINT tenant_location_cover_image_fk FOREIGN KEY (tenant_id, cover_image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (cover_image_id);
+ALTER TABLE ONLY public.tenant_location
     ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
@@ -28,4 +31,5 @@ CREATE POLICY public_view ON public.tenant_location FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_location FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX tenant_location_cover_image_idx ON public.tenant_location USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
 CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);

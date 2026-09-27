@@ -4,11 +4,10 @@ CREATE TABLE public.security_event (
     user_id bigint,
     person_id bigint,
     actor_user_id bigint DEFAULT public.current_user_id(),
-    kind text NOT NULL,
-    method text NOT NULL,
+    kind public.security_event_kind NOT NULL,
+    method public.security_event_method NOT NULL,
     occurred_at timestamp with time zone DEFAULT now() NOT NULL,
-    effective_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT security_event_method_check CHECK ((method = ANY (ARRAY['password'::text, 'otp'::text, 'manual'::text, 'scheduled'::text])))
+    effective_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 COMMENT ON TABLE public.security_event IS '@omit create,update,delete

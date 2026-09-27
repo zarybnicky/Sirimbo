@@ -1,0 +1,19 @@
+CREATE TYPE public.security_event_kind AS ENUM (
+    'login_succeeded',
+    'login_failed',
+    'registration',
+    'impersonation',
+    'password_reset_requested',
+    'password_changed',
+    'invitation_accepted',
+    'person_linked',
+    'person_unlinked',
+    'membership_granted',
+    'membership_revoked',
+    'trainer_granted',
+    'trainer_revoked',
+    'administrator_granted',
+    'administrator_revoked',
+    'access_credential_issued',
+    'access_credential_ended'
+);

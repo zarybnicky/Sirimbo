@@ -21,8 +21,8 @@ begin
     values (
       new.user_id,
       new.person_id,
-      case when new.status = 'active' then 'person_linked' else 'person_unlinked' end,
-      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      (case when new.status = 'active' then 'person_linked' else 'person_unlinked' end)::security_event_kind,
+      (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
       case when new.status = 'active' then new.since else new.until end
     );
   end if;

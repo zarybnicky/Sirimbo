@@ -20,8 +20,8 @@ begin
     insert into security_event (person_id, kind, method, effective_at)
     values (
       new.person_id,
-      case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end,
-      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      (case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end)::security_event_kind,
+      (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
       case when new.status = 'active' then new.since else new.until end
     );
   end if;

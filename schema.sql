@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 5WRt1bcLlJEfAMkF1akWdf7lEWSeEgCKmWeagGn00PvWclLhR7sZp9g8eKCpwEI
+\restrict plIorjXY0rcSts4rUZfbcRt2zO9RVO4d1zPtnot43IcHTX3PHgnWecgeF0V3CUB
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -747,6 +747,19 @@ COMMENT ON TYPE public.jwt_token IS '@jwt';
 
 
 --
+-- Name: location_details_input; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.location_details_input AS (
+	id bigint,
+	name text,
+	description text,
+	address public.address_domain,
+	is_public boolean
+);
+
+
+--
 -- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -877,6 +890,43 @@ CREATE TYPE public.scoreboard_record AS (
 
 COMMENT ON TYPE public.scoreboard_record IS '@foreignKey (person_id) references person (id)
 @foreignKey (cohort_id) references cohort (id)';
+
+
+--
+-- Name: security_event_kind; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.security_event_kind AS ENUM (
+    'login_succeeded',
+    'login_failed',
+    'registration',
+    'impersonation',
+    'password_reset_requested',
+    'password_changed',
+    'invitation_accepted',
+    'person_linked',
+    'person_unlinked',
+    'membership_granted',
+    'membership_revoked',
+    'trainer_granted',
+    'trainer_revoked',
+    'administrator_granted',
+    'administrator_revoked',
+    'access_credential_issued',
+    'access_credential_ended'
+);
+
+
+--
+-- Name: security_event_method; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.security_event_method AS ENUM (
+    'password',
+    'otp',
+    'manual',
+    'scheduled'
+);
 
 
 --
@@ -2300,8 +2350,8 @@ begin
     insert into security_event (person_id, kind, method, effective_at)
     values (
       new.person_id,
-      case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end,
-      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      (case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end)::security_event_kind,
+      (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
       case when new.status = 'active' then new.since else new.until end
     );
   end if;
@@ -2338,22 +2388,22 @@ begin
   if tg_op = 'DELETE' then
     if old.status = 'active' then
       insert into security_event (person_id, kind, method)
-      values (old.person_id, tg_argv[1], 'manual');
+      values (old.person_id, tg_argv[1]::security_event_kind, 'manual');
     end if;
     return old;
   end if;
 
   if tg_op = 'INSERT' and new.status = 'active' then
     insert into security_event (person_id, kind, method, effective_at)
-    values (new.person_id, tg_argv[0], 'manual', new.since);
+    values (new.person_id, tg_argv[0]::security_event_kind, 'manual', new.since);
   elsif tg_op = 'UPDATE'
      and new.status is distinct from old.status
      and new.status in ('active', 'expired') then
     insert into security_event (person_id, kind, method, effective_at)
     values (
       new.person_id,
-      case when new.status = 'active' then tg_argv[0] else tg_argv[1] end,
-      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      (case when new.status = 'active' then tg_argv[0] else tg_argv[1] end)::security_event_kind,
+      (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
       case when new.status = 'active' then new.since else new.until end
     );
   end if;
@@ -2389,8 +2439,8 @@ begin
     values (
       new.user_id,
       new.person_id,
-      case when new.status = 'active' then 'person_linked' else 'person_unlinked' end,
-      case when current_user_id() is null then 'scheduled' else 'manual' end,
+      (case when new.status = 'active' then 'person_linked' else 'person_unlinked' end)::security_event_kind,
+      (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
       case when new.status = 'active' then new.since else new.until end
     );
   end if;
@@ -2546,7 +2596,25 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
   from article_attachment f
   join aktuality a on id = f.aktuality_id and a.tenant_id = f.tenant_id
   where a.tenant_id = (select current_tenant_id())
-    and a.is_visible;
+    and a.is_visible
+
+  union
+
+  select image.file_id
+  from tenant_location_image image
+  join tenant_location location
+    on location.tenant_id = image.tenant_id
+    and location.id = image.location_id
+  where image.tenant_id = (select current_tenant_id())
+    and location.is_public
+
+  union
+
+  select cover_image_id
+  from tenant_location
+  where tenant_id = (select current_tenant_id())
+    and is_public
+    and cover_image_id is not null;
 $$;
 
 
@@ -4325,10 +4393,10 @@ COMMENT ON FUNCTION public.event_instance_trainers(v_instance public.event_insta
 
 
 --
--- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], boolean, boolean, bigint, public.event_instance_range_scope); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], bigint, public.event_instance_range_scope, bigint[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], only_mine boolean DEFAULT false, any_parent boolean DEFAULT true, parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT NULL::public.event_instance_range_scope) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT 'all'::public.event_instance_range_scope, location_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $_$
   with mine as (
@@ -4340,20 +4408,15 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
   )
   select i.*
   from event_instance i
-  cross join (values (coalesce($9, case
-    when only_mine then 'mine'
-    when not any_parent then 'top_level'
-    else 'all'
-  end::event_instance_range_scope))) args(scope)
   where i.tenant_id = current_tenant_id()
     and (only_type is null or i.type = only_type)
     and case
-      when $8 is not null then i.parent_id = $8
-        and (args.scope <> 'mine' or i.id in (select instance_id from mine))
-      when args.scope = 'all' then true
-      when args.scope = 'top_level' then i.parent_id is null
-      when args.scope = 'mine' then i.id in (select instance_id from mine)
-      when args.scope = 'relevant' then i.parent_id is null
+      when $6 is not null then i.parent_id = $6
+        and (scope <> 'mine' or i.id in (select instance_id from mine))
+      when scope = 'all' then true
+      when scope = 'top_level' then i.parent_id is null
+      when scope = 'mine' then i.id in (select instance_id from mine)
+      when scope = 'relevant' then i.parent_id is null
         or i.id in (select instance_id from mine)
         or i.parent_id in (select instance_id from mine)
     end
@@ -4363,15 +4426,17 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
       or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
       or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
+    and (location_ids is null or i.location_id = any (location_ids))
+  order by i.since
   ;
 $_$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) IS '@simpleCollections only';
 
 
 --
@@ -6869,6 +6934,97 @@ $$;
 
 
 --
+-- Name: tenant_location; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_location (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    address public.address_domain,
+    is_public boolean DEFAULT true NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    cover_image_id bigint
+);
+
+
+--
+-- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection -queryField:resource:connection';
+
+
+--
+-- Name: upsert_location(public.location_details_input, bigint[], bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[] DEFAULT NULL::bigint[], cover_image_id bigint DEFAULT NULL::bigint) RETURNS public.tenant_location
+    LANGUAGE plpgsql
+    AS $$
+declare
+  result tenant_location;
+begin
+  if details.id is null then
+    insert into tenant_location (
+      name,
+      description,
+      address,
+      is_public,
+      cover_image_id
+    )
+    values (
+      details.name,
+      coalesce(details.description, ''),
+      details.address,
+      coalesce(details.is_public, true),
+      cover_image_id
+    )
+    returning * into result;
+  else
+    update tenant_location
+    set name = details.name,
+        description = coalesce(details.description, ''),
+        address = details.address,
+        is_public = coalesce(details.is_public, true),
+        cover_image_id = upsert_location.cover_image_id
+    where id = details.id
+    returning * into result;
+
+    if not found then
+      raise exception 'Location with id % not found', details.id;
+    end if;
+  end if;
+
+  if image_ids is not null then
+    select coalesce(array_agg(id), '{}'::bigint[])
+    into image_ids
+    from file
+    where id = any(image_ids)
+      and tenant_id = result.tenant_id
+      and uploaded_at is not null
+      and content_type like 'image/%';
+
+    delete from tenant_location_image image
+    where image.tenant_id = result.tenant_id
+      and image.location_id = result.id
+      and image.file_id <> all(image_ids);
+
+    insert into tenant_location_image (tenant_id, location_id, file_id)
+    select result.tenant_id, result.id, file_id
+    from unnest(image_ids) input(file_id)
+    on conflict do nothing;
+  end if;
+
+  return result;
+end;
+$$;
+
+
+--
 -- Name: verify_function(regproc, regclass); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -8985,11 +9141,10 @@ CREATE TABLE public.security_event (
     user_id bigint,
     person_id bigint,
     actor_user_id bigint DEFAULT public.current_user_id(),
-    kind text NOT NULL,
-    method text NOT NULL,
+    kind public.security_event_kind NOT NULL,
+    method public.security_event_method NOT NULL,
     occurred_at timestamp with time zone DEFAULT now() NOT NULL,
-    effective_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT security_event_method_check CHECK ((method = ANY (ARRAY['password'::text, 'otp'::text, 'manual'::text, 'scheduled'::text])))
+    effective_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -9045,30 +9200,6 @@ ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 
 --
--- Name: tenant_location; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_location (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    address public.address_domain,
-    is_public boolean DEFAULT true NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-
-
---
 -- Name: tenant_location_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -9080,6 +9211,25 @@ ALTER TABLE public.tenant_location ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: tenant_location_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_location_image (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    location_id bigint NOT NULL,
+    file_id bigint NOT NULL
+);
+
+
+--
+-- Name: TABLE tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_location_image IS '@omit create,update,delete
+@simpleCollections only';
 
 
 --
@@ -10300,6 +10450,14 @@ ALTER TABLE ONLY public.tenant_administrator
 
 ALTER TABLE ONLY public.tenant_administrator
     ADD CONSTRAINT tenant_administrator_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_location_image tenant_location_image_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_location_image
+    ADD CONSTRAINT tenant_location_image_pkey PRIMARY KEY (tenant_id, location_id, file_id);
 
 
 --
@@ -11572,6 +11730,20 @@ CREATE INDEX tenant_administrator_tenant_status_person_idx ON public.tenant_admi
 --
 
 CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
+
+
+--
+-- Name: tenant_location_cover_image_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_location_cover_image_idx ON public.tenant_location USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
+
+
+--
+-- Name: tenant_location_image_file_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_location_image_file_idx ON public.tenant_location_image USING btree (tenant_id, file_id);
 
 
 --
@@ -13640,6 +13812,54 @@ ALTER TABLE ONLY public.tenant_administrator
 
 
 --
+-- Name: tenant_location tenant_location_cover_image_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_location
+    ADD CONSTRAINT tenant_location_cover_image_fk FOREIGN KEY (tenant_id, cover_image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (cover_image_id);
+
+
+--
+-- Name: CONSTRAINT tenant_location_cover_image_fk ON tenant_location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT tenant_location_cover_image_fk ON public.tenant_location IS '@fieldName coverImage
+@behavior -manyRelation:resource:list -manyRelation:resource:connection';
+
+
+--
+-- Name: tenant_location_image tenant_location_image_file_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_location_image
+    ADD CONSTRAINT tenant_location_image_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT tenant_location_image_file_fk ON tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT tenant_location_image_file_fk ON public.tenant_location_image IS '@fieldName file
+@foreignFieldName locationImages';
+
+
+--
+-- Name: tenant_location_image tenant_location_image_location_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_location_image
+    ADD CONSTRAINT tenant_location_image_location_fk FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT tenant_location_image_location_fk ON tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT tenant_location_image_location_fk ON public.tenant_location_image IS '@fieldName location
+@foreignFieldName images';
+
+
+--
 -- Name: tenant_location tenant_location_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -14101,6 +14321,13 @@ CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
 
 
 --
+-- Name: tenant_location_image admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.tenant_location_image TO administrator USING (true);
+
+
+--
 -- Name: tenant_membership admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14541,6 +14768,13 @@ CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((te
 
 
 --
+-- Name: tenant_location_image current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.tenant_location_image AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: transaction current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14936,6 +15170,13 @@ CREATE POLICY public_view ON public.tenant_location FOR SELECT USING (true);
 
 
 --
+-- Name: tenant_location_image public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.tenant_location_image FOR SELECT USING (true);
+
+
+--
 -- Name: tenant_trainer public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15022,6 +15263,12 @@ ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: tenant_location_image; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant_location_image ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: tenant_membership; Type: ROW SECURITY; Schema: public; Owner: -
@@ -15772,10 +16019,10 @@ GRANT ALL ON FUNCTION public.event_instance_trainers(v_instance public.event_ins
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], only_mine boolean, any_parent boolean, parent_id bigint, scope public.event_instance_range_scope) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) TO anonymous;
 
 
 --
@@ -16317,6 +16564,20 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.upsert_article(info public.article_type_input, attachments bigint[]) TO anonymous;
+
+
+--
+-- Name: TABLE tenant_location; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_location TO anonymous;
+
+
+--
+-- Name: FUNCTION upsert_location(details public.location_details_input, image_ids bigint[], cover_image_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[], cover_image_id bigint) TO administrator;
 
 
 --
@@ -17063,17 +17324,17 @@ GRANT SELECT,USAGE ON SEQUENCE public.tenant_id_seq TO anonymous;
 
 
 --
--- Name: TABLE tenant_location; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_location TO anonymous;
-
-
---
 -- Name: SEQUENCE tenant_location_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.tenant_location_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE tenant_location_image; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_location_image TO anonymous;
 
 
 --
@@ -17157,5 +17418,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5WRt1bcLlJEfAMkF1akWdf7lEWSeEgCKmWeagGn00PvWclLhR7sZp9g8eKCpwEI
+\unrestrict plIorjXY0rcSts4rUZfbcRt2zO9RVO4d1zPtnot43IcHTX3PHgnWecgeF0V3CUB
 
