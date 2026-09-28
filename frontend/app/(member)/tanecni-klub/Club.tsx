@@ -41,6 +41,7 @@ export function Club() {
   });
   const [{ data: applications }] = useQuery({
     query: PendingMembershipApplicationsDocument,
+    pause: !auth.isAdmin,
   });
   const tenantActions = useActions(
     [

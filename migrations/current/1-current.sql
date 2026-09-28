@@ -43,3 +43,4 @@ where tenant_id = 1 and id = 4 and name = 'SGO';
 
 --!include functions/upsert_location.sql
 --!include functions/visible_file_ids.sql
+--!include functions/confirm_membership_application.sql
