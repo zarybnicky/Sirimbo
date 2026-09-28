@@ -16,7 +16,7 @@ import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
-import { formatEventType, formatEventName } from '@/ui/format';
+import { formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
@@ -42,24 +42,29 @@ export function EventPageClient({
   const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
     ? 'eventInstance.edit'
     : 'eventInstance.registrations';
-  const title = instance ? formatEventName(instance) || '' : '';
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
 
   const tabs = React.useMemo(() => {
+    if (!instance) return [];
     const tabs: {
       id: string;
       title: React.ReactNode;
       contents: () => React.ReactNode;
-    }[] = [];
-    if (!instance) return tabs;
+    }[] = [
+      {
+        id: 'info',
+        title: 'Info',
+        contents: () => <BasicEventInfo instance={instance} />,
+      },
+    ];
 
     const schedule =
-      auth.user?.id || instance.hasPublicDetails || hasShareToken ? instance : null;
+      auth.isLoggedIn || instance.hasPublicDetails || hasShareToken ? instance : null;
     if (schedule?.type?.toUpperCase() === 'CAMP') {
-      tabs.push({
+      tabs.unshift({
         id: 'schedule',
         title: 'Rozpis',
         contents: () => (
@@ -68,15 +73,8 @@ export function EventPageClient({
       });
     }
 
-    tabs.push({
-      id: 'info',
-      title: 'Info',
-      contents: () => <BasicEventInfo instance={instance} />,
-    });
-
-
     const numRegistrations = instance.registrationInfo?.registrations ?? 0;
-    if (auth.isTrainer || (auth.user?.id && numRegistrations > 0)) {
+    if (auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
@@ -111,27 +109,25 @@ export function EventPageClient({
       );
     }
     if (auth.isTrainer) {
-      tabs.push(
-        {
-          id: 'payments',
-          title: 'Platby',
-          contents: () => (
-            <div className="col-popout">
-              <EventPayments id={instance.id} />
-            </div>
-          ),
-        },
-      );
+      tabs.push({
+        id: 'payments',
+        title: 'Platby',
+        contents: () => (
+          <div className="col-popout">
+            <EventPayments id={instance.id} />
+          </div>
+        ),
+      });
     }
     return tabs;
-  }, [auth.isTrainer, auth.user?.id, hasShareToken, instance]);
+  }, [auth.isLoggedIn, auth.isTrainer, hasShareToken, instance]);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <div className="col-feature">
         {instance && (
           <PageHeader
-            title={title}
+            title={instance ? formatEventName(instance) || '' : ''}
             subtitle={formatEventType(instance.type?.toUpperCase() as EventType | null)}
             actions={actions}
             primary={primaryAction}

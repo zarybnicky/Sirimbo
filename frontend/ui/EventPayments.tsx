@@ -12,41 +12,36 @@ export function EventPayments({ id }: { id: string }) {
     variables: { id },
   });
 
-  const instances = data?.eventInstance
+  const events = data?.eventInstance
     ? [data.eventInstance, ...data.eventInstance.childEventInstancesList]
     : [];
-  const payments = instances.flatMap((instance) =>
-    instance.paymentsList.flatMap((payment) =>
-      payment.transactions.nodes.map((transaction) => [instance, payment, transaction] as const),
+  const payments = events.flatMap((event) =>
+    event.paymentsList.flatMap((payment) =>
+      payment.transactions.nodes.map((t) => [event, payment, t] as const),
     ),
   );
   const actionMap = useActionMap(
     paymentActions,
-    instances.flatMap((instance) => instance.paymentsList),
+    events.flatMap((x) => x.paymentsList),
   );
 
-  if (fetching && !data) {
-    return (
-      <div className="flex justify-center py-8">
-        <Spinner />
-      </div>
-    );
-  }
-
-  return (
+  return fetching && !data ? (
+    <div className="flex justify-center py-8">
+      <Spinner />
+    </div>
+  ) : (
     <div className="prose prose-accent">
-      {payments.map(([instance, payment, transaction]) => (
+      {payments.map(([event, payment, transaction]) => (
         <div key={transaction.id}>
           <ActionRow actions={actionMap.get(payment.id)!} className="mb-0">
-            Za lekci {fullDateFormatter.format(new Date(instance.since))}
+            Za lekci {fullDateFormatter.format(new Date(event.since))}
           </ActionRow>
           <ul>
-            {transaction.postingsList.map((posting) => (
-              <li key={posting.id}>
-                {moneyFormatter.format({ amount: posting.amount, currency: 'CZK' })}
+            {transaction.postingsList.map(({ id, amount, account }) => (
+              <li key={id}>
+                {moneyFormatter.format({ amount: amount, currency: 'CZK' })}
                 {' - '}
-                {posting.account?.person?.name ||
-                  (posting.account?.tenantId ? 'Klub' : '-')}
+                {account?.person?.name || (account?.tenantId ? 'Klub' : '-')}
               </li>
             ))}
           </ul>
