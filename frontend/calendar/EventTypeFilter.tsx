@@ -1,4 +1,4 @@
-import { eventTypes, eventTypesFilterAtom } from '@/calendar/state';
+import { eventTypes, calendarFilterParsers } from '@/calendar/state';
 import {
   DropdownMenu,
   DropdownMenuButton,
@@ -7,11 +7,11 @@ import {
 } from '@/ui/dropdown';
 import { formatEventType } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
-import { useAtom } from 'jotai';
+import { useQueryState } from 'nuqs';
 import { CheckCircle2, Circle, Filter } from 'lucide-react';
 
 export function EventTypeFilter() {
-  const [selected, setSelected] = useAtom(eventTypesFilterAtom);
+  const [selected, setSelected] = useQueryState('types', calendarFilterParsers.types);
   const label =
     selected.length === eventTypes.length
       ? 'Typy'

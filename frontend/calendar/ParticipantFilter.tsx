@@ -1,5 +1,5 @@
-import { useAtom } from 'jotai';
-import { participantIdsFilterAtom } from '@/calendar/state';
+import { useQueryState } from 'nuqs';
+import { calendarFilterParsers } from '@/calendar/state';
 import { useQuery } from 'urql';
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { PersonListDocument } from '@/graphql/Person';
 
 export function ParticipantFilter() {
-  const [ids, setIds] = useAtom(participantIdsFilterAtom);
+  const [ids, setIds] = useQueryState('participants', calendarFilterParsers.participants);
   const [{ data }] = useQuery({
     query: PersonListDocument,
     variables: {

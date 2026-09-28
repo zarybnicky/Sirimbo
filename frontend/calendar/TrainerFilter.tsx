@@ -1,5 +1,5 @@
-import { useAtom } from 'jotai';
-import { trainerIdsFilterAtom } from '@/calendar/state';
+import { useQueryState } from 'nuqs';
+import { calendarFilterParsers } from '@/calendar/state';
 import { useQuery } from 'urql';
 import { TrainerOptionsDocument } from '@/graphql/Tenant';
 import {
@@ -26,7 +26,7 @@ export function TrainerFilter({
   showAllResources?: boolean;
   onShowAllResourcesChange?: (showAllResources: boolean) => void;
 }) {
-  const [trainerIds, setTrainerIds] = useAtom(trainerIdsFilterAtom);
+  const [trainerIds, setTrainerIds] = useQueryState('trainers', calendarFilterParsers.trainers);
   const [{ data: tenant }] = useQuery({
     query: TrainerOptionsDocument,
     pause: availableTrainers !== undefined,

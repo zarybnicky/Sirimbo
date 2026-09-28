@@ -3,18 +3,16 @@ import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { createParser, parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryState, useQueryStates } from 'nuqs';
+import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import React from 'react';
 import { useMutation } from 'urql';
 import {
   dragListenersAtom,
-  eventTypesFilterAtom,
-  eventTypes as allEventTypes,
+  calendarFilterParsers,
   type ExternalDragSubject,
   groupByAtom,
-  participantIdsFilterAtom,
-  trainerIdsFilterAtom,
 } from './state';
 import type {
   CalendarInstanceEvent,
@@ -47,6 +45,14 @@ import {
 } from '@/calendar/eventDefaults';
 
 const emptyArray: readonly [] = [];
+const calendarDateParser = createParser({
+  parse(value) {
+    const date = parseISO(value);
+    return isValid(date) && format(date, 'yyyy-MM-dd') === value ? date : null;
+  },
+  serialize: (date) => format(date, 'yyyy-MM-dd'),
+  eq: isSameDay,
+});
 const preventDefault = (e: Event) => e.preventDefault();
 const columnModes = ['all'] as const;
 
@@ -112,13 +118,16 @@ export function Calendar({
     [dateRange],
   );
   const view: CalendarView = viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
-  const [date, setDate] = React.useState(() => initialDate ?? new Date());
+  const [defaultDate] = React.useState(() => initialDate ?? new Date());
+  const [date, setDate] = useQueryState(
+    'date',
+    calendarDateParser.withDefault(defaultDate).withOptions({ history: 'push', clearOnDefault: false }),
+  );
 
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
-  const trainerIds = useAtomValue(trainerIdsFilterAtom);
-  const participantIds = useAtomValue(participantIdsFilterAtom);
-  const eventTypes = useAtomValue(eventTypesFilterAtom);
+  const [{ trainers: trainerIds, participants: participantIds, types: eventTypes }] =
+    useQueryStates(calendarFilterParsers);
   const effectiveTrainerIds = React.useMemo(() => {
     if (!availableTrainers) return trainerIds;
     const availableIds = new Set(availableTrainers.map((trainer) => trainer.id));
@@ -234,7 +243,7 @@ export function Calendar({
       setDate(date);
       setView('day');
     },
-    [availableViews, setView],
+    [availableViews, setDate, setView],
   );
 
   React.useEffect(() => {

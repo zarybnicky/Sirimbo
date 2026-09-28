@@ -104,11 +104,11 @@ export function Location({
         <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
       )}
 
-      {location.address ? (
-        <LocationAddress address={location.address} />
-      ) : (
-        <p className="text-sm text-neutral-10">(Adresa nevyplněna)</p>
-      )}
+      <LocationAddress
+        address={location.address}
+        latitude={location.latitude}
+        longitude={location.longitude}
+      />
 
       <h2 className="mt-4 mb-2 text-lg font-bold">Fotografie</h2>
       {coverImage && (
@@ -198,35 +198,43 @@ export function Location({
   );
 }
 
-function LocationAddress({ address }: { address: AddressDomain }) {
-  const number = [address.conscriptionNumber, address.orientationNumber]
+function LocationAddress({ address, latitude, longitude }: {
+  address: AddressDomain | null;
+  latitude: number | null;
+  longitude: number | null;
+}) {
+  const number = [address?.conscriptionNumber, address?.orientationNumber]
     .filter(Boolean)
     .join('/');
-  const street = [address.street, number].filter(Boolean).join(' ');
-  const city = [address.postalCode, address.city].filter(Boolean).join(' ');
-  const mapQuery = [street, address.district, city, address.region]
-    .filter(Boolean)
-    .join(', ');
+  const street = [address?.street, number].filter(Boolean).join(' ');
+  const city = [address?.postalCode, address?.city].filter(Boolean).join(' ');
+  const mapQuery = latitude != null && longitude != null
+    ? `${latitude},${longitude}`
+    : [street, address?.district, city, address?.region]
+        .filter(Boolean)
+        .join(', ');
+
+  if (!mapQuery) {
+    return <p className="text-sm text-neutral-10">(Adresa nevyplněna)</p>;
+  }
 
   return (
     <div className="mb-4 flex items-start gap-2 text-sm">
       <MapPin className="mt-0.5 size-4 shrink-0 text-accent-11" aria-hidden="true" />
       <address className="not-italic">
         {street && <div>{street}</div>}
-        {address.district && <div>{address.district}</div>}
+        {address?.district && <div>{address.district}</div>}
         {city && <div>{city}</div>}
-        {address.region && <div>{address.region}</div>}
-        {mapQuery && (
-          <a
-            className="mt-1 inline-flex items-center gap-1 underline"
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Otevřít v mapě
-            <ExternalLink className="size-3" aria-hidden="true" />
-          </a>
-        )}
+        {address?.region && <div>{address.region}</div>}
+        <a
+          className="mt-1 inline-flex items-center gap-1 underline"
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Otevřít v mapě
+          <ExternalLink className="size-3" aria-hidden="true" />
+        </a>
       </address>
     </div>
   );
