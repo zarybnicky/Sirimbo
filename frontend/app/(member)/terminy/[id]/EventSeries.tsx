@@ -5,6 +5,8 @@ import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { useActions } from '@/lib/actions';
 import { eventSeriesActions } from '@/lib/actions/eventSeries';
+import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { cn } from '@/lib/cn';
 import { isTruthy } from '@/lib/truthyFilter';
 import { PageHeader } from '@/ui/TitleBar';
@@ -135,7 +137,7 @@ export function EventSeries({
       {series.eventsList.length === 0 ? (
         <p>Série nemá žádné termíny.</p>
       ) : (
-        <div className="grid grid-cols-[max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1">
+        <div className="grid grid-cols-[auto_max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1">
           {series.eventsList.map((instance, i) => (
             <EventRow
               key={instance.id}
@@ -165,35 +167,38 @@ function EventRow({
   showAttendance: boolean;
   common: Detail[];
 }>) {
+  const actions = useActions(eventInstanceActions, instance);
   const start = new Date(instance.since);
   const end = new Date(instance.until);
   const name = instance.name?.trim();
   const displayName = name === seriesName?.trim() ? null : name;
   const inlineDetails = details.flatMap((detail, i) => {
     if (detail?.key === common[i]?.key) return [];
-    const label = detail?.label ?? common[i]?.missing;
-    return label ? [label] : [];
+    if (detail) return [detail];
+    const missing = common[i]?.missing;
+    return missing ? [{ name: common[i]!.name, key: `missing:${i}`, label: missing }] : [];
   });
   const stats =
     typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
 
   return (
-    <Link
-      href={`/termin/${instance.id}?tab=attendance`}
-      className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm hover:bg-neutral-2 lg:gap-x-4"
+    <div
+      className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4"
     >
-      <span
+      <ActionGroup className="col-start-1 row-start-1" variant="row" actions={actions} />
+      <Link
+        href={`/termin/${instance.id}?tab=registrations`}
         className={cn(
-          'text-right font-medium leading-5 tabular-nums text-neutral-12',
+          'col-start-2 row-start-1 text-right font-medium leading-5 tabular-nums text-neutral-12 underline',
           instance.isCancelled && 'line-through text-neutral-10',
         )}
       >
         {numericDateWithYearFormatter.formatRange(start, end)}
-      </span>
+      </Link>
       {(displayName || inlineDetails.length > 0) && (
         <div
           className={cn(
-            'min-w-0 text-neutral-11',
+            'col-start-3 row-start-1 min-w-0 text-neutral-11',
             instance.isCancelled && 'line-through text-neutral-10',
           )}
         >
@@ -201,9 +206,11 @@ function EventRow({
             <span className="font-medium text-neutral-12">{displayName}</span>
           )}
           {inlineDetails.map((detail, index) => (
-            <span key={index}>
+            <span key={detail.key}>
               {displayName || index > 0 ? ' · ' : null}
-              {detail}
+              {detail.href ? (
+                <Link className="underline" href={detail.href}>{detail.label}</Link>
+              ) : detail.label}
             </span>
           ))}
         </div>
@@ -213,7 +220,11 @@ function EventRow({
       (!instance.isCancelled ||
         (stats?.ATTENDED ?? 0) > 0 ||
         (stats?.NOT_EXCUSED ?? 0) > 0) ? (
-        <div className="col-start-3 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums">
+        <Link
+          href={`/termin/${instance.id}?tab=registrations`}
+          aria-label="Docházka"
+          className="col-start-4 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
+        >
           {Object.entries(attendanceLabels).map(([status, { icon: Icon, className }]) => (
             <span
               key={status}
@@ -226,8 +237,8 @@ function EventRow({
               <span>{stats?.[status] ?? 0}</span>
             </span>
           ))}
-        </div>
+        </Link>
       ) : null}
-    </Link>
+    </div>
   );
 }

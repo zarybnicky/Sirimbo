@@ -28,23 +28,7 @@ query EventSeries($id: BigInt!) {
     id
     name
     eventsList(orderBy: SINCE_ASC) {
-      ...EventInstance
-      trainersList: eventInstanceTrainersByInstanceIdList {
-        id
-        personId
-        person {
-          id
-          name
-        }
-      }
-      targetCohortsList {
-        id
-        cohortId
-        cohort {
-          id
-          name
-        }
-      }
+      ...EventWithTrainer
     }
   }
 }
@@ -279,6 +263,8 @@ query EventWithAttendance($id: BigInt!) {
     ...EventPage
     eventInstanceRegistrationsByInstanceId(condition: { registrationStatus: ACTIVE }) {
       nodes {
+        parentRegistrationId
+        ...EventInstanceRegistration
         ...EventRegistrationAttendance
       }
     }

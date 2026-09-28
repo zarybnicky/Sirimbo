@@ -11,7 +11,6 @@ import {
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { useActions } from '@/lib/actions';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
-import { EventAttendance } from '@/ui/EventAttendance';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
@@ -77,7 +76,7 @@ export function EventPageClient({
 
 
     const numRegistrations = instance.registrationInfo?.registrations ?? 0;
-    if (auth.user?.id && numRegistrations > 0) {
+    if (auth.isTrainer || (auth.user?.id && numRegistrations > 0)) {
       tabs.push({
         id: 'registrations',
         title: `Přihlášky (${numRegistrations})`,
@@ -114,15 +113,6 @@ export function EventPageClient({
     if (auth.isTrainer) {
       tabs.push(
         {
-          id: 'attendance',
-          title: 'Docházka',
-          contents: () => (
-            <div className="col-popout">
-              <EventAttendance id={instance.id} />
-            </div>
-          ),
-        },
-        {
           id: 'payments',
           title: 'Platby',
           contents: () => (
@@ -158,7 +148,7 @@ export function EventPageClient({
       </div>
       <TabMenu
         className="col-feature"
-        selected={variant}
+        selected={variant === 'attendance' ? 'registrations' : variant}
         onSelect={setVariant}
         options={tabs}
       />

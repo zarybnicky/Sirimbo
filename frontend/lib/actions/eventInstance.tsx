@@ -11,6 +11,7 @@ import {
 import {
   DeleteEventDocument,
   DeleteEventExternalRegistrationDocument,
+  type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
   UpdateEventDocument,
 } from '@/graphql/Event';
@@ -23,6 +24,26 @@ import { exportEventParticipants } from '@/ui/reports/export-event-participants'
 import { exportEventRegistrations } from '@/ui/reports/export-event-registrations';
 
 const preventDefault = (e: Event) => e.preventDefault();
+
+export const eventRegistrationActions = defineActions<EventInstanceRegistrationFragment & {
+  instance: EventWithTrainerFragment;
+}>()([
+  {
+    id: 'eventRegistration.edit',
+    label: 'Upravit přihlášku',
+    icon: Pencil,
+    visible: ({ auth, item }) =>
+      canManageInstance({ auth, item: item.instance }) ||
+      auth.isMyPerson(item.personId) || auth.isMyCouple(item.coupleId),
+    render: ({ auth, item }) => (
+      <MyRegistrationsDialog
+        instance={item.instance}
+        isManager={canManageInstance({ auth, item: item.instance })}
+        initialRegistrationId={item.id}
+      />
+    ),
+  },
+]);
 
 export function canManageInstance({
   auth,
@@ -119,7 +140,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     id: 'eventInstance.attendance',
     label: 'Docházka',
     visible: canManageInstance,
-    href: ({ item }) => `/termin/${item.id}?tab=attendance`,
+    href: ({ item }) => `/termin/${item.id}?tab=registrations`,
   },
   {
     id: 'eventInstance.addToEventSchedule',

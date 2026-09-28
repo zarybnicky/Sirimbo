@@ -86,6 +86,7 @@ export function ActionGroup<Id extends string = string>({
   groups,
   variant = 'toolbar',
   align,
+  iconOnly = false,
 }: {
   className?: string;
   actions: readonly ResolvedAction<Id>[];
@@ -93,6 +94,7 @@ export function ActionGroup<Id extends string = string>({
   groups?: Partial<Record<'add', readonly Id[]>>;
   variant?: 'toolbar' | 'row';
   align?: 'start' | 'end';
+  iconOnly?: boolean;
 }) {
   const confirm = useConfirm();
   const [dialogAction, setDialogAction] = useState<Extract<
@@ -148,21 +150,23 @@ export function ActionGroup<Id extends string = string>({
           <Link
             key={a.key}
             href={a.href}
+            title={iconOnly ? a.label : undefined}
             className={buttonCls({ variant: 'outline', size: 'sm' })}
           >
             {a.icon && <a.icon className="size-4" />}
-            {a.label}
+            <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
           </Link>
         ) : (
           <button
             key={a.key}
             type="button"
             disabled={pending === a.key}
+            title={iconOnly ? a.label : undefined}
             className={buttonCls({ variant: 'outline', size: 'sm' })}
             onClick={() => fire(a)}
           >
             {a.icon && <a.icon className="size-4" />}
-            {a.label}
+            <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
           </button>
         )
       ))}
