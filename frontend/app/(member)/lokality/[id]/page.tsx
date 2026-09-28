@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!result?.data?.location) notFound();
 
   return {
-    title: result.data.location.name,
+    title: result.data.location.longName || result.data.location.name,
     robots: { index: false, follow: false },
   };
 }
@@ -37,7 +37,7 @@ export default async function LocationPage({ params }: Props) {
   if (!result) notFound();
 
   return (
-    <Layout requireMember>
+    <Layout>
       <Location initialData={result.data} start={result.start} />
     </Layout>
   );

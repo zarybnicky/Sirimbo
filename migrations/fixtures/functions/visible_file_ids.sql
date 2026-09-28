@@ -32,14 +32,12 @@ as $$
     on location.tenant_id = image.tenant_id
     and location.id = image.location_id
   where image.tenant_id = (select current_tenant_id())
-    and location.is_public
 
   union
 
   select cover_image_id
   from tenant_location
   where tenant_id = (select current_tenant_id())
-    and is_public
     and cover_image_id is not null;
 $$;
 

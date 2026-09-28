@@ -2,8 +2,11 @@ fragment Location on TenantLocation {
   id
   tenantId
   name
+  longName
   description
-  isPublic
+  showInLists
+  latitude
+  longitude
   coverImageId
   coverImage {
     ...File
@@ -22,6 +25,14 @@ fragment Location on TenantLocation {
     postalCode
     region
     street
+  }
+}
+
+query PublicLocations {
+  tenant: getCurrentTenant {
+    locationsList: tenantLocationsList(condition: { showInLists: true }, orderBy: NAME_ASC) {
+      ...Location
+    }
   }
 }
 

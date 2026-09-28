@@ -112,7 +112,7 @@ export function EventSeries({
     rows[0]?.map((_, i) => majority(rows.map((row) => row[i] ?? null))) ?? [];
 
   return (
-    <div className="col-feature min-h-[60vh] p-4 lg:pb-8">
+    <>
       <PageHeader title={series.name || 'Termíny'} actions={actions} />
       <dl className="mb-4 text-sm tabular">
         {common.filter(isTruthy).map((detail) => (
@@ -132,8 +132,9 @@ export function EventSeries({
       </dl>
 
       <FormError error={error} />
-      {series.eventsList.length === 0 ? <p>Série nemá žádné termíny.</p> : null}
-      {series.eventsList.length > 0 ? (
+      {series.eventsList.length === 0 ? (
+        <p>Série nemá žádné termíny.</p>
+      ) : (
         <div className="grid grid-cols-[max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1">
           {series.eventsList.map((instance, i) => (
             <EventRow
@@ -146,8 +147,8 @@ export function EventSeries({
             />
           ))}
         </div>
-      ) : null}
-    </div>
+      )}
+    </>
   );
 }
 

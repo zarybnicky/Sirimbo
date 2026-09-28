@@ -63,7 +63,7 @@ mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
   }
 }
 
-query Club {
+query Club($showInLists: Boolean) {
   tenant: getCurrentTenant {
     id
     description
@@ -73,7 +73,7 @@ query Club {
     tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
       ...TenantTrainer
     }
-    locationsList: tenantLocationsList {
+    locationsList: tenantLocationsList(condition: { showInLists: $showInLists }) {
       ...LocationSummary
     }
   }

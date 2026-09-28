@@ -15,8 +15,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   name: z.string(),
+  longName: z.string().nullish(),
   description: z.string().nullish(),
-  isPublic: z.boolean().prefault(false),
+  showInLists: z.boolean().prefault(false),
+  latitude: z.number().min(-90).max(90).nullish(),
+  longitude: z.number().min(-180).max(180).nullish(),
   imageIds: z.array(z.string()).prefault([]),
   coverImageId: z.string().nullish(),
   address: z
@@ -34,9 +37,9 @@ const Form = z.object({
 
 export function LocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
+  const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { imageIds: [], coverImageId: null },
+    defaultValues: { name: '', longName: '', imageIds: [], coverImageId: null },
   });
   const [query] = useQuery({
     query: LocationDocument,
@@ -65,8 +68,11 @@ export function LocationForm({ id = '' }: { id?: string }) {
     reset(
       {
         name: item.name,
+        longName: item.longName || item.name,
         description: item.description,
-        isPublic: item.isPublic,
+        showInLists: item.showInLists,
+        latitude: item.latitude,
+        longitude: item.longitude,
         imageIds: item.imagesList.map((x) => x.fileId),
         coverImageId: item.imagesList.some((x) => x.fileId === item.coverImageId)
           ? item.coverImageId
@@ -108,7 +114,27 @@ export function LocationForm({ id = '' }: { id?: string }) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
 
-      <TextFieldElement control={control} name="name" label="Jméno" />
+      <TextFieldElement
+        control={control}
+        name="name"
+        label="Název"
+        onChange={(event) => {
+          const longName = getValues('longName');
+          if (!longName || longName === getValues('name')) {
+            setValue('longName', event.currentTarget.value, { shouldDirty: true });
+          }
+        }}
+      />
+      <TextFieldElement
+        control={control}
+        name="longName"
+        label="Plný název"
+        onBlur={(event) => {
+          if (!getValues('name')) {
+            setValue('name', event.currentTarget.value, { shouldDirty: true });
+          }
+        }}
+      />
       <RichTextEditor
         control={control}
         initialState={item?.description}
@@ -139,7 +165,28 @@ export function LocationForm({ id = '' }: { id?: string }) {
       <TextFieldElement control={control} name="address.region" label="Kraj" />
       <TextField label="Země" value="Česká republika" disabled />
 
-      <CheckboxElement control={control} name="isPublic" label="Veřejné" />
+      <div className="grid gap-2 md:grid-cols-2">
+        <TextFieldElement
+          control={control}
+          name="latitude"
+          type="number"
+          step="any"
+          label="Zeměpisná šířka"
+        />
+        <TextFieldElement
+          control={control}
+          name="longitude"
+          type="number"
+          step="any"
+          label="Zeměpisná délka"
+        />
+      </div>
+
+      <CheckboxElement
+        control={control}
+        name="showInLists"
+        label="Zobrazovat v přehledech míst"
+      />
 
       <FilePicker
         value={imageIds.value ?? []}

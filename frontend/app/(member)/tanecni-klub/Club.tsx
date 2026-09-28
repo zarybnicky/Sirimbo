@@ -29,7 +29,10 @@ export function Club() {
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
-  const [{ data: tenant }] = useQuery({ query: ClubDocument });
+  const [{ data: tenant }] = useQuery({
+    query: ClubDocument,
+    variables: { showInLists: auth.isAdmin ? undefined : true },
+  });
   const [{ data: applications }] = useQuery({
     query: PendingMembershipApplicationsDocument,
   });

@@ -1,30 +1,16 @@
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_type type
-    join pg_namespace namespace on namespace.oid = type.typnamespace
-    where namespace.nspname = 'public' and type.typname = 'location_details_input'
-  ) then
-    create type location_details_input as (
-      id bigint,
-      name text,
-      description text,
-      address address_domain,
-      is_public boolean
-    );
-  end if;
-end;
-$$;
+drop function if exists upsert_location;
+drop type if exists location_details_input;
 
-do $$
-begin
-  if to_regtype('location_image_input') is not null then
-    execute 'drop function if exists upsert_location(location_details_input, location_image_input[])';
-    execute 'drop type location_image_input';
-  end if;
-end;
-$$;
+create type location_details_input as (
+  id bigint,
+  name text,
+  long_name text,
+  description text,
+  address address_domain,
+  show_in_lists boolean,
+  latitude double precision,
+  longitude double precision
+);
 
 create or replace function upsert_location(
   details location_details_input,
@@ -40,25 +26,34 @@ begin
   if details.id is null then
     insert into tenant_location (
       name,
+      long_name,
       description,
       address,
-      is_public,
+      show_in_lists,
+      latitude,
+      longitude,
       cover_image_id
     )
     values (
       details.name,
+      nullif(nullif(btrim(details.long_name), ''), details.name),
       coalesce(details.description, ''),
       details.address,
-      coalesce(details.is_public, true),
+      coalesce(details.show_in_lists, false),
+      details.latitude,
+      details.longitude,
       cover_image_id
     )
     returning * into result;
   else
     update tenant_location
     set name = details.name,
+        long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        is_public = coalesce(details.is_public, true),
+        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
+        latitude = details.latitude,
+        longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id
     where id = details.id
     returning * into result;

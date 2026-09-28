@@ -20099,6 +20099,38 @@
           {
             "name": "isPublic",
             "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "latitude",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "longName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "longitude",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "SCALAR",
@@ -20108,7 +20140,7 @@
             "args": []
           },
           {
-            "name": "name",
+            "name": "showInLists",
             "type": {
               "kind": "NON_NULL",
               "ofType": {

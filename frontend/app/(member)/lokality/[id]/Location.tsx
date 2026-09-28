@@ -57,11 +57,11 @@ export function Location({
   return (
     <>
       <PageHeader
-        title={location.name}
+        title={location.longName || location.name}
         subtitle={
           auth.isAdmin ? (
             <span className={badgeCls()}>
-              {location.isPublic ? 'Viditelná členům' : 'Skrytá'}
+              {location.showInLists ? 'Viditelná' : 'Skrytá'}
             </span>
           ) : undefined
         }
@@ -89,6 +89,19 @@ export function Location({
             ))}
           </div>
         </>
+      )}
+
+      <h2 className="mt-4 mb-2 text-lg font-bold">O místě</h2>
+      {location.description?.trim() ? (
+        <RichTextView className="mb-2" value={location.description} />
+      ) : (
+        <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
+      )}
+
+      {location.address ? (
+        <LocationAddress address={location.address} />
+      ) : (
+        <p className="text-sm text-neutral-10">(Adresa nevyplněna)</p>
       )}
 
       <h2 className="mt-4 mb-2 text-lg font-bold">Fotografie</h2>
@@ -137,19 +150,6 @@ export function Location({
 
       {!coverImage && images.length === 0 && (
         <p className="text-sm text-neutral-10">Nejsou nahrané žádné fotografie.</p>
-      )}
-
-      <h2 className="mt-4 mb-2 text-lg font-bold">O místě</h2>
-      {location.description?.trim() ? (
-        <RichTextView className="mb-2" value={location.description} />
-      ) : (
-        <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
-      )}
-
-      {location.address ? (
-        <LocationAddress address={location.address} />
-      ) : (
-        <p className="text-sm text-neutral-10">(Adresa nevyplněna)</p>
       )}
 
       {location.accessEventsList.length > 0 && (
