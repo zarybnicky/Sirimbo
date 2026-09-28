@@ -3,6 +3,9 @@
 !package.json
 !pnpm-lock.yaml
 !pnpm-workspace.yaml
+!graphql.config.yml
+!graphql/
+!graphql/*.graphql
 
 !patches/
 !patches/**

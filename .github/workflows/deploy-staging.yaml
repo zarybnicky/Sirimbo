@@ -39,6 +39,7 @@ jobs:
           docker buildx build \
             --file deploy/Dockerfile \
             --target runner \
+            --no-cache-filter graphql-validation \
             --platform linux/amd64 \
             --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \

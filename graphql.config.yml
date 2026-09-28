@@ -1,5 +1,5 @@
 
-schema: schema.graphql
+schema: ${GRAPHQL_SCHEMA:schema.graphql}
 documents: "graphql/*.graphql"
 overwrite: true
 

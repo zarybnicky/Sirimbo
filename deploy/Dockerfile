@@ -21,16 +21,21 @@ COPY patches/ patches/
 COPY frontend/package.json frontend/package.json
 
 RUN --mount=type=cache,id=sirimbo-pnpm,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter @rozpisovnik/web...
+  pnpm install --frozen-lockfile --filter rozpisovnik --filter @rozpisovnik/web...
 
-FROM deps AS builder
+FROM deps AS graphql-validation
+
+COPY . .
+ARG NEXT_PUBLIC_GRAPHQL_BACKEND
+RUN test -n "$NEXT_PUBLIC_GRAPHQL_BACKEND" \
+  && GRAPHQL_SCHEMA="${NEXT_PUBLIC_GRAPHQL_BACKEND%/}/graphql" pnpm schema
+
+FROM graphql-validation AS builder
 
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND
 ARG NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT
 ARG SENTRY_AUTH_TOKEN
-
-COPY . .
 
 ARG GITHUB_SHA
 ENV SENTRY_RELEASE=${GITHUB_SHA}
