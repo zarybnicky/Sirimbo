@@ -131,7 +131,8 @@ export function ExhibitionRequestForm() {
         />
 
         <p className="py-2 prose prose-accent">
-          Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.
+          Ozveme se Vám co nejdříve. V případě potřeby volejte{' '}
+          <a href="tel:+420737545525">737 545 525</a>.
         </p>
 
         <FormError error={result.error} />

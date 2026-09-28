@@ -52,8 +52,16 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
 
   const subtitleParts = [
     categoryProgress,
-    item.phone,
-    item.email,
+    item.phone && (
+      <a className="underline" href={`tel:${item.phone.replaceAll(' ', '')}`}>
+        {item.phone}
+      </a>
+    ),
+    item.email && (
+      <a className="underline" href={`mailto:${item.email}`}>
+        {item.email}
+      </a>
+    ),
     item.cstsId && (
       <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">
         ČSTS

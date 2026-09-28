@@ -165,7 +165,9 @@ export function Footer() {
             <br />
             IČO: 68347286
             <br />
-            miroslav.hyza@tkolymp.cz
+            <a className="underline" href="mailto:miroslav.hyza@tkolymp.cz">
+              miroslav.hyza@tkolymp.cz
+            </a>
           </div>
 
           <Link

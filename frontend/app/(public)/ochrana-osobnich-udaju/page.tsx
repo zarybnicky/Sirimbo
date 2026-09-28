@@ -26,7 +26,10 @@ export default function OchranaOsobnichUdajuPage() {
         </p>
         <p>2. Kontaktní údaje správce jsou:</p>
         <p>Adresa: Jiráskova 25, 779 00, Olomouc</p>
-        <p>E-mail: miroslav.hyza@tkolymp.cz</p>
+        <p>
+          E-mail:{' '}
+          <a href="mailto:miroslav.hyza@tkolymp.cz">miroslav.hyza@tkolymp.cz</a>
+        </p>
         <p>
           3. Osobními údaji se rozumí veškeré informace o identifikované nebo
           identifikovatelné fyzické osobě; identifikovatelnou fyzickou osobou je fyzická

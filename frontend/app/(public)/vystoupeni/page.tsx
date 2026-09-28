@@ -41,8 +41,8 @@ export default function Vystoupeni() {
         </ul>
 
         <p>
-          Můžete nás kontaktovat na 737 644 899 nebo nezávazně vyplnit formulář a my se
-          Vám ozveme.
+          Můžete nás kontaktovat na <a href="tel:+420737644899">737 644 899</a> nebo
+          nezávazně vyplnit formulář a my se Vám ozveme.
         </p>
       </div>
 

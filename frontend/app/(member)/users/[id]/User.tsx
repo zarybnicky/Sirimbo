@@ -42,7 +42,11 @@ export function User({ id }: { id: string }) {
             <dt>ID</dt>
             <dd>{user.id}</dd>
             <dt>E-mail</dt>
-            <dd>{user.uEmail}</dd>
+            <dd>
+              <a className="underline" href={`mailto:${user.uEmail}`}>
+                {user.uEmail}
+              </a>
+            </dd>
             <dt>Jméno</dt>
             <dd>{[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ')}</dd>
             <dt>Vytvořen</dt>

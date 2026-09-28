@@ -98,7 +98,11 @@ export function Crm() {
                 <td key={x}>
                   {x === 'date'
                     ? fullDateFormatter.format(new Date(row.data[x] as string))
-                    : row.data[x]}
+                    : x === 'email' && row.data[x]
+                      ? <a className="underline" href={`mailto:${row.data[x]}`}>{row.data[x]}</a>
+                      : x === 'phone' && row.data[x]
+                        ? <a className="underline" href={`tel:${String(row.data[x]).replaceAll(' ', '')}`}>{row.data[x]}</a>
+                        : row.data[x]}
                 </td>
               ))}
               <td className="text-right">
