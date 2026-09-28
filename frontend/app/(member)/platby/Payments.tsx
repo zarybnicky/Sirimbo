@@ -3,7 +3,7 @@
 import { PageHeader } from '@/ui/TitleBar';
 import React from 'react';
 import { parseAsString, useQueryState } from 'nuqs';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { useClient, useQuery } from 'urql';
 import {
   TenantManualCreditTransactionsDocument,
@@ -42,38 +42,28 @@ export function Payments() {
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const tabs = React.useMemo(() => ([
-    {
-      id: 'info',
-      title: <>Stav kreditu</>,
-      contents: () => <AccountOverview key="info" />,
-    },
-    {
-      id: 'unpaid',
-      title: <>Nezaplacené</>,
-      contents: () => <UnpaidPayments key="unpaid" />,
-    },
-    {
-      id: 'turnover',
-      title: <>Obrat klubu</>,
-      contents: () => <TenantTurnover key="turnover" />,
-    },
-    {
-      id: 'deposits',
-      title: <>Dobití kreditu</>,
-      contents: () => <TenantDeposits key="deposits" />,
-    },
-  ]), []);
-
   return (
     <>
       <PageHeader title="Platby" />
-      <TabMenu selected={tab} onSelect={setTab} options={tabs} />
+      <TabMenu selected={tab} onSelect={setTab}>
+        <Tab id="info" title="Stav kreditu">
+          <AccountOverview />
+        </Tab>
+        <Tab id="unpaid" title="Nezaplacené">
+          <UnpaidPayments />
+        </Tab>
+        <Tab id="turnover" title="Obrat klubu">
+          <TenantTurnover />
+        </Tab>
+        <Tab id="deposits" title="Dobití kreditu">
+          <TenantDeposits />
+        </Tab>
+      </TabMenu>
     </>
   );
 }
 
-function AccountOverview() {
+const AccountOverview = React.memo(function AccountOverview() {
   const client = useClient();
   const [{ data }] = useQuery({ query: PersonAccountsDocument });
 
@@ -104,9 +94,9 @@ function AccountOverview() {
       ))}
     </>
   );
-}
+});
 
-function UnpaidPayments() {
+const UnpaidPayments = React.memo(function UnpaidPayments() {
   const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
   const unpaid = data?.unpaidPayments?.filter(keyIsNonNull('payment')) ?? [];
   const actionMap = useActionMap(
@@ -125,9 +115,9 @@ function UnpaidPayments() {
       <span>{moneyFormatter.format(x.price)}</span>
     </ActionRow>
   ));
-}
+});
 
-function TenantTurnover() {
+const TenantTurnover = React.memo(function TenantTurnover() {
   const client = useClient();
   const auth = useAuth();
   const [accounts, setAccounts] = React.useState<Map<string, TenantAccount>>(new Map());
@@ -343,14 +333,14 @@ function TenantTurnover() {
       )}
     </div>
   );
-}
+});
 
 interface TenantDepositsPageProps {
   cursor?: string | null;
   onLoadMore?: (cursor: string) => void;
 }
 
-function TenantDeposits() {
+const TenantDeposits = React.memo(function TenantDeposits() {
   const [cursors, setCursors] = React.useState<Array<string | null>>([null]);
 
   const handleLoadMore = React.useCallback((cursor: string) => {
@@ -370,7 +360,7 @@ function TenantDeposits() {
       </div>
     </div>
   );
-}
+});
 
 function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
   const [{ data, fetching, error }] = useQuery({

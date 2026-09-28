@@ -8,7 +8,7 @@ import { useQuery } from 'urql';
 import { useAuth } from '@/lib/auth';
 import { formatAgeGroup } from '@/ui/format';
 import { parseAsString, useQueryState } from 'nuqs';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
@@ -19,7 +19,7 @@ import { CstsPersonLink } from '@/ui/csts-links';
 import { Globe, Music2 } from 'lucide-react';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
-export function PersonView({ id }: { id: string }) {
+export const PersonView = React.memo(function PersonView({ id }: { id: string }) {
   const auth = useAuth();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
@@ -46,39 +46,7 @@ export function PersonView({ id }: { id: string }) {
     .filter(Boolean)
     .join(' ');
 
-  const tabs = React.useMemo(() => {
-    if (!item) return [];
-
-    const tabs = [
-      {
-        id: 'info',
-        title: <>Členství</>,
-        contents: () => <PersonMembershipView key="memberships" item={item} />,
-      },
-    ];
-    if (isAdminOrCurrentPerson) {
-      tabs.push(
-        {
-          id: 'activity',
-          title: <>Aktivita</>,
-          contents: () => <ActivityTimeline personIds={[id]} includeJudging />,
-        },
-        {
-          id: 'payment',
-          title: <>Platby</>,
-          contents: () => <PersonPaymentsView key="payments" id={id} />,
-        },
-      );
-    }
-    if (isAdminOrCurrentPerson && auth.isTrainer) {
-      tabs.push({
-        id: 'workReport',
-        title: <>Výkaz práce</>,
-        contents: () => <PersonWorkReportView key="work-report" id={id} />,
-      });
-    }
-    return tabs;
-  }, [id, item, isAdminOrCurrentPerson, auth.isTrainer]);
+  const personIds = React.useMemo(() => [id], [id]);
 
   if (!item) return null;
 
@@ -169,7 +137,24 @@ export function PersonView({ id }: { id: string }) {
         </div>
       )}
 
-      <TabMenu selected={tab} onSelect={setTab} options={tabs} />
+      <TabMenu selected={tab} onSelect={setTab}>
+        <Tab id="info" title="Členství">
+          <PersonMembershipView item={item} />
+        </Tab>
+        {isAdminOrCurrentPerson && (
+          <>
+            <Tab id="activity" title="Aktivita">
+              <ActivityTimeline personIds={personIds} includeJudging />
+            </Tab>
+            <Tab id="payment" title="Platby">
+              <PersonPaymentsView id={id} />
+            </Tab>
+            <Tab id="workReport" title="Výkaz práce" requireTrainer>
+              <PersonWorkReportView id={id} />
+            </Tab>
+          </>
+        )}
+      </TabMenu>
     </>
   );
-}
+});

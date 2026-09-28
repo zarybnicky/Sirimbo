@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useQuery } from 'urql';
 import { cardCls } from '../style';
 
-export function MyEventsList() {
+export const MyEventsList = React.memo(function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
@@ -84,4 +84,4 @@ export function MyEventsList() {
       </div>
     </div>
   );
-}
+});

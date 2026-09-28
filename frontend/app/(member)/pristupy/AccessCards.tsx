@@ -22,7 +22,7 @@ import { cn } from '@/lib/cn';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { dateTimeFormatter } from '@/ui/format';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { SelectField, type SelectOption } from '@/ui/fields/select';
@@ -126,11 +126,6 @@ function summarizeAccess(
   };
 }
 
-const tabs = [
-  { id: 'people', title: 'Osoby', contents: () => <PeopleAccessTab /> },
-  { id: 'events', title: 'Přístupy', contents: () => <EventsTab /> },
-];
-
 export function AccessCards() {
   const { enableStarletImport } = useTenantConfig();
   const [tab, setTab] = useQueryState(
@@ -142,7 +137,14 @@ export function AccessCards() {
     <>
       <PageHeader title="Přístupy" />
       {enableStarletImport ? (
-        <TabMenu selected={tab} onSelect={setTab} options={tabs} />
+        <TabMenu selected={tab} onSelect={setTab}>
+          <Tab id="people" title="Osoby">
+            <PeopleAccessTab />
+          </Tab>
+          <Tab id="events" title="Přístupy">
+            <EventsTab />
+          </Tab>
+        </TabMenu>
       ) : (
         <PeopleAccessTab />
       )}
@@ -150,7 +152,7 @@ export function AccessCards() {
   );
 }
 
-function PeopleAccessTab() {
+const PeopleAccessTab = React.memo(function PeopleAccessTab() {
   const { enableStarletImport = false } = useTenantConfig();
   const [webFacet, setWebFacet] = React.useState<AccessFacet>('all');
   const [cardFacet, setCardFacet] = React.useState<AccessFacet>('all');
@@ -351,7 +353,7 @@ function PeopleAccessTab() {
       </div>
     </>
   );
-}
+});
 
 function AccessWarning({
   message,
@@ -521,7 +523,7 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
   );
 });
 
-function EventsTab() {
+const EventsTab = React.memo(function EventsTab() {
   const [{ data, error }] = useQuery({ query: AccessEventOverviewDocument });
   const credentials = React.useMemo(
     () => data?.accessCredentialsList ?? [],
@@ -594,7 +596,7 @@ function EventsTab() {
       )}
     </div>
   );
-}
+});
 
 function AccessMenu({
   person,

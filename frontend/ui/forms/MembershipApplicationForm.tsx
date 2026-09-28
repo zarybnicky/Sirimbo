@@ -64,7 +64,7 @@ const Form = ApplicationForm.extend({
   cohortIds: z.array(z.string()),
 });
 
-export function MembershipApplicationForm({
+export const MembershipApplicationForm = React.memo(function MembershipApplicationForm({
   data,
   onCreate,
   onRemove,
@@ -383,4 +383,4 @@ export function MembershipApplicationForm({
       </div>
     </form>
   );
-}
+});

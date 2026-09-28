@@ -1,41 +1,51 @@
+'use client';
+
+import { useAuth, useTenantConfig } from '@/lib/auth';
+import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import { cn } from '@/lib/cn';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
+
+export interface TabProps extends AccessRequirements {
+  id: string;
+  title: React.ReactNode;
+  children: React.ReactNode;
+}
+
+export function Tab({ children }: TabProps) {
+  return children;
+}
+
+function collectTabs(children: React.ReactNode): TabProps[] {
+  return React.Children.toArray(children).flatMap((child) => {
+    if (!React.isValidElement<TabProps>(child)) return [];
+    if (child.type === React.Fragment) return collectTabs(child.props.children);
+    return child.type === Tab ? [child.props] : [];
+  });
+}
 
 export interface TabMenuProps {
   className?: string;
-  options: {
-    id: string;
-    title: React.ReactNode;
-    contents: () => React.ReactNode;
-  }[];
   selected: string | null | undefined;
   onSelect: (x: string) => void;
   children?: React.ReactNode;
 }
 
-export const TabMenu = React.memo(function TabMenu({
-  className,
-  options,
-  selected,
-  onSelect,
-}: TabMenuProps) {
-  const active = useMemo(() => {
-    return (
-      options.find((x) => x.id === selected) ||
-      options[0] || {
-        id: '',
-        title: '',
-        contents: () => null,
-      }
-    );
-  }, [options, selected]);
+export function TabMenu({ className, children, selected, onSelect }: TabMenuProps) {
+  const auth = useAuth();
+  const tenant = useTenantConfig();
+  const tabs = collectTabs(children).filter((tab) => canAccess(auth, tenant, tab));
+  const active = tabs.find((tab) => tab.id === selected) ?? tabs[0];
+  if (!active) return null;
 
   return (
     <>
       <nav
-        className={cn("print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto", className)}
+        className={cn(
+          'print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto',
+          className,
+        )}
       >
-        {options.map((tab) => (
+        {tabs.map((tab) => (
           <TabButton
             key={tab.id}
             id={tab.id}
@@ -46,14 +56,12 @@ export const TabMenu = React.memo(function TabMenu({
         ))}
       </nav>
 
-      <React.Fragment key={active.id}>
-        {useMemo(() => active.contents(), [active])}
-      </React.Fragment>
+      <React.Fragment key={active.id}>{active.children}</React.Fragment>
     </>
   );
-});
+}
 
-function TabButton({
+const TabButton = React.memo(function TabButton({
   id,
   title,
   onSelect,
@@ -80,4 +88,4 @@ function TabButton({
       {title}
     </button>
   );
-}
+});

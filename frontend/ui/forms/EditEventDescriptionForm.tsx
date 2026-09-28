@@ -1,5 +1,5 @@
 import { EventDescriptionDocument, UpdateEventDocument } from '@/graphql/Event';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
@@ -46,45 +46,31 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
     if (!result.error) onSuccess();
   };
 
-  const tabs: Array<{
-    id: string;
-    title: React.ReactNode;
-    contents: () => React.ReactNode;
-  }> = instance
-    ? [
-        {
-          id: 'summary',
-          title: 'Shrnutí',
-          contents: () => (
-            <RichTextEditor
-              name="summary"
-              initialState={values.summary || instance.summary || ''}
-              control={control}
-              key="summary"
-            />
-          ),
-        },
-        {
-          id: 'description',
-          title: 'Dlouhý popis',
-          contents: () => (
-            <RichTextEditor
-              name="description"
-              initialState={values.description || instance.description || ''}
-              control={control}
-              key="description"
-            />
-          ),
-        },
-      ]
-    : [];
-
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
 
       <div className="max-w-full">
-        <TabMenu selected={tab} onSelect={setTab} options={tabs} />
+        <TabMenu selected={tab} onSelect={setTab}>
+          {instance && (
+            <>
+              <Tab id="summary" title="Shrnutí">
+                <RichTextEditor
+                  name="summary"
+                  initialState={values.summary || instance.summary || ''}
+                  control={control}
+                />
+              </Tab>
+              <Tab id="description" title="Dlouhý popis">
+                <RichTextEditor
+                  name="description"
+                  initialState={values.description || instance.description || ''}
+                  control={control}
+                />
+              </Tab>
+            </>
+          )}
+        </TabMenu>
       </div>
 
       <div className="flex flex-wrap gap-4">

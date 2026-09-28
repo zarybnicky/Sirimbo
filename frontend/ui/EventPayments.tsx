@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { EventPaymentsDocument } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
@@ -6,7 +7,7 @@ import { Spinner } from '@/ui/Spinner';
 import { fullDateFormatter, moneyFormatter } from '@/ui/format';
 import { useQuery } from 'urql';
 
-export function EventPayments({ id }: { id: string }) {
+export const EventPayments = memo(function EventPayments({ id }: { id: string }) {
   const [{ data, fetching }] = useQuery({
     query: EventPaymentsDocument,
     variables: { id },
@@ -49,4 +50,4 @@ export function EventPayments({ id }: { id: string }) {
       ))}
     </div>
   );
-}
+});

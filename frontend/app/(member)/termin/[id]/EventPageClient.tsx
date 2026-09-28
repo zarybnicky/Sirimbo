@@ -14,12 +14,11 @@ import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
-import React from 'react';
 import { useQuery } from 'urql';
 
 export function EventPageClient({
@@ -47,80 +46,10 @@ export function EventPageClient({
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const tabs = React.useMemo(() => {
-    if (!instance) return [];
-    const tabs: {
-      id: string;
-      title: React.ReactNode;
-      contents: () => React.ReactNode;
-    }[] = [
-      {
-        id: 'info',
-        title: 'Info',
-        contents: () => <BasicEventInfo instance={instance} />,
-      },
-    ];
-
-    const schedule =
-      auth.isLoggedIn || instance.hasPublicDetails || hasShareToken ? instance : null;
-    if (schedule?.type?.toUpperCase() === 'CAMP') {
-      tabs.unshift({
-        id: 'schedule',
-        title: 'Rozpis',
-        contents: () => (
-          <CampSchedule id={schedule.id} since={schedule.since} until={schedule.until} />
-        ),
-      });
-    }
-
-    const numRegistrations = instance.registrationInfo?.registrations ?? 0;
-    if (auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) {
-      tabs.push({
-        id: 'registrations',
-        title: `Přihlášky (${numRegistrations})`,
-        contents: () => (
-          <div className="col-popout">
-            <EventRegistrations instance={instance} />
-          </div>
-        ),
-      });
-    }
-
-    if (instance?.type === 'CAMP' && auth.isTrainer) {
-      tabs.push(
-        {
-          id: 'lessons',
-          title: 'Lekce',
-          contents: () => (
-            <div className="col-full-width relative">
-              <CampLessonsTable id={instance.id} />
-            </div>
-          ),
-        },
-        {
-          id: 'trainers',
-          title: 'Trenéři',
-          contents: () => (
-            <div className="col-full-width relative">
-              <CampTrainersTable id={instance.id} />
-            </div>
-          ),
-        },
-      );
-    }
-    if (auth.isTrainer) {
-      tabs.push({
-        id: 'payments',
-        title: 'Platby',
-        contents: () => (
-          <div className="col-popout">
-            <EventPayments id={instance.id} />
-          </div>
-        ),
-      });
-    }
-    return tabs;
-  }, [auth.isLoggedIn, auth.isTrainer, hasShareToken, instance]);
+  const showSchedule =
+    instance?.type?.toUpperCase() === 'CAMP' &&
+    (auth.isLoggedIn || instance.hasPublicDetails || hasShareToken);
+  const numRegistrations = instance?.registrationInfo?.registrations ?? 0;
 
   return (
     <Layout hideTopMenuIfLoggedIn>
@@ -146,8 +75,50 @@ export function EventPageClient({
         className="col-feature"
         selected={variant === 'attendance' ? 'registrations' : variant}
         onSelect={setVariant}
-        options={tabs}
-      />
+      >
+        {instance && (
+          <>
+            {showSchedule && (
+              <Tab id="schedule" title="Rozpis">
+                <CampSchedule
+                  id={instance.id}
+                  since={instance.since}
+                  until={instance.until}
+                />
+              </Tab>
+            )}
+            <Tab id="info" title="Info">
+              <BasicEventInfo instance={instance} />
+            </Tab>
+            {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
+              <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
+                <div className="col-popout">
+                  <EventRegistrations instance={instance} />
+                </div>
+              </Tab>
+            )}
+            {instance.type === 'CAMP' && (
+              <>
+                <Tab id="lessons" title="Lekce" requireTrainer>
+                  <div className="col-full-width relative">
+                    <CampLessonsTable id={instance.id} />
+                  </div>
+                </Tab>
+                <Tab id="trainers" title="Trenéři" requireTrainer>
+                  <div className="col-full-width relative">
+                    <CampTrainersTable id={instance.id} />
+                  </div>
+                </Tab>
+              </>
+            )}
+            <Tab id="payments" title="Platby" requireTrainer>
+              <div className="col-popout">
+                <EventPayments id={instance.id} />
+              </div>
+            </Tab>
+          </>
+        )}
+      </TabMenu>
     </Layout>
   );
 }

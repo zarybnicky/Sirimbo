@@ -3,28 +3,9 @@
 import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { useAuth, useAuthLoading } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
-
-const tabs = [
-  { id: 'myLessons', title: 'Moje události', contents: () => <MyEventsList /> },
-  {
-    id: 'competitions',
-    title: 'Soutěže',
-    contents: () => <CompetitionWeekPanel allowOnlyMine />,
-  },
-  {
-    id: 'myAnnouncements',
-    title: 'Aktuality',
-    contents: () => <MyAnnouncements />,
-  },
-  {
-    id: 'stickyAnnouncements',
-    title: 'Stálá nástěnka',
-    contents: () => <StickyAnnouncements />,
-  },
-];
 
 export function Dashboard() {
   const auth = useAuth();
@@ -39,7 +20,20 @@ export function Dashboard() {
   return (
     <div className="col-full-width p-4 lg:py-8 h-full bg-neutral-2">
       <div className="xl:hidden">
-        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
+        <TabMenu selected={variant} onSelect={setVariant}>
+          <Tab id="myLessons" title="Moje události">
+            <MyEventsList />
+          </Tab>
+          <Tab id="competitions" title="Soutěže">
+            <CompetitionWeekPanel allowOnlyMine />
+          </Tab>
+          <Tab id="myAnnouncements" title="Aktuality">
+            <MyAnnouncements />
+          </Tab>
+          <Tab id="stickyAnnouncements" title="Stálá nástěnka">
+            <StickyAnnouncements />
+          </Tab>
+        </TabMenu>
       </div>
 
       <div className="hidden xl:grid grid-cols-3 gap-4">

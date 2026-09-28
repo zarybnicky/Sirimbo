@@ -54,7 +54,7 @@ type ActivityTimelineProps = {
   includeJudging?: boolean;
 };
 
-export function ActivityTimeline({
+export const ActivityTimeline = React.memo(function ActivityTimeline({
   defaultMode = 'past',
   personIds,
   cohortId,
@@ -73,7 +73,7 @@ export function ActivityTimeline({
       includeJudging={includeJudging}
     />
   );
-}
+});
 
 function ActivityTimelineScope({
   mode,

@@ -69,7 +69,7 @@ export function AnnouncementSortControls({
   );
 }
 
-export function MyAnnouncements() {
+export const MyAnnouncements = React.memo(function MyAnnouncements() {
   const [page, setPage] = React.useState(1);
   const [state, setState] = React.useState('current');
   const [sort, setSort] = React.useState<SortOption>('updated');
@@ -148,9 +148,9 @@ export function MyAnnouncements() {
       )}
     </div>
   );
-}
+});
 
-export function StickyAnnouncements() {
+export const StickyAnnouncements = React.memo(function StickyAnnouncements() {
   const [sort, setSort] = React.useState<SortOption>('updated');
 
   const [{ data }] = useQuery({
@@ -177,4 +177,4 @@ export function StickyAnnouncements() {
       </div>
     </div>
   );
-}
+});

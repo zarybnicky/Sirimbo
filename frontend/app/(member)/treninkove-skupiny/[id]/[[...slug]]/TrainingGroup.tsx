@@ -20,7 +20,7 @@ import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { useAuth } from '@/lib/auth';
-import { TabMenu } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 
 export function TrainingGroup({
@@ -43,67 +43,11 @@ export function TrainingGroup({
     () => cohort.cohortMembershipsList ?? [],
     [cohort.cohortMembershipsList],
   );
-  const membershipActionMap = useActionMap(cohortMembershipActions, members);
-  const memberActionMap = useActionMap(
-    personActions,
-    members.map((x) => x.person).filter(isTruthy),
-  );
   const description = React.useMemo(
     () => cohort.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort.description],
   );
   const actions = useActions(cohortActions, cohort);
-  const tabs = [
-    {
-      id: 'members',
-      title: `Členové (${members.length})`,
-      contents: () => (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[1fr_minmax(0,14rem)_minmax(0,14rem)_auto] pb-4">
-          {members.map((membership) => (
-            <div
-              key={membership.id}
-              className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
-            >
-              <ActionRow
-                className="mb-0 min-w-max"
-                actions={[
-                  ...(membership.person
-                    ? memberActionMap.get(membership.person.id)!
-                    : []),
-                  ...membershipActionMap.get(membership.id)!,
-                ]}
-              >
-                {membership.person ? (
-                  <span className="inline-flex items-center gap-1">
-                    <Link
-                      className="font-bold underline"
-                      href={`/clenove/${membership.person.id}`}
-                    >
-                      {membership.person.name}
-                    </Link>
-                  </span>
-                ) : (
-                  '?'
-                )}
-              </ActionRow>
-
-              <div className="order-3 lg:order-2">
-                <CategoryList person={membership.person} discipline="Standard" />
-              </div>
-              <div className="order-4 lg:order-3">
-                <CategoryList person={membership.person} discipline="Latin" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ),
-    },
-    {
-      id: 'activity',
-      title: 'Aktivita',
-      contents: () => <ActivityTimeline cohortId={cohort.id} />,
-    },
-  ];
 
   return (
     <>
@@ -126,7 +70,16 @@ export function TrainingGroup({
 
       <RichTextView value={description} />
 
-      {auth.isLoggedIn && <TabMenu selected={tab} onSelect={setTab} options={tabs} />}
+      {auth.isLoggedIn && (
+        <TabMenu selected={tab} onSelect={setTab}>
+          <Tab id="members" title={`Členové (${members.length})`}>
+            <TrainingGroupMembers members={members} />
+          </Tab>
+          <Tab id="activity" title="Aktivita">
+            <ActivityTimeline cohortId={cohort.id} />
+          </Tab>
+        </TabMenu>
+      )}
     </>
   );
 }
@@ -177,3 +130,54 @@ function CategoryList({
     </div>
   );
 }
+
+const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
+  members,
+}: {
+  members: NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList'];
+}) {
+  const membershipActionMap = useActionMap(cohortMembershipActions, members);
+  const memberActionMap = useActionMap(
+    personActions,
+    members.map((x) => x.person).filter(isTruthy),
+  );
+
+  return (
+    <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[1fr_minmax(0,14rem)_minmax(0,14rem)_auto] pb-4">
+      {members.map((membership) => (
+        <div
+          key={membership.id}
+          className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
+        >
+          <ActionRow
+            className="mb-0 min-w-max"
+            actions={[
+              ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
+              ...membershipActionMap.get(membership.id)!,
+            ]}
+          >
+            {membership.person ? (
+              <span className="inline-flex items-center gap-1">
+                <Link
+                  className="font-bold underline"
+                  href={`/clenove/${membership.person.id}`}
+                >
+                  {membership.person.name}
+                </Link>
+              </span>
+            ) : (
+              '?'
+            )}
+          </ActionRow>
+
+          <div className="order-3 lg:order-2">
+            <CategoryList person={membership.person} discipline="Standard" />
+          </div>
+          <div className="order-4 lg:order-3">
+            <CategoryList person={membership.person} discipline="Latin" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+});

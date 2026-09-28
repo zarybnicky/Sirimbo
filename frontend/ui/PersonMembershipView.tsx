@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonWithLinksFragment } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -28,7 +29,7 @@ import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 
-export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
+export const PersonMembershipView = memo(function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
   const auth = useAuth();
   const { enableStarletImport } = useTenantConfig();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
@@ -279,7 +280,7 @@ export function PersonMembershipView({ item }: { item: PersonWithLinksFragment }
       )}
     </div>
   );
-}
+});
 
 function CoupleRow({ item }: { item: CoupleFragment }) {
   const actions = useActions(coupleActions, item);

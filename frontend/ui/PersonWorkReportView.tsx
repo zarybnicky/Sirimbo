@@ -40,7 +40,7 @@ function formatDuration(minutes: number) {
 const toMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
-export function PersonWorkReportView({ id }: { id: string }) {
+export const PersonWorkReportView = React.memo(function PersonWorkReportView({ id }: { id: string }) {
   const now = React.useMemo(() => new Date(), []);
   const month = React.useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
   const workReportQueryParsers = React.useMemo(
@@ -272,4 +272,4 @@ export function PersonWorkReportView({ id }: { id: string }) {
       )}
     </div>
   );
-}
+});

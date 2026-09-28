@@ -5,15 +5,13 @@ import { useActions } from '@/lib/actions';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { PersonView } from '@/ui/PersonView';
-import { TabMenu, type TabMenuProps } from '@/ui/TabMenu';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/TitleBar';
 import { useAuth, useAuthLoading, useTenantConfig } from '@/lib/auth';
 import { LockKeyhole } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
-import React from 'react';
+import { useCallback } from 'react';
 import { useQuery } from 'urql';
-
-type Tabs = TabMenuProps['options'];
 
 export function Profile() {
   const auth = useAuth();
@@ -28,6 +26,14 @@ export function Profile() {
     'person',
     parseAsString.withOptions({ history: 'push' }),
   );
+  const onApplicationCreated = useCallback(
+    (id: string) => setVariant(`application-${id}`),
+    [setVariant],
+  );
+  const onApplicationRemoved = useCallback(
+    () => setVariant('new-application'),
+    [setVariant],
+  );
   const actions = useActions(
     [
       {
@@ -40,48 +46,40 @@ export function Profile() {
     ],
     {},
   );
-  const tabs = React.useMemo<Tabs>(() => {
-    const tabs: Tabs = auth.persons.map((person) => ({
-      id: person.id,
-      title: person.name,
-      contents: () => <PersonView id={person.id} />,
-    }));
-
-    if (enableRegistration) {
-      const applications = data?.membershipApplicationsList ?? [];
-      tabs.push(
-        ...applications.map((application) => ({
-          id: `application-${application.id}`,
-          title: `${application.firstName} ${application.lastName}`,
-          contents: () => (
-            <MembershipApplicationForm
-              data={application}
-              onRemove={() => setVariant('new-application')}
-            />
-          ),
-        })),
-        {
-          id: 'new-application',
-          title: 'Nová přihláška',
-          contents: () => (
-            <MembershipApplicationForm
-              onCreate={(id) => setVariant(`application-${id}`)}
-            />
-          ),
-        },
-      );
-    }
-
-    return tabs;
-  }, [auth.persons, data?.membershipApplicationsList, enableRegistration, setVariant]);
-
   if (authLoading || !auth.user) return null;
 
   return (
     <>
       <PageHeader title="Můj profil" actions={actions} />
       <div className="max-w-full">
-        <TabMenu selected={variant} onSelect={setVariant} options={tabs} />
+        <TabMenu selected={variant} onSelect={setVariant}>
+          {auth.persons.map((person) => (
+            <Tab key={person.id} id={person.id} title={person.name}>
+              <PersonView id={person.id} />
+            </Tab>
+          ))}
+          {enableRegistration && (
+            <>
+              {data?.membershipApplicationsList?.map((application) => (
+                <Tab
+                  key={application.id}
+                  id={`application-${application.id}`}
+                  title={`${application.firstName} ${application.lastName}`}
+                >
+                  <MembershipApplicationForm
+                    data={application}
+                    onRemove={onApplicationRemoved}
+                  />
+                </Tab>
+              ))}
+              <Tab id="new-application" title="Nová přihláška">
+                <MembershipApplicationForm
+                  onCreate={onApplicationCreated}
+                />
+              </Tab>
+            </>
+          )}
+        </TabMenu>
       </div>
     </>
   );

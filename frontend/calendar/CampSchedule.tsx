@@ -36,7 +36,7 @@ import { Calendar } from './Calendar';
 
 const emptyRegistrations: EventInstanceRegistrationFragment[] = [];
 
-export function CampSchedule({
+export const CampSchedule = React.memo(function CampSchedule({
   id,
   since,
   until,
@@ -253,7 +253,7 @@ export function CampSchedule({
       )}
     </div>
   );
-}
+});
 
 type ScheduledLesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
 

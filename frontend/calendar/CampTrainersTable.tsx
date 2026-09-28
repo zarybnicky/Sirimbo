@@ -21,7 +21,7 @@ type Row = {
 
 const dayKeyFormatter = new Intl.DateTimeFormat('sv-SE');
 
-export function CampTrainersTable({ id }: { id: string }) {
+export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: { id: string }) {
   const [query] = useQuery({ query: CampTrainerOverviewDocument, variables: { id } });
   const { rows, days } = React.useMemo(() => {
     const rows = new Map<string, Row>();
@@ -150,7 +150,7 @@ export function CampTrainersTable({ id }: { id: string }) {
       )}
     </div>
   );
-}
+});
 
 function EventCounts({ events }: { events: ScheduledEvent[] }) {
   const lessons = events.filter((event) => event.type === 'LESSON').length;

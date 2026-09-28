@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { EventWithAttendanceQuery } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
 import { canManageInstance, eventRegistrationActions, eventExternalRegistrationActions } from '@/lib/actions/eventInstance';
@@ -8,7 +9,7 @@ import { dateTimeFormatter, formatCoupleName, numericDateFormatter } from '@/ui/
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 
-export function EventRegistrations({
+export const EventRegistrations = memo(function EventRegistrations({
   instance,
 }: {
   instance: NonNullable<EventWithAttendanceQuery['event']>;
@@ -129,4 +130,4 @@ export function EventRegistrations({
       </table>
     </div>
   );
-}
+});

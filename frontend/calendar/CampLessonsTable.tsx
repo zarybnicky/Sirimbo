@@ -23,7 +23,7 @@ type Row = {
   nested?: boolean;
 };
 
-export function CampLessonsTable({ id }: { id: string }) {
+export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { id: string }) {
   const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id },
@@ -305,4 +305,4 @@ export function CampLessonsTable({ id }: { id: string }) {
       )}
     </div>
   );
-}
+});

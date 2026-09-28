@@ -19,7 +19,7 @@ import React from 'react';
 import { Column, DataGrid, SortColumn } from 'react-data-grid';
 import { useQuery } from 'urql';
 
-export function PersonPaymentsView({ id }: { id: string }) {
+export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }: { id: string }) {
   const [query] = useQuery({
     query: PersonPaymentsDocument,
     variables: { id },
@@ -114,7 +114,7 @@ export function PersonPaymentsView({ id }: { id: string }) {
       ))}
     </div>
   );
-}
+});
 
 type Account = NonNullable<
   NonNullable<PersonPaymentsQuery['person']>['accountsList']

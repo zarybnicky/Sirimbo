@@ -307,7 +307,7 @@ function CompetitionSourceName({
   );
 }
 
-export function CompetitionWeekPanel({
+export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   personIds,
   cohortId,
   allowOnlyMine = false,
@@ -430,4 +430,4 @@ export function CompetitionWeekPanel({
       )}
     </section>
   );
-}
+});
