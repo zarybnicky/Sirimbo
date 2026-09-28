@@ -23,6 +23,7 @@ import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
 import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
+import { badgeCls } from '@/ui/style';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
@@ -146,8 +147,11 @@ const ClubInformation = React.memo(function ClubInformation({
               </span>
               <span className="min-w-0 text-sm">
                 <span className="font-bold underline">{item.name}</span>
-                <span className="block truncate text-neutral-11">
-                  {formatAddress(item.address)}
+                <span className="flex min-w-0 items-center gap-2 text-neutral-11">
+                  {auth.isAdmin && !item.showInLists && (
+                    <span className={badgeCls({ className: 'shrink-0' })}>Skryté</span>
+                  )}
+                  <span className="truncate">{formatAddress(item.address)}</span>
                 </span>
               </span>
             </Link>

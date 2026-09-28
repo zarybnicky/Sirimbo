@@ -98,7 +98,7 @@ export function Location({
         </>
       )}
 
-      <h2 className="mt-4 mb-2 text-lg font-bold">O místě</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">O místu</h2>
       <div className={hasCoordinates ? 'grid items-center gap-6 md:grid-cols-[auto_1fr]' : ''}>
         {hasCoordinates && (
           <LeafletMap map={{ lat: location.latitude!, lng: location.longitude!, zoom: 16 }} />
