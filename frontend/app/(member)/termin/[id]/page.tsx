@@ -3,6 +3,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { stripHtml } from '@/lib/stripHtml';
 import { getRequestContext } from '@/lib/server/tenant';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { EventPageClient } from './EventPageClient';
 
@@ -52,7 +53,6 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function EventPage(props: PageProps) {
   const { id, hasShareToken, event } = await resolvePage(props);
-  return (
-    <EventPageClient id={id} initialEvent={event} hasShareToken={hasShareToken} />
-  );
+  if (!event) notFound();
+  return <EventPageClient id={id} initialEvent={event} hasShareToken={hasShareToken} />;
 }

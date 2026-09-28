@@ -3,7 +3,6 @@
 import { CampSchedule } from '@/calendar/CampSchedule';
 import { CampLessonsTable } from '@/calendar/CampLessonsTable';
 import { CampTrainersTable } from '@/calendar/CampTrainersTable';
-import type { EventType } from '@/graphql';
 import {
   EventWithAttendanceDocument,
   type EventWithAttendanceQuery,
@@ -27,96 +26,81 @@ export function EventPageClient({
   hasShareToken,
 }: {
   id: string;
-  initialEvent: EventWithAttendanceQuery['event'];
+  initialEvent: NonNullable<EventWithAttendanceQuery['event']>;
   hasShareToken: boolean;
 }) {
   const auth = useAuth();
-  const [{ data, fetching }] = useQuery({
+  const [{ data }] = useQuery({
     query: EventWithAttendanceDocument,
     variables: { id },
     pause: !/^\d{1,18}$/.test(id),
   });
-  const instance = data ? data.event : initialEvent;
-  const actions = useActions(eventInstanceActions, instance);
+  const event = data?.event ?? initialEvent;
+  const actions = useActions(eventInstanceActions, event);
   const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
     ? 'eventInstance.edit'
     : 'eventInstance.registrations';
-  const [variant, setVariant] = useQueryState(
+  const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const showSchedule =
-    instance?.type?.toUpperCase() === 'CAMP' &&
-    (auth.isLoggedIn || instance.hasPublicDetails || hasShareToken);
-  const numRegistrations = instance?.registrationInfo?.registrations ?? 0;
+  const numRegistrations = event.registrationInfo?.registrations ?? 0;
+  const hasPayments = [event, ...event.childEventInstancesList].some(
+    (e) => e.paymentsList.length > 0,
+  );
 
   return (
     <Layout hideTopMenuIfLoggedIn>
       <div className="col-feature">
-        {instance && (
-          <PageHeader
-            title={instance ? formatEventName(instance) || '' : ''}
-            subtitle={formatEventType(instance.type?.toUpperCase() as EventType | null)}
-            actions={actions}
-            primary={primaryAction}
-          />
-        )}
-        {!fetching && !instance && (
-          <div className="my-12 rounded-md border border-neutral-5 bg-neutral-2 p-6 text-center">
-            <h1 className="text-xl text-neutral-12">Událost nenalezena</h1>
-            <p className="mt-2 text-neutral-11">
-              Odkaz není platný, nebo k události nemáte přístup.
-            </p>
-          </div>
-        )}
+        <PageHeader
+          title={formatEventName(event) || ''}
+          subtitle={formatEventType(event.type)}
+          actions={actions}
+          primary={primaryAction}
+        />
       </div>
       <TabMenu
         className="col-feature"
-        selected={variant === 'attendance' ? 'registrations' : variant}
-        onSelect={setVariant}
+        selected={tab === 'attendance' ? 'registrations' : tab}
+        onSelect={setTab}
       >
-        {instance && (
-          <>
-            {showSchedule && (
-              <Tab id="schedule" title="Rozpis">
-                <CampSchedule
-                  id={instance.id}
-                  since={instance.since}
-                  until={instance.until}
-                />
-              </Tab>
-            )}
-            <Tab id="info" title="Info">
-              <BasicEventInfo instance={instance} />
+        {event.type === 'CAMP' &&
+          (auth.isLoggedIn || event.hasPublicDetails || hasShareToken) && (
+            <Tab id="schedule" title="Rozpis">
+              <CampSchedule id={event.id} since={event.since} until={event.until} />
             </Tab>
-            {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
-              <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
-                <div className="col-popout">
-                  <EventRegistrations instance={instance} />
-                </div>
-              </Tab>
-            )}
-            {instance.type === 'CAMP' && (
-              <>
-                <Tab id="lessons" title="Lekce" requireTrainer>
-                  <div className="col-full-width relative">
-                    <CampLessonsTable id={instance.id} />
-                  </div>
-                </Tab>
-                <Tab id="trainers" title="Trenéři" requireTrainer>
-                  <div className="col-full-width relative">
-                    <CampTrainersTable id={instance.id} />
-                  </div>
-                </Tab>
-              </>
-            )}
-            <Tab id="payments" title="Platby" requireTrainer>
-              <div className="col-popout">
-                <EventPayments id={instance.id} />
-              </div>
-            </Tab>
-          </>
+          )}
+        <Tab id="info" title="Info">
+          <BasicEventInfo instance={event} />
+        </Tab>
+        {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
+          <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
+            <div className="col-popout">
+              <EventRegistrations instance={event} />
+            </div>
+          </Tab>
+        )}
+        {event.type === 'CAMP' && event.childEventInstancesList.length > 0 && (
+          <Tab id="lessons" title="Lekce" requireTrainer>
+            <div className="col-full-width relative">
+              <CampLessonsTable id={event.id} />
+            </div>
+          </Tab>
+        )}
+        {event.type === 'CAMP' && event.childEventInstancesList.length > 0 && (
+          <Tab id="trainers" title="Trenéři" requireTrainer>
+            <div className="col-full-width relative">
+              <CampTrainersTable id={event.id} />
+            </div>
+          </Tab>
+        )}
+        {hasPayments && (
+          <Tab id="payments" title="Platby" requireTrainer>
+            <div className="col-popout">
+              <EventPayments id={event.id} />
+            </div>
+          </Tab>
         )}
       </TabMenu>
     </Layout>

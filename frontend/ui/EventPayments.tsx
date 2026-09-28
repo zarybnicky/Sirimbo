@@ -17,13 +17,11 @@ export const EventPayments = memo(function EventPayments({ id }: { id: string })
     ? [data.eventInstance, ...data.eventInstance.childEventInstancesList]
     : [];
   const payments = events.flatMap((event) =>
-    event.paymentsList.flatMap((payment) =>
-      payment.transactions.nodes.map((t) => [event, payment, t] as const),
-    ),
+    event.paymentsList.map((payment) => [event, payment] as const),
   );
   const actionMap = useActionMap(
     paymentActions,
-    events.flatMap((x) => x.paymentsList),
+    payments.map(([, payment]) => payment),
   );
 
   return fetching && !data ? (
@@ -32,20 +30,22 @@ export const EventPayments = memo(function EventPayments({ id }: { id: string })
     </div>
   ) : (
     <div className="prose prose-accent">
-      {payments.map(([event, payment, transaction]) => (
-        <div key={transaction.id}>
+      {payments.map(([event, payment]) => (
+        <div key={payment.id}>
           <ActionRow actions={actionMap.get(payment.id)!} className="mb-0">
-            Za lekci {fullDateFormatter.format(new Date(event.since))}
+            Platba {payment.id} · {fullDateFormatter.format(new Date(event.since))}
           </ActionRow>
-          <ul>
-            {transaction.postingsList.map(({ id, amount, account }) => (
-              <li key={id}>
-                {moneyFormatter.format({ amount: amount, currency: 'CZK' })}
-                {' - '}
-                {account?.person?.name || (account?.tenantId ? 'Klub' : '-')}
-              </li>
-            ))}
-          </ul>
+          {payment.transactions.nodes.map((transaction) => (
+            <ul key={transaction.id}>
+              {transaction.postingsList.map(({ id, amount, account }) => (
+                <li key={id}>
+                  {moneyFormatter.format({ amount, currency: account?.currency ?? 'CZK' })}
+                  {' - '}
+                  {account?.person?.name || (account?.tenantId ? 'Klub' : '-')}
+                </li>
+              ))}
+            </ul>
+          ))}
         </div>
       ))}
     </div>
