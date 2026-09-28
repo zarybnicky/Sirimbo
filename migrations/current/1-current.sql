@@ -18,6 +18,7 @@ alter table tenant_location add column if not exists is_public boolean generated
 alter table tenant_location add column if not exists long_name text;
 alter table tenant_location add column if not exists latitude double precision;
 alter table tenant_location add column if not exists longitude double precision;
+alter table tenant_location add column if not exists ordering integer not null default 1;
 
 comment on table tenant_location is '@simpleCollections only
 @behavior -query:resource:list -query:resource:connection -queryField:resource:connection';

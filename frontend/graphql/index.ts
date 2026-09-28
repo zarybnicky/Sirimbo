@@ -3974,6 +3974,7 @@ export type LocationDetailsInputRecordInput = {
   longName?: InputMaybe<Scalars['String']['input']>;
   longitude?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -7764,6 +7765,8 @@ export type TenantLocation = {
   /** GPS longitude in WGS84 degrees. */
   longitude: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
+  /** Display order in public location lists; lower numbers come first. */
+  ordering: Scalars['Int']['output'];
   showInLists: Scalars['Boolean']['output'];
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -7818,6 +7821,8 @@ export type TenantLocationCondition = {
   longitude?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ordering` field. */
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `showInLists` field. */
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -7875,6 +7880,8 @@ export type TenantLocationInput = {
   /** GPS longitude in WGS84 degrees. */
   longitude?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
+  /** Display order in public location lists; lower numbers come first. */
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -7893,6 +7900,8 @@ export type TenantLocationPatch = {
   /** GPS longitude in WGS84 degrees. */
   longitude?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Display order in public location lists; lower numbers come first. */
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -7930,6 +7939,8 @@ export type TenantLocationsOrderBy =
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
+  | 'ORDERING_ASC'
+  | 'ORDERING_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'SHOW_IN_LISTS_ASC'
@@ -10975,6 +10986,7 @@ export type GraphCacheResolvers = {
     longName?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String']['output'] | string>,
     longitude?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Float']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['String']['output'] | string>,
+    ordering?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Int']['output'] | string>,
     showInLists?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantLocation>, Record<string, never>, Scalars['Datetime']['output'] | string>
@@ -12787,6 +12799,7 @@ export type GraphCacheUpdaters = {
     longName?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     longitude?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
+    ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     showInLists?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, Record<string, never>>

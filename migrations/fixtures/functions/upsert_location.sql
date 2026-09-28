@@ -8,6 +8,7 @@ create type location_details_input as (
   description text,
   address address_domain,
   show_in_lists boolean,
+  ordering integer,
   latitude double precision,
   longitude double precision
 );
@@ -30,6 +31,7 @@ begin
       description,
       address,
       show_in_lists,
+      ordering,
       latitude,
       longitude,
       cover_image_id
@@ -40,6 +42,7 @@ begin
       coalesce(details.description, ''),
       details.address,
       coalesce(details.show_in_lists, false),
+      coalesce(details.ordering, 1),
       details.latitude,
       details.longitude,
       cover_image_id
@@ -52,6 +55,7 @@ begin
         description = coalesce(details.description, ''),
         address = details.address,
         show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
+        ordering = coalesce(details.ordering, tenant_location.ordering),
         latitude = details.latitude,
         longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id

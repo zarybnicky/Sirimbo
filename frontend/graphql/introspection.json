@@ -20140,6 +20140,17 @@
             "args": []
           },
           {
+            "name": "ordering",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "showInLists",
             "type": {
               "kind": "NON_NULL",

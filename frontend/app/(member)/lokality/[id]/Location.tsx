@@ -6,6 +6,7 @@ import { locationActions } from '@/lib/actions/location';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { EventButton } from '@/ui/EventButton';
 import { dateTimeFormatter } from '@/ui/format';
+import { LeafletMap } from '@/ui/LeafletMap';
 import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
@@ -41,6 +42,7 @@ export function Location({
   });
   const result = data ?? initialData;
   const location = result.location!;
+  const hasCoordinates = location.latitude != null && location.longitude != null;
   const actions = useActions(locationActions, location);
   const ongoingEvents = (result.events ?? []).filter(
     (x) => new Date(x.since).getTime() <= now && new Date(x.until).getTime() > now,
@@ -97,18 +99,24 @@ export function Location({
       )}
 
       <h2 className="mt-4 mb-2 text-lg font-bold">O místě</h2>
-      {location.description?.trim() ? (
-        <RichTextView className="mb-2" value={location.description} />
-      ) : (
-        <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
-      )}
-
-      <LocationAddress
-        address={location.address}
-        latitude={location.latitude}
-        longitude={location.longitude}
-        showMissingAddress={auth.isAdmin}
-      />
+      <div className={hasCoordinates ? 'grid items-center gap-6 md:grid-cols-[auto_1fr]' : ''}>
+        {hasCoordinates && (
+          <LeafletMap map={{ lat: location.latitude!, lng: location.longitude!, zoom: 16 }} />
+        )}
+        <div>
+          {location.description?.trim() ? (
+            <RichTextView className="mb-2" value={location.description} />
+          ) : (
+            <p className="text-sm mb-2 text-neutral-10">(Nevyplněno)</p>
+          )}
+          <LocationAddress
+            address={location.address}
+            latitude={location.latitude}
+            longitude={location.longitude}
+            showMissingAddress={auth.isAdmin}
+          />
+        </div>
+      </div>
 
       <h2 className="mt-4 mb-2 text-lg font-bold">Fotografie</h2>
       {coverImage && (

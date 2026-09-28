@@ -8,6 +8,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Use the checked-in PNPM 10 workspaces (Node 24.x) for JavaScript/TypeScript tooling.
 - After code changes, run the affected package's lint and typecheck commands, plus relevant tests. Report failures without changing unrelated code to fix them.
 - Prefer incremental SQL migrations. For changes under `migrations/current/` or `migrations/fixtures/`, follow `migrations/current/AGENTS.md`.
+- For direct checks against the local development database, use `psql olymp` as the prefix; `.envrc` supplies the connection settings. Use a transaction and `ROLLBACK` for temporary test writes.
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
 
 ## Running development services

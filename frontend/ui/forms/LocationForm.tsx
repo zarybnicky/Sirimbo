@@ -18,6 +18,7 @@ const Form = z.object({
   longName: z.string().nullish(),
   description: z.string().nullish(),
   showInLists: z.boolean().prefault(false),
+  ordering: z.number().int(),
   latitude: z.number().min(-90).max(90).nullish(),
   longitude: z.number().min(-180).max(180).nullish(),
   imageIds: z.array(z.string()).prefault([]),
@@ -39,7 +40,7 @@ export function LocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { name: '', longName: '', imageIds: [], coverImageId: null },
+    defaultValues: { name: '', longName: '', ordering: 1, imageIds: [], coverImageId: null },
   });
   const [query] = useQuery({
     query: LocationDocument,
@@ -71,6 +72,7 @@ export function LocationForm({ id = '' }: { id?: string }) {
         longName: item.longName || item.name,
         description: item.description,
         showInLists: item.showInLists,
+        ordering: item.ordering,
         latitude: item.latitude,
         longitude: item.longitude,
         imageIds: item.imagesList.map((x) => x.fileId),
@@ -186,6 +188,13 @@ export function LocationForm({ id = '' }: { id?: string }) {
         control={control}
         name="showInLists"
         label="Zobrazovat v přehledech míst"
+      />
+      <TextFieldElement
+        control={control}
+        name="ordering"
+        type="number"
+        step="1"
+        label="Pořadí v přehledech míst (1 = první)"
       />
 
       <FilePicker

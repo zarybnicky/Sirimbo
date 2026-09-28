@@ -5,6 +5,7 @@ fragment Location on TenantLocation {
   longName
   description
   showInLists
+  ordering
   latitude
   longitude
   coverImageId
@@ -31,7 +32,7 @@ fragment Location on TenantLocation {
 query LocationOptions {
   tenant: getCurrentTenant {
     id
-    locationsList: tenantLocationsList(orderBy: NAME_ASC) {
+    locationsList: tenantLocationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       id
       name
       showInLists
@@ -42,7 +43,7 @@ query LocationOptions {
 query PublicLocations {
   tenant: getCurrentTenant {
     id
-    locationsList: tenantLocationsList(condition: { showInLists: true }, orderBy: NAME_ASC) {
+    locationsList: tenantLocationsList(condition: { showInLists: true }, orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       ...Location
     }
   }

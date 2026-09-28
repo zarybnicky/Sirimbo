@@ -73,7 +73,7 @@ query Club($showInLists: Boolean) {
     tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
       ...TenantTrainer
     }
-    locationsList: tenantLocationsList(condition: { showInLists: $showInLists }) {
+    locationsList: tenantLocationsList(condition: { showInLists: $showInLists }, orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       ...LocationSummary
     }
   }

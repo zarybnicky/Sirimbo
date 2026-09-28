@@ -4739,6 +4739,7 @@ input LocationDetailsInputRecordInput {
   longName: String
   longitude: Float
   name: String
+  ordering: Int
   showInLists: Boolean
 }
 
@@ -9308,6 +9309,9 @@ type TenantLocation {
   """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String!
+
+  """Display order in public location lists; lower numbers come first."""
+  ordering: Int!
   showInLists: Boolean!
   tenantId: BigInt!
   updatedAt: Datetime!
@@ -9347,6 +9351,9 @@ input TenantLocationCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+
+  """Checks for equality with the object’s `ordering` field."""
+  ordering: Int
 
   """Checks for equality with the object’s `showInLists` field."""
   showInLists: Boolean
@@ -9414,6 +9421,9 @@ input TenantLocationInput {
   """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String!
+
+  """Display order in public location lists; lower numbers come first."""
+  ordering: Int
   showInLists: Boolean
   tenantId: BigInt
   updatedAt: Datetime
@@ -9436,6 +9446,9 @@ input TenantLocationPatch {
   """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String
+
+  """Display order in public location lists; lower numbers come first."""
+  ordering: Int
   showInLists: Boolean
   tenantId: BigInt
   updatedAt: Datetime
@@ -9473,6 +9486,8 @@ enum TenantLocationsOrderBy {
   NAME_ASC
   NAME_DESC
   NATURAL
+  ORDERING_ASC
+  ORDERING_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SHOW_IN_LISTS_ASC
