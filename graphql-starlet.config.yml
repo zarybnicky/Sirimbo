@@ -1,8 +1,4 @@
 
-watch:
- - frontend/starlet/schema.graphql
- - frontend/starlet/graphql/*.graphql
-
 schema: ./frontend/starlet/schema.graphql
 documents: "./frontend/starlet/graphql/*.graphql"
 overwrite: true

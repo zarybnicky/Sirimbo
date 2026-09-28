@@ -3,9 +3,21 @@
 This document is for fellow ChatGPT/Codex-style agents working in this repository. Use it as a quick reference before you make changes.
 
 ## Workflow expectations
+- Do not create Git commits or change the Git index. Leave staging and commits to the maintainer.
+- Preserve existing work, including unrelated changes in files you edit.
 - Use the checked-in PNPM 10 workspaces (Node 24.x) for JavaScript/TypeScript tooling.
-- Prefer incremental SQL migrations. When altering the database, author idempotent scripts in `migrations/current/1-current.sql` (or add fixtures under `migrations/fixtures/...`) and rely on Graphile Migrate to promote them.
+- After code changes, run the affected package's lint and typecheck commands, plus relevant tests. Report failures without changing unrelated code to fix them.
+- Prefer incremental SQL migrations. For changes under `migrations/current/` or `migrations/fixtures/`, follow `migrations/current/AGENTS.md`.
 - `schema/` is generated from the canonical `schema.sql` dump via `python schema/split.py < schema.sql`. Do not hand-edit files under `schema/`—regenerate from the dump instead.
+
+## Running development services
+- The maintainer often runs `overmind` with the root `Procfile`. It starts the web server, backend, migration watcher, and code generators among other services.
+- Before starting a service, run `overmind status` from the repository root. If the command reports a permission error, retry with the required sandbox approval. A permission error does not mean that Overmind is stopped.
+- If `web` is running, reuse it. Run `ss -ltnp` to find listening ports and their process IDs. Use `ps -eo pid,ppid,args` to match the Next.js process to the `web` process from `overmind status`. Request sandbox approval if these commands cannot see host processes or sockets. Use that port for browser requests and `PLAYWRIGHT_BASE_URL`. If the port remains unknown, ask the maintainer for the URL instead of starting another server.
+- If Overmind is unavailable or `web` is stopped, use the same process and socket commands to find standalone Next.js servers. Start a server only after establishing that this checkout has none. Do not assume port 3000 or 5100.
+- Do not start a second Next.js server in the same checkout. A different port still shares `frontend/.next/` and can cause conflicts. Before a build or cleanup of `.next/`, coordinate with the maintainer if the web server is running. Do not stop or restart maintainer-owned services without direction.
+- Background watchers can apply migrations and regenerate files before a manual command runs. For migration verification, use the command in `migrations/current/AGENTS.md` even when the watcher is running. Do not infer success from a running process or changed generated files. Keep generated output intact, as described below.
+- Before finishing, stop temporary processes you started. Leave maintainer-owned processes running.
 
 ## Code style preferences
 - Prefer compact, elegant code that keeps the local control flow easy to read. Extract helpers when they name a real concept, isolate complex behavior, or remove meaningful duplication.
@@ -60,14 +72,13 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 ## Worker and crawler model
 - Graphile Worker loads TypeScript tasks through `worker/graphile.config.ts`. `worker/crontab` schedules membership refreshes, accounting/event discovery, and `frontier_schedule`; the scheduler seeds root frontiers and enqueues `frontier_fetch`/`frontier_process` jobs as needed.
 - The crawler stores work in `crawler.frontier`. Loader definitions in `worker/crawler/handlers.ts` fetch federation-specific JSON or HTML, persist raw responses, and then normalize them through each loader's `load` handler into federated tables. Loader side effects are batched through `worker/crawler/effects.ts`.
-- JSON loaders define Zod schemas. Use the crawler backtest command when changing schemas or loaders so cached responses are validated strictly against the new shape.
+- JSON loaders define Zod schemas. After changes to schemas or loaders, run `pnpm --silent crawler backtest <federation>:<kind>` against cached responses.
 - Local crawler development uses the root CLI in `worker/crawler/cli.ts`: run `pnpm crawler ...` with commands like `list`, `status [federation]:[kind]`, `failures ...`, `jobs ...`, `explain ...`, `response ...`, `refetch ...`, `cleanup ... [--commit]`, `backtest ...`, and `process ... [--commit]`.
-- Fetch responses are stored in `crawler.json_response` / `crawler.json_response_cache`; each frontier points to its latest response and latest successful response so operational reads do not scan history. `process` replays stored OK responses into the database and rolls back by default unless `--commit` is passed.
+- Fetch responses are stored in `crawler.json_response` / `crawler.json_response_cache`; each frontier points to its latest response and latest successful response so operational reads do not scan history.
 - Crawler SQL lives in `worker/crawler/*.sql`; pgtyped outputs `worker/crawler/*.queries.ts`. When SQL changes, regenerate the typed queries with `pnpm --filter @rozpisovnik/worker sql:generate` instead of hand-editing the generated files.
 - Prefer bulk loader queries shaped as `pgtypedCollection` + `unnest` arrays. Keep per-loader query count low, and make merge/upsert statements semantic no-ops on repeated loads except where the table is intentionally cleared and reinserted.
 - Normalize incoming federation quirks in Zod schemas or enum mappers before load logic. Keep loader bodies focused on building federated rows and frontier keys.
 - Use the crawler dev tool for cached inspection and replay: `pnpm --silent crawler response <frontier-key> | jq ...` for response bodies, and `pnpm crawler process <frontier-key>` for rollback-by-default validation. Use `--commit` only when intentionally replaying into the dev database.
-- Use the crawler dev tool's backtest support to verify schema changes: `pnpm --silent crawler backtest <federation>:<kind>`
 
 ## Frontend conventions
 - This is an App Router app. Use the `@/*` import alias to reference files from the frontend root.
@@ -99,7 +110,10 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Run the crawler dev tool: `pnpm crawler --help`
 - Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`, `pnpm --filter @rozpisovnik/worker typecheck`
 - Run Playwright smoke tests: `pnpm --filter @rozpisovnik/e2e test` (defaults to `PLAYWRIGHT_BASE_URL=http://localhost:5100`).
-- Create a new migration: edit `migrations/current/1-current.sql` or add fixtures under `migrations/fixtures/...`; follow `migrations/current/AGENTS.md` and keep scripts idempotent.
-- Don't add GraphQL documents to code; add them to the root `graphql/` folder and run `pnpm schema` or `pnpm schema-starlet` when codegen is needed. Keep generated `frontend/graphql` changes out of the commit unless explicitly requested.
+- Create a new migration: follow `migrations/current/AGENTS.md`, including its fixture inclusion and testing steps.
+- Add GraphQL documents to the root `graphql/` folder. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`.
+- After frontend SQL changes, regenerate query bindings with `pnpm --filter @rozpisovnik/web sql:generate`.
+- Leave regenerated files in the working tree for the maintainer to review.
+- Do not hand-patch or revert generated output to restore its previous state or reduce the diff. This includes `frontend/graphql/`, `schema.sql`, `schema/`, `schema.graphql`, and `*.queries.ts`. If output is wrong, fix the source or generator and regenerate it. Follow explicit user instructions for any requested rollback.
 
 Keep this guide in sync as the project evolves.

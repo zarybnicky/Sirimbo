@@ -1,8 +1,4 @@
 
-watch:
- - schema.graphql
- - graphql/*.graphql
-
 schema: schema.graphql
 documents: "graphql/*.graphql"
 overwrite: true

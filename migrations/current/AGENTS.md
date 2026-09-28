@@ -1,26 +1,24 @@
 # Migrations scratchpad manual for AI contributors
 
-This guide governs all files under `migrations/current/`. Follow it before promoting a migration with Graphile Migrate.
+This guide covers changes under `migrations/current/` and `migrations/fixtures/`, including migration promotion with Graphile Migrate.
 
 ## Must dos
-- **Only drop objects with explicit user approval.** Require explicit instructions from the task author before emitting any `drop table` or `alter table ... drop column`. When authorized, restrict the drop to objects you are recreating in the same migration so no production data is lost. For structural renames, follow the multi-step pattern (new table + view bridge) described below instead of dropping the live table.
-- **Re-create row-level security policies safely.** Call `select app_private.drop_policies('schema.table');` before redefining policies so reruns do not fail, then issue fresh `create policy` and `grant` statements to restore access controls.
+- **Rebuild new, empty tables during development.** For tables introduced by the current work, edit the original definition instead of accumulating `alter table` statements. You can drop and recreate these tables without additional approval when they contain no data to preserve. For existing tables or columns, require explicit task authorization before dropping them. Recreating a table does not restore its data.
 - **Refresh supporting metadata.** Whenever you define or change a table, function, or trigger, include the accompanying `comment on ...` statements (for Graphile hints) and explicit `grant`/`revoke` statements to keep permissions consistent.
-- **Prefer helper APIs for background jobs.** Use existing helpers like `graphile_worker.add_job(...)` and `postgraphile_watch.notify_watchers_*()` instead of reimplementing notification logic.
+- **Use existing helpers.** Reuse helpers for policy resets, background jobs, and watcher notifications. Use `graphile_worker.add_job(...)` with an existing task from `worker/tasks/`. Use `postgraphile_watch.notify_watchers_*()` for watcher notifications.
 - **Document complex operations inline.** Add concise SQL comments explaining non-obvious sequences, especially when coordinating multiple triggers/functions.
 
 ### Example patterns from committed migrations
-- **Idempotent table rebuilds.** Follow the guarded drop + create pattern from `migrations/committed/000047.sql` when you need to recreate a table:
+- **New, empty table rebuilds.** Use this pattern only for tables introduced by the current work with no data to preserve:
   ```sql
   drop table if exists event_external_registration;
   create table if not exists event_external_registration (
     ...
   );
   ```
-- **Guarded column changes.** Mirror `migrations/committed/000016.sql` and `000027.sql` by wrapping `ALTER TABLE` column additions/removals with `if not exists` / `if exists` so reruns succeed:
+- **Guarded column changes.** Use existence guards so column additions and authorized removals succeed on reruns. These guards do not protect data or dependent objects:
   ```sql
   alter table attachment add column if not exists thumbhash text null;
-  alter table skupiny drop column if exists cohort_group cascade;
   ```
 - **Adding enum values safely.** Use an existence check before `alter type ... add value`, as seen in `migrations/committed/000041.sql`:
   ```sql
@@ -43,21 +41,30 @@ This guide governs all files under `migrations/current/`. Follow it before promo
   alter table event_attendance alter column status type attendance_type using status::text::attendance_type;
   drop type attendance_type_old;
   ```
-- **Renaming tables without data loss.** Take the three-step approach used across historical migrations when renaming: create the replacement table under the new name, populate it from the old structure with conflict-safe `insert`/`update` (see the copy pattern in `migrations/committed/000037.sql`), and expose a compatibility view under the old name until application code switches over. Only drop the compatibility view after verifying no consumers require it.
+- **Renames and old readers.** Prefer a rename plus a generated column under the old name when compatibility requires only reads. The generated column derives its value from the renamed column. Old writes to that generated column are not supported. For table renames, consider a compatibility view with the required permissions and row-level security behavior. Make sure that old GraphQL queries still work. Guard renames so the current migration can run again. Add write synchronization only when the task requires old writers to remain supported.
+- **Deployment order.** PostGraphile reloads the API schema after database changes. For order-dependent changes, describe the boundaries for separate commits and their deployment order. State when old columns or views can be removed. The maintainer creates the Git commits and deploys them in order. Do not add deployment scripts solely to enforce this sequence.
 - **Resetting and recreating RLS policies.** Pair `app_private.drop_policies` with new policies and grants, following `migrations/committed/000052.sql`:
   ```sql
   select app_private.drop_policies('public.tenant_settings');
   create policy tenant_settings_select on public.tenant_settings for select to member using (...);
   grant select on public.tenant_settings to member;
   ```
-- **Scheduling background jobs.** Delegate to helpers such as `graphile_worker.add_job`, as demonstrated in `migrations/committed/000052.sql`:
-  ```sql
-  perform graphile_worker.add_job('refresh_auth_details', job_key := 'refresh_auth_details');
-  ```
+
+## Local workflow
+- Preserve unrelated SQL already in `1-current.sql`. Migration promotion includes the whole scratchpad, not just your changes. Leave promotion to the maintainer unless the task explicitly includes that work.
+- Edit `1-current.sql` or a fixture under `migrations/fixtures/`.
+- For each new or changed fixture, add its `--!include` directive to `1-current.sql`. Paths are relative to `migrations/fixtures/`, such as `--!include functions/upsert_location.sql`.
+- Before running migrations, make sure that `DATABASE_URL` and `SHADOW_DATABASE_URL` identify local development databases.
+- The Overmind `migrate` process runs `graphile-migrate watch` and can apply edits before a manual command runs. Do not start another watcher.
+- After editing SQL, run `pnpm exec graphile-migrate current --force-actions`, even when the watcher is running. This applies pending SQL and runs the `.gmrc` tests, including SQL function checks and pgTAP assertions.
+- Require a zero exit status and successful test output before reporting success. If the command fails, use its error output to diagnose the failure. An unchanged-SQL message is normal when the watcher already applied the SQL. The `--force-actions` flag still runs the tests. Do not change SQL merely to force the watcher to run again.
+- After permission changes, test both allowed and denied access, including access from another tenant. Add or update the relevant tests in `migrations/test/` for high-exposure changes.
+- Test repeatability with `pnpm exec graphile-migrate run migrations/current/1-current.sql` against the same local database. Then run `pnpm exec graphile-migrate current --force-actions` again for the tests. The `current` and `watch` commands skip unchanged SQL, so invoking them twice does not test repeatability.
+- When the migration is ready for promotion, run `pnpm exec graphile-migrate commit`. This creates a committed migration file and refreshes the schema dump through the configured hooks. It does not create a Git commit or change the Git index.
+- Do not hand-edit files under `migrations/committed/`. Put later corrections in the current migration.
 
 ## Don't dos
 - **Do not write non-repeatable DDL.** Avoid bare `insert`, `update`, or `delete` statements that would error or duplicate data on reruns; always include conflict handling or checks.
-- **Do not drop or rename live objects without safeguards or direction.** Never emit unconditional `drop table`, `drop function`, or `alter table ... drop column`; wrap them in `if exists`/`if not exists` clauses. Only perform table or column drops when the user has explicitly requested them, and favor the create-copy-view pattern rather than dropping the original table for renames.
-- **Do not bypass existing helpers.** If a helper function already encapsulates logic (e.g., for policy resets, trigger verification, or auth refresh jobs), call it rather than duplicating its behavior.
+- **Do not treat existence guards as data protection.** Apply the new-table exception and authorization rules above. Preserve existing data and required readers across renames.
 - **Do not disable RLS or grants implicitly.** Every change must leave row-level security and permissions in a valid state—if you drop and recreate a table or function, restate the grants and policies within the same migration.
 - **Do not remove the `--!` metadata headers Graphile Migrate expects.** Preserve include directives or file headers already present in `1-current.sql` when editing.
