@@ -112,6 +112,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Run Playwright smoke tests: `pnpm --filter @rozpisovnik/e2e test` (defaults to `PLAYWRIGHT_BASE_URL=http://localhost:5100`).
 - Create a new migration: follow `migrations/current/AGENTS.md`, including its fixture inclusion and testing steps.
 - Add GraphQL documents to the root `graphql/` folder. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`.
+- After changes to `.graphql` documents under `graphql/`, run `pnpm --filter @rozpisovnik/graphql lint`. Run this separately from frontend lint, even if frontend lint fails.
 - After frontend SQL changes, regenerate query bindings with `pnpm --filter @rozpisovnik/web sql:generate`.
 - Leave regenerated files in the working tree for the maintainer to review.
 - Do not hand-patch or revert generated output to restore its previous state or reduce the diff. This includes `frontend/graphql/`, `schema.sql`, `schema/`, `schema.graphql`, and `*.queries.ts`. If output is wrong, fix the source or generator and regenerate it. Follow explicit user instructions for any requested rollback.

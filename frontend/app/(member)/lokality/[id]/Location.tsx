@@ -88,6 +88,12 @@ export function Location({
               <EventButton key={event.id} instance={event} viewer="auto" showDate />
             ))}
           </div>
+          <Link
+            href={`/rozpis?location=${location.id}`}
+            className="mt-2 inline-block text-sm text-neutral-11 underline"
+          >
+            Zobrazit další
+          </Link>
         </>
       )}
 

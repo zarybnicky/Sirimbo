@@ -86,6 +86,7 @@ query Person($id: BigInt!) {
 
 query PersonPayments($id: BigInt!) {
   tenant: getCurrentTenant {
+    id
     bankAccount
   }
   person(id: $id) {

@@ -3,13 +3,14 @@ import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { parseAsBoolean, parseAsStringLiteral, useQueryState } from 'nuqs';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs';
 import React from 'react';
 import { useMutation } from 'urql';
 import {
   dragListenersAtom,
   eventTypesFilterAtom,
+  eventTypes as allEventTypes,
   type ExternalDragSubject,
   groupByAtom,
   participantIdsFilterAtom,
@@ -36,6 +37,7 @@ import { ViewPicker } from '@/calendar/ViewPicker';
 import { DateNavigator } from '@/calendar/DateNavigator';
 import { ParticipantFilter } from '@/calendar/ParticipantFilter';
 import { EventTypeFilter } from '@/calendar/EventTypeFilter';
+import { LocationFilter } from '@/calendar/LocationFilter';
 import { BoundedDayPicker } from '@/calendar/BoundedDayPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import {
@@ -84,6 +86,10 @@ export function Calendar({
     parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
   );
   const onlyMine = auth.isLoggedIn && onlyMineInput;
+  const [locationId, setLocationId] = useQueryState(
+    'location',
+    parseAsString.withOptions({ history: 'push' }),
+  );
   const [viewInput, setView] = useQueryState(
     'v',
     parseAsStringLiteral(availableViews)
@@ -126,8 +132,9 @@ export function Calendar({
       eventTypes,
       myPersonIds: auth.personIds,
       parentId,
+      locationId,
     }),
-    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId],
+    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationId],
   );
 
   const { fetching, range, events, resources, refresh } = useCalendarData(
@@ -294,6 +301,7 @@ export function Calendar({
           />
           {auth.isLoggedIn && <ParticipantFilter />}
           <EventTypeFilter />
+          <LocationFilter value={locationId} onChange={setLocationId} />
           {fetching && <Spinner />}
         </div>
 

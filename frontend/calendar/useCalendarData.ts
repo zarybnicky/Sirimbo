@@ -16,6 +16,7 @@ export type CalendarFilters = {
   onlyMine: boolean;
   myPersonIds: string[];
   parentId?: string;
+  locationId?: string | null;
 };
 
 const competitionResource: Resource = {
@@ -32,13 +33,14 @@ const calendarDay = (date: string) => ({
 
 function prepareVariables(
   range: DateRange,
-  { onlyMine, trainerIds, participantIds, eventTypes, parentId }: CalendarFilters,
+  { onlyMine, trainerIds, participantIds, eventTypes, parentId, locationId }: CalendarFilters,
 ): EventRangeQueryVariables {
   return {
     start: startOf(range.since, 'day').toISOString(),
     end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
     trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     participantIds: participantIds.length > 0 ? participantIds : undefined,
+    locationIds: locationId ? [locationId] : undefined,
     type: eventTypes.length === 1 ? eventTypes[0] : undefined,
     scope: onlyMine ? 'MINE' : parentId ? 'ALL' : 'RELEVANT',
     parentId,
@@ -115,7 +117,7 @@ export function useCalendarData(
   });
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
   const showActivities =
-    !filters.parentId && filters.eventTypes.length === allEventTypes.length;
+    !filters.parentId && !filters.locationId && filters.eventTypes.length === allEventTypes.length;
   const [{ data: activityData, fetching: activityFetching }] = useQuery({
     query: ActivityTimelineDocument,
     variables: {

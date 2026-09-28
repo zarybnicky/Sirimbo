@@ -28,8 +28,19 @@ fragment Location on TenantLocation {
   }
 }
 
+query LocationOptions {
+  tenant: getCurrentTenant {
+    id
+    locationsList: tenantLocationsList(orderBy: NAME_ASC) {
+      id
+      name
+    }
+  }
+}
+
 query PublicLocations {
   tenant: getCurrentTenant {
+    id
     locationsList: tenantLocationsList(condition: { showInLists: true }, orderBy: NAME_ASC) {
       ...Location
     }

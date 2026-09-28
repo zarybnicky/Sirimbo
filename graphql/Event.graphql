@@ -30,6 +30,7 @@ query EventSeries($id: BigInt!) {
     eventsList(orderBy: SINCE_ASC) {
       ...EventInstance
       trainersList: eventInstanceTrainersByInstanceIdList {
+        id
         personId
         person {
           id
@@ -37,6 +38,7 @@ query EventSeries($id: BigInt!) {
         }
       }
       targetCohortsList {
+        id
         cohortId
         cohort {
           id
@@ -372,17 +374,20 @@ query EventRegistrationCandidates {
 
 query EventFormOptions {
   tenant: getCurrentTenant {
+    id
     locationsList: tenantLocationsList {
       id
       name
     }
     tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      id
       person {
         id
         name
       }
     }
     tenantMembershipsList(condition: { status: ACTIVE }) {
+      id
       person {
         id
         name
@@ -459,6 +464,7 @@ query EventRange(
   $participantIds: [BigInt]
   $scope: EventInstanceRangeScope,
   $parentId: BigInt
+  $locationIds: [BigInt]
 ) {
   list: eventInstancesForRangeList(
     startRange: $start
@@ -468,6 +474,7 @@ query EventRange(
     participantIds: $participantIds,
     scope: $scope,
     parentId: $parentId
+    locationIds: $locationIds
   ) {
     ...EventWithTrainer
   }

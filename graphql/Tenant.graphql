@@ -90,7 +90,9 @@ query TenantForm {
 
 query TrainerOptions {
   tenant: getCurrentTenant {
+    id
     tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      id
       person {
         id
         name
