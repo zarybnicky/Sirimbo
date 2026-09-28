@@ -79,10 +79,11 @@ export function Calendar({
   const defaultOnlyMine = !!dateRange && auth.isMember;
   const availableViews: readonly CalendarViewKey[] = dateRange ? boundedViewKeys : standardViewKeys;
 
-  const [onlyMine, setOnlyMine] = useQueryState(
+  const [onlyMineInput, setOnlyMine] = useQueryState(
     'my',
     parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
   );
+  const onlyMine = auth.isLoggedIn && onlyMineInput;
   const [viewInput, setView] = useQueryState(
     'v',
     parseAsStringLiteral(availableViews)
@@ -121,12 +122,12 @@ export function Calendar({
     () => ({
       onlyMine,
       trainerIds: effectiveTrainerIds,
-      participantIds,
+      participantIds: auth.isLoggedIn ? participantIds : [],
       eventTypes,
       myPersonIds: auth.personIds,
       parentId,
     }),
-    [auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId],
+    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId],
   );
 
   const { fetching, range, events, resources, refresh } = useCalendarData(
@@ -274,22 +275,24 @@ export function Calendar({
           )}
           <ViewPicker view={viewInput} setView={setView} views={availableViews} />
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
-          <button
-            type="button"
-            className={buttonCls({
-              variant: onlyMine ? 'primary' : 'outline',
-              size: 'sm',
-            })}
-            onClick={() => setOnlyMine((x) => !x)}
-          >
-            Pouze moje
-          </button>
+          {auth.isLoggedIn && (
+            <button
+              type="button"
+              className={buttonCls({
+                variant: onlyMine ? 'primary' : 'outline',
+                size: 'sm',
+              })}
+              onClick={() => setOnlyMine((x) => !x)}
+            >
+              Pouze moje
+            </button>
+          )}
           <TrainerFilter
             availableTrainers={availableTrainers}
             showAllResources={columnMode === 'all'}
             onShowAllResourcesChange={handleShowAllResourcesChange}
           />
-          <ParticipantFilter />
+          {auth.isLoggedIn && <ParticipantFilter />}
           <EventTypeFilter />
           {fetching && <Spinner />}
         </div>
@@ -307,7 +310,7 @@ export function Calendar({
         viewElement
       )}
 
-      <CalendarConflictsIndicator range={range} />
+      {auth.isLoggedIn && <CalendarConflictsIndicator range={range} />}
 
       {auth.isTrainer && (
         <Dialog

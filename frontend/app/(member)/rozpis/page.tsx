@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 export default function SchedulePage() {
   return (
     <Layout
-      requireMember
       className="grow overflow-hidden overscroll-contain relative h-[calc(100dvh-68px)] lg:h-[calc(100dvh)]"
     >
       <Schedule />
