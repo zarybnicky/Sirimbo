@@ -44,3 +44,13 @@ where tenant_id = 1 and id = 4 and name = 'SGO';
 --!include functions/upsert_location.sql
 --!include functions/visible_file_ids.sql
 --!include functions/confirm_membership_application.sql
+
+alter table event_instance
+  drop constraint event_instance_parent_id_fkey,
+  add constraint event_instance_parent_id_fkey
+    foreign key (tenant_id, parent_id)
+    references event_instance (tenant_id, id)
+    on update cascade;
+
+comment on constraint event_instance_parent_id_fkey on event_instance
+  is E'@fieldName parent\n@foreignFieldName childEventInstances';
