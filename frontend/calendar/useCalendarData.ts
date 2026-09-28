@@ -42,7 +42,7 @@ function prepareVariables(
     participantIds: participantIds.length > 0 ? participantIds : undefined,
     locationIds: locationId ? [locationId] : undefined,
     type: eventTypes.length === 1 ? eventTypes[0] : undefined,
-    scope: onlyMine ? 'MINE' : parentId ? 'ALL' : 'RELEVANT',
+    scope: onlyMine ? 'MINE' : parentId || locationId ? 'ALL' : 'RELEVANT',
     parentId,
   };
 }

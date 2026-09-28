@@ -34,6 +34,7 @@ query LocationOptions {
     locationsList: tenantLocationsList(orderBy: NAME_ASC) {
       id
       name
+      showInLists
     }
   }
 }

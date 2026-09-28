@@ -9,7 +9,6 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { CheckIcon, Filter } from 'lucide-react';
-import React from 'react';
 import { isTruthy } from '@/lib/truthyFilter';
 import { PersonListDocument } from '@/graphql/Person';
 

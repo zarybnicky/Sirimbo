@@ -219,9 +219,13 @@ export function Calendar({
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
       const defaults = defaultsFromSlot(slot, events, auth.persons, onlyMine);
+      if (locationId) {
+        defaults.locationId = locationId;
+        defaults.locationText = '';
+      }
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
-    [onlyMine, auth.persons, events],
+    [onlyMine, auth.persons, events, locationId],
   );
 
   const onDrillDown = React.useCallback(
