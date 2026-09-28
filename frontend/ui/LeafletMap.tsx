@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 
 export type MapProps = {
-  name: string;
   map: {
     lat: number;
     lng: number;
@@ -13,8 +12,8 @@ export type MapProps = {
 
 export const LeafletMap = dynamic<MapProps>(
   async () => {
-    const { MapContainer, Marker, Popup, TileLayer } = await import('react-leaflet');
-    function LeafletMapClient({ map, name }: MapProps) {
+    const { MapContainer, Marker, TileLayer } = await import('react-leaflet');
+    function LeafletMapClient({ map }: MapProps) {
       return (
         <MapContainer
           className="size-[200px]"
@@ -23,9 +22,7 @@ export const LeafletMap = dynamic<MapProps>(
           scrollWheelZoom={false}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={map}>
-            <Popup>{name}</Popup>
-          </Marker>
+          <Marker position={map} />
         </MapContainer>
       );
     }
