@@ -234,15 +234,11 @@ query EventExport($id: BigInt!) {
 query EventPayments($id: BigInt!) {
   eventInstance(id: $id) {
     id
-    since
-    until
     paymentsList {
       ...PaymentDetail
     }
     childEventInstancesList(orderBy: SINCE_ASC) {
       id
-      since
-      until
       paymentsList {
         ...PaymentDetail
       }

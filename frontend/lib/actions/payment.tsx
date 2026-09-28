@@ -8,6 +8,7 @@ export const paymentActions = defineActions<{ id: string; status: PaymentStatus 
     id: 'payment.detail',
     label: 'Detail',
     icon: Info,
+    requireAdmin: true,
     href: ({ item }) => `/platby/${item.id}`,
   },
   {

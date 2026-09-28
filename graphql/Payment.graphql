@@ -71,6 +71,17 @@ fragment Payment on Payment {
 
 fragment PaymentDetail on Payment {
   ...Payment
+  paymentDebtorsList {
+    id
+    person {
+      id
+      name
+    }
+    price {
+      amount
+      currency
+    }
+  }
   transactions {
     nodes {
       id
