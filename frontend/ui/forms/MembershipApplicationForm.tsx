@@ -117,7 +117,7 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    if (!auth.user) return;
+    if (!auth.userId) return;
     const application = ApplicationForm.parse(values);
 
     let result;
@@ -129,7 +129,7 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
         input: {
           membershipApplication: {
             ...application,
-            createdBy: auth.user.id,
+            createdBy: auth.userId,
           },
         },
       });

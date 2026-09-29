@@ -1,7 +1,4 @@
-import type {
-  AnnouncementAudienceRole,
-  UpsertAnnouncementInput,
-} from '@/graphql';
+import type { AnnouncementAudienceRole, UpsertAnnouncementInput } from '@/graphql';
 import {
   AnnouncementAudienceFragment,
   type AnnouncementFragment,
@@ -12,10 +9,10 @@ import { DatePickerElement } from '@/ui/fields/date';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
-import { FormError } from '@/ui/form';
+import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
-import { badgeCls } from '@/ui/style';
+import { badgeCls, buttonCls } from '@/ui/style';
 import React from 'react';
 import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -67,13 +64,12 @@ const Form = z.object({
 export function AnnouncementForm({
   id,
   data,
-  onSuccess,
 }: {
   id?: string;
   data?: AnnouncementFragment | null;
-  onSuccess?: (id: string | undefined) => void;
 }) {
   const [result, upsert] = useMutation(UpsertAnnouncementDocument);
+  const { onSuccess, onCancel } = useFormResult();
 
   const { reset, control, handleSubmit } = useForm({
     defaultValues: {
@@ -95,14 +91,11 @@ export function AnnouncementForm({
         scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
         scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
         audienceRoles:
-          data?.announcementAudiences.nodes.map((x) => x.audienceRole).filter(isTruthy) ??
-          [],
+          data?.announcementAudiences.nodes.map((x) => x.audienceRole).filter(isTruthy),
         cohortIds:
-          data?.announcementAudiences.nodes.map((x) => x.cohortId).filter(isTruthy) ?? [],
+          data?.announcementAudiences.nodes.map((x) => x.cohortId).filter(isTruthy),
         attachmentIds:
-          data?.explicitAttachments.nodes
-            .map((attachment) => attachment.file?.id)
-            .filter(isTruthy) ?? [],
+          data?.explicitAttachments.nodes.map((f) => f.file?.id).filter(isTruthy),
       },
       {
         keepDirtyValues: true,
@@ -157,7 +150,7 @@ export function AnnouncementForm({
     if (!result.error) {
       const newId = result.data?.upsertAnnouncement?.announcement?.id;
       if (!id && newId) toast.success('Přidáno.');
-      onSuccess?.(newId);
+      onSuccess(newId);
     }
   };
 
@@ -208,7 +201,18 @@ export function AnnouncementForm({
 
       <FilePicker value={attachmentIds.value ?? []} onChange={attachmentIds.onChange} />
 
-      <SubmitButton control={control} />
+      <div className="flex items-center gap-2">
+        <SubmitButton control={control} />
+        {onCancel && (
+          <button
+            type="button"
+            className={buttonCls({ variant: 'outline' })}
+            onClick={onCancel}
+          >
+            Zrušit úpravy
+          </button>
+        )}
+      </div>
     </form>
   );
 }
@@ -248,11 +252,7 @@ function AnnouncementAudienceEditor({
 
       <div>
         <AnnouncementAudienceBadges audiences={audiences} />
-        {showWarning && (
-          <div className={badgeCls()}>
-            Viditelný pro všechny
-          </div>
-        )}
+        {showWarning && <div className={badgeCls()}>Viditelný pro všechny</div>}
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2">
@@ -324,9 +324,7 @@ function AudienceCohortCheckboxes({
 }: {
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
   cohorts:
-    | { id: string; name?: string | null; colorRgb?: string | null }[]
-    | null
-    | undefined;
+    { id: string; name?: string | null; colorRgb?: string | null }[] | null | undefined;
   loading?: boolean;
 }) {
   const { field } = useController({ control, name: 'cohortIds' });

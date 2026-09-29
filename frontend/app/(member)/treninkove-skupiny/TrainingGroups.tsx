@@ -24,8 +24,8 @@ export function TrainingGroups() {
   const cohortActionMap = useActionMap(cohortActions, cohorts?.cohortsList ?? []);
 
   return (
-    <div className={cn(auth.user ? 'col-full-width p-4' : 'col-popout')}>
-      {auth.user && (
+    <div className={cn(auth.isLoggedIn ? 'col-full-width p-4' : 'col-popout')}>
+      {auth.isLoggedIn && (
         <TitleBar title="Tréninkové skupiny">
           {auth.isTrainer && (
             <button
@@ -41,7 +41,7 @@ export function TrainingGroups() {
         </TitleBar>
       )}
 
-      <div className={cn('pl-8', auth.user ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
+      <div className={cn('pl-8', auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
         {cohorts?.cohortsList?.map((item) => (
           <div
             key={item.id}

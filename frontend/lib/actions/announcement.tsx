@@ -1,4 +1,4 @@
-import { Archive, Pin, PinOff, Send, Trash2 } from 'lucide-react';
+import { Archive, Pencil, Pin, PinOff, Send, Trash2 } from 'lucide-react';
 import { type ActionContext, defineActions } from '@/lib/actions';
 import {
   type AnnouncementFragment,
@@ -7,11 +7,21 @@ import {
   ToggleAnnouncementStickyDocument,
 } from '@/graphql/Announcement';
 
-export function canManageAnnouncement({ auth, item }: ActionContext<AnnouncementFragment>) {
-  return auth.isAdmin || (auth.isTrainer && item.authorId === auth.user?.id);
+export function canManageAnnouncement({
+  auth,
+  item,
+}: Pick<ActionContext<AnnouncementFragment>, 'auth' | 'item'>) {
+  return auth.isAdmin || (auth.isTrainer && item.authorId === auth.userId);
 }
 
 export const announcementActions = defineActions<AnnouncementFragment>()([
+  {
+    id: 'announcement.edit',
+    label: 'Upravit',
+    icon: Pencil,
+    visible: canManageAnnouncement,
+    href: ({ item }) => `/nastenka/${item.id}?edit=1`,
+  },
   {
     id: 'announcement.sticky',
     label: ({ item }) => (item.isSticky ? 'Odepnout' : 'Připnout'),
@@ -27,8 +37,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
   },
   {
     id: 'announcement.status',
-    label: ({ item }) =>
-      item.status === 'PUBLISHED' ? 'Archivovat' : 'Zveřejnit',
+    label: ({ item }) => (item.status === 'PUBLISHED' ? 'Archivovat' : 'Zveřejnit'),
     icon: ({ item }: ActionContext<AnnouncementFragment>) =>
       item.status === 'PUBLISHED' ? Archive : Send,
     visible: canManageAnnouncement,

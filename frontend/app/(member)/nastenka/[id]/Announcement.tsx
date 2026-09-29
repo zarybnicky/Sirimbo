@@ -2,15 +2,19 @@
 
 import { AnnouncementDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
-import { AnnouncementMeta, useAnnouncementActions } from '@/ui/AnnouncementShared';
+import { AnnouncementMeta } from '@/ui/AnnouncementShared';
 import { PageHeader } from '@/ui/TitleBar';
-import React from 'react';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
 import { FileAttachments } from '@/ui/FileAttachments';
+import { announcementActions } from '@/lib/actions/announcement';
+import { useActions } from '@/lib/actions';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { FormResultContext } from '@/ui/form';
 
 export function Announcement({ id }: { id: string }) {
-  const [editing, setEditing] = React.useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [query] = useQuery({
     query: AnnouncementDocument,
     variables: { id },
@@ -18,19 +22,26 @@ export function Announcement({ id }: { id: string }) {
   });
   const data = query.data?.announcement;
   const loading = !id || query.fetching;
-  const startEditing = React.useCallback(() => setEditing(true), []);
-  const stopEditing = React.useCallback(() => setEditing(false), []);
-  const actions = useAnnouncementActions(data, startEditing);
+  const actions = useActions(announcementActions, data);
+  const editing =
+    searchParams?.get('edit') === '1' &&
+    actions.some((action) => action.id === 'announcement.edit');
   const pageTitle = loading
     ? 'Načítám příspěvek…'
     : data?.title || 'Příspěvek nebyl nalezen';
+  const exitEditing = () => router.replace(`/nastenka/${id}`);
 
   return (
-    <div className="py-4 lg:py-8">
+    <>
       <PageHeader
         title={pageTitle}
         breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }, { label: pageTitle }]}
-        actions={data ? actions : undefined}
+        primary="announcement.edit"
+        actions={
+          data
+            ? actions.filter((action) => !editing || action.id !== 'announcement.edit')
+            : undefined
+        }
         subtitle={data ? <AnnouncementMeta item={data} /> : undefined}
       />
       {loading ? (
@@ -40,13 +51,17 @@ export function Announcement({ id }: { id: string }) {
           Příspěvek je nedostupný nebo už neexistuje.
         </p>
       ) : editing ? (
-        <AnnouncementForm id={data.id} data={data} onSuccess={stopEditing} />
+        <FormResultContext.Provider
+          value={{ onSuccess: exitEditing, onCancel: exitEditing }}
+        >
+          <AnnouncementForm id={data.id} data={data} />
+        </FormResultContext.Provider>
       ) : (
         <>
           <RichTextView className="max-w-none" value={data.body} />
           <FileAttachments attachments={data.explicitAttachments.nodes} />
         </>
       )}
-    </div>
+    </>
   );
 }

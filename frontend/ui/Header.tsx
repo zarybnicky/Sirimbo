@@ -58,8 +58,8 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
 
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.user ? '/profil' : '/login'}
-            aria-label={auth.user ? 'Otevřít profil' : 'Přihlásit se'}
+            href={auth.isLoggedIn ? '/profil' : '/login'}
+            aria-label={auth.isLoggedIn ? 'Otevřít profil' : 'Přihlásit se'}
           >
             <Account aria-hidden="true" />
           </Link>

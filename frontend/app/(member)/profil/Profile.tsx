@@ -19,8 +19,8 @@ export function Profile() {
   const { enableRegistration } = useTenantConfig();
   const [{ data }] = useQuery({
     query: MyMembershipApplicationsDocument,
-    variables: { createdBy: auth.user?.id ?? '' },
-    pause: authLoading || !auth.user || !enableRegistration,
+    variables: { createdBy: auth.userId ?? '' },
+    pause: authLoading || !auth.isLoggedIn || !enableRegistration,
   });
   const [variant, setVariant] = useQueryState(
     'person',
@@ -46,7 +46,7 @@ export function Profile() {
     ],
     {},
   );
-  if (authLoading || !auth.user) return null;
+  if (authLoading || !auth.isLoggedIn) return null;
 
   return (
     <>

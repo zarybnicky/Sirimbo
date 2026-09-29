@@ -1,11 +1,13 @@
 import type { AnnouncementFragment } from '@/graphql/Announcement';
-import { AnnouncementMeta, useAnnouncementActions } from '@/ui/AnnouncementShared';
+import { AnnouncementMeta } from '@/ui/AnnouncementShared';
 import React from 'react';
 import { cardCls, typographyCls } from './style';
-import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
 import { ActionGroup } from './ActionGroup';
 import { FileAttachments } from '@/ui/FileAttachments';
+import { announcementActions } from '@/lib/actions/announcement';
+import { useActions } from '@/lib/actions';
+import Link from 'next/link';
 
 interface Props {
   item: AnnouncementFragment;
@@ -14,21 +16,10 @@ interface Props {
 
 export function AnnouncementCard({ item, mode = 'preview' }: Props) {
   const [expanded, setExpanded] = React.useState(false);
-  const [editing, setEditing] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
-  const startEditing = React.useCallback(() => setEditing(true), []);
-  const stopEditing = React.useCallback(() => setEditing(false), []);
-  const actions = useAnnouncementActions(item, startEditing);
+  const actions = useActions(announcementActions, item);
   const isTitleOnly = mode === 'titleOnly';
   const isEmpty = !item.body.trim();
-
-  if (editing) {
-    return (
-      <div className={cardCls()}>
-        <AnnouncementForm id={item.id} data={item} onSuccess={stopEditing} />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -37,7 +28,14 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
     >
       <div className="flex justify-between gap-2 items-start">
         <h3 className={typographyCls({ className: 'min-w-0', variant: 'cardHeading' })}>
-          {expanded ? (
+          {!isTitleOnly ? (
+            <Link
+              href={`/nastenka/${item.id}`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {item.title}
+            </Link>
+          ) : expanded ? (
             <div className="cursor-pointer" onClick={() => setExpanded(false)}>
               {item.title}
             </div>
@@ -67,7 +65,9 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
           )}
         </>
       )}
-      {(expanded || (!isTitleOnly && isEmpty)) && <FileAttachments attachments={item.explicitAttachments.nodes} />}
+      {(expanded || (!isTitleOnly && isEmpty)) && (
+        <FileAttachments attachments={item.explicitAttachments.nodes} />
+      )}
     </div>
   );
 }

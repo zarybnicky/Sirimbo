@@ -6,7 +6,8 @@ import { AlertCircle } from 'lucide-react';
 import { getErrorMessage } from '@/lib/errors';
 
 interface FormResultContext {
-  onSuccess: () => void;
+  onSuccess: (id?: string) => void;
+  onCancel?: () => void;
 }
 export const FormResultContext = React.createContext<FormResultContext>({
   onSuccess() {},

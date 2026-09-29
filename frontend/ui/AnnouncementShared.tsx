@@ -1,10 +1,7 @@
-import { Paperclip, Pencil } from 'lucide-react';
+import { Paperclip } from 'lucide-react';
 import type { AnnouncementFragment, AnnouncementStatus } from '@/graphql/Announcement';
-import { announcementActions, canManageAnnouncement } from '@/lib/actions/announcement';
-import { type Action, useActions } from '@/lib/actions';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
-import React from 'react';
 import { badgeCls } from '@/ui/style';
 
 const STATUS_LABEL: Partial<Record<AnnouncementStatus, string>> = {
@@ -24,29 +21,6 @@ export function AnnouncementStatusBadge({
   if (!label) return null;
 
   return <span className={badgeCls({ variant: 'accent', className })}>{label}</span>;
-}
-
-export function useAnnouncementActions(
-  item: AnnouncementFragment | null | undefined,
-  onEdit: () => void,
-) {
-  const actions = React.useMemo<Action<AnnouncementFragment>[]>(() => {
-    return [
-      {
-        id: 'announcement.edit',
-        label: 'Upravit',
-        icon: Pencil,
-        visible: canManageAnnouncement,
-        type: 'mutation',
-        execute: async () => {
-          onEdit();
-        },
-      },
-      ...announcementActions,
-    ];
-  }, [onEdit]);
-
-  return useActions(actions, item);
 }
 
 export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {

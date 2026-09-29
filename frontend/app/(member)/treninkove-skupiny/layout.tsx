@@ -13,7 +13,7 @@ export default function TrainingGroupsLayout({ children }: { children: ReactNode
 
   return (
     <Layout hideTopMenuIfLoggedIn>
-      {detail || auth.user ? (
+      {detail || auth.isLoggedIn ? (
         <WithSidebar sidebar={<CohortList />}>{children}</WithSidebar>
       ) : (
         children

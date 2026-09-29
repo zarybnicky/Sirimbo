@@ -15,7 +15,7 @@ export function Dashboard() {
     parseAsString.withDefault('myLessons').withOptions({ history: 'push' }),
   );
 
-  if (authLoading || !auth.user) return null;
+  if (authLoading || !auth.userId) return null;
 
   return (
     <div className="col-full-width p-4 lg:py-8 h-full bg-neutral-2">

@@ -40,17 +40,17 @@ export const Layout = React.memo(function Layout({
   const missingPermission = !canAccess(auth, tenant, requirements);
 
   React.useEffect(() => {
-    if (!authLoading && missingPermission && !auth.user) {
+    if (!authLoading && missingPermission && !auth.isLoggedIn) {
       router.push(`/login?from=${encodeURIComponent(url)}`);
     }
-  }, [router, auth.user, authLoading, missingPermission, url]);
+  }, [router, auth.isLoggedIn, authLoading, missingPermission, url]);
 
   showTopMenu = tenant.publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !!tenant.publicSite && !auth.user;
+    showTopMenu = !!tenant.publicSite && !auth.isLoggedIn;
   }
   if (missingPermission) {
-    children = authLoading ? null : auth.user ? (
+    children = authLoading ? null : auth.isLoggedIn ? (
       <ErrorPage
         error="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"

@@ -18,7 +18,7 @@ export function AuthButton() {
   const auth = useAuth();
   const memberMenu = useMemberMenu();
 
-  if (!auth.user) {
+  if (!auth.isLoggedIn) {
     return (
       <Link href="/login" className="flex items-center gap-2 uppercase font-bold text-sm">
         <Account className="size-4" />
