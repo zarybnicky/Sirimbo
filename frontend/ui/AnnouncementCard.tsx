@@ -23,49 +23,62 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
 
   return (
     <div
-      onClick={expanded ? undefined : open}
-      className={cardCls({ className: expanded ? '' : 'cursor-pointer' })}
+      onClick={isTitleOnly || expanded ? undefined : open}
+      className={cardCls({ className: isTitleOnly || !expanded ? 'cursor-pointer' : '' })}
     >
+      {isTitleOnly && (
+        <Link
+          href={`/nastenka/${item.id}`}
+          aria-label={`Zobrazit příspěvek ${item.title}`}
+          className="absolute inset-0 z-10 rounded-lg focus-visible:ring-3 focus-visible:ring-accent-7"
+        />
+      )}
       <div className="flex justify-between gap-2 items-start">
         <h3 className={typographyCls({ className: 'min-w-0', variant: 'cardHeading' })}>
-          {!isTitleOnly ? (
+          {isTitleOnly ? (
+            item.title
+          ) : expanded ? (
+            <button type="button" className="cursor-pointer" onClick={() => setExpanded(false)}>
+              {item.title}
+            </button>
+          ) : (
             <Link
               href={`/nastenka/${item.id}`}
               onClick={(event) => event.stopPropagation()}
             >
               {item.title}
             </Link>
-          ) : expanded ? (
-            <div className="cursor-pointer" onClick={() => setExpanded(false)}>
-              {item.title}
-            </div>
-          ) : (
-            item.title
           )}
         </h3>
 
-        {actions && <ActionGroup className="ml-auto" actions={actions} />}
+        {actions && (
+          <ActionGroup
+            className={isTitleOnly ? 'relative z-20 ml-auto' : 'ml-auto'}
+            actions={actions}
+          />
+        )}
       </div>
 
       <AnnouncementMeta item={item} />
 
-      {isTitleOnly || isEmpty ? (
-        expanded ? (
-          <RichTextView value={item.body} />
-        ) : null
-      ) : (
-        <>
-          <div className="relative pt-1">
-            <RichTextView className={expanded ? '' : 'clamp-fade'} value={item.body} />
-          </div>
-          {!expanded && (
-            <div className="absolute bottom-2 text-accent-11 font-bold">
-              Zobrazit více...
+      {!isTitleOnly &&
+        (isEmpty ? (
+          expanded ? (
+            <RichTextView value={item.body} />
+          ) : null
+        ) : (
+          <>
+            <div className="relative pt-1">
+              <RichTextView className={expanded ? '' : 'clamp-fade'} value={item.body} />
             </div>
-          )}
-        </>
-      )}
-      {(expanded || (!isTitleOnly && isEmpty)) && (
+            {!expanded && (
+              <div className="absolute bottom-2 text-accent-11 font-bold">
+                Zobrazit více...
+              </div>
+            )}
+          </>
+        ))}
+      {!isTitleOnly && (expanded || isEmpty) && (
         <FileAttachments attachments={item.explicitAttachments.nodes} />
       )}
     </div>
