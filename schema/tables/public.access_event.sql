@@ -17,7 +17,8 @@ CREATE TABLE public.access_event (
 );
 
 COMMENT ON TABLE public.access_event IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName tenantLocation|@foreignFieldName accessEvents';
 
 GRANT ALL ON TABLE public.access_event TO anonymous;
 ALTER TABLE public.access_event ENABLE ROW LEVEL SECURITY;
@@ -27,7 +28,7 @@ ALTER TABLE ONLY public.access_event
 ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_tenant_id_external_id_key UNIQUE (tenant_id, external_id);
 ALTER TABLE ONLY public.access_event
-    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id);
+    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id);
 ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
 ALTER TABLE ONLY public.access_event

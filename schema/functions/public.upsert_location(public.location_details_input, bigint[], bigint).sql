@@ -1,11 +1,11 @@
-CREATE FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[] DEFAULT NULL::bigint[], cover_image_id bigint DEFAULT NULL::bigint) RETURNS public.tenant_location
+CREATE FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[] DEFAULT NULL::bigint[], cover_image_id bigint DEFAULT NULL::bigint) RETURNS public.location
     LANGUAGE plpgsql
     AS $$
 declare
-  result tenant_location;
+  result location;
 begin
   if details.id is null then
-    insert into tenant_location (
+    insert into location (
       name,
       long_name,
       description,
@@ -29,13 +29,13 @@ begin
     )
     returning * into result;
   else
-    update tenant_location
+    update location
     set name = details.name,
         long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
-        ordering = coalesce(details.ordering, tenant_location.ordering),
+        show_in_lists = coalesce(details.show_in_lists, location.show_in_lists),
+        ordering = coalesce(details.ordering, location.ordering),
         latitude = details.latitude,
         longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id
@@ -56,12 +56,12 @@ begin
       and uploaded_at is not null
       and content_type like 'image/%';
 
-    delete from tenant_location_image image
+    delete from location_image image
     where image.tenant_id = result.tenant_id
       and image.location_id = result.id
       and image.file_id <> all(image_ids);
 
-    insert into tenant_location_image (tenant_id, location_id, file_id)
+    insert into location_image (tenant_id, location_id, file_id)
     select result.tenant_id, result.id, file_id
     from unnest(image_ids) input(file_id)
     on conflict do nothing;

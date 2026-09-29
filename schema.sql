@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict iPPZ6OeeXXvboqWkRZ8cziv9v6qrpQrOKBXUvva2pnMqSEtVu5NYHzKwVgTrDV0
+\restrict oeVXcUduBrufU0K6n2I42Q3uF3eItRrQuUX4vDHTrcFLal3iPOXY15h2FZReVRb
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -1282,7 +1282,8 @@ CREATE TABLE public.event_instance (
 --
 
 COMMENT ON TABLE public.event_instance IS '@omit create
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName location|@foreignFieldName eventInstances';
 
 
 --
@@ -2605,8 +2606,8 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
   union
 
   select image.file_id
-  from tenant_location_image image
-  join tenant_location location
+  from location_image image
+  join location
     on location.tenant_id = image.tenant_id
     and location.id = image.location_id
   where image.tenant_id = (select current_tenant_id())
@@ -2614,7 +2615,7 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
   union
 
   select cover_image_id
-  from tenant_location
+  from location
   where tenant_id = (select current_tenant_id())
     and cover_image_id is not null;
 $$;
@@ -7021,32 +7022,32 @@ $$;
 
 
 --
--- Name: tenant_location; Type: TABLE; Schema: public; Owner: -
+-- Name: location; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tenant_location (
-    id bigint NOT NULL,
-    name text NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
+CREATE TABLE public.location (
+    id bigint CONSTRAINT tenant_location_id_not_null NOT NULL,
+    name text CONSTRAINT tenant_location_name_not_null NOT NULL,
+    description text DEFAULT ''::text CONSTRAINT tenant_location_description_not_null NOT NULL,
     address public.address_domain,
     show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() CONSTRAINT tenant_location_tenant_id_not_null NOT NULL,
+    created_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_created_at_not_null NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_updated_at_not_null NOT NULL,
     cover_image_id bigint,
     is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
     long_name text,
     latitude double precision,
     longitude double precision,
-    ordering integer DEFAULT 1 NOT NULL
+    ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL
 );
 
 
 --
--- Name: TABLE tenant_location; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE location; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
+COMMENT ON TABLE public.location IS '@simpleCollections only
 @behavior -query:resource:list -query:resource:connection -queryField:resource:connection';
 
 
@@ -7054,14 +7055,14 @@ COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
 -- Name: upsert_location(public.location_details_input, bigint[], bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[] DEFAULT NULL::bigint[], cover_image_id bigint DEFAULT NULL::bigint) RETURNS public.tenant_location
+CREATE FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[] DEFAULT NULL::bigint[], cover_image_id bigint DEFAULT NULL::bigint) RETURNS public.location
     LANGUAGE plpgsql
     AS $$
 declare
-  result tenant_location;
+  result location;
 begin
   if details.id is null then
-    insert into tenant_location (
+    insert into location (
       name,
       long_name,
       description,
@@ -7085,13 +7086,13 @@ begin
     )
     returning * into result;
   else
-    update tenant_location
+    update location
     set name = details.name,
         long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
-        ordering = coalesce(details.ordering, tenant_location.ordering),
+        show_in_lists = coalesce(details.show_in_lists, location.show_in_lists),
+        ordering = coalesce(details.ordering, location.ordering),
         latitude = details.latitude,
         longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id
@@ -7112,12 +7113,12 @@ begin
       and uploaded_at is not null
       and content_type like 'image/%';
 
-    delete from tenant_location_image image
+    delete from location_image image
     where image.tenant_id = result.tenant_id
       and image.location_id = result.id
       and image.file_id <> all(image_ids);
 
-    insert into tenant_location_image (tenant_id, location_id, file_id)
+    insert into location_image (tenant_id, location_id, file_id)
     select result.tenant_id, result.id, file_id
     from unnest(image_ids) input(file_id)
     on conflict do nothing;
@@ -8304,7 +8305,8 @@ CREATE TABLE public.access_event (
 --
 
 COMMENT ON TABLE public.access_event IS '@omit create,update,delete
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName tenantLocation|@foreignFieldName accessEvents';
 
 
 --
@@ -9010,6 +9012,25 @@ ALTER TABLE public.form_responses ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
 
 
 --
+-- Name: location_image; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.location_image (
+    tenant_id bigint DEFAULT public.current_tenant_id() CONSTRAINT tenant_location_image_tenant_id_not_null NOT NULL,
+    location_id bigint CONSTRAINT tenant_location_image_location_id_not_null NOT NULL,
+    file_id bigint CONSTRAINT tenant_location_image_file_id_not_null NOT NULL
+);
+
+
+--
+-- Name: TABLE location_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.location_image IS '@omit create,update,delete
+@simpleCollections only';
+
+
+--
 -- Name: membership_application_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -9304,10 +9325,93 @@ ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
 
 
 --
+-- Name: tenant_location; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.tenant_location WITH (security_invoker='true') AS
+ SELECT id,
+    name,
+    description,
+    address,
+    show_in_lists,
+    tenant_id,
+    created_at,
+    updated_at,
+    cover_image_id,
+    is_public,
+    long_name,
+    latitude,
+    longitude,
+    ordering
+   FROM public.location;
+
+
+--
+-- Name: VIEW tenant_location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.tenant_location IS '@primaryKey id
+@unique tenant_id,id
+@foreignKey (tenant_id) references tenant(id)
+@foreignKey (tenant_id,cover_image_id) references file(tenant_id,id)|@fieldName coverImage|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@simpleCollections only
+@behavior -insert -update -delete -query:resource:list -query:resource:connection -queryField:resource:connection';
+
+
+--
+-- Name: COLUMN tenant_location.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.name IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.description IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.show_in_lists; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.show_in_lists IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.tenant_id IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.created_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.created_at IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.updated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.updated_at IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location.ordering; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location.ordering IS '@notNull';
+
+
+--
 -- Name: tenant_location_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.tenant_location ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+ALTER TABLE public.location ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.tenant_location_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -9318,22 +9422,47 @@ ALTER TABLE public.tenant_location ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- Name: tenant_location_image; Type: TABLE; Schema: public; Owner: -
+-- Name: tenant_location_image; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tenant_location_image (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    location_id bigint NOT NULL,
-    file_id bigint NOT NULL
-);
+CREATE VIEW public.tenant_location_image WITH (security_invoker='true') AS
+ SELECT tenant_id,
+    location_id,
+    file_id
+   FROM public.location_image;
 
 
 --
--- Name: TABLE tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+-- Name: VIEW tenant_location_image; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_location_image IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON VIEW public.tenant_location_image IS '@primaryKey tenant_id,location_id,file_id
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName location|@foreignFieldName images
+@foreignKey (tenant_id,file_id) references file(tenant_id,id)|@fieldName file|@foreignFieldName locationImages
+@omit create,update,delete
+@simpleCollections only
+@behavior -insert -update -delete';
+
+
+--
+-- Name: COLUMN tenant_location_image.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location_image.tenant_id IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location_image.location_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location_image.location_id IS '@notNull';
+
+
+--
+-- Name: COLUMN tenant_location_image.file_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_location_image.file_id IS '@notNull';
 
 
 --
@@ -10557,26 +10686,26 @@ ALTER TABLE ONLY public.tenant_administrator
 
 
 --
--- Name: tenant_location_image tenant_location_image_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: location_image tenant_location_image_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location_image
+ALTER TABLE ONLY public.location_image
     ADD CONSTRAINT tenant_location_image_pkey PRIMARY KEY (tenant_id, location_id, file_id);
 
 
 --
--- Name: tenant_location tenant_location_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: location tenant_location_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location
+ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_pkey PRIMARY KEY (id);
 
 
 --
--- Name: tenant_location tenant_location_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: location tenant_location_tenant_id_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location
+ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_tenant_id_id_key UNIQUE (tenant_id, id);
 
 
@@ -11840,21 +11969,21 @@ CREATE INDEX tenant_id ON public.aktuality USING btree (tenant_id);
 -- Name: tenant_location_cover_image_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_location_cover_image_idx ON public.tenant_location USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
+CREATE INDEX tenant_location_cover_image_idx ON public.location USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
 
 
 --
 -- Name: tenant_location_image_file_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_location_image_file_idx ON public.tenant_location_image USING btree (tenant_id, file_id);
+CREATE INDEX tenant_location_image_file_idx ON public.location_image USING btree (tenant_id, file_id);
 
 
 --
 -- Name: tenant_location_tenant_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tenant_location_tenant_id_idx ON public.tenant_location USING btree (tenant_id);
+CREATE INDEX tenant_location_tenant_id_idx ON public.location USING btree (tenant_id);
 
 
 --
@@ -12152,6 +12281,13 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.form_responses 
 
 
 --
+-- Name: location _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.location FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: membership_application _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -12205,13 +12341,6 @@ CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.scoreboard_manu
 --
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_administrator FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-
-
---
--- Name: tenant_location _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_location FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 
 --
@@ -13096,7 +13225,15 @@ ALTER TABLE ONLY public.access_credential
 --
 
 ALTER TABLE ONLY public.access_event
-    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id);
+    ADD CONSTRAINT access_event_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id);
+
+
+--
+-- Name: CONSTRAINT access_event_location_fkey ON access_event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT access_event_location_fkey ON public.access_event IS '@fieldName locationRecord
+@foreignFieldName accessEvents';
 
 
 --
@@ -13426,14 +13563,14 @@ ALTER TABLE ONLY public.event_external_registration
 --
 
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
 -- Name: CONSTRAINT event_instance_location_fkey ON event_instance; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT event_instance_location_fkey ON public.event_instance IS '@fieldName location
+COMMENT ON CONSTRAINT event_instance_location_fkey ON public.event_instance IS '@fieldName locationRecord
 @foreignFieldName eventInstances';
 
 
@@ -13924,58 +14061,58 @@ ALTER TABLE ONLY public.tenant_administrator
 
 
 --
--- Name: tenant_location tenant_location_cover_image_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: location tenant_location_cover_image_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location
+ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_cover_image_fk FOREIGN KEY (tenant_id, cover_image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (cover_image_id);
 
 
 --
--- Name: CONSTRAINT tenant_location_cover_image_fk ON tenant_location; Type: COMMENT; Schema: public; Owner: -
+-- Name: CONSTRAINT tenant_location_cover_image_fk ON location; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT tenant_location_cover_image_fk ON public.tenant_location IS '@fieldName coverImage
+COMMENT ON CONSTRAINT tenant_location_cover_image_fk ON public.location IS '@fieldName coverImage
 @behavior -manyRelation:resource:list -manyRelation:resource:connection';
 
 
 --
--- Name: tenant_location_image tenant_location_image_file_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: location_image tenant_location_image_file_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location_image
+ALTER TABLE ONLY public.location_image
     ADD CONSTRAINT tenant_location_image_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
 
 
 --
--- Name: CONSTRAINT tenant_location_image_file_fk ON tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+-- Name: CONSTRAINT tenant_location_image_file_fk ON location_image; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT tenant_location_image_file_fk ON public.tenant_location_image IS '@fieldName file
-@foreignFieldName locationImages';
-
-
---
--- Name: tenant_location_image tenant_location_image_location_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_location_image
-    ADD CONSTRAINT tenant_location_image_location_fk FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT tenant_location_image_file_fk ON public.location_image IS '@fieldName file
+@foreignFieldName locationImageRecords';
 
 
 --
--- Name: CONSTRAINT tenant_location_image_location_fk ON tenant_location_image; Type: COMMENT; Schema: public; Owner: -
+-- Name: location_image tenant_location_image_location_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT tenant_location_image_location_fk ON public.tenant_location_image IS '@fieldName location
+ALTER TABLE ONLY public.location_image
+    ADD CONSTRAINT tenant_location_image_location_fk FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT tenant_location_image_location_fk ON location_image; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT tenant_location_image_location_fk ON public.location_image IS '@fieldName location
 @foreignFieldName images';
 
 
 --
--- Name: tenant_location tenant_location_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: location tenant_location_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_location
+ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
@@ -14398,6 +14535,20 @@ CREATE POLICY admin_all ON public.form_responses TO administrator USING (true);
 
 
 --
+-- Name: location admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.location TO administrator USING (true);
+
+
+--
+-- Name: location_image admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.location_image TO administrator USING (true);
+
+
+--
 -- Name: person admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14423,20 +14574,6 @@ CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = ( SELECT 
 --
 
 CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_location admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_location TO administrator USING (true);
-
-
---
--- Name: tenant_location_image admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_location_image TO administrator USING (true);
 
 
 --
@@ -14824,6 +14961,20 @@ CREATE POLICY current_tenant ON public.form_responses AS RESTRICTIVE USING ((ten
 
 
 --
+-- Name: location current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: location_image current_tenant; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY current_tenant ON public.location_image AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: membership_application current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -14877,20 +15028,6 @@ CREATE POLICY current_tenant ON public.scoreboard_manual_adjustment AS RESTRICTI
 --
 
 CREATE POLICY current_tenant ON public.security_event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_location current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.tenant_location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_location_image current_tenant; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY current_tenant ON public.tenant_location_image AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -15029,6 +15166,18 @@ CREATE POLICY insert_my ON public.event_instance_registration FOR INSERT WITH CH
 
 CREATE POLICY insert_my ON public.membership_application FOR INSERT WITH CHECK (((created_by = ( SELECT public.current_user_id() AS current_user_id)) AND (status = ANY (ARRAY['new'::public.application_form_status, 'sent'::public.application_form_status]))));
 
+
+--
+-- Name: location; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: location_image; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.location_image ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: membership_application manage_admin; Type: POLICY; Schema: public; Owner: -
@@ -15276,6 +15425,20 @@ CREATE POLICY public_view ON public.event_series FOR SELECT TO anonymous USING (
 
 
 --
+-- Name: location public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.location FOR SELECT USING (true);
+
+
+--
+-- Name: location_image public_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY public_view ON public.location_image FOR SELECT USING (true);
+
+
+--
 -- Name: tenant public_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -15287,20 +15450,6 @@ CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING ((id = 
 --
 
 CREATE POLICY public_view ON public.tenant_administrator FOR SELECT USING (true);
-
-
---
--- Name: tenant_location public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.tenant_location FOR SELECT USING (true);
-
-
---
--- Name: tenant_location_image public_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY public_view ON public.tenant_location_image FOR SELECT USING (true);
 
 
 --
@@ -15384,18 +15533,6 @@ ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;
-
---
--- Name: tenant_location; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.tenant_location ENABLE ROW LEVEL SECURITY;
-
---
--- Name: tenant_location_image; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.tenant_location_image ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: tenant_membership; Type: ROW SECURITY; Schema: public; Owner: -
@@ -16761,10 +16898,10 @@ GRANT ALL ON FUNCTION public.upsert_article(info public.article_type_input, atta
 
 
 --
--- Name: TABLE tenant_location; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE location; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.tenant_location TO anonymous;
+GRANT ALL ON TABLE public.location TO anonymous;
 
 
 --
@@ -17405,6 +17542,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.form_responses_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE location_image; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.location_image TO anonymous;
+
+
+--
 -- Name: SEQUENCE membership_application_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17518,6 +17662,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.tenant_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE tenant_location; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.tenant_location TO anonymous;
+
+
+--
 -- Name: SEQUENCE tenant_location_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17528,7 +17679,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.tenant_location_id_seq TO anonymous;
 -- Name: TABLE tenant_location_image; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.tenant_location_image TO anonymous;
+GRANT SELECT ON TABLE public.tenant_location_image TO anonymous;
 
 
 --
@@ -17612,5 +17763,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict iPPZ6OeeXXvboqWkRZ8cziv9v6qrpQrOKBXUvva2pnMqSEtVu5NYHzKwVgTrDV0
+\unrestrict oeVXcUduBrufU0K6n2I42Q3uF3eItRrQuUX4vDHTrcFLal3iPOXY15h2FZReVRb
 

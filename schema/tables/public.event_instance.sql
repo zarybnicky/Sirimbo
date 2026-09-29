@@ -31,7 +31,8 @@ CREATE TABLE public.event_instance (
 );
 
 COMMENT ON TABLE public.event_instance IS '@omit create
-@simpleCollections only';
+@simpleCollections only
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName location|@foreignFieldName eventInstances';
 COMMENT ON COLUMN public.event_instance.series_id IS 'Groups related events without supplying inherited event values.';
 COMMENT ON COLUMN public.event_instance.share_token IS '@omit';
 
@@ -43,7 +44,7 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (tenant_id, parent_id) REFERENCES public.event_instance(tenant_id, id) ON UPDATE CASCADE;
 ALTER TABLE ONLY public.event_instance
