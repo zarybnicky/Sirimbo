@@ -1,10 +1,10 @@
 import type {
   EventInstance,
   GraphCacheConfig,
+  Location,
   Maybe,
   MoveEventInstancePayload,
   Person,
-  TenantLocation,
   TenantTrainer,
   WithTypename,
 } from '@/graphql';
@@ -200,9 +200,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           location:
             input.locationId !== null
               ? ({
-                  __typename: 'TenantLocation' as const,
+                  __typename: 'Location' as const,
                   id: input.locationId,
-                } as TenantLocation)
+                } as Location)
               : null,
           locationText:
             typeof input.locationText === 'string' ? input.locationText : null,
@@ -349,7 +349,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       upsertLocation(result, _args, cache, _info) {
         const location = result.upsertLocation?.location;
-        if (location) cache.invalidate({ __typename: 'TenantLocation', id: location.id });
+        if (location) cache.invalidate({ __typename: 'Location', id: location.id });
         const tenantId = location?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
       },

@@ -11,7 +11,7 @@ fragment EventInstance on EventInstance {
   since
   until
   locationText
-  location {
+  location: locationRecord {
     id
     name
   }
@@ -301,7 +301,7 @@ query EventRegistrations($id: BigInt!) {
     since
     until
     locationText
-    location {
+    location: locationRecord {
       id
       name
     }
@@ -366,7 +366,7 @@ query EventRegistrationCandidates {
 query EventFormOptions {
   tenant: getCurrentTenant {
     id
-    locationsList: tenantLocationsList {
+    locationsList {
       id
       name
     }
@@ -558,7 +558,7 @@ mutation MoveEvent($input: MoveEventInstanceInput!) {
       since
       until
       locationText
-      location {
+      location: locationRecord {
         id
         name
       }

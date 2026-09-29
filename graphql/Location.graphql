@@ -1,4 +1,4 @@
-fragment Location on TenantLocation {
+fragment Location on Location {
   id
   tenantId
   name
@@ -32,7 +32,7 @@ fragment Location on TenantLocation {
 query LocationOptions {
   tenant: getCurrentTenant {
     id
-    locationsList: tenantLocationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+    locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       id
       name
       showInLists
@@ -43,20 +43,20 @@ query LocationOptions {
 query PublicLocations {
   tenant: getCurrentTenant {
     id
-    locationsList: tenantLocationsList(condition: { showInLists: true }, orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+    locationsList(condition: { showInLists: true }, orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       ...Location
     }
   }
 }
 
 query Location($id: BigInt!) {
-  location: tenantLocation(id: $id) {
+  location(id: $id) {
     ...Location
   }
 }
 
 query LocationPage($id: BigInt!, $start: Datetime!) {
-  location: tenantLocation(id: $id) {
+  location(id: $id) {
     ...Location
     accessEventsList(first: 20, orderBy: OCCURRED_AT_DESC) {
       ...AccessEvent

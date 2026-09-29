@@ -257,14 +257,14 @@ export const PersonMembershipView = memo(function PersonMembershipView({ item }:
                     <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
                     <span className="text-neutral-11">
                       {dateTimeFormatter.format(new Date(event.occurredAt))}
-                      {event.tenantLocation && (
+                      {event.location && (
                         <>
                           {' · '}
                           <Link
                             className="underline"
-                            href={`/lokality/${event.tenantLocation.id}`}
+                            href={`/lokality/${event.location.id}`}
                           >
-                            {event.tenantLocation.name}
+                            {event.location.name}
                           </Link>
                         </>
                       )}

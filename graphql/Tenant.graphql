@@ -1,4 +1,4 @@
-fragment LocationSummary on TenantLocation {
+fragment LocationSummary on Location {
   id
   name
   showInLists
@@ -74,7 +74,7 @@ query Club($showInLists: Boolean) {
     tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
       ...TenantTrainer
     }
-    locationsList: tenantLocationsList(condition: { showInLists: $showInLists }, orderBy: [SHOW_IN_LISTS_DESC, ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+    locationsList(condition: { showInLists: $showInLists }, orderBy: [SHOW_IN_LISTS_DESC, ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
       ...LocationSummary
     }
   }

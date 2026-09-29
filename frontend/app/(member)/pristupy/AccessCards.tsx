@@ -563,11 +563,11 @@ const EventsTab = React.memo(function EventsTab() {
           </span>
           <span className="ml-auto text-neutral-11">
             {dateTimeFormatter.format(new Date(event.occurredAt))}
-            {event.tenantLocation && (
+            {event.location && (
               <>
                 {' · '}
-                <Link className="underline" href={`/lokality/${event.tenantLocation.id}`}>
-                  {event.tenantLocation.name}
+                <Link className="underline" href={`/lokality/${event.location.id}`}>
+                  {event.location.name}
                 </Link>
               </>
             )}
