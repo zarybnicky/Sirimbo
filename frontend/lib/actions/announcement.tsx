@@ -20,7 +20,7 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
     label: 'Upravit',
     icon: Pencil,
     visible: canManageAnnouncement,
-    href: ({ item }) => `/nastenka/${item.id}?edit=1`,
+    href: ({ item }) => `/nastenka/${item.id}/edit`,
   },
   {
     id: 'announcement.sticky',
