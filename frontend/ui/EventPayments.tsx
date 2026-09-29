@@ -34,20 +34,27 @@ export const EventPayments = memo(function EventPayments({ id }: { id: string })
   ) : (
     <div className="divide-y divide-neutral-4">
       {payments.map((payment) => {
-        const postings = payment.transactions.nodes.flatMap((transaction) => transaction.postingsList);
+        const postings = payment.transactions.nodes.flatMap((t) => t.postingsList);
         return (
           <section key={payment.id} className="py-4 first:pt-0">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <ActionRow actions={actionMap.get(payment.id)!} className="mb-0">
                 <span className="font-medium">Platba {payment.id}</span>
               </ActionRow>
-              <span className="text-sm text-neutral-11">{paymentStatus[payment.status]}</span>
+              <span className="text-sm text-neutral-11">
+                {paymentStatus[payment.status]}
+              </span>
             </div>
             {postings.length > 0 ? (
               <div className="mt-2 space-y-1 text-sm">
                 {postings.map((posting) => (
-                  <div key={posting.id} className="flex flex-wrap justify-between gap-x-4">
-                    <span>{posting.account?.person?.name ?? (posting.account ? 'Klub' : '–')}</span>
+                  <div
+                    key={posting.id}
+                    className="flex flex-wrap justify-between gap-x-4"
+                  >
+                    <span>
+                      {posting.account?.person?.name ?? (posting.account ? 'Klub' : '–')}
+                    </span>
                     <span className="tabular-nums">
                       {moneyFormatter.format({
                         amount: posting.amount,
@@ -62,7 +69,9 @@ export const EventPayments = memo(function EventPayments({ id }: { id: string })
                 {payment.paymentDebtorsList.map((debtor) => (
                   <div key={debtor.id} className="flex flex-wrap justify-between gap-x-4">
                     <span>{debtor.person?.name ?? 'Neznámá osoba'}</span>
-                    <span className="tabular-nums">{moneyFormatter.format(debtor.price) ?? '–'}</span>
+                    <span className="tabular-nums">
+                      {moneyFormatter.format(debtor.price) ?? '–'}
+                    </span>
                   </div>
                 ))}
               </div>

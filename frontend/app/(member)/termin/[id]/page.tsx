@@ -40,13 +40,11 @@ async function resolvePage(props: PageProps) {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { id, hasShareToken, event, tenant } = await resolvePage(props);
-  const title = event?.name?.trim() || `Termín ${id}`;
-  const canonical = new URL(`/termin/${id}`, tenant.config.origin).toString();
 
   return {
-    title,
+    title: event?.name?.trim() || `Termín ${id}`,
     description: stripHtml(event?.summary) || undefined,
-    alternates: { canonical },
+    alternates: { canonical: new URL(`/termin/${id}`, tenant.config.origin).toString() },
     robots: hasShareToken || !event ? { index: false, follow: false } : undefined,
   };
 }
