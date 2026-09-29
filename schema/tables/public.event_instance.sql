@@ -45,7 +45,7 @@ ALTER TABLE ONLY public.event_instance
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_location_fkey FOREIGN KEY (tenant_id, location_id) REFERENCES public.tenant_location(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE;
+    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (tenant_id, parent_id) REFERENCES public.event_instance(tenant_id, id) ON UPDATE CASCADE;
 ALTER TABLE ONLY public.event_instance
     ADD CONSTRAINT event_instance_series_fkey FOREIGN KEY (tenant_id, series_id) REFERENCES public.event_series(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL (series_id);
 ALTER TABLE ONLY public.event_instance

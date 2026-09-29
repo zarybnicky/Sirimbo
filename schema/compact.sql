@@ -943,11 +943,16 @@ CREATE TABLE public.tenant_location (
   name text NOT NULL,
   description text DEFAULT ''::text NOT NULL,
   address public.address_domain,
-  is_public boolean DEFAULT true NOT NULL,
+  show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id),
   created_at timestamp with time zone DEFAULT now() NOT NULL,
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   cover_image_id bigint,
+  is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
+  long_name text,
+  latitude double precision,
+  longitude double precision,
+  ordering int DEFAULT 1 NOT NULL,
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, cover_image_id)
     REFERENCES public.file (tenant_id, id)
@@ -1007,8 +1012,7 @@ CREATE TABLE public.event_instance (
   is_public boolean,
   manager_person_ids bigint[] DEFAULT CAST('{}' AS bigint[]) NOT NULL,
   stats jsonb DEFAULT '{}'::jsonb NOT NULL,
-  parent_id bigint REFERENCES public.event_instance (id)
-    ON UPDATE CASCADE,
+  parent_id bigint,
   capacity int,
   capacity_unit public.event_capacity_unit DEFAULT CAST('people' AS public.event_capacity_unit) NOT NULL,
   description text,
@@ -1029,6 +1033,9 @@ CREATE TABLE public.event_instance (
     REFERENCES public.tenant_location (tenant_id, id)
     ON UPDATE CASCADE
     ON DELETE SET NULL,
+  FOREIGN KEY(tenant_id, parent_id)
+    REFERENCES public.event_instance (tenant_id, id)
+    ON UPDATE CASCADE,
   FOREIGN KEY(tenant_id, series_id)
     REFERENCES public.event_series (tenant_id, id)
     ON UPDATE CASCADE
@@ -1474,7 +1481,7 @@ CREATE TYPE public.event_trainer_input AS (person_id bigint, lessons_offered int
 
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
 
-CREATE TYPE public.location_details_input AS (id bigint, name text, description text, address public.address_domain, is_public boolean);
+CREATE TYPE public.location_details_input AS (id bigint, name text, long_name text, description text, address public.address_domain, show_in_lists boolean, ordering int, latitude double precision, longitude double precision);
 
 CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
 

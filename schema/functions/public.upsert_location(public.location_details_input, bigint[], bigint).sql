@@ -7,25 +7,37 @@ begin
   if details.id is null then
     insert into tenant_location (
       name,
+      long_name,
       description,
       address,
-      is_public,
+      show_in_lists,
+      ordering,
+      latitude,
+      longitude,
       cover_image_id
     )
     values (
       details.name,
+      nullif(nullif(btrim(details.long_name), ''), details.name),
       coalesce(details.description, ''),
       details.address,
-      coalesce(details.is_public, true),
+      coalesce(details.show_in_lists, false),
+      coalesce(details.ordering, 1),
+      details.latitude,
+      details.longitude,
       cover_image_id
     )
     returning * into result;
   else
     update tenant_location
     set name = details.name,
+        long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        is_public = coalesce(details.is_public, true),
+        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
+        ordering = coalesce(details.ordering, tenant_location.ordering),
+        latitude = details.latitude,
+        longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id
     where id = details.id
     returning * into result;

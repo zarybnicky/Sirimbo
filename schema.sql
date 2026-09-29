@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict wRGzoG0GCcGEh9svofSq4ynreUFkn5FZIH3t5126XiMCmffntewJdf0np2uFgnF
+\restrict iPPZ6OeeXXvboqWkRZ8cziv9v6qrpQrOKBXUvva2pnMqSEtVu5NYHzKwVgTrDV0
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -753,9 +753,13 @@ COMMENT ON TYPE public.jwt_token IS '@jwt';
 CREATE TYPE public.location_details_input AS (
 	id bigint,
 	name text,
+	long_name text,
 	description text,
 	address public.address_domain,
-	is_public boolean
+	show_in_lists boolean,
+	ordering integer,
+	latitude double precision,
+	longitude double precision
 );
 
 
@@ -2606,14 +2610,12 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
     on location.tenant_id = image.tenant_id
     and location.id = image.location_id
   where image.tenant_id = (select current_tenant_id())
-    and location.is_public
 
   union
 
   select cover_image_id
   from tenant_location
   where tenant_id = (select current_tenant_id())
-    and is_public
     and cover_image_id is not null;
 $$;
 
@@ -3757,8 +3759,9 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_
     )
     select
       first_name, last_name, gender, birth_date, nationality, tax_identification_number,
-      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone,
-      note
+      national_id_number, csts_id, wdsf_id,
+      coalesce(prefix_title, ''), coalesce(suffix_title, ''), coalesce(bio, ''),
+      email, phone, coalesce(note, '')
     from application
     returning *
   ), appl as (
@@ -7026,11 +7029,16 @@ CREATE TABLE public.tenant_location (
     name text NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
-    is_public boolean DEFAULT true NOT NULL,
+    show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    cover_image_id bigint
+    cover_image_id bigint,
+    is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
+    long_name text,
+    latitude double precision,
+    longitude double precision,
+    ordering integer DEFAULT 1 NOT NULL
 );
 
 
@@ -7055,25 +7063,37 @@ begin
   if details.id is null then
     insert into tenant_location (
       name,
+      long_name,
       description,
       address,
-      is_public,
+      show_in_lists,
+      ordering,
+      latitude,
+      longitude,
       cover_image_id
     )
     values (
       details.name,
+      nullif(nullif(btrim(details.long_name), ''), details.name),
       coalesce(details.description, ''),
       details.address,
-      coalesce(details.is_public, true),
+      coalesce(details.show_in_lists, false),
+      coalesce(details.ordering, 1),
+      details.latitude,
+      details.longitude,
       cover_image_id
     )
     returning * into result;
   else
     update tenant_location
     set name = details.name,
+        long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        is_public = coalesce(details.is_public, true),
+        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
+        ordering = coalesce(details.ordering, tenant_location.ordering),
+        latitude = details.latitude,
+        longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id
     where id = details.id
     returning * into result;
@@ -13422,7 +13442,15 @@ COMMENT ON CONSTRAINT event_instance_location_fkey ON public.event_instance IS '
 --
 
 ALTER TABLE ONLY public.event_instance
-    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE;
+    ADD CONSTRAINT event_instance_parent_id_fkey FOREIGN KEY (tenant_id, parent_id) REFERENCES public.event_instance(tenant_id, id) ON UPDATE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_instance_parent_id_fkey ON event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_instance_parent_id_fkey ON public.event_instance IS '@fieldName parent
+@foreignFieldName childEventInstances';
 
 
 --
@@ -17584,5 +17612,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict wRGzoG0GCcGEh9svofSq4ynreUFkn5FZIH3t5126XiMCmffntewJdf0np2uFgnF
+\unrestrict iPPZ6OeeXXvboqWkRZ8cziv9v6qrpQrOKBXUvva2pnMqSEtVu5NYHzKwVgTrDV0
 

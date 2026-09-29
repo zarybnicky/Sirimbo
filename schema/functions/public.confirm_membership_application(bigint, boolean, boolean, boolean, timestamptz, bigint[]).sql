@@ -14,8 +14,9 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_
     )
     select
       first_name, last_name, gender, birth_date, nationality, tax_identification_number,
-      national_id_number, csts_id, wdsf_id, prefix_title, suffix_title, bio, email, phone,
-      note
+      national_id_number, csts_id, wdsf_id,
+      coalesce(prefix_title, ''), coalesce(suffix_title, ''), coalesce(bio, ''),
+      email, phone, coalesce(note, '')
     from application
     returning *
   ), appl as (

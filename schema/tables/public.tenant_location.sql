@@ -3,11 +3,16 @@ CREATE TABLE public.tenant_location (
     name text NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     address public.address_domain,
-    is_public boolean DEFAULT true NOT NULL,
+    show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    cover_image_id bigint
+    cover_image_id bigint,
+    is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
+    long_name text,
+    latitude double precision,
+    longitude double precision,
+    ordering integer DEFAULT 1 NOT NULL
 );
 
 COMMENT ON TABLE public.tenant_location IS '@simpleCollections only
