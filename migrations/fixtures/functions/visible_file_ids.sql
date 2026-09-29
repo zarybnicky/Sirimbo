@@ -27,7 +27,7 @@ as $$
   union
 
   select image.file_id
-  from tenant_location_image image
+  from location_image image
   join location
     on location.tenant_id = image.tenant_id
     and location.id = image.location_id

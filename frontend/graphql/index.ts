@@ -3729,6 +3729,8 @@ export type File = {
   displayName: Maybe<Scalars['String']['output']>;
   id: Scalars['BigInt']['output'];
   isPublic: Scalars['Boolean']['output'];
+  /** Reads and enables pagination through a set of `LocationImage`. */
+  locationImageRecordsList: Array<LocationImage>;
   /** Reads and enables pagination through a set of `TenantLocationImage`. */
   locationImagesList: Array<TenantLocationImage>;
   name: Scalars['String']['output'];
@@ -3761,6 +3763,14 @@ export type FileArticleAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
+};
+
+
+export type FileLocationImageRecordsListArgs = {
+  condition?: InputMaybe<LocationImageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LocationImagesOrderBy>>;
 };
 
 
@@ -3984,8 +3994,8 @@ export type Location = {
   /** Reads and enables pagination through a set of `EventInstance`. */
   eventInstancesList: Array<EventInstance>;
   id: Scalars['BigInt']['output'];
-  /** Reads and enables pagination through a set of `TenantLocationImage`. */
-  imagesList: Array<TenantLocationImage>;
+  /** Reads and enables pagination through a set of `LocationImage`. */
+  imagesList: Array<LocationImage>;
   isPublic: Maybe<Scalars['Boolean']['output']>;
   /** GPS latitude in WGS84 degrees. */
   latitude: Maybe<Scalars['Float']['output']>;
@@ -4018,10 +4028,10 @@ export type LocationEventInstancesListArgs = {
 
 
 export type LocationImagesListArgs = {
-  condition?: InputMaybe<TenantLocationImageCondition>;
+  condition?: InputMaybe<LocationImageCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TenantLocationImagesOrderBy>>;
+  orderBy?: InputMaybe<Array<LocationImagesOrderBy>>;
 };
 
 /**
@@ -4071,6 +4081,42 @@ export type LocationDetailsInputRecordInput = {
   ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
 };
+
+export type LocationImage = {
+  __typename?: 'LocationImage';
+  /** Reads a single `File` that is related to this `LocationImage`. */
+  file: Maybe<File>;
+  fileId: Scalars['BigInt']['output'];
+  /** Reads a single `Location` that is related to this `LocationImage`. */
+  location: Maybe<Location>;
+  locationId: Scalars['BigInt']['output'];
+  tenantId: Scalars['BigInt']['output'];
+};
+
+/**
+ * A condition to be used against `LocationImage` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type LocationImageCondition = {
+  /** Checks for equality with the object’s `fileId` field. */
+  fileId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `locationId` field. */
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `tenantId` field. */
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** Methods to use when ordering `LocationImage`. */
+export type LocationImagesOrderBy =
+  | 'FILE_ID_ASC'
+  | 'FILE_ID_DESC'
+  | 'LOCATION_ID_ASC'
+  | 'LOCATION_ID_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
 
 /** An input for mutations affecting `Location` */
 export type LocationInput = {
@@ -6119,6 +6165,10 @@ export type Query = {
   location: Maybe<Location>;
   /** Get a single `Location`. */
   locationByTenantIdAndId: Maybe<Location>;
+  /** Get a single `LocationImage`. */
+  locationImage: Maybe<LocationImage>;
+  /** Reads a set of `LocationImage`. */
+  locationImagesList: Maybe<Array<LocationImage>>;
   /** Get a single `MembershipApplication`. */
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
@@ -6552,6 +6602,23 @@ export type QueryLocationArgs = {
 export type QueryLocationByTenantIdAndIdArgs = {
   id: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLocationImageArgs = {
+  fileId: Scalars['BigInt']['input'];
+  locationId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLocationImagesListArgs = {
+  condition?: InputMaybe<LocationImageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LocationImagesOrderBy>>;
 };
 
 
@@ -8044,8 +8111,6 @@ export type TenantLocationImage = {
   /** Reads a single `TenantLocation` that is related to this `TenantLocationImage`. */
   location: Maybe<TenantLocation>;
   locationId: Scalars['BigInt']['output'];
-  /** Reads a single `Location` that is related to this `TenantLocationImage`. */
-  locationRecord: Maybe<Location>;
   tenantId: Scalars['BigInt']['output'];
 };
 
@@ -9727,6 +9792,7 @@ export type GraphCacheKeysConfig = {
   FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
+  LocationImage?: (data: WithTypename<LocationImage>) => null | string,
   LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
   LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
@@ -9863,6 +9929,8 @@ export type GraphCacheResolvers = {
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
     locationByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryLocationByTenantIdAndIdArgs, WithTypename<Location> | string>,
+    locationImage?: GraphCacheResolver<WithTypename<Query>, QueryLocationImageArgs, WithTypename<LocationImage> | string>,
+    locationImagesList?: GraphCacheResolver<WithTypename<Query>, QueryLocationImagesListArgs, Array<WithTypename<LocationImage> | string>>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
@@ -10685,6 +10753,7 @@ export type GraphCacheResolvers = {
     displayName?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    locationImageRecordsList?: GraphCacheResolver<WithTypename<File>, FileLocationImageRecordsListArgs, Array<WithTypename<LocationImage> | string>>,
     locationImagesList?: GraphCacheResolver<WithTypename<File>, FileLocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
     name?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     objectKey?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10740,7 +10809,7 @@ export type GraphCacheResolvers = {
     description?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Location>, LocationEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     id?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    imagesList?: GraphCacheResolver<WithTypename<Location>, LocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
+    imagesList?: GraphCacheResolver<WithTypename<Location>, LocationImagesListArgs, Array<WithTypename<LocationImage> | string>>,
     isPublic?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     latitude?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['Float']['output'] | string>,
     longName?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -10750,6 +10819,13 @@ export type GraphCacheResolvers = {
     showInLists?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  LocationImage?: {
+    file?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, WithTypename<File> | string>,
+    fileId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    location?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, WithTypename<Location> | string>,
+    locationId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
   LocationsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
@@ -11188,7 +11264,6 @@ export type GraphCacheResolvers = {
     fileId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, WithTypename<TenantLocation> | string>,
     locationId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    locationRecord?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, WithTypename<Location> | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantLocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
   TenantMembership?: {
@@ -11614,6 +11689,8 @@ export type GraphCacheUpdaters = {
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']['output']> }, QueryInvitationNameArgs>,
     location?: GraphCacheUpdateResolver<{ location: Maybe<WithTypename<Location>> }, QueryLocationArgs>,
     locationByTenantIdAndId?: GraphCacheUpdateResolver<{ locationByTenantIdAndId: Maybe<WithTypename<Location>> }, QueryLocationByTenantIdAndIdArgs>,
+    locationImage?: GraphCacheUpdateResolver<{ locationImage: Maybe<WithTypename<LocationImage>> }, QueryLocationImageArgs>,
+    locationImagesList?: GraphCacheUpdateResolver<{ locationImagesList: Maybe<Array<WithTypename<LocationImage>>> }, QueryLocationImagesListArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
@@ -12527,6 +12604,7 @@ export type GraphCacheUpdaters = {
     displayName?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    locationImageRecordsList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileLocationImageRecordsListArgs>,
     locationImagesList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileLocationImagesListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     objectKey?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
@@ -12592,6 +12670,13 @@ export type GraphCacheUpdaters = {
     showInLists?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>
+  },
+  LocationImage?: {
+    file?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
+    fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
+    locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>
   },
   LocationsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>,
@@ -13030,7 +13115,6 @@ export type GraphCacheUpdaters = {
     fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
     locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
-    locationRecord?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocationImage>>, Record<string, never>>
   },
   TenantMembership?: {

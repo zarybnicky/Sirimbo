@@ -76,12 +76,12 @@ begin
       and uploaded_at is not null
       and content_type like 'image/%';
 
-    delete from tenant_location_image image
+    delete from location_image image
     where image.tenant_id = result.tenant_id
       and image.location_id = result.id
       and image.file_id <> all(image_ids);
 
-    insert into tenant_location_image (tenant_id, location_id, file_id)
+    insert into location_image (tenant_id, location_id, file_id)
     select result.tenant_id, result.id, file_id
     from unnest(image_ids) input(file_id)
     on conflict do nothing;
