@@ -1,36 +1,28 @@
-import type { EventFormControl } from '@/ui/event-form/types';
+import type { EventFormInput, EventFormType } from '@/ui/event-form/types';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
-import { useFieldArray, useWatch } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useQuery } from 'urql';
-import { CohortListDocument } from '@/graphql/Cohorts';
+import { EventFormOptionsDocument } from '@/graphql/Event';
+import { FormError } from '@/ui/form';
 
-export function CohortListElement({
-  control,
-  existingCohorts,
-}: {
-  control: EventFormControl;
-  existingCohorts?: ReadonlyArray<{ id: string; label: string }>;
+export function CohortListElement({ onAdd, onRemove }: {
+  onAdd: (cohortId: string) => void;
+  onRemove: (cohortId: string) => void;
 }) {
+  const { control } = useFormContext<EventFormInput, unknown, EventFormType>();
   const [open, setOpen] = React.useState(false);
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove } = useFieldArray({ name: 'cohorts', control });
 
-  const [{ data: cohortQuery }] = useQuery({
-    query: CohortListDocument,
-    variables: { archived: false },
+  const [{ data, fetching, error }] = useQuery({
+    query: EventFormOptionsDocument,
   });
-  const cohortOptions = React.useMemo(() => {
-    const options = new Map(existingCohorts?.map((cohort) => [cohort.id, cohort]));
-    for (const cohort of cohortQuery?.cohortsList ?? []) {
-      options.set(cohort.id, { id: cohort.id, label: cohort.name });
-    }
-    return [...options.values()];
-  }, [cohortQuery?.cohortsList, existingCohorts]);
+  const cohorts = data?.tenant?.cohortsList ?? [];
 
   return (
     <>
@@ -55,9 +47,10 @@ export function CohortListElement({
                 sideOffset={5}
               >
                 <ComboboxSearchArea
-                  options={cohortOptions}
+                  options={cohorts.filter((x) => !x.isArchived).map((x) => ({ id: x.id, label: x.name }))}
                   onChange={(id) => {
                     if (id && !fields.some((cohort) => cohort.cohortId === id)) {
+                      onAdd(id);
                       append({ cohortId: id });
                     }
                     setOpen(false);
@@ -69,19 +62,21 @@ export function CohortListElement({
         </div>
       )}
 
+      <FormError error={error} />
       {fields.map((cohort, index) => (
-        <div className="flex gap-2" key={cohort.id}>
-          <div className="grow">
-            {cohortOptions.find((x) => x.id === cohort.cohortId)?.label}
-          </div>
+        <div key={cohort.id} className="flex items-center gap-2">
+          <span className="grow">
+            {cohorts.find((x) => x.id === cohort.cohortId)?.name ??
+              (fetching ? 'Načítám…' : cohort.cohortId)}
+          </span>
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: 'outline' })}
-            aria-label={`Odebrat skupinu ${
-              cohortOptions.find((x) => x.id === cohort.cohortId)?.label ??
-              cohort.cohortId
-            }`}
-            onClick={() => remove(index)}
+            aria-label="Odebrat skupinu"
+            onClick={() => {
+              onRemove(cohort.cohortId);
+              remove(index);
+            }}
           >
             <X />
           </button>

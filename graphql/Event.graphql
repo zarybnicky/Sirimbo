@@ -163,6 +163,9 @@ fragment EventLessonDemand on EventLessonDemand {
 fragment EventInstanceRegistration on EventInstanceRegistration {
   id
   instanceId
+  source
+  targetCohortId
+  registrationStatus
   note
   createdAt
   personId
@@ -284,6 +287,17 @@ query EventDescription($id: BigInt!) {
   }
 }
 
+query EventEditorRegistrations($id: BigInt!) {
+  event: eventInstance(id: $id) {
+    id
+    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    ) {
+      ...EventInstanceRegistration
+    }
+  }
+}
+
 query EventRegistrations($id: BigInt!) {
   event: eventInstance(id: $id) {
     id
@@ -366,6 +380,21 @@ query EventRegistrationCandidates {
 query EventFormOptions {
   tenant: getCurrentTenant {
     id
+    cohortsList(orderBy: ORDERING_ASC) {
+      id
+      name
+      isArchived
+      cohortMembershipsList {
+        id
+        since
+        until
+        status
+        person {
+          id
+          name
+        }
+      }
+    }
     locationsList {
       id
       name

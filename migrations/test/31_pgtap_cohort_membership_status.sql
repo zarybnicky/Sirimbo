@@ -78,8 +78,7 @@ INSERT INTO cohort_membership (id, tenant_id, cohort_id, person_id, since, statu
          (860005, 1000, 800001, 200005, now() - interval '30 days', 'active')
   ON CONFLICT (id) DO NOTHING;
 
--- The submitted participant list predates the cohort selection. Participant
--- edits must run first so adding the target can append Evan afterwards.
+-- The form submits its complete participant list, including cohort members.
 SELECT public.save_events(
   details => ROW(
     instance.parent_id, instance.name, instance.type,
@@ -91,12 +90,8 @@ SELECT public.save_events(
   events => ARRAY[
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[
-        ROW(200001, null)::public.event_registration_input,
-        ROW(200002, null)::public.event_registration_input,
-        ROW(200003, null)::public.event_registration_input,
-        ROW(200004, null)::public.event_registration_input
-      ]
+      ARRAY(SELECT ROW(person_id, null, cohort_id, false)::public.event_registration_input
+        FROM cohort_membership WHERE cohort_id = 800001 AND status = 'active' AND active_range @> now())
     )::public.event_input
   ],
   cohort_ids => ARRAY[800001, 800001]
@@ -169,12 +164,13 @@ SELECT public.save_events(
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
       ARRAY(
-        SELECT ROW(registration.person_id, registration.couple_id)
+        SELECT ROW(registration.person_id, registration.couple_id, null, false)
           ::public.event_registration_input
         FROM event_instance_registration registration
         WHERE registration.instance_id = instance.id
           AND registration.parent_registration_id is null
           AND registration.registration_status = 'active'
+          AND registration.source IS DISTINCT FROM 'cohort'
       )
     )::public.event_input
   ]
@@ -204,12 +200,16 @@ SELECT public.save_events(
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
       ARRAY(
-        SELECT ROW(registration.person_id, registration.couple_id)
+        SELECT ROW(registration.person_id, registration.couple_id, null, false)
           ::public.event_registration_input
         FROM event_instance_registration registration
         WHERE registration.instance_id = instance.id
           AND registration.parent_registration_id is null
           AND registration.registration_status = 'active'
+          AND registration.source IS DISTINCT FROM 'cohort'
+        UNION ALL
+        SELECT ROW(person_id, null, cohort_id, false)::public.event_registration_input
+        FROM cohort_membership WHERE cohort_id = 800001 AND status = 'active' AND active_range @> now()
       )
     )::public.event_input
   ],
@@ -233,7 +233,7 @@ SELECT tap.ok(
     WHERE instance_id = 900002
       AND cohort_id = 800001
   ),
-  'removing and restoring an instance target reconciles its registration'
+  'removing and restoring a cohort saves its submitted registrations'
 );
 
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
@@ -296,8 +296,9 @@ SELECT public.save_events(
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
       ARRAY[
-        ROW(200003, null)::public.event_registration_input,
-        ROW(200005, null)::public.event_registration_input
+        ROW(200002, null, null, true)::public.event_registration_input,
+        ROW(200003, null, null, false)::public.event_registration_input,
+        ROW(200005, null, null, false)::public.event_registration_input
       ]
     )::public.event_input
   ],
@@ -322,9 +323,9 @@ SELECT public.save_events(
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
       ARRAY[
-        ROW(200003, null)::public.event_registration_input,
-        ROW(200004, null)::public.event_registration_input,
-        ROW(200005, null)::public.event_registration_input
+        ROW(200003, null, null, false)::public.event_registration_input,
+        ROW(200004, null, null, false)::public.event_registration_input,
+        ROW(200005, null, null, false)::public.event_registration_input
       ]
     )::public.event_input
   ],
@@ -583,7 +584,7 @@ FROM public.save_events(
       now() + interval '6 hours',
       now() + interval '7 hours',
       false,
-      ARRAY[ROW(2900003, null)::public.event_registration_input]
+      ARRAY[ROW(2900003, null, null, false)::public.event_registration_input]
     )::public.event_input
   ],
   trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
@@ -867,14 +868,14 @@ SELECT public.save_events(
   events => ARRAY[
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+      ARRAY[ROW(null, 2950001, null, false)::public.event_registration_input]
     )::public.event_input,
     ROW(
       null::bigint,
       instance.since + interval '1 week',
       instance.until + interval '1 week',
       false,
-      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+      ARRAY[ROW(null, 2950001, null, false)::public.event_registration_input]
     )::public.event_input
   ],
   trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
@@ -973,14 +974,14 @@ SELECT public.save_events(
   events => ARRAY[
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+      ARRAY[ROW(null, 2950001, null, false)::public.event_registration_input]
     )::public.event_input,
     ROW(
       null::bigint,
       instance.since + interval '2 weeks',
       instance.until + interval '2 weeks',
       false,
-      ARRAY[ROW(null, 2950001)::public.event_registration_input]
+      ARRAY[ROW(null, 2950001, null, false)::public.event_registration_input]
     )::public.event_input
   ],
   trainers => ARRAY[ROW(2900002, 2)::public.event_trainer_input],
@@ -1038,9 +1039,9 @@ SELECT public.save_events(
     ROW(
       instance.id, instance.since, instance.until, instance.is_cancelled,
       ARRAY[
-        ROW(200001, null)::public.event_registration_input,
-        ROW(200002, null)::public.event_registration_input,
-        ROW(200003, null)::public.event_registration_input
+        ROW(200001, null, null, false)::public.event_registration_input,
+        ROW(200002, null, null, false)::public.event_registration_input,
+        ROW(200003, null, null, false)::public.event_registration_input
       ]
     )::public.event_input
   ],

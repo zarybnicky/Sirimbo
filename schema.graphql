@@ -137,8 +137,6 @@ type AccessEvent {
   externalId: String!
   id: BigInt!
   kind: AccessCredentialKind!
-
-  """Location resolved when the access event is received."""
   locationId: BigInt
 
   """Reads a single `Location` that is related to this `AccessEvent`."""
@@ -743,8 +741,6 @@ type Announcement {
   """Reads a single `User` that is related to this `Announcement`."""
   author: User
   authorId: BigInt
-
-  """Author display name without exposing the author login account."""
   authorName: String
   body: String!
   createdAt: Datetime!
@@ -4254,7 +4250,9 @@ enum EventLessonDemandsOrderBy {
 """An input for mutations affecting `EventRegistrationInputRecord`"""
 input EventRegistrationInputRecordInput {
   coupleId: BigInt
+  isCancelled: Boolean
   personId: BigInt
+  targetCohortId: BigInt
 }
 
 enum EventRegistrationSource {
@@ -4816,16 +4814,10 @@ type Location {
     orderBy: [LocationImagesOrderBy!]
   ): [LocationImage!]!
   isPublic: Boolean
-
-  """GPS latitude in WGS84 degrees."""
   latitude: Float
   longName: String
-
-  """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String!
-
-  """Display order in public location lists; lower numbers come first."""
   ordering: Int!
   showInLists: Boolean!
   tenantId: BigInt!
@@ -4939,16 +4931,10 @@ input LocationInput {
   createdAt: Datetime
   description: String
   isPublic: Boolean
-
-  """GPS latitude in WGS84 degrees."""
   latitude: Float
   longName: String
-
-  """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String!
-
-  """Display order in public location lists; lower numbers come first."""
   ordering: Int
   showInLists: Boolean
   tenantId: BigInt
@@ -4964,16 +4950,10 @@ input LocationPatch {
   createdAt: Datetime
   description: String
   isPublic: Boolean
-
-  """GPS latitude in WGS84 degrees."""
   latitude: Float
   longName: String
-
-  """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String
-
-  """Display order in public location lists; lower numbers come first."""
   ordering: Int
   showInLists: Boolean
   tenantId: BigInt
@@ -8236,11 +8216,7 @@ type ScoreboardRecord {
 type SecurityEvent {
   """Reads a single `User` that is related to this `SecurityEvent`."""
   actorUser: User
-
-  """The user who caused the event, if known."""
   actorUserId: BigInt
-
-  """When the change takes effect."""
   effectiveAt: Datetime!
   id: BigInt!
   kind: SecurityEventKind!

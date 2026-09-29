@@ -3,7 +3,7 @@ import {
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
 import {
-  EventRegistrationsDocument,
+  EventEditorRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
   type EventInstanceRegistrationFragment,
@@ -21,7 +21,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
-import { CohortListElement } from './CohortListElement';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { LocationField } from './LocationField';
@@ -92,14 +91,12 @@ function EventEditor({
   defaultValues,
   parentId,
   seriesId,
-  existingCohorts,
   existingRegistrations = [],
   mode,
 }: {
   defaultValues: EventFormType;
   parentId?: string | null;
   seriesId?: string | null;
-  existingCohorts?: Option[];
   existingRegistrations?: EventInstanceRegistrationFragment[];
   mode: 'create' | 'edit';
 }) {
@@ -174,7 +171,10 @@ function EventEditor({
           since,
           until,
           isCancelled,
-          registrations: values.registrations,
+          registrations: values.registrations.map(({ cohortIds, ...registration }) => ({
+            ...registration,
+            targetCohortId: cohortIds[0] ?? null,
+          })),
         }));
     const name = values.name.trim();
     const isLesson = values.type === 'LESSON';
@@ -273,16 +273,7 @@ function EventEditor({
             <InstanceListElement control={control} />
             <LocationField control={control} />
             <TrainerListElement control={control} mode={mode} />
-            <CohortListElement control={control} existingCohorts={existingCohorts} />
-            <ParticipantListElement
-              control={control}
-              existingPeople={existingRegistrations.flatMap(({ person }) =>
-                person ? [{ id: person.id, label: person.name }] : [],
-              )}
-              existingCouples={existingRegistrations.flatMap(({ couple }) =>
-                couple ? [{ id: couple.id, label: formatCoupleName(couple) }] : [],
-              )}
-            />
+            <ParticipantListElement savedRegistrations={existingRegistrations} />
           </>
         )}
 
@@ -347,8 +338,10 @@ export function CreateEventForm({
 }
 
 export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
+  const [now] = React.useState(() => Date.now());
+  const [options] = useQuery({ query: EventFormOptionsDocument });
   const [query] = useQuery({
-    query: EventRegistrationsDocument,
+    query: EventEditorRegistrationsDocument,
     variables: { id: event.id },
     requestPolicy: 'network-only',
   });
@@ -358,17 +351,19 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
       ? registrationsEvent.registrationsList
       : undefined;
 
-  if (!registrations && query.fetching) {
+  if ((!registrations && query.fetching) || (!options.data && options.fetching)) {
     return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
   }
 
-  if (!registrations) {
-    return query.error ? (
-      <FormError error={query.error} />
+  if (!registrations || !options.data) {
+    return query.error || options.error ? (
+      <FormError error={query.error ?? options.error} />
     ) : (
       <div className="text-sm text-neutral-11">Událost není dostupná.</div>
     );
   }
+
+  const at = Math.min(now, Date.parse(event.since));
 
   return (
     <EventEditor
@@ -377,10 +372,6 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
       parentId={event.parentId}
       seriesId={event.seriesId}
       existingRegistrations={registrations}
-      existingCohorts={event.targetCohortsList.map((target) => ({
-        id: target.cohortId,
-        label: target.cohort?.name ?? '-',
-      }))}
       defaultValues={{
         name: event.name ?? '',
         type: event.type ?? 'LESSON',
@@ -406,9 +397,18 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
           lessonsOffered: trainer.lessonsOffered,
         })),
         cohorts: event.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
-        registrations: registrations.map((registration) => ({
-          personId: registration.personId,
-          coupleId: registration.coupleId,
+        registrations: registrations.map((r) => ({
+          personId: r.personId,
+          coupleId: r.coupleId,
+          isCancelled: false,
+          // The recorded origin is certain; membership dates recover overlapping cohorts.
+          cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
+            .filter(({ cohortId }) => cohortId === r.targetCohortId ||
+              options.data?.tenant?.cohortsList.find((x) => x.id === cohortId)?.cohortMembershipsList
+                .some((m) => m.person?.id === r.personId &&
+                  (at < now || m.status === 'ACTIVE') && Date.parse(m.since) <= at &&
+                  (!m.until || Date.parse(m.until) > at)))
+            .map((x) => x.cohortId),
         })),
       }}
     />

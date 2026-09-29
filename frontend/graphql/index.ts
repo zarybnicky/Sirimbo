@@ -168,7 +168,6 @@ export type AccessEvent = {
   externalId: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   kind: AccessCredentialKind;
-  /** Location resolved when the access event is received. */
   locationId: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Location` that is related to this `AccessEvent`. */
   locationRecord: Maybe<Location>;
@@ -628,7 +627,6 @@ export type Announcement = {
   /** Reads a single `User` that is related to this `Announcement`. */
   author: Maybe<User>;
   authorId: Maybe<Scalars['BigInt']['output']>;
-  /** Author display name without exposing the author login account. */
   authorName: Maybe<Scalars['String']['output']>;
   body: Scalars['String']['output'];
   createdAt: Scalars['Datetime']['output'];
@@ -3598,7 +3596,9 @@ export type EventLessonDemandsOrderBy =
 /** An input for mutations affecting `EventRegistrationInputRecord` */
 export type EventRegistrationInputRecordInput = {
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type EventRegistrationSource =
@@ -3997,13 +3997,10 @@ export type Location = {
   /** Reads and enables pagination through a set of `LocationImage`. */
   imagesList: Array<LocationImage>;
   isPublic: Maybe<Scalars['Boolean']['output']>;
-  /** GPS latitude in WGS84 degrees. */
   latitude: Maybe<Scalars['Float']['output']>;
   longName: Maybe<Scalars['String']['output']>;
-  /** GPS longitude in WGS84 degrees. */
   longitude: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
-  /** Display order in public location lists; lower numbers come first. */
   ordering: Scalars['Int']['output'];
   showInLists: Scalars['Boolean']['output'];
   tenantId: Scalars['BigInt']['output'];
@@ -4125,13 +4122,10 @@ export type LocationInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
-  /** GPS latitude in WGS84 degrees. */
   latitude?: InputMaybe<Scalars['Float']['input']>;
   longName?: InputMaybe<Scalars['String']['input']>;
-  /** GPS longitude in WGS84 degrees. */
   longitude?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
-  /** Display order in public location lists; lower numbers come first. */
   ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4145,13 +4139,10 @@ export type LocationPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
-  /** GPS latitude in WGS84 degrees. */
   latitude?: InputMaybe<Scalars['Float']['input']>;
   longName?: InputMaybe<Scalars['String']['input']>;
-  /** GPS longitude in WGS84 degrees. */
   longitude?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Display order in public location lists; lower numbers come first. */
   ordering?: InputMaybe<Scalars['Int']['input']>;
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -7125,9 +7116,7 @@ export type SecurityEvent = {
   __typename?: 'SecurityEvent';
   /** Reads a single `User` that is related to this `SecurityEvent`. */
   actorUser: Maybe<User>;
-  /** The user who caused the event, if known. */
   actorUserId: Maybe<Scalars['BigInt']['output']>;
-  /** When the change takes effect. */
   effectiveAt: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   kind: SecurityEventKind;

@@ -35,6 +35,8 @@ export const EventForm = z.object({
       z.object({
         personId: z.string().nullable().prefault(null),
         coupleId: z.string().nullable().prefault(null),
+        cohortIds: z.array(z.string()).prefault([]),
+        isCancelled: z.boolean().prefault(false),
       }),
     )
     .prefault([]),

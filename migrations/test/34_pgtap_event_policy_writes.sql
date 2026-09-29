@@ -73,7 +73,7 @@ SELECT id FROM save_events(
   jsonb_populate_record(null::event_details_input,
     '{"name":"RLS save","type":"lesson","capacity":5,"capacity_unit":"people","is_visible":true}'),
   ARRAY[ROW(null, now(), now()+interval '1 hour', false,
-    ARRAY[ROW(-8202,null)::event_registration_input])::event_input],
+    ARRAY[ROW(-8202, null, null, false)::event_registration_input])::event_input],
   ARRAY[ROW(-8200,2)::event_trainer_input, ROW(-8201,3)::event_trainer_input],
   ARRAY[-8200]::bigint[]
 );
@@ -84,7 +84,7 @@ SELECT tap.lives_ok($$
     jsonb_populate_record(null::event_details_input,
       '{"name":"RLS handoff","type":"lesson","capacity":6,"capacity_unit":"people","is_visible":true}'),
     ARRAY[ROW((SELECT id FROM saved_policy_event), now(), now()+interval '2 hours', false,
-      ARRAY[ROW(-8202,null)::event_registration_input])::event_input],
+      ARRAY[ROW(-8202, null, null, false)::event_registration_input])::event_input],
     ARRAY[ROW(-8201,4)::event_trainer_input, ROW(-8202,5)::event_trainer_input],
     ARRAY[-8200]::bigint[]
   )
