@@ -8032,10 +8032,8 @@ export type TenantLocation = {
   /** Reads and enables pagination through a set of `TenantLocationImage`. */
   imagesList: Array<TenantLocationImage>;
   isPublic: Maybe<Scalars['Boolean']['output']>;
-  /** GPS latitude in WGS84 degrees. */
   latitude: Maybe<Scalars['Float']['output']>;
   longName: Maybe<Scalars['String']['output']>;
-  /** GPS longitude in WGS84 degrees. */
   longitude: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   ordering: Scalars['Int']['output'];

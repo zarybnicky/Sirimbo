@@ -9628,12 +9628,8 @@ type TenantLocation {
     orderBy: [TenantLocationImagesOrderBy!]
   ): [TenantLocationImage!]!
   isPublic: Boolean
-
-  """GPS latitude in WGS84 degrees."""
   latitude: Float
   longName: String
-
-  """GPS longitude in WGS84 degrees."""
   longitude: Float
   name: String!
   ordering: Int!
