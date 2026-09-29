@@ -348,7 +348,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['accessCredentialsList']);
       },
       upsertLocation(result, _args, cache, _info) {
-        const tenantId = result.upsertLocation?.tenantLocation?.tenantId;
+        const location = result.upsertLocation?.location;
+        if (location) cache.invalidate({ __typename: 'TenantLocation', id: location.id });
+        const tenantId = location?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
       },
       updateTenant(_result, args, cache, _info) {

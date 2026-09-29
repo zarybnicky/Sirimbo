@@ -28,7 +28,7 @@ as $$
 
   select image.file_id
   from tenant_location_image image
-  join tenant_location location
+  join location
     on location.tenant_id = image.tenant_id
     and location.id = image.location_id
   where image.tenant_id = (select current_tenant_id())
@@ -36,7 +36,7 @@ as $$
   union
 
   select cover_image_id
-  from tenant_location
+  from location
   where tenant_id = (select current_tenant_id())
     and cover_image_id is not null;
 $$;

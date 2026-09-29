@@ -18,14 +18,14 @@ create or replace function upsert_location(
   image_ids bigint[] default null,
   cover_image_id bigint default null
 )
-returns tenant_location
+returns location
 language plpgsql
 as $$
 declare
-  result tenant_location;
+  result location;
 begin
   if details.id is null then
-    insert into tenant_location (
+    insert into location (
       name,
       long_name,
       description,
@@ -49,13 +49,13 @@ begin
     )
     returning * into result;
   else
-    update tenant_location
+    update location
     set name = details.name,
         long_name = nullif(nullif(btrim(details.long_name), ''), details.name),
         description = coalesce(details.description, ''),
         address = details.address,
-        show_in_lists = coalesce(details.show_in_lists, tenant_location.show_in_lists),
-        ordering = coalesce(details.ordering, tenant_location.ordering),
+        show_in_lists = coalesce(details.show_in_lists, location.show_in_lists),
+        ordering = coalesce(details.ordering, location.ordering),
         latitude = details.latitude,
         longitude = details.longitude,
         cover_image_id = upsert_location.cover_image_id

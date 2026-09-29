@@ -73,8 +73,9 @@ query LocationPage($id: BigInt!, $start: Datetime!) {
 
 mutation UpsertLocation($input: UpsertLocationInput!) {
   upsertLocation(input: $input) {
-    tenantLocation {
-      ...Location
+    location {
+      id
+      tenantId
     }
   }
 }
