@@ -34,11 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocationPage({ params }: Props) {
   const { id } = await params;
   const result = await getLocation(id);
-  if (!result) notFound();
+  if (!result?.data?.location) notFound();
 
   return (
     <Layout>
-      <Location initialData={result.data} start={result.start} />
+      <Location
+        initialLocation={result.data.location}
+        initialEvents={result.data.events ?? []}
+        start={result.start}
+      />
     </Layout>
   );
 }

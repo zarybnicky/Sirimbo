@@ -18,10 +18,12 @@ import { useQuery } from 'urql';
 import { useAuth } from '@/lib/auth';
 
 export function Location({
-  initialData,
+  initialLocation,
+  initialEvents,
   start,
 }: {
-  initialData: LocationPageQuery;
+  initialLocation: NonNullable<LocationPageQuery['location']>;
+  initialEvents: NonNullable<LocationPageQuery['events']>;
   start: string;
 }) {
   const auth = useAuth();
@@ -36,20 +38,17 @@ export function Location({
   const [{ data }] = useQuery({
     query: LocationPageDocument,
     variables: {
-      id: initialData.location!.id,
+      id: initialLocation.id,
       start: new Date(now).toISOString(),
     },
   });
-  const result = data ?? initialData;
-  const location = result.location!;
-  const hasCoordinates = location.latitude != null && location.longitude != null;
+  const location = data?.location ?? initialLocation;
+  const events = data?.events ?? initialEvents;
   const actions = useActions(locationActions, location);
-  const ongoingEvents = (result.events ?? []).filter(
+  const ongoingEvents = events.filter(
     (x) => new Date(x.since).getTime() <= now && new Date(x.until).getTime() > now,
   );
-  const upcomingEvents = (result.events ?? []).filter(
-    (x) => new Date(x.since).getTime() > now,
-  );
+  const upcomingEvents = events.filter((x) => new Date(x.since).getTime() > now);
   const coverImage = location.coverImage;
   const images = location.imagesList.flatMap((x) =>
     x.file && x.file.id !== coverImage?.id ? [x.file] : [],
@@ -99,9 +98,9 @@ export function Location({
       )}
 
       <h2 className="mt-4 mb-2 text-lg font-bold">O místu</h2>
-      <div className={hasCoordinates ? 'grid items-center gap-6 md:grid-cols-[auto_1fr]' : ''}>
-        {hasCoordinates && (
-          <LocationMap map={{ lat: location.latitude!, lng: location.longitude!, zoom: 16 }} />
+      <div className={location.latitude && location.longitude ? 'grid items-center gap-6 md:grid-cols-[auto_1fr]' : ''}>
+        {location.latitude && location.longitude && (
+          <LocationMap map={{ lat: location.latitude, lng: location.longitude, zoom: 14 }} />
         )}
         <div>
           {location.description?.trim() ? (

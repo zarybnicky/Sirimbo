@@ -10,8 +10,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Kde trénujeme',
-  description:
-    'Přehled tanečních sálů TK Olymp v Olomouci: Taneční centrum při FZŠ Holečkova a tělocvična Slovanského gymnázia včetně adres a map.',
+  description: 'Přehled tanečních sálů klubu včetně adres a map.',
   alternates: { canonical: '/kde-trenujeme' },
 };
 
@@ -40,7 +39,7 @@ export default async function LocationsPage() {
 
               <div className="grid items-center gap-6 md:grid-cols-[auto_1fr]">
                 {loc.latitude != null && loc.longitude != null && (
-                  <LocationMap map={{ lat: loc.latitude, lng: loc.longitude, zoom: 16 }} />
+                  <LocationMap map={{ lat: loc.latitude, lng: loc.longitude, zoom: 14 }} />
                 )}
                 <div className="text-neutral-12">
                   <LocationAddress
