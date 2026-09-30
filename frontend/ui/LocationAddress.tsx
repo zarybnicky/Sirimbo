@@ -36,7 +36,7 @@ export function LocationAddress({ address, latitude, longitude, showMissingAddre
           target="_blank"
           rel="noreferrer"
         >
-          Otevřít v mapě
+          Otevřít na mapě
           <ExternalLink className="size-3" aria-hidden="true" />
         </a>
       </address>

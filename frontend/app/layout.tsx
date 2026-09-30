@@ -9,8 +9,6 @@ import type { ReactNode } from 'react';
 import { isDeepStrictEqual } from 'node:util';
 
 import '../style/index.css';
-import 'leaflet/dist/leaflet.css';
-import '../style/leaflet.css';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 export async function generateMetadata(): Promise<Metadata> {

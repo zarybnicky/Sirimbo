@@ -6,7 +6,7 @@ import { locationActions } from '@/lib/actions/location';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { EventButton } from '@/ui/EventButton';
 import { dateTimeFormatter } from '@/ui/format';
-import { LeafletMap } from '@/ui/LeafletMap';
+import { LocationMap } from '@/ui/LocationMap';
 import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
@@ -101,7 +101,7 @@ export function Location({
       <h2 className="mt-4 mb-2 text-lg font-bold">O místu</h2>
       <div className={hasCoordinates ? 'grid items-center gap-6 md:grid-cols-[auto_1fr]' : ''}>
         {hasCoordinates && (
-          <LeafletMap map={{ lat: location.latitude!, lng: location.longitude!, zoom: 16 }} />
+          <LocationMap map={{ lat: location.latitude!, lng: location.longitude!, zoom: 16 }} />
         )}
         <div>
           {location.description?.trim() ? (

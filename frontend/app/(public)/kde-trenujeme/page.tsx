@@ -1,6 +1,6 @@
 import { PublicLocationsDocument } from '@/graphql/Location';
 import { executeGraphql } from '@/lib/server/graphql';
-import { LeafletMap } from '@/ui/LeafletMap';
+import { LocationMap } from '@/ui/LocationMap';
 import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
@@ -40,7 +40,7 @@ export default async function LocationsPage() {
 
               <div className="grid items-center gap-6 md:grid-cols-[auto_1fr]">
                 {loc.latitude != null && loc.longitude != null && (
-                  <LeafletMap map={{ lat: loc.latitude, lng: loc.longitude, zoom: 16 }} />
+                  <LocationMap map={{ lat: loc.latitude, lng: loc.longitude, zoom: 16 }} />
                 )}
                 <div className="text-neutral-12">
                   <LocationAddress
