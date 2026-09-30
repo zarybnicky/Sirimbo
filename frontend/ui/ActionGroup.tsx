@@ -21,8 +21,7 @@ type BucketKey = 'add' | 'more';
 
 const toArray = <T,>(v: T | readonly T[] | undefined): readonly T[] => {
   if (v === undefined) return [];
-  if (Array.isArray(v)) return v;
-  return [v] as readonly T[];
+  return Array.isArray(v) ? v : ([v] as readonly T[]);
 };
 
 function partitionActions<Id extends string>(
@@ -124,7 +123,8 @@ export function ActionGroup<Id extends string = string>({
     if (!('execute' in action)) return;
     if (action.confirm) {
       try {
-        const options = typeof action.confirm === 'string'
+        const options =
+          typeof action.confirm === 'string'
             ? { description: action.confirm }
             : action.confirm;
         await confirm(options);
@@ -145,7 +145,7 @@ export function ActionGroup<Id extends string = string>({
       className={cn('inline-flex items-center gap-2', className)}
       onClick={(e) => e.stopPropagation()}
     >
-      {primaryActions.map((a) => (
+      {primaryActions.map((a) =>
         'href' in a ? (
           <Link
             key={a.key}
@@ -168,8 +168,8 @@ export function ActionGroup<Id extends string = string>({
             {a.icon && <a.icon className="size-4" />}
             <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
           </button>
-        )
-      ))}
+        ),
+      )}
       {buckets.map(({ key, items }) => (
         <DropdownMenu key={key}>
           {variant === 'row' ? (
@@ -194,7 +194,7 @@ export function ActionGroup<Id extends string = string>({
               event.preventDefault();
             }}
           >
-            {items.map((a) => (
+            {items.map((a) =>
               'href' in a ? (
                 <DropdownMenuLink
                   key={a.key}
@@ -214,8 +214,8 @@ export function ActionGroup<Id extends string = string>({
                   {a.icon && <a.icon className="size-4" />}
                   {a.label}
                 </DropdownMenuButton>
-              )
-            ))}
+              ),
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       ))}

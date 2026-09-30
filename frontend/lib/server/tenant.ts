@@ -1,15 +1,20 @@
 import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import type { RequestAuthState } from '@/lib/auth';
 import {
+  type JwtClaims,
   parseCurrentClaims,
   resolveAuth,
-  type JwtClaims,
   type ResolvedAuth,
 } from '@/lib/auth-claims';
 import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
-import { defaultTenant, getTenant, hostToTenant, type TenantCatalogEntry } from '@/tenant/catalog';
+import {
+  defaultTenant,
+  getTenant,
+  hostToTenant,
+  type TenantCatalogEntry,
+} from '@/tenant/catalog';
 import jwt from 'jsonwebtoken';
 import { cookies, headers } from 'next/headers';
 import { cache } from 'react';
@@ -41,7 +46,7 @@ export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
 export const getRequestContext = cache(async (): Promise<RequestContext> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
-  let claims: JwtClaims | undefined;
+  let claims: JwtClaims | null = null;
 
   if (token) {
     try {
@@ -49,20 +54,21 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
         algorithms: ['HS256'],
         ignoreExpiration: true,
       }) as JwtClaims;
-      claims = parseCurrentClaims(
-        Object.fromEntries(
-          Object.entries(payload).filter(
-            ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
+      claims =
+        parseCurrentClaims(
+          Object.fromEntries(
+            Object.entries(payload).filter(
+              ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
+            ),
           ),
-        ),
-      ) ?? undefined;
+        ) ?? null;
     } catch (error) {
       if (!(error instanceof jwt.JsonWebTokenError)) throw error;
     }
   }
 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
-  const tenant = cookieTenant ?? await getRequestHostTenant();
+  const tenant = cookieTenant ?? (await getRequestHostTenant());
   const auth = resolveAuth(claims, tenant.id.toString());
   const pgSettings: Record<string, string> = {
     role: auth.role,
@@ -79,13 +85,14 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
     }
   }
 
-  return { token, claims: claims ?? null, tenant, auth, pgSettings };
+  return { token, claims, tenant, auth, pgSettings };
 });
 
 async function getRequestHostTenant() {
   const headerStore = await headers();
   const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
-  const hostname = host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
+  const hostname =
+    host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
 
   return hostToTenant.get(hostname ?? '') ?? defaultTenant;
 }
