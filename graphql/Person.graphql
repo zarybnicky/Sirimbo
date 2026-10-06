@@ -117,7 +117,7 @@ query PersonMemberships($id: BigInt!) {
 }
 
 query FullPersonList {
-  people(condition: { membership: {} }) {
+  people {
     nodes {
       ...Person
     }
@@ -125,7 +125,7 @@ query FullPersonList {
 }
 
 query PersonAccounts {
-  people(condition: { membership: {} }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
+  people(condition: { membership: { state: CURRENT } }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
     nodes {
       ...PersonBasic
       accountsList {
@@ -151,7 +151,7 @@ query UnpaidPayments {
   }
 }
 
-query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState) {
+query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState = CURRENT) {
   people(
     condition: {
       membership: {
@@ -194,7 +194,7 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
 
 query MissingCstsIdCandidates {
   people(
-    condition: { cstsId: null, membership: {} }
+    condition: { cstsId: null, membership: { state: CURRENT } }
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
   ) {
     nodes {
@@ -213,7 +213,7 @@ query MissingCstsIdCandidates {
 }
 
 query PersonWithLinksList {
-  people(condition: { membership: {} }) {
+  people(condition: { membership: { state: CURRENT } }) {
     nodes {
       ...PersonWithLinks
     }

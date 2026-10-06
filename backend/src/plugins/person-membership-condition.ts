@@ -86,15 +86,22 @@ function visibleMembershipPredicate(state: MembershipState, sql: SqlTag, personA
         select ta.person_id from public.current_tenant_administrator ta
       )`
     : sql`${personAlias}.id in (
-        select tm.person_id
-        from public.tenant_membership tm
-        where tm.tenant_id = (select public.current_tenant_id())
-          and tm.status = 'expired'
-          and not exists (
-            select 1
-            from public.current_tenant_membership active
-            where active.person_id = tm.person_id
-          )
+        select person_id from public.tenant_membership
+        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
+        union
+        select person_id from public.tenant_trainer
+        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
+        union
+        select person_id from public.tenant_administrator
+        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
+        except
+        (
+          select person_id from public.current_tenant_membership
+          union
+          select person_id from public.current_tenant_trainer
+          union
+          select person_id from public.current_tenant_administrator
+        )
       )`;
 }
 
@@ -160,7 +167,7 @@ const PersonMembershipConditionTypesPlugin: GraphileConfig.Plugin = {
 
               return {
                 state: {
-                  description: 'The membership state to filter by. Defaults to CURRENT.',
+                  description: 'The membership state to filter by.',
                   type: stateType,
                 },
                 inCohorts: {
@@ -229,7 +236,10 @@ const PersonMembershipConditionPlugin = addPgTableCondition(
 
     const state = expectState(condition.state);
     const cohorts = expectCohorts(condition.inCohorts);
-    const predicates: SQL[] = [visibleMembershipPredicate(state, sql, personAlias)];
+    const predicates: SQL[] = [];
+    if (condition.state != null) {
+      predicates.push(visibleMembershipPredicate(state, sql, personAlias));
+    }
 
     if (cohorts) {
       if (cohorts.length === 0) {
@@ -295,7 +305,7 @@ const PersonMembershipConditionPlugin = addPgTableCondition(
     );
     if (adminPredicate) predicates.push(adminPredicate);
 
-    return sql`(${sql.join(predicates, ') and (')})`;
+    return predicates.length ? sql`(${sql.join(predicates, ') and (')})` : null;
   },
 );
 
