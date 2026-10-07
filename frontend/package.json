@@ -96,7 +96,7 @@
     "@types/file-saver": "~2.0.7",
     "@types/iban": "~0.0.35",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.13.6",
+    "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
