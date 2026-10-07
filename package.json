@@ -22,7 +22,7 @@
     "graphile-migrate": "2.0.0-rc.3",
     "graphql": "~16.14.0",
     "graphql-tag": "~2.12.7",
-    "libpg-query": "~17.7.4",
+    "libpg-query": "~18.1.5",
     "pgsql-parser": "^18.2.8",
     "prettier": "~3.9.9",
     "prop-types": "~15.8.1",
