@@ -21,9 +21,12 @@ what is missing, and a phased path, so that each phase ships value on its own.
 - Conflicts: `event_overlaps_trainer_report` and `event_overlaps_attendee_report` are
   post-hoc SQL reports for a time range. No room conflict report exists.
 - Money: `create_event_instance_payment` prices a `lesson` from the trainer's
-  `member_price_45min`, pro-rated by duration and split by participant count. It is
-  hard-coded to tenant 2 and runs nightly for lessons that already started. Payout rates
-  exist on `tenant_trainer` but are only used for the on-screen estimate.
+  `member_price_45min`, pro-rated by duration and split by participant count, and
+  `app_private.create_latest_lesson_payments` runs it nightly for lessons that already
+  started, then `resolve_payment_with_credit` posts the amounts: debtors' person accounts
+  are debited, the trainer account is credited with the payout share and the club account
+  with the rest. `account_balances` nets postings per account. The nightly job is
+  hard-coded to tenant 2.
 - Sharing: `share_token` plus `has_public_details` expose the camp and all children to
   anonymous viewers through `event_share_claims`.
 - Permissions: `can_trainer_edit_instance` walks the parent chain, so camp trainers can
@@ -57,11 +60,18 @@ what is missing, and a phased path, so that each phase ships value on its own.
    shows columns already in use and cannot act as a drop target before then.
 5. Scheduling is one drop per lesson. Nothing helps place forty requests quickly:
    no place-N-times, no copy-day, no proposal, no undo.
-6. Participants get nothing after registering: no "my lessons" list, no notification on
-   change, no calendar export, no printable sheet. Trainers have no printable day sheet.
-7. Money is partial: per-lesson payments only, tenant 2 only, no group lesson pricing,
-   no camp-specific rates, no guest rates, no consolidated bill per registrant, and the
-   price logic is duplicated in TypeScript in the Lekce and Trenéři tabs.
+6. Participants are not told about changes. The personal agenda exists (`/rozpis` with
+   "Pouze moje", scope `mine`) and already includes camp lessons through the per-person
+   child registration rows, but the camp page does not lead there, nothing notifies on a
+   change, and there is no printable sheet for trainers or rooms. An ICS feed exists as a
+   draft, but calendar apps, Android above all, refresh subscribed feeds on their own
+   schedule (hours, not minutes), so it cannot carry same-day changes.
+7. Money: the SQL ledger is complete. `create_event_instance_payment` prices a lesson,
+   `resolve_payment_with_credit` posts it to the debtors' accounts and splits the trainer
+   payout from the club share, and `account_balances` nets everything per person. What is
+   missing for camps is narrow: the tenant 2 hard-code, pricing for `group` lessons,
+   camp-specific rates, guest rates, and a per-camp statement. The Lekce and Trenéři tabs
+   re-implement the price estimate in TypeScript instead of reading it from SQL.
 8. External registrations cannot request or receive lessons.
 9. Privacy: `view_visible_instance` lets any member read every registration's note and
    lesson requests on a visible camp. Notes often contain diet or health details.
@@ -91,7 +101,7 @@ Users and their primary screens:
 | --- | --- | --- |
 | Organizer (admin or head trainer) | build, publish, adjust, settle | Rozpis, Lekce, Trenéři, Platby |
 | Trainer | own day sheet, attendance | Rozpis filtered to self, print |
-| Participant or parent | register, request, see own lessons, hear about changes | Přihlášky dialog, "Moje lekce", share link |
+| Participant or parent | register, request, see own lessons, hear about changes | Přihlášky dialog, personal agenda ("Pouze moje"), share link |
 
 ## 3. Phases
 
@@ -148,8 +158,9 @@ Goal: an organizer places a full camp in an afternoon.
   also makes tablets usable, since it needs no HTML5 drag and drop.
 - Place-N-times: drop a request with count 3 and fill three consecutive free slots for
   that trainer on that day, skipping blocks and participant conflicts.
-- Day templates: copy a trainer's block layout or a whole day to another day; shift a
-  column by 15 minutes; swap two lessons.
+- Swap two lessons (two `move_event_instance` calls, no modeling). Day templates are
+  deliberately out: copying layouts between days would need its own model for little
+  gain over placing blocks by hand.
 - Proposal fill. A greedy heuristic (client-side first, worker later if it grows) that
   takes unfulfilled demands and proposes placements honoring blocks, arrival and departure,
   rooms, daily caps, and that favors back-to-back lessons for a registrant and spreads a
@@ -163,32 +174,44 @@ Goal: an organizer places a full camp in an afternoon.
 
 Goal: nobody has to ask "when is my lesson?"
 
-- "Moje lekce" on the camp page for members and in the registration dialog, listing the
-  registrant's lessons by day with trainer and room.
+- One personal agenda, not a camp-specific list. The existing `/rozpis` agenda with
+  "Pouze moje" already returns club lessons and camp lessons together. Make it the
+  canonical "my lessons" view: link to it from the camp page and the registration dialog,
+  and group camp lessons under their camp heading in the agenda so a member sees Monday's
+  club lesson and the weekend camp in one list.
+- Change notifications after publish. On create, move or cancel of a published lesson,
+  record the affected person ids and send one digest per person through the worker, with
+  an explicit "Odeslat změny" action so a burst of edits produces one message. Deliver by
+  web push first: the service worker already handles push payloads, so what is missing is
+  subscription storage and a sender task. Email is the fallback for people without a
+  subscription.
+- ICS stays a convenience export, not the delivery channel. Calendar apps poll feeds on
+  their own interval, so the feed is right for next week's plan and wrong for a lesson
+  moved this morning. The agenda plus push covers the latter.
 - Printable sheets: per trainer per day, per room per day, and per registrant, with a
   print stylesheet for the time grid. Paper on the hall door is still how camps run.
-- ICS export per registrant and per trainer, served as a tokenized URL.
-- Change notifications after publish: on create, move or cancel of a published lesson,
-  queue a worker job that sends a digest email to affected registrants and trainers, with
-  an explicit "Odeslat změny" action so that a burst of edits produces one message.
-  Web push through the existing service worker can follow once the digest exists.
 - Share link respects visibility (from Phase 0) and gets an optional per-trainer read-only
   variant.
 
 ### Phase 4: money and after-camp
 
-Goal: the camp settles from the schedule and attendance with no spreadsheet.
+Goal: the camp settles through the existing ledger with no spreadsheet. Per-lesson
+payments and per-person account balances already consolidate correctly, so there is no
+need for a separate camp invoice.
 
-- Move price logic to SQL. Extend `event_instance_approx_price` to `group` lessons and
-  to per-camp rate overrides (per-trainer `price_45min` and `payout_45min` on
-  `event_instance_trainer`, falling back to `tenant_trainer`). The Lekce and Trenéři
-  tabs, the registration form and payments then agree by construction.
-- Consolidated billing: one payment per registrant per camp created by an explicit
-  "Uzavřít vyúčtování" action, replacing the nightly tenant 2 job for camps and removing
-  the hard-coded tenant. Base it on attended lessons, with a per-camp choice of billing
-  scheduled versus attended.
-- Trainer payout statement per camp as an export.
-- Camp attendance grid (registrant × lesson) with a no-show rule that feeds billing.
+- Extend the SQL pricing, not the TypeScript. Teach `event_instance_approx_price` and
+  `create_event_instance_payment` about `group` lessons and about per-camp rate overrides
+  (per-trainer `price_45min` and `payout_45min` on `event_instance_trainer`, falling back
+  to `tenant_trainer`). Then make the Lekce and Trenéři tabs read `approxPriceList` and a
+  matching payout field instead of recomputing, so estimates and postings agree.
+- Remove the tenant 2 hard-code from the nightly job and from
+  `create_event_instance_payment`, replacing it with a per-tenant setting.
+- Per-camp statement: a view or function summing postings of lessons under the camp per
+  account, giving each registrant's camp total and each trainer's payout from the same
+  rows the ledger already holds. Export it for trainers.
+- Camp attendance grid (registrant × lesson). Decide per camp whether a no-show is still
+  billed; the existing cancellation trigger already drops the payment for cancelled
+  lessons.
 - Guest rates for external participants once Phase 5 gives them lessons.
 
 ### Phase 5: broader scope
@@ -214,6 +237,7 @@ Goal: the camp settles from the schedule and attendance with no spreadsheet.
 ## 5. Measures of success
 
 - Hours from registration close to published schedule.
+- Minutes from a lesson change to the affected participants knowing about it.
 - Conflicts reported at publish (target zero).
 - Share of requests fulfilled at publish.
 - Lessons changed after publish and messages sent per change.
