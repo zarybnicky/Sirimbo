@@ -12,7 +12,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
   const name = event.name || formatEventName(event) || 'Sheet 1';
-  const worksheet = workbook.addWorksheet(name);
+  const worksheet = workbook.addWorksheet(name.replaceAll(/[^a-zA-Z0-9\s]/g, ''));
 
   const columns = [
     { header: 'Partner', key: 'man' },
