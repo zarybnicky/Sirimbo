@@ -662,14 +662,17 @@ WHERE NOT EXISTS (
 );
 
 /* @name UpsertFrontier */
-INSERT INTO crawler.frontier (federation, kind, key)
+INSERT INTO crawler.frontier AS f (federation, kind, key)
 VALUES (:federation, :kind, :key)
 ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending'
-WHERE crawler.frontier.process_status = 'error';
+SET process_status = 'pending',
+    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+WHERE f.process_status = 'error'
+   OR f.fetch_status = 'gone';
 
 /* @name UpsertFrontiers */
-INSERT INTO crawler.frontier (federation, kind, key)
+INSERT INTO crawler.frontier AS f (federation, kind, key)
 SELECT federation, kind, key
 FROM unnest(
   :federations::text[],
@@ -677,13 +680,19 @@ FROM unnest(
   :keys::text[]
 ) AS input(federation, kind, key)
 ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending'
-WHERE crawler.frontier.process_status = 'error';
+SET process_status = 'pending',
+    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+WHERE f.process_status = 'error'
+   OR f.fetch_status = 'gone';
 
 /* @name UpsertFrontierKeys */
-INSERT INTO crawler.frontier (federation, kind, key)
+INSERT INTO crawler.frontier AS f (federation, kind, key)
 SELECT :federation, :kind, key
 FROM unnest(:keys::text[]) as input(key)
 ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending'
-WHERE crawler.frontier.process_status = 'error';
+SET process_status = 'pending',
+    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+WHERE f.process_status = 'error'
+   OR f.fetch_status = 'gone';

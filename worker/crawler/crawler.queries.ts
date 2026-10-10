@@ -1601,16 +1601,19 @@ export interface IUpsertFrontierQuery {
   result: IUpsertFrontierResult;
 }
 
-const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":61,"b":71}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":74,"b":78}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":81,"b":84}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nVALUES (:federation, :kind, :key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending'\nWHERE crawler.frontier.process_status = 'error'"};
+const upsertFrontierIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":66,"b":76}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":83}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":86,"b":89}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nVALUES (:federation, :kind, :key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO crawler.frontier (federation, kind, key)
+ * INSERT INTO crawler.frontier AS f (federation, kind, key)
  * VALUES (:federation, :kind, :key)
  * ON CONFLICT (federation, kind, key) DO UPDATE
- * SET process_status = 'pending'
- * WHERE crawler.frontier.process_status = 'error'
+ * SET process_status = 'pending',
+ *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+ *     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+ * WHERE f.process_status = 'error'
+ *    OR f.fetch_status = 'gone'
  * ```
  */
 export const upsertFrontier = new PreparedQuery<IUpsertFrontierParams,IUpsertFrontierResult>(upsertFrontierIR);
@@ -1632,12 +1635,12 @@ export interface IUpsertFrontiersQuery {
   result: IUpsertFrontiersResult;
 }
 
-const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,"keys":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":108}]},{"name":"kinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":121,"b":126}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":139,"b":143}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nSELECT federation, kind, key\nFROM unnest(\n  :federations::text[],\n  :kinds::text[],\n  :keys::text[]\n) AS input(federation, kind, key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending'\nWHERE crawler.frontier.process_status = 'error'"};
+const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,"keys":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":113}]},{"name":"kinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":131}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":144,"b":148}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nSELECT federation, kind, key\nFROM unnest(\n  :federations::text[],\n  :kinds::text[],\n  :keys::text[]\n) AS input(federation, kind, key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO crawler.frontier (federation, kind, key)
+ * INSERT INTO crawler.frontier AS f (federation, kind, key)
  * SELECT federation, kind, key
  * FROM unnest(
  *   :federations::text[],
@@ -1645,8 +1648,11 @@ const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,
  *   :keys::text[]
  * ) AS input(federation, kind, key)
  * ON CONFLICT (federation, kind, key) DO UPDATE
- * SET process_status = 'pending'
- * WHERE crawler.frontier.process_status = 'error'
+ * SET process_status = 'pending',
+ *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+ *     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+ * WHERE f.process_status = 'error'
+ *    OR f.fetch_status = 'gone'
  * ```
  */
 export const upsertFrontiers = new PreparedQuery<IUpsertFrontiersParams,IUpsertFrontiersResult>(upsertFrontiersIR);
@@ -1668,17 +1674,20 @@ export interface IUpsertFrontierKeysQuery {
   result: IUpsertFrontierKeysResult;
 }
 
-const upsertFrontierKeysIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":60,"b":70}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":73,"b":77}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":96,"b":100}]}],"statement":"INSERT INTO crawler.frontier (federation, kind, key)\nSELECT :federation, :kind, key\nFROM unnest(:keys::text[]) as input(key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending'\nWHERE crawler.frontier.process_status = 'error'"};
+const upsertFrontierKeysIR: any = {"usedParamSet":{"federation":true,"kind":true,"keys":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":75}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":78,"b":82}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":101,"b":105}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nSELECT :federation, :kind, key\nFROM unnest(:keys::text[]) as input(key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO crawler.frontier (federation, kind, key)
+ * INSERT INTO crawler.frontier AS f (federation, kind, key)
  * SELECT :federation, :kind, key
  * FROM unnest(:keys::text[]) as input(key)
  * ON CONFLICT (federation, kind, key) DO UPDATE
- * SET process_status = 'pending'
- * WHERE crawler.frontier.process_status = 'error'
+ * SET process_status = 'pending',
+ *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
+ *     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
+ * WHERE f.process_status = 'error'
+ *    OR f.fetch_status = 'gone'
  * ```
  */
 export const upsertFrontierKeys = new PreparedQuery<IUpsertFrontierKeysParams,IUpsertFrontierKeysResult>(upsertFrontierKeysIR);
