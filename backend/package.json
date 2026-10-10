@@ -38,7 +38,7 @@
     "jsonwebtoken": "^9.0.3",
     "lru-cache": "^11.5.3",
     "morgan": "~1.12.1",
-    "pg": "8.22.0",
+    "pg": "8.23.0",
     "pg-sql2": "^5.0.1",
     "postgraphile": "~5.1.5",
     "tamedevil": "~0.1.1",
