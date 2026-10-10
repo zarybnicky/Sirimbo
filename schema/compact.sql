@@ -349,12 +349,9 @@ CREATE TABLE federated.round_dance (
 CREATE TYPE federated.score_component AS ENUM ('mark', 'places', 'ajs_tq', 'ajs_mm', 'ajs_ps', 'ajs_cp', 'ajs_reduction');
 
 CREATE TABLE federated.judge_score (
-  federation text NOT NULL,
-  event_date date NOT NULL,
-  event_id bigint NOT NULL,
-  competition_id bigint NOT NULL,
-  category_id bigint NOT NULL,
-  round_id bigint NOT NULL,
+  round_id bigint NOT NULL REFERENCES federated.competition_round (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   dance_order int NOT NULL,
   dance_code text NOT NULL,
   judge_person_id bigint NOT NULL,
@@ -362,25 +359,7 @@ CREATE TABLE federated.judge_score (
   component federated.score_component NOT NULL,
   score numeric(10, 3) NOT NULL,
   raw_score text,
-  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (round_id, dance_order, judge_person_id, competitor_id, component),
-  FOREIGN KEY(competition_id, category_id)
-    REFERENCES federated.competition (id, category_id)
-    ON UPDATE CASCADE,
-  FOREIGN KEY(competition_id, event_id)
-    REFERENCES federated.competition (id, event_id)
-    ON UPDATE CASCADE,
-  FOREIGN KEY(federation, competition_id)
-    REFERENCES federated.competition (federation, id)
-    ON UPDATE CASCADE,
-  FOREIGN KEY(federation, competitor_id)
-    REFERENCES federated.competitor (federation, external_id),
-  FOREIGN KEY(federation, judge_person_id)
-    REFERENCES federated.person (federation, external_id),
-  FOREIGN KEY(round_id, competition_id)
-    REFERENCES federated.competition_round (id, competition_id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
   FOREIGN KEY(round_id, dance_order, dance_code)
     REFERENCES federated.round_dance (round_id, dance_order, dance_code)
     ON DELETE CASCADE
@@ -1453,6 +1432,7 @@ CREATE TABLE crawler.json_response (
   content_hash text REFERENCES crawler.json_response_cache (content_hash),
   sys_period tstzrange,
   last_observed_at timestamp with time zone,
+  observation_count bigint DEFAULT 1 NOT NULL,
   CHECK (
     (sys_period IS NULL
       AND last_observed_at IS NULL)
@@ -1464,7 +1444,8 @@ CREATE TABLE crawler.json_response (
       AND NOT (upper_inc(sys_period))
       AND lower(sys_period) = fetched_at
       AND sys_period @> last_observed_at)
-  )
+  ),
+  CHECK (observation_count > 0)
 );
 
 CREATE TYPE public.activity_timeline_kind AS ENUM ('EVENT_ATTENDANCE', 'COMPETITION_BRIEF', 'COMPETITION_RESULT', 'JUDGING', 'BIRTHDAY');

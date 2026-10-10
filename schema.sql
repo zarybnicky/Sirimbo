@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 06Cc49COpmp1puvBUJnlKQfWRkbFsS10buCo7gygeGsF9hjFWF4MLGkY6zza5NG
+\restrict sulyJKf0z5uswbSRAH63iSxeq2CqnAk2bISUbxnkXYs1PHk23E7uQgh2VHggLP3
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -2678,7 +2678,8 @@ begin
   then
     update crawler.json_response
     set sys_period = coalesce(sys_period, tstzrange(fetched_at, null, '[)')),
-        last_observed_at = observed_at
+        last_observed_at = observed_at,
+        observation_count = observation_count + 1
     where id = previous.id;
     response_id := previous.id;
   else
@@ -7568,7 +7569,9 @@ CREATE TABLE crawler.json_response (
     content_hash text,
     sys_period tstzrange,
     last_observed_at timestamp with time zone,
-    CONSTRAINT json_response_observation_check CHECK ((((sys_period IS NULL) AND (last_observed_at IS NULL)) OR ((sys_period IS NOT NULL) AND (last_observed_at IS NOT NULL) AND (NOT isempty(sys_period)) AND (NOT lower_inf(sys_period)) AND lower_inc(sys_period) AND (NOT upper_inc(sys_period)) AND (lower(sys_period) = fetched_at) AND (sys_period @> last_observed_at))))
+    observation_count bigint DEFAULT 1 NOT NULL,
+    CONSTRAINT json_response_observation_check CHECK ((((sys_period IS NULL) AND (last_observed_at IS NULL)) OR ((sys_period IS NOT NULL) AND (last_observed_at IS NOT NULL) AND (NOT isempty(sys_period)) AND (NOT lower_inf(sys_period)) AND lower_inc(sys_period) AND (NOT upper_inc(sys_period)) AND (lower(sys_period) = fetched_at) AND (sys_period @> last_observed_at)))),
+    CONSTRAINT json_response_observation_count_check CHECK ((observation_count > 0))
 );
 
 
@@ -8103,11 +8106,6 @@ ALTER TABLE federated.federation_club ALTER COLUMN id ADD GENERATED ALWAYS AS ID
 --
 
 CREATE TABLE federated.judge_score (
-    federation text NOT NULL,
-    event_date date NOT NULL,
-    event_id bigint NOT NULL,
-    competition_id bigint NOT NULL,
-    category_id bigint NOT NULL,
     round_id bigint NOT NULL,
     dance_order integer NOT NULL,
     dance_code text NOT NULL,
@@ -8115,8 +8113,7 @@ CREATE TABLE federated.judge_score (
     competitor_id bigint NOT NULL,
     component federated.score_component NOT NULL,
     score numeric(10,3) NOT NULL,
-    raw_score text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    raw_score text
 );
 
 
@@ -11154,27 +11151,6 @@ CREATE INDEX idx_person_search_name_trgm ON federated.person USING gin (search_n
 
 
 --
--- Name: judge_score_federation_category_id_event_date_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX judge_score_federation_category_id_event_date_idx ON federated.judge_score USING btree (federation, category_id, event_date);
-
-
---
--- Name: judge_score_federation_competitor_id_event_date_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX judge_score_federation_competitor_id_event_date_idx ON federated.judge_score USING btree (federation, competitor_id, event_date);
-
-
---
--- Name: judge_score_federation_judge_person_id_event_date_idx; Type: INDEX; Schema: federated; Owner: -
---
-
-CREATE INDEX judge_score_federation_judge_person_id_event_date_idx ON federated.judge_score USING btree (federation, judge_person_id, event_date);
-
-
---
 -- Name: person_club_membership_club_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -13031,59 +13007,19 @@ ALTER TABLE ONLY federated.federation_club
 
 
 --
--- Name: judge_score judge_score_competition_id_category_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_category_id_fkey FOREIGN KEY (competition_id, category_id) REFERENCES federated.competition(id, category_id) ON UPDATE CASCADE;
-
-
---
--- Name: judge_score judge_score_competition_id_event_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_competition_id_event_id_fkey FOREIGN KEY (competition_id, event_id) REFERENCES federated.competition(id, event_id) ON UPDATE CASCADE;
-
-
---
--- Name: judge_score judge_score_federation_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_competition_id_fkey FOREIGN KEY (federation, competition_id) REFERENCES federated.competition(federation, id) ON UPDATE CASCADE;
-
-
---
--- Name: judge_score judge_score_federation_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_competitor_id_fkey FOREIGN KEY (federation, competitor_id) REFERENCES federated.competitor(federation, external_id);
-
-
---
--- Name: judge_score judge_score_federation_judge_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_federation_judge_person_id_fkey FOREIGN KEY (federation, judge_person_id) REFERENCES federated.person(federation, external_id);
-
-
---
--- Name: judge_score judge_score_round_id_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
---
-
-ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_competition_id_fkey FOREIGN KEY (round_id, competition_id) REFERENCES federated.competition_round(id, competition_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: judge_score judge_score_round_id_dance_order_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE;
+
+
+--
+-- Name: judge_score judge_score_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.judge_score
+    ADD CONSTRAINT judge_score_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -17751,5 +17687,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 06Cc49COpmp1puvBUJnlKQfWRkbFsS10buCo7gygeGsF9hjFWF4MLGkY6zza5NG
+\unrestrict sulyJKf0z5uswbSRAH63iSxeq2CqnAk2bISUbxnkXYs1PHk23E7uQgh2VHggLP3
 

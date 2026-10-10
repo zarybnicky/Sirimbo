@@ -8,7 +8,9 @@ CREATE TABLE crawler.json_response (
     content_hash text,
     sys_period tstzrange,
     last_observed_at timestamp with time zone,
-    CONSTRAINT json_response_observation_check CHECK ((((sys_period IS NULL) AND (last_observed_at IS NULL)) OR ((sys_period IS NOT NULL) AND (last_observed_at IS NOT NULL) AND (NOT isempty(sys_period)) AND (NOT lower_inf(sys_period)) AND lower_inc(sys_period) AND (NOT upper_inc(sys_period)) AND (lower(sys_period) = fetched_at) AND (sys_period @> last_observed_at))))
+    observation_count bigint DEFAULT 1 NOT NULL,
+    CONSTRAINT json_response_observation_check CHECK ((((sys_period IS NULL) AND (last_observed_at IS NULL)) OR ((sys_period IS NOT NULL) AND (last_observed_at IS NOT NULL) AND (NOT isempty(sys_period)) AND (NOT lower_inf(sys_period)) AND lower_inc(sys_period) AND (NOT upper_inc(sys_period)) AND (lower(sys_period) = fetched_at) AND (sys_period @> last_observed_at)))),
+    CONSTRAINT json_response_observation_count_check CHECK ((observation_count > 0))
 );
 
 ALTER TABLE ONLY crawler.json_response
