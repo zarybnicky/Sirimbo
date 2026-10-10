@@ -33,7 +33,8 @@ begin
   then
     update crawler.json_response
     set sys_period = coalesce(sys_period, tstzrange(fetched_at, null, '[)')),
-        last_observed_at = observed_at
+        last_observed_at = observed_at,
+        observation_count = observation_count + 1
     where id = previous.id;
     response_id := previous.id;
   else

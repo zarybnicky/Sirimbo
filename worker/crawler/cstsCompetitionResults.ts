@@ -406,11 +406,6 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
         ...roundDances.params,
         ...roundJudges.params,
         ...roundResults.params,
-        scoreFederation: 'csts',
-        scoreEventDate: context.startDate.toISOString().slice(0, 10),
-        scoreEventId: context.eventId,
-        scoreCompetitionId: context.id,
-        scoreCategoryId: context.categoryId,
         ...judgeScores.params,
       },
       client,
@@ -516,7 +511,7 @@ function scoresForRound(args: {
         scoreCompetitorId: competitorId,
         scoreComponent: parsed.component,
         score: parsed.score,
-        rawScore: raw,
+        rawScore: /\([wd]\)$/.test(raw) ? raw : '',
       });
     }
   }

@@ -753,9 +753,6 @@ WHERE t.competition_id IN (SELECT id FROM competitions)
 /* @name GetCompetitionContext */
 SELECT
   c.id,
-  c.event_id AS "eventId",
-  c.category_id AS "categoryId",
-  c.start_date AS "startDate",
   cat.competitor_type AS "competitorType"
 FROM federated.competition c
 JOIN federated.category cat ON cat.id = c.category_id
@@ -1032,13 +1029,12 @@ WITH inserted_dances AS (
   )
 )
 INSERT INTO federated.judge_score (
-  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
+  round_id, dance_order, dance_code,
   judge_person_id, competitor_id, component, score, raw_score
 )
 SELECT
-  :scoreFederation::text, :scoreEventDate::date, :scoreEventId::bigint, :scoreCompetitionId::bigint,
-  :scoreCategoryId::bigint, round_id, dance_order, dance_code,
-  judge_person_id, competitor_id, component, score, raw_score
+  round_id, dance_order, dance_code,
+  judge_person_id, competitor_id, component, score, nullif(raw_score, '')
 FROM unnest(
   :scoreRoundId::bigint[],
   :scoreDanceOrder::int[],
@@ -1193,7 +1189,7 @@ ON CONFLICT (round_id, person_judge_id) DO UPDATE
 /* @name UpsertJudgeScores */
 WITH input AS (
   SELECT
-    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
+    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score
   FROM unnest(
     :roundId::bigint[],
     :danceOrder::int[],
@@ -1201,25 +1197,23 @@ WITH input AS (
     :judgePersonId::bigint[],
     :competitorId::bigint[],
     :component::federated.score_component[],
-    :score::numeric(10,3)[],
-    :rawScore::text[]
+    :score::numeric(10,3)[]
   ) AS input(
-    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
+    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score
   )
 ), source AS (
   SELECT DISTINCT ON (round_id, dance_order, judge_person_id, competitor_id, component)
-    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
+    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score
   FROM input
   ORDER BY round_id, dance_order, judge_person_id, competitor_id, component
 )
 INSERT INTO federated.judge_score (
-  federation, event_date, event_id, competition_id, category_id, round_id, dance_order, dance_code,
+  round_id, dance_order, dance_code,
   judge_person_id, competitor_id, component, score, raw_score
 )
 SELECT
-  :federation::text, :eventDate::date, :eventId::bigint, :competitionId::bigint,
-  :categoryId::bigint, round_id, dance_order, dance_code,
-  judge_person_id, competitor_id, component, score, raw_score
+  round_id, dance_order, dance_code,
+  judge_person_id, competitor_id, component, score, null
 FROM source
 ON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) DO UPDATE
   SET dance_code = EXCLUDED.dance_code,
@@ -1261,12 +1255,13 @@ WITH scoped_rounds AS (
       ELSE sum(js.score)::numeric(10,3)
     END AS dance_score
   FROM presence p
+  JOIN federated.competition competition ON competition.id = :competitionId
   JOIN federated.round_dance rd ON rd.round_id = p.round_id
   LEFT JOIN federated.judge_score js
     ON js.round_id = p.round_id
    AND js.dance_order = rd.dance_order
    AND js.dance_code = rd.dance_code
-   AND js.federation || ':' || js.competitor_id::text = p.competitor_id
+   AND competition.federation || ':' || js.competitor_id::text = p.competitor_id
   GROUP BY
     p.round_id, p.round_index, p.scoring_method, p.competitor_id,
     p.ranking, p.ranking_to, rd.dance_order

@@ -5,7 +5,6 @@ import {
   ensurePeople,
   getCompetitionAdjudicatorMap,
   getCompetitionContext,
-  type IGetCompetitionContextResult,
   mergeCompetitorComponents,
   type score_component,
   type scoring_method,
@@ -229,7 +228,6 @@ type Score = Round['dances'][number]['scores'][number];
 type ScoreRow = {
   component: score_component;
   score: number;
-  rawScore: string;
 };
 type SupportedScore = {
   adjudicatorExternalId: string;
@@ -376,12 +374,12 @@ async function loadWdsfParticipant(
     );
   }
 
-  return loadWdsfRoundDetails(client, context, p, competitor);
+  return loadWdsfRoundDetails(client, context.id, p, competitor);
 }
 
 async function loadWdsfRoundDetails(
   client: PoolClient,
-  context: IGetCompetitionContextResult,
+  competitionId: string,
   participant: Participant,
   competitor: ResolvedCompetitor,
 ): Promise<LoaderResult> {
@@ -399,7 +397,7 @@ async function loadWdsfRoundDetails(
   ];
   const adjudicatorRows = adjudicatorExternalIds.length
     ? await getCompetitionAdjudicatorMap.run(
-        { competitionId: context.id, officialExternalId: adjudicatorExternalIds },
+        { competitionId, officialExternalId: adjudicatorExternalIds },
         client,
       )
     : [];
@@ -425,7 +423,7 @@ async function loadWdsfRoundDetails(
   const danceProgramIds = await getDanceProgramIds(rounds.map((r) => r.dances.map((d) => d.code)));
   const roundRows = await upsertCompetitionRoundsNonDestructive.run(
     {
-      competitionId: context.id,
+      competitionId,
       roundKey: rounds.map((r) => r.key),
       roundLabel: rounds.map((r) => r.label),
       roundIndex: rounds.map((r) => r.index),
@@ -455,7 +453,6 @@ async function loadWdsfRoundDetails(
     competitorId: string;
     component: score_component;
     score: number;
-    rawScore: string;
   }>(
     [
       'roundId',
@@ -465,7 +462,6 @@ async function loadWdsfRoundDetails(
       'competitorId',
       'component',
       'score',
-      'rawScore',
     ],
     ['roundId', 'danceOrder', 'judgePersonId', 'competitorId', 'component'],
   );
@@ -508,7 +504,6 @@ async function loadWdsfRoundDetails(
             competitorId: competitor.externalId,
             component: row.component,
             score: row.score,
-            rawScore: row.rawScore,
           });
         }
       }
@@ -518,19 +513,9 @@ async function loadWdsfRoundDetails(
   if (roundDances.length) await upsertRoundDances.run(roundDances.params, client);
   if (roundJudges.length) await upsertCompetitionRoundJudges.run(roundJudges.params, client);
   if (judgeScores.length) {
-    await upsertJudgeScores.run(
-      {
-        federation: 'wdsf',
-        eventDate: context.startDate.toISOString().slice(0, 10),
-        eventId: context.eventId,
-        competitionId: context.id,
-        categoryId: context.categoryId,
-        ...judgeScores.params,
-      },
-      client,
-    );
+    await upsertJudgeScores.run(judgeScores.params, client);
   }
-  return { refreshRoundResult: [context.id] };
+  return { refreshRoundResult: [competitionId] };
 }
 
 function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
@@ -632,7 +617,6 @@ function scoreRows(score: Score): ScoreRow[] {
       return [{
         component: 'mark',
         score: score.set === false ? 0 : 1,
-        rawScore: score.set === false ? 'set=false' : 'mark',
       }];
     case 'final':
       return [scoreRow('places', score.rank)];
@@ -658,6 +642,5 @@ function scoreRow(component: score_component, score: number): ScoreRow {
   return {
     component,
     score,
-    rawScore: score.toString(),
   };
 }
