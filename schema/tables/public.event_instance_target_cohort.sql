@@ -33,7 +33,6 @@ CREATE POLICY member_view ON public.event_instance_target_cohort FOR SELECT TO m
 CREATE POLICY trainer_select ON public.event_instance_target_cohort TO trainer USING (app_private.can_trainer_edit_instance(instance_id));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
-CREATE TRIGGER _500_reconcile_registrations AFTER INSERT OR DELETE OR UPDATE OF instance_id, cohort_id ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_target_cohort__reconcile();
 
 CREATE INDEX event_instance_target_cohort_cohort_id_idx ON public.event_instance_target_cohort USING btree (cohort_id);
 CREATE INDEX event_instance_target_cohort_tenant_id_idx ON public.event_instance_target_cohort USING btree (tenant_id);

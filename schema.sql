@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict oeVXcUduBrufU0K6n2I42Q3uF3eItRrQuUX4vDHTrcFLal3iPOXY15h2FZReVRb
+\restrict 06Cc49COpmp1puvBUJnlKQfWRkbFsS10buCo7gygeGsF9hjFWF4MLGkY6zza5NG
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -625,7 +625,9 @@ CREATE TYPE public.event_details_input AS (
 
 CREATE TYPE public.event_registration_input AS (
 	person_id bigint,
-	couple_id bigint
+	couple_id bigint,
+	target_cohort_id bigint,
+	is_cancelled boolean
 );
 
 
@@ -1550,106 +1552,59 @@ COMMENT ON FUNCTION app_private.queue_announcement_notifications(in_announcement
 --
 
 CREATE FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS void
-    LANGUAGE sql SECURITY DEFINER
+    LANGUAGE sql
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
-  select instance.id
-  from event_instance instance
-  where instance.id = any (p_instance_ids)
-  order by instance.id
-  for update;
+  select instance.id from event_instance instance
+  where instance.id = any(p_instance_ids) order by instance.id for update;
 
-  with desired as (
-    select target.instance_id, membership.person_id,
+  -- Direct registrations (including cancellations) take precedence. Couples
+  -- already supply their person rows; cohorts supply only the remaining people.
+  with desired as materialized (
+    select instance.id as instance_id, instance.tenant_id, membership.person_id,
       min(target.cohort_id) as target_cohort_id
-    from event_instance_target_cohort target
-    join event_instance instance on instance.id = target.instance_id
+    from event_instance instance
+    join event_instance_target_cohort target on target.instance_id = instance.id
     join cohort_membership membership on membership.cohort_id = target.cohort_id
-    where target.instance_id = any (p_instance_ids)
+    where instance.id = any(p_instance_ids)
       and instance.since >= now()
-      and membership.status = 'active'
-      and membership.active_range @> now()
-      and (p_person_ids is null or membership.person_id = any (p_person_ids))
-    group by target.instance_id, membership.person_id
+      and membership.status = 'active' and membership.active_range @> now()
+      and (p_person_ids is null or membership.person_id = any(p_person_ids))
+      and not exists (
+        select 1 from event_instance_registration registration
+        where registration.instance_id = instance.id
+          and registration.person_id = membership.person_id
+          and (
+            (registration.parent_registration_id is null and registration.source is distinct from 'cohort')
+            or (registration.parent_registration_id is not null and registration.registration_status = 'active')
+          )
+      )
+    group by instance.id, instance.tenant_id, membership.person_id
+  ), cancelled as (
+    update event_instance_registration registration
+    set registration_status = 'cancelled'
+    from event_instance instance
+    where registration.instance_id = any(p_instance_ids)
+      and instance.id = registration.instance_id and instance.since >= now()
+      and registration.source = 'cohort'
+      and registration.registration_status = 'active'
+      and (p_person_ids is null or registration.person_id = any(p_person_ids))
+      and not exists (
+        select 1 from desired
+        where desired.instance_id = registration.instance_id
+          and desired.person_id = registration.person_id
+      )
   )
-  update event_instance_registration r
-  set registration_status = 'active',
-      source = 'cohort',
-      target_cohort_id = desired.target_cohort_id
+  insert into event_instance_registration as registration (
+    tenant_id, instance_id, person_id, target_cohort_id, source, status
+  )
+  select tenant_id, instance_id, person_id, target_cohort_id, 'cohort', 'unknown'
   from desired
-  where r.instance_id = desired.instance_id
-    and r.person_id = desired.person_id
-    and r.parent_registration_id is null
-    and r.source = 'cohort'
-    and not exists (
-      select 1
-      from event_instance_registration attendee
-      where attendee.instance_id = desired.instance_id
-        and attendee.person_id = desired.person_id
-        and attendee.registration_status = 'active'
-        and coalesce(attendee.parent_registration_id, attendee.id) <> r.id
-    )
-    and (r.registration_status, r.target_cohort_id)
-      is distinct from (
-        'active'::event_instance_registration_status,
-        desired.target_cohort_id
-      );
-
-  with desired as (
-    select target.instance_id, instance.tenant_id, membership.person_id,
-      min(target.cohort_id) as target_cohort_id
-    from event_instance_target_cohort target
-    join event_instance instance on instance.id = target.instance_id
-    join cohort_membership membership on membership.cohort_id = target.cohort_id
-    where target.instance_id = any (p_instance_ids)
-      and instance.since >= now()
-      and membership.status = 'active'
-      and membership.active_range @> now()
-      and (p_person_ids is null or membership.person_id = any (p_person_ids))
-    group by target.instance_id, instance.tenant_id, membership.person_id
-  )
-  insert into event_instance_registration (
-    tenant_id, instance_id, person_id, target_cohort_id,
-    source, status
-  )
-  select desired.tenant_id, desired.instance_id, desired.person_id,
-    desired.target_cohort_id, 'cohort', 'unknown'
-  from desired
-  where not exists (
-    select 1
-    from event_instance_registration r
-    where r.instance_id = desired.instance_id
-      and r.person_id = desired.person_id
-      and r.parent_registration_id is null
-  ) and not exists (
-    select 1
-    from event_instance_registration attendee
-    where attendee.instance_id = desired.instance_id
-      and attendee.person_id = desired.person_id
-      and attendee.registration_status = 'active'
-  );
-
-  update event_instance_registration r
-  set registration_status = 'cancelled'
-  from event_instance instance
-  where r.instance_id = instance.id
-    and r.instance_id = any (p_instance_ids)
-    and r.parent_registration_id is null
-    and r.person_id is not null
-    and r.source = 'cohort'
-    and r.registration_status = 'active'
-    and instance.since >= now()
-    and (p_person_ids is null or r.person_id = any (p_person_ids))
-    and not exists (
-      select 1
-      from event_instance_target_cohort target
-      join cohort_membership membership
-        on membership.cohort_id = target.cohort_id
-       and membership.person_id = r.person_id
-      where target.instance_id = r.instance_id
-        and membership.status = 'active'
-        and membership.active_range @> now()
-    );
+  on conflict (instance_id, couple_id, person_id) where parent_registration_id is null
+  do update set registration_status = 'active', target_cohort_id = excluded.target_cohort_id
+  where registration.source = 'cohort'
+    and (registration.registration_status, registration.target_cohort_id)
+      is distinct from ('active'::event_instance_registration_status, excluded.target_cohort_id);
 $$;
 
 
@@ -2176,31 +2131,6 @@ $$;
 
 
 --
--- Name: tg_event_instance_target_cohort__reconcile(); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.tg_event_instance_target_cohort__reconcile() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-begin
-  if tg_op = 'DELETE' then
-    perform app_private.reconcile_event_instance_cohort_registrations(array[old.instance_id]);
-    return old;
-  end if;
-
-  perform app_private.reconcile_event_instance_cohort_registrations(
-    case when tg_op = 'UPDATE' and old.instance_id <> new.instance_id
-      then array[old.instance_id, new.instance_id]
-      else array[new.instance_id]
-    end
-  );
-  return new;
-end;
-$$;
-
-
---
 -- Name: tg_event_instance_trainer__refresh_manager_person_ids(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2713,6 +2643,74 @@ BEGIN
     RETURN;
   END IF;
 END;
+$$;
+
+
+--
+-- Name: store_response(bigint, text, integer, text, jsonb, crawler.fetch_status); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) RETURNS bigint
+    LANGUAGE plpgsql
+    AS $$
+declare
+  previous crawler.json_response;
+  observed_at timestamptz;
+  payload_hash text;
+  response_id bigint;
+begin
+  perform 1 from crawler.frontier where id = p_frontier_id for update;
+  if not found then
+    raise exception 'Crawler frontier % does not exist', p_frontier_id;
+  end if;
+
+  select r.* into previous
+  from crawler.frontier f
+  join crawler.json_response r on r.id = f.last_response_id
+  where f.id = p_frontier_id;
+
+  observed_at := clock_timestamp();
+  payload_hash := encode(digest(p_content::text, 'sha256'), 'hex');
+
+  if previous.id is not null and
+    row(previous.url, previous.http_status, previous.error, previous.content_hash)
+      is not distinct from row(p_url, p_http_status, p_error, payload_hash)
+  then
+    update crawler.json_response
+    set sys_period = coalesce(sys_period, tstzrange(fetched_at, null, '[)')),
+        last_observed_at = observed_at
+    where id = previous.id;
+    response_id := previous.id;
+  else
+    if previous.id is not null then
+      update crawler.json_response
+      set sys_period = tstzrange(fetched_at, observed_at, '[)'),
+          last_observed_at = coalesce(last_observed_at, fetched_at)
+      where id = previous.id;
+    end if;
+
+    if p_content is not null then
+      insert into crawler.json_response_cache (content) values (p_content)
+      on conflict (content_hash) do nothing;
+    end if;
+
+    insert into crawler.json_response (
+      frontier_id, url, http_status, error, content_hash,
+      fetched_at, sys_period, last_observed_at
+    ) values (
+      p_frontier_id, p_url, p_http_status, p_error, payload_hash,
+      observed_at, tstzrange(observed_at, null, '[)'), observed_at
+    ) returning id into response_id;
+  end if;
+
+  update crawler.frontier
+  set last_response_id = response_id,
+      last_successful_response_id = case when p_fetch_status = 'ok'
+        then response_id else last_successful_response_id end
+  where id = p_frontier_id;
+
+  return response_id;
+end;
 $$;
 
 
@@ -5624,6 +5622,17 @@ begin
   end if;
 
   if exists (
+    select 1 from unnest(events) i
+    cross join lateral unnest(i.registrations) registration
+    where registration.target_cohort_id is not null and (
+      registration.person_id is null or registration.is_cancelled
+      or not registration.target_cohort_id = any(coalesce(cohort_ids, '{}'))
+    )
+  ) then
+    raise exception 'a cohort registration requires an active person and a selected cohort' using errcode = '22023';
+  end if;
+
+  if exists (
     select 1
     from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
     left join cohort cohort on cohort.id = i.cohort_id and cohort.tenant_id = v_tenant_id
@@ -5752,104 +5761,78 @@ begin
     order by registration.id
     for update;
 
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(coalesce(event_to_save.registrations, '{}'::event_registration_input[])) registration
-    ), roots as (
-      select e.id
-      from event_instance_registration e
-      where e.instance_id = v_saved_event.id
-        and e.parent_registration_id is null
+    -- Release person slots before replacing couples with individuals or vice versa.
+    with removed as (
+      select registration.id
+      from event_instance_registration registration
+      where registration.instance_id = v_saved_event.id
+        and registration.parent_registration_id is null
         and not exists (
-          select 1 from desired
-          where desired.person_id is not distinct from e.person_id
-            and desired.couple_id is not distinct from e.couple_id
+          select 1 from unnest(event_to_save.registrations) desired
+          where desired.person_id is not distinct from registration.person_id
+            and desired.couple_id is not distinct from registration.couple_id
+            and not coalesce(desired.is_cancelled, false)
         )
     )
     update event_instance_registration registration
     set registration_status = 'cancelled',
-        target_cohort_id = null,
-        source = case when registration.id = roots.id
-          then 'manager'::event_registration_source end
-    from roots
-    where registration.registration_status <> 'cancelled'
-      and (registration.id = roots.id or registration.parent_registration_id = roots.id);
+        source = case when registration.parent_registration_id is null and registration.source is distinct from 'cohort'
+          then 'manager'::event_registration_source else registration.source end
+    from removed
+    where registration.registration_status = 'active'
+      and (registration.id = removed.id or registration.parent_registration_id = removed.id);
 
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(
-        coalesce(event_to_save.registrations, '{}'::event_registration_input[])
-      ) registration
-    ), roots as (
-      select e.id
-      from event_instance_registration e
-      join desired
-        on desired.person_id is not distinct from e.person_id
-        and desired.couple_id is not distinct from e.couple_id
-      where e.instance_id = v_saved_event.id
-        and e.parent_registration_id is null
+    -- Save the displayed list and explicit removals; reuse rows to preserve attendance.
+    insert into event_instance_registration as registration (
+      instance_id, person_id, couple_id, target_cohort_id, source, registration_status, status
     )
-    update event_instance_registration registration
-    set registration_status = 'active',
-        target_cohort_id = null,
-        source = case when registration.id = roots.id
-          then 'manager'::event_registration_source end
-    from roots
-    where registration.registration_status <> 'active'
-      and (registration.id = roots.id or registration.parent_registration_id = roots.id);
+    select v_saved_event.id, choice.person_id, choice.couple_id, choice.target_cohort_id,
+      case when choice.target_cohort_id is null then 'manager'::event_registration_source else 'cohort'::event_registration_source end,
+      case when choice.is_cancelled then 'cancelled'::event_instance_registration_status else 'active'::event_instance_registration_status end,
+      case when choice.person_id is not null then 'unknown'::attendance_type end
+    from (
+      select distinct on (choice.person_id, choice.couple_id) choice.*
+      from unnest(event_to_save.registrations) with ordinality
+        choice(person_id, couple_id, target_cohort_id, is_cancelled, position)
+      order by choice.person_id, choice.couple_id, choice.position
+    ) choice
+    on conflict (instance_id, couple_id, person_id) where parent_registration_id is null
+    do update set registration_status = excluded.registration_status,
+      source = excluded.source,
+      target_cohort_id = excluded.target_cohort_id
+    where (registration.registration_status, registration.target_cohort_id)
+      is distinct from (excluded.registration_status, excluded.target_cohort_id);
 
-    with desired as (
-      select distinct registration.person_id, registration.couple_id
-      from unnest(
-        coalesce(event_to_save.registrations, '{}'::event_registration_input[])
-      ) registration
-    ), roots as (
-      insert into event_instance_registration (
-        instance_id, person_id, couple_id, source, status
-      )
-      select v_saved_event.id,
-        desired.person_id,
-        desired.couple_id,
-        'manager',
-        case when desired.person_id is not null
-          then 'unknown'::attendance_type end
-      from desired
-      where not exists (
-        select 1
-        from event_instance_registration e
-        where e.instance_id = v_saved_event.id
-          and e.parent_registration_id is null
-          and e.person_id is not distinct from desired.person_id
-          and e.couple_id is not distinct from desired.couple_id
-      )
-      returning id, couple_id
-    )
+    -- Couple attendance follows the couple's registration state.
+    update event_instance_registration child
+    set registration_status = parent.registration_status
+    from event_instance_registration parent
+    where parent.instance_id = v_saved_event.id
+      and child.parent_registration_id = parent.id
+      and child.registration_status is distinct from parent.registration_status;
+
     insert into event_instance_registration (instance_id, parent_registration_id, person_id, status)
-    select v_saved_event.id, roots.id, person.person_id, 'unknown'
-    from roots
-    join couple couple on couple.id = roots.couple_id
-    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id);
+    select v_saved_event.id, registration.id, person.person_id, 'unknown'
+    from event_instance_registration registration
+    join couple on couple.id = registration.couple_id
+    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
+    where registration.instance_id = v_saved_event.id
+      and registration.registration_status = 'active'
+      and not exists (
+        select 1 from event_instance_registration child
+        where child.parent_registration_id = registration.id and child.person_id = person.person_id
+      );
+    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    select v_tenant_id, v_saved_event.id, id
+    from unnest(cohort_ids) cohort(id)
+    where id is not null
+    on conflict (instance_id, cohort_id) do nothing;
+
+    delete from event_instance_target_cohort target
+    where target.instance_id = v_saved_event.id
+      and not exists (select 1 from unnest(cohort_ids) cohort(id) where id = target.cohort_id);
+
   end loop;
-
-  with desired as (
-    select distinct i.cohort_id
-    from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
-    where i.cohort_id is not null
-  )
-  insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
-  select stored_event.tenant_id, stored_event.id, desired.cohort_id
-  from event_instance stored_event
-  join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
-  cross join desired
-  on conflict (instance_id, cohort_id) do nothing;
-
-  delete from event_instance_target_cohort e
-  where e.instance_id = any(v_saved_event_ids)
-    and not exists (
-      select 1
-      from unnest(coalesce(cohort_ids, '{}'::bigint[])) i(cohort_id)
-      where i.cohort_id = e.cohort_id
-    );
 
   -- Keep the caller's trainer assignment until all edits and replacements are saved.
   with desired as (
@@ -7582,7 +7565,10 @@ CREATE TABLE crawler.json_response (
     fetched_at timestamp with time zone DEFAULT now() NOT NULL,
     http_status integer,
     error text,
-    content_hash text
+    content_hash text,
+    sys_period tstzrange,
+    last_observed_at timestamp with time zone,
+    CONSTRAINT json_response_observation_check CHECK ((((sys_period IS NULL) AND (last_observed_at IS NULL)) OR ((sys_period IS NOT NULL) AND (last_observed_at IS NOT NULL) AND (NOT isempty(sys_period)) AND (NOT lower_inf(sys_period)) AND lower_inc(sys_period) AND (NOT upper_inc(sys_period)) AND (lower(sys_period) = fetched_at) AND (sys_period @> last_observed_at))))
 );
 
 
@@ -7600,9 +7586,9 @@ CREATE VIEW crawler.frontier_failure AS
     f.error_count,
     f.next_fetch_at,
         CASE
-            WHEN ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) AND (f.process_status = 'error'::crawler.process_status)) THEN GREATEST(COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at), COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at))
+            WHEN ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) AND (f.process_status = 'error'::crawler.process_status)) THEN GREATEST(COALESCE(jr.last_observed_at, jr.fetched_at, f.last_fetched_at, f.discovered_at), COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at))
             WHEN (f.process_status = 'error'::crawler.process_status) THEN COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at)
-            ELSE COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at)
+            ELSE COALESCE(jr.last_observed_at, jr.fetched_at, f.last_fetched_at, f.discovered_at)
         END AS failed_at,
     jr.url,
     jr.http_status,
@@ -10972,6 +10958,13 @@ CREATE INDEX json_response_content_hash_idx ON crawler.json_response USING btree
 
 
 --
+-- Name: json_response_current_frontier_idx; Type: INDEX; Schema: crawler; Owner: -
+--
+
+CREATE UNIQUE INDEX json_response_current_frontier_idx ON crawler.json_response USING btree (frontier_id) WHERE upper_inf(sys_period);
+
+
+--
 -- Name: json_response_frontier_fetched_desc_idx; Type: INDEX; Schema: crawler; Owner: -
 --
 
@@ -12488,13 +12481,6 @@ CREATE TRIGGER _500_on_status AFTER INSERT OR DELETE OR UPDATE OF status, cohort
 --
 
 CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_membership FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
-
-
---
--- Name: event_instance_target_cohort _500_reconcile_registrations; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _500_reconcile_registrations AFTER INSERT OR DELETE OR UPDATE OF instance_id, cohort_id ON public.event_instance_target_cohort FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_instance_target_cohort__reconcile();
 
 
 --
@@ -14716,7 +14702,7 @@ CREATE POLICY admin_same_tenant ON public.event_instance TO administrator USING 
 -- Name: access_credential admin_update; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrator WITH CHECK (((EXISTS ( SELECT 1
+CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrator USING (true) WITH CHECK (((EXISTS ( SELECT 1
    FROM public.tenant_membership r
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
    FROM public.tenant_trainer r
@@ -14810,7 +14796,7 @@ ALTER TABLE public.couple ENABLE ROW LEVEL SECURITY;
 -- Name: access_credential current_tenant; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 
 --
@@ -15927,6 +15913,8 @@ GRANT ALL ON FUNCTION app_private.queue_announcement_notifications(in_announceme
 --
 
 REVOKE ALL ON FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[]) TO trainer;
+GRANT ALL ON FUNCTION app_private.reconcile_event_instance_cohort_registrations(p_instance_ids bigint[], p_person_ids bigint[]) TO administrator;
 
 
 --
@@ -15986,13 +15974,6 @@ REVOKE ALL ON FUNCTION app_private.tg_event_instance__validate_parent() FROM PUB
 
 
 --
--- Name: FUNCTION tg_event_instance_target_cohort__reconcile(); Type: ACL; Schema: app_private; Owner: -
---
-
-REVOKE ALL ON FUNCTION app_private.tg_event_instance_target_cohort__reconcile() FROM PUBLIC;
-
-
---
 -- Name: FUNCTION tg_event_instance_trainer__refresh_manager_person_ids(); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -16032,6 +16013,13 @@ GRANT ALL ON FUNCTION app_private.visible_person_ids() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION app_private.visible_user_proxy_ids() TO anonymous;
+
+
+--
+-- Name: FUNCTION store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status); Type: ACL; Schema: crawler; Owner: -
+--
+
+REVOKE ALL ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) FROM PUBLIC;
 
 
 --
@@ -17763,5 +17751,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict oeVXcUduBrufU0K6n2I42Q3uF3eItRrQuUX4vDHTrcFLal3iPOXY15h2FZReVRb
+\unrestrict 06Cc49COpmp1puvBUJnlKQfWRkbFsS10buCo7gygeGsF9hjFWF4MLGkY6zza5NG
 

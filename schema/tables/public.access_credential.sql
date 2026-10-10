@@ -42,7 +42,7 @@ CREATE POLICY admin_insert ON public.access_credential FOR INSERT TO administrat
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
    FROM public.tenant_administrator r
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id))))));
-CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrator WITH CHECK (((EXISTS ( SELECT 1
+CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrator USING (true) WITH CHECK (((EXISTS ( SELECT 1
    FROM public.tenant_membership r
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
    FROM public.tenant_trainer r
@@ -50,7 +50,7 @@ CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrat
    FROM public.tenant_administrator r
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id))))));
 CREATE POLICY admin_view ON public.access_credential FOR SELECT TO administrator USING (true);
-CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
+CREATE POLICY current_tenant ON public.access_credential AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.access_credential FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

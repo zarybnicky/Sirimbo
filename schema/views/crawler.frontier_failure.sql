@@ -8,9 +8,9 @@ CREATE VIEW crawler.frontier_failure AS
     f.error_count,
     f.next_fetch_at,
         CASE
-            WHEN ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) AND (f.process_status = 'error'::crawler.process_status)) THEN GREATEST(COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at), COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at))
+            WHEN ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) AND (f.process_status = 'error'::crawler.process_status)) THEN GREATEST(COALESCE(jr.last_observed_at, jr.fetched_at, f.last_fetched_at, f.discovered_at), COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at))
             WHEN (f.process_status = 'error'::crawler.process_status) THEN COALESCE(f.last_process_error_at, f.last_fetched_at, f.discovered_at)
-            ELSE COALESCE(jr.fetched_at, f.last_fetched_at, f.discovered_at)
+            ELSE COALESCE(jr.last_observed_at, jr.fetched_at, f.last_fetched_at, f.discovered_at)
         END AS failed_at,
     jr.url,
     jr.http_status,

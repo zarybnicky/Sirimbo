@@ -1450,7 +1450,21 @@ CREATE TABLE crawler.json_response (
   fetched_at timestamp with time zone DEFAULT now() NOT NULL,
   http_status int,
   error text,
-  content_hash text REFERENCES crawler.json_response_cache (content_hash)
+  content_hash text REFERENCES crawler.json_response_cache (content_hash),
+  sys_period tstzrange,
+  last_observed_at timestamp with time zone,
+  CHECK (
+    (sys_period IS NULL
+      AND last_observed_at IS NULL)
+      OR (sys_period IS NOT NULL
+      AND last_observed_at IS NOT NULL
+      AND NOT (isempty(sys_period))
+      AND NOT (lower_inf(sys_period))
+      AND lower_inc(sys_period)
+      AND NOT (upper_inc(sys_period))
+      AND lower(sys_period) = fetched_at
+      AND sys_period @> last_observed_at)
+  )
 );
 
 CREATE TYPE public.activity_timeline_kind AS ENUM ('EVENT_ATTENDANCE', 'COMPETITION_BRIEF', 'COMPETITION_RESULT', 'JUDGING', 'BIRTHDAY');
@@ -1467,7 +1481,7 @@ CREATE TYPE public.event_conflict AS (person_id bigint, person_name text, first_
 
 CREATE TYPE public.event_details_input AS (parent_id bigint, name text, type public.event_type, location_id bigint, location_text text, capacity int, capacity_unit public.event_capacity_unit, is_visible boolean, is_public boolean, has_public_details boolean, is_locked boolean, enable_notes boolean);
 
-CREATE TYPE public.event_registration_input AS (person_id bigint, couple_id bigint);
+CREATE TYPE public.event_registration_input AS (person_id bigint, couple_id bigint, target_cohort_id bigint, is_cancelled boolean);
 
 CREATE TYPE public.event_input AS (id bigint, since timestamp with time zone, until timestamp with time zone, is_cancelled boolean, registrations public.event_registration_input[]);
 
