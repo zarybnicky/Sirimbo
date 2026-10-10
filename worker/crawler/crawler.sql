@@ -97,7 +97,7 @@ SELECT
   f.key AS "key!",
   jr.url AS "url!",
   jr.http_status,
-  jr.fetched_at AS "fetched_at!",
+  coalesce(jr.last_observed_at, jr.fetched_at) AS "fetched_at!",
   jrc.content AS "content!"
 FROM crawler.frontier f
 JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
@@ -291,7 +291,7 @@ SELECT
   f.last_process_error,
   f.meta,
   jr.url AS "response_url?",
-  jr.fetched_at AS "response_fetched_at?",
+  coalesce(jr.last_observed_at, jr.fetched_at) AS "response_fetched_at?",
   jr.http_status AS "response_http_status?",
   jr.error AS "response_error?",
   jrc.content AS "response_content?",
@@ -423,7 +423,7 @@ SELECT granted, allowed_at
 
 /* @name MarkFrontierFetchError */
 UPDATE crawler.frontier
-SET last_fetched_at = now(),
+SET last_fetched_at = clock_timestamp(),
     fetch_status    = 'error',
     error_count     = error_count + 1,
     next_fetch_at   = now() + least(
@@ -434,7 +434,7 @@ WHERE id = :id::bigint;
 
 /* @name MarkFrontierTransient */
 UPDATE crawler.frontier
-SET last_fetched_at = now(),
+SET last_fetched_at = clock_timestamp(),
     fetch_status    = 'transient',
     error_count     = error_count + 1,
     next_fetch_at   = now() + least(
@@ -445,7 +445,7 @@ WHERE id = :id::bigint;
 
 /* @name MarkFrontierFetchSuccess */
 UPDATE crawler.frontier
-SET last_fetched_at = now(),
+SET last_fetched_at = clock_timestamp(),
     fetch_status = :fetchStatus::crawler.fetch_status,
     process_status = CASE
       WHEN :fetchStatus::crawler.fetch_status = 'gone'::crawler.fetch_status
@@ -507,33 +507,10 @@ SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!"
 FROM frontier;
 
 /* @name InsertResponse */
-WITH payload AS (
-  SELECT :content::text::jsonb AS content
-), ins_cache AS (
-  INSERT INTO crawler.json_response_cache (content)
-    SELECT content
-    FROM payload
-    WHERE content IS NOT NULL
-    ON CONFLICT (content_hash) DO NOTHING
-), inserted AS (
-  INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
-  SELECT :id, :url, :httpStatus, :error,
-         case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
-  FROM payload
-  RETURNING id
-), frontier AS (
-  UPDATE crawler.frontier f
-  SET
-    last_response_id = inserted.id,
-    last_successful_response_id = case
-      when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id
-      else f.last_successful_response_id
-    end
-  FROM inserted
-  WHERE f.id = :id
-)
-SELECT id AS "id!"
-FROM inserted;
+SELECT crawler.store_response(
+  :id::bigint, :url::text, :httpStatus::integer, :error::text,
+  :content::text::jsonb, :fetchStatus::crawler.fetch_status
+) AS "id!";
 
 /* @name GetResolvedFailureCleanupCount */
 SELECT count(*)::int AS "resolved_failures!"

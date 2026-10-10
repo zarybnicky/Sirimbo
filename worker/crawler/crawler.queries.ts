@@ -227,7 +227,7 @@ export interface IGetFrontierResponsesQuery {
   result: IGetFrontierResponsesResult;
 }
 
-const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"allowErrors":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":374,"b":384},{"a":418,"b":428}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":438,"b":442},{"a":470,"b":474}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":484,"b":487},{"a":514,"b":517}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":529},{"a":557,"b":559}]},{"name":"allowErrors","required":false,"transform":{"type":"scalar"},"locs":[{"a":569,"b":580}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":664,"b":669}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  jr.fetched_at AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (:allowErrors OR f.fetch_status = 'ok')\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
+const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":true,"key":true,"id":true,"allowErrors":true,"limit":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":405,"b":415},{"a":449,"b":459}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":469,"b":473},{"a":501,"b":505}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":515,"b":518},{"a":545,"b":548}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":558,"b":560},{"a":588,"b":590}]},{"name":"allowErrors","required":false,"transform":{"type":"scalar"},"locs":[{"a":600,"b":611}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":695,"b":700}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url AS \"url!\",\n  jr.http_status,\n  coalesce(jr.last_observed_at, jr.fetched_at) AS \"fetched_at!\",\n  jrc.content AS \"content!\"\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE (:federation::text IS NULL OR f.federation = :federation)\n  AND (:kind::text IS NULL OR f.kind = :kind)\n  AND (:key::text IS NULL OR f.key = :key)\n  AND (:id::bigint IS NULL OR f.id = :id)\n  AND (:allowErrors OR f.fetch_status = 'ok')\nORDER BY f.discovered_at, f.last_fetched_at, f.id\nLIMIT :limit"};
 
 /**
  * Query generated from SQL:
@@ -239,7 +239,7 @@ const getFrontierResponsesIR: any = {"usedParamSet":{"federation":true,"kind":tr
  *   f.key AS "key!",
  *   jr.url AS "url!",
  *   jr.http_status,
- *   jr.fetched_at AS "fetched_at!",
+ *   coalesce(jr.last_observed_at, jr.fetched_at) AS "fetched_at!",
  *   jrc.content AS "content!"
  * FROM crawler.frontier f
  * JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
@@ -636,7 +636,7 @@ export interface IGetFrontierDetailQuery {
   result: IGetFrontierDetailResult;
 }
 
-const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":868,"b":870},{"a":903,"b":905},{"a":925,"b":927}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":982,"b":992}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":995,"b":999}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1002,"b":1005}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  jr.fetched_at AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jrc.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error\nFROM crawler.frontier f\nLEFT JOIN crawler.json_response jr ON jr.id = f.last_response_id\nLEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
+const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"kind":true,"key":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":899,"b":901},{"a":934,"b":936},{"a":956,"b":958}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":1013,"b":1023}]},{"name":"kind","required":false,"transform":{"type":"scalar"},"locs":[{"a":1026,"b":1030}]},{"name":"key","required":false,"transform":{"type":"scalar"},"locs":[{"a":1033,"b":1036}]}],"statement":"SELECT\n  f.id,\n  f.federation,\n  f.kind,\n  f.key,\n  f.discovered_at,\n  f.last_fetched_at,\n  f.fetch_status,\n  f.process_status,\n  f.error_count,\n  f.next_fetch_at,\n  f.last_process_error,\n  f.meta,\n  jr.url AS \"response_url?\",\n  coalesce(jr.last_observed_at, jr.fetched_at) AS \"response_fetched_at?\",\n  jr.http_status AS \"response_http_status?\",\n  jr.error AS \"response_error?\",\n  jrc.content AS \"response_content?\",\n  j.job_id,\n  j.job_key,\n  j.run_at AS job_run_at,\n  j.attempts AS job_attempts,\n  j.max_attempts AS job_max_attempts,\n  j.job_error AS job_last_error\nFROM crawler.frontier f\nLEFT JOIN crawler.json_response jr ON jr.id = f.last_response_id\nLEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash\nLEFT JOIN LATERAL (\n  SELECT j.*\n  FROM crawler.frontier_fetch_job j\n  WHERE j.frontier_id = f.id\n  ORDER BY j.job_updated_at DESC\n  LIMIT 1\n) j ON true\n  WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)\n     OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key))"};
 
 /**
  * Query generated from SQL:
@@ -655,7 +655,7 @@ const getFrontierDetailIR: any = {"usedParamSet":{"id":true,"federation":true,"k
  *   f.last_process_error,
  *   f.meta,
  *   jr.url AS "response_url?",
- *   jr.fetched_at AS "response_fetched_at?",
+ *   coalesce(jr.last_observed_at, jr.fetched_at) AS "response_fetched_at?",
  *   jr.http_status AS "response_http_status?",
  *   jr.error AS "response_error?",
  *   jrc.content AS "response_content?",
@@ -966,13 +966,13 @@ export interface IMarkFrontierFetchErrorQuery {
   result: IMarkFrontierFetchErrorResult;
 }
 
-const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":274,"b":276}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      300::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
+const markFrontierFetchErrorIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":286,"b":288}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = clock_timestamp(),\n    fetch_status    = 'error',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      300::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
  * UPDATE crawler.frontier
- * SET last_fetched_at = now(),
+ * SET last_fetched_at = clock_timestamp(),
  *     fetch_status    = 'error',
  *     error_count     = error_count + 1,
  *     next_fetch_at   = now() + least(
@@ -999,13 +999,13 @@ export interface IMarkFrontierTransientQuery {
   result: IMarkFrontierTransientResult;
 }
 
-const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":279,"b":281}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status    = 'transient',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      1800::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
+const markFrontierTransientIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":291,"b":293}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = clock_timestamp(),\n    fetch_status    = 'transient',\n    error_count     = error_count + 1,\n    next_fetch_at   = now() + least(\n      1800::numeric,\n      power(2::numeric, least(error_count, 9) + 1) * 5\n    ) * interval '1 second'\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
  * UPDATE crawler.frontier
- * SET last_fetched_at = now(),
+ * SET last_fetched_at = clock_timestamp(),
  *     fetch_status    = 'transient',
  *     error_count     = error_count + 1,
  *     next_fetch_at   = now() + least(
@@ -1034,13 +1034,13 @@ export interface IMarkFrontierFetchSuccessQuery {
   result: IMarkFrontierFetchSuccessResult;
 }
 
-const markFrontierFetchSuccessIR: any = {"usedParamSet":{"fetchStatus":true,"revalidatePeriod":true,"id":true},"params":[{"name":"fetchStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":83},{"a":145,"b":156}]},{"name":"revalidatePeriod","required":false,"transform":{"type":"scalar"},"locs":[{"a":419,"b":435}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":458,"b":460}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = now(),\n    fetch_status = :fetchStatus::crawler.fetch_status,\n    process_status = CASE\n      WHEN :fetchStatus::crawler.fetch_status = 'gone'::crawler.fetch_status\n      THEN 'ok'::crawler.process_status\n      ELSE 'pending'::crawler.process_status\n    END,\n    last_process_error = NULL,\n    last_process_error_at = NULL,\n    error_count = 0,\n    next_fetch_at = now() + :revalidatePeriod::interval\nWHERE id = :id::bigint"};
+const markFrontierFetchSuccessIR: any = {"usedParamSet":{"fetchStatus":true,"revalidatePeriod":true,"id":true},"params":[{"name":"fetchStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":95},{"a":157,"b":168}]},{"name":"revalidatePeriod","required":false,"transform":{"type":"scalar"},"locs":[{"a":431,"b":447}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":470,"b":472}]}],"statement":"UPDATE crawler.frontier\nSET last_fetched_at = clock_timestamp(),\n    fetch_status = :fetchStatus::crawler.fetch_status,\n    process_status = CASE\n      WHEN :fetchStatus::crawler.fetch_status = 'gone'::crawler.fetch_status\n      THEN 'ok'::crawler.process_status\n      ELSE 'pending'::crawler.process_status\n    END,\n    last_process_error = NULL,\n    last_process_error_at = NULL,\n    error_count = 0,\n    next_fetch_at = now() + :revalidatePeriod::interval\nWHERE id = :id::bigint"};
 
 /**
  * Query generated from SQL:
  * ```
  * UPDATE crawler.frontier
- * SET last_fetched_at = now(),
+ * SET last_fetched_at = clock_timestamp(),
  *     fetch_status = :fetchStatus::crawler.fetch_status,
  *     process_status = CASE
  *       WHEN :fetchStatus::crawler.fetch_status = 'gone'::crawler.fetch_status
@@ -1226,38 +1226,15 @@ export interface IInsertResponseQuery {
   result: IInsertResponseResult;
 }
 
-const insertResponseIR: any = {"usedParamSet":{"content":true,"id":true,"url":true,"httpStatus":true,"error":true,"fetchStatus":true},"params":[{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":27,"b":34}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":353,"b":355},{"a":808,"b":810}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":361}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":364,"b":374}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":377,"b":382}]},{"name":"fetchStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":669,"b":680}]}],"statement":"WITH payload AS (\n  SELECT :content::text::jsonb AS content\n), ins_cache AS (\n  INSERT INTO crawler.json_response_cache (content)\n    SELECT content\n    FROM payload\n    WHERE content IS NOT NULL\n    ON CONFLICT (content_hash) DO NOTHING\n), inserted AS (\n  INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)\n  SELECT :id, :url, :httpStatus, :error,\n         case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash\n  FROM payload\n  RETURNING id\n), frontier AS (\n  UPDATE crawler.frontier f\n  SET\n    last_response_id = inserted.id,\n    last_successful_response_id = case\n      when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id\n      else f.last_successful_response_id\n    end\n  FROM inserted\n  WHERE f.id = :id\n)\nSELECT id AS \"id!\"\nFROM inserted"};
+const insertResponseIR: any = {"usedParamSet":{"id":true,"url":true,"httpStatus":true,"error":true,"content":true,"fetchStatus":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":33,"b":35}]},{"name":"url","required":false,"transform":{"type":"scalar"},"locs":[{"a":46,"b":49}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":58,"b":68}]},{"name":"error","required":false,"transform":{"type":"scalar"},"locs":[{"a":80,"b":85}]},{"name":"content","required":false,"transform":{"type":"scalar"},"locs":[{"a":96,"b":103}]},{"name":"fetchStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":119,"b":130}]}],"statement":"SELECT crawler.store_response(\n  :id::bigint, :url::text, :httpStatus::integer, :error::text,\n  :content::text::jsonb, :fetchStatus::crawler.fetch_status\n) AS \"id!\""};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH payload AS (
- *   SELECT :content::text::jsonb AS content
- * ), ins_cache AS (
- *   INSERT INTO crawler.json_response_cache (content)
- *     SELECT content
- *     FROM payload
- *     WHERE content IS NOT NULL
- *     ON CONFLICT (content_hash) DO NOTHING
- * ), inserted AS (
- *   INSERT INTO crawler.json_response (frontier_id, url, http_status, error, content_hash)
- *   SELECT :id, :url, :httpStatus, :error,
- *          case when content IS NULL then NULL else encode(digest(content::text, 'sha256'), 'hex') end AS content_hash
- *   FROM payload
- *   RETURNING id
- * ), frontier AS (
- *   UPDATE crawler.frontier f
- *   SET
- *     last_response_id = inserted.id,
- *     last_successful_response_id = case
- *       when :fetchStatus::crawler.fetch_status = 'ok' then inserted.id
- *       else f.last_successful_response_id
- *     end
- *   FROM inserted
- *   WHERE f.id = :id
- * )
- * SELECT id AS "id!"
- * FROM inserted
+ * SELECT crawler.store_response(
+ *   :id::bigint, :url::text, :httpStatus::integer, :error::text,
+ *   :content::text::jsonb, :fetchStatus::crawler.fetch_status
+ * ) AS "id!"
  * ```
  */
 export const insertResponse = new PreparedQuery<IInsertResponseParams,IInsertResponseResult>(insertResponseIR);

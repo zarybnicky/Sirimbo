@@ -5960,7 +5960,7 @@ export type PersonMembershipCondition = {
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether the person has a trainer relationship in the selected state. */
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The membership state to filter by. Defaults to CURRENT. */
+  /** The membership state to filter by. */
   state?: InputMaybe<PersonMembershipState>;
 };
 
