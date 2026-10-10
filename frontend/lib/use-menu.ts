@@ -162,6 +162,12 @@ const memberMenu: MenuStructItem[] = [
         href: '/admin/tenants',
         requireSystemAdmin: true,
       },
+      {
+        type: 'link',
+        title: 'Crawler',
+        href: '/admin/crawler',
+        requireSystemAdmin: true,
+      },
     ],
   },
 ];
