@@ -72,7 +72,7 @@ async function request(
     body: JSON.stringify({ query, variables }),
   });
   return (await response.json()) as {
-    data: Record<string, { nodes: { id: string }[] }>;
+    data: Record<string, { totalCount: number; nodes: { id: string }[] }>;
     errors?: { message: string }[];
   };
 }
@@ -86,9 +86,7 @@ test('existing operation documents pass schema validation', async () => {
   );
   for (const [name, operation] of Object.entries(separateOperations(document))) {
     assert.deepEqual(
-      validate(schema, operation, specifiedRules).map(
-        (error) => error.message,
-      ),
+      validate(schema, operation, specifiedRules).map((error) => error.message),
       [],
       name,
     );
@@ -133,7 +131,13 @@ test('public federation reads and system-admin-only crawler reads', async () => 
 
 test('lookup tables expose unpaginated lists instead of connections', async () => {
   const fields = schema.getQueryType()!.getFields();
-  for (const name of ['dances', 'dancePrograms', 'danceProgramDances', 'categories', 'federations']) {
+  for (const name of [
+    'dances',
+    'dancePrograms',
+    'danceProgramDances',
+    'categories',
+    'federations',
+  ]) {
     assert.equal(fields[name], undefined);
     assert(fields[`${name}List`]);
   }
@@ -145,6 +149,62 @@ test('lookup tables expose unpaginated lists instead of connections', async () =
     federationsList { code }
   }`);
   assert.equal(result.errors, undefined);
+});
+
+test('federation search normalizes names and treats search text literally', async () => {
+  for (const field of ['federationPeople', 'federationCompetitors']) {
+    const conditionType =
+      field === 'federationPeople'
+        ? 'FederationPersonCondition'
+        : 'FederationCompetitorCondition';
+    const query = `query Search($condition: ${conditionType}) {
+      matches: ${field}(first: 10, condition: $condition, orderBy: ID_ASC) {
+        totalCount nodes { id }
+      }
+    }`;
+    const search = await request(query, {
+      condition: { federation: 'csts', search: 'Novák' },
+    });
+    assert.equal(search.errors, undefined);
+    assert(search.data.matches.totalCount > 0);
+    for (const value of ['NOVAK', '  novák  ']) {
+      const result = await request(query, {
+        condition: { federation: 'csts', search: value },
+      });
+      assert.deepEqual(result, search);
+    }
+    const id = search.data.matches.nodes[0]!.id;
+    const byId = await request(query, { condition: { search: id } });
+    assert.equal(byId.errors, undefined);
+    assert(byId.data.matches.nodes.some((row) => row.id === id));
+    for (const value of ['%', "' OR true --"]) {
+      const result = await request(query, { condition: { search: value } });
+      assert.equal(result.errors, undefined);
+      assert.equal(result.data.matches.totalCount, 0);
+    }
+  }
+});
+
+test('event date conditions include both ends of a multi-day event', async () => {
+  const {
+    rows: [event],
+  } = await pool.query(`
+    select id, start_date::text, end_date::text, (end_date + 1)::text as after_date
+    from federated.event where end_date > start_date limit 1
+  `);
+  assert(event);
+  const query = `query Events($condition: FederationEventCondition) {
+    matches: federationEvents(first: 1, condition: $condition) { totalCount nodes { id } }
+  }`;
+  for (const [onDate, count] of [
+    [event.start_date, 1],
+    [event.end_date, 1],
+    [event.after_date, 0],
+  ]) {
+    const result = await request(query, { condition: { id: event.id, onDate } });
+    assert.equal(result.errors, undefined);
+    assert.equal(result.data.matches.totalCount, count);
+  }
 });
 
 test('pagination checks variables on every execution, including cached documents', async () => {
@@ -161,7 +221,8 @@ test('pagination checks variables on every execution, including cached documents
     /requires first or last/,
   );
   assert.equal(
-    (await request('{ federationPeople(first: 0, offset: 10001) { nodes { id } } }')).errors,
+    (await request('{ federationPeople(first: 0, offset: 10001) { nodes { id } } }'))
+      .errors,
     undefined,
   );
   assert.equal(
@@ -176,7 +237,7 @@ test('pagination checks variables on every execution, including cached documents
 
 test('nested connections and fragments cannot bypass pagination limits', async () => {
   const query = `query { federationPeople(first: 1) { nodes { ...Person } } }
-    fragment Person on FederationPerson { federationCompetitorComponentsByPersonId(first: 101) { nodes { role } } }`;
+    fragment Person on FederationPerson { competitorComponents(first: 101) { nodes { role } } }`;
   assert.match(
     (await request(query)).errors?.[0]?.message ?? '',
     /requires first or last/,
@@ -198,7 +259,7 @@ test('crawler pagination and public aliases remain unrestricted', async () => {
 test('nested pagination variables contribute to the cost budget', async () => {
   const query = `query People($first: Int!) {
     federationPeople(first: $first) { nodes {
-      federationCompetitorComponentsByPersonId(first: $first) { nodes { role } }
+      competitorComponents(first: $first) { nodes { role } }
     } }
   }`;
   assert.equal((await request(query, { first: 1 })).errors, undefined);
@@ -219,7 +280,7 @@ test('pool connections enforce statement timeout', async () => {
 test('Armor rejects deep traversal through valid relationships', async () => {
   let selection = 'id';
   for (let i = 0; i < 5; i++) {
-    selection = `federationCompetitorComponentsByPersonId(first: 1) { nodes { person { ${selection} } } }`;
+    selection = `competitorComponents(first: 1) { nodes { person { ${selection} } } }`;
   }
   const result = await request(
     `{ federationPeople(first: 1) { nodes { ${selection} } } }`,

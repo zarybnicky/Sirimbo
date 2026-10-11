@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import { runQuery } from '@/lib/server/postgresql';
+import { executeGraphql } from '@/lib/server/graphql';
+import { CrawlerResponseDocument } from '@/graphql/Crawler';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { crawlerResponseContent } from '../../../crawler.queries';
 
 export const metadata = {
   title: 'Crawler response',
@@ -20,13 +20,16 @@ export default async function ResponsePage({
 
   const { id, responseId } = await params;
   if (!/^[0-9]{1,18}$/.test(id) || !/^[0-9]{1,18}$/.test(responseId)) notFound();
-  const [response] = await runQuery(crawlerResponseContent, {
-    frontierId: id,
-    responseId,
-  });
-  if (!response) notFound();
+  const { crawlerResponse: response } = await executeGraphql(
+    CrawlerResponseDocument,
+    { id: responseId },
+  );
+  if (!response || response.frontierId !== id || !response.frontier) notFound();
+  const { frontier } = response;
+  const rawContent = response.crawlerResponseCache?.content;
+  const content = typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
 
-  const frontierTitle = `${response.federation}:${response.kind}${response.key ? `:${response.key}` : ''}`;
+  const frontierTitle = `${frontier.federation}:${frontier.kind}${frontier.key ? `:${frontier.key}` : ''}`;
 
   return (
     <Layout requireSystemAdmin>
@@ -35,10 +38,10 @@ export default async function ResponsePage({
         breadcrumbs={[
           { label: 'Crawler', href: '/admin/crawler' },
           {
-            label: `${response.federation}:${response.kind}`,
+            label: `${frontier.federation}:${frontier.kind}`,
             href: {
               pathname: '/admin/crawler',
-              query: { federation: response.federation, kind: response.kind },
+              query: { federation: frontier.federation, kind: frontier.kind },
             },
           },
           { label: frontierTitle, href: `/admin/crawler/${id}` },
@@ -49,17 +52,17 @@ export default async function ResponsePage({
         <dt>url</dt>
         <dd>{response.url}</dd>
         <dt>http</dt>
-        <dd>{response.http_status ?? '-'}</dd>
+        <dd>{response.httpStatus ?? '-'}</dd>
       </dl>
       {response.error && (
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}
       <pre className="col-full-width overflow-x-auto text-sm">
-        {response.content == null
+        {content == null
           ? 'No cached content'
-          : typeof response.content === 'string'
-            ? response.content
-            : JSON.stringify(response.content, null, 2)}
+          : typeof content === 'string'
+            ? content
+            : JSON.stringify(content, null, 2)}
       </pre>
     </Layout>
   );

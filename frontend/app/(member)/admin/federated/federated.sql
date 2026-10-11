@@ -1,35 +1,3 @@
-/* @name BrowseFederations */
-SELECT f.code, f.name,
-  (SELECT count(*)::int FROM federated.event e WHERE e.federation = f.code) AS events,
-  (SELECT count(*)::int FROM federated.competition c WHERE c.federation = f.code) AS competitions
-FROM federated.federation f ORDER BY f.code;
-
-/* @name BrowseFederation */
-SELECT code, name FROM federated.federation WHERE code = :federation!;
-
-/* @name BrowseEventCount */
-SELECT count(*)::int AS total
-FROM federated.event e
-WHERE federation = :federation!
-  AND (:search! = '' OR strpos(lower(concat_ws(' ', name, location, city, external_id)), lower(:search!)) > 0)
-  AND (:date! = '' OR range @> nullif(:date!, '')::date);
-
-/* @name BrowseEvents */
-SELECT e.id, e.external_id, e.name, e.start_date, e.end_date, e.location, e.city, e.country,
-  (SELECT count(*)::int FROM federated.competition c WHERE c.event_id = e.id) AS competitions
-FROM federated.event e
-WHERE federation = :federation!
-  AND (:search! = '' OR strpos(lower(concat_ws(' ', name, location, city, external_id)), lower(:search!)) > 0)
-  AND (:date! = '' OR range @> nullif(:date!, '')::date)
-ORDER BY start_date DESC, id DESC
-LIMIT 50 OFFSET :offset!;
-
-/* @name BrowseEvent */
-SELECT e.id, e.federation, e.external_id, e.name, e.start_date, e.end_date,
-  e.location, e.street_address, e.city, e.postal_code, e.country, f.name AS federation_name
-FROM federated.event e JOIN federated.federation f ON f.code = e.federation
-WHERE e.id = :eventId! AND e.federation = :federation!;
-
 /* @name BrowseCompetitions */
 SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_type, cat.name AS category,
   (SELECT count(*)::int FROM federated.competition_entry ce WHERE ce.competition_id = c.id AND NOT ce.cancelled) AS registrations,
@@ -37,12 +5,6 @@ SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_ty
 FROM federated.competition c JOIN federated.category cat ON cat.id = c.category_id
 WHERE c.event_id = :eventId!
 ORDER BY c.start_date, c.check_in_end NULLS LAST, cat.name, c.id;
-
-/* @name BrowseCompetition */
-SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_type,
-  c.participants_total, c.completed_at, cat.name AS category
-FROM federated.competition c JOIN federated.category cat ON cat.id = c.category_id
-WHERE c.id = :competitionId! AND c.event_id = :eventId!;
 
 /* @name BrowseParticipants */
 WITH participants AS (
@@ -105,11 +67,6 @@ WHERE federation = :federation! AND (
 )
 ORDER BY kind, key;
 
-/* @name BrowseCompetitor */
-SELECT c.id, c.name, c.competitor_type, c.age_group, f.name AS federation_name
-FROM federated.competitor c JOIN federated.federation f ON f.code = c.federation
-WHERE c.id = :id! AND c.federation = :federation!;
-
 /* @name BrowseCompetitorMembers */
 SELECT p.id, p.external_id, coalesce(p.canonical_name, nullif(concat_ws(' ', p.first_name, p.last_name), ''), p.id) AS name, cc.role
 FROM federated.competitor_component cc JOIN federated.person p ON p.id = cc.person_id
@@ -138,12 +95,6 @@ JOIN federated.category cat ON cat.id = c.category_id
 ORDER BY c.start_date DESC, c.id DESC
 LIMIT 50 OFFSET :offset!;
 
-/* @name BrowseFederatedPerson */
-SELECT p.id, p.external_id, coalesce(p.canonical_name, nullif(concat_ws(' ', p.first_name, p.last_name), ''), p.id) AS name,
-  p.gender, p.dob, p.nationality, p.age_group, f.name AS federation_name
-FROM federated.person p JOIN federated.federation f ON f.code = p.federation
-WHERE p.id = :id! AND p.federation = :federation!;
-
 /* @name BrowsePersonCompetitors */
 SELECT c.id, c.external_id, c.name, c.competitor_type, cc.role
 FROM federated.competitor_component cc JOIN federated.competitor c ON c.id = cc.competitor_id
@@ -167,29 +118,3 @@ SELECT id, kind, key, fetch_status, process_status
 FROM crawler.frontier
 WHERE federation = :federation! AND kind = 'member' AND key = :key!
 ORDER BY id;
-
-/* @name BrowsePeopleCount */
-SELECT count(*)::int AS total FROM federated.person
-WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
-  OR strpos(search_name, app_private.normalize_name(:search!)) > 0);
-
-/* @name BrowsePeople */
-SELECT id, external_id,
-  coalesce(canonical_name, nullif(concat_ws(' ', first_name, last_name), ''), id) AS name, age_group
-FROM federated.person
-WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
-  OR strpos(search_name, app_private.normalize_name(:search!)) > 0)
-ORDER BY search_name, external_id
-LIMIT 50 OFFSET :offset!;
-
-/* @name BrowseCompetitorsCount */
-SELECT count(*)::int AS total FROM federated.competitor
-WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
-  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0);
-
-/* @name BrowseSearchCompetitors */
-SELECT id, external_id, name, age_group FROM federated.competitor
-WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
-  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)
-ORDER BY nullif(name, '') NULLS LAST, external_id
-LIMIT 50 OFFSET :offset!;

@@ -4,12 +4,10 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
+import { executeGraphql } from '@/lib/server/graphql';
+import { FederationEventDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
-import {
-  browseEvent,
-  browseCompetitions,
-  browseSourceFrontiers,
-} from '../../federated.queries';
+import { browseCompetitions, browseSourceFrontiers } from '../../federated.queries';
 
 export const metadata = {
   title: 'Federated event',
@@ -25,17 +23,20 @@ export default async function EventPage({
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
   const { federation, eventId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
-  const [event] = await runQuery(browseEvent, { federation, eventId });
+  const { federationEventByFederationAndId: event } = await executeGraphql(
+    FederationEventDocument,
+    { federation, eventId },
+  );
   if (!event) notFound();
   const [competitions, sources] = await Promise.all([
     runQuery(browseCompetitions, { eventId }),
     runQuery(browseSourceFrontiers, {
       federation,
-      eventKey: event.external_id,
+      eventKey: event.externalId,
       competitionKey: null,
     }),
   ]);
-  const title = event.name || event.external_id;
+  const title = event.name || event.externalId;
   const path = `/admin/federated/${federation}/${eventId}`;
   return (
     <Layout requireSystemAdmin>
@@ -43,27 +44,30 @@ export default async function EventPage({
         title={title}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: event.federation_name, href: `/admin/federated/${federation}` },
+          {
+            label: event.federationByFederation?.name ?? federation,
+            href: `/admin/federated/${federation}`,
+          },
           { label: title },
         ]}
       />
       <dl className="text-sm tabular">
         <dt>event ID</dt>
-        <dd>{event.external_id}</dd>
+        <dd>{event.externalId}</dd>
         <dt>date</dt>
         <dd>
-          {numericDateWithYearFormatter.format(event.start_date)}
-          {event.end_date && event.end_date.getTime() !== event.start_date.getTime() && (
-            <> – {numericDateWithYearFormatter.format(event.end_date)}</>
+          {numericDateWithYearFormatter.format(new Date(event.startDate))}
+          {event.endDate && event.endDate !== event.startDate && (
+            <> – {numericDateWithYearFormatter.format(new Date(event.endDate))}</>
           )}
         </dd>
         <dt>venue</dt>
         <dd>
           {[
             event.location,
-            event.street_address,
+            event.streetAddress,
             event.city,
-            event.postal_code,
+            event.postalCode,
             event.country,
           ]
             .filter(Boolean)

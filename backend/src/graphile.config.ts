@@ -10,6 +10,7 @@ import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
 import currentUserPlugin from './plugins/current-user.ts';
 import { FailedLoginPlugin } from './plugins/failed-login.ts';
+import federationConditionPlugins from './plugins/federation-condition.ts';
 import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
 
@@ -29,6 +30,7 @@ const preset: GraphileConfig.Preset = {
   plugins: [
     currentUserPlugin,
     ...personMembershipConditionPlugin,
+    ...federationConditionPlugins,
     FailedLoginPlugin,
     OTELPlugin,
     QueryControlsPlugin,

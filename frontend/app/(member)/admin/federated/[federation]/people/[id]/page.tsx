@@ -4,9 +4,10 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
+import { executeGraphql } from '@/lib/server/graphql';
+import { FederationPersonDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
 import {
-  browseFederatedPerson,
   browsePersonCompetitors,
   browsePersonLocalMatches,
   browsePersonFrontiers,
@@ -27,35 +28,47 @@ export default async function FederatedPersonPage({
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
-  const [person] = await runQuery(browseFederatedPerson, { federation, id });
+  const { federationPersonByFederationAndExternalId: person } = await executeGraphql(
+    FederationPersonDocument,
+    { federation, externalId },
+  );
   if (!person) notFound();
   const [competitors, matches, sources] = await Promise.all([
     runQuery(browsePersonCompetitors, { id }),
     runQuery(browsePersonLocalMatches, { id }),
-    runQuery(browsePersonFrontiers, { federation, key: person.external_id }),
+    runQuery(browsePersonFrontiers, { federation, key: person.externalId }),
   ]);
+  const name =
+    person.canonicalName ||
+    [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+    person.id;
   const base = `/admin/federated/${federation}`;
   return (
     <Layout requireSystemAdmin>
       <PageHeader
-        title={person.name || person.id}
+        title={name}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: person.federation_name, href: `${base}?view=people` },
-          { label: person.name || person.id },
+          {
+            label: person.federationByFederation?.name ?? federation,
+            href: `${base}?view=people`,
+          },
+          { label: name },
         ]}
       />
       <dl className="text-sm tabular">
         <dt>person ID</dt>
         <dd>{person.id}</dd>
         <dt>date of birth</dt>
-        <dd>{person.dob ? numericDateWithYearFormatter.format(person.dob) : '-'}</dd>
+        <dd>
+          {person.dob ? numericDateWithYearFormatter.format(new Date(person.dob)) : '-'}
+        </dd>
         <dt>gender</dt>
-        <dd>{person.gender || '-'}</dd>
+        <dd>{person.gender?.toLowerCase() || '-'}</dd>
         <dt>nationality</dt>
         <dd>{person.nationality || '-'}</dd>
         <dt>age group</dt>
-        <dd>{person.age_group || '-'}</dd>
+        <dd>{person.ageGroup || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
       <div className="overflow-x-auto">

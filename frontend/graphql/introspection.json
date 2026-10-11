@@ -2950,29 +2950,7 @@
             ]
           },
           {
-            "name": "competitorType",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "discipline",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federationCompetitorCategoryProgresses",
+            "name": "competitorProgresses",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -3038,6 +3016,28 @@
                 }
               }
             ]
+          },
+          {
+            "name": "competitorType",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "discipline",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "genderGroup",
@@ -4307,7 +4307,31 @@
             "args": []
           },
           {
-            "name": "competitionEntries",
+            "name": "competitionType",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "completedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "endDate",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "entries",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -4375,7 +4399,77 @@
             ]
           },
           {
-            "name": "competitionOfficials",
+            "name": "event",
+            "type": {
+              "kind": "OBJECT",
+              "name": "FederationEvent",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "eventId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "excusedTotal",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "externalId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federation",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federationByFederation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Federation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "officials",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -4443,7 +4537,23 @@
             ]
           },
           {
-            "name": "competitionResults",
+            "name": "participantsTotal",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "registrationFee",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "results",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -4511,7 +4621,7 @@
             ]
           },
           {
-            "name": "competitionRounds",
+            "name": "rounds",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -4577,125 +4687,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "competitionType",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "completedAt",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "endDate",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "event",
-            "type": {
-              "kind": "OBJECT",
-              "name": "FederationEvent",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "excusedTotal",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "externalId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federationByFederation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Federation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "federationEventByFederationAndEventId",
-            "type": {
-              "kind": "OBJECT",
-              "name": "FederationEvent",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "participantsTotal",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "registrationFee",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
           },
           {
             "name": "startDate",
@@ -5272,7 +5263,38 @@
             "args": []
           },
           {
-            "name": "competitionRoundDancesByRoundIdAndDanceProgramId",
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "danceProgram",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DanceProgram",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "danceProgramId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "dances",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -5340,7 +5362,86 @@
             ]
           },
           {
-            "name": "competitionRoundJudgesByRoundId",
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "judgeScores",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "JudgeScoresConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "judges",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -5408,121 +5509,11 @@
             ]
           },
           {
-            "name": "competitionRoundResultsByRoundId",
+            "name": "results",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "name": "CompetitionRoundResultsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "createdAt",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "danceProgram",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DanceProgram",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "danceProgramId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "judgeScoresByRoundId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "JudgeScoresConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -5673,7 +5664,7 @@
             "args": []
           },
           {
-            "name": "judgeScoresByRoundIdAndDanceOrderAndDanceCode",
+            "name": "judgeScores",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -7224,142 +7215,6 @@
             "args": []
           },
           {
-            "name": "crawlerTargetsByLastResponseId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CrawlerTargetsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "crawlerTargetsByLastSuccessfulResponseId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CrawlerTargetsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "error",
             "type": {
               "kind": "SCALAR",
@@ -7446,6 +7301,142 @@
             "args": []
           },
           {
+            "name": "targetsWithLastSuccessfulResponse",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CrawlerTargetsConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "targetsWithLatestResponse",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CrawlerTargetsConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "url",
             "type": {
               "kind": "NON_NULL",
@@ -7486,7 +7477,7 @@
             "args": []
           },
           {
-            "name": "crawlerResponsesByContentHash",
+            "name": "responses",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -7747,74 +7738,6 @@
         "name": "CrawlerTarget",
         "fields": [
           {
-            "name": "crawlerResponsesByFrontierId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CrawlerResponsesConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "discoveredAt",
             "type": {
               "kind": "NON_NULL",
@@ -7981,6 +7904,74 @@
               }
             },
             "args": []
+          },
+          {
+            "name": "responses",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CrawlerResponsesConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -9034,7 +9025,7 @@
             "args": []
           },
           {
-            "name": "danceProgramDancesByDanceCodeList",
+            "name": "danceProgramsList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -9116,7 +9107,7 @@
         "name": "DanceProgram",
         "fields": [
           {
-            "name": "categoriesByBaseDanceProgramIdList",
+            "name": "categoriesList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -9256,7 +9247,7 @@
             "args": []
           },
           {
-            "name": "danceProgramDancesByProgramIdList",
+            "name": "dancesList",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -9357,7 +9348,58 @@
         "name": "DanceProgramDance",
         "fields": [
           {
-            "name": "competitionRoundDancesByDanceProgramIdAndDanceCode",
+            "name": "danceByDanceCode",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Dance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "danceCode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "danceOrder",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "program",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DanceProgram",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "programId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "roundDances",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -9423,57 +9465,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "danceByDanceCode",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Dance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "danceCode",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "danceOrder",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "program",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DanceProgram",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "programId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -12739,86 +12730,7 @@
         "name": "Federation",
         "fields": [
           {
-            "name": "code",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "competitionsByFederation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CompetitionsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "federationClubsByFederation",
+            "name": "clubs",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -12886,7 +12798,86 @@
             ]
           },
           {
-            "name": "federationCompetitorsByFederation",
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "competitions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CompetitionsConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "competitors",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -12954,7 +12945,7 @@
             ]
           },
           {
-            "name": "federationEventsByFederation",
+            "name": "events",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13022,75 +13013,7 @@
             ]
           },
           {
-            "name": "federationPeopleByFederation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationPeopleConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "federationPersonLicensesByFederation",
+            "name": "licenses",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13169,7 +13092,75 @@
             "args": []
           },
           {
-            "name": "ranklistsByFederation",
+            "name": "people",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationPeopleConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "ranklists",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13252,57 +13243,7 @@
             "args": []
           },
           {
-            "name": "country",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "createdAt",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "externalId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federationByFederation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Federation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "federationCompetitorClubAffiliationsByClubId",
+            "name": "competitorAffiliations",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13370,7 +13311,26 @@
             ]
           },
           {
-            "name": "federationEventsByFederationAndOrganizingClubId",
+            "name": "country",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "events",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13438,75 +13398,60 @@
             ]
           },
           {
-            "name": "federationEventsByOrganizingClubId",
+            "name": "externalId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationEventsConnection",
-                "kind": "OBJECT",
-                "ofType": null
+                "kind": "SCALAR",
+                "name": "Any"
               }
             },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
+            "args": []
           },
           {
-            "name": "federationPersonClubMembershipsByClubId",
+            "name": "federation",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federationByFederation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Federation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "personMemberships",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13572,28 +13517,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -13704,7 +13627,143 @@
             "args": []
           },
           {
-            "name": "competitionEntriesByCompetitorId",
+            "name": "categoryProgresses",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationCompetitorCategoryProgressesConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "clubAffiliations",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationCompetitorClubAffiliationsConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "competitionEntries",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -13772,79 +13831,11 @@
             ]
           },
           {
-            "name": "competitionResultsByCompetitorId",
+            "name": "competitionResults",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "name": "CompetitionResultsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "competitionRoundResultsByCompetitorId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CompetitionRoundResultsConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13919,185 +13910,7 @@
             "args": []
           },
           {
-            "name": "createdAt",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "externalId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federationByFederation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Federation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "federationCompetitorCategoryProgressesByCompetitorId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationCompetitorCategoryProgressesConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "federationCompetitorClubAffiliationsByCompetitorId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationCompetitorClubAffiliationsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "federationCompetitorComponentsByCompetitorId",
+            "name": "components",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -14165,6 +13978,48 @@
             ]
           },
           {
+            "name": "createdAt",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "externalId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federation",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federationByFederation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Federation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "id",
             "type": {
               "kind": "NON_NULL",
@@ -14184,11 +14039,79 @@
             "args": []
           },
           {
-            "name": "ranklistEntriesByCompetitorId",
+            "name": "ranklistEntries",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "name": "RanklistEntriesConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "roundResults",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CompetitionRoundResultsConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14851,75 +14774,7 @@
             "args": []
           },
           {
-            "name": "competitionsByEventId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CompetitionsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "competitionsByFederationAndEventId",
+            "name": "competitions",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -15058,16 +14913,50 @@
             "args": []
           },
           {
-            "name": "federationClubByFederationAndOrganizingClubId",
+            "name": "floorSize",
             "type": {
-              "kind": "OBJECT",
-              "name": "FederationClub",
-              "ofType": null
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
           {
-            "name": "federationEventOfficialsByEventId",
+            "name": "geoReference",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "officials",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -15133,49 +15022,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "floorSize",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "geoReference",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
           },
           {
             "name": "organizingClub",
@@ -15650,7 +15496,75 @@
             "args": []
           },
           {
-            "name": "competitionOfficialsByPersonId",
+            "name": "clubMemberships",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationPersonClubMembershipsConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "competitionOfficialAssignments",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -15718,11 +15632,11 @@
             ]
           },
           {
-            "name": "competitionRoundJudgesByPersonJudgeId",
+            "name": "competitorComponents",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionRoundJudgesConnection",
+                "name": "FederationCompetitorComponentsConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -15805,106 +15719,7 @@
             "args": []
           },
           {
-            "name": "externalId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federation",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "federationByFederation",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Federation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "federationCompetitorComponentsByPersonId",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationCompetitorComponentsConnection",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "federationEventOfficialsByPersonId",
+            "name": "eventOfficialAssignments",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -15972,75 +15787,73 @@
             ]
           },
           {
-            "name": "federationPersonClubMembershipsByPersonId",
+            "name": "externalId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPersonClubMembershipsConnection",
-                "kind": "OBJECT",
-                "ofType": null
+                "kind": "SCALAR",
+                "name": "Any"
               }
             },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
+            "args": []
           },
           {
-            "name": "federationPersonLicensesByPersonId",
+            "name": "federation",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "federationByFederation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Federation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "firstName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "gender",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "lastName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "licenses",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -16108,41 +15921,6 @@
             ]
           },
           {
-            "name": "firstName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "gender",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "lastName",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "medicalCheckupExpiration",
             "type": {
               "kind": "SCALAR",
@@ -16165,6 +15943,74 @@
               "name": "Any"
             },
             "args": []
+          },
+          {
+            "name": "roundJudgeAssignments",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CompetitionRoundJudgesConnection",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "searchName",

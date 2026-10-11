@@ -4,10 +4,13 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
+import { executeGraphql } from '@/lib/server/graphql';
+import {
+  FederationEventDocument,
+  FederationCompetitionDocument,
+} from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
 import {
-  browseEvent,
-  browseCompetition,
   browseParticipants,
   browseParticipantPeople,
   browseRounds,
@@ -28,51 +31,55 @@ export default async function CompetitionPage({
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
   const { federation, eventId, competitionId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId) || !/^[0-9]{1,18}$/.test(competitionId)) notFound();
-  const [[event], [competition]] = await Promise.all([
-    runQuery(browseEvent, { federation, eventId }),
-    runQuery(browseCompetition, { eventId, competitionId }),
-  ]);
-  if (!event || !competition) notFound();
+  const [{ federationEventByFederationAndId: event }, { competition }] =
+    await Promise.all([
+      executeGraphql(FederationEventDocument, { federation, eventId }),
+      executeGraphql(FederationCompetitionDocument, { id: competitionId }),
+    ]);
+  if (!event || !competition || competition.eventId !== eventId) notFound();
   const [participants, people, rounds, sources] = await Promise.all([
     runQuery(browseParticipants, { competitionId }),
     runQuery(browseParticipantPeople, { competitionId }),
     runQuery(browseRounds, { competitionId }),
     runQuery(browseSourceFrontiers, {
       federation,
-      eventKey: event.external_id,
-      competitionKey: competition.external_id,
+      eventKey: event.externalId,
+      competitionKey: competition.externalId,
     }),
   ]);
   const peopleByCompetitor = Object.groupBy(people, (person) => person.competitor_id);
   return (
     <Layout requireSystemAdmin>
       <PageHeader
-        title={competition.category}
+        title={competition.category?.name ?? competition.externalId}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: event.federation_name, href: `/admin/federated/${federation}` },
           {
-            label: event.name || event.external_id,
+            label: event.federationByFederation?.name ?? federation,
+            href: `/admin/federated/${federation}`,
+          },
+          {
+            label: event.name || event.externalId,
             href: `/admin/federated/${federation}/${eventId}`,
           },
-          { label: competition.category },
+          { label: competition.category?.name ?? competition.externalId },
         ]}
       />
       <dl className="text-sm tabular">
         <dt>competition ID</dt>
-        <dd>{competition.external_id}</dd>
+        <dd>{competition.externalId}</dd>
         <dt>type</dt>
-        <dd>{competition.competition_type || '-'}</dd>
+        <dd>{competition.competitionType?.toLowerCase() || '-'}</dd>
         <dt>date</dt>
-        <dd>{numericDateWithYearFormatter.format(competition.start_date)}</dd>
+        <dd>{numericDateWithYearFormatter.format(new Date(competition.startDate))}</dd>
         <dt>check-in end</dt>
-        <dd>{competition.check_in_end || '-'}</dd>
+        <dd>{competition.checkInEnd || '-'}</dd>
         <dt>participants reported</dt>
-        <dd>{competition.participants_total ?? '-'}</dd>
+        <dd>{competition.participantsTotal ?? '-'}</dd>
         <dt>completed</dt>
         <dd>
-          {competition.completed_at
-            ? numericFullFormatter.format(competition.completed_at)
+          {competition.completedAt
+            ? numericFullFormatter.format(new Date(competition.completedAt))
             : '-'}
         </dd>
       </dl>

@@ -3,16 +3,8 @@ import { z } from 'zod';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { getRequestContext } from '@/lib/server/tenant';
-import { runQuery } from '@/lib/server/postgresql';
-import {
-  browseFederation,
-  browseEventCount,
-  browseEvents,
-  browsePeopleCount,
-  browsePeople,
-  browseCompetitorsCount,
-  browseSearchCompetitors,
-} from '../federated.queries';
+import { executeGraphql } from '@/lib/server/graphql';
+import { FederationDocument } from '@/graphql/Federation';
 import { Browser, type BrowserResult } from './Browser';
 
 export const metadata = {
@@ -33,33 +25,36 @@ export default async function FederationPage({
   const { search = '', date = '', page, view = 'events' } = await searchParams;
   if (view !== 'events' && view !== 'people' && view !== 'competitors') notFound();
   if (view === 'events' && date && !z.iso.date().safeParse(date).success) notFound();
-  const [item] = await runQuery(browseFederation, { federation });
+  let currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
+  const variables = {
+    federation,
+    events: view === 'events',
+    people: view === 'people',
+    competitors: view === 'competitors',
+    eventCondition: {
+      search: search.trim(),
+      onDate: view === 'events' && date ? date : null,
+    },
+    personCondition: { search: search.trim() },
+    competitorCondition: { search: search.trim() },
+    offset: Math.min((currentPage - 1) * 50, 2_147_483_647),
+  };
+  let { federation: item } = await executeGraphql(FederationDocument, variables);
   if (!item) notFound();
-  const filters = { federation, search: search.trim(), date };
-  const [count] =
-    view === 'events'
-      ? await runQuery(browseEventCount, filters)
-      : view === 'people'
-        ? await runQuery(browsePeopleCount, filters)
-        : await runQuery(browseCompetitorsCount, filters);
-  const total = count?.total ?? 0;
-  const currentPage = Math.min(
-    Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
-    Math.max(1, Math.ceil(total / 50)),
-  );
-  const query = { ...filters, offset: (currentPage - 1) * 50 };
+  const total = item[view]?.totalCount ?? 0;
+  const lastPage = Math.max(1, Math.ceil(total / 50));
+  if (currentPage > lastPage) {
+    currentPage = lastPage;
+    ({ federation: item } = await executeGraphql(FederationDocument, {
+      ...variables,
+      offset: (currentPage - 1) * 50,
+    }));
+    if (!item) notFound();
+  }
   const result: BrowserResult =
     view === 'events'
-      ? { view, total, page: currentPage, rows: await runQuery(browseEvents, query) }
-      : {
-          view,
-          total,
-          page: currentPage,
-          rows:
-            view === 'people'
-              ? await runQuery(browsePeople, query)
-              : await runQuery(browseSearchCompetitors, query),
-        };
+      ? { view, total, page: currentPage, rows: item.events?.nodes ?? [] }
+      : { view, total, page: currentPage, rows: item[view]?.nodes ?? [] };
 
   return (
     <Layout requireSystemAdmin>

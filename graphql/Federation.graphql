@@ -7,3 +7,114 @@ fragment CompetitionCategory on Category {
   discipline
   competitorType
 }
+
+query FederationList($condition: FederationCondition, $withCounts: Boolean! = true) {
+  federationsList(condition: $condition, orderBy: CODE_ASC) {
+    code
+    name
+    events(first: 0) @include(if: $withCounts) { totalCount }
+    competitions(first: 0) @include(if: $withCounts) { totalCount }
+    people(first: 0) @include(if: $withCounts) { totalCount }
+    competitors(first: 0) @include(if: $withCounts) { totalCount }
+  }
+}
+
+query FederationEvent($federation: String!, $eventId: BigInt!) {
+  federationEventByFederationAndId(federation: $federation, id: $eventId) {
+    id
+    externalId
+    name
+    startDate
+    endDate
+    location
+    streetAddress
+    city
+    postalCode
+    country
+    federationByFederation { code name }
+  }
+}
+
+query FederationCompetition($id: BigInt!) {
+  competition(id: $id) {
+    id
+    eventId
+    externalId
+    startDate
+    checkInEnd
+    competitionType
+    participantsTotal
+    completedAt
+    category { id name }
+  }
+}
+
+query FederationPerson($federation: String!, $externalId: BigInt!) {
+  federationPersonByFederationAndExternalId(federation: $federation, externalId: $externalId) {
+    id
+    externalId
+    canonicalName
+    firstName
+    lastName
+    gender
+    dob
+    nationality
+    ageGroup
+    federationByFederation { code name }
+  }
+}
+
+query FederationCompetitor($federation: String!, $externalId: BigInt!) {
+  federationCompetitorByFederationAndExternalId(federation: $federation, externalId: $externalId) {
+    id
+    name
+    competitorType
+    ageGroup
+    federationByFederation { code name }
+  }
+}
+
+query Federation(
+  $federation: String!
+  $events: Boolean! = false
+  $people: Boolean! = false
+  $competitors: Boolean! = false
+  $eventCondition: FederationEventCondition
+  $personCondition: FederationPersonCondition
+  $competitorCondition: FederationCompetitorCondition
+  $offset: Int! = 0
+) {
+  federation(code: $federation) {
+    code
+    name
+    events(first: 50, offset: $offset, condition: $eventCondition, orderBy: [START_DATE_DESC, ID_DESC]) @include(if: $events) {
+      totalCount
+      nodes {
+        id
+        externalId
+        name
+        startDate
+        endDate
+        location
+        city
+        country
+        competitions(first: 0) { totalCount }
+      }
+    }
+    people(first: 50, offset: $offset, condition: $personCondition, orderBy: [SEARCH_NAME_ASC, EXTERNAL_ID_ASC]) @include(if: $people) {
+      totalCount
+      nodes {
+        id
+        externalId
+        name: canonicalName
+        firstName
+        lastName
+        ageGroup
+      }
+    }
+    competitors(first: 50, offset: $offset, condition: $competitorCondition, orderBy: [NAME_ASC, EXTERNAL_ID_ASC]) @include(if: $competitors) {
+      totalCount
+      nodes { id externalId name ageGroup }
+    }
+  }
+}

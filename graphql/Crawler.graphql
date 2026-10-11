@@ -1,0 +1,59 @@
+query CrawlerTarget($id: BigInt!, $offset: Int!) {
+  crawlerTarget(id: $id) {
+    id
+    federation
+    kind
+    key
+    discoveredAt
+    fetchStatus
+    processStatus
+    lastFetchedAt
+    nextFetchAt
+    errorCount
+    lastProcessError
+    lastProcessErrorAt
+    lastResponseId
+    lastSuccessfulResponseId
+    responses(first: 50, offset: $offset, orderBy: [FETCHED_AT_DESC, ID_DESC]) {
+      totalCount
+      nodes {
+        id
+        url
+        httpStatus
+        error
+        fetchedAt
+        sysPeriod { start { value } end { value } }
+        lastObservedAt
+        observationCount
+        contentHash
+      }
+    }
+  }
+}
+
+query CrawlerResponse($id: BigInt!) {
+  crawlerResponse(id: $id) {
+    id
+    frontierId
+    url
+    httpStatus
+    error
+    crawlerResponseCache { contentHash content }
+    frontier { id federation kind key }
+  }
+}
+
+query CrawlerTargets($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
+  crawlerTargets(first: 50, offset: $offset, condition: $condition, orderBy: [KEY_ASC, ID_ASC]) {
+    totalCount
+    nodes {
+      id
+      key
+      fetchStatus
+      processStatus
+      errorCount
+      lastFetchedAt
+      nextFetchAt
+    }
+  }
+}

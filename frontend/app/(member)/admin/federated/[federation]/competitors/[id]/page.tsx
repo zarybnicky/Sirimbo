@@ -5,9 +5,10 @@ import { PageHeader } from '@/ui/TitleBar';
 import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
+import { executeGraphql } from '@/lib/server/graphql';
+import { FederationCompetitorDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
 import {
-  browseCompetitor,
   browseCompetitorMembers,
   browseCompetitorHistoryCount,
   browseCompetitorHistory,
@@ -31,7 +32,8 @@ export default async function CompetitorPage({
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
   const { page } = await searchParams;
-  const [competitor] = await runQuery(browseCompetitor, { federation, id });
+  const { federationCompetitorByFederationAndExternalId: competitor } =
+    await executeGraphql(FederationCompetitorDocument, { federation, externalId });
   if (!competitor) notFound();
   const [members, [count]] = await Promise.all([
     runQuery(browseCompetitorMembers, { id }),
@@ -54,7 +56,10 @@ export default async function CompetitorPage({
         title={title}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: competitor.federation_name, href: `${base}?view=competitors` },
+          {
+            label: competitor.federationByFederation?.name ?? federation,
+            href: `${base}?view=competitors`,
+          },
           { label: title },
         ]}
       />
@@ -62,9 +67,9 @@ export default async function CompetitorPage({
         <dt>competitor ID</dt>
         <dd>{competitor.id}</dd>
         <dt>type</dt>
-        <dd>{competitor.competitor_type}</dd>
+        <dd>{competitor.competitorType.toLowerCase()}</dd>
         <dt>age group</dt>
-        <dd>{competitor.age_group || '-'}</dd>
+        <dd>{competitor.ageGroup || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Members</h2>
       <div className="overflow-x-auto">

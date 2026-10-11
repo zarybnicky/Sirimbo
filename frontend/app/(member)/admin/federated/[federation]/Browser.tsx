@@ -13,19 +13,20 @@ import { TextField } from '@/ui/fields/text';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter } from '@/ui/format';
-import type {
-  IBrowseEventsResult,
-  IBrowsePeopleResult,
-  IBrowseSearchCompetitorsResult,
-} from '../federated.queries';
+import type { FederationQuery } from '@/graphql/Federation';
+
+type FederationData = NonNullable<FederationQuery['federation']>;
 
 const views = ['events', 'people', 'competitors'] as const;
 
 export type BrowserResult = { total: number; page: number } & (
-  | { view: 'events'; rows: IBrowseEventsResult[] }
+  | { view: 'events'; rows: NonNullable<FederationData['events']>['nodes'] }
   | {
       view: 'people' | 'competitors';
-      rows: (IBrowsePeopleResult | IBrowseSearchCompetitorsResult)[];
+      rows: (
+        | NonNullable<FederationData['people']>['nodes'][number]
+        | NonNullable<FederationData['competitors']>['nodes'][number]
+      )[];
     }
 );
 
@@ -100,9 +101,9 @@ export function Browser({
                   : `${(result.page - 1) * 50 + 1}–${Math.min(result.page * 50, result.total)} of ${result.total}`}
             </p>
             {result.view === view && (
-              <div className="contents" aria-busy={isPending}>
+              <>
                 {result.view === 'events' ? (
-                  <div className="col-full-width overflow-x-auto">
+                  <div className="col-full-width overflow-x-auto" aria-busy={isPending}>
                     <table className="w-full text-left text-sm tabular-nums">
                       <thead>
                         <tr>
@@ -124,16 +125,18 @@ export function Browser({
                         {result.rows.map((event) => (
                           <tr key={event.id} className="border-t border-neutral-4">
                             <td className="px-2 py-1 whitespace-nowrap">
-                              {numericDateWithYearFormatter.format(event.start_date)}
-                              {event.end_date &&
-                                event.end_date.getTime() !==
-                                  event.start_date.getTime() && (
-                                  <>
-                                    {' '}
-                                    –{' '}
-                                    {numericDateWithYearFormatter.format(event.end_date)}
-                                  </>
-                                )}
+                              {numericDateWithYearFormatter.format(
+                                new Date(event.startDate),
+                              )}
+                              {event.endDate && event.endDate !== event.startDate && (
+                                <>
+                                  {' '}
+                                  –{' '}
+                                  {numericDateWithYearFormatter.format(
+                                    new Date(event.endDate),
+                                  )}
+                                </>
+                              )}
                             </td>
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
@@ -141,13 +144,13 @@ export function Browser({
                                 href={`/admin/federated/${federation}/${event.id}`}
                                 prefetch={false}
                               >
-                                {event.name || event.external_id}
+                                {event.name || event.externalId}
                               </Link>
                             </th>
-                            <td className="px-2 py-1">{event.external_id}</td>
+                            <td className="px-2 py-1">{event.externalId}</td>
                             <td className="px-2 py-1">{event.location || event.city}</td>
                             <td className="px-2 py-1">{event.country}</td>
-                            <td className="px-2 py-1">{event.competitions}</td>
+                            <td className="px-2 py-1">{event.competitions.totalCount}</td>
                           </tr>
                         ))}
                         {result.rows.length === 0 && (
@@ -161,7 +164,7 @@ export function Browser({
                     </table>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto" aria-busy={isPending}>
                     <table className="w-full text-left text-sm">
                       <thead>
                         <tr>
@@ -182,14 +185,19 @@ export function Browser({
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
                                 className="text-accent-11 underline"
-                                href={`/admin/federated/${federation}/${result.view}/${row.external_id}`}
+                                href={`/admin/federated/${federation}/${result.view}/${row.externalId}`}
                                 prefetch={false}
                               >
-                                {row.name || row.id}
+                                {row.name ||
+                                  ('firstName' in row &&
+                                    [row.firstName, row.lastName]
+                                      .filter(Boolean)
+                                      .join(' ')) ||
+                                  row.id}
                               </Link>
                             </th>
-                            <td className="px-2 py-1">{row.external_id}</td>
-                            <td className="px-2 py-1">{row.age_group || '-'}</td>
+                            <td className="px-2 py-1">{row.externalId}</td>
+                            <td className="px-2 py-1">{row.ageGroup || '-'}</td>
                           </tr>
                         ))}
                         {result.rows.length === 0 && (
@@ -209,7 +217,7 @@ export function Browser({
                   page={result.page}
                   onPageChange={(page) => setFilters({ page }, { history: 'push' })}
                 />
-              </div>
+              </>
             )}
           </Tab>
         ))}

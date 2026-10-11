@@ -2,15 +2,17 @@ import Link from 'next/link';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { getRequestContext } from '@/lib/server/tenant';
-import { runQuery } from '@/lib/server/postgresql';
-import { browseFederations } from './federated.queries';
+import { executeGraphql } from '@/lib/server/graphql';
+import { FederationListDocument } from '@/graphql/Federation';
 
 export const metadata = { title: 'Federations', robots: { index: false, follow: false } };
 
 export default async function FederationsPage() {
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
-  const federations = await runQuery(browseFederations);
+  const { federationsList: federations } = await executeGraphql(
+    FederationListDocument,
+  );
   return (
     <Layout requireSystemAdmin>
       <PageHeader title="Federations" />
@@ -18,7 +20,14 @@ export default async function FederationsPage() {
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['federation', 'name', 'events', 'competitions'].map((label) => (
+              {[
+                'federation',
+                'name',
+                'events',
+                'competitions',
+                'people',
+                'competitors',
+              ].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -26,7 +35,7 @@ export default async function FederationsPage() {
             </tr>
           </thead>
           <tbody>
-            {federations.map((federation) => (
+            {federations?.map((federation) => (
               <tr key={federation.code} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
@@ -37,8 +46,18 @@ export default async function FederationsPage() {
                   </Link>
                 </th>
                 <td className="px-2 py-1">{federation.name}</td>
-                <td className="px-2 py-1">{federation.events}</td>
-                <td className="px-2 py-1">{federation.competitions}</td>
+                <td className="px-2 py-1">
+                  {federation.events?.totalCount}
+                </td>
+                <td className="px-2 py-1">
+                  {federation.competitions?.totalCount}
+                </td>
+                <td className="px-2 py-1">
+                  {federation.people?.totalCount}
+                </td>
+                <td className="px-2 py-1">
+                  {federation.competitors?.totalCount}
+                </td>
               </tr>
             ))}
           </tbody>

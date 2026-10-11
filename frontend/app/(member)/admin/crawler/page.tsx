@@ -1,16 +1,13 @@
 import type { Metadata } from 'next';
 import { Fragment } from 'react';
 import Link from 'next/link';
+import { executeGraphql } from '@/lib/server/graphql';
+import { CrawlerTargetsDocument } from '@/graphql/Crawler';
 import { runQuery } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import {
-  crawlerOverview,
-  crawlerFailures,
-  crawlerFrontiers,
-  crawlerFrontierCount,
-} from './crawler.queries';
+import { crawlerOverview, crawlerFailures } from './crawler.queries';
 import { numericFullFormatter } from '@/ui/format';
 import { Filters } from './Filters';
 import { Pagination } from '@/ui/Pagination';
@@ -37,17 +34,22 @@ export default async function CrawlerPage({
   const { federation = '', kind = '', all, key = '', page } = await searchParams;
 
   if (federation && kind) {
-    const filters = { federation, kind, key };
-    const [count] = await runQuery(crawlerFrontierCount, filters);
-    const total = count?.total ?? 0;
-    const currentPage = Math.min(
-      Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
-      Math.max(1, Math.ceil(total / 50)),
-    );
-    const rows = await runQuery(crawlerFrontiers, {
-      ...filters,
-      offset: (currentPage - 1) * 50,
+    let currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
+    const condition = { federation, kind, keyContains: key };
+    let { crawlerTargets } = await executeGraphql(CrawlerTargetsDocument, {
+      condition,
+      offset: Math.min((currentPage - 1) * 50, 2_147_483_647),
     });
+    const total = crawlerTargets?.totalCount ?? 0;
+    const lastPage = Math.max(1, Math.ceil(total / 50));
+    if (currentPage > lastPage) {
+      currentPage = lastPage;
+      ({ crawlerTargets } = await executeGraphql(CrawlerTargetsDocument, {
+        condition,
+        offset: (currentPage - 1) * 50,
+      }));
+    }
+    const rows = crawlerTargets?.nodes ?? [];
     const target = `${federation}:${kind}`;
     const query = { federation, kind, ...(key ? { key } : {}) };
     return (
@@ -87,16 +89,16 @@ export default async function CrawlerPage({
                       {row.key || '(root)'}
                     </Link>
                   </th>
-                  <td className="px-2 py-1">{row.fetch_status}</td>
-                  <td className="px-2 py-1">{row.process_status}</td>
-                  <td className="px-2 py-1">{row.error_count || ''}</td>
+                  <td className="px-2 py-1">{row.fetchStatus.toLowerCase()}</td>
+                  <td className="px-2 py-1">{row.processStatus.toLowerCase()}</td>
+                  <td className="px-2 py-1">{row.errorCount || ''}</td>
                   <td className="px-2 py-1">
-                    {row.last_fetched_at
-                      ? numericFullFormatter.format(row.last_fetched_at)
+                    {row.lastFetchedAt
+                      ? numericFullFormatter.format(new Date(row.lastFetchedAt))
                       : '-'}
                   </td>
                   <td className="px-2 py-1">
-                    {numericFullFormatter.format(row.next_fetch_at)}
+                    {numericFullFormatter.format(new Date(row.nextFetchAt))}
                   </td>
                 </tr>
               ))}

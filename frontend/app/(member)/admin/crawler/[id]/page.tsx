@@ -1,16 +1,12 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { runQuery } from '@/lib/server/postgresql';
+import { executeGraphql } from '@/lib/server/graphql';
+import { CrawlerTargetDocument } from '@/graphql/Crawler';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Pagination } from '@/ui/Pagination';
 import { numericFullFormatter } from '@/ui/format';
-import {
-  crawlerFrontier,
-  crawlerResponses,
-  crawlerResponseCount,
-} from '../crawler.queries';
 
 export const metadata = {
   title: 'Crawler frontier',
@@ -30,18 +26,23 @@ export default async function FrontierPage({
   const { id } = await params;
   const { page } = await searchParams;
   if (!/^[0-9]{1,18}$/.test(id)) notFound();
-  const [frontier] = await runQuery(crawlerFrontier, { id });
-  if (!frontier) notFound();
-  const [count] = await runQuery(crawlerResponseCount, { id });
-  const total = count?.total ?? 0;
-  const currentPage = Math.min(
-    Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
-    Math.max(1, Math.ceil(total / 50)),
-  );
-  const responses = await runQuery(crawlerResponses, {
+  let currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
+  let { crawlerTarget: frontier } = await executeGraphql(CrawlerTargetDocument, {
     id,
     offset: (currentPage - 1) * 50,
   });
+  if (!frontier) notFound();
+  const total = frontier.responses.totalCount;
+  const lastPage = Math.max(1, Math.ceil(total / 50));
+  if (currentPage > lastPage) {
+    currentPage = lastPage;
+    ({ crawlerTarget: frontier } = await executeGraphql(CrawlerTargetDocument, {
+      id,
+      offset: (currentPage - 1) * 50,
+    }));
+    if (!frontier) notFound();
+  }
+  const responses = frontier.responses.nodes;
 
   const title = `${frontier.federation}:${frontier.kind}${frontier.key ? `:${frontier.key}` : ''}`;
 
@@ -65,28 +66,28 @@ export default async function FrontierPage({
         <dt>id</dt>
         <dd>{frontier.id}</dd>
         <dt>fetch status</dt>
-        <dd>{frontier.fetch_status}</dd>
+        <dd>{frontier.fetchStatus.toLowerCase()}</dd>
         <dt>process status</dt>
-        <dd>{frontier.process_status}</dd>
+        <dd>{frontier.processStatus.toLowerCase()}</dd>
         <dt>error count</dt>
-        <dd>{frontier.error_count}</dd>
+        <dd>{frontier.errorCount}</dd>
         {(
           [
-            ['discovered', frontier.discovered_at],
-            ['last fetched', frontier.last_fetched_at],
-            ['next fetch', frontier.next_fetch_at],
-            ['last process error', frontier.last_process_error_at],
+            ['discovered', frontier.discoveredAt],
+            ['last fetched', frontier.lastFetchedAt],
+            ['next fetch', frontier.nextFetchAt],
+            ['last process error', frontier.lastProcessErrorAt],
           ] as const
         ).map(([label, date]) => (
           <div key={label}>
             <dt>{label}</dt>
-            <dd>{date ? numericFullFormatter.format(date) : '-'}</dd>
+            <dd>{date ? numericFullFormatter.format(new Date(date)) : '-'}</dd>
           </div>
         ))}
       </dl>
-      {frontier.last_process_error && (
+      {frontier.lastProcessError && (
         <pre className="whitespace-pre-wrap break-all text-sm">
-          {frontier.last_process_error}
+          {frontier.lastProcessError}
         </pre>
       )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Responses</h2>
@@ -112,7 +113,7 @@ export default async function FrontierPage({
             {responses.map((response) => (
               <tr key={response.id} className="border-t border-neutral-4 align-top">
                 <td className="px-2 py-1 whitespace-nowrap">
-                  {response.has_content ? (
+                  {response.contentHash ? (
                     <Link
                       className="text-accent-11 underline"
                       href={`/admin/crawler/${id}/responses/${response.id}`}
@@ -123,35 +124,44 @@ export default async function FrontierPage({
                   ) : (
                     response.id
                   )}
-                  {response.id === frontier.last_response_id && <div>latest</div>}
-                  {response.id === frontier.last_successful_response_id && (
+                  {response.id === frontier.lastResponseId && <div>latest</div>}
+                  {response.id === frontier.lastSuccessfulResponseId && (
                     <div>last successful</div>
                   )}
                 </td>
-                <td className="px-2 py-1">{response.http_status ?? '-'}</td>
+                <td className="px-2 py-1">{response.httpStatus ?? '-'}</td>
                 <td className="px-2 py-1 whitespace-nowrap">
-                  {response.valid_from ? (
+                  {response.sysPeriod?.start?.value ? (
                     <>
-                      <div>[{numericFullFormatter.format(response.valid_from)},</div>
                       <div>
-                        {response.valid_until
-                          ? numericFullFormatter.format(response.valid_until)
+                        [
+                        {numericFullFormatter.format(
+                          new Date(response.sysPeriod?.start?.value),
+                        )}
+                        ,
+                      </div>
+                      <div>
+                        {response.sysPeriod?.end?.value
+                          ? numericFullFormatter.format(
+                              new Date(response.sysPeriod?.end?.value),
+                            )
                           : '∞'}
                         )
                       </div>
                     </>
                   ) : (
                     <div>
-                      {numericFullFormatter.format(response.fetched_at)} (fetched)
+                      {numericFullFormatter.format(new Date(response.fetchedAt))}{' '}
+                      (fetched)
                     </div>
                   )}
                 </td>
                 <td className="px-2 py-1 whitespace-nowrap">
-                  {response.last_observed_at
-                    ? numericFullFormatter.format(response.last_observed_at)
+                  {response.lastObservedAt
+                    ? numericFullFormatter.format(new Date(response.lastObservedAt))
                     : '-'}
                 </td>
-                <td className="px-2 py-1">{response.observation_count}</td>
+                <td className="px-2 py-1">{response.observationCount}</td>
                 <td className="min-w-64 px-2 py-1 break-all">
                   <div>{response.url}</div>
                   {response.error && (
