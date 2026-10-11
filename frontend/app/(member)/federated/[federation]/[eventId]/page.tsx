@@ -39,16 +39,16 @@ export default async function EventPage({
       : [],
   ]);
   const title = event.name || event.externalId;
-  const path = `/admin/federated/${federation}/${eventId}`;
+  const path = `/federated/${federation}/${eventId}`;
   return (
     <Layout requireUser>
       <PageHeader
         title={title}
         breadcrumbs={[
-          { label: 'Federations', href: '/admin/federated' },
+          { label: 'Federations', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
-            href: `/admin/federated/${federation}`,
+            href: `/federated/${federation}`,
           },
           { label: title },
         ]}

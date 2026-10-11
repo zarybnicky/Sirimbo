@@ -38,7 +38,7 @@ export default async function FederationsPage() {
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
                     className="text-accent-11 underline"
-                    href={`/admin/federated/${federation.code}`}
+                    href={`/federated/${federation.code}`}
                   >
                     {federation.code}
                   </Link>

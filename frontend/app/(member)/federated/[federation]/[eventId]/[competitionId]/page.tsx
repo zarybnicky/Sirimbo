@@ -57,14 +57,14 @@ export default async function CompetitionPage({
       <PageHeader
         title={competition.category?.name ?? competition.externalId}
         breadcrumbs={[
-          { label: 'Federations', href: '/admin/federated' },
+          { label: 'Federations', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
-            href: `/admin/federated/${federation}`,
+            href: `/federated/${federation}`,
           },
           {
             label: event.name || event.externalId,
-            href: `/admin/federated/${federation}/${eventId}`,
+            href: `/federated/${federation}/${eventId}`,
           },
           { label: competition.category?.name ?? competition.externalId },
         ]}
@@ -122,7 +122,7 @@ export default async function CompetitionPage({
                   <th scope="row" className="px-2 py-1 font-normal">
                     <Link
                       className="text-accent-11 underline"
-                      href={`/admin/federated/${federation}/competitors/${participant.competitor_external_id}`}
+                      href={`/federated/${federation}/competitors/${participant.competitor_external_id}`}
                       prefetch={false}
                     >
                       {participant.name || participant.competitor_id}
@@ -152,7 +152,7 @@ export default async function CompetitionPage({
                       <div key={`${person.federated_person_id}:${person.person_id}`}>
                         <Link
                           className="font-mono text-xs text-accent-11 underline"
-                          href={`/admin/federated/${federation}/people/${person.person_external_id}`}
+                          href={`/federated/${federation}/people/${person.person_external_id}`}
                           prefetch={false}
                         >
                           {person.federated_person_id}

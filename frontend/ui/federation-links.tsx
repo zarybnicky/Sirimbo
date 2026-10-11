@@ -17,7 +17,7 @@ export function FederationPersonLink({
 
   return (
     <Link
-      href={`/admin/federated/${federation}/people/${externalId}`}
+      href={`/federated/${federation}/people/${externalId}`}
       className={cn(
         'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
@@ -43,7 +43,7 @@ export function FederationCompetitorLink({
 
   return (
     <Link
-      href={`/admin/federated/${federation}/competitors/${externalId}`}
+      href={`/federated/${federation}/competitors/${externalId}`}
       className={cn(
         'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,

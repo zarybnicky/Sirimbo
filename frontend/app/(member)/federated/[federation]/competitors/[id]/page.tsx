@@ -53,13 +53,13 @@ export default async function CompetitorPage({
     offset: (currentPage - 1) * 50,
   });
   const title = competitor.name || competitor.id;
-  const base = `/admin/federated/${federation}`;
+  const base = `/federated/${federation}`;
   return (
     <Layout requireUser>
       <PageHeader
         title={title}
         breadcrumbs={[
-          { label: 'Federations', href: '/admin/federated' },
+          { label: 'Federations', href: '/federated' },
           {
             label: competitor.federationByFederation?.name ?? federation,
             href: `${base}?view=competitors`,

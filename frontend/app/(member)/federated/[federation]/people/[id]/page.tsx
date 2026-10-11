@@ -43,13 +43,13 @@ export default async function FederatedPersonPage({
     person.canonicalName ||
     [person.firstName, person.lastName].filter(Boolean).join(' ') ||
     person.id;
-  const base = `/admin/federated/${federation}`;
+  const base = `/federated/${federation}`;
   return (
     <Layout requireUser>
       <PageHeader
         title={name}
         breadcrumbs={[
-          { label: 'Federations', href: '/admin/federated' },
+          { label: 'Federations', href: '/federated' },
           {
             label: person.federationByFederation?.name ?? federation,
             href: `${base}?view=people`,

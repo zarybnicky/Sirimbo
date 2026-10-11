@@ -61,7 +61,7 @@ export default async function FederationPage({
       <PageHeader
         title={item.name}
         breadcrumbs={[
-          { label: 'Federations', href: '/admin/federated' },
+          { label: 'Federations', href: '/federated' },
           { label: item.name },
         ]}
       />

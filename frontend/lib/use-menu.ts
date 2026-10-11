@@ -118,7 +118,7 @@ const memberMenu: MenuStructItem[] = [
       {
         type: 'link',
         title: 'Federated data',
-        href: '/admin/federated',
+        href: '/federated',
         requireUser: true,
       },
     ],

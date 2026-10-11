@@ -141,7 +141,7 @@ export function Browser({
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
                                 className="text-accent-11 underline"
-                                href={`/admin/federated/${federation}/${event.id}`}
+                                href={`/federated/${federation}/${event.id}`}
                                 prefetch={false}
                               >
                                 {event.name || event.externalId}
@@ -185,7 +185,7 @@ export function Browser({
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
                                 className="text-accent-11 underline"
-                                href={`/admin/federated/${federation}/${result.view}/${row.externalId}`}
+                                href={`/federated/${federation}/${result.view}/${row.externalId}`}
                                 prefetch={false}
                               >
                                 {row.name ||

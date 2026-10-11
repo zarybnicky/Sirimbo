@@ -1,4 +1,4 @@
-/** Types generated for queries found in "app/(member)/admin/federated/federated.sql" */
+/** Types generated for queries found in "app/(member)/federated/federated.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
 export type competition_type = 'championship' | 'cup' | 'g_cup' | 'league' | 'ranking' | 'super_league' | 'top_level' | 'unknown';
