@@ -118,9 +118,11 @@ comment on view person_federation_link is '@primaryKey person_id,federation
 grant select on person_federation_link to anonymous;
 
 comment on table person is '@omit create
-@ref federationPeople via:public.person_federation_link;federated.person';
+@ref federationPeople via:public.person_federation_link;federated.person
+@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress';
 
 drop function if exists csts_athlete;
+drop function if exists person_csts_progress;
 drop function if exists wdsf_athlete;
 
 create or replace view couple_federation_link with (security_invoker = true) as

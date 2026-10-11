@@ -8,6 +8,23 @@ fragment CompetitionCategory on Category {
   competitorType
 }
 
+fragment FederationCategoryProgress on FederationCompetitorCategoryProgress {
+  competitorId
+  categoryId
+  competitor {
+    id
+    federation
+  }
+  category {
+    id
+    class
+    discipline
+  }
+  points
+  domesticFinals
+  foreignFinals
+}
+
 query FederationPersonLookup($federation: String!, $externalId: BigInt!) {
   federationPersonByFederationAndExternalId(federation: $federation, externalId: $externalId) {
     id

@@ -3,7 +3,6 @@
 import {
   CohortWithMembersDocument,
   type CohortWithMembersQuery,
-  type CstsProgressRecordFragment,
 } from '@/graphql/Cohorts';
 import { useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
@@ -88,11 +87,9 @@ function CategoryList({
   person,
   discipline,
 }: {
-  person?: {
-    cstsId?: number | null;
-    birthDate?: string | null;
-    cstsProgressList?: CstsProgressRecordFragment[] | null;
-  } | null;
+  person: NonNullable<
+    CohortWithMembersQuery['entity']
+  >['cohortMembershipsList'][number]['person'];
   discipline: string;
 }) {
   if (!person?.cstsId)
@@ -103,8 +100,7 @@ function CategoryList({
         </div>
       </div>
     );
-  if (!person?.cstsProgressList) return null;
-  const item = getBestCstsProgress(person.cstsProgressList, discipline);
+  const item = getBestCstsProgress(person.federationCategoryProgresses.nodes, discipline);
   if (!item) return null;
 
   return (
@@ -125,7 +121,8 @@ function CategoryList({
           .join(' ')}
       </div>
       <div className="text-xs text-neutral-11">
-        {Number.parseFloat(item.points ?? '0')} / {item.finals}F
+        {Number.parseFloat(item.points ?? '0')} /{' '}
+        {item.domesticFinals + item.foreignFinals}F
       </div>
     </div>
   );

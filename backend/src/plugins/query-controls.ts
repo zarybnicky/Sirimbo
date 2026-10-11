@@ -25,7 +25,7 @@ const rejection = {
 };
 const queryCostRule = costLimitRule({
   ...rejection,
-  maxCost: 20000,
+  maxCost: 50000,
   flattenFragments: true,
 });
 

@@ -40,9 +40,6 @@ fragment Person on Person {
 
 fragment PersonWithLinks on Person {
   ...Person
-  cstsProgressList {
-    ...CstsProgressRecord
-  }
   tenantMembershipsList(orderBy: SINCE_ASC) {
     ...TenantMembership
   }
@@ -113,6 +110,9 @@ query PersonPayments($id: BigInt!) {
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
+    federationCategoryProgresses(first: 100) {
+      nodes { ...FederationCategoryProgress }
+    }
     federationPeople(first: 100, orderBy: FEDERATION_ASC) {
       nodes { id federation externalId }
     }

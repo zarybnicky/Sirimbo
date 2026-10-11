@@ -35,8 +35,14 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
   const item = data?.person;
 
   const actions = useActions(personActions, item);
-  const sttProgress = getBestCstsProgress(item?.cstsProgressList, 'Standard');
-  const latProgress = getBestCstsProgress(item?.cstsProgressList, 'Latin');
+  const sttProgress = getBestCstsProgress(
+    item?.federationCategoryProgresses.nodes,
+    'Standard',
+  );
+  const latProgress = getBestCstsProgress(
+    item?.federationCategoryProgresses.nodes,
+    'Latin',
+  );
   const sttClass = formatCstsClass(sttProgress?.category?.class);
   const latClass = formatCstsClass(latProgress?.category?.class);
   const categoryProgress = [
