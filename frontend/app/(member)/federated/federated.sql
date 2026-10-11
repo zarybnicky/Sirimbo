@@ -1,11 +1,3 @@
-/* @name BrowseCompetitions */
-SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_type, cat.name AS category,
-  (SELECT count(*)::int FROM federated.competition_entry ce WHERE ce.competition_id = c.id AND NOT ce.cancelled) AS registrations,
-  (SELECT count(*)::int FROM federated.competition_result cr WHERE cr.competition_id = c.id) AS results
-FROM federated.competition c JOIN federated.category cat ON cat.id = c.category_id
-WHERE c.event_id = :eventId!
-ORDER BY c.start_date, c.check_in_end NULLS LAST, cat.name, c.id;
-
 /* @name BrowseParticipants */
 WITH participants AS (
   SELECT competitor_id, cancelled
@@ -49,12 +41,6 @@ SELECT m.*, (
 FROM mapped m
 ORDER BY competitor_id, federated_person_id, person_id;
 
-/* @name BrowseRounds */
-SELECT r.id, r.round_key, r.round_label, r.scoring_method,
-  (SELECT count(*)::int FROM federated.competition_round_result rr WHERE rr.round_id = r.id) AS results
-FROM federated.competition_round r WHERE competition_id = :competitionId!
-ORDER BY round_index NULLS LAST, id;
-
 /* @name BrowseSourceFrontiers */
 SELECT id, kind, key, fetch_status, process_status
 FROM crawler.frontier
@@ -66,12 +52,6 @@ WHERE federation = :federation! AND (
   ))
 )
 ORDER BY kind, key;
-
-/* @name BrowseCompetitorMembers */
-SELECT p.id, p.external_id, coalesce(p.canonical_name, nullif(concat_ws(' ', p.first_name, p.last_name), ''), p.id) AS name, cc.role
-FROM federated.competitor_component cc JOIN federated.person p ON p.id = cc.person_id
-WHERE cc.competitor_id = :id!
-ORDER BY cc.role, name, p.id;
 
 /* @name BrowseCompetitorHistoryCount */
 SELECT count(*)::int AS total FROM (
@@ -94,15 +74,3 @@ JOIN federated.event e ON e.id = c.event_id
 JOIN federated.category cat ON cat.id = c.category_id
 ORDER BY c.start_date DESC, c.id DESC
 LIMIT 50 OFFSET :offset!;
-
-/* @name BrowsePersonCompetitors */
-SELECT c.id, c.external_id, c.name, c.competitor_type, cc.role
-FROM federated.competitor_component cc JOIN federated.competitor c ON c.id = cc.competitor_id
-WHERE cc.person_id = :id!
-ORDER BY c.name, c.id;
-
-/* @name BrowsePersonFrontiers */
-SELECT id, kind, key, fetch_status, process_status
-FROM crawler.frontier
-WHERE federation = :federation! AND kind = 'member' AND key = :key!
-ORDER BY id;

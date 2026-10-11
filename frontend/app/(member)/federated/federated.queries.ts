@@ -1,61 +1,13 @@
 /** Types generated for queries found in "app/(member)/federated/federated.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-export type competition_type = 'championship' | 'cup' | 'g_cup' | 'league' | 'ranking' | 'super_league' | 'top_level' | 'unknown';
-
-export type competitor_role = 'follow' | 'lead' | 'member' | 'substitute';
-
-export type competitor_type = 'couple' | 'duo' | 'formation' | 'group' | 'solo' | 'team' | 'trio';
-
 export type fetch_status = 'error' | 'gone' | 'ok' | 'pending' | 'transient';
 
 export type process_status = 'error' | 'ok' | 'pending';
 
-export type scoring_method = 'ajs-3.0' | 'skating_marks' | 'skating_places';
-
 export type NumberOrString = number | string;
 
 export type stringArray = (string)[];
-
-/** 'BrowseCompetitions' parameters type */
-export interface IBrowseCompetitionsParams {
-  eventId: NumberOrString;
-}
-
-/** 'BrowseCompetitions' return type */
-export interface IBrowseCompetitionsResult {
-  category: string;
-  check_in_end: string | null;
-  /** Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship. */
-  competition_type: competition_type | null;
-  external_id: string;
-  id: string;
-  registrations: number | null;
-  results: number | null;
-  start_date: Date;
-}
-
-/** 'BrowseCompetitions' query type */
-export interface IBrowseCompetitionsQuery {
-  params: IBrowseCompetitionsParams;
-  result: IBrowseCompetitionsResult;
-}
-
-const browseCompetitionsIR: any = {"usedParamSet":{"eventId":true},"params":[{"name":"eventId","required":true,"transform":{"type":"scalar"},"locs":[{"a":443,"b":451}]}],"statement":"SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_type, cat.name AS category,\n  (SELECT count(*)::int FROM federated.competition_entry ce WHERE ce.competition_id = c.id AND NOT ce.cancelled) AS registrations,\n  (SELECT count(*)::int FROM federated.competition_result cr WHERE cr.competition_id = c.id) AS results\nFROM federated.competition c JOIN federated.category cat ON cat.id = c.category_id\nWHERE c.event_id = :eventId!\nORDER BY c.start_date, c.check_in_end NULLS LAST, cat.name, c.id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT c.id, c.external_id, c.start_date, c.check_in_end::text, c.competition_type, cat.name AS category,
- *   (SELECT count(*)::int FROM federated.competition_entry ce WHERE ce.competition_id = c.id AND NOT ce.cancelled) AS registrations,
- *   (SELECT count(*)::int FROM federated.competition_result cr WHERE cr.competition_id = c.id) AS results
- * FROM federated.competition c JOIN federated.category cat ON cat.id = c.category_id
- * WHERE c.event_id = :eventId!
- * ORDER BY c.start_date, c.check_in_end NULLS LAST, cat.name, c.id
- * ```
- */
-export const browseCompetitions = new PreparedQuery<IBrowseCompetitionsParams,IBrowseCompetitionsResult>(browseCompetitionsIR);
-
 
 /** 'BrowseParticipants' parameters type */
 export interface IBrowseParticipantsParams {
@@ -164,40 +116,6 @@ const browseParticipantPeopleIR: any = {"usedParamSet":{"competitionId":true},"p
 export const browseParticipantPeople = new PreparedQuery<IBrowseParticipantPeopleParams,IBrowseParticipantPeopleResult>(browseParticipantPeopleIR);
 
 
-/** 'BrowseRounds' parameters type */
-export interface IBrowseRoundsParams {
-  competitionId: NumberOrString;
-}
-
-/** 'BrowseRounds' return type */
-export interface IBrowseRoundsResult {
-  id: string;
-  results: number | null;
-  round_key: string;
-  round_label: string | null;
-  scoring_method: scoring_method;
-}
-
-/** 'BrowseRounds' query type */
-export interface IBrowseRoundsQuery {
-  params: IBrowseRoundsParams;
-  result: IBrowseRoundsResult;
-}
-
-const browseRoundsIR: any = {"usedParamSet":{"competitionId":true},"params":[{"name":"competitionId","required":true,"transform":{"type":"scalar"},"locs":[{"a":221,"b":235}]}],"statement":"SELECT r.id, r.round_key, r.round_label, r.scoring_method,\n  (SELECT count(*)::int FROM federated.competition_round_result rr WHERE rr.round_id = r.id) AS results\nFROM federated.competition_round r WHERE competition_id = :competitionId!\nORDER BY round_index NULLS LAST, id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT r.id, r.round_key, r.round_label, r.scoring_method,
- *   (SELECT count(*)::int FROM federated.competition_round_result rr WHERE rr.round_id = r.id) AS results
- * FROM federated.competition_round r WHERE competition_id = :competitionId!
- * ORDER BY round_index NULLS LAST, id
- * ```
- */
-export const browseRounds = new PreparedQuery<IBrowseRoundsParams,IBrowseRoundsResult>(browseRoundsIR);
-
-
 /** 'BrowseSourceFrontiers' parameters type */
 export interface IBrowseSourceFrontiersParams {
   competitionKey?: string | null | void;
@@ -238,39 +156,6 @@ const browseSourceFrontiersIR: any = {"usedParamSet":{"federation":true,"eventKe
  * ```
  */
 export const browseSourceFrontiers = new PreparedQuery<IBrowseSourceFrontiersParams,IBrowseSourceFrontiersResult>(browseSourceFrontiersIR);
-
-
-/** 'BrowseCompetitorMembers' parameters type */
-export interface IBrowseCompetitorMembersParams {
-  id: string;
-}
-
-/** 'BrowseCompetitorMembers' return type */
-export interface IBrowseCompetitorMembersResult {
-  external_id: string;
-  id: string;
-  name: string | null;
-  role: competitor_role;
-}
-
-/** 'BrowseCompetitorMembers' query type */
-export interface IBrowseCompetitorMembersQuery {
-  params: IBrowseCompetitorMembersParams;
-  result: IBrowseCompetitorMembersResult;
-}
-
-const browseCompetitorMembersIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":244,"b":247}]}],"statement":"SELECT p.id, p.external_id, coalesce(p.canonical_name, nullif(concat_ws(' ', p.first_name, p.last_name), ''), p.id) AS name, cc.role\nFROM federated.competitor_component cc JOIN federated.person p ON p.id = cc.person_id\nWHERE cc.competitor_id = :id!\nORDER BY cc.role, name, p.id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT p.id, p.external_id, coalesce(p.canonical_name, nullif(concat_ws(' ', p.first_name, p.last_name), ''), p.id) AS name, cc.role
- * FROM federated.competitor_component cc JOIN federated.person p ON p.id = cc.person_id
- * WHERE cc.competitor_id = :id!
- * ORDER BY cc.role, name, p.id
- * ```
- */
-export const browseCompetitorMembers = new PreparedQuery<IBrowseCompetitorMembersParams,IBrowseCompetitorMembersResult>(browseCompetitorMembersIR);
 
 
 /** 'BrowseCompetitorHistoryCount' parameters type */
@@ -352,74 +237,5 @@ const browseCompetitorHistoryIR: any = {"usedParamSet":{"id":true,"offset":true}
  * ```
  */
 export const browseCompetitorHistory = new PreparedQuery<IBrowseCompetitorHistoryParams,IBrowseCompetitorHistoryResult>(browseCompetitorHistoryIR);
-
-
-/** 'BrowsePersonCompetitors' parameters type */
-export interface IBrowsePersonCompetitorsParams {
-  id: string;
-}
-
-/** 'BrowsePersonCompetitors' return type */
-export interface IBrowsePersonCompetitorsResult {
-  competitor_type: competitor_type;
-  external_id: string;
-  id: string;
-  name: string | null;
-  role: competitor_role;
-}
-
-/** 'BrowsePersonCompetitors' query type */
-export interface IBrowsePersonCompetitorsQuery {
-  params: IBrowsePersonCompetitorsParams;
-  result: IBrowsePersonCompetitorsResult;
-}
-
-const browsePersonCompetitorsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":178,"b":181}]}],"statement":"SELECT c.id, c.external_id, c.name, c.competitor_type, cc.role\nFROM federated.competitor_component cc JOIN federated.competitor c ON c.id = cc.competitor_id\nWHERE cc.person_id = :id!\nORDER BY c.name, c.id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT c.id, c.external_id, c.name, c.competitor_type, cc.role
- * FROM federated.competitor_component cc JOIN federated.competitor c ON c.id = cc.competitor_id
- * WHERE cc.person_id = :id!
- * ORDER BY c.name, c.id
- * ```
- */
-export const browsePersonCompetitors = new PreparedQuery<IBrowsePersonCompetitorsParams,IBrowsePersonCompetitorsResult>(browsePersonCompetitorsIR);
-
-
-/** 'BrowsePersonFrontiers' parameters type */
-export interface IBrowsePersonFrontiersParams {
-  federation: string;
-  key: string;
-}
-
-/** 'BrowsePersonFrontiers' return type */
-export interface IBrowsePersonFrontiersResult {
-  fetch_status: fetch_status;
-  id: string;
-  key: string;
-  kind: string;
-  process_status: process_status;
-}
-
-/** 'BrowsePersonFrontiers' query type */
-export interface IBrowsePersonFrontiersQuery {
-  params: IBrowsePersonFrontiersParams;
-  result: IBrowsePersonFrontiersResult;
-}
-
-const browsePersonFrontiersIR: any = {"usedParamSet":{"federation":true,"key":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":92,"b":103}]},{"name":"key","required":true,"transform":{"type":"scalar"},"locs":[{"a":135,"b":139}]}],"statement":"SELECT id, kind, key, fetch_status, process_status\nFROM crawler.frontier\nWHERE federation = :federation! AND kind = 'member' AND key = :key!\nORDER BY id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT id, kind, key, fetch_status, process_status
- * FROM crawler.frontier
- * WHERE federation = :federation! AND kind = 'member' AND key = :key!
- * ORDER BY id
- * ```
- */
-export const browsePersonFrontiers = new PreparedQuery<IBrowsePersonFrontiersParams,IBrowsePersonFrontiersResult>(browsePersonFrontiersIR);
 
 

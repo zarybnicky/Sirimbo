@@ -2,15 +2,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
-import { runQuery } from '@/lib/server/postgresql';
-import {
-  browsePersonCompetitors,
-  browsePersonFrontiers,
-} from '../../../federated.queries';
+import { CrawlerTargetsDocument } from '@/graphql/Crawler';
 
 export const metadata = {
   title: 'Federated person',
@@ -19,25 +16,34 @@ export const metadata = {
 
 export default async function FederatedPersonPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ federation: string; id: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
-  const id = `${federation}:${externalId}`;
+  const { page } = await searchParams;
+  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
   const { federationPersonByFederationAndExternalId: person } = await executeGraphql(
     FederationPersonDocument,
-    { federation, externalId },
+    {
+      federation,
+      externalId,
+      competitorsOffset: Math.min((currentPage - 1) * 100, 2_147_483_647),
+    },
   );
   if (!person) notFound();
-  const [competitors, sources] = await Promise.all([
-    runQuery(browsePersonCompetitors, { id }),
-    auth.isSystemAdmin
-      ? runQuery(browsePersonFrontiers, { federation, key: person.externalId })
-      : [],
-  ]);
+  const competitors = person.competitorComponents;
+  if (currentPage > Math.max(1, Math.ceil(competitors.totalCount / 100))) notFound();
+  const crawler = auth.isSystemAdmin
+    ? await executeGraphql(CrawlerTargetsDocument, {
+        condition: { federation, kind: 'member', key: person.externalId },
+      })
+    : null;
+  const sources = crawler?.crawlerTargets?.nodes ?? [];
   const matches = person.people.nodes;
   const name =
     person.canonicalName ||
@@ -126,22 +132,26 @@ export default async function FederatedPersonPage({
             </tr>
           </thead>
           <tbody>
-            {competitors.map((competitor) => (
-              <tr key={competitor.id} className="border-t border-neutral-4">
+            {competitors.nodes.map(({ competitorId, competitor, role }) => (
+              <tr key={competitorId} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`${base}/competitors/${competitor.external_id}`}
-                  >
-                    {competitor.name || competitor.id}
-                  </Link>
+                  {competitor ? (
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`${base}/competitors/${competitor.externalId}`}
+                    >
+                      {competitor.name || competitorId}
+                    </Link>
+                  ) : (
+                    competitorId
+                  )}
                 </th>
-                <td className="px-2 py-1">{competitor.id}</td>
-                <td className="px-2 py-1">{competitor.competitor_type}</td>
-                <td className="px-2 py-1">{competitor.role}</td>
+                <td className="px-2 py-1">{competitorId}</td>
+                <td className="px-2 py-1">{competitor?.competitorType.toLowerCase()}</td>
+                <td className="px-2 py-1">{role.toLowerCase()}</td>
               </tr>
             ))}
-            {competitors.length === 0 && (
+            {competitors.nodes.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-2 py-1">
                   No competitors
@@ -151,6 +161,12 @@ export default async function FederatedPersonPage({
           </tbody>
         </table>
       </div>
+      <Pagination
+        total={competitors.totalCount}
+        limit={100}
+        page={currentPage}
+        href={(page) => `${base}/people/${externalId}?page=${page}`}
+      />
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
@@ -161,9 +177,10 @@ export default async function FederatedPersonPage({
                 href={`/admin/crawler/${source.id}`}
                 prefetch={false}
               >
-                {federation}:{source.kind}:{source.key}
+                {federation}:member:{source.key}
               </Link>{' '}
-              — fetch: {source.fetch_status}, process: {source.process_status}
+              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
+              {source.processStatus.toLowerCase()}
             </p>
           ))}
           {sources.length === 0 && <p>No matching frontiers</p>}

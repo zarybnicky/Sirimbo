@@ -13,7 +13,6 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
 import {
-  browseCompetitorMembers,
   browseCompetitorHistoryCount,
   browseCompetitorHistory,
 } from '../../../federated.queries';
@@ -28,21 +27,25 @@ export default async function CompetitorPage({
   searchParams,
 }: {
   params: Promise<{ federation: string; id: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; membersPage?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
-  const { page } = await searchParams;
+  const { page, membersPage } = await searchParams;
+  const currentMembersPage = Math.max(1, Number.parseInt(membersPage ?? '1', 10) || 1);
   const { federationCompetitorByFederationAndExternalId: competitor } =
-    await executeGraphql(FederationCompetitorDocument, { federation, externalId });
+    await executeGraphql(FederationCompetitorDocument, {
+      federation,
+      externalId,
+      membersOffset: Math.min((currentMembersPage - 1) * 100, 2_147_483_647),
+    });
   if (!competitor) notFound();
-  const [members, [count]] = await Promise.all([
-    runQuery(browseCompetitorMembers, { id }),
-    runQuery(browseCompetitorHistoryCount, { id }),
-  ]);
+  const members = competitor.components;
+  if (currentMembersPage > Math.max(1, Math.ceil(members.totalCount / 100))) notFound();
+  const [count] = await runQuery(browseCompetitorHistoryCount, { id });
   const total = count?.total ?? 0;
   const currentPage = Math.min(
     Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
@@ -121,21 +124,27 @@ export default async function CompetitorPage({
             </tr>
           </thead>
           <tbody>
-            {members.map((member) => (
-              <tr key={member.id} className="border-t border-neutral-4">
+            {members.nodes.map(({ personId, person, role }) => (
+              <tr key={personId} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`${base}/people/${member.external_id}`}
-                  >
-                    {member.name}
-                  </Link>
+                  {person ? (
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`${base}/people/${person.externalId}`}
+                    >
+                      {person.canonicalName ||
+                        [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+                        personId}
+                    </Link>
+                  ) : (
+                    personId
+                  )}
                 </th>
-                <td className="px-2 py-1">{member.id}</td>
-                <td className="px-2 py-1">{member.role}</td>
+                <td className="px-2 py-1">{personId}</td>
+                <td className="px-2 py-1">{role.toLowerCase()}</td>
               </tr>
             ))}
-            {members.length === 0 && (
+            {members.nodes.length === 0 && (
               <tr>
                 <td colSpan={3} className="px-2 py-1">
                   No members
@@ -145,6 +154,14 @@ export default async function CompetitorPage({
           </tbody>
         </table>
       </div>
+      <Pagination
+        total={members.totalCount}
+        limit={100}
+        page={currentMembersPage}
+        href={(membersPage) =>
+          `${base}/competitors/${externalId}?page=${currentPage}&membersPage=${membersPage}`
+        }
+      />
       <h2 className="mt-4 mb-2 text-lg font-bold">Registrations and results</h2>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
@@ -220,7 +237,9 @@ export default async function CompetitorPage({
         total={total}
         limit={50}
         page={currentPage}
-        href={(page) => `${base}/competitors/${externalId}?page=${page}`}
+        href={(page) =>
+          `${base}/competitors/${externalId}?page=${page}&membersPage=${currentMembersPage}`
+        }
       />
     </Layout>
   );

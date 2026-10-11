@@ -19,7 +19,12 @@ query FederationList($condition: FederationCondition, $withCounts: Boolean! = tr
   }
 }
 
-query FederationEvent($federation: String!, $eventId: BigInt!) {
+query FederationEvent(
+  $federation: String!
+  $eventId: BigInt!
+  $withCompetitions: Boolean! = false
+  $competitionsOffset: Int! = 0
+) {
   federationEventByFederationAndId(federation: $federation, id: $eventId) {
     id
     externalId
@@ -32,10 +37,23 @@ query FederationEvent($federation: String!, $eventId: BigInt!) {
     postalCode
     country
     federationByFederation { code name }
+    competitions(first: 100, offset: $competitionsOffset, orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]) @include(if: $withCompetitions) {
+      totalCount
+      nodes {
+        id
+        externalId
+        startDate
+        checkInEnd
+        competitionType
+        category { id name }
+        entries(first: 0, condition: { cancelled: false }) { totalCount }
+        results(first: 0) { totalCount }
+      }
+    }
   }
 }
 
-query FederationCompetition($id: BigInt!) {
+query FederationCompetition($id: BigInt!, $roundsOffset: Int! = 0) {
   competition(id: $id) {
     id
     eventId
@@ -46,10 +64,20 @@ query FederationCompetition($id: BigInt!) {
     participantsTotal
     completedAt
     category { id name }
+    rounds(first: 100, offset: $roundsOffset, orderBy: [ROUND_INDEX_ASC, ID_ASC]) {
+      totalCount
+      nodes {
+        id
+        roundKey
+        roundLabel
+        scoringMethod
+        results(first: 0) { totalCount }
+      }
+    }
   }
 }
 
-query FederationPerson($federation: String!, $externalId: BigInt!) {
+query FederationPerson($federation: String!, $externalId: BigInt!, $competitorsOffset: Int! = 0) {
   federationPersonByFederationAndExternalId(federation: $federation, externalId: $externalId) {
     id
     externalId
@@ -61,6 +89,14 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     nationality
     ageGroup
     federationByFederation { code name }
+    competitorComponents(first: 100, offset: $competitorsOffset, orderBy: COMPETITOR_ID_ASC) {
+      totalCount
+      nodes {
+        competitorId
+        role
+        competitor { id externalId name competitorType }
+      }
+    }
     people(first: 100, orderBy: [NAME_ASC, ID_ASC]) {
       nodes {
         id
@@ -74,7 +110,7 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
   }
 }
 
-query FederationCompetitor($federation: String!, $externalId: BigInt!) {
+query FederationCompetitor($federation: String!, $externalId: BigInt!, $membersOffset: Int! = 0) {
   federationCompetitorByFederationAndExternalId(federation: $federation, externalId: $externalId) {
     id
     name
@@ -82,6 +118,14 @@ query FederationCompetitor($federation: String!, $externalId: BigInt!) {
     ageGroup
     federationByFederation { code name }
     couplesList(orderBy: [SINCE_DESC, ID_ASC]) { ...Couple }
+    components(first: 100, offset: $membersOffset, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
+      totalCount
+      nodes {
+        personId
+        role
+        person { id externalId canonicalName firstName lastName }
+      }
+    }
   }
 }
 

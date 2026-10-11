@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -13,7 +14,6 @@ import { runQuery, withRequestPgClient } from '@/lib/server/postgresql';
 import {
   browseParticipants,
   browseParticipantPeople,
-  browseRounds,
   browseSourceFrontiers,
 } from '../../../federated.queries';
 
@@ -24,25 +24,33 @@ export const metadata = {
 
 export default async function CompetitionPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ federation: string; eventId: string; competitionId: string }>;
+  searchParams: Promise<{ roundsPage?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId) || !/^[0-9]{1,18}$/.test(competitionId)) notFound();
+  const { roundsPage } = await searchParams;
+  const currentRoundsPage = Math.max(1, Number.parseInt(roundsPage ?? '1', 10) || 1);
   const [{ federationEventByFederationAndId: event }, { competition }] =
     await Promise.all([
       executeGraphql(FederationEventDocument, { federation, eventId }),
-      executeGraphql(FederationCompetitionDocument, { id: competitionId }),
+      executeGraphql(FederationCompetitionDocument, {
+        id: competitionId,
+        roundsOffset: Math.min((currentRoundsPage - 1) * 100, 2_147_483_647),
+      }),
     ]);
   if (!event || !competition || competition.eventId !== eventId) notFound();
-  const [participants, people, rounds, sources] = await Promise.all([
+  const rounds = competition.rounds;
+  if (currentRoundsPage > Math.max(1, Math.ceil(rounds.totalCount / 100))) notFound();
+  const [participants, people, sources] = await Promise.all([
     runQuery(browseParticipants, { competitionId }),
     withRequestPgClient((client) =>
       browseParticipantPeople.run({ competitionId }, client),
     ),
-    runQuery(browseRounds, { competitionId }),
     auth.isSystemAdmin
       ? runQuery(browseSourceFrontiers, {
           federation,
@@ -208,17 +216,17 @@ export default async function CompetitionPage({
             </tr>
           </thead>
           <tbody>
-            {rounds.map((round) => (
+            {rounds.nodes.map((round) => (
               <tr key={round.id} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
-                  {round.round_label || round.round_key}
+                  {round.roundLabel || round.roundKey}
                 </th>
-                <td className="px-2 py-1">{round.round_key}</td>
-                <td className="px-2 py-1">{round.scoring_method}</td>
-                <td className="px-2 py-1">{round.results}</td>
+                <td className="px-2 py-1">{round.roundKey}</td>
+                <td className="px-2 py-1">{round.scoringMethod.toLowerCase()}</td>
+                <td className="px-2 py-1">{round.results.totalCount}</td>
               </tr>
             ))}
-            {rounds.length === 0 && (
+            {rounds.nodes.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-2 py-1">
                   No rounds
@@ -228,6 +236,14 @@ export default async function CompetitionPage({
           </tbody>
         </table>
       </div>
+      <Pagination
+        total={rounds.totalCount}
+        limit={100}
+        page={currentRoundsPage}
+        href={(roundsPage) =>
+          `/federated/${federation}/${eventId}/${competitionId}?roundsPage=${roundsPage}`
+        }
+      />
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>

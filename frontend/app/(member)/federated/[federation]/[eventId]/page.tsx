@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
-import { browseCompetitions, browseSourceFrontiers } from '../../federated.queries';
+import { browseSourceFrontiers } from '../../federated.queries';
 
 export const metadata = {
   title: 'Federated event',
@@ -16,28 +17,36 @@ export const metadata = {
 
 export default async function EventPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ federation: string; eventId: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
+  const { page } = await searchParams;
+  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
   const { federationEventByFederationAndId: event } = await executeGraphql(
     FederationEventDocument,
-    { federation, eventId },
+    {
+      federation,
+      eventId,
+      withCompetitions: true,
+      competitionsOffset: Math.min((currentPage - 1) * 100, 2_147_483_647),
+    },
   );
-  if (!event) notFound();
-  const [competitions, sources] = await Promise.all([
-    runQuery(browseCompetitions, { eventId }),
-    auth.isSystemAdmin
-      ? runQuery(browseSourceFrontiers, {
-          federation,
-          eventKey: event.externalId,
-          competitionKey: null,
-        })
-      : [],
-  ]);
+  if (!event?.competitions) notFound();
+  const competitions = event.competitions;
+  if (currentPage > Math.max(1, Math.ceil(competitions.totalCount / 100))) notFound();
+  const sources = auth.isSystemAdmin
+    ? await runQuery(browseSourceFrontiers, {
+        federation,
+        eventKey: event.externalId,
+        competitionKey: null,
+      })
+    : [];
   const title = event.name || event.externalId;
   const path = `/federated/${federation}/${eventId}`;
   return (
@@ -97,28 +106,30 @@ export default async function EventPage({
             </tr>
           </thead>
           <tbody>
-            {competitions.map((competition) => (
+            {competitions.nodes.map((competition) => (
               <tr key={competition.id} className="border-t border-neutral-4">
-                <td className="px-2 py-1">{competition.external_id}</td>
+                <td className="px-2 py-1">{competition.externalId}</td>
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
                     className="text-accent-11 underline"
                     href={`${path}/${competition.id}`}
                     prefetch={false}
                   >
-                    {competition.category}
+                    {competition.category?.name || competition.externalId}
                   </Link>
                 </th>
-                <td className="px-2 py-1">{competition.competition_type}</td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {numericDateWithYearFormatter.format(competition.start_date)}
+                <td className="px-2 py-1">
+                  {competition.competitionType?.toLowerCase()}
                 </td>
-                <td className="px-2 py-1">{competition.check_in_end}</td>
-                <td className="px-2 py-1">{competition.registrations}</td>
-                <td className="px-2 py-1">{competition.results}</td>
+                <td className="px-2 py-1 whitespace-nowrap">
+                  {numericDateWithYearFormatter.format(new Date(competition.startDate))}
+                </td>
+                <td className="px-2 py-1">{competition.checkInEnd}</td>
+                <td className="px-2 py-1">{competition.entries.totalCount}</td>
+                <td className="px-2 py-1">{competition.results.totalCount}</td>
               </tr>
             ))}
-            {competitions.length === 0 && (
+            {competitions.nodes.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-2 py-1">
                   No competitions
@@ -128,6 +139,12 @@ export default async function EventPage({
           </tbody>
         </table>
       </div>
+      <Pagination
+        total={competitions.totalCount}
+        limit={100}
+        page={currentPage}
+        href={(page) => `${path}?page=${page}`}
+      />
       {sources.length > 0 && (
         <section>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
