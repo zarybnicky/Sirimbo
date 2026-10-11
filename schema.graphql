@@ -3088,6 +3088,35 @@ type Couple {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]!
+
+  """Reads and enables pagination through a set of `FederationCompetitor`."""
+  federationCompetitors(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitor`."""
+    orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorsConnection!
   id: BigInt!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -7234,6 +7263,23 @@ type FederationCompetitor {
     """The method to use when ordering `FederationCompetitorComponent`."""
     orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationCompetitorComponentsConnection!
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couplesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]!
   createdAt: Datetime!
   externalId: BigInt!
   federation: String!

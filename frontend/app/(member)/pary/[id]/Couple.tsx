@@ -8,6 +8,7 @@ import { useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { FederationCompetitorLink } from '@/ui/federation-links';
 
 export function Couple({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
@@ -22,7 +23,28 @@ export function Couple({ id }: { id: string }) {
 
   return (
     <>
-      <PageHeader title={title} actions={actions} />
+      <PageHeader
+        title={title}
+        actions={actions}
+        subtitle={
+          item.federationCompetitors.nodes.length > 0 && (
+            <span className="inline-flex flex-wrap gap-2">
+              {item.federationCompetitors.nodes.map((competitor) => (
+                <FederationCompetitorLink
+                  key={competitor.id}
+                  federation={competitor.federation}
+                  externalId={competitor.externalId}
+                  className="text-accent-12 hover:text-accent-11"
+                >
+                  {competitor.federation === 'csts'
+                    ? 'ČSTS'
+                    : competitor.federation.toUpperCase()}
+                </FederationCompetitorLink>
+              ))}
+            </span>
+          )
+        }
+      />
 
       <div className="mb-2">
         <div>

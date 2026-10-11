@@ -81,6 +81,7 @@ query FederationCompetitor($federation: String!, $externalId: BigInt!) {
     competitorType
     ageGroup
     federationByFederation { code name }
+    couplesList(orderBy: [SINCE_DESC, ID_ASC]) { ...Couple }
   }
 }
 

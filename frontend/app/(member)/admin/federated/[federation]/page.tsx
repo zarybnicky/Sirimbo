@@ -20,7 +20,7 @@ export default async function FederationPage({
   searchParams: Promise<{ search?: string; date?: string; page?: string; view?: string }>;
 }) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
+  if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation } = await params;
   const { search = '', date = '', page, view = 'events' } = await searchParams;
   if (view !== 'events' && view !== 'people' && view !== 'competitors') notFound();
@@ -57,7 +57,7 @@ export default async function FederationPage({
       : { view, total, page: currentPage, rows: item[view]?.nodes ?? [] };
 
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader
         title={item.name}
         breadcrumbs={[

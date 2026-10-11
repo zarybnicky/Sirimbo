@@ -115,6 +115,12 @@ const memberMenu: MenuStructItem[] = [
       { type: 'link', title: 'Páry', href: '/pary', requireMember: true },
       { type: 'link', title: 'Členové', href: '/clenove', requireMember: true },
       { type: 'link', title: 'Žebříček', href: '/zebricek', requireMember: true },
+      {
+        type: 'link',
+        title: 'Federated data',
+        href: '/admin/federated',
+        requireUser: true,
+      },
     ],
   },
   {
@@ -160,12 +166,6 @@ const memberMenu: MenuStructItem[] = [
         type: 'link',
         title: 'Tenanti',
         href: '/admin/tenants',
-        requireSystemAdmin: true,
-      },
-      {
-        type: 'link',
-        title: 'Federated data',
-        href: '/admin/federated',
         requireSystemAdmin: true,
       },
       {

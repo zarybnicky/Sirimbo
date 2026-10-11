@@ -23,7 +23,7 @@ export default async function FederatedPersonPage({
   params: Promise<{ federation: string; id: string }>;
 }) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
+  if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
@@ -34,7 +34,9 @@ export default async function FederatedPersonPage({
   if (!person) notFound();
   const [competitors, sources] = await Promise.all([
     runQuery(browsePersonCompetitors, { id }),
-    runQuery(browsePersonFrontiers, { federation, key: person.externalId }),
+    auth.isSystemAdmin
+      ? runQuery(browsePersonFrontiers, { federation, key: person.externalId })
+      : [],
   ]);
   const matches = person.people.nodes;
   const name =
@@ -43,7 +45,7 @@ export default async function FederatedPersonPage({
     person.id;
   const base = `/admin/federated/${federation}`;
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader
         title={name}
         breadcrumbs={[
@@ -149,20 +151,24 @@ export default async function FederatedPersonPage({
           </tbody>
         </table>
       </div>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-      {sources.map((source) => (
-        <p key={source.id}>
-          <Link
-            className="text-accent-11 underline"
-            href={`/admin/crawler/${source.id}`}
-            prefetch={false}
-          >
-            {federation}:{source.kind}:{source.key}
-          </Link>{' '}
-          — fetch: {source.fetch_status}, process: {source.process_status}
-        </p>
-      ))}
-      {sources.length === 0 && <p>No matching frontiers</p>}
+      {auth.isSystemAdmin && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
+          {sources.map((source) => (
+            <p key={source.id}>
+              <Link
+                className="text-accent-11 underline"
+                href={`/admin/crawler/${source.id}`}
+                prefetch={false}
+              >
+                {federation}:{source.kind}:{source.key}
+              </Link>{' '}
+              — fetch: {source.fetch_status}, process: {source.process_status}
+            </p>
+          ))}
+          {sources.length === 0 && <p>No matching frontiers</p>}
+        </>
+      )}
     </Layout>
   );
 }

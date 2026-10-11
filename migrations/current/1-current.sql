@@ -10,7 +10,8 @@ COMMENT ON TABLE federated.event IS '@name federation_event
 COMMENT ON TABLE federated.event_official IS '@name federation_event_official
 @behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
-@behavior -insert -update -delete -list';
+@behavior -insert -update -delete -list
+@ref couples via:public.couple_federation_link;public.couple';
 COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
 @behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
@@ -120,3 +121,25 @@ comment on table public.person is '@omit create
 @ref federationPeople via:public.person_federation_link;federated.person';
 
 drop function if exists public.csts_athlete(integer);
+
+create or replace view public.couple_federation_link with (security_invoker = true) as
+select c.id as couple_id, fc.id as competitor_id
+from public.couple c
+join public.person_federation_link ml on ml.person_id = c.man_id
+join federated.person mp on (mp.federation, mp.external_id) = (ml.federation, ml.external_id)
+join federated.competitor_component mc on mc.person_id = mp.id and mc.role = 'lead'
+join federated.competitor fc on fc.id = mc.competitor_id and fc.competitor_type = 'couple'
+join federated.competitor_component wc on wc.competitor_id = fc.id and wc.role = 'follow'
+join federated.person wp on wp.id = wc.person_id
+join public.person_federation_link wl on wl.person_id = c.woman_id
+  and (wl.federation, wl.external_id) = (wp.federation, wp.external_id);
+
+comment on view public.couple_federation_link is '@primaryKey couple_id,competitor_id
+@foreignKey (couple_id) references public.couple (id)
+@foreignKey (competitor_id) references federated.competitor (id)
+@behavior -single -list -connection -insert -update -delete';
+grant select on public.couple_federation_link to anonymous;
+
+comment on table public.couple is '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection
+@ref federationCompetitors via:public.couple_federation_link;federated.competitor';

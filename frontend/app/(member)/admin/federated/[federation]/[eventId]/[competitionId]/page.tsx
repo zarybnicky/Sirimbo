@@ -9,7 +9,7 @@ import {
   FederationEventDocument,
   FederationCompetitionDocument,
 } from '@/graphql/Federation';
-import { runQuery } from '@/lib/server/postgresql';
+import { runQuery, withRequestPgClient } from '@/lib/server/postgresql';
 import {
   browseParticipants,
   browseParticipantPeople,
@@ -28,7 +28,7 @@ export default async function CompetitionPage({
   params: Promise<{ federation: string; eventId: string; competitionId: string }>;
 }) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
+  if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId) || !/^[0-9]{1,18}$/.test(competitionId)) notFound();
   const [{ federationEventByFederationAndId: event }, { competition }] =
@@ -39,17 +39,21 @@ export default async function CompetitionPage({
   if (!event || !competition || competition.eventId !== eventId) notFound();
   const [participants, people, rounds, sources] = await Promise.all([
     runQuery(browseParticipants, { competitionId }),
-    runQuery(browseParticipantPeople, { competitionId }),
+    withRequestPgClient((client) =>
+      browseParticipantPeople.run({ competitionId }, client),
+    ),
     runQuery(browseRounds, { competitionId }),
-    runQuery(browseSourceFrontiers, {
-      federation,
-      eventKey: event.externalId,
-      competitionKey: competition.externalId,
-    }),
+    auth.isSystemAdmin
+      ? runQuery(browseSourceFrontiers, {
+          federation,
+          eventKey: event.externalId,
+          competitionKey: competition.externalId,
+        })
+      : [],
   ]);
   const peopleByCompetitor = Object.groupBy(people, (person) => person.competitor_id);
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader
         title={competition.category?.name ?? competition.externalId}
         breadcrumbs={[
@@ -224,20 +228,24 @@ export default async function CompetitionPage({
           </tbody>
         </table>
       </div>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-      {sources.map((source) => (
-        <p key={source.id}>
-          <Link
-            className="text-accent-11 underline"
-            href={`/admin/crawler/${source.id}`}
-            prefetch={false}
-          >
-            {federation}:{source.kind}:{source.key}
-          </Link>{' '}
-          — fetch: {source.fetch_status}, process: {source.process_status}
-        </p>
-      ))}
-      {sources.length === 0 && <p>No matching frontiers</p>}
+      {auth.isSystemAdmin && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
+          {sources.map((source) => (
+            <p key={source.id}>
+              <Link
+                className="text-accent-11 underline"
+                href={`/admin/crawler/${source.id}`}
+                prefetch={false}
+              >
+                {federation}:{source.kind}:{source.key}
+              </Link>{' '}
+              — fetch: {source.fetch_status}, process: {source.process_status}
+            </p>
+          ))}
+          {sources.length === 0 && <p>No matching frontiers</p>}
+        </>
+      )}
     </Layout>
   );
 }

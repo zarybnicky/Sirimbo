@@ -1,5 +1,4 @@
 import { cn } from '@/lib/cn';
-import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 
@@ -14,27 +13,43 @@ export function FederationPersonLink({
   className?: string;
   children: React.ReactNode;
 }) {
-  const { isSystemAdmin } = useAuth();
   if (!externalId || externalId === '0') return null;
-  const href = isSystemAdmin
-    ? `/admin/federated/${federation}/people/${externalId}`
-    : federation === 'csts'
-      ? `https://www.csts.cz/dancesport/evidence/lide/${externalId}/osobni_udaje`
-      : null;
-  if (!href) return <span className={className}>{children}</span>;
 
   return (
     <Link
-      href={href}
-      target={isSystemAdmin ? undefined : '_blank'}
-      rel={isSystemAdmin ? undefined : 'noreferrer'}
+      href={`/admin/federated/${federation}/people/${externalId}`}
       className={cn(
         'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
       {children}
-      {!isSystemAdmin && <ExternalLink className="size-3.5" aria-hidden="true" />}
+    </Link>
+  );
+}
+
+export function FederationCompetitorLink({
+  federation,
+  externalId,
+  className,
+  children,
+}: {
+  federation: string;
+  externalId?: number | string | null;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (!externalId || externalId === '0') return null;
+
+  return (
+    <Link
+      href={`/admin/federated/${federation}/competitors/${externalId}`}
+      className={cn(
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        className,
+      )}
+    >
+      {children}
     </Link>
   );
 }

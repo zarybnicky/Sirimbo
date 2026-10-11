@@ -20,7 +20,7 @@ export default async function EventPage({
   params: Promise<{ federation: string; eventId: string }>;
 }) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
+  if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
   const { federationEventByFederationAndId: event } = await executeGraphql(
@@ -30,16 +30,18 @@ export default async function EventPage({
   if (!event) notFound();
   const [competitions, sources] = await Promise.all([
     runQuery(browseCompetitions, { eventId }),
-    runQuery(browseSourceFrontiers, {
-      federation,
-      eventKey: event.externalId,
-      competitionKey: null,
-    }),
+    auth.isSystemAdmin
+      ? runQuery(browseSourceFrontiers, {
+          federation,
+          eventKey: event.externalId,
+          competitionKey: null,
+        })
+      : [],
   ]);
   const title = event.name || event.externalId;
   const path = `/admin/federated/${federation}/${eventId}`;
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader
         title={title}
         breadcrumbs={[

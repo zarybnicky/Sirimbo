@@ -112,6 +112,9 @@ query CoupleList {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
+    federationCompetitors(first: 100, orderBy: [FEDERATION_ASC, EXTERNAL_ID_ASC]) {
+      nodes { id federation externalId }
+    }
   }
 }
 

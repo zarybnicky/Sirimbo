@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Pagination } from '@/ui/Pagination';
-import { numericDateWithYearFormatter } from '@/ui/format';
+import {
+  formatCoupleName,
+  formatOpenDateRange,
+  numericDateWithYearFormatter,
+} from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
@@ -27,7 +31,7 @@ export default async function CompetitorPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
+  if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
@@ -51,7 +55,7 @@ export default async function CompetitorPage({
   const title = competitor.name || competitor.id;
   const base = `/admin/federated/${federation}`;
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader
         title={title}
         breadcrumbs={[
@@ -71,6 +75,39 @@ export default async function CompetitorPage({
         <dt>age group</dt>
         <dd>{competitor.ageGroup || '-'}</dd>
       </dl>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr>
+              {['couple', 'partnership'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {competitor.couplesList.map((couple) => (
+              <tr key={couple.id} className="border-t border-neutral-4">
+                <th scope="row" className="px-2 py-1 font-normal">
+                  <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
+                    {formatCoupleName(couple)}
+                  </Link>
+                </th>
+                <td className="px-2 py-1">{formatOpenDateRange(couple)}</td>
+              </tr>
+            ))}
+            {competitor.couplesList.length === 0 && (
+              <tr>
+                <td colSpan={2} className="px-2 py-1">
+                  No local matches
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <h2 className="mt-4 mb-2 text-lg font-bold">Members</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">

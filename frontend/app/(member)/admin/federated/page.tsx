@@ -9,12 +9,10 @@ export const metadata = { title: 'Federations', robots: { index: false, follow: 
 
 export default async function FederationsPage() {
   const { auth } = await getRequestContext();
-  if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
-  const { federationsList: federations } = await executeGraphql(
-    FederationListDocument,
-  );
+  if (!auth.isLoggedIn) return <Layout requireUser />;
+  const { federationsList: federations } = await executeGraphql(FederationListDocument);
   return (
-    <Layout requireSystemAdmin>
+    <Layout requireUser>
       <PageHeader title="Federations" />
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
@@ -46,18 +44,10 @@ export default async function FederationsPage() {
                   </Link>
                 </th>
                 <td className="px-2 py-1">{federation.name}</td>
-                <td className="px-2 py-1">
-                  {federation.events?.totalCount}
-                </td>
-                <td className="px-2 py-1">
-                  {federation.competitions?.totalCount}
-                </td>
-                <td className="px-2 py-1">
-                  {federation.people?.totalCount}
-                </td>
-                <td className="px-2 py-1">
-                  {federation.competitors?.totalCount}
-                </td>
+                <td className="px-2 py-1">{federation.events?.totalCount}</td>
+                <td className="px-2 py-1">{federation.competitions?.totalCount}</td>
+                <td className="px-2 py-1">{federation.people?.totalCount}</td>
+                <td className="px-2 py-1">{federation.competitors?.totalCount}</td>
               </tr>
             ))}
           </tbody>
