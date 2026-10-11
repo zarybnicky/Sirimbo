@@ -2114,6 +2114,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `competitionType` field."""
   competitionType: CompetitionType
+  competitorId: String
 
   """Checks for equality with the object’s `completedAt` field."""
   completedAt: Datetime

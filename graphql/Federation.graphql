@@ -139,8 +139,8 @@ query FederationPerson($federation: String!, $externalId: BigInt!, $competitorsO
   }
 }
 
-query FederationCompetitor($federation: String!, $externalId: BigInt!, $membersOffset: Int! = 0) {
-  federationCompetitorByFederationAndExternalId(federation: $federation, externalId: $externalId) {
+query FederationCompetitor($id: String!, $membersOffset: Int! = 0, $historyOffset: Int! = 0) {
+  federationCompetitor(id: $id) {
     id
     name
     competitorType
@@ -153,6 +153,23 @@ query FederationCompetitor($federation: String!, $externalId: BigInt!, $membersO
         personId
         role
         person { id externalId canonicalName firstName lastName }
+      }
+    }
+  }
+  competitions(first: 50, offset: $historyOffset, condition: { competitorId: $id }, orderBy: [START_DATE_DESC, ID_DESC]) {
+    totalCount
+    nodes {
+      id
+      externalId
+      eventId
+      startDate
+      event { id name externalId }
+      category { id name }
+      entries(first: 1, condition: { competitorId: $id }) {
+        nodes { competitionId competitorId cancelled }
+      }
+      results(first: 1, condition: { competitorId: $id }) {
+        nodes { competitionId competitorId ranking rankingTo pointGain finalGain }
       }
     }
   }

@@ -11,11 +11,6 @@ import {
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
-import { runQuery } from '@/lib/server/postgresql';
-import {
-  browseCompetitorHistoryCount,
-  browseCompetitorHistory,
-} from '../../../federated.queries';
 
 export const metadata = {
   title: 'Federated competitor',
@@ -35,26 +30,18 @@ export default async function CompetitorPage({
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
   const { page, membersPage } = await searchParams;
+  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
   const currentMembersPage = Math.max(1, Number.parseInt(membersPage ?? '1', 10) || 1);
-  const { federationCompetitorByFederationAndExternalId: competitor } =
+  const { federationCompetitor: competitor, competitions: history } =
     await executeGraphql(FederationCompetitorDocument, {
-      federation,
-      externalId,
+      id,
+      historyOffset: Math.min((currentPage - 1) * 50, 2_147_483_647),
       membersOffset: Math.min((currentMembersPage - 1) * 100, 2_147_483_647),
     });
-  if (!competitor) notFound();
+  if (!competitor || !history) notFound();
   const members = competitor.components;
   if (currentMembersPage > Math.max(1, Math.ceil(members.totalCount / 100))) notFound();
-  const [count] = await runQuery(browseCompetitorHistoryCount, { id });
-  const total = count?.total ?? 0;
-  const currentPage = Math.min(
-    Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
-    Math.max(1, Math.ceil(total / 50)),
-  );
-  const history = await runQuery(browseCompetitorHistory, {
-    id,
-    offset: (currentPage - 1) * 50,
-  });
+  if (currentPage > Math.max(1, Math.ceil(history.totalCount / 50))) notFound();
   const title = competitor.name || competitor.id;
   const base = `/federated/${federation}`;
   return (
@@ -183,47 +170,47 @@ export default async function CompetitorPage({
             </tr>
           </thead>
           <tbody>
-            {history.map((row) => (
-              <tr key={row.id} className="border-t border-neutral-4">
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {numericDateWithYearFormatter.format(row.start_date)}
-                </td>
-                <td className="px-2 py-1">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`${base}/${row.event_id}`}
-                    prefetch={false}
-                  >
-                    {row.event_name || row.event_external_id}
-                  </Link>
-                </td>
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`${base}/${row.event_id}/${row.id}`}
-                    prefetch={false}
-                  >
-                    {row.category}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">
-                  {row.cancelled === null
-                    ? '-'
-                    : row.cancelled
-                      ? 'cancelled'
-                      : 'registered'}
-                </td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {row.ranking}
-                  {row.ranking_to && row.ranking_to !== row.ranking
-                    ? `–${row.ranking_to}`
-                    : ''}
-                </td>
-                <td className="px-2 py-1">{row.point_gain}</td>
-                <td className="px-2 py-1">{row.final_gain}</td>
-              </tr>
-            ))}
-            {history.length === 0 && (
+            {history.nodes.map((row) => {
+              const entry = row.entries.nodes[0];
+              const result = row.results.nodes[0];
+              return (
+                <tr key={row.id} className="border-t border-neutral-4">
+                  <td className="px-2 py-1 whitespace-nowrap">
+                    {numericDateWithYearFormatter.format(new Date(row.startDate))}
+                  </td>
+                  <td className="px-2 py-1">
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`${base}/${row.eventId}`}
+                      prefetch={false}
+                    >
+                      {row.event?.name || row.event?.externalId || row.eventId}
+                    </Link>
+                  </td>
+                  <th scope="row" className="px-2 py-1 font-normal">
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`${base}/${row.eventId}/${row.id}`}
+                      prefetch={false}
+                    >
+                      {row.category?.name || row.externalId}
+                    </Link>
+                  </th>
+                  <td className="px-2 py-1">
+                    {!entry ? '-' : entry.cancelled ? 'cancelled' : 'registered'}
+                  </td>
+                  <td className="px-2 py-1 whitespace-nowrap">
+                    {result?.ranking}
+                    {result?.rankingTo && result?.rankingTo !== result?.ranking
+                      ? `–${result?.rankingTo}`
+                      : ''}
+                  </td>
+                  <td className="px-2 py-1">{result?.pointGain}</td>
+                  <td className="px-2 py-1">{result?.finalGain}</td>
+                </tr>
+              );
+            })}
+            {history.nodes.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-2 py-1">
                   No registrations or results
@@ -234,7 +221,7 @@ export default async function CompetitorPage({
         </table>
       </div>
       <Pagination
-        total={total}
+        total={history.totalCount}
         limit={50}
         page={currentPage}
         href={(page) =>

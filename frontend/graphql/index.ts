@@ -1683,6 +1683,7 @@ export type CompetitionCondition = {
   checkInEnd?: InputMaybe<Scalars['Time']['input']>;
   /** Checks for equality with the object’s `competitionType` field. */
   competitionType?: InputMaybe<CompetitionType>;
+  competitorId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `completedAt` field. */
   completedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `endDate` field. */
