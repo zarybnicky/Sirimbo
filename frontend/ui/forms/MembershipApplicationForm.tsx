@@ -15,7 +15,7 @@ import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
 import { TextAreaElement } from '@/ui/fields/textarea';
-import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
+import { FederationIdFieldElement } from '@/ui/fields/FederationIdFieldElement';
 import { FieldLabel, FormError, useFormResult } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
@@ -274,11 +274,16 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
 
         {data && auth.isAdmin && (
           <div className="col-full grid gap-2 border-t border-neutral-6 pt-3 lg:grid-cols-2">
-            <CstsIdFieldElement control={control} name="cstsId" />
-            <TextFieldElement
+            <FederationIdFieldElement
+              control={control}
+              name="cstsId"
+              federation="csts"
+              label="ČSTS IDT"
+            />
+            <FederationIdFieldElement
               control={control}
               name="wdsfId"
-              type="number"
+              federation="wdsf"
               label="WDSF MIN"
               placeholder="10000000"
             />

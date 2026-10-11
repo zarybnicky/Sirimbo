@@ -223,20 +223,6 @@ query PersonWithLinksList {
   }
 }
 
-query CstsPerson($idt: BigInt!) {
-  federationPersonByFederationAndExternalId(federation: "csts", externalId: $idt) {
-    id
-    externalId
-    canonicalName
-    firstName
-    lastName
-  }
-}
-
-query WdsfPerson($min: Int!) {
-  wdsfAthlete(min: $min)
-}
-
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
     p {

@@ -3,7 +3,7 @@ import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
-import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
+import { FederationIdFieldElement } from '@/ui/fields/FederationIdFieldElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
@@ -174,11 +174,16 @@ export function EditPersonForm({ id }: { id: string }) {
         onBlur={fillBirthDate}
       />
 
-      <CstsIdFieldElement control={control} name="cstsId" />
-      <TextFieldElement
+      <FederationIdFieldElement
+        control={control}
+        name="cstsId"
+        federation="csts"
+        label="ČSTS IDT"
+      />
+      <FederationIdFieldElement
         control={control}
         name="wdsfId"
-        type="number"
+        federation="wdsf"
         label="WDSF MIN"
         placeholder="10000000"
       />

@@ -17,7 +17,7 @@ import { ComboboxElement } from '@/ui/fields/Combobox';
 import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { TextFieldElement } from '@/ui/fields/text';
-import { CstsIdFieldElement } from '@/ui/fields/CstsIdFieldElement';
+import { FederationIdFieldElement } from '@/ui/fields/FederationIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
@@ -309,12 +309,17 @@ export function CreatePersonDialog() {
               onBlur={fillBirthDate}
             />
 
-            <CstsIdFieldElement control={control} name="cstsId" />
+            <FederationIdFieldElement
+              control={control}
+              name="cstsId"
+              federation="csts"
+              label="ČSTS IDT"
+            />
 
-            <TextFieldElement
+            <FederationIdFieldElement
               control={control}
               name="wdsfId"
-              type="number"
+              federation="wdsf"
               label="WDSF MIN"
               placeholder="10000000"
             />

@@ -9489,7 +9489,6 @@ export type Query = {
   userProxy: Maybe<UserProxy>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
-  wdsfAthlete: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -10891,12 +10890,6 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWdsfAthleteArgs = {
-  min?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Ranklist = {
@@ -14392,8 +14385,7 @@ export type GraphCacheResolvers = {
     transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionsConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
-    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>,
-    wdsfAthlete?: GraphCacheResolver<WithTypename<Query>, QueryWdsfAthleteArgs, Scalars['String']['output'] | string>
+    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
   },
   AccessCredential?: {
     code?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16942,8 +16934,7 @@ export type GraphCacheUpdaters = {
     transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionsConnection>> }, QueryTransactionsArgs>,
     user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
     userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
-    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>,
-    wdsfAthlete?: GraphCacheUpdateResolver<{ wdsfAthlete: Maybe<Scalars['String']['output']> }, QueryWdsfAthleteArgs>
+    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>
   },
   Mutation?: {
     archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,

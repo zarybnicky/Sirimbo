@@ -13432,7 +13432,6 @@ type Query {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersConnection
-  wdsfAthlete(min: Int): String
 }
 
 type Ranklist {

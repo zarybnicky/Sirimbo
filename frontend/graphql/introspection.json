@@ -29267,22 +29267,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "wdsfAthlete",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "min",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
           }
         ],
         "interfaces": []

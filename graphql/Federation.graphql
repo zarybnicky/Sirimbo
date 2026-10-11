@@ -8,6 +8,16 @@ fragment CompetitionCategory on Category {
   competitorType
 }
 
+query FederationPersonLookup($federation: String!, $externalId: BigInt!) {
+  federationPersonByFederationAndExternalId(federation: $federation, externalId: $externalId) {
+    id
+    externalId
+    canonicalName
+    firstName
+    lastName
+  }
+}
+
 query FederationList($condition: FederationCondition, $withCounts: Boolean! = true) {
   federationsList(condition: $condition, orderBy: CODE_ASC) {
     code
