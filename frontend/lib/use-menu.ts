@@ -164,6 +164,12 @@ const memberMenu: MenuStructItem[] = [
       },
       {
         type: 'link',
+        title: 'Federated data',
+        href: '/admin/federated',
+        requireSystemAdmin: true,
+      },
+      {
+        type: 'link',
         title: 'Crawler',
         href: '/admin/crawler',
         requireSystemAdmin: true,
