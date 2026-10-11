@@ -4,7 +4,6 @@ WITH frontier_status AS (
     federation,
     kind,
     count(*)::int AS total,
-    count(*) FILTER (WHERE key <> '')::int AS key_count,
     count(*) FILTER (WHERE fetch_status = 'pending')::int AS fetch_pending,
     count(*) FILTER (WHERE fetch_status = 'transient')::int AS fetch_transient,
     count(*) FILTER (WHERE fetch_status = 'error')::int AS fetch_error,
@@ -30,13 +29,14 @@ WITH frontier_status AS (
   GROUP BY federation, kind
 )
 SELECT fs.*,
-  coalesce(key_samples.keys, '-') || CASE WHEN fs.key_count > 3 THEN ', ...' ELSE '' END AS keys
+  key_samples.keys, key_samples.ids
 FROM frontier_status fs
 LEFT JOIN LATERAL (
-  SELECT string_agg(sample.key, ', ' ORDER BY sample.key) AS keys
+  SELECT array_agg(sample.key ORDER BY sample.key) AS keys,
+    array_agg(sample.id ORDER BY sample.key) AS ids
   FROM (
-    SELECT key FROM crawler.frontier f
-    WHERE f.federation = fs.federation AND f.kind = fs.kind AND key <> ''
+    SELECT id, key FROM crawler.frontier f
+    WHERE f.federation = fs.federation AND f.kind = fs.kind
     ORDER BY key LIMIT 3
   ) sample
 ) key_samples ON true
@@ -66,7 +66,52 @@ SELECT
   http_status,
   error_fingerprint,
   count(*)::int AS count,
-  string_agg(key, ', ' ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS samples
+  array_agg(key ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS samples,
+  array_agg(id ORDER BY failed_at DESC, id DESC) FILTER (WHERE sample_rank <= 5) AS sample_ids
 FROM ranked
 GROUP BY federation, kind, failure, http_status, error_fingerprint
 ORDER BY count(*) DESC, max(failed_at) DESC;
+
+
+/* @name CrawlerFrontier */
+SELECT id, federation, kind, key, discovered_at, fetch_status, process_status,
+  last_fetched_at, next_fetch_at, error_count, last_process_error,
+  last_process_error_at, last_response_id, last_successful_response_id
+FROM crawler.frontier
+WHERE id = :id!;
+
+/* @name CrawlerResponses */
+SELECT id, url, http_status, error, fetched_at, lower(sys_period) AS valid_from,
+  upper(sys_period) AS valid_until, upper_inf(sys_period) AS current,
+  last_observed_at, observation_count, content_hash IS NOT NULL AS has_content
+FROM crawler.json_response
+WHERE frontier_id = :id!
+  AND (:before::bigint IS NULL OR (fetched_at, id) < (
+    SELECT fetched_at, id FROM crawler.json_response
+    WHERE frontier_id = :id! AND id = :before
+  ))
+ORDER BY fetched_at DESC, id DESC
+LIMIT 51;
+
+/* @name CrawlerResponseContent */
+SELECT r.id, r.url, r.http_status, r.error, c.content, f.federation, f.kind, f.key
+FROM crawler.json_response r
+JOIN crawler.frontier f ON f.id = r.frontier_id
+LEFT JOIN crawler.json_response_cache c ON c.content_hash = r.content_hash
+WHERE r.frontier_id = :frontierId! AND r.id = :responseId!;
+
+
+/* @name CrawlerFrontiers */
+SELECT id, key, fetch_status, process_status, error_count, last_fetched_at, next_fetch_at
+FROM crawler.frontier
+WHERE federation = :federation! AND kind = :kind!
+  AND (:key! = '' OR strpos(key, :key!) > 0)
+ORDER BY key
+LIMIT 50 OFFSET :offset!;
+
+
+/* @name CrawlerFrontierCount */
+SELECT count(*)::int AS total
+FROM crawler.frontier
+WHERE federation = :federation! AND kind = :kind!
+  AND (:key! = '' OR strpos(key, :key!) > 0);

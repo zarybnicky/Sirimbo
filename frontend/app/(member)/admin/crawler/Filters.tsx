@@ -1,6 +1,6 @@
 'use client';
 
-import { debounce, parseAsString, useQueryStates } from 'nuqs';
+import { debounce, parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { useRouter } from 'next/navigation';
 import { TextField } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -17,6 +17,8 @@ export function Filters() {
       federation: textFilter,
       kind: textFilter,
       all: parseAsString.withDefault(''),
+      key: textFilter,
+      page: parseAsInteger,
     },
     { shallow: false, scroll: false },
   );
@@ -28,21 +30,37 @@ export function Filters() {
         label="federation"
         className="w-32"
         value={filters.federation}
-        onChange={(event) => setFilters({ federation: event.target.value })}
+        onChange={(event) =>
+          setFilters({ federation: event.target.value, key: null, page: null })
+        }
       />
       <TextField
         name="kind"
         label="kind"
         className="w-48"
         value={filters.kind}
-        onChange={(event) => setFilters({ kind: event.target.value })}
+        onChange={(event) =>
+          setFilters({ kind: event.target.value, key: null, page: null })
+        }
       />
-      <Checkbox
-        name="all"
-        label="Show completed"
-        checked={filters.all === '1'}
-        onChange={(event) => setFilters({ all: event.currentTarget.checked ? '1' : '' })}
-      />
+      {filters.federation && filters.kind ? (
+        <TextField
+          name="key"
+          label="key"
+          className="w-48"
+          value={filters.key}
+          onChange={(event) => setFilters({ key: event.target.value, page: null })}
+        />
+      ) : (
+        <Checkbox
+          name="all"
+          label="Show completed"
+          checked={filters.all === '1'}
+          onChange={(event) =>
+            setFilters({ all: event.currentTarget.checked ? '1' : '' })
+          }
+        />
+      )}
       <button
         type="button"
         className={buttonCls({ variant: 'outline' })}
