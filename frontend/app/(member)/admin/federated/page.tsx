@@ -14,34 +14,36 @@ export default async function FederationsPage() {
   return (
     <Layout requireSystemAdmin>
       <PageHeader title="Federations" />
-      <table className="w-full text-left text-sm tabular-nums">
-        <thead>
-          <tr>
-            {['federation', 'name', 'events', 'competitions'].map((label) => (
-              <th key={label} scope="col" className="px-2 py-1">
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {federations.map((federation) => (
-            <tr key={federation.code} className="border-t border-neutral-4">
-              <th scope="row" className="px-2 py-1 font-normal">
-                <Link
-                  className="text-accent-11 underline"
-                  href={`/admin/federated/${federation.code}`}
-                >
-                  {federation.code}
-                </Link>
-              </th>
-              <td className="px-2 py-1">{federation.name}</td>
-              <td className="px-2 py-1">{federation.events}</td>
-              <td className="px-2 py-1">{federation.competitions}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm tabular-nums">
+          <thead>
+            <tr>
+              {['federation', 'name', 'events', 'competitions'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {federations.map((federation) => (
+              <tr key={federation.code} className="border-t border-neutral-4">
+                <th scope="row" className="px-2 py-1 font-normal">
+                  <Link
+                    className="text-accent-11 underline"
+                    href={`/admin/federated/${federation.code}`}
+                  >
+                    {federation.code}
+                  </Link>
+                </th>
+                <td className="px-2 py-1">{federation.name}</td>
+                <td className="px-2 py-1">{federation.events}</td>
+                <td className="px-2 py-1">{federation.competitions}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </Layout>
   );
 }

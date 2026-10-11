@@ -45,8 +45,12 @@ export default async function ResponsePage({
           { label: `Response ${response.id}` },
         ]}
       />
-      <p className="break-all">{response.url}</p>
-      <p>HTTP {response.http_status ?? '-'}</p>
+      <dl className="text-sm tabular">
+        <dt>url</dt>
+        <dd>{response.url}</dd>
+        <dt>http</dt>
+        <dd>{response.http_status ?? '-'}</dd>
+      </dl>
       {response.error && (
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}

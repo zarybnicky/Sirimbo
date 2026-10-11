@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { typographyCls } from '@/ui/style';
 import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
@@ -53,32 +53,40 @@ export function PageHeader<Id extends string = string>({
   const parent = breadcrumbs?.at(-2);
 
   return (
-    <div className="my-4">
+    <div className="my-4 min-w-0">
       {parent?.href && (
-        <nav className="mb-2 text-sm text-neutral-7">
+        <nav className="mb-2 text-sm text-neutral-11">
           <Link
             href={parent.href}
-            className="flex items-center gap-1.5 lg:hidden hover:text-neutral-11"
+            className="flex items-center gap-1.5 lg:hidden wrap-anywhere hover:text-neutral-12"
           >
-            <ArrowLeft className="size-3.5" />
+            <ArrowLeft className="size-3.5 shrink-0" />
             {parent.label}
           </Link>
 
-          <div className="hidden lg:flex items-baseline gap-1.5">
+          <div className="hidden lg:flex flex-wrap items-baseline gap-1.5 wrap-anywhere">
             {breadcrumbs!.map((crumb, i) => (
-              <Fragment key={i}>
-                {i > 0 && <ChevronRight className="size-3 text-neutral-9" />}
+              <span
+                key={i}
+                className="inline-flex min-w-0 items-baseline gap-1.5"
+              >
+                {i > 0 && (
+                  <ChevronRight
+                    aria-hidden="true"
+                    className="size-3 shrink-0 self-center text-neutral-9"
+                  />
+                )}
                 {crumb.href && i < breadcrumbs!.length - 1 ? (
                   <Link
                     href={crumb.href}
-                    className="text-neutral-9 hover:text-neutral-12"
+                    className="text-neutral-11 hover:text-neutral-12"
                   >
                     {crumb.label}
                   </Link>
                 ) : (
                   <span className="text-neutral-11">{crumb.label}</span>
                 )}
-              </Fragment>
+              </span>
             ))}
           </div>
         </nav>
@@ -86,7 +94,13 @@ export function PageHeader<Id extends string = string>({
 
       <div className="flex flex-wrap-reverse justify-between gap-2 items-center">
         <div className="min-w-0">
-          <h1 className={typographyCls({ variant, spacing: 'default' })}>
+          <h1
+            className={typographyCls({
+              variant,
+              spacing: 'default',
+              className: 'wrap-anywhere',
+            })}
+          >
             {title}
           </h1>
         </div>

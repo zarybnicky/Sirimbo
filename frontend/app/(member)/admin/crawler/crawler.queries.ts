@@ -201,13 +201,12 @@ export const crawlerFrontier = new PreparedQuery<ICrawlerFrontierParams,ICrawler
 
 /** 'CrawlerResponses' parameters type */
 export interface ICrawlerResponsesParams {
-  before?: NumberOrString | null | void;
   id: NumberOrString;
+  offset: NumberOrString;
 }
 
 /** 'CrawlerResponses' return type */
 export interface ICrawlerResponsesResult {
-  current: boolean | null;
   error: string | null;
   fetched_at: Date;
   has_content: boolean | null;
@@ -226,25 +225,48 @@ export interface ICrawlerResponsesQuery {
   result: ICrawlerResponsesResult;
 }
 
-const crawlerResponsesIR: any = {"usedParamSet":{"id":true,"before":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":277,"b":280},{"a":414,"b":417}]},{"name":"before","required":false,"transform":{"type":"scalar"},"locs":[{"a":289,"b":295},{"a":428,"b":434}]}],"statement":"SELECT id, url, http_status, error, fetched_at, lower(sys_period) AS valid_from,\n  upper(sys_period) AS valid_until, upper_inf(sys_period) AS current,\n  last_observed_at, observation_count, content_hash IS NOT NULL AS has_content\nFROM crawler.json_response\nWHERE frontier_id = :id!\n  AND (:before::bigint IS NULL OR (fetched_at, id) < (\n    SELECT fetched_at, id FROM crawler.json_response\n    WHERE frontier_id = :id! AND id = :before\n  ))\nORDER BY fetched_at DESC, id DESC\nLIMIT 51"};
+const crawlerResponsesIR: any = {"usedParamSet":{"id":true,"offset":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":243,"b":246}]},{"name":"offset","required":true,"transform":{"type":"scalar"},"locs":[{"a":298,"b":305}]}],"statement":"SELECT id, url, http_status, error, fetched_at, lower(sys_period) AS valid_from,\n  upper(sys_period) AS valid_until,\n  last_observed_at, observation_count, content_hash IS NOT NULL AS has_content\nFROM crawler.json_response\nWHERE frontier_id = :id!\nORDER BY fetched_at DESC, id DESC\nLIMIT 50 OFFSET :offset!"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT id, url, http_status, error, fetched_at, lower(sys_period) AS valid_from,
- *   upper(sys_period) AS valid_until, upper_inf(sys_period) AS current,
+ *   upper(sys_period) AS valid_until,
  *   last_observed_at, observation_count, content_hash IS NOT NULL AS has_content
  * FROM crawler.json_response
  * WHERE frontier_id = :id!
- *   AND (:before::bigint IS NULL OR (fetched_at, id) < (
- *     SELECT fetched_at, id FROM crawler.json_response
- *     WHERE frontier_id = :id! AND id = :before
- *   ))
  * ORDER BY fetched_at DESC, id DESC
- * LIMIT 51
+ * LIMIT 50 OFFSET :offset!
  * ```
  */
 export const crawlerResponses = new PreparedQuery<ICrawlerResponsesParams,ICrawlerResponsesResult>(crawlerResponsesIR);
+
+
+/** 'CrawlerResponseCount' parameters type */
+export interface ICrawlerResponseCountParams {
+  id: NumberOrString;
+}
+
+/** 'CrawlerResponseCount' return type */
+export interface ICrawlerResponseCountResult {
+  total: number | null;
+}
+
+/** 'CrawlerResponseCount' query type */
+export interface ICrawlerResponseCountQuery {
+  params: ICrawlerResponseCountParams;
+  result: ICrawlerResponseCountResult;
+}
+
+const crawlerResponseCountIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":77,"b":80}]}],"statement":"SELECT count(*)::int AS total FROM crawler.json_response WHERE frontier_id = :id!"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)::int AS total FROM crawler.json_response WHERE frontier_id = :id!
+ * ```
+ */
+export const crawlerResponseCount = new PreparedQuery<ICrawlerResponseCountParams,ICrawlerResponseCountResult>(crawlerResponseCountIR);
 
 
 /** 'CrawlerResponseContent' parameters type */

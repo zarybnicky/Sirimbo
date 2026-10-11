@@ -302,7 +302,7 @@ export default async function CrawlerPage({
       </div>
       {all !== '1' && (
         <section>
-          <h2>Done</h2>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Done</h2>
           {Object.entries(done)
             .toSorted(([a], [b]) => a.localeCompare(b))
             .map(([federation, targets]) => (

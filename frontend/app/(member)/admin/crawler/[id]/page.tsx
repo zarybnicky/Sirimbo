@@ -4,8 +4,13 @@ import { runQuery } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
+import { Pagination } from '@/ui/Pagination';
 import { numericFullFormatter } from '@/ui/format';
-import { crawlerFrontier, crawlerResponses } from '../crawler.queries';
+import {
+  crawlerFrontier,
+  crawlerResponses,
+  crawlerResponseCount,
+} from '../crawler.queries';
 
 export const metadata = {
   title: 'Crawler frontier',
@@ -17,21 +22,26 @@ export default async function FrontierPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ before?: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
 
   const { id } = await params;
-  const { before } = await searchParams;
-  if (
-    !/^[0-9]{1,18}$/.test(id) ||
-    (before !== undefined && !/^[0-9]{1,18}$/.test(before))
-  )
-    notFound();
+  const { page } = await searchParams;
+  if (!/^[0-9]{1,18}$/.test(id)) notFound();
   const [frontier] = await runQuery(crawlerFrontier, { id });
   if (!frontier) notFound();
-  const responses = await runQuery(crawlerResponses, { id, before: before ?? null });
+  const [count] = await runQuery(crawlerResponseCount, { id });
+  const total = count?.total ?? 0;
+  const currentPage = Math.min(
+    Math.max(1, Number.parseInt(page ?? '1', 10) || 1),
+    Math.max(1, Math.ceil(total / 50)),
+  );
+  const responses = await runQuery(crawlerResponses, {
+    id,
+    offset: (currentPage - 1) * 50,
+  });
 
   const title = `${frontier.federation}:${frontier.kind}${frontier.key ? `:${frontier.key}` : ''}`;
 
@@ -51,7 +61,7 @@ export default async function FrontierPage({
           { label: title },
         ]}
       />
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+      <dl className="text-sm tabular">
         <dt>id</dt>
         <dd>{frontier.id}</dd>
         <dt>fetch status</dt>
@@ -68,7 +78,7 @@ export default async function FrontierPage({
             ['last process error', frontier.last_process_error_at],
           ] as const
         ).map(([label, date]) => (
-          <div key={label} className="contents">
+          <div key={label}>
             <dt>{label}</dt>
             <dd>{date ? numericFullFormatter.format(date) : '-'}</dd>
           </div>
@@ -79,12 +89,7 @@ export default async function FrontierPage({
           {frontier.last_process_error}
         </pre>
       )}
-      <h2 className="text-xl font-bold">Responses</h2>
-      {before && (
-        <Link className="text-accent-11 underline" href={`/admin/crawler/${id}`}>
-          Latest responses
-        </Link>
-      )}
+      <h2 className="mt-4 mb-2 text-lg font-bold">Responses</h2>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
@@ -104,7 +109,7 @@ export default async function FrontierPage({
             </tr>
           </thead>
           <tbody>
-            {responses.slice(0, 50).map((response) => (
+            {responses.map((response) => (
               <tr key={response.id} className="border-t border-neutral-4 align-top">
                 <td className="px-2 py-1 whitespace-nowrap">
                   {response.has_content ? (
@@ -129,11 +134,9 @@ export default async function FrontierPage({
                     <>
                       <div>[{numericFullFormatter.format(response.valid_from)},</div>
                       <div>
-                        {response.current
-                          ? '∞'
-                          : response.valid_until
-                            ? numericFullFormatter.format(response.valid_until)
-                            : '?'}{' '}
+                        {response.valid_until
+                          ? numericFullFormatter.format(response.valid_until)
+                          : '∞'}
                         )
                       </div>
                     </>
@@ -172,15 +175,12 @@ export default async function FrontierPage({
           </tbody>
         </table>
       </div>
-      {responses.length > 50 && (
-        <Link
-          className="text-accent-11 underline"
-          href={`/admin/crawler/${id}?before=${responses[49]?.id}`}
-          prefetch={false}
-        >
-          Older responses
-        </Link>
-      )}
+      <Pagination
+        total={total}
+        limit={50}
+        page={currentPage}
+        href={(page) => `/admin/crawler/${id}?page=${page}`}
+      />
     </Layout>
   );
 }

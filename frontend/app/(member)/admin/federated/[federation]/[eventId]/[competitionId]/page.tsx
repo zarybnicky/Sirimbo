@@ -76,7 +76,7 @@ export default async function CompetitionPage({
             : '-'}
         </dd>
       </dl>
-      <h2 className="text-xl font-bold">Registrations and results</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Registrations and results</h2>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
@@ -109,7 +109,13 @@ export default async function CompetitionPage({
                   className="border-t border-neutral-4 align-top"
                 >
                   <th scope="row" className="px-2 py-1 font-normal">
-                    {participant.name}
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`/admin/federated/${federation}/competitors/${participant.competitor_external_id}`}
+                      prefetch={false}
+                    >
+                      {participant.name || participant.competitor_id}
+                    </Link>
                     <div className="text-xs">{participant.competitor_id}</div>
                   </th>
                   <td className="px-2 py-1">
@@ -133,9 +139,13 @@ export default async function CompetitionPage({
                   <td className="px-2 py-1">
                     {matches.map((person) => (
                       <div key={`${person.federated_person_id}:${person.person_id}`}>
-                        <span className="font-mono text-xs">
+                        <Link
+                          className="font-mono text-xs text-accent-11 underline"
+                          href={`/admin/federated/${federation}/people/${person.person_external_id}`}
+                          prefetch={false}
+                        >
                           {person.federated_person_id}
-                        </span>
+                        </Link>
                         {' → '}
                         {person.person_id ? (
                           <>
@@ -174,38 +184,40 @@ export default async function CompetitionPage({
           </tbody>
         </table>
       </div>
-      <h2 className="text-xl font-bold">Rounds</h2>
-      <table className="w-full text-left text-sm tabular-nums">
-        <thead>
-          <tr>
-            {['round', 'key', 'scoring method', 'results'].map((label) => (
-              <th key={label} scope="col" className="px-2 py-1">
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rounds.map((round) => (
-            <tr key={round.id} className="border-t border-neutral-4">
-              <th scope="row" className="px-2 py-1 font-normal">
-                {round.round_label || round.round_key}
-              </th>
-              <td className="px-2 py-1">{round.round_key}</td>
-              <td className="px-2 py-1">{round.scoring_method}</td>
-              <td className="px-2 py-1">{round.results}</td>
-            </tr>
-          ))}
-          {rounds.length === 0 && (
+      <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm tabular-nums">
+          <thead>
             <tr>
-              <td colSpan={4} className="px-2 py-1">
-                No rounds
-              </td>
+              {['round', 'key', 'scoring method', 'results'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
-      <h2 className="text-xl font-bold">Crawler</h2>
+          </thead>
+          <tbody>
+            {rounds.map((round) => (
+              <tr key={round.id} className="border-t border-neutral-4">
+                <th scope="row" className="px-2 py-1 font-normal">
+                  {round.round_label || round.round_key}
+                </th>
+                <td className="px-2 py-1">{round.round_key}</td>
+                <td className="px-2 py-1">{round.scoring_method}</td>
+                <td className="px-2 py-1">{round.results}</td>
+              </tr>
+            ))}
+            {rounds.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-2 py-1">
+                  No rounds
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
       {sources.map((source) => (
         <p key={source.id}>
           <Link

@@ -82,16 +82,15 @@ WHERE id = :id!;
 
 /* @name CrawlerResponses */
 SELECT id, url, http_status, error, fetched_at, lower(sys_period) AS valid_from,
-  upper(sys_period) AS valid_until, upper_inf(sys_period) AS current,
+  upper(sys_period) AS valid_until,
   last_observed_at, observation_count, content_hash IS NOT NULL AS has_content
 FROM crawler.json_response
 WHERE frontier_id = :id!
-  AND (:before::bigint IS NULL OR (fetched_at, id) < (
-    SELECT fetched_at, id FROM crawler.json_response
-    WHERE frontier_id = :id! AND id = :before
-  ))
 ORDER BY fetched_at DESC, id DESC
-LIMIT 51;
+LIMIT 50 OFFSET :offset!;
+
+/* @name CrawlerResponseCount */
+SELECT count(*)::int AS total FROM crawler.json_response WHERE frontier_id = :id!;
 
 /* @name CrawlerResponseContent */
 SELECT r.id, r.url, r.http_status, r.error, c.content, f.federation, f.kind, f.key

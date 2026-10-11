@@ -70,7 +70,7 @@ export default async function EventPage({
             .join(', ') || '-'}
         </dd>
       </dl>
-      <h2 className="text-xl font-bold">Competitions</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Competitions</h2>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
@@ -124,7 +124,7 @@ export default async function EventPage({
       </div>
       {sources.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold">Crawler</h2>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
           {sources.map((source) => (
             <p key={source.id}>
               <Link
