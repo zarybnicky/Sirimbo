@@ -753,3 +753,137 @@ const browsePersonFrontiersIR: any = {"usedParamSet":{"federation":true,"key":tr
 export const browsePersonFrontiers = new PreparedQuery<IBrowsePersonFrontiersParams,IBrowsePersonFrontiersResult>(browsePersonFrontiersIR);
 
 
+/** 'BrowsePeopleCount' parameters type */
+export interface IBrowsePeopleCountParams {
+  federation: string;
+  search: string;
+}
+
+/** 'BrowsePeopleCount' return type */
+export interface IBrowsePeopleCountResult {
+  total: number | null;
+}
+
+/** 'BrowsePeopleCount' query type */
+export interface IBrowsePeopleCountQuery {
+  params: IBrowsePeopleCountParams;
+  result: IBrowsePeopleCountResult;
+}
+
+const browsePeopleCountIR: any = {"usedParamSet":{"federation":true,"search":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":71,"b":82}]},{"name":"search","required":true,"transform":{"type":"scalar"},"locs":[{"a":89,"b":96},{"a":126,"b":133},{"a":143,"b":150},{"a":204,"b":211}]}],"statement":"SELECT count(*)::int AS total FROM federated.person\nWHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!\n  OR strpos(search_name, app_private.normalize_name(:search!)) > 0)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)::int AS total FROM federated.person
+ * WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+ *   OR strpos(search_name, app_private.normalize_name(:search!)) > 0)
+ * ```
+ */
+export const browsePeopleCount = new PreparedQuery<IBrowsePeopleCountParams,IBrowsePeopleCountResult>(browsePeopleCountIR);
+
+
+/** 'BrowsePeople' parameters type */
+export interface IBrowsePeopleParams {
+  federation: string;
+  offset: NumberOrString;
+  search: string;
+}
+
+/** 'BrowsePeople' return type */
+export interface IBrowsePeopleResult {
+  age_group: string | null;
+  external_id: string;
+  id: string;
+  name: string | null;
+}
+
+/** 'BrowsePeople' query type */
+export interface IBrowsePeopleQuery {
+  params: IBrowsePeopleParams;
+  result: IBrowsePeopleResult;
+}
+
+const browsePeopleIR: any = {"usedParamSet":{"federation":true,"search":true,"offset":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":166,"b":177}]},{"name":"search","required":true,"transform":{"type":"scalar"},"locs":[{"a":184,"b":191},{"a":221,"b":228},{"a":238,"b":245},{"a":299,"b":306}]},{"name":"offset","required":true,"transform":{"type":"scalar"},"locs":[{"a":365,"b":372}]}],"statement":"SELECT id, external_id,\n  coalesce(canonical_name, nullif(concat_ws(' ', first_name, last_name), ''), id) AS name, age_group\nFROM federated.person\nWHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!\n  OR strpos(search_name, app_private.normalize_name(:search!)) > 0)\nORDER BY search_name, external_id\nLIMIT 50 OFFSET :offset!"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, external_id,
+ *   coalesce(canonical_name, nullif(concat_ws(' ', first_name, last_name), ''), id) AS name, age_group
+ * FROM federated.person
+ * WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+ *   OR strpos(search_name, app_private.normalize_name(:search!)) > 0)
+ * ORDER BY search_name, external_id
+ * LIMIT 50 OFFSET :offset!
+ * ```
+ */
+export const browsePeople = new PreparedQuery<IBrowsePeopleParams,IBrowsePeopleResult>(browsePeopleIR);
+
+
+/** 'BrowseCompetitorsCount' parameters type */
+export interface IBrowseCompetitorsCountParams {
+  federation: string;
+  search: string;
+}
+
+/** 'BrowseCompetitorsCount' return type */
+export interface IBrowseCompetitorsCountResult {
+  total: number | null;
+}
+
+/** 'BrowseCompetitorsCount' query type */
+export interface IBrowseCompetitorsCountQuery {
+  params: IBrowseCompetitorsCountParams;
+  result: IBrowseCompetitorsCountResult;
+}
+
+const browseCompetitorsCountIR: any = {"usedParamSet":{"federation":true,"search":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":75,"b":86}]},{"name":"search","required":true,"transform":{"type":"scalar"},"locs":[{"a":93,"b":100},{"a":130,"b":137},{"a":147,"b":154},{"a":229,"b":236}]}],"statement":"SELECT count(*)::int AS total FROM federated.competitor\nWHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!\n  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)::int AS total FROM federated.competitor
+ * WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+ *   OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)
+ * ```
+ */
+export const browseCompetitorsCount = new PreparedQuery<IBrowseCompetitorsCountParams,IBrowseCompetitorsCountResult>(browseCompetitorsCountIR);
+
+
+/** 'BrowseSearchCompetitors' parameters type */
+export interface IBrowseSearchCompetitorsParams {
+  federation: string;
+  offset: NumberOrString;
+  search: string;
+}
+
+/** 'BrowseSearchCompetitors' return type */
+export interface IBrowseSearchCompetitorsResult {
+  age_group: string | null;
+  external_id: string;
+  id: string;
+  name: string | null;
+}
+
+/** 'BrowseSearchCompetitors' query type */
+export interface IBrowseSearchCompetitorsQuery {
+  params: IBrowseSearchCompetitorsParams;
+  result: IBrowseSearchCompetitorsResult;
+}
+
+const browseSearchCompetitorsIR: any = {"usedParamSet":{"federation":true,"search":true,"offset":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":85,"b":96}]},{"name":"search","required":true,"transform":{"type":"scalar"},"locs":[{"a":103,"b":110},{"a":140,"b":147},{"a":157,"b":164},{"a":239,"b":246}]},{"name":"offset","required":true,"transform":{"type":"scalar"},"locs":[{"a":321,"b":328}]}],"statement":"SELECT id, external_id, name, age_group FROM federated.competitor\nWHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!\n  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)\nORDER BY nullif(name, '') NULLS LAST, external_id\nLIMIT 50 OFFSET :offset!"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT id, external_id, name, age_group FROM federated.competitor
+ * WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+ *   OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)
+ * ORDER BY nullif(name, '') NULLS LAST, external_id
+ * LIMIT 50 OFFSET :offset!
+ * ```
+ */
+export const browseSearchCompetitors = new PreparedQuery<IBrowseSearchCompetitorsParams,IBrowseSearchCompetitorsResult>(browseSearchCompetitorsIR);
+
+

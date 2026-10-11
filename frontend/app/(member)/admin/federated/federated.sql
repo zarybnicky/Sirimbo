@@ -167,3 +167,29 @@ SELECT id, kind, key, fetch_status, process_status
 FROM crawler.frontier
 WHERE federation = :federation! AND kind = 'member' AND key = :key!
 ORDER BY id;
+
+/* @name BrowsePeopleCount */
+SELECT count(*)::int AS total FROM federated.person
+WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+  OR strpos(search_name, app_private.normalize_name(:search!)) > 0);
+
+/* @name BrowsePeople */
+SELECT id, external_id,
+  coalesce(canonical_name, nullif(concat_ws(' ', first_name, last_name), ''), id) AS name, age_group
+FROM federated.person
+WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+  OR strpos(search_name, app_private.normalize_name(:search!)) > 0)
+ORDER BY search_name, external_id
+LIMIT 50 OFFSET :offset!;
+
+/* @name BrowseCompetitorsCount */
+SELECT count(*)::int AS total FROM federated.competitor
+WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0);
+
+/* @name BrowseSearchCompetitors */
+SELECT id, external_id, name, age_group FROM federated.competitor
+WHERE federation = :federation! AND (:search! = '' OR external_id::text = :search! OR id = :search!
+  OR strpos(app_private.normalize_name(name), app_private.normalize_name(:search!)) > 0)
+ORDER BY nullif(name, '') NULLS LAST, external_id
+LIMIT 50 OFFSET :offset!;

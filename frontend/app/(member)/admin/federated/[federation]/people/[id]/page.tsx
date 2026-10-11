@@ -41,7 +41,7 @@ export default async function FederatedPersonPage({
         title={person.name || person.id}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: person.federation_name, href: base },
+          { label: person.federation_name, href: `${base}?view=people` },
           { label: person.name || person.id },
         ]}
       />

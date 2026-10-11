@@ -54,7 +54,7 @@ export default async function CompetitorPage({
         title={title}
         breadcrumbs={[
           { label: 'Federations', href: '/admin/federated' },
-          { label: competitor.federation_name, href: base },
+          { label: competitor.federation_name, href: `${base}?view=competitors` },
           { label: title },
         ]}
       />
