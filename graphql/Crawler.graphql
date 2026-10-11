@@ -57,3 +57,16 @@ query CrawlerTargets($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
     }
   }
 }
+
+query CrawlerSources($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
+  crawlerTargets(first: 100, offset: $offset, condition: $condition, orderBy: [KIND_ASC, KEY_ASC, ID_ASC]) {
+    totalCount
+    nodes {
+      id
+      kind
+      key
+      fetchStatus
+      processStatus
+    }
+  }
+}

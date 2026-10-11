@@ -10,8 +10,7 @@ import {
   FederationEventDocument,
   FederationCompetitionDocument,
 } from '@/graphql/Federation';
-import { runQuery } from '@/lib/server/postgresql';
-import { browseSourceFrontiers } from '../../../federated.queries';
+import { CrawlerSourcesDocument } from '@/graphql/Crawler';
 
 export const metadata = {
   title: 'Federated competition',
@@ -48,13 +47,10 @@ export default async function CompetitionPage({
   if (currentRoundsPage > Math.max(1, Math.ceil(rounds.totalCount / 100))) notFound();
   if (!participants || currentPage > Math.max(1, Math.ceil(participants.totalCount / 20)))
     notFound();
-  const sources = auth.isSystemAdmin
-    ? await runQuery(browseSourceFrontiers, {
-        federation,
-        eventKey: event.externalId,
-        competitionKey: competition.externalId,
-      })
-    : [];
+  const crawler = auth.isSystemAdmin
+    ? await executeGraphql(CrawlerSourcesDocument, { condition: { competitionId } })
+    : null;
+  const sources = crawler?.crawlerTargets?.nodes ?? [];
   const path = `/federated/${federation}/${eventId}/${competitionId}`;
   return (
     <Layout requireUser>
@@ -269,7 +265,8 @@ export default async function CompetitionPage({
               >
                 {federation}:{source.kind}:{source.key}
               </Link>{' '}
-              — fetch: {source.fetch_status}, process: {source.process_status}
+              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
+              {source.processStatus.toLowerCase()}
             </p>
           ))}
           {sources.length === 0 && <p>No matching frontiers</p>}

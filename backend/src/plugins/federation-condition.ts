@@ -57,6 +57,38 @@ const plugins: GraphileConfig.Plugin[] = [
     (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
       value == null ? null : sql`${row}.range @> ${sqlValueWithCodec(value, TYPES.date)}`,
   ),
+  ...(['eventId', 'competitionId'] as const).map((field) =>
+    addPgTableCondition(
+      { schemaName: 'crawler', tableName: 'frontier' },
+      field,
+      (build) => ({ type: build.getInputTypeByName('BigInt') }),
+      (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+        if (value == null) return null;
+        const id = sqlValueWithCodec(value, TYPES.bigint);
+        const eventId =
+          field === 'eventId'
+            ? id
+            : sql`(select event_id from federated.competition where id = ${id})`;
+        const competitionScope =
+          field === 'eventId' ? sql`c.event_id = ${id}` : sql`c.id = ${id}`;
+        return sql`(${row}.federation, ${row}.kind, ${row}.key) in (
+          select e.federation, k.kind, e.external_id
+          from federated.event e
+          cross join unnest(array['event', 'eventCompetitors']) k(kind)
+          where e.id = ${eventId} and e.federation = 'csts'
+          union all
+          select c.federation, k.kind, c.external_id
+          from federated.competition c
+          cross join lateral unnest(case c.federation
+            when 'csts' then array['competitionResults']
+            when 'wdsf' then array['competition', 'participantIndex', 'officialIndex']
+            else array[]::text[]
+          end) k(kind)
+          where ${competitionScope}
+        )`;
+      },
+    ),
+  ),
   addPgTableCondition(
     { schemaName: 'crawler', tableName: 'frontier' },
     'keyContains',

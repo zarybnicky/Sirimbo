@@ -2974,10 +2974,12 @@ export type CrawlerTargetResponsesArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type CrawlerTargetCondition = {
+  competitionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `discoveredAt` field. */
   discoveredAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `errorCount` field. */
   errorCount?: InputMaybe<Scalars['Int']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fetchStatus` field. */

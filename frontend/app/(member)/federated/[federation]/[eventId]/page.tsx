@@ -7,8 +7,7 @@ import { numericDateWithYearFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
-import { runQuery } from '@/lib/server/postgresql';
-import { browseSourceFrontiers } from '../../federated.queries';
+import { CrawlerSourcesDocument } from '@/graphql/Crawler';
 
 export const metadata = {
   title: 'Federated event',
@@ -20,14 +19,15 @@ export default async function EventPage({
   searchParams,
 }: {
   params: Promise<{ federation: string; eventId: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; sourcesPage?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
-  const { page } = await searchParams;
+  const { page, sourcesPage } = await searchParams;
   const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
+  const currentSourcesPage = Math.max(1, Number.parseInt(sourcesPage ?? '1', 10) || 1);
   const { federationEventByFederationAndId: event } = await executeGraphql(
     FederationEventDocument,
     {
@@ -40,13 +40,15 @@ export default async function EventPage({
   if (!event?.competitions) notFound();
   const competitions = event.competitions;
   if (currentPage > Math.max(1, Math.ceil(competitions.totalCount / 100))) notFound();
-  const sources = auth.isSystemAdmin
-    ? await runQuery(browseSourceFrontiers, {
-        federation,
-        eventKey: event.externalId,
-        competitionKey: null,
+  const crawler = auth.isSystemAdmin
+    ? await executeGraphql(CrawlerSourcesDocument, {
+        condition: { eventId },
+        offset: Math.min((currentSourcesPage - 1) * 100, 2_147_483_647),
       })
-    : [];
+    : null;
+  const sources = crawler?.crawlerTargets;
+  if (sources && currentSourcesPage > Math.max(1, Math.ceil(sources.totalCount / 100)))
+    notFound();
   const title = event.name || event.externalId;
   const path = `/federated/${federation}/${eventId}`;
   return (
@@ -143,12 +145,12 @@ export default async function EventPage({
         total={competitions.totalCount}
         limit={100}
         page={currentPage}
-        href={(page) => `${path}?page=${page}`}
+        href={(page) => `${path}?page=${page}&sourcesPage=${currentSourcesPage}`}
       />
-      {sources.length > 0 && (
+      {sources && sources.totalCount > 0 && (
         <section>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-          {sources.map((source) => (
+          {sources.nodes.map((source) => (
             <p key={source.id}>
               <Link
                 className="text-accent-11 underline"
@@ -157,9 +159,18 @@ export default async function EventPage({
               >
                 {federation}:{source.kind}:{source.key}
               </Link>{' '}
-              — fetch: {source.fetch_status}, process: {source.process_status}
+              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
+              {source.processStatus.toLowerCase()}
             </p>
           ))}
+          <Pagination
+            total={sources.totalCount}
+            limit={100}
+            page={currentSourcesPage}
+            href={(sourcesPage) =>
+              `${path}?page=${currentPage}&sourcesPage=${sourcesPage}`
+            }
+          />
         </section>
       )}
     </Layout>
