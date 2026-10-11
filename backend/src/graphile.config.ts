@@ -5,6 +5,7 @@ import 'graphile-config';
 import path from 'path';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { makeV4Preset } from 'postgraphile/presets/v4';
+import { QueryControlsPlugin } from './plugins/query-controls.ts';
 import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
 import currentUserPlugin from './plugins/current-user.ts';
@@ -30,6 +31,7 @@ const preset: GraphileConfig.Preset = {
     ...personMembershipConditionPlugin,
     FailedLoginPlugin,
     OTELPlugin,
+    QueryControlsPlugin,
   ],
 
   grafast: {
@@ -61,7 +63,7 @@ const preset: GraphileConfig.Preset = {
   pgServices: [
     makePgService({
       name: 'main',
-      schemas: ['public'],
+      schemas: ['public', 'federated', 'crawler'],
       pool,
       superuserPool: pool,
     }),

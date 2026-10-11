@@ -1196,16 +1196,168 @@ strings and not numbers.
 """
 scalar BigInt
 
+"""Methods to use when ordering `Category`."""
+enum CategoriesOrderBy {
+  AGE_GROUP_ASC
+  AGE_GROUP_DESC
+  BASE_DANCE_PROGRAM_ID_ASC
+  BASE_DANCE_PROGRAM_ID_DESC
+  CLASS_ASC
+  CLASS_DESC
+  COMPETITOR_TYPE_ASC
+  COMPETITOR_TYPE_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  GENDER_GROUP_ASC
+  GENDER_GROUP_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SERIES_ASC
+  SERIES_DESC
+}
+
 type Category {
   ageGroup: String!
+
+  """Reads a single `DanceProgram` that is related to this `Category`."""
+  baseDanceProgram: DanceProgram
   baseDanceProgramId: BigInt
   class: String!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
   competitorType: CompetitorType!
   discipline: String!
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
+  """
+  federationCompetitorCategoryProgresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCategoryProgressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """
+    The method to use when ordering `FederationCompetitorCategoryProgress`.
+    """
+    orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorCategoryProgressesConnection!
   genderGroup: String!
   id: BigInt!
   name: String!
+
+  """Reads and enables pagination through a set of `Ranklist`."""
+  ranklists(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Ranklist`."""
+    orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistsConnection!
   series: String!
+}
+
+"""
+A condition to be used against `Category` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CategoryCondition {
+  """Checks for equality with the object’s `ageGroup` field."""
+  ageGroup: String
+
+  """Checks for equality with the object’s `baseDanceProgramId` field."""
+  baseDanceProgramId: BigInt
+
+  """Checks for equality with the object’s `class` field."""
+  class: String
+
+  """Checks for equality with the object’s `competitorType` field."""
+  competitorType: CompetitorType
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: String
+
+  """Checks for equality with the object’s `genderGroup` field."""
+  genderGroup: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `series` field."""
+  series: String
 }
 
 """All input for the `changePassword` mutation."""
@@ -1803,6 +1955,973 @@ enum CohortsOrderBy {
   TENANT_ID_DESC
 }
 
+type Competition {
+  """Reads a single `Category` that is related to this `Competition`."""
+  category: Category
+  categoryId: BigInt!
+  checkInEnd: Time
+
+  """Reads and enables pagination through a set of `CompetitionEntry`."""
+  competitionEntries(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionEntry`."""
+    orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionEntriesConnection!
+
+  """Reads and enables pagination through a set of `CompetitionOfficial`."""
+  competitionOfficials(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionOfficial`."""
+    orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionOfficialsConnection!
+
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResults(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionResultsConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRound`."""
+  competitionRounds(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRound`."""
+    orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundsConnection!
+
+  """
+  Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.
+  """
+  competitionType: CompetitionType
+  completedAt: Datetime
+  endDate: Date
+
+  """
+  Reads a single `FederationEvent` that is related to this `Competition`.
+  """
+  event: FederationEvent
+  eventId: BigInt!
+  excusedTotal: Int
+  externalId: String!
+  federation: String!
+
+  """Reads a single `Federation` that is related to this `Competition`."""
+  federationByFederation: Federation
+
+  """
+  Reads a single `FederationEvent` that is related to this `Competition`.
+  """
+  federationEventByFederationAndEventId: FederationEvent
+  id: BigInt!
+  participantsTotal: Int
+  registrationFee: BigFloat
+  startDate: Date!
+}
+
+"""
+A condition to be used against `Competition` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CompetitionCondition {
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: BigInt
+
+  """Checks for equality with the object’s `checkInEnd` field."""
+  checkInEnd: Time
+
+  """Checks for equality with the object’s `competitionType` field."""
+  competitionType: CompetitionType
+
+  """Checks for equality with the object’s `completedAt` field."""
+  completedAt: Datetime
+
+  """Checks for equality with the object’s `endDate` field."""
+  endDate: Date
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `excusedTotal` field."""
+  excusedTotal: Int
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `participantsTotal` field."""
+  participantsTotal: Int
+
+  """Checks for equality with the object’s `registrationFee` field."""
+  registrationFee: BigFloat
+
+  """Checks for equality with the object’s `startDate` field."""
+  startDate: Date
+}
+
+"""A connection to a list of `CompetitionEntry` values."""
+type CompetitionEntriesConnection {
+  """
+  A list of edges which contains the `CompetitionEntry` and cursor to aid in pagination.
+  """
+  edges: [CompetitionEntriesEdge!]!
+
+  """A list of `CompetitionEntry` objects."""
+  nodes: [CompetitionEntry!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionEntry` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionEntry` edge in the connection."""
+type CompetitionEntriesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionEntry` at the end of the edge."""
+  node: CompetitionEntry!
+}
+
+"""Methods to use when ordering `CompetitionEntry`."""
+enum CompetitionEntriesOrderBy {
+  CANCELLED_ASC
+  CANCELLED_DESC
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CompetitionEntry {
+  cancelled: Boolean!
+
+  """
+  Reads a single `Competition` that is related to this `CompetitionEntry`.
+  """
+  competition: Competition
+  competitionId: BigInt!
+
+  """
+  Reads a single `FederationCompetitor` that is related to this `CompetitionEntry`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  createdAt: Datetime!
+}
+
+"""
+A condition to be used against `CompetitionEntry` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionEntryCondition {
+  """Checks for equality with the object’s `cancelled` field."""
+  cancelled: Boolean
+
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+}
+
+type CompetitionOfficial {
+  """
+  Reads a single `Competition` that is related to this `CompetitionOfficial`.
+  """
+  competition: Competition
+  competitionId: BigInt!
+  externalId: String
+
+  """
+  Reads a single `FederationPerson` that is related to this `CompetitionOfficial`.
+  """
+  person: FederationPerson
+  personId: String!
+  role: OfficialRole!
+}
+
+"""
+A condition to be used against `CompetitionOfficial` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionOfficialCondition {
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `role` field."""
+  role: OfficialRole
+}
+
+"""A connection to a list of `CompetitionOfficial` values."""
+type CompetitionOfficialsConnection {
+  """
+  A list of edges which contains the `CompetitionOfficial` and cursor to aid in pagination.
+  """
+  edges: [CompetitionOfficialsEdge!]!
+
+  """A list of `CompetitionOfficial` objects."""
+  nodes: [CompetitionOfficial!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionOfficial` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionOfficial` edge in the connection."""
+type CompetitionOfficialsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionOfficial` at the end of the edge."""
+  node: CompetitionOfficial!
+}
+
+"""Methods to use when ordering `CompetitionOfficial`."""
+enum CompetitionOfficialsOrderBy {
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROLE_ASC
+  ROLE_DESC
+}
+
+type CompetitionResult {
+  """
+  Reads a single `Competition` that is related to this `CompetitionResult`.
+  """
+  competition: Competition
+  competitionId: BigInt!
+
+  """
+  Reads a single `FederationCompetitor` that is related to this `CompetitionResult`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  completionStatus: String
+  finalGain: BigFloat
+  isFinal: Boolean
+  lastDance: String
+  lastRound: String
+  pointGain: BigFloat
+  ranking: Int!
+  rankingTo: Int
+  startNumber: String
+}
+
+"""
+A condition to be used against `CompetitionResult` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionResultCondition {
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `completionStatus` field."""
+  completionStatus: String
+
+  """Checks for equality with the object’s `finalGain` field."""
+  finalGain: BigFloat
+
+  """Checks for equality with the object’s `isFinal` field."""
+  isFinal: Boolean
+
+  """Checks for equality with the object’s `lastDance` field."""
+  lastDance: String
+
+  """Checks for equality with the object’s `lastRound` field."""
+  lastRound: String
+
+  """Checks for equality with the object’s `pointGain` field."""
+  pointGain: BigFloat
+
+  """Checks for equality with the object’s `ranking` field."""
+  ranking: Int
+
+  """Checks for equality with the object’s `rankingTo` field."""
+  rankingTo: Int
+
+  """Checks for equality with the object’s `startNumber` field."""
+  startNumber: String
+}
+
+"""A connection to a list of `CompetitionResult` values."""
+type CompetitionResultsConnection {
+  """
+  A list of edges which contains the `CompetitionResult` and cursor to aid in pagination.
+  """
+  edges: [CompetitionResultsEdge!]!
+
+  """A list of `CompetitionResult` objects."""
+  nodes: [CompetitionResult!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionResult` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionResult` edge in the connection."""
+type CompetitionResultsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionResult` at the end of the edge."""
+  node: CompetitionResult!
+}
+
+"""Methods to use when ordering `CompetitionResult`."""
+enum CompetitionResultsOrderBy {
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  COMPLETION_STATUS_ASC
+  COMPLETION_STATUS_DESC
+  FINAL_GAIN_ASC
+  FINAL_GAIN_DESC
+  IS_FINAL_ASC
+  IS_FINAL_DESC
+  LAST_DANCE_ASC
+  LAST_DANCE_DESC
+  LAST_ROUND_ASC
+  LAST_ROUND_DESC
+  NATURAL
+  POINT_GAIN_ASC
+  POINT_GAIN_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANKING_ASC
+  RANKING_DESC
+  RANKING_TO_ASC
+  RANKING_TO_DESC
+  START_NUMBER_ASC
+  START_NUMBER_DESC
+}
+
+type CompetitionRound {
+  """
+  Reads a single `Competition` that is related to this `CompetitionRound`.
+  """
+  competition: Competition
+  competitionId: BigInt!
+
+  """Reads and enables pagination through a set of `CompetitionRoundDance`."""
+  competitionRoundDancesByRoundIdAndDanceProgramId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundDance`."""
+    orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundDancesConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
+  competitionRoundJudgesByRoundId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundJudgeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundJudge`."""
+    orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundJudgesConnection!
+
+  """
+  Reads and enables pagination through a set of `CompetitionRoundResult`.
+  """
+  competitionRoundResultsByRoundId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundResult`."""
+    orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundResultsConnection!
+  createdAt: Datetime!
+
+  """
+  Reads a single `DanceProgram` that is related to this `CompetitionRound`.
+  """
+  danceProgram: DanceProgram
+  danceProgramId: BigInt!
+  id: BigInt!
+
+  """Reads and enables pagination through a set of `JudgeScore`."""
+  judgeScoresByRoundId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JudgeScoreCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `JudgeScore`."""
+    orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JudgeScoresConnection!
+  roundIndex: Int
+  roundKey: String!
+  roundLabel: String
+  scoringMethod: ScoringMethod!
+}
+
+"""
+A condition to be used against `CompetitionRound` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionRoundCondition {
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `danceProgramId` field."""
+  danceProgramId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `roundIndex` field."""
+  roundIndex: Int
+
+  """Checks for equality with the object’s `roundKey` field."""
+  roundKey: String
+
+  """Checks for equality with the object’s `roundLabel` field."""
+  roundLabel: String
+
+  """Checks for equality with the object’s `scoringMethod` field."""
+  scoringMethod: ScoringMethod
+}
+
+type CompetitionRoundDance {
+  danceCode: String!
+  danceOrder: Int!
+
+  """
+  Reads a single `DanceProgramDance` that is related to this `CompetitionRoundDance`.
+  """
+  danceProgramDanceByDanceProgramIdAndDanceCode: DanceProgramDance
+  danceProgramId: BigInt!
+
+  """Reads and enables pagination through a set of `JudgeScore`."""
+  judgeScoresByRoundIdAndDanceOrderAndDanceCode(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JudgeScoreCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `JudgeScore`."""
+    orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JudgeScoresConnection!
+
+  """
+  Reads a single `CompetitionRound` that is related to this `CompetitionRoundDance`.
+  """
+  roundDanceProgram: CompetitionRound
+  roundId: BigInt!
+}
+
+"""
+A condition to be used against `CompetitionRoundDance` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionRoundDanceCondition {
+  """Checks for equality with the object’s `danceCode` field."""
+  danceCode: String
+
+  """Checks for equality with the object’s `danceOrder` field."""
+  danceOrder: Int
+
+  """Checks for equality with the object’s `danceProgramId` field."""
+  danceProgramId: BigInt
+
+  """Checks for equality with the object’s `roundId` field."""
+  roundId: BigInt
+}
+
+"""A connection to a list of `CompetitionRoundDance` values."""
+type CompetitionRoundDancesConnection {
+  """
+  A list of edges which contains the `CompetitionRoundDance` and cursor to aid in pagination.
+  """
+  edges: [CompetitionRoundDancesEdge!]!
+
+  """A list of `CompetitionRoundDance` objects."""
+  nodes: [CompetitionRoundDance!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionRoundDance` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionRoundDance` edge in the connection."""
+type CompetitionRoundDancesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionRoundDance` at the end of the edge."""
+  node: CompetitionRoundDance!
+}
+
+"""Methods to use when ordering `CompetitionRoundDance`."""
+enum CompetitionRoundDancesOrderBy {
+  DANCE_CODE_ASC
+  DANCE_CODE_DESC
+  DANCE_ORDER_ASC
+  DANCE_ORDER_DESC
+  DANCE_PROGRAM_ID_ASC
+  DANCE_PROGRAM_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROUND_ID_ASC
+  ROUND_ID_DESC
+}
+
+type CompetitionRoundJudge {
+  judgeIndex: Int!
+  judgeLabel: String
+
+  """
+  Reads a single `FederationPerson` that is related to this `CompetitionRoundJudge`.
+  """
+  personJudge: FederationPerson
+  personJudgeId: String!
+
+  """
+  Reads a single `CompetitionRound` that is related to this `CompetitionRoundJudge`.
+  """
+  round: CompetitionRound
+  roundId: BigInt!
+}
+
+"""
+A condition to be used against `CompetitionRoundJudge` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionRoundJudgeCondition {
+  """Checks for equality with the object’s `judgeIndex` field."""
+  judgeIndex: Int
+
+  """Checks for equality with the object’s `judgeLabel` field."""
+  judgeLabel: String
+
+  """Checks for equality with the object’s `personJudgeId` field."""
+  personJudgeId: String
+
+  """Checks for equality with the object’s `roundId` field."""
+  roundId: BigInt
+}
+
+"""A connection to a list of `CompetitionRoundJudge` values."""
+type CompetitionRoundJudgesConnection {
+  """
+  A list of edges which contains the `CompetitionRoundJudge` and cursor to aid in pagination.
+  """
+  edges: [CompetitionRoundJudgesEdge!]!
+
+  """A list of `CompetitionRoundJudge` objects."""
+  nodes: [CompetitionRoundJudge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionRoundJudge` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionRoundJudge` edge in the connection."""
+type CompetitionRoundJudgesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionRoundJudge` at the end of the edge."""
+  node: CompetitionRoundJudge!
+}
+
+"""Methods to use when ordering `CompetitionRoundJudge`."""
+enum CompetitionRoundJudgesOrderBy {
+  JUDGE_INDEX_ASC
+  JUDGE_INDEX_DESC
+  JUDGE_LABEL_ASC
+  JUDGE_LABEL_DESC
+  NATURAL
+  PERSON_JUDGE_ID_ASC
+  PERSON_JUDGE_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROUND_ID_ASC
+  ROUND_ID_DESC
+}
+
+type CompetitionRoundResult {
+  """
+  Reads a single `FederationCompetitor` that is related to this `CompetitionRoundResult`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  danceResults: [Float]
+  overallRanking: Int
+  overallRankingTo: Int
+  overallScore: BigFloat
+  qualifiedNext: Boolean
+
+  """
+  Reads a single `CompetitionRound` that is related to this `CompetitionRoundResult`.
+  """
+  round: CompetitionRound
+  roundId: BigInt!
+}
+
+"""
+A condition to be used against `CompetitionRoundResult` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionRoundResultCondition {
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `danceResults` field."""
+  danceResults: [Float]
+
+  """Checks for equality with the object’s `overallRanking` field."""
+  overallRanking: Int
+
+  """Checks for equality with the object’s `overallRankingTo` field."""
+  overallRankingTo: Int
+
+  """Checks for equality with the object’s `overallScore` field."""
+  overallScore: BigFloat
+
+  """Checks for equality with the object’s `qualifiedNext` field."""
+  qualifiedNext: Boolean
+
+  """Checks for equality with the object’s `roundId` field."""
+  roundId: BigInt
+}
+
+"""A connection to a list of `CompetitionRoundResult` values."""
+type CompetitionRoundResultsConnection {
+  """
+  A list of edges which contains the `CompetitionRoundResult` and cursor to aid in pagination.
+  """
+  edges: [CompetitionRoundResultsEdge!]!
+
+  """A list of `CompetitionRoundResult` objects."""
+  nodes: [CompetitionRoundResult!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionRoundResult` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionRoundResult` edge in the connection."""
+type CompetitionRoundResultsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionRoundResult` at the end of the edge."""
+  node: CompetitionRoundResult!
+}
+
+"""Methods to use when ordering `CompetitionRoundResult`."""
+enum CompetitionRoundResultsOrderBy {
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  NATURAL
+  OVERALL_RANKING_ASC
+  OVERALL_RANKING_DESC
+  OVERALL_RANKING_TO_ASC
+  OVERALL_RANKING_TO_DESC
+  OVERALL_SCORE_ASC
+  OVERALL_SCORE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  QUALIFIED_NEXT_ASC
+  QUALIFIED_NEXT_DESC
+  ROUND_ID_ASC
+  ROUND_ID_DESC
+}
+
+"""A connection to a list of `CompetitionRound` values."""
+type CompetitionRoundsConnection {
+  """
+  A list of edges which contains the `CompetitionRound` and cursor to aid in pagination.
+  """
+  edges: [CompetitionRoundsEdge!]!
+
+  """A list of `CompetitionRound` objects."""
+  nodes: [CompetitionRound!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionRound` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionRound` edge in the connection."""
+type CompetitionRoundsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionRound` at the end of the edge."""
+  node: CompetitionRound!
+}
+
+"""Methods to use when ordering `CompetitionRound`."""
+enum CompetitionRoundsOrderBy {
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DANCE_PROGRAM_ID_ASC
+  DANCE_PROGRAM_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROUND_INDEX_ASC
+  ROUND_INDEX_DESC
+  ROUND_KEY_ASC
+  ROUND_KEY_DESC
+  ROUND_LABEL_ASC
+  ROUND_LABEL_DESC
+  SCORING_METHOD_ASC
+  SCORING_METHOD_DESC
+}
+
 enum CompetitionType {
   CHAMPIONSHIP
   CUP
@@ -1812,6 +2931,72 @@ enum CompetitionType {
   SUPER_LEAGUE
   TOP_LEVEL
   UNKNOWN
+}
+
+"""A connection to a list of `Competition` values."""
+type CompetitionsConnection {
+  """
+  A list of edges which contains the `Competition` and cursor to aid in pagination.
+  """
+  edges: [CompetitionsEdge!]!
+
+  """A list of `Competition` objects."""
+  nodes: [Competition!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Competition` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Competition` edge in the connection."""
+type CompetitionsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Competition` at the end of the edge."""
+  node: Competition!
+}
+
+"""Methods to use when ordering `Competition`."""
+enum CompetitionsOrderBy {
+  CATEGORY_ID_ASC
+  CATEGORY_ID_DESC
+  CHECK_IN_END_ASC
+  CHECK_IN_END_DESC
+  COMPETITION_TYPE_ASC
+  COMPETITION_TYPE_DESC
+  COMPLETED_AT_ASC
+  COMPLETED_AT_DESC
+  END_DATE_ASC
+  END_DATE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  EXCUSED_TOTAL_ASC
+  EXCUSED_TOTAL_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  PARTICIPANTS_TOTAL_ASC
+  PARTICIPANTS_TOTAL_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  REGISTRATION_FEE_ASC
+  REGISTRATION_FEE_DESC
+  START_DATE_ASC
+  START_DATE_DESC
+}
+
+enum CompetitorRole {
+  FOLLOW
+  LEAD
+  MEMBER
+  SUBSTITUTE
 }
 
 enum CompetitorType {
@@ -1997,6 +3182,851 @@ enum CouplesOrderBy {
   UPDATED_AT_DESC
   WOMAN_ID_ASC
   WOMAN_ID_DESC
+}
+
+type CrawlerFetchJob {
+  attempts: Int
+  federation: String
+  fetchStatus: FetchStatus
+  frontierId: BigInt
+  frontierKey: String
+  host: String
+  jobError: String
+  jobId: BigInt
+  jobKey: String
+  jobUpdatedAt: Datetime
+  kind: String
+  lockedAt: Datetime
+  maxAttempts: Int
+  processError: String
+  processStatus: ProcessStatus
+  runAt: Datetime
+  state: String
+}
+
+"""
+A condition to be used against `CrawlerFetchJob` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerFetchJobCondition {
+  """Checks for equality with the object’s `attempts` field."""
+  attempts: Int
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `fetchStatus` field."""
+  fetchStatus: FetchStatus
+
+  """Checks for equality with the object’s `frontierId` field."""
+  frontierId: BigInt
+
+  """Checks for equality with the object’s `frontierKey` field."""
+  frontierKey: String
+
+  """Checks for equality with the object’s `host` field."""
+  host: String
+
+  """Checks for equality with the object’s `jobError` field."""
+  jobError: String
+
+  """Checks for equality with the object’s `jobId` field."""
+  jobId: BigInt
+
+  """Checks for equality with the object’s `jobKey` field."""
+  jobKey: String
+
+  """Checks for equality with the object’s `jobUpdatedAt` field."""
+  jobUpdatedAt: Datetime
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `lockedAt` field."""
+  lockedAt: Datetime
+
+  """Checks for equality with the object’s `maxAttempts` field."""
+  maxAttempts: Int
+
+  """Checks for equality with the object’s `processError` field."""
+  processError: String
+
+  """Checks for equality with the object’s `processStatus` field."""
+  processStatus: ProcessStatus
+
+  """Checks for equality with the object’s `runAt` field."""
+  runAt: Datetime
+
+  """Checks for equality with the object’s `state` field."""
+  state: String
+}
+
+"""A connection to a list of `CrawlerFetchJob` values."""
+type CrawlerFetchJobsConnection {
+  """
+  A list of edges which contains the `CrawlerFetchJob` and cursor to aid in pagination.
+  """
+  edges: [CrawlerFetchJobsEdge!]!
+
+  """A list of `CrawlerFetchJob` objects."""
+  nodes: [CrawlerFetchJob!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerFetchJob` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerFetchJob` edge in the connection."""
+type CrawlerFetchJobsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerFetchJob` at the end of the edge."""
+  node: CrawlerFetchJob!
+}
+
+"""Methods to use when ordering `CrawlerFetchJob`."""
+enum CrawlerFetchJobsOrderBy {
+  ATTEMPTS_ASC
+  ATTEMPTS_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FETCH_STATUS_ASC
+  FETCH_STATUS_DESC
+  FRONTIER_ID_ASC
+  FRONTIER_ID_DESC
+  FRONTIER_KEY_ASC
+  FRONTIER_KEY_DESC
+  HOST_ASC
+  HOST_DESC
+  JOB_ERROR_ASC
+  JOB_ERROR_DESC
+  JOB_ID_ASC
+  JOB_ID_DESC
+  JOB_KEY_ASC
+  JOB_KEY_DESC
+  JOB_UPDATED_AT_ASC
+  JOB_UPDATED_AT_DESC
+  KIND_ASC
+  KIND_DESC
+  LOCKED_AT_ASC
+  LOCKED_AT_DESC
+  MAX_ATTEMPTS_ASC
+  MAX_ATTEMPTS_DESC
+  NATURAL
+  PROCESS_ERROR_ASC
+  PROCESS_ERROR_DESC
+  PROCESS_STATUS_ASC
+  PROCESS_STATUS_DESC
+  RUN_AT_ASC
+  RUN_AT_DESC
+  STATE_ASC
+  STATE_DESC
+}
+
+type CrawlerIncrementalRange {
+  federation: String!
+  kind: String!
+  lastChecked: Int!
+  lastKnown: Int!
+}
+
+"""
+A condition to be used against `CrawlerIncrementalRange` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerIncrementalRangeCondition {
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `lastChecked` field."""
+  lastChecked: Int
+
+  """Checks for equality with the object’s `lastKnown` field."""
+  lastKnown: Int
+}
+
+"""A connection to a list of `CrawlerIncrementalRange` values."""
+type CrawlerIncrementalRangesConnection {
+  """
+  A list of edges which contains the `CrawlerIncrementalRange` and cursor to aid in pagination.
+  """
+  edges: [CrawlerIncrementalRangesEdge!]!
+
+  """A list of `CrawlerIncrementalRange` objects."""
+  nodes: [CrawlerIncrementalRange!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerIncrementalRange` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerIncrementalRange` edge in the connection."""
+type CrawlerIncrementalRangesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerIncrementalRange` at the end of the edge."""
+  node: CrawlerIncrementalRange!
+}
+
+"""Methods to use when ordering `CrawlerIncrementalRange`."""
+enum CrawlerIncrementalRangesOrderBy {
+  FEDERATION_ASC
+  FEDERATION_DESC
+  KIND_ASC
+  KIND_DESC
+  LAST_CHECKED_ASC
+  LAST_CHECKED_DESC
+  LAST_KNOWN_ASC
+  LAST_KNOWN_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type CrawlerRateLimitRule {
+  host: String!
+  maxRequests: Int!
+  nextAvailableAt: Datetime!
+  perInterval: Interval!
+  spacing: Interval!
+}
+
+"""
+A condition to be used against `CrawlerRateLimitRule` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerRateLimitRuleCondition {
+  """Checks for equality with the object’s `host` field."""
+  host: String
+
+  """Checks for equality with the object’s `maxRequests` field."""
+  maxRequests: Int
+
+  """Checks for equality with the object’s `nextAvailableAt` field."""
+  nextAvailableAt: Datetime
+
+  """Checks for equality with the object’s `perInterval` field."""
+  perInterval: IntervalInput
+
+  """Checks for equality with the object’s `spacing` field."""
+  spacing: IntervalInput
+}
+
+"""A connection to a list of `CrawlerRateLimitRule` values."""
+type CrawlerRateLimitRulesConnection {
+  """
+  A list of edges which contains the `CrawlerRateLimitRule` and cursor to aid in pagination.
+  """
+  edges: [CrawlerRateLimitRulesEdge!]!
+
+  """A list of `CrawlerRateLimitRule` objects."""
+  nodes: [CrawlerRateLimitRule!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerRateLimitRule` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerRateLimitRule` edge in the connection."""
+type CrawlerRateLimitRulesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerRateLimitRule` at the end of the edge."""
+  node: CrawlerRateLimitRule!
+}
+
+"""Methods to use when ordering `CrawlerRateLimitRule`."""
+enum CrawlerRateLimitRulesOrderBy {
+  HOST_ASC
+  HOST_DESC
+  MAX_REQUESTS_ASC
+  MAX_REQUESTS_DESC
+  NATURAL
+  NEXT_AVAILABLE_AT_ASC
+  NEXT_AVAILABLE_AT_DESC
+  PER_INTERVAL_ASC
+  PER_INTERVAL_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SPACING_ASC
+  SPACING_DESC
+}
+
+type CrawlerResponse {
+  contentHash: String
+
+  """
+  Reads a single `CrawlerResponseCache` that is related to this `CrawlerResponse`.
+  """
+  crawlerResponseCache: CrawlerResponseCache
+
+  """Reads and enables pagination through a set of `CrawlerTarget`."""
+  crawlerTargetsByLastResponseId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerTarget`."""
+    orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerTargetsConnection!
+
+  """Reads and enables pagination through a set of `CrawlerTarget`."""
+  crawlerTargetsByLastSuccessfulResponseId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerTarget`."""
+    orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerTargetsConnection!
+  error: String
+  fetchedAt: Datetime!
+
+  """
+  Reads a single `CrawlerTarget` that is related to this `CrawlerResponse`.
+  """
+  frontier: CrawlerTarget
+  frontierId: BigInt!
+  httpStatus: Int
+  id: BigInt!
+  lastObservedAt: Datetime
+  observationCount: BigInt!
+  sysPeriod: DatetimeRange
+  url: String!
+}
+
+type CrawlerResponseCache {
+  content: JSON!
+  contentHash: String!
+
+  """Reads and enables pagination through a set of `CrawlerResponse`."""
+  crawlerResponsesByContentHash(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerResponseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerResponse`."""
+    orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerResponsesConnection!
+}
+
+"""
+A condition to be used against `CrawlerResponseCache` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerResponseCacheCondition {
+  """Checks for equality with the object’s `content` field."""
+  content: JSON
+
+  """Checks for equality with the object’s `contentHash` field."""
+  contentHash: String
+}
+
+"""A connection to a list of `CrawlerResponseCache` values."""
+type CrawlerResponseCachesConnection {
+  """
+  A list of edges which contains the `CrawlerResponseCache` and cursor to aid in pagination.
+  """
+  edges: [CrawlerResponseCachesEdge!]!
+
+  """A list of `CrawlerResponseCache` objects."""
+  nodes: [CrawlerResponseCache!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerResponseCache` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerResponseCache` edge in the connection."""
+type CrawlerResponseCachesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerResponseCache` at the end of the edge."""
+  node: CrawlerResponseCache!
+}
+
+"""Methods to use when ordering `CrawlerResponseCache`."""
+enum CrawlerResponseCachesOrderBy {
+  CONTENT_ASC
+  CONTENT_DESC
+  CONTENT_HASH_ASC
+  CONTENT_HASH_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `CrawlerResponse` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerResponseCondition {
+  """Checks for equality with the object’s `contentHash` field."""
+  contentHash: String
+
+  """Checks for equality with the object’s `error` field."""
+  error: String
+
+  """Checks for equality with the object’s `fetchedAt` field."""
+  fetchedAt: Datetime
+
+  """Checks for equality with the object’s `frontierId` field."""
+  frontierId: BigInt
+
+  """Checks for equality with the object’s `httpStatus` field."""
+  httpStatus: Int
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `lastObservedAt` field."""
+  lastObservedAt: Datetime
+
+  """Checks for equality with the object’s `observationCount` field."""
+  observationCount: BigInt
+
+  """Checks for equality with the object’s `sysPeriod` field."""
+  sysPeriod: DatetimeRangeInput
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
+}
+
+"""A connection to a list of `CrawlerResponse` values."""
+type CrawlerResponsesConnection {
+  """
+  A list of edges which contains the `CrawlerResponse` and cursor to aid in pagination.
+  """
+  edges: [CrawlerResponsesEdge!]!
+
+  """A list of `CrawlerResponse` objects."""
+  nodes: [CrawlerResponse!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerResponse` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerResponse` edge in the connection."""
+type CrawlerResponsesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerResponse` at the end of the edge."""
+  node: CrawlerResponse!
+}
+
+"""Methods to use when ordering `CrawlerResponse`."""
+enum CrawlerResponsesOrderBy {
+  CONTENT_HASH_ASC
+  CONTENT_HASH_DESC
+  ERROR_ASC
+  ERROR_DESC
+  FETCHED_AT_ASC
+  FETCHED_AT_DESC
+  FRONTIER_ID_ASC
+  FRONTIER_ID_DESC
+  HTTP_STATUS_ASC
+  HTTP_STATUS_DESC
+  ID_ASC
+  ID_DESC
+  LAST_OBSERVED_AT_ASC
+  LAST_OBSERVED_AT_DESC
+  NATURAL
+  OBSERVATION_COUNT_ASC
+  OBSERVATION_COUNT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  URL_ASC
+  URL_DESC
+}
+
+type CrawlerTarget {
+  """Reads and enables pagination through a set of `CrawlerResponse`."""
+  crawlerResponsesByFrontierId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerResponseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerResponse`."""
+    orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerResponsesConnection!
+  discoveredAt: Datetime!
+  errorCount: Int!
+  federation: String!
+  fetchStatus: FetchStatus!
+  id: BigInt!
+  key: String!
+  kind: String!
+  lastFetchedAt: Datetime
+  lastProcessError: String
+  lastProcessErrorAt: Datetime
+
+  """
+  Reads a single `CrawlerResponse` that is related to this `CrawlerTarget`.
+  """
+  lastResponse: CrawlerResponse
+  lastResponseId: BigInt
+
+  """
+  Reads a single `CrawlerResponse` that is related to this `CrawlerTarget`.
+  """
+  lastSuccessfulResponse: CrawlerResponse
+  lastSuccessfulResponseId: BigInt
+  meta: JSON!
+  nextFetchAt: Datetime!
+  processStatus: ProcessStatus!
+}
+
+"""
+A condition to be used against `CrawlerTarget` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerTargetCondition {
+  """Checks for equality with the object’s `discoveredAt` field."""
+  discoveredAt: Datetime
+
+  """Checks for equality with the object’s `errorCount` field."""
+  errorCount: Int
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `fetchStatus` field."""
+  fetchStatus: FetchStatus
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `key` field."""
+  key: String
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `lastFetchedAt` field."""
+  lastFetchedAt: Datetime
+
+  """Checks for equality with the object’s `lastProcessError` field."""
+  lastProcessError: String
+
+  """Checks for equality with the object’s `lastProcessErrorAt` field."""
+  lastProcessErrorAt: Datetime
+
+  """Checks for equality with the object’s `lastResponseId` field."""
+  lastResponseId: BigInt
+
+  """
+  Checks for equality with the object’s `lastSuccessfulResponseId` field.
+  """
+  lastSuccessfulResponseId: BigInt
+
+  """Checks for equality with the object’s `meta` field."""
+  meta: JSON
+
+  """Checks for equality with the object’s `nextFetchAt` field."""
+  nextFetchAt: Datetime
+
+  """Checks for equality with the object’s `processStatus` field."""
+  processStatus: ProcessStatus
+}
+
+type CrawlerTargetFailure {
+  errorCount: Int
+  errorText: String
+  failedAt: Datetime
+  failure: String
+  federation: String
+  fetchStatus: FetchStatus
+  httpStatus: Int
+  id: BigInt
+  key: String
+  kind: String
+  nextFetchAt: Datetime
+  processError: String
+  processStatus: ProcessStatus
+  responseError: String
+  url: String
+}
+
+"""
+A condition to be used against `CrawlerTargetFailure` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerTargetFailureCondition {
+  """Checks for equality with the object’s `errorCount` field."""
+  errorCount: Int
+
+  """Checks for equality with the object’s `errorText` field."""
+  errorText: String
+
+  """Checks for equality with the object’s `failedAt` field."""
+  failedAt: Datetime
+
+  """Checks for equality with the object’s `failure` field."""
+  failure: String
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `fetchStatus` field."""
+  fetchStatus: FetchStatus
+
+  """Checks for equality with the object’s `httpStatus` field."""
+  httpStatus: Int
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `key` field."""
+  key: String
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `nextFetchAt` field."""
+  nextFetchAt: Datetime
+
+  """Checks for equality with the object’s `processError` field."""
+  processError: String
+
+  """Checks for equality with the object’s `processStatus` field."""
+  processStatus: ProcessStatus
+
+  """Checks for equality with the object’s `responseError` field."""
+  responseError: String
+
+  """Checks for equality with the object’s `url` field."""
+  url: String
+}
+
+"""A connection to a list of `CrawlerTargetFailure` values."""
+type CrawlerTargetFailuresConnection {
+  """
+  A list of edges which contains the `CrawlerTargetFailure` and cursor to aid in pagination.
+  """
+  edges: [CrawlerTargetFailuresEdge!]!
+
+  """A list of `CrawlerTargetFailure` objects."""
+  nodes: [CrawlerTargetFailure!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerTargetFailure` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerTargetFailure` edge in the connection."""
+type CrawlerTargetFailuresEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerTargetFailure` at the end of the edge."""
+  node: CrawlerTargetFailure!
+}
+
+"""Methods to use when ordering `CrawlerTargetFailure`."""
+enum CrawlerTargetFailuresOrderBy {
+  ERROR_COUNT_ASC
+  ERROR_COUNT_DESC
+  ERROR_TEXT_ASC
+  ERROR_TEXT_DESC
+  FAILED_AT_ASC
+  FAILED_AT_DESC
+  FAILURE_ASC
+  FAILURE_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FETCH_STATUS_ASC
+  FETCH_STATUS_DESC
+  HTTP_STATUS_ASC
+  HTTP_STATUS_DESC
+  ID_ASC
+  ID_DESC
+  KEY_ASC
+  KEY_DESC
+  KIND_ASC
+  KIND_DESC
+  NATURAL
+  NEXT_FETCH_AT_ASC
+  NEXT_FETCH_AT_DESC
+  PROCESS_ERROR_ASC
+  PROCESS_ERROR_DESC
+  PROCESS_STATUS_ASC
+  PROCESS_STATUS_DESC
+  RESPONSE_ERROR_ASC
+  RESPONSE_ERROR_DESC
+  URL_ASC
+  URL_DESC
+}
+
+"""A connection to a list of `CrawlerTarget` values."""
+type CrawlerTargetsConnection {
+  """
+  A list of edges which contains the `CrawlerTarget` and cursor to aid in pagination.
+  """
+  edges: [CrawlerTargetsEdge!]!
+
+  """A list of `CrawlerTarget` objects."""
+  nodes: [CrawlerTarget!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CrawlerTarget` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CrawlerTarget` edge in the connection."""
+type CrawlerTargetsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerTarget` at the end of the edge."""
+  node: CrawlerTarget!
+}
+
+"""Methods to use when ordering `CrawlerTarget`."""
+enum CrawlerTargetsOrderBy {
+  DISCOVERED_AT_ASC
+  DISCOVERED_AT_DESC
+  ERROR_COUNT_ASC
+  ERROR_COUNT_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FETCH_STATUS_ASC
+  FETCH_STATUS_DESC
+  ID_ASC
+  ID_DESC
+  KEY_ASC
+  KEY_DESC
+  KIND_ASC
+  KIND_DESC
+  LAST_FETCHED_AT_ASC
+  LAST_FETCHED_AT_DESC
+  LAST_PROCESS_ERROR_ASC
+  LAST_PROCESS_ERROR_AT_ASC
+  LAST_PROCESS_ERROR_AT_DESC
+  LAST_PROCESS_ERROR_DESC
+  LAST_RESPONSE_ID_ASC
+  LAST_RESPONSE_ID_DESC
+  LAST_SUCCESSFUL_RESPONSE_ID_ASC
+  LAST_SUCCESSFUL_RESPONSE_ID_DESC
+  META_ASC
+  META_DESC
+  NATURAL
+  NEXT_FETCH_AT_ASC
+  NEXT_FETCH_AT_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  PROCESS_STATUS_ASC
+  PROCESS_STATUS_DESC
 }
 
 """All input for the create `AccessCredential` mutation."""
@@ -2492,8 +4522,282 @@ type CreateUserProxyPayload {
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
+type Dance {
+  code: String!
+
+  """Reads and enables pagination through a set of `DanceProgramDance`."""
+  danceProgramDancesByDanceCodeList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceProgramDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `DanceProgramDance`."""
+    orderBy: [DanceProgramDancesOrderBy!]
+  ): [DanceProgramDance!]!
+  discipline: String!
+  name: String!
+}
+
+"""
+A condition to be used against `Dance` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input DanceCondition {
+  """Checks for equality with the object’s `code` field."""
+  code: String
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+type DanceProgram {
+  """Reads and enables pagination through a set of `Category`."""
+  categoriesByBaseDanceProgramIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategoryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Category`."""
+    orderBy: [CategoriesOrderBy!]
+  ): [Category!]!
+  code: String
+
+  """Reads and enables pagination through a set of `CompetitionRound`."""
+  competitionRounds(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRound`."""
+    orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundsConnection!
+  createdAt: Datetime!
+
+  """Reads and enables pagination through a set of `DanceProgramDance`."""
+  danceProgramDancesByProgramIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceProgramDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `DanceProgramDance`."""
+    orderBy: [DanceProgramDancesOrderBy!]
+  ): [DanceProgramDance!]!
+  discipline: String
+  id: BigInt!
+  isDefault: Boolean!
+  name: String!
+}
+
+"""
+A condition to be used against `DanceProgram` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input DanceProgramCondition {
+  """Checks for equality with the object’s `code` field."""
+  code: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isDefault` field."""
+  isDefault: Boolean
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+type DanceProgramDance {
+  """Reads and enables pagination through a set of `CompetitionRoundDance`."""
+  competitionRoundDancesByDanceProgramIdAndDanceCode(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundDance`."""
+    orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundDancesConnection!
+
+  """Reads a single `Dance` that is related to this `DanceProgramDance`."""
+  danceByDanceCode: Dance
+  danceCode: String!
+  danceOrder: Int!
+
+  """
+  Reads a single `DanceProgram` that is related to this `DanceProgramDance`.
+  """
+  program: DanceProgram
+  programId: BigInt!
+}
+
+"""
+A condition to be used against `DanceProgramDance` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input DanceProgramDanceCondition {
+  """Checks for equality with the object’s `danceCode` field."""
+  danceCode: String
+
+  """Checks for equality with the object’s `danceOrder` field."""
+  danceOrder: Int
+
+  """Checks for equality with the object’s `programId` field."""
+  programId: BigInt
+}
+
+"""Methods to use when ordering `DanceProgramDance`."""
+enum DanceProgramDancesOrderBy {
+  DANCE_CODE_ASC
+  DANCE_CODE_DESC
+  DANCE_ORDER_ASC
+  DANCE_ORDER_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  PROGRAM_ID_ASC
+  PROGRAM_ID_DESC
+}
+
+"""Methods to use when ordering `DanceProgram`."""
+enum DanceProgramsOrderBy {
+  CODE_ASC
+  CODE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  ID_ASC
+  ID_DESC
+  IS_DEFAULT_ASC
+  IS_DEFAULT_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""Methods to use when ordering `Dance`."""
+enum DancesOrderBy {
+  CODE_ASC
+  CODE_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """A calendar date in YYYY-MM-DD format."""
 scalar Date
+
+"""A range of `Date`."""
+type DateRange {
+  """The ending bound of our range."""
+  end: DateRangeBound
+
+  """The starting bound of our range."""
+  start: DateRangeBound
+}
+
+"""
+The value at one end of a range. A range can either include this value, or not.
+"""
+type DateRangeBound {
+  """Whether or not the value of this bound is included in the range."""
+  inclusive: Boolean!
+
+  """The value at one end of our range."""
+  value: Date!
+}
+
+"""
+The value at one end of a range. A range can either include this value, or not.
+"""
+input DateRangeBoundInput {
+  """Whether or not the value of this bound is included in the range."""
+  inclusive: Boolean!
+
+  """The value at one end of our range."""
+  value: Date!
+}
+
+"""A range of `Date`."""
+input DateRangeInput {
+  """The ending bound of our range."""
+  end: DateRangeBoundInput
+
+  """The starting bound of our range."""
+  start: DateRangeBoundInput
+}
 
 """
 A point in time as described by the [ISO
@@ -4390,6 +6694,1861 @@ enum EventType {
   RESERVATION
 }
 
+type Federation {
+  code: String!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitionsByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
+
+  """Reads and enables pagination through a set of `FederationClub`."""
+  federationClubsByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationClubCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationClub`."""
+    orderBy: [FederationClubsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationClubsConnection!
+
+  """Reads and enables pagination through a set of `FederationCompetitor`."""
+  federationCompetitorsByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitor`."""
+    orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorsConnection!
+
+  """Reads and enables pagination through a set of `FederationEvent`."""
+  federationEventsByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEvent`."""
+    orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventsConnection!
+
+  """Reads and enables pagination through a set of `FederationPerson`."""
+  federationPeopleByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPerson`."""
+    orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPeopleConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationPersonLicense`.
+  """
+  federationPersonLicensesByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonLicenseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonLicense`."""
+    orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonLicensesConnection!
+  name: String!
+
+  """Reads and enables pagination through a set of `Ranklist`."""
+  ranklistsByFederation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Ranklist`."""
+    orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistsConnection!
+}
+
+type FederationClub {
+  city: String
+  country: String
+  createdAt: Datetime!
+  externalId: String!
+  federation: String!
+
+  """Reads a single `Federation` that is related to this `FederationClub`."""
+  federationByFederation: Federation
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`.
+  """
+  federationCompetitorClubAffiliationsByClubId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorClubAffiliationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorClubAffiliation`."""
+    orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorClubAffiliationsConnection!
+
+  """Reads and enables pagination through a set of `FederationEvent`."""
+  federationEventsByFederationAndOrganizingClubId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEvent`."""
+    orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventsConnection!
+
+  """Reads and enables pagination through a set of `FederationEvent`."""
+  federationEventsByOrganizingClubId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEvent`."""
+    orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventsConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationPersonClubMembership`.
+  """
+  federationPersonClubMembershipsByClubId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonClubMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonClubMembership`."""
+    orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonClubMembershipsConnection!
+  id: BigInt!
+  name: String!
+}
+
+"""
+A condition to be used against `FederationClub` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input FederationClubCondition {
+  """Checks for equality with the object’s `city` field."""
+  city: String
+
+  """Checks for equality with the object’s `country` field."""
+  country: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""A connection to a list of `FederationClub` values."""
+type FederationClubsConnection {
+  """
+  A list of edges which contains the `FederationClub` and cursor to aid in pagination.
+  """
+  edges: [FederationClubsEdge!]!
+
+  """A list of `FederationClub` objects."""
+  nodes: [FederationClub!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `FederationClub` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `FederationClub` edge in the connection."""
+type FederationClubsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationClub` at the end of the edge."""
+  node: FederationClub!
+}
+
+"""Methods to use when ordering `FederationClub`."""
+enum FederationClubsOrderBy {
+  CITY_ASC
+  CITY_DESC
+  COUNTRY_ASC
+  COUNTRY_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type FederationCompetitor {
+  ageGroup: String
+
+  """Reads and enables pagination through a set of `CompetitionEntry`."""
+  competitionEntriesByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionEntry`."""
+    orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionEntriesConnection!
+
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResultsByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionResultsConnection!
+
+  """
+  Reads and enables pagination through a set of `CompetitionRoundResult`.
+  """
+  competitionRoundResultsByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundResult`."""
+    orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundResultsConnection!
+  competitorType: CompetitorType!
+  createdAt: Datetime!
+  externalId: BigInt!
+  federation: String!
+
+  """
+  Reads a single `Federation` that is related to this `FederationCompetitor`.
+  """
+  federationByFederation: Federation
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
+  """
+  federationCompetitorCategoryProgressesByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCategoryProgressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """
+    The method to use when ordering `FederationCompetitorCategoryProgress`.
+    """
+    orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorCategoryProgressesConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`.
+  """
+  federationCompetitorClubAffiliationsByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorClubAffiliationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorClubAffiliation`."""
+    orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorClubAffiliationsConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorComponent`.
+  """
+  federationCompetitorComponentsByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorComponentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorComponent`."""
+    orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorComponentsConnection!
+  id: String!
+  name: String
+
+  """Reads and enables pagination through a set of `RanklistEntry`."""
+  ranklistEntriesByCompetitorId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistEntry`."""
+    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistEntriesConnection!
+}
+
+type FederationCompetitorCategoryProgress {
+  """
+  Reads a single `Category` that is related to this `FederationCompetitorCategoryProgress`.
+  """
+  category: Category
+  categoryId: BigInt!
+
+  """
+  Reads a single `FederationCompetitor` that is related to this `FederationCompetitorCategoryProgress`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  domesticFinals: Int!
+  foreignFinals: Int!
+  points: BigFloat!
+}
+
+"""
+A condition to be used against `FederationCompetitorCategoryProgress` object
+types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationCompetitorCategoryProgressCondition {
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: BigInt
+
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `domesticFinals` field."""
+  domesticFinals: Int
+
+  """Checks for equality with the object’s `foreignFinals` field."""
+  foreignFinals: Int
+
+  """Checks for equality with the object’s `points` field."""
+  points: BigFloat
+}
+
+"""
+A connection to a list of `FederationCompetitorCategoryProgress` values.
+"""
+type FederationCompetitorCategoryProgressesConnection {
+  """
+  A list of edges which contains the `FederationCompetitorCategoryProgress` and cursor to aid in pagination.
+  """
+  edges: [FederationCompetitorCategoryProgressesEdge!]!
+
+  """A list of `FederationCompetitorCategoryProgress` objects."""
+  nodes: [FederationCompetitorCategoryProgress!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationCompetitorCategoryProgress` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationCompetitorCategoryProgress` edge in the connection."""
+type FederationCompetitorCategoryProgressesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationCompetitorCategoryProgress` at the end of the edge."""
+  node: FederationCompetitorCategoryProgress!
+}
+
+"""Methods to use when ordering `FederationCompetitorCategoryProgress`."""
+enum FederationCompetitorCategoryProgressesOrderBy {
+  CATEGORY_ID_ASC
+  CATEGORY_ID_DESC
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  DOMESTIC_FINALS_ASC
+  DOMESTIC_FINALS_DESC
+  FOREIGN_FINALS_ASC
+  FOREIGN_FINALS_DESC
+  NATURAL
+  POINTS_ASC
+  POINTS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+type FederationCompetitorClubAffiliation {
+  """
+  Reads a single `FederationClub` that is related to this `FederationCompetitorClubAffiliation`.
+  """
+  club: FederationClub
+  clubId: BigInt!
+
+  """
+  Reads a single `FederationCompetitor` that is related to this `FederationCompetitorClubAffiliation`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  validFrom: Date!
+  validTo: Date
+}
+
+"""
+A condition to be used against `FederationCompetitorClubAffiliation` object
+types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationCompetitorClubAffiliationCondition {
+  """Checks for equality with the object’s `clubId` field."""
+  clubId: BigInt
+
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `validFrom` field."""
+  validFrom: Date
+
+  """Checks for equality with the object’s `validTo` field."""
+  validTo: Date
+}
+
+"""
+A connection to a list of `FederationCompetitorClubAffiliation` values.
+"""
+type FederationCompetitorClubAffiliationsConnection {
+  """
+  A list of edges which contains the `FederationCompetitorClubAffiliation` and cursor to aid in pagination.
+  """
+  edges: [FederationCompetitorClubAffiliationsEdge!]!
+
+  """A list of `FederationCompetitorClubAffiliation` objects."""
+  nodes: [FederationCompetitorClubAffiliation!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationCompetitorClubAffiliation` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationCompetitorClubAffiliation` edge in the connection."""
+type FederationCompetitorClubAffiliationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationCompetitorClubAffiliation` at the end of the edge."""
+  node: FederationCompetitorClubAffiliation!
+}
+
+"""Methods to use when ordering `FederationCompetitorClubAffiliation`."""
+enum FederationCompetitorClubAffiliationsOrderBy {
+  CLUB_ID_ASC
+  CLUB_ID_DESC
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  VALID_FROM_ASC
+  VALID_FROM_DESC
+  VALID_TO_ASC
+  VALID_TO_DESC
+}
+
+type FederationCompetitorComponent {
+  """
+  Reads a single `FederationCompetitor` that is related to this `FederationCompetitorComponent`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+
+  """
+  Reads a single `FederationPerson` that is related to this `FederationCompetitorComponent`.
+  """
+  person: FederationPerson
+  personId: String!
+  role: CompetitorRole!
+}
+
+"""
+A condition to be used against `FederationCompetitorComponent` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationCompetitorComponentCondition {
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `role` field."""
+  role: CompetitorRole
+}
+
+"""A connection to a list of `FederationCompetitorComponent` values."""
+type FederationCompetitorComponentsConnection {
+  """
+  A list of edges which contains the `FederationCompetitorComponent` and cursor to aid in pagination.
+  """
+  edges: [FederationCompetitorComponentsEdge!]!
+
+  """A list of `FederationCompetitorComponent` objects."""
+  nodes: [FederationCompetitorComponent!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationCompetitorComponent` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationCompetitorComponent` edge in the connection."""
+type FederationCompetitorComponentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationCompetitorComponent` at the end of the edge."""
+  node: FederationCompetitorComponent!
+}
+
+"""Methods to use when ordering `FederationCompetitorComponent`."""
+enum FederationCompetitorComponentsOrderBy {
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROLE_ASC
+  ROLE_DESC
+}
+
+"""
+A condition to be used against `FederationCompetitor` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input FederationCompetitorCondition {
+  """Checks for equality with the object’s `ageGroup` field."""
+  ageGroup: String
+
+  """Checks for equality with the object’s `competitorType` field."""
+  competitorType: CompetitorType
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: BigInt
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""A connection to a list of `FederationCompetitor` values."""
+type FederationCompetitorsConnection {
+  """
+  A list of edges which contains the `FederationCompetitor` and cursor to aid in pagination.
+  """
+  edges: [FederationCompetitorsEdge!]!
+
+  """A list of `FederationCompetitor` objects."""
+  nodes: [FederationCompetitor!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationCompetitor` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationCompetitor` edge in the connection."""
+type FederationCompetitorsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationCompetitor` at the end of the edge."""
+  node: FederationCompetitor!
+}
+
+"""Methods to use when ordering `FederationCompetitor`."""
+enum FederationCompetitorsOrderBy {
+  AGE_GROUP_ASC
+  AGE_GROUP_DESC
+  COMPETITOR_TYPE_ASC
+  COMPETITOR_TYPE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Federation` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input FederationCondition {
+  """Checks for equality with the object’s `code` field."""
+  code: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+type FederationEvent {
+  addressNote: String
+  city: String
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitionsByEventId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitionsByFederationAndEventId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
+  contactEmail: String
+  contactName: String
+  contactPhone: String
+  country: String
+  endDate: Date
+  externalId: String!
+  federation: String!
+
+  """Reads a single `Federation` that is related to this `FederationEvent`."""
+  federationByFederation: Federation
+
+  """
+  Reads a single `FederationClub` that is related to this `FederationEvent`.
+  """
+  federationClubByFederationAndOrganizingClubId: FederationClub
+
+  """
+  Reads and enables pagination through a set of `FederationEventOfficial`.
+  """
+  federationEventOfficialsByEventId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEventOfficial`."""
+    orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventOfficialsConnection!
+  floorSize: String
+  geoReference: String
+  id: BigInt!
+  location: String
+  name: String
+
+  """
+  Reads a single `FederationClub` that is related to this `FederationEvent`.
+  """
+  organizingClub: FederationClub
+  organizingClubId: BigInt
+  postalCode: String
+  range: DateRange
+  startDate: Date!
+  streetAddress: String
+  venueLat: Float
+  venueLng: Float
+  venueLocationRef: String
+  venueLocationSource: String
+  websiteUrl: String
+}
+
+"""
+A condition to be used against `FederationEvent` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input FederationEventCondition {
+  """Checks for equality with the object’s `addressNote` field."""
+  addressNote: String
+
+  """Checks for equality with the object’s `city` field."""
+  city: String
+
+  """Checks for equality with the object’s `contactEmail` field."""
+  contactEmail: String
+
+  """Checks for equality with the object’s `contactName` field."""
+  contactName: String
+
+  """Checks for equality with the object’s `contactPhone` field."""
+  contactPhone: String
+
+  """Checks for equality with the object’s `country` field."""
+  country: String
+
+  """Checks for equality with the object’s `endDate` field."""
+  endDate: Date
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: String
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `floorSize` field."""
+  floorSize: String
+
+  """Checks for equality with the object’s `geoReference` field."""
+  geoReference: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `location` field."""
+  location: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `organizingClubId` field."""
+  organizingClubId: BigInt
+
+  """Checks for equality with the object’s `postalCode` field."""
+  postalCode: String
+
+  """Checks for equality with the object’s `range` field."""
+  range: DateRangeInput
+
+  """Checks for equality with the object’s `startDate` field."""
+  startDate: Date
+
+  """Checks for equality with the object’s `streetAddress` field."""
+  streetAddress: String
+
+  """Checks for equality with the object’s `venueLat` field."""
+  venueLat: Float
+
+  """Checks for equality with the object’s `venueLng` field."""
+  venueLng: Float
+
+  """Checks for equality with the object’s `venueLocationRef` field."""
+  venueLocationRef: String
+
+  """Checks for equality with the object’s `venueLocationSource` field."""
+  venueLocationSource: String
+
+  """Checks for equality with the object’s `websiteUrl` field."""
+  websiteUrl: String
+}
+
+type FederationEventOfficial {
+  discipline: String!
+
+  """
+  Reads a single `FederationEvent` that is related to this `FederationEventOfficial`.
+  """
+  event: FederationEvent
+  eventId: BigInt!
+  grade: String
+
+  """
+  Reads a single `FederationPerson` that is related to this `FederationEventOfficial`.
+  """
+  person: FederationPerson
+  personId: String!
+  role: OfficialRole!
+}
+
+"""
+A condition to be used against `FederationEventOfficial` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationEventOfficialCondition {
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: String
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `grade` field."""
+  grade: String
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `role` field."""
+  role: OfficialRole
+}
+
+"""A connection to a list of `FederationEventOfficial` values."""
+type FederationEventOfficialsConnection {
+  """
+  A list of edges which contains the `FederationEventOfficial` and cursor to aid in pagination.
+  """
+  edges: [FederationEventOfficialsEdge!]!
+
+  """A list of `FederationEventOfficial` objects."""
+  nodes: [FederationEventOfficial!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationEventOfficial` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationEventOfficial` edge in the connection."""
+type FederationEventOfficialsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationEventOfficial` at the end of the edge."""
+  node: FederationEventOfficial!
+}
+
+"""Methods to use when ordering `FederationEventOfficial`."""
+enum FederationEventOfficialsOrderBy {
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  GRADE_ASC
+  GRADE_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROLE_ASC
+  ROLE_DESC
+}
+
+"""A connection to a list of `FederationEvent` values."""
+type FederationEventsConnection {
+  """
+  A list of edges which contains the `FederationEvent` and cursor to aid in pagination.
+  """
+  edges: [FederationEventsEdge!]!
+
+  """A list of `FederationEvent` objects."""
+  nodes: [FederationEvent!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationEvent` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationEvent` edge in the connection."""
+type FederationEventsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationEvent` at the end of the edge."""
+  node: FederationEvent!
+}
+
+"""Methods to use when ordering `FederationEvent`."""
+enum FederationEventsOrderBy {
+  ADDRESS_NOTE_ASC
+  ADDRESS_NOTE_DESC
+  CITY_ASC
+  CITY_DESC
+  CONTACT_EMAIL_ASC
+  CONTACT_EMAIL_DESC
+  CONTACT_NAME_ASC
+  CONTACT_NAME_DESC
+  CONTACT_PHONE_ASC
+  CONTACT_PHONE_DESC
+  COUNTRY_ASC
+  COUNTRY_DESC
+  END_DATE_ASC
+  END_DATE_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FLOOR_SIZE_ASC
+  FLOOR_SIZE_DESC
+  GEO_REFERENCE_ASC
+  GEO_REFERENCE_DESC
+  ID_ASC
+  ID_DESC
+  LOCATION_ASC
+  LOCATION_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  ORGANIZING_CLUB_ID_ASC
+  ORGANIZING_CLUB_ID_DESC
+  POSTAL_CODE_ASC
+  POSTAL_CODE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  START_DATE_ASC
+  START_DATE_DESC
+  STREET_ADDRESS_ASC
+  STREET_ADDRESS_DESC
+  VENUE_LAT_ASC
+  VENUE_LAT_DESC
+  VENUE_LNG_ASC
+  VENUE_LNG_DESC
+  VENUE_LOCATION_REF_ASC
+  VENUE_LOCATION_REF_DESC
+  VENUE_LOCATION_SOURCE_ASC
+  VENUE_LOCATION_SOURCE_DESC
+  WEBSITE_URL_ASC
+  WEBSITE_URL_DESC
+}
+
+"""A connection to a list of `FederationPerson` values."""
+type FederationPeopleConnection {
+  """
+  A list of edges which contains the `FederationPerson` and cursor to aid in pagination.
+  """
+  edges: [FederationPeopleEdge!]!
+
+  """A list of `FederationPerson` objects."""
+  nodes: [FederationPerson!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationPerson` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationPerson` edge in the connection."""
+type FederationPeopleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationPerson` at the end of the edge."""
+  node: FederationPerson!
+}
+
+"""Methods to use when ordering `FederationPerson`."""
+enum FederationPeopleOrderBy {
+  AGE_GROUP_ASC
+  AGE_GROUP_DESC
+  CANONICAL_NAME_ASC
+  CANONICAL_NAME_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DOB_ASC
+  DOB_DESC
+  EXTERNAL_ID_ASC
+  EXTERNAL_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  GENDER_ASC
+  GENDER_DESC
+  ID_ASC
+  ID_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  MEDICAL_CHECKUP_EXPIRATION_ASC
+  MEDICAL_CHECKUP_EXPIRATION_DESC
+  MEDICAL_CHECKUP_TYPE_ASC
+  MEDICAL_CHECKUP_TYPE_DESC
+  NATIONALITY_ASC
+  NATIONALITY_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SEARCH_NAME_ASC
+  SEARCH_NAME_DESC
+}
+
+type FederationPerson {
+  ageGroup: String
+  canonicalName: String
+
+  """Reads and enables pagination through a set of `CompetitionOfficial`."""
+  competitionOfficialsByPersonId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionOfficial`."""
+    orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionOfficialsConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
+  competitionRoundJudgesByPersonJudgeId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundJudgeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundJudge`."""
+    orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundJudgesConnection!
+  createdAt: Datetime!
+  dob: Date
+  externalId: BigInt!
+  federation: String!
+
+  """
+  Reads a single `Federation` that is related to this `FederationPerson`.
+  """
+  federationByFederation: Federation
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorComponent`.
+  """
+  federationCompetitorComponentsByPersonId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorComponentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorComponent`."""
+    orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorComponentsConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationEventOfficial`.
+  """
+  federationEventOfficialsByPersonId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEventOfficial`."""
+    orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventOfficialsConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationPersonClubMembership`.
+  """
+  federationPersonClubMembershipsByPersonId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonClubMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonClubMembership`."""
+    orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonClubMembershipsConnection!
+
+  """
+  Reads and enables pagination through a set of `FederationPersonLicense`.
+  """
+  federationPersonLicensesByPersonId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonLicenseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonLicense`."""
+    orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonLicensesConnection!
+  firstName: String
+  gender: Gender
+  id: String!
+  lastName: String
+  medicalCheckupExpiration: Date
+  medicalCheckupType: String
+  nationality: String
+  searchName: String
+}
+
+type FederationPersonClubMembership {
+  """
+  Reads a single `FederationClub` that is related to this `FederationPersonClubMembership`.
+  """
+  club: FederationClub
+  clubId: BigInt!
+
+  """
+  Reads a single `FederationPerson` that is related to this `FederationPersonClubMembership`.
+  """
+  person: FederationPerson
+  personId: String!
+  validFrom: Date!
+  validTo: Date
+}
+
+"""
+A condition to be used against `FederationPersonClubMembership` object types.
+All fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationPersonClubMembershipCondition {
+  """Checks for equality with the object’s `clubId` field."""
+  clubId: BigInt
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `validFrom` field."""
+  validFrom: Date
+
+  """Checks for equality with the object’s `validTo` field."""
+  validTo: Date
+}
+
+"""A connection to a list of `FederationPersonClubMembership` values."""
+type FederationPersonClubMembershipsConnection {
+  """
+  A list of edges which contains the `FederationPersonClubMembership` and cursor to aid in pagination.
+  """
+  edges: [FederationPersonClubMembershipsEdge!]!
+
+  """A list of `FederationPersonClubMembership` objects."""
+  nodes: [FederationPersonClubMembership!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationPersonClubMembership` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationPersonClubMembership` edge in the connection."""
+type FederationPersonClubMembershipsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationPersonClubMembership` at the end of the edge."""
+  node: FederationPersonClubMembership!
+}
+
+"""Methods to use when ordering `FederationPersonClubMembership`."""
+enum FederationPersonClubMembershipsOrderBy {
+  CLUB_ID_ASC
+  CLUB_ID_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  VALID_FROM_ASC
+  VALID_FROM_DESC
+  VALID_TO_ASC
+  VALID_TO_DESC
+}
+
+"""
+A condition to be used against `FederationPerson` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input FederationPersonCondition {
+  """Checks for equality with the object’s `ageGroup` field."""
+  ageGroup: String
+
+  """Checks for equality with the object’s `canonicalName` field."""
+  canonicalName: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `dob` field."""
+  dob: Date
+
+  """Checks for equality with the object’s `externalId` field."""
+  externalId: BigInt
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
+
+  """Checks for equality with the object’s `gender` field."""
+  gender: Gender
+
+  """Checks for equality with the object’s `id` field."""
+  id: String
+
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
+
+  """
+  Checks for equality with the object’s `medicalCheckupExpiration` field.
+  """
+  medicalCheckupExpiration: Date
+
+  """Checks for equality with the object’s `medicalCheckupType` field."""
+  medicalCheckupType: String
+
+  """Checks for equality with the object’s `nationality` field."""
+  nationality: String
+
+  """Checks for equality with the object’s `searchName` field."""
+  searchName: String
+}
+
+type FederationPersonLicense {
+  createdAt: Datetime!
+  discipline: PersonLicenseDiscipline!
+  federation: String!
+
+  """
+  Reads a single `Federation` that is related to this `FederationPersonLicense`.
+  """
+  federationByFederation: Federation
+  grade: String
+  kind: PersonLicenseKind!
+
+  """
+  Reads a single `FederationPerson` that is related to this `FederationPersonLicense`.
+  """
+  person: FederationPerson
+  personId: String!
+  status: PersonLicenseStatus!
+  validUntil: Date
+}
+
+"""
+A condition to be used against `FederationPersonLicense` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationPersonLicenseCondition {
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `discipline` field."""
+  discipline: PersonLicenseDiscipline
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `grade` field."""
+  grade: String
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: PersonLicenseKind
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: PersonLicenseStatus
+
+  """Checks for equality with the object’s `validUntil` field."""
+  validUntil: Date
+}
+
+"""A connection to a list of `FederationPersonLicense` values."""
+type FederationPersonLicensesConnection {
+  """
+  A list of edges which contains the `FederationPersonLicense` and cursor to aid in pagination.
+  """
+  edges: [FederationPersonLicensesEdge!]!
+
+  """A list of `FederationPersonLicense` objects."""
+  nodes: [FederationPersonLicense!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationPersonLicense` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationPersonLicense` edge in the connection."""
+type FederationPersonLicensesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationPersonLicense` at the end of the edge."""
+  node: FederationPersonLicense!
+}
+
+"""Methods to use when ordering `FederationPersonLicense`."""
+enum FederationPersonLicensesOrderBy {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  DISCIPLINE_ASC
+  DISCIPLINE_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  GRADE_ASC
+  GRADE_DESC
+  KIND_ASC
+  KIND_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  STATUS_ASC
+  STATUS_DESC
+  VALID_UNTIL_ASC
+  VALID_UNTIL_DESC
+}
+
+"""Methods to use when ordering `Federation`."""
+enum FederationsOrderBy {
+  CODE_ASC
+  CODE_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+enum FetchStatus {
+  ERROR
+  GONE
+  OK
+  PENDING
+  TRANSIENT
+}
+
 type File {
   """
   Reads and enables pagination through a set of `AnnouncementAttachment`.
@@ -4683,6 +8842,13 @@ enum FormResponsesOrderBy {
   URL_DESC
 }
 
+enum Gender {
+  FEMALE
+  MALE
+  OTHER
+  UNKNOWN
+}
+
 enum GenderType {
   MAN
   UNSPECIFIED
@@ -4747,6 +8913,105 @@ input IntervalInput {
 A JavaScript object encoded in the JSON format as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+type JudgeScore {
+  """
+  Reads a single `CompetitionRoundDance` that is related to this `JudgeScore`.
+  """
+  competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode: CompetitionRoundDance
+  competitorId: BigInt!
+  component: ScoreComponent!
+  danceCode: String!
+  danceOrder: Int!
+  judgePersonId: BigInt!
+  rawScore: String
+
+  """
+  Reads a single `CompetitionRound` that is related to this `JudgeScore`.
+  """
+  round: CompetitionRound
+  roundId: BigInt!
+  score: BigFloat!
+}
+
+"""
+A condition to be used against `JudgeScore` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input JudgeScoreCondition {
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: BigInt
+
+  """Checks for equality with the object’s `component` field."""
+  component: ScoreComponent
+
+  """Checks for equality with the object’s `danceCode` field."""
+  danceCode: String
+
+  """Checks for equality with the object’s `danceOrder` field."""
+  danceOrder: Int
+
+  """Checks for equality with the object’s `judgePersonId` field."""
+  judgePersonId: BigInt
+
+  """Checks for equality with the object’s `rawScore` field."""
+  rawScore: String
+
+  """Checks for equality with the object’s `roundId` field."""
+  roundId: BigInt
+
+  """Checks for equality with the object’s `score` field."""
+  score: BigFloat
+}
+
+"""A connection to a list of `JudgeScore` values."""
+type JudgeScoresConnection {
+  """
+  A list of edges which contains the `JudgeScore` and cursor to aid in pagination.
+  """
+  edges: [JudgeScoresEdge!]!
+
+  """A list of `JudgeScore` objects."""
+  nodes: [JudgeScore!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `JudgeScore` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `JudgeScore` edge in the connection."""
+type JudgeScoresEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `JudgeScore` at the end of the edge."""
+  node: JudgeScore!
+}
+
+"""Methods to use when ordering `JudgeScore`."""
+enum JudgeScoresOrderBy {
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  COMPONENT_ASC
+  COMPONENT_DESC
+  DANCE_CODE_ASC
+  DANCE_CODE_DESC
+  DANCE_ORDER_ASC
+  DANCE_ORDER_DESC
+  JUDGE_PERSON_ID_ASC
+  JUDGE_PERSON_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RAW_SCORE_ASC
+  RAW_SCORE_DESC
+  ROUND_ID_ASC
+  ROUND_ID_DESC
+  SCORE_ASC
+  SCORE_DESC
+}
 
 """
 A JSON Web Token defined by [RFC 7519](https://tools.ietf.org/html/rfc7519)
@@ -5970,6 +10235,14 @@ type Mutation {
   ): UpsertLocationPayload
 }
 
+enum OfficialRole {
+  ADJUDICATOR
+  CHAIRPERSON
+  INVIGILATOR
+  LEAD_SCRUTINEER
+  SCRUTINEER
+}
+
 """All input for the `otpLogin` mutation."""
 input OtpLoginInput {
   """
@@ -7057,6 +11330,55 @@ enum PersonInvitationsOrderBy {
   USED_AT_DESC
 }
 
+enum PersonLicenseDiscipline {
+  BREAKING
+  CARIBBEAN
+  DISCO
+  FORMATION_LATIN
+  FORMATION_STANDARD
+  GENERAL
+  HIPHOP
+  LATIN
+  PD_LATIN
+  PD_SHOW_DANCE_LATIN
+  PD_SHOW_DANCE_STANDARD
+  PD_STANDARD
+  PD_TEN_DANCE
+  SHOW_DANCE_LATIN
+  SHOW_DANCE_STANDARD
+  SMOOTH
+  SOLO_SYNCRO_CHOREO
+  STAGE
+  STANDARD
+  TEN_DANCE
+  UNKNOWN
+}
+
+enum PersonLicenseKind {
+  ADJUDICATOR
+  ATHLETE
+  CHAIRPERSON
+  DJ
+  EXAMINER
+  HEAD_JUDGE
+  INVIGILATOR
+  LEAD_SCRUTINEER
+  OFFICIAL
+  SCRUTINEER
+  TRAINER
+}
+
+enum PersonLicenseStatus {
+  ACTIVE
+  ASPIRING
+  EXPIRED
+  RESTING
+  RETIRED
+  REVOKED
+  SUSPENDED
+  UNKNOWN
+}
+
 """Filters people by current or former tenant membership state."""
 input PersonMembershipCondition {
   """
@@ -7192,6 +11514,12 @@ type Price {
 input PriceInput {
   amount: BigFloat
   currency: String
+}
+
+enum ProcessStatus {
+  ERROR
+  OK
+  PENDING
 }
 
 """The root query type which gives access points into the data universe."""
@@ -7399,6 +11727,30 @@ type Query {
     orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): ArticleAttachmentsConnection
 
+  """Reads a set of `Category`."""
+  categoriesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategoryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Category`."""
+    orderBy: [CategoriesOrderBy!]
+  ): [Category!]
+
+  """Get a single `Category`."""
+  category(id: BigInt!): Category
+
+  """Get a single `Category`."""
+  categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType(ageGroup: String!, class: String!, competitorType: CompetitorType!, discipline: String!, genderGroup: String!, series: String!): Category
+  classRank(class: String): Int
+
   """Get a single `Cohort`."""
   cohort(id: BigInt!): Cohort
 
@@ -7460,10 +11812,584 @@ type Query {
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]
 
+  """Get a single `Competition`."""
+  competition(id: BigInt!): Competition
+
+  """Get a single `Competition`."""
+  competitionByFederationAndExternalId(externalId: String!, federation: String!): Competition
+
+  """Get a single `Competition`."""
+  competitionByFederationAndId(federation: String!, id: BigInt!): Competition
+
+  """Get a single `Competition`."""
+  competitionByIdAndCategoryId(categoryId: BigInt!, id: BigInt!): Competition
+
+  """Get a single `Competition`."""
+  competitionByIdAndEventId(eventId: BigInt!, id: BigInt!): Competition
+
+  """Reads and enables pagination through a set of `CompetitionEntry`."""
+  competitionEntries(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionEntry`."""
+    orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionEntriesConnection
+
+  """Get a single `CompetitionEntry`."""
+  competitionEntry(competitionId: BigInt!, competitorId: String!): CompetitionEntry
+
+  """Get a single `CompetitionOfficial`."""
+  competitionOfficial(competitionId: BigInt!, personId: String!, role: OfficialRole!): CompetitionOfficial
+
+  """Reads and enables pagination through a set of `CompetitionOfficial`."""
+  competitionOfficials(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionOfficial`."""
+    orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionOfficialsConnection
+
+  """Get a single `CompetitionResult`."""
+  competitionResult(competitionId: BigInt!, competitorId: String!): CompetitionResult
+
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResults(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionResultsConnection
+
+  """Get a single `CompetitionRound`."""
+  competitionRound(id: BigInt!): CompetitionRound
+
+  """Get a single `CompetitionRound`."""
+  competitionRoundByCompetitionIdAndRoundKey(competitionId: BigInt!, roundKey: String!): CompetitionRound
+
+  """Get a single `CompetitionRound`."""
+  competitionRoundByIdAndCompetitionId(competitionId: BigInt!, id: BigInt!): CompetitionRound
+
+  """Get a single `CompetitionRound`."""
+  competitionRoundByIdAndDanceProgramId(danceProgramId: BigInt!, id: BigInt!): CompetitionRound
+
+  """Get a single `CompetitionRoundDance`."""
+  competitionRoundDance(danceOrder: Int!, roundId: BigInt!): CompetitionRoundDance
+
+  """Get a single `CompetitionRoundDance`."""
+  competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode(danceCode: String!, danceOrder: Int!, roundId: BigInt!): CompetitionRoundDance
+
+  """Reads and enables pagination through a set of `CompetitionRoundDance`."""
+  competitionRoundDances(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundDance`."""
+    orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundDancesConnection
+
+  """Get a single `CompetitionRoundJudge`."""
+  competitionRoundJudge(personJudgeId: String!, roundId: BigInt!): CompetitionRoundJudge
+
+  """Get a single `CompetitionRoundJudge`."""
+  competitionRoundJudgeByRoundIdAndJudgeIndex(judgeIndex: Int!, roundId: BigInt!): CompetitionRoundJudge
+
+  """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
+  competitionRoundJudges(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundJudgeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundJudge`."""
+    orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundJudgesConnection
+
+  """Get a single `CompetitionRoundResult`."""
+  competitionRoundResult(competitorId: String!, roundId: BigInt!): CompetitionRoundResult
+
+  """
+  Reads and enables pagination through a set of `CompetitionRoundResult`.
+  """
+  competitionRoundResults(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundResult`."""
+    orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundResultsConnection
+
+  """Reads and enables pagination through a set of `CompetitionRound`."""
+  competitionRounds(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionRound`."""
+    orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionRoundsConnection
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection
+
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
+
+  """Reads and enables pagination through a set of `CrawlerFetchJob`."""
+  crawlerFetchJobs(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerFetchJobCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerFetchJob`."""
+    orderBy: [CrawlerFetchJobsOrderBy!] = [NATURAL]
+  ): CrawlerFetchJobsConnection
+
+  """Get a single `CrawlerIncrementalRange`."""
+  crawlerIncrementalRange(federation: String!, kind: String!): CrawlerIncrementalRange
+
+  """
+  Reads and enables pagination through a set of `CrawlerIncrementalRange`.
+  """
+  crawlerIncrementalRanges(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerIncrementalRangeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerIncrementalRange`."""
+    orderBy: [CrawlerIncrementalRangesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerIncrementalRangesConnection
+
+  """Get a single `CrawlerRateLimitRule`."""
+  crawlerRateLimitRule(host: String!): CrawlerRateLimitRule
+
+  """Reads and enables pagination through a set of `CrawlerRateLimitRule`."""
+  crawlerRateLimitRules(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerRateLimitRuleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerRateLimitRule`."""
+    orderBy: [CrawlerRateLimitRulesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerRateLimitRulesConnection
+
+  """Get a single `CrawlerResponse`."""
+  crawlerResponse(id: BigInt!): CrawlerResponse
+
+  """Get a single `CrawlerResponseCache`."""
+  crawlerResponseCache(contentHash: String!): CrawlerResponseCache
+
+  """Reads and enables pagination through a set of `CrawlerResponseCache`."""
+  crawlerResponseCaches(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerResponseCacheCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerResponseCache`."""
+    orderBy: [CrawlerResponseCachesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerResponseCachesConnection
+
+  """Reads and enables pagination through a set of `CrawlerResponse`."""
+  crawlerResponses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerResponseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerResponse`."""
+    orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerResponsesConnection
+
+  """Get a single `CrawlerTarget`."""
+  crawlerTarget(id: BigInt!): CrawlerTarget
+
+  """Get a single `CrawlerTarget`."""
+  crawlerTargetByFederationAndKindAndKey(federation: String!, key: String!, kind: String!): CrawlerTarget
+
+  """Reads and enables pagination through a set of `CrawlerTargetFailure`."""
+  crawlerTargetFailures(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetFailureCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerTargetFailure`."""
+    orderBy: [CrawlerTargetFailuresOrderBy!] = [NATURAL]
+  ): CrawlerTargetFailuresConnection
+
+  """Reads and enables pagination through a set of `CrawlerTarget`."""
+  crawlerTargets(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CrawlerTarget`."""
+    orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CrawlerTargetsConnection
   cstsAthlete(idt: Int): String
   currentClaims: JSON
+
+  """Get a single `Dance`."""
+  dance(code: String!): Dance
+
+  """Get a single `DanceProgram`."""
+  danceProgram(id: BigInt!): DanceProgram
+
+  """Get a single `DanceProgram`."""
+  danceProgramByCode(code: String!): DanceProgram
+
+  """Get a single `DanceProgramDance`."""
+  danceProgramDance(danceCode: String!, programId: BigInt!): DanceProgramDance
+
+  """Get a single `DanceProgramDance`."""
+  danceProgramDanceByProgramIdAndDanceOrder(danceOrder: Int!, programId: BigInt!): DanceProgramDance
+
+  """Reads a set of `DanceProgramDance`."""
+  danceProgramDancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceProgramDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `DanceProgramDance`."""
+    orderBy: [DanceProgramDancesOrderBy!]
+  ): [DanceProgramDance!]
+
+  """Reads a set of `DanceProgram`."""
+  danceProgramsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceProgramCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `DanceProgram`."""
+    orderBy: [DanceProgramsOrderBy!]
+  ): [DanceProgram!]
+
+  """Reads a set of `Dance`."""
+  dancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Dance`."""
+    orderBy: [DancesOrderBy!]
+  ): [Dance!]
 
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
@@ -7579,6 +12505,378 @@ type Query {
   """Get a single `EventSeries`."""
   eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
 
+  """Get a single `Federation`."""
+  federation(code: String!): Federation
+
+  """Get a single `FederationClub`."""
+  federationClub(id: BigInt!): FederationClub
+
+  """Get a single `FederationClub`."""
+  federationClubByFederationAndExternalId(externalId: String!, federation: String!): FederationClub
+
+  """Get a single `FederationClub`."""
+  federationClubByFederationAndId(federation: String!, id: BigInt!): FederationClub
+
+  """Reads and enables pagination through a set of `FederationClub`."""
+  federationClubs(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationClubCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationClub`."""
+    orderBy: [FederationClubsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationClubsConnection
+
+  """Get a single `FederationCompetitor`."""
+  federationCompetitor(id: String!): FederationCompetitor
+
+  """Get a single `FederationCompetitor`."""
+  federationCompetitorByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationCompetitor
+
+  """Get a single `FederationCompetitorCategoryProgress`."""
+  federationCompetitorCategoryProgress(categoryId: BigInt!, competitorId: String!): FederationCompetitorCategoryProgress
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
+  """
+  federationCompetitorCategoryProgresses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCategoryProgressCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """
+    The method to use when ordering `FederationCompetitorCategoryProgress`.
+    """
+    orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorCategoryProgressesConnection
+
+  """Get a single `FederationCompetitorClubAffiliation`."""
+  federationCompetitorClubAffiliation(clubId: BigInt!, competitorId: String!, validFrom: Date!): FederationCompetitorClubAffiliation
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`.
+  """
+  federationCompetitorClubAffiliations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorClubAffiliationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorClubAffiliation`."""
+    orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorClubAffiliationsConnection
+
+  """Get a single `FederationCompetitorComponent`."""
+  federationCompetitorComponent(competitorId: String!, personId: String!): FederationCompetitorComponent
+
+  """
+  Reads and enables pagination through a set of `FederationCompetitorComponent`.
+  """
+  federationCompetitorComponents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorComponentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitorComponent`."""
+    orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorComponentsConnection
+
+  """Reads and enables pagination through a set of `FederationCompetitor`."""
+  federationCompetitors(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCompetitorCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationCompetitor`."""
+    orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationCompetitorsConnection
+
+  """Get a single `FederationEvent`."""
+  federationEvent(id: BigInt!): FederationEvent
+
+  """Get a single `FederationEvent`."""
+  federationEventByFederationAndExternalId(externalId: String!, federation: String!): FederationEvent
+
+  """Get a single `FederationEvent`."""
+  federationEventByFederationAndId(federation: String!, id: BigInt!): FederationEvent
+
+  """Get a single `FederationEventOfficial`."""
+  federationEventOfficial(discipline: String!, eventId: BigInt!, personId: String!, role: OfficialRole!): FederationEventOfficial
+
+  """
+  Reads and enables pagination through a set of `FederationEventOfficial`.
+  """
+  federationEventOfficials(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventOfficialCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEventOfficial`."""
+    orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventOfficialsConnection
+
+  """Reads and enables pagination through a set of `FederationEvent`."""
+  federationEvents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationEventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationEvent`."""
+    orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationEventsConnection
+
+  """Reads and enables pagination through a set of `FederationPerson`."""
+  federationPeople(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPerson`."""
+    orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPeopleConnection
+
+  """Get a single `FederationPerson`."""
+  federationPerson(id: String!): FederationPerson
+
+  """Get a single `FederationPerson`."""
+  federationPersonByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationPerson
+
+  """Get a single `FederationPersonClubMembership`."""
+  federationPersonClubMembership(clubId: BigInt!, personId: String!, validFrom: Date!): FederationPersonClubMembership
+
+  """
+  Reads and enables pagination through a set of `FederationPersonClubMembership`.
+  """
+  federationPersonClubMemberships(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonClubMembershipCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonClubMembership`."""
+    orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonClubMembershipsConnection
+
+  """Get a single `FederationPersonLicense`."""
+  federationPersonLicense(discipline: PersonLicenseDiscipline!, kind: PersonLicenseKind!, personId: String!): FederationPersonLicense
+
+  """
+  Reads and enables pagination through a set of `FederationPersonLicense`.
+  """
+  federationPersonLicenses(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonLicenseCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPersonLicense`."""
+    orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPersonLicensesConnection
+
+  """Reads a set of `Federation`."""
+  federationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Federation`."""
+    orderBy: [FederationsOrderBy!]
+  ): [Federation!]
+
   """Get a single `File`."""
   file(id: BigInt!): File
 
@@ -7649,6 +12947,38 @@ type Query {
   getCurrentUser(versionId: String): User
   invitationInfo(token: UUID): String
   invitationName(token: UUID): String
+
+  """Get a single `JudgeScore`."""
+  judgeScore(competitorId: BigInt!, component: ScoreComponent!, danceOrder: Int!, judgePersonId: BigInt!, roundId: BigInt!): JudgeScore
+
+  """Reads and enables pagination through a set of `JudgeScore`."""
+  judgeScores(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JudgeScoreCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `JudgeScore`."""
+    orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JudgeScoresConnection
 
   """Get a single `Location`."""
   location(id: BigInt!): Location
@@ -7783,6 +13113,108 @@ type Query {
 
   """Get a single `PersonInvitation`."""
   personInvitationByAccessToken(accessToken: UUID!): PersonInvitation
+
+  """Get a single `Ranklist`."""
+  ranklist(id: BigInt!): Ranklist
+
+  """Get a single `Ranklist`."""
+  ranklistByFederationAndCategoryId(categoryId: BigInt!, federation: String!): Ranklist
+
+  """Reads and enables pagination through a set of `RanklistEntry`."""
+  ranklistEntries(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistEntry`."""
+    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistEntriesConnection
+
+  """Get a single `RanklistEntry`."""
+  ranklistEntry(competitorId: String!, snapshotId: BigInt!): RanklistEntry
+
+  """Get a single `RanklistSnapshot`."""
+  ranklistSnapshot(id: BigInt!): RanklistSnapshot
+
+  """Get a single `RanklistSnapshot`."""
+  ranklistSnapshotByRanklistIdAndAsOfDateAndKind(asOfDate: Date!, kind: String!, ranklistId: BigInt!): RanklistSnapshot
+
+  """Reads and enables pagination through a set of `RanklistSnapshot`."""
+  ranklistSnapshots(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistSnapshotCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistSnapshot`."""
+    orderBy: [RanklistSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistSnapshotsConnection
+
+  """Reads and enables pagination through a set of `Ranklist`."""
+  ranklists(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Ranklist`."""
+    orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistsConnection
   refreshJwt: JwtToken
   scoreboardEntriesList(
     cohortId: BigInt
@@ -7961,6 +13393,287 @@ type Query {
   wdsfAthlete(min: Int): String
 }
 
+type Ranklist {
+  """Reads a single `Category` that is related to this `Ranklist`."""
+  category: Category
+  categoryId: BigInt!
+  federation: String!
+
+  """Reads a single `Federation` that is related to this `Ranklist`."""
+  federationByFederation: Federation
+  id: BigInt!
+  name: String!
+
+  """Reads and enables pagination through a set of `RanklistSnapshot`."""
+  ranklistSnapshots(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistSnapshotCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistSnapshot`."""
+    orderBy: [RanklistSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistSnapshotsConnection!
+}
+
+"""
+A condition to be used against `Ranklist` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input RanklistCondition {
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: BigInt
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""A connection to a list of `RanklistEntry` values."""
+type RanklistEntriesConnection {
+  """
+  A list of edges which contains the `RanklistEntry` and cursor to aid in pagination.
+  """
+  edges: [RanklistEntriesEdge!]!
+
+  """A list of `RanklistEntry` objects."""
+  nodes: [RanklistEntry!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `RanklistEntry` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `RanklistEntry` edge in the connection."""
+type RanklistEntriesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RanklistEntry` at the end of the edge."""
+  node: RanklistEntry!
+}
+
+"""Methods to use when ordering `RanklistEntry`."""
+enum RanklistEntriesOrderBy {
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  NATURAL
+  POINTS_ASC
+  POINTS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANKING_ASC
+  RANKING_DESC
+  RANKING_TO_ASC
+  RANKING_TO_DESC
+  SNAPSHOT_ID_ASC
+  SNAPSHOT_ID_DESC
+}
+
+type RanklistEntry {
+  """
+  Reads a single `FederationCompetitor` that is related to this `RanklistEntry`.
+  """
+  competitor: FederationCompetitor
+  competitorId: String!
+  points: BigFloat
+  ranking: Int!
+  rankingTo: Int
+
+  """
+  Reads a single `RanklistSnapshot` that is related to this `RanklistEntry`.
+  """
+  snapshot: RanklistSnapshot
+  snapshotId: BigInt!
+}
+
+"""
+A condition to be used against `RanklistEntry` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RanklistEntryCondition {
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `points` field."""
+  points: BigFloat
+
+  """Checks for equality with the object’s `ranking` field."""
+  ranking: Int
+
+  """Checks for equality with the object’s `rankingTo` field."""
+  rankingTo: Int
+
+  """Checks for equality with the object’s `snapshotId` field."""
+  snapshotId: BigInt
+}
+
+type RanklistSnapshot {
+  asOfDate: Date!
+  id: BigInt!
+  kind: String!
+
+  """Reads a single `Ranklist` that is related to this `RanklistSnapshot`."""
+  ranklist: Ranklist
+
+  """Reads and enables pagination through a set of `RanklistEntry`."""
+  ranklistEntriesBySnapshotId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistEntry`."""
+    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistEntriesConnection!
+  ranklistId: BigInt!
+}
+
+"""
+A condition to be used against `RanklistSnapshot` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RanklistSnapshotCondition {
+  """Checks for equality with the object’s `asOfDate` field."""
+  asOfDate: Date
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `ranklistId` field."""
+  ranklistId: BigInt
+}
+
+"""A connection to a list of `RanklistSnapshot` values."""
+type RanklistSnapshotsConnection {
+  """
+  A list of edges which contains the `RanklistSnapshot` and cursor to aid in pagination.
+  """
+  edges: [RanklistSnapshotsEdge!]!
+
+  """A list of `RanklistSnapshot` objects."""
+  nodes: [RanklistSnapshot!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RanklistSnapshot` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `RanklistSnapshot` edge in the connection."""
+type RanklistSnapshotsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RanklistSnapshot` at the end of the edge."""
+  node: RanklistSnapshot!
+}
+
+"""Methods to use when ordering `RanklistSnapshot`."""
+enum RanklistSnapshotsOrderBy {
+  AS_OF_DATE_ASC
+  AS_OF_DATE_DESC
+  ID_ASC
+  ID_DESC
+  KIND_ASC
+  KIND_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANKLIST_ID_ASC
+  RANKLIST_ID_DESC
+}
+
+"""A connection to a list of `Ranklist` values."""
+type RanklistsConnection {
+  """
+  A list of edges which contains the `Ranklist` and cursor to aid in pagination.
+  """
+  edges: [RanklistsEdge!]!
+
+  """A list of `Ranklist` objects."""
+  nodes: [Ranklist!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Ranklist` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Ranklist` edge in the connection."""
+type RanklistsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Ranklist` at the end of the edge."""
+  node: Ranklist!
+}
+
+"""Methods to use when ordering `Ranklist`."""
+enum RanklistsOrderBy {
+  CATEGORY_ID_ASC
+  CATEGORY_ID_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """All input for the `registerUsingInvitation` mutation."""
 input RegisterUsingInvitationInput {
   """
@@ -8089,6 +13802,16 @@ type SaveEventsPayload {
   eventInstances: [EventInstance!]
 }
 
+enum ScoreComponent {
+  AJS_CP
+  AJS_MM
+  AJS_PS
+  AJS_REDUCTION
+  AJS_TQ
+  MARK
+  PLACES
+}
+
 type ScoreboardManualAdjustment {
   awardedAt: Date!
 
@@ -8211,6 +13934,12 @@ type ScoreboardRecord {
   personId: BigInt
   ranking: BigInt
   totalScore: BigInt
+}
+
+enum ScoringMethod {
+  AJS_3_0
+  SKATING_MARKS
+  SKATING_PLACES
 }
 
 type SecurityEvent {
