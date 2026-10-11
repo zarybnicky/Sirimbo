@@ -9,7 +9,6 @@ import { FederationPersonDocument } from '@/graphql/Federation';
 import { runQuery } from '@/lib/server/postgresql';
 import {
   browsePersonCompetitors,
-  browsePersonLocalMatches,
   browsePersonFrontiers,
 } from '../../../federated.queries';
 
@@ -33,11 +32,11 @@ export default async function FederatedPersonPage({
     { federation, externalId },
   );
   if (!person) notFound();
-  const [competitors, matches, sources] = await Promise.all([
+  const [competitors, sources] = await Promise.all([
     runQuery(browsePersonCompetitors, { id }),
-    runQuery(browsePersonLocalMatches, { id }),
     runQuery(browsePersonFrontiers, { federation, key: person.externalId }),
   ]);
+  const matches = person.people.nodes;
   const name =
     person.canonicalName ||
     [person.firstName, person.lastName].filter(Boolean).join(' ') ||
@@ -94,7 +93,11 @@ export default async function FederatedPersonPage({
                   </Link>
                 </th>
                 <td className="px-2 py-1">
-                  {match.tenants?.join(', ') || 'No active membership'}
+                  {match.tenantMembershipsList
+                    .map((membership) => membership.tenantName)
+                    .filter((name) => name != null)
+                    .toSorted((a, b) => a.localeCompare(b))
+                    .join(', ') || 'No active membership'}
                 </td>
               </tr>
             ))}

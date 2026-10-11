@@ -1,5 +1,5 @@
 import { CstsPersonDocument } from '@/graphql/Person';
-import { CstsPersonLink } from '@/ui/csts-links';
+import { FederationPersonLink } from '@/ui/federation-links';
 import { TextFieldElement, type TextFieldElementProps } from '@/ui/fields/text';
 import React from 'react';
 import { type FieldValues, useWatch } from 'react-hook-form';
@@ -29,8 +29,9 @@ export function CstsIdFieldElement<T extends FieldValues>({
   const [query] = useQuery({
     query: CstsPersonDocument,
     pause: Number.isNaN(idt),
-    variables: { idt },
+    variables: { idt: String(idt) },
   });
+  const person = query.data?.federationPersonByFederationAndExternalId;
 
   return (
     <div className={wrapperClassName}>
@@ -42,12 +43,18 @@ export function CstsIdFieldElement<T extends FieldValues>({
         type={type}
         {...props}
       />
-      {!query.data ? null : !query.data.cstsAthlete ? (
+      {!query.data ? null : !person ? (
         <span className="text-accent-9">Nenalezeno</span>
       ) : (
-        <CstsPersonLink idt={idt} className="text-green-9 hover:text-green-11">
-          {query.data.cstsAthlete}
-        </CstsPersonLink>
+        <FederationPersonLink
+          federation="csts"
+          externalId={person.externalId}
+          className="text-green-9 hover:text-green-11"
+        >
+          {person.canonicalName ||
+            [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+            person.externalId}
+        </FederationPersonLink>
       )}
     </div>
   );

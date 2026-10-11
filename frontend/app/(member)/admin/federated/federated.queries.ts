@@ -388,44 +388,6 @@ const browsePersonCompetitorsIR: any = {"usedParamSet":{"id":true},"params":[{"n
 export const browsePersonCompetitors = new PreparedQuery<IBrowsePersonCompetitorsParams,IBrowsePersonCompetitorsResult>(browsePersonCompetitorsIR);
 
 
-/** 'BrowsePersonLocalMatches' parameters type */
-export interface IBrowsePersonLocalMatchesParams {
-  id: string;
-}
-
-/** 'BrowsePersonLocalMatches' return type */
-export interface IBrowsePersonLocalMatchesResult {
-  id: string;
-  name: string;
-  tenants: stringArray | null;
-}
-
-/** 'BrowsePersonLocalMatches' query type */
-export interface IBrowsePersonLocalMatchesQuery {
-  params: IBrowsePersonLocalMatchesParams;
-  result: IBrowsePersonLocalMatchesResult;
-}
-
-const browsePersonLocalMatchesIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":419,"b":422}]}],"statement":"SELECT p.id, p.name, ARRAY(\n  SELECT t.name FROM public.tenant_membership tm JOIN public.tenant t ON t.id = tm.tenant_id\n  WHERE tm.person_id = p.id AND tm.status = 'active' ORDER BY t.name, t.id\n) AS tenants\nFROM public.person p JOIN federated.person fp ON fp.external_id <> 0 AND (\n  (fp.federation = 'csts' AND p.csts_id = fp.external_id) OR\n  (fp.federation = 'wdsf' AND p.wdsf_id = fp.external_id)\n)\nWHERE fp.id = :id!\nORDER BY p.name, p.id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT p.id, p.name, ARRAY(
- *   SELECT t.name FROM public.tenant_membership tm JOIN public.tenant t ON t.id = tm.tenant_id
- *   WHERE tm.person_id = p.id AND tm.status = 'active' ORDER BY t.name, t.id
- * ) AS tenants
- * FROM public.person p JOIN federated.person fp ON fp.external_id <> 0 AND (
- *   (fp.federation = 'csts' AND p.csts_id = fp.external_id) OR
- *   (fp.federation = 'wdsf' AND p.wdsf_id = fp.external_id)
- * )
- * WHERE fp.id = :id!
- * ORDER BY p.name, p.id
- * ```
- */
-export const browsePersonLocalMatches = new PreparedQuery<IBrowsePersonLocalMatchesParams,IBrowsePersonLocalMatchesResult>(browsePersonLocalMatchesIR);
-
-
 /** 'BrowsePersonFrontiers' parameters type */
 export interface IBrowsePersonFrontiersParams {
   federation: string;

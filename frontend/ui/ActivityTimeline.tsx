@@ -19,7 +19,7 @@ import { Cake } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { CstsResultsLink } from './csts-links';
+import { CstsResultsLink } from './federation-links';
 
 type TimelineMode = 'future' | 'past';
 type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';

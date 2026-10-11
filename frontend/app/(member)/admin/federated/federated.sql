@@ -101,18 +101,6 @@ FROM federated.competitor_component cc JOIN federated.competitor c ON c.id = cc.
 WHERE cc.person_id = :id!
 ORDER BY c.name, c.id;
 
-/* @name BrowsePersonLocalMatches */
-SELECT p.id, p.name, ARRAY(
-  SELECT t.name FROM public.tenant_membership tm JOIN public.tenant t ON t.id = tm.tenant_id
-  WHERE tm.person_id = p.id AND tm.status = 'active' ORDER BY t.name, t.id
-) AS tenants
-FROM public.person p JOIN federated.person fp ON fp.external_id <> 0 AND (
-  (fp.federation = 'csts' AND p.csts_id = fp.external_id) OR
-  (fp.federation = 'wdsf' AND p.wdsf_id = fp.external_id)
-)
-WHERE fp.id = :id!
-ORDER BY p.name, p.id;
-
 /* @name BrowsePersonFrontiers */
 SELECT id, kind, key, fetch_status, process_status
 FROM crawler.frontier

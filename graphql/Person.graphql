@@ -113,6 +113,9 @@ query PersonPayments($id: BigInt!) {
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
+    federationPeople(first: 100, orderBy: FEDERATION_ASC) {
+      nodes { id federation externalId }
+    }
   }
 }
 
@@ -220,8 +223,14 @@ query PersonWithLinksList {
   }
 }
 
-query CstsPerson($idt: Int!) {
-  cstsAthlete(idt: $idt)
+query CstsPerson($idt: BigInt!) {
+  federationPersonByFederationAndExternalId(federation: "csts", externalId: $idt) {
+    id
+    externalId
+    canonicalName
+    firstName
+    lastName
+  }
 }
 
 query WdsfPerson($min: Int!) {

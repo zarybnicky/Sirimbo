@@ -1,20 +1,38 @@
-COMMENT ON TABLE federated.person IS E'@name federation_person\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.person_club_membership IS E'@name federation_person_club_membership\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.person_license IS E'@name federation_person_license\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.event IS E'@name federation_event\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.event_official IS E'@name federation_event_official\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.competitor IS E'@name federation_competitor\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.competitor_component IS E'@name federation_competitor_component\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.competitor_category_progress IS E'@name federation_competitor_category_progress\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.competitor_club_affiliation IS E'@name federation_competitor_club_affiliation\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.round_dance IS E'@name competition_round_dance\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE crawler.frontier IS E'@name crawler_target\n@behavior -insert -update -delete -list';
-COMMENT ON VIEW crawler.frontier_failure IS E'@name crawler_target_failure\n@behavior -insert -update -delete -list';
-COMMENT ON VIEW crawler.frontier_fetch_job IS E'@name crawler_fetch_job\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE crawler.json_response IS E'@name crawler_response\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE crawler.json_response_cache IS E'@name crawler_response_cache\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE crawler.incremental_ranges IS E'@name crawler_incremental_range\n@behavior -insert -update -delete -list';
-COMMENT ON TABLE crawler.rate_limit_rule IS E'@name crawler_rate_limit_rule\n@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.person IS '@name federation_person
+@behavior -insert -update -delete -list
+@ref people via:public.person_federation_link;public.person';
+COMMENT ON TABLE federated.person_club_membership IS '@name federation_person_club_membership
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.person_license IS '@name federation_person_license
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.event IS '@name federation_event
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.event_official IS '@name federation_event_official
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.competitor IS '@name federation_competitor
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.competitor_club_affiliation IS '@name federation_competitor_club_affiliation
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.round_dance IS '@name competition_round_dance
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE crawler.frontier IS '@name crawler_target
+@behavior -insert -update -delete -list';
+COMMENT ON VIEW crawler.frontier_failure IS '@name crawler_target_failure
+@behavior -insert -update -delete -list';
+COMMENT ON VIEW crawler.frontier_fetch_job IS '@name crawler_fetch_job
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE crawler.json_response IS '@name crawler_response
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE crawler.json_response_cache IS '@name crawler_response_cache
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE crawler.incremental_ranges IS '@name crawler_incremental_range
+@behavior -insert -update -delete -list';
+COMMENT ON TABLE crawler.rate_limit_rule IS '@name crawler_rate_limit_rule
+@behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.category IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.competition IS '@behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.competition_entry IS '@behavior -insert -update -delete -list';
@@ -84,3 +102,21 @@ COMMENT ON CONSTRAINT category_base_dance_program_id_fkey ON federated.category 
 COMMENT ON CONSTRAINT competition_federation_event_id_fkey ON federated.competition IS '@behavior -single -connection -list';
 COMMENT ON CONSTRAINT event_federation_organizing_club_id_fkey ON federated.event IS '@behavior -single -connection -list';
 COMMENT ON CONSTRAINT round_dance_dance_program_id_dance_code_fkey ON federated.round_dance IS '@foreignFieldName roundDances';
+
+create or replace view public.person_federation_link with (security_invoker = true) as
+select id as person_id, 'csts'::text as federation, csts_id::bigint as external_id
+from public.person where csts_id <> 0
+union all
+select id, 'wdsf'::text, wdsf_id::bigint
+from public.person where wdsf_id <> 0;
+
+comment on view public.person_federation_link is '@primaryKey person_id,federation
+@foreignKey (person_id) references public.person (id)
+@foreignKey (federation,external_id) references federated.person (federation,external_id)
+@behavior -single -list -connection -insert -update -delete';
+grant select on public.person_federation_link to anonymous;
+
+comment on table public.person is '@omit create
+@ref federationPeople via:public.person_federation_link;federated.person';
+
+drop function if exists public.csts_athlete(integer);

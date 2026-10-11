@@ -15,7 +15,7 @@ import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { CstsPersonLink } from '@/ui/csts-links';
+import { FederationPersonLink } from '@/ui/federation-links';
 import { Globe, Music2 } from 'lucide-react';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
@@ -62,11 +62,16 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
         {item.email}
       </a>
     ),
-    item.cstsId && (
-      <CstsPersonLink idt={item.cstsId} className="text-accent-12 hover:text-accent-11">
-        ČSTS
-      </CstsPersonLink>
-    ),
+    ...item.federationPeople.nodes.map((person) => (
+      <FederationPersonLink
+        key={person.id}
+        federation={person.federation}
+        externalId={person.externalId}
+        className="text-accent-12 hover:text-accent-11"
+      >
+        {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
+      </FederationPersonLink>
+    )),
   ].filter(Boolean);
 
   const socialLinks = [

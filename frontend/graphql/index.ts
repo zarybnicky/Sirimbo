@@ -6340,6 +6340,8 @@ export type FederationPerson = {
   medicalCheckupExpiration: Maybe<Scalars['Date']['output']>;
   medicalCheckupType: Maybe<Scalars['String']['output']>;
   nationality: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Person`. */
+  people: PeopleConnection;
   /** Reads and enables pagination through a set of `CompetitionRoundJudge`. */
   roundJudgeAssignments: CompetitionRoundJudgesConnection;
   searchName: Maybe<Scalars['String']['output']>;
@@ -6398,6 +6400,17 @@ export type FederationPersonLicensesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationPersonLicensesOrderBy>>;
+};
+
+
+export type FederationPersonPeopleArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PersonCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PeopleOrderBy>>;
 };
 
 
@@ -8518,6 +8531,8 @@ export type Person = {
   eventInstanceTrainersList: Array<EventInstanceTrainer>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   facebookUrl: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `FederationPerson`. */
+  federationPeople: FederationPeopleConnection;
   firstName: Scalars['String']['output'];
   gender: GenderType;
   hasAccess: Maybe<Scalars['Boolean']['output']>;
@@ -8662,6 +8677,17 @@ export type PersonEventInstanceTrainersListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstanceTrainersOrderBy>>;
+};
+
+
+export type PersonFederationPeopleArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FederationPersonCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FederationPeopleOrderBy>>;
 };
 
 
@@ -9240,7 +9266,6 @@ export type Query = {
   crawlerTargetFailures: Maybe<CrawlerTargetFailuresConnection>;
   /** Reads and enables pagination through a set of `CrawlerTarget`. */
   crawlerTargets: Maybe<CrawlerTargetsConnection>;
-  cstsAthlete: Maybe<Scalars['String']['output']>;
   currentClaims: Maybe<Scalars['JSON']['output']>;
   /** Get a single `Dance`. */
   dance: Maybe<Dance>;
@@ -10004,12 +10029,6 @@ export type QueryCrawlerTargetsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CrawlerTargetsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryCstsAthleteArgs = {
-  idt?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -14243,7 +14262,6 @@ export type GraphCacheResolvers = {
     crawlerTargetByFederationAndKindAndKey?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetByFederationAndKindAndKeyArgs, WithTypename<CrawlerTarget> | string>,
     crawlerTargetFailures?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailuresArgs, WithTypename<CrawlerTargetFailuresConnection> | string>,
     crawlerTargets?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetsArgs, WithTypename<CrawlerTargetsConnection> | string>,
-    cstsAthlete?: GraphCacheResolver<WithTypename<Query>, QueryCstsAthleteArgs, Scalars['String']['output'] | string>,
     currentClaims?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JSON']['output'] | string>,
     dance?: GraphCacheResolver<WithTypename<Query>, QueryDanceArgs, WithTypename<Dance> | string>,
     danceProgram?: GraphCacheResolver<WithTypename<Query>, QueryDanceProgramArgs, WithTypename<DanceProgram> | string>,
@@ -15706,6 +15724,7 @@ export type GraphCacheResolvers = {
     medicalCheckupExpiration?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Date']['output'] | string>,
     medicalCheckupType?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     nationality?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
+    people?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonPeopleArgs, WithTypename<PeopleConnection> | string>,
     roundJudgeAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonRoundJudgeAssignmentsArgs, WithTypename<CompetitionRoundJudgesConnection> | string>,
     searchName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -15990,6 +16009,7 @@ export type GraphCacheResolvers = {
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     facebookUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
+    federationPeople?: GraphCacheResolver<WithTypename<Person>, PersonFederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -16790,7 +16810,6 @@ export type GraphCacheUpdaters = {
     crawlerTargetByFederationAndKindAndKey?: GraphCacheUpdateResolver<{ crawlerTargetByFederationAndKindAndKey: Maybe<WithTypename<CrawlerTarget>> }, QueryCrawlerTargetByFederationAndKindAndKeyArgs>,
     crawlerTargetFailures?: GraphCacheUpdateResolver<{ crawlerTargetFailures: Maybe<WithTypename<CrawlerTargetFailuresConnection>> }, QueryCrawlerTargetFailuresArgs>,
     crawlerTargets?: GraphCacheUpdateResolver<{ crawlerTargets: Maybe<WithTypename<CrawlerTargetsConnection>> }, QueryCrawlerTargetsArgs>,
-    cstsAthlete?: GraphCacheUpdateResolver<{ cstsAthlete: Maybe<Scalars['String']['output']> }, QueryCstsAthleteArgs>,
     currentClaims?: GraphCacheUpdateResolver<{ currentClaims: Maybe<Scalars['JSON']['output']> }, Record<string, never>>,
     dance?: GraphCacheUpdateResolver<{ dance: Maybe<WithTypename<Dance>> }, QueryDanceArgs>,
     danceProgram?: GraphCacheUpdateResolver<{ danceProgram: Maybe<WithTypename<DanceProgram>> }, QueryDanceProgramArgs>,
@@ -18344,6 +18363,7 @@ export type GraphCacheUpdaters = {
     medicalCheckupExpiration?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     medicalCheckupType?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
+    people?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonPeopleArgs>,
     roundJudgeAssignments?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonRoundJudgeAssignmentsArgs>,
     searchName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>
   },
@@ -18628,6 +18648,7 @@ export type GraphCacheUpdaters = {
     eventInstanceTrainersList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonEventInstanceTrainersListArgs>,
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     facebookUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    federationPeople?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonFederationPeopleArgs>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

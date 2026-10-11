@@ -8206,6 +8206,35 @@ type FederationPerson {
   medicalCheckupType: String
   nationality: String
 
+  """Reads and enables pagination through a set of `Person`."""
+  people(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleConnection!
+
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   roundJudgeAssignments(
     """Read all values in the set after (below) this cursor."""
@@ -10798,6 +10827,35 @@ type Person {
   ): [EventInstanceTrainer!]!
   externalIds: [String]
   facebookUrl: String
+
+  """Reads and enables pagination through a set of `FederationPerson`."""
+  federationPeople(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `FederationPerson`."""
+    orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FederationPeopleConnection!
   firstName: String!
   gender: GenderType!
   hasAccess: Boolean
@@ -12259,7 +12317,6 @@ type Query {
     """The method to use when ordering `CrawlerTarget`."""
     orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CrawlerTargetsConnection
-  cstsAthlete(idt: Int): String
   currentClaims: JSON
 
   """Get a single `Dance`."""

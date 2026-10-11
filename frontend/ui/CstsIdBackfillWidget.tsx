@@ -3,7 +3,7 @@ import {
   UpdatePersonCstsIdDocument,
   type MissingCstsIdCandidatesQuery,
 } from '@/graphql/Person';
-import { CstsPersonLink } from '@/ui/csts-links';
+import { FederationPersonLink } from '@/ui/federation-links';
 import { formatAgeGroup } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
@@ -121,9 +121,13 @@ export function CstsIdBackfillWidget() {
                     <div className="min-w-0">
                       <div className="flex min-w-0 items-center font-medium">
                         Vyplněno:{' '}
-                        <CstsPersonLink idt={selectedCandidate.id} className="text-accent-11 hover:text-accent-12">
+                        <FederationPersonLink
+                          federation="csts"
+                          externalId={selectedCandidate.id}
+                          className="text-accent-11 hover:text-accent-12"
+                        >
                           IDT {selectedCandidate.id}
-                        </CstsPersonLink>
+                        </FederationPersonLink>
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-accent-11">
                         <span>{selectedCandidate.name ?? 'bez jména'}</span>
@@ -158,9 +162,12 @@ export function CstsIdBackfillWidget() {
                         >
                           <div className="min-w-0">
                             <div className="flex min-w-0 items-center gap-1 font-medium">
-                              <CstsPersonLink idt={candidate.id}>
+                              <FederationPersonLink
+                                federation="csts"
+                                externalId={candidate.id}
+                              >
                                 {candidate.name || '-'}
-                              </CstsPersonLink>
+                              </FederationPersonLink>
                             </div>
                             <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
                               <span>IDT {candidate.id}</span>

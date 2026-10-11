@@ -61,6 +61,16 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     nationality
     ageGroup
     federationByFederation { code name }
+    people(first: 100, orderBy: [NAME_ASC, ID_ASC]) {
+      nodes {
+        id
+        name
+        tenantMembershipsList(condition: { status: ACTIVE }) {
+          id
+          tenantName
+        }
+      }
+    }
   }
 }
 
