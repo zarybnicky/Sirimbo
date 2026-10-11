@@ -23,6 +23,20 @@ const plugins: GraphileConfig.Plugin[] = [
     ),
   ),
   addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competitor' },
+    'competitionId',
+    (build) => ({ type: build.getInputTypeByName('BigInt') }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      if (value == null) return null;
+      const competitionId = sqlValueWithCodec(value, TYPES.bigint);
+      return sql`${row}.id in (
+        select competitor_id from federated.competition_entry where competition_id = ${competitionId}
+        union all
+        select competitor_id from federated.competition_result where competition_id = ${competitionId}
+      )`;
+    },
+  ),
+  addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
     'onDate',
     (build) => ({ type: build.getInputTypeByName('Date') }),

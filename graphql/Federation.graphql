@@ -53,7 +53,7 @@ query FederationEvent(
   }
 }
 
-query FederationCompetition($id: BigInt!, $roundsOffset: Int! = 0) {
+query FederationCompetition($id: BigInt!, $roundsOffset: Int! = 0, $participantsOffset: Int! = 0) {
   competition(id: $id) {
     id
     eventId
@@ -72,6 +72,35 @@ query FederationCompetition($id: BigInt!, $roundsOffset: Int! = 0) {
         roundLabel
         scoringMethod
         results(first: 0) { totalCount }
+      }
+    }
+  }
+  federationCompetitors(first: 20, offset: $participantsOffset, condition: { competitionId: $id }, orderBy: [NAME_ASC, ID_ASC]) {
+    totalCount
+    nodes {
+      id
+      externalId
+      name
+      competitionEntries(first: 1, condition: { competitionId: $id }) {
+        nodes { competitionId competitorId cancelled }
+      }
+      competitionResults(first: 1, condition: { competitionId: $id }) {
+        nodes { competitionId competitorId ranking rankingTo startNumber pointGain finalGain completionStatus }
+      }
+      couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) { id }
+      components(first: 2, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
+        totalCount
+        nodes {
+          personId
+          person {
+            id
+            externalId
+            people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
+              totalCount
+              nodes { id name }
+            }
+          }
+        }
       }
     }
   }

@@ -10,12 +10,8 @@ import {
   FederationEventDocument,
   FederationCompetitionDocument,
 } from '@/graphql/Federation';
-import { runQuery, withRequestPgClient } from '@/lib/server/postgresql';
-import {
-  browseParticipants,
-  browseParticipantPeople,
-  browseSourceFrontiers,
-} from '../../../federated.queries';
+import { runQuery } from '@/lib/server/postgresql';
+import { browseSourceFrontiers } from '../../../federated.queries';
 
 export const metadata = {
   title: 'Federated competition',
@@ -27,39 +23,39 @@ export default async function CompetitionPage({
   searchParams,
 }: {
   params: Promise<{ federation: string; eventId: string; competitionId: string }>;
-  searchParams: Promise<{ roundsPage?: string }>;
+  searchParams: Promise<{ roundsPage?: string; page?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId) || !/^[0-9]{1,18}$/.test(competitionId)) notFound();
-  const { roundsPage } = await searchParams;
+  const { roundsPage, page } = await searchParams;
+  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
   const currentRoundsPage = Math.max(1, Number.parseInt(roundsPage ?? '1', 10) || 1);
-  const [{ federationEventByFederationAndId: event }, { competition }] =
-    await Promise.all([
-      executeGraphql(FederationEventDocument, { federation, eventId }),
-      executeGraphql(FederationCompetitionDocument, {
-        id: competitionId,
-        roundsOffset: Math.min((currentRoundsPage - 1) * 100, 2_147_483_647),
-      }),
-    ]);
+  const [
+    { federationEventByFederationAndId: event },
+    { competition, federationCompetitors: participants },
+  ] = await Promise.all([
+    executeGraphql(FederationEventDocument, { federation, eventId }),
+    executeGraphql(FederationCompetitionDocument, {
+      id: competitionId,
+      participantsOffset: Math.min((currentPage - 1) * 20, 2_147_483_647),
+      roundsOffset: Math.min((currentRoundsPage - 1) * 100, 2_147_483_647),
+    }),
+  ]);
   if (!event || !competition || competition.eventId !== eventId) notFound();
   const rounds = competition.rounds;
   if (currentRoundsPage > Math.max(1, Math.ceil(rounds.totalCount / 100))) notFound();
-  const [participants, people, sources] = await Promise.all([
-    runQuery(browseParticipants, { competitionId }),
-    withRequestPgClient((client) =>
-      browseParticipantPeople.run({ competitionId }, client),
-    ),
-    auth.isSystemAdmin
-      ? runQuery(browseSourceFrontiers, {
-          federation,
-          eventKey: event.externalId,
-          competitionKey: competition.externalId,
-        })
-      : [],
-  ]);
-  const peopleByCompetitor = Object.groupBy(people, (person) => person.competitor_id);
+  if (!participants || currentPage > Math.max(1, Math.ceil(participants.totalCount / 20)))
+    notFound();
+  const sources = auth.isSystemAdmin
+    ? await runQuery(browseSourceFrontiers, {
+        federation,
+        eventKey: event.externalId,
+        competitionKey: competition.externalId,
+      })
+    : [];
+  const path = `/federated/${federation}/${eventId}/${competitionId}`;
   return (
     <Layout requireUser>
       <PageHeader
@@ -117,72 +113,85 @@ export default async function CompetitionPage({
             </tr>
           </thead>
           <tbody>
-            {participants.map((participant) => {
-              const matches = peopleByCompetitor[participant.competitor_id] ?? [];
-              const couples = [
-                ...new Set(matches.flatMap((person) => person.couple_ids ?? [])),
-              ];
+            {participants.nodes.map((participant) => {
+              const entry = participant.competitionEntries.nodes[0];
+              const result = participant.competitionResults.nodes[0];
+              const competitorPath = `/federated/${federation}/competitors/${participant.externalId}`;
               return (
-                <tr
-                  key={participant.competitor_id}
-                  className="border-t border-neutral-4 align-top"
-                >
+                <tr key={participant.id} className="border-t border-neutral-4 align-top">
                   <th scope="row" className="px-2 py-1 font-normal">
                     <Link
                       className="text-accent-11 underline"
-                      href={`/federated/${federation}/competitors/${participant.competitor_external_id}`}
+                      href={competitorPath}
                       prefetch={false}
                     >
-                      {participant.name || participant.competitor_id}
+                      {participant.name || participant.id}
                     </Link>
-                    <div className="text-xs">{participant.competitor_id}</div>
+                    <div className="text-xs">{participant.id}</div>
                   </th>
                   <td className="px-2 py-1">
-                    {participant.cancelled === null
-                      ? '-'
-                      : participant.cancelled
-                        ? 'cancelled'
-                        : 'registered'}
+                    {!entry ? '-' : entry.cancelled ? 'cancelled' : 'registered'}
                   </td>
                   <td className="px-2 py-1 whitespace-nowrap">
-                    {participant.ranking}
-                    {participant.ranking_to &&
-                    participant.ranking_to !== participant.ranking
-                      ? `–${participant.ranking_to}`
+                    {result?.ranking}
+                    {result?.rankingTo && result?.rankingTo !== result?.ranking
+                      ? `–${result?.rankingTo}`
                       : ''}
                   </td>
-                  <td className="px-2 py-1">{participant.start_number}</td>
-                  <td className="px-2 py-1">{participant.point_gain}</td>
-                  <td className="px-2 py-1">{participant.final_gain}</td>
-                  <td className="px-2 py-1">{participant.completion_status}</td>
+                  <td className="px-2 py-1">{result?.startNumber}</td>
+                  <td className="px-2 py-1">{result?.pointGain}</td>
+                  <td className="px-2 py-1">{result?.finalGain}</td>
+                  <td className="px-2 py-1">{result?.completionStatus}</td>
                   <td className="px-2 py-1">
-                    {matches.map((person) => (
-                      <div key={`${person.federated_person_id}:${person.person_id}`}>
-                        <Link
-                          className="font-mono text-xs text-accent-11 underline"
-                          href={`/federated/${federation}/people/${person.person_external_id}`}
-                          prefetch={false}
-                        >
-                          {person.federated_person_id}
-                        </Link>
-                        {' → '}
-                        {person.person_id ? (
+                    {participant.components.nodes.map(({ personId, person }) => (
+                      <div key={personId}>
+                        {person ? (
                           <>
                             <Link
-                              className="text-accent-11 underline"
-                              href={`/clenove/${person.person_id}`}
+                              className="font-mono text-xs text-accent-11 underline"
+                              href={`/federated/${federation}/people/${person.externalId}`}
+                              prefetch={false}
                             >
-                              {person.person_name}
-                            </Link>{' '}
-                            ({person.tenants?.join(', ') || 'No active membership'})
+                              {personId}
+                            </Link>
+                            {' → '}
+                            {person.people.nodes.length === 0
+                              ? 'No local match'
+                              : person.people.nodes.map((match, index) => (
+                                  <span key={match.id}>
+                                    {index > 0 && ', '}
+                                    <Link
+                                      className="text-accent-11 underline"
+                                      href={`/clenove/${match.id}`}
+                                    >
+                                      {match.name}
+                                    </Link>
+                                  </span>
+                                ))}
+                            {person.people.totalCount > person.people.nodes.length && (
+                              <Link
+                                className="ml-1 text-accent-11 underline"
+                                href={`/federated/${federation}/people/${person.externalId}`}
+                              >
+                                All {person.people.totalCount} matches
+                              </Link>
+                            )}
                           </>
                         ) : (
-                          'No local match'
+                          personId
                         )}
                       </div>
                     ))}
-                    {matches.length === 0 && 'No competitor members'}
-                    {couples.map((id) => (
+                    {participant.components.totalCount === 0 && 'No competitor members'}
+                    {participant.components.totalCount >
+                      participant.components.nodes.length && (
+                      <div>
+                        <Link className="text-accent-11 underline" href={competitorPath}>
+                          All {participant.components.totalCount} members
+                        </Link>
+                      </div>
+                    )}
+                    {participant.couplesList.map(({ id }) => (
                       <div key={id}>
                         <Link className="text-accent-11 underline" href={`/pary/${id}`}>
                           Couple {id}
@@ -193,7 +202,7 @@ export default async function CompetitionPage({
                 </tr>
               );
             })}
-            {participants.length === 0 && (
+            {participants.nodes.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-2 py-1">
                   No registrations or results
@@ -203,6 +212,12 @@ export default async function CompetitionPage({
           </tbody>
         </table>
       </div>
+      <Pagination
+        total={participants.totalCount}
+        limit={20}
+        page={currentPage}
+        href={(page) => `${path}?page=${page}&roundsPage=${currentRoundsPage}`}
+      />
       <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
@@ -240,9 +255,7 @@ export default async function CompetitionPage({
         total={rounds.totalCount}
         limit={100}
         page={currentRoundsPage}
-        href={(roundsPage) =>
-          `/federated/${federation}/${eventId}/${competitionId}?roundsPage=${roundsPage}`
-        }
+        href={(roundsPage) => `${path}?page=${currentPage}&roundsPage=${roundsPage}`}
       />
       {auth.isSystemAdmin && (
         <>

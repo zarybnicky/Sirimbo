@@ -7594,6 +7594,7 @@ are tested for equality and combined with a logical ‘and.’
 input FederationCompetitorCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
+  competitionId: BigInt
 
   """Checks for equality with the object’s `competitorType` field."""
   competitorType: CompetitorType

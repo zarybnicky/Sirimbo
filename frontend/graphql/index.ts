@@ -5955,6 +5955,7 @@ export type FederationCompetitorComponentsOrderBy =
 export type FederationCompetitorCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
+  competitionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `competitorType` field. */
   competitorType?: InputMaybe<CompetitorType>;
   /** Checks for equality with the object’s `createdAt` field. */
