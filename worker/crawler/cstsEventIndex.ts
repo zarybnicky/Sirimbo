@@ -1,9 +1,14 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { endOfMonth } from 'date-fns';
-import { updateEventVenueLocations, upsertEventsDetailed } from './federated.queries.ts';
+import {
+  type event_status,
+  updateEventVenueLocations,
+  upsertEventsDetailed,
+} from './federated.queries.ts';
 import { resolveEventVenueLocations } from './eventVenueLocation.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { eventState, numberAsEnum } from './cstsEnums.ts';
 
 const rangeKeyRe = /^(\d{4})-(\d{2})$/;
 const text = z.string().overwrite((x) => x.trim());
@@ -32,7 +37,7 @@ const eventSchema = z.object({
         city: text,
         name: text,
         date: z.iso.datetime({ local: true }),
-        state: z.number(),
+        state: numberAsEnum(eventState),
         // TODO: Unused yet
         dayOfEvent: z.number(),
         street: optionalText,
@@ -105,6 +110,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
   },
   async load(client, parsed) {
     const events = makePgtypedCollection<{
+      status: event_status;
       federation: string;
       externalId: string;
       name: string;
@@ -125,6 +131,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
       organizingClubId: string;
     }>(
       [
+        'status',
         'federation',
         'externalId',
         'name',
@@ -172,6 +179,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
       const competitionEvent = event.eventCompetitions.find((x) => x)!;
       const location = eventLocations[index];
       events.add({
+        status: competitionEvent.state === 'Cancelled' ? 'cancelled' : 'planned',
         federation: 'csts',
         externalId: event.id.toString(),
         name: competitionEvent.name,

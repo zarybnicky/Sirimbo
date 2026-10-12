@@ -72,6 +72,8 @@ export default async function CompetitionPage({
       <dl className="text-sm tabular">
         <dt>competition ID</dt>
         <dd>{competition.externalId}</dd>
+        <dt>status</dt>
+        <dd>{competition.status.toLowerCase().replaceAll('_', ' ')}</dd>
         <dt>type</dt>
         <dd>{competition.competitionType?.toLowerCase() || '-'}</dd>
         <dt>date</dt>

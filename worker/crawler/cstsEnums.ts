@@ -287,3 +287,12 @@ export const competitionClassType: { [key in CompetitionClassType]: number } = {
 export const cstsCompetitionClass = numberAsEnum(competitionClassType).overwrite((x) =>
   x === 'S' ? 'M' : x,
 );
+
+export const eventState = {
+  Private: 0,
+  Waiting: 1,
+  Approved: 2,
+  Public: 3,
+  Cancelled: 100,
+  Checked: 900,
+};

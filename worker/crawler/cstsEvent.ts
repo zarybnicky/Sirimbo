@@ -19,6 +19,7 @@ import {
   ensurePeople,
   mergeEventOfficials,
   type competition_type,
+  type event_status,
   type gender,
   type official_role,
   upsertCompetitions,
@@ -159,6 +160,7 @@ export const cstsEvent: JsonLoader<Response> = {
       registrationFee: string;
       excusedTotal: number;
       competitionType: competition_type;
+      status: event_status;
     }>([
       'externalId',
       'categoryId',
@@ -170,6 +172,7 @@ export const cstsEvent: JsonLoader<Response> = {
       'registrationFee',
       'excusedTotal',
       'competitionType',
+      'status',
     ]);
 
     for (const [index, competition] of event.competitions.entries()) {
@@ -183,6 +186,7 @@ export const cstsEvent: JsonLoader<Response> = {
         participantsTotal: competition.registered,
         checkInEnd: competition.checkInEnd ?? '',
         completedAt: competition.completedAt ?? '',
+        status: competition.completedAt ? 'completed' : 'planned',
         registrationFee: competition.registrationFee.toString(),
         excusedTotal: competition.excused,
         competitionType: mapCompetitionType(competition.grade),

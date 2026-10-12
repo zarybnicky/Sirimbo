@@ -67,6 +67,8 @@ export default async function EventPage({
       <dl className="text-sm tabular">
         <dt>event ID</dt>
         <dd>{event.externalId}</dd>
+        <dt>status</dt>
+        <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
         <dt>date</dt>
         <dd>
           {numericDateWithYearFormatter.format(new Date(event.startDate))}
@@ -96,6 +98,7 @@ export default async function EventPage({
                 'competition ID',
                 'category',
                 'type',
+                'status',
                 'date',
                 'check-in end',
                 'registrations',
@@ -124,6 +127,9 @@ export default async function EventPage({
                   {competition.competitionType?.toLowerCase()}
                 </td>
                 <td className="px-2 py-1 whitespace-nowrap">
+                  {competition.status.toLowerCase().replaceAll('_', ' ')}
+                </td>
+                <td className="px-2 py-1 whitespace-nowrap">
                   {numericDateWithYearFormatter.format(new Date(competition.startDate))}
                 </td>
                 <td className="px-2 py-1">{competition.checkInEnd}</td>
@@ -133,7 +139,7 @@ export default async function EventPage({
             ))}
             {competitions.nodes.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-2 py-1">
+                <td colSpan={8} className="px-2 py-1">
                   No competitions
                 </td>
               </tr>

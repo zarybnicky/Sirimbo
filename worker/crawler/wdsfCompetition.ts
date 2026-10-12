@@ -337,7 +337,7 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
   }),
   revalidatePeriod: '30d',
   load: async (client, c) => {
-    // TODO(wdsf): Persist parsed status, coefficient, eventId, lastmodifiedDate,
+    // TODO(wdsf): Persist parsed coefficient, eventId, lastmodifiedDate,
     // and link relations, or remove them from the schema.
     const competitorType = mapCompetitorType(c);
     const categoryId = await getFederatedCategoryId({
@@ -367,6 +367,19 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
         externalId: [c.id.toString()],
         categoryId: [categoryId],
         competitionType: [mapCompetitionType(c.type)],
+        status: [
+          ({
+            Canceled: 'cancelled',
+            Closed: 'completed',
+            RegistrationClosed: 'planned',
+            PreRegistration: 'planned',
+            Registering: 'planned',
+            InProgress: 'in_progress',
+            Processing: 'in_progress',
+            PostponedTBC: 'postponed',
+            Postponed: 'postponed',
+          } as const)[c.status],
+        ],
         startDate: [c.date],
         endDate: [c.date],
       },

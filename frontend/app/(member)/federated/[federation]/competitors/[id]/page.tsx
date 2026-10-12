@@ -158,6 +158,7 @@ export default async function CompetitorPage({
                 'date',
                 'event',
                 'competition',
+                'status',
                 'registration',
                 'rank',
                 'points',
@@ -196,6 +197,9 @@ export default async function CompetitorPage({
                       {row.category?.name || row.externalId}
                     </Link>
                   </th>
+                  <td className="px-2 py-1 whitespace-nowrap">
+                    {row.status.toLowerCase().replaceAll('_', ' ')}
+                  </td>
                   <td className="px-2 py-1">
                     {!entry ? '-' : entry.cancelled ? 'cancelled' : 'registered'}
                   </td>
@@ -212,7 +216,7 @@ export default async function CompetitorPage({
             })}
             {history.nodes.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-2 py-1">
+                <td colSpan={8} className="px-2 py-1">
                   No registrations or results
                 </td>
               </tr>

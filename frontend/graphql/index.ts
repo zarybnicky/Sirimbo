@@ -1626,6 +1626,7 @@ export type Competition = {
   /** Reads and enables pagination through a set of `CompetitionRound`. */
   rounds: CompetitionRoundsConnection;
   startDate: Scalars['Date']['output'];
+  status: FederationEventStatus;
 };
 
 
@@ -1704,6 +1705,8 @@ export type CompetitionCondition = {
   registrationFee?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `startDate` field. */
   startDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<FederationEventStatus>;
 };
 
 /** A connection to a list of `CompetitionEntry` values. */
@@ -2342,7 +2345,9 @@ export type CompetitionsOrderBy =
   | 'REGISTRATION_FEE_ASC'
   | 'REGISTRATION_FEE_DESC'
   | 'START_DATE_ASC'
-  | 'START_DATE_DESC';
+  | 'START_DATE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC';
 
 export type CompetitorRole =
   | 'FOLLOW'
@@ -6055,6 +6060,7 @@ export type FederationEvent = {
   postalCode: Maybe<Scalars['String']['output']>;
   range: Maybe<DateRange>;
   startDate: Scalars['Date']['output'];
+  status: FederationEventStatus;
   streetAddress: Maybe<Scalars['String']['output']>;
   venueLat: Maybe<Scalars['Float']['output']>;
   venueLng: Maybe<Scalars['Float']['output']>;
@@ -6128,6 +6134,8 @@ export type FederationEventCondition = {
   search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `startDate` field. */
   startDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<FederationEventStatus>;
   /** Checks for equality with the object’s `streetAddress` field. */
   streetAddress?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `venueLat` field. */
@@ -6210,6 +6218,14 @@ export type FederationEventOfficialsOrderBy =
   | 'ROLE_ASC'
   | 'ROLE_DESC';
 
+export type FederationEventStatus =
+  | 'CANCELLED'
+  | 'COMPLETED'
+  | 'IN_PROGRESS'
+  | 'PLANNED'
+  | 'POSTPONED'
+  | 'UNKNOWN';
+
 /** A connection to a list of `FederationEvent` values. */
 export type FederationEventsConnection = {
   __typename?: 'FederationEventsConnection';
@@ -6271,6 +6287,8 @@ export type FederationEventsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'START_DATE_ASC'
   | 'START_DATE_DESC'
+  | 'STATUS_ASC'
+  | 'STATUS_DESC'
   | 'STREET_ADDRESS_ASC'
   | 'STREET_ADDRESS_DESC'
   | 'VENUE_LAT_ASC'
@@ -14770,7 +14788,8 @@ export type GraphCacheResolvers = {
     registrationFee?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     results?: GraphCacheResolver<WithTypename<Competition>, CompetitionResultsArgs, WithTypename<CompetitionResultsConnection> | string>,
     rounds?: GraphCacheResolver<WithTypename<Competition>, CompetitionRoundsArgs, WithTypename<CompetitionRoundsConnection> | string>,
-    startDate?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Date']['output'] | string>
+    startDate?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Date']['output'] | string>,
+    status?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, FederationEventStatus | string>
   },
   CompetitionEntriesConnection?: {
     edges?: GraphCacheResolver<WithTypename<CompetitionEntriesConnection>, Record<string, never>, Array<WithTypename<CompetitionEntriesEdge> | string>>,
@@ -15676,6 +15695,7 @@ export type GraphCacheResolvers = {
     postalCode?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     range?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, WithTypename<DateRange> | string>,
     startDate?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['Date']['output'] | string>,
+    status?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, FederationEventStatus | string>,
     streetAddress?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     venueLat?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['Float']['output'] | string>,
     venueLng?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['Float']['output'] | string>,
@@ -17404,7 +17424,8 @@ export type GraphCacheUpdaters = {
     registrationFee?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>,
     results?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, CompetitionResultsArgs>,
     rounds?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, CompetitionRoundsArgs>,
-    startDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>
+    startDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>
   },
   CompetitionEntriesConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesConnection>>, Record<string, never>>,
@@ -18310,6 +18331,7 @@ export type GraphCacheUpdaters = {
     postalCode?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     range?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     startDate?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     streetAddress?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     venueLat?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     venueLng?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,

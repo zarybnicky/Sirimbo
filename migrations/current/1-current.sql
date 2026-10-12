@@ -146,3 +146,70 @@ grant select on couple_federation_link to anonymous;
 comment on table couple is '@simpleCollections only
 @behavior -query:resource:list -query:resource:connection
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor';
+
+do $$
+begin
+  if not exists (select 1 from pg_type where typnamespace = 'federated'::regnamespace and typname = 'event_status') then
+    create type federated.event_status as enum (
+      'unknown', 'planned', 'in_progress', 'completed', 'postponed', 'cancelled'
+    );
+  end if;
+end;
+$$;
+comment on type federated.event_status is '@name federation_event_status';
+grant usage on type federated.event_status to anonymous;
+
+alter table federated.event add column if not exists status federated.event_status not null default 'unknown';
+alter table federated.competition add column if not exists status federated.event_status not null default 'unknown';
+
+with cached as (
+  select distinct on (e->>'id') e->>'id' as external_id,
+    case (e->'eventCompetitions'->0->>'state')::integer
+      when 0 then 'planned'
+      when 1 then 'planned'
+      when 2 then 'planned'
+      when 3 then 'planned'
+      when 900 then 'planned'
+      when 100 then 'cancelled'
+      else 'unknown'
+    end::federated.event_status as status
+  from crawler.frontier f
+  join crawler.json_response r on r.id = f.last_successful_response_id
+  join crawler.json_response_cache cache using (content_hash)
+  cross join lateral jsonb_array_elements(cache.content->'collection') e
+  where f.federation = 'csts' and f.kind = 'eventIndex'
+  order by e->>'id', r.last_observed_at desc, r.id desc
+)
+update federated.event e set status = cached.status
+from cached
+where e.federation = 'csts' and e.external_id = cached.external_id
+  and e.status = 'unknown' and e.status is distinct from cached.status;
+
+with cached as (
+  select f.key, case cache.content->>'status'
+    when 'Canceled' then 'cancelled'
+    when 'Closed' then 'completed'
+    when 'RegistrationClosed' then 'planned'
+    when 'PreRegistration' then 'planned'
+    when 'Registering' then 'planned'
+    when 'InProgress' then 'in_progress'
+    when 'Processing' then 'in_progress'
+    when 'PostponedTBC' then 'postponed'
+    when 'Postponed' then 'postponed'
+    else 'unknown'
+  end::federated.event_status as status
+  from crawler.frontier f
+  join crawler.json_response r on r.id = f.last_successful_response_id
+  join crawler.json_response_cache cache using (content_hash)
+  where f.federation = 'wdsf' and f.kind = 'competition'
+)
+update federated.competition c set status = cached.status
+from cached
+where c.federation = 'wdsf' and c.external_id = cached.key
+  and c.status = 'unknown' and c.status is distinct from cached.status;
+
+update federated.competition set status = case
+  when completed_at is not null then 'completed'::federated.event_status
+  else 'planned'::federated.event_status
+end
+where federation = 'csts' and status = 'unknown';

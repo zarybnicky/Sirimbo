@@ -489,7 +489,7 @@ ON CONFLICT (federation, external_id) DO UPDATE
 /* @name UpsertEventsDetailed */
 INSERT INTO federated.event (
   federation, external_id, name, start_date, end_date, location, city, country, street_address, postal_code,
-  address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id
+  address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
 )
 SELECT
   federation,
@@ -509,7 +509,8 @@ SELECT
   nullif(contact_phone, ''),
   nullif(contact_email, ''),
   nullif(website_url, ''),
-  CAST(NULLIF(organizing_club_id, '') AS bigint)
+  CAST(NULLIF(organizing_club_id, '') AS bigint),
+  status
 FROM unnest(
   :federation::text[],
   :externalId::text[],
@@ -528,13 +529,15 @@ FROM unnest(
   :contactPhone::text[],
   :contactEmail::text[],
   :websiteUrl::text[],
-  :organizingClubId::text[]
+  :organizingClubId::text[],
+  :status::federated.event_status[]
 ) AS input(
   federation, external_id, name, start_date, end_date, location, city, country, street_address, postal_code,
-  address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id
+  address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
 )
 ON CONFLICT (federation, external_id) DO UPDATE
-  SET name = COALESCE(EXCLUDED.name, federated.event.name),
+  SET status = EXCLUDED.status,
+      name = COALESCE(EXCLUDED.name, federated.event.name),
       start_date = EXCLUDED.start_date,
       end_date = COALESCE(EXCLUDED.end_date, federated.event.end_date),
       location = COALESCE(EXCLUDED.location, federated.event.location),
@@ -638,15 +641,16 @@ WITH event AS (
     :completedAt::text[],
     :registrationFee::text[],
     :excusedTotal::int[],
-    :competitionType::federated.competition_type[]
+    :competitionType::federated.competition_type[],
+    :status::federated.event_status[]
   ) AS input(
     external_id, category_id, start_date, end_date, participants_total,
-    check_in_end, completed_at, registration_fee, excused_total, competition_type
+    check_in_end, completed_at, registration_fee, excused_total, competition_type, status
   )
 )
 INSERT INTO federated.competition (
   federation, external_id, event_id, category_id, start_date, end_date, participants_total,
-  check_in_end, completed_at, registration_fee, excused_total, competition_type
+  check_in_end, completed_at, registration_fee, excused_total, competition_type, status
 )
 SELECT
   :federation,
@@ -660,7 +664,8 @@ SELECT
   nullif(input.completed_at, '')::timestamptz,
   nullif(input.registration_fee, '')::numeric(10,3),
   input.excused_total,
-  input.competition_type
+  input.competition_type,
+  coalesce(input.status, 'unknown')
 FROM input
 CROSS JOIN event
 ON CONFLICT (federation, external_id) DO UPDATE
@@ -673,7 +678,8 @@ ON CONFLICT (federation, external_id) DO UPDATE
       completed_at = EXCLUDED.completed_at,
       registration_fee = EXCLUDED.registration_fee,
       excused_total = EXCLUDED.excused_total,
-      competition_type = EXCLUDED.competition_type;
+      competition_type = EXCLUDED.competition_type,
+      status = EXCLUDED.status;
 
 /* @name MergeEventOfficials */
 WITH event AS (

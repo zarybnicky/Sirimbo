@@ -110,6 +110,7 @@ export function Browser({
                           {[
                             'date',
                             'event',
+                            'status',
                             'event ID',
                             'location',
                             'country',
@@ -147,6 +148,9 @@ export function Browser({
                                 {event.name || event.externalId}
                               </Link>
                             </th>
+                            <td className="px-2 py-1 whitespace-nowrap">
+                              {event.status.toLowerCase().replaceAll('_', ' ')}
+                            </td>
                             <td className="px-2 py-1">{event.externalId}</td>
                             <td className="px-2 py-1">{event.location || event.city}</td>
                             <td className="px-2 py-1">{event.country}</td>
@@ -155,7 +159,7 @@ export function Browser({
                         ))}
                         {result.rows.length === 0 && (
                           <tr>
-                            <td colSpan={6} className="px-2 py-1">
+                            <td colSpan={7} className="px-2 py-1">
                               No events found
                             </td>
                           </tr>

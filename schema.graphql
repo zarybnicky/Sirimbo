@@ -2099,6 +2099,7 @@ type Competition {
     orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundsConnection!
   startDate: Date!
+  status: FederationEventStatus!
 }
 
 """
@@ -2145,6 +2146,9 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `startDate` field."""
   startDate: Date
+
+  """Checks for equality with the object’s `status` field."""
+  status: FederationEventStatus
 }
 
 """A connection to a list of `CompetitionEntry` values."""
@@ -2986,6 +2990,8 @@ enum CompetitionsOrderBy {
   REGISTRATION_FEE_DESC
   START_DATE_ASC
   START_DATE_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 enum CompetitorRole {
@@ -7768,6 +7774,7 @@ type FederationEvent {
   postalCode: String
   range: DateRange
   startDate: Date!
+  status: FederationEventStatus!
   streetAddress: String
   venueLat: Float
   venueLng: Float
@@ -7836,6 +7843,9 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `startDate` field."""
   startDate: Date
+
+  """Checks for equality with the object’s `status` field."""
+  status: FederationEventStatus
 
   """Checks for equality with the object’s `streetAddress` field."""
   streetAddress: String
@@ -7940,6 +7950,15 @@ enum FederationEventOfficialsOrderBy {
   ROLE_DESC
 }
 
+enum FederationEventStatus {
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+  PLANNED
+  POSTPONED
+  UNKNOWN
+}
+
 """A connection to a list of `FederationEvent` values."""
 type FederationEventsConnection {
   """
@@ -8007,6 +8026,8 @@ enum FederationEventsOrderBy {
   PRIMARY_KEY_DESC
   START_DATE_ASC
   START_DATE_DESC
+  STATUS_ASC
+  STATUS_DESC
   STREET_ADDRESS_ASC
   STREET_ADDRESS_DESC
   VENUE_LAT_ASC

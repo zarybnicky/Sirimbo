@@ -56,6 +56,7 @@ query FederationEvent(
     id
     externalId
     name
+    status
     startDate
     endDate
     location
@@ -72,6 +73,7 @@ query FederationEvent(
         startDate
         checkInEnd
         competitionType
+        status
         category { id name }
         entries(first: 0, condition: { cancelled: false }) { totalCount }
         results(first: 0) { totalCount }
@@ -90,6 +92,7 @@ query FederationCompetition($id: BigInt!, $roundsOffset: Int! = 0, $participants
     competitionType
     participantsTotal
     completedAt
+    status
     category { id name }
     rounds(first: 100, offset: $roundsOffset, orderBy: [ROUND_INDEX_ASC, ID_ASC]) {
       totalCount
@@ -197,6 +200,7 @@ query FederationCompetitor($id: String!, $membersOffset: Int! = 0, $historyOffse
       id
       externalId
       eventId
+      status
       startDate
       event { id name externalId }
       category { id name }
@@ -229,6 +233,7 @@ query Federation(
         id
         externalId
         name
+        status
         startDate
         endDate
         location
