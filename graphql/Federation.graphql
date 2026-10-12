@@ -161,6 +161,14 @@ query FederationPerson($federation: String!, $externalId: BigInt!, $competitorsO
           id
           tenantName
         }
+        tenantTrainersList(condition: { status: ACTIVE }) {
+          id
+          tenantName
+        }
+        tenantAdministratorsList(condition: { status: ACTIVE }) {
+          id
+          tenantName
+        }
       }
     }
   }

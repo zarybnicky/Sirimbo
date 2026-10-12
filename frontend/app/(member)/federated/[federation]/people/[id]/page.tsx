@@ -82,7 +82,7 @@ export default async function FederatedPersonPage({
         <table className="w-full text-left text-sm">
           <thead>
             <tr>
-              {['person', 'active memberships'].map((label) => (
+              {['person', 'active affiliations'].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -101,11 +101,19 @@ export default async function FederatedPersonPage({
                   </Link>
                 </th>
                 <td className="px-2 py-1">
-                  {match.tenantMembershipsList
-                    .map((membership) => membership.tenantName)
-                    .filter((name) => name != null)
+                  {[
+                    ...new Set(
+                      [
+                        ...match.tenantMembershipsList,
+                        ...match.tenantTrainersList,
+                        ...match.tenantAdministratorsList,
+                      ]
+                        .map((affiliation) => affiliation.tenantName)
+                        .filter((name) => name != null),
+                    ),
+                  ]
                     .toSorted((a, b) => a.localeCompare(b))
-                    .join(', ') || 'No active membership'}
+                    .join(', ') || 'No active affiliation'}
                 </td>
               </tr>
             ))}
