@@ -1,25 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useTransition } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'urql';
+import { z } from 'zod';
 import {
-  debounce,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
   useQueryStates,
 } from 'nuqs';
 import { TextField } from '@/ui/fields/text';
+import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { Pagination } from '@/ui/Pagination';
 import { numericDateWithYearFormatter } from '@/ui/format';
-import type { FederationQuery } from '@/graphql/Federation';
+import { FederationDocument, type FederationQuery } from '@/graphql/Federation';
 
 type FederationData = NonNullable<FederationQuery['federation']>;
 
 const views = ['events', 'people', 'competitors'] as const;
 
-export type BrowserResult = { total: number; page: number } & (
+type BrowserResult = { total: number; page: number } & (
   | { view: 'events'; rows: NonNullable<FederationData['events']>['nodes'] }
   | {
       view: 'people' | 'competitors';
@@ -30,14 +32,7 @@ export type BrowserResult = { total: number; page: number } & (
     }
 );
 
-export function Browser({
-  federation,
-  result,
-}: {
-  federation: string;
-  result: BrowserResult;
-}) {
-  const [isPending, startTransition] = useTransition();
+export function Browser({ federation }: { federation: string }) {
   const [filters, setFilters] = useQueryStates(
     {
       search: parseAsString.withDefault(''),
@@ -45,8 +40,50 @@ export function Browser({
       page: parseAsInteger,
       view: parseAsStringLiteral(views).withDefault('events'),
     },
-    { shallow: false, scroll: false, startTransition },
+    { shallow: true, scroll: false },
   );
+  const [search, setSearch] = useState(filters.search.trim());
+  useEffect(() => {
+    const timeout = setTimeout(() => setSearch(filters.search.trim()), 300);
+    return () => clearTimeout(timeout);
+  }, [filters.search]);
+
+  const { view, date } = filters;
+  const page = Math.max(1, filters.page ?? 1);
+  const searchPending = search !== filters.search.trim();
+  const invalidDate =
+    view === 'events' && !!date && !z.iso.date().safeParse(date).success;
+  const [{ data, fetching, error }] = useQuery({
+    query: FederationDocument,
+    pause: searchPending || invalidDate,
+    variables: {
+      federation,
+      events: view === 'events',
+      people: view === 'people',
+      competitors: view === 'competitors',
+      eventCondition: { search, onDate: view === 'events' && date ? date : null },
+      personCondition: { search },
+      competitorCondition: { search },
+      offset: Math.min((page - 1) * 50, 2_147_483_647),
+    },
+  });
+  const item = data?.federation;
+  const total = item?.[view]?.totalCount ?? 0;
+  const lastPage = Math.max(1, Math.ceil(total / 50));
+  const isPending = fetching || searchPending;
+
+  useEffect(() => {
+    if (item?.[view] && !isPending && !error && !invalidDate && page > lastPage) {
+      void setFilters({ page: lastPage });
+    }
+  }, [item, view, isPending, error, invalidDate, page, lastPage, setFilters]);
+
+  const result: BrowserResult | null =
+    !item?.[view] || invalidDate || error
+      ? null
+      : view === 'events'
+        ? { view, total, page, rows: item.events?.nodes ?? [] }
+        : { view, total, page, rows: item[view]?.nodes ?? [] };
 
   return (
     <>
@@ -75,10 +112,7 @@ export function Browser({
                 label={view === 'events' ? 'Name, location or event ID' : 'Name or ID'}
                 value={filters.search}
                 onChange={(event) =>
-                  setFilters(
-                    { search: event.target.value, page: null },
-                    { limitUrlUpdates: debounce(300) },
-                  )
+                  setFilters({ search: event.target.value, page: null })
                 }
               />
               {view === 'events' && (
@@ -93,14 +127,17 @@ export function Browser({
                 />
               )}
             </div>
+            <FormError error={invalidDate ? 'Invalid date' : error} />
             <p role="status" className="my-2 text-sm text-neutral-11">
-              {isPending || result.view !== view
+              {isPending
                 ? 'Loading…'
-                : result.total === 0
-                  ? '0 results'
-                  : `${(result.page - 1) * 50 + 1}–${Math.min(result.page * 50, result.total)} of ${result.total}`}
+                : !result
+                  ? null
+                  : result.total === 0
+                    ? '0 results'
+                    : `${(result.page - 1) * 50 + 1}–${Math.min(result.page * 50, result.total)} of ${result.total}`}
             </p>
-            {result.view === view && (
+            {result && (
               <>
                 {result.view === 'events' ? (
                   <div className="col-full-width overflow-x-auto" aria-busy={isPending}>

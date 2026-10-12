@@ -187,6 +187,15 @@ query FederationCompetitor($id: String!, $membersOffset: Int! = 0, $historyOffse
     competitorType
     ageGroup
     federationByFederation { code name }
+    categoryProgresses(first: 100, orderBy: CATEGORY_ID_ASC) {
+      nodes {
+        categoryId
+        category { id name }
+        points
+        domesticFinals
+        foreignFinals
+      }
+    }
     couplesList(orderBy: [SINCE_DESC, ID_ASC]) { ...Couple }
     components(first: 100, offset: $membersOffset, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
       totalCount

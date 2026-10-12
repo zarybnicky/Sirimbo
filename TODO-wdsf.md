@@ -27,8 +27,8 @@
 
 ## Category progress and ranklists
 
-- [ ] Competitor page: show category/class, points, domestic finals, and foreign finals.
-- [ ] Link progress from the person's competitor memberships.
+- [x] Competitor page: show category/class, points, domestic finals, and foreign finals.
+- [x] Link progress from the person's competitor memberships.
 - [ ] Add federation → ranklist → dated snapshot navigation.
 - [ ] Show snapshot date/kind and entries ordered by rank, with links to competitors.
 - [ ] Link competitors back to their ranklist entries.

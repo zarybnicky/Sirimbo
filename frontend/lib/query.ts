@@ -178,6 +178,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     EventInstanceApproxPriceRecord: () => null,
     EventConflict: () => null,
     EventInstanceRegistrationInfo: () => null,
+    Federation: (x) => x.code || null,
     FederationCompetitorCategoryProgress: (x) => `${x.competitorId}:${x.categoryId}`,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,

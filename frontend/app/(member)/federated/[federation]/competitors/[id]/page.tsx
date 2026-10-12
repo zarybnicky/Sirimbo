@@ -65,6 +65,45 @@ export default async function CompetitorPage({
         <dt>age group</dt>
         <dd>{competitor.ageGroup || '-'}</dd>
       </dl>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Category progress</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm tabular-nums">
+          <thead>
+            <tr>
+              {['category', 'points', 'domestic finals', 'foreign finals'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {competitor.categoryProgresses.nodes
+              .toSorted((a, b) =>
+                (a.category?.name ?? a.categoryId).localeCompare(
+                  b.category?.name ?? b.categoryId,
+                ),
+              )
+              .map((progress) => (
+                <tr key={progress.categoryId} className="border-t border-neutral-4">
+                  <th scope="row" className="px-2 py-1 font-normal">
+                    {progress.category?.name || progress.categoryId}
+                  </th>
+                  <td className="px-2 py-1">{progress.points}</td>
+                  <td className="px-2 py-1">{progress.domesticFinals}</td>
+                  <td className="px-2 py-1">{progress.foreignFinals}</td>
+                </tr>
+              ))}
+            {competitor.categoryProgresses.nodes.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-2 py-1">
+                  No category progress
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
