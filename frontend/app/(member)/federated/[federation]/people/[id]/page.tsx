@@ -94,6 +94,51 @@ export default async function FederatedPersonPage({
         <dt>age group</dt>
         <dd>{person.ageGroup || '-'}</dd>
       </dl>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Licences</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr>
+              {['kind', 'discipline', 'grade', 'status', 'valid until'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {person.licenses.nodes.map((license) => (
+              <tr
+                key={`${license.kind}:${license.discipline}`}
+                className="border-t border-neutral-4"
+              >
+                <th scope="row" className="px-2 py-1 font-normal">
+                  {license.kind.toLowerCase().replaceAll('_', ' ')}
+                </th>
+                <td className="px-2 py-1">
+                  {license.discipline.toLowerCase().replaceAll('_', ' ')}
+                </td>
+                <td className="px-2 py-1">{license.grade || '-'}</td>
+                <td className="px-2 py-1">{license.status.toLowerCase()}</td>
+                <td className="px-2 py-1 whitespace-nowrap tabular-nums">
+                  {license.validUntil
+                    ? numericDateWithYearFormatter.format(
+                        new Date(`${license.validUntil}T00:00:00`),
+                      )
+                    : '-'}
+                </td>
+              </tr>
+            ))}
+            {person.licenses.nodes.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-2 py-1">
+                  No licences
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">

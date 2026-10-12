@@ -21,8 +21,8 @@
 
 ## Licenses
 
-- [ ] Person page: show license kind, discipline, grade, source status, and expiry date.
-- [ ] Include athlete, trainer, adjudicator, and other official qualifications.
+- [x] Person page: show license kind, discipline, grade, source status, and expiry date.
+- [x] Include athlete, trainer, adjudicator, and other official qualifications.
 - [ ] Store WDSF license blocking dates (see member metadata notes).
 
 ## Category progress and ranklists

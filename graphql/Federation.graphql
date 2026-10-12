@@ -148,6 +148,9 @@ query FederationPerson($federation: String!, $externalId: BigInt!, $competitorsO
     nationality
     ageGroup
     federationByFederation { code name }
+    licenses(first: 100, orderBy: [KIND_ASC, DISCIPLINE_ASC]) {
+      nodes { kind discipline grade status validUntil }
+    }
     competitorComponents(first: 100, offset: $competitorsOffset, orderBy: COMPETITOR_ID_ASC) {
       totalCount
       nodes {
