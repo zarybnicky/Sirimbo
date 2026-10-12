@@ -6,6 +6,7 @@ import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Competitors } from './Competitors';
+import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -187,6 +188,10 @@ export default async function FederatedPersonPage({ params }: Props) {
         </>
       )}
       <Competitors federation={federation} externalId={externalId} />
+      {(person.eventOfficialAssignments.totalCount > 0 ||
+        person.competitionOfficialAssignments.totalCount > 0) && (
+        <OfficialAssignments federation={federation} id={person.id} />
+      )}
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>

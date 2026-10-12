@@ -2188,6 +2188,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+  officialPersonId: String
 
   """Checks for equality with the object’s `participantsTotal` field."""
   participantsTotal: Int
@@ -7903,6 +7904,23 @@ type FederationEvent {
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionsConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!]
+  ): [Competition!]!
   contactEmail: String
   contactName: String
   contactPhone: String
@@ -8013,6 +8031,7 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+  officialPersonId: String
   onDate: Date
 
   """Checks for equality with the object’s `organizingClubId` field."""

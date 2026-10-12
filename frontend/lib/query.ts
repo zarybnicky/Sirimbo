@@ -174,6 +174,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     AddressDomain: () => null,
     CompetitionEntry: (x) => `${x.competitionId}:${x.competitorId}`,
+    CompetitionOfficial: (x) => `${x.competitionId}:${x.personId}:${x.role}`,
     CompetitionResult: (x) => `${x.competitionId}:${x.competitorId}`,
     DatetimeRange: () => null,
     DatetimeRangeBound: () => null,
@@ -184,6 +185,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     FederationCompetitorFacetsRecord: () => null,
     FederationCompetitorComponent: (x) => `${x.competitorId}:${x.personId}`,
     FederationCompetitorCategoryProgress: (x) => `${x.competitorId}:${x.categoryId}`,
+    FederationEventOfficial: (x) =>
+      `${x.eventId}:${x.personId}:${x.role}:${x.discipline}`,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
     TenantSetting: (x) => x.tenantId || null,

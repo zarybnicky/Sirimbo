@@ -1729,6 +1729,7 @@ export type CompetitionCondition = {
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  officialPersonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `participantsTotal` field. */
   participantsTotal?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `registrationFee` field. */
@@ -6159,6 +6160,8 @@ export type FederationEvent = {
   city: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Competition`. */
   competitions: CompetitionsConnection;
+  /** Reads and enables pagination through a set of `Competition`. */
+  competitionsList: Array<Competition>;
   contactEmail: Maybe<Scalars['String']['output']>;
   contactName: Maybe<Scalars['String']['output']>;
   contactPhone: Maybe<Scalars['String']['output']>;
@@ -6197,6 +6200,14 @@ export type FederationEventCompetitionsArgs = {
   condition?: InputMaybe<CompetitionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionsOrderBy>>;
+};
+
+
+export type FederationEventCompetitionsListArgs = {
+  condition?: InputMaybe<CompetitionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompetitionsOrderBy>>;
 };
@@ -6245,6 +6256,7 @@ export type FederationEventCondition = {
   location?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  officialPersonId?: InputMaybe<Scalars['String']['input']>;
   onDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `organizingClubId` field. */
   organizingClubId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -15564,6 +15576,7 @@ export type GraphCacheResolvers = {
     addressNote?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     city?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     competitions?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
+    competitionsList?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventCompetitionsListArgs, Array<WithTypename<Competition> | string>>,
     contactEmail?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     contactName?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     contactPhone?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -18199,6 +18212,7 @@ export type GraphCacheUpdaters = {
     addressNote?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     city?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     competitions?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, FederationEventCompetitionsArgs>,
+    competitionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, FederationEventCompetitionsListArgs>,
     contactEmail?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     contactName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     contactPhone?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,

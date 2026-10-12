@@ -90,6 +90,7 @@ query FederationEvent($federation: String!, $eventId: String!) {
     country
     officials(first: 100, orderBy: [ROLE_ASC, PERSON_ID_ASC, DISCIPLINE_ASC]) {
       nodes {
+        eventId
         personId
         role
         discipline
@@ -126,6 +127,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
     }
     officials(first: 100, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
       nodes {
+        competitionId
         personId
         role
         judgeLabel
@@ -157,6 +159,12 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     dob
     nationality
     ageGroup
+    eventOfficialAssignments(first: 0) {
+      totalCount
+    }
+    competitionOfficialAssignments(first: 0) {
+      totalCount
+    }
     federationByFederation {
       code
       name
@@ -529,6 +537,53 @@ query CompetitionRegistrations($id: BigInt!) {
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
+  federationEvents(
+    condition: { officialPersonId: $id }
+    first: 20
+    offset: $offset
+    orderBy: [START_DATE_DESC, ID_DESC]
+  ) {
+    totalCount
+    nodes {
+      id
+      externalId
+      name
+      startDate
+      status
+      officials(first: 10, condition: { personId: $id }, orderBy: PRIMARY_KEY_ASC) {
+        nodes {
+          eventId
+          personId
+          role
+          discipline
+          grade
+        }
+      }
+      competitionsList(
+        condition: { officialPersonId: $id }
+        orderBy: [START_DATE_ASC, ID_ASC]
+      ) {
+        id
+        externalId
+        startDate
+        status
+        category {
+          id
+          name
+        }
+        officials(first: 10, condition: { personId: $id }, orderBy: PRIMARY_KEY_ASC) {
+          nodes {
+            competitionId
+            personId
+            role
           }
         }
       }

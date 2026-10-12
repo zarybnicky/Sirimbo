@@ -129,6 +129,28 @@ const plugins: GraphileConfig.Plugin[] = [
       )`;
     },
   ),
+  ...(['event', 'competition'] as const).map((tableName) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName },
+      'officialPersonId',
+      (build) => ({ type: build.graphql.GraphQLString }),
+      (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+        if (value == null) return null;
+        const personId = sqlValueWithCodec(value, TYPES.text);
+        return tableName === 'competition'
+          ? sql`${row}.id in (
+              select competition_id from federated.competition_official where person_id = ${personId}
+            )`
+          : sql`${row}.id in (
+              select event_id from federated.event_official where person_id = ${personId}
+              union all
+              select c.event_id from federated.competition c
+              join federated.competition_official o on o.competition_id = c.id
+              where o.person_id = ${personId}
+            )`;
+      },
+    ),
+  ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
     'onDate',

@@ -13,13 +13,13 @@
 
 ## Officials and judging history
 
-- [ ] Show local matches for judges and other officials through federation person relations.
-- [ ] Event page: show officials with person, role, discipline, and grade.
-- [ ] Competition page: show officials with person and role.
+- [x] Show local matches for judges and other officials through federation person relations.
+- [x] Event page: show officials with person, role, discipline, and grade.
+- [x] Competition page: show officials with person and role.
 - [x] Round page: show judges with labels/letters and panel order, matched to marks columns.
-- [ ] Link official names to federation person pages.
-- [ ] Person page: show official assignments with roles and links to events/competitions.
-- [ ] Preserve WDSF adjudicator labels in `wdsfOfficialIndex` (see official metadata notes).
+- [x] Link official names to federation person pages.
+- [x] Person page: show official assignments with roles and links to events/competitions.
+- [x] Preserve WDSF adjudicator labels in `wdsfOfficialIndex` (see official metadata notes).
 
 ## Licenses
 
@@ -144,9 +144,8 @@ we want to keep accepting.
 
 ### Official metadata
 
-`wdsfOfficialIndex` parses official country and adjudicator label, but the current
-load path stores neither. The adjudicator label is important if WDSF score payloads
-or reports need judge letters rather than just official external IDs.
+`wdsfOfficialIndex` stores adjudicator labels and propagates them to round judges.
+Official country is parsed but not stored.
 
 ### Age rules from `/api/1/age`
 
