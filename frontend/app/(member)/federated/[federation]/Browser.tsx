@@ -14,7 +14,7 @@ import { TextField } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { Pagination } from '@/ui/Pagination';
-import { numericDateWithYearFormatter } from '@/ui/format';
+import { formatDateOnly } from '@/ui/format';
 import { FederationDocument, type FederationQuery } from '@/graphql/Federation';
 
 type FederationData = NonNullable<FederationQuery['federation']>;
@@ -73,10 +73,11 @@ export function Browser({ federation }: { federation: string }) {
   const isPending = fetching || searchPending;
 
   useEffect(() => {
-    if (item?.[view] && !isPending && !error && !invalidDate && page > lastPage) {
-      void setFilters({ page: lastPage });
+    if (item?.[view] && !isPending && !error && !invalidDate && filters.page != null) {
+      const clamped = Math.max(1, Math.min(filters.page, lastPage));
+      if (filters.page !== clamped) void setFilters({ page: clamped });
     }
-  }, [item, view, isPending, error, invalidDate, page, lastPage, setFilters]);
+  }, [item, view, isPending, error, invalidDate, filters.page, lastPage, setFilters]);
 
   const result: BrowserResult | null =
     !item?.[view] || invalidDate || error
@@ -163,17 +164,9 @@ export function Browser({ federation }: { federation: string }) {
                         {result.rows.map((event) => (
                           <tr key={event.id} className="border-t border-neutral-4">
                             <td className="px-2 py-1 whitespace-nowrap">
-                              {numericDateWithYearFormatter.format(
-                                new Date(event.startDate),
-                              )}
+                              {formatDateOnly(event.startDate)}
                               {event.endDate && event.endDate !== event.startDate && (
-                                <>
-                                  {' '}
-                                  –{' '}
-                                  {numericDateWithYearFormatter.format(
-                                    new Date(event.endDate),
-                                  )}
-                                </>
+                                <> – {formatDateOnly(event.endDate)}</>
                               )}
                             </td>
                             <th scope="row" className="px-2 py-1 font-normal">

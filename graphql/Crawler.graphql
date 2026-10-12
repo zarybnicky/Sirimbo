@@ -1,4 +1,4 @@
-query CrawlerTarget($id: BigInt!, $offset: Int!) {
+query CrawlerTarget($id: BigInt!) {
   crawlerTarget(id: $id) {
     id
     federation
@@ -14,20 +14,6 @@ query CrawlerTarget($id: BigInt!, $offset: Int!) {
     lastProcessErrorAt
     lastResponseId
     lastSuccessfulResponseId
-    responses(first: 50, offset: $offset, orderBy: [FETCHED_AT_DESC, ID_DESC]) {
-      totalCount
-      nodes {
-        id
-        url
-        httpStatus
-        error
-        fetchedAt
-        sysPeriod { start { value } end { value } }
-        lastObservedAt
-        observationCount
-        contentHash
-      }
-    }
   }
 }
 
@@ -38,13 +24,26 @@ query CrawlerResponse($id: BigInt!) {
     url
     httpStatus
     error
-    crawlerResponseCache { contentHash content }
-    frontier { id federation kind key }
+    crawlerResponseCache {
+      contentHash
+      content
+    }
+    frontier {
+      id
+      federation
+      kind
+      key
+    }
   }
 }
 
 query CrawlerTargets($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
-  crawlerTargets(first: 50, offset: $offset, condition: $condition, orderBy: [KEY_ASC, ID_ASC]) {
+  crawlerTargets(
+    first: 50
+    offset: $offset
+    condition: $condition
+    orderBy: [KEY_ASC, ID_ASC]
+  ) {
     totalCount
     nodes {
       id
@@ -59,7 +58,12 @@ query CrawlerTargets($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
 }
 
 query CrawlerSources($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
-  crawlerTargets(first: 100, offset: $offset, condition: $condition, orderBy: [KIND_ASC, KEY_ASC, ID_ASC]) {
+  crawlerTargets(
+    first: 100
+    offset: $offset
+    condition: $condition
+    orderBy: [KIND_ASC, KEY_ASC, ID_ASC]
+  ) {
     totalCount
     nodes {
       id
@@ -67,6 +71,35 @@ query CrawlerSources($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
       key
       fetchStatus
       processStatus
+    }
+  }
+}
+
+query CrawlerResponses($id: BigInt!, $offset: Int! = 0) {
+  crawlerTarget(id: $id) {
+    id
+    lastResponseId
+    lastSuccessfulResponseId
+    responses(first: 50, offset: $offset, orderBy: [FETCHED_AT_DESC, ID_DESC]) {
+      totalCount
+      nodes {
+        id
+        url
+        httpStatus
+        error
+        fetchedAt
+        sysPeriod {
+          start {
+            value
+          }
+          end {
+            value
+          }
+        }
+        lastObservedAt
+        observationCount
+        contentHash
+      }
     }
   }
 }

@@ -1,14 +1,12 @@
-import Link from 'next/link';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { Pagination } from '@/ui/Pagination';
-import { numericDateWithYearFormatter } from '@/ui/format';
+import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
-import { CrawlerSourcesDocument } from '@/graphql/Crawler';
+import { Competitions, Sources } from './Tables';
 
 export const metadata = {
   title: 'Federated event',
@@ -17,41 +15,19 @@ export const metadata = {
 
 export default async function EventPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ federation: string; eventId: string }>;
-  searchParams: Promise<{ page?: string; sourcesPage?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
   if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
-  const { page, sourcesPage } = await searchParams;
-  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
-  const currentSourcesPage = Math.max(1, Number.parseInt(sourcesPage ?? '1', 10) || 1);
   const { federationEventByFederationAndId: event } = await executeGraphql(
     FederationEventDocument,
-    {
-      federation,
-      eventId,
-      withCompetitions: true,
-      competitionsOffset: Math.min((currentPage - 1) * 100, 2_147_483_647),
-    },
+    { federation, eventId },
   );
-  if (!event?.competitions) notFound();
-  const competitions = event.competitions;
-  if (currentPage > Math.max(1, Math.ceil(competitions.totalCount / 100))) notFound();
-  const crawler = auth.isSystemAdmin
-    ? await executeGraphql(CrawlerSourcesDocument, {
-        condition: { eventId },
-        offset: Math.min((currentSourcesPage - 1) * 100, 2_147_483_647),
-      })
-    : null;
-  const sources = crawler?.crawlerTargets;
-  if (sources && currentSourcesPage > Math.max(1, Math.ceil(sources.totalCount / 100)))
-    notFound();
+  if (!event) notFound();
   const title = event.name || event.externalId;
-  const path = `/federated/${federation}/${eventId}`;
   return (
     <Layout requireUser>
       <PageHeader
@@ -80,9 +56,9 @@ export default async function EventPage({
         <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
         <dt>date</dt>
         <dd>
-          {numericDateWithYearFormatter.format(new Date(event.startDate))}
+          {formatDateOnly(event.startDate)}
           {event.endDate && event.endDate !== event.startDate && (
-            <> – {numericDateWithYearFormatter.format(new Date(event.endDate))}</>
+            <> – {formatDateOnly(event.endDate)}</>
           )}
         </dd>
         <dt>venue</dt>
@@ -98,96 +74,8 @@ export default async function EventPage({
             .join(', ') || '-'}
         </dd>
       </dl>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Competitions</h2>
-      <div className="col-full-width overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {[
-                'competition ID',
-                'category',
-                'type',
-                'status',
-                'date',
-                'check-in end',
-                'registrations',
-                'results',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {competitions.nodes.map((competition) => (
-              <tr key={competition.id} className="border-t border-neutral-4">
-                <td className="px-2 py-1">{competition.externalId}</td>
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`${path}/${competition.id}`}
-                    prefetch={false}
-                  >
-                    {competition.category?.name || competition.externalId}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">
-                  {competition.competitionType?.toLowerCase()}
-                </td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {competition.status.toLowerCase().replaceAll('_', ' ')}
-                </td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {numericDateWithYearFormatter.format(new Date(competition.startDate))}
-                </td>
-                <td className="px-2 py-1">{competition.checkInEnd}</td>
-                <td className="px-2 py-1">{competition.entries.totalCount}</td>
-                <td className="px-2 py-1">{competition.results.totalCount}</td>
-              </tr>
-            ))}
-            {competitions.nodes.length === 0 && (
-              <tr>
-                <td colSpan={8} className="px-2 py-1">
-                  No competitions
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        total={competitions.totalCount}
-        limit={100}
-        page={currentPage}
-        href={(page) => `${path}?page=${page}&sourcesPage=${currentSourcesPage}`}
-      />
-      {sources && sources.totalCount > 0 && (
-        <section>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-          {sources.nodes.map((source) => (
-            <p key={source.id}>
-              <Link
-                className="text-accent-11 underline"
-                href={`/admin/crawler/${source.id}`}
-                prefetch={false}
-              >
-                {federation}:{source.kind}:{source.key}
-              </Link>{' '}
-              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
-              {source.processStatus.toLowerCase()}
-            </p>
-          ))}
-          <Pagination
-            total={sources.totalCount}
-            limit={100}
-            page={currentSourcesPage}
-            href={(sourcesPage) =>
-              `${path}?page=${currentPage}&sourcesPage=${sourcesPage}`
-            }
-          />
-        </section>
-      )}
+      <Competitions federation={federation} eventId={eventId} />
+      {auth.isSystemAdmin && <Sources federation={federation} eventId={eventId} />}
     </Layout>
   );
 }

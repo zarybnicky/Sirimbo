@@ -107,6 +107,10 @@ export const numericDateWithYearFormatter = new Intl.DateTimeFormat('cs-CZ', {
   year: 'numeric',
 });
 
+export function formatDateOnly(value: string) {
+  return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
+}
+
 export const numericFullFormatter = new Intl.DateTimeFormat('cs-CZ', {
   year: 'numeric',
   month: '2-digit',

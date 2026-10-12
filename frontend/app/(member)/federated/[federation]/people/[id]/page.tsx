@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { Pagination } from '@/ui/Pagination';
-import { numericDateWithYearFormatter } from '@/ui/format';
+import { Competitors } from './Competitors';
+import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
@@ -17,28 +17,21 @@ export const metadata = {
 
 export default async function FederatedPersonPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ federation: string; id: string }>;
-  searchParams: Promise<{ page?: string }>;
 }) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
-  const { page } = await searchParams;
-  const currentPage = Math.max(1, Number.parseInt(page ?? '1', 10) || 1);
   const { federationPersonByFederationAndExternalId: person } = await executeGraphql(
     FederationPersonDocument,
     {
       federation,
       externalId,
-      competitorsOffset: Math.min((currentPage - 1) * 100, 2_147_483_647),
     },
   );
   if (!person) notFound();
-  const competitors = person.competitorComponents;
-  if (currentPage > Math.max(1, Math.ceil(competitors.totalCount / 100))) notFound();
   const crawler = auth.isSystemAdmin
     ? await executeGraphql(CrawlerTargetsDocument, {
         condition: { federation, kind: 'member', key: person.externalId },
@@ -84,9 +77,7 @@ export default async function FederatedPersonPage({
           </>
         )}
         <dt>date of birth</dt>
-        <dd>
-          {person.dob ? numericDateWithYearFormatter.format(new Date(person.dob)) : '-'}
-        </dd>
+        <dd>{person.dob ? formatDateOnly(person.dob) : '-'}</dd>
         <dt>gender</dt>
         <dd>{person.gender?.toLowerCase() || '-'}</dd>
         <dt>nationality</dt>
@@ -121,11 +112,7 @@ export default async function FederatedPersonPage({
                 <td className="px-2 py-1">{license.grade || '-'}</td>
                 <td className="px-2 py-1">{license.status.toLowerCase()}</td>
                 <td className="px-2 py-1 whitespace-nowrap tabular-nums">
-                  {license.validUntil
-                    ? numericDateWithYearFormatter.format(
-                        new Date(`${license.validUntil}T00:00:00`),
-                      )
-                    : '-'}
+                  {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
                 </td>
               </tr>
             ))}
@@ -189,54 +176,7 @@ export default async function FederatedPersonPage({
           </tbody>
         </table>
       </div>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Competitors</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr>
-              {['competitor', 'competitor ID', 'type', 'role'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {competitors.nodes.map(({ competitorId, competitor, role }) => (
-              <tr key={competitorId} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  {competitor ? (
-                    <Link
-                      className="text-accent-11 underline"
-                      href={`${base}/competitors/${competitor.externalId}`}
-                    >
-                      {competitor.name || competitorId}
-                    </Link>
-                  ) : (
-                    competitorId
-                  )}
-                </th>
-                <td className="px-2 py-1">{competitorId}</td>
-                <td className="px-2 py-1">{competitor?.competitorType.toLowerCase()}</td>
-                <td className="px-2 py-1">{role.toLowerCase()}</td>
-              </tr>
-            ))}
-            {competitors.nodes.length === 0 && (
-              <tr>
-                <td colSpan={4} className="px-2 py-1">
-                  No competitors
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        total={competitors.totalCount}
-        limit={100}
-        page={currentPage}
-        href={(page) => `${base}/people/${externalId}?page=${page}`}
-      />
+      <Competitors federation={federation} externalId={externalId} />
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>

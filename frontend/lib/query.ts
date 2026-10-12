@@ -173,12 +173,15 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     AddressDomain: () => null,
+    CompetitionEntry: (x) => `${x.competitionId}:${x.competitorId}`,
+    CompetitionResult: (x) => `${x.competitionId}:${x.competitorId}`,
     DatetimeRange: () => null,
     DatetimeRangeBound: () => null,
     EventInstanceApproxPriceRecord: () => null,
     EventConflict: () => null,
     EventInstanceRegistrationInfo: () => null,
     Federation: (x) => x.code || null,
+    FederationCompetitorComponent: (x) => `${x.competitorId}:${x.personId}`,
     FederationCompetitorCategoryProgress: (x) => `${x.competitorId}:${x.categoryId}`,
     Price: () => null,
     ScoreboardRecord: (x) => x.personId || null,
