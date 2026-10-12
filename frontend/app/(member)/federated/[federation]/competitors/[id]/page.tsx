@@ -56,13 +56,11 @@ export default async function CompetitorPage({
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['category', 'points', 'domestic finals', 'foreign finals'].map(
-                (label) => (
-                  <th key={label} scope="col" className="px-2 py-1">
-                    {label}
-                  </th>
-                ),
-              )}
+              {['category', 'points'].map((label) => (
+                <th key={label} scope="col" className="px-2 py-1">
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -77,14 +75,15 @@ export default async function CompetitorPage({
                   <th scope="row" className="px-2 py-1 font-normal">
                     {progress.category?.name || progress.categoryId}
                   </th>
-                  <td className="px-2 py-1">{progress.points}</td>
-                  <td className="px-2 py-1">{progress.domesticFinals}</td>
-                  <td className="px-2 py-1">{progress.foreignFinals}</td>
+                  <td className="px-2 py-1">
+                    {Number(progress.points)}F
+                    {progress.domesticFinals + progress.foreignFinals}
+                  </td>
                 </tr>
               ))}
             {competitor.categoryProgresses.nodes.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-2 py-1">
+                <td colSpan={2} className="px-2 py-1">
                   No category progress
                 </td>
               </tr>

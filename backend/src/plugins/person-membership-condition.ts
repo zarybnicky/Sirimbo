@@ -13,11 +13,6 @@ type MembershipCondition = {
   isAdmin?: boolean | null;
 };
 
-type BirthDateRangeCondition = {
-  since?: string | null;
-  until?: string | null;
-};
-
 function expectInputType(build: GraphileBuild.Build, name: string): GraphQLInputType {
   const type = build.getTypeByName(name);
   if (!type || !build.graphql.isInputType(type)) {
@@ -52,31 +47,11 @@ function expectCohorts(value: unknown): readonly string[] | null {
   return value;
 }
 
-function isBirthDateRangeCondition(value: unknown): value is BirthDateRangeCondition {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function expectDateString(value: unknown, fieldName: string): string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    throw new Error(`Invalid person birth date range ${fieldName}`);
-  }
-  return value;
-}
-
-function expectBirthDateRangeCondition(value: unknown): BirthDateRangeCondition | null {
-  if (value == null) return null;
-  if (!isBirthDateRangeCondition(value)) {
-    throw new Error('Invalid person birth date range condition');
-  }
-  const since = expectDateString(value.since, 'since');
-  const until = expectDateString(value.until, 'until');
-  if (until <= since) {
-    throw new Error('Person birth date range until must be after since');
-  }
-  return { since, until };
-}
-
-function visibleMembershipPredicate(state: MembershipState, sql: SqlTag, personAlias: SQL) {
+function visibleMembershipPredicate(
+  state: MembershipState,
+  sql: SqlTag,
+  personAlias: SQL,
+) {
   return state === 'current'
     ? sql`${personAlias}.id in (
         select tm.person_id from public.current_tenant_membership tm
@@ -190,30 +165,6 @@ const PersonMembershipConditionTypesPlugin: GraphileConfig.Plugin = {
           'PersonMembershipConditionTypesPlugin',
         );
 
-        build.registerInputObjectType(
-          'PersonBirthDateRangeCondition',
-          {},
-          () => ({
-            description:
-              'Filters people by annual birthday occurrence in a date range. The range is since-inclusive and until-exclusive.',
-            fields: () => {
-              const dateType = expectInputType(build, 'Date');
-
-              return {
-                since: {
-                  description: 'Inclusive start date.',
-                  type: new GraphQLNonNull(dateType),
-                },
-                until: {
-                  description: 'Exclusive end date.',
-                  type: new GraphQLNonNull(dateType),
-                },
-              };
-            },
-          }),
-          'PersonMembershipConditionTypesPlugin',
-        );
-
         return _;
       },
     },
@@ -309,57 +260,9 @@ const PersonMembershipConditionPlugin = addPgTableCondition(
   },
 );
 
-const PersonBirthDateRangeConditionPlugin = addPgTableCondition(
-  { schemaName: 'public', tableName: 'person' },
-  'birthDateInRange',
-  (build) => {
-    return {
-      description:
-        'Filters people whose next annual birthday occurrence falls inside the date range.',
-      type: expectInputType(build, 'PersonBirthDateRangeCondition'),
-    };
-  },
-  (rawValue, { sql, sqlTableAlias: personAlias, sqlValueWithCodec, build }) => {
-    const range = expectBirthDateRangeCondition(rawValue);
-    if (range == null) return null;
-
-    const dateCodec =
-      build.input.pgRegistry.pgResources.person?.codec.attributes.birth_date?.codec;
-    if (!dateCodec) {
-      throw new Error('Failed to resolve person birth_date codec');
-    }
-
-    const since = sqlValueWithCodec(range.since, dateCodec);
-    const until = sqlValueWithCodec(range.until, dateCodec);
-    const years = sql`(
-      extract(year from ${since})::int - extract(year from ${personAlias}.birth_date)::int
-    )`;
-    const birthdayThisYear = sql`(
-      ${personAlias}.birth_date + make_interval(years => ${years})
-    )::date`;
-    const birthdayNextYear = sql`(
-      ${personAlias}.birth_date + make_interval(years => (${years} + 1))
-    )::date`;
-    const birthday = sql`(
-      case
-        when ${birthdayThisYear} >= ${since} then ${birthdayThisYear}
-        else ${birthdayNextYear}
-      end
-    )`;
-
-    return sql`(
-      ${personAlias}.birth_date is not null
-      and ${birthday} >= ${personAlias}.birth_date
-      and ${birthday} >= ${since}
-      and ${birthday} < ${until}
-    )`;
-  },
-);
-
 const plugins: GraphileConfig.Plugin[] = [
   PersonMembershipConditionTypesPlugin,
   PersonMembershipConditionPlugin,
-  PersonBirthDateRangeConditionPlugin,
 ];
 
 export default plugins;

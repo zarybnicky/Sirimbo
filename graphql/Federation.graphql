@@ -182,9 +182,13 @@ query Federation(
   $events: Boolean! = false
   $people: Boolean! = false
   $competitors: Boolean! = false
-  $eventCondition: FederationEventCondition
-  $personCondition: FederationPersonCondition
-  $competitorCondition: FederationCompetitorCondition
+  $search: String
+  $onDate: Date
+  $competitorTypes: [CompetitorType!]
+  $ageGroups: [String!]
+  $classes: [String!]
+  $disciplines: [String!]
+  $competedSince: Date
   $offset: Int! = 0
 ) {
   federation(code: $federation) {
@@ -193,7 +197,7 @@ query Federation(
     events(
       first: 50
       offset: $offset
-      condition: $eventCondition
+      condition: { search: $search, onDate: $onDate }
       orderBy: [START_DATE_DESC, ID_DESC]
     ) @include(if: $events) {
       totalCount
@@ -215,7 +219,7 @@ query Federation(
     people(
       first: 50
       offset: $offset
-      condition: $personCondition
+      condition: { search: $search }
       orderBy: [SEARCH_NAME_ASC, EXTERNAL_ID_ASC]
     ) @include(if: $people) {
       totalCount
@@ -231,7 +235,16 @@ query Federation(
     competitors(
       first: 50
       offset: $offset
-      condition: $competitorCondition
+      condition: {
+        search: $search
+        competitorTypes: $competitorTypes
+        categoryProgress: {
+          ageGroups: $ageGroups
+          classes: $classes
+          disciplines: $disciplines
+        }
+        competedSince: $competedSince
+      }
       orderBy: [NAME_ASC, EXTERNAL_ID_ASC]
     ) @include(if: $competitors) {
       totalCount
@@ -239,8 +252,33 @@ query Federation(
         id
         externalId
         name
-        ageGroup
+        competitorType
+        categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
+          competitorId
+          categoryId
+          points
+          domesticFinals
+          foreignFinals
+          category {
+            id
+            ageGroup
+            class
+            discipline
+          }
+        }
       }
+    }
+    competitorFacetsList(
+      search: $search
+      competitorTypes: $competitorTypes
+      ageGroups: $ageGroups
+      classes: $classes
+      disciplines: $disciplines
+      competedSince: $competedSince
+    ) @include(if: $competitors) {
+      facet
+      value
+      count
     }
   }
 }

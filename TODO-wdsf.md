@@ -4,11 +4,11 @@
 
 - [x] Store and display normalized event/competition statuses: planned, in progress, completed, postponed, cancelled, unknown.
 - [ ] Link competitions to round detail pages.
-- [ ] Sort overall results by placing; retain registration browsing.
+- [x] Sort overall results by placing; retain registration browsing.
 - [ ] Show round rankings, qualification, per-dance results, and judges' marks.
 - [ ] Render crosses, skating places, and component scores according to the scoring method.
 - [ ] Add competitor/judge relations for the numeric IDs on `JudgeScore`.
-- [ ] Handle ties, withdrawals/disqualifications, and results without registrations.
+- [x] Handle ties, withdrawals/disqualifications, and results without registrations.
 
 ## Officials and judging history
 

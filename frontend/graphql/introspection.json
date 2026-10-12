@@ -13115,6 +13115,90 @@
             ]
           },
           {
+            "name": "competitorFacetsList",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "name": "FederationCompetitorFacetsRecord",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "ageGroups",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "classes",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "competedSince",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "competitorTypes",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "disciplines",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "search",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "competitors",
             "type": {
               "kind": "NON_NULL",
@@ -13905,6 +13989,59 @@
               },
               {
                 "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "categoryProgressesList",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "FederationCompetitorCategoryProgress",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": [
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -14945,6 +15082,37 @@
                 "kind": "OBJECT",
                 "ofType": null
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationCompetitorFacetsRecord",
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "facet",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "value",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }

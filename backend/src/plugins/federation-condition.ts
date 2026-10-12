@@ -1,7 +1,87 @@
 import { TYPES } from '@dataplan/pg';
-import { addPgTableCondition } from 'postgraphile/utils';
+import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
+
+type CategoryProgressCondition = {
+  ageGroups?: string[];
+  classes?: string[];
+  disciplines?: string[];
+};
 
 const plugins: GraphileConfig.Plugin[] = [
+  extendSchema({
+    typeDefs: `
+      input CompetitorCategoryProgressCondition {
+        ageGroups: [String!]
+        classes: [String!]
+        disciplines: [String!]
+      }
+    `,
+  }),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competitor' },
+    'categoryProgress',
+    (build) => ({
+      type: build.getInputTypeByName('CompetitorCategoryProgressCondition'),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      if (value == null) return null;
+      const { ageGroups, classes, disciplines } = value as CategoryProgressCondition;
+      const predicates = (
+        [
+          ['age_group', ageGroups],
+          ['class', classes],
+          ['discipline', disciplines],
+        ] as const
+      ).flatMap(([column, values]) =>
+        values?.length
+          ? [
+              sql`cat.${sql.identifier(column)} in (${sql.join(
+                values.map((v) => sqlValueWithCodec(v, TYPES.text)),
+                ', ',
+              )})`,
+            ]
+          : [],
+      );
+      if (!predicates.length) return null;
+      return sql`exists (
+          select 1 from federated.competitor_category_progress p
+          join federated.category cat on cat.id = p.category_id
+          where p.competitor_id = ${row}.id and ${sql.join(predicates, ' and ')}
+        )`;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competitor' },
+    'competitorTypes',
+    (build) => ({
+      type: new build.graphql.GraphQLList(
+        new build.graphql.GraphQLNonNull(build.getInputTypeByName('CompetitorType')),
+      ),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      const values = value as string[] | null;
+      return values?.length
+        ? sql`${row}.competitor_type::text in (${sql.join(
+            values.map((v) => sqlValueWithCodec(v, TYPES.text)),
+            ', ',
+          )})`
+        : null;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competitor' },
+    'competedSince',
+    (build) => ({ type: build.getInputTypeByName('Date') }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
+      value == null
+        ? null
+        : sql`exists (
+      select 1 from federated.competition_result r
+      join federated.competition c on c.id = r.competition_id
+      where r.competitor_id = ${row}.id
+        and c.start_date >= ${sqlValueWithCodec(value, TYPES.date)} and c.start_date <= current_date
+    )`,
+  ),
   ...(['event', 'person', 'competitor'] as const).map((tableName) =>
     addPgTableCondition(
       { schemaName: 'federated', tableName },
@@ -33,20 +113,6 @@ const plugins: GraphileConfig.Plugin[] = [
         where r.competition_id = ${row}.competition_id and r.competitor_id = ${row}.competitor_id
       )`;
       return value ? exists : sql`not ${exists}`;
-    },
-  ),
-  addPgTableCondition(
-    { schemaName: 'federated', tableName: 'competitor' },
-    'competitionId',
-    (build) => ({ type: build.getInputTypeByName('BigInt') }),
-    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
-      if (value == null) return null;
-      const competitionId = sqlValueWithCodec(value, TYPES.bigint);
-      return sql`${row}.id in (
-        select competitor_id from federated.competition_entry where competition_id = ${competitionId}
-        union all
-        select competitor_id from federated.competition_result where competition_id = ${competitionId}
-      )`;
     },
   ),
   addPgTableCondition(
