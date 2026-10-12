@@ -4,6 +4,7 @@ import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { ResolvedAction } from '@/lib/actions';
+import { cn } from '@/lib/cn';
 
 type TitleBarProps = {
   title?: string | null;
@@ -31,12 +32,11 @@ export function TitleBar({
   );
 }
 
-
 type PageHeaderProps<Id extends string = string> = Parameters<typeof typographyCls>[0] & {
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
   groups?: Record<'add', Id[]>;
-  breadcrumbs?: { label: string; href?: LinkProps['href'] }[];
+  breadcrumbs?: { label: string; href?: LinkProps['href']; truncate?: boolean }[];
   title: string;
   subtitle?: React.ReactNode;
 };
@@ -61,14 +61,22 @@ export function PageHeader<Id extends string = string>({
             className="flex items-center gap-1.5 lg:hidden wrap-anywhere hover:text-neutral-12"
           >
             <ArrowLeft className="size-3.5 shrink-0" />
-            {parent.label}
+            <span
+              className={parent.truncate ? 'truncate' : undefined}
+              title={parent.truncate ? parent.label : undefined}
+            >
+              {parent.label}
+            </span>
           </Link>
 
           <div className="hidden lg:flex flex-wrap items-baseline gap-1.5 wrap-anywhere">
             {breadcrumbs!.map((crumb, i) => (
               <span
                 key={i}
-                className="inline-flex min-w-0 items-baseline gap-1.5"
+                className={cn(
+                  'inline-flex min-w-0 items-baseline gap-1.5',
+                  crumb.truncate && 'max-w-64',
+                )}
               >
                 {i > 0 && (
                   <ChevronRight
@@ -79,12 +87,21 @@ export function PageHeader<Id extends string = string>({
                 {crumb.href && i < breadcrumbs!.length - 1 ? (
                   <Link
                     href={crumb.href}
-                    className="text-neutral-11 hover:text-neutral-12"
+                    className={cn(
+                      'text-neutral-11 hover:text-neutral-12',
+                      crumb.truncate && 'truncate',
+                    )}
+                    title={crumb.truncate ? crumb.label : undefined}
                   >
                     {crumb.label}
                   </Link>
                 ) : (
-                  <span className="text-neutral-11">{crumb.label}</span>
+                  <span
+                    className={cn('text-neutral-11', crumb.truncate && 'truncate')}
+                    title={crumb.truncate ? crumb.label : undefined}
+                  >
+                    {crumb.label}
+                  </span>
                 )}
               </span>
             ))}
@@ -105,7 +122,14 @@ export function PageHeader<Id extends string = string>({
           </h1>
         </div>
 
-        {actions && <ActionGroup className="ml-auto" primary={primary} groups={groups} actions={actions} />}
+        {actions && (
+          <ActionGroup
+            className="ml-auto"
+            primary={primary}
+            groups={groups}
+            actions={actions}
+          />
+        )}
       </div>
 
       {subtitle && <p className="mt-1 text-sm text-accent-12">{subtitle}</p>}

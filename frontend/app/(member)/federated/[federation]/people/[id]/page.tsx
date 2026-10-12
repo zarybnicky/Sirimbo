@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
@@ -10,19 +12,11 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
 import { CrawlerTargetsDocument } from '@/graphql/Crawler';
 
-export const metadata = {
-  title: 'Federated person',
-  robots: { index: false, follow: false },
+type Props = {
+  params: Promise<{ federation: string; id: string }>;
 };
 
-export default async function FederatedPersonPage({
-  params,
-}: {
-  params: Promise<{ federation: string; id: string }>;
-}) {
-  const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
-  const { federation, id: externalId } = await params;
+const getPerson = cache(async (federation: string, externalId: string) => {
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const { federationPersonByFederationAndExternalId: person } = await executeGraphql(
     FederationPersonDocument,
@@ -32,6 +26,31 @@ export default async function FederatedPersonPage({
     },
   );
   if (!person) notFound();
+  return {
+    person,
+    name:
+      person.canonicalName ||
+      [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+      person.id,
+  };
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  const { federation, id } = await params;
+  const { person, name } = await getPerson(federation, id);
+  return {
+    title: `${name} · ${person.federationByFederation?.name ?? federation}`,
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function FederatedPersonPage({ params }: Props) {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return <Layout requireUser />;
+  const { federation, id: externalId } = await params;
+  const { person, name } = await getPerson(federation, externalId);
   const crawler = auth.isSystemAdmin
     ? await executeGraphql(CrawlerTargetsDocument, {
         condition: { federation, kind: 'member', key: person.externalId },
@@ -39,10 +58,6 @@ export default async function FederatedPersonPage({
     : null;
   const sources = crawler?.crawlerTargets?.nodes ?? [];
   const matches = person.people.nodes;
-  const name =
-    person.canonicalName ||
-    [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-    person.id;
   const base = `/federated/${federation}`;
   return (
     <Layout requireUser>
@@ -58,8 +73,6 @@ export default async function FederatedPersonPage({
         ]}
       />
       <dl className="text-sm tabular">
-        <dt>person ID</dt>
-        <dd>{person.id}</dd>
         {federation === 'csts' && (
           <>
             <dt>source</dt>
@@ -126,56 +139,53 @@ export default async function FederatedPersonPage({
           </tbody>
         </table>
       </div>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr>
-              {['person', 'active affiliations'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match) => (
-              <tr key={match.id} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/clenove/${match.id}`}
-                  >
-                    {match.name}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">
-                  {[
-                    ...new Set(
-                      [
-                        ...match.tenantMembershipsList,
-                        ...match.tenantTrainersList,
-                        ...match.tenantAdministratorsList,
+      {matches.length > 0 && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr>
+                  {['person', 'active affiliations'].map((label) => (
+                    <th key={label} scope="col" className="px-2 py-1">
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {matches.map((match) => (
+                  <tr key={match.id} className="border-t border-neutral-4">
+                    <th scope="row" className="px-2 py-1 font-normal">
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`/clenove/${match.id}`}
+                      >
+                        {match.name}
+                      </Link>
+                    </th>
+                    <td className="px-2 py-1">
+                      {[
+                        ...new Set(
+                          [
+                            ...match.tenantMembershipsList,
+                            ...match.tenantTrainersList,
+                            ...match.tenantAdministratorsList,
+                          ]
+                            .map((affiliation) => affiliation.tenantName)
+                            .filter((name) => name != null),
+                        ),
                       ]
-                        .map((affiliation) => affiliation.tenantName)
-                        .filter((name) => name != null),
-                    ),
-                  ]
-                    .toSorted((a, b) => a.localeCompare(b))
-                    .join(', ') || 'No active affiliation'}
-                </td>
-              </tr>
-            ))}
-            {matches.length === 0 && (
-              <tr>
-                <td colSpan={2} className="px-2 py-1">
-                  No local matches
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                        .toSorted((a, b) => a.localeCompare(b))
+                        .join(', ') || 'No active affiliation'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
       <Competitors federation={federation} externalId={externalId} />
       {auth.isSystemAdmin && (
         <>

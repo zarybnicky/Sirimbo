@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Members, History } from './Tables';
@@ -8,19 +10,11 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
 
-export const metadata = {
-  title: 'Federated competitor',
-  robots: { index: false, follow: false },
+type Props = {
+  params: Promise<{ federation: string; id: string }>;
 };
 
-export default async function CompetitorPage({
-  params,
-}: {
-  params: Promise<{ federation: string; id: string }>;
-}) {
-  const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
-  const { federation, id: externalId } = await params;
+const getCompetitor = cache(async (federation: string, externalId: string) => {
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
   const { federationCompetitor: competitor } = await executeGraphql(
@@ -28,6 +22,26 @@ export default async function CompetitorPage({
     { id },
   );
   if (!competitor) notFound();
+  return competitor;
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  const { federation, id } = await params;
+  const competitor = await getCompetitor(federation, id);
+  return {
+    title: `${competitor.name || competitor.id} · ${competitor.federationByFederation?.name ?? federation}`,
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function CompetitorPage({ params }: Props) {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return <Layout requireUser />;
+  const { federation, id: externalId } = await params;
+  const competitor = await getCompetitor(federation, externalId);
+  const id = competitor.id;
   const title = competitor.name || competitor.id;
   const base = `/federated/${federation}`;
   return (
@@ -44,8 +58,6 @@ export default async function CompetitorPage({
         ]}
       />
       <dl className="text-sm tabular">
-        <dt>competitor ID</dt>
-        <dd>{competitor.id}</dd>
         <dt>type</dt>
         <dd>{competitor.competitorType.toLowerCase()}</dd>
         <dt>age group</dt>
@@ -91,39 +103,39 @@ export default async function CompetitorPage({
           </tbody>
         </table>
       </div>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr>
-              {['couple', 'partnership'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {competitor.couplesList.map((couple) => (
-              <tr key={couple.id} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-                    {formatCoupleName(couple)}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">{formatOpenDateRange(couple)}</td>
-              </tr>
-            ))}
-            {competitor.couplesList.length === 0 && (
-              <tr>
-                <td colSpan={2} className="px-2 py-1">
-                  No local matches
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {competitor.couplesList.length > 0 && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr>
+                  {['couple', 'partnership'].map((label) => (
+                    <th key={label} scope="col" className="px-2 py-1">
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {competitor.couplesList.map((couple) => (
+                  <tr key={couple.id} className="border-t border-neutral-4">
+                    <th scope="row" className="px-2 py-1 font-normal">
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`/pary/${couple.id}`}
+                      >
+                        {formatCoupleName(couple)}
+                      </Link>
+                    </th>
+                    <td className="px-2 py-1">{formatOpenDateRange(couple)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
       <Members federation={federation} id={id} />
       <History federation={federation} id={id} />
     </Layout>

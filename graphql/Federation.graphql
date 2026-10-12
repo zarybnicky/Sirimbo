@@ -350,6 +350,7 @@ query CompetitionRound(
   ) {
     id
     externalId
+    startDate
     category {
       id
       name
@@ -466,6 +467,8 @@ query CompetitionRegistrations($id: BigInt!) {
         name
         couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
           id
+          man { id name }
+          woman { id name }
         }
         components(first: 2, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
           totalCount
@@ -475,6 +478,9 @@ query CompetitionRegistrations($id: BigInt!) {
             person {
               id
               externalId
+              canonicalName
+              firstName
+              lastName
               people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
                 totalCount
                 nodes {
@@ -581,6 +587,7 @@ query FederationCompetitorHistory($id: String!, $historyOffset: Int! = 0) {
           pointGain
           finalGain
           isFinal
+          completionStatus
         }
       }
     }

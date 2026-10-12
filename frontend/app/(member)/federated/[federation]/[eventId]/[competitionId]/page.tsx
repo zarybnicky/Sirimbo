@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Results, Rounds } from './Tables';
-import { formatDateOnly, numericFullFormatter } from '@/ui/format';
+import { formatDateOnly, dateTimeFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import {
@@ -13,28 +15,41 @@ import {
 } from '@/graphql/Federation';
 import { CrawlerSourcesDocument } from '@/graphql/Crawler';
 
-export const metadata = {
-  title: 'Federated competition',
-  robots: { index: false, follow: false },
+type Props = {
+  params: Promise<{ federation: string; eventId: string; competitionId: string }>;
 };
 
-export default async function CompetitionPage({
-  params,
-}: {
-  params: Promise<{ federation: string; eventId: string; competitionId: string }>;
-}) {
+const getCompetition = cache(
+  async (federation: string, eventId: string, competitionId: string) => {
+    const [{ federationEventByFederationAndExternalId: event }, { competition }] =
+      await Promise.all([
+        executeGraphql(FederationEventDocument, { federation, eventId }),
+        executeGraphql(FederationCompetitionDocument, {
+          federation,
+          competitionId,
+        }),
+      ]);
+    if (!event || !competition || competition.eventId !== event.id) notFound();
+    return { event, competition };
+  },
+);
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  const { federation, eventId, competitionId } = await params;
+  const { competition } = await getCompetition(federation, eventId, competitionId);
+  return {
+    title: `${competition.category?.name ?? competitionId} · ${formatDateOnly(competition.startDate)}`,
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function CompetitionPage({ params }: Props) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
-  const [{ federationEventByFederationAndExternalId: event }, { competition }] =
-    await Promise.all([
-      executeGraphql(FederationEventDocument, { federation, eventId }),
-      executeGraphql(FederationCompetitionDocument, {
-        federation,
-        competitionId,
-      }),
-    ]);
-  if (!event || !competition || competition.eventId !== event.id) notFound();
+  const { event, competition } = await getCompetition(federation, eventId, competitionId);
   const crawler = auth.isSystemAdmin
     ? await executeGraphql(CrawlerSourcesDocument, {
         condition: { competitionId: competition.id },
@@ -45,6 +60,14 @@ export default async function CompetitionPage({
     <Layout requireUser>
       <PageHeader
         title={competition.category?.name ?? competition.externalId}
+        subtitle={
+          <span className="flex gap-2">
+            <span className="shrink-0">{formatDateOnly(competition.startDate)} ·</span>
+            <span className="truncate" title={event.name || eventId}>
+              {event.name || eventId}
+            </span>
+          </span>
+        }
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
@@ -54,13 +77,12 @@ export default async function CompetitionPage({
           {
             label: event.name || event.externalId,
             href: `/federated/${federation}/${eventId}`,
+            truncate: true,
           },
           { label: competition.category?.name ?? competition.externalId },
         ]}
       />
       <dl className="text-sm tabular">
-        <dt>competition ID</dt>
-        <dd>{competition.externalId}</dd>
         {federation === 'csts' && (
           <>
             <dt>source</dt>
@@ -77,17 +99,15 @@ export default async function CompetitionPage({
         <dt>status</dt>
         <dd>{competition.status.toLowerCase().replaceAll('_', ' ')}</dd>
         <dt>type</dt>
-        <dd>{competition.competitionType?.toLowerCase() || '-'}</dd>
-        <dt>date</dt>
-        <dd>{formatDateOnly(competition.startDate)}</dd>
+        <dd>{competition.competitionType?.toLowerCase().replaceAll('_', ' ') || '-'}</dd>
         <dt>check-in end</dt>
-        <dd>{competition.checkInEnd || '-'}</dd>
+        <dd>{competition.checkInEnd?.slice(0, 5) || '-'}</dd>
         <dt>participants reported</dt>
         <dd>{competition.participantsTotal ?? '-'}</dd>
         <dt>completed</dt>
         <dd>
           {competition.completedAt
-            ? numericFullFormatter.format(new Date(competition.completedAt))
+            ? dateTimeFormatter.format(new Date(competition.completedAt))
             : '-'}
         </dd>
       </dl>

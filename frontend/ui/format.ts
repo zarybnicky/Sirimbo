@@ -1,4 +1,4 @@
-import { AddressDomain, EventType } from '@/graphql';
+import { AddressDomain, EventType, ScoreComponent, ScoringMethod } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 
 type MaybePerson =
@@ -12,6 +12,40 @@ export const formatCoupleName = (couple: MaybeCouple) =>
 export const formatRegistrant = ({ person, couple }: MaybeRegistration) =>
   person?.name ||
   (!couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`);
+
+export const scoringMethodLabels: Record<ScoringMethod, string> = {
+  SKATING_MARKS: 'Marks',
+  SKATING_PLACES: 'Skating',
+  AJS_3_0: 'AJS 3.0',
+};
+
+export function formatJudgeScore(
+  value:
+    | {
+        component: ScoreComponent;
+        score: string;
+        rawScore: string | null;
+      }
+    | undefined,
+) {
+  if (!value) return '–';
+  if (value.rawScore && /\([wd]\)$/.test(value.rawScore)) return value.rawScore;
+  return value.component === 'MARK'
+    ? Number(value.score)
+      ? '×'
+      : '–'
+    : Number(value.score);
+}
+
+export function formatResultStatus(value: string | null | undefined) {
+  const status = value?.toLowerCase();
+  if (!status || status === 'normal' || status === 'present') return '';
+  return status === 'retirement'
+    ? 'retired'
+    : status === 'noshow'
+      ? 'no show'
+      : status.replaceAll('_', ' ');
+}
 
 const names: { [type in EventType]: string } = {
   LESSON: 'Lekce',

@@ -12,7 +12,7 @@ import {
   FederationCompetitorMembersDocument,
   FederationCompetitorHistoryDocument,
 } from '@/graphql/Federation';
-import { formatDateOnly } from '@/ui/format';
+import { formatDateOnly, formatResultStatus } from '@/ui/format';
 
 export function Members({ federation, id }: { federation: string; id: string }) {
   const [currentPage, setPage] = useQueryState(
@@ -51,7 +51,7 @@ export function Members({ federation, id }: { federation: string; id: string }) 
         <table className="w-full text-left text-sm">
           <thead>
             <tr>
-              {['person', 'person ID', 'role'].map((label) => (
+              {['person', 'role'].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -75,13 +75,12 @@ export function Members({ federation, id }: { federation: string; id: string }) 
                     personId
                   )}
                 </th>
-                <td className="px-2 py-1">{personId}</td>
                 <td className="px-2 py-1">{role.toLowerCase()}</td>
               </tr>
             ))}
             {members.nodes.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-2 py-1">
+                <td colSpan={2} className="px-2 py-1">
                   No members
                 </td>
               </tr>
@@ -123,6 +122,14 @@ export function History({ federation, id }: { federation: string; id: string }) 
   const base = `/federated/${federation}`;
   if (error) return <FormError error={error} />;
   if (!history) return <Spinner />;
+  const showPoints = history.nodes.some((row) =>
+    row.results.nodes.some((result) => result.pointGain != null),
+  );
+  const showFinalGain = history.nodes.some((row) =>
+    row.results.nodes.some((result) =>
+      federation === 'csts' ? result.isFinal : result.finalGain != null,
+    ),
+  );
 
   return (
     <>
@@ -136,26 +143,30 @@ export function History({ federation, id }: { federation: string; id: string }) 
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {[
-                'date',
-                'event',
-                'competition',
-                'status',
-                'registration',
-                'rank',
-                'points',
-                'final gain',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
+              {['date', 'event', 'competition', 'status', 'registration', 'rank'].map(
+                (label) => (
+                  <th key={label} scope="col" className="px-2 py-1">
+                    {label}
+                  </th>
+                ),
+              )}
+              {showPoints && (
+                <th scope="col" className="px-2 py-1">
+                  points
                 </th>
-              ))}
+              )}
+              {showFinalGain && (
+                <th scope="col" className="px-2 py-1">
+                  final gain
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {history.nodes.map((row) => {
               const entry = row.entries.nodes[0];
               const result = row.results.nodes[0];
+              const status = formatResultStatus(result?.completionStatus);
               return (
                 <tr key={row.id} className="border-t border-neutral-4">
                   <td className="px-2 py-1 whitespace-nowrap">
@@ -187,12 +198,17 @@ export function History({ federation, id }: { federation: string; id: string }) 
                     ) : (
                       row.category?.name || row.externalId
                     )}
+                    {status && <div className="text-xs text-neutral-11">{status}</div>}
                   </th>
                   <td className="px-2 py-1 whitespace-nowrap">
                     {row.status.toLowerCase().replaceAll('_', ' ')}
                   </td>
                   <td className="px-2 py-1">
-                    {!entry ? '-' : entry.cancelled ? 'cancelled' : 'registered'}
+                    {entry?.cancelled
+                      ? 'cancelled'
+                      : !result && entry
+                        ? 'registered'
+                        : ''}
                   </td>
                   <td className="px-2 py-1 whitespace-nowrap">
                     {result?.ranking}
@@ -200,20 +216,31 @@ export function History({ federation, id }: { federation: string; id: string }) 
                       ? `–${result?.rankingTo}`
                       : ''}
                   </td>
-                  <td className="px-2 py-1">{result?.pointGain}</td>
-                  <td className="px-2 py-1">
-                    {federation === 'csts'
-                      ? result?.isFinal
-                        ? 'F'
-                        : ''
-                      : result?.finalGain}
-                  </td>
+                  {showPoints && (
+                    <td className="px-2 py-1">
+                      {result?.pointGain == null ? null : Number(result.pointGain)}
+                    </td>
+                  )}
+                  {showFinalGain && (
+                    <td className="px-2 py-1">
+                      {federation === 'csts'
+                        ? result?.isFinal
+                          ? 'F'
+                          : ''
+                        : result?.finalGain == null
+                          ? null
+                          : Number(result.finalGain)}
+                    </td>
+                  )}
                 </tr>
               );
             })}
             {history.nodes.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-2 py-1">
+                <td
+                  colSpan={6 + Number(showPoints) + Number(showFinalGain)}
+                  className="px-2 py-1"
+                >
                   No registrations or results
                 </td>
               </tr>

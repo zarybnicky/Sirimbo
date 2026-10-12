@@ -1,5 +1,7 @@
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { formatDateOnly } from '@/ui/format';
@@ -8,41 +10,55 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
 import { Competitions, Sources } from './Tables';
 
-export const metadata = {
-  title: 'Federated event',
-  robots: { index: false, follow: false },
+type Props = {
+  params: Promise<{ federation: string; eventId: string }>;
 };
 
-export default async function EventPage({
-  params,
-}: {
-  params: Promise<{ federation: string; eventId: string }>;
-}) {
-  const { auth } = await getRequestContext();
-  if (!auth.isLoggedIn) return <Layout requireUser />;
-  const { federation, eventId } = await params;
+const getEvent = cache(async (federation: string, eventId: string) => {
   const { federationEventByFederationAndExternalId: event } = await executeGraphql(
     FederationEventDocument,
     { federation, eventId },
   );
   if (!event) notFound();
-  const title = event.name || event.externalId;
+  return {
+    event,
+    title: event.name || event.externalId,
+    date:
+      formatDateOnly(event.startDate) +
+      (event.endDate && event.endDate !== event.startDate
+        ? ` – ${formatDateOnly(event.endDate)}`
+        : ''),
+  };
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
+  const { federation, eventId } = await params;
+  const { title, date } = await getEvent(federation, eventId);
+  return { title: `${title} · ${date}`, robots: { index: false, follow: false } };
+}
+
+export default async function EventPage({ params }: Props) {
+  const { auth } = await getRequestContext();
+  if (!auth.isLoggedIn) return <Layout requireUser />;
+  const { federation, eventId } = await params;
+  const { event, title, date } = await getEvent(federation, eventId);
   return (
     <Layout requireUser>
       <PageHeader
         title={title}
+        subtitle={date}
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
           },
-          { label: title },
+          { label: title, truncate: true },
         ]}
       />
       <dl className="text-sm tabular">
-        <dt>event ID</dt>
-        <dd>{event.externalId}</dd>
         {federation === 'csts' && (
           <>
             <dt>source</dt>
@@ -53,13 +69,6 @@ export default async function EventPage({
         )}
         <dt>status</dt>
         <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
-        <dt>date</dt>
-        <dd>
-          {formatDateOnly(event.startDate)}
-          {event.endDate && event.endDate !== event.startDate && (
-            <> – {formatDateOnly(event.endDate)}</>
-          )}
-        </dd>
         <dt>venue</dt>
         <dd>
           {[

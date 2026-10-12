@@ -54,7 +54,7 @@ export function Competitors({
         <table className="w-full text-left text-sm">
           <thead>
             <tr>
-              {['competitor', 'competitor ID', 'type', 'role'].map((label) => (
+              {['competitor', 'type', 'role'].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -76,14 +76,13 @@ export function Competitors({
                     competitorId
                   )}
                 </th>
-                <td className="px-2 py-1">{competitorId}</td>
                 <td className="px-2 py-1">{competitor?.competitorType.toLowerCase()}</td>
                 <td className="px-2 py-1">{role.toLowerCase()}</td>
               </tr>
             ))}
             {competitors.nodes.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-2 py-1">
+                <td colSpan={3} className="px-2 py-1">
                   No competitors
                 </td>
               </tr>

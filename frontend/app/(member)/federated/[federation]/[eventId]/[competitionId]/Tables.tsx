@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
+import { formatCoupleName, formatResultStatus, scoringMethodLabels } from '@/ui/format';
 import {
   CompetitionResultsDocument,
   CompetitionRegistrationsDocument,
@@ -19,6 +20,10 @@ export function Results({ federation, id }: { federation: string; id: string }) 
 
   if (error) return <FormError error={error} />;
   if (!results) return <Spinner />;
+  const showPoints = results.some((result) => result.pointGain != null);
+  const showFinalGain = results.some((result) =>
+    federation === 'csts' ? result.isFinal : result.finalGain != null,
+  );
 
   return (
     <>
@@ -29,57 +34,73 @@ export function Results({ federation, id }: { federation: string; id: string }) 
             <table className="w-full text-left text-sm tabular-nums">
               <thead>
                 <tr>
-                  {[
-                    'rank',
-                    'start number',
-                    'competitor',
-                    'points',
-                    'final gain',
-                    'status',
-                  ].map((label) => (
+                  {['rank', 'start number', 'competitor'].map((label) => (
                     <th key={label} scope="col" className="px-2 py-1">
                       {label}
                     </th>
                   ))}
+                  {showPoints && (
+                    <th scope="col" className="px-2 py-1">
+                      points
+                    </th>
+                  )}
+                  {showFinalGain && (
+                    <th scope="col" className="px-2 py-1">
+                      final gain
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {results.map((result) => (
-                  <tr
-                    key={result.competitorId}
-                    className="border-t border-neutral-4 align-top"
-                  >
-                    <td className="px-2 py-1 whitespace-nowrap">
-                      {result.ranking}
-                      {result.rankingTo && result.rankingTo !== result.ranking
-                        ? `–${result.rankingTo}`
-                        : ''}
-                    </td>
-                    <td className="px-2 py-1">{result.startNumber}</td>
-                    <th scope="row" className="px-2 py-1 font-normal">
-                      {result.competitor ? (
-                        <Link
-                          className="text-accent-11 underline"
-                          href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                          prefetch={false}
-                        >
-                          {result.competitor.name || result.competitorId}
-                        </Link>
-                      ) : (
-                        result.competitorId
+                {results.map((result) => {
+                  const status = formatResultStatus(result.completionStatus);
+                  return (
+                    <tr
+                      key={result.competitorId}
+                      className="border-t border-neutral-4 align-top"
+                    >
+                      <td className="px-2 py-1 whitespace-nowrap">
+                        {result.ranking}
+                        {result.rankingTo && result.rankingTo !== result.ranking
+                          ? `–${result.rankingTo}`
+                          : ''}
+                      </td>
+                      <td className="px-2 py-1">{result.startNumber}</td>
+                      <th scope="row" className="px-2 py-1 font-normal">
+                        {result.competitor ? (
+                          <Link
+                            className="text-accent-11 underline"
+                            href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                            prefetch={false}
+                          >
+                            {result.competitor.name || result.competitorId}
+                          </Link>
+                        ) : (
+                          result.competitorId
+                        )}
+                        {status && (
+                          <div className="text-xs text-neutral-11">{status}</div>
+                        )}
+                      </th>
+                      {showPoints && (
+                        <td className="px-2 py-1">
+                          {result.pointGain == null ? null : Number(result.pointGain)}
+                        </td>
                       )}
-                    </th>
-                    <td className="px-2 py-1">{result.pointGain}</td>
-                    <td className="px-2 py-1">
-                      {federation === 'csts'
-                        ? result.isFinal
-                          ? 'F'
-                          : ''
-                        : result.finalGain}
-                    </td>
-                    <td className="px-2 py-1">{result.completionStatus}</td>
-                  </tr>
-                ))}
+                      {showFinalGain && (
+                        <td className="px-2 py-1">
+                          {federation === 'csts'
+                            ? result.isFinal
+                              ? 'F'
+                              : ''
+                            : result.finalGain == null
+                              ? null
+                              : Number(result.finalGain)}
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -147,37 +168,39 @@ function Registrations({
                     ) : (
                       entry.competitorId
                     )}
-                    <div className="text-xs">{entry.competitorId}</div>
                   </th>
                   <td className="px-2 py-1">
                     {entry.cancelled ? 'cancelled' : 'registered'}
                   </td>
                   <td className="px-2 py-1">
-                    {participant?.components.nodes.map(({ personId, person }) => (
-                      <div key={personId}>
-                        {person ? (
-                          <>
+                    {participant?.components.nodes.map(
+                      ({ personId, person }) =>
+                        person &&
+                        person.people.nodes.length > 0 && (
+                          <div key={personId}>
                             <Link
-                              className="font-mono text-xs text-accent-11 underline"
+                              className="text-accent-11 underline"
                               href={`/federated/${federation}/people/${person.externalId}`}
                               prefetch={false}
                             >
-                              {personId}
+                              {person.canonicalName ||
+                                [person.firstName, person.lastName]
+                                  .filter(Boolean)
+                                  .join(' ') ||
+                                personId}
                             </Link>
                             {' → '}
-                            {person.people.nodes.length === 0
-                              ? 'No local match'
-                              : person.people.nodes.map((match, index) => (
-                                  <span key={match.id}>
-                                    {index > 0 && ', '}
-                                    <Link
-                                      className="text-accent-11 underline"
-                                      href={`/clenove/${match.id}`}
-                                    >
-                                      {match.name}
-                                    </Link>
-                                  </span>
-                                ))}
+                            {person.people.nodes.map((match, index) => (
+                              <span key={match.id}>
+                                {index > 0 && ', '}
+                                <Link
+                                  className="text-accent-11 underline"
+                                  href={`/clenove/${match.id}`}
+                                >
+                                  {match.name}
+                                </Link>
+                              </span>
+                            ))}
                             {person.people.totalCount > person.people.nodes.length && (
                               <Link
                                 className="ml-1 text-accent-11 underline"
@@ -186,13 +209,9 @@ function Registrations({
                                 All {person.people.totalCount} matches
                               </Link>
                             )}
-                          </>
-                        ) : (
-                          personId
-                        )}
-                      </div>
-                    ))}
-                    {participant?.components.totalCount === 0 && 'No competitor members'}
+                          </div>
+                        ),
+                    )}
                     {participant &&
                       participant.components.totalCount >
                         participant.components.nodes.length && (
@@ -205,10 +224,13 @@ function Registrations({
                           </Link>
                         </div>
                       )}
-                    {participant?.couplesList.map(({ id }) => (
-                      <div key={id}>
-                        <Link className="text-accent-11 underline" href={`/pary/${id}`}>
-                          Couple {id}
+                    {participant?.couplesList.map((couple) => (
+                      <div key={couple.id}>
+                        <Link
+                          className="text-accent-11 underline"
+                          href={`/pary/${couple.id}`}
+                        >
+                          {formatCoupleName(couple)}
                         </Link>
                       </div>
                     ))}
@@ -247,7 +269,7 @@ export function Rounds({ id, href }: { id: string; href: string }) {
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['round', 'key', 'scoring method', 'results'].map((label) => (
+              {['round', 'scoring method', 'results'].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -266,14 +288,13 @@ export function Rounds({ id, href }: { id: string; href: string }) {
                     {round.roundLabel || round.roundKey}
                   </Link>
                 </th>
-                <td className="px-2 py-1">{round.roundKey}</td>
-                <td className="px-2 py-1">{round.scoringMethod.toLowerCase()}</td>
+                <td className="px-2 py-1">{scoringMethodLabels[round.scoringMethod]}</td>
                 <td className="px-2 py-1">{round.results.totalCount}</td>
               </tr>
             ))}
             {rounds.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-2 py-1">
+                <td colSpan={3} className="px-2 py-1">
                   No rounds
                 </td>
               </tr>

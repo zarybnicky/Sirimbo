@@ -57,7 +57,6 @@ export function Competitions({
           <thead>
             <tr>
               {[
-                'competition ID',
                 'category',
                 'type',
                 'status',
@@ -75,7 +74,6 @@ export function Competitions({
           <tbody>
             {competitions.nodes.map((competition) => (
               <tr key={competition.id} className="border-t border-neutral-4">
-                <td className="px-2 py-1">{competition.externalId}</td>
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
                     className={cn(
@@ -89,7 +87,7 @@ export function Competitions({
                   </Link>
                 </th>
                 <td className="px-2 py-1">
-                  {competition.competitionType?.toLowerCase()}
+                  {competition.competitionType?.toLowerCase().replaceAll('_', ' ')}
                 </td>
                 <td className="px-2 py-1 whitespace-nowrap">
                   {competition.status.toLowerCase().replaceAll('_', ' ')}
@@ -97,14 +95,14 @@ export function Competitions({
                 <td className="px-2 py-1 whitespace-nowrap">
                   {formatDateOnly(competition.startDate)}
                 </td>
-                <td className="px-2 py-1">{competition.checkInEnd}</td>
+                <td className="px-2 py-1">{competition.checkInEnd?.slice(0, 5)}</td>
                 <td className="px-2 py-1">{competition.entries.totalCount}</td>
                 <td className="px-2 py-1">{competition.results.totalCount}</td>
               </tr>
             ))}
             {competitions.nodes.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-2 py-1">
+                <td colSpan={7} className="px-2 py-1">
                   No competitions
                 </td>
               </tr>

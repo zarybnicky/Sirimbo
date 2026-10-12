@@ -13,6 +13,7 @@
 
 ## Officials and judging history
 
+- [ ] Show local matches for judges and other officials through federation person relations.
 - [ ] Event page: show officials with person, role, discipline, and grade.
 - [ ] Competition page: show officials with person and role.
 - [x] Round page: show judges with labels/letters and panel order, matched to marks columns.

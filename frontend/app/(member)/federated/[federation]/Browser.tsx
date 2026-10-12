@@ -267,7 +267,6 @@ export function Browser({ federation }: { federation: string }) {
                             'date',
                             'event',
                             'status',
-                            'event ID',
                             'location',
                             'country',
                             'competitions',
@@ -304,7 +303,6 @@ export function Browser({ federation }: { federation: string }) {
                             <td className="px-2 py-1 whitespace-nowrap">
                               {event.status.toLowerCase().replaceAll('_', ' ')}
                             </td>
-                            <td className="px-2 py-1">{event.externalId}</td>
                             <td className="px-2 py-1">{event.location || event.city}</td>
                             <td className="px-2 py-1">{event.country}</td>
                             <td className="px-2 py-1">{event.competitions.totalCount}</td>
@@ -312,7 +310,7 @@ export function Browser({ federation }: { federation: string }) {
                         ))}
                         {item.events.nodes.length === 0 && (
                           <tr>
-                            <td colSpan={7} className="px-2 py-1">
+                            <td colSpan={6} className="px-2 py-1">
                               No events found
                             </td>
                           </tr>
@@ -471,7 +469,7 @@ export function Browser({ federation }: { federation: string }) {
                     <table className="w-full text-left text-sm">
                       <thead>
                         <tr>
-                          {['person', 'ID', 'age group'].map((label) => (
+                          {['person', 'age group'].map((label) => (
                             <th key={label} scope="col" className="px-2 py-1">
                               {label}
                             </th>
@@ -494,13 +492,12 @@ export function Browser({ federation }: { federation: string }) {
                                   row.id}
                               </Link>
                             </th>
-                            <td className="px-2 py-1">{row.externalId}</td>
                             <td className="px-2 py-1">{row.ageGroup || '-'}</td>
                           </tr>
                         ))}
                         {item.people.nodes.length === 0 && (
                           <tr>
-                            <td colSpan={3} className="px-2 py-1">
+                            <td colSpan={2} className="px-2 py-1">
                               No people found
                             </td>
                           </tr>
