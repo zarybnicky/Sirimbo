@@ -6796,6 +6796,13 @@
                     }
                   }
                 }
+              },
+              {
+                "name": "orderByCategory",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
               }
             ]
           },
@@ -13262,6 +13269,13 @@
                       "name": "Any"
                     }
                   }
+                }
+              },
+              {
+                "name": "orderByCategory",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]
@@ -26375,6 +26389,13 @@
                       "name": "Any"
                     }
                   }
+                }
+              },
+              {
+                "name": "orderByCategory",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]

@@ -3046,6 +3046,11 @@ enum CompetitionsOrderBy {
   STATUS_DESC
 }
 
+input CompetitorCategoryOrder {
+  descending: Boolean! = true
+  discipline: String!
+}
+
 input CompetitorCategoryProgressCondition {
   ageGroups: [String!]
   classes: [String!]
@@ -3181,6 +3186,7 @@ type Couple {
 
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection!
   id: BigInt!
 
@@ -6889,6 +6895,7 @@ type Federation {
 
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection!
 
   """Reads and enables pagination through a set of `FederationEvent`."""
@@ -12553,6 +12560,7 @@ type Query {
 
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection
 
   """Get a single `FederationEvent`."""

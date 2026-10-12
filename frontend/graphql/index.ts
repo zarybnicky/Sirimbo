@@ -2380,6 +2380,11 @@ export type CompetitionsOrderBy =
   | 'STATUS_ASC'
   | 'STATUS_DESC';
 
+export type CompetitorCategoryOrder = {
+  descending?: Scalars['Boolean']['input'];
+  discipline: Scalars['String']['input'];
+};
+
 export type CompetitorCategoryProgressCondition = {
   ageGroups?: InputMaybe<Array<Scalars['String']['input']>>;
   classes?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -2485,6 +2490,7 @@ export type CoupleFederationCompetitorsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationCompetitorsOrderBy>>;
+  orderByCategory?: InputMaybe<CompetitorCategoryOrder>;
 };
 
 /** A condition to be used against `Couple` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -5542,6 +5548,7 @@ export type FederationCompetitorsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationCompetitorsOrderBy>>;
+  orderByCategory?: InputMaybe<CompetitorCategoryOrder>;
 };
 
 
@@ -10253,6 +10260,7 @@ export type QueryFederationCompetitorsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationCompetitorsOrderBy>>;
+  orderByCategory?: InputMaybe<CompetitorCategoryOrder>;
 };
 
 

@@ -189,6 +189,8 @@ query Federation(
   $classes: [String!]
   $disciplines: [String!]
   $competedSince: Date
+  $orderByCategory: CompetitorCategoryOrder
+  $competitorOrder: [FederationCompetitorsOrderBy!] = [NAME_ASC, EXTERNAL_ID_ASC]
   $offset: Int! = 0
 ) {
   federation(code: $federation) {
@@ -245,7 +247,8 @@ query Federation(
         }
         competedSince: $competedSince
       }
-      orderBy: [NAME_ASC, EXTERNAL_ID_ASC]
+      orderByCategory: $orderByCategory
+      orderBy: $competitorOrder
     ) @include(if: $competitors) {
       totalCount
       nodes {

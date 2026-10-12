@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
+import { ArrowDown, ArrowUpDown } from 'lucide-react';
 import {
   parseAsArrayOf,
   parseAsBoolean,
@@ -62,6 +63,8 @@ export function Browser({ federation }: { federation: string }) {
       class: parseAsArrayOf(parseAsString).withDefault([]),
       discipline: parseAsArrayOf(parseAsString).withDefault([]),
       competedThisYear: parseAsBoolean.withDefault(false),
+      sort: parseAsString.withDefault('competitor'),
+      descending: parseAsBoolean.withDefault(false),
       view: parseAsStringLiteral(views).withDefault('events'),
     },
     { shallow: true, scroll: false },
@@ -91,6 +94,17 @@ export function Browser({ federation }: { federation: string }) {
       ageGroups: filters.ageGroup,
       classes: filters.class,
       disciplines: filters.discipline,
+      competitorOrder:
+        filters.sort === 'competitor'
+          ? [filters.descending ? 'NAME_DESC' : 'NAME_ASC', 'EXTERNAL_ID_ASC']
+          : ['NATURAL'],
+      orderByCategory:
+        filters.sort === 'competitor'
+          ? null
+          : {
+              discipline: filters.sort,
+              descending: filters.descending,
+            },
       competedSince: filters.competedThisYear
         ? `${new Date().getFullYear()}-01-01`
         : null,
@@ -101,13 +115,16 @@ export function Browser({ federation }: { federation: string }) {
   const total = item?.[view]?.totalCount ?? 0;
   const lastPage = Math.max(1, Math.ceil(total / 50));
   const isPending = fetching || searchPending;
-  const availableDisciplines = new Set(
-    (item?.competitors?.nodes ?? []).flatMap((competitor) =>
+  const availableDisciplines = new Set([
+    ...(item?.competitorFacetsList ?? [])
+      .filter((facet) => facet.facet === 'discipline')
+      .map((facet) => facet.value!),
+    ...(item?.competitors?.nodes ?? []).flatMap((competitor) =>
       competitor.categoryProgressesList.flatMap((p) =>
         p.category ? [p.category.discipline] : [],
       ),
     ),
-  );
+  ]);
   const disciplines = [...new Set(['Standard', 'Latin', ...availableDisciplines])].filter(
     (discipline) => availableDisciplines.has(discipline),
   );
@@ -131,6 +148,8 @@ export function Browser({ federation }: { federation: string }) {
                 view: selected,
                 search: null,
                 date: null,
+                sort: null,
+                descending: null,
                 ...clearedCompetitorFilters,
               },
               { history: 'push' },
@@ -309,8 +328,49 @@ export function Browser({ federation }: { federation: string }) {
                         <tr>
                           {['competitor', 'type', 'age group', ...disciplines].map(
                             (label) => (
-                              <th key={label} scope="col" className="px-2 py-1">
-                                {label}
+                              <th
+                                key={label}
+                                scope="col"
+                                className="px-2 py-1"
+                                aria-sort={
+                                  filters.sort !== label
+                                    ? undefined
+                                    : filters.descending
+                                      ? 'descending'
+                                      : 'ascending'
+                                }
+                              >
+                                {label === 'type' || label === 'age group' ? (
+                                  label
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center gap-1 text-accent-11"
+                                    onClick={() =>
+                                      setFilters({
+                                        sort: label,
+                                        descending:
+                                          filters.sort === label
+                                            ? !filters.descending
+                                            : label !== 'competitor',
+                                        page: null,
+                                      })
+                                    }
+                                  >
+                                    {label}
+                                    {filters.sort === label ? (
+                                      <ArrowDown
+                                        className={cn(
+                                          'size-4',
+                                          !filters.descending && 'rotate-180',
+                                        )}
+                                        aria-hidden
+                                      />
+                                    ) : (
+                                      <ArrowUpDown className="size-4" aria-hidden />
+                                    )}
+                                  </button>
+                                )}
                               </th>
                             ),
                           )}
@@ -318,11 +378,18 @@ export function Browser({ federation }: { federation: string }) {
                       </thead>
                       {item.competitors.nodes.map((row) => {
                         const progressByAge = Object.groupBy(
-                          row.categoryProgressesList.toSorted((a, b) =>
-                            (a.category?.class ?? '').localeCompare(
-                              b.category?.class ?? '',
+                          row.categoryProgressesList
+                            .filter(
+                              (p) =>
+                                p.category?.class !== 'Entry' ||
+                                Number(p.points) !== 0 ||
+                                p.domesticFinals + p.foreignFinals !== 0,
+                            )
+                            .toSorted((a, b) =>
+                              (a.category?.class ?? '').localeCompare(
+                                b.category?.class ?? '',
+                              ),
                             ),
-                          ),
                           (p) => p.category?.ageGroup ?? '',
                         );
                         const ageGroups = Object.keys(progressByAge).toSorted();
