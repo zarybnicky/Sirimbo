@@ -167,13 +167,19 @@ alter table federated.competition add column if not exists status federated.even
 
 with cached as (
   select distinct on (e->>'id') e->>'id' as external_id,
-    case (e->'eventCompetitions'->0->>'state')::integer
-      when 0 then 'planned'
-      when 1 then 'planned'
-      when 2 then 'planned'
-      when 3 then 'planned'
-      when 900 then 'planned'
-      when 100 then 'cancelled'
+    case (e->'eventCompetitions'->0->>'state')::text
+      when 'Private' then 'planned'
+      when 'Waiting' then 'planned'
+      when 'Approved' then 'planned'
+      when 'Public' then 'planned'
+      when 'Checked' then 'planned'
+      when 'Cancelled' then 'cancelled'
+      when '0' then 'planned'
+      when '1' then 'planned'
+      when '2' then 'planned'
+      when '3' then 'planned'
+      when '900' then 'planned'
+      when '100' then 'cancelled'
       else 'unknown'
     end::federated.event_status as status
   from crawler.frontier f
@@ -193,6 +199,7 @@ with cached as (
     when 'Canceled' then 'cancelled'
     when 'Closed' then 'completed'
     when 'RegistrationClosed' then 'planned'
+    when 'Approved' then 'planned'
     when 'PreRegistration' then 'planned'
     when 'Registering' then 'planned'
     when 'InProgress' then 'in_progress'
@@ -216,3 +223,21 @@ update federated.competition set status = case
   else 'planned'::federated.event_status
 end
 where federation = 'csts' and status = 'unknown';
+
+with statuses as (
+  select c.event_id, case
+    when bool_and(c.status = 'cancelled') then 'cancelled'
+    when bool_and(c.status in ('completed', 'cancelled')) then 'completed'
+    when bool_or(c.status = 'in_progress') then 'in_progress'
+    when bool_or(c.status = 'planned') then 'planned'
+    when bool_or(c.status = 'postponed') then 'postponed'
+    else 'unknown'
+  end::federated.event_status as status
+  from federated.competition c
+  where c.federation = 'wdsf'
+  group by c.event_id
+)
+update federated.event e set status = statuses.status
+from statuses
+where e.federation = 'wdsf' and e.id = statuses.event_id
+  and e.status is distinct from statuses.status;

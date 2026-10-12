@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { cn } from '@/lib/cn';
 import { useEffect } from 'react';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
@@ -174,7 +175,10 @@ export function History({ federation, id }: { federation: string; id: string }) 
                   <th scope="row" className="px-2 py-1 font-normal">
                     {row.event ? (
                       <Link
-                        className="text-accent-11 underline"
+                        className={cn(
+                          'text-accent-11',
+                          row.status === 'CANCELLED' ? 'line-through' : 'underline',
+                        )}
                         href={`${base}/${row.event.externalId}/${row.externalId}`}
                         prefetch={false}
                       >

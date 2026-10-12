@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { cn } from '@/lib/cn';
 import { useEffect } from 'react';
 import { parseAsInteger, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
@@ -77,7 +78,10 @@ export function Competitions({
                 <td className="px-2 py-1">{competition.externalId}</td>
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
-                    className="text-accent-11 underline"
+                    className={cn(
+                      'text-accent-11',
+                      competition.status === 'CANCELLED' ? 'line-through' : 'underline',
+                    )}
                     href={`${path}/${competition.externalId}`}
                     prefetch={false}
                   >

@@ -681,6 +681,25 @@ ON CONFLICT (federation, external_id) DO UPDATE
       competition_type = EXCLUDED.competition_type,
       status = EXCLUDED.status;
 
+/* @name UpdateWdsfEventStatus */
+WITH statuses AS (
+  SELECT c.event_id, case
+    when bool_and(c.status = 'cancelled') then 'cancelled'
+    when bool_and(c.status in ('completed', 'cancelled')) then 'completed'
+    when bool_or(c.status = 'in_progress') then 'in_progress'
+    when bool_or(c.status = 'planned') then 'planned'
+    when bool_or(c.status = 'postponed') then 'postponed'
+    else 'unknown'
+  end::federated.event_status AS status
+  FROM federated.competition c
+  JOIN federated.event e ON e.id = c.event_id
+  WHERE e.federation = 'wdsf' AND e.external_id = :eventExternalId
+  GROUP BY c.event_id
+)
+UPDATE federated.event e SET status = statuses.status
+FROM statuses
+WHERE e.id = statuses.event_id AND e.status IS DISTINCT FROM statuses.status;
+
 /* @name MergeEventOfficials */
 WITH event AS (
   SELECT id

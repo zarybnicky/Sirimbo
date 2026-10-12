@@ -4,6 +4,7 @@ import { getFederatedCategoryId } from './federatedCategory.ts';
 import {
   type competition_type,
   type competitor_type,
+  updateWdsfEventStatus,
   upsertCompetitions,
   upsertEvents,
 } from './federated.queries.ts';
@@ -385,6 +386,7 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       },
       client,
     );
+    await updateWdsfEventStatus.run({ eventExternalId: c.groupId.toString() }, client);
     return {
       upsertFrontier: [
         {

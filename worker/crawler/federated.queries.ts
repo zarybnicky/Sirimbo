@@ -1296,6 +1296,47 @@ const upsertCompetitionsIR: any = {"usedParamSet":{"federation":true,"eventExter
 export const upsertCompetitions = new PreparedQuery<IUpsertCompetitionsParams,IUpsertCompetitionsResult>(upsertCompetitionsIR);
 
 
+/** 'UpdateWdsfEventStatus' parameters type */
+export interface IUpdateWdsfEventStatusParams {
+  eventExternalId?: string | null | void;
+}
+
+/** 'UpdateWdsfEventStatus' return type */
+export type IUpdateWdsfEventStatusResult = void;
+
+/** 'UpdateWdsfEventStatus' query type */
+export interface IUpdateWdsfEventStatusQuery {
+  params: IUpdateWdsfEventStatusParams;
+  result: IUpdateWdsfEventStatusResult;
+}
+
+const updateWdsfEventStatusIR: any = {"usedParamSet":{"eventExternalId":true},"params":[{"name":"eventExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":539,"b":554}]}],"statement":"WITH statuses AS (\n  SELECT c.event_id, case\n    when bool_and(c.status = 'cancelled') then 'cancelled'\n    when bool_and(c.status in ('completed', 'cancelled')) then 'completed'\n    when bool_or(c.status = 'in_progress') then 'in_progress'\n    when bool_or(c.status = 'planned') then 'planned'\n    when bool_or(c.status = 'postponed') then 'postponed'\n    else 'unknown'\n  end::federated.event_status AS status\n  FROM federated.competition c\n  JOIN federated.event e ON e.id = c.event_id\n  WHERE e.federation = 'wdsf' AND e.external_id = :eventExternalId\n  GROUP BY c.event_id\n)\nUPDATE federated.event e SET status = statuses.status\nFROM statuses\nWHERE e.id = statuses.event_id AND e.status IS DISTINCT FROM statuses.status"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH statuses AS (
+ *   SELECT c.event_id, case
+ *     when bool_and(c.status = 'cancelled') then 'cancelled'
+ *     when bool_and(c.status in ('completed', 'cancelled')) then 'completed'
+ *     when bool_or(c.status = 'in_progress') then 'in_progress'
+ *     when bool_or(c.status = 'planned') then 'planned'
+ *     when bool_or(c.status = 'postponed') then 'postponed'
+ *     else 'unknown'
+ *   end::federated.event_status AS status
+ *   FROM federated.competition c
+ *   JOIN federated.event e ON e.id = c.event_id
+ *   WHERE e.federation = 'wdsf' AND e.external_id = :eventExternalId
+ *   GROUP BY c.event_id
+ * )
+ * UPDATE federated.event e SET status = statuses.status
+ * FROM statuses
+ * WHERE e.id = statuses.event_id AND e.status IS DISTINCT FROM statuses.status
+ * ```
+ */
+export const updateWdsfEventStatus = new PreparedQuery<IUpdateWdsfEventStatusParams,IUpdateWdsfEventStatusResult>(updateWdsfEventStatusIR);
+
+
 /** 'MergeEventOfficials' parameters type */
 export interface IMergeEventOfficialsParams {
   discipline?: stringArray | null | void;

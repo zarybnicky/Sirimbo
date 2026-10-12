@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { cn } from '@/lib/cn';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { z } from 'zod';
@@ -171,7 +172,12 @@ export function Browser({ federation }: { federation: string }) {
                             </td>
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
-                                className="text-accent-11 underline"
+                                className={cn(
+                                  'text-accent-11',
+                                  event.status === 'CANCELLED'
+                                    ? 'line-through'
+                                    : 'underline',
+                                )}
                                 href={`/federated/${federation}/${event.externalId}`}
                                 prefetch={false}
                               >
