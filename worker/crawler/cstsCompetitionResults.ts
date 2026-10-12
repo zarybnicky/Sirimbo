@@ -177,8 +177,9 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     externalId: string;
     personId: string;
     role: official_role;
+    judgeLabel: string;
   }>(
-    ['competitionExternalId', 'externalId', 'personId', 'role'],
+    ['competitionExternalId', 'externalId', 'personId', 'role', 'judgeLabel'],
     ['competitionExternalId', 'personId', 'role'],
   );
   for (const official of result.officials) {
@@ -188,6 +189,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       externalId: official.id.toString(),
       personId: `csts:${official.id}`,
       role: mapOfficialRole(official.type),
+      judgeLabel: '',
     });
   }
   await mergeCompetitionOfficials.run(

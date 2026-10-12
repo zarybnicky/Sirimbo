@@ -1116,6 +1116,34 @@ const markFrontierProcessErrorIR: any = {"usedParamSet":{"error":true,"id":true}
 export const markFrontierProcessError = new PreparedQuery<IMarkFrontierProcessErrorParams,IMarkFrontierProcessErrorResult>(markFrontierProcessErrorIR);
 
 
+/** 'ReprocessWdsfParticipantIndex' parameters type */
+export interface IReprocessWdsfParticipantIndexParams {
+  competitionExternalId?: string | null | void;
+}
+
+/** 'ReprocessWdsfParticipantIndex' return type */
+export type IReprocessWdsfParticipantIndexResult = void;
+
+/** 'ReprocessWdsfParticipantIndex' query type */
+export interface IReprocessWdsfParticipantIndexQuery {
+  params: IReprocessWdsfParticipantIndexParams;
+  result: IReprocessWdsfParticipantIndexResult;
+}
+
+const reprocessWdsfParticipantIndexIR: any = {"usedParamSet":{"competitionExternalId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":121,"b":142}]}],"statement":"UPDATE crawler.frontier\nSET process_status = 'pending'\nWHERE federation = 'wdsf' AND kind = 'participantIndex' AND key = :competitionExternalId\n  AND fetch_status = 'ok' AND process_status <> 'pending'"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE crawler.frontier
+ * SET process_status = 'pending'
+ * WHERE federation = 'wdsf' AND kind = 'participantIndex' AND key = :competitionExternalId
+ *   AND fetch_status = 'ok' AND process_status <> 'pending'
+ * ```
+ */
+export const reprocessWdsfParticipantIndex = new PreparedQuery<IReprocessWdsfParticipantIndexParams,IReprocessWdsfParticipantIndexResult>(reprocessWdsfParticipantIndexIR);
+
+
 /** 'RescheduleFrontier' parameters type */
 export interface IRescheduleFrontierParams {
   id?: NumberOrString | null | void;

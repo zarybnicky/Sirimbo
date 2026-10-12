@@ -249,6 +249,7 @@ type Adjudicator = {
   personId: string;
   personExternalId: string;
   judgeIndex: number;
+  judgeLabel: string | null;
 };
 
 type ResolvedCompetitor = {
@@ -412,6 +413,7 @@ async function loadWdsfRoundDetails(
       personId: row.personId,
       personExternalId: row.personExternalId,
       judgeIndex: row.judgeIndex,
+      judgeLabel: row.judgeLabel,
     });
   }
   if (missingAdjudicators.length > 0) {
@@ -493,7 +495,7 @@ async function loadWdsfRoundDetails(
           roundId,
           personJudgeId: adjudicator.personId,
           judgeIndex: adjudicator.judgeIndex,
-          judgeLabel: score.adjudicatorExternalId,
+          judgeLabel: adjudicator.judgeLabel ?? '',
         });
         for (const row of score.rows) {
           judgeScores.add({

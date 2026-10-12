@@ -741,29 +741,33 @@ WHERE t.event_id IN (SELECT id FROM event)
 
 /* @name MergeCompetitionOfficials */
 WITH input AS (
-  SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role
+  SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role,
+    nullif(judge_label, '') AS judge_label
   FROM unnest(
     :competitionExternalId::text[],
     :externalId::text[],
     :personId::text[],
-    :role::federated.official_role[]
-  ) AS input(competition_external_id, external_id, person_id, role)
+    :role::federated.official_role[],
+    :judgeLabel::text[]
+  ) AS input(competition_external_id, external_id, person_id, role, judge_label)
 ), competitions AS (
   SELECT id, external_id
   FROM federated.competition
   WHERE federation = :federation
     AND external_id IN (SELECT unnest(:scopeCompetitionExternalId::text[]))
 ), source AS (
-  SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role
+  SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role, input.judge_label
   FROM input
   JOIN competitions ON competitions.external_id = input.competition_external_id
 ), inserted_official AS (
-  INSERT INTO federated.competition_official (competition_id, external_id, person_id, role)
-  SELECT s.competition_id, s.external_id, s.person_id, s.role
+  INSERT INTO federated.competition_official (competition_id, external_id, person_id, role, judge_label)
+  SELECT s.competition_id, s.external_id, s.person_id, s.role, s.judge_label
   FROM source s
   ON CONFLICT (competition_id, person_id, role) DO UPDATE
-    SET external_id = EXCLUDED.external_id
+    SET external_id = EXCLUDED.external_id,
+        judge_label = EXCLUDED.judge_label
     WHERE federated.competition_official.external_id IS DISTINCT FROM EXCLUDED.external_id
+       OR federated.competition_official.judge_label IS DISTINCT FROM EXCLUDED.judge_label
 )
 DELETE FROM federated.competition_official t
 WHERE t.competition_id IN (SELECT id FROM competitions)
@@ -783,6 +787,17 @@ FROM federated.competition c
 JOIN federated.category cat ON cat.id = c.category_id
 WHERE c.federation = :federation
   AND c.external_id = :externalId;
+
+/* @name UpdateWdsfRoundJudgeLabels */
+UPDATE federated.competition_round_judge crj
+SET judge_label = co.judge_label
+FROM federated.competition_round cr
+JOIN federated.competition c ON c.id = cr.competition_id
+JOIN federated.competition_official co ON co.competition_id = c.id
+WHERE c.federation = 'wdsf' AND c.external_id = :competitionExternalId
+  AND co.role = 'adjudicator'
+  AND crj.round_id = cr.id AND crj.person_judge_id = co.person_id
+  AND crj.judge_label IS DISTINCT FROM co.judge_label;
 
 /* @name MergeCompetitionEntriesByEventId */
 WITH input AS (
@@ -1165,6 +1180,7 @@ WITH wanted AS (
   SELECT
     co.external_id,
     co.person_id,
+    co.judge_label,
     p.external_id AS person_external_id,
     row_number() OVER (
       ORDER BY
@@ -1181,7 +1197,8 @@ SELECT
   wanted.external_id AS "officialExternalId!",
   panel.person_id AS "personId?",
   panel.person_external_id AS "personExternalId?",
-  panel.judge_index AS "judgeIndex?"
+  panel.judge_index AS "judgeIndex?",
+  panel.judge_label AS "judgeLabel?"
 FROM wanted
 LEFT JOIN panel ON panel.external_id = wanted.external_id
 ORDER BY

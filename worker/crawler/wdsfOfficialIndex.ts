@@ -4,10 +4,12 @@ import {
   ensurePeople,
   type gender,
   mergeCompetitionOfficials,
+  updateWdsfRoundJudgeLabels,
   type official_role,
 } from './federated.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 import type { PoolClient } from 'pg';
+import { reprocessWdsfParticipantIndex } from './crawler.queries.ts';
 
 const PERSON_REL = 'http://services.worlddancesport.org/rel/official/person';
 const COMPETITION_REL = 'http://services.worlddancesport.org/rel/official/competition';
@@ -81,8 +83,7 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
   }
   const [competitionExternalId] = competitionExternalIds;
 
-  // TODO(wdsf): Preserve parsed official country and adjudicator labels instead
-  // of only storing person, official external ID, and role.
+  // TODO(wdsf): Preserve parsed official country.
   const people = makePgtypedCollection<{
     federation: string;
     externalId: string;
@@ -107,8 +108,9 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
     externalId: string;
     personId: string;
     role: official_role;
+    judgeLabel: string;
   }>(
-    ['competitionExternalId', 'externalId', 'personId', 'role'],
+    ['competitionExternalId', 'externalId', 'personId', 'role', 'judgeLabel'],
     ['competitionExternalId', 'personId', 'role'],
   );
   for (const official of officials) {
@@ -118,6 +120,7 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
       externalId: official.officialExternalId,
       personId: official.personId,
       role: official.role,
+      judgeLabel: official.judgeLabel ?? '',
     });
   }
   await mergeCompetitionOfficials.run(
@@ -128,6 +131,8 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
     },
     client,
   );
+  await updateWdsfRoundJudgeLabels.run({ competitionExternalId }, client);
+  await reprocessWdsfParticipantIndex.run({ competitionExternalId }, client);
 }
 
 export function parseWdsfOfficial(official: Official): ParsedWdsfOfficial {

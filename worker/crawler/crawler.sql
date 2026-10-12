@@ -472,6 +472,12 @@ SET process_status = 'error',
     last_process_error_at = now()
 WHERE id = :id::bigint;
 
+/* @name ReprocessWdsfParticipantIndex */
+UPDATE crawler.frontier
+SET process_status = 'pending'
+WHERE federation = 'wdsf' AND kind = 'participantIndex' AND key = :competitionExternalId
+  AND fetch_status = 'ok' AND process_status <> 'pending';
+
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
 

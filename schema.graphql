@@ -2288,6 +2288,7 @@ type CompetitionOfficial {
   competition: Competition
   competitionId: BigInt!
   externalId: String
+  judgeLabel: String
 
   """
   Reads a single `FederationPerson` that is related to this `CompetitionOfficial`.
@@ -2307,6 +2308,9 @@ input CompetitionOfficialCondition {
 
   """Checks for equality with the object’s `externalId` field."""
   externalId: String
+
+  """Checks for equality with the object’s `judgeLabel` field."""
+  judgeLabel: String
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -2349,6 +2353,8 @@ enum CompetitionOfficialsOrderBy {
   COMPETITION_ID_DESC
   EXTERNAL_ID_ASC
   EXTERNAL_ID_DESC
+  JUDGE_LABEL_ASC
+  JUDGE_LABEL_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC

@@ -1408,6 +1408,7 @@ export interface IMergeCompetitionOfficialsParams {
   competitionExternalId?: stringArray | null | void;
   externalId?: stringArray | null | void;
   federation?: string | null | void;
+  judgeLabel?: stringArray | null | void;
   personId?: stringArray | null | void;
   role?: official_roleArray | null | void;
   scopeCompetitionExternalId?: stringArray | null | void;
@@ -1422,35 +1423,39 @@ export interface IMergeCompetitionOfficialsQuery {
   result: IMergeCompetitionOfficialsResult;
 }
 
-const mergeCompetitionOfficialsIR: any = {"usedParamSet":{"competitionExternalId":true,"externalId":true,"personId":true,"role":true,"federation":true,"scopeCompetitionExternalId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":125,"b":146}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":161,"b":171}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":186,"b":194}]},{"name":"role","required":false,"transform":{"type":"scalar"},"locs":[{"a":209,"b":213}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":406,"b":416}]},{"name":"scopeCompetitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":456,"b":482}]}],"statement":"WITH input AS (\n  SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role\n  FROM unnest(\n    :competitionExternalId::text[],\n    :externalId::text[],\n    :personId::text[],\n    :role::federated.official_role[]\n  ) AS input(competition_external_id, external_id, person_id, role)\n), competitions AS (\n  SELECT id, external_id\n  FROM federated.competition\n  WHERE federation = :federation\n    AND external_id IN (SELECT unnest(:scopeCompetitionExternalId::text[]))\n), source AS (\n  SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role\n  FROM input\n  JOIN competitions ON competitions.external_id = input.competition_external_id\n), inserted_official AS (\n  INSERT INTO federated.competition_official (competition_id, external_id, person_id, role)\n  SELECT s.competition_id, s.external_id, s.person_id, s.role\n  FROM source s\n  ON CONFLICT (competition_id, person_id, role) DO UPDATE\n    SET external_id = EXCLUDED.external_id\n    WHERE federated.competition_official.external_id IS DISTINCT FROM EXCLUDED.external_id\n)\nDELETE FROM federated.competition_official t\nWHERE t.competition_id IN (SELECT id FROM competitions)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competition_id = t.competition_id\n      AND s.person_id = t.person_id\n      AND s.role = t.role\n  )"};
+const mergeCompetitionOfficialsIR: any = {"usedParamSet":{"competitionExternalId":true,"externalId":true,"personId":true,"role":true,"judgeLabel":true,"federation":true,"scopeCompetitionExternalId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":169,"b":190}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":205,"b":215}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":230,"b":238}]},{"name":"role","required":false,"transform":{"type":"scalar"},"locs":[{"a":253,"b":257}]},{"name":"judgeLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":291,"b":301}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":488,"b":498}]},{"name":"scopeCompetitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":538,"b":564}]}],"statement":"WITH input AS (\n  SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role,\n    nullif(judge_label, '') AS judge_label\n  FROM unnest(\n    :competitionExternalId::text[],\n    :externalId::text[],\n    :personId::text[],\n    :role::federated.official_role[],\n    :judgeLabel::text[]\n  ) AS input(competition_external_id, external_id, person_id, role, judge_label)\n), competitions AS (\n  SELECT id, external_id\n  FROM federated.competition\n  WHERE federation = :federation\n    AND external_id IN (SELECT unnest(:scopeCompetitionExternalId::text[]))\n), source AS (\n  SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role, input.judge_label\n  FROM input\n  JOIN competitions ON competitions.external_id = input.competition_external_id\n), inserted_official AS (\n  INSERT INTO federated.competition_official (competition_id, external_id, person_id, role, judge_label)\n  SELECT s.competition_id, s.external_id, s.person_id, s.role, s.judge_label\n  FROM source s\n  ON CONFLICT (competition_id, person_id, role) DO UPDATE\n    SET external_id = EXCLUDED.external_id,\n        judge_label = EXCLUDED.judge_label\n    WHERE federated.competition_official.external_id IS DISTINCT FROM EXCLUDED.external_id\n       OR federated.competition_official.judge_label IS DISTINCT FROM EXCLUDED.judge_label\n)\nDELETE FROM federated.competition_official t\nWHERE t.competition_id IN (SELECT id FROM competitions)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competition_id = t.competition_id\n      AND s.person_id = t.person_id\n      AND s.role = t.role\n  )"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH input AS (
- *   SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role
+ *   SELECT competition_external_id, nullif(external_id, '') AS external_id, person_id, role,
+ *     nullif(judge_label, '') AS judge_label
  *   FROM unnest(
  *     :competitionExternalId::text[],
  *     :externalId::text[],
  *     :personId::text[],
- *     :role::federated.official_role[]
- *   ) AS input(competition_external_id, external_id, person_id, role)
+ *     :role::federated.official_role[],
+ *     :judgeLabel::text[]
+ *   ) AS input(competition_external_id, external_id, person_id, role, judge_label)
  * ), competitions AS (
  *   SELECT id, external_id
  *   FROM federated.competition
  *   WHERE federation = :federation
  *     AND external_id IN (SELECT unnest(:scopeCompetitionExternalId::text[]))
  * ), source AS (
- *   SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role
+ *   SELECT competitions.id AS competition_id, input.external_id, input.person_id, input.role, input.judge_label
  *   FROM input
  *   JOIN competitions ON competitions.external_id = input.competition_external_id
  * ), inserted_official AS (
- *   INSERT INTO federated.competition_official (competition_id, external_id, person_id, role)
- *   SELECT s.competition_id, s.external_id, s.person_id, s.role
+ *   INSERT INTO federated.competition_official (competition_id, external_id, person_id, role, judge_label)
+ *   SELECT s.competition_id, s.external_id, s.person_id, s.role, s.judge_label
  *   FROM source s
  *   ON CONFLICT (competition_id, person_id, role) DO UPDATE
- *     SET external_id = EXCLUDED.external_id
+ *     SET external_id = EXCLUDED.external_id,
+ *         judge_label = EXCLUDED.judge_label
  *     WHERE federated.competition_official.external_id IS DISTINCT FROM EXCLUDED.external_id
+ *        OR federated.competition_official.judge_label IS DISTINCT FROM EXCLUDED.judge_label
  * )
  * DELETE FROM federated.competition_official t
  * WHERE t.competition_id IN (SELECT id FROM competitions)
@@ -1499,6 +1504,39 @@ const getCompetitionContextIR: any = {"usedParamSet":{"federation":true,"externa
  * ```
  */
 export const getCompetitionContext = new PreparedQuery<IGetCompetitionContextParams,IGetCompetitionContextResult>(getCompetitionContextIR);
+
+
+/** 'UpdateWdsfRoundJudgeLabels' parameters type */
+export interface IUpdateWdsfRoundJudgeLabelsParams {
+  competitionExternalId?: string | null | void;
+}
+
+/** 'UpdateWdsfRoundJudgeLabels' return type */
+export type IUpdateWdsfRoundJudgeLabelsResult = void;
+
+/** 'UpdateWdsfRoundJudgeLabels' query type */
+export interface IUpdateWdsfRoundJudgeLabelsQuery {
+  params: IUpdateWdsfRoundJudgeLabelsParams;
+  result: IUpdateWdsfRoundJudgeLabelsResult;
+}
+
+const updateWdsfRoundJudgeLabelsIR: any = {"usedParamSet":{"competitionExternalId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":286,"b":307}]}],"statement":"UPDATE federated.competition_round_judge crj\nSET judge_label = co.judge_label\nFROM federated.competition_round cr\nJOIN federated.competition c ON c.id = cr.competition_id\nJOIN federated.competition_official co ON co.competition_id = c.id\nWHERE c.federation = 'wdsf' AND c.external_id = :competitionExternalId\n  AND co.role = 'adjudicator'\n  AND crj.round_id = cr.id AND crj.person_judge_id = co.person_id\n  AND crj.judge_label IS DISTINCT FROM co.judge_label"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE federated.competition_round_judge crj
+ * SET judge_label = co.judge_label
+ * FROM federated.competition_round cr
+ * JOIN federated.competition c ON c.id = cr.competition_id
+ * JOIN federated.competition_official co ON co.competition_id = c.id
+ * WHERE c.federation = 'wdsf' AND c.external_id = :competitionExternalId
+ *   AND co.role = 'adjudicator'
+ *   AND crj.round_id = cr.id AND crj.person_judge_id = co.person_id
+ *   AND crj.judge_label IS DISTINCT FROM co.judge_label
+ * ```
+ */
+export const updateWdsfRoundJudgeLabels = new PreparedQuery<IUpdateWdsfRoundJudgeLabelsParams,IUpdateWdsfRoundJudgeLabelsResult>(updateWdsfRoundJudgeLabelsIR);
 
 
 /** 'MergeCompetitionEntriesByEventId' parameters type */
@@ -2145,6 +2183,7 @@ export interface IGetCompetitionAdjudicatorMapParams {
 /** 'GetCompetitionAdjudicatorMap' return type */
 export interface IGetCompetitionAdjudicatorMapResult {
   judgeIndex: number | null;
+  judgeLabel: string | null;
   officialExternalId: string;
   personExternalId: string | null;
   personId: string | null;
@@ -2156,7 +2195,7 @@ export interface IGetCompetitionAdjudicatorMapQuery {
   result: IGetCompetitionAdjudicatorMapResult;
 }
 
-const getCompetitionAdjudicatorMapIR: any = {"usedParamSet":{"officialExternalId":true,"competitionId":true},"params":[{"name":"officialExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":106}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":581,"b":594}]}],"statement":"WITH wanted AS (\n  SELECT DISTINCT nullif(external_id, '') AS external_id\n  FROM unnest(:officialExternalId::text[]) AS input(external_id)\n  WHERE nullif(external_id, '') IS NOT NULL\n), panel AS (\n  SELECT\n    co.external_id,\n    co.person_id,\n    p.external_id AS person_external_id,\n    row_number() OVER (\n      ORDER BY\n        CASE WHEN co.external_id ~ '^[0-9]+$' THEN co.external_id::bigint END NULLS LAST,\n        co.external_id\n    )::int AS judge_index\n  FROM federated.competition_official co\n  JOIN federated.person p ON p.id = co.person_id\n  WHERE co.competition_id = :competitionId\n    AND co.role = 'adjudicator'\n    AND co.external_id IS NOT NULL\n)\nSELECT\n  wanted.external_id AS \"officialExternalId!\",\n  panel.person_id AS \"personId?\",\n  panel.person_external_id AS \"personExternalId?\",\n  panel.judge_index AS \"judgeIndex?\"\nFROM wanted\nLEFT JOIN panel ON panel.external_id = wanted.external_id\nORDER BY\n  CASE WHEN wanted.external_id ~ '^[0-9]+$' THEN wanted.external_id::bigint END NULLS LAST,\n  wanted.external_id"};
+const getCompetitionAdjudicatorMapIR: any = {"usedParamSet":{"officialExternalId":true,"competitionId":true},"params":[{"name":"officialExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":106}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":601,"b":614}]}],"statement":"WITH wanted AS (\n  SELECT DISTINCT nullif(external_id, '') AS external_id\n  FROM unnest(:officialExternalId::text[]) AS input(external_id)\n  WHERE nullif(external_id, '') IS NOT NULL\n), panel AS (\n  SELECT\n    co.external_id,\n    co.person_id,\n    co.judge_label,\n    p.external_id AS person_external_id,\n    row_number() OVER (\n      ORDER BY\n        CASE WHEN co.external_id ~ '^[0-9]+$' THEN co.external_id::bigint END NULLS LAST,\n        co.external_id\n    )::int AS judge_index\n  FROM federated.competition_official co\n  JOIN federated.person p ON p.id = co.person_id\n  WHERE co.competition_id = :competitionId\n    AND co.role = 'adjudicator'\n    AND co.external_id IS NOT NULL\n)\nSELECT\n  wanted.external_id AS \"officialExternalId!\",\n  panel.person_id AS \"personId?\",\n  panel.person_external_id AS \"personExternalId?\",\n  panel.judge_index AS \"judgeIndex?\",\n  panel.judge_label AS \"judgeLabel?\"\nFROM wanted\nLEFT JOIN panel ON panel.external_id = wanted.external_id\nORDER BY\n  CASE WHEN wanted.external_id ~ '^[0-9]+$' THEN wanted.external_id::bigint END NULLS LAST,\n  wanted.external_id"};
 
 /**
  * Query generated from SQL:
@@ -2169,6 +2208,7 @@ const getCompetitionAdjudicatorMapIR: any = {"usedParamSet":{"officialExternalId
  *   SELECT
  *     co.external_id,
  *     co.person_id,
+ *     co.judge_label,
  *     p.external_id AS person_external_id,
  *     row_number() OVER (
  *       ORDER BY
@@ -2185,7 +2225,8 @@ const getCompetitionAdjudicatorMapIR: any = {"usedParamSet":{"officialExternalId
  *   wanted.external_id AS "officialExternalId!",
  *   panel.person_id AS "personId?",
  *   panel.person_external_id AS "personExternalId?",
- *   panel.judge_index AS "judgeIndex?"
+ *   panel.judge_index AS "judgeIndex?",
+ *   panel.judge_label AS "judgeLabel?"
  * FROM wanted
  * LEFT JOIN panel ON panel.external_id = wanted.external_id
  * ORDER BY

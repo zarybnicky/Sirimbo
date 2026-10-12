@@ -173,45 +173,48 @@ function Registrations({
                     {entry.cancelled ? 'cancelled' : 'registered'}
                   </td>
                   <td className="px-2 py-1">
-                    {participant?.components.nodes.map(
-                      ({ personId, person }) =>
-                        person &&
-                        person.people.nodes.length > 0 && (
-                          <div key={personId}>
-                            <Link
-                              className="text-accent-11 underline"
-                              href={`/federated/${federation}/people/${person.externalId}`}
-                              prefetch={false}
-                            >
-                              {person.canonicalName ||
-                                [person.firstName, person.lastName]
-                                  .filter(Boolean)
-                                  .join(' ') ||
-                                personId}
-                            </Link>
-                            {' → '}
-                            {person.people.nodes.map((match, index) => (
-                              <span key={match.id}>
-                                {index > 0 && ', '}
-                                <Link
-                                  className="text-accent-11 underline"
-                                  href={`/clenove/${match.id}`}
-                                >
-                                  {match.name}
-                                </Link>
-                              </span>
-                            ))}
-                            {person.people.totalCount > person.people.nodes.length && (
+                    {participant?.components.nodes.map(({ personId, person }) => {
+                      if (
+                        !person ||
+                        (person.people.totalCount === 0 &&
+                          participant.couplesList.length === 0)
+                      ) {
+                        return null;
+                      }
+                      const name =
+                        person.canonicalName ||
+                        [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+                        personId;
+                      return (
+                        <div key={personId}>
+                          {person.people.nodes.map((match, index) => (
+                            <span key={match.id}>
+                              {index > 0 && ', '}
                               <Link
-                                className="ml-1 text-accent-11 underline"
-                                href={`/federated/${federation}/people/${person.externalId}`}
+                                className="text-accent-11 underline"
+                                href={`/clenove/${match.id}`}
+                                title={match.name}
                               >
-                                All {person.people.totalCount} matches
+                                {person.people.totalCount === 1 ? name : match.name}
                               </Link>
-                            )}
-                          </div>
-                        ),
-                    )}
+                            </span>
+                          ))}
+                          {person.people.totalCount === 0 && (
+                            <span className="text-neutral-11">
+                              {name} (no person match)
+                            </span>
+                          )}
+                          {person.people.totalCount > person.people.nodes.length && (
+                            <Link
+                              className="ml-1 text-accent-11 underline"
+                              href={`/federated/${federation}/people/${person.externalId}`}
+                            >
+                              All {person.people.totalCount} matches
+                            </Link>
+                          )}
+                        </div>
+                      );
+                    })}
                     {participant &&
                       participant.components.totalCount >
                         participant.components.nodes.length && (

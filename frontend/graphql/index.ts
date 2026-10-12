@@ -1809,6 +1809,7 @@ export type CompetitionOfficial = {
   competition: Maybe<Competition>;
   competitionId: Scalars['BigInt']['output'];
   externalId: Maybe<Scalars['String']['output']>;
+  judgeLabel: Maybe<Scalars['String']['output']>;
   /** Reads a single `FederationPerson` that is related to this `CompetitionOfficial`. */
   person: Maybe<FederationPerson>;
   personId: Scalars['String']['output'];
@@ -1824,6 +1825,8 @@ export type CompetitionOfficialCondition = {
   competitionId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `judgeLabel` field. */
+  judgeLabel?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -1858,6 +1861,8 @@ export type CompetitionOfficialsOrderBy =
   | 'COMPETITION_ID_DESC'
   | 'EXTERNAL_ID_ASC'
   | 'EXTERNAL_ID_DESC'
+  | 'JUDGE_LABEL_ASC'
+  | 'JUDGE_LABEL_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -14684,6 +14689,7 @@ export type GraphCacheResolvers = {
     competition?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, WithTypename<Competition> | string>,
     competitionId?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     externalId?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
+    judgeLabel?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, WithTypename<FederationPerson> | string>,
     personId?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
     role?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, OfficialRole | string>
@@ -17318,6 +17324,7 @@ export type GraphCacheUpdaters = {
     competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     competitionId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     externalId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
+    judgeLabel?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     role?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>

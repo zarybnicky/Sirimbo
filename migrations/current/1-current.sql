@@ -248,3 +248,5 @@ where e.federation = 'wdsf' and e.id = statuses.event_id
   and e.status is distinct from statuses.status;
 
 --!include functions/federation_competitor_facets.sql
+
+ALTER TABLE federated.competition_official ADD COLUMN IF NOT EXISTS judge_label text;

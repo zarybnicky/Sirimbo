@@ -5067,6 +5067,14 @@
             "args": []
           },
           {
+            "name": "judgeLabel",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "person",
             "type": {
               "kind": "OBJECT",
