@@ -54,6 +54,38 @@ export function FederationCompetitorLink({
   );
 }
 
+export function LocalPersonLinks({
+  federation,
+  externalId,
+  people,
+}: {
+  federation: string;
+  externalId: string;
+  people: { totalCount: number; nodes: { id: string; name: string }[] };
+}) {
+  return (
+    <>
+      {people.nodes.map((person, index) => (
+        <span key={person.id}>
+          {index > 0 && ', '}
+          <Link className="text-accent-11 underline" href={`/clenove/${person.id}`}>
+            {person.name}
+          </Link>
+        </span>
+      ))}
+      {people.totalCount > people.nodes.length && (
+        <FederationPersonLink
+          federation={federation}
+          externalId={externalId}
+          className="ml-1 text-accent-11"
+        >
+          All {people.totalCount} matches
+        </FederationPersonLink>
+      )}
+    </>
+  );
+}
+
 export function CstsResultsLink({
   eventId,
   competitionId,

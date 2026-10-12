@@ -9,6 +9,7 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
 import { Competitions, Sources } from './Tables';
+import { Officials } from './Officials';
 
 type Props = {
   params: Promise<{ federation: string; eventId: string }>;
@@ -83,6 +84,7 @@ export default async function EventPage({ params }: Props) {
         </dd>
       </dl>
       <Competitions federation={federation} eventId={eventId} />
+      <Officials federation={federation} officials={event.officials.nodes} />
       {auth.isSystemAdmin && <Sources federation={federation} eventId={event.id} />}
     </Layout>
   );

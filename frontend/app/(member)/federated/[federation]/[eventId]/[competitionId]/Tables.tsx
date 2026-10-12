@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { LocalPersonLinks } from '@/ui/federation-links';
 import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
@@ -187,30 +188,15 @@ function Registrations({
                         personId;
                       return (
                         <div key={personId}>
-                          {person.people.nodes.map((match, index) => (
-                            <span key={match.id}>
-                              {index > 0 && ', '}
-                              <Link
-                                className="text-accent-11 underline"
-                                href={`/clenove/${match.id}`}
-                                title={match.name}
-                              >
-                                {person.people.totalCount === 1 ? name : match.name}
-                              </Link>
-                            </span>
-                          ))}
+                          <LocalPersonLinks
+                            federation={federation}
+                            externalId={person.externalId}
+                            people={person.people}
+                          />
                           {person.people.totalCount === 0 && (
                             <span className="text-neutral-11">
                               {name} (no person match)
                             </span>
-                          )}
-                          {person.people.totalCount > person.people.nodes.length && (
-                            <Link
-                              className="ml-1 text-accent-11 underline"
-                              href={`/federated/${federation}/people/${person.externalId}`}
-                            >
-                              All {person.people.totalCount} matches
-                            </Link>
                           )}
                         </div>
                       );

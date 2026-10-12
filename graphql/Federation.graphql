@@ -57,6 +57,21 @@ query FederationList($condition: FederationCondition, $withCounts: Boolean! = tr
   }
 }
 
+fragment OfficialPerson on FederationPerson {
+  id
+  externalId
+  canonicalName
+  firstName
+  lastName
+  people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
+    totalCount
+    nodes {
+      id
+      name
+    }
+  }
+}
+
 query FederationEvent($federation: String!, $eventId: String!) {
   federationEventByFederationAndExternalId(
     federation: $federation
@@ -73,6 +88,17 @@ query FederationEvent($federation: String!, $eventId: String!) {
     city
     postalCode
     country
+    officials(first: 100, orderBy: [ROLE_ASC, PERSON_ID_ASC, DISCIPLINE_ASC]) {
+      nodes {
+        personId
+        role
+        discipline
+        grade
+        person {
+          ...OfficialPerson
+        }
+      }
+    }
     federationByFederation {
       code
       name
@@ -97,6 +123,22 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
     category {
       id
       name
+    }
+    officials(first: 100, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
+      nodes {
+        personId
+        role
+        judgeLabel
+        person {
+          ...OfficialPerson
+        }
+      }
+    }
+    rounds(first: 0) {
+      totalCount
+    }
+    results(first: 0) {
+      totalCount
     }
   }
 }
@@ -395,9 +437,7 @@ query CompetitionRound(
         judgeIndex
         judgeLabel
         personJudge {
-          id
-          externalId
-          canonicalName
+          ...OfficialPerson
         }
       }
       resultsList(orderBy: [OVERALL_RANKING_ASC, COMPETITOR_ID_ASC]) {

@@ -14,6 +14,7 @@ import {
   FederationCompetitionDocument,
 } from '@/graphql/Federation';
 import { CrawlerSourcesDocument } from '@/graphql/Crawler';
+import { Officials } from '../Officials';
 
 type Props = {
   params: Promise<{ federation: string; eventId: string; competitionId: string }>;
@@ -115,6 +116,16 @@ export default async function CompetitionPage({ params }: Props) {
       <Rounds
         id={competition.id}
         href={`/federated/${federation}/${eventId}/${competitionId}`}
+      />
+      <Officials
+        federation={federation}
+        officials={competition.officials.nodes}
+        showJudges={
+          event.status !== 'COMPLETED' &&
+          competition.status !== 'COMPLETED' &&
+          competition.results.totalCount === 0 &&
+          competition.rounds.totalCount === 0
+        }
       />
       {auth.isSystemAdmin && (
         <>

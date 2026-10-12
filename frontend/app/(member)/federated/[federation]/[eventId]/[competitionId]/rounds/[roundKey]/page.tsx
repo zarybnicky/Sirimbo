@@ -10,6 +10,7 @@ import { formatDateOnly, formatJudgeScore, scoringMethodLabels } from '@/ui/form
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { Results } from './Results';
+import { FederationPersonLink, LocalPersonLinks } from '@/ui/federation-links';
 
 type Props = {
   params: Promise<{
@@ -198,13 +199,29 @@ export default async function RoundPage({ params }: Props) {
             <dt>{judge.judgeLabel || judge.judgeIndex}</dt>
             <dd>
               {judge.personJudge ? (
-                <Link
-                  href={`/federated/${federation}/people/${judge.personJudge.externalId}`}
-                  className="text-accent-11 underline"
-                  prefetch={false}
-                >
-                  {judge.personJudge.canonicalName || judge.personJudgeId}
-                </Link>
+                <>
+                  <FederationPersonLink
+                    federation={federation}
+                    externalId={judge.personJudge.externalId}
+                    className="text-accent-11"
+                  >
+                    {judge.personJudge.canonicalName ||
+                      [judge.personJudge.firstName, judge.personJudge.lastName]
+                        .filter(Boolean)
+                        .join(' ') ||
+                      judge.personJudgeId}
+                  </FederationPersonLink>
+                  {judge.personJudge.people.totalCount > 0 && (
+                    <span className="ml-2 text-sm">
+                      Local:{' '}
+                      <LocalPersonLinks
+                        federation={federation}
+                        externalId={judge.personJudge.externalId}
+                        people={judge.personJudge.people}
+                      />
+                    </span>
+                  )}
+                </>
               ) : (
                 judge.personJudgeId
               )}
