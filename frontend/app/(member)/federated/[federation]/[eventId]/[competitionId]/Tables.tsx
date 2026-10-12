@@ -230,7 +230,7 @@ function Registrations({
   );
 }
 
-export function Rounds({ id }: { id: string }) {
+export function Rounds({ id, href }: { id: string; href: string }) {
   const [{ data, error }] = useQuery({
     query: CompetitionRoundsDocument,
     variables: { id },
@@ -258,7 +258,13 @@ export function Rounds({ id }: { id: string }) {
             {rounds.map((round) => (
               <tr key={round.id} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
-                  {round.roundLabel || round.roundKey}
+                  <Link
+                    href={`${href}/rounds/${encodeURIComponent(round.roundKey)}`}
+                    className="text-accent-11 underline"
+                    prefetch={false}
+                  >
+                    {round.roundLabel || round.roundKey}
+                  </Link>
                 </th>
                 <td className="px-2 py-1">{round.roundKey}</td>
                 <td className="px-2 py-1">{round.scoringMethod.toLowerCase()}</td>

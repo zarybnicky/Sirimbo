@@ -92,7 +92,10 @@ export default async function CompetitionPage({
         </dd>
       </dl>
       <Results federation={federation} id={competition.id} />
-      <Rounds id={competition.id} />
+      <Rounds
+        id={competition.id}
+        href={`/federated/${federation}/${eventId}/${competitionId}`}
+      />
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>

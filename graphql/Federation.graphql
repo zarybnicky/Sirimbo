@@ -339,6 +339,95 @@ query CompetitionRounds($id: BigInt!) {
   }
 }
 
+query CompetitionRound(
+  $federation: String!
+  $competitionId: String!
+  $roundKey: String!
+) {
+  competition: competitionByFederationAndExternalId(
+    federation: $federation
+    externalId: $competitionId
+  ) {
+    id
+    externalId
+    category {
+      id
+      name
+    }
+    event {
+      id
+      externalId
+      name
+      federationByFederation {
+        code
+        name
+      }
+    }
+    roundsList(orderBy: [ROUND_INDEX_ASC, ID_ASC]) {
+      id
+      roundKey
+      roundLabel
+    }
+    resultsList {
+      competitorId
+      startNumber
+    }
+    round: roundsList(condition: { roundKey: $roundKey }) {
+      id
+      roundKey
+      roundLabel
+      scoringMethod
+      dancesList(orderBy: DANCE_ORDER_ASC) {
+        roundId
+        danceOrder
+        danceCode
+        programDance: danceProgramDanceByDanceProgramIdAndDanceCode {
+          dance: danceByDanceCode {
+            code
+            name
+          }
+        }
+      }
+      judgesList(orderBy: JUDGE_INDEX_ASC) {
+        roundId
+        personJudgeId
+        judgeIndex
+        judgeLabel
+        personJudge {
+          id
+          externalId
+          canonicalName
+        }
+      }
+      resultsList(orderBy: [OVERALL_RANKING_ASC, COMPETITOR_ID_ASC]) {
+        roundId
+        competitorId
+        overallRanking
+        overallRankingTo
+        qualifiedNext
+        overallScore
+        danceResults
+        competitor {
+          id
+          externalId
+          name
+        }
+      }
+      judgeScoresList(
+        orderBy: [DANCE_ORDER_ASC, COMPETITOR_ID_ASC, JUDGE_PERSON_ID_ASC, COMPONENT_ASC]
+      ) {
+        roundId
+        danceOrder
+        competitorId
+        judgePersonId
+        component
+        score
+        rawScore
+      }
+    }
+  }
+}
+
 query CompetitionResults($id: BigInt!) {
   competition(id: $id) {
     id

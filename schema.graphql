@@ -2519,6 +2519,23 @@ type CompetitionRound {
     """The method to use when ordering `CompetitionRoundDance`."""
     orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundDancesConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRoundDance`."""
+  dancesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundDanceCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundDance`."""
+    orderBy: [CompetitionRoundDancesOrderBy!]
+  ): [CompetitionRoundDance!]!
   id: BigInt!
 
   """Reads and enables pagination through a set of `JudgeScore`."""
@@ -2550,6 +2567,23 @@ type CompetitionRound {
     orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
   ): JudgeScoresConnection!
 
+  """Reads and enables pagination through a set of `JudgeScore`."""
+  judgeScoresList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JudgeScoreCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `JudgeScore`."""
+    orderBy: [JudgeScoresOrderBy!]
+  ): [JudgeScore!]!
+
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   judges(
     """Read all values in the set after (below) this cursor."""
@@ -2578,6 +2612,23 @@ type CompetitionRound {
     """The method to use when ordering `CompetitionRoundJudge`."""
     orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundJudgesConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
+  judgesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundJudgeCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundJudge`."""
+    orderBy: [CompetitionRoundJudgesOrderBy!]
+  ): [CompetitionRoundJudge!]!
 
   """
   Reads and enables pagination through a set of `CompetitionRoundResult`.
@@ -2609,6 +2660,25 @@ type CompetitionRound {
     """The method to use when ordering `CompetitionRoundResult`."""
     orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundResultsConnection!
+
+  """
+  Reads and enables pagination through a set of `CompetitionRoundResult`.
+  """
+  resultsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionRoundResult`."""
+    orderBy: [CompetitionRoundResultsOrderBy!]
+  ): [CompetitionRoundResult!]!
   roundIndex: Int
   roundKey: String!
   roundLabel: String

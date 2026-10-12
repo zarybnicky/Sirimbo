@@ -1975,13 +1975,21 @@ export type CompetitionRound = {
   danceProgramId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `CompetitionRoundDance`. */
   dances: CompetitionRoundDancesConnection;
+  /** Reads and enables pagination through a set of `CompetitionRoundDance`. */
+  dancesList: Array<CompetitionRoundDance>;
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `JudgeScore`. */
   judgeScores: JudgeScoresConnection;
+  /** Reads and enables pagination through a set of `JudgeScore`. */
+  judgeScoresList: Array<JudgeScore>;
   /** Reads and enables pagination through a set of `CompetitionRoundJudge`. */
   judges: CompetitionRoundJudgesConnection;
+  /** Reads and enables pagination through a set of `CompetitionRoundJudge`. */
+  judgesList: Array<CompetitionRoundJudge>;
   /** Reads and enables pagination through a set of `CompetitionRoundResult`. */
   results: CompetitionRoundResultsConnection;
+  /** Reads and enables pagination through a set of `CompetitionRoundResult`. */
+  resultsList: Array<CompetitionRoundResult>;
   roundIndex: Maybe<Scalars['Int']['output']>;
   roundKey: Scalars['String']['output'];
   roundLabel: Maybe<Scalars['String']['output']>;
@@ -2000,12 +2008,28 @@ export type CompetitionRoundDancesArgs = {
 };
 
 
+export type CompetitionRoundDancesListArgs = {
+  condition?: InputMaybe<CompetitionRoundDanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionRoundDancesOrderBy>>;
+};
+
+
 export type CompetitionRoundJudgeScoresArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<JudgeScoreCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<JudgeScoresOrderBy>>;
+};
+
+
+export type CompetitionRoundJudgeScoresListArgs = {
+  condition?: InputMaybe<JudgeScoreCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<JudgeScoresOrderBy>>;
 };
@@ -2022,12 +2046,28 @@ export type CompetitionRoundJudgesArgs = {
 };
 
 
+export type CompetitionRoundJudgesListArgs = {
+  condition?: InputMaybe<CompetitionRoundJudgeCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionRoundJudgesOrderBy>>;
+};
+
+
 export type CompetitionRoundResultsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CompetitionRoundResultCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionRoundResultsOrderBy>>;
+};
+
+
+export type CompetitionRoundResultsListArgs = {
+  condition?: InputMaybe<CompetitionRoundResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompetitionRoundResultsOrderBy>>;
 };
@@ -14690,10 +14730,14 @@ export type GraphCacheResolvers = {
     danceProgram?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, WithTypename<DanceProgram> | string>,
     danceProgramId?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     dances?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundDancesArgs, WithTypename<CompetitionRoundDancesConnection> | string>,
+    dancesList?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundDancesListArgs, Array<WithTypename<CompetitionRoundDance> | string>>,
     id?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     judgeScores?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundJudgeScoresArgs, WithTypename<JudgeScoresConnection> | string>,
+    judgeScoresList?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundJudgeScoresListArgs, Array<WithTypename<JudgeScore> | string>>,
     judges?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundJudgesArgs, WithTypename<CompetitionRoundJudgesConnection> | string>,
+    judgesList?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundJudgesListArgs, Array<WithTypename<CompetitionRoundJudge> | string>>,
     results?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundResultsArgs, WithTypename<CompetitionRoundResultsConnection> | string>,
+    resultsList?: GraphCacheResolver<WithTypename<CompetitionRound>, CompetitionRoundResultsListArgs, Array<WithTypename<CompetitionRoundResult> | string>>,
     roundIndex?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['Int']['output'] | string>,
     roundKey?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['String']['output'] | string>,
     roundLabel?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -17320,10 +17364,14 @@ export type GraphCacheUpdaters = {
     danceProgram?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     danceProgramId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     dances?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundDancesArgs>,
+    dancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundDancesListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     judgeScores?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundJudgeScoresArgs>,
+    judgeScoresList?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundJudgeScoresListArgs>,
     judges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundJudgesArgs>,
+    judgesList?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundJudgesListArgs>,
     results?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundResultsArgs>,
+    resultsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, CompetitionRoundResultsListArgs>,
     roundIndex?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     roundKey?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     roundLabel?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,

@@ -3,10 +3,11 @@
 ## Competition results and round marks
 
 - [x] Store and display normalized event/competition statuses: planned, in progress, completed, postponed, cancelled, unknown.
-- [ ] Link competitions to round detail pages.
+- [x] Link competitions to round detail pages.
 - [x] Sort overall results by placing; retain registration browsing.
-- [ ] Show round rankings, qualification, per-dance results, and judges' marks.
-- [ ] Render crosses, skating places, and component scores according to the scoring method.
+- [x] Show stored round rankings, qualification, per-dance results, and judges' marks.
+- [x] Render marks, skating places, and component scores according to the scoring method.
+- [ ] Store official WDSF final dance results and AJS rankings/scores; current round aggregates sum judges' marks.
 - [ ] Add competitor/judge relations for the numeric IDs on `JudgeScore`.
 - [x] Handle ties, withdrawals/disqualifications, and results without registrations.
 
@@ -14,7 +15,7 @@
 
 - [ ] Event page: show officials with person, role, discipline, and grade.
 - [ ] Competition page: show officials with person and role.
-- [ ] Round page: show judges with labels/letters and panel order, matched to marks columns.
+- [x] Round page: show judges with labels/letters and panel order, matched to marks columns.
 - [ ] Link official names to federation person pages.
 - [ ] Person page: show official assignments with roles and links to events/competitions.
 - [ ] Preserve WDSF adjudicator labels in `wdsfOfficialIndex` (see official metadata notes).
@@ -32,6 +33,7 @@
 - [ ] Add federation → ranklist → dated snapshot navigation.
 - [ ] Show snapshot date/kind and entries ordered by rank, with links to competitors.
 - [ ] Link competitors back to their ranklist entries.
+- [ ] Show ranklist placement alongside class and age group in the app, linked to the dated snapshot.
 
 ## Remaining app consumers
 
