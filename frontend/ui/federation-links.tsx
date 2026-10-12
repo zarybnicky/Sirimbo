@@ -19,7 +19,7 @@ export function FederationPersonLink({
     <Link
       href={`/federated/${federation}/people/${externalId}`}
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
@@ -45,7 +45,7 @@ export function FederationCompetitorLink({
     <Link
       href={`/federated/${federation}/competitors/${externalId}`}
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >
@@ -76,7 +76,7 @@ export function CstsResultsLink({
       rel="noreferrer"
       title="Otevřít výsledky na ČSTS"
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >

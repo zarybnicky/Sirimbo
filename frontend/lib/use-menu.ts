@@ -119,7 +119,7 @@ const memberMenu: MenuStructItem[] = [
         type: 'link',
         title: 'Federated data',
         href: '/federated',
-        requireUser: true,
+        requireSystemAdmin: true,
       },
     ],
   },
