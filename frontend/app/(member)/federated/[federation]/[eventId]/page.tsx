@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
@@ -67,6 +68,14 @@ export default async function EventPage({
       <dl className="text-sm tabular">
         <dt>event ID</dt>
         <dd>{event.externalId}</dd>
+        {federation === 'csts' && (
+          <>
+            <dt>source</dt>
+            <dd>
+              <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>
+            </dd>
+          </>
+        )}
         <dt>status</dt>
         <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
         <dt>date</dt>

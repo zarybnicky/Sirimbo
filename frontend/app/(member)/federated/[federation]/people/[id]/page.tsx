@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Pagination } from '@/ui/Pagination';
@@ -66,6 +67,22 @@ export default async function FederatedPersonPage({
       <dl className="text-sm tabular">
         <dt>person ID</dt>
         <dd>{person.id}</dd>
+        {federation === 'csts' && (
+          <>
+            <dt>source</dt>
+            <dd>
+              <a
+                href={`https://www.csts.cz/dancesport/evidence/lide/${person.externalId}/osobni_udaje`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-accent-11 underline"
+              >
+                ČSTS profile
+                <ExternalLink className="size-3.5" aria-hidden="true" />
+              </a>
+            </dd>
+          </>
+        )}
         <dt>date of birth</dt>
         <dd>
           {person.dob ? numericDateWithYearFormatter.format(new Date(person.dob)) : '-'}

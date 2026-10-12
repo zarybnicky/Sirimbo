@@ -67,11 +67,11 @@ export function CstsResultsLink({
 }) {
   const event = Number(eventId);
   const competition = Number(competitionId);
-  if (!event || !competition) return null;
+  if (!event || (competitionId != null && !competition)) return null;
 
   return (
     <a
-      href={`https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}/competition/${competition}`}
+      href={`https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}${competition ? `/competition/${competition}` : ''}`}
       target="_blank"
       rel="noreferrer"
       title="Otevřít výsledky na ČSTS"
