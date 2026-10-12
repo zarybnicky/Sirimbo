@@ -3,7 +3,7 @@ import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { Participants, Rounds } from './Tables';
+import { Results, Rounds } from './Tables';
 import { formatDateOnly, numericFullFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -26,17 +26,19 @@ export default async function CompetitionPage({
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
-  if (!/^[0-9]{1,18}$/.test(eventId) || !/^[0-9]{1,18}$/.test(competitionId)) notFound();
-  const [{ federationEventByFederationAndId: event }, { competition }] =
+  const [{ federationEventByFederationAndExternalId: event }, { competition }] =
     await Promise.all([
       executeGraphql(FederationEventDocument, { federation, eventId }),
       executeGraphql(FederationCompetitionDocument, {
-        id: competitionId,
+        federation,
+        competitionId,
       }),
     ]);
-  if (!event || !competition || competition.eventId !== eventId) notFound();
+  if (!event || !competition || competition.eventId !== event.id) notFound();
   const crawler = auth.isSystemAdmin
-    ? await executeGraphql(CrawlerSourcesDocument, { condition: { competitionId } })
+    ? await executeGraphql(CrawlerSourcesDocument, {
+        condition: { competitionId: competition.id },
+      })
     : null;
   const sources = crawler?.crawlerTargets?.nodes ?? [];
   return (
@@ -89,8 +91,8 @@ export default async function CompetitionPage({
             : '-'}
         </dd>
       </dl>
-      <Participants federation={federation} id={competitionId} />
-      <Rounds id={competitionId} />
+      <Results federation={federation} id={competition.id} />
+      <Rounds id={competition.id} />
       {auth.isSystemAdmin && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>

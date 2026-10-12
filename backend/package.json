@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",
     "import:people": "node ./scripts/import_people_from_csv.ts",
-    "test:graphql": "NODE_ENV=development GRAPHILE_ENV=development node --test src/plugins/query-controls.test.ts"
+    "test": "NODE_ENV=development GRAPHILE_ENV=development node --test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1127.0",

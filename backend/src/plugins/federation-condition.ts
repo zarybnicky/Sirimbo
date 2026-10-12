@@ -23,6 +23,19 @@ const plugins: GraphileConfig.Plugin[] = [
     ),
   ),
   addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_entry' },
+    'hasResult',
+    (build) => ({ type: build.graphql.GraphQLBoolean }),
+    (value, { sql, sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const exists = sql`exists (
+        select 1 from federated.competition_result r
+        where r.competition_id = ${row}.competition_id and r.competitor_id = ${row}.competitor_id
+      )`;
+      return value ? exists : sql`not ${exists}`;
+    },
+  ),
+  addPgTableCondition(
     { schemaName: 'federated', tableName: 'competitor' },
     'competitionId',
     (build) => ({ type: build.getInputTypeByName('BigInt') }),

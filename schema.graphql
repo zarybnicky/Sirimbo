@@ -1997,6 +1997,23 @@ type Competition {
     orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionEntriesConnection!
 
+  """Reads and enables pagination through a set of `CompetitionEntry`."""
+  entriesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionEntry`."""
+    orderBy: [CompetitionEntriesOrderBy!]
+  ): [CompetitionEntry!]!
+
   """
   Reads a single `FederationEvent` that is related to this `Competition`.
   """
@@ -2070,6 +2087,23 @@ type Competition {
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionResultsConnection!
 
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  resultsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!]
+  ): [CompetitionResult!]!
+
   """Reads and enables pagination through a set of `CompetitionRound`."""
   rounds(
     """Read all values in the set after (below) this cursor."""
@@ -2098,6 +2132,23 @@ type Competition {
     """The method to use when ordering `CompetitionRound`."""
     orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundsConnection!
+
+  """Reads and enables pagination through a set of `CompetitionRound`."""
+  roundsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionRoundCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionRound`."""
+    orderBy: [CompetitionRoundsOrderBy!]
+  ): [CompetitionRound!]!
   startDate: Date!
   status: FederationEventStatus!
 }
@@ -2227,6 +2278,7 @@ input CompetitionEntryCondition {
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+  hasResult: Boolean
 }
 
 type CompetitionOfficial {
@@ -11913,101 +11965,14 @@ type Query {
   """Get a single `Competition`."""
   competitionByIdAndEventId(eventId: BigInt!, id: BigInt!): Competition
 
-  """Reads and enables pagination through a set of `CompetitionEntry`."""
-  competitionEntries(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionEntryCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionEntry`."""
-    orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionEntriesConnection
-
   """Get a single `CompetitionEntry`."""
   competitionEntry(competitionId: BigInt!, competitorId: String!): CompetitionEntry
 
   """Get a single `CompetitionOfficial`."""
   competitionOfficial(competitionId: BigInt!, personId: String!, role: OfficialRole!): CompetitionOfficial
 
-  """Reads and enables pagination through a set of `CompetitionOfficial`."""
-  competitionOfficials(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionOfficialCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionOfficial`."""
-    orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionOfficialsConnection
-
   """Get a single `CompetitionResult`."""
   competitionResult(competitionId: BigInt!, competitorId: String!): CompetitionResult
-
-  """Reads and enables pagination through a set of `CompetitionResult`."""
-  competitionResults(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionResultCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionResult`."""
-    orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionResultsConnection
 
   """Get a single `CompetitionRound`."""
   competitionRound(id: BigInt!): CompetitionRound
@@ -12027,132 +11992,14 @@ type Query {
   """Get a single `CompetitionRoundDance`."""
   competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode(danceCode: String!, danceOrder: Int!, roundId: BigInt!): CompetitionRoundDance
 
-  """Reads and enables pagination through a set of `CompetitionRoundDance`."""
-  competitionRoundDances(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionRoundDanceCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionRoundDance`."""
-    orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundDancesConnection
-
   """Get a single `CompetitionRoundJudge`."""
   competitionRoundJudge(personJudgeId: String!, roundId: BigInt!): CompetitionRoundJudge
 
   """Get a single `CompetitionRoundJudge`."""
   competitionRoundJudgeByRoundIdAndJudgeIndex(judgeIndex: Int!, roundId: BigInt!): CompetitionRoundJudge
 
-  """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
-  competitionRoundJudges(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionRoundJudgeCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionRoundJudge`."""
-    orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundJudgesConnection
-
   """Get a single `CompetitionRoundResult`."""
   competitionRoundResult(competitorId: String!, roundId: BigInt!): CompetitionRoundResult
-
-  """
-  Reads and enables pagination through a set of `CompetitionRoundResult`.
-  """
-  competitionRoundResults(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionRoundResultCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionRoundResult`."""
-    orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundResultsConnection
-
-  """Reads and enables pagination through a set of `CompetitionRound`."""
-  competitionRounds(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionRoundCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `CompetitionRound`."""
-    orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundsConnection
 
   """Reads and enables pagination through a set of `Competition`."""
   competitions(
@@ -12640,106 +12487,11 @@ type Query {
   """Get a single `FederationCompetitorCategoryProgress`."""
   federationCompetitorCategoryProgress(categoryId: BigInt!, competitorId: String!): FederationCompetitorCategoryProgress
 
-  """
-  Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
-  """
-  federationCompetitorCategoryProgresses(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationCompetitorCategoryProgressCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """
-    The method to use when ordering `FederationCompetitorCategoryProgress`.
-    """
-    orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorCategoryProgressesConnection
-
   """Get a single `FederationCompetitorClubAffiliation`."""
   federationCompetitorClubAffiliation(clubId: BigInt!, competitorId: String!, validFrom: Date!): FederationCompetitorClubAffiliation
 
-  """
-  Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`.
-  """
-  federationCompetitorClubAffiliations(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationCompetitorClubAffiliationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `FederationCompetitorClubAffiliation`."""
-    orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorClubAffiliationsConnection
-
   """Get a single `FederationCompetitorComponent`."""
   federationCompetitorComponent(competitorId: String!, personId: String!): FederationCompetitorComponent
-
-  """
-  Reads and enables pagination through a set of `FederationCompetitorComponent`.
-  """
-  federationCompetitorComponents(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationCompetitorComponentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `FederationCompetitorComponent`."""
-    orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorComponentsConnection
 
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
@@ -12781,37 +12533,6 @@ type Query {
 
   """Get a single `FederationEventOfficial`."""
   federationEventOfficial(discipline: String!, eventId: BigInt!, personId: String!, role: OfficialRole!): FederationEventOfficial
-
-  """
-  Reads and enables pagination through a set of `FederationEventOfficial`.
-  """
-  federationEventOfficials(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationEventOfficialCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `FederationEventOfficial`."""
-    orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventOfficialsConnection
 
   """Reads and enables pagination through a set of `FederationEvent`."""
   federationEvents(
@@ -12880,70 +12601,8 @@ type Query {
   """Get a single `FederationPersonClubMembership`."""
   federationPersonClubMembership(clubId: BigInt!, personId: String!, validFrom: Date!): FederationPersonClubMembership
 
-  """
-  Reads and enables pagination through a set of `FederationPersonClubMembership`.
-  """
-  federationPersonClubMemberships(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationPersonClubMembershipCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `FederationPersonClubMembership`."""
-    orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonClubMembershipsConnection
-
   """Get a single `FederationPersonLicense`."""
   federationPersonLicense(discipline: PersonLicenseDiscipline!, kind: PersonLicenseKind!, personId: String!): FederationPersonLicense
-
-  """
-  Reads and enables pagination through a set of `FederationPersonLicense`.
-  """
-  federationPersonLicenses(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: FederationPersonLicenseCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `FederationPersonLicense`."""
-    orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonLicensesConnection
 
   """Reads a set of `Federation`."""
   federationsList(
@@ -13035,35 +12694,6 @@ type Query {
 
   """Get a single `JudgeScore`."""
   judgeScore(competitorId: BigInt!, component: ScoreComponent!, danceOrder: Int!, judgePersonId: BigInt!, roundId: BigInt!): JudgeScore
-
-  """Reads and enables pagination through a set of `JudgeScore`."""
-  judgeScores(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JudgeScoreCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `JudgeScore`."""
-    orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JudgeScoresConnection
 
   """Get a single `Location`."""
   location(id: BigInt!): Location
@@ -13205,35 +12835,6 @@ type Query {
   """Get a single `Ranklist`."""
   ranklistByFederationAndCategoryId(categoryId: BigInt!, federation: String!): Ranklist
 
-  """Reads and enables pagination through a set of `RanklistEntry`."""
-  ranklistEntries(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RanklistEntryCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `RanklistEntry`."""
-    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistEntriesConnection
-
   """Get a single `RanklistEntry`."""
   ranklistEntry(competitorId: String!, snapshotId: BigInt!): RanklistEntry
 
@@ -13242,35 +12843,6 @@ type Query {
 
   """Get a single `RanklistSnapshot`."""
   ranklistSnapshotByRanklistIdAndAsOfDateAndKind(asOfDate: Date!, kind: String!, ranklistId: BigInt!): RanklistSnapshot
-
-  """Reads and enables pagination through a set of `RanklistSnapshot`."""
-  ranklistSnapshots(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: RanklistSnapshotCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `RanklistSnapshot`."""
-    orderBy: [RanklistSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistSnapshotsConnection
 
   """Reads and enables pagination through a set of `Ranklist`."""
   ranklists(

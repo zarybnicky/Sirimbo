@@ -161,22 +161,28 @@ export function History({ federation, id }: { federation: string; id: string }) 
                     {formatDateOnly(row.startDate)}
                   </td>
                   <td className="px-2 py-1">
-                    <Link
-                      className="text-accent-11 underline"
-                      href={`${base}/${row.eventId}`}
-                      prefetch={false}
-                    >
-                      {row.event?.name || row.event?.externalId || row.eventId}
-                    </Link>
+                    {row.event && (
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`${base}/${row.event.externalId}`}
+                        prefetch={false}
+                      >
+                        {row.event.name || row.event.externalId}
+                      </Link>
+                    )}
                   </td>
                   <th scope="row" className="px-2 py-1 font-normal">
-                    <Link
-                      className="text-accent-11 underline"
-                      href={`${base}/${row.eventId}/${row.id}`}
-                      prefetch={false}
-                    >
-                      {row.category?.name || row.externalId}
-                    </Link>
+                    {row.event ? (
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`${base}/${row.event.externalId}/${row.externalId}`}
+                        prefetch={false}
+                      >
+                        {row.category?.name || row.externalId}
+                      </Link>
+                    ) : (
+                      row.category?.name || row.externalId
+                    )}
                   </th>
                   <td className="px-2 py-1 whitespace-nowrap">
                     {row.status.toLowerCase().replaceAll('_', ' ')}
@@ -191,7 +197,13 @@ export function History({ federation, id }: { federation: string; id: string }) 
                       : ''}
                   </td>
                   <td className="px-2 py-1">{result?.pointGain}</td>
-                  <td className="px-2 py-1">{result?.finalGain}</td>
+                  <td className="px-2 py-1">
+                    {federation === 'csts'
+                      ? result?.isFinal
+                        ? 'F'
+                        : ''
+                      : result?.finalGain}
+                  </td>
                 </tr>
               );
             })}

@@ -32,7 +32,7 @@ export function Competitions({
       competitionsOffset: Math.min(Math.max(0, currentPage - 1) * 100, 2_147_483_647),
     },
   });
-  const competitions = data?.federationEventByFederationAndId?.competitions;
+  const competitions = data?.federationEventByFederationAndExternalId?.competitions;
   const total = competitions?.totalCount;
   useEffect(() => {
     if (fetching || error || total == null) return;
@@ -78,7 +78,7 @@ export function Competitions({
                 <th scope="row" className="px-2 py-1 font-normal">
                   <Link
                     className="text-accent-11 underline"
-                    href={`${path}/${competition.id}`}
+                    href={`${path}/${competition.externalId}`}
                     prefetch={false}
                   >
                     {competition.category?.name || competition.externalId}

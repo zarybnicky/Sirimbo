@@ -57,8 +57,11 @@ query FederationList($condition: FederationCondition, $withCounts: Boolean! = tr
   }
 }
 
-query FederationEvent($federation: String!, $eventId: BigInt!) {
-  federationEventByFederationAndId(federation: $federation, id: $eventId) {
+query FederationEvent($federation: String!, $eventId: String!) {
+  federationEventByFederationAndExternalId(
+    federation: $federation
+    externalId: $eventId
+  ) {
     id
     externalId
     name
@@ -77,8 +80,11 @@ query FederationEvent($federation: String!, $eventId: BigInt!) {
   }
 }
 
-query FederationCompetition($id: BigInt!) {
-  competition(id: $id) {
+query FederationCompetition($federation: String!, $competitionId: String!) {
+  competition: competitionByFederationAndExternalId(
+    federation: $federation
+    externalId: $competitionId
+  ) {
     id
     eventId
     externalId
@@ -241,10 +247,13 @@ query Federation(
 
 query FederationEventCompetitions(
   $federation: String!
-  $eventId: BigInt!
+  $eventId: String!
   $competitionsOffset: Int! = 0
 ) {
-  federationEventByFederationAndId(federation: $federation, id: $eventId) {
+  federationEventByFederationAndExternalId(
+    federation: $federation
+    externalId: $eventId
+  ) {
     id
     competitions(
       first: 100
@@ -274,71 +283,74 @@ query FederationEventCompetitions(
   }
 }
 
-query CompetitionRounds($id: BigInt!, $roundsOffset: Int! = 0) {
+query CompetitionRounds($id: BigInt!) {
   competition(id: $id) {
     id
-    rounds(first: 100, offset: $roundsOffset, orderBy: [ROUND_INDEX_ASC, ID_ASC]) {
-      totalCount
-      nodes {
-        id
-        roundKey
-        roundLabel
-        scoringMethod
-        results(first: 0) {
-          totalCount
-        }
+    rounds: roundsList(orderBy: [ROUND_INDEX_ASC, ID_ASC]) {
+      id
+      roundKey
+      roundLabel
+      scoringMethod
+      results(first: 0) {
+        totalCount
       }
     }
   }
 }
 
-query CompetitionParticipants($id: BigInt!, $participantsOffset: Int! = 0) {
-  federationCompetitors(
-    first: 20
-    offset: $participantsOffset
-    condition: { competitionId: $id }
-    orderBy: [NAME_ASC, ID_ASC]
-  ) {
-    totalCount
-    nodes {
-      id
-      externalId
-      name
-      competitionEntries(first: 1, condition: { competitionId: $id }) {
-        nodes {
-          competitionId
-          competitorId
-          cancelled
-        }
-      }
-      competitionResults(first: 1, condition: { competitionId: $id }) {
-        nodes {
-          competitionId
-          competitorId
-          ranking
-          rankingTo
-          startNumber
-          pointGain
-          finalGain
-          completionStatus
-        }
-      }
-      couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
+query CompetitionResults($id: BigInt!) {
+  competition(id: $id) {
+    id
+    results: resultsList(orderBy: [RANKING_ASC, COMPETITOR_ID_ASC]) {
+      competitionId
+      competitorId
+      ranking
+      rankingTo
+      startNumber
+      pointGain
+      finalGain
+      isFinal
+      completionStatus
+      competitor {
         id
+        externalId
+        name
       }
-      components(first: 2, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
-        totalCount
-        nodes {
-          competitorId
-          personId
-          person {
-            id
-            externalId
-            people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
-              totalCount
-              nodes {
-                id
-                name
+    }
+  }
+}
+
+query CompetitionRegistrations($id: BigInt!) {
+  competition(id: $id) {
+    id
+    entries: entriesList(
+      condition: { hasResult: false }
+      orderBy: [CANCELLED_ASC, COMPETITOR_ID_ASC]
+    ) {
+      competitionId
+      competitorId
+      cancelled
+      competitor {
+        id
+        externalId
+        name
+        couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
+          id
+        }
+        components(first: 2, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
+          totalCount
+          nodes {
+            competitorId
+            personId
+            person {
+              id
+              externalId
+              people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
+                totalCount
+                nodes {
+                  id
+                  name
+                }
               }
             }
           }
@@ -438,6 +450,7 @@ query FederationCompetitorHistory($id: String!, $historyOffset: Int! = 0) {
           rankingTo
           pointGain
           finalGain
+          isFinal
         }
       }
     }

@@ -1,64 +1,125 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { parseAsInteger, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
-import { Pagination } from '@/ui/Pagination';
 import {
-  CompetitionParticipantsDocument,
+  CompetitionResultsDocument,
+  CompetitionRegistrationsDocument,
   CompetitionRoundsDocument,
 } from '@/graphql/Federation';
 
-export function Participants({ federation, id }: { federation: string; id: string }) {
-  const [currentPage, setPage] = useQueryState(
-    'page',
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({ shallow: true, scroll: false, history: 'push' }),
-  );
-  const [{ data, fetching, error }] = useQuery({
-    query: CompetitionParticipantsDocument,
-    variables: {
-      id,
-      participantsOffset: Math.min(Math.max(0, currentPage - 1) * 20, 2_147_483_647),
-    },
+export function Results({ federation, id }: { federation: string; id: string }) {
+  const [{ data, error }] = useQuery({
+    query: CompetitionResultsDocument,
+    variables: { id },
   });
-  const participants = data?.federationCompetitors;
-  const total = participants?.totalCount;
-  useEffect(() => {
-    if (fetching || error || total == null) return;
-    const page = Math.max(1, Math.min(currentPage, Math.ceil(total / 20)));
-    if (page !== currentPage) void setPage(page, { history: 'replace' });
-  }, [currentPage, total, fetching, error, setPage]);
+  const results = data?.competition?.results;
 
   if (error) return <FormError error={error} />;
-  if (!participants) return <Spinner />;
+  if (!results) return <Spinner />;
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
+      {results.length > 0 && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Results</h2>
+          <div className="col-full-width overflow-x-auto">
+            <table className="w-full text-left text-sm tabular-nums">
+              <thead>
+                <tr>
+                  {[
+                    'rank',
+                    'start number',
+                    'competitor',
+                    'points',
+                    'final gain',
+                    'status',
+                  ].map((label) => (
+                    <th key={label} scope="col" className="px-2 py-1">
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((result) => (
+                  <tr
+                    key={result.competitorId}
+                    className="border-t border-neutral-4 align-top"
+                  >
+                    <td className="px-2 py-1 whitespace-nowrap">
+                      {result.ranking}
+                      {result.rankingTo && result.rankingTo !== result.ranking
+                        ? `–${result.rankingTo}`
+                        : ''}
+                    </td>
+                    <td className="px-2 py-1">{result.startNumber}</td>
+                    <th scope="row" className="px-2 py-1 font-normal">
+                      {result.competitor ? (
+                        <Link
+                          className="text-accent-11 underline"
+                          href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                          prefetch={false}
+                        >
+                          {result.competitor.name || result.competitorId}
+                        </Link>
+                      ) : (
+                        result.competitorId
+                      )}
+                    </th>
+                    <td className="px-2 py-1">{result.pointGain}</td>
+                    <td className="px-2 py-1">
+                      {federation === 'csts'
+                        ? result.isFinal
+                          ? 'F'
+                          : ''
+                        : result.finalGain}
+                    </td>
+                    <td className="px-2 py-1">{result.completionStatus}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
-      <h2 className="mt-4 mb-2 text-lg font-bold">Registrations and results</h2>
+      <Registrations federation={federation} id={id} hasResults={results.length > 0} />
+    </>
+  );
+}
+
+function Registrations({
+  federation,
+  id,
+  hasResults,
+}: {
+  federation: string;
+  id: string;
+  hasResults: boolean;
+}) {
+  const [{ data, error }] = useQuery({
+    query: CompetitionRegistrationsDocument,
+    variables: { id },
+  });
+  const entries = data?.competition?.entries;
+
+  if (error) return <FormError error={error} />;
+  if (!entries) return <Spinner />;
+
+  if (hasResults && entries.length === 0) return null;
+
+  return (
+    <>
+      <h2 className="mt-4 mb-2 text-lg font-bold">
+        {hasResults ? 'Registrations without results' : 'Registrations'}
+      </h2>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {[
-                'competitor',
-                'registration',
-                'rank',
-                'start number',
-                'points',
-                'final gain',
-                'status',
-                'local matches',
-              ].map((label) => (
+              {['competitor', 'registration', 'local matches'].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
                   {label}
                 </th>
@@ -66,37 +127,33 @@ export function Participants({ federation, id }: { federation: string; id: strin
             </tr>
           </thead>
           <tbody>
-            {participants.nodes.map((participant) => {
-              const entry = participant.competitionEntries.nodes[0];
-              const result = participant.competitionResults.nodes[0];
-              const competitorPath = `/federated/${federation}/competitors/${participant.externalId}`;
+            {entries.map((entry) => {
+              const participant = entry.competitor;
+              const competitorPath = `/federated/${federation}/competitors/${participant?.externalId}`;
               return (
-                <tr key={participant.id} className="border-t border-neutral-4 align-top">
+                <tr
+                  key={entry.competitorId}
+                  className="border-t border-neutral-4 align-top"
+                >
                   <th scope="row" className="px-2 py-1 font-normal">
-                    <Link
-                      className="text-accent-11 underline"
-                      href={competitorPath}
-                      prefetch={false}
-                    >
-                      {participant.name || participant.id}
-                    </Link>
-                    <div className="text-xs">{participant.id}</div>
+                    {participant ? (
+                      <Link
+                        className="text-accent-11 underline"
+                        href={competitorPath}
+                        prefetch={false}
+                      >
+                        {participant.name || participant.id}
+                      </Link>
+                    ) : (
+                      entry.competitorId
+                    )}
+                    <div className="text-xs">{entry.competitorId}</div>
                   </th>
                   <td className="px-2 py-1">
-                    {!entry ? '-' : entry.cancelled ? 'cancelled' : 'registered'}
+                    {entry.cancelled ? 'cancelled' : 'registered'}
                   </td>
-                  <td className="px-2 py-1 whitespace-nowrap">
-                    {result?.ranking}
-                    {result?.rankingTo && result?.rankingTo !== result?.ranking
-                      ? `–${result?.rankingTo}`
-                      : ''}
-                  </td>
-                  <td className="px-2 py-1">{result?.startNumber}</td>
-                  <td className="px-2 py-1">{result?.pointGain}</td>
-                  <td className="px-2 py-1">{result?.finalGain}</td>
-                  <td className="px-2 py-1">{result?.completionStatus}</td>
                   <td className="px-2 py-1">
-                    {participant.components.nodes.map(({ personId, person }) => (
+                    {participant?.components.nodes.map(({ personId, person }) => (
                       <div key={personId}>
                         {person ? (
                           <>
@@ -135,16 +192,20 @@ export function Participants({ federation, id }: { federation: string; id: strin
                         )}
                       </div>
                     ))}
-                    {participant.components.totalCount === 0 && 'No competitor members'}
-                    {participant.components.totalCount >
-                      participant.components.nodes.length && (
-                      <div>
-                        <Link className="text-accent-11 underline" href={competitorPath}>
-                          All {participant.components.totalCount} members
-                        </Link>
-                      </div>
-                    )}
-                    {participant.couplesList.map(({ id }) => (
+                    {participant?.components.totalCount === 0 && 'No competitor members'}
+                    {participant &&
+                      participant.components.totalCount >
+                        participant.components.nodes.length && (
+                        <div>
+                          <Link
+                            className="text-accent-11 underline"
+                            href={competitorPath}
+                          >
+                            All {participant.components.totalCount} members
+                          </Link>
+                        </div>
+                      )}
+                    {participant?.couplesList.map(({ id }) => (
                       <div key={id}>
                         <Link className="text-accent-11 underline" href={`/pary/${id}`}>
                           Couple {id}
@@ -155,58 +216,32 @@ export function Participants({ federation, id }: { federation: string; id: strin
                 </tr>
               );
             })}
-            {participants.nodes.length === 0 && (
+            {entries.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-2 py-1">
-                  No registrations or results
+                <td colSpan={3} className="px-2 py-1">
+                  No registrations
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      <Pagination
-        total={participants.totalCount}
-        limit={20}
-        page={currentPage}
-        onPageChange={setPage}
-      />
     </>
   );
 }
 
 export function Rounds({ id }: { id: string }) {
-  const [currentPage, setPage] = useQueryState(
-    'roundsPage',
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({ shallow: true, scroll: false, history: 'push' }),
-  );
-  const [{ data, fetching, error }] = useQuery({
+  const [{ data, error }] = useQuery({
     query: CompetitionRoundsDocument,
-    variables: {
-      id,
-      roundsOffset: Math.min(Math.max(0, currentPage - 1) * 100, 2_147_483_647),
-    },
+    variables: { id },
   });
   const rounds = data?.competition?.rounds;
-  const total = rounds?.totalCount;
-  useEffect(() => {
-    if (fetching || error || total == null) return;
-    const page = Math.max(1, Math.min(currentPage, Math.ceil(total / 100)));
-    if (page !== currentPage) void setPage(page, { history: 'replace' });
-  }, [currentPage, total, fetching, error, setPage]);
 
   if (error) return <FormError error={error} />;
   if (!rounds) return <Spinner />;
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
@@ -220,7 +255,7 @@ export function Rounds({ id }: { id: string }) {
             </tr>
           </thead>
           <tbody>
-            {rounds.nodes.map((round) => (
+            {rounds.map((round) => (
               <tr key={round.id} className="border-t border-neutral-4">
                 <th scope="row" className="px-2 py-1 font-normal">
                   {round.roundLabel || round.roundKey}
@@ -230,7 +265,7 @@ export function Rounds({ id }: { id: string }) {
                 <td className="px-2 py-1">{round.results.totalCount}</td>
               </tr>
             ))}
-            {rounds.nodes.length === 0 && (
+            {rounds.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-2 py-1">
                   No rounds
@@ -240,12 +275,6 @@ export function Rounds({ id }: { id: string }) {
           </tbody>
         </table>
       </div>
-      <Pagination
-        total={rounds.totalCount}
-        limit={100}
-        page={currentPage}
-        onPageChange={setPage}
-      />
     </>
   );
 }

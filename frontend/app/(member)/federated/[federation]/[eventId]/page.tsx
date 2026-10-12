@@ -21,8 +21,7 @@ export default async function EventPage({
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
-  if (!/^[0-9]{1,18}$/.test(eventId)) notFound();
-  const { federationEventByFederationAndId: event } = await executeGraphql(
+  const { federationEventByFederationAndExternalId: event } = await executeGraphql(
     FederationEventDocument,
     { federation, eventId },
   );
@@ -75,7 +74,7 @@ export default async function EventPage({
         </dd>
       </dl>
       <Competitions federation={federation} eventId={eventId} />
-      {auth.isSystemAdmin && <Sources federation={federation} eventId={eventId} />}
+      {auth.isSystemAdmin && <Sources federation={federation} eventId={event.id} />}
     </Layout>
   );
 }

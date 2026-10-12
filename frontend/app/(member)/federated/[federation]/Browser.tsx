@@ -172,7 +172,7 @@ export function Browser({ federation }: { federation: string }) {
                             <th scope="row" className="px-2 py-1 font-normal">
                               <Link
                                 className="text-accent-11 underline"
-                                href={`/federated/${federation}/${event.id}`}
+                                href={`/federated/${federation}/${event.externalId}`}
                                 prefetch={false}
                               >
                                 {event.name || event.externalId}
