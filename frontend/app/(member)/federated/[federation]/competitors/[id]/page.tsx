@@ -1,3 +1,4 @@
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -64,76 +65,38 @@ export default async function CompetitorPage({ params }: Props) {
         <dd>{competitor.ageGroup || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Category progress</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {['category', 'points'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
+      <Table columns={['category', 'points']} empty="No category progress">
+        {competitor.categoryProgresses.nodes
+          .toSorted((a, b) =>
+            (a.category?.name ?? a.categoryId).localeCompare(
+              b.category?.name ?? b.categoryId,
+            ),
+          )
+          .map((progress) => (
+            <tr key={progress.categoryId} className="border-t border-neutral-4">
+              <th scope="row">{progress.category?.name || progress.categoryId}</th>
+              <td>
+                {Number(progress.points)}F
+                {progress.domesticFinals + progress.foreignFinals}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {competitor.categoryProgresses.nodes
-              .toSorted((a, b) =>
-                (a.category?.name ?? a.categoryId).localeCompare(
-                  b.category?.name ?? b.categoryId,
-                ),
-              )
-              .map((progress) => (
-                <tr key={progress.categoryId} className="border-t border-neutral-4">
-                  <th scope="row" className="px-2 py-1 font-normal">
-                    {progress.category?.name || progress.categoryId}
-                  </th>
-                  <td className="px-2 py-1">
-                    {Number(progress.points)}F
-                    {progress.domesticFinals + progress.foreignFinals}
-                  </td>
-                </tr>
-              ))}
-            {competitor.categoryProgresses.nodes.length === 0 && (
-              <tr>
-                <td colSpan={2} className="px-2 py-1">
-                  No category progress
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          ))}
+      </Table>
       {competitor.couplesList.length > 0 && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr>
-                  {['couple', 'partnership'].map((label) => (
-                    <th key={label} scope="col" className="px-2 py-1">
-                      {label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {competitor.couplesList.map((couple) => (
-                  <tr key={couple.id} className="border-t border-neutral-4">
-                    <th scope="row" className="px-2 py-1 font-normal">
-                      <Link
-                        className="text-accent-11 underline"
-                        href={`/pary/${couple.id}`}
-                      >
-                        {formatCoupleName(couple)}
-                      </Link>
-                    </th>
-                    <td className="px-2 py-1">{formatOpenDateRange(couple)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table columns={['couple', 'partnership']}>
+            {competitor.couplesList.map((couple) => (
+              <tr key={couple.id} className="border-t border-neutral-4">
+                <th scope="row">
+                  <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
+                    {formatCoupleName(couple)}
+                  </Link>
+                </th>
+                <td>{formatOpenDateRange(couple)}</td>
+              </tr>
+            ))}
+          </Table>
         </>
       )}
       <Members federation={federation} id={id} />

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState, type ReactNode } from 'react';
+import { Table } from '@/ui/Table';
+import { useMemo, useState } from 'react';
 import type { CompetitionRoundQuery } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
 import { formatJudgeScore } from '@/ui/format';
@@ -12,13 +13,11 @@ export function Results({
   round,
   startNumbers,
   hasNextRound,
-  children,
 }: {
   federation: string;
   round: NonNullable<CompetitionRoundQuery['competition']>['round'][number];
   startNumbers: Map<string, string | null>;
   hasNextRound: boolean;
-  children: ReactNode;
 }) {
   const showDanceResults =
     federation === 'csts' || round.scoringMethod === 'SKATING_MARKS';
@@ -33,11 +32,9 @@ export function Results({
   const showMarks = canGroupMarks && view !== 'detailed';
   const scores = useMemo(
     () =>
-      new Map(
-        round.judgeScoresList.map((s) => [
-          `${s.danceOrder}:${s.competitorId}:${s.judgePersonId}`,
-          s,
-        ]),
+      Object.groupBy(
+        round.judgeScoresList,
+        (s) => `${s.danceOrder}:${s.competitorId}:${s.judgePersonId}`,
       ),
     [round.judgeScoresList],
   );
@@ -66,6 +63,8 @@ export function Results({
             title: dance.programDance?.dance?.name,
           })),
         }));
+
+  const resultRowSpan = showMarks && showDanceResults ? 2 : 1;
 
   return (
     <>
@@ -167,22 +166,19 @@ export function Results({
           {round.resultsList.map((result) => (
             <tbody key={result.competitorId} className="border-t border-neutral-4">
               <tr>
-                <td
-                  rowSpan={showMarks && showDanceResults ? 2 : 1}
-                  className="px-2 py-1 whitespace-nowrap"
-                >
+                <td rowSpan={resultRowSpan} className="px-2 py-1 whitespace-nowrap">
                   {result.overallRanking ?? '–'}
                   {result.overallRankingTo &&
                   result.overallRankingTo !== result.overallRanking
                     ? `–${result.overallRankingTo}`
                     : ''}
                 </td>
-                <td rowSpan={showMarks && showDanceResults ? 2 : 1} className="px-2 py-1">
+                <td rowSpan={resultRowSpan} className="px-2 py-1">
                   {startNumbers.get(result.competitorId)}
                 </td>
                 <th
                   scope="rowgroup"
-                  rowSpan={showMarks && showDanceResults ? 2 : 1}
+                  rowSpan={resultRowSpan}
                   className="min-w-48 px-2 py-1 font-normal"
                 >
                   {result.competitor ? (
@@ -199,9 +195,10 @@ export function Results({
                 </th>
                 {groups.flatMap((group) =>
                   group.columns.map((column, index) => {
-                    const score = scores.get(
-                      `${column.danceOrder}:${result.competitor?.externalId}:${column.judgeId}`,
-                    );
+                    const score =
+                      scores[
+                        `${column.danceOrder}:${result.competitor?.externalId}:${column.judgeId}`
+                      ]?.[0];
                     return (
                       <td
                         key={`${column.danceOrder}:${column.judgeId}`}
@@ -228,10 +225,7 @@ export function Results({
                   </td>
                 )}
                 {hasNextRound && (
-                  <td
-                    rowSpan={showMarks && showDanceResults ? 2 : 1}
-                    className="px-2 py-1"
-                  >
+                  <td rowSpan={resultRowSpan} className="px-2 py-1">
                     {result.qualifiedNext == null
                       ? '–'
                       : result.qualifiedNext
@@ -279,7 +273,70 @@ export function Results({
         </table>
       </div>
       {round.resultsList.length === 0 && <p>No round results</p>}
-      {view === 'detailed' && children}
+      {view === 'detailed' &&
+        (round.judgeScoresList.length === 0 ? (
+          <p>No marks</p>
+        ) : (
+          round.dancesList.map((dance) => (
+            <Table
+              key={dance.danceOrder}
+              className="col-full-width mb-4"
+              caption={dance.programDance?.dance?.name || dance.danceCode}
+              columns={[
+                'start number',
+                'competitor',
+                ...round.judgesList.map((judge) => (
+                  <span
+                    key={judge.personJudgeId}
+                    className="block text-center"
+                    title={judge.personJudge?.canonicalName || judge.personJudgeId}
+                  >
+                    {judge.judgeLabel || judge.judgeIndex}
+                  </span>
+                )),
+              ]}
+            >
+              {round.resultsList.map((result) => (
+                <tr
+                  key={result.competitorId}
+                  className="border-t border-neutral-4 align-top"
+                >
+                  <td>{startNumbers.get(result.competitorId)}</td>
+                  <th scope="row" className="min-w-48">
+                    {result.competitor ? (
+                      <Link
+                        href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                        className="text-accent-11 underline"
+                        prefetch={false}
+                      >
+                        {result.competitor.name || result.competitorId}
+                      </Link>
+                    ) : (
+                      result.competitorId
+                    )}
+                  </th>
+                  {round.judgesList.map((judge) => (
+                    <td
+                      key={judge.personJudgeId}
+                      className="text-center whitespace-nowrap"
+                    >
+                      {scores[
+                        `${dance.danceOrder}:${result.competitor?.externalId}:${judge.personJudge?.externalId}`
+                      ]?.map((score) => (
+                        <div key={score.component}>
+                          {score.component.startsWith('AJS_') && (
+                            <>{score.component.slice(4)} </>
+                          )}
+                          {formatJudgeScore(score)}
+                        </div>
+                      )) ?? '–'}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </Table>
+          ))
+        ))}
     </>
   );
 }

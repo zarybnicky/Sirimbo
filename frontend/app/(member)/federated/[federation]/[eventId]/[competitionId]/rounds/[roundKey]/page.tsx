@@ -6,7 +6,7 @@ import { CompetitionRoundDocument } from '@/graphql/Federation';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
-import { formatDateOnly, formatJudgeScore, scoringMethodLabels } from '@/ui/format';
+import { formatDateOnly, scoringMethodLabels } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { Results } from './Results';
@@ -56,10 +56,6 @@ export default async function RoundPage({ params }: Props) {
     competition.roundsList.length - 1;
   const startNumbers = new Map(
     competition.resultsList.map((r) => [r.competitorId, r.startNumber]),
-  );
-  const scores = Object.groupBy(
-    round.judgeScoresList,
-    (s) => `${s.danceOrder}:${s.competitorId}:${s.judgePersonId}`,
   );
 
   return (
@@ -115,83 +111,7 @@ export default async function RoundPage({ params }: Props) {
         round={round}
         startNumbers={startNumbers}
         hasNextRound={hasNextRound}
-      >
-        {round.judgeScoresList.length === 0 ? (
-          <p>No marks</p>
-        ) : (
-          round.dancesList.map((dance) => (
-            <div key={dance.danceOrder} className="col-full-width overflow-x-auto mb-4">
-              <table className="w-full text-left text-sm tabular-nums">
-                <caption className="text-left font-bold mb-2">
-                  {dance.programDance?.dance?.name || dance.danceCode}
-                </caption>
-                <thead>
-                  <tr>
-                    <th scope="col" className="px-2 py-1">
-                      start number
-                    </th>
-                    <th scope="col" className="px-2 py-1">
-                      competitor
-                    </th>
-                    {round.judgesList.map((judge) => (
-                      <th
-                        key={judge.personJudgeId}
-                        scope="col"
-                        className="px-2 py-1 text-center"
-                        title={judge.personJudge?.canonicalName || judge.personJudgeId}
-                      >
-                        {judge.judgeLabel || judge.judgeIndex}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {round.resultsList.map((result) => (
-                    <tr
-                      key={result.competitorId}
-                      className="border-t border-neutral-4 align-top"
-                    >
-                      <td className="px-2 py-1">
-                        {startNumbers.get(result.competitorId)}
-                      </td>
-                      <th scope="row" className="min-w-48 px-2 py-1 font-normal">
-                        {result.competitor ? (
-                          <Link
-                            href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                            className="text-accent-11 underline"
-                            prefetch={false}
-                          >
-                            {result.competitor.name || result.competitorId}
-                          </Link>
-                        ) : (
-                          result.competitorId
-                        )}
-                      </th>
-                      {round.judgesList.map((judge) => (
-                        <td
-                          key={judge.personJudgeId}
-                          className="px-2 py-1 text-center whitespace-nowrap"
-                        >
-                          {scores[
-                            `${dance.danceOrder}:${result.competitor?.externalId}:${judge.personJudge?.externalId}`
-                          ]?.map((score) => (
-                            <div key={score.component}>
-                              {score.component.startsWith('AJS_') && (
-                                <>{score.component.slice(4)} </>
-                              )}
-                              {formatJudgeScore(score)}
-                            </div>
-                          )) ?? '–'}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))
-        )}
-      </Results>
+      />
       <h2 className="mt-4 mb-2 text-lg font-bold">Judges</h2>
       <dl className="text-sm tabular">
         {round.judgesList.map((judge) => (

@@ -1,5 +1,6 @@
 'use client';
 
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
 import { useQuery } from 'urql';
@@ -31,80 +32,62 @@ export function Results({ federation, id }: { federation: string; id: string }) 
       {results.length > 0 && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Results</h2>
-          <div className="col-full-width overflow-x-auto">
-            <table className="w-full text-left text-sm tabular-nums">
-              <thead>
-                <tr>
-                  {['rank', 'start number', 'competitor'].map((label) => (
-                    <th key={label} scope="col" className="px-2 py-1">
-                      {label}
-                    </th>
-                  ))}
+          <Table
+            columns={[
+              'rank',
+              'start number',
+              'competitor',
+              showPoints && 'points',
+              showFinalGain && 'final gain',
+            ]}
+            className="col-full-width"
+          >
+            {results.map((result) => {
+              const status = formatResultStatus(result.completionStatus);
+              return (
+                <tr
+                  key={result.competitorId}
+                  className="border-t border-neutral-4 align-top"
+                >
+                  <td className="whitespace-nowrap">
+                    {result.ranking}
+                    {result.rankingTo && result.rankingTo !== result.ranking
+                      ? `–${result.rankingTo}`
+                      : ''}
+                  </td>
+                  <td>{result.startNumber}</td>
+                  <th scope="row">
+                    {result.competitor ? (
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                        prefetch={false}
+                      >
+                        {result.competitor.name || result.competitorId}
+                      </Link>
+                    ) : (
+                      result.competitorId
+                    )}
+                    {status && <div className="text-xs text-neutral-11">{status}</div>}
+                  </th>
                   {showPoints && (
-                    <th scope="col" className="px-2 py-1">
-                      points
-                    </th>
+                    <td>{result.pointGain == null ? null : Number(result.pointGain)}</td>
                   )}
                   {showFinalGain && (
-                    <th scope="col" className="px-2 py-1">
-                      final gain
-                    </th>
+                    <td>
+                      {federation === 'csts'
+                        ? result.isFinal
+                          ? 'F'
+                          : ''
+                        : result.finalGain == null
+                          ? null
+                          : Number(result.finalGain)}
+                    </td>
                   )}
                 </tr>
-              </thead>
-              <tbody>
-                {results.map((result) => {
-                  const status = formatResultStatus(result.completionStatus);
-                  return (
-                    <tr
-                      key={result.competitorId}
-                      className="border-t border-neutral-4 align-top"
-                    >
-                      <td className="px-2 py-1 whitespace-nowrap">
-                        {result.ranking}
-                        {result.rankingTo && result.rankingTo !== result.ranking
-                          ? `–${result.rankingTo}`
-                          : ''}
-                      </td>
-                      <td className="px-2 py-1">{result.startNumber}</td>
-                      <th scope="row" className="px-2 py-1 font-normal">
-                        {result.competitor ? (
-                          <Link
-                            className="text-accent-11 underline"
-                            href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                            prefetch={false}
-                          >
-                            {result.competitor.name || result.competitorId}
-                          </Link>
-                        ) : (
-                          result.competitorId
-                        )}
-                        {status && (
-                          <div className="text-xs text-neutral-11">{status}</div>
-                        )}
-                      </th>
-                      {showPoints && (
-                        <td className="px-2 py-1">
-                          {result.pointGain == null ? null : Number(result.pointGain)}
-                        </td>
-                      )}
-                      {showFinalGain && (
-                        <td className="px-2 py-1">
-                          {federation === 'csts'
-                            ? result.isFinal
-                              ? 'F'
-                              : ''
-                            : result.finalGain == null
-                              ? null
-                              : Number(result.finalGain)}
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+              );
+            })}
+          </Table>
         </>
       )}
       <Registrations federation={federation} id={id} hasResults={results.length > 0} />
@@ -137,106 +120,80 @@ function Registrations({
       <h2 className="mt-4 mb-2 text-lg font-bold">
         {hasResults ? 'Registrations without results' : 'Registrations'}
       </h2>
-      <div className="col-full-width overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {['competitor', 'registration', 'local matches'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry) => {
-              const participant = entry.competitor;
-              const competitorPath = `/federated/${federation}/competitors/${participant?.externalId}`;
-              return (
-                <tr
-                  key={entry.competitorId}
-                  className="border-t border-neutral-4 align-top"
-                >
-                  <th scope="row" className="px-2 py-1 font-normal">
-                    {participant ? (
-                      <Link
-                        className="text-accent-11 underline"
-                        href={competitorPath}
-                        prefetch={false}
-                      >
-                        {participant.name || participant.id}
-                      </Link>
-                    ) : (
-                      entry.competitorId
-                    )}
-                  </th>
-                  <td className="px-2 py-1">
-                    {entry.cancelled ? 'cancelled' : 'registered'}
-                  </td>
-                  <td className="px-2 py-1">
-                    {participant?.components.nodes.map(({ personId, person }) => {
-                      if (
-                        !person ||
-                        (person.people.totalCount === 0 &&
-                          participant.couplesList.length === 0)
-                      ) {
-                        return null;
-                      }
-                      const name =
-                        person.canonicalName ||
-                        [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-                        personId;
-                      return (
-                        <div key={personId}>
-                          <LocalPersonLinks
-                            federation={federation}
-                            externalId={person.externalId}
-                            people={person.people}
-                          />
-                          {person.people.totalCount === 0 && (
-                            <span className="text-neutral-11">
-                              {name} (no person match)
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                    {participant &&
-                      participant.components.totalCount >
-                        participant.components.nodes.length && (
-                        <div>
-                          <Link
-                            className="text-accent-11 underline"
-                            href={competitorPath}
-                          >
-                            All {participant.components.totalCount} members
-                          </Link>
-                        </div>
+      <Table
+        columns={['competitor', 'registration', 'local matches']}
+        className="col-full-width"
+        empty="No registrations"
+      >
+        {entries.map((entry) => {
+          const participant = entry.competitor;
+          const competitorPath = `/federated/${federation}/competitors/${participant?.externalId}`;
+          return (
+            <tr key={entry.competitorId} className="border-t border-neutral-4 align-top">
+              <th scope="row">
+                {participant ? (
+                  <Link
+                    className="text-accent-11 underline"
+                    href={competitorPath}
+                    prefetch={false}
+                  >
+                    {participant.name || participant.id}
+                  </Link>
+                ) : (
+                  entry.competitorId
+                )}
+              </th>
+              <td>{entry.cancelled ? 'cancelled' : 'registered'}</td>
+              <td>
+                {participant?.components.nodes.map(({ personId, person }) => {
+                  if (
+                    !person ||
+                    (person.people.totalCount === 0 &&
+                      participant.couplesList.length === 0)
+                  ) {
+                    return null;
+                  }
+                  const name =
+                    person.canonicalName ||
+                    [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+                    personId;
+                  return (
+                    <div key={personId}>
+                      <LocalPersonLinks
+                        federation={federation}
+                        externalId={person.externalId}
+                        people={person.people}
+                      />
+                      {person.people.totalCount === 0 && (
+                        <span className="text-neutral-11">{name} (no person match)</span>
                       )}
-                    {participant?.couplesList.map((couple) => (
-                      <div key={couple.id}>
-                        <Link
-                          className="text-accent-11 underline"
-                          href={`/pary/${couple.id}`}
-                        >
-                          {formatCoupleName(couple)}
-                        </Link>
-                      </div>
-                    ))}
-                  </td>
-                </tr>
-              );
-            })}
-            {entries.length === 0 && (
-              <tr>
-                <td colSpan={3} className="px-2 py-1">
-                  No registrations
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                    </div>
+                  );
+                })}
+                {participant &&
+                  participant.components.totalCount >
+                    participant.components.nodes.length && (
+                    <div>
+                      <Link className="text-accent-11 underline" href={competitorPath}>
+                        All {participant.components.totalCount} members
+                      </Link>
+                    </div>
+                  )}
+                {participant?.couplesList.map((couple) => (
+                  <div key={couple.id}>
+                    <Link
+                      className="text-accent-11 underline"
+                      href={`/pary/${couple.id}`}
+                    >
+                      {formatCoupleName(couple)}
+                    </Link>
+                  </div>
+                ))}
+              </td>
+            </tr>
+          );
+        })}
+      </Table>
     </>
   );
 }
@@ -254,43 +211,23 @@ export function Rounds({ id, href }: { id: string; href: string }) {
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {['round', 'scoring method', 'results'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rounds.map((round) => (
-              <tr key={round.id} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    href={`${href}/rounds/${encodeURIComponent(round.roundKey)}`}
-                    className="text-accent-11 underline"
-                    prefetch={false}
-                  >
-                    {round.roundLabel || round.roundKey}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">{scoringMethodLabels[round.scoringMethod]}</td>
-                <td className="px-2 py-1">{round.results.totalCount}</td>
-              </tr>
-            ))}
-            {rounds.length === 0 && (
-              <tr>
-                <td colSpan={3} className="px-2 py-1">
-                  No rounds
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Table columns={['round', 'scoring method', 'results']} empty="No rounds">
+        {rounds.map((round) => (
+          <tr key={round.id} className="border-t border-neutral-4">
+            <th scope="row">
+              <Link
+                href={`${href}/rounds/${encodeURIComponent(round.roundKey)}`}
+                className="text-accent-11 underline"
+                prefetch={false}
+              >
+                {round.roundLabel || round.roundKey}
+              </Link>
+            </th>
+            <td>{scoringMethodLabels[round.scoringMethod]}</td>
+            <td>{round.results.totalCount}</td>
+          </tr>
+        ))}
+      </Table>
     </>
   );
 }

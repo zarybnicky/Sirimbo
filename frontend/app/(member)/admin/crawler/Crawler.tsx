@@ -1,9 +1,10 @@
 'use client';
 
+import { Table } from '@/ui/Table';
 import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { parseAsInteger, parseAsString, useQueryState, useQueryStates } from 'nuqs';
-import { useQuery } from 'urql';
+import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
+import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { useAsync } from 'react-async-hook';
 import { CrawlerTargetsDocument } from '@/graphql/Crawler';
 import { TextField } from '@/ui/fields/text';
@@ -137,26 +138,17 @@ function Targets({
   search: string;
   pending: boolean;
 }) {
-  const [currentPage, setPage] = useQueryState(
-    'page',
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({ shallow: true, scroll: false, history: 'push' }),
-  );
-  const [{ data, fetching, error }] = useQuery({
+  const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CrawlerTargetsDocument,
     pause: pending,
-    variables: {
+    variables: (offset) => ({
       condition: { federation, kind, keyContains: search },
-      offset: Math.min(Math.max(0, currentPage - 1) * 50, 2_147_483_647),
-    },
+      offset,
+    }),
+    limit: 50,
+    getTotal: (data) => data?.crawlerTargets?.totalCount,
   });
-  const total = data?.crawlerTargets?.totalCount;
-  useEffect(() => {
-    if (pending || fetching || error || total == null) return;
-    const page = Math.max(1, Math.min(currentPage, Math.ceil(total / 50)));
-    if (page !== currentPage) void setPage(page, { history: 'replace' });
-  }, [currentPage, total, pending, fetching, error, setPage]);
+  const total = pagination.total;
   if (error) return <FormError error={error} />;
   if (!data?.crawlerTargets) return <Spinner />;
   const rows = data.crawlerTargets.nodes;
@@ -166,65 +158,42 @@ function Targets({
       <p role="status" className="my-2 text-sm text-neutral-11">
         {pending || fetching ? 'Loading…' : `${total} targets`}
       </p>
-      <div className="col-full-width overflow-x-auto">
-        <table className="w-full whitespace-nowrap text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {[
-                'key',
-                'fetch status',
-                'process status',
-                'error count',
-                'last fetched',
-                'next fetch',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.id} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-mono font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/admin/crawler/${row.id}`}
-                    prefetch={false}
-                  >
-                    {row.key || '(root)'}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">{row.fetchStatus.toLowerCase()}</td>
-                <td className="px-2 py-1">{row.processStatus.toLowerCase()}</td>
-                <td className="px-2 py-1">{row.errorCount || ''}</td>
-                <td className="px-2 py-1">
-                  {row.lastFetchedAt
-                    ? numericFullFormatter.format(new Date(row.lastFetchedAt))
-                    : '-'}
-                </td>
-                <td className="px-2 py-1">
-                  {numericFullFormatter.format(new Date(row.nextFetchAt))}
-                </td>
-              </tr>
-            ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-2 py-1">
-                  No frontiers found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        total={data.crawlerTargets.totalCount}
-        limit={50}
-        page={currentPage}
-        onPageChange={setPage}
-      />
+      <Table
+        columns={[
+          'key',
+          'fetch status',
+          'process status',
+          'error count',
+          'last fetched',
+          'next fetch',
+        ]}
+        className="col-full-width whitespace-nowrap"
+        empty="No frontiers found"
+      >
+        {rows.map((row) => (
+          <tr key={row.id} className="border-t border-neutral-4">
+            <th scope="row" className="font-mono">
+              <Link
+                className="text-accent-11 underline"
+                href={`/admin/crawler/${row.id}`}
+                prefetch={false}
+              >
+                {row.key || '(root)'}
+              </Link>
+            </th>
+            <td>{row.fetchStatus.toLowerCase()}</td>
+            <td>{row.processStatus.toLowerCase()}</td>
+            <td>{row.errorCount || ''}</td>
+            <td>
+              {row.lastFetchedAt
+                ? numericFullFormatter.format(new Date(row.lastFetchedAt))
+                : '-'}
+            </td>
+            <td>{numericFullFormatter.format(new Date(row.nextFetchAt))}</td>
+          </tr>
+        ))}
+      </Table>
+      <Pagination {...pagination} />
     </>
   );
 }

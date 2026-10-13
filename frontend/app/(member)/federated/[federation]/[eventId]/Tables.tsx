@@ -1,10 +1,9 @@
 'use client';
 
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { useEffect } from 'react';
-import { parseAsInteger, useQueryState } from 'nuqs';
-import { useQuery } from 'urql';
+import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
@@ -19,27 +18,18 @@ export function Competitions({
   federation: string;
   eventId: string;
 }) {
-  const [currentPage, setPage] = useQueryState(
-    'page',
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({ shallow: true, scroll: false, history: 'push' }),
-  );
-  const [{ data, fetching, error }] = useQuery({
+  const { data, fetching, error, pagination } = usePaginatedQuery({
     query: FederationEventCompetitionsDocument,
-    variables: {
+    variables: (offset) => ({
       federation,
       eventId,
-      competitionsOffset: Math.min(Math.max(0, currentPage - 1) * 100, 2_147_483_647),
-    },
+      competitionsOffset: offset,
+    }),
+    limit: 100,
+    getTotal: (data) =>
+      data?.federationEventByFederationAndExternalId?.competitions?.totalCount,
   });
   const competitions = data?.federationEventByFederationAndExternalId?.competitions;
-  const total = competitions?.totalCount;
-  useEffect(() => {
-    if (fetching || error || total == null) return;
-    const page = Math.max(1, Math.min(currentPage, Math.ceil(total / 100)));
-    if (page !== currentPage) void setPage(page, { history: 'replace' });
-  }, [currentPage, total, fetching, error, setPage]);
   const path = `/federated/${federation}/${eventId}`;
   if (error) return <FormError error={error} />;
   if (!competitions) return <Spinner />;
@@ -52,70 +42,45 @@ export function Competitions({
         </p>
       )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Competitions</h2>
-      <div className="col-full-width overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {[
-                'category',
-                'type',
-                'status',
-                'date',
-                'check-in end',
-                'registrations',
-                'results',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {competitions.nodes.map((competition) => (
-              <tr key={competition.id} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className={cn(
-                      'text-accent-11',
-                      competition.status === 'CANCELLED' ? 'line-through' : 'underline',
-                    )}
-                    href={`${path}/${competition.externalId}`}
-                    prefetch={false}
-                  >
-                    {competition.category?.name || competition.externalId}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">
-                  {competition.competitionType?.toLowerCase().replaceAll('_', ' ')}
-                </td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {competition.status.toLowerCase().replaceAll('_', ' ')}
-                </td>
-                <td className="px-2 py-1 whitespace-nowrap">
-                  {formatDateOnly(competition.startDate)}
-                </td>
-                <td className="px-2 py-1">{competition.checkInEnd?.slice(0, 5)}</td>
-                <td className="px-2 py-1">{competition.entries.totalCount}</td>
-                <td className="px-2 py-1">{competition.results.totalCount}</td>
-              </tr>
-            ))}
-            {competitions.nodes.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-2 py-1">
-                  No competitions
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        total={competitions.totalCount}
-        limit={100}
-        page={currentPage}
-        onPageChange={setPage}
-      />
+      <Table
+        columns={[
+          'category',
+          'type',
+          'status',
+          'date',
+          'check-in end',
+          'registrations',
+          'results',
+        ]}
+        className="col-full-width"
+        empty="No competitions"
+      >
+        {competitions.nodes.map((competition) => (
+          <tr key={competition.id} className="border-t border-neutral-4">
+            <th scope="row">
+              <Link
+                className={cn(
+                  'text-accent-11',
+                  competition.status === 'CANCELLED' ? 'line-through' : 'underline',
+                )}
+                href={`${path}/${competition.externalId}`}
+                prefetch={false}
+              >
+                {competition.category?.name || competition.externalId}
+              </Link>
+            </th>
+            <td>{competition.competitionType?.toLowerCase().replaceAll('_', ' ')}</td>
+            <td className="whitespace-nowrap">
+              {competition.status.toLowerCase().replaceAll('_', ' ')}
+            </td>
+            <td className="whitespace-nowrap">{formatDateOnly(competition.startDate)}</td>
+            <td>{competition.checkInEnd?.slice(0, 5)}</td>
+            <td>{competition.entries.totalCount}</td>
+            <td>{competition.results.totalCount}</td>
+          </tr>
+        ))}
+      </Table>
+      <Pagination {...pagination} />
     </>
   );
 }
@@ -127,26 +92,17 @@ export function Sources({
   federation: string;
   eventId: string;
 }) {
-  const [currentPage, setPage] = useQueryState(
-    'sourcesPage',
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({ shallow: true, scroll: false, history: 'push' }),
-  );
-  const [{ data, fetching, error }] = useQuery({
+  const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CrawlerSourcesDocument,
-    variables: {
+    variables: (offset) => ({
       condition: { eventId },
-      offset: Math.min(Math.max(0, currentPage - 1) * 100, 2_147_483_647),
-    },
+      offset,
+    }),
+    limit: 100,
+    pageKey: 'sourcesPage',
+    getTotal: (data) => data?.crawlerTargets?.totalCount,
   });
   const sources = data?.crawlerTargets;
-  const total = sources?.totalCount;
-  useEffect(() => {
-    if (fetching || error || total == null) return;
-    const page = Math.max(1, Math.min(currentPage, Math.ceil(total / 100)));
-    if (page !== currentPage) void setPage(page, { history: 'replace' });
-  }, [currentPage, total, fetching, error, setPage]);
 
   if (error) return <FormError error={error} />;
   if (!sources) return <Spinner />;
@@ -174,12 +130,7 @@ export function Sources({
               {source.processStatus.toLowerCase()}
             </p>
           ))}
-          <Pagination
-            total={sources.totalCount}
-            limit={100}
-            page={currentPage}
-            onPageChange={setPage}
-          />
+          <Pagination {...pagination} />
         </section>
       )}
     </>

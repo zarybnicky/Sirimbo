@@ -1,3 +1,4 @@
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -100,91 +101,57 @@ export default async function FederatedPersonPage({ params }: Props) {
         <dd>{person.ageGroup || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Licences</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr>
-              {['kind', 'discipline', 'grade', 'status', 'valid until'].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {person.licenses.nodes.map((license) => (
-              <tr
-                key={`${license.kind}:${license.discipline}`}
-                className="border-t border-neutral-4"
-              >
-                <th scope="row" className="px-2 py-1 font-normal">
-                  {license.kind.toLowerCase().replaceAll('_', ' ')}
-                </th>
-                <td className="px-2 py-1">
-                  {license.discipline.toLowerCase().replaceAll('_', ' ')}
-                </td>
-                <td className="px-2 py-1">{license.grade || '-'}</td>
-                <td className="px-2 py-1">{license.status.toLowerCase()}</td>
-                <td className="px-2 py-1 whitespace-nowrap tabular-nums">
-                  {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
-                </td>
-              </tr>
-            ))}
-            {person.licenses.nodes.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-2 py-1">
-                  No licences
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        columns={['kind', 'discipline', 'grade', 'status', 'valid until']}
+        empty="No licences"
+      >
+        {person.licenses.nodes.map((license) => (
+          <tr
+            key={`${license.kind}:${license.discipline}`}
+            className="border-t border-neutral-4"
+          >
+            <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
+            <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
+            <td>{license.grade || '-'}</td>
+            <td>{license.status.toLowerCase()}</td>
+            <td className="whitespace-nowrap tabular-nums">
+              {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
+            </td>
+          </tr>
+        ))}
+      </Table>
       {matches.length > 0 && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr>
-                  {['person', 'active affiliations'].map((label) => (
-                    <th key={label} scope="col" className="px-2 py-1">
-                      {label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {matches.map((match) => (
-                  <tr key={match.id} className="border-t border-neutral-4">
-                    <th scope="row" className="px-2 py-1 font-normal">
-                      <Link
-                        className="text-accent-11 underline"
-                        href={`/clenove/${match.id}`}
-                      >
-                        {match.name}
-                      </Link>
-                    </th>
-                    <td className="px-2 py-1">
-                      {[
-                        ...new Set(
-                          [
-                            ...match.tenantMembershipsList,
-                            ...match.tenantTrainersList,
-                            ...match.tenantAdministratorsList,
-                          ]
-                            .map((affiliation) => affiliation.tenantName)
-                            .filter((name) => name != null),
-                        ),
+          <Table columns={['person', 'active affiliations']}>
+            {matches.map((match) => (
+              <tr key={match.id} className="border-t border-neutral-4">
+                <th scope="row">
+                  <Link
+                    className="text-accent-11 underline"
+                    href={`/clenove/${match.id}`}
+                  >
+                    {match.name}
+                  </Link>
+                </th>
+                <td>
+                  {[
+                    ...new Set(
+                      [
+                        ...match.tenantMembershipsList,
+                        ...match.tenantTrainersList,
+                        ...match.tenantAdministratorsList,
                       ]
-                        .toSorted((a, b) => a.localeCompare(b))
-                        .join(', ') || 'No active affiliation'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        .map((affiliation) => affiliation.tenantName)
+                        .filter((name) => name != null),
+                    ),
+                  ]
+                    .toSorted((a, b) => a.localeCompare(b))
+                    .join(', ') || 'No active affiliation'}
+                </td>
+              </tr>
+            ))}
+          </Table>
         </>
       )}
       <Competitors federation={federation} externalId={externalId} />

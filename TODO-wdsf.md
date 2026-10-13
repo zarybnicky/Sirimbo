@@ -1,50 +1,29 @@
 # Federation browser, crawler, and WDSF backlog
 
+## Browser and shared UI
+
+- [ ] Redesign reusable faceted search for competitors, then app people/couples; retain inline class, points/finals, and ranklist placement where relevant.
+- [ ] Derive competitor age categories from their members.
+- [ ] Make `/federated` suitable for ordinary users before linking it throughout the main app.
+
 ## Competition results and round marks
 
-- [x] Store and display normalized event/competition statuses: planned, in progress, completed, postponed, cancelled, unknown.
-- [x] Link competitions to round detail pages.
-- [x] Sort overall results by placing; retain registration browsing.
-- [x] Show stored round rankings, qualification, per-dance results, and judges' marks.
-- [x] Render marks, skating places, and component scores according to the scoring method.
 - [ ] Store official WDSF final dance results and AJS rankings/scores; current round aggregates sum judges' marks.
 - [ ] Add competitor/judge relations for the numeric IDs on `JudgeScore`.
-- [x] Handle ties, withdrawals/disqualifications, and results without registrations.
 
-## Officials and judging history
+## Ranklists
 
-- [x] Show local matches for judges and other officials through federation person relations.
-- [x] Event page: show officials with person, role, discipline, and grade.
-- [x] Competition page: show officials with person and role.
-- [x] Round page: show judges with labels/letters and panel order, matched to marks columns.
-- [x] Link official names to federation person pages.
-- [x] Person page: show official assignments with roles and links to events/competitions.
-- [x] Preserve WDSF adjudicator labels in `wdsfOfficialIndex` (see official metadata notes).
-
-## Licenses
-
-- [x] Person page: show license kind, discipline, grade, source status, and expiry date.
-- [x] Include athlete, trainer, adjudicator, and other official qualifications.
-- [ ] Store WDSF license blocking dates (see member metadata notes).
-
-## Category progress and ranklists
-
-- [x] Competitor page: show category/class, points, domestic finals, and foreign finals.
-- [x] Link progress from the person's competitor memberships.
+- [ ] Check the points formula in [cstsRanklist.ts](worker/crawler/cstsRanklist.ts): it adds `pointsWdsf` twice and omits `pointsChampionship`. Confirm the intended calculation, fix it, and replay cached responses locally.
 - [ ] Add federation → ranklist → dated snapshot navigation.
 - [ ] Show snapshot date/kind and entries ordered by rank, with links to competitors.
 - [ ] Link competitors back to their ranklist entries.
-- [x] Show current-age-category ranklist placements on in-app person and couple pages.
-- [ ] Link in-app ranklist placements to the dated snapshot.
+- [ ] Link in-app ranklist placements to the dated snapshot; retain the compact current-category summary without nomination rankings.
 - [ ] Add WDSF ranklist ingestion; stored snapshots currently cover ČSTS only.
 
 ## Remaining app consumers
 
-- [ ] [Competitions.tsx](frontend/ui/Competitions.tsx): link dashboard, calendar, and timeline cards to internal event/competition pages; support category labels across federations.
+- [ ] [Competitions.tsx](frontend/ui/Competitions.tsx): link dashboard, calendar, and timeline cards to internal event/competition pages once the browser is ready for users; support category labels across federations.
 - [ ] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): replace ČSTS-only judging links on person/couple/group pages; link event-level official activity too.
-- [x] [competition_reports.sql](migrations/fixtures/functions/competition_reports.sql): use `person_federation_link` in `competition_brief` and `competition_report` instead of repeated ID matching.
-- [x] [activity_timeline.sql](migrations/fixtures/functions/activity_timeline.sql): use the same relation in the judging branch.
-- [x] Review `current_tenant_membership` scoping in reports: explicitly selected, RLS-visible people must not disappear solely for lacking tenant membership.
 - [ ] [CstsIdBackfillWidget.tsx](frontend/ui/CstsIdBackfillWidget.tsx) / `person_csts_candidates`: generalize federation selection and candidate matching; retain fuzzy suggestions and explicit selection.
 
 ## Clubs and affiliations
@@ -58,18 +37,21 @@
 
 - [ ] Add system-admin refetch/reprocess actions using worker scheduling, with resulting status and errors.
 - [ ] Rename physical `json_response` / `json_response_cache` tables (low priority).
+- [ ] Resume the WDSF completeness/recovery/replay investigation in a separate session; explicitly shelved, with no production access.
 
 ## Deferred
 
 - [ ] Replace `csts_id`, `wdsf_id`, and ad-hoc external identifiers with persisted federation links.
+- [ ] Remove surrogate IDs for federation events/competitions; external IDs in browser URLs did not replace the database keys.
 - [ ] Add provenance and as-of attribution.
 - [ ] Add cross-federation matching.
-- [ ] Add analytics and roll-ups for actual workloads.
 - [ ] Link app categories/dances to federation metadata.
 
 ## WDSF ingestion notes
 
 ### Couple and team composition
+
+- [ ] Implement couple and team composition loaders so person-based reports can associate WDSF results with their members.
 
 The old scraper fetched `/api/1/couple/rls-<id>` from participant detail links and
 stored male/female member IDs. The current `wdsfParticipant` loader creates a
@@ -92,6 +74,8 @@ participant coverage.
 
 ### Member metadata
 
+- [ ] Store explicit birth years, license blocking dates, and the remaining member metadata below.
+
 `wdsfMember` currently parses fields that are not stored:
 
 - `nickname`
@@ -104,6 +88,8 @@ storing a synthetic date would be misleading. Add an honest birth-year or approx
 year-range field if age-based reports remain useful.
 
 ### Participant metadata
+
+- [ ] Store or use the participant and round metadata below for entries, composition, and discovery.
 
 `wdsfParticipant` parses but drops or only partly uses:
 
@@ -118,6 +104,8 @@ Some of this should probably become entry-level metadata. Some should feed the
 couple/team loaders. None should be silently discarded.
 
 ### Score families
+
+- [ ] Materialize the accepted score families below that currently produce no score rows.
 
 The participant schema accepts several WDSF score families that `scoreRows` currently
 turns into no rows:
@@ -137,6 +125,8 @@ we want to keep accepting.
 
 ### Competition metadata
 
+- [ ] Store or use the competition metadata below.
+
 `wdsfCompetition` parses but does not persist or model:
 
 - `coefficient`
@@ -146,10 +136,14 @@ we want to keep accepting.
 
 ### Official metadata
 
+- [ ] Store official country.
+
 `wdsfOfficialIndex` stores adjudicator labels and propagates them to round judges.
 Official country is parsed but not stored.
 
 ### Age rules from `/api/1/age`
+
+- [ ] Restore dated federation age rules and their applicability flags.
 
 The branch had a `wdsfAgeGroups` loader and a `federated.federation_age_group_rule`
 table. The useful idea is storing WDSF age rules as dated federation metadata:
@@ -176,6 +170,8 @@ must not replace WDSF member `yearOfBirth` when that explicit field exists.
 
 ### Approximate birth years
 
+- [ ] Implement inferred birth-year ranges, precedence of explicit birth data, and conflict detection.
+
 The branch modeled `person.yob_approx int4range` and narrowed it from multiple
 signals. The useful behavior is:
 
@@ -190,6 +186,8 @@ must preserve precision honestly. Do not store `YYYY-01-01` as a fake date of bi
 
 ### Participant-driven follow-up frontiers
 
+- [ ] Restore follow-up discovery for missing couple, team, and person details.
+
 The branch participant loader queued `couple`, `team`, or `person` frontiers from
 participant detail links. Keep that mechanism, but prefer index-driven loaders when
 the endpoint supports them:
@@ -202,6 +200,9 @@ the endpoint supports them:
 - Solo participant links can queue `wdsf:member` when person detail is missing.
 
 ### Reports from `wdsf/`
+
+- [ ] Implement the age-by-placement report below once composition and birth-year data is available.
+- [ ] Implement the wins-by-country report below once composition and country data is available.
 
 ```sql
 SELECT

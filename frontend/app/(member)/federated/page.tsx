@@ -1,3 +1,4 @@
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
@@ -14,45 +15,34 @@ export default async function FederationsPage() {
   return (
     <Layout requireUser>
       <PageHeader title="Federations" />
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {[
-                'federation',
-                'name',
-                'events',
-                'competitions',
-                'people',
-                'competitors',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {federations?.map((federation) => (
-              <tr key={federation.code} className="border-t border-neutral-4">
-                <th scope="row" className="px-2 py-1 font-normal">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/federated/${federation.code}`}
-                  >
-                    {federation.code}
-                  </Link>
-                </th>
-                <td className="px-2 py-1">{federation.name}</td>
-                <td className="px-2 py-1">{federation.events?.totalCount}</td>
-                <td className="px-2 py-1">{federation.competitions?.totalCount}</td>
-                <td className="px-2 py-1">{federation.people?.totalCount}</td>
-                <td className="px-2 py-1">{federation.competitors?.totalCount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        columns={[
+          'federation',
+          'name',
+          'events',
+          'competitions',
+          'people',
+          'competitors',
+        ]}
+      >
+        {federations?.map((federation) => (
+          <tr key={federation.code} className="border-t border-neutral-4">
+            <th scope="row">
+              <Link
+                className="text-accent-11 underline"
+                href={`/federated/${federation.code}`}
+              >
+                {federation.code}
+              </Link>
+            </th>
+            <td>{federation.name}</td>
+            <td>{federation.events?.totalCount}</td>
+            <td>{federation.competitions?.totalCount}</td>
+            <td>{federation.people?.totalCount}</td>
+            <td>{federation.competitors?.totalCount}</td>
+          </tr>
+        ))}
+      </Table>
     </Layout>
   );
 }

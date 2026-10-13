@@ -1,3 +1,4 @@
+import { Table } from '@/ui/Table';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import type { OfficialRole } from '@/graphql';
 import { FederationPersonLink, LocalPersonLinks } from '@/ui/federation-links';
@@ -37,83 +38,56 @@ export function Officials({
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Officials</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr>
-              <th scope="col" className="px-2 py-1">
-                role
-              </th>
-              <th scope="col" className="px-2 py-1">
-                person
-              </th>
-              {showMatches && (
-                <th scope="col" className="px-2 py-1">
-                  local matches
-                </th>
+      <Table
+        columns={[
+          'role',
+          'person',
+          showMatches && 'local matches',
+          showLabel && 'label',
+          showDiscipline && 'discipline',
+          showGrade && 'grade',
+        ]}
+      >
+        {rows.map((official) => (
+          <tr
+            key={`${official.personId}:${official.role}:${official.discipline ?? ''}`}
+            className="border-t border-neutral-4"
+          >
+            <td>{official.role.toLowerCase().replaceAll('_', ' ')}</td>
+            <th scope="row">
+              {official.person ? (
+                <FederationPersonLink
+                  federation={federation}
+                  externalId={official.person.externalId}
+                  className="text-accent-11"
+                >
+                  {official.person.canonicalName ||
+                    [official.person.firstName, official.person.lastName]
+                      .filter(Boolean)
+                      .join(' ') ||
+                    official.personId}
+                </FederationPersonLink>
+              ) : (
+                official.personId
               )}
-              {showLabel && (
-                <th scope="col" className="px-2 py-1">
-                  label
-                </th>
-              )}
-              {showDiscipline && (
-                <th scope="col" className="px-2 py-1">
-                  discipline
-                </th>
-              )}
-              {showGrade && (
-                <th scope="col" className="px-2 py-1">
-                  grade
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((official) => (
-              <tr
-                key={`${official.personId}:${official.role}:${official.discipline ?? ''}`}
-                className="border-t border-neutral-4"
-              >
-                <td className="px-2 py-1">
-                  {official.role.toLowerCase().replaceAll('_', ' ')}
-                </td>
-                <th scope="row" className="px-2 py-1 font-normal">
-                  {official.person ? (
-                    <FederationPersonLink
-                      federation={federation}
-                      externalId={official.person.externalId}
-                      className="text-accent-11"
-                    >
-                      {official.person.canonicalName ||
-                        [official.person.firstName, official.person.lastName]
-                          .filter(Boolean)
-                          .join(' ') ||
-                        official.personId}
-                    </FederationPersonLink>
-                  ) : (
-                    official.personId
-                  )}
-                </th>
-                {showMatches && (
-                  <td className="px-2 py-1">
-                    {official.person && (
-                      <LocalPersonLinks
-                        federation={federation}
-                        externalId={official.person.externalId}
-                        people={official.person.people}
-                      />
-                    )}
-                  </td>
+            </th>
+            {showMatches && (
+              <td>
+                {official.person && (
+                  <LocalPersonLinks
+                    federation={federation}
+                    externalId={official.person.externalId}
+                    people={official.person.people}
+                  />
                 )}
-                {showLabel && <td className="px-2 py-1">{official.judgeLabel}</td>}
-                {showDiscipline && <td className="px-2 py-1">{official.discipline}</td>}
-                {showGrade && <td className="px-2 py-1">{official.grade}</td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </td>
+            )}
+            {showLabel && <td>{official.judgeLabel}</td>}
+            {showDiscipline && <td>{official.discipline}</td>}
+            {showGrade && <td>{official.grade}</td>}
+          </tr>
+        ))}
+      </Table>
     </>
   );
 }
