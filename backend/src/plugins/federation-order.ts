@@ -1,14 +1,36 @@
 import { TYPES, listOfCodec, type PgSelectQueryBuilder } from '@dataplan/pg';
 import { lambda } from 'grafast';
+import { orderByAscDesc } from 'postgraphile/utils';
 
 const progressCodec = listOfCodec(TYPES.numeric);
 type CategoryOrder = { discipline: string; descending: boolean };
 
 const plugin: GraphileConfig.Plugin = {
   name: 'FederationOrderPlugin',
+  after: ['PgOrderAllAttributesPlugin'],
   before: ['PgConnectionArgOrderByPlugin'],
   schema: {
     hooks: {
+      GraphQLEnumType_values(values, { sql }, { scope }) {
+        const table = scope.pgCodec?.extensions?.pg;
+        if (
+          !scope.isPgRowSortEnum ||
+          table?.schemaName !== 'federated' ||
+          table.name !== 'competitor'
+        )
+          return values;
+        return {
+          ...values,
+          ...orderByAscDesc(
+            'NAME',
+            (query) => ({
+              fragment: sql`nullif(trim(${query.alias}.name), '')`,
+              codec: TYPES.text,
+            }),
+            { nulls: 'last' },
+          ),
+        };
+      },
       init(_, build) {
         build.registerInputObjectType(
           'CompetitorCategoryOrder',

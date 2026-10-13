@@ -30,14 +30,22 @@ export function Results({
     canGroupMarks ? 'dance' : 'detailed',
   );
   const showMarks = canGroupMarks && view !== 'detailed';
-  const scores = useMemo(
-    () =>
-      Object.groupBy(
-        round.judgeScoresList,
-        (s): string => `${s.competitorId}:${s.danceOrder}:${s.judgePersonId}`,
+  const scores = useMemo(() => {
+    const activeComponents = new Set(
+      round.judgeScoresList
+        .filter((score) => Number(score.score) !== 0)
+        .map((score) => `${score.danceOrder}:${score.component}`),
+    );
+    return Object.groupBy(
+      round.judgeScoresList.filter((score) =>
+        score.component === 'AJS_REDUCTION'
+          ? Number(score.score) !== 0
+          : !score.component.startsWith('AJS_') ||
+            activeComponents.has(`${score.danceOrder}:${score.component}`),
       ),
-    [round.judgeScoresList],
-  );
+      (s): string => `${s.competitorId}:${s.danceOrder}:${s.judgePersonId}`,
+    );
+  }, [round.judgeScoresList]);
   const dances = round.dancesList.map((dance) => ({
     key: String(dance.danceOrder),
     label: dance.danceCode,

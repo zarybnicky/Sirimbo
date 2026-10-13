@@ -176,10 +176,6 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
       id
       roundKey
       roundLabel
-      scoringMethod
-      results(first: 0) {
-        totalCount
-      }
     }
     results: resultsList(orderBy: [RANKING_ASC, COMPETITOR_ID_ASC]) {
       competitionId

@@ -1,7 +1,7 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
-import { formatCoupleName, formatResultStatus, scoringMethodLabels } from '@/ui/format';
+import { formatCoupleName, formatResultStatus } from '@/ui/format';
 import type { FederationCompetitionQuery } from '@/graphql/Federation';
 
 type Competition = NonNullable<FederationCompetitionQuery['competition']>;
@@ -166,37 +166,6 @@ export function Registrations({
             </tr>
           );
         })}
-      </Table>
-    </>
-  );
-}
-
-export function Rounds({
-  rounds,
-  href,
-}: {
-  rounds: Competition['rounds'];
-  href: string;
-}) {
-  return (
-    <>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>
-      <Table columns={['round', 'scoring method', 'results']} empty="No rounds">
-        {rounds.map((round) => (
-          <tr key={round.id} className="border-t border-neutral-4">
-            <th scope="row">
-              <Link
-                href={`${href}/rounds/${encodeURIComponent(round.roundKey)}`}
-                className="text-accent-11 underline"
-                prefetch={false}
-              >
-                {round.roundLabel || round.roundKey}
-              </Link>
-            </th>
-            <td>{scoringMethodLabels[round.scoringMethod]}</td>
-            <td>{round.results.totalCount}</td>
-          </tr>
-        ))}
       </Table>
     </>
   );

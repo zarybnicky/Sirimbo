@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { Results, Registrations, Rounds } from './Tables';
+import { Results, Registrations } from './Tables';
+import { RoundNav } from './RoundNav';
 import { formatDateOnly, dateTimeFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -70,6 +71,10 @@ export default async function CompetitionPage({ params }: Props) {
           { label: competition.category?.name ?? competition.externalId },
         ]}
       />
+      <RoundNav
+        rounds={competition.rounds}
+        href={`/federated/${federation}/${eventId}/${competitionId}`}
+      />
       <dl className="text-sm tabular">
         {federation === 'csts' && (
           <>
@@ -104,10 +109,6 @@ export default async function CompetitionPage({ params }: Props) {
         federation={federation}
         entries={competition.entries}
         hasResults={competition.results.length > 0}
-      />
-      <Rounds
-        rounds={competition.rounds}
-        href={`/federated/${federation}/${eventId}/${competitionId}`}
       />
       <Officials
         federation={federation}

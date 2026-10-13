@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -7,7 +6,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { formatDateOnly, scoringMethodLabels } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
+import { RoundNav } from '../../RoundNav';
 import { PageHeader } from '@/ui/TitleBar';
 import { Results } from './Results';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
@@ -85,22 +84,7 @@ export default async function RoundPage({ params }: Props) {
           { label: round.roundLabel || round.roundKey },
         ]}
       />
-      <nav aria-label="Rounds" className="flex flex-wrap gap-2 my-2">
-        {competition.roundsList.map((r) => (
-          <Link
-            key={r.id}
-            href={`${href}/rounds/${encodeURIComponent(r.roundKey)}`}
-            className={buttonCls({
-              variant: r.id === round.id ? 'primary' : 'outline',
-              size: 'sm',
-            })}
-            aria-current={r.id === round.id ? 'page' : undefined}
-            prefetch={false}
-          >
-            {r.roundLabel || r.roundKey}
-          </Link>
-        ))}
-      </nav>
+      <RoundNav href={href} rounds={competition.roundsList} current={round.roundKey} />
       <dl className="text-sm tabular">
         <dt>scoring method</dt>
         <dd>{scoringMethodLabels[round.scoringMethod]}</dd>
