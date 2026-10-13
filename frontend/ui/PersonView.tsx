@@ -3,7 +3,7 @@
 import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';
-import { formatCstsClass, getBestCstsProgress } from '@/ui/csts';
+import { formatCstsClass, getBestCstsProgress, getCstsAgeCategory } from '@/ui/csts';
 import { useQuery } from 'urql';
 import { useAuth } from '@/lib/auth';
 import { formatAgeGroup } from '@/ui/format';
@@ -16,6 +16,7 @@ import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationPersonLink } from '@/ui/federation-links';
+import { FederationRankBadge } from '@/ui/FederationRankings';
 import { Globe, Music2 } from 'lucide-react';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
@@ -57,7 +58,9 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
   if (!item) return null;
 
   const subtitleParts = [
-    categoryProgress,
+    <span key="category" className="inline-flex flex-wrap items-center gap-2">
+      {categoryProgress}
+    </span>,
     item.phone && (
       <a className="underline" href={`tel:${item.phone.replaceAll(' ', '')}`}>
         {item.phone}
@@ -78,6 +81,12 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
         {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
       </FederationPersonLink>
     )),
+    <span key="ranklist" className="inline-flex flex-wrap items-center gap-2">
+      <FederationRankBadge
+        entries={item.federationRanklistEntries.nodes}
+        ageGroup={getCstsAgeCategory(item.birthDate)?.id}
+      />
+    </span>,
   ].filter(Boolean);
 
   const socialLinks = [

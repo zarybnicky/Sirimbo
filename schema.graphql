@@ -3265,6 +3265,35 @@ type Couple {
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection!
+
+  """Reads and enables pagination through a set of `RanklistEntry`."""
+  federationRanklistEntries(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistEntry`."""
+    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistEntriesConnection!
   id: BigInt!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -11157,6 +11186,35 @@ type Person {
     """The method to use when ordering `FederationPerson`."""
     orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationPeopleConnection!
+
+  """Reads and enables pagination through a set of `RanklistEntry`."""
+  federationRanklistEntries(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RanklistEntryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RanklistEntry`."""
+    orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RanklistEntriesConnection!
   firstName: String!
   gender: GenderType!
   hasAccess: Boolean
@@ -13311,6 +13369,7 @@ tested for equality and combined with a logical ‘and.’
 input RanklistEntryCondition {
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
+  latestSnapshot: Boolean
 
   """Checks for equality with the object’s `points` field."""
   points: BigFloat

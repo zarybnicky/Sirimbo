@@ -128,7 +128,8 @@ grant select on person_federation_link to anonymous;
 
 comment on table person is '@omit create
 @ref federationPeople via:public.person_federation_link;federated.person
-@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress';
+@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
 
 drop function if exists csts_athlete;
 drop function if exists person_csts_progress;
@@ -154,7 +155,8 @@ grant select on couple_federation_link to anonymous;
 
 comment on table couple is '@simpleCollections only
 @behavior -query:resource:list -query:resource:connection
-@ref federationCompetitors via:public.couple_federation_link;federated.competitor';
+@ref federationCompetitors via:public.couple_federation_link;federated.competitor
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 
 do $$
 begin
@@ -251,3 +253,6 @@ where e.federation = 'wdsf' and e.id = statuses.event_id
 --!include functions/federation_competitor_facets.sql
 
 ALTER TABLE federated.competition_official ADD COLUMN IF NOT EXISTS judge_label text;
+
+--!include functions/competition_reports.sql
+--!include functions/activity_timeline.sql

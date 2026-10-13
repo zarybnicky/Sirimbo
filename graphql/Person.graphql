@@ -110,6 +110,12 @@ query PersonPayments($id: BigInt!) {
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
+    federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
+      nodes {
+        ...FederationRanking
+        competitor { id couplesList { id } }
+      }
+    }
     federationCategoryProgresses(first: 100) {
       nodes { ...FederationCategoryProgress }
     }

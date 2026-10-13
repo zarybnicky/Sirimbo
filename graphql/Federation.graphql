@@ -57,6 +57,31 @@ query FederationList($condition: FederationCondition, $withCounts: Boolean! = tr
   }
 }
 
+fragment FederationRanking on RanklistEntry {
+  snapshotId
+  competitorId
+  ranking
+  rankingTo
+  competitor {
+    id
+    name
+  }
+  snapshot {
+    id
+    asOfDate
+    kind
+    ranklistEntriesBySnapshotId(first: 0) { totalCount }
+    ranklist {
+      id
+      federation
+      name
+      category {
+        ...CompetitionCategory
+      }
+    }
+  }
+}
+
 fragment OfficialPerson on FederationPerson {
   id
   externalId

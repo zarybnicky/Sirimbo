@@ -1,19 +1,13 @@
-type Constraint = { maxAge?: number; minAge?: number };
+import { cstsAgeCategories, type AgeConstraint } from '@/ui/csts';
 
-type Category = {
-  name: string;
-  older: Constraint;
-  younger: Constraint;
-};
-
-const formatAge = ({ minAge, maxAge }: Constraint): string => {
+const formatAge = ({ minAge, maxAge }: AgeConstraint): string => {
   if (minAge !== undefined && maxAge !== undefined) return `${minAge}–${maxAge - 1}`;
   if (maxAge !== undefined) return `<${maxAge}`;
   if (minAge !== undefined) return `${minAge}+`;
   return '—';
 };
 
-const formatYears = (year: number, { minAge, maxAge }: Constraint): string => {
+const formatYears = (year: number, { minAge, maxAge }: AgeConstraint): string => {
   const from = maxAge !== undefined ? year - maxAge + 1 : undefined;
   const to = minAge !== undefined ? year - minAge : undefined;
 
@@ -31,21 +25,6 @@ const formatYears = (year: number, { minAge, maxAge }: Constraint): string => {
   return '—';
 };
 
-const categories: Category[] = [
-  { name: 'Do 8 let', older: { maxAge: 8 }, younger: { maxAge: 8 } },
-  { name: 'Děti I', older: { maxAge: 10 }, younger: { maxAge: 10 } },
-  { name: 'Děti II', older: { maxAge: 12, minAge: 10 }, younger: { maxAge: 12 } },
-  { name: 'Junioři I', older: { maxAge: 14, minAge: 12 }, younger: { maxAge: 14 } },
-  { name: 'Junioři II', older: { maxAge: 16, minAge: 14 }, younger: { maxAge: 16 } },
-  { name: 'Mládež', older: { maxAge: 19, minAge: 16 }, younger: { maxAge: 19 } },
-  { name: 'Do 21 let', older: { maxAge: 21, minAge: 16 }, younger: { maxAge: 21 } },
-  { name: 'Dospělí', older: { minAge: 19 }, younger: { maxAge: 35 } },
-  { name: 'Senioři I', older: { minAge: 35 }, younger: { minAge: 30 } },
-  { name: 'Senioři II', older: { minAge: 45 }, younger: { minAge: 40 } },
-  { name: 'Senioři III', older: { minAge: 55 }, younger: { minAge: 50 } },
-  { name: 'Senioři IV', older: { minAge: 65 }, younger: { minAge: 60 } },
-];
-
 export function AgeCategoryTable() {
   const year = new Date().getFullYear();
 
@@ -59,7 +38,7 @@ export function AgeCategoryTable() {
         </tr>
       </thead>
       <tbody className="contents">
-        {categories.map((c) => (
+        {cstsAgeCategories.map((c) => (
           <tr key={c.name} className="contents">
             <td className="self-center">{c.name}</td>
             <td className="self-center text-center px-0">

@@ -9,6 +9,8 @@ import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationCompetitorLink } from '@/ui/federation-links';
+import { getCstsAgeCategory } from '@/ui/csts';
+import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 
 export function Couple({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
@@ -27,22 +29,26 @@ export function Couple({ id }: { id: string }) {
         title={title}
         actions={actions}
         subtitle={
-          item.federationCompetitors.nodes.length > 0 && (
-            <span className="inline-flex flex-wrap gap-2">
-              {item.federationCompetitors.nodes.map((competitor) => (
-                <FederationCompetitorLink
-                  key={competitor.id}
-                  federation={competitor.federation}
-                  externalId={competitor.externalId}
-                  className="text-accent-12 hover:text-accent-11"
-                >
-                  {competitor.federation === 'csts'
-                    ? 'ČSTS'
-                    : competitor.federation.toUpperCase()}
-                </FederationCompetitorLink>
-              ))}
-            </span>
-          )
+          <span className="inline-flex flex-wrap items-center gap-2">
+            <FederationRankBadge
+              entries={item.federationRanklistEntries.nodes}
+              ageGroup={
+                getCstsAgeCategory(item.man?.birthDate, item.woman?.birthDate ?? null)?.id
+              }
+            />
+            {item.federationCompetitors.nodes.map((competitor) => (
+              <FederationCompetitorLink
+                key={competitor.id}
+                federation={competitor.federation}
+                externalId={competitor.externalId}
+                className="text-accent-12 hover:text-accent-11"
+              >
+                {competitor.federation === 'csts'
+                  ? 'ČSTS'
+                  : competitor.federation.toUpperCase()}
+              </FederationCompetitorLink>
+            ))}
+          </span>
         }
       />
 
@@ -70,7 +76,7 @@ export function Couple({ id }: { id: string }) {
         <div>{formatOpenDateRange(item)}</div>
         <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
       </div>
-
+      <FederationRankings entries={item.federationRanklistEntries.nodes} />
       <ActivityTimeline personIds={personIds} includeJudging />
     </>
   );

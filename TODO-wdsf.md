@@ -34,15 +34,17 @@
 - [ ] Add federation → ranklist → dated snapshot navigation.
 - [ ] Show snapshot date/kind and entries ordered by rank, with links to competitors.
 - [ ] Link competitors back to their ranklist entries.
-- [ ] Show ranklist placement alongside class and age group in the app, linked to the dated snapshot.
+- [x] Show current-age-category ranklist placements on in-app person and couple pages.
+- [ ] Link in-app ranklist placements to the dated snapshot.
+- [ ] Add WDSF ranklist ingestion; stored snapshots currently cover ČSTS only.
 
 ## Remaining app consumers
 
 - [ ] [Competitions.tsx](frontend/ui/Competitions.tsx): link dashboard, calendar, and timeline cards to internal event/competition pages; support category labels across federations.
 - [ ] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): replace ČSTS-only judging links on person/couple/group pages; link event-level official activity too.
-- [ ] [competition_reports.sql](migrations/fixtures/functions/competition_reports.sql): use `person_federation_link` in `competition_brief` and `competition_report` instead of repeated ID matching.
-- [ ] [activity_timeline.sql](migrations/fixtures/functions/activity_timeline.sql): use the same relation in the judging branch.
-- [ ] Review `current_tenant_membership` scoping in reports: explicitly selected, RLS-visible people must not disappear solely for lacking tenant membership.
+- [x] [competition_reports.sql](migrations/fixtures/functions/competition_reports.sql): use `person_federation_link` in `competition_brief` and `competition_report` instead of repeated ID matching.
+- [x] [activity_timeline.sql](migrations/fixtures/functions/activity_timeline.sql): use the same relation in the judging branch.
+- [x] Review `current_tenant_membership` scoping in reports: explicitly selected, RLS-visible people must not disappear solely for lacking tenant membership.
 - [ ] [CstsIdBackfillWidget.tsx](frontend/ui/CstsIdBackfillWidget.tsx) / `person_csts_candidates`: generalize federation selection and candidate matching; retain fuzzy suggestions and explicit selection.
 
 ## Clubs and affiliations

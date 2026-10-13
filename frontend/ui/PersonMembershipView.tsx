@@ -1,6 +1,8 @@
+import type { CoupleFragment } from '@/graphql/Memberships';
+import type { FederationRankingFragment } from '@/graphql/Federation';
+import { FederationRankings } from '@/ui/FederationRankings';
 import { memo } from 'react';
-import { CoupleFragment } from '@/graphql/Memberships';
-import type { PersonWithLinksFragment } from '@/graphql/Person';
+import type { PersonMembershipsQuery } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import {
   formatCoupleName,
@@ -29,7 +31,11 @@ import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 
-export const PersonMembershipView = memo(function PersonMembershipView({ item }: { item: PersonWithLinksFragment }) {
+export const PersonMembershipView = memo(function PersonMembershipView({
+  item,
+}: {
+  item: NonNullable<PersonMembershipsQuery['person']>;
+}) {
   const auth = useAuth();
   const { enableStarletImport } = useTenantConfig();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
@@ -77,8 +83,14 @@ export const PersonMembershipView = memo(function PersonMembershipView({ item }:
 
       {item.allCouplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
-        ?.map((item) => (
-          <CoupleRow key={item.id} item={item} />
+        ?.map((couple) => (
+          <CoupleRow
+            key={couple.id}
+            item={couple}
+            rankings={item.federationRanklistEntries.nodes.filter((entry) =>
+              entry.competitor?.couplesList?.some((match) => match.id === couple.id),
+            )}
+          />
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -282,16 +294,25 @@ export const PersonMembershipView = memo(function PersonMembershipView({ item }:
   );
 });
 
-function CoupleRow({ item }: { item: CoupleFragment }) {
+function CoupleRow({
+  item,
+  rankings,
+}: {
+  item: CoupleFragment;
+  rankings: FederationRankingFragment[];
+}) {
   const actions = useActions(coupleActions, item);
   return (
-    <ActionRow actions={actions}>
-      <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-        <Link className="underline font-bold" href={`/pary/${item.id}`}>
-          {formatCoupleName(item)}
-        </Link>
-        <span>{formatOpenDateRange(item)}</span>
-      </div>
-    </ActionRow>
+    <div>
+      <ActionRow actions={actions}>
+        <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <Link className="underline font-bold" href={`/pary/${item.id}`}>
+            {formatCoupleName(item)}
+          </Link>
+          <span>{formatOpenDateRange(item)}</span>
+        </div>
+      </ActionRow>
+      <FederationRankings entries={rankings} />
+    </div>
   );
 }

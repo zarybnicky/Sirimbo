@@ -1,3 +1,4 @@
+import { getCstsAgeCategory } from '@/ui/csts';
 import { AddressDomain, EventType, ScoreComponent, ScoringMethod } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 
@@ -188,43 +189,7 @@ export const formatOpenDateRange = (item: {
         : '';
 
 export function formatAgeGroup(birthDate: string | null | undefined) {
-  if (!birthDate) return;
-  const birthYear = new Date(birthDate).getFullYear();
-  const diff = new Date().getFullYear() - birthYear;
-  if (diff < 8) {
-    return 'Do 8 let';
-  }
-  if (diff < 10) {
-    return 'Děti I';
-  }
-  if (10 <= diff && diff < 12) {
-    return 'Děti II';
-  }
-  if (12 <= diff && diff < 14) {
-    return 'Jun I';
-  }
-  if (14 <= diff && diff < 16) {
-    return 'Jun II';
-  }
-  if (16 <= diff && diff < 19) {
-    return 'Mládež';
-  }
-  if (19 <= diff && diff < 21) {
-    return 'U21';
-  }
-  if (21 <= diff && diff < 35) {
-    return 'Dospělí';
-  }
-  if (35 <= diff && diff < 45) {
-    return 'Sen I';
-  }
-  if (45 <= diff && diff < 55) {
-    return 'Sen II';
-  }
-  if (55 <= diff && diff < 65) {
-    return 'Sen III';
-  }
-  return 'Sen IV';
+  return getCstsAgeCategory(birthDate)?.name;
 }
 
 export function describePosting(

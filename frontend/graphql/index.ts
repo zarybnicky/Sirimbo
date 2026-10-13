@@ -2495,6 +2495,8 @@ export type Couple = {
   eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
   federationCompetitors: FederationCompetitorsConnection;
+  /** Reads and enables pagination through a set of `RanklistEntry`. */
+  federationRanklistEntries: RanklistEntriesConnection;
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   man: Maybe<Person>;
@@ -2537,6 +2539,17 @@ export type CoupleFederationCompetitorsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationCompetitorsOrderBy>>;
   orderByCategory?: InputMaybe<CompetitorCategoryOrder>;
+};
+
+
+export type CoupleFederationRanklistEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RanklistEntryCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RanklistEntriesOrderBy>>;
 };
 
 /** A condition to be used against `Couple` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -8712,6 +8725,8 @@ export type Person = {
   federationCategoryProgresses: FederationCompetitorCategoryProgressesConnection;
   /** Reads and enables pagination through a set of `FederationPerson`. */
   federationPeople: FederationPeopleConnection;
+  /** Reads and enables pagination through a set of `RanklistEntry`. */
+  federationRanklistEntries: RanklistEntriesConnection;
   firstName: Scalars['String']['output'];
   gender: GenderType;
   hasAccess: Maybe<Scalars['Boolean']['output']>;
@@ -8872,6 +8887,17 @@ export type PersonFederationPeopleArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationPeopleOrderBy>>;
+};
+
+
+export type PersonFederationRanklistEntriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RanklistEntryCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RanklistEntriesOrderBy>>;
 };
 
 
@@ -10908,6 +10934,7 @@ export type RanklistEntry = {
 export type RanklistEntryCondition = {
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: InputMaybe<Scalars['String']['input']>;
+  latestSnapshot?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `points` field. */
   points?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `ranking` field. */
@@ -14849,6 +14876,7 @@ export type GraphCacheResolvers = {
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     federationCompetitors?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
+    federationRanklistEntries?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     man?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     manId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -15949,6 +15977,7 @@ export type GraphCacheResolvers = {
     facebookUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     federationCategoryProgresses?: GraphCacheResolver<WithTypename<Person>, PersonFederationCategoryProgressesArgs, WithTypename<FederationCompetitorCategoryProgressesConnection> | string>,
     federationPeople?: GraphCacheResolver<WithTypename<Person>, PersonFederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
+    federationRanklistEntries?: GraphCacheResolver<WithTypename<Person>, PersonFederationRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -17485,6 +17514,7 @@ export type GraphCacheUpdaters = {
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsListArgs>,
     federationCompetitors?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleFederationCompetitorsArgs>,
+    federationRanklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleFederationRanklistEntriesArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     manId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
@@ -18585,6 +18615,7 @@ export type GraphCacheUpdaters = {
     facebookUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     federationCategoryProgresses?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonFederationCategoryProgressesArgs>,
     federationPeople?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonFederationPeopleArgs>,
+    federationRanklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonFederationRanklistEntriesArgs>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

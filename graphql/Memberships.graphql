@@ -112,6 +112,11 @@ query CoupleList {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
+    man { id birthDate }
+    woman { id birthDate }
+    federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
+      nodes { ...FederationRanking }
+    }
     federationCompetitors(first: 100, orderBy: [FEDERATION_ASC, EXTERNAL_ID_ASC]) {
       nodes { id federation externalId }
     }

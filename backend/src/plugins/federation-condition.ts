@@ -152,6 +152,20 @@ const plugins: GraphileConfig.Plugin[] = [
     ),
   ),
   addPgTableCondition(
+    { schemaName: 'federated', tableName: 'ranklist_entry' },
+    'latestSnapshot',
+    (build) => ({ type: build.graphql.GraphQLBoolean }),
+    (value, { sql, sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const latest = sql`${row}.snapshot_id in (
+        select distinct on (ranklist_id, kind) id
+        from federated.ranklist_snapshot
+        order by ranklist_id, kind, as_of_date desc
+      )`;
+      return value ? latest : sql`not (${latest})`;
+    },
+  ),
+  addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
     'onDate',
     (build) => ({ type: build.getInputTypeByName('Date') }),

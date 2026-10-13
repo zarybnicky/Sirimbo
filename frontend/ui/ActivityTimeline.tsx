@@ -308,7 +308,7 @@ function TimelineDay({
 
         {competitionGroups.size > 0 && (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
-            {competitionGroups.entries().map(([key, items]) => (
+            {[...competitionGroups].map(([key, items]) => (
               <div
                 key={`competition:${key}`}
                 className={cardCls({
@@ -327,7 +327,7 @@ function TimelineDay({
 
         {judgingGroups.size > 0 && (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
-            {judgingGroups.entries().map(([key, items]) => (
+            {[...judgingGroups].map(([key, items]) => (
               <div
                 key={`judging:${key}`}
                 className={cardCls({
