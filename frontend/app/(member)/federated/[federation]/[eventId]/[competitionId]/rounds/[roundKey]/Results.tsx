@@ -34,37 +34,75 @@ export function Results({
     () =>
       Object.groupBy(
         round.judgeScoresList,
-        (s) => `${s.danceOrder}:${s.competitorId}:${s.judgePersonId}`,
+        (s): string => `${s.competitorId}:${s.danceOrder}:${s.judgePersonId}`,
       ),
     [round.judgeScoresList],
   );
-  const groups = !showMarks
-    ? []
-    : view === 'dance'
-      ? round.dancesList.map((dance) => ({
-          key: dance.danceOrder,
-          label: dance.danceCode,
-          title: dance.programDance?.dance?.name,
-          columns: round.judgesList.map((judge) => ({
-            danceOrder: dance.danceOrder,
-            judgeId: judge.personJudge?.externalId,
-            label: judge.judgeLabel || judge.judgeIndex,
-            title: judge.personJudge?.canonicalName ?? undefined,
-          })),
-        }))
-      : round.judgesList.map((judge) => ({
-          key: judge.personJudgeId,
-          label: judge.judgeLabel || judge.judgeIndex,
-          title: judge.personJudge?.canonicalName ?? undefined,
-          columns: round.dancesList.map((dance) => ({
-            danceOrder: dance.danceOrder,
-            judgeId: judge.personJudge?.externalId,
-            label: dance.danceCode,
-            title: dance.programDance?.dance?.name,
-          })),
-        }));
-
+  const dances = round.dancesList.map((dance) => ({
+    key: String(dance.danceOrder),
+    label: dance.danceCode,
+    title: dance.programDance?.dance?.name,
+  }));
+  const judges = round.judgesList.map((judge) => ({
+    key: judge.personJudge?.externalId ?? judge.personJudgeId,
+    label: judge.judgeLabel || judge.judgeIndex,
+    title: judge.personJudge?.canonicalName ?? undefined,
+    personId: judge.personJudgeId,
+  }));
+  const groups = showMarks ? (view === 'dance' ? dances : judges) : [];
+  const columns = groups.flatMap((group) =>
+    (view === 'dance' ? judges : dances).map((column, index) => ({
+      ...column,
+      key: view === 'dance' ? `${group.key}:${column.key}` : `${column.key}:${group.key}`,
+      border: index === 0,
+    })),
+  );
+  const rows = round.resultsList.map((result) => ({
+    ...result,
+    startNumber: startNumbers.get(result.competitorId),
+    competitorLink: result.competitor ? (
+      <Link
+        href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+        className="text-accent-11 underline"
+        prefetch={false}
+      >
+        {result.competitor.name || result.competitorId}
+      </Link>
+    ) : (
+      result.competitorId
+    ),
+  }));
   const resultRowSpan = showMarks && showDanceResults ? 2 : 1;
+
+  function scoreCells(
+    competitorId: string | undefined,
+    cells: { key: string; border?: boolean }[],
+    danceKey?: string,
+  ) {
+    return cells.map((column) => {
+      const key = danceKey == null ? column.key : `${danceKey}:${column.key}`;
+      const marks = scores[`${competitorId}:${key}`];
+      return (
+        <td
+          key={column.key}
+          className={cn(
+            'text-center whitespace-nowrap',
+            showMarks && 'px-0.5 py-1 font-mono',
+            column.border && 'border-l border-neutral-4',
+          )}
+        >
+          {view === 'detailed'
+            ? (marks?.map((score) => (
+                <div key={score.component}>
+                  {score.component.startsWith('AJS_') && <>{score.component.slice(4)} </>}
+                  {formatJudgeScore(score)}
+                </div>
+              )) ?? '–')
+            : formatJudgeScore(marks?.[0])}
+        </td>
+      );
+    });
+  }
 
   return (
     <>
@@ -113,7 +151,7 @@ export function Results({
                 <th
                   key={group.key}
                   scope="colgroup"
-                  colSpan={group.columns.length}
+                  colSpan={view === 'dance' ? judges.length : dances.length}
                   className="border-l border-neutral-4 px-2 py-1 text-center"
                   title={group.title}
                 >
@@ -122,14 +160,14 @@ export function Results({
               ))}
               {!showMarks &&
                 showDanceResults &&
-                round.dancesList.map((dance) => (
+                dances.map((dance) => (
                   <th
-                    key={dance.danceOrder}
+                    key={dance.key}
                     scope="col"
                     className="px-2 py-1"
-                    title={dance.programDance?.dance?.name}
+                    title={dance.title}
                   >
-                    {dance.danceCode}
+                    {dance.label}
                   </th>
                 ))}
               {showDanceResults && (
@@ -145,25 +183,23 @@ export function Results({
             </tr>
             {showMarks && (
               <tr>
-                {groups.flatMap((group) =>
-                  group.columns.map((column, index) => (
-                    <th
-                      key={`${column.danceOrder}:${column.judgeId}`}
-                      scope="col"
-                      className={cn(
-                        'px-0.5 py-1 text-center font-mono font-normal',
-                        index === 0 && 'border-l border-neutral-4',
-                      )}
-                      title={column.title}
-                    >
-                      {column.label}
-                    </th>
-                  )),
-                )}
+                {columns.map((column) => (
+                  <th
+                    key={column.key}
+                    scope="col"
+                    className={cn(
+                      'px-0.5 py-1 text-center font-mono font-normal',
+                      column.border && 'border-l border-neutral-4',
+                    )}
+                    title={column.title}
+                  >
+                    {column.label}
+                  </th>
+                ))}
               </tr>
             )}
           </thead>
-          {round.resultsList.map((result) => (
+          {rows.map((result) => (
             <tbody key={result.competitorId} className="border-t border-neutral-4">
               <tr>
                 <td rowSpan={resultRowSpan} className="px-2 py-1 whitespace-nowrap">
@@ -174,48 +210,20 @@ export function Results({
                     : ''}
                 </td>
                 <td rowSpan={resultRowSpan} className="px-2 py-1">
-                  {startNumbers.get(result.competitorId)}
+                  {result.startNumber}
                 </td>
                 <th
                   scope="rowgroup"
                   rowSpan={resultRowSpan}
                   className="min-w-48 px-2 py-1 font-normal"
                 >
-                  {result.competitor ? (
-                    <Link
-                      href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                      className="text-accent-11 underline"
-                      prefetch={false}
-                    >
-                      {result.competitor.name || result.competitorId}
-                    </Link>
-                  ) : (
-                    result.competitorId
-                  )}
+                  {result.competitorLink}
                 </th>
-                {groups.flatMap((group) =>
-                  group.columns.map((column, index) => {
-                    const score =
-                      scores[
-                        `${column.danceOrder}:${result.competitor?.externalId}:${column.judgeId}`
-                      ]?.[0];
-                    return (
-                      <td
-                        key={`${column.danceOrder}:${column.judgeId}`}
-                        className={cn(
-                          'px-0.5 py-1 text-center font-mono whitespace-nowrap',
-                          index === 0 && 'border-l border-neutral-4',
-                        )}
-                      >
-                        {formatJudgeScore(score)}
-                      </td>
-                    );
-                  }),
-                )}
+                {scoreCells(result.competitor?.externalId, columns)}
                 {!showMarks &&
                   showDanceResults &&
-                  round.dancesList.map((dance, index) => (
-                    <td key={dance.danceOrder} className="px-2 py-1">
+                  dances.map((dance, index) => (
+                    <td key={dance.key} className="px-2 py-1">
                       {result.danceResults?.[index] ?? '–'}
                     </td>
                   ))}
@@ -237,10 +245,10 @@ export function Results({
               {showMarks && showDanceResults && (
                 <tr>
                   {view === 'dance' ? (
-                    round.dancesList.map((dance, index) => (
+                    dances.map((dance, index) => (
                       <td
-                        key={dance.danceOrder}
-                        colSpan={round.judgesList.length}
+                        key={dance.key}
+                        colSpan={judges.length}
                         className="border-l border-t border-neutral-4 px-2 py-0.5 text-center font-medium"
                       >
                         {result.danceResults?.[index] ?? '–'}
@@ -248,16 +256,16 @@ export function Results({
                     ))
                   ) : (
                     <td
-                      colSpan={round.dancesList.length * round.judgesList.length}
+                      colSpan={dances.length * judges.length}
                       className="border-l border-t border-neutral-4 px-2 py-0.5"
                     >
                       <dl
                         aria-label="Dance results"
                         className="flex flex-wrap justify-center gap-x-4"
                       >
-                        {round.dancesList.map((dance, index) => (
-                          <div key={dance.danceOrder} className="flex gap-1">
-                            <dt>{dance.danceCode}</dt>
+                        {dances.map((dance, index) => (
+                          <div key={dance.key} className="flex gap-1">
+                            <dt>{dance.label}</dt>
                             <dd className="font-medium">
                               {result.danceResults?.[index] ?? '–'}
                             </dd>
@@ -272,66 +280,40 @@ export function Results({
           ))}
         </table>
       </div>
-      {round.resultsList.length === 0 && <p>No round results</p>}
+      {rows.length === 0 && <p>No round results</p>}
       {view === 'detailed' &&
         (round.judgeScoresList.length === 0 ? (
           <p>No marks</p>
         ) : (
-          round.dancesList.map((dance) => (
+          dances.map((dance) => (
             <Table
-              key={dance.danceOrder}
+              key={dance.key}
               className="col-feature mb-4"
-              caption={dance.programDance?.dance?.name || dance.danceCode}
+              caption={dance.title || dance.label}
               columns={[
                 'start number',
                 'competitor',
-                ...round.judgesList.map((judge) => (
+                ...judges.map((judge) => (
                   <span
-                    key={judge.personJudgeId}
+                    key={judge.personId}
                     className="block text-center"
-                    title={judge.personJudge?.canonicalName || judge.personJudgeId}
+                    title={judge.title || judge.personId}
                   >
-                    {judge.judgeLabel || judge.judgeIndex}
+                    {judge.label}
                   </span>
                 )),
               ]}
             >
-              {round.resultsList.map((result) => (
+              {rows.map((result) => (
                 <tr
                   key={result.competitorId}
                   className="border-t border-neutral-4 align-top"
                 >
-                  <td>{startNumbers.get(result.competitorId)}</td>
+                  <td>{result.startNumber}</td>
                   <th scope="row" className="min-w-48">
-                    {result.competitor ? (
-                      <Link
-                        href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                        className="text-accent-11 underline"
-                        prefetch={false}
-                      >
-                        {result.competitor.name || result.competitorId}
-                      </Link>
-                    ) : (
-                      result.competitorId
-                    )}
+                    {result.competitorLink}
                   </th>
-                  {round.judgesList.map((judge) => (
-                    <td
-                      key={judge.personJudgeId}
-                      className="text-center whitespace-nowrap"
-                    >
-                      {scores[
-                        `${dance.danceOrder}:${result.competitor?.externalId}:${judge.personJudge?.externalId}`
-                      ]?.map((score) => (
-                        <div key={score.component}>
-                          {score.component.startsWith('AJS_') && (
-                            <>{score.component.slice(4)} </>
-                          )}
-                          {formatJudgeScore(score)}
-                        </div>
-                      )) ?? '–'}
-                    </td>
-                  ))}
+                  {scoreCells(result.competitor?.externalId, judges, dance.key)}
                 </tr>
               ))}
             </Table>
