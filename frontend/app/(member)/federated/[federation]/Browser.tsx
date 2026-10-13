@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 import { useEffect, useState, type ReactNode } from 'react';
+import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Table } from '@/ui/Table';
 import { z } from 'zod';
@@ -29,6 +30,7 @@ import {
   FederationEventsDocument,
   FederationPeopleDocument,
   FederationCompetitorsDocument,
+  FederationCompetitorFacetsDocument,
   type FederationCompetitorsQueryVariables,
 } from '@/graphql/Federation';
 
@@ -274,16 +276,27 @@ function People(props: BrowserProps) {
 
 function Competitors(props: BrowserProps) {
   const { federation, filters, setFilters, search, searchPending } = props;
+  const filterVariables = {
+    federation,
+    search,
+    competitorTypes: filters.type,
+    ageGroups: filters.ageGroup,
+    classes: filters.class,
+    disciplines: filters.discipline,
+    competedSince: filters.competedThisYear ? `${new Date().getFullYear()}-01-01` : null,
+  };
+  const [facetResult] = useQuery({
+    query: FederationCompetitorFacetsDocument,
+    variables: filterVariables,
+    pause: searchPending,
+    requestPolicy: 'cache-first',
+  });
+  const facetOptions = facetResult.data?.federation?.competitorFacetsList ?? [];
   const result = usePaginatedQuery({
     query: FederationCompetitorsDocument,
     pause: searchPending,
     variables: (offset): FederationCompetitorsQueryVariables => ({
-      federation,
-      search,
-      competitorTypes: filters.type,
-      ageGroups: filters.ageGroup,
-      classes: filters.class,
-      disciplines: filters.discipline,
+      ...filterVariables,
       competitorOrder:
         filters.sort === 'competitor'
           ? [filters.descending ? 'NAME_DESC' : 'NAME_ASC', 'EXTERNAL_ID_ASC']
@@ -295,9 +308,6 @@ function Competitors(props: BrowserProps) {
               discipline: filters.sort,
               descending: filters.descending,
             },
-      competedSince: filters.competedThisYear
-        ? `${new Date().getFullYear()}-01-01`
-        : null,
       offset,
     }),
     limit: 50,
@@ -306,7 +316,7 @@ function Competitors(props: BrowserProps) {
   const item = result.data?.federation;
   const isPending = result.fetching || searchPending;
   const availableDisciplines = new Set([
-    ...(item?.competitorFacetsList ?? [])
+    ...facetOptions
       .filter((facet) => facet.facet === 'discipline')
       .map((facet) => facet.value!),
     ...(item?.competitors?.nodes ?? []).flatMap((competitor) =>
@@ -321,13 +331,17 @@ function Competitors(props: BrowserProps) {
   return (
     <Results
       browser={props}
-      result={result}
+      result={{
+        ...result,
+        fetching: result.fetching || facetResult.fetching,
+        error: result.error ?? facetResult.error,
+      }}
       controls={
         <>
           {' '}
           {facets.map(({ key, label }) => {
             const counts = new Map(
-              (item?.competitorFacetsList ?? [])
+              facetOptions
                 .filter((option) => option.facet === key)
                 .map((option) => [
                   key === 'type' ? option.value!.toUpperCase() : option.value!,

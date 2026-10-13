@@ -436,6 +436,20 @@ query FederationCompetitors(
         }
       }
     }
+  }
+}
+
+query FederationCompetitorFacets(
+  $federation: String!
+  $search: String
+  $competitorTypes: [CompetitorType!]
+  $ageGroups: [String!]
+  $classes: [String!]
+  $disciplines: [String!]
+  $competedSince: Date
+) {
+  federation(code: $federation) {
+    code
     competitorFacetsList(
       search: $search
       competitorTypes: $competitorTypes
