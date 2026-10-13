@@ -305,17 +305,15 @@ query FederationCompetitor($id: String!) {
       code
       name
     }
-    categoryProgresses(first: 100, orderBy: CATEGORY_ID_ASC) {
-      nodes {
-        categoryId
-        category {
-          id
-          name
-        }
-        points
-        domesticFinals
-        foreignFinals
+    categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
+      categoryId
+      category {
+        id
+        name
       }
+      points
+      domesticFinals
+      foreignFinals
     }
     couplesList(orderBy: [SINCE_DESC, ID_ASC]) {
       ...Couple
@@ -537,7 +535,7 @@ query CompetitionRound(
       competitorId
       startNumber
     }
-    round: roundsList(condition: { roundKey: $roundKey }) {
+    round: roundsList(first: 1, condition: { roundKey: $roundKey }) {
       id
       roundKey
       roundLabel

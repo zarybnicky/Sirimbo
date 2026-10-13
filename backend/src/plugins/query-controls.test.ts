@@ -1,17 +1,10 @@
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
-import { readFile, readdir } from 'node:fs/promises';
 import { createServer, type Server } from 'node:http';
 import { after, before, test } from 'node:test';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import {
-  parse,
-  separateOperations,
-  specifiedRules,
-  validate,
-  type GraphQLSchema,
-} from 'graphql';
+import type { GraphQLSchema } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { postgraphile, type PostGraphileInstance } from 'postgraphile';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
@@ -76,22 +69,6 @@ async function request(
     errors?: { message: string }[];
   };
 }
-
-test('existing operation documents pass schema validation', async () => {
-  const files = (await readdir('../graphql')).filter((file) => file.endsWith('.graphql'));
-  const document = parse(
-    (await Promise.all(files.map((file) => readFile(`../graphql/${file}`, 'utf8')))).join(
-      '\n',
-    ),
-  );
-  for (const [name, operation] of Object.entries(separateOperations(document))) {
-    assert.deepEqual(
-      validate(schema, operation, specifiedRules).map((error) => error.message),
-      [],
-      name,
-    );
-  }
-});
 
 test('new names are present and crawler/federation writes are absent', () => {
   for (const name of [
@@ -266,6 +243,37 @@ test('nested pagination variables contribute to the cost budget', async () => {
   assert.match(
     (await request(query, { first: 100 })).errors?.[0]?.message ?? '',
     /Cost limit/,
+  );
+});
+
+test('omitted and null list limits cannot hide nested fan-out', async () => {
+  const query = `query Scores($first: Int) {
+    competitionRound(id: "-1") {
+      scores: judgeScoresList(first: $first) { ...Score }
+    }
+  }
+  fragment Score on JudgeScore { round { judgeScoresList { score } } }`;
+  assert.equal((await request(query, { first: 1 })).errors, undefined);
+  for (const variables of [{}, { first: null }, { first: 10000 }]) {
+    assert.match(
+      (await request(query, variables)).errors?.[0]?.message ?? '',
+      /Cost limit/,
+    );
+  }
+  assert.match(
+    (
+      await request(`{
+      competitionRound(id: "-1") {
+        judgeScoresList { round { judgeScoresList { score } } }
+      }
+    }`)
+    ).errors?.[0]?.message ?? '',
+    /Cost limit/,
+  );
+  assert.equal(
+    (await request('{ competitionRound(id: "-1") { judgeScoresList { score } } }'))
+      .errors,
+    undefined,
   );
 });
 

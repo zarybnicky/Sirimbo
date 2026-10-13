@@ -5,6 +5,12 @@
 - [ ] Redesign reusable faceted search for competitors, then app people/couples; retain inline class, points/finals, and ranklist placement where relevant.
 - [ ] Derive competitor age categories from their members.
 - [ ] Make `/federated` suitable for ordinary users before linking it throughout the main app.
+- [ ] Retain local person/couple links in competition results. These links currently appear only through registrations.
+- [ ] Derive ČSTS event status from competition completion, while preserving explicit cancellation.
+
+`cstsEventIndex` writes `planned` for every non-cancelled event. `cstsEvent` updates
+competition status but does not update the parent event. The status aggregation
+currently applies only to WDSF. An index refresh must not overwrite derived completion.
 
 ## Competition results and round marks
 
@@ -35,6 +41,7 @@
 
 ## Crawler
 
+- [ ] Link failure groups to the affected filtered frontier list.
 - [ ] Add system-admin refetch/reprocess actions using worker scheduling, with resulting status and errors.
 - [ ] Rename physical `json_response` / `json_response_cache` tables (low priority).
 - [ ] Resume the WDSF completeness/recovery/replay investigation in a separate session; explicitly shelved, with no production access.

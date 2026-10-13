@@ -34,6 +34,17 @@ const queryValidationRules = [
   queryCostRule,
 ];
 
+// Separate from the existing cost limit: stop collection multiplication without
+// charging every scalar in a complete result table for the estimated row count.
+const collectionCostRule = costLimitRule({
+  ...rejection,
+  maxCost: 50000,
+  flattenFragments: true,
+  scalarCost: 0,
+  objectCost: 1,
+  depthCostFactor: 1,
+});
+
 function checkQueryLimits(
   schema: GraphQLSchema,
   document: DocumentNode,
@@ -91,7 +102,35 @@ function checkQueryLimits(
   );
   if (!federation) return [];
   if (errors.length) return errors;
-  return validate(schema, withPaginationValues, queryValidationRules);
+  const queryErrors = validate(schema, withPaginationValues, queryValidationRules);
+  if (queryErrors.length) return queryErrors;
+
+  const collectionInfo = new TypeInfo(schema);
+  const withCollectionSizes = visit(
+    withPaginationValues,
+    visitWithTypeInfo(collectionInfo, {
+      Field(node) {
+        const field = collectionInfo.getFieldDef();
+        if (!field?.extensions.collectionCost) return;
+        const args = getArgumentValues(field, node, values.coerced);
+        if (args.first != null || args.last != null) return;
+        return {
+          ...node,
+          arguments: [
+            ...(node.arguments ?? []).filter(
+              (arg) => !['first', 'last'].includes(arg.name.value),
+            ),
+            {
+              kind: Kind.ARGUMENT,
+              name: { kind: Kind.NAME, value: 'first' },
+              value: { kind: Kind.INT, value: String(field.extensions.collectionCost) },
+            },
+          ],
+        };
+      },
+    }),
+  );
+  return validate(schema, withCollectionSizes, [collectionCostRule]);
 }
 
 export const QueryControlsPlugin: GraphileConfig.Plugin = {
@@ -99,14 +138,22 @@ export const QueryControlsPlugin: GraphileConfig.Plugin = {
   schema: {
     hooks: {
       GraphQLObjectType_fields_field(field, _build, { scope }) {
-        const schema = scope.pgFieldResource?.codec.extensions?.pg?.schemaName;
-        if (schema === 'federated') {
+        const table = (scope.pgFieldCodec ?? scope.pgFieldResource?.codec)?.extensions
+          ?.pg;
+        const collection = scope.isPgFieldConnection || scope.isPgFieldSimpleCollection;
+        if (table?.schemaName === 'federated' || collection) {
           return {
             ...field,
             extensions: {
               ...field.extensions,
-              federationData: true,
-              boundedPagination: !!scope.isPgFieldConnection,
+              federationData: table?.schemaName === 'federated',
+              boundedPagination:
+                table?.schemaName === 'federated' && !!scope.isPgFieldConnection,
+              collectionCost: collection
+                ? table?.name === 'judge_score'
+                  ? 10000
+                  : 50
+                : undefined,
             },
           };
         }

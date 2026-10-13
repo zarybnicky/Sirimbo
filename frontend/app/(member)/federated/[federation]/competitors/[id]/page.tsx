@@ -66,7 +66,7 @@ export default async function CompetitorPage({ params }: Props) {
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Category progress</h2>
       <Table columns={['category', 'points']} empty="No category progress">
-        {competitor.categoryProgresses.nodes
+        {competitor.categoryProgressesList
           .toSorted((a, b) =>
             (a.category?.name ?? a.categoryId).localeCompare(
               b.category?.name ?? b.categoryId,
