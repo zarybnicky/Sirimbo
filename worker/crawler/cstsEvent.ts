@@ -22,6 +22,7 @@ import {
   type event_status,
   type gender,
   type official_role,
+  updateEventStatus,
   upsertCompetitions,
   upsertEvents,
 } from './federated.queries.ts';
@@ -202,6 +203,11 @@ export const cstsEvent: JsonLoader<Response> = {
         client,
       );
     }
+
+    await updateEventStatus.run(
+      { federation: 'csts', eventExternalId: event.eventId.toString() },
+      client,
+    );
 
     const people = makePgtypedCollection<{
       federation: string;

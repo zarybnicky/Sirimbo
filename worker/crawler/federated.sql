@@ -536,7 +536,11 @@ FROM unnest(
   address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
 )
 ON CONFLICT (federation, external_id) DO UPDATE
-  SET status = EXCLUDED.status,
+  SET status = CASE
+        WHEN EXCLUDED.status = 'planned' AND federated.event.status = 'completed'
+        THEN federated.event.status
+        ELSE EXCLUDED.status
+      END,
       name = COALESCE(EXCLUDED.name, federated.event.name),
       start_date = EXCLUDED.start_date,
       end_date = COALESCE(EXCLUDED.end_date, federated.event.end_date),
@@ -681,7 +685,7 @@ ON CONFLICT (federation, external_id) DO UPDATE
       competition_type = EXCLUDED.competition_type,
       status = EXCLUDED.status;
 
-/* @name UpdateWdsfEventStatus */
+/* @name UpdateEventStatus */
 WITH statuses AS (
   SELECT c.event_id, case
     when bool_and(c.status = 'cancelled') then 'cancelled'
@@ -693,12 +697,14 @@ WITH statuses AS (
   end::federated.event_status AS status
   FROM federated.competition c
   JOIN federated.event e ON e.id = c.event_id
-  WHERE e.federation = 'wdsf' AND e.external_id = :eventExternalId
+  WHERE e.federation = :federation AND e.external_id = :eventExternalId
   GROUP BY c.event_id
 )
 UPDATE federated.event e SET status = statuses.status
 FROM statuses
-WHERE e.id = statuses.event_id AND e.status IS DISTINCT FROM statuses.status;
+WHERE e.id = statuses.event_id AND e.status IS DISTINCT FROM statuses.status
+  -- ČSTS cancellation comes from the event index, not its competitions.
+  AND NOT (e.federation = 'csts' AND e.status = 'cancelled');
 
 /* @name MergeEventOfficials */
 WITH event AS (
