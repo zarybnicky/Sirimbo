@@ -3172,6 +3172,56 @@ export type CrawlerTargetFailureCondition = {
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CrawlerTargetFailureGroup = {
+  __typename?: 'CrawlerTargetFailureGroup';
+  count: Maybe<Scalars['Int']['output']>;
+  errorFingerprint: Maybe<Scalars['String']['output']>;
+  failedAt: Maybe<Scalars['Datetime']['output']>;
+  failure: Maybe<Scalars['String']['output']>;
+  federation: Maybe<Scalars['String']['output']>;
+  httpStatus: Maybe<Scalars['Int']['output']>;
+  kind: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * A condition to be used against `CrawlerTargetFailureGroup` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type CrawlerTargetFailureGroupCondition = {
+  /** Checks for equality with the object’s `count` field. */
+  count?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `errorFingerprint` field. */
+  errorFingerprint?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `failedAt` field. */
+  failedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `failure` field. */
+  failure?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `federation` field. */
+  federation?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `httpStatus` field. */
+  httpStatus?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Methods to use when ordering `CrawlerTargetFailureGroup`. */
+export type CrawlerTargetFailureGroupsOrderBy =
+  | 'COUNT_ASC'
+  | 'COUNT_DESC'
+  | 'ERROR_FINGERPRINT_ASC'
+  | 'ERROR_FINGERPRINT_DESC'
+  | 'FAILED_AT_ASC'
+  | 'FAILED_AT_DESC'
+  | 'FAILURE_ASC'
+  | 'FAILURE_DESC'
+  | 'FEDERATION_ASC'
+  | 'FEDERATION_DESC'
+  | 'HTTP_STATUS_ASC'
+  | 'HTTP_STATUS_DESC'
+  | 'KIND_ASC'
+  | 'KIND_DESC'
+  | 'NATURAL';
+
 /** A connection to a list of `CrawlerTargetFailure` values. */
 export type CrawlerTargetFailuresConnection = {
   __typename?: 'CrawlerTargetFailuresConnection';
@@ -3227,6 +3277,81 @@ export type CrawlerTargetFailuresOrderBy =
   | 'RESPONSE_ERROR_DESC'
   | 'URL_ASC'
   | 'URL_DESC';
+
+/** Methods to use when ordering `CrawlerTargetSummary`. */
+export type CrawlerTargetSummariesOrderBy =
+  | 'DONE_ASC'
+  | 'DONE_DESC'
+  | 'FEDERATION_ASC'
+  | 'FEDERATION_DESC'
+  | 'FETCH_DUE_ASC'
+  | 'FETCH_DUE_DESC'
+  | 'FETCH_ERROR_ASC'
+  | 'FETCH_ERROR_DESC'
+  | 'FETCH_PENDING_ASC'
+  | 'FETCH_PENDING_DESC'
+  | 'FETCH_TRANSIENT_ASC'
+  | 'FETCH_TRANSIENT_DESC'
+  | 'KIND_ASC'
+  | 'KIND_DESC'
+  | 'LATEST_ASC'
+  | 'LATEST_DESC'
+  | 'NATURAL'
+  | 'PROCESS_ERROR_ASC'
+  | 'PROCESS_ERROR_DESC'
+  | 'PROCESS_READY_ASC'
+  | 'PROCESS_READY_DESC'
+  | 'REFETCH_DUE_ASC'
+  | 'REFETCH_DUE_DESC'
+  | 'TOTAL_ASC'
+  | 'TOTAL_DESC';
+
+export type CrawlerTargetSummary = {
+  __typename?: 'CrawlerTargetSummary';
+  done: Maybe<Scalars['Int']['output']>;
+  federation: Maybe<Scalars['String']['output']>;
+  fetchDue: Maybe<Scalars['Int']['output']>;
+  fetchError: Maybe<Scalars['Int']['output']>;
+  fetchPending: Maybe<Scalars['Int']['output']>;
+  fetchTransient: Maybe<Scalars['Int']['output']>;
+  kind: Maybe<Scalars['String']['output']>;
+  latest: Maybe<Scalars['Datetime']['output']>;
+  processError: Maybe<Scalars['Int']['output']>;
+  processReady: Maybe<Scalars['Int']['output']>;
+  refetchDue: Maybe<Scalars['Int']['output']>;
+  total: Maybe<Scalars['Int']['output']>;
+};
+
+/**
+ * A condition to be used against `CrawlerTargetSummary` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type CrawlerTargetSummaryCondition = {
+  /** Checks for equality with the object’s `done` field. */
+  done?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `federation` field. */
+  federation?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `fetchDue` field. */
+  fetchDue?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `fetchError` field. */
+  fetchError?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `fetchPending` field. */
+  fetchPending?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `fetchTransient` field. */
+  fetchTransient?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `latest` field. */
+  latest?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `processError` field. */
+  processError?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `processReady` field. */
+  processReady?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `refetchDue` field. */
+  refetchDue?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `total` field. */
+  total?: InputMaybe<Scalars['Int']['input']>;
+};
 
 /** A connection to a list of `CrawlerTarget` values. */
 export type CrawlerTargetsConnection = {
@@ -9440,8 +9565,12 @@ export type Query = {
   crawlerTarget: Maybe<CrawlerTarget>;
   /** Get a single `CrawlerTarget`. */
   crawlerTargetByFederationAndKindAndKey: Maybe<CrawlerTarget>;
+  /** Reads a set of `CrawlerTargetFailureGroup`. */
+  crawlerTargetFailureGroupsList: Maybe<Array<CrawlerTargetFailureGroup>>;
   /** Reads and enables pagination through a set of `CrawlerTargetFailure`. */
   crawlerTargetFailures: Maybe<CrawlerTargetFailuresConnection>;
+  /** Reads a set of `CrawlerTargetSummary`. */
+  crawlerTargetSummariesList: Maybe<Array<CrawlerTargetSummary>>;
   /** Reads and enables pagination through a set of `CrawlerTarget`. */
   crawlerTargets: Maybe<CrawlerTargetsConnection>;
   currentClaims: Maybe<Scalars['JSON']['output']>;
@@ -10084,6 +10213,15 @@ export type QueryCrawlerTargetByFederationAndKindAndKeyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCrawlerTargetFailureGroupsListArgs = {
+  condition?: InputMaybe<CrawlerTargetFailureGroupCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CrawlerTargetFailureGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCrawlerTargetFailuresArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -10092,6 +10230,15 @@ export type QueryCrawlerTargetFailuresArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CrawlerTargetFailuresOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCrawlerTargetSummariesListArgs = {
+  condition?: InputMaybe<CrawlerTargetSummaryCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CrawlerTargetSummariesOrderBy>>;
 };
 
 
@@ -13957,8 +14104,10 @@ export type GraphCacheKeysConfig = {
   CrawlerResponsesEdge?: (data: WithTypename<CrawlerResponsesEdge>) => null | string,
   CrawlerTarget?: (data: WithTypename<CrawlerTarget>) => null | string,
   CrawlerTargetFailure?: (data: WithTypename<CrawlerTargetFailure>) => null | string,
+  CrawlerTargetFailureGroup?: (data: WithTypename<CrawlerTargetFailureGroup>) => null | string,
   CrawlerTargetFailuresConnection?: (data: WithTypename<CrawlerTargetFailuresConnection>) => null | string,
   CrawlerTargetFailuresEdge?: (data: WithTypename<CrawlerTargetFailuresEdge>) => null | string,
+  CrawlerTargetSummary?: (data: WithTypename<CrawlerTargetSummary>) => null | string,
   CrawlerTargetsConnection?: (data: WithTypename<CrawlerTargetsConnection>) => null | string,
   CrawlerTargetsEdge?: (data: WithTypename<CrawlerTargetsEdge>) => null | string,
   CreateAccessCredentialPayload?: (data: WithTypename<CreateAccessCredentialPayload>) => null | string,
@@ -14216,7 +14365,9 @@ export type GraphCacheResolvers = {
     crawlerResponses?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponsesArgs, WithTypename<CrawlerResponsesConnection> | string>,
     crawlerTarget?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetArgs, WithTypename<CrawlerTarget> | string>,
     crawlerTargetByFederationAndKindAndKey?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetByFederationAndKindAndKeyArgs, WithTypename<CrawlerTarget> | string>,
+    crawlerTargetFailureGroupsList?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailureGroupsListArgs, Array<WithTypename<CrawlerTargetFailureGroup> | string>>,
     crawlerTargetFailures?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailuresArgs, WithTypename<CrawlerTargetFailuresConnection> | string>,
+    crawlerTargetSummariesList?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetSummariesListArgs, Array<WithTypename<CrawlerTargetSummary> | string>>,
     crawlerTargets?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetsArgs, WithTypename<CrawlerTargetsConnection> | string>,
     currentClaims?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JSON']['output'] | string>,
     dance?: GraphCacheResolver<WithTypename<Query>, QueryDanceArgs, WithTypename<Dance> | string>,
@@ -15027,6 +15178,15 @@ export type GraphCacheResolvers = {
     responseError?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     url?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  CrawlerTargetFailureGroup?: {
+    count?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['Int']['output'] | string>,
+    errorFingerprint?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>,
+    failedAt?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    failure?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>,
+    federation?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>,
+    httpStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['Int']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   CrawlerTargetFailuresConnection?: {
     edges?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailuresEdge> | string>>,
     nodes?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailure> | string>>,
@@ -15036,6 +15196,20 @@ export type GraphCacheResolvers = {
   CrawlerTargetFailuresEdge?: {
     cursor?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresEdge>, Record<string, never>, WithTypename<CrawlerTargetFailure> | string>
+  },
+  CrawlerTargetSummary?: {
+    done?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    federation?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['String']['output'] | string>,
+    fetchDue?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    fetchError?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    fetchPending?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    fetchTransient?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['String']['output'] | string>,
+    latest?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    processError?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    processReady?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    refetchDue?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
+    total?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   CrawlerTargetsConnection?: {
     edges?: GraphCacheResolver<WithTypename<CrawlerTargetsConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetsEdge> | string>>,
@@ -16763,7 +16937,9 @@ export type GraphCacheUpdaters = {
     crawlerResponses?: GraphCacheUpdateResolver<{ crawlerResponses: Maybe<WithTypename<CrawlerResponsesConnection>> }, QueryCrawlerResponsesArgs>,
     crawlerTarget?: GraphCacheUpdateResolver<{ crawlerTarget: Maybe<WithTypename<CrawlerTarget>> }, QueryCrawlerTargetArgs>,
     crawlerTargetByFederationAndKindAndKey?: GraphCacheUpdateResolver<{ crawlerTargetByFederationAndKindAndKey: Maybe<WithTypename<CrawlerTarget>> }, QueryCrawlerTargetByFederationAndKindAndKeyArgs>,
+    crawlerTargetFailureGroupsList?: GraphCacheUpdateResolver<{ crawlerTargetFailureGroupsList: Maybe<Array<WithTypename<CrawlerTargetFailureGroup>>> }, QueryCrawlerTargetFailureGroupsListArgs>,
     crawlerTargetFailures?: GraphCacheUpdateResolver<{ crawlerTargetFailures: Maybe<WithTypename<CrawlerTargetFailuresConnection>> }, QueryCrawlerTargetFailuresArgs>,
+    crawlerTargetSummariesList?: GraphCacheUpdateResolver<{ crawlerTargetSummariesList: Maybe<Array<WithTypename<CrawlerTargetSummary>>> }, QueryCrawlerTargetSummariesListArgs>,
     crawlerTargets?: GraphCacheUpdateResolver<{ crawlerTargets: Maybe<WithTypename<CrawlerTargetsConnection>> }, QueryCrawlerTargetsArgs>,
     currentClaims?: GraphCacheUpdateResolver<{ currentClaims: Maybe<Scalars['JSON']['output']> }, Record<string, never>>,
     dance?: GraphCacheUpdateResolver<{ dance: Maybe<WithTypename<Dance>> }, QueryDanceArgs>,
@@ -17665,6 +17841,15 @@ export type GraphCacheUpdaters = {
     responseError?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>,
     url?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>
   },
+  CrawlerTargetFailureGroup?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    errorFingerprint?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    failedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    failure?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    federation?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    httpStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>
+  },
   CrawlerTargetFailuresConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>,
     nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>,
@@ -17674,6 +17859,20 @@ export type GraphCacheUpdaters = {
   CrawlerTargetFailuresEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresEdge>>, Record<string, never>>
+  },
+  CrawlerTargetSummary?: {
+    done?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    federation?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    fetchDue?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    fetchError?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    fetchPending?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    fetchTransient?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    latest?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    processError?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    processReady?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    refetchDue?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
+    total?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>
   },
   CrawlerTargetsConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsConnection>>, Record<string, never>>,

@@ -57,7 +57,7 @@ export default async function ResponsePage({
       {response.error && (
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}
-      <pre className="col-full-width overflow-x-auto text-sm">
+      <pre className="col-feature overflow-x-auto text-sm">
         {content == null
           ? 'No cached content'
           : typeof content === 'string'

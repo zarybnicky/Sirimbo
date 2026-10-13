@@ -38,7 +38,7 @@ export function Responses({ id }: { id: string }) {
           'observations',
           'url / error',
         ]}
-        className="col-full-width"
+        className="col-feature"
         empty="No responses"
       >
         {responses.map((response) => (

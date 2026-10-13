@@ -1,27 +1,19 @@
-'use client';
-
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
-import { useQuery } from 'urql';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { formatCoupleName, formatResultStatus, scoringMethodLabels } from '@/ui/format';
-import {
-  CompetitionResultsDocument,
-  CompetitionRegistrationsDocument,
-  CompetitionRoundsDocument,
-} from '@/graphql/Federation';
+import type { FederationCompetitionQuery } from '@/graphql/Federation';
 
-export function Results({ federation, id }: { federation: string; id: string }) {
-  const [{ data, error }] = useQuery({
-    query: CompetitionResultsDocument,
-    variables: { id },
-  });
-  const results = data?.competition?.results;
+type Competition = NonNullable<FederationCompetitionQuery['competition']>;
 
-  if (error) return <FormError error={error} />;
-  if (!results) return <Spinner />;
+export function Results({
+  federation,
+  results,
+}: {
+  federation: string;
+  results: Competition['results'];
+}) {
+  if (results.length === 0) return null;
   const showPoints = results.some((result) => result.pointGain != null);
   const showFinalGain = results.some((result) =>
     federation === 'csts' ? result.isFinal : result.finalGain != null,
@@ -29,90 +21,72 @@ export function Results({ federation, id }: { federation: string; id: string }) 
 
   return (
     <>
-      {results.length > 0 && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Results</h2>
-          <Table
-            columns={[
-              'rank',
-              'start number',
-              'competitor',
-              showPoints && 'points',
-              showFinalGain && 'final gain',
-            ]}
-            className="col-full-width"
-          >
-            {results.map((result) => {
-              const status = formatResultStatus(result.completionStatus);
-              return (
-                <tr
-                  key={result.competitorId}
-                  className="border-t border-neutral-4 align-top"
-                >
-                  <td className="whitespace-nowrap">
-                    {result.ranking}
-                    {result.rankingTo && result.rankingTo !== result.ranking
-                      ? `–${result.rankingTo}`
-                      : ''}
-                  </td>
-                  <td>{result.startNumber}</td>
-                  <th scope="row">
-                    {result.competitor ? (
-                      <Link
-                        className="text-accent-11 underline"
-                        href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                        prefetch={false}
-                      >
-                        {result.competitor.name || result.competitorId}
-                      </Link>
-                    ) : (
-                      result.competitorId
-                    )}
-                    {status && <div className="text-xs text-neutral-11">{status}</div>}
-                  </th>
-                  {showPoints && (
-                    <td>{result.pointGain == null ? null : Number(result.pointGain)}</td>
-                  )}
-                  {showFinalGain && (
-                    <td>
-                      {federation === 'csts'
-                        ? result.isFinal
-                          ? 'F'
-                          : ''
-                        : result.finalGain == null
-                          ? null
-                          : Number(result.finalGain)}
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
-          </Table>
-        </>
-      )}
-      <Registrations federation={federation} id={id} hasResults={results.length > 0} />
+      <h2 className="mt-4 mb-2 text-lg font-bold">Results</h2>
+      <Table
+        columns={[
+          'rank',
+          'start number',
+          'competitor',
+          showPoints && 'points',
+          showFinalGain && 'final gain',
+        ]}
+      >
+        {results.map((result) => {
+          const status = formatResultStatus(result.completionStatus);
+          return (
+            <tr key={result.competitorId} className="border-t border-neutral-4 align-top">
+              <td className="whitespace-nowrap">
+                {result.ranking}
+                {result.rankingTo && result.rankingTo !== result.ranking
+                  ? `–${result.rankingTo}`
+                  : ''}
+              </td>
+              <td>{result.startNumber}</td>
+              <th scope="row">
+                {result.competitor ? (
+                  <Link
+                    className="text-accent-11 underline"
+                    href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                    prefetch={false}
+                  >
+                    {result.competitor.name || result.competitorId}
+                  </Link>
+                ) : (
+                  result.competitorId
+                )}
+                {status && <div className="text-xs text-neutral-11">{status}</div>}
+              </th>
+              {showPoints && (
+                <td>{result.pointGain == null ? null : Number(result.pointGain)}</td>
+              )}
+              {showFinalGain && (
+                <td>
+                  {federation === 'csts'
+                    ? result.isFinal
+                      ? 'F'
+                      : ''
+                    : result.finalGain == null
+                      ? null
+                      : Number(result.finalGain)}
+                </td>
+              )}
+            </tr>
+          );
+        })}
+      </Table>
     </>
   );
 }
 
-function Registrations({
+export function Registrations({
   federation,
-  id,
+  entries,
   hasResults,
 }: {
   federation: string;
-  id: string;
+  entries: Competition['entries'];
   hasResults: boolean;
 }) {
-  const [{ data, error }] = useQuery({
-    query: CompetitionRegistrationsDocument,
-    variables: { id },
-  });
-  const entries = data?.competition?.entries;
-
-  if (error) return <FormError error={error} />;
-  if (!entries) return <Spinner />;
-
   if (hasResults && entries.length === 0) return null;
 
   return (
@@ -122,7 +96,6 @@ function Registrations({
       </h2>
       <Table
         columns={['competitor', 'registration', 'local matches']}
-        className="col-full-width"
         empty="No registrations"
       >
         {entries.map((entry) => {
@@ -198,16 +171,13 @@ function Registrations({
   );
 }
 
-export function Rounds({ id, href }: { id: string; href: string }) {
-  const [{ data, error }] = useQuery({
-    query: CompetitionRoundsDocument,
-    variables: { id },
-  });
-  const rounds = data?.competition?.rounds;
-
-  if (error) return <FormError error={error} />;
-  if (!rounds) return <Spinner />;
-
+export function Rounds({
+  rounds,
+  href,
+}: {
+  rounds: Competition['rounds'];
+  href: string;
+}) {
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Rounds</h2>

@@ -13,7 +13,7 @@ export default async function CrawlerPage() {
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
   return (
     <Layout requireSystemAdmin>
-      <Crawler />
+      <Crawler allowRefetch={process.env.CRAWLER_DISABLE_REFETCH !== 'true'} />
     </Layout>
   );
 }

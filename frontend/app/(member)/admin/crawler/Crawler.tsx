@@ -1,12 +1,17 @@
 'use client';
 
 import { Table } from '@/ui/Table';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, type ComponentProps } from 'react';
 import Link from 'next/link';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { useAsync } from 'react-async-hook';
-import { CrawlerTargetsDocument } from '@/graphql/Crawler';
+import { useQuery } from 'urql';
+import {
+  CrawlerOverviewDocument,
+  type CrawlerOverviewQuery,
+  CrawlerTargetsDocument,
+  type CrawlerTargetsQuery,
+} from '@/graphql/Crawler';
 import { TextField } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { buttonCls } from '@/ui/style';
@@ -15,9 +20,8 @@ import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
 import { numericFullFormatter } from '@/ui/format';
-import { getOverview } from './actions';
 
-export function Crawler() {
+export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
   const [filters, setFilters] = useQueryStates(
     {
       federation: parseAsString.withDefault(''),
@@ -33,7 +37,6 @@ export function Crawler() {
     kind: filters.kind,
     key: filters.key,
   });
-  const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     const timeout = setTimeout(
       () =>
@@ -52,6 +55,27 @@ export function Crawler() {
     search.key !== filters.key;
   const target =
     search.federation && search.kind ? `${search.federation}:${search.kind}` : null;
+  const [overview, refreshOverview] = useQuery({
+    query: CrawlerOverviewDocument,
+    variables: { federation: search.federation || undefined, kind: search.kind || undefined },
+    pause: !!target || pending,
+  });
+  const targets = usePaginatedQuery({
+    query: CrawlerTargetsDocument,
+    pause: !target || pending,
+    variables: (offset) => ({
+      condition: {
+        federation: search.federation,
+        kind: search.kind,
+        keyContains: search.key,
+      },
+      offset,
+    }),
+    limit: 50,
+    getTotal: (data) => data.crawlerTargets?.totalCount,
+  });
+  const error = target ? targets.error : overview.error;
+  const loading = pending || (target ? targets.fetching : overview.fetching);
   return (
     <>
       <PageHeader
@@ -102,62 +126,47 @@ export function Crawler() {
         <button
           type="button"
           className={buttonCls({ variant: 'outline' })}
-          onClick={() => setRefresh((value) => value + 1)}
+          onClick={() =>
+            target
+              ? targets.reexecuteQuery({ requestPolicy: 'network-only' })
+              : refreshOverview({ requestPolicy: 'network-only' })
+          }
         >
           Refresh
         </button>
       </div>
-      {target ? (
-        <Targets
-          key={refresh}
-          federation={search.federation}
-          kind={search.kind}
-          search={search.key}
-          pending={pending}
-        />
+      <p role="status" className="my-2 text-sm text-neutral-11">
+        {loading ? 'Loading…' : target ? `${targets.pagination.total} targets` : null}
+      </p>
+      {error ? (
+        <FormError error={error} />
+      ) : target ? (
+        targets.data?.crawlerTargets ? (
+          <Targets
+            rows={targets.data.crawlerTargets.nodes}
+            pagination={targets.pagination}
+          />
+        ) : (
+          <Spinner />
+        )
+      ) : overview.data ? (
+        <Overview {...overview.data} all={filters.all} allowRefetch={allowRefetch} />
       ) : (
-        <Overview
-          key={refresh}
-          federation={search.federation}
-          kind={search.kind}
-          all={filters.all}
-        />
+        <Spinner />
       )}
     </>
   );
 }
 
 function Targets({
-  federation,
-  kind,
-  search,
-  pending,
+  rows,
+  pagination,
 }: {
-  federation: string;
-  kind: string;
-  search: string;
-  pending: boolean;
+  rows: NonNullable<CrawlerTargetsQuery['crawlerTargets']>['nodes'];
+  pagination: ComponentProps<typeof Pagination>;
 }) {
-  const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CrawlerTargetsDocument,
-    pause: pending,
-    variables: (offset) => ({
-      condition: { federation, kind, keyContains: search },
-      offset,
-    }),
-    limit: 50,
-    getTotal: (data) => data?.crawlerTargets?.totalCount,
-  });
-  const total = pagination.total;
-  if (error) return <FormError error={error} />;
-  if (!data?.crawlerTargets) return <Spinner />;
-  const rows = data.crawlerTargets.nodes;
-
   return (
     <>
-      <p role="status" className="my-2 text-sm text-neutral-11">
-        {pending || fetching ? 'Loading…' : `${total} targets`}
-      </p>
       <Table
         columns={[
           'key',
@@ -199,48 +208,52 @@ function Targets({
 }
 
 function Overview({
-  federation,
-  kind,
+  rows,
+  failures,
   all,
-}: {
-  federation: string;
-  kind: string;
-  all: string;
-}) {
-  const { result, loading, error } = useAsync(getOverview, [federation, kind]);
-  if (error) return <FormError error={error} />;
-  if (!result) return <Spinner />;
-  const { rows, failures } = result;
+  allowRefetch,
+}: CrawlerOverviewQuery & { all: string; allowRefetch: boolean }) {
   const failuresByTarget = Object.groupBy(
-    failures,
+    failures ?? [],
     (row): string => `${row.federation}:${row.kind}`,
   );
-  const frontiers = rows.map((row) => {
-    const target = `${row.federation}:${row.kind}`;
-    const failures = failuresByTarget[target] ?? [];
-    return {
-      ...row,
-      target,
-      failures,
-      stable:
-        row.total === row.done &&
-        !row.fetch_due &&
-        !row.fetch_error &&
-        !row.fetch_transient &&
-        !row.process_error &&
-        failures.length === 0,
-    };
-  });
+  const frontiers = (rows ?? [])
+    .map((row) => {
+      const target = `${row.federation}:${row.kind}`;
+      const failures = failuresByTarget[target] ?? [];
+      const fetchDue = (row.fetchDue ?? 0) + (allowRefetch ? (row.refetchDue ?? 0) : 0);
+      return {
+        ...row,
+        fetchDue,
+        target,
+        failures,
+        stable:
+          row.total === row.done &&
+          !fetchDue &&
+          !row.fetchError &&
+          !row.fetchTransient &&
+          !row.processError &&
+          failures.length === 0,
+      };
+    })
+    .toSorted(
+      (a, b) =>
+        (b.processError ?? 0) - (a.processError ?? 0) ||
+        (b.fetchError ?? 0) - (a.fetchError ?? 0) ||
+        (b.fetchTransient ?? 0) - (a.fetchTransient ?? 0) ||
+        (b.processReady ?? 0) - (a.processReady ?? 0) ||
+        b.fetchDue - a.fetchDue ||
+        (b.fetchPending ?? 0) - (a.fetchPending ?? 0) ||
+        (a.federation ?? '').localeCompare(b.federation ?? '') ||
+        (a.kind ?? '').localeCompare(b.kind ?? ''),
+    );
   const done = Object.groupBy(
     frontiers.filter((row) => row.stable),
-    (row) => row.federation,
+    (row) => row.federation ?? '',
   );
 
   return (
     <>
-      <p role="status" className="my-2 text-sm text-neutral-11">
-        {loading ? 'Loading…' : null}
-      </p>
       <div className="col-full-width overflow-x-auto">
         <table className="w-full whitespace-nowrap text-left text-sm tabular-nums">
           <thead>
@@ -252,7 +265,6 @@ function Overview({
                 'fetch errors',
                 'process errors',
                 'process',
-                'keys',
                 'last fetched',
               ].map((label) => (
                 <th key={label} scope="col" className="px-2 py-1">
@@ -280,50 +292,35 @@ function Overview({
                       </Link>
                     </th>
                     <td className="px-2 py-1">{row.done || ''}</td>
-                    <td className="px-2 py-1">{row.fetch_due || ''}</td>
+                    <td className="px-2 py-1">{row.fetchDue || ''}</td>
                     <td className="px-2 py-1">
-                      {row.fetch_error || ''}
-                      {!!row.fetch_transient &&
-                        (row.fetch_error
-                          ? ` (+${row.fetch_transient} temp)`
-                          : `${row.fetch_transient} temp`)}
+                      {row.fetchError || ''}
+                      {!!row.fetchTransient &&
+                        (row.fetchError
+                          ? ` (+${row.fetchTransient} temp)`
+                          : `${row.fetchTransient} temp`)}
                     </td>
-                    <td className="px-2 py-1">{row.process_error || ''}</td>
-                    <td className="px-2 py-1">{row.process_ready || ''}</td>
-                    <td className="px-2 py-1 font-mono">
-                      {row.keys?.map((key, index) => (
-                        <Fragment key={row.ids?.[index]}>
-                          {index > 0 && ', '}
-                          <Link
-                            className="text-accent-11 underline"
-                            href={`/admin/crawler/${row.ids?.[index]}`}
-                            prefetch={false}
-                          >
-                            {key || '(root)'}
-                          </Link>
-                        </Fragment>
-                      ))}
-                      {(row.total ?? 0) > 3 && ', ...'}
-                    </td>
+                    <td className="px-2 py-1">{row.processError || ''}</td>
+                    <td className="px-2 py-1">{row.processReady || ''}</td>
                     <td className="px-2 py-1">
-                      {row.latest ? numericFullFormatter.format(row.latest) : '-'}
+                      {row.latest
+                        ? numericFullFormatter.format(new Date(row.latest))
+                        : '-'}
                     </td>
                   </tr>
                   {row.failures.length > 0 && (
                     <tr>
-                      <td colSpan={8} className="px-2 pb-1">
+                      <td colSpan={7} className="px-2 pb-1">
                         <details>
                           <summary className="cursor-pointer">Failures</summary>
                           <table className="w-full whitespace-normal text-left">
                             <thead>
                               <tr>
-                                {['count', 'failure', 'http', 'samples', 'details'].map(
-                                  (label) => (
-                                    <th key={label} scope="col" className="px-2 py-1">
-                                      {label}
-                                    </th>
-                                  ),
-                                )}
+                                {['count', 'failure', 'http', 'details'].map((label) => (
+                                  <th key={label} scope="col" className="px-2 py-1">
+                                    {label}
+                                  </th>
+                                ))}
                               </tr>
                             </thead>
                             <tbody>
@@ -331,30 +328,16 @@ function Overview({
                                 <tr
                                   key={JSON.stringify([
                                     failure.failure,
-                                    failure.http_status,
-                                    failure.error_fingerprint,
+                                    failure.httpStatus,
+                                    failure.errorFingerprint,
                                   ])}
                                   className="border-t border-neutral-4 align-top"
                                 >
                                   <td className="px-2 py-1">{failure.count}</td>
                                   <td className="px-2 py-1">{failure.failure}</td>
-                                  <td className="px-2 py-1">{failure.http_status}</td>
-                                  <td className="px-2 py-1 font-mono break-all">
-                                    {failure.samples?.map((key, index) => (
-                                      <Fragment key={failure.sample_ids?.[index]}>
-                                        {index > 0 && ', '}
-                                        <Link
-                                          className="text-accent-11 underline"
-                                          href={`/admin/crawler/${failure.sample_ids?.[index]}`}
-                                          prefetch={false}
-                                        >
-                                          {key || '(root)'}
-                                        </Link>
-                                      </Fragment>
-                                    ))}
-                                  </td>
+                                  <td className="px-2 py-1">{failure.httpStatus}</td>
                                   <td className="px-2 py-1 break-all">
-                                    {failure.error_fingerprint}
+                                    {failure.errorFingerprint}
                                   </td>
                                 </tr>
                               ))}
@@ -376,9 +359,9 @@ function Overview({
                 {frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}
               </td>
               <td className="px-2 py-1">
-                {frontiers.reduce((sum, row) => sum + (row.fetch_due ?? 0), 0) || ''}
+                {frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}
               </td>
-              <td colSpan={5} />
+              <td colSpan={4} />
             </tr>
           </tfoot>
         </table>
@@ -394,7 +377,8 @@ function Overview({
                 {targets
                   ?.toSorted(
                     (a, b) =>
-                      (b.total ?? 0) - (a.total ?? 0) || a.kind.localeCompare(b.kind),
+                      (b.total ?? 0) - (a.total ?? 0) ||
+                      (a.kind ?? '').localeCompare(b.kind ?? ''),
                   )
                   .map((row, index) => (
                     <Fragment key={row.kind}>

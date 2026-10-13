@@ -10,7 +10,7 @@ import { formatDateOnly, scoringMethodLabels } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
 import { Results } from './Results';
-import { FederationPersonLink, LocalPersonLinks } from '@/ui/federation-links';
+import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
 
 type Props = {
   params: Promise<{
@@ -120,7 +120,8 @@ export default async function RoundPage({ params }: Props) {
             <dd>
               {judge.personJudge ? (
                 <>
-                  <FederationPersonLink
+                  <FederationLink
+                    entity="people"
                     federation={federation}
                     externalId={judge.personJudge.externalId}
                     className="text-accent-11"
@@ -130,7 +131,7 @@ export default async function RoundPage({ params }: Props) {
                         .filter(Boolean)
                         .join(' ') ||
                       judge.personJudgeId}
-                  </FederationPersonLink>
+                  </FederationLink>
                   {judge.personJudge.people.totalCount > 0 && (
                     <span className="ml-2 text-sm">
                       Local:{' '}

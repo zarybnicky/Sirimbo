@@ -1,7 +1,7 @@
 import { Table } from '@/ui/Table';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import type { OfficialRole } from '@/graphql';
-import { FederationPersonLink, LocalPersonLinks } from '@/ui/federation-links';
+import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
 
 export function Officials({
   federation,
@@ -56,7 +56,8 @@ export function Officials({
             <td>{official.role.toLowerCase().replaceAll('_', ' ')}</td>
             <th scope="row">
               {official.person ? (
-                <FederationPersonLink
+                <FederationLink
+                  entity="people"
                   federation={federation}
                   externalId={official.person.externalId}
                   className="text-accent-11"
@@ -66,7 +67,7 @@ export function Officials({
                       .filter(Boolean)
                       .join(' ') ||
                     official.personId}
-                </FederationPersonLink>
+                </FederationLink>
               ) : (
                 official.personId
               )}

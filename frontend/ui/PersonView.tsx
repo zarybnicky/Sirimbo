@@ -15,7 +15,7 @@ import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
 import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { FederationPersonLink } from '@/ui/federation-links';
+import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge } from '@/ui/FederationRankings';
 import { Globe, Music2 } from 'lucide-react';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
@@ -72,14 +72,15 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
       </a>
     ),
     ...item.federationPeople.nodes.map((person) => (
-      <FederationPersonLink
+      <FederationLink
+        entity="people"
         key={person.id}
         federation={person.federation}
         externalId={person.externalId}
         className="text-accent-12 hover:text-accent-11"
       >
         {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
-      </FederationPersonLink>
+      </FederationLink>
     )),
     <span key="ranklist" className="inline-flex flex-wrap items-center gap-2">
       <FederationRankBadge

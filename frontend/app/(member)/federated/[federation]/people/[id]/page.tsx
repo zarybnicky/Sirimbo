@@ -12,7 +12,7 @@ import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
-import { CrawlerTargetsDocument } from '@/graphql/Crawler';
+import { Sources } from '../../Sources';
 
 type Props = {
   params: Promise<{ federation: string; id: string }>;
@@ -53,12 +53,6 @@ export default async function FederatedPersonPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   const { person, name } = await getPerson(federation, externalId);
-  const crawler = auth.isSystemAdmin
-    ? await executeGraphql(CrawlerTargetsDocument, {
-        condition: { federation, kind: 'member', key: person.externalId },
-      })
-    : null;
-  const sources = crawler?.crawlerTargets?.nodes ?? [];
   const matches = person.people.nodes;
   const base = `/federated/${federation}`;
   return (
@@ -160,23 +154,10 @@ export default async function FederatedPersonPage({ params }: Props) {
         <OfficialAssignments federation={federation} id={person.id} />
       )}
       {auth.isSystemAdmin && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-          {sources.map((source) => (
-            <p key={source.id}>
-              <Link
-                className="text-accent-11 underline"
-                href={`/admin/crawler/${source.id}`}
-                prefetch={false}
-              >
-                {federation}:member:{source.key}
-              </Link>{' '}
-              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
-              {source.processStatus.toLowerCase()}
-            </p>
-          ))}
-          {sources.length === 0 && <p>No matching frontiers</p>}
-        </>
+        <Sources
+          federation={federation}
+          condition={{ federation, kind: 'member', key: person.externalId }}
+        />
       )}
     </Layout>
   );

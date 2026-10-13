@@ -2,12 +2,14 @@ import { cn } from '@/lib/cn';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 
-export function FederationPersonLink({
+export function FederationLink({
+  entity,
   federation,
   externalId,
   className,
   children,
 }: {
+  entity: 'people' | 'competitors';
   federation: string;
   externalId?: number | string | null;
   className?: string;
@@ -17,33 +19,7 @@ export function FederationPersonLink({
 
   return (
     <Link
-      href={`/federated/${federation}/people/${externalId}`}
-      className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
-        className,
-      )}
-    >
-      {children}
-    </Link>
-  );
-}
-
-export function FederationCompetitorLink({
-  federation,
-  externalId,
-  className,
-  children,
-}: {
-  federation: string;
-  externalId?: number | string | null;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  if (!externalId || externalId === '0') return null;
-
-  return (
-    <Link
-      href={`/federated/${federation}/competitors/${externalId}`}
+      href={`/federated/${federation}/${entity}/${externalId}`}
       className={cn(
         'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
@@ -74,13 +50,14 @@ export function LocalPersonLinks({
         </span>
       ))}
       {people.totalCount > people.nodes.length && (
-        <FederationPersonLink
+        <FederationLink
+          entity="people"
           federation={federation}
           externalId={externalId}
           className="ml-1 text-accent-11"
         >
           All {people.totalCount} matches
-        </FederationPersonLink>
+        </FederationLink>
       )}
     </>
   );

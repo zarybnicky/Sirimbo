@@ -1,5 +1,5 @@
 import { FederationPersonLookupDocument } from '@/graphql/Federation';
-import { FederationPersonLink } from '@/ui/federation-links';
+import { FederationLink } from '@/ui/federation-links';
 import { TextFieldElement, type TextFieldElementProps } from '@/ui/fields/text';
 import React from 'react';
 import { type FieldValues, useWatch } from 'react-hook-form';
@@ -34,11 +34,15 @@ export function FederationIdFieldElement<T extends FieldValues>({
       helperText = 'Vyhledávání se nezdařilo';
     } else if (query.data) {
       helperText = person ? (
-        <FederationPersonLink federation={federation} externalId={person.externalId}>
+        <FederationLink
+          entity="people"
+          federation={federation}
+          externalId={person.externalId}
+        >
           {person.canonicalName ||
             [person.firstName, person.lastName].filter(Boolean).join(' ') ||
             person.externalId}
-        </FederationPersonLink>
+        </FederationLink>
       ) : (
         'Nenalezeno'
       );

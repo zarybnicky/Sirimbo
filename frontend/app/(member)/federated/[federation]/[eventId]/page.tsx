@@ -8,7 +8,8 @@ import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
-import { Competitions, Sources } from './Tables';
+import { Competitions } from './Tables';
+import { Sources } from '../Sources';
 import { Officials } from './Officials';
 
 type Props = {
@@ -85,7 +86,9 @@ export default async function EventPage({ params }: Props) {
       </dl>
       <Competitions federation={federation} eventId={eventId} />
       <Officials federation={federation} officials={event.officials.nodes} />
-      {auth.isSystemAdmin && <Sources federation={federation} eventId={event.id} />}
+      {auth.isSystemAdmin && (
+        <Sources federation={federation} condition={{ eventId: event.id }} hideEmpty />
+      )}
     </Layout>
   );
 }

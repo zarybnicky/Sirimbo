@@ -105,7 +105,6 @@ export function History({ federation, id }: { federation: string; id: string }) 
           showPoints && 'points',
           showFinalGain && 'final gain',
         ]}
-        className="col-full-width"
         empty="No registrations or results"
       >
         {history.nodes.map((row) => {

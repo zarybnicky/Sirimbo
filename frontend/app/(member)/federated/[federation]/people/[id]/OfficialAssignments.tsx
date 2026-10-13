@@ -40,7 +40,7 @@ export function OfficialAssignments({
           Loading…
         </p>
       )}
-      <Table columns={['date', 'event', 'assignments']} className="col-full-width">
+      <Table columns={['date', 'event', 'assignments']}>
         {events.nodes.map((event) => {
           const roles = [
             ...new Set([

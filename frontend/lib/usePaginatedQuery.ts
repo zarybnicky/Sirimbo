@@ -25,7 +25,7 @@ export function usePaginatedQuery<Data, Variables extends AnyVariables>({
       .withDefault(1)
       .withOptions({ shallow: true, scroll: false, history: 'push' }),
   );
-  const [result] = useQuery({
+  const [result, reexecuteQuery] = useQuery({
     query,
     variables: variables(Math.min(Math.max(0, page - 1) * limit, 2_147_483_647)),
     pause,
@@ -40,6 +40,7 @@ export function usePaginatedQuery<Data, Variables extends AnyVariables>({
 
   return {
     ...result,
+    reexecuteQuery,
     pagination: {
       total: total ?? 0,
       limit,

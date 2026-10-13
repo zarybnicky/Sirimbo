@@ -4109,6 +4109,62 @@ input CrawlerTargetFailureCondition {
   url: String
 }
 
+type CrawlerTargetFailureGroup {
+  count: Int
+  errorFingerprint: String
+  failedAt: Datetime
+  failure: String
+  federation: String
+  httpStatus: Int
+  kind: String
+}
+
+"""
+A condition to be used against `CrawlerTargetFailureGroup` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerTargetFailureGroupCondition {
+  """Checks for equality with the object’s `count` field."""
+  count: Int
+
+  """Checks for equality with the object’s `errorFingerprint` field."""
+  errorFingerprint: String
+
+  """Checks for equality with the object’s `failedAt` field."""
+  failedAt: Datetime
+
+  """Checks for equality with the object’s `failure` field."""
+  failure: String
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `httpStatus` field."""
+  httpStatus: Int
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+}
+
+"""Methods to use when ordering `CrawlerTargetFailureGroup`."""
+enum CrawlerTargetFailureGroupsOrderBy {
+  COUNT_ASC
+  COUNT_DESC
+  ERROR_FINGERPRINT_ASC
+  ERROR_FINGERPRINT_DESC
+  FAILED_AT_ASC
+  FAILED_AT_DESC
+  FAILURE_ASC
+  FAILURE_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  HTTP_STATUS_ASC
+  HTTP_STATUS_DESC
+  KIND_ASC
+  KIND_DESC
+  NATURAL
+}
+
 """A connection to a list of `CrawlerTargetFailure` values."""
 type CrawlerTargetFailuresConnection {
   """
@@ -4170,6 +4226,92 @@ enum CrawlerTargetFailuresOrderBy {
   RESPONSE_ERROR_DESC
   URL_ASC
   URL_DESC
+}
+
+"""Methods to use when ordering `CrawlerTargetSummary`."""
+enum CrawlerTargetSummariesOrderBy {
+  DONE_ASC
+  DONE_DESC
+  FEDERATION_ASC
+  FEDERATION_DESC
+  FETCH_DUE_ASC
+  FETCH_DUE_DESC
+  FETCH_ERROR_ASC
+  FETCH_ERROR_DESC
+  FETCH_PENDING_ASC
+  FETCH_PENDING_DESC
+  FETCH_TRANSIENT_ASC
+  FETCH_TRANSIENT_DESC
+  KIND_ASC
+  KIND_DESC
+  LATEST_ASC
+  LATEST_DESC
+  NATURAL
+  PROCESS_ERROR_ASC
+  PROCESS_ERROR_DESC
+  PROCESS_READY_ASC
+  PROCESS_READY_DESC
+  REFETCH_DUE_ASC
+  REFETCH_DUE_DESC
+  TOTAL_ASC
+  TOTAL_DESC
+}
+
+type CrawlerTargetSummary {
+  done: Int
+  federation: String
+  fetchDue: Int
+  fetchError: Int
+  fetchPending: Int
+  fetchTransient: Int
+  kind: String
+  latest: Datetime
+  processError: Int
+  processReady: Int
+  refetchDue: Int
+  total: Int
+}
+
+"""
+A condition to be used against `CrawlerTargetSummary` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CrawlerTargetSummaryCondition {
+  """Checks for equality with the object’s `done` field."""
+  done: Int
+
+  """Checks for equality with the object’s `federation` field."""
+  federation: String
+
+  """Checks for equality with the object’s `fetchDue` field."""
+  fetchDue: Int
+
+  """Checks for equality with the object’s `fetchError` field."""
+  fetchError: Int
+
+  """Checks for equality with the object’s `fetchPending` field."""
+  fetchPending: Int
+
+  """Checks for equality with the object’s `fetchTransient` field."""
+  fetchTransient: Int
+
+  """Checks for equality with the object’s `kind` field."""
+  kind: String
+
+  """Checks for equality with the object’s `latest` field."""
+  latest: Datetime
+
+  """Checks for equality with the object’s `processError` field."""
+  processError: Int
+
+  """Checks for equality with the object’s `processReady` field."""
+  processReady: Int
+
+  """Checks for equality with the object’s `refetchDue` field."""
+  refetchDue: Int
+
+  """Checks for equality with the object’s `total` field."""
+  total: Int
 }
 
 """A connection to a list of `CrawlerTarget` values."""
@@ -12391,6 +12533,23 @@ type Query {
   """Get a single `CrawlerTarget`."""
   crawlerTargetByFederationAndKindAndKey(federation: String!, key: String!, kind: String!): CrawlerTarget
 
+  """Reads a set of `CrawlerTargetFailureGroup`."""
+  crawlerTargetFailureGroupsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetFailureGroupCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CrawlerTargetFailureGroup`."""
+    orderBy: [CrawlerTargetFailureGroupsOrderBy!]
+  ): [CrawlerTargetFailureGroup!]
+
   """Reads and enables pagination through a set of `CrawlerTargetFailure`."""
   crawlerTargetFailures(
     """Read all values in the set after (below) this cursor."""
@@ -12419,6 +12578,23 @@ type Query {
     """The method to use when ordering `CrawlerTargetFailure`."""
     orderBy: [CrawlerTargetFailuresOrderBy!] = [NATURAL]
   ): CrawlerTargetFailuresConnection
+
+  """Reads a set of `CrawlerTargetSummary`."""
+  crawlerTargetSummariesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CrawlerTargetSummaryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CrawlerTargetSummary`."""
+    orderBy: [CrawlerTargetSummariesOrderBy!]
+  ): [CrawlerTargetSummary!]
 
   """Reads and enables pagination through a set of `CrawlerTarget`."""
   crawlerTargets(

@@ -256,3 +256,6 @@ ALTER TABLE federated.competition_official ADD COLUMN IF NOT EXISTS judge_label 
 
 --!include functions/competition_reports.sql
 --!include functions/activity_timeline.sql
+
+--!include views/crawler_frontier_summary.sql
+--!include views/crawler_frontier_failure_group.sql

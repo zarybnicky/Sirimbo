@@ -95,7 +95,7 @@ export function Results({
           </div>
         )}
       </div>
-      <div className="col-full-width overflow-x-auto">
+      <div className="col-feature overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
@@ -280,7 +280,7 @@ export function Results({
           round.dancesList.map((dance) => (
             <Table
               key={dance.danceOrder}
-              className="col-full-width mb-4"
+              className="col-feature mb-4"
               caption={dance.programDance?.dance?.name || dance.danceCode}
               columns={[
                 'start number',

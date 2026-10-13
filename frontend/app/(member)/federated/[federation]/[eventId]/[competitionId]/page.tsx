@@ -1,19 +1,15 @@
-import Link from 'next/link';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
-import { Results, Rounds } from './Tables';
+import { Results, Registrations, Rounds } from './Tables';
 import { formatDateOnly, dateTimeFormatter } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
-import {
-  FederationEventDocument,
-  FederationCompetitionDocument,
-} from '@/graphql/Federation';
-import { CrawlerSourcesDocument } from '@/graphql/Crawler';
+import { FederationCompetitionDocument } from '@/graphql/Federation';
+import { Sources } from '../../Sources';
 import { Officials } from '../Officials';
 
 type Props = {
@@ -22,15 +18,12 @@ type Props = {
 
 const getCompetition = cache(
   async (federation: string, eventId: string, competitionId: string) => {
-    const [{ federationEventByFederationAndExternalId: event }, { competition }] =
-      await Promise.all([
-        executeGraphql(FederationEventDocument, { federation, eventId }),
-        executeGraphql(FederationCompetitionDocument, {
-          federation,
-          competitionId,
-        }),
-      ]);
-    if (!event || !competition || competition.eventId !== event.id) notFound();
+    const { competition } = await executeGraphql(FederationCompetitionDocument, {
+      federation,
+      competitionId,
+    });
+    const event = competition?.event;
+    if (!competition || !event || event.externalId !== eventId) notFound();
     return { event, competition };
   },
 );
@@ -51,12 +44,6 @@ export default async function CompetitionPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
   const { event, competition } = await getCompetition(federation, eventId, competitionId);
-  const crawler = auth.isSystemAdmin
-    ? await executeGraphql(CrawlerSourcesDocument, {
-        condition: { competitionId: competition.id },
-      })
-    : null;
-  const sources = crawler?.crawlerTargets?.nodes ?? [];
   return (
     <Layout requireUser>
       <PageHeader
@@ -112,9 +99,14 @@ export default async function CompetitionPage({ params }: Props) {
             : '-'}
         </dd>
       </dl>
-      <Results federation={federation} id={competition.id} />
+      <Results federation={federation} results={competition.results} />
+      <Registrations
+        federation={federation}
+        entries={competition.entries}
+        hasResults={competition.results.length > 0}
+      />
       <Rounds
-        id={competition.id}
+        rounds={competition.rounds}
         href={`/federated/${federation}/${eventId}/${competitionId}`}
       />
       <Officials
@@ -123,28 +115,12 @@ export default async function CompetitionPage({ params }: Props) {
         showJudges={
           event.status !== 'COMPLETED' &&
           competition.status !== 'COMPLETED' &&
-          competition.results.totalCount === 0 &&
-          competition.rounds.totalCount === 0
+          competition.results.length === 0 &&
+          competition.rounds.length === 0
         }
       />
       {auth.isSystemAdmin && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Crawler</h2>
-          {sources.map((source) => (
-            <p key={source.id}>
-              <Link
-                className="text-accent-11 underline"
-                href={`/admin/crawler/${source.id}`}
-                prefetch={false}
-              >
-                {federation}:{source.kind}:{source.key}
-              </Link>{' '}
-              — fetch: {source.fetchStatus.toLowerCase()}, process:{' '}
-              {source.processStatus.toLowerCase()}
-            </p>
-          ))}
-          {sources.length === 0 && <p>No matching frontiers</p>}
-        </>
+        <Sources federation={federation} condition={{ competitionId: competition.id }} />
       )}
     </Layout>
   );

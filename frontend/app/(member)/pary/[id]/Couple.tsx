@@ -8,7 +8,7 @@ import { useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { FederationCompetitorLink } from '@/ui/federation-links';
+import { FederationLink } from '@/ui/federation-links';
 import { getCstsAgeCategory } from '@/ui/csts';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 
@@ -37,7 +37,8 @@ export function Couple({ id }: { id: string }) {
               }
             />
             {item.federationCompetitors.nodes.map((competitor) => (
-              <FederationCompetitorLink
+              <FederationLink
+                entity="competitors"
                 key={competitor.id}
                 federation={competitor.federation}
                 externalId={competitor.externalId}
@@ -46,7 +47,7 @@ export function Couple({ id }: { id: string }) {
                 {competitor.federation === 'csts'
                   ? 'ČSTS'
                   : competitor.federation.toUpperCase()}
-              </FederationCompetitorLink>
+              </FederationLink>
             ))}
           </span>
         }
