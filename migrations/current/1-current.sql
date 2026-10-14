@@ -1,3 +1,22 @@
+COMMENT ON TABLE public.announcement_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE public.article_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
+
+COMMENT ON TABLE public.location_image IS '@simpleCollections only
+@behavior -insert -update -delete -query:resource:connection -query:resource:list';
+
+COMMENT ON VIEW public.tenant_location_image IS '@primaryKey tenant_id,location_id,file_id
+@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName location|@foreignFieldName images
+@foreignKey (tenant_id,file_id) references file(tenant_id,id)|@fieldName file|@foreignFieldName locationImages
+@simpleCollections only
+@behavior -insert -update -delete -query:resource:connection -query:resource:list';
+
+COMMENT ON VIEW public.tenant_location IS '@primaryKey id
+@unique tenant_id,id|@behavior -query:resource:single
+@foreignKey (tenant_id) references tenant(id)
+@foreignKey (tenant_id,cover_image_id) references file(tenant_id,id)|@fieldName coverImage|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@simpleCollections only
+@behavior -insert -update -delete -query:resource:list -query:resource:connection -queryField:resource:connection';
+
 COMMENT ON TABLE federated.person IS '@name federation_person
 @behavior -insert -update -delete -list
 @ref people via:public.person_federation_link;public.person behavior:"+list -connection"';

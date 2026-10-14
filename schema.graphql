@@ -11957,40 +11957,6 @@ type Query {
   """Get a single `Announcement`."""
   announcement(id: BigInt!): Announcement
 
-  """Get a single `AnnouncementAttachment`."""
-  announcementAttachment(announcementId: BigInt!, fileId: BigInt!, tenantId: BigInt!): AnnouncementAttachment
-
-  """
-  Reads and enables pagination through a set of `AnnouncementAttachment`.
-  """
-  announcementAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AnnouncementAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `AnnouncementAttachment`."""
-    orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAttachmentsConnection
-
   """Reads and enables pagination through a set of `Announcement`."""
   announcements(
     """Read all values in the set after (below) this cursor."""
@@ -12019,38 +11985,6 @@ type Query {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementsConnection
-
-  """Get a single `ArticleAttachment`."""
-  articleAttachment(aktualityId: BigInt!, fileId: BigInt!, tenantId: BigInt!): ArticleAttachment
-
-  """Reads and enables pagination through a set of `ArticleAttachment`."""
-  articleAttachments(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ArticleAttachmentCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `ArticleAttachment`."""
-    orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ArticleAttachmentsConnection
 
   """Reads a set of `Category`."""
   categoriesList(
@@ -12844,23 +12778,6 @@ type Query {
   """Get a single `LocationImage`."""
   locationImage(fileId: BigInt!, locationId: BigInt!, tenantId: BigInt!): LocationImage
 
-  """Reads a set of `LocationImage`."""
-  locationImagesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationImageCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LocationImage`."""
-    orderBy: [LocationImagesOrderBy!]
-  ): [LocationImage!]
-
   """Get a single `MembershipApplication`."""
   membershipApplication(id: BigInt!): MembershipApplication
 
@@ -13048,28 +12965,8 @@ type Query {
   """Get a single `TenantLocation`."""
   tenantLocation(id: BigInt!): TenantLocation
 
-  """Get a single `TenantLocation`."""
-  tenantLocationByTenantIdAndId(id: BigInt!, tenantId: BigInt!): TenantLocation
-
   """Get a single `TenantLocationImage`."""
   tenantLocationImage(fileId: BigInt!, locationId: BigInt!, tenantId: BigInt!): TenantLocationImage
-
-  """Reads a set of `TenantLocationImage`."""
-  tenantLocationImagesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TenantLocationImageCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `TenantLocationImage`."""
-    orderBy: [TenantLocationImagesOrderBy!]
-  ): [TenantLocationImage!]
 
   """Get a single `TenantMembership`."""
   tenantMembership(id: BigInt!): TenantMembership

@@ -23852,46 +23852,6 @@
             ]
           },
           {
-            "name": "announcementAttachment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AnnouncementAttachment",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "announcementId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "fileId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "tenantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "announcements",
             "type": {
               "kind": "OBJECT",
@@ -23951,46 +23911,6 @@
                       "kind": "SCALAR",
                       "name": "Any"
                     }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "articleAttachment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "ArticleAttachment",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "aktualityId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "fileId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "tenantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
                   }
                 }
               }
@@ -26733,56 +26653,6 @@
             ]
           },
           {
-            "name": "locationImagesList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "LocationImage",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "membershipApplication",
             "type": {
               "kind": "OBJECT",
@@ -27477,36 +27347,6 @@
             ]
           },
           {
-            "name": "tenantLocationByTenantIdAndId",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "tenantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "tenantLocationImage",
             "type": {
               "kind": "OBJECT",
@@ -27541,56 +27381,6 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "tenantLocationImagesList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "TenantLocationImage",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "condition",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "orderBy",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
                   }
                 }
               }

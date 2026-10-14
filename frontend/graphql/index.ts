@@ -9382,12 +9382,8 @@ export type Query = {
   aktuality: Maybe<Aktuality>;
   /** Get a single `Announcement`. */
   announcement: Maybe<Announcement>;
-  /** Get a single `AnnouncementAttachment`. */
-  announcementAttachment: Maybe<AnnouncementAttachment>;
   /** Reads and enables pagination through a set of `Announcement`. */
   announcements: Maybe<AnnouncementsConnection>;
-  /** Get a single `ArticleAttachment`. */
-  articleAttachment: Maybe<ArticleAttachment>;
   /** Reads a set of `Category`. */
   categoriesList: Maybe<Array<Category>>;
   /** Get a single `Category`. */
@@ -9524,8 +9520,6 @@ export type Query = {
   location: Maybe<Location>;
   /** Get a single `LocationImage`. */
   locationImage: Maybe<LocationImage>;
-  /** Reads a set of `LocationImage`. */
-  locationImagesList: Maybe<Array<LocationImage>>;
   /** Get a single `MembershipApplication`. */
   membershipApplication: Maybe<MembershipApplication>;
   /** Reads a set of `MembershipApplication`. */
@@ -9567,12 +9561,8 @@ export type Query = {
   tenantAdministrator: Maybe<TenantAdministrator>;
   /** Get a single `TenantLocation`. */
   tenantLocation: Maybe<TenantLocation>;
-  /** Get a single `TenantLocation`. */
-  tenantLocationByTenantIdAndId: Maybe<TenantLocation>;
   /** Get a single `TenantLocationImage`. */
   tenantLocationImage: Maybe<TenantLocationImage>;
-  /** Reads a set of `TenantLocationImage`. */
-  tenantLocationImagesList: Maybe<Array<TenantLocationImage>>;
   /** Get a single `TenantMembership`. */
   tenantMembership: Maybe<TenantMembership>;
   /** Get a single `TenantSetting`. */
@@ -9694,14 +9684,6 @@ export type QueryAnnouncementArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAnnouncementAttachmentArgs = {
-  announcementId: Scalars['BigInt']['input'];
-  fileId: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -9710,14 +9692,6 @@ export type QueryAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryArticleAttachmentArgs = {
-  aktualityId: Scalars['BigInt']['input'];
-  fileId: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
 };
 
 
@@ -10302,15 +10276,6 @@ export type QueryLocationImageArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryLocationImagesListArgs = {
-  condition?: InputMaybe<LocationImageCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<LocationImagesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryMembershipApplicationArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -10473,26 +10438,10 @@ export type QueryTenantLocationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryTenantLocationByTenantIdAndIdArgs = {
-  id: Scalars['BigInt']['input'];
-  tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryTenantLocationImageArgs = {
   fileId: Scalars['BigInt']['input'];
   locationId: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTenantLocationImagesListArgs = {
-  condition?: InputMaybe<TenantLocationImageCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TenantLocationImagesOrderBy>>;
 };
 
 
@@ -13850,9 +13799,7 @@ export type GraphCacheResolvers = {
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
-    announcementAttachment?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAttachmentArgs, WithTypename<AnnouncementAttachment> | string>,
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
-    articleAttachment?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentArgs, WithTypename<ArticleAttachment> | string>,
     categoriesList?: GraphCacheResolver<WithTypename<Query>, QueryCategoriesListArgs, Array<WithTypename<Category> | string>>,
     category?: GraphCacheResolver<WithTypename<Query>, QueryCategoryArgs, WithTypename<Category> | string>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheResolver<WithTypename<Query>, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs, WithTypename<Category> | string>,
@@ -13925,7 +13872,6 @@ export type GraphCacheResolvers = {
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
     locationImage?: GraphCacheResolver<WithTypename<Query>, QueryLocationImageArgs, WithTypename<LocationImage> | string>,
-    locationImagesList?: GraphCacheResolver<WithTypename<Query>, QueryLocationImagesListArgs, Array<WithTypename<LocationImage> | string>>,
     membershipApplication?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationArgs, WithTypename<MembershipApplication> | string>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Query>, QueryMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
@@ -13949,9 +13895,7 @@ export type GraphCacheResolvers = {
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<Query>, QueryTenantAdministratorArgs, WithTypename<TenantAdministrator> | string>,
     tenantLocation?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationArgs, WithTypename<TenantLocation> | string>,
-    tenantLocationByTenantIdAndId?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationByTenantIdAndIdArgs, WithTypename<TenantLocation> | string>,
     tenantLocationImage?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationImageArgs, WithTypename<TenantLocationImage> | string>,
-    tenantLocationImagesList?: GraphCacheResolver<WithTypename<Query>, QueryTenantLocationImagesListArgs, Array<WithTypename<TenantLocationImage> | string>>,
     tenantMembership?: GraphCacheResolver<WithTypename<Query>, QueryTenantMembershipArgs, WithTypename<TenantMembership> | string>,
     tenantSetting?: GraphCacheResolver<WithTypename<Query>, QueryTenantSettingArgs, WithTypename<TenantSetting> | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<Query>, QueryTenantTrainerArgs, WithTypename<TenantTrainer> | string>,
@@ -16408,9 +16352,7 @@ export type GraphCacheUpdaters = {
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
-    announcementAttachment?: GraphCacheUpdateResolver<{ announcementAttachment: Maybe<WithTypename<AnnouncementAttachment>> }, QueryAnnouncementAttachmentArgs>,
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
-    articleAttachment?: GraphCacheUpdateResolver<{ articleAttachment: Maybe<WithTypename<ArticleAttachment>> }, QueryArticleAttachmentArgs>,
     categoriesList?: GraphCacheUpdateResolver<{ categoriesList: Maybe<Array<WithTypename<Category>>> }, QueryCategoriesListArgs>,
     category?: GraphCacheUpdateResolver<{ category: Maybe<WithTypename<Category>> }, QueryCategoryArgs>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheUpdateResolver<{ categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType: Maybe<WithTypename<Category>> }, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs>,
@@ -16483,7 +16425,6 @@ export type GraphCacheUpdaters = {
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']['output']> }, QueryInvitationNameArgs>,
     location?: GraphCacheUpdateResolver<{ location: Maybe<WithTypename<Location>> }, QueryLocationArgs>,
     locationImage?: GraphCacheUpdateResolver<{ locationImage: Maybe<WithTypename<LocationImage>> }, QueryLocationImageArgs>,
-    locationImagesList?: GraphCacheUpdateResolver<{ locationImagesList: Maybe<Array<WithTypename<LocationImage>>> }, QueryLocationImagesListArgs>,
     membershipApplication?: GraphCacheUpdateResolver<{ membershipApplication: Maybe<WithTypename<MembershipApplication>> }, QueryMembershipApplicationArgs>,
     membershipApplicationsList?: GraphCacheUpdateResolver<{ membershipApplicationsList: Maybe<Array<WithTypename<MembershipApplication>>> }, QueryMembershipApplicationsListArgs>,
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
@@ -16507,9 +16448,7 @@ export type GraphCacheUpdaters = {
     tenant?: GraphCacheUpdateResolver<{ tenant: Maybe<WithTypename<Tenant>> }, QueryTenantArgs>,
     tenantAdministrator?: GraphCacheUpdateResolver<{ tenantAdministrator: Maybe<WithTypename<TenantAdministrator>> }, QueryTenantAdministratorArgs>,
     tenantLocation?: GraphCacheUpdateResolver<{ tenantLocation: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationArgs>,
-    tenantLocationByTenantIdAndId?: GraphCacheUpdateResolver<{ tenantLocationByTenantIdAndId: Maybe<WithTypename<TenantLocation>> }, QueryTenantLocationByTenantIdAndIdArgs>,
     tenantLocationImage?: GraphCacheUpdateResolver<{ tenantLocationImage: Maybe<WithTypename<TenantLocationImage>> }, QueryTenantLocationImageArgs>,
-    tenantLocationImagesList?: GraphCacheUpdateResolver<{ tenantLocationImagesList: Maybe<Array<WithTypename<TenantLocationImage>>> }, QueryTenantLocationImagesListArgs>,
     tenantMembership?: GraphCacheUpdateResolver<{ tenantMembership: Maybe<WithTypename<TenantMembership>> }, QueryTenantMembershipArgs>,
     tenantSetting?: GraphCacheUpdateResolver<{ tenantSetting: Maybe<WithTypename<TenantSetting>> }, QueryTenantSettingArgs>,
     tenantTrainer?: GraphCacheUpdateResolver<{ tenantTrainer: Maybe<WithTypename<TenantTrainer>> }, QueryTenantTrainerArgs>,
