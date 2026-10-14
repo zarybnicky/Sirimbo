@@ -14,7 +14,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import React from 'react';
 import {
   type Control,

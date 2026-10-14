@@ -1,7 +1,7 @@
 import { RichTextView } from '@/ui/RichTextView';
 import { buttonCls, cardCls } from '@/ui/style';
 import { ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import Link, { LinkProps } from 'next/link';
 
 interface Props {

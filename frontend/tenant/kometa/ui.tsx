@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import LogoOnDark from './logo-white.webp';
 import LogoOnWhite from './logo-vec.webp';
 

@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
 import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import Link, { type LinkProps } from 'next/link';
 import React from 'react';
 

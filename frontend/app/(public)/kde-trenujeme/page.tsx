@@ -5,7 +5,7 @@ import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -55,7 +55,6 @@ export default async function LocationsPage() {
                 <div className="relative mt-4 aspect-2/1 max-h-96 overflow-hidden rounded-md bg-neutral-3">
                   <Image
                     fill
-                    unoptimized
                     src={image.url}
                     alt={`Fotografie místa ${loc.longName || loc.name}`}
                     sizes="(min-width: 768px) 800px, 100vw"

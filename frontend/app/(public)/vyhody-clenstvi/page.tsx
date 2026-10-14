@@ -1,5 +1,5 @@
 import { PageHeader } from '@/ui/TitleBar';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

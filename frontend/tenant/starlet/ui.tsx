@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import LogoIcon from './logo-white-no-text.png';
 
 export function SidebarLogo() {

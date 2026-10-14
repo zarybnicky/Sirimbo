@@ -4,7 +4,7 @@ import type { ArticleFragment } from '@/graphql/Articles';
 import { cn } from '@/lib/cn';
 import { slugify } from '@/lib/slugify';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import Link, { type LinkProps } from 'next/link';
 import * as React from 'react';
 

@@ -11,7 +11,7 @@ import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -128,7 +128,6 @@ export function Location({
         >
           <Image
             fill
-            unoptimized
             src={coverImage.url}
             alt=""
             sizes="100vw"
@@ -150,7 +149,6 @@ export function Location({
             >
               <Image
                 fill
-                unoptimized
                 src={image.url}
                 alt=""
                 sizes="(min-width: 768px) 33vw, 50vw"

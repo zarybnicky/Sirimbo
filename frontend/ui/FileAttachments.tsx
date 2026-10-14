@@ -1,6 +1,6 @@
 import type { FileFragment } from '@/graphql/File';
 import { Paperclip } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 
 export function FileAttachments({
   attachments,

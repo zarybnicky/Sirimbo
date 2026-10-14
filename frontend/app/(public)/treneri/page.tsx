@@ -1,6 +1,6 @@
 import { typographyCls } from '@/ui/style';
 import { PageHeader } from '@/ui/TitleBar';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 

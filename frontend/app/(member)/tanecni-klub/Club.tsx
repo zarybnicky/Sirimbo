@@ -14,7 +14,7 @@ import { TenantForm } from '@/ui/forms/TenantForm.tsx';
 import { useAuth } from '@/lib/auth';
 import { Pencil, PinIcon } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 import { useQuery } from 'urql';
 import { ClubDocument, type ClubQuery } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
@@ -135,7 +135,6 @@ const ClubInformation = React.memo(function ClubInformation({
                 {item.coverImage ? (
                   <Image
                     fill
-                    unoptimized
                     src={item.coverImage.url}
                     alt=""
                     sizes="80px"

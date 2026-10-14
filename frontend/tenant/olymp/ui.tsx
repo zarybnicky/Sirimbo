@@ -11,7 +11,7 @@ import LogoOlomouc from './logo-olomouc.jpg';
 import LogoKraj from './logo-kraj.png';
 import { config } from './config';
 import LogoOnDark from './logo.webp';
-import Image from 'next/image';
+import Image from '@/ui/Image';
 
 function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
   return (

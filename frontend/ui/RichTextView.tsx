@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from '@/ui/Image';
 import parse, {
   domToReact,
   type DOMNode,
@@ -47,16 +48,25 @@ const options: HTMLReactParserOptions = {
 
     if (domNode.name === 'img') {
       const { src, alt, class: className, ...rest } = domNode.attribs;
+      const width = Number(rest.width);
+      const height = Number(rest.height);
+      const props = {
+        loading: 'lazy' as const,
+        decoding: 'async' as const,
+        ...attributesToProps(rest),
+        src,
+        className,
+      };
       return (
         <a href={src} target="_blank" rel="noreferrer">
-          <img
-            src={src}
-            alt={alt}
-            className={className}
-            loading="lazy"
-            decoding="async"
-            {...attributesToProps(rest)}
-          />
+          {src?.startsWith('/f/') && !rest.srcset &&
+          Number.isSafeInteger(width) && width > 0 &&
+          Number.isSafeInteger(height) && height > 0 ? (
+            <Image {...props} src={src} alt={alt ?? ''} width={width} height={height} />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element -- Preserve external sources, authored srcsets, and images without valid dimensions.
+            <img {...props} alt={alt ?? ''} />
+          )}
         </a>
       );
     }
