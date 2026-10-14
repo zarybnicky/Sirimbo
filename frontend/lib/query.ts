@@ -173,6 +173,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {
     AddressDomain: () => null,
+    AgeGroup: (x) => x.code || null,
     CompetitionEntry: (x) => `${x.competitionId}:${x.competitorId}`,
     CompetitionOfficial: (x) => `${x.competitionId}:${x.personId}:${x.role}`,
     CompetitionResult: (x) => `${x.competitionId}:${x.competitorId}`,

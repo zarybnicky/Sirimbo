@@ -388,6 +388,7 @@ export type IGetAllCategoriesParams = void;
 
 /** 'GetAllCategories' return type */
 export interface IGetAllCategoriesResult {
+  /** @behavior -* */
   ageGroup: string;
   class: string;
   competitorType: competitor_type;
