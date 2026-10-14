@@ -27,6 +27,8 @@ export type DateOrString = Date | string;
 
 export type DateOrStringArray = (DateOrString)[];
 
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
 export type NumberOrString = number | string;
 
 export type NumberOrStringArray = (NumberOrString)[];
@@ -2512,5 +2514,120 @@ const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":t
  * ```
  */
 export const refreshCompetitionRoundResults = new PreparedQuery<IRefreshCompetitionRoundResultsParams,IRefreshCompetitionRoundResultsResult>(refreshCompetitionRoundResultsIR);
+
+
+/** 'MergeWdsfAgeGroups' parameters type */
+export interface IMergeWdsfAgeGroupsParams {
+  groups?: Json | null | void;
+}
+
+/** 'MergeWdsfAgeGroups' return type */
+export type IMergeWdsfAgeGroupsResult = void;
+
+/** 'MergeWdsfAgeGroups' query type */
+export interface IMergeWdsfAgeGroupsQuery {
+  params: IMergeWdsfAgeGroupsParams;
+  result: IMergeWdsfAgeGroupsResult;
+}
+
+const mergeWdsfAgeGroupsIR: any = {"usedParamSet":{"groups":true},"params":[{"name":"groups","required":false,"transform":{"type":"scalar"},"locs":[{"a":289,"b":295}]}],"statement":"INSERT INTO federated.age_group AS t (\n  code, name, age, is_person, is_couple, is_team, is_competition, divisions\n)\nSELECT federated.resolve_age_group(name), name, int4range(\"fromAge\", \"toAge\", '[]'),\n  \"isPerson\", \"isCouple\", \"isTeam\", \"isCompetition\", divisions\nFROM jsonb_to_recordset(:groups::jsonb) AS i(\n  name text, \"fromAge\" integer, \"toAge\" integer,\n  \"isPerson\" boolean, \"isCouple\" boolean, \"isTeam\" boolean,\n  \"isCompetition\" boolean, divisions text[]\n)\nON CONFLICT (code) DO UPDATE SET\n  age = EXCLUDED.age,\n  is_person = EXCLUDED.is_person OR t.person_age IS NOT NULL,\n  is_couple = EXCLUDED.is_couple OR t.is_couple,\n  is_team = EXCLUDED.is_team,\n  is_competition = EXCLUDED.is_competition OR t.is_competition,\n  divisions = EXCLUDED.divisions\nWHERE (t.age, t.is_person, t.is_couple, t.is_team, t.is_competition, t.divisions)\n  IS DISTINCT FROM (EXCLUDED.age, EXCLUDED.is_person OR t.person_age IS NOT NULL,\n    EXCLUDED.is_couple OR t.is_couple, EXCLUDED.is_team,\n    EXCLUDED.is_competition OR t.is_competition, EXCLUDED.divisions)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO federated.age_group AS t (
+ *   code, name, age, is_person, is_couple, is_team, is_competition, divisions
+ * )
+ * SELECT federated.resolve_age_group(name), name, int4range("fromAge", "toAge", '[]'),
+ *   "isPerson", "isCouple", "isTeam", "isCompetition", divisions
+ * FROM jsonb_to_recordset(:groups::jsonb) AS i(
+ *   name text, "fromAge" integer, "toAge" integer,
+ *   "isPerson" boolean, "isCouple" boolean, "isTeam" boolean,
+ *   "isCompetition" boolean, divisions text[]
+ * )
+ * ON CONFLICT (code) DO UPDATE SET
+ *   age = EXCLUDED.age,
+ *   is_person = EXCLUDED.is_person OR t.person_age IS NOT NULL,
+ *   is_couple = EXCLUDED.is_couple OR t.is_couple,
+ *   is_team = EXCLUDED.is_team,
+ *   is_competition = EXCLUDED.is_competition OR t.is_competition,
+ *   divisions = EXCLUDED.divisions
+ * WHERE (t.age, t.is_person, t.is_couple, t.is_team, t.is_competition, t.divisions)
+ *   IS DISTINCT FROM (EXCLUDED.age, EXCLUDED.is_person OR t.person_age IS NOT NULL,
+ *     EXCLUDED.is_couple OR t.is_couple, EXCLUDED.is_team,
+ *     EXCLUDED.is_competition OR t.is_competition, EXCLUDED.divisions)
+ * ```
+ */
+export const mergeWdsfAgeGroups = new PreparedQuery<IMergeWdsfAgeGroupsParams,IMergeWdsfAgeGroupsResult>(mergeWdsfAgeGroupsIR);
+
+
+/** 'MergeWdsfAgeGroupAllowances' parameters type */
+export interface IMergeWdsfAgeGroupAllowancesParams {
+  groups?: Json | null | void;
+}
+
+/** 'MergeWdsfAgeGroupAllowances' return type */
+export type IMergeWdsfAgeGroupAllowancesResult = void;
+
+/** 'MergeWdsfAgeGroupAllowances' query type */
+export interface IMergeWdsfAgeGroupAllowancesQuery {
+  params: IMergeWdsfAgeGroupAllowancesParams;
+  result: IMergeWdsfAgeGroupAllowancesResult;
+}
+
+const mergeWdsfAgeGroupAllowancesIR: any = {"usedParamSet":{"groups":true},"params":[{"name":"groups","required":false,"transform":{"type":"scalar"},"locs":[{"a":315,"b":321}]}],"statement":"UPDATE federated.age_group g SET allowed_to_dance_in = ARRAY(\n  SELECT DISTINCT unnest(g.allowed_to_dance_in || i.allowed) ORDER BY 1\n)\nFROM (\n  SELECT federated.resolve_age_group(name) AS code,\n    ARRAY(SELECT federated.resolve_age_group(a) FROM unnest(\"AllowedToDanceIn\") a) AS allowed\n  FROM jsonb_to_recordset(:groups::jsonb) AS i(name text, \"AllowedToDanceIn\" text[])\n) i\nWHERE g.code = i.code AND NOT g.allowed_to_dance_in @> i.allowed"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE federated.age_group g SET allowed_to_dance_in = ARRAY(
+ *   SELECT DISTINCT unnest(g.allowed_to_dance_in || i.allowed) ORDER BY 1
+ * )
+ * FROM (
+ *   SELECT federated.resolve_age_group(name) AS code,
+ *     ARRAY(SELECT federated.resolve_age_group(a) FROM unnest("AllowedToDanceIn") a) AS allowed
+ *   FROM jsonb_to_recordset(:groups::jsonb) AS i(name text, "AllowedToDanceIn" text[])
+ * ) i
+ * WHERE g.code = i.code AND NOT g.allowed_to_dance_in @> i.allowed
+ * ```
+ */
+export const mergeWdsfAgeGroupAllowances = new PreparedQuery<IMergeWdsfAgeGroupAllowancesParams,IMergeWdsfAgeGroupAllowancesResult>(mergeWdsfAgeGroupAllowancesIR);
+
+
+/** 'MergeWdsfSeniorRules' parameters type */
+export type IMergeWdsfSeniorRulesParams = void;
+
+/** 'MergeWdsfSeniorRules' return type */
+export type IMergeWdsfSeniorRulesResult = void;
+
+/** 'MergeWdsfSeniorRules' query type */
+export interface IMergeWdsfSeniorRulesQuery {
+  params: IMergeWdsfSeniorRulesParams;
+  result: IMergeWdsfSeniorRulesResult;
+}
+
+const mergeWdsfSeniorRulesIR: any = {"usedParamSet":{},"params":[],"statement":"INSERT INTO federated.couple_age_rule AS t\n  (age_group_code, division, older_age, younger_age)\n-- A/B bands supply entry thresholds, not upper limits on senior classification.\nSELECT c.code, 'General', int4range(lower(b.age), NULL), int4range(lower(a.age), NULL)\nFROM federated.age_group c\nJOIN federated.age_group a ON a.code = c.code || 'a'\nJOIN federated.age_group b ON b.code = c.code || 'b'\nWHERE c.code ~ '^Senior_[IV]+$' AND c.is_couple\n  AND a.is_person AND b.is_person\n  AND 'General' = ANY(c.divisions)\n  AND 'General' = ANY(a.divisions) AND 'General' = ANY(b.divisions)\n  AND lower(a.age) IS NOT NULL AND lower(b.age) IS NOT NULL\nON CONFLICT (age_group_code, division) DO UPDATE SET\n  older_age = EXCLUDED.older_age, younger_age = EXCLUDED.younger_age\nWHERE t IS DISTINCT FROM EXCLUDED"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO federated.couple_age_rule AS t
+ *   (age_group_code, division, older_age, younger_age)
+ * -- A/B bands supply entry thresholds, not upper limits on senior classification.
+ * SELECT c.code, 'General', int4range(lower(b.age), NULL), int4range(lower(a.age), NULL)
+ * FROM federated.age_group c
+ * JOIN federated.age_group a ON a.code = c.code || 'a'
+ * JOIN federated.age_group b ON b.code = c.code || 'b'
+ * WHERE c.code ~ '^Senior_[IV]+$' AND c.is_couple
+ *   AND a.is_person AND b.is_person
+ *   AND 'General' = ANY(c.divisions)
+ *   AND 'General' = ANY(a.divisions) AND 'General' = ANY(b.divisions)
+ *   AND lower(a.age) IS NOT NULL AND lower(b.age) IS NOT NULL
+ * ON CONFLICT (age_group_code, division) DO UPDATE SET
+ *   older_age = EXCLUDED.older_age, younger_age = EXCLUDED.younger_age
+ * WHERE t IS DISTINCT FROM EXCLUDED
+ * ```
+ */
+export const mergeWdsfSeniorRules = new PreparedQuery<IMergeWdsfSeniorRulesParams,IMergeWdsfSeniorRulesResult>(mergeWdsfSeniorRulesIR);
 
 

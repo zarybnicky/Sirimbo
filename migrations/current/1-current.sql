@@ -269,3 +269,171 @@ ALTER TABLE federated.competition_official ADD COLUMN IF NOT EXISTS judge_label 
 
 --!include views/crawler_frontier_summary.sql
 --!include views/crawler_frontier_failure_group.sql
+
+create table if not exists federated.age_group (
+  code text primary key,
+  name text not null,
+  aliases text[] not null default '{}',
+  allowed_to_dance_in text[] not null default '{}',
+  age int4range check (not isempty(age)),
+  person_age int4range check (not isempty(person_age)),
+  is_person boolean not null default false,
+  is_couple boolean not null default false,
+  is_team boolean not null default false,
+  is_competition boolean not null default false,
+  divisions text[] not null default '{}'
+);
+comment on table federated.age_group is '@name age_group
+@behavior -insert -update -delete +list -connection';
+comment on column federated.age_group.aliases is '@behavior -filterBy -orderBy';
+comment on column federated.age_group.allowed_to_dance_in is '@behavior -filterBy -orderBy';
+comment on column federated.age_group.age is '@behavior -filterBy -orderBy';
+comment on column federated.age_group.person_age is '@behavior -filterBy -orderBy';
+comment on column federated.age_group.divisions is '@behavior -filterBy -orderBy';
+grant select on federated.age_group to anonymous;
+
+create table if not exists federated.couple_age_rule (
+  age_group_code text not null references federated.age_group(code),
+  division text not null default 'General',
+  older_age int4range not null check (not isempty(older_age)),
+  younger_age int4range not null check (not isempty(younger_age)),
+  primary key (age_group_code, division)
+);
+comment on table federated.couple_age_rule is '@name federation_couple_age_rule
+@behavior -insert -update -delete +list -connection -query:resource:single -query:resource:list -query:resource:connection';
+comment on column federated.couple_age_rule.older_age is '@behavior -filterBy -orderBy';
+comment on column federated.couple_age_rule.younger_age is '@behavior -filterBy -orderBy';
+comment on constraint couple_age_rule_age_group_code_fkey on federated.couple_age_rule is '@fieldName canonicalAgeGroup
+@foreignFieldName coupleRules
+@foreignSimpleFieldName coupleRules
+@backwardBehavior +list -connection';
+grant select on federated.couple_age_rule to anonymous;
+
+-- The non-overlapping person display ladder is separate from classification/entry rules.
+insert into federated.age_group as t (code, name, person_age, is_person)
+values
+  ('Adult', 'Adult', '[21,30)', true),
+  ('Adult_O', 'Adult O', null, false),
+  ('Adult_T', 'Adult T', null, false),
+  ('Junior', 'Junior', null, false),
+  ('Junior_I', 'Junior I', '[12,14)', true),
+  ('Junior_II', 'Junior II', '[14,16)', true),
+  ('Junior_T', 'Junior T', null, false),
+  ('Juvenile', 'Juvenile', null, false),
+  ('Juvenile_I', 'Juvenile I', '[8,10)', true),
+  ('Juvenile_I_C', 'Juvenile I C', null, false),
+  ('Juvenile_II', 'Juvenile II', '[10,12)', true),
+  ('Juvenile_II_C', 'Juvenile II C', null, false),
+  ('Juvenile_T', 'Juvenile T', null, false),
+  ('Kid_I', 'Kid I', null, false),
+  ('Kid_II', 'Kid II', null, false),
+  ('Master_Class', 'Master Class', null, false),
+  ('Master_Class_I', 'Master Class I', null, false),
+  ('Master_Class_II', 'Master Class II', null, false),
+  ('Master_Class_III', 'Master Class III', null, false),
+  ('Mix', 'Mix', null, false),
+  ('Over_35', 'Over 35', null, false),
+  ('Rising_Star', 'Rising Star', null, false),
+  ('Senior', 'Senior', null, false),
+  ('Senior_I', 'Senior I', null, false),
+  ('Senior_Ia', 'Senior Ia', '[30,35)', true),
+  ('Senior_Ib', 'Senior Ib', '[35,40)', true),
+  ('Senior_II', 'Senior II', null, false),
+  ('Senior_IIa', 'Senior IIa', '[40,45)', true),
+  ('Senior_IIb', 'Senior IIb', '[45,50)', true),
+  ('Senior_III', 'Senior III', null, false),
+  ('Senior_IIIa', 'Senior IIIa', '[50,55)', true),
+  ('Senior_IIIb', 'Senior IIIb', '[55,60)', true),
+  ('Senior_IV', 'Senior IV', null, false),
+  ('Senior_IVa', 'Senior IVa', '[60,65)', true),
+  ('Senior_IVb', 'Senior IVb', '[65,70)', true),
+  ('Senior_O', 'Senior O', null, false),
+  ('Senior_T', 'Senior T', null, false),
+  ('Senior_V', 'Senior V', '[70,)', true),
+  ('Under_21', 'Under 21', '[19,21)', true),
+  ('Youth', 'Youth', '[16,19)', true),
+  ('Youth_X', 'Youth X', null, false),
+  ('Under_8', 'Under 8', '[0,8)', true)
+on conflict (code) do update set person_age = excluded.person_age
+where t.person_age is distinct from excluded.person_age;
+
+update federated.age_group g set aliases = a.aliases::text[]
+from (values
+  ('Under_8', '{u8}'), ('Juvenile_I', '{u10}'), ('Juvenile_II', '{u12}'),
+  ('Junior_I', '{u14}'), ('Junior_II', '{u16}'), ('Youth', '{u19,under19}'),
+  ('Under_21', '{u21}')
+) a(code, aliases)
+where g.code = a.code and g.aliases is distinct from a.aliases::text[];
+
+--!include functions/resolve_age_group.sql
+
+insert into federated.couple_age_rule as t (age_group_code, older_age, younger_age)
+values
+  ('Under_8', '(,8)', '(,8)'),
+  ('Juvenile_I', '(,10)', '(,10)'),
+  ('Juvenile_II', '[10,12)', '(,12)'),
+  ('Junior_I', '[12,14)', '(,14)'),
+  ('Junior_II', '[14,16)', '(,16)'),
+  ('Youth', '[16,19)', '(,19)'),
+  ('Under_21', '[16,21)', '(,21)'),
+  ('Adult', '[19,)', '(,35)'),
+  ('Senior_I', '[35,)', '[30,)'),
+  ('Senior_II', '[45,)', '[40,)'),
+  ('Senior_III', '[55,)', '[50,)'),
+  ('Senior_IV', '[65,)', '[60,)'),
+  ('Senior_V', '[70,)', '[70,)')
+on conflict (age_group_code, division) do update set
+  older_age = excluded.older_age, younger_age = excluded.younger_age
+where (t.older_age, t.younger_age) is distinct from (excluded.older_age, excluded.younger_age);
+
+update federated.age_group g set is_couple = true, is_competition = true
+where exists (select 1 from federated.couple_age_rule r where r.age_group_code = g.code)
+  and (not g.is_couple or not g.is_competition);
+
+-- Local additions survive every WDSF refresh.
+update federated.age_group g set allowed_to_dance_in = array(
+  select distinct unnest(g.allowed_to_dance_in || a.allowed::text[]) order by 1
+)
+from (values
+  ('Under_8', '{Under_8,Juvenile_I,Juvenile_II}'),
+  ('Under_21', '{Under_21,Adult}')
+) a(code, allowed)
+where g.code = a.code and not g.allowed_to_dance_in @> a.allowed::text[];
+
+alter table federated.category add column if not exists age_group_code text references federated.age_group(code);
+alter table federated.person add column if not exists age_group_code text references federated.age_group(code);
+alter table federated.competitor add column if not exists age_group_code text references federated.age_group(code);
+create index if not exists category_age_group_code_idx on federated.category(age_group_code);
+create index if not exists person_age_group_code_idx on federated.person(age_group_code);
+create index if not exists competitor_age_group_code_idx on federated.competitor(age_group_code);
+
+--!include functions/tg_resolve_age_group.sql
+
+create or replace trigger _resolve_age_group
+  before insert or update of age_group on federated.category
+  for each row execute function app_private.tg_resolve_age_group();
+create or replace trigger _resolve_age_group
+  before insert or update of age_group on federated.person
+  for each row execute function app_private.tg_resolve_age_group();
+create or replace trigger _resolve_age_group
+  before insert or update of age_group on federated.competitor
+  for each row execute function app_private.tg_resolve_age_group();
+
+comment on column federated.category.age_group_code is '@behavior -insert -update';
+comment on column federated.person.age_group_code is '@behavior -insert -update';
+comment on column federated.competitor.age_group_code is '@behavior -insert -update';
+comment on constraint category_age_group_code_fkey on federated.category is '@fieldName canonicalAgeGroup
+@foreignFieldName categories
+@foreignSimpleFieldName categories
+@backwardBehavior +list -connection';
+comment on constraint person_age_group_code_fkey on federated.person is '@fieldName canonicalAgeGroup
+@backwardBehavior -single -list -connection';
+comment on constraint competitor_age_group_code_fkey on federated.competitor is '@fieldName canonicalAgeGroup
+@backwardBehavior -single -list -connection';
+
+update federated.category set age_group_code = federated.resolve_age_group(age_group)
+where age_group_code is distinct from federated.resolve_age_group(age_group);
+update federated.person set age_group_code = federated.resolve_age_group(age_group)
+where age_group_code is distinct from federated.resolve_age_group(age_group);
+update federated.competitor set age_group_code = federated.resolve_age_group(age_group)
+where age_group_code is distinct from federated.resolve_age_group(age_group);

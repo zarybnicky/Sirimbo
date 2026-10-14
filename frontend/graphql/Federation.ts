@@ -39,6 +39,8 @@ export type CompetitorType =
 /** Methods to use when ordering `FederationCompetitor`. */
 export type FederationCompetitorsOrderBy =
   | 'AGE_GROUP_ASC'
+  | 'AGE_GROUP_CODE_ASC'
+  | 'AGE_GROUP_CODE_DESC'
   | 'AGE_GROUP_DESC'
   | 'COMPETITOR_TYPE_ASC'
   | 'COMPETITOR_TYPE_DESC'

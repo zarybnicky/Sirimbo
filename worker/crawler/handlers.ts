@@ -27,9 +27,11 @@ import { wdsfCompetition } from './wdsfCompetition.ts';
 import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
 import { wdsfParticipant } from './wdsfParticipant.ts';
 import { wdsfOfficialIndex } from './wdsfOfficialIndex.ts';
+import { wdsfAgeGroups } from './wdsfAgeGroups.ts';
 
 export const LOADERS = {
   wdsf: {
+    ageGroups: wdsfAgeGroups,
     // https://services.worlddancesport.org/api/1/person
     memberIndex: wdsfMemberIndex,
 
@@ -55,7 +57,6 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
     // https://services.worlddancesport.org/api/1/ranking?ageGroup=???&discipline=???&division=???
     // https://services.worlddancesport.org/api/1/country
-    // https://services.worlddancesport.org/api/1/age - includes divisions? or disciplines?
   },
   csts: {
     // Soutěžní údaje, modrý web

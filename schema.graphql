@@ -531,6 +531,99 @@ input AddressDomainInput {
   street: String
 }
 
+type AgeGroup {
+  age: IntRange
+  aliases: [String]!
+  allowedToDanceIn: [String]!
+
+  """Reads and enables pagination through a set of `Category`."""
+  categories(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategoryCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Category`."""
+    orderBy: [CategoriesOrderBy!]
+  ): [Category!]!
+  code: String!
+
+  """
+  Reads and enables pagination through a set of `FederationCoupleAgeRule`.
+  """
+  coupleRules(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FederationCoupleAgeRuleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `FederationCoupleAgeRule`."""
+    orderBy: [FederationCoupleAgeRulesOrderBy!]
+  ): [FederationCoupleAgeRule!]!
+  divisions: [String]!
+  isCompetition: Boolean!
+  isCouple: Boolean!
+  isPerson: Boolean!
+  isTeam: Boolean!
+  name: String!
+  personAge: IntRange
+}
+
+"""
+A condition to be used against `AgeGroup` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AgeGroupCondition {
+  """Checks for equality with the object’s `code` field."""
+  code: String
+
+  """Checks for equality with the object’s `isCompetition` field."""
+  isCompetition: Boolean
+
+  """Checks for equality with the object’s `isCouple` field."""
+  isCouple: Boolean
+
+  """Checks for equality with the object’s `isPerson` field."""
+  isPerson: Boolean
+
+  """Checks for equality with the object’s `isTeam` field."""
+  isTeam: Boolean
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""Methods to use when ordering `AgeGroup`."""
+enum AgeGroupsOrderBy {
+  CODE_ASC
+  CODE_DESC
+  IS_COMPETITION_ASC
+  IS_COMPETITION_DESC
+  IS_COUPLE_ASC
+  IS_COUPLE_DESC
+  IS_PERSON_ASC
+  IS_PERSON_DESC
+  IS_TEAM_ASC
+  IS_TEAM_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """A connection to a list of `Aktuality` values."""
 type AktualitiesConnection {
   """
@@ -1199,6 +1292,8 @@ scalar BigInt
 """Methods to use when ordering `Category`."""
 enum CategoriesOrderBy {
   AGE_GROUP_ASC
+  AGE_GROUP_CODE_ASC
+  AGE_GROUP_CODE_DESC
   AGE_GROUP_DESC
   BASE_DANCE_PROGRAM_ID_ASC
   BASE_DANCE_PROGRAM_ID_DESC
@@ -1223,10 +1318,14 @@ enum CategoriesOrderBy {
 
 type Category {
   ageGroup: String!
+  ageGroupCode: String
 
   """Reads a single `DanceProgram` that is related to this `Category`."""
   baseDanceProgram: DanceProgram
   baseDanceProgramId: BigInt
+
+  """Reads a single `AgeGroup` that is related to this `Category`."""
+  canonicalAgeGroup: AgeGroup
   class: String!
 
   """Reads and enables pagination through a set of `Competition`."""
@@ -1334,6 +1433,9 @@ for equality and combined with a logical ‘and.’
 input CategoryCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
+
+  """Checks for equality with the object’s `ageGroupCode` field."""
+  ageGroupCode: String
 
   """Checks for equality with the object’s `baseDanceProgramId` field."""
   baseDanceProgramId: BigInt
@@ -7299,6 +7401,12 @@ enum FederationClubsOrderBy {
 
 type FederationCompetitor {
   ageGroup: String
+  ageGroupCode: String
+
+  """
+  Reads a single `AgeGroup` that is related to this `FederationCompetitor`.
+  """
+  canonicalAgeGroup: AgeGroup
 
   """
   Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
@@ -7789,6 +7897,9 @@ are tested for equality and combined with a logical ‘and.’
 input FederationCompetitorCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
+
+  """Checks for equality with the object’s `ageGroupCode` field."""
+  ageGroupCode: String
   categoryProgress: CompetitorCategoryProgressCondition
   competedSince: Date
 
@@ -7850,6 +7961,8 @@ type FederationCompetitorsEdge {
 """Methods to use when ordering `FederationCompetitor`."""
 enum FederationCompetitorsOrderBy {
   AGE_GROUP_ASC
+  AGE_GROUP_CODE_ASC
+  AGE_GROUP_CODE_DESC
   AGE_GROUP_DESC
   COMPETITOR_TYPE_ASC
   COMPETITOR_TYPE_DESC
@@ -7878,6 +7991,41 @@ input FederationCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+}
+
+type FederationCoupleAgeRule {
+  ageGroupCode: String!
+
+  """
+  Reads a single `AgeGroup` that is related to this `FederationCoupleAgeRule`.
+  """
+  canonicalAgeGroup: AgeGroup
+  division: String!
+  olderAge: IntRange!
+  youngerAge: IntRange!
+}
+
+"""
+A condition to be used against `FederationCoupleAgeRule` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input FederationCoupleAgeRuleCondition {
+  """Checks for equality with the object’s `ageGroupCode` field."""
+  ageGroupCode: String
+
+  """Checks for equality with the object’s `division` field."""
+  division: String
+}
+
+"""Methods to use when ordering `FederationCoupleAgeRule`."""
+enum FederationCoupleAgeRulesOrderBy {
+  AGE_GROUP_CODE_ASC
+  AGE_GROUP_CODE_DESC
+  DIVISION_ASC
+  DIVISION_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 type FederationEvent {
@@ -8284,6 +8432,8 @@ type FederationPeopleEdge {
 """Methods to use when ordering `FederationPerson`."""
 enum FederationPeopleOrderBy {
   AGE_GROUP_ASC
+  AGE_GROUP_CODE_ASC
+  AGE_GROUP_CODE_DESC
   AGE_GROUP_DESC
   CANONICAL_NAME_ASC
   CANONICAL_NAME_DESC
@@ -8318,6 +8468,10 @@ enum FederationPeopleOrderBy {
 
 type FederationPerson {
   ageGroup: String
+  ageGroupCode: String
+
+  """Reads a single `AgeGroup` that is related to this `FederationPerson`."""
+  canonicalAgeGroup: AgeGroup
   canonicalName: String
 
   """
@@ -8621,6 +8775,9 @@ tested for equality and combined with a logical ‘and.’
 input FederationPersonCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
+
+  """Checks for equality with the object’s `ageGroupCode` field."""
+  ageGroupCode: String
 
   """Checks for equality with the object’s `canonicalName` field."""
   canonicalName: String
@@ -9090,6 +9247,26 @@ enum GenderType {
   MAN
   UNSPECIFIED
   WOMAN
+}
+
+"""A range of `Int`."""
+type IntRange {
+  """The ending bound of our range."""
+  end: IntRangeBound
+
+  """The starting bound of our range."""
+  start: IntRangeBound
+}
+
+"""
+The value at one end of a range. A range can either include this value, or not.
+"""
+type IntRangeBound {
+  """Whether or not the value of this bound is included in the range."""
+  inclusive: Boolean!
+
+  """The value at one end of our range."""
+  value: Int!
 }
 
 """
@@ -11894,6 +12071,26 @@ type Query {
     pSince: Datetime
     pUntil: Datetime
   ): [ActivityTimelineItem!]
+
+  """Get a single `AgeGroup`."""
+  ageGroup(code: String!): AgeGroup
+
+  """Reads a set of `AgeGroup`."""
+  ageGroupsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AgeGroupCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `AgeGroup`."""
+    orderBy: [AgeGroupsOrderBy!]
+  ): [AgeGroup!]
 
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualities(

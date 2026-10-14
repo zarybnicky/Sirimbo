@@ -19,6 +19,14 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Background watchers can apply migrations and regenerate files before a manual command runs. For migration verification, use the command in `migrations/current/AGENTS.md` even when the watcher is running. Do not infer success from a running process or changed generated files. Keep generated output intact, as described below.
 - Before finishing, stop temporary processes you started. Leave maintainer-owned processes running.
 
+## Design preferences
+
+- Understand the affected data flow and callers before choosing a solution. Fix the cause at the appropriate shared boundary.
+- Prefer the simplest design that meets the whole request and remains easy to maintain. Judge simplicity by clarity, not line count.
+- Reuse existing code, standard libraries, and native platform features before adding dependencies or custom machinery.
+- Add abstractions for clear concepts, meaningful duplication, or current requirements. Leave speculative flexibility for a concrete need.
+- Preserve real differences in the data and behavior. Do not sacrifice correctness, security, data integrity, or necessary verification for a smaller change.
+
 ## Code style preferences
 - Prefer compact, elegant code that keeps the local control flow easy to read. Extract helpers when they name a real concept, isolate complex behavior, or remove meaningful duplication.
 - Avoid one-line helper functions used in a single place; they usually make this codebase harder to read than an inline expression.

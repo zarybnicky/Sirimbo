@@ -1405,3 +1405,53 @@ WHERE crr.round_id = sr.id
     WHERE source.round_id = crr.round_id
       AND source.competitor_id = crr.competitor_id
   );
+/* @name MergeWdsfAgeGroups */
+INSERT INTO federated.age_group AS t (
+  code, name, age, is_person, is_couple, is_team, is_competition, divisions
+)
+SELECT federated.resolve_age_group(name), name, int4range("fromAge", "toAge", '[]'),
+  "isPerson", "isCouple", "isTeam", "isCompetition", divisions
+FROM jsonb_to_recordset(:groups::jsonb) AS i(
+  name text, "fromAge" integer, "toAge" integer,
+  "isPerson" boolean, "isCouple" boolean, "isTeam" boolean,
+  "isCompetition" boolean, divisions text[]
+)
+ON CONFLICT (code) DO UPDATE SET
+  age = EXCLUDED.age,
+  is_person = EXCLUDED.is_person OR t.person_age IS NOT NULL,
+  is_couple = EXCLUDED.is_couple OR t.is_couple,
+  is_team = EXCLUDED.is_team,
+  is_competition = EXCLUDED.is_competition OR t.is_competition,
+  divisions = EXCLUDED.divisions
+WHERE (t.age, t.is_person, t.is_couple, t.is_team, t.is_competition, t.divisions)
+  IS DISTINCT FROM (EXCLUDED.age, EXCLUDED.is_person OR t.person_age IS NOT NULL,
+    EXCLUDED.is_couple OR t.is_couple, EXCLUDED.is_team,
+    EXCLUDED.is_competition OR t.is_competition, EXCLUDED.divisions);
+
+/* @name MergeWdsfAgeGroupAllowances */
+UPDATE federated.age_group g SET allowed_to_dance_in = ARRAY(
+  SELECT DISTINCT unnest(g.allowed_to_dance_in || i.allowed) ORDER BY 1
+)
+FROM (
+  SELECT federated.resolve_age_group(name) AS code,
+    ARRAY(SELECT federated.resolve_age_group(a) FROM unnest("AllowedToDanceIn") a) AS allowed
+  FROM jsonb_to_recordset(:groups::jsonb) AS i(name text, "AllowedToDanceIn" text[])
+) i
+WHERE g.code = i.code AND NOT g.allowed_to_dance_in @> i.allowed;
+
+/* @name MergeWdsfSeniorRules */
+INSERT INTO federated.couple_age_rule AS t
+  (age_group_code, division, older_age, younger_age)
+-- A/B bands supply entry thresholds, not upper limits on senior classification.
+SELECT c.code, 'General', int4range(lower(b.age), NULL), int4range(lower(a.age), NULL)
+FROM federated.age_group c
+JOIN federated.age_group a ON a.code = c.code || 'a'
+JOIN federated.age_group b ON b.code = c.code || 'b'
+WHERE c.code ~ '^Senior_[IV]+$' AND c.is_couple
+  AND a.is_person AND b.is_person
+  AND 'General' = ANY(c.divisions)
+  AND 'General' = ANY(a.divisions) AND 'General' = ANY(b.divisions)
+  AND lower(a.age) IS NOT NULL AND lower(b.age) IS NOT NULL
+ON CONFLICT (age_group_code, division) DO UPDATE SET
+  older_age = EXCLUDED.older_age, younger_age = EXCLUDED.younger_age
+WHERE t IS DISTINCT FROM EXCLUDED;

@@ -35,6 +35,7 @@ function reserveEarliestSlot(
 }
 
 const SEED_FRONTIERS: LoaderIds[] = [
+  { federation: 'wdsf', kind: 'ageGroups' },
   { federation: 'wdsf', kind: 'memberIndex' },
 
   { federation: 'csts', kind: 'ranklistIndex' },

@@ -503,6 +503,78 @@ export type AddressDomainInput = {
   street?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AgeGroup = {
+  __typename?: 'AgeGroup';
+  age: Maybe<IntRange>;
+  aliases: Array<Maybe<Scalars['String']['output']>>;
+  allowedToDanceIn: Array<Maybe<Scalars['String']['output']>>;
+  /** Reads and enables pagination through a set of `Category`. */
+  categories: Array<Category>;
+  code: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `FederationCoupleAgeRule`. */
+  coupleRules: Array<FederationCoupleAgeRule>;
+  divisions: Array<Maybe<Scalars['String']['output']>>;
+  isCompetition: Scalars['Boolean']['output'];
+  isCouple: Scalars['Boolean']['output'];
+  isPerson: Scalars['Boolean']['output'];
+  isTeam: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  personAge: Maybe<IntRange>;
+};
+
+
+export type AgeGroupCategoriesArgs = {
+  condition?: InputMaybe<CategoryCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CategoriesOrderBy>>;
+};
+
+
+export type AgeGroupCoupleRulesArgs = {
+  condition?: InputMaybe<FederationCoupleAgeRuleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FederationCoupleAgeRulesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `AgeGroup` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AgeGroupCondition = {
+  /** Checks for equality with the object’s `code` field. */
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `isCompetition` field. */
+  isCompetition?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isCouple` field. */
+  isCouple?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isPerson` field. */
+  isPerson?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isTeam` field. */
+  isTeam?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Methods to use when ordering `AgeGroup`. */
+export type AgeGroupsOrderBy =
+  | 'CODE_ASC'
+  | 'CODE_DESC'
+  | 'IS_COMPETITION_ASC'
+  | 'IS_COMPETITION_DESC'
+  | 'IS_COUPLE_ASC'
+  | 'IS_COUPLE_DESC'
+  | 'IS_PERSON_ASC'
+  | 'IS_PERSON_DESC'
+  | 'IS_TEAM_ASC'
+  | 'IS_TEAM_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC';
+
 /** A connection to a list of `Aktuality` values. */
 export type AktualitiesConnection = {
   __typename?: 'AktualitiesConnection';
@@ -1034,6 +1106,8 @@ export type AttendanceType =
 /** Methods to use when ordering `Category`. */
 export type CategoriesOrderBy =
   | 'AGE_GROUP_ASC'
+  | 'AGE_GROUP_CODE_ASC'
+  | 'AGE_GROUP_CODE_DESC'
   | 'AGE_GROUP_DESC'
   | 'BASE_DANCE_PROGRAM_ID_ASC'
   | 'BASE_DANCE_PROGRAM_ID_DESC'
@@ -1058,9 +1132,12 @@ export type CategoriesOrderBy =
 export type Category = {
   __typename?: 'Category';
   ageGroup: Scalars['String']['output'];
+  ageGroupCode: Maybe<Scalars['String']['output']>;
   /** Reads a single `DanceProgram` that is related to this `Category`. */
   baseDanceProgram: Maybe<DanceProgram>;
   baseDanceProgramId: Maybe<Scalars['BigInt']['output']>;
+  /** Reads a single `AgeGroup` that is related to this `Category`. */
+  canonicalAgeGroup: Maybe<AgeGroup>;
   class: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Competition`. */
   competitions: CompetitionsConnection;
@@ -1116,6 +1193,8 @@ export type CategoryRanklistsArgs = {
 export type CategoryCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ageGroupCode` field. */
+  ageGroupCode?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `baseDanceProgramId` field. */
   baseDanceProgramId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `class` field. */
@@ -5832,6 +5911,9 @@ export type FederationClubsOrderBy =
 export type FederationCompetitor = {
   __typename?: 'FederationCompetitor';
   ageGroup: Maybe<Scalars['String']['output']>;
+  ageGroupCode: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AgeGroup` that is related to this `FederationCompetitor`. */
+  canonicalAgeGroup: Maybe<AgeGroup>;
   /** Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`. */
   categoryProgressesList: Array<FederationCompetitorCategoryProgress>;
   /** Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`. */
@@ -6146,6 +6228,8 @@ export type FederationCompetitorComponentsOrderBy =
 export type FederationCompetitorCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ageGroupCode` field. */
+  ageGroupCode?: InputMaybe<Scalars['String']['input']>;
   categoryProgress?: InputMaybe<CompetitorCategoryProgressCondition>;
   competedSince?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `competitorType` field. */
@@ -6196,6 +6280,8 @@ export type FederationCompetitorsEdge = {
 /** Methods to use when ordering `FederationCompetitor`. */
 export type FederationCompetitorsOrderBy =
   | 'AGE_GROUP_ASC'
+  | 'AGE_GROUP_CODE_ASC'
+  | 'AGE_GROUP_CODE_DESC'
   | 'AGE_GROUP_DESC'
   | 'COMPETITOR_TYPE_ASC'
   | 'COMPETITOR_TYPE_DESC'
@@ -6223,6 +6309,37 @@ export type FederationCondition = {
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type FederationCoupleAgeRule = {
+  __typename?: 'FederationCoupleAgeRule';
+  ageGroupCode: Scalars['String']['output'];
+  /** Reads a single `AgeGroup` that is related to this `FederationCoupleAgeRule`. */
+  canonicalAgeGroup: Maybe<AgeGroup>;
+  division: Scalars['String']['output'];
+  olderAge: IntRange;
+  youngerAge: IntRange;
+};
+
+/**
+ * A condition to be used against `FederationCoupleAgeRule` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type FederationCoupleAgeRuleCondition = {
+  /** Checks for equality with the object’s `ageGroupCode` field. */
+  ageGroupCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `division` field. */
+  division?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Methods to use when ordering `FederationCoupleAgeRule`. */
+export type FederationCoupleAgeRulesOrderBy =
+  | 'AGE_GROUP_CODE_ASC'
+  | 'AGE_GROUP_CODE_DESC'
+  | 'DIVISION_ASC'
+  | 'DIVISION_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC';
 
 export type FederationEvent = {
   __typename?: 'FederationEvent';
@@ -6530,6 +6647,8 @@ export type FederationPeopleEdge = {
 /** Methods to use when ordering `FederationPerson`. */
 export type FederationPeopleOrderBy =
   | 'AGE_GROUP_ASC'
+  | 'AGE_GROUP_CODE_ASC'
+  | 'AGE_GROUP_CODE_DESC'
   | 'AGE_GROUP_DESC'
   | 'CANONICAL_NAME_ASC'
   | 'CANONICAL_NAME_DESC'
@@ -6564,6 +6683,9 @@ export type FederationPeopleOrderBy =
 export type FederationPerson = {
   __typename?: 'FederationPerson';
   ageGroup: Maybe<Scalars['String']['output']>;
+  ageGroupCode: Maybe<Scalars['String']['output']>;
+  /** Reads a single `AgeGroup` that is related to this `FederationPerson`. */
+  canonicalAgeGroup: Maybe<AgeGroup>;
   canonicalName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationPersonClubMembership`. */
   clubMemberships: FederationPersonClubMembershipsConnection;
@@ -6739,6 +6861,8 @@ export type FederationPersonClubMembershipsOrderBy =
 export type FederationPersonCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ageGroupCode` field. */
+  ageGroupCode?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `canonicalName` field. */
   canonicalName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -7096,6 +7220,24 @@ export type GenderType =
   | 'MAN'
   | 'UNSPECIFIED'
   | 'WOMAN';
+
+/** A range of `Int`. */
+export type IntRange = {
+  __typename?: 'IntRange';
+  /** The ending bound of our range. */
+  end: Maybe<IntRangeBound>;
+  /** The starting bound of our range. */
+  start: Maybe<IntRangeBound>;
+};
+
+/** The value at one end of a range. A range can either include this value, or not. */
+export type IntRangeBound = {
+  __typename?: 'IntRangeBound';
+  /** Whether or not the value of this bound is included in the range. */
+  inclusive: Scalars['Boolean']['output'];
+  /** The value at one end of our range. */
+  value: Scalars['Int']['output'];
+};
 
 /** An interval of time that has passed where the smallest distinct unit is a second. */
 export type Interval = {
@@ -9397,6 +9539,10 @@ export type Query = {
   /** Reads a set of `Account`. */
   accountsList: Maybe<Array<Account>>;
   activityTimelineList: Maybe<Array<ActivityTimelineItem>>;
+  /** Get a single `AgeGroup`. */
+  ageGroup: Maybe<AgeGroup>;
+  /** Reads a set of `AgeGroup`. */
+  ageGroupsList: Maybe<Array<AgeGroup>>;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualities: Maybe<AktualitiesConnection>;
   /** Get a single `Aktuality`. */
@@ -9725,6 +9871,21 @@ export type QueryActivityTimelineListArgs = {
   pPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pSince?: InputMaybe<Scalars['Datetime']['input']>;
   pUntil?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAgeGroupArgs = {
+  code: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAgeGroupsListArgs = {
+  condition?: InputMaybe<AgeGroupCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<AgeGroupsOrderBy>>;
 };
 
 
@@ -13892,6 +14053,7 @@ export type GraphCacheKeysConfig = {
   ActivityEventAttendance?: (data: WithTypename<ActivityEventAttendance>) => null | string,
   ActivityJudging?: (data: WithTypename<ActivityJudging>) => null | string,
   AddressDomain?: (data: WithTypename<AddressDomain>) => null | string,
+  AgeGroup?: (data: WithTypename<AgeGroup>) => null | string,
   AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
@@ -14041,6 +14203,7 @@ export type GraphCacheKeysConfig = {
   FederationCompetitorFacetsRecord?: (data: WithTypename<FederationCompetitorFacetsRecord>) => null | string,
   FederationCompetitorsConnection?: (data: WithTypename<FederationCompetitorsConnection>) => null | string,
   FederationCompetitorsEdge?: (data: WithTypename<FederationCompetitorsEdge>) => null | string,
+  FederationCoupleAgeRule?: (data: WithTypename<FederationCoupleAgeRule>) => null | string,
   FederationEvent?: (data: WithTypename<FederationEvent>) => null | string,
   FederationEventOfficial?: (data: WithTypename<FederationEventOfficial>) => null | string,
   FederationEventOfficialsConnection?: (data: WithTypename<FederationEventOfficialsConnection>) => null | string,
@@ -14062,6 +14225,8 @@ export type GraphCacheKeysConfig = {
   FormResponse?: (data: WithTypename<FormResponse>) => null | string,
   FormResponsesConnection?: (data: WithTypename<FormResponsesConnection>) => null | string,
   FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
+  IntRange?: (data: WithTypename<IntRange>) => null | string,
+  IntRangeBound?: (data: WithTypename<IntRangeBound>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   JudgeScore?: (data: WithTypename<JudgeScore>) => null | string,
   JudgeScoresConnection?: (data: WithTypename<JudgeScoresConnection>) => null | string,
@@ -14172,6 +14337,8 @@ export type GraphCacheResolvers = {
     accessEventsList?: GraphCacheResolver<WithTypename<Query>, QueryAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Query>, QueryAccountsListArgs, Array<WithTypename<Account> | string>>,
     activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
+    ageGroup?: GraphCacheResolver<WithTypename<Query>, QueryAgeGroupArgs, WithTypename<AgeGroup> | string>,
+    ageGroupsList?: GraphCacheResolver<WithTypename<Query>, QueryAgeGroupsListArgs, Array<WithTypename<AgeGroup> | string>>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
@@ -14473,6 +14640,21 @@ export type GraphCacheResolvers = {
     region?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String']['output'] | string>,
     street?: GraphCacheResolver<WithTypename<AddressDomain>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  AgeGroup?: {
+    age?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, WithTypename<IntRange> | string>,
+    aliases?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
+    allowedToDanceIn?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
+    categories?: GraphCacheResolver<WithTypename<AgeGroup>, AgeGroupCategoriesArgs, Array<WithTypename<Category> | string>>,
+    code?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['String']['output'] | string>,
+    coupleRules?: GraphCacheResolver<WithTypename<AgeGroup>, AgeGroupCoupleRulesArgs, Array<WithTypename<FederationCoupleAgeRule> | string>>,
+    divisions?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
+    isCompetition?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    isCouple?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    isPerson?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    isTeam?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    name?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['String']['output'] | string>,
+    personAge?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, WithTypename<IntRange> | string>
+  },
   AktualitiesConnection?: {
     edges?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, Array<WithTypename<AktualitiesEdge> | string>>,
     nodes?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, Array<WithTypename<Aktuality> | string>>,
@@ -14589,8 +14771,10 @@ export type GraphCacheResolvers = {
   },
   Category?: {
     ageGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
+    ageGroupCode?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
     baseDanceProgram?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, WithTypename<DanceProgram> | string>,
     baseDanceProgramId?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    canonicalAgeGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, WithTypename<AgeGroup> | string>,
     class?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
     competitions?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
     competitorProgresses?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitorProgressesArgs, WithTypename<FederationCompetitorCategoryProgressesConnection> | string>,
@@ -15531,6 +15715,8 @@ export type GraphCacheResolvers = {
   },
   FederationCompetitor?: {
     ageGroup?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
+    ageGroupCode?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
+    canonicalAgeGroup?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<AgeGroup> | string>,
     categoryProgressesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCategoryProgressesListArgs, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
     clubAffiliations?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorClubAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationsConnection> | string>,
     competitionEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionEntriesArgs, WithTypename<CompetitionEntriesConnection> | string>,
@@ -15617,6 +15803,13 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<FederationCompetitorsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<FederationCompetitorsEdge>, Record<string, never>, WithTypename<FederationCompetitor> | string>
   },
+  FederationCoupleAgeRule?: {
+    ageGroupCode?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, Scalars['String']['output'] | string>,
+    canonicalAgeGroup?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, WithTypename<AgeGroup> | string>,
+    division?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, Scalars['String']['output'] | string>,
+    olderAge?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, WithTypename<IntRange> | string>,
+    youngerAge?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, WithTypename<IntRange> | string>
+  },
   FederationEvent?: {
     addressNote?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     city?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15690,6 +15883,8 @@ export type GraphCacheResolvers = {
   },
   FederationPerson?: {
     ageGroup?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
+    ageGroupCode?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
+    canonicalAgeGroup?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, WithTypename<AgeGroup> | string>,
     canonicalName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     clubMemberships?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonClubMembershipsArgs, WithTypename<FederationPersonClubMembershipsConnection> | string>,
     competitionOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionOfficialAssignmentsArgs, WithTypename<CompetitionOfficialsConnection> | string>,
@@ -15799,6 +15994,14 @@ export type GraphCacheResolvers = {
   FormResponsesEdge?: {
     cursor?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, WithTypename<FormResponse> | string>
+  },
+  IntRange?: {
+    end?: GraphCacheResolver<WithTypename<IntRange>, Record<string, never>, WithTypename<IntRangeBound> | string>,
+    start?: GraphCacheResolver<WithTypename<IntRange>, Record<string, never>, WithTypename<IntRangeBound> | string>
+  },
+  IntRangeBound?: {
+    inclusive?: GraphCacheResolver<WithTypename<IntRangeBound>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<IntRangeBound>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   Interval?: {
     days?: GraphCacheResolver<WithTypename<Interval>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -16731,6 +16934,8 @@ export type GraphCacheUpdaters = {
     accessEventsList?: GraphCacheUpdateResolver<{ accessEventsList: Maybe<Array<WithTypename<AccessEvent>>> }, QueryAccessEventsListArgs>,
     accountsList?: GraphCacheUpdateResolver<{ accountsList: Maybe<Array<WithTypename<Account>>> }, QueryAccountsListArgs>,
     activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
+    ageGroup?: GraphCacheUpdateResolver<{ ageGroup: Maybe<WithTypename<AgeGroup>> }, QueryAgeGroupArgs>,
+    ageGroupsList?: GraphCacheUpdateResolver<{ ageGroupsList: Maybe<Array<WithTypename<AgeGroup>>> }, QueryAgeGroupsListArgs>,
     aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
@@ -17123,6 +17328,21 @@ export type GraphCacheUpdaters = {
     region?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>,
     street?: GraphCacheUpdateResolver<Maybe<WithTypename<AddressDomain>>, Record<string, never>>
   },
+  AgeGroup?: {
+    age?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    aliases?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    allowedToDanceIn?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    categories?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, AgeGroupCategoriesArgs>,
+    code?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    coupleRules?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, AgeGroupCoupleRulesArgs>,
+    divisions?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    isCompetition?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    isCouple?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    isPerson?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    isTeam?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
+    personAge?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>
+  },
   AktualitiesConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
     nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
@@ -17239,8 +17459,10 @@ export type GraphCacheUpdaters = {
   },
   Category?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    ageGroupCode?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     baseDanceProgram?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     baseDanceProgramId?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
+    canonicalAgeGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     class?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
     competitions?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, CategoryCompetitionsArgs>,
     competitorProgresses?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, CategoryCompetitorProgressesArgs>,
@@ -18181,6 +18403,8 @@ export type GraphCacheUpdaters = {
   },
   FederationCompetitor?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    ageGroupCode?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    canonicalAgeGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     categoryProgressesList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCategoryProgressesListArgs>,
     clubAffiliations?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorClubAffiliationsArgs>,
     competitionEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionEntriesArgs>,
@@ -18267,6 +18491,13 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsEdge>>, Record<string, never>>
   },
+  FederationCoupleAgeRule?: {
+    ageGroupCode?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>,
+    canonicalAgeGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>,
+    division?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>,
+    olderAge?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>,
+    youngerAge?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>
+  },
   FederationEvent?: {
     addressNote?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     city?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
@@ -18340,6 +18571,8 @@ export type GraphCacheUpdaters = {
   },
   FederationPerson?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
+    ageGroupCode?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
+    canonicalAgeGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     canonicalName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     clubMemberships?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonClubMembershipsArgs>,
     competitionOfficialAssignments?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonCompetitionOfficialAssignmentsArgs>,
@@ -18449,6 +18682,14 @@ export type GraphCacheUpdaters = {
   FormResponsesEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>
+  },
+  IntRange?: {
+    end?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRange>>, Record<string, never>>,
+    start?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRange>>, Record<string, never>>
+  },
+  IntRangeBound?: {
+    inclusive?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRangeBound>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRangeBound>>, Record<string, never>>
   },
   Interval?: {
     days?: GraphCacheUpdateResolver<Maybe<WithTypename<Interval>>, Record<string, never>>,
