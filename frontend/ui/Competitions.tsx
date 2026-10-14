@@ -11,7 +11,7 @@ import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
-import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -29,38 +29,6 @@ type CompetitionScope = {
   personIds?: string[];
   cohortId?: string;
 };
-
-function formatRank(
-  row: Pick<
-    ActivityTimelineItem_ActivityCompetitionResult_Fragment,
-    'ranking' | 'rankingTo'
-  >,
-) {
-  if (!row.ranking) return '';
-  return row.rankingTo && row.rankingTo !== row.ranking
-    ? `${row.ranking}-${row.rankingTo}.`
-    : `${row.ranking}.`;
-}
-
-function cstsResultSourceUrl(
-  entry: ActivityTimelineItem_ActivityCompetitionResult_Fragment,
-) {
-  if (entry.federation !== 'csts') return null;
-  const event = Number(entry.competitionEventExternalId);
-  const competition = Number(entry.competitionExternalId);
-  return event && competition
-    ? `https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}/competition/${competition}`
-    : null;
-}
-
-function cstsUpcomingCalendarUrl(entries: readonly CompetitionEntry[]) {
-  return entries.some(
-    (entry) =>
-      entry.federation === 'csts' && entry.__typename === 'ActivityCompetitionBrief',
-  )
-    ? `https://www.csts.cz/dancesport/kalendar_akci`
-    : null;
-}
 
 function groupByCompetitor(items: readonly CompetitionEntry[] | null | undefined) {
   const seen = new Set<string>();
@@ -110,7 +78,7 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
           key: eventKey,
           eventName: entries[0]?.competitionEventName ?? '',
           eventLocation: entries[0]?.competitionEventLocation ?? '',
-          sourceUrl: cstsUpcomingCalendarUrl(entries),
+          entry: entries[0],
           competitorGroups: groupByCompetitor(entries),
         }))
         .toSorted(
@@ -137,9 +105,9 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
                   )}
                 </h6>
                 <div className="text-sm font-semibold leading-tight text-neutral-12">
-                  <CompetitionSourceName href={event.sourceUrl}>
+                  <CompetitionLink entry={event.entry}>
                     {event.eventName ?? ''}
-                  </CompetitionSourceName>
+                  </CompetitionLink>
                 </div>
               </div>
               {event.competitorGroups.map((group) => (
@@ -161,79 +129,62 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
 }
 
 function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
-  const briefEntries = group.entries
-    .filter((entry) => entry.__typename === 'ActivityCompetitionBrief')
-    .toSorted((a, b) => {
-      return (
-        (a.checkInEnd ?? '').localeCompare(b.checkInEnd ?? '') ||
-        (a.category?.name ?? '').localeCompare(b.category?.name ?? '')
-      );
-    });
-  const reportEntries = group.entries
-    .filter((entry) => entry.__typename === 'ActivityCompetitionResult')
-    .toSorted(
-      (a, b) =>
-        (a.ranking ?? Number.MAX_SAFE_INTEGER) - (b.ranking ?? Number.MAX_SAFE_INTEGER) ||
-        (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
-    );
-
   return (
-    <>
-      <div className="flex items-start justify-between gap-3 min-w-0 pb-1">
-        <h5 className="wrap-break-word text-sm font-medium leading-tight text-neutral-12">
-          {group.competitorName}
-        </h5>
-      </div>
-      {briefEntries.map((entry) => (
-        <div
-          key={entry.id}
-          className="grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-2 py-1.5 text-xs @max-[99px]/competition:grid-cols-[minmax(0,1fr)] @max-[99px]/competition:[&+&]:mt-0.5"
-        >
-          <div className="font-semibold tabular-nums text-neutral-11">
-            {entry.checkInEnd ? entry.checkInEnd.split(':').slice(0, 2).join(':') : ''}
-          </div>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <span className="h-3 w-1 rounded-xs" aria-hidden />
-            <CompetitionCategoryLine entry={entry} />
-          </div>
-        </div>
-      ))}
-      {reportEntries.map((entry) => (
-        <div
-          key={entry.id}
-          className="grid grid-cols-[3rem_minmax(0,1fr)_min-content] items-center gap-2 py-1.5 text-xs @max-[99px]/competition:grid-cols-[minmax(0,1fr)] @max-[99px]/competition:[&+&]:mt-0.5"
-        >
-          <div className="font-semibold tabular-nums leading-none text-neutral-11">
-            <span className={entry.ranking && entry.ranking <= 3 ? 'text-accent-11' : ''}>
-              {formatRank(entry)}
-            </span>
-            {` z ${entry.participants ?? ''}`}
-          </div>
-          <CompetitionCategoryLine entry={entry} />
-          <div className="justify-self-end whitespace-nowrap font-semibold tabular-nums text-green-11">
-            {Number(entry.pointGain ?? 0) > 0 || entry.isFinal
-              ? `+${Number(entry.pointGain ?? 0).toString()}b ${entry.isFinal ? 'F' : ''}`
-              : ''}
-          </div>
-        </div>
-      ))}
-    </>
-  );
-}
-
-function CompetitionCategoryLine({ entry }: { entry: CompetitionEntry }) {
-  const sourceUrl =
-    entry.__typename === 'ActivityCompetitionResult' ? cstsResultSourceUrl(entry) : null;
-  const name = formatCstsCategoryName(entry.category, entry.competitionType);
-
-  return (
-    <div className="flex min-w-0 items-center gap-1.5 font-semibold text-neutral-12">
-      <CompetitionSourceName
-        href={sourceUrl}
-        className="text-accent-12 hover:text-accent-11"
-      >
-        {name}
-      </CompetitionSourceName>
+    <div className="grid grid-cols-[minmax(3rem,max-content)_minmax(0,1fr)_max-content] gap-x-2 @max-[99px]/competition:grid-cols-1">
+      <h5 className="col-span-full wrap-break-word pb-1 text-sm font-medium leading-tight text-neutral-12">
+        {group.competitorName}
+      </h5>
+      {group.entries
+        .toSorted((a, b) =>
+          (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
+        )
+        .map((entry) => {
+          const result = entry.__typename === 'ActivityCompetitionResult' ? entry : null;
+          const category =
+            (entry.federation === 'csts'
+              ? formatCstsCategoryName(entry.category, entry.competitionType)
+              : entry.category?.name) ||
+            entry.competitionExternalId ||
+            entry.competitionId;
+          return (
+            <div
+              key={entry.id}
+              className="col-span-full grid grid-cols-subgrid items-baseline py-1.5 text-xs"
+            >
+              <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
+                {result
+                  ? result.ranking != null && (
+                      <>
+                        <span className={result.ranking <= 3 ? 'text-accent-11' : ''}>
+                          {result.ranking}
+                          {result.rankingTo && result.rankingTo !== result.ranking
+                            ? `–${result.rankingTo}`
+                            : ''}
+                          .
+                        </span>
+                        {result.participants != null && ` z ${result.participants}`}
+                      </>
+                    )
+                  : entry.__typename === 'ActivityCompetitionBrief'
+                    ? entry.checkInEnd?.slice(0, 5)
+                    : null}
+              </div>
+              <CompetitionLink
+                entry={entry}
+                competitionId={entry.competitionExternalId}
+                className="min-w-0 font-semibold text-accent-11"
+              >
+                {category}
+              </CompetitionLink>
+              {result && (
+                <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
+                  {Number(result.pointGain) > 0 && `+${Number(result.pointGain)}b`}
+                  {result.isFinal && ' F'}
+                </div>
+              )}
+            </div>
+          );
+        })}
     </div>
   );
 }
@@ -250,12 +201,9 @@ export function CompetitionEventContent({
   return (
     <>
       <div className="mb-1 text-sm font-semibold leading-tight text-green-11">
-        <CompetitionSourceName
-          href={cstsUpcomingCalendarUrl(entries)}
-          className="text-green-11 hover:text-green-12"
-        >
+        <CompetitionLink entry={entries[0]} className="text-green-11 hover:text-green-12">
           {title}
-        </CompetitionSourceName>
+        </CompetitionLink>
       </div>
       {location && (
         <div className="truncate text-xs leading-tight text-green-11">{location}</div>
@@ -271,30 +219,27 @@ export function CompetitionEventContent({
   );
 }
 
-function CompetitionSourceName({
-  href,
+function CompetitionLink({
+  entry,
+  competitionId,
   children,
   className,
 }: {
-  href?: string | null;
+  entry?: CompetitionEntry;
+  competitionId?: string | null;
   children: React.ReactNode;
   className?: string;
 }) {
-  if (!href) return <span className="min-w-0">{children}</span>;
+  if (!entry?.federation || !entry.competitionEventExternalId) return <>{children}</>;
 
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={cn(
-        'inline-flex min-w-0 items-center gap-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
-        className,
-      )}
+    <Link
+      href={`/federated/${entry.federation}/${entry.competitionEventExternalId}${competitionId ? `/${competitionId}` : ''}`}
+      prefetch={false}
+      className={cn('underline hover:text-accent-11', className)}
     >
-      <span className="min-w-0">{children}</span>
-      <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
-    </a>
+      {children}
+    </Link>
   );
 }
 

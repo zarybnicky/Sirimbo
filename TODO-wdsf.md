@@ -28,7 +28,7 @@ on their next load.
 
 ## Remaining app consumers
 
-- [ ] [Competitions.tsx](frontend/ui/Competitions.tsx): link dashboard, calendar, and timeline cards to internal event/competition pages once the browser is ready for users; support category labels across federations.
+- [x] [Competitions.tsx](frontend/ui/Competitions.tsx): use shared rows with subgrid alignment, internal event/competition links, and category labels across federations in dashboard, calendar, and timeline cards.
 - [ ] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): replace ČSTS-only judging links on person/couple/group pages; link event-level official activity too.
 - [ ] [CstsIdBackfillWidget.tsx](frontend/ui/CstsIdBackfillWidget.tsx) / `person_csts_candidates`: generalize federation selection and candidate matching; retain fuzzy suggestions and explicit selection.
 
