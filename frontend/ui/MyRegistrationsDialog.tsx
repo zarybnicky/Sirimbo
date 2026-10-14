@@ -1,9 +1,8 @@
 import {
   type EventInstanceRegistrationFragment,
   EventRegistrationCandidatesDocument,
-  EventRegistrationsDocument,
-  type EventRegistrationsQuery,
-  type EventWithTrainerFragment,
+  EventRegistrationDialogDocument,
+  type EventRegistrationDialogQuery,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
@@ -33,6 +32,8 @@ type Selection =
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
+type RegistrationInstance = NonNullable<EventRegistrationDialogQuery['instance']>;
+
 const registrant = (registration: EventInstanceRegistrationFragment): Registrant => ({
   id: registration.id,
   label: formatRegistrant(registration),
@@ -41,8 +42,7 @@ const registrant = (registration: EventInstanceRegistrationFragment): Registrant
 });
 
 function useRegistrationCandidates(
-  instance: EventWithTrainerFragment,
-  registrations: EventInstanceRegistrationFragment[],
+  instance: RegistrationInstance,
   isManager: boolean,
   enabled: boolean,
 ) {
@@ -52,7 +52,7 @@ function useRegistrationCandidates(
     pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(
-    registrations.flatMap((r) =>
+    instance.registrationsList.flatMap((r) =>
       r.personId
         ? [r.personId]
         : [r.couple?.man?.id, r.couple?.woman?.id].filter((id): id is string => !!id),
@@ -100,27 +100,26 @@ function useRegistrationCandidates(
 }
 
 export function MyRegistrationsDialog({
-  instance,
+  instanceId,
   initialRegistrationId,
 }: {
-  instance: EventWithTrainerFragment;
+  instanceId: string;
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
   const [query] = useQuery({
-    query: EventRegistrationsDocument,
-    variables: { id: instance.id },
+    query: EventRegistrationDialogDocument,
+    variables: { id: instanceId },
     pause: auth.isExternal,
   });
 
-  if (auth.isExternal) return <NewExternalRegistrationForm instanceId={instance.id} />;
+  if (auth.isExternal) return <NewExternalRegistrationForm instanceId={instanceId} />;
   if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
-  if (!query.data.event) return <FormError error="Termín není dostupný." />;
+  if (!query.data.instance) return <FormError error="Termín není dostupný." />;
 
   return (
     <RegistrationsDialogContent
-      instance={instance}
-      event={query.data.event}
+      instance={query.data.instance}
       initialRegistrationId={initialRegistrationId}
     />
   );
@@ -128,19 +127,17 @@ export function MyRegistrationsDialog({
 
 function RegistrationsDialogContent({
   instance,
-  event,
   initialRegistrationId,
 }: {
-  instance: EventWithTrainerFragment;
-  event: NonNullable<EventRegistrationsQuery['event']>;
+  instance: RegistrationInstance;
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
   const isManager = auth.canManageInstance(instance);
   const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
-    ? event.registrationsList
-    : event.registrationsList.filter(
+    ? instance.registrationsList
+    : instance.registrationsList.filter(
         (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
       );
   const [selection, setSelection] = React.useState<Selection>(() => {
@@ -169,12 +166,7 @@ function RegistrationsDialogContent({
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(
-    instance,
-    event.registrationsList,
-    isManager,
-    page === 'candidates',
-  );
+  } = useRegistrationCandidates(instance, isManager, page === 'candidates');
   const [setRegistrationResult, setRegistration] = useMutation(
     SetEventRegistrationDocument,
   );
@@ -280,7 +272,6 @@ function RegistrationsDialogContent({
             key={`${selected.id}:${registration?.id ?? 'new'}`}
             instance={instance}
             registrant={registration ?? selected}
-            lessonTrainers={event.trainersList}
             onSaved={() => {
               if (!registration) onClose();
             }}

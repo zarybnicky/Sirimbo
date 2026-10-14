@@ -9384,14 +9384,10 @@ export type Query = {
   announcement: Maybe<Announcement>;
   /** Get a single `AnnouncementAttachment`. */
   announcementAttachment: Maybe<AnnouncementAttachment>;
-  /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
-  announcementAttachments: Maybe<AnnouncementAttachmentsConnection>;
   /** Reads and enables pagination through a set of `Announcement`. */
   announcements: Maybe<AnnouncementsConnection>;
   /** Get a single `ArticleAttachment`. */
   articleAttachment: Maybe<ArticleAttachment>;
-  /** Reads and enables pagination through a set of `ArticleAttachment`. */
-  articleAttachments: Maybe<ArticleAttachmentsConnection>;
   /** Reads a set of `Category`. */
   categoriesList: Maybe<Array<Category>>;
   /** Get a single `Category`. */
@@ -9706,18 +9702,6 @@ export type QueryAnnouncementAttachmentArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAnnouncementAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<AnnouncementAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<AnnouncementAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -9734,18 +9718,6 @@ export type QueryArticleAttachmentArgs = {
   aktualityId: Scalars['BigInt']['input'];
   fileId: Scalars['BigInt']['input'];
   tenantId: Scalars['BigInt']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryArticleAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<ArticleAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
 };
 
 
@@ -13879,10 +13851,8 @@ export type GraphCacheResolvers = {
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
     announcementAttachment?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAttachmentArgs, WithTypename<AnnouncementAttachment> | string>,
-    announcementAttachments?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
     announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     articleAttachment?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentArgs, WithTypename<ArticleAttachment> | string>,
-    articleAttachments?: GraphCacheResolver<WithTypename<Query>, QueryArticleAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
     categoriesList?: GraphCacheResolver<WithTypename<Query>, QueryCategoriesListArgs, Array<WithTypename<Category> | string>>,
     category?: GraphCacheResolver<WithTypename<Query>, QueryCategoryArgs, WithTypename<Category> | string>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheResolver<WithTypename<Query>, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs, WithTypename<Category> | string>,
@@ -16439,10 +16409,8 @@ export type GraphCacheUpdaters = {
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
     announcementAttachment?: GraphCacheUpdateResolver<{ announcementAttachment: Maybe<WithTypename<AnnouncementAttachment>> }, QueryAnnouncementAttachmentArgs>,
-    announcementAttachments?: GraphCacheUpdateResolver<{ announcementAttachments: Maybe<WithTypename<AnnouncementAttachmentsConnection>> }, QueryAnnouncementAttachmentsArgs>,
     announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
     articleAttachment?: GraphCacheUpdateResolver<{ articleAttachment: Maybe<WithTypename<ArticleAttachment>> }, QueryArticleAttachmentArgs>,
-    articleAttachments?: GraphCacheUpdateResolver<{ articleAttachments: Maybe<WithTypename<ArticleAttachmentsConnection>> }, QueryArticleAttachmentsArgs>,
     categoriesList?: GraphCacheUpdateResolver<{ categoriesList: Maybe<Array<WithTypename<Category>>> }, QueryCategoriesListArgs>,
     category?: GraphCacheUpdateResolver<{ category: Maybe<WithTypename<Category>> }, QueryCategoryArgs>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheUpdateResolver<{ categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType: Maybe<WithTypename<Category>> }, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs>,

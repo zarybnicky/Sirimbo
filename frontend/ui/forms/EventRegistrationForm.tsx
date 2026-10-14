@@ -1,7 +1,7 @@
 import {
   type EventInstanceRegistrationFragment,
   type EventInstanceTrainerFragment,
-  type EventWithTrainerFragment,
+  type EventRegistrationDialogQuery,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
@@ -28,18 +28,13 @@ type FormValues = z.infer<typeof Form>;
 export function EventRegistrationForm({
   instance,
   registrant,
-  lessonTrainers: allLessonTrainers,
   onSaved,
   onCancelled,
 }: {
-  instance: Pick<
-    EventWithTrainerFragment,
-    'id' | 'type' | 'enableNotes' | 'isLocked' | 'managerPersonIds'
-  >;
+  instance: NonNullable<EventRegistrationDialogQuery['instance']>;
   registrant:
     | EventInstanceRegistrationFragment
     | Pick<EventInstanceRegistrationFragment, 'personId' | 'coupleId'>;
-  lessonTrainers: EventInstanceTrainerFragment[];
   onSaved: () => void;
   onCancelled: () => void;
 }) {
@@ -54,7 +49,7 @@ export function EventRegistrationForm({
     registration?.requests.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
   const lessonTrainers = enableDetails
-    ? allLessonTrainers.filter(
+    ? instance.trainersList.filter(
         (x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0,
       )
     : [];

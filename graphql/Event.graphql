@@ -298,6 +298,28 @@ query EventEditorRegistrations($id: BigInt!) {
   }
 }
 
+query EventRegistrationDialog($id: BigInt!) {
+  instance: eventInstance(id: $id) {
+    id
+    type
+    isLocked
+    enableNotes
+    capacityUnit
+    managerPersonIds
+    registrationInfo {
+      remainingCapacity
+    }
+    trainersList: eventInstanceTrainersByInstanceIdList {
+      ...EventInstanceTrainer
+    }
+    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+    ) {
+      ...EventInstanceRegistration
+    }
+  }
+}
+
 query EventRegistrations($id: BigInt!) {
   event: eventInstance(id: $id) {
     id

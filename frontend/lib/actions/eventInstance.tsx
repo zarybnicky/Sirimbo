@@ -37,7 +37,7 @@ export const eventRegistrationActions = defineActions<EventInstanceRegistrationF
       auth.isMyPerson(item.personId) || auth.isMyCouple(item.coupleId),
     render: ({ item }) => (
       <MyRegistrationsDialog
-        instance={item.instance}
+        instanceId={item.instance.id}
         initialRegistrationId={item.id}
       />
     ),
@@ -76,7 +76,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     group: 'primary',
     label: registrationActionLabel,
     visible: canOpenRegistrations,
-    render: ({ item }) => <MyRegistrationsDialog instance={item} />,
+    render: ({ item }) => <MyRegistrationsDialog instanceId={item.id} />,
   },
   {
     id: 'eventInstance.edit',
