@@ -105,6 +105,7 @@ query CoupleList {
     id
     couplesList {
       ...Couple
+      ageGroup
     }
   }
 }
@@ -112,6 +113,7 @@ query CoupleList {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
+    ageGroup
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
       nodes { ...FederationRanking }
     }

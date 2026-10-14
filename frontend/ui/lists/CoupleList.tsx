@@ -2,6 +2,7 @@ import { CoupleListDocument } from '@/graphql/Memberships';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { formatCoupleName } from '@/ui/format';
+import { formatAgeGroup } from '@/ui/csts';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
@@ -21,6 +22,7 @@ export function CoupleList() {
     return (data?.getCurrentTenant?.couplesList || []).map((item) => ({
       id: item.id,
       title: formatCoupleName(item),
+      ageGroup: formatAgeGroup(item.ageGroup),
       href: `/pary/${item.id}`,
     }));
   }, [data]);
@@ -63,6 +65,7 @@ export function CoupleList() {
             })}
           >
             <div>{item.title}</div>
+            {item.ageGroup && <div className="text-xs">{item.ageGroup}</div>}
           </Link>
         ))}
       </div>

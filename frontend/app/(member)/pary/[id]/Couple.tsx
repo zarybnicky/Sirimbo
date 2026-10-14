@@ -10,6 +10,7 @@ import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
+import { formatAgeGroup } from '@/ui/csts';
 
 export function Couple({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
@@ -29,6 +30,7 @@ export function Couple({ id }: { id: string }) {
         actions={actions}
         subtitle={
           <span className="inline-flex flex-wrap items-center gap-2">
+            {formatAgeGroup(item.ageGroup)}
             <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
             {item.federationCompetitors.nodes.map((competitor) => (
               <FederationLink
