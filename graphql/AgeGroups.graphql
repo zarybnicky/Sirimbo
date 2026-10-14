@@ -1,0 +1,16 @@
+query AgeGroupRules {
+  ageGroupsList(condition: { isCouple: true }) {
+    code
+    name
+    coupleRules(condition: { division: "General" }) {
+      olderAge {
+        start { value }
+        end { value }
+      }
+      youngerAge {
+        start { value }
+        end { value }
+      }
+    }
+  }
+}
