@@ -446,5 +446,6 @@ where age_group_code is distinct from federated.resolve_age_group(age_group);
 --!include policies/crawler.sql
 --!include functions/federation_competitor_facets.sql
 --!include functions/person_age_group.sql
+--!include functions/couple_age_group.sql
 
 COMMENT ON FUNCTION federated.class_rank(text) IS '@behavior -*';

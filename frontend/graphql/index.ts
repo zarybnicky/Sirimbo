@@ -2497,6 +2497,7 @@ export type ConfirmMembershipApplicationPayloadPersonEdgeArgs = {
 
 export type Couple = {
   __typename?: 'Couple';
+  ageGroup: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
@@ -14848,6 +14849,7 @@ export type GraphCacheResolvers = {
     personEdge?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, ConfirmMembershipApplicationPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>
   },
   Couple?: {
+    ageGroup?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
@@ -17516,6 +17518,7 @@ export type GraphCacheUpdaters = {
     personEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, ConfirmMembershipApplicationPayloadPersonEdgeArgs>
   },
   Couple?: {
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleEventInstanceRegistrationsListArgs>,
