@@ -111,6 +111,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - For dark themes, Radix automatically inverts the perceptual weight—keep the same numeric semantics.
 
 ## Common tasks & commands
+- Check external API consumers with `bash check-consumers.sh [schema file or URL] [refs...]`. Defaults to local `schema.graphql` and both the latest published release and `main`. After GraphQL schema changes, run this check against the updated local schema before applying production migrations. Report incompatible operations; do not silently exclude them - a failure in this script is for the programmer to communicate to 3rd party developers or to introduce a temporary ship, not a reason to avoid a change.
 - Run all typechecks: `pnpm -r typecheck`
 - Run all lints: `pnpm -r lint`
 - Type-check/lint the API: `pnpm --filter @rozpisovnik/backend lint`, `pnpm --filter @rozpisovnik/backend typecheck`.

@@ -13060,9 +13060,6 @@ type Query {
   invitationInfo(token: UUID): String
   invitationName(token: UUID): String
 
-  """Get a single `JudgeScore`."""
-  judgeScore(competitorId: BigInt!, component: ScoreComponent!, danceOrder: Int!, judgePersonId: BigInt!, roundId: BigInt!): JudgeScore
-
   """Get a single `Location`."""
   location(id: BigInt!): Location
 
