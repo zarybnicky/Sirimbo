@@ -34,7 +34,7 @@ query CohortWithMembers($id: BigInt!) {
       person {
         ...PersonBasic
         id
-        birthDate
+        ageGroup
         cstsId
         federationCategoryProgresses(first: 100) {
           nodes { ...FederationCategoryProgress }

@@ -1,17 +1,19 @@
-import { ageGroupNames, compareAgeRanges, type AgeConstraint } from '@/ui/csts';
+import { formatAgeGroup, compareAgeRanges, type AgeRange } from '@/ui/csts';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { executeGraphql } from '@/lib/server/graphql';
 
-const formatAge = ({ minAge, maxAge }: AgeConstraint): string => {
+const formatAge = ({ start, end }: AgeRange): string => {
+  const minAge = start?.value;
+  const maxAge = end?.value;
   if (minAge !== undefined && maxAge !== undefined) return `${minAge}–${maxAge - 1}`;
   if (maxAge !== undefined) return `<${maxAge}`;
   if (minAge !== undefined) return `${minAge}+`;
   return '—';
 };
 
-const formatYears = (year: number, { minAge, maxAge }: AgeConstraint): string => {
-  const from = maxAge !== undefined ? year - maxAge + 1 : undefined;
-  const to = minAge !== undefined ? year - minAge : undefined;
+const formatYears = (year: number, { start, end }: AgeRange): string => {
+  const from = end ? year - end.value + 1 : undefined;
+  const to = start ? year - start.value : undefined;
 
   if (from !== undefined && to !== undefined) {
     if (from > to) return '—';
@@ -34,17 +36,12 @@ export async function AgeCategoryTable() {
     .flatMap((group) =>
       group.coupleRules.map((rule) => ({
         code: group.code,
-        name: ageGroupNames[group.code] ?? group.name,
-        ageRange: rule.olderAge,
-        // PostgreSQL canonicalizes int4range to inclusive start / exclusive end.
-        older: { minAge: rule.olderAge.start?.value, maxAge: rule.olderAge.end?.value },
-        younger: {
-          minAge: rule.youngerAge.start?.value,
-          maxAge: rule.youngerAge.end?.value,
-        },
+        name: formatAgeGroup(group.code, group.name),
+        older: rule.olderAge,
+        younger: rule.youngerAge,
       })),
     )
-    .toSorted((a, b) => compareAgeRanges(a.ageRange, b.ageRange));
+    .toSorted((a, b) => compareAgeRanges(a.older, b.older));
 
   return (
     <table className="grid grid-cols-[auto_min-content_1fr_min-content_1fr] gap-x-4 gap-y-1">

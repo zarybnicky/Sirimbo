@@ -1,4 +1,3 @@
-import { ageGroupNames, getCstsAgeCategory } from '@/ui/csts';
 import { AddressDomain, EventType, ScoreComponent, ScoringMethod } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 
@@ -187,11 +186,6 @@ export const formatOpenDateRange = (item: {
       : item.until
         ? `do ${fullDateFormatter.format(new Date(item.until))}`
         : '';
-
-export function formatAgeGroup(birthDate: string | null | undefined) {
-  const category = getCstsAgeCategory(birthDate);
-  return category ? ageGroupNames[category.id] : undefined;
-}
 
 export function describePosting(
   payment?: PaymentFragment | null | undefined,

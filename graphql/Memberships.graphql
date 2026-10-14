@@ -112,8 +112,6 @@ query CoupleList {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
-    man { id birthDate }
-    woman { id birthDate }
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
       nodes { ...FederationRanking }
     }

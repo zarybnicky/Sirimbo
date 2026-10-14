@@ -110,6 +110,7 @@ query PersonPayments($id: BigInt!) {
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
+    ageGroup
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
       nodes {
         ...FederationRanking
@@ -211,6 +212,7 @@ query MissingCstsIdCandidates {
       name
       birthDate
       cstsId
+      ageGroup
       cstsCandidatesList(limit: 10, threshold: 0.4) {
         id
         name

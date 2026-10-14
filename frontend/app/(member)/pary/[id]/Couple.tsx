@@ -9,7 +9,6 @@ import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationLink } from '@/ui/federation-links';
-import { getCstsAgeCategory } from '@/ui/csts';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 
 export function Couple({ id }: { id: string }) {
@@ -30,12 +29,7 @@ export function Couple({ id }: { id: string }) {
         actions={actions}
         subtitle={
           <span className="inline-flex flex-wrap items-center gap-2">
-            <FederationRankBadge
-              entries={item.federationRanklistEntries.nodes}
-              ageGroup={
-                getCstsAgeCategory(item.man?.birthDate, item.woman?.birthDate ?? null)?.id
-              }
-            />
+            <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
             {item.federationCompetitors.nodes.map((competitor) => (
               <FederationLink
                 entity="competitors"

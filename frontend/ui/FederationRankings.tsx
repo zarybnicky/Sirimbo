@@ -1,5 +1,5 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { ageGroupNames, compareAgeRanges, formatCstsClass } from '@/ui/csts';
+import { compareAgeRanges, formatAgeGroup, formatCstsClass } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 
 const disciplineNames: Record<string, string> = {
@@ -32,14 +32,18 @@ function ranklistRows(entries: FederationRankingFragment[]) {
             category.ageGroupDetails?.age ??
             null,
           category: [
-            (category.ageGroup && ageGroupNames[category.ageGroup]) ??
-              category.ageGroupDetails?.name ??
-              category.ageGroup,
+            formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
             formatCstsClass(category.class),
           ]
             .filter(Boolean)
             .join(' '),
           discipline: category.discipline,
+          percentile:
+            entry.ranking > 0 && snapshot.ranklistEntriesBySnapshotId.totalCount > 0
+              ? (entry.ranking + (entry.rankingTo ?? entry.ranking)) /
+                2 /
+                snapshot.ranklistEntriesBySnapshotId.totalCount
+              : null,
           placement: `${entry.ranking}${entry.rankingTo && entry.rankingTo !== entry.ranking ? `–${entry.rankingTo}` : ''}/${snapshot.ranklistEntriesBySnapshotId.totalCount}`,
         },
       ];
@@ -53,14 +57,33 @@ function ranklistRows(entries: FederationRankingFragment[]) {
 
 export function FederationRankBadge({
   entries,
-  ageGroup,
 }: {
   entries: FederationRankingFragment[];
-  ageGroup: string | undefined;
 }) {
-  const rows = ranklistRows(entries).filter(
-    (row) => ageGroup && row.ageGroup === ageGroup,
+  const groups = Object.groupBy(
+    ranklistRows(entries).filter((row) => row.ageGroup && row.percentile !== null),
+    (row) => row.ageGroup!,
   );
+  let rows: ReturnType<typeof ranklistRows> = [];
+  let bestCoverage = 0;
+  let bestScore = Infinity;
+  for (const group of Object.values(groups)) {
+    if (!group) continue;
+    const disciplines = Object.groupBy(group, (row) => row.discipline);
+    // Count each discipline once, even with results in several ranklists.
+    const scores = Object.values(disciplines).map((results) =>
+      Math.min(...results!.map((row) => row.percentile!)),
+    );
+    const score = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+    if (
+      scores.length > bestCoverage ||
+      (scores.length === bestCoverage && score < bestScore)
+    ) {
+      rows = group;
+      bestCoverage = scores.length;
+      bestScore = score;
+    }
+  }
   if (rows.length === 0) return null;
   return (
     <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">

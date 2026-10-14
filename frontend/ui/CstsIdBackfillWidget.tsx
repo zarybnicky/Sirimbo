@@ -4,7 +4,7 @@ import {
   type MissingCstsIdCandidatesQuery,
 } from '@/graphql/Person';
 import { FederationLink } from '@/ui/federation-links';
-import { formatAgeGroup } from '@/ui/format';
+import { formatAgeGroup } from '@/ui/csts';
 import { buttonCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
 import React from 'react';
@@ -112,7 +112,14 @@ export function CstsIdBackfillWidget() {
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   <div className="font-bold">{person.name}</div>
                   <div className="text-neutral-11">
-                    {formatBirthInfo(person.birthDate)}
+                    {[
+                      formatAgeGroup(person.ageGroup),
+                      person.birthDate
+                        ? new Date(person.birthDate).getFullYear()
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </div>
                 </div>
 
@@ -198,13 +205,6 @@ export function CstsIdBackfillWidget() {
       )}
     </>
   );
-}
-
-function formatBirthInfo(value: string | null) {
-  if (!value) return 'bez data narození';
-  return [new Date(value).getFullYear(), formatAgeGroup(value)]
-    .filter(Boolean)
-    .join(' · ');
 }
 
 function formatSimilarity(value: number | null) {
