@@ -52,7 +52,7 @@ export function Results({
     title: dance.programDance?.dance?.name,
   }));
   const judges = round.judgesList.map((judge) => ({
-    key: judge.personJudge?.externalId ?? judge.personJudgeId,
+    key: judge.personJudge?.externalId ?? judge.personJudgeId.split(':').at(-1)!,
     label: judge.judgeLabel || judge.judgeIndex,
     title: judge.personJudge?.canonicalName ?? undefined,
     personId: judge.personJudgeId,

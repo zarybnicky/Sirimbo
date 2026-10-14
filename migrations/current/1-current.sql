@@ -2,25 +2,25 @@ COMMENT ON TABLE federated.person IS '@name federation_person
 @behavior -insert -update -delete -list
 @ref people via:public.person_federation_link;public.person behavior:"+list -connection"';
 COMMENT ON TABLE federated.person_club_membership IS '@name federation_person_club_membership
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.person_license IS '@name federation_person_license
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.event IS '@name federation_event
 @behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.event_official IS '@name federation_event_official
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
 @behavior -insert -update -delete -list
 @ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
 @ref couples via:public.couple_federation_link;public.couple';
 COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.competitor_club_affiliation IS '@name federation_competitor_club_affiliation
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.round_dance IS '@name competition_round_dance
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE crawler.frontier IS '@name crawler_target
 @behavior -insert -update -delete -list';
 COMMENT ON VIEW crawler.frontier_failure IS '@name crawler_target_failure
@@ -37,21 +37,21 @@ COMMENT ON TABLE crawler.rate_limit_rule IS '@name crawler_rate_limit_rule
 @behavior -insert -update -delete -list';
 COMMENT ON TABLE federated.category IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.competition IS '@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.competition_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
-COMMENT ON TABLE federated.competition_official IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
-COMMENT ON TABLE federated.competition_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+COMMENT ON TABLE federated.competition_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.competition_official IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.competition_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.competition_round IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
-COMMENT ON TABLE federated.competition_round_judge IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
-COMMENT ON TABLE federated.competition_round_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+COMMENT ON TABLE federated.competition_round_judge IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.competition_round_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.dance IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.dance_program IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.dance_program_dance IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.federation IS '@behavior -insert -update -delete +list -connection';
 COMMENT ON TABLE federated.federation_club IS '@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.judge_score IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+COMMENT ON TABLE federated.judge_score IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.ranklist IS '@behavior -insert -update -delete -list';
-COMMENT ON TABLE federated.ranklist_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
-COMMENT ON TABLE federated.ranklist_snapshot IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+COMMENT ON TABLE federated.ranklist_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.ranklist_snapshot IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON FUNCTION crawler.reserve_request(text) IS '@behavior -*';
 COMMENT ON FUNCTION crawler.store_response(bigint, text, integer, text, jsonb, crawler.fetch_status) IS '@behavior -*';
 
@@ -437,3 +437,7 @@ update federated.person set age_group_code = federated.resolve_age_group(age_gro
 where age_group_code is distinct from federated.resolve_age_group(age_group);
 update federated.competitor set age_group_code = federated.resolve_age_group(age_group)
 where age_group_code is distinct from federated.resolve_age_group(age_group);
+
+--!include policies/crawler.sql
+
+COMMENT ON FUNCTION federated.class_rank(text) IS '@behavior -*';

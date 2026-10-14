@@ -12244,7 +12244,6 @@ type Query {
 
   """Get a single `Category`."""
   categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType(ageGroup: String!, class: String!, competitorType: CompetitorType!, discipline: String!, genderGroup: String!, series: String!): Category
-  classRank(class: String): Int
 
   """Get a single `Cohort`."""
   cohort(id: BigInt!): Cohort
@@ -12313,32 +12312,11 @@ type Query {
   """Get a single `Competition`."""
   competitionByFederationAndExternalId(externalId: String!, federation: String!): Competition
 
-  """Get a single `CompetitionEntry`."""
-  competitionEntry(competitionId: BigInt!, competitorId: String!): CompetitionEntry
-
-  """Get a single `CompetitionOfficial`."""
-  competitionOfficial(competitionId: BigInt!, personId: String!, role: OfficialRole!): CompetitionOfficial
-
-  """Get a single `CompetitionResult`."""
-  competitionResult(competitionId: BigInt!, competitorId: String!): CompetitionResult
-
   """Get a single `CompetitionRound`."""
   competitionRound(id: BigInt!): CompetitionRound
 
   """Get a single `CompetitionRound`."""
   competitionRoundByCompetitionIdAndRoundKey(competitionId: BigInt!, roundKey: String!): CompetitionRound
-
-  """Get a single `CompetitionRoundDance`."""
-  competitionRoundDance(danceOrder: Int!, roundId: BigInt!): CompetitionRoundDance
-
-  """Get a single `CompetitionRoundJudge`."""
-  competitionRoundJudge(personJudgeId: String!, roundId: BigInt!): CompetitionRoundJudge
-
-  """Get a single `CompetitionRoundJudge`."""
-  competitionRoundJudgeByRoundIdAndJudgeIndex(judgeIndex: Int!, roundId: BigInt!): CompetitionRoundJudge
-
-  """Get a single `CompetitionRoundResult`."""
-  competitionRoundResult(competitorId: String!, roundId: BigInt!): CompetitionRoundResult
 
   """Reads and enables pagination through a set of `Competition`."""
   competitions(
@@ -12854,15 +12832,6 @@ type Query {
   """Get a single `FederationCompetitor`."""
   federationCompetitorByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationCompetitor
 
-  """Get a single `FederationCompetitorCategoryProgress`."""
-  federationCompetitorCategoryProgress(categoryId: BigInt!, competitorId: String!): FederationCompetitorCategoryProgress
-
-  """Get a single `FederationCompetitorClubAffiliation`."""
-  federationCompetitorClubAffiliation(clubId: BigInt!, competitorId: String!, validFrom: Date!): FederationCompetitorClubAffiliation
-
-  """Get a single `FederationCompetitorComponent`."""
-  federationCompetitorComponent(competitorId: String!, personId: String!): FederationCompetitorComponent
-
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
     """Read all values in the set after (below) this cursor."""
@@ -12898,9 +12867,6 @@ type Query {
 
   """Get a single `FederationEvent`."""
   federationEventByFederationAndExternalId(externalId: String!, federation: String!): FederationEvent
-
-  """Get a single `FederationEventOfficial`."""
-  federationEventOfficial(discipline: String!, eventId: BigInt!, personId: String!, role: OfficialRole!): FederationEventOfficial
 
   """Reads and enables pagination through a set of `FederationEvent`."""
   federationEvents(
@@ -12965,12 +12931,6 @@ type Query {
 
   """Get a single `FederationPerson`."""
   federationPersonByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationPerson
-
-  """Get a single `FederationPersonClubMembership`."""
-  federationPersonClubMembership(clubId: BigInt!, personId: String!, validFrom: Date!): FederationPersonClubMembership
-
-  """Get a single `FederationPersonLicense`."""
-  federationPersonLicense(discipline: PersonLicenseDiscipline!, kind: PersonLicenseKind!, personId: String!): FederationPersonLicense
 
   """Reads a set of `Federation`."""
   federationsList(
@@ -13199,15 +13159,6 @@ type Query {
 
   """Get a single `Ranklist`."""
   ranklistByFederationAndCategoryId(categoryId: BigInt!, federation: String!): Ranklist
-
-  """Get a single `RanklistEntry`."""
-  ranklistEntry(competitorId: String!, snapshotId: BigInt!): RanklistEntry
-
-  """Get a single `RanklistSnapshot`."""
-  ranklistSnapshot(id: BigInt!): RanklistSnapshot
-
-  """Get a single `RanklistSnapshot`."""
-  ranklistSnapshotByRanklistIdAndAsOfDateAndKind(asOfDate: Date!, kind: String!, ranklistId: BigInt!): RanklistSnapshot
 
   """Reads and enables pagination through a set of `Ranklist`."""
   ranklists(
