@@ -471,6 +471,16 @@ update federated.competitor set age_group_code = federated.resolve_age_group(age
 where age_group_code is distinct from federated.resolve_age_group(age_group);
 
 --!include policies/crawler.sql
+alter table federated.competitor add column if not exists search_name text
+  generated always as (app_private.normalize_name(name)) stored;
+comment on column federated.competitor.search_name is '@behavior -*';
+create index if not exists competitor_search_name_trgm_idx
+  on federated.competitor using gin (search_name public.gin_trgm_ops);
+
+-- Exact external-ID searches share an OR with the name search.
+create index if not exists competitor_external_id_text_idx on federated.competitor ((external_id::text));
+create index if not exists person_external_id_text_idx on federated.person ((external_id::text));
+
 --!include functions/federation_competitor_facets.sql
 --!include functions/person_age_group.sql
 --!include functions/couple_age_group.sql

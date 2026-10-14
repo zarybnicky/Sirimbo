@@ -97,12 +97,9 @@ const plugins: GraphileConfig.Plugin[] = [
         if (tableName === 'event') {
           return sql`strpos(lower(concat_ws(' ', ${row}.name, ${row}.location, ${row}.city, ${row}.external_id)), lower(${search})) > 0`;
         }
-        const name =
-          tableName === 'person'
-            ? sql`${row}.search_name`
-            : sql`app_private.normalize_name(${row}.name)`;
         return sql`(${row}.external_id::text = ${search} or ${row}.id = ${search}
-          or strpos(${name}, app_private.normalize_name(${search})) > 0)`;
+          or ${row}.search_name like '%' || replace(replace(replace(
+            app_private.normalize_name(${search}), '!', '!!'), '%', '!%'), '_', '!_') || '%' escape '!')`;
       },
     ),
   ),
@@ -161,11 +158,11 @@ const plugins: GraphileConfig.Plugin[] = [
     (build) => ({ type: build.graphql.GraphQLBoolean }),
     (value, { sql, sqlTableAlias: row }) => {
       if (value == null) return null;
-      const latest = sql`${row}.snapshot_id in (
+      const latest = sql`${row}.snapshot_id = any(array(
         select distinct on (ranklist_id, kind) id
         from federated.ranklist_snapshot
         order by ranklist_id, kind, as_of_date desc
-      )`;
+      ))`;
       return value ? latest : sql`not (${latest})`;
     },
   ),

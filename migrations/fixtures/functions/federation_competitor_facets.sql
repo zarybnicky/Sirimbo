@@ -22,7 +22,8 @@ language sql stable as $$
     left join federated.category cat on cat.id = p.category_id
     where c.federation = federation.code
       and (nullif(trim(search), '') is null or c.external_id::text = trim(search) or c.id = trim(search)
-        or strpos(app_private.normalize_name(c.name), app_private.normalize_name(trim(search))) > 0)
+        or c.search_name like '%' || replace(replace(replace(
+          app_private.normalize_name(trim(search)), '!', '!!'), '%', '!%'), '_', '!_') || '%' escape '!')
       and (competed_since is null or exists (
         select 1 from federated.competition_result r
         join federated.competition comp on comp.id = r.competition_id

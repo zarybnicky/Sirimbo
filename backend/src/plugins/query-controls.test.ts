@@ -150,13 +150,19 @@ test('federation search normalizes names and treats search text literally', asyn
       const result = await request(query, {
         condition: { federation: 'csts', search: value },
       });
-      assert.deepEqual(result, search);
+      assert.equal(result.errors, undefined);
+      assert.deepEqual(result.data, search.data);
     }
     const id = search.data.matches.nodes[0]!.id;
     const byId = await request(query, { condition: { search: id } });
     assert.equal(byId.errors, undefined);
     assert(byId.data.matches.nodes.some((row) => row.id === id));
-    for (const value of ['%', "' OR true --"]) {
+    const byExternalId = await request(query, {
+      condition: { federation: 'csts', search: id.split(':')[1] },
+    });
+    assert.equal(byExternalId.errors, undefined);
+    assert(byExternalId.data.matches.nodes.some((row) => row.id === id));
+    for (const value of ['%', '%_!\\', "' OR true --"]) {
       const result = await request(query, { condition: { search: value } });
       assert.equal(result.errors, undefined);
       assert.equal(result.data.matches.totalCount, 0);
