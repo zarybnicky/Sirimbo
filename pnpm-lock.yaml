@@ -100,12 +100,9 @@ importers:
       '@dataplan/pg':
         specifier: ^1.1.2
         version: 1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.6.1)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)
-      '@escape.tech/graphql-armor-cost-limit':
-        specifier: ^2.4.3
-        version: 2.4.3
-      '@escape.tech/graphql-armor-max-depth':
-        specifier: ^2.4.2
-        version: 2.4.2
+      '@graphile/depth-limit':
+        specifier: ^0.4.0
+        version: 0.4.0(graphql@16.14.2)
       '@graphile/simplify-inflection':
         specifier: ~9.0.0
         version: 9.0.0
@@ -289,10 +286,10 @@ importers:
         version: 10.75.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
       '@serwist/next':
         specifier: ^9.5.12
-        version: 9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
+        version: 9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.6)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
       '@serwist/window':
         specifier: ^9.5.12
-        version: 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
+        version: 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       '@tanstack/match-sorter-utils':
         specifier: ^9.1.2
         version: 9.1.2
@@ -415,7 +412,7 @@ importers:
         version: 0.0.1
       serwist:
         specifier: ^9.5.12
-        version: 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
+        version: 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       sharp:
         specifier: ^0.35.4
         version: 0.35.4(@types/node@24.13.6)
@@ -452,7 +449,7 @@ importers:
         version: 2.4.3(typescript@6.0.3)
       '@serwist/cli':
         specifier: ^9.5.12
-        version: 9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
+        version: 9.5.12(@types/node@24.13.6)(browserslist@4.28.6)(esbuild@0.28.2)(typescript@6.0.3)
       '@swc/core':
         specifier: ~1.16.2
         version: 1.16.2(@swc/helpers@0.5.23)
@@ -1381,17 +1378,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@escape.tech/graphql-armor-cost-limit@2.4.3':
-    resolution: {integrity: sha512-fLZTlJjrjinpNhbv5VP6f8Ce4MiQzbcHtCNaCPVaHqArTEbN7vDnlVLiH+VcmZBmOwU6Si97lKdlOXWNgB5ytw==}
-    engines: {node: '>=18.0.0'}
-
-  '@escape.tech/graphql-armor-max-depth@2.4.2':
-    resolution: {integrity: sha512-J9fbW1+W4u3GAcf19wwS0zrNGICCbWn/glvopCoC11Ga0reXvGwgr8EcyuHjTFLL7+pPvWAeVhP4qo6hybcB9w==}
-    engines: {node: '>=18.0.0'}
-
-  '@escape.tech/graphql-armor-types@0.7.0':
-    resolution: {integrity: sha512-RHxyyp6PDgS6NAPnnmB6JdmUJ6oqhpSHFbsglGWeCcnNzceA5AkQFpir7VIDbVyS8LNC1xhipOtk7f9ycrIemQ==}
-
   '@eslint-community/eslint-utils@4.9.1':
     resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1460,6 +1446,11 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@graphile/depth-limit@0.4.0':
+    resolution: {integrity: sha512-emDlqO8qHjTcW6CPzT1tKIE6+t5CeGb4f5wKqdDWbUJHJygbfJ482R3OzGVuAv9pCkJYOF0Zk6+24w1OQyZgfw==}
+    peerDependencies:
+      graphql: '>=15 <18'
 
   '@graphile/logger@0.2.0':
     resolution: {integrity: sha512-jjcWBokl9eb1gVJ85QmoaQ73CQ52xAaOCF29ukRbYNl6lY+ts0ErTaDYOBlejcbUs2OpaiqYLO5uDhyLFzWw4w==}
@@ -11078,8 +11069,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@47.6.2':
     dependencies:
@@ -11109,8 +11098,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-watchdog': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-easy-image@47.6.2':
     dependencies:
@@ -11195,16 +11182,12 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-essentials@47.6.2':
     dependencies:
@@ -11429,8 +11412,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-mention@47.6.2':
     dependencies:
@@ -11440,8 +11421,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.6.2':
     dependencies:
@@ -11450,8 +11429,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.6.2':
     dependencies:
@@ -11461,8 +11438,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.6.2':
     dependencies:
@@ -11471,8 +11446,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.6.2':
     dependencies:
@@ -11585,8 +11558,6 @@ snapshots:
       color-parse: 2.0.2
       es-toolkit: 1.39.5
       vanilla-colorful: 0.7.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-undo@47.6.2':
     dependencies:
@@ -11605,8 +11576,6 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-ui': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-watchdog@47.6.2':
     dependencies:
@@ -11615,8 +11584,6 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-widget@47.6.2':
     dependencies:
@@ -11852,25 +11819,6 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@escape.tech/graphql-armor-cost-limit@2.4.3':
-    dependencies:
-      graphql: 16.14.2
-    optionalDependencies:
-      '@envelop/core': 5.4.0
-      '@escape.tech/graphql-armor-types': 0.7.0
-
-  '@escape.tech/graphql-armor-max-depth@2.4.2':
-    dependencies:
-      graphql: 16.14.2
-    optionalDependencies:
-      '@envelop/core': 5.4.0
-      '@escape.tech/graphql-armor-types': 0.7.0
-
-  '@escape.tech/graphql-armor-types@0.7.0':
-    dependencies:
-      graphql: 16.14.2
-    optional: true
-
   '@eslint-community/eslint-utils@4.9.1(eslint@10.11.0(jiti@2.7.0))':
     dependencies:
       eslint: 10.11.0(jiti@2.7.0)
@@ -11950,6 +11898,10 @@ snapshots:
       tabbable: 6.5.0
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@graphile/depth-limit@0.4.0(graphql@16.14.2)':
+    dependencies:
+      graphql: 16.14.2
 
   '@graphile/logger@0.2.0': {}
 
@@ -15186,25 +15138,11 @@ snapshots:
     transitivePeerDependencies:
       - browserslist
 
-  '@serwist/build@9.5.12(browserslist@4.28.7)(typescript@6.0.3)':
-    dependencies:
-      '@serwist/utils': 9.5.12(browserslist@4.28.7)
-      common-tags: 1.8.2
-      glob: 13.0.6
-      pretty-bytes: 6.1.1
-      source-map: 0.8.0
-      type-fest: 5.8.0
-      zod: 4.4.3
-    optionalDependencies:
-      typescript: 6.0.3
-    transitivePeerDependencies:
-      - browserslist
-
-  '@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)':
+  '@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.6)(esbuild@0.28.2)(typescript@6.0.3)':
     dependencies:
       '@inquirer/prompts': 8.5.2(@types/node@24.13.6)
-      '@serwist/build': 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
-      '@serwist/utils': 9.5.12(browserslist@4.28.7)
+      '@serwist/build': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
+      '@serwist/utils': 9.5.12(browserslist@4.28.6)
       chalk: 5.6.2
       chokidar: 5.0.0
       common-tags: 1.8.2
@@ -15221,7 +15159,7 @@ snapshots:
       - browserslist
       - typescript
 
-  '@serwist/next@9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
+  '@serwist/next@9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.6)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
     dependencies:
       '@serwist/build': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       '@serwist/utils': 9.5.12(browserslist@4.28.6)
@@ -15236,7 +15174,7 @@ snapshots:
       serwist: 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       zod: 4.4.3
     optionalDependencies:
-      '@serwist/cli': 9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
+      '@serwist/cli': 9.5.12(@types/node@24.13.6)(browserslist@4.28.6)(esbuild@0.28.2)(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
       - webpack
@@ -15244,10 +15182,6 @@ snapshots:
   '@serwist/utils@9.5.12(browserslist@4.28.6)':
     optionalDependencies:
       browserslist: 4.28.6
-
-  '@serwist/utils@9.5.12(browserslist@4.28.7)':
-    optionalDependencies:
-      browserslist: 4.28.7
 
   '@serwist/webpack-plugin@9.5.12(browserslist@4.28.6)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
     dependencies:
@@ -15265,15 +15199,6 @@ snapshots:
     dependencies:
       '@types/trusted-types': 2.0.7
       serwist: 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
-    optionalDependencies:
-      typescript: 6.0.3
-    transitivePeerDependencies:
-      - browserslist
-
-  '@serwist/window@9.5.12(browserslist@4.28.7)(typescript@6.0.3)':
-    dependencies:
-      '@types/trusted-types': 2.0.7
-      serwist: 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
     optionalDependencies:
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -21704,15 +21629,6 @@ snapshots:
   serwist@9.5.12(browserslist@4.28.6)(typescript@6.0.3):
     dependencies:
       '@serwist/utils': 9.5.12(browserslist@4.28.6)
-      idb: 8.0.3
-    optionalDependencies:
-      typescript: 6.0.3
-    transitivePeerDependencies:
-      - browserslist
-
-  serwist@9.5.12(browserslist@4.28.7)(typescript@6.0.3):
-    dependencies:
-      '@serwist/utils': 9.5.12(browserslist@4.28.7)
       idb: 8.0.3
     optionalDependencies:
       typescript: 6.0.3

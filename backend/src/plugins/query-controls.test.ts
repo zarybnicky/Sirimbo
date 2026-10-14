@@ -4,7 +4,9 @@ import { createServer, type Server } from 'node:http';
 import { after, before, test } from 'node:test';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import type { GraphQLSchema } from 'graphql';
+import { parse, validate, type GraphQLSchema } from 'graphql';
+import { readFileSync, readdirSync } from 'node:fs';
+import { queryDepthRule } from './query-depth.ts';
 import jwt from 'jsonwebtoken';
 import { postgraphile, type PostGraphileInstance } from 'postgraphile';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
@@ -233,48 +235,45 @@ test('crawler pagination and public aliases remain unrestricted', async () => {
   assert.equal((await request(`{ ${aliases} }`)).errors, undefined);
 });
 
-test('nested pagination variables contribute to the cost budget', async () => {
+test('bounded nested connections no longer have a multiplicative cost budget', async () => {
   const query = `query People($first: Int!) {
-    federationPeople(first: $first) { nodes {
+    federationPeople(first: $first, condition: { id: "-1" }) { nodes {
       competitorComponents(first: $first) { nodes { role } }
     } }
   }`;
-  assert.equal((await request(query, { first: 1 })).errors, undefined);
-  assert.match(
-    (await request(query, { first: 100 })).errors?.[0]?.message ?? '',
-    /Cost limit/,
-  );
+  for (const first of [1, 100])
+    assert.equal((await request(query, { first })).errors, undefined);
 });
 
-test('omitted and null list limits cannot hide nested fan-out', async () => {
+test('repeated relationships are limited even through fragments and aliases', async () => {
   const query = `query Scores($first: Int) {
     competitionRound(id: "-1") {
       scores: judgeScoresList(first: $first) { ...Score }
     }
   }
-  fragment Score on JudgeScore { round { judgeScoresList { score } } }`;
-  assert.equal((await request(query, { first: 1 })).errors, undefined);
-  for (const variables of [{}, { first: null }, { first: 10000 }]) {
+  fragment Score on JudgeScore {
+    round { second: judgeScoresList { round { third: judgeScoresList { score } } } }
+  }`;
+  for (const variables of [{}, { first: null }, { first: 1 }, { first: 10000 }]) {
     assert.match(
       (await request(query, variables)).errors?.[0]?.message ?? '',
-      /Cost limit/,
+      /self referential maximum/,
     );
   }
-  assert.match(
-    (
-      await request(`{
-      competitionRound(id: "-1") {
-        judgeScoresList { round { judgeScoresList { score } } }
-      }
-    }`)
-    ).errors?.[0]?.message ?? '',
-    /Cost limit/,
-  );
   assert.equal(
-    (await request('{ competitionRound(id: "-1") { judgeScoresList { score } } }'))
-      .errors,
+    (await request('{ competitionRound(id: "-1") { judgeScoresList { score } } }')).errors,
     undefined,
   );
+});
+
+test('checked-in operations, including PersonMemberships, pass the shared depth rule', () => {
+  const directory = new URL('../../../graphql/', import.meta.url);
+  const source = readdirSync(directory)
+    .filter((file) => file.endsWith('.graphql'))
+    .map((file) => readFileSync(new URL(file, directory), 'utf8'))
+    .join('\n');
+  assert(source.includes('query PersonMemberships('));
+  assert.deepEqual(validate(schema, parse(source), [queryDepthRule]), []);
 });
 
 test('pool connections enforce statement timeout', async () => {
@@ -285,7 +284,7 @@ test('pool connections enforce statement timeout', async () => {
   await assert.rejects(pool.query('SELECT pg_sleep(6)'), { code: '57014' });
 });
 
-test('Armor rejects deep traversal through valid relationships', async () => {
+test('depth limits reject deep traversal through valid relationships', async () => {
   let selection = 'id';
   for (let i = 0; i < 5; i++) {
     selection = `competitorComponents(first: 1) { nodes { person { ${selection} } } }`;
