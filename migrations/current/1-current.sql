@@ -1,6 +1,6 @@
 COMMENT ON TABLE federated.person IS '@name federation_person
 @behavior -insert -update -delete -list
-@ref people via:public.person_federation_link;public.person';
+@ref people via:public.person_federation_link;public.person behavior:"+list -connection"';
 COMMENT ON TABLE federated.person_club_membership IS '@name federation_person_club_membership
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
 COMMENT ON TABLE federated.person_license IS '@name federation_person_license
@@ -11,6 +11,7 @@ COMMENT ON TABLE federated.event_official IS '@name federation_event_official
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
 @behavior -insert -update -delete -list
+@ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
 @ref couples via:public.couple_federation_link;public.couple';
 COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list';

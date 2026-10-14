@@ -30,18 +30,10 @@ export function FederationLink({
   );
 }
 
-export function LocalPersonLinks({
-  federation,
-  externalId,
-  people,
-}: {
-  federation: string;
-  externalId: string;
-  people: { totalCount: number; nodes: { id: string; name: string }[] };
-}) {
+export function LocalPersonLinks({ people }: { people: { id: string; name: string }[] }) {
   return (
     <>
-      {people.nodes.map((person, index) => (
+      {people.map((person, index) => (
         <span key={person.id}>
           {index > 0 && ', '}
           <Link className="text-accent-11 underline" href={`/clenove/${person.id}`}>
@@ -49,16 +41,6 @@ export function LocalPersonLinks({
           </Link>
         </span>
       ))}
-      {people.totalCount > people.nodes.length && (
-        <FederationLink
-          entity="people"
-          federation={federation}
-          externalId={externalId}
-          className="ml-1 text-accent-11"
-        >
-          All {people.totalCount} matches
-        </FederationLink>
-      )}
     </>
   );
 }

@@ -90,12 +90,9 @@ fragment OfficialPerson on FederationPerson {
   canonicalName
   firstName
   lastName
-  people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
-    totalCount
-    nodes {
-      id
-      name
-    }
+  peopleList(orderBy: [NAME_ASC, ID_ASC]) {
+    id
+    name
   }
 }
 
@@ -131,6 +128,27 @@ query FederationEvent($federation: String!, $eventId: String!) {
       code
       name
     }
+  }
+}
+
+fragment CompetitionParticipant on FederationCompetitor {
+  id
+  externalId
+  name
+  couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
+    id
+    man {
+      id
+      name
+    }
+    woman {
+      id
+      name
+    }
+  }
+  peopleList(orderBy: [NAME_ASC, ID_ASC]) {
+    id
+    name
   }
 }
 
@@ -188,9 +206,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
       isFinal
       completionStatus
       competitor {
-        id
-        externalId
-        name
+        ...CompetitionParticipant
       }
     }
     entries: entriesList(
@@ -201,41 +217,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
       competitorId
       cancelled
       competitor {
-        id
-        externalId
-        name
-        couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
-          id
-          man {
-            id
-            name
-          }
-          woman {
-            id
-            name
-          }
-        }
-        components(first: 2, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
-          totalCount
-          nodes {
-            competitorId
-            personId
-            person {
-              id
-              externalId
-              canonicalName
-              firstName
-              lastName
-              people(first: 3, orderBy: [NAME_ASC, ID_ASC]) {
-                totalCount
-                nodes {
-                  id
-                  name
-                }
-              }
-            }
-          }
-        }
+        ...CompetitionParticipant
       }
     }
   }
@@ -274,22 +256,20 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
         validUntil
       }
     }
-    people(first: 100, orderBy: [NAME_ASC, ID_ASC]) {
-      nodes {
+    peopleList(orderBy: [NAME_ASC, ID_ASC]) {
+      id
+      name
+      tenantMembershipsList(condition: { status: ACTIVE }) {
         id
-        name
-        tenantMembershipsList(condition: { status: ACTIVE }) {
-          id
-          tenantName
-        }
-        tenantTrainersList(condition: { status: ACTIVE }) {
-          id
-          tenantName
-        }
-        tenantAdministratorsList(condition: { status: ACTIVE }) {
-          id
-          tenantName
-        }
+        tenantName
+      }
+      tenantTrainersList(condition: { status: ACTIVE }) {
+        id
+        tenantName
+      }
+      tenantAdministratorsList(condition: { status: ACTIVE }) {
+        id
+        tenantName
       }
     }
   }

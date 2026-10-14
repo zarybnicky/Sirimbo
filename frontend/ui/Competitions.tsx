@@ -3,7 +3,6 @@ import {
   type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
   type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
 } from '@/graphql/ActivityTimeline';
-import type { ActivityTimelineKind } from '@/graphql';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
@@ -16,10 +15,9 @@ import { ExternalLink } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
-type TimelineCompetitionItem =
+export type CompetitionEntry =
   | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
   | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
-export type CompetitionEntry = TimelineCompetitionItem;
 
 type CompetitorGroup = {
   key: string;
@@ -31,13 +29,6 @@ type CompetitionScope = {
   personIds?: string[];
   cohortId?: string;
 };
-
-function toLocalDateInput(date: Date) {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 
 function formatRank(
   row: Pick<
@@ -317,74 +308,28 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
   const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
-  const myPersonIds = React.useMemo(() => new Set(auth.personIds), [auth.personIds]);
-  const { mode, todayKey, variables } = React.useMemo(() => {
-    const weekUntil = add(startDate, 1, 'week');
-    const today = startOf(new Date(), 'day');
-    const mode = weekUntil <= today ? 'past' : startDate > today ? 'future' : 'current';
-
-    return {
-      mode,
-      todayKey: toLocalDateInput(today),
-      variables: {
-        since: startDate.toISOString(),
-        until: weekUntil.toISOString(),
-        personIds,
-        cohortId,
-        kinds: [
-          'COMPETITION_BRIEF',
-          'COMPETITION_RESULT',
-        ] satisfies ActivityTimelineKind[],
-      },
-    };
-  }, [cohortId, personIds, startDate]);
-
   const [{ data, fetching }] = useQuery({
     query: ActivityTimelineDocument,
-    variables,
+    variables: {
+      since: startDate.toISOString(),
+      until: add(startDate, 1, 'week').toISOString(),
+      personIds,
+      cohortId,
+      kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT'],
+    },
     requestPolicy: 'cache-and-network',
   });
-
-  const { briefs, reports, locations } = React.useMemo(() => {
-    const entries = (data?.activityTimelineList ?? []).filter(
-      (
-        item,
-      ): item is
-        | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
-        | ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
-        item.__typename === 'ActivityCompetitionBrief' ||
-        item.__typename === 'ActivityCompetitionResult',
-    );
-
-    const isRelevant = (entry: CompetitionEntry) =>
-      entry.__typename === 'ActivityCompetitionBrief'
-        ? mode !== 'past' &&
-          (mode !== 'current' || (entry.competitionDate ?? '') >= todayKey)
-        : mode !== 'future';
-    const visible = (entry: CompetitionEntry) =>
-      isRelevant(entry) && (!onlyMine || myPersonIds.has(entry.personId ?? '-'));
-
-    const locations = new Set<string>();
-    for (const entry of entries) {
-      if (isRelevant(entry) && entry.competitionEventLocation) {
-        locations.add(entry.competitionEventLocation);
-      }
-    }
-
-    return {
-      briefs: entries.filter(
-        (entry): entry is ActivityTimelineItem_ActivityCompetitionBrief_Fragment =>
-          entry.__typename === 'ActivityCompetitionBrief' && visible(entry),
-      ),
-      reports: entries.filter(
-        (entry): entry is ActivityTimelineItem_ActivityCompetitionResult_Fragment =>
-          entry.__typename === 'ActivityCompetitionResult' && visible(entry),
-      ),
-      locations: [...locations],
-    };
-  }, [data?.activityTimelineList, mode, myPersonIds, onlyMine, todayKey]);
-
-  const hasVisibleEntries = briefs.length > 0 || reports.length > 0;
+  const entries = (data?.activityTimelineList ?? []).filter(
+    (item): item is CompetitionEntry =>
+      item.__typename === 'ActivityCompetitionBrief' ||
+      item.__typename === 'ActivityCompetitionResult',
+  );
+  const visible = onlyMine
+    ? entries.filter((entry) => auth.personIds.includes(entry.personId ?? ''))
+    : entries;
+  const locations = [
+    ...new Set(entries.flatMap((entry) => entry.competitionEventLocation || [])),
+  ];
 
   return (
     <section className="flex flex-col relative">
@@ -402,32 +347,26 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
         </div>
       )}
 
-      <div className="text-sm text-neutral-9">
-        {fetching ? 'Načítám...' : ''}
-        {!fetching && !hasVisibleEntries ? 'Žádné soutěže tento týden. ' : ''}
-        <br />
-        {!fetching && !hasVisibleEntries && onlyMine && locations.length > 0 && (
-          <a
-            className="underline text-accent-12"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setOnlyMine(false);
-            }}
-          >
-            Další soutěže s klubovou účastí: {locations.join(', ')}.
-          </a>
-        )}
-      </div>
-
-      {mode === 'current' ? (
-        <div className="flex flex-col gap-4">
-          <CompetitionPanelFrame entries={reports} />
-          <CompetitionPanelFrame entries={briefs} />
-        </div>
+      {fetching ? (
+        <p className="text-sm text-neutral-9">Načítám...</p>
       ) : (
-        <CompetitionPanelFrame entries={mode === 'past' ? reports : briefs} />
+        visible.length === 0 && (
+          <div className="text-sm text-neutral-9">
+            <p>Žádné soutěže tento týden.</p>
+            {onlyMine && locations.length > 0 && (
+              <button
+                type="button"
+                className="underline text-accent-12"
+                onClick={() => setOnlyMine(false)}
+              >
+                Další soutěže s klubovou účastí: {locations.join(', ')}.
+              </button>
+            )}
+          </div>
+        )
       )}
+
+      <CompetitionPanelFrame entries={visible} />
     </section>
   );
 });

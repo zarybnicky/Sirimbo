@@ -116,14 +116,9 @@ export default async function RoundPage({ params }: Props) {
                         .join(' ') ||
                       judge.personJudgeId}
                   </FederationLink>
-                  {judge.personJudge.people.totalCount > 0 && (
+                  {judge.personJudge.peopleList.length > 0 && (
                     <span className="ml-2 text-sm">
-                      Local:{' '}
-                      <LocalPersonLinks
-                        federation={federation}
-                        externalId={judge.personJudge.externalId}
-                        people={judge.personJudge.people}
-                      />
+                      Local: <LocalPersonLinks people={judge.personJudge.peopleList} />
                     </span>
                   )}
                 </>

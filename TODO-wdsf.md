@@ -5,12 +5,12 @@
 - [ ] Redesign reusable faceted search for competitors, then app people/couples; retain inline class, points/finals, and ranklist placement where relevant.
 - [ ] Derive competitor age categories from their members.
 - [ ] Make `/federated` suitable for ordinary users before linking it throughout the main app.
-- [ ] Retain local person/couple links in competition results. These links currently appear only through registrations.
-- [ ] Derive ČSTS event status from competition completion, while preserving explicit cancellation.
+- [x] Retain local person/couple links in competition results. Results and registrations share the query fragment and link rendering.
+- [x] Derive ČSTS event status from competition completion, while preserving explicit cancellation.
 
-`cstsEventIndex` writes `planned` for every non-cancelled event. `cstsEvent` updates
-competition status but does not update the parent event. The status aggregation
-currently applies only to WDSF. An index refresh must not overwrite derived completion.
+ČSTS and WDSF share event status aggregation. ČSTS index refreshes preserve completed
+events, and event detail loads preserve explicit cancellation. Existing events update
+on their next load.
 
 ## Competition results and round marks
 
@@ -48,6 +48,7 @@ currently applies only to WDSF. An index refresh must not overwrite derived comp
 
 ## Deferred
 
+- [ ] Audit missing `@ref` / `@refVia` relations and existing refs that consumers bypass with nested traversals. Prefer direct relations where intermediate rows carry no information needed by the consumer.
 - [ ] Replace `csts_id`, `wdsf_id`, and ad-hoc external identifiers with persisted federation links.
 - [ ] Remove surrogate IDs for federation events/competitions; external IDs in browser URLs did not replace the database keys.
 - [ ] Add provenance and as-of attribution.

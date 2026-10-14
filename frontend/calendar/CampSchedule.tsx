@@ -264,10 +264,10 @@ function scheduledTrainers(
   const counts = new Map<string, { count: number; name: string }>();
 
   for (const lesson of lessons) {
-    const hasRegistration = lesson.registrationsList.some((scheduled) =>
+    const hasRegistration = lesson.registrationsList.some((x) =>
       registration.personId
-        ? scheduled.personId === registration.personId
-        : scheduled.coupleId === registration.coupleId,
+        ? x.personId === registration.personId
+        : x.coupleId === registration.coupleId,
     );
     if (!hasRegistration) continue;
 

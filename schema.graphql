@@ -7469,6 +7469,23 @@ type FederationCompetitor {
   id: String!
   name: String
 
+  """Reads and enables pagination through a set of `Person`."""
+  peopleList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!]
+  ): [Person!]!
+
   """Reads and enables pagination through a set of `RanklistEntry`."""
   ranklistEntries(
     """Read all values in the set after (below) this cursor."""
@@ -8473,13 +8490,7 @@ type FederationPerson {
   nationality: String
 
   """Reads and enables pagination through a set of `Person`."""
-  people(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
+  peopleList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -8488,18 +8499,12 @@ type FederationPerson {
     """Only read the first `n` values of the set."""
     first: Int
 
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
+    """Skip the first `n` values."""
     offset: Int
 
     """The method to use when ordering `Person`."""
-    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PeopleConnection!
+    orderBy: [PeopleOrderBy!]
+  ): [Person!]!
 
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   roundJudgeAssignments(

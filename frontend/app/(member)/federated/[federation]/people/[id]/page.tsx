@@ -53,7 +53,7 @@ export default async function FederatedPersonPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   const { person, name } = await getPerson(federation, externalId);
-  const matches = person.people.nodes;
+  const matches = person.peopleList;
   const base = `/federated/${federation}`;
   return (
     <Layout requireUser>

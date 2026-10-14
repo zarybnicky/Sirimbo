@@ -1,9 +1,9 @@
 import {
+  type EventInstanceRegistrationFragment,
   EventRegistrationCandidatesDocument,
   EventRegistrationsDocument,
-  SetEventRegistrationDocument,
-  type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
+  SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
@@ -17,7 +17,6 @@ import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
-import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 
@@ -144,7 +143,9 @@ function RegistrationsDialogContent({
     query: EventRegistrationsDocument,
     variables: { id: instance.id },
   });
-  const setRegistration = useMutation(SetEventRegistrationDocument)[1];
+  const [setRegistrationResult, setRegistration] = useMutation(
+    SetEventRegistrationDocument,
+  );
   const allRegistrations = query.data?.event?.registrationsList ?? [];
   const registrations = isManager
     ? allRegistrations
@@ -176,25 +177,20 @@ function RegistrationsDialogContent({
     : undefined;
   const i = selectedRegistration ? registrations.indexOf(selectedRegistration) : -1;
   const simpleRegistration = instance.type === 'LESSON' || instance.type === 'GROUP';
-  const readOnly = !!instance.isLocked && !isManager;
 
-  const registerImmediately = useAsyncCallback(async (candidate: Registrant) => {
-    const result = await setRegistration({
-      input: {
-        pInstanceId: instance.id,
-        pPersonId: candidate.personId,
-        pCoupleId: candidate.coupleId,
-        pIsRegistered: true,
-      },
-    });
-    if (result.error) throw result.error;
-    toast.success('Přihlášení proběhlo úspěšně.');
-    onClose();
-  });
-
-  const selectCandidate = (candidate: Registrant) => {
+  const selectCandidate = async (candidate: Registrant) => {
     if (simpleRegistration) {
-      registerImmediately.execute(candidate);
+      const result = await setRegistration({
+        input: {
+          pInstanceId: instance.id,
+          pPersonId: candidate.personId,
+          pCoupleId: candidate.coupleId,
+          pIsRegistered: true,
+        },
+      });
+      if (result.error) return;
+      toast.success('Přihlášení proběhlo úspěšně.');
+      onClose();
     } else {
       setSelected(candidate);
       setPage('editor');
@@ -246,7 +242,7 @@ function RegistrationsDialogContent({
           )}
           <DialogTitle>Koho přihlásit</DialogTitle>
         </div>
-        <FormError error={candidateError || registerImmediately.error} />
+        <FormError error={candidateError || setRegistrationResult.error} />
         {candidatesLoading ? (
           <Spinner />
         ) : candidates.length > 0 ? (
@@ -254,6 +250,7 @@ function RegistrationsDialogContent({
             autoFocus
             options={candidates}
             searchable={isManager}
+            disabled={setRegistrationResult.fetching}
             onSelect={selectCandidate}
           />
         ) : (
@@ -320,7 +317,7 @@ function RegistrationsDialogContent({
         instanceId={instance.id}
         enableDetails={!simpleRegistration}
         enableNotes={!!instance.enableNotes}
-        readOnly={readOnly}
+        readOnly={!!instance.isLocked && !isManager}
         personId={selected.personId}
         coupleId={selected.coupleId}
         registration={selectedRegistration}
@@ -369,11 +366,13 @@ const registrantSearchFields: 'label'[] = ['label'];
 
 function RegistrantList({
   autoFocus,
+  disabled,
   options,
   searchable,
   onSelect,
 }: {
   autoFocus?: boolean;
+  disabled?: boolean;
   options: Registrant[];
   searchable: boolean;
   onSelect: (registrant: Registrant) => void;
@@ -399,7 +398,12 @@ function RegistrantList({
           <li key={option.id}>
             <button
               type="button"
-              className={buttonCls({ display: 'listItem', variant: 'none', size: 'none' })}
+              disabled={disabled}
+              className={buttonCls({
+                display: 'listItem',
+                variant: 'none',
+                size: 'none',
+              })}
               onClick={() => onSelect(option)}
             >
               {option.label}

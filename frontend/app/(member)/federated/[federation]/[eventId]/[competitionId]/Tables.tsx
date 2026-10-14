@@ -2,7 +2,10 @@ import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
 import { formatCoupleName, formatResultStatus } from '@/ui/format';
-import type { FederationCompetitionQuery } from '@/graphql/Federation';
+import type {
+  CompetitionParticipantFragment,
+  FederationCompetitionQuery,
+} from '@/graphql/Federation';
 
 type Competition = NonNullable<FederationCompetitionQuery['competition']>;
 
@@ -29,6 +32,7 @@ export function Results({
           'competitor',
           showPoints && 'points',
           showFinalGain && 'final gain',
+          'local matches',
         ]}
       >
         {results.map((result) => {
@@ -70,6 +74,9 @@ export function Results({
                       : Number(result.finalGain)}
                 </td>
               )}
+              <td>
+                <LocalMatches participant={result.competitor} />
+              </td>
             </tr>
           );
         })}
@@ -98,75 +105,51 @@ export function Registrations({
         columns={['competitor', 'registration', 'local matches']}
         empty="No registrations"
       >
-        {entries.map((entry) => {
-          const participant = entry.competitor;
-          const competitorPath = `/federated/${federation}/competitors/${participant?.externalId}`;
+        {entries.map(({ competitor, competitorId, cancelled }) => {
           return (
-            <tr key={entry.competitorId} className="border-t border-neutral-4 align-top">
+            <tr key={competitorId} className="border-t border-neutral-4 align-top">
               <th scope="row">
-                {participant ? (
+                {competitor ? (
                   <Link
                     className="text-accent-11 underline"
-                    href={competitorPath}
+                    href={`/federated/${federation}/competitors/${competitor?.externalId}`}
                     prefetch={false}
                   >
-                    {participant.name || participant.id}
+                    {competitor.name || competitor.id}
                   </Link>
                 ) : (
-                  entry.competitorId
+                  competitorId
                 )}
               </th>
-              <td>{entry.cancelled ? 'cancelled' : 'registered'}</td>
+              <td>{cancelled ? 'cancelled' : 'registered'}</td>
               <td>
-                {participant?.components.nodes.map(({ personId, person }) => {
-                  if (
-                    !person ||
-                    (person.people.totalCount === 0 &&
-                      participant.couplesList.length === 0)
-                  ) {
-                    return null;
-                  }
-                  const name =
-                    person.canonicalName ||
-                    [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-                    personId;
-                  return (
-                    <div key={personId}>
-                      <LocalPersonLinks
-                        federation={federation}
-                        externalId={person.externalId}
-                        people={person.people}
-                      />
-                      {person.people.totalCount === 0 && (
-                        <span className="text-neutral-11">{name} (no person match)</span>
-                      )}
-                    </div>
-                  );
-                })}
-                {participant &&
-                  participant.components.totalCount >
-                    participant.components.nodes.length && (
-                    <div>
-                      <Link className="text-accent-11 underline" href={competitorPath}>
-                        All {participant.components.totalCount} members
-                      </Link>
-                    </div>
-                  )}
-                {participant?.couplesList.map((couple) => (
-                  <div key={couple.id}>
-                    <Link
-                      className="text-accent-11 underline"
-                      href={`/pary/${couple.id}`}
-                    >
-                      {formatCoupleName(couple)}
-                    </Link>
-                  </div>
-                ))}
+                <LocalMatches participant={competitor} />
               </td>
             </tr>
           );
         })}
       </Table>
+    </>
+  );
+}
+
+function LocalMatches({
+  participant,
+}: {
+  participant: CompetitionParticipantFragment | null;
+}) {
+  if (!participant) return null;
+
+  return (
+    <>
+      <LocalPersonLinks people={participant.peopleList} />
+      {participant.couplesList.map((couple) => (
+        <div key={couple.id}>
+          <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
+            {formatCoupleName(couple)}
+          </Link>
+        </div>
+      ))}
     </>
   );
 }

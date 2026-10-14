@@ -33,7 +33,7 @@ export function Officials({
   const showDiscipline = rows.some((official) => official.discipline);
   const showGrade = rows.some((official) => official.grade);
   const showLabel = rows.some((official) => official.judgeLabel);
-  const showMatches = rows.some((official) => official.person?.people.totalCount);
+  const showMatches = rows.some((official) => official.person?.peopleList.length);
 
   return (
     <>
@@ -75,11 +75,7 @@ export function Officials({
             {showMatches && (
               <td>
                 {official.person && (
-                  <LocalPersonLinks
-                    federation={federation}
-                    externalId={official.person.externalId}
-                    people={official.person.people}
-                  />
+                  <LocalPersonLinks people={official.person.peopleList} />
                 )}
               </td>
             )}

@@ -16,10 +16,9 @@ import { capitalize, longDayFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
-import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { CstsResultsLink } from './federation-links';
+import { CstsResultsLink, LocalPersonLinks } from './federation-links';
 
 type TimelineMode = 'future' | 'past';
 type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
@@ -257,7 +256,7 @@ function TimelineDay({
   const competitionGroups = new Map<string, [CompetitionItem, ...CompetitionItem[]]>();
   const judgingGroups = new Map<string, [JudgingItem, ...JudgingItem[]]>();
 
-  const birthdayItems = items.filter(x => x.__typename === 'ActivityBirthday');
+  const birthdayItems = items.filter((x) => x.__typename === 'ActivityBirthday');
 
   for (const item of items) {
     if (item.__typename === 'ActivityEventAttendance' && item.eventInstance) {
@@ -292,16 +291,10 @@ function TimelineDay({
               <Cake className="size-4 text-accent-11" />
               Narozeniny
             </div>
-            <div className="flex flex-wrap gap-2">
-              {birthdayItems.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/clenove/${item.personId!}`}
-                  className="rounded-sm border border-neutral-6 bg-neutral-1 px-2 py-1 text-sm text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
-                >
-                  {item.person?.name}
-                </Link>
-              ))}
+            <div className="text-sm">
+              <LocalPersonLinks
+                people={birthdayItems.flatMap((item) => item.person ?? [])}
+              />
             </div>
           </div>
         )}
