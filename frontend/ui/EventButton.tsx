@@ -13,7 +13,6 @@ import { diff } from 'date-arithmetic';
 import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
 import * as React from 'react';
 import { Check, HelpCircle, X } from 'lucide-react';
-import { canManageInstance } from '@/lib/actions/eventInstance';
 
 export function EventButton({
   instance,
@@ -49,7 +48,7 @@ export function EventButton({
   const showInlineAttendance =
     attendance === 'inline' &&
     instance.type === 'GROUP' &&
-    canManageInstance({ auth, item: instance });
+    auth.canManageInstance(instance);
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."

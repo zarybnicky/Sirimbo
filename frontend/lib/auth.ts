@@ -29,6 +29,7 @@ export interface AuthState extends ResolvedAuth {
   couples: CoupleFragment[];
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;
+  canManageInstance: (instance: { managerPersonIds: readonly (string | null)[] }) => boolean;
 }
 
 const defaultAuthState: AuthState = {
@@ -38,6 +39,7 @@ const defaultAuthState: AuthState = {
   couples: [],
   isMyPerson: () => false,
   isMyCouple: () => false,
+  canManageInstance: () => false,
 };
 
 export const storeRef = {
@@ -123,6 +125,10 @@ const authHelpersAtom = atom<AuthState>((get) => {
     couples: persons.flatMap((x) => x.allCouplesList || []),
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
     isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
+    canManageInstance: (instance) =>
+      auth.isAdmin ||
+      (auth.isTrainer &&
+        auth.personIds.some((id) => instance.managerPersonIds.includes(id))),
   };
 });
 

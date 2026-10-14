@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { EventWithAttendanceQuery } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
-import { canManageInstance, eventRegistrationActions, eventExternalRegistrationActions } from '@/lib/actions/eventInstance';
+import { eventRegistrationActions, eventExternalRegistrationActions } from '@/lib/actions/eventInstance';
 import { ActionRow } from '@/ui/ActionRow';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
@@ -25,7 +25,7 @@ export const EventRegistrations = memo(function EventRegistrations({
     .filter((r) => !r.parentRegistrationId)
     .flatMap((r) => [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)]);
   const attendees = rows.filter((r) => r.person && r.status);
-  const canEditAttendance = canManageInstance({ auth, item: instance });
+  const canEditAttendance = auth.canManageInstance(instance);
   const externalRegistrations = instance.externalRegistrations;
   const externalRegistrationActionMap = useActionMap(
     eventExternalRegistrationActions,

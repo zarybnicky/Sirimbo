@@ -348,29 +348,14 @@ query EventRegistrations($id: BigInt!) {
 }
 
 query EventRegistrationCandidates {
+  people(condition: { membership: { state: CURRENT } }) {
+    nodes {
+      id
+      name
+    }
+  }
   tenant: getCurrentTenant {
     id
-    tenantMembershipsList(condition: { status: ACTIVE }) {
-      id
-      person {
-        id
-        name
-      }
-    }
-    tenantTrainersList(condition: { status: ACTIVE }) {
-      id
-      person {
-        id
-        name
-      }
-    }
-    tenantAdministratorsList(condition: { status: ACTIVE }) {
-      id
-      person {
-        id
-        name
-      }
-    }
     couplesList {
       ...Couple
     }

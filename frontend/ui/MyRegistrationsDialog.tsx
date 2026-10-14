@@ -2,6 +2,7 @@ import {
   type EventInstanceRegistrationFragment,
   EventRegistrationCandidatesDocument,
   EventRegistrationsDocument,
+  type EventRegistrationsQuery,
   type EventWithTrainerFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
@@ -20,8 +21,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 
-type Page = 'overview' | 'candidates' | 'editor';
-
 type Registrant = {
   id: string;
   label: string;
@@ -29,11 +28,13 @@ type Registrant = {
   coupleId: string | null;
 };
 
-const registrantKey = (personId: string | null, coupleId: string | null) =>
-  personId ? `person:${personId}` : `couple:${coupleId}`;
+type Selection =
+  | { kind: 'overview' | 'candidates' }
+  | { kind: 'registration'; id: string }
+  | { kind: 'candidate'; registrant: Registrant };
 
 const registrant = (registration: EventInstanceRegistrationFragment): Registrant => ({
-  id: registrantKey(registration.personId, registration.coupleId),
+  id: registration.id,
   label: formatRegistrant(registration),
   personId: registration.personId,
   coupleId: registration.coupleId,
@@ -43,11 +44,12 @@ function useRegistrationCandidates(
   instance: EventWithTrainerFragment,
   registrations: EventInstanceRegistrationFragment[],
   isManager: boolean,
+  enabled: boolean,
 ) {
   const auth = useAuth();
   const [query] = useQuery({
     query: EventRegistrationCandidatesDocument,
-    pause: !isManager,
+    pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(
     registrations.flatMap((r) =>
@@ -56,36 +58,32 @@ function useRegistrationCandidates(
         : [r.couple?.man?.id, r.couple?.woman?.id].filter((id): id is string => !!id),
     ),
   );
-  const tenant = query.data?.tenant;
-  const people = isManager
-    ? [
-        ...(tenant?.tenantMembershipsList ?? []),
-        ...(tenant?.tenantTrainersList ?? []),
-        ...(tenant?.tenantAdministratorsList ?? []),
-      ].flatMap((membership) => (membership.person ? [membership.person] : []))
-    : auth.persons;
-  const couples = isManager ? (tenant?.couplesList ?? []) : auth.couples;
+  const people = isManager ? (query.data?.people?.nodes ?? []) : auth.persons;
+  const couples = isManager
+    ? (query.data?.tenant?.couplesList ?? [])
+    : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
+        (c) => c.status === 'ACTIVE',
+      );
   const capacityLeft =
     instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates: Registrant[] = [
-    ...[...new Map(people.map((x) => [x.id, x])).values()]
+    ...people
       .filter((x) => !registeredPeople.has(x.id))
       .map((p) => ({
-        id: registrantKey(p.id, null),
+        id: `person:${p.id}`,
         label: p.name,
         personId: p.id,
         coupleId: null,
       })),
-    ...[...new Map(couples.map((c) => [c.id, c])).values()]
+    ...couples
       .filter(
         (c) =>
-          c.status === 'ACTIVE' &&
           !registeredPeople.has(c.man?.id ?? '') &&
           !registeredPeople.has(c.woman?.id ?? '') &&
           (isManager || capacityLeft >= (instance.capacityUnit === 'PEOPLE' ? 2 : 1)),
       )
       .map((couple) => ({
-        id: registrantKey(null, couple.id),
+        id: `couple:${couple.id}`,
         label: formatCoupleName(couple),
         personId: null,
         coupleId: couple.id,
@@ -103,242 +101,202 @@ function useRegistrationCandidates(
 
 export function MyRegistrationsDialog({
   instance,
-  isManager,
   initialRegistrationId,
 }: {
   instance: EventWithTrainerFragment;
-  isManager: boolean;
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
-  const { onSuccess } = useFormResult();
+  const [query] = useQuery({
+    query: EventRegistrationsDocument,
+    variables: { id: instance.id },
+    pause: auth.isExternal,
+  });
 
-  return auth.isExternal ? (
-    <NewExternalRegistrationForm instanceId={instance.id} />
-  ) : (
+  if (auth.isExternal) return <NewExternalRegistrationForm instanceId={instance.id} />;
+  if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
+  if (!query.data.event) return <FormError error="Termín není dostupný." />;
+
+  return (
     <RegistrationsDialogContent
       instance={instance}
-      isManager={isManager}
+      event={query.data.event}
       initialRegistrationId={initialRegistrationId}
-      onClose={onSuccess}
     />
   );
 }
 
 function RegistrationsDialogContent({
   instance,
-  isManager,
+  event,
   initialRegistrationId,
-  onClose,
 }: {
   instance: EventWithTrainerFragment;
-  isManager: boolean;
+  event: NonNullable<EventRegistrationsQuery['event']>;
   initialRegistrationId?: string;
-  onClose: () => void;
 }) {
   const auth = useAuth();
-  const [selectedPage, setPage] = React.useState<Page>();
-  const [selectedRegistrant, setSelected] = React.useState<Registrant>();
-  const [query] = useQuery({
-    query: EventRegistrationsDocument,
-    variables: { id: instance.id },
-  });
-  const [setRegistrationResult, setRegistration] = useMutation(
-    SetEventRegistrationDocument,
-  );
-  const allRegistrations = query.data?.event?.registrationsList ?? [];
+  const isManager = auth.canManageInstance(instance);
+  const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
-    ? allRegistrations
-    : allRegistrations.filter(
+    ? event.registrationsList
+    : event.registrationsList.filter(
         (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
       );
+  const [selection, setSelection] = React.useState<Selection>(() => {
+    const initial =
+      registrations.find((r) => r.id === initialRegistrationId) ??
+      (registrations.length === 1 ? registrations[0] : undefined);
+    return initial
+      ? { kind: 'registration', id: initial.id }
+      : { kind: registrations.length > 0 ? 'overview' : 'candidates' };
+  });
+  const registration =
+    selection.kind === 'registration'
+      ? registrations.find((r) => r.id === selection.id)
+      : undefined;
+  const selected = registration
+    ? registrant(registration)
+    : selection.kind === 'candidate'
+      ? selection.registrant
+      : undefined;
+  const page = selected
+    ? 'editor'
+    : selection.kind === 'candidates'
+      ? 'candidates'
+      : 'overview';
   const {
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(instance, allRegistrations, isManager);
-  const initialRegistration = registrations.find((r) => r.id === initialRegistrationId);
-  const initialRegistrant = initialRegistration
-    ? registrant(initialRegistration)
-    : registrations[0]
-      ? registrant(registrations[0])
-      : undefined;
-  const page =
-    selectedPage ??
-    (initialRegistration || registrations.length === 1
-      ? 'editor'
-      : registrations.length > 1
-        ? 'overview'
-        : 'candidates');
-  const selected = selectedPage === undefined ? initialRegistrant : selectedRegistrant;
-
-  const selectedRegistration = selected
-    ? registrations.find((r) => registrantKey(r.personId, r.coupleId) === selected.id)
-    : undefined;
-  const i = selectedRegistration ? registrations.indexOf(selectedRegistration) : -1;
+  } = useRegistrationCandidates(
+    instance,
+    event.registrationsList,
+    isManager,
+    page === 'candidates',
+  );
+  const [setRegistrationResult, setRegistration] = useMutation(
+    SetEventRegistrationDocument,
+  );
+  const i = registration ? registrations.indexOf(registration) : -1;
+  const canCycle = !!registration && registrations.length > 1;
   const simpleRegistration = instance.type === 'LESSON' || instance.type === 'GROUP';
 
   const selectCandidate = async (candidate: Registrant) => {
-    if (simpleRegistration) {
-      const result = await setRegistration({
-        input: {
-          pInstanceId: instance.id,
-          pPersonId: candidate.personId,
-          pCoupleId: candidate.coupleId,
-          pIsRegistered: true,
-        },
-      });
-      if (result.error) return;
-      toast.success('Přihlášení proběhlo úspěšně.');
-      onClose();
-    } else {
-      setSelected(candidate);
-      setPage('editor');
+    if (!simpleRegistration) {
+      setSelection({ kind: 'candidate', registrant: candidate });
+      return;
     }
+    const result = await setRegistration({
+      input: {
+        pInstanceId: instance.id,
+        pPersonId: candidate.personId,
+        pCoupleId: candidate.coupleId,
+        pIsRegistered: true,
+      },
+    });
+    if (result.error) return;
+    toast.success('Přihlášení proběhlo úspěšně.');
+    onClose();
   };
 
-  const selectRegistration = (registrant: Registrant) => {
-    setSelected(registrant);
-    setPage('editor');
+  const changeRegistration = (offset: number) => {
+    const next =
+      registrations[(i + offset + registrations.length) % registrations.length];
+    if (next) setSelection({ kind: 'registration', id: next.id });
   };
-
-  const changeRegistration = (n: number) => {
-    const x = registrations[(i + n + registrations.length) % registrations.length];
-    if (x) selectRegistration(registrant(x));
-  };
-
-  if (!query.data) {
-    return query.error ? <FormError error={query.error} /> : <Spinner />;
-  }
-
-  if (page === 'overview') {
-    return (
-      <>
-        <div className="flex items-center gap-2 pr-8">
-          <DialogTitle className="grow">Přihlášky</DialogTitle>
-          {candidates.length > 0 && (
-            <IconButton label="Přidat přihlášku" onClick={() => setPage('candidates')}>
-              <Plus />
-            </IconButton>
-          )}
-        </div>
-        <RegistrantList
-          options={registrations.map(registrant)}
-          searchable={registrations.length > 8}
-          onSelect={selectRegistration}
-        />
-      </>
-    );
-  }
-
-  if (page === 'candidates') {
-    return (
-      <>
-        <div className="flex items-center gap-2 pr-8">
-          {registrations.length > 1 && (
-            <IconButton label="Zobrazit přihlášky" onClick={() => setPage('overview')}>
-              <List />
-            </IconButton>
-          )}
-          <DialogTitle>Koho přihlásit</DialogTitle>
-        </div>
-        <FormError error={candidateError || setRegistrationResult.error} />
-        {candidatesLoading ? (
-          <Spinner />
-        ) : candidates.length > 0 ? (
-          <RegistrantList
-            autoFocus
-            options={candidates}
-            searchable={isManager}
-            disabled={setRegistrationResult.fetching}
-            onSelect={selectCandidate}
-          />
-        ) : (
-          <div className="text-neutral-11">Není koho dalšího přihlásit.</div>
-        )}
-      </>
-    );
-  }
-
-  if (!selected) return null;
 
   return (
     <>
       <div className="flex items-center gap-2 pr-8">
-        {registrations.length > 1 && (
-          <IconButton label="Zobrazit přihlášky" onClick={() => setPage('overview')}>
+        {page !== 'overview' && registrations.length > 0 && (
+          <IconButton
+            label="Zobrazit přihlášky"
+            onClick={() => setSelection({ kind: 'overview' })}
+          >
             <List />
           </IconButton>
         )}
-        {selectedRegistration ? (
-          <>
-            {registrations.length > 1 && (
-              <IconButton
-                label="Předchozí přihláška"
-                onClick={() => changeRegistration(-1)}
-              >
-                <ChevronLeft />
-              </IconButton>
-            )}
-            <DialogTitle className="grow text-center">
-              {selected.label}
-              {registrations.length > 1 && ` (${i + 1}/${registrations.length})`}
-            </DialogTitle>
-            {registrations.length > 1 && (
-              <IconButton
-                label="Následující přihláška"
-                onClick={() => changeRegistration(1)}
-              >
-                <ChevronRight />
-              </IconButton>
-            )}
-            {candidates.length > 0 && (
-              <IconButton label="Přidat přihlášku" onClick={() => setPage('candidates')}>
-                <Plus />
-              </IconButton>
-            )}
-          </>
-        ) : (
-          <>
-            <DialogTitle className="grow">{selected.label}</DialogTitle>
-            <button
-              type="button"
-              className={buttonCls({ size: 'xs', variant: 'outline' })}
-              onClick={() => setPage('candidates')}
+        {canCycle && (
+          <IconButton label="Předchozí přihláška" onClick={() => changeRegistration(-1)}>
+            <ChevronLeft />
+          </IconButton>
+        )}
+        <DialogTitle className="grow">
+          {selected?.label ?? (page === 'candidates' ? 'Koho přihlásit' : 'Přihlášky')}
+          {canCycle && ` (${i + 1}/${registrations.length})`}
+        </DialogTitle>
+        {canCycle && (
+          <IconButton label="Následující přihláška" onClick={() => changeRegistration(1)}>
+            <ChevronRight />
+          </IconButton>
+        )}
+        {(page === 'overview' || registration) &&
+          (isManager || candidates.length > 0) && (
+            <IconButton
+              label="Přidat přihlášku"
+              onClick={() => setSelection({ kind: 'candidates' })}
             >
-              Změnit
-            </button>
-          </>
+              <Plus />
+            </IconButton>
+          )}
+        {selected && !registration && (
+          <button
+            type="button"
+            className={buttonCls({ size: 'xs', variant: 'outline' })}
+            onClick={() => setSelection({ kind: 'candidates' })}
+          >
+            Změnit
+          </button>
         )}
       </div>
 
-      <EventRegistrationForm
-        key={`${selected.id}:${selectedRegistration?.id ?? 'new'}`}
-        instanceId={instance.id}
-        enableDetails={!simpleRegistration}
-        enableNotes={!!instance.enableNotes}
-        readOnly={!!instance.isLocked && !isManager}
-        personId={selected.personId}
-        coupleId={selected.coupleId}
-        registration={selectedRegistration}
-        lessonTrainers={query.data.event?.trainersList ?? []}
-        onSaved={() => {
-          if (!selectedRegistration) onClose();
-        }}
-        onCancelled={() => {
-          const remaining = registrations.filter(
-            (r) => registrantKey(r.personId, r.coupleId) !== selected.id,
-          );
-          if (remaining.length > 1) {
-            setPage('overview');
-          } else if (remaining[0]) {
-            selectRegistration(registrant(remaining[0]));
-          } else {
-            setSelected(undefined);
-            setPage('candidates');
-          }
-        }}
-      />
+      {page === 'overview' ? (
+        <RegistrantList
+          options={registrations.map(registrant)}
+          searchable={registrations.length > 8}
+          onSelect={(option) => setSelection({ kind: 'registration', id: option.id })}
+        />
+      ) : page === 'candidates' ? (
+        <>
+          <FormError error={candidateError || setRegistrationResult.error} />
+          {candidatesLoading ? (
+            <Spinner />
+          ) : candidates.length > 0 ? (
+            <RegistrantList
+              autoFocus
+              options={candidates}
+              searchable={isManager}
+              disabled={setRegistrationResult.fetching}
+              onSelect={selectCandidate}
+            />
+          ) : (
+            <div className="text-neutral-11">Není koho dalšího přihlásit.</div>
+          )}
+        </>
+      ) : (
+        selected && (
+          <EventRegistrationForm
+            key={`${selected.id}:${registration?.id ?? 'new'}`}
+            instance={instance}
+            registrant={registration ?? selected}
+            lessonTrainers={event.trainersList}
+            onSaved={() => {
+              if (!registration) onClose();
+            }}
+            onCancelled={() => {
+              const remaining = registrations.filter((r) => r.id !== registration?.id);
+              setSelection(
+                remaining.length > 1
+                  ? { kind: 'overview' }
+                  : remaining[0]
+                    ? { kind: 'registration', id: remaining[0].id }
+                    : { kind: 'candidates' },
+              );
+            }}
+          />
+        )
+      )}
     </>
   );
 }

@@ -5208,17 +5208,6 @@ type DeleteAnnouncementPayload {
   clientMutationId: String
 }
 
-"""All input for the `deleteCohortByTenantIdAndId` mutation."""
-input DeleteCohortByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
-}
-
 """All input for the `deleteCohort` mutation."""
 input DeleteCohortInput {
   """
@@ -5332,17 +5321,6 @@ type DeleteEventExternalRegistrationPayload {
   userByCreatedBy: User
 }
 
-"""All input for the `deleteEventInstanceByTenantIdAndId` mutation."""
-input DeleteEventInstanceByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
-}
-
 """All input for the `deleteEventInstance` mutation."""
 input DeleteEventInstanceInput {
   """
@@ -5381,17 +5359,6 @@ type DeleteEventInstancePayload {
   series: EventSeries
 }
 
-"""All input for the `deleteEventSeriesByTenantIdAndId` mutation."""
-input DeleteEventSeriesByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
-}
-
 """All input for the `deleteEventSeries` mutation."""
 input DeleteEventSeriesInput {
   """
@@ -5418,17 +5385,6 @@ type DeleteEventSeriesPayload {
     """The method to use when ordering `EventSeries`."""
     orderBy: [EventSeriesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventSeriesEdge
-}
-
-"""All input for the `deleteLocationByTenantIdAndId` mutation."""
-input DeleteLocationByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
 }
 
 """All input for the `deleteLocation` mutation."""
@@ -5479,17 +5435,6 @@ type DeleteMembershipApplicationPayload {
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   userByCreatedBy: User
-}
-
-"""All input for the `deletePaymentByTenantIdAndId` mutation."""
-input DeletePaymentByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
 }
 
 """All input for the `deletePayment` mutation."""
@@ -5707,17 +5652,6 @@ type DeleteTenantTrainerPayload {
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TenantTrainersEdge
-}
-
-"""All input for the `deleteTransactionByTenantIdAndId` mutation."""
-input DeleteTransactionByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-  tenantId: BigInt!
 }
 
 """All input for the `deleteTransaction` mutation."""
@@ -10139,14 +10073,6 @@ type Mutation {
     input: DeleteCohortInput!
   ): DeleteCohortPayload
 
-  """Deletes a single `Cohort` using a unique key."""
-  deleteCohortByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCohortByTenantIdAndIdInput!
-  ): DeleteCohortPayload
-
   """Deletes a single `CohortMembership` using a unique key."""
   deleteCohortMembership(
     """
@@ -10179,14 +10105,6 @@ type Mutation {
     input: DeleteEventInstanceInput!
   ): DeleteEventInstancePayload
 
-  """Deletes a single `EventInstance` using a unique key."""
-  deleteEventInstanceByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEventInstanceByTenantIdAndIdInput!
-  ): DeleteEventInstancePayload
-
   """Deletes a single `EventSeries` using a unique key."""
   deleteEventSeries(
     """
@@ -10195,28 +10113,12 @@ type Mutation {
     input: DeleteEventSeriesInput!
   ): DeleteEventSeriesPayload
 
-  """Deletes a single `EventSeries` using a unique key."""
-  deleteEventSeriesByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEventSeriesByTenantIdAndIdInput!
-  ): DeleteEventSeriesPayload
-
   """Deletes a single `Location` using a unique key."""
   deleteLocation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteLocationInput!
-  ): DeleteLocationPayload
-
-  """Deletes a single `Location` using a unique key."""
-  deleteLocationByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLocationByTenantIdAndIdInput!
   ): DeleteLocationPayload
 
   """Deletes a single `MembershipApplication` using a unique key."""
@@ -10233,14 +10135,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePaymentInput!
-  ): DeletePaymentPayload
-
-  """Deletes a single `Payment` using a unique key."""
-  deletePaymentByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePaymentByTenantIdAndIdInput!
   ): DeletePaymentPayload
 
   """Deletes a single `Person` using a unique key."""
@@ -10305,14 +10199,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteTransactionInput!
-  ): DeleteTransactionPayload
-
-  """Deletes a single `Transaction` using a unique key."""
-  deleteTransactionByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTransactionByTenantIdAndIdInput!
   ): DeleteTransactionPayload
 
   """Deletes a single `UserProxy` using a unique key."""
@@ -10443,14 +10329,6 @@ type Mutation {
     input: UpdateCohortInput!
   ): UpdateCohortPayload
 
-  """Updates a single `Cohort` using a unique key and a patch."""
-  updateCohortByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCohortByTenantIdAndIdInput!
-  ): UpdateCohortPayload
-
   """Updates a single `CohortMembership` using a unique key and a patch."""
   updateCohortMembership(
     """
@@ -10475,14 +10353,6 @@ type Mutation {
     input: UpdateEventInstanceInput!
   ): UpdateEventInstancePayload
 
-  """Updates a single `EventInstance` using a unique key and a patch."""
-  updateEventInstanceByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventInstanceByTenantIdAndIdInput!
-  ): UpdateEventInstancePayload
-
   """Updates a single `EventSeries` using a unique key and a patch."""
   updateEventSeries(
     """
@@ -10491,28 +10361,12 @@ type Mutation {
     input: UpdateEventSeriesInput!
   ): UpdateEventSeriesPayload
 
-  """Updates a single `EventSeries` using a unique key and a patch."""
-  updateEventSeriesByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventSeriesByTenantIdAndIdInput!
-  ): UpdateEventSeriesPayload
-
   """Updates a single `Location` using a unique key and a patch."""
   updateLocation(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateLocationInput!
-  ): UpdateLocationPayload
-
-  """Updates a single `Location` using a unique key and a patch."""
-  updateLocationByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLocationByTenantIdAndIdInput!
   ): UpdateLocationPayload
 
   """
@@ -10531,14 +10385,6 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePaymentInput!
-  ): UpdatePaymentPayload
-
-  """Updates a single `Payment` using a unique key and a patch."""
-  updatePaymentByTenantIdAndId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePaymentByTenantIdAndIdInput!
   ): UpdatePaymentPayload
 
   """Updates a single `Person` using a unique key and a patch."""
@@ -12232,14 +12078,8 @@ type Query {
   """Get a single `Cohort`."""
   cohort(id: BigInt!): Cohort
 
-  """Get a single `Cohort`."""
-  cohortByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Cohort
-
   """Get a single `CohortGroup`."""
   cohortGroup(id: BigInt!): CohortGroup
-
-  """Get a single `CohortGroup`."""
-  cohortGroupByTenantIdAndId(id: BigInt!, tenantId: BigInt!): CohortGroup
 
   """Reads and enables pagination through a set of `CohortGroup`."""
   cohortGroups(
@@ -12661,9 +12501,6 @@ type Query {
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
 
-  """Get a single `EventInstance`."""
-  eventInstanceByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventInstance
-
   """Get a single `EventInstanceRegistration`."""
   eventInstanceRegistration(id: BigInt!): EventInstanceRegistration
 
@@ -12768,9 +12605,6 @@ type Query {
 
   """Get a single `EventSeries`."""
   eventSeries(id: BigInt!): EventSeries
-
-  """Get a single `EventSeries`."""
-  eventSeriesByTenantIdAndId(id: BigInt!, tenantId: BigInt!): EventSeries
 
   """Get a single `Federation`."""
   federation(code: String!): Federation
@@ -13007,9 +12841,6 @@ type Query {
   """Get a single `Location`."""
   location(id: BigInt!): Location
 
-  """Get a single `Location`."""
-  locationByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Location
-
   """Get a single `LocationImage`."""
   locationImage(fileId: BigInt!, locationId: BigInt!, tenantId: BigInt!): LocationImage
 
@@ -13052,9 +12883,6 @@ type Query {
 
   """Get a single `Payment`."""
   payment(id: BigInt!): Payment
-
-  """Get a single `Payment`."""
-  paymentByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Payment
 
   """Get a single `PaymentDebtor`."""
   paymentDebtor(id: BigInt!): PaymentDebtor
@@ -13280,9 +13108,6 @@ type Query {
 
   """Get a single `Transaction`."""
   transaction(id: BigInt!): Transaction
-
-  """Get a single `Transaction`."""
-  transactionByTenantIdAndId(id: BigInt!, tenantId: BigInt!): Transaction
 
   """Reads and enables pagination through a set of `Transaction`."""
   transactions(
@@ -16115,22 +15940,6 @@ type UpdateAttendancePayload {
   targetCohort: Cohort
 }
 
-"""All input for the `updateCohortByTenantIdAndId` mutation."""
-input UpdateCohortByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Cohort` being updated.
-  """
-  patch: CohortPatch!
-  tenantId: BigInt!
-}
-
 """All input for the `updateCohort` mutation."""
 input UpdateCohortInput {
   """
@@ -16227,22 +16036,6 @@ type UpdateCouplePayload {
   woman: Person
 }
 
-"""All input for the `updateEventInstanceByTenantIdAndId` mutation."""
-input UpdateEventInstanceByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `EventInstance` being updated.
-  """
-  patch: EventInstancePatch!
-  tenantId: BigInt!
-}
-
 """All input for the `updateEventInstance` mutation."""
 input UpdateEventInstanceInput {
   """
@@ -16286,22 +16079,6 @@ type UpdateEventInstancePayload {
   series: EventSeries
 }
 
-"""All input for the `updateEventSeriesByTenantIdAndId` mutation."""
-input UpdateEventSeriesByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `EventSeries` being updated.
-  """
-  patch: EventSeriesPatch!
-  tenantId: BigInt!
-}
-
 """All input for the `updateEventSeries` mutation."""
 input UpdateEventSeriesInput {
   """
@@ -16333,22 +16110,6 @@ type UpdateEventSeriesPayload {
     """The method to use when ordering `EventSeries`."""
     orderBy: [EventSeriesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventSeriesEdge
-}
-
-"""All input for the `updateLocationByTenantIdAndId` mutation."""
-input UpdateLocationByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Location` being updated.
-  """
-  patch: LocationPatch!
-  tenantId: BigInt!
 }
 
 """All input for the `updateLocation` mutation."""
@@ -16409,22 +16170,6 @@ type UpdateMembershipApplicationPayload {
 
   """Reads a single `User` that is related to this `MembershipApplication`."""
   userByCreatedBy: User
-}
-
-"""All input for the `updatePaymentByTenantIdAndId` mutation."""
-input UpdatePaymentByTenantIdAndIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Payment` being updated.
-  """
-  patch: PaymentPatch!
-  tenantId: BigInt!
 }
 
 """All input for the `updatePayment` mutation."""

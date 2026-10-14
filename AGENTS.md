@@ -5,6 +5,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 ## Workflow expectations
 - Do not create Git commits or change the Git index. Leave staging and commits to the maintainer.
 - Preserve existing work, including unrelated changes in files you edit.
+- Never run `schema/after-commit.sh`, directly or through a command that invokes it. It regenerates broad portions of the working tree and disrupts the maintainer's work. Do not reproduce its dump/regeneration steps as a workaround. Leave this workflow to the maintainer.
 - Use the checked-in PNPM 10 workspaces (Node 24.x) for JavaScript/TypeScript tooling.
 - After code changes, run the affected package's lint and typecheck commands, plus relevant tests. Report failures without changing unrelated code to fix them.
 - Prefer incremental SQL migrations. For changes under `migrations/current/` or `migrations/fixtures/`, follow `migrations/current/AGENTS.md`.

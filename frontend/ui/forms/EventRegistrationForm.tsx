@@ -1,8 +1,10 @@
 import {
   type EventInstanceRegistrationFragment,
   type EventInstanceTrainerFragment,
+  type EventWithTrainerFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
+import { useAuth } from '@/lib/auth';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
@@ -24,30 +26,30 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 
 export function EventRegistrationForm({
-  instanceId,
-  enableDetails,
-  enableNotes,
-  readOnly,
-  personId,
-  coupleId,
-  registration,
+  instance,
+  registrant,
   lessonTrainers: allLessonTrainers,
   onSaved,
   onCancelled,
 }: {
-  instanceId: string;
-  enableDetails: boolean;
-  enableNotes: boolean;
-  readOnly: boolean;
-  personId: string | null;
-  coupleId: string | null;
-  registration?: EventInstanceRegistrationFragment;
+  instance: Pick<
+    EventWithTrainerFragment,
+    'id' | 'type' | 'enableNotes' | 'isLocked' | 'managerPersonIds'
+  >;
+  registrant:
+    | EventInstanceRegistrationFragment
+    | Pick<EventInstanceRegistrationFragment, 'personId' | 'coupleId'>;
   lessonTrainers: EventInstanceTrainerFragment[];
   onSaved: () => void;
   onCancelled: () => void;
 }) {
+  const auth = useAuth();
   const confirm = useConfirm();
   const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
+  const registration = 'requests' in registrant ? registrant : undefined;
+  const { personId, coupleId } = registrant;
+  const enableDetails = instance.type !== 'LESSON' && instance.type !== 'GROUP';
+  const readOnly = !!instance.isLocked && !auth.canManageInstance(instance);
   const requestCounts = Object.fromEntries(
     registration?.requests.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
@@ -56,7 +58,7 @@ export function EventRegistrationForm({
         (x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0,
       )
     : [];
-  const showNotes = enableDetails && (enableNotes || !!registration?.note);
+  const showNotes = enableDetails && (instance.enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(Form),
@@ -69,7 +71,7 @@ export function EventRegistrationForm({
   const save = async (values: FormValues) => {
     const result = await setRegistration({
       input: {
-        pInstanceId: instanceId,
+        pInstanceId: instance.id,
         pPersonId: personId,
         pCoupleId: coupleId,
         pIsRegistered: true,
@@ -94,7 +96,7 @@ export function EventRegistrationForm({
     }
     const result = await setRegistration({
       input: {
-        pInstanceId: instanceId,
+        pInstanceId: instance.id,
         pPersonId: personId,
         pCoupleId: coupleId,
         pIsRegistered: false,
@@ -145,7 +147,11 @@ export function EventRegistrationForm({
             </SubmitButton>
           )}
           {(!registration || hasFields) && (
-            <SubmitButton className="ml-auto" control={control} disabled={result.fetching}>
+            <SubmitButton
+              className="ml-auto"
+              control={control}
+              disabled={result.fetching}
+            >
               {registration ? 'Uložit' : 'Přihlásit'}
             </SubmitButton>
           )}

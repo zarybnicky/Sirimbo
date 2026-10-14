@@ -33,34 +33,23 @@ export const eventRegistrationActions = defineActions<EventInstanceRegistrationF
     label: 'Upravit přihlášku',
     icon: Pencil,
     visible: ({ auth, item }) =>
-      canManageInstance({ auth, item: item.instance }) ||
+      auth.canManageInstance(item.instance) ||
       auth.isMyPerson(item.personId) || auth.isMyCouple(item.coupleId),
-    render: ({ auth, item }) => (
+    render: ({ item }) => (
       <MyRegistrationsDialog
         instance={item.instance}
-        isManager={canManageInstance({ auth, item: item.instance })}
         initialRegistrationId={item.id}
       />
     ),
   },
 ]);
 
-export function canManageInstance({
-  auth,
-  item,
-}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
-  return (
-    auth.isAdmin ||
-    (auth.isTrainer && auth.personIds.some((x) => item.managerPersonIds.includes(x)))
-  );
-}
-
 function canOpenRegistrations({
   auth,
   item,
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
   return (
-    canManageInstance({ auth, item }) ||
+    auth.canManageInstance(item) ||
     !!item.registrationInfo?.my ||
     (!!(item.isPublic || item.isVisible) &&
       !item.isLocked &&
@@ -74,7 +63,7 @@ function registrationActionLabel({
   auth,
   item,
 }: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
-  if (canManageInstance({ auth, item })) {
+  if (auth.canManageInstance(item)) {
     return `Přihlášky (${item.registrationInfo?.registrations ?? 0})`;
   }
 
@@ -87,19 +76,14 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     group: 'primary',
     label: registrationActionLabel,
     visible: canOpenRegistrations,
-    render: ({ auth, item }) => (
-      <MyRegistrationsDialog
-        instance={item}
-        isManager={canManageInstance({ auth, item })}
-      />
-    ),
+    render: ({ item }) => <MyRegistrationsDialog instance={item} />,
   },
   {
     id: 'eventInstance.edit',
     group: 'primary',
     label: 'Upravit',
     icon: Pencil,
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     render: ({ item }) => <EditEventForm event={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -110,7 +94,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     id: 'eventInstance.editDescription',
     label: 'Upravit dlouhý popis',
     icon: NotebookPen,
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     render: ({ item }) => <EditEventDescriptionForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-xl',
@@ -120,7 +104,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     id: 'eventInstance.share',
     label: 'Sdílet program',
     icon: Share2,
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     load: () => import('@/ui/EventShareDialog'),
   },
   {
@@ -128,7 +112,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: ({ item }) => (item.isCancelled ? 'Zrušeno' : 'Zrušit termín'),
     icon: ({ item }: ActionContext<EventWithTrainerFragment>) =>
       item.isCancelled ? CheckSquare : Square,
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     execute: async ({ item, mutate }) => {
       await mutate(UpdateEventDocument, {
         id: item.id,
@@ -139,14 +123,14 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'eventInstance.attendance',
     label: 'Docházka',
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     href: ({ item }) => `/termin/${item.id}?tab=registrations`,
   },
   {
     id: 'eventInstance.addToEventSchedule',
     label: 'Přidat do rozpisu události',
     icon: CalendarPlus,
-    visible: ({ item, auth }) => canManageInstance({ item, auth }) && !item.parentId,
+    visible: ({ item, auth }) => auth.canManageInstance(item) && !item.parentId,
     render: ({ item }) => <AddToEventScheduleForm eventId={item.id} />,
   },
   {
@@ -154,7 +138,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit termín'),
     icon: GitBranch,
     visible: ({ item, auth }) =>
-      canManageInstance({ item, auth }) && !!(item.parentId || item.seriesId),
+      auth.canManageInstance(item) && !!(item.parentId || item.seriesId),
     confirm: ({ item }) =>
       item.parentId
         ? {
@@ -184,7 +168,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     label: 'Odstranit termín',
     icon: Trash2,
     variant: 'danger',
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     confirm: {
       description:
         'Opravdu chcete smazat termín? Tím se smažou také všechny jeho záznamy o účasti a platby.',
@@ -196,7 +180,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'eventInstance.exportParticipants',
     label: 'Export přihlášených',
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     execute: async ({ item, client }) => {
       await exportEventParticipants(client, item.id);
     },
@@ -204,7 +188,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'eventInstance.exportRegistrations',
     label: 'Export přihlášek',
-    visible: canManageInstance,
+    visible: ({ auth, item }) => auth.canManageInstance(item),
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.id);
     },
