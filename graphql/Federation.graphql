@@ -4,6 +4,9 @@ fragment CompetitionCategory on Category {
   class
   series
   ageGroup
+  ageGroupDetails {
+    name
+  }
   discipline
   competitorType
 }
@@ -79,6 +82,18 @@ fragment FederationRanking on RanklistEntry {
       name
       category {
         ...CompetitionCategory
+        ageGroupDetails {
+          age {
+            start { value }
+            end { value }
+          }
+          coupleRules(condition: { division: "General" }) {
+            olderAge {
+              start { value }
+              end { value }
+            }
+          }
+        }
       }
     }
   }
@@ -408,6 +423,18 @@ query FederationCompetitors(
           category {
             id
             ageGroup
+            ageGroupDetails {
+              age {
+                start { value }
+                end { value }
+              }
+              coupleRules(condition: { division: "General" }) {
+                olderAge {
+                  start { value }
+                  end { value }
+                }
+              }
+            }
             class
             discipline
           }

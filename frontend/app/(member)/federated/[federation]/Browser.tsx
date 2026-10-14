@@ -22,7 +22,7 @@ import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { buttonCls } from '@/ui/style';
-import { formatCstsClass } from '@/ui/csts';
+import { compareAgeRanges, formatCstsClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
@@ -463,7 +463,14 @@ function Competitors(props: BrowserProps) {
                   ),
                 (p) => p.category?.ageGroup ?? '',
               );
-              const ageGroups = Object.keys(progressByAge).toSorted();
+              const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
+                const left = progressByAge[a]?.[0]?.category?.ageGroupDetails;
+                const right = progressByAge[b]?.[0]?.category?.ageGroupDetails;
+                return compareAgeRanges(
+                  left?.coupleRules[0]?.olderAge ?? left?.age ?? null,
+                  right?.coupleRules[0]?.olderAge ?? right?.age ?? null,
+                );
+              });
               if (ageGroups.length === 0) ageGroups.push('');
               return (
                 <tbody key={row.id} className="border-t border-neutral-4">

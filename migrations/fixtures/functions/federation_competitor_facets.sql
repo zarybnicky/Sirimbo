@@ -10,9 +10,11 @@ create or replace function federated.federation_competitor_facets(
 language sql stable as $$
   with candidates as materialized (
     select c.id, c.competitor_type::text as competitor_type,
-      cat.age_group, cat.class, cat.discipline,
+      cat.age_group_code, cat.class, cat.discipline,
       coalesce(cardinality(competitor_types), 0) = 0 or c.competitor_type = any(competitor_types) as type_matches,
-      coalesce(cardinality(age_groups), 0) = 0 or cat.age_group = any(age_groups) as age_matches,
+      coalesce(cardinality(age_groups), 0) = 0 or cat.age_group_code = any(
+        array(select federated.resolve_age_group(value) from unnest(age_groups) value)
+      ) as age_matches,
       coalesce(cardinality(classes), 0) = 0 or cat.class = any(classes) as class_matches,
       coalesce(cardinality(disciplines), 0) = 0 or cat.discipline = any(disciplines) as discipline_matches
     from federated.competitor c
@@ -31,7 +33,7 @@ language sql stable as $$
   from candidates c
   cross join lateral (values
     ('type', c.competitor_type, c.age_matches and c.class_matches and c.discipline_matches),
-    ('ageGroup', c.age_group, c.type_matches and c.class_matches and c.discipline_matches),
+    ('ageGroup', c.age_group_code, c.type_matches and c.class_matches and c.discipline_matches),
     ('class', c.class, c.type_matches and c.age_matches and c.discipline_matches),
     ('discipline', c.discipline, c.type_matches and c.age_matches and c.class_matches)
   ) option(facet, value, matches)

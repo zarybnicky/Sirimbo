@@ -3084,19 +3084,17 @@
           {
             "name": "ageGroup",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
           {
-            "name": "ageGroupCode",
+            "name": "ageGroupDetails",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "OBJECT",
+              "name": "AgeGroup",
+              "ofType": null
             },
             "args": []
           },
@@ -3114,15 +3112,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "canonicalAgeGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "AgeGroup",
-              "ofType": null
             },
             "args": []
           },
@@ -14333,15 +14322,7 @@
             "args": []
           },
           {
-            "name": "ageGroupCode",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "canonicalAgeGroup",
+            "name": "ageGroupDetails",
             "type": {
               "kind": "OBJECT",
               "name": "AgeGroup",
@@ -15614,7 +15595,7 @@
             "args": []
           },
           {
-            "name": "canonicalAgeGroup",
+            "name": "ageGroupDetails",
             "type": {
               "kind": "OBJECT",
               "name": "AgeGroup",
@@ -16459,15 +16440,7 @@
             "args": []
           },
           {
-            "name": "ageGroupCode",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "canonicalAgeGroup",
+            "name": "ageGroupDetails",
             "type": {
               "kind": "OBJECT",
               "name": "AgeGroup",

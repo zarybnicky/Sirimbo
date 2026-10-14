@@ -260,7 +260,6 @@ from statuses
 where e.federation = 'wdsf' and e.id = statuses.event_id
   and e.status is distinct from statuses.status;
 
---!include functions/federation_competitor_facets.sql
 
 ALTER TABLE federated.competition_official ADD COLUMN IF NOT EXISTS judge_label text;
 
@@ -303,7 +302,7 @@ comment on table federated.couple_age_rule is '@name federation_couple_age_rule
 @behavior -insert -update -delete +list -connection -query:resource:single -query:resource:list -query:resource:connection';
 comment on column federated.couple_age_rule.older_age is '@behavior -filterBy -orderBy';
 comment on column federated.couple_age_rule.younger_age is '@behavior -filterBy -orderBy';
-comment on constraint couple_age_rule_age_group_code_fkey on federated.couple_age_rule is '@fieldName canonicalAgeGroup
+comment on constraint couple_age_rule_age_group_code_fkey on federated.couple_age_rule is '@fieldName ageGroupDetails
 @foreignFieldName coupleRules
 @foreignSimpleFieldName coupleRules
 @backwardBehavior +list -connection';
@@ -419,16 +418,22 @@ create or replace trigger _resolve_age_group
   before insert or update of age_group on federated.competitor
   for each row execute function app_private.tg_resolve_age_group();
 
-comment on column federated.category.age_group_code is '@behavior -insert -update';
-comment on column federated.person.age_group_code is '@behavior -insert -update';
-comment on column federated.competitor.age_group_code is '@behavior -insert -update';
-comment on constraint category_age_group_code_fkey on federated.category is '@fieldName canonicalAgeGroup
+comment on column federated.category.age_group is '@behavior -*';
+comment on column federated.person.age_group is '@behavior -*';
+comment on column federated.competitor.age_group is '@behavior -*';
+comment on column federated.category.age_group_code is '@name ageGroup
+@behavior -insert -update';
+comment on column federated.person.age_group_code is '@name ageGroup
+@behavior -insert -update';
+comment on column federated.competitor.age_group_code is '@name ageGroup
+@behavior -insert -update';
+comment on constraint category_age_group_code_fkey on federated.category is '@fieldName ageGroupDetails
 @foreignFieldName categories
 @foreignSimpleFieldName categories
 @backwardBehavior +list -connection';
-comment on constraint person_age_group_code_fkey on federated.person is '@fieldName canonicalAgeGroup
+comment on constraint person_age_group_code_fkey on federated.person is '@fieldName ageGroupDetails
 @backwardBehavior -single -list -connection';
-comment on constraint competitor_age_group_code_fkey on federated.competitor is '@fieldName canonicalAgeGroup
+comment on constraint competitor_age_group_code_fkey on federated.competitor is '@fieldName ageGroupDetails
 @backwardBehavior -single -list -connection';
 
 update federated.category set age_group_code = federated.resolve_age_group(age_group)
@@ -439,5 +444,6 @@ update federated.competitor set age_group_code = federated.resolve_age_group(age
 where age_group_code is distinct from federated.resolve_age_group(age_group);
 
 --!include policies/crawler.sql
+--!include functions/federation_competitor_facets.sql
 
 COMMENT ON FUNCTION federated.class_rank(text) IS '@behavior -*';

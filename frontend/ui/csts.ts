@@ -6,54 +6,88 @@ import type {
 
 export type AgeConstraint = { maxAge?: number; minAge?: number };
 
+export const ageGroupNames: Record<string, string> = {
+  Under_8: 'Do 8 let',
+  Juvenile: 'Děti',
+  Juvenile_I: 'Děti I',
+  Juvenile_II: 'Děti II',
+  Junior: 'Junioři',
+  Junior_I: 'Junioři I',
+  Junior_II: 'Junioři II',
+  Youth: 'Mládež',
+  Under_21: 'Do 21 let',
+  Adult: 'Dospělí',
+  Senior: 'Senioři',
+  Senior_I: 'Senioři I',
+  Senior_Ia: 'Senioři Ia',
+  Senior_Ib: 'Senioři Ib',
+  Senior_II: 'Senioři II',
+  Senior_IIa: 'Senioři IIa',
+  Senior_IIb: 'Senioři IIb',
+  Senior_III: 'Senioři III',
+  Senior_IIIa: 'Senioři IIIa',
+  Senior_IIIb: 'Senioři IIIb',
+  Senior_IV: 'Senioři IV',
+  Senior_IVa: 'Senioři IVa',
+  Senior_IVb: 'Senioři IVb',
+  Senior_V: 'Senioři V',
+};
+
+type AgeRange = {
+  start: { value: number } | null;
+  end: { value: number } | null;
+};
+
+export function compareAgeRanges(a: AgeRange | null, b: AgeRange | null) {
+  if (!a || !b) return Number(!a) - Number(!b);
+  return (
+    (a.start?.value ?? -Infinity) - (b.start?.value ?? -Infinity) ||
+    (a.end?.value ?? Infinity) - (b.end?.value ?? Infinity) ||
+    0
+  );
+}
+
 export const cstsAgeCategories: {
   id: string;
-  name: string;
   older: AgeConstraint;
   younger: AgeConstraint;
 }[] = [
-  { id: 'Under_8', name: 'Do 8 let', older: { maxAge: 8 }, younger: { maxAge: 8 } },
-  { id: 'Juvenile_I', name: 'Děti I', older: { maxAge: 10 }, younger: { maxAge: 10 } },
+  { id: 'Under_8', older: { maxAge: 8 }, younger: { maxAge: 8 } },
+  { id: 'Juvenile_I', older: { maxAge: 10 }, younger: { maxAge: 10 } },
   {
     id: 'Juvenile_II',
-    name: 'Děti II',
     older: { maxAge: 12, minAge: 10 },
     younger: { maxAge: 12 },
   },
   {
     id: 'Junior_I',
-    name: 'Junioři I',
     older: { maxAge: 14, minAge: 12 },
     younger: { maxAge: 14 },
   },
   {
     id: 'Junior_II',
-    name: 'Junioři II',
     older: { maxAge: 16, minAge: 14 },
     younger: { maxAge: 16 },
   },
   {
     id: 'Youth',
-    name: 'Mládež',
     older: { maxAge: 19, minAge: 16 },
     younger: { maxAge: 19 },
   },
   {
     id: 'Under_21',
-    name: 'Do 21 let',
     older: { maxAge: 21, minAge: 16 },
     younger: { maxAge: 21 },
   },
-  { id: 'Adult', name: 'Dospělí', older: { minAge: 19 }, younger: { maxAge: 35 } },
-  { id: 'Senior_I', name: 'Senioři I', older: { minAge: 35 }, younger: { minAge: 30 } },
-  { id: 'Senior_II', name: 'Senioři II', older: { minAge: 45 }, younger: { minAge: 40 } },
+  { id: 'Adult', older: { minAge: 19 }, younger: { maxAge: 35 } },
+  { id: 'Senior_I', older: { minAge: 35 }, younger: { minAge: 30 } },
+  { id: 'Senior_II', older: { minAge: 45 }, younger: { minAge: 40 } },
   {
     id: 'Senior_III',
-    name: 'Senioři III',
     older: { minAge: 55 },
     younger: { minAge: 50 },
   },
-  { id: 'Senior_IV', name: 'Senioři IV', older: { minAge: 65 }, younger: { minAge: 60 } },
+  { id: 'Senior_IV', older: { minAge: 65 }, younger: { minAge: 60 } },
 ];
 
 export function getCstsAgeCategory(
@@ -85,14 +119,6 @@ export function formatCstsClass(value: string | null | undefined) {
   return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;
 }
 
-const ageGroups = {
-  ADULT: 'Dospělí',
-  YOUTH: 'Mládež',
-  JUVENILE_II: 'Děti 2',
-  JUVENILE_I: 'Děti 1',
-  JUVENILE: 'Děti',
-} as Record<string, string>;
-
 const typePrefix: Partial<Record<CompetitionType, string>> = {
   LEAGUE: 'TL',
   CHAMPIONSHIP: 'MČR',
@@ -115,7 +141,9 @@ export function formatCstsCategoryName(
   return [
     competitionType && typePrefix[competitionType],
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
-    ageGroups[category.ageGroup.toUpperCase()] || category.ageGroup?.replace('_', ' '),
+    (category.ageGroup && ageGroupNames[category.ageGroup]) ??
+      category.ageGroupDetails?.name ??
+      category.ageGroup,
     formatCstsClass(category.class),
     discipline === 'Standard_Latin'
       ? 'STT+LAT'

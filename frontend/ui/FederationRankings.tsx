@@ -1,5 +1,5 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { cstsAgeCategories, formatCstsClass } from '@/ui/csts';
+import { ageGroupNames, compareAgeRanges, formatCstsClass } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 
 const disciplineNames: Record<string, string> = {
@@ -27,8 +27,13 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           date: snapshot.asOfDate,
           kind: snapshot.kind,
           ageGroup: category.ageGroup,
+          ageRange:
+            category.ageGroupDetails?.coupleRules[0]?.olderAge ??
+            category.ageGroupDetails?.age ??
+            null,
           category: [
-            cstsAgeCategories.find((age) => age.id === category.ageGroup)?.name ??
+            (category.ageGroup && ageGroupNames[category.ageGroup]) ??
+              category.ageGroupDetails?.name ??
               category.ageGroup,
             formatCstsClass(category.class),
           ]
@@ -41,8 +46,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
     })
     .toSorted(
       (a, b) =>
-        cstsAgeCategories.findIndex((age) => age.id === a.ageGroup) -
-          cstsAgeCategories.findIndex((age) => age.id === b.ageGroup) ||
+        compareAgeRanges(a.ageRange, b.ageRange) ||
         disciplineOrder.indexOf(a.discipline) - disciplineOrder.indexOf(b.discipline),
     );
 }
@@ -54,7 +58,9 @@ export function FederationRankBadge({
   entries: FederationRankingFragment[];
   ageGroup: string | undefined;
 }) {
-  const rows = ranklistRows(entries).filter((row) => row.ageGroup === ageGroup);
+  const rows = ranklistRows(entries).filter(
+    (row) => ageGroup && row.ageGroup === ageGroup,
+  );
   if (rows.length === 0) return null;
   return (
     <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">

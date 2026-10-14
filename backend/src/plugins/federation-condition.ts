@@ -28,7 +28,7 @@ const plugins: GraphileConfig.Plugin[] = [
       const { ageGroups, classes, disciplines } = value as CategoryProgressCondition;
       const predicates = (
         [
-          ['age_group', ageGroups],
+          ['age_group_code', ageGroups],
           ['class', classes],
           ['discipline', disciplines],
         ] as const
@@ -36,7 +36,11 @@ const plugins: GraphileConfig.Plugin[] = [
         values?.length
           ? [
               sql`cat.${sql.identifier(column)} in (${sql.join(
-                values.map((v) => sqlValueWithCodec(v, TYPES.text)),
+                values.map((v) =>
+                  column === 'age_group_code'
+                    ? sql`federated.resolve_age_group(${sqlValueWithCodec(v, TYPES.text)})`
+                    : sqlValueWithCodec(v, TYPES.text),
+                ),
                 ', ',
               )})`,
             ]

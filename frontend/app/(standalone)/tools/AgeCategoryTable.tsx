@@ -1,4 +1,4 @@
-import { cstsAgeCategories, type AgeConstraint } from '@/ui/csts';
+import { ageGroupNames, compareAgeRanges, type AgeConstraint } from '@/ui/csts';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { executeGraphql } from '@/lib/server/graphql';
 
@@ -34,9 +34,8 @@ export async function AgeCategoryTable() {
     .flatMap((group) =>
       group.coupleRules.map((rule) => ({
         code: group.code,
-        name:
-          cstsAgeCategories.find((category) => category.id === group.code)?.name ??
-          group.name,
+        name: ageGroupNames[group.code] ?? group.name,
+        ageRange: rule.olderAge,
         // PostgreSQL canonicalizes int4range to inclusive start / exclusive end.
         older: { minAge: rule.olderAge.start?.value, maxAge: rule.olderAge.end?.value },
         younger: {
@@ -45,12 +44,7 @@ export async function AgeCategoryTable() {
         },
       })),
     )
-    .toSorted(
-      (a, b) =>
-        (a.older.minAge ?? 0) - (b.older.minAge ?? 0) ||
-        (a.older.maxAge ?? Infinity) - (b.older.maxAge ?? Infinity) ||
-        a.code.localeCompare(b.code),
-    );
+    .toSorted((a, b) => compareAgeRanges(a.ageRange, b.ageRange));
 
   return (
     <table className="grid grid-cols-[auto_min-content_1fr_min-content_1fr] gap-x-4 gap-y-1">
