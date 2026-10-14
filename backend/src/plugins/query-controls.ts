@@ -25,7 +25,7 @@ const rejection = {
 };
 const queryCostRule = costLimitRule({
   ...rejection,
-  maxCost: 50000,
+  maxCost: 150000, // temporary, should be 50_000
   flattenFragments: true,
 });
 
@@ -38,7 +38,7 @@ const queryValidationRules = [
 // charging every scalar in a complete result table for the estimated row count.
 const collectionCostRule = costLimitRule({
   ...rejection,
-  maxCost: 50000,
+  maxCost: 150000, // temporary, should be 50_000
   flattenFragments: true,
   scalarCost: 0,
   objectCost: 1,
