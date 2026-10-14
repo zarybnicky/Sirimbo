@@ -110,7 +110,7 @@
     "eslint-plugin-de-morgan": "^2.2.0",
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-tailwindcss": "~4.4.0",
-    "eslint-plugin-unicorn": "^65.0.1",
+    "eslint-plugin-unicorn": "^76.0.0",
     "node-gyp": "^13.0.2",
     "oxlint-plugin-react-hook-form": "^0.3.3",
     "prettier": "^3.9.9",
