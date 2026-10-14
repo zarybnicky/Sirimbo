@@ -24,7 +24,7 @@ importers:
         version: 7.1.0(graphql@16.14.2)
       '@graphql-codegen/cli':
         specifier: ~7.3.1
-        version: 7.3.1(@parcel/watcher@2.6.0)(@types/node@24.13.6)(graphql@16.14.2)(typescript@6.0.3)
+        version: 7.3.1(@parcel/watcher@2.6.0)(@types/node@26.6.3)(graphql@16.14.2)(typescript@6.0.3)
       '@graphql-codegen/near-operation-file-preset':
         specifier: ~5.2.2
         version: 5.2.2(graphql@16.14.2)
@@ -53,8 +53,8 @@ importers:
         specifier: ~24.0.5
         version: 24.0.5
       '@types/node':
-        specifier: ^24.13.6
-        version: 24.13.6
+        specifier: ^26.6.3
+        version: 26.6.3
       '@urql/exchange-graphcache':
         specifier: ~9.0.1
         version: 9.0.1(@urql/core@6.0.3(graphql@16.14.2))(graphql@16.14.2)
@@ -138,7 +138,7 @@ importers:
         version: 1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)
       grafserv:
         specifier: ^1.0.2
-        version: 1.0.2(@envelop/core@5.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3)
+        version: 1.0.2(@envelop/core@5.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3)
       graphile-build:
         specifier: ^5.1.1
         version: 5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)
@@ -171,7 +171,7 @@ importers:
         version: 5.0.1
       postgraphile:
         specifier: ~5.1.5
-        version: 5.1.5(9b70a8c55645b4b517f75c9ab71d352f)
+        version: 5.1.5(4c1df0eef799299179ec937ce87ec034)
       tamedevil:
         specifier: ~0.1.1
         version: 0.1.1
@@ -207,8 +207,8 @@ importers:
         specifier: ~1.9.10
         version: 1.9.10
       '@types/node':
-        specifier: ^24.13.6
-        version: 24.13.6
+        specifier: ^26.6.3
+        version: 26.6.3
       '@types/pg':
         specifier: ^8.23.1
         version: 8.23.1
@@ -283,10 +283,10 @@ importers:
         version: 1.1.4(@types/react@19.3.0)(react@19.2.8)
       '@sentry/nextjs':
         specifier: ~10.75.3
-        version: 10.75.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
+        version: 10.75.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))
       '@serwist/next':
         specifier: ^9.5.12
-        version: 9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
+        version: 9.5.12(@serwist/cli@9.5.12(@types/node@26.6.3)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))
       '@serwist/window':
         specifier: ^9.5.12
         version: 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
@@ -313,7 +313,7 @@ importers:
         version: 1.1.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       cookies-next:
         specifier: ~6.1.1
-        version: 6.1.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 6.1.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       core-js:
         specifier: ^3.50.0
         version: 3.50.0
@@ -361,13 +361,13 @@ importers:
         version: 1.42.0(react@19.2.8)
       next:
         specifier: ^16.3.6
-        version: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       nextjs-google-analytics:
         specifier: ^2.3.7
-        version: 2.3.7(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 2.3.7(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       nuqs:
         specifier: ^2.10.1
-        version: 2.10.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+        version: 2.10.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       pg:
         specifier: 8.22.0
         version: 8.22.0
@@ -415,7 +415,7 @@ importers:
         version: 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
       sharp:
         specifier: ^0.35.4
-        version: 0.35.4(@types/node@24.13.6)
+        version: 0.35.4(@types/node@26.6.3)
       tailwind-merge:
         specifier: ~3.6.0
         version: 3.6.0
@@ -449,7 +449,7 @@ importers:
         version: 2.4.3(typescript@6.0.3)
       '@serwist/cli':
         specifier: ^9.5.12
-        version: 9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
+        version: 9.5.12(@types/node@26.6.3)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
       '@swc/core':
         specifier: ~1.16.2
         version: 1.16.2(@swc/helpers@0.5.23)
@@ -484,8 +484,8 @@ importers:
         specifier: ^9.0.10
         version: 9.0.10
       '@types/node':
-        specifier: ^24.13.6
-        version: 24.13.6
+        specifier: ^26.6.3
+        version: 26.6.3
       '@types/pg':
         specifier: ^8.23.1
         version: 8.23.1
@@ -552,7 +552,7 @@ importers:
     devDependencies:
       '@graphql-eslint/eslint-plugin':
         specifier: ^4.4.1
-        version: 4.4.1(@types/node@24.13.6)(eslint@10.11.0(jiti@2.7.0))(graphql@16.14.2)(typescript@6.0.3)
+        version: 4.4.1(@types/node@26.6.3)(eslint@10.11.0(jiti@2.7.0))(graphql@16.14.2)(typescript@6.0.3)
       eslint:
         specifier: ^10.11.0
         version: 10.11.0(jiti@2.7.0)
@@ -633,8 +633,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@types/node':
-        specifier: ^24.13.6
-        version: 24.13.6
+        specifier: ^26.6.3
+        version: 26.6.3
       '@types/nodemailer':
         specifier: ~8.0.2
         version: 8.0.2
@@ -4555,11 +4555,11 @@ packages:
   '@types/node@18.19.130':
     resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
 
-  '@types/node@22.20.1':
-    resolution: {integrity: sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==}
+  '@types/node@22.20.4':
+    resolution: {integrity: sha512-zJRE40jpHtKqE/C4fgHrAKQLJuSpzEnP9ff9Y7YtoR3Wd2pwqzlekDeEuUQXjRd+QCYnVnNwuJYmhdk9XV8gvA==}
 
-  '@types/node@24.13.6':
-    resolution: {integrity: sha512-SGrw/h3KPFshy3OE6ZL53LMBG5vGQQ8/gIpiqz/kRZhPJ7HgwCEs8LBuNtWLa8dvGZVpSF7+Bf+c11HUrCb/yg==}
+  '@types/node@26.6.3':
+    resolution: {integrity: sha512-dsqMQQoeTLqu9wynDD00q573mNzso3IdQOAfHRJqLCcmCFPoGo9A1bDpUcv/9tnKpErQWv9uKeGfl37EIS02Yg==}
 
   '@types/nodemailer@8.0.2':
     resolution: {integrity: sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==}
@@ -4940,6 +4940,14 @@ packages:
 
   ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+
+  ajv-formats@3.0.1:
+    resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
     peerDependencies:
       ajv: ^8.0.0
     peerDependenciesMeta:
@@ -6016,6 +6024,10 @@ packages:
     resolution: {integrity: sha512-L1l8TNvomm6UVW5B253AGxQagSQr+vGwhMlrrfRS2qmhx46AMpMVJKQYLvWYbysTMY8VoicOvzHzoHMbyzB+4A==}
     engines: {node: '>=10.13.0'}
 
+  enhanced-resolve@5.26.0:
+    resolution: {integrity: sha512-9vhedylFonb2YGogzUKX6+Ja72gOJbN1QHAqdrvqLwhdl/QWbKopzoUC9EbQNVsAns/bx/4uyqalrQAoy1IByw==}
+    engines: {node: '>=10.13.0'}
+
   entities@2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
 
@@ -6370,8 +6382,8 @@ packages:
   fast-string-width@3.0.2:
     resolution: {integrity: sha512-gX8LrtNEI5hq8DVUfRQMbr5lpaS4nMIWV+7XEbXk2b8kiQIizgnlr12B4dA3ZEx3308ze0O4Q1R+cHts8kyUJg==}
 
-  fast-uri@3.1.7:
-    resolution: {integrity: sha512-dOvZVzjdZdz7phd9v6jCbwxrBW3fK6n8Rc0CtdmM4bumzMnxywBYhuph6J819RRw/ku+rLbelwfMunktuzVVHg==}
+  fast-uri@3.1.8:
+    resolution: {integrity: sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==}
 
   fast-wrap-ansi@0.2.2:
     resolution: {integrity: sha512-7F2Fl+TjRSenLqlU3UjSH0iyqopqoZIu7eZVpEirP2g1GtWa2G/ecEmBdgz31+Mxr+ELclgg6sokpSFIQiZ02Q==}
@@ -8010,8 +8022,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  minimizer-webpack-plugin@5.10.0:
-    resolution: {integrity: sha512-2//60T4S0X1Ug/dqLDOgDaGlZsN1Lv8hf8oB0NOV/KIHSaXlPwXBBIbim79dE2Z7NEs52ES8YHoSv6Lmsk+XNg==}
+  minimizer-webpack-plugin@5.12.0:
+    resolution: {integrity: sha512-PCN1x1OzFeFB2GlP91s46q7Gz8Jf16Z7M45bzpoqrYZlh12QeY6tYVM5h299wbwy1DxnQ69VFmmh8Hb2Ff8mbw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@minify-html/node': '*'
@@ -9388,8 +9400,8 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
-  schema-utils@4.3.3:
-    resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
+  schema-utils@4.5.0:
+    resolution: {integrity: sha512-zJlMCZ0cAR5p/Y4oVpRoqioDMJcGxaXRrQ/4rP4WyR84vc5z/DolXdbvXeDpTwbtocDFr2rhPqHPErDCUtz2kA==}
     engines: {node: '>= 10.13.0'}
 
   selderee@0.12.0:
@@ -9927,8 +9939,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   undici@6.27.0:
     resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
@@ -10109,8 +10121,8 @@ packages:
     engines: {node: '>= 10.13.0'}
     hasBin: true
 
-  webpack-sources@3.5.1:
-    resolution: {integrity: sha512-jyuiGJdtvY434z5bUZrjz67v76/ePNvFZTp9Mdz29IlH4+GPsgyGjiv0fKI+M7BdkU6ADjulUcKAd3tUK3WlEw==}
+  webpack-sources@3.6.0:
+    resolution: {integrity: sha512-EIMmPVvNI0CYXyRPp34F2Qk7W37/BZVZIofS6LAUnrNjCVahS+hO4mxwFJDjQjODTGZDtVzLYoN2+1dYkhk9qA==}
     engines: {node: '>=10.13.0'}
 
   webpack@5.108.4:
@@ -10656,8 +10668,6 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-upload': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.6.2':
     dependencies:
@@ -10789,6 +10799,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-watchdog': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-easy-image@47.6.2':
     dependencies:
@@ -10808,8 +10820,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@47.6.2':
     dependencies:
@@ -10819,8 +10829,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@47.6.2':
     dependencies:
@@ -10830,8 +10838,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@47.6.2':
     dependencies:
@@ -10873,6 +10879,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
@@ -10901,8 +10909,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-font@47.6.2':
     dependencies:
@@ -10958,8 +10964,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.6.2':
     dependencies:
@@ -11103,6 +11107,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-mention@47.6.2':
     dependencies:
@@ -11112,6 +11118,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-minimap@47.6.2':
     dependencies:
@@ -11120,6 +11128,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-page-break@47.6.2':
     dependencies:
@@ -11129,6 +11139,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-paragraph@47.6.2':
     dependencies:
@@ -11183,6 +11195,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-source-editing@47.6.2':
     dependencies:
@@ -11213,6 +11227,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-table@47.6.2':
     dependencies:
@@ -11225,6 +11241,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-theme-lark@47.6.2':
     dependencies:
@@ -11249,6 +11267,8 @@ snapshots:
       color-parse: 2.0.2
       es-toolkit: 1.39.5
       vanilla-colorful: 0.7.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-undo@47.6.2':
     dependencies:
@@ -11267,6 +11287,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-ui': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-watchdog@47.6.2':
     dependencies:
@@ -11275,6 +11297,8 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-widget@47.6.2':
     dependencies:
@@ -11294,6 +11318,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@colordx/core@5.5.0': {}
 
@@ -11309,7 +11335,7 @@ snapshots:
     dependencies:
       '@dataplan/json': 1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))
       '@graphile/lru': 5.0.0
-      '@types/node': 22.20.1
+      '@types/node': 22.20.4
       chalk: 4.1.2
       debug: 4.4.3
       eventemitter3: 5.0.4
@@ -11597,9 +11623,9 @@ snapshots:
 
   '@graphile/simplify-inflection@9.0.0': {}
 
-  '@graphiql/plugin-doc-explorer@0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/react@19.3.0)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
+  '@graphiql/plugin-doc-explorer@0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/react@19.3.0)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
     dependencies:
-      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@headlessui/react': 2.2.10(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       graphql: 16.14.2
       react: 19.2.8
@@ -11611,10 +11637,10 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/plugin-history@0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/node@24.13.6)(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
+  '@graphiql/plugin-history@0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/node@26.6.3)(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
     dependencies:
-      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
-      '@graphiql/toolkit': 0.12.1(@types/node@24.13.6)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
+      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/toolkit': 0.12.1(@types/node@26.6.3)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
       react: 19.2.8
       react-compiler-runtime: 19.1.0-rc.1(react@19.2.8)
       react-dom: 19.2.8(react@19.2.8)
@@ -11627,9 +11653,9 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
+  '@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
     dependencies:
-      '@graphiql/toolkit': 0.12.1(@types/node@24.13.6)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
+      '@graphiql/toolkit': 0.12.1(@types/node@26.6.3)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
       '@radix-ui/react-dialog': 1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@radix-ui/react-dropdown-menu': 2.1.20(patch_hash=879575068f0d3746a5162317bfbbee4ea661c284e4d2b60db0fbd01d130d7b48)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@radix-ui/react-tooltip': 1.2.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -11658,21 +11684,21 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@graphiql/toolkit@0.11.3(@types/node@24.13.6)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)':
+  '@graphiql/toolkit@0.11.3(@types/node@26.6.3)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@24.13.6)
+      meros: 1.3.2(@types/node@26.6.3)
     optionalDependencies:
       graphql-ws: 6.2.1(graphql@16.14.2)(ws@8.21.3)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@graphiql/toolkit@0.12.1(@types/node@24.13.6)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)':
+  '@graphiql/toolkit@0.12.1(@types/node@26.6.3)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)':
     dependencies:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@24.13.6)
+      meros: 1.3.2(@types/node@26.6.3)
     optionalDependencies:
       graphql-ws: 6.2.1(graphql@16.14.2)(ws@8.21.3)
     transitivePeerDependencies:
@@ -11684,7 +11710,7 @@ snapshots:
       graphql: 16.14.2
       tslib: 2.8.1
 
-  '@graphql-codegen/cli@7.3.1(@parcel/watcher@2.6.0)(@types/node@24.13.6)(graphql@16.14.2)(typescript@6.0.3)':
+  '@graphql-codegen/cli@7.3.1(@parcel/watcher@2.6.0)(@types/node@26.6.3)(graphql@16.14.2)(typescript@6.0.3)':
     dependencies:
       '@babel/generator': 7.29.7
       '@babel/template': 7.29.7
@@ -11695,21 +11721,21 @@ snapshots:
       '@graphql-tools/apollo-engine-loader': 8.0.30(graphql@16.14.2)
       '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.2)
       '@graphql-tools/git-loader': 8.0.36(graphql@16.14.2)
-      '@graphql-tools/github-loader': 9.1.2(@types/node@24.13.6)(graphql@16.14.2)
+      '@graphql-tools/github-loader': 9.1.2(@types/node@26.6.3)(graphql@16.14.2)
       '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.2)
       '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.2)
       '@graphql-tools/load': 8.1.10(graphql@16.14.2)
       '@graphql-tools/merge': 9.1.9(graphql@16.14.2)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@24.13.6)(graphql@16.14.2)
+      '@graphql-tools/url-loader': 9.1.2(@types/node@26.6.3)(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.2(graphql@16.14.2)
-      '@inquirer/prompts': 8.5.2(@types/node@24.13.6)
+      '@inquirer/prompts': 8.5.2(@types/node@26.6.3)
       '@whatwg-node/fetch': 0.10.13
       chalk: 5.6.2
       cosmiconfig: 9.0.0(typescript@6.0.3)
       debounce: 3.0.0
       detect-indent: 7.0.2
       graphql: 16.14.2
-      graphql-config: 5.1.6(@types/node@24.13.6)(graphql@16.14.2)(typescript@6.0.3)
+      graphql-config: 5.1.6(@types/node@26.6.3)(graphql@16.14.2)(typescript@6.0.3)
       is-glob: 4.0.3
       jiti: 2.7.0
       json-to-pretty-yaml: 1.2.2
@@ -11877,7 +11903,7 @@ snapshots:
       parse-filepath: 1.0.2
       tslib: 2.8.1
 
-  '@graphql-eslint/eslint-plugin@4.4.1(@types/node@24.13.6)(eslint@10.11.0(jiti@2.7.0))(graphql@16.14.2)(typescript@6.0.3)':
+  '@graphql-eslint/eslint-plugin@4.4.1(@types/node@26.6.3)(eslint@10.11.0(jiti@2.7.0))(graphql@16.14.2)(typescript@6.0.3)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.32(graphql@16.14.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.31(graphql@16.14.2)
@@ -11886,7 +11912,7 @@ snapshots:
       eslint: 10.11.0(jiti@2.7.0)
       fast-glob: 3.3.3
       graphql: 16.14.2
-      graphql-config: 5.1.6(@types/node@24.13.6)(graphql@16.14.2)(typescript@6.0.3)
+      graphql-config: 5.1.6(@types/node@26.6.3)(graphql@16.14.2)(typescript@6.0.3)
       graphql-depth-limit: 1.1.0(graphql@16.14.2)
       lodash.lowercase: 4.3.0
     transitivePeerDependencies:
@@ -11968,7 +11994,7 @@ snapshots:
       - crossws
       - utf-8-validate
 
-  '@graphql-tools/executor-http@3.3.0(@types/node@24.13.6)(graphql@16.14.2)':
+  '@graphql-tools/executor-http@3.3.0(@types/node@26.6.3)(graphql@16.14.2)':
     dependencies:
       '@graphql-hive/signal': 2.0.0
       '@graphql-tools/executor-common': 1.0.6(graphql@16.14.2)
@@ -11978,7 +12004,7 @@ snapshots:
       '@whatwg-node/fetch': 0.10.13
       '@whatwg-node/promise-helpers': 1.3.2
       graphql: 16.14.2
-      meros: 1.3.2(@types/node@24.13.6)
+      meros: 1.3.2(@types/node@26.6.3)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@types/node'
@@ -12017,9 +12043,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@graphql-tools/github-loader@9.1.2(@types/node@24.13.6)(graphql@16.14.2)':
+  '@graphql-tools/github-loader@9.1.2(@types/node@26.6.3)(graphql@16.14.2)':
     dependencies:
-      '@graphql-tools/executor-http': 3.3.0(@types/node@24.13.6)(graphql@16.14.2)
+      '@graphql-tools/executor-http': 3.3.0(@types/node@26.6.3)(graphql@16.14.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.31(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.2(graphql@16.14.2)
       '@whatwg-node/fetch': 0.10.13
@@ -12101,10 +12127,10 @@ snapshots:
       graphql: 16.14.2
       tslib: 2.8.1
 
-  '@graphql-tools/url-loader@9.1.2(@types/node@24.13.6)(graphql@16.14.2)':
+  '@graphql-tools/url-loader@9.1.2(@types/node@26.6.3)(graphql@16.14.2)':
     dependencies:
       '@graphql-tools/executor-graphql-ws': 3.1.5(graphql@16.14.2)
-      '@graphql-tools/executor-http': 3.3.0(@types/node@24.13.6)(graphql@16.14.2)
+      '@graphql-tools/executor-http': 3.3.0(@types/node@26.6.3)(graphql@16.14.2)
       '@graphql-tools/executor-legacy-ws': 1.1.28(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.2(graphql@16.14.2)
       '@graphql-tools/wrap': 11.1.2(graphql@16.14.2)
@@ -12377,122 +12403,122 @@ snapshots:
 
   '@inquirer/ansi@2.0.7': {}
 
-  '@inquirer/checkbox@5.2.1(@types/node@24.13.6)':
+  '@inquirer/checkbox@5.2.1(@types/node@26.6.3)':
     dependencies:
       '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
       '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/confirm@6.1.1(@types/node@24.13.6)':
+  '@inquirer/confirm@6.1.1(@types/node@26.6.3)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/core@11.2.1(@types/node@24.13.6)':
+  '@inquirer/core@11.2.1(@types/node@26.6.3)':
     dependencies:
       '@inquirer/ansi': 2.0.7
       '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
       cli-width: 4.1.0
       fast-wrap-ansi: 0.2.2
       mute-stream: 3.0.0
       signal-exit: 4.1.0
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/editor@5.2.2(@types/node@24.13.6)':
+  '@inquirer/editor@5.2.2(@types/node@26.6.3)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/external-editor': 3.0.3(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/external-editor': 3.0.3(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/expand@5.1.1(@types/node@24.13.6)':
+  '@inquirer/expand@5.1.1(@types/node@26.6.3)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/external-editor@3.0.3(@types/node@24.13.6)':
+  '@inquirer/external-editor@3.0.3(@types/node@26.6.3)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.2
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@inquirer/figures@2.0.7': {}
 
-  '@inquirer/input@5.1.2(@types/node@24.13.6)':
+  '@inquirer/input@5.1.2(@types/node@26.6.3)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/number@4.1.1(@types/node@24.13.6)':
+  '@inquirer/number@4.1.1(@types/node@26.6.3)':
     dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/password@5.1.1(@types/node@24.13.6)':
-    dependencies:
-      '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
-    optionalDependencies:
-      '@types/node': 24.13.6
-
-  '@inquirer/prompts@8.5.2(@types/node@24.13.6)':
-    dependencies:
-      '@inquirer/checkbox': 5.2.1(@types/node@24.13.6)
-      '@inquirer/confirm': 6.1.1(@types/node@24.13.6)
-      '@inquirer/editor': 5.2.2(@types/node@24.13.6)
-      '@inquirer/expand': 5.1.1(@types/node@24.13.6)
-      '@inquirer/input': 5.1.2(@types/node@24.13.6)
-      '@inquirer/number': 4.1.1(@types/node@24.13.6)
-      '@inquirer/password': 5.1.1(@types/node@24.13.6)
-      '@inquirer/rawlist': 5.3.1(@types/node@24.13.6)
-      '@inquirer/search': 4.2.1(@types/node@24.13.6)
-      '@inquirer/select': 5.2.1(@types/node@24.13.6)
-    optionalDependencies:
-      '@types/node': 24.13.6
-
-  '@inquirer/rawlist@5.3.1(@types/node@24.13.6)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
-    optionalDependencies:
-      '@types/node': 24.13.6
-
-  '@inquirer/search@4.2.1(@types/node@24.13.6)':
-    dependencies:
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
-    optionalDependencies:
-      '@types/node': 24.13.6
-
-  '@inquirer/select@5.2.1(@types/node@24.13.6)':
+  '@inquirer/password@5.1.1(@types/node@26.6.3)':
     dependencies:
       '@inquirer/ansi': 2.0.7
-      '@inquirer/core': 11.2.1(@types/node@24.13.6)
-      '@inquirer/figures': 2.0.7
-      '@inquirer/type': 4.0.7(@types/node@24.13.6)
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
-  '@inquirer/type@4.0.7(@types/node@24.13.6)':
+  '@inquirer/prompts@8.5.2(@types/node@26.6.3)':
+    dependencies:
+      '@inquirer/checkbox': 5.2.1(@types/node@26.6.3)
+      '@inquirer/confirm': 6.1.1(@types/node@26.6.3)
+      '@inquirer/editor': 5.2.2(@types/node@26.6.3)
+      '@inquirer/expand': 5.1.1(@types/node@26.6.3)
+      '@inquirer/input': 5.1.2(@types/node@26.6.3)
+      '@inquirer/number': 4.1.1(@types/node@26.6.3)
+      '@inquirer/password': 5.1.1(@types/node@26.6.3)
+      '@inquirer/rawlist': 5.3.1(@types/node@26.6.3)
+      '@inquirer/search': 4.2.1(@types/node@26.6.3)
+      '@inquirer/select': 5.2.1(@types/node@26.6.3)
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
+
+  '@inquirer/rawlist@5.3.1(@types/node@26.6.3)':
+    dependencies:
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
+    optionalDependencies:
+      '@types/node': 26.6.3
+
+  '@inquirer/search@4.2.1(@types/node@26.6.3)':
+    dependencies:
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/figures': 2.0.7
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
+    optionalDependencies:
+      '@types/node': 26.6.3
+
+  '@inquirer/select@5.2.1(@types/node@26.6.3)':
+    dependencies:
+      '@inquirer/ansi': 2.0.7
+      '@inquirer/core': 11.2.1(@types/node@26.6.3)
+      '@inquirer/figures': 2.0.7
+      '@inquirer/type': 4.0.7(@types/node@26.6.3)
+    optionalDependencies:
+      '@types/node': 26.6.3
+
+  '@inquirer/type@4.0.7(@types/node@26.6.3)':
+    optionalDependencies:
+      '@types/node': 26.6.3
 
   '@internationalized/date@3.12.4':
     dependencies:
@@ -14284,7 +14310,7 @@ snapshots:
     dependencies:
       '@sentry/core': 10.75.3
 
-  '@sentry/nextjs@10.75.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
+  '@sentry/nextjs@10.75.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/exporter-trace-otlp-http@0.218.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))':
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@rollup/plugin-commonjs': 28.0.1(rollup@4.62.2)
@@ -14297,8 +14323,8 @@ snapshots:
       '@sentry/react': 10.75.3(react@19.2.8)
       '@sentry/server-utils': 10.75.3
       '@sentry/vercel-edge': 10.75.3
-      '@sentry/webpack-plugin': 5.3.0(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
-      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@sentry/webpack-plugin': 5.3.0(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))
+      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       rollup: 4.62.2
       stacktrace-parser: 0.1.11
     transitivePeerDependencies:
@@ -14382,10 +14408,10 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@sentry/core': 10.75.3
 
-  '@sentry/webpack-plugin@5.3.0(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
+  '@sentry/webpack-plugin@5.3.0(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))':
     dependencies:
       '@sentry/bundler-plugin-core': 5.3.0
-      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))
+      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -14418,9 +14444,9 @@ snapshots:
     transitivePeerDependencies:
       - browserslist
 
-  '@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)':
+  '@serwist/cli@9.5.12(@types/node@26.6.3)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)':
     dependencies:
-      '@inquirer/prompts': 8.5.2(@types/node@24.13.6)
+      '@inquirer/prompts': 8.5.2(@types/node@26.6.3)
       '@serwist/build': 9.5.12(browserslist@4.28.7)(typescript@6.0.3)
       '@serwist/utils': 9.5.12(browserslist@4.28.7)
       chalk: 5.6.2
@@ -14439,22 +14465,22 @@ snapshots:
       - browserslist
       - typescript
 
-  '@serwist/next@9.5.12(@serwist/cli@9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
+  '@serwist/next@9.5.12(@serwist/cli@9.5.12(@types/node@26.6.3)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3))(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))':
     dependencies:
       '@serwist/build': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       '@serwist/utils': 9.5.12(browserslist@4.28.6)
-      '@serwist/webpack-plugin': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
+      '@serwist/webpack-plugin': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))
       '@serwist/window': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       browserslist: 4.28.6
       glob: 13.0.6
       kolorist: 1.8.0
-      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
       semver: 7.8.5
       serwist: 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       zod: 4.4.3
     optionalDependencies:
-      '@serwist/cli': 9.5.12(@types/node@24.13.6)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
+      '@serwist/cli': 9.5.12(@types/node@26.6.3)(browserslist@4.28.7)(esbuild@0.28.2)(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
       - webpack
@@ -14467,7 +14493,7 @@ snapshots:
     optionalDependencies:
       browserslist: 4.28.7
 
-  '@serwist/webpack-plugin@9.5.12(browserslist@4.28.6)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))':
+  '@serwist/webpack-plugin@9.5.12(browserslist@4.28.6)(typescript@6.0.3)(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))':
     dependencies:
       '@serwist/build': 9.5.12(browserslist@4.28.6)(typescript@6.0.3)
       '@serwist/utils': 9.5.12(browserslist@4.28.6)
@@ -14475,7 +14501,7 @@ snapshots:
       zod: 4.4.3
     optionalDependencies:
       typescript: 6.0.3
-      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))
+      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))
     transitivePeerDependencies:
       - browserslist
 
@@ -14723,11 +14749,11 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/color-convert@2.0.4':
     dependencies:
@@ -14738,11 +14764,11 @@ snapshots:
   '@types/compression@1.8.1':
     dependencies:
       '@types/express': 5.0.6
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -14750,7 +14776,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/d3-array@3.2.2': {}
 
@@ -14895,7 +14921,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.2':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       '@types/qs': 6.15.1
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -14924,7 +14950,7 @@ snapshots:
 
   '@types/interpret@1.1.3':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/json-schema@7.0.15': {}
 
@@ -14937,7 +14963,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -14945,7 +14971,7 @@ snapshots:
 
   '@types/memcached@2.2.10':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/mjml-core@4.15.2': {}
 
@@ -14955,13 +14981,13 @@ snapshots:
 
   '@types/morgan@1.9.10':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/ms@2.1.0': {}
 
   '@types/mysql@2.15.27':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/node@14.18.63': {}
 
@@ -14969,25 +14995,25 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@22.20.1':
+  '@types/node@22.20.4':
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.13.6':
+  '@types/node@26.6.3':
     dependencies:
-      undici-types: 7.18.2
+      undici-types: 8.9.0
 
   '@types/nodemailer@8.0.2':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/oracledb@6.5.2':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/pg-cursor@2.7.2':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       '@types/pg': 8.23.1
 
   '@types/pg-pool@2.0.7':
@@ -14996,13 +15022,13 @@ snapshots:
 
   '@types/pg@8.15.6':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       pg-protocol: 1.15.0
       pg-types: 2.2.0
 
   '@types/pg@8.23.1':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       pg-protocol: 1.15.0
       pg-types: 2.2.0
 
@@ -15026,16 +15052,16 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@types/triple-beam@1.3.5': {}
 
@@ -15045,7 +15071,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   '@typescript-eslint/eslint-plugin@8.70.1(@typescript-eslint/parser@8.70.1(eslint@10.11.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.11.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
@@ -15375,6 +15401,11 @@ snapshots:
   ajv-formats@2.1.1(ajv@8.20.0):
     optionalDependencies:
       ajv: 8.20.0
+    optional: true
+
+  ajv-formats@3.0.1(ajv@8.20.0):
+    optionalDependencies:
+      ajv: 8.20.0
 
   ajv-keywords@5.1.0(ajv@8.20.0):
     dependencies:
@@ -15391,7 +15422,7 @@ snapshots:
   ajv@8.20.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.7
+      fast-uri: 3.1.8
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -16105,10 +16136,10 @@ snapshots:
 
   cookie@1.1.1: {}
 
-  cookies-next@6.1.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
+  cookies-next@6.1.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
     dependencies:
       cookie: 1.1.1
-      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
 
   core-js-compat@3.49.0:
@@ -16634,6 +16665,11 @@ snapshots:
       once: 1.4.0
 
   enhanced-resolve@5.24.5:
+    dependencies:
+      graceful-fs: 4.2.11
+      tapable: 2.3.3
+
+  enhanced-resolve@5.26.0:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.3.3
@@ -17200,7 +17236,7 @@ snapshots:
     dependencies:
       fast-string-truncated-width: 3.0.3
 
-  fast-uri@3.1.7: {}
+  fast-uri@3.1.8: {}
 
   fast-wrap-ansi@0.2.2:
     dependencies:
@@ -17482,7 +17518,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  grafserv@1.0.2(@envelop/core@5.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3):
+  grafserv@1.0.2(@envelop/core@5.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3):
     dependencies:
       '@graphile/lru': 5.0.0
       debug: 4.4.3
@@ -17491,7 +17527,7 @@ snapshots:
       graphile-config: 1.1.1
       graphql: 16.14.2
       graphql-ws: 6.2.1(graphql@16.14.2)(ws@8.21.3)
-      ruru: 2.0.2(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(debug@4.4.3)(graphile-config@1.1.1)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      ruru: 2.0.2(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(debug@4.4.3)(graphile-config@1.1.1)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       tslib: 2.8.1
     optionalDependencies:
       '@envelop/core': 5.4.0
@@ -17511,7 +17547,7 @@ snapshots:
   graphile-build-pg@5.1.4(@dataplan/pg@1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-build@5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)(tamedevil@0.1.1):
     dependencies:
       '@dataplan/pg': 1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)
-      '@types/node': 22.20.1
+      '@types/node': 22.20.4
       debug: 4.4.3
       grafast: 1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)
       graphile-build: 5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)
@@ -17529,7 +17565,7 @@ snapshots:
 
   graphile-build@5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2):
     dependencies:
-      '@types/node': 22.20.1
+      '@types/node': 22.20.4
       '@types/pluralize': 0.0.33
       '@types/semver': 7.7.1
       chalk: 4.1.2
@@ -17549,7 +17585,7 @@ snapshots:
   graphile-config@0.0.1-beta.18:
     dependencies:
       '@types/interpret': 1.1.3
-      '@types/node': 22.20.1
+      '@types/node': 22.20.4
       '@types/semver': 7.7.1
       chalk: 4.1.2
       debug: 4.4.3
@@ -17620,11 +17656,11 @@ snapshots:
       - supports-color
       - typescript
 
-  graphiql@5.4.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
+  graphiql@5.4.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
     dependencies:
-      '@graphiql/plugin-doc-explorer': 0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/react@19.3.0)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
-      '@graphiql/plugin-history': 0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/node@24.13.6)(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
-      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/plugin-doc-explorer': 0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/react@19.3.0)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/plugin-history': 0.4.4(@graphiql/react@0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)))(@types/node@26.6.3)(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/react': 0.39.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       graphql: 16.14.2
       react: 19.2.8
       react-compiler-runtime: 19.1.0-rc.1(react@19.2.8)
@@ -17638,13 +17674,13 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  graphql-config@5.1.6(@types/node@24.13.6)(graphql@16.14.2)(typescript@6.0.3):
+  graphql-config@5.1.6(@types/node@26.6.3)(graphql@16.14.2)(typescript@6.0.3):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.1.14(graphql@16.14.2)
       '@graphql-tools/json-file-loader': 8.0.28(graphql@16.14.2)
       '@graphql-tools/load': 8.1.10(graphql@16.14.2)
       '@graphql-tools/merge': 9.1.9(graphql@16.14.2)
-      '@graphql-tools/url-loader': 9.1.2(@types/node@24.13.6)(graphql@16.14.2)
+      '@graphql-tools/url-loader': 9.1.2(@types/node@26.6.3)(graphql@16.14.2)
       '@graphql-tools/utils': 11.2.2(graphql@16.14.2)
       cosmiconfig: 8.3.6(typescript@6.0.3)
       graphql: 16.14.2
@@ -18316,7 +18352,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -18812,9 +18848,9 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  meros@1.3.2(@types/node@24.13.6):
+  meros@1.3.2(@types/node@26.6.3):
     optionalDependencies:
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   methods@1.1.2: {}
 
@@ -19056,18 +19092,18 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  minimizer-webpack-plugin@5.10.0(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))):
+  minimizer-webpack-plugin@5.12.0(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
-      schema-utils: 4.3.3
+      schema-utils: 4.5.0
       terser: 5.51.2
-      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))
+      webpack: 5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))
     optionalDependencies:
       '@swc/core': 1.16.2(@swc/helpers@0.5.23)
       esbuild: 0.28.2
       postcss: 8.5.26
-      sharp: 0.35.4(@types/node@24.13.6)
+      sharp: 0.35.4(@types/node@26.6.3)
 
   minipass@7.1.3: {}
 
@@ -19604,7 +19640,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 16.3.6
       '@swc/helpers': 0.5.23
@@ -19625,15 +19661,15 @@ snapshots:
       '@next/swc-win32-x64-msvc': 16.3.6
       '@opentelemetry/api': 1.9.1
       '@playwright/test': 1.62.0
-      sharp: 0.35.4(@types/node@24.13.6)
+      sharp: 0.35.4(@types/node@26.6.3)
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/node'
       - babel-plugin-macros
 
-  nextjs-google-analytics@2.3.7(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
+  nextjs-google-analytics@2.3.7(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
     dependencies:
-      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
     optionalDependencies:
       fsevents: 2.3.3
@@ -19704,12 +19740,12 @@ snapshots:
     optionalDependencies:
       chokidar: 4.0.3
 
-  nuqs@2.10.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
+  nuqs@2.10.1(next@16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8):
     dependencies:
       '@standard-schema/spec': 1.1.0
       react: 19.2.8
     optionalDependencies:
-      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@24.13.6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.6(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.6.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   object-assign@4.1.1: {}
 
@@ -20223,16 +20259,16 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgraphile@5.1.5(9b70a8c55645b4b517f75c9ab71d352f):
+  postgraphile@5.1.5(4c1df0eef799299179ec937ce87ec034):
     dependencies:
       '@dataplan/json': 1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))
       '@dataplan/pg': 1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)
       '@graphile/lru': 5.0.0
-      '@types/node': 22.20.1
+      '@types/node': 22.20.4
       '@types/pg': 8.23.1
       debug: 4.4.3
       grafast: 1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)
-      grafserv: 1.0.2(@envelop/core@5.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3)
+      grafserv: 1.0.2(@envelop/core@5.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))(ws@8.21.3)
       graphile-build: 5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)
       graphile-build-pg: 5.1.4(@dataplan/pg@1.1.2(@dataplan/json@1.0.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2)))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0))(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-build@5.1.1(grafast@1.1.3(@envelop/core@5.4.0)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2))(graphile-config@1.1.1)(graphql@16.14.2)(pg-sql2@5.0.1)(pg@8.22.0)(tamedevil@0.1.1)
       graphile-config: 1.1.1
@@ -20320,7 +20356,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
       long: 5.3.2
 
   proxy-addr@2.0.7:
@@ -20725,10 +20761,10 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  ruru-types@2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
+  ruru-types@2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
     dependencies:
-      '@graphiql/toolkit': 0.11.3(@types/node@24.13.6)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
-      graphiql: 5.4.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      '@graphiql/toolkit': 0.11.3(@types/node@26.6.3)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)
+      graphiql: 5.4.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       graphql: 16.14.2
     optionalDependencies:
       react: 19.2.8
@@ -20742,13 +20778,13 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  ruru@2.0.2(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(debug@4.4.3)(graphile-config@1.1.1)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
+  ruru@2.0.2(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(debug@4.4.3)(graphile-config@1.1.1)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8)):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       graphile-config: 1.1.1
       graphql: 16.14.2
       http-proxy: 1.18.1(debug@4.4.3)
-      ruru-types: 2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@24.13.6)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+      ruru-types: 2.0.0(@emotion/is-prop-valid@1.4.0)(@types/node@26.6.3)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3))(graphql@16.14.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       tslib: 2.8.1
       yargs: 17.7.3
     optionalDependencies:
@@ -20804,11 +20840,11 @@ snapshots:
 
   scheduler@0.27.0: {}
 
-  schema-utils@4.3.3:
+  schema-utils@4.5.0:
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.20.0
-      ajv-formats: 2.1.1(ajv@8.20.0)
+      ajv-formats: 3.0.1(ajv@8.20.0)
       ajv-keywords: 5.1.0(ajv@8.20.0)
 
   selderee@0.12.0:
@@ -20903,7 +20939,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  sharp@0.35.4(@types/node@24.13.6):
+  sharp@0.35.4(@types/node@26.6.3):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -20934,7 +20970,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.4
       '@img/sharp-win32-ia32': 0.35.4
       '@img/sharp-win32-x64': 0.35.4
-      '@types/node': 24.13.6
+      '@types/node': 26.6.3
 
   shebang-command@2.0.0:
     dependencies:
@@ -21423,7 +21459,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.18.2: {}
+  undici-types@8.9.0: {}
 
   undici@6.27.0: {}
 
@@ -21659,9 +21695,9 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  webpack-sources@3.5.1: {}
+  webpack-sources@3.6.0: {}
 
-  webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)):
+  webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)):
     dependencies:
       '@types/estree': 1.0.9
       '@types/json-schema': 7.0.15
@@ -21672,19 +21708,19 @@ snapshots:
       acorn-import-phases: 1.0.4(acorn@8.18.0)
       browserslist: 4.28.7
       chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.24.5
+      enhanced-resolve: 5.26.0
       es-module-lexer: 2.3.2
       eslint-scope: 5.1.1
       events: 3.3.0
       graceful-fs: 4.2.11
       loader-runner: 4.3.2
       mime-db: 1.54.0
-      minimizer-webpack-plugin: 5.10.0(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6))(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@24.13.6)))
+      minimizer-webpack-plugin: 5.12.0(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3))(webpack@5.108.4(@swc/core@1.16.2(@swc/helpers@0.5.23))(esbuild@0.28.2)(postcss@8.5.26)(sharp@0.35.4(@types/node@26.6.3)))
       neo-async: 2.6.2
-      schema-utils: 4.3.3
+      schema-utils: 4.5.0
       tapable: 2.3.3
       watchpack: 2.5.2
-      webpack-sources: 3.5.1
+      webpack-sources: 3.6.0
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@napi-rs/image'
