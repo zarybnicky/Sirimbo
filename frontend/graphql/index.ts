@@ -8880,6 +8880,7 @@ export type Person = {
   accountsList: Array<Account>;
   activeCouplesList: Maybe<Array<Couple>>;
   address: Maybe<AddressDomain>;
+  ageGroup: Maybe<Scalars['String']['output']>;
   allCouplesList: Maybe<Array<Couple>>;
   bio: Scalars['String']['output'];
   birthDate: Maybe<Scalars['Date']['output']>;
@@ -15974,6 +15975,7 @@ export type GraphCacheResolvers = {
     accountsList?: GraphCacheResolver<WithTypename<Person>, PersonAccountsListArgs, Array<WithTypename<Account> | string>>,
     activeCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonActiveCouplesListArgs, Array<WithTypename<Couple> | string>>,
     address?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<AddressDomain> | string>,
+    ageGroup?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     allCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonAllCouplesListArgs, Array<WithTypename<Couple> | string>>,
     bio?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date']['output'] | string>,
@@ -18641,6 +18643,7 @@ export type GraphCacheUpdaters = {
     accountsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccountsListArgs>,
     activeCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonActiveCouplesListArgs>,
     address?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     allCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAllCouplesListArgs>,
     bio?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

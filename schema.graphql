@@ -11108,6 +11108,7 @@ type Person {
     offset: Int
   ): [Couple!]
   address: AddressDomain
+  ageGroup: String
   allCouplesList(
     """Only read the first `n` values of the set."""
     first: Int
