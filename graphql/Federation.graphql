@@ -453,6 +453,19 @@ query FederationCompetitorFacets(
   $disciplines: [String!]
   $competedSince: Date
 ) {
+  ageGroupsList {
+    code
+    age {
+      start { value }
+      end { value }
+    }
+    coupleRules(condition: { division: "General" }) {
+      olderAge {
+        start { value }
+        end { value }
+      }
+    }
+  }
   federation(code: $federation) {
     code
     competitorFacetsList(

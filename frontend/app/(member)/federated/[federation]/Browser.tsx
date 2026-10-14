@@ -22,7 +22,7 @@ import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { buttonCls } from '@/ui/style';
-import { compareAgeRanges, formatCstsClass } from '@/ui/csts';
+import { compareAgeRanges, formatAgeGroup, formatCstsClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
@@ -265,7 +265,7 @@ function People(props: BrowserProps) {
                     row.id}
                 </Link>
               </th>
-              <td>{row.ageGroup || '-'}</td>
+              <td>{formatAgeGroup(row.ageGroup) || '-'}</td>
             </tr>
           ))}
         </Table>
@@ -292,6 +292,12 @@ function Competitors(props: BrowserProps) {
     requestPolicy: 'cache-first',
   });
   const facetOptions = facetResult.data?.federation?.competitorFacetsList ?? [];
+  const ageRanges = new Map(
+    (facetResult.data?.ageGroupsList ?? []).map((group) => [
+      group.code,
+      group.coupleRules[0]?.olderAge ?? group.age,
+    ]),
+  );
   const result = usePaginatedQuery({
     query: FederationCompetitorsDocument,
     pause: searchPending,
@@ -349,7 +355,10 @@ function Competitors(props: BrowserProps) {
                 ]),
             );
             const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
-              (a, b) => a.localeCompare(b, 'en', { numeric: true }),
+              (a, b) =>
+                key === 'ageGroup'
+                  ? compareAgeRanges(ageRanges.get(a) ?? null, ageRanges.get(b) ?? null)
+                  : a.localeCompare(b, 'en', { numeric: true }),
             );
             return (
               <FacetFilter
@@ -361,9 +370,11 @@ function Competitors(props: BrowserProps) {
                   label:
                     key === 'type'
                       ? value.toLowerCase()
-                      : key === 'class' && federation === 'csts'
-                        ? (formatCstsClass(value) ?? value)
-                        : value,
+                      : key === 'ageGroup'
+                        ? (formatAgeGroup(value) ?? value)
+                        : key === 'class' && federation === 'csts'
+                          ? (formatCstsClass(value) ?? value)
+                          : value,
                   count: counts.get(value) ?? 0,
                 }))}
                 onChange={(value) =>
@@ -497,7 +508,7 @@ function Competitors(props: BrowserProps) {
                         </>
                       )}
                       <td className="px-2 py-1 whitespace-nowrap align-top">
-                        {ageGroup || '–'}
+                        {formatAgeGroup(ageGroup) || '–'}
                       </td>
                       {disciplines.map((discipline) => {
                         const entries = (progressByAge[ageGroup] ?? []).filter(

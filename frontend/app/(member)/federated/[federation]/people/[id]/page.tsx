@@ -9,6 +9,7 @@ import { PageHeader } from '@/ui/TitleBar';
 import { Competitors } from './Competitors';
 import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
+import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
@@ -92,7 +93,7 @@ export default async function FederatedPersonPage({ params }: Props) {
         <dt>nationality</dt>
         <dd>{person.nationality || '-'}</dd>
         <dt>age group</dt>
-        <dd>{person.ageGroup || '-'}</dd>
+        <dd>{formatAgeGroup(person.ageGroup) || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Licences</h2>
       <Table

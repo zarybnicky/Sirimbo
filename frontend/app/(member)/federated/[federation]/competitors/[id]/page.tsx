@@ -7,6 +7,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Members, History } from './Tables';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
+import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
@@ -62,7 +63,7 @@ export default async function CompetitorPage({ params }: Props) {
         <dt>type</dt>
         <dd>{competitor.competitorType.toLowerCase()}</dd>
         <dt>age group</dt>
-        <dd>{competitor.ageGroup || '-'}</dd>
+        <dd>{formatAgeGroup(competitor.ageGroup) || '-'}</dd>
       </dl>
       <h2 className="mt-4 mb-2 text-lg font-bold">Category progress</h2>
       <Table columns={['category', 'points']} empty="No category progress">
