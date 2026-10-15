@@ -3,7 +3,7 @@ import {
   type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
   type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
 } from '@/graphql/ActivityTimeline';
-import { formatCstsCategoryName } from '@/ui/csts';
+import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -136,14 +136,14 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
       </h5>
       {group.entries
         .toSorted((a, b) =>
-          (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
+          formatCategoryName(a.federation, a.category, a.competitionType).localeCompare(
+            formatCategoryName(b.federation, b.category, b.competitionType),
+          ),
         )
         .map((entry) => {
           const result = entry.__typename === 'ActivityCompetitionResult' ? entry : null;
           const category =
-            (entry.federation === 'csts'
-              ? formatCstsCategoryName(entry.category, entry.competitionType)
-              : entry.category?.name) ||
+            formatCategoryName(entry.federation, entry.category, entry.competitionType) ||
             entry.competitionExternalId ||
             entry.competitionId;
           return (

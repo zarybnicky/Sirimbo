@@ -1,3 +1,4 @@
+import { formatCategoryName } from '@/ui/csts';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { federation, eventId, competitionId } = await params;
   const { competition } = await getCompetition(federation, eventId, competitionId);
   return {
-    title: `${competition.category?.name ?? competitionId} · ${formatDateOnly(competition.startDate)}`,
+    title: `${formatCategoryName(federation, competition.category, competition.competitionType) || competitionId} · ${formatDateOnly(competition.startDate)}`,
     robots: { index: false, follow: false },
   };
 }
@@ -45,10 +46,13 @@ export default async function CompetitionPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId, competitionId } = await params;
   const { event, competition } = await getCompetition(federation, eventId, competitionId);
+  const title =
+    formatCategoryName(federation, competition.category, competition.competitionType) ||
+    competition.externalId;
   return (
     <Layout requireUser>
       <PageHeader
-        title={competition.category?.name ?? competition.externalId}
+        title={title}
         subtitle={
           <span className="flex gap-2">
             <span className="shrink-0">{formatDateOnly(competition.startDate)} ·</span>
@@ -68,7 +72,7 @@ export default async function CompetitionPage({ params }: Props) {
             href: `/federated/${federation}/${eventId}`,
             truncate: true,
           },
-          { label: competition.category?.name ?? competition.externalId },
+          { label: title },
         ]}
       />
       <RoundNav

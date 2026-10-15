@@ -1,5 +1,7 @@
 'use client';
 
+import { formatCategoryName } from '@/ui/csts';
+
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
@@ -108,6 +110,9 @@ export function History({ federation, id }: { federation: string; id: string }) 
         empty="No registrations or results"
       >
         {history.nodes.map((row) => {
+          const categoryName =
+            formatCategoryName(federation, row.category, row.competitionType) ||
+            row.externalId;
           const entry = row.entries.nodes[0];
           const result = row.results.nodes[0];
           const status = formatResultStatus(result?.completionStatus);
@@ -135,10 +140,10 @@ export function History({ federation, id }: { federation: string; id: string }) 
                     href={`${base}/${row.event.externalId}/${row.externalId}`}
                     prefetch={false}
                   >
-                    {row.category?.name || row.externalId}
+                    {categoryName}
                   </Link>
                 ) : (
-                  row.category?.name || row.externalId
+                  categoryName
                 )}
                 {status && <div className="text-xs text-neutral-11">{status}</div>}
               </th>

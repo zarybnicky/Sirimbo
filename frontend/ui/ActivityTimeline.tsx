@@ -1,15 +1,15 @@
 import {
   ActivityTimelineDocument,
-  type ActivityTimelineItemFragment,
-  type ActivityTimelineItem_ActivityEventAttendance_Fragment,
   type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
   type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+  type ActivityTimelineItem_ActivityEventAttendance_Fragment,
   type ActivityTimelineItem_ActivityJudging_Fragment,
+  type ActivityTimelineItemFragment,
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
 import { CompetitionEventContent, CompetitionLink } from '@/ui/Competitions';
-import { formatCstsCategoryName } from '@/ui/csts';
+import { formatCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
 import { capitalize, longDayFormatter } from '@/ui/format';
@@ -337,8 +337,10 @@ function TimelineDay({
                 </div>
                 <div className="mt-2 flex flex-col items-start gap-1">
                   {items
-                    .filter(x => x.competitionId)
-                    .toSorted((a, b) => (a.competitionId ?? '').localeCompare(b.competitionId ?? ''))
+                    .filter((x) => x.competitionId)
+                    .toSorted((a, b) =>
+                      (a.competitionId ?? '').localeCompare(b.competitionId ?? ''),
+                    )
                     .map((item) => (
                       <CompetitionLink
                         key={item.id}
@@ -346,9 +348,13 @@ function TimelineDay({
                         entry={item}
                         competitionId={item.competitionExternalId}
                       >
-                        {(item.federation === 'csts'
-                          ? formatCstsCategoryName(item.category, item.competitionType)
-                          : item.category?.name) || item.competitionExternalId}
+                        {formatCategoryName(
+                          item.federation,
+                          item.category,
+                          item.competitionType,
+                        ) ||
+                          item.competitionExternalId ||
+                          item.competitionId}
                       </CompetitionLink>
                     ))}
                 </div>
@@ -358,14 +364,17 @@ function TimelineDay({
         )}
 
         {eventRows.length > 0 && (
-          <div className={cardCls({ className: 'rounded-lg border-neutral-6 border p-0' })}>
+          <div
+            className={cardCls({ className: 'rounded-lg border-neutral-6 border p-0' })}
+          >
             {eventRows.map((items) => (
               <EventButton
                 key={items[0].id}
                 instance={items[0].eventInstance!}
                 viewer="auto"
                 suffix={
-                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') || isCohort) && (
+                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') ||
+                    isCohort) && (
                     <AttendanceSummary
                       compact={isCohort && items[0].eventInstance?.type !== 'LESSON'}
                       items={items}

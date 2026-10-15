@@ -7,7 +7,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Members, History } from './Tables';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
-import { formatAgeGroup } from '@/ui/csts';
+import { formatAgeGroup, formatCategoryName } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
@@ -69,13 +69,15 @@ export default async function CompetitorPage({ params }: Props) {
       <Table columns={['category', 'points']} empty="No category progress">
         {competitor.categoryProgressesList
           .toSorted((a, b) =>
-            (a.category?.name ?? a.categoryId).localeCompare(
-              b.category?.name ?? b.categoryId,
+            (formatCategoryName(federation, a.category) || a.categoryId).localeCompare(
+              formatCategoryName(federation, b.category) || b.categoryId,
             ),
           )
           .map((progress) => (
             <tr key={progress.categoryId} className="border-t border-neutral-4">
-              <th scope="row">{progress.category?.name || progress.categoryId}</th>
+              <th scope="row">
+                {formatCategoryName(federation, progress.category) || progress.categoryId}
+              </th>
               <td>
                 {Number(progress.points)}F
                 {progress.domesticFinals + progress.foreignFinals}

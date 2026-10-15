@@ -1,3 +1,4 @@
+import { formatCategoryName } from '@/ui/csts';
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
 import { EventRangeDocument, type EventRangeQuery, type EventRangeQueryVariables } from '@/graphql/Event';
@@ -202,7 +203,9 @@ export function useCalendarData(
         (a, b) =>
           a.__typename.localeCompare(b.__typename) ||
           (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
-          (a.category?.name ?? '').localeCompare(b.category?.name ?? ''),
+          formatCategoryName(a.federation, a.category, a.competitionType).localeCompare(
+            formatCategoryName(b.federation, b.category, b.competitionType),
+          ),
       );
     }
 

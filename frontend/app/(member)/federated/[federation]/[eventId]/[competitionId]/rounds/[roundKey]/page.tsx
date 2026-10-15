@@ -1,3 +1,4 @@
+import { formatCategoryName } from '@/ui/csts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -34,7 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: [
-      competition.category?.name ?? competitionId,
+      formatCategoryName(federation, competition.category, competition.competitionType) ||
+        competitionId,
       round.roundLabel || round.roundKey,
       formatDateOnly(competition.startDate),
     ].join(' · '),
@@ -57,10 +59,13 @@ export default async function RoundPage({ params }: Props) {
     competition.resultsList.map((r) => [r.competitorId, r.startNumber]),
   );
 
+  const title =
+    formatCategoryName(federation, competition.category, competition.competitionType) ||
+    competitionId;
   return (
     <Layout requireUser>
       <PageHeader
-        title={competition.category?.name ?? competitionId}
+        title={title}
         subtitle={
           <span className="flex gap-2">
             <span className="shrink-0">{formatDateOnly(competition.startDate)} ·</span>
@@ -80,7 +85,7 @@ export default async function RoundPage({ params }: Props) {
             href: `/federated/${federation}/${eventId}`,
             truncate: true,
           },
-          { label: competition.category?.name ?? competitionId, href },
+          { label: title, href },
           { label: round.roundLabel || round.roundKey },
         ]}
       />

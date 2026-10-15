@@ -74,7 +74,7 @@ export function getCoupleAgeGroups(
 const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
 
-export function formatCstsClass(value: string | null | undefined) {
+export function formatClass(value: string | null | undefined) {
   return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;
 }
 
@@ -90,31 +90,43 @@ const typeSuffix: Partial<Record<CompetitionType, string>> = {
   TOP_LEVEL: 'TopLevel',
 };
 
-export function formatCstsCategoryName(
+export function formatCategoryName(
+  federation: string | null | undefined,
   category: CompetitionCategoryFragment | null | undefined,
-  competitionType: CompetitionType | null | undefined,
+  competitionType?: CompetitionType | null,
 ) {
   if (!category) return '';
+  return federation === 'csts'
+    ? formatCstsCategoryName(category, competitionType)
+    : (category?.name ?? '');
+}
+
+function formatCstsCategoryName(
+  category: CompetitionCategoryFragment,
+  competitionType: CompetitionType | null | undefined,
+) {
   const { discipline, series, competitorType } = category;
+  const disciplinePrefix =
+    competitorType === 'SOLO'
+      ? 'So'
+      : competitorType === 'DUO' || competitorType === 'TRIO'
+        ? 'Sy'
+        : '';
 
   return [
     competitionType && typePrefix[competitionType],
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
     formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
-    formatCstsClass(category.class),
+    formatClass(category.class),
     discipline === 'Standard_Latin'
       ? 'STT+LAT'
       : discipline === 'TenDance'
         ? '10T'
-        : discipline?.toLowerCase() === 'standard' && competitorType === 'SOLO'
-          ? 'SoSTT'
-          : discipline?.toLowerCase() === 'latin' && competitorType === 'SOLO'
-            ? 'SoLAT'
-            : discipline?.toLowerCase() === 'standard'
-              ? 'STT'
-              : discipline?.toLowerCase() === 'latin'
-                ? 'LAT'
-                : discipline,
+        : discipline?.toLowerCase() === 'standard'
+          ? `${disciplinePrefix}STT`
+          : discipline?.toLowerCase() === 'latin'
+            ? `${disciplinePrefix}LAT`
+            : discipline,
     competitionType && typeSuffix[competitionType],
   ]
     .filter(Boolean)
@@ -131,10 +143,10 @@ export function getBestCstsProgress(
     .filter((progress) => progress?.category?.discipline === discipline)
     .reduce<FederationCategoryProgressFragment | null>((best, progress) => {
       const bestRank = best
-        ? classOrder.indexOf(formatCstsClass(best?.category?.class) ?? '')
+        ? classOrder.indexOf(formatClass(best?.category?.class) ?? '')
         : -1;
       const progressRank = classOrder.indexOf(
-        formatCstsClass(progress?.category?.class) ?? '',
+        formatClass(progress?.category?.class) ?? '',
       );
 
       return progressRank > bestRank ? progress : best;

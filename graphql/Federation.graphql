@@ -191,8 +191,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
     completedAt
     status
     category {
-      id
-      name
+      ...CompetitionCategory
     }
     officials(first: 100, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
       nodes {
@@ -303,8 +302,7 @@ query FederationCompetitor($id: String!) {
     categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
       categoryId
       category {
-        id
-        name
+        ...CompetitionCategory
       }
       points
       domesticFinals
@@ -507,8 +505,7 @@ query FederationEventCompetitions(
         competitionType
         status
         category {
-          id
-          name
+          ...CompetitionCategory
         }
         entries(first: 0, condition: { cancelled: false }) {
           totalCount
@@ -533,9 +530,9 @@ query CompetitionRound(
     id
     externalId
     startDate
+    competitionType
     category {
-      id
-      name
+      ...CompetitionCategory
     }
     event {
       id
@@ -637,10 +634,10 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
         id
         externalId
         startDate
+        competitionType
         status
         category {
-          id
-          name
+          ...CompetitionCategory
         }
         officials(first: 10, condition: { personId: $id }, orderBy: PRIMARY_KEY_ASC) {
           nodes {
@@ -720,14 +717,14 @@ query FederationCompetitorHistory($id: String!, $historyOffset: Int! = 0) {
       eventId
       status
       startDate
+      competitionType
       event {
         id
         name
         externalId
       }
       category {
-        id
-        name
+        ...CompetitionCategory
       }
       entries(first: 1, condition: { competitorId: $id }) {
         nodes {

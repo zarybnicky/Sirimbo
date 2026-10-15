@@ -10,7 +10,7 @@ import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/TitleBar';
-import { formatAgeGroup, formatCstsClass, getBestCstsProgress } from '@/ui/csts';
+import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
@@ -107,7 +107,7 @@ function CategoryList({
       <div className="font-medium">
         {[
           formatAgeGroup(person.ageGroup),
-          formatCstsClass(item.category?.class),
+          formatClass(item.category?.class),
           item.category?.discipline === 'Standard_Latin'
             ? 'STT+LAT'
             : item.category?.discipline === 'Standard'

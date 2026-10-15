@@ -1,5 +1,7 @@
 'use client';
 
+import { formatCategoryName } from '@/ui/csts';
+
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
@@ -64,7 +66,11 @@ export function Competitions({
                 href={`${path}/${competition.externalId}`}
                 prefetch={false}
               >
-                {competition.category?.name || competition.externalId}
+                {formatCategoryName(
+                  federation,
+                  competition.category,
+                  competition.competitionType,
+                ) || competition.externalId}
               </Link>
             </th>
             <td>{competition.competitionType?.toLowerCase().replaceAll('_', ' ')}</td>

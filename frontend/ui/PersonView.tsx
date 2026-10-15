@@ -3,7 +3,7 @@
 import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { PageHeader } from '@/ui/TitleBar';
-import { formatAgeGroup, formatCstsClass, getBestCstsProgress } from '@/ui/csts';
+import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { useQuery } from 'urql';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -43,8 +43,8 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
     item?.federationCategoryProgresses.nodes,
     'Latin',
   );
-  const sttClass = formatCstsClass(sttProgress?.category?.class);
-  const latClass = formatCstsClass(latProgress?.category?.class);
+  const sttClass = formatClass(sttProgress?.category?.class);
+  const latClass = formatClass(latProgress?.category?.class);
   const categoryProgress = [
     formatAgeGroup(item?.ageGroup),
     sttClass || latClass ? `${sttClass ?? '-'}/${latClass ?? '-'}` : null,

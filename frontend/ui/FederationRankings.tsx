@@ -1,5 +1,5 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { compareAgeRanges, formatAgeGroup, formatCstsClass } from '@/ui/csts';
+import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 
 const disciplineNames: Record<string, string> = {
@@ -27,13 +27,15 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           date: snapshot.asOfDate,
           kind: snapshot.kind,
           ageGroup: category.ageGroup,
+          competitorType: category.competitorType,
           ageRange:
             category.ageGroupDetails?.coupleRules[0]?.olderAge ??
             category.ageGroupDetails?.age ??
             null,
           category: [
             formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
-            formatCstsClass(category.class),
+            category.competitorType !== 'COUPLE' && category.competitorType.toLowerCase(),
+            formatClass(category.class),
           ]
             .filter(Boolean)
             .join(' '),
@@ -44,7 +46,11 @@ function ranklistRows(entries: FederationRankingFragment[]) {
                 2 /
                 snapshot.ranklistEntriesBySnapshotId.totalCount
               : null,
-          placement: entry.ranking + (entry.rankingTo && entry.rankingTo !== entry.ranking ? `–${entry.rankingTo}.` : '.'),
+          placement:
+            entry.ranking +
+            (entry.rankingTo && entry.rankingTo !== entry.ranking
+              ? `–${entry.rankingTo}.`
+              : '.'),
         },
       ];
     })
@@ -60,8 +66,19 @@ export function FederationRankBadge({
 }: {
   entries: FederationRankingFragment[];
 }) {
+  const types = Object.groupBy(ranklistRows(entries), (row) => row.competitorType);
+  return (
+    <>
+      {Object.entries(types).map(([type, rows]) => (
+        <RankBadge key={type} entries={rows!} />
+      ))}
+    </>
+  );
+}
+
+function RankBadge({ entries }: { entries: ReturnType<typeof ranklistRows> }) {
   const groups = Object.groupBy(
-    ranklistRows(entries).filter((row) => row.ageGroup && row.percentile !== null),
+    entries.filter((row) => row.ageGroup && row.percentile !== null),
     (row) => row.ageGroup!,
   );
   let rows: ReturnType<typeof ranklistRows> = [];
@@ -88,8 +105,9 @@ export function FederationRankBadge({
   return (
     <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
       <span title="Ranklist">RL</span>
-      {rows[0] && (
-        <span>{formatAgeGroup(rows[0].ageGroup)}</span>
+      {rows[0] && <span>{formatAgeGroup(rows[0].ageGroup)}</span>}
+      {rows[0] && rows[0].competitorType !== 'COUPLE' && (
+        <span>{rows[0].competitorType.toLowerCase()}</span>
       )}
       {rows.map((row) => (
         <span

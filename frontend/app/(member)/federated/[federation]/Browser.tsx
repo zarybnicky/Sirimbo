@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Table } from '@/ui/Table';
@@ -22,16 +22,16 @@ import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { buttonCls } from '@/ui/style';
-import { compareAgeRanges, formatAgeGroup, formatCstsClass } from '@/ui/csts';
+import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
 import {
+  FederationCompetitorFacetsDocument,
+  FederationCompetitorsDocument,
+  type FederationCompetitorsQueryVariables,
   FederationEventsDocument,
   FederationPeopleDocument,
-  FederationCompetitorsDocument,
-  FederationCompetitorFacetsDocument,
-  type FederationCompetitorsQueryVariables,
 } from '@/graphql/Federation';
 
 const views = ['events', 'people', 'competitors'] as const;
@@ -372,8 +372,8 @@ function Competitors(props: BrowserProps) {
                       ? value.toLowerCase()
                       : key === 'ageGroup'
                         ? (formatAgeGroup(value) ?? value)
-                        : key === 'class' && federation === 'csts'
-                          ? (formatCstsClass(value) ?? value)
+                        : key === 'class'
+                          ? (formatClass(value) ?? value)
                           : value,
                   count: counts.get(value) ?? 0,
                 }))}
@@ -523,9 +523,8 @@ function Competitors(props: BrowserProps) {
                               ? entries.map((p) => (
                                   <div key={p.categoryId}>
                                     <span className="font-medium">
-                                      {(federation === 'csts'
-                                        ? formatCstsClass(p.category?.class)
-                                        : null) ?? p.category?.class}
+                                      {formatClass(p.category?.class) ??
+                                        p.category?.class}
                                     </span>{' '}
                                     {Number(p.points)}F
                                     {p.domesticFinals + p.foreignFinals}

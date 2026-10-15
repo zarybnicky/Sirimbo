@@ -1,5 +1,7 @@
 'use client';
 
+import { formatCategoryName } from '@/ui/csts';
+
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -104,7 +106,11 @@ export function OfficialAssignments({
                                       : 'underline',
                                   )}
                                 >
-                                  {competition.category?.name || competition.externalId}
+                                  {formatCategoryName(
+                                    federation,
+                                    competition.category,
+                                    competition.competitionType,
+                                  ) || competition.externalId}
                                 </Link>
                                 {competition.startDate !== event.startDate &&
                                   competition.startDate && (
