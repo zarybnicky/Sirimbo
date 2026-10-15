@@ -263,3 +263,12 @@ mutation DeletePerson($id: BigInt!) {
     __typename
   }
 }
+
+query LinkUserPeople {
+  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
+    nodes {
+      id
+      name
+    }
+  }
+}

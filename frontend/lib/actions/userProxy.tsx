@@ -10,7 +10,7 @@ import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 export const userProxyActions = defineActions<UserProxyFragment>()([
   {
     id: 'userProxy.edit',
-    label: ({ item }) => ['Upravit účet', item.user?.uEmail].filter(Boolean).join(' · '),
+    label: ({ item }) => ['Upravit přístup', item.user?.uEmail].filter(Boolean).join(' · '),
     icon: Pencil,
     requireAdmin: true,
     render: ({ item }) => <EditUserProxyForm id={item.id} />,
@@ -48,7 +48,7 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
   },
   {
     id: 'userProxy.delete',
-    label: 'Smazat',
+    label: 'Smazat přístup',
     icon: Trash2,
     variant: 'danger',
     requireAdmin: true,

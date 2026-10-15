@@ -1,8 +1,11 @@
 'use client';
 
 import { UserDetailDocument } from '@/graphql/CurrentUser';
-import { useActionMap } from '@/lib/actions';
+import { useActionMap, useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
+import { userProxyActions } from '@/lib/actions/userProxy';
+import { userActions } from '@/lib/actions/user';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { ActionRow } from '@/ui/ActionRow';
 import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
 import { PageHeader } from '@/ui/TitleBar';
@@ -18,12 +21,14 @@ export function User({ id }: { id: string }) {
   });
 
   const user = data?.user;
+  const actions = useActions(userActions, user);
   const pageTitle = user?.uEmail ?? '';
   const people = React.useMemo(() => {
     return user?.userProxiesList.flatMap((x) => (x.person ? [x.person] : [])) ?? [];
   }, [user]);
 
   const personActionMap = useActionMap(personActions, people);
+  const proxyActionMap = useActionMap(userProxyActions, user?.userProxiesList ?? []);
 
   return (
     <>
@@ -65,9 +70,18 @@ export function User({ id }: { id: string }) {
           </dl>
 
           <section>
-            <h2 className="text-lg font-medium">Připojené osoby</h2>
+            <div className="flex justify-between items-baseline flex-wrap gap-4">
+              <h2 className="text-lg font-medium">Připojené osoby</h2>
+              <ActionGroup actions={actions} />
+            </div>
             {user.userProxiesList.map((item) => (
-              <ActionRow key={item.id} actions={personActionMap.get(item.personId)!}>
+              <ActionRow
+                key={item.id}
+                actions={[
+                  ...(personActionMap.get(item.personId) ?? []),
+                  ...(proxyActionMap.get(item.id) ?? []),
+                ]}
+              >
                 <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
                   <Link
                     className="underline font-bold"

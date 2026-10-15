@@ -44,10 +44,7 @@ query UserDetail($id: BigInt!) {
     lastVersion
     tenantId
     userProxiesList(orderBy: CREATED_AT_ASC) {
-      id
-      since
-      until
-      status
+      ...UserProxy
       personId
       person {
         ...PersonBasic

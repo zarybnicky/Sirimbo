@@ -176,6 +176,7 @@ export function ActionGroup<Id extends string = string>({
             <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
           ) : key === 'add' ? (
             <DropdownMenuTrigger
+              aria-label="Přidat"
               className={buttonCls({ variant: 'outline', size: 'sm' })}
             >
               <Plus className="size-5" />

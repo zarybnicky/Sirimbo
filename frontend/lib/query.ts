@@ -351,6 +351,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       createUserProxy(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId });
+        cache.invalidate({ __typename: 'User', id: args.input.userProxy.userId });
       },
       createAccessCredential(_result, args, cache) {
         cache.invalidate({

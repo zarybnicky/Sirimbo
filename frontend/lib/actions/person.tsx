@@ -51,6 +51,7 @@ export const personActions = defineActions<PersonActionItem>()([
   },
   {
     id: 'person.createCouple',
+    modal: false,
     group: 'add',
     label: 'Přidat do páru',
     icon: Plus,
@@ -59,6 +60,7 @@ export const personActions = defineActions<PersonActionItem>()([
   },
   {
     id: 'person.addToCohort',
+    modal: false,
     group: 'add',
     label: 'Přidat do skupiny',
     icon: Plus,

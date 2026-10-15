@@ -1,7 +1,6 @@
 import type { CoupleFragment } from '@/graphql/Memberships';
 import { memo } from 'react';
 import type { PersonMembershipsQuery } from '@/graphql/Person';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import {
   formatCoupleName,
   formatOpenDateRange,
@@ -9,16 +8,13 @@ import {
   dateTimeFormatter,
   moneyFormatter,
 } from '@/ui/format';
-import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
-import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth, useTenantId, useTenantConfig } from '@/lib/auth';
 import Link from 'next/link';
-import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
-import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
 import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap, useActions } from '@/lib/actions';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { coupleActions } from '@/lib/actions/couple';
+import { personActions } from '@/lib/actions/person';
 import { personInvitationActions } from '@/lib/actions/personInvitation';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
@@ -28,7 +24,6 @@ import { ActionRow } from '@/ui/ActionRow';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
-import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 
 export const PersonMembershipView = memo(function PersonMembershipView({
   item,
@@ -39,6 +34,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
   const { enableStarletImport } = useTenantConfig();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
   const tenantId = useTenantId();
+  const actions = useActions(personActions, item);
   const cohortMembershipActionMap = useActionMap(
     cohortMembershipActions,
     item.cohortMembershipsList,
@@ -70,14 +66,11 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
 
-        {auth.isAdmin && (
-          <Dialog modal={false}>
-            <DialogTrigger.Add size="sm" />
-            <DialogContent>
-              <CreateCoupleForm person={item} />
-            </DialogContent>
-          </Dialog>
-        )}
+        <ActionGroup
+          actions={actions.filter((action) => action.id === 'person.createCouple')}
+          primary="person.createCouple"
+          iconOnly
+        />
       </div>
 
       {item.allCouplesList
@@ -89,14 +82,11 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
 
-        {auth.isAdmin && (
-          <Dialog modal={false}>
-            <DialogTrigger.Add size="sm" />
-            <DialogContent>
-              <AddToCohortForm personId={item.id} />
-            </DialogContent>
-          </Dialog>
-        )}
+        <ActionGroup
+          actions={actions.filter((action) => action.id === 'person.addToCohort')}
+          primary="person.addToCohort"
+          iconOnly
+        />
       </div>
       {item.cohortMembershipsList
         .filter(keyIsNonNull('cohort'))
@@ -117,6 +107,11 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
         <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
+        <ActionGroup
+          actions={actions.filter((action) =>
+            ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(action.id),
+          )}
+        />
       </div>
 
       {item.tenantAdministratorsList
@@ -155,6 +150,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             </div>
           </ActionRow>
         ))}
+
       {item.tenantMembershipsList
         .filter((x) => x.tenantId === tenantId)
         .map((item) => (
@@ -172,22 +168,10 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
             {auth.isAdmin && (
               <ActionGroup
-                actions={[
-                  {
-                    id: 'person.invite',
-                    key: 'person.invite',
-                    label: 'Pozvat e-mailem',
-                    group: 'add',
-                    render: () => <CreateInvitationForm personId={item.id} />,
-                  },
-                  {
-                    id: 'person.linkUser',
-                    key: 'person.linkUser',
-                    label: 'Přiřadit existující účet',
-                    group: 'add',
-                    render: () => <LinkUserToPersonForm personId={item.id} />,
-                  },
-                ]}
+                actions={actions.filter((action) =>
+                  ['person.invite', 'person.linkUser'].includes(action.id),
+                )}
+                groups={{ add: ['person.invite', 'person.linkUser'] }}
               />
             )}
           </div>
@@ -225,12 +209,13 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             <>
               <div className="flex justify-between items-baseline flex-wrap gap-4">
                 <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
-                <Dialog>
-                  <DialogTrigger.Add size="sm" />
-                  <DialogContent>
-                    <AccessCredentialForm personId={item.id} />
-                  </DialogContent>
-                </Dialog>
+                <ActionGroup
+                  actions={actions.filter(
+                    (action) => action.id === 'person.addAccessCredential',
+                  )}
+                  primary="person.addAccessCredential"
+                  iconOnly
+                />
               </div>
               {item.accessCredentialsList.map((card) => (
                 <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
