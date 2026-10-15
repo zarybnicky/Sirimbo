@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import * as Plot from '@observablehq/plot';
-import type { ExtendedFeatureCollection } from 'd3';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { json, type ExtendedFeatureCollection } from 'd3';
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
 import {
   FederationEventFacetsDocument,
@@ -17,11 +17,25 @@ import { Table } from '@/ui/Table';
 import { FormError } from '@/ui/form';
 import { formatDateOnly } from '@/ui/format';
 
+const shapes = [
+  { value: 'czechia', label: 'Česko' },
+  { value: 'europe', label: 'Evropa' },
+  { value: 'world', label: 'Svět' },
+] as const;
+type MapShape = (typeof shapes)[number]['value'];
+const defaultShapes: Record<string, MapShape> = { csts: 'czechia', szts: 'europe', wdsf: 'world' };
+
 export default function EventMap({ federation }: { federation: string }) {
   const [year, setYear] = useQueryState(
     'year',
     parseAsInteger
       .withDefault(new Date().getFullYear())
+      .withOptions({ history: 'push', scroll: false }),
+  );
+  const [shape, setShape] = useQueryState(
+    'shape',
+    parseAsStringLiteral(shapes.map((s) => s.value))
+      .withDefault(defaultShapes[federation] ?? 'world')
       .withOptions({ history: 'push', scroll: false }),
   );
   const [facets] = useQuery({
@@ -46,6 +60,7 @@ export default function EventMap({ federation }: { federation: string }) {
   return (
     <div className="min-w-0">
       <div className="mb-4 flex flex-wrap items-end gap-3">
+        <SelectField name="shape" label="Mapa" value={shape} onChange={setShape} options={shapes} />
         <SelectField
           name="year"
           label="Rok"
@@ -92,21 +107,26 @@ export default function EventMap({ federation }: { federation: string }) {
           </Dialog>
         )}
       </div>
-      <MapPlot events={events} />
+      <MapPlot key={shape} events={events} shape={shape} />
     </div>
   );
 }
 
-function MapPlot({ events }: { events: FederationMapEventFragment[] }) {
-  const [cz, setCz] = React.useState<ExtendedFeatureCollection | null>(null);
+function MapPlot({ events, shape }: { events: FederationMapEventFragment[]; shape: MapShape }) {
+  const [geography, setGeography] = React.useState<ExtendedFeatureCollection>();
+  const [error, setError] = React.useState<Error>();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
-    fetch('/cz-admin1.json')
-      .then((x) => x.json())
-      .then(setCz);
-  }, []);
+    const controller = new AbortController();
+    json<ExtendedFeatureCollection>(shape === 'czechia' ? '/cz-admin1.json' : '/world-countries.json', {
+      signal: controller.signal,
+    }).then(setGeography).catch((error) => {
+      if (!controller.signal.aborted) setError(error);
+    });
+    return () => controller.abort();
+  }, [shape]);
   React.useEffect(() => {
-    if (!cz || !containerRef.current) return;
+    if (!geography || !containerRef.current) return;
     const months = [
       'leden',
       'únor',
@@ -121,18 +141,26 @@ function MapPlot({ events }: { events: FederationMapEventFragment[] }) {
       'listopad',
       'prosinec',
     ];
-    const plot = Plot.plot({
-      projection: {
+    const projections: Record<MapShape, Plot.ProjectionOptions> = {
+      czechia: {
         type: 'azimuthal-equidistant',
-        domain: cz,
-        inset: 5,
+        domain: geography,
         rotate: [-20, 0],
       },
+      europe: {
+        type: 'mercator',
+        domain: { type: 'MultiPoint', coordinates: [[-25, 34], [45, 72]] },
+      },
+      world: { type: 'equal-earth' },
+    };
+    const plot = Plot.plot({
+      height: 400,
+      projection: { ...projections[shape], inset: 5 },
       axis: null,
       color: { type: 'categorical', scheme: 'sinebow', domain: months, legend: true },
       style: { fontFamily: 'Georgia' },
       marks: [
-        Plot.geo(cz, { stroke: '#aaa' }),
+        Plot.geo(geography, { stroke: '#aaa' }),
         Plot.dot(
           events.filter((e) => e.venueLat !== null && e.venueLng !== null),
           {
@@ -150,6 +178,6 @@ function MapPlot({ events }: { events: FederationMapEventFragment[] }) {
     });
     containerRef.current.append(plot);
     return () => plot.remove();
-  }, [cz, events]);
-  return <div ref={containerRef} />;
+  }, [geography, events, shape]);
+  return error ? <FormError error={error} /> : <div ref={containerRef} />;
 }

@@ -26,6 +26,7 @@ import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
+import EventMap from '../EventMap';
 import {
   FederationCompetitorFacetsDocument,
   FederationCompetitorsDocument,
@@ -34,7 +35,7 @@ import {
   FederationPeopleDocument,
 } from '@/graphql/Federation';
 
-const views = ['events', 'people', 'competitors'] as const;
+const views = ['events', 'map', 'people', 'competitors'] as const;
 
 const competitorTypes = [
   'COUPLE',
@@ -112,6 +113,9 @@ export function Browser({ federation }: { federation: string }) {
     >
       <Tab id="events" title="Events">
         <Events {...props} />
+      </Tab>
+      <Tab id="map" title="Mapa">
+        <EventMap federation={federation} />
       </Tab>
       <Tab id="people" title="People">
         <People {...props} />
