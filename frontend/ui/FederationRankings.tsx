@@ -44,7 +44,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
                 2 /
                 snapshot.ranklistEntriesBySnapshotId.totalCount
               : null,
-          placement: `${entry.ranking}${entry.rankingTo && entry.rankingTo !== entry.ranking ? `–${entry.rankingTo}` : ''}/${snapshot.ranklistEntriesBySnapshotId.totalCount}`,
+          placement: entry.ranking + (entry.rankingTo && entry.rankingTo !== entry.ranking ? `–${entry.rankingTo}.` : '.'),
         },
       ];
     })
@@ -88,13 +88,15 @@ export function FederationRankBadge({
   return (
     <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
       <span title="Ranklist">RL</span>
-      {rows.map((row, index) => (
+      {rows[0] && (
+        <span>{formatAgeGroup(rows[0].ageGroup)}</span>
+      )}
+      {rows.map((row) => (
         <span
           key={row.id}
           className="whitespace-nowrap"
           title={`${row.competitor} · ${row.ranklist} · ${formatDateOnly(row.date)}`}
         >
-          {index > 0 && <span className="mr-1">·</span>}
           {disciplineNames[row.discipline] ?? row.discipline} {row.placement}
         </span>
       ))}

@@ -1,4 +1,5 @@
 import type { CompetitionType } from '@/graphql';
+import type { AgeGroupRulesQuery } from '@/graphql/AgeGroups';
 import type {
   CompetitionCategoryFragment,
   FederationCategoryProgressFragment,
@@ -46,7 +47,28 @@ export function compareAgeRanges(a: AgeRange | null, b: AgeRange | null) {
 }
 
 export function formatAgeGroup(code: string | null | undefined, name?: string | null) {
-  return code ? ageGroupNames[code] ?? name ?? code : undefined;
+  return code ? (ageGroupNames[code] ?? name ?? code) : undefined;
+}
+
+export function getCoupleAgeGroups(
+  first: string | null | undefined,
+  second: string | null | undefined,
+  groups: AgeGroupRulesQuery['ageGroupsList'] | undefined,
+) {
+  if (!first || !second) return [];
+  const year = new Date().getFullYear();
+  const ages = [year - Number(first.slice(0, 4)), year - Number(second.slice(0, 4))];
+  const older = Math.max(...ages);
+  const younger = Math.min(...ages);
+  return (groups ?? []).filter((group) =>
+    group.coupleRules.some(
+      (rule) =>
+        older >= (rule.olderAge.start?.value ?? -Infinity) &&
+        older < (rule.olderAge.end?.value ?? Infinity) &&
+        younger >= (rule.youngerAge.start?.value ?? -Infinity) &&
+        younger < (rule.youngerAge.end?.value ?? Infinity),
+    ),
+  );
 }
 
 const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);

@@ -88,7 +88,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             key={couple.id}
             item={couple}
             rankings={item.federationRanklistEntries.nodes.filter((entry) =>
-              entry.competitor?.couplesList?.some((match) => match.id === couple.id),
+              entry.competitor?.couplesList?.some((x) => x.id === couple.id),
             )}
           />
         ))}

@@ -171,10 +171,12 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   value,
   onChange,
   options,
+  inline = false,
 }: {
   value?: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
   options: Item[];
+  inline?: boolean;
 }) {
   return (
     <Command
@@ -189,7 +191,7 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
           <Search className="size-4" aria-hidden="true" />
         </span>
         <Command.Input
-          autoFocus
+          autoFocus={!inline}
           placeholder="Vyhledat.."
           className={inputCls({
             className:
@@ -216,7 +218,9 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
       <Command.List
         className={cn(
           'scrollbar overflow-auto overscroll-contain',
-          'max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]',
+          inline
+            ? 'max-h-64'
+            : 'max-h-[calc(var(--radix-popover-content-available-height)-var(--radix-popover-trigger-height)-15px)]',
           'h-(--cmdk-list-height)',
         )}
       >

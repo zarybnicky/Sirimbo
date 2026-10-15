@@ -100,6 +100,25 @@ fragment UserProxy on UserProxy {
   }
 }
 
+query CoupleFormPeople($personId: BigInt!, $withPerson: Boolean!) {
+  people(condition: { membership: { state: CURRENT } }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
+    nodes {
+      id
+      name
+      gender
+      birthDate
+      ageGroup
+    }
+  }
+  person(id: $personId) @include(if: $withPerson) {
+    id
+    name
+    gender
+    birthDate
+    ageGroup
+  }
+}
+
 query CoupleList {
   getCurrentTenant {
     id
