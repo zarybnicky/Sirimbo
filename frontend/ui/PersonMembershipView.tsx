@@ -120,8 +120,8 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
               <b>Správce</b>
+              {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
             </div>
-            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </ActionRow>
         ))}
 

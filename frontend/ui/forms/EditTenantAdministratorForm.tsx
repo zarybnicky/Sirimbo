@@ -1,3 +1,4 @@
+import { DialogTitle } from '@/ui/dialog';
 import {
   TenantAdministratorDocument,
   UpdateTenantAdministratorDocument,
@@ -43,6 +44,7 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
   }, [reset, item]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
+    if (!item || query.error) return;
     const result = await update({
       input: {
         id,
@@ -57,7 +59,11 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+      <DialogTitle>Upravit správcovství</DialogTitle>
+      <FormError error={result.error || query.error} />
+      {!query.fetching && !query.error && !item && (
+        <p>Záznam nebyl nalezen.</p>
+      )}
 
       <div className="prose prose-accent">
         <h4>
@@ -69,7 +75,7 @@ export function EditTenantAdministratorForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Členství do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Uložit změny</SubmitButton>
+        <SubmitButton control={control} disabled={!item || !!query.error}>Uložit změny</SubmitButton>
       </div>
     </form>
   );

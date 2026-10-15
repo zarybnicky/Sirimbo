@@ -1,3 +1,4 @@
+import { DialogTitle } from '@/ui/dialog';
 import { CreateCoupleDocument, CoupleFormPeopleDocument } from '@/graphql/Memberships';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
@@ -114,6 +115,7 @@ export function CreateCoupleForm({
 
   return (
     <form className="grid gap-3 text-sm" onSubmit={handleSubmit(onSubmit)}>
+      <DialogTitle>Přidat do páru</DialogTitle>
       <FormError error={result.error ?? peopleResult.error ?? rulesResult.error} />
       {(['man', 'woman'] as const).map((field) => {
         const id = field === 'man' ? manId : womanId;

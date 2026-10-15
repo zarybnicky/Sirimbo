@@ -20,6 +20,7 @@ export const tenantMembershipActions = defineActions<TenantMembershipFragment>()
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
+    visible: ({ item }) => item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete členovi ${item.person?.name} ukončit členství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {

@@ -20,6 +20,7 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
+    visible: ({ item }) => item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete ${item.person?.name} ukončit trenérství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {

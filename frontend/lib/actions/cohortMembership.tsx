@@ -1,3 +1,4 @@
+import type { RelationshipStatus } from '@/graphql';
 import { Pencil, Trash2, Unplug } from 'lucide-react';
 import {
   DeleteCohortMembershipDocument,
@@ -9,6 +10,7 @@ import { EditCohortMembershipForm } from '@/ui/forms/EditCohortMembershipForm';
 type Item = {
   __typename?: 'CohortMembership';
   id: string;
+  status: RelationshipStatus;
   person?: {
     name: string;
   } | null;
@@ -27,6 +29,7 @@ export const cohortMembershipActions = defineActions<Item>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
+    visible: ({ item }) => item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete členovi ${item.person?.name} ukončit členství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {

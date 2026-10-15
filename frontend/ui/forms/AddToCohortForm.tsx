@@ -1,3 +1,4 @@
+import { DialogTitle } from '@/ui/dialog';
 import { CreateCohortMembershipDocument } from '@/graphql/Memberships';
 import { FormError, useFormResult } from '@/ui/form';
 import React from 'react';
@@ -20,7 +21,7 @@ export function AddToCohortForm({ personId }: { personId: string; }) {
   });
   const [result, createCohortMember] = useMutation(CreateCohortMembershipDocument);
 
-  const [{ data: cohorts }] = useQuery({
+  const [{ data: cohorts, error: queryError }] = useQuery({
     query: CohortListDocument,
     variables: { archived: false },
   });
@@ -41,13 +42,14 @@ export function AddToCohortForm({ personId }: { personId: string; }) {
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error} />
+      <DialogTitle>Přidat do skupiny</DialogTitle>
+      <FormError error={result.error || queryError} />
       <VerticalCheckboxButtonGroupElement
         control={control}
         name="cohortIds"
         options={cohortOptions}
       />
-      <SubmitButton control={control} />
+      <SubmitButton control={control} disabled={!cohorts || !!queryError} />
     </form>
   );
 }

@@ -25,6 +25,7 @@ export const coupleActions = defineActions<CoupleFragment>()([
     label: 'Ukončit k dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
+    visible: ({ item }) => item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete partnerství ${formatCoupleName(item)} ukončit ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
