@@ -14,7 +14,11 @@ export default async function FederationsPage() {
   const { federationsList: federations } = await executeGraphql(FederationListDocument);
   return (
     <Layout requireUser>
-      <PageHeader title="Federations" />
+      <PageHeader
+        title="Federations"
+        actions={[{ id: 'map', key: 'map', label: 'Competition map', href: '/federated/map' }]}
+        primary="map"
+      />
       <Table
         columns={[
           'federation',

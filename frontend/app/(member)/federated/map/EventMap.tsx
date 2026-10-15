@@ -3,7 +3,7 @@
 import React from 'react';
 import * as Plot from '@observablehq/plot';
 import type { ExtendedFeatureCollection } from 'd3';
-import type { ICompetitionEventLocationsResult } from '../tools.queries';
+import type { ICompetitionEventLocationsResult } from '@/app/(standalone)/tools/tools.queries';
 
 export default function EventMap({
   events,
@@ -64,5 +64,5 @@ export default function EventMap({
     return () => plot.remove();
   }, [cz, events]);
 
-  return <div ref={containerRef} />
+  return <div ref={containerRef} className="min-w-0" />
 }
