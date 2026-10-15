@@ -27,7 +27,9 @@ export async function flushLoaderEffects(
   const roundResultRefreshes = new Set<string>();
 
   for (const effect of effects) {
-    if (effect.upsertFrontier) frontierUpserts.add(...effect.upsertFrontier);
+    for (const frontier of effect.upsertFrontier ?? []) {
+      frontierUpserts.add(frontier);
+    }
     for (const competitionId of effect.refreshRoundResult ?? []) {
       roundResultRefreshes.add(competitionId);
     }
