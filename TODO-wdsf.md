@@ -18,7 +18,6 @@ on their next load.
 
 ## Ranklists
 
-- [ ] Check the points formula in [cstsRanklist.ts](worker/crawler/cstsRanklist.ts): it adds `pointsWdsf` twice and omits `pointsChampionship`. Confirm the intended calculation, fix it, and replay cached responses locally.
 - [ ] Add federation → ranklist → dated snapshot navigation.
 - [ ] Show snapshot date/kind and entries ordered by rank, with links to competitors.
 - [ ] Link competitors back to their ranklist entries.
@@ -28,7 +27,7 @@ on their next load.
 ## Remaining app consumers
 
 - [x] [Competitions.tsx](frontend/ui/Competitions.tsx): use shared rows with subgrid alignment, internal event/competition links, and category labels across federations in dashboard, calendar, and timeline cards.
-- [ ] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): replace ČSTS-only judging links on person/couple/group pages; link event-level official activity too.
+- [x] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): use internal federation event/competition links for judging, including event-only assignments, with federation-appropriate category labels.
 - [ ] [CstsIdBackfillWidget.tsx](frontend/ui/CstsIdBackfillWidget.tsx) / `person_csts_candidates`: generalize federation selection and candidate matching; retain fuzzy suggestions and explicit selection.
 
 ## Clubs and affiliations

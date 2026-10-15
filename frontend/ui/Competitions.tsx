@@ -219,13 +219,13 @@ export function CompetitionEventContent({
   );
 }
 
-function CompetitionLink({
+export function CompetitionLink({
   entry,
   competitionId,
   children,
   className,
 }: {
-  entry?: CompetitionEntry;
+  entry?: Pick<CompetitionEntry, 'federation' | 'competitionEventExternalId'>;
   competitionId?: string | null;
   children: React.ReactNode;
   className?: string;

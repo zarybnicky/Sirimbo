@@ -8,7 +8,7 @@ import {
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
-import { CompetitionEventContent } from '@/ui/Competitions';
+import { CompetitionEventContent, CompetitionLink } from '@/ui/Competitions';
 import { formatCstsCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
@@ -18,7 +18,7 @@ import { add, subtract } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { CstsResultsLink, LocalPersonLinks } from './federation-links';
+import { LocalPersonLinks } from './federation-links';
 
 type TimelineMode = 'future' | 'past';
 type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
@@ -328,7 +328,9 @@ function TimelineDay({
                 })}
               >
                 <div className="mb-1 text-sm font-semibold leading-tight text-accent-11">
-                  {items[0].competitionEventName}
+                  <CompetitionLink entry={items[0]}>
+                    {items[0].competitionEventName}
+                  </CompetitionLink>
                 </div>
                 <div className="text-xs leading-tight text-accent-11">
                   {items[0].competitionEventLocation}
@@ -338,14 +340,16 @@ function TimelineDay({
                     .filter(x => x.competitionId)
                     .toSorted((a, b) => (a.competitionId ?? '').localeCompare(b.competitionId ?? ''))
                     .map((item) => (
-                      <CstsResultsLink
+                      <CompetitionLink
                         key={item.id}
                         className="text-xs text-neutral-12"
-                        eventId={item.competitionEventExternalId}
+                        entry={item}
                         competitionId={item.competitionExternalId}
                       >
-                        {formatCstsCategoryName(item.category, item.competitionType)}
-                      </CstsResultsLink>
+                        {(item.federation === 'csts'
+                          ? formatCstsCategoryName(item.category, item.competitionType)
+                          : item.category?.name) || item.competitionExternalId}
+                      </CompetitionLink>
                     ))}
                 </div>
               </div>
