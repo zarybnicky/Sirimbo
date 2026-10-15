@@ -49,7 +49,7 @@ export function Results({
   const dances = round.dancesList.map((dance) => ({
     key: String(dance.danceOrder),
     label: dance.danceCode,
-    title: dance.programDance?.dance?.name,
+    title: dance.dance?.name,
   }));
   const judges = round.judgesList.map((judge) => ({
     key: judge.personJudge?.externalId ?? judge.personJudgeId.split(':').at(-1)!,

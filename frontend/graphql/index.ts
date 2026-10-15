@@ -2112,6 +2112,8 @@ export type CompetitionRoundCondition = {
 
 export type CompetitionRoundDance = {
   __typename?: 'CompetitionRoundDance';
+  /** Reads a single `Dance` that is related to this `CompetitionRoundDance`. */
+  dance: Maybe<Dance>;
   danceCode: Scalars['String']['output'];
   danceOrder: Scalars['Int']['output'];
   /** Reads a single `DanceProgramDance` that is related to this `CompetitionRoundDance`. */
@@ -14391,6 +14393,7 @@ export type GraphCacheResolvers = {
     scoringMethod?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, ScoringMethod | string>
   },
   CompetitionRoundDance?: {
+    dance?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, WithTypename<Dance> | string>,
     danceCode?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['String']['output'] | string>,
     danceOrder?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['Int']['output'] | string>,
     danceProgramDanceByDanceProgramIdAndDanceCode?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, WithTypename<DanceProgramDance> | string>,
@@ -17024,6 +17027,7 @@ export type GraphCacheUpdaters = {
     scoringMethod?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>
   },
   CompetitionRoundDance?: {
+    dance?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
     danceCode?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
     danceOrder?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
     danceProgramDanceByDanceProgramIdAndDanceCode?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,

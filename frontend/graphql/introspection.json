@@ -5917,6 +5917,15 @@
         "name": "CompetitionRoundDance",
         "fields": [
           {
+            "name": "dance",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Dance",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "danceCode",
             "type": {
               "kind": "NON_NULL",

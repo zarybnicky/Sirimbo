@@ -2672,6 +2672,10 @@ input CompetitionRoundCondition {
 }
 
 type CompetitionRoundDance {
+  """
+  Reads a single `Dance` that is related to this `CompetitionRoundDance`.
+  """
+  dance: Dance
   danceCode: String!
   danceOrder: Int!
 

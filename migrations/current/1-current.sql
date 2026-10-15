@@ -39,7 +39,8 @@ COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_com
 COMMENT ON TABLE federated.competitor_club_affiliation IS '@name federation_competitor_club_affiliation
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.round_dance IS '@name competition_round_dance
-@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single
+@ref dance singular via:federated.dance_program_dance;federated.dance';
 COMMENT ON TABLE crawler.frontier IS '@name crawler_target
 @behavior -insert -update -delete -list';
 COMMENT ON VIEW crawler.frontier_failure IS '@name crawler_target_failure

@@ -111,7 +111,7 @@ async function loadCstsRanklist(client: PoolClient, entity: Ranklist) {
       entryRankingTo: competitor.rankingTo,
       entryPoints:
         competitor.points +
-        competitor.pointsWdsf +
+        competitor.pointsChampionship +
         competitor.pointsLeague +
         competitor.pointsWdsf,
     });

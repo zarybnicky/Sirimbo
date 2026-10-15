@@ -564,11 +564,9 @@ query CompetitionRound(
         roundId
         danceOrder
         danceCode
-        programDance: danceProgramDanceByDanceProgramIdAndDanceCode {
-          dance: danceByDanceCode {
-            code
-            name
-          }
+        dance {
+          code
+          name
         }
       }
       judgesList(orderBy: JUDGE_INDEX_ASC) {

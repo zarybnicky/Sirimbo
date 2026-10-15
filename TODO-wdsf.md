@@ -15,7 +15,6 @@ on their next load.
 ## Competition results and round marks
 
 - [ ] Store official WDSF final dance results and AJS rankings/scores; current round aggregates sum judges' marks.
-- [ ] Add competitor/judge relations for the numeric IDs on `JudgeScore`.
 
 ## Ranklists
 
@@ -48,7 +47,7 @@ on their next load.
 
 ## Deferred
 
-- [ ] Audit missing `@ref` / `@refVia` relations and existing refs that consumers bypass with nested traversals. Prefer direct relations where intermediate rows carry no information needed by the consumer.
+- [x] Audit federation `@ref` / `@refVia` consumers. Round dances now expose `dance` directly; other traversals retain needed roles, assignments, or snapshot metadata.
 - [ ] Replace `csts_id`, `wdsf_id`, and ad-hoc external identifiers with persisted federation links.
 - [ ] Remove surrogate IDs for federation events/competitions; external IDs in browser URLs did not replace the database keys.
 - [ ] Add provenance and as-of attribution.
