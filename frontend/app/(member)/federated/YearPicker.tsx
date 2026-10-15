@@ -10,7 +10,7 @@ export function YearPicker({ years, value, onChange }: {
   if (years.length === 0) return null;
 
   return (
-    <div className="my-4 flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <button
         type="button"
         aria-label="Předchozí rok"

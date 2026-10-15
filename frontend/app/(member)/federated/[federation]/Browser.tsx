@@ -73,7 +73,7 @@ function useBrowserState(federation: string) {
       shape: parseAsStringLiteral(mapShapes.map((s) => s.value))
         .withDefault(defaultMapShapes[federation] ?? 'world'),
       missing: parseAsBoolean.withDefault(false),
-      map: parseAsBoolean.withDefault(false),
+      map: parseAsBoolean.withDefault(true),
       page: parseAsInteger,
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
       ageGroup: parseAsArrayOf(parseAsString).withDefault([]),
@@ -192,6 +192,7 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
   const filtered = events.filter((e) => filters.month === 0 || Number(e.startDate.slice(5, 7)) === filters.month);
   const missing = filtered.filter((e) => e.venueLat === null || e.venueLng === null);
   const visible = filters.missing ? missing : filtered;
+  const showMap = filters.map && visible.some((e) => e.venueLat !== null && e.venueLng !== null);
   const isPending = result.fetching || facets.fetching || searchPending;
   const error = result.error || facets.error;
   return (
@@ -201,7 +202,7 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
         value={filters.year}
         onChange={(year) => setFilters({ year }, { history: 'push' })}
       />
-      <div role="group" aria-label="Měsíc" className="mb-4 flex flex-wrap gap-0.5">
+      <div role="group" aria-label="Měsíc" className="my-2 flex flex-wrap gap-0.5">
         {['Celý rok', ...eventMonths].map((label, month) => (
           <label key={month} className="relative cursor-pointer">
             <input
@@ -218,26 +219,28 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
           </label>
         ))}
       </div>
-      <div className="mb-4 flex flex-wrap items-end gap-3">
+      <div className="my-2 flex flex-wrap items-end gap-3">
         <TextField
           name="search"
           label="Name, location or event ID"
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value })}
         />
-        <Checkbox
-          name="missing"
-          label={`Bez souřadnic (${missing.length})`}
-          checked={filters.missing}
-          onChange={(event) => setFilters({ missing: event.target.checked })}
-        />
-        <Checkbox
-          name="map"
-          label="Zobrazit mapu"
-          checked={filters.map}
-          onChange={(event) => setFilters({ map: event.target.checked })}
-        />
-        {filters.map && (
+        <div >
+          <Checkbox
+            name="missing"
+            label={`Bez souřadnic (${missing.length})`}
+            checked={filters.missing}
+            onChange={(event) => setFilters({ missing: event.target.checked })}
+          />
+          <Checkbox
+            name="map"
+            label="Zobrazit mapu"
+            checked={filters.map}
+            onChange={(event) => setFilters({ map: event.target.checked })}
+          />
+        </div>
+        {showMap && (
           <SelectField
             name="shape"
             label="Mapa"
@@ -247,19 +250,19 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
           />
         )}
         <p role="status" className="ml-auto text-sm text-neutral-11">
-          {isPending ? 'Loading…' : !error && `${visible.length} events`}
+          {isPending ? 'Načítám…' : !error && `${visible.length} událostí`}
         </p>
       </div>
       <FormError error={error} />
       {!error && (
         <>
-          {filters.map && (
-            <EventMap key={filters.shape} events={filtered} shape={filters.shape} />
+          {showMap && (
+            <EventMap key={filters.shape} events={visible} shape={filters.shape} />
           )}
           <Table
             columns={['date', 'event', 'status', 'location', 'country', 'competitions']}
             busy={isPending}
-            empty="No events found"
+            empty="Žádné události"
           >
             {visible.map((event) => (
               <tr key={event.id} className="border-t border-neutral-4">
