@@ -25,7 +25,7 @@ export function LinkUserToPersonForm({ personId, userId }: {
   userId: string;
 }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setError } = useForm({
     resolver: zodResolver(Form),
     defaultValues: { userId: userId ?? '', personId: personId ?? '' },
   });
@@ -52,7 +52,11 @@ export function LinkUserToPersonForm({ personId, userId }: {
     const response = await create({
       input: { userProxy: values },
     });
-    if (!response.error) onSuccess();
+    if (response.error) {
+      setError('root.server', { message: response.error.message });
+      return;
+    }
+    onSuccess();
   };
 
   return (

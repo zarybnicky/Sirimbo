@@ -1,55 +1,129 @@
 import { DialogTitle } from '@/ui/dialog';
-import { CreateCohortMembershipDocument } from '@/graphql/Memberships';
-import { FormError, useFormResult } from '@/ui/form';
-import React from 'react';
-import { useMutation, useQuery } from 'urql';
-import { z } from 'zod';
-import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import {
+  AddToCohortOptionsDocument,
+  SyncCohortMembershipsDocument,
+} from '@/graphql/Cohorts';
+import { FieldHelper, FormError, useFormResult } from '@/ui/form';
+import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { SubmitButton } from '@/ui/submit';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CohortListDocument } from '@/graphql/Cohorts';
+import { buttonCls } from '@/ui/style';
+import { X } from 'lucide-react';
+import { useMutation, useQuery } from 'urql';
+import { useController, useForm } from 'react-hook-form';
 
-const Form = z.object({
-  cohortIds: z.array(z.string()).min(1, 'Vyberte alespoň jednu skupinu'),
-});
-
-export function AddToCohortForm({ personId }: { personId: string; }) {
+export function AddToCohortForm({ personId }: { personId: string }) {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit } = useForm({
-    resolver: zodResolver(Form),
+  const { control, handleSubmit, setError } = useForm({
+    defaultValues: { cohortIds: [] as string[] },
   });
-  const [result, createCohortMember] = useMutation(CreateCohortMembershipDocument);
-
-  const [{ data: cohorts, error: queryError }] = useQuery({
-    query: CohortListDocument,
-    variables: { archived: false },
+  const { field, fieldState } = useController({
+    control,
+    name: 'cohortIds',
+    rules: { validate: (ids) => ids.length > 0 || 'Vyberte alespoň jednu skupinu' },
   });
-  const cohortOptions = React.useMemo(
-    () => cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || [],
-    [cohorts],
+  const selectedIds = field.value;
+  const [result, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
+  const [query] = useQuery({
+    query: AddToCohortOptionsDocument,
+    variables: { personId },
+    requestPolicy: 'network-only',
+  });
+  const person = query.data?.person;
+  const memberships =
+    person?.cohortMembershipsList.filter((x) => x.status !== 'EXPIRED') ?? [];
+  const existingIds = new Set(memberships.map((x) => x.cohortId));
+  const cohorts = query.data?.cohortsList ?? [];
+  const toAdd = cohorts.filter(
+    (x) => selectedIds.includes(x.id) && !existingIds.has(x.id),
   );
+  const options = cohorts
+    .filter((x) => !existingIds.has(x.id) && !selectedIds.includes(x.id))
+    .map((x) => ({ id: x.id, label: x.name }));
 
-  const onSubmit = async (values: z.infer<typeof Form>) => {
-    for (const cohortId of values.cohortIds) {
-      const result = await createCohortMember({
-        input: { cohortMembership: { personId, cohortId } },
-      });
-      if (result.error) return;
+  const rows = [
+    ...memberships,
+    ...toAdd.map((cohort) => ({
+      id: `new:${cohort.id}`,
+      cohortId: cohort.id,
+      cohort,
+      status: 'NEW' as const,
+    })),
+  ];
+
+  const onSubmit = async () => {
+    if (!person || query.error || query.fetching) return;
+    const cohortIds = rows.filter((x) => x.status !== 'PENDING').map((x) => x.cohortId);
+    const result = await syncCohorts({
+      input: { personId, cohortIds: [...new Set(cohortIds)] },
+    });
+    if (result.error) {
+      setError('root.server', { message: result.error.message });
+      return;
     }
     onSuccess();
   };
 
   return (
-    <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přidat do skupiny</DialogTitle>
-      <FormError error={result.error || queryError} />
-      <VerticalCheckboxButtonGroupElement
+      <FormError error={result.error || query.error} />
+      {query.fetching && !person && <p>Načítám skupiny…</p>}
+      {!query.fetching && !query.error && !person && <p>Osoba nebyla nalezena.</p>}
+      {person && (
+        <>
+          {rows.length > 0 && (
+            <ul className="divide-y divide-neutral-4 rounded-md border border-neutral-4">
+              {rows.map(({ id, cohortId, cohort, status }) => (
+                <li
+                  key={id}
+                  className={`flex items-center justify-between gap-3 px-3 py-2 text-sm ${status === 'NEW' ? 'bg-accent-2' : ''}`}
+                >
+                  <span>{cohort?.name ?? cohortId}</span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span
+                      className={status === 'NEW' ? 'text-accent-11' : 'text-neutral-11'}
+                    >
+                      {status === 'NEW' ? 'Bude přidáno' : status === 'PENDING' ? 'Naplánováno' : 'Stávající'}
+                    </span>
+                    {status === 'NEW' && (
+                      <button
+                        type="button"
+                        className={buttonCls({ variant: 'outline', size: 'xs' })}
+                        aria-label={`Odebrat z výběru: ${cohort?.name}`}
+                        onClick={() =>
+                          field.onChange(selectedIds.filter((id) => id !== cohortId))
+                        }
+                      >
+                        <X className="size-4" />
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          {options.length > 0 ? (
+            <div>
+              <ComboboxSearchArea
+                inline
+                options={options}
+                onChange={(id) => {
+                  if (id) field.onChange([...selectedIds, id]);
+                }}
+              />
+            </div>
+          ) : (
+            <p className="text-sm text-neutral-11">Žádné další skupiny k přidání.</p>
+          )}
+          <FieldHelper error={fieldState.error} />
+        </>
+      )}
+      <SubmitButton
         control={control}
-        name="cohortIds"
-        options={cohortOptions}
-      />
-      <SubmitButton control={control} disabled={!cohorts || !!queryError} />
+        disabled={!person || !!query.error || query.fetching || toAdd.length === 0}
+      >
+        Uložit změny
+      </SubmitButton>
     </form>
   );
 }
