@@ -47,7 +47,7 @@ after(async () => {
   await pool.end();
 });
 
-async function request(
+async function request<Data = Record<string, { totalCount: number; nodes: { id: string }[] }>>(
   query: string,
   variables = {},
   claims?: Record<string, unknown>,
@@ -67,7 +67,7 @@ async function request(
     body: JSON.stringify({ query, variables }),
   });
   return (await response.json()) as {
-    data: Record<string, { totalCount: number; nodes: { id: string }[] }>;
+    data: Data;
     errors?: { message: string }[];
   };
 }
@@ -82,6 +82,7 @@ test('new names are present and crawler/federation writes are absent', () => {
     'CrawlerResponse',
   ])
     assert(schema.getType(name), name);
+  assert.equal(schema.getQueryType()!.getFields().competitionParticipations, undefined);
   const mutations = schema.getMutationType()!.getFields();
   for (const name of [
     'storeResponse',
@@ -190,6 +191,128 @@ test('event date conditions include both ends of a multi-day event', async () =>
     assert.equal(result.errors, undefined);
     assert.equal(result.data.matches.totalCount, count);
   }
+});
+
+test('participation scopes match the legacy reports under tenant RLS', async () => {
+  const query = `query Participation($participant: CompetitionParticipantCondition!, $date: CompetitionDateCondition!) {
+    matches: competitions(first: 100,
+      condition: { participation: { participant: $participant, date: $date } }, orderBy: PRIMARY_KEY_ASC
+    ) { totalCount nodes { id } }
+  }`;
+  const claims = { member_tenant_ids: ['1', '3'], my_tenant_ids: ['1', '3'] };
+  const client = await pool.connect();
+  try {
+    await client.query('begin read only');
+    await client.query("set local role member; set local jwt.claims.my_tenant_ids = '{1,3}'");
+    for (const key of [
+      'my_person_ids', 'my_cohort_ids', 'my_couple_ids',
+      'shared.event_ids', 'shared.person_ids', 'shared.couple_ids', 'shared.cohort_ids',
+    ]) {
+      await client.query('select set_config($1, $2, true)', [`jwt.claims.${key}`, '{}']);
+    }
+    for (const tenant of ['1', '3']) {
+      await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenant]);
+      const { rows: [sample] } = await client.query(`
+        select p.id::text as person_id, c.start_date::text as since,
+          (c.start_date + 7)::text as until,
+          (select cohort_id::text from current_cohort_membership
+           where person_id = p.id limit 1) as cohort_id
+        from current_tenant_membership tm
+        join person p on p.id = tm.person_id
+        join federated.person fp on fp.federation = 'csts' and fp.external_id = p.csts_id
+        join federated.competitor_component cc on cc.person_id = fp.id
+        join federated.competition_result r on r.competitor_id = cc.competitor_id
+        join federated.competition c on c.id = r.competition_id
+        order by c.start_date desc limit 1
+      `);
+      assert(sample, `tenant ${tenant} has a competition fixture`);
+      const date = { since: sample.since, until: sample.until };
+      for (const [personIds, cohortId] of [
+        [null, null], [[sample.person_id], null], [[], null],
+        [null, sample.cohort_id],
+      ] as [string[] | null, string | null][]) {
+        const expected = await client.query(`
+          select competition_id from competition_brief($1, $2, $3, $4)
+          union
+          select competition_id from competition_report($1, $2, $3, $4)
+          order by competition_id
+        `, [date.since, date.until, cohortId, personIds]);
+        const result = await request(query, {
+          participant: { currentTenant: true, personIds, cohortId }, date,
+        }, claims, tenant);
+        assert.equal(result.errors, undefined);
+        assert.equal(result.data.matches.totalCount, expected.rows.length);
+        assert.deepEqual(result.data.matches.nodes.map(x => x.id),
+          expected.rows.slice(0, 100).map(x => x.competition_id));
+      }
+      for (const condition of [
+        { participant: { personIds: [sample.person_id] }, date },
+        { participant: { currentTenant: true }, date },
+      ]) {
+        const anonymous = await request(query, condition, undefined, tenant);
+        assert.equal(anonymous.errors, undefined);
+        assert.equal(anonymous.data.matches.totalCount, 0);
+      }
+      const emptyDate = await request(query, {
+        participant: { currentTenant: true }, date: { since: date.since, until: date.since },
+      }, claims, tenant);
+      assert.equal(emptyDate.errors, undefined);
+      assert.equal(emptyDate.data.matches.totalCount, 0);
+    }
+  } finally {
+    await client.query('rollback');
+    client.release();
+  }
+});
+
+test('couple participation selects the exact partnership', async () => {
+  const { rows: [sample] } = await pool.query(`
+    select l.couple_id::text, array_agg(distinct l.competitor_id) as competitors,
+      (select man_id::text from couple where id = l.couple_id) as person_id
+    from couple_federation_link l
+    join federated.competition_participation p using (competitor_id)
+    group by l.couple_id limit 1
+  `);
+  assert(sample);
+  const query = `query Participation($participant: CompetitionParticipantCondition!) {
+    matches: competitions(first: 100,
+      condition: { participation: { participant: $participant } }, orderBy: PRIMARY_KEY_ASC
+    ) { totalCount nodes { id } }
+  }`;
+  const expected = await pool.query(`
+    select distinct competition_id from federated.competition_participation
+    where competitor_id = any($1::text[]) order by competition_id
+  `, [sample.competitors]);
+  const result = await request(query, { participant: { coupleId: sample.couple_id } },
+    { is_system_admin: true });
+  assert.equal(result.errors, undefined);
+  assert.equal(result.data.matches.totalCount, expected.rows.length);
+  assert.deepEqual(result.data.matches.nodes.map(x => x.id),
+    expected.rows.slice(0, 100).map(x => x.competition_id));
+  for (const [personId, count] of [[sample.person_id, expected.rows.length], ['-1', 0]]) {
+    const intersection = await request(query, {
+      participant: { coupleId: sample.couple_id, personIds: [personId] },
+    }, { is_system_admin: true });
+    assert.equal(intersection.errors, undefined);
+    assert.equal(intersection.data.matches.totalCount, count);
+  }
+  const viaRef = await request<{ couple: { matches: typeof result.data.matches } }>(`
+    query Ref($id: BigInt!) {
+      couple(id: $id) {
+        matches: federationCompetitions(first: 100, orderBy: PRIMARY_KEY_ASC) {
+          totalCount nodes { id }
+        }
+      }
+    }
+  `, { id: sample.couple_id }, { is_system_admin: true });
+  assert.equal(viaRef.errors, undefined);
+  assert.deepEqual(new Set(viaRef.data.couple.matches.nodes.map(x => x.id)),
+    new Set(result.data.matches.nodes.map(x => x.id)));
+  const empty = await request(query, {
+    participant: { coupleId: sample.couple_id, personIds: [] },
+  }, { is_system_admin: true });
+  assert.equal(empty.errors, undefined);
+  assert.equal(empty.data.matches.totalCount, 0);
 });
 
 test('pagination checks variables on every execution, including cached documents', async () => {

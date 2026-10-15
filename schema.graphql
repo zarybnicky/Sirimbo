@@ -2237,6 +2237,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `completedAt` field."""
   completedAt: Datetime
+  date: CompetitionDateCondition
 
   """Checks for equality with the object’s `endDate` field."""
   endDate: Date
@@ -2259,6 +2260,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `participantsTotal` field."""
   participantsTotal: Int
+  participation: CompetitionParticipationFilter
 
   """Checks for equality with the object’s `registrationFee` field."""
   registrationFee: BigFloat
@@ -2268,6 +2270,14 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `status` field."""
   status: FederationEventStatus
+}
+
+input CompetitionDateCondition {
+  """Inclusive competition start date."""
+  since: Date
+
+  """Exclusive competition start date."""
+  until: Date
 }
 
 """A connection to a list of `CompetitionEntry` values."""
@@ -2347,6 +2357,7 @@ input CompetitionEntryCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
   hasResult: Boolean
+  participant: CompetitionParticipantCondition
 }
 
 type CompetitionOfficial {
@@ -2432,6 +2443,26 @@ enum CompetitionOfficialsOrderBy {
   ROLE_DESC
 }
 
+"""Intersect the supplied scopes to select federation competitors."""
+input CompetitionParticipantCondition {
+  """Require a current member of this local cohort."""
+  cohortId: BigInt
+
+  """An exact local partnership, across federations."""
+  coupleId: BigInt
+
+  """When true, require a current member of the request tenant."""
+  currentTenant: Boolean
+
+  """Local person IDs. An empty list matches nobody."""
+  personIds: [BigInt!]
+}
+
+input CompetitionParticipationFilter {
+  date: CompetitionDateCondition
+  participant: CompetitionParticipantCondition
+}
+
 type CompetitionResult {
   """
   Reads a single `Competition` that is related to this `CompetitionResult`.
@@ -2480,6 +2511,7 @@ input CompetitionResultCondition {
 
   """Checks for equality with the object’s `lastRound` field."""
   lastRound: String
+  participant: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `pointGain` field."""
   pointGain: BigFloat
@@ -3189,6 +3221,35 @@ type Couple {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  federationCompetitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
 
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
@@ -7449,6 +7510,35 @@ type FederationCompetitor {
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionResultsConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
   competitorType: CompetitorType!
 
   """
@@ -11135,6 +11225,35 @@ type Person {
     """
     orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationCompetitorCategoryProgressesConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  federationCompetitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(

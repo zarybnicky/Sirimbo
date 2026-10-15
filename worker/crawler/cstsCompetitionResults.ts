@@ -266,7 +266,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       ranking: competitor.ranking,
       rankingTo: competitor.rankingTo,
       pointGain: competitor.points?.toString() ?? '',
-      finalGain: '',
+      finalGain: competitor.final ? '1' : '0',
       isFinal: competitor.final,
       completionStatus: competitor.completion.completion,
       lastRound: competitor.completion.lastRound,

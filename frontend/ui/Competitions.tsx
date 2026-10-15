@@ -1,11 +1,20 @@
 import {
-  ActivityTimelineDocument,
-  type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
-  type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
-} from '@/graphql/ActivityTimeline';
+  CompetitionParticipationsDocument,
+  ClubCompetitionLocationsDocument,
+} from '@/graphql/CompetitionParticipation';
+import type {
+  CompetitionType,
+  FederationEventStatus,
+  CompetitionParticipantCondition,
+} from '@/graphql';
+import type { CompetitionCategoryFragment } from '@/graphql/Federation';
+import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
+import { Pagination } from '@/ui/Pagination';
+import { FormError } from '@/ui/form';
+import { format } from 'date-fns';
 import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
-import { numericDateFormatter } from '@/ui/format';
+import { numericDateFormatter, formatResultStatus } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
@@ -15,9 +24,30 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
-export type CompetitionEntry =
-  | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
-  | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
+export type CompetitionEntry = {
+  id: string;
+  federation: string | null;
+  competitorId: string | null;
+  competitorName: string | null;
+  competitionId: string | null;
+  competitionExternalId: string | null;
+  competitionEventId: string | null;
+  competitionEventExternalId: string | null;
+  competitionEventName: string | null;
+  competitionEventLocation: string | null;
+  competitionDate: string | null;
+  competitionType: CompetitionType | null;
+  category: CompetitionCategoryFragment | null;
+  participants: number | null;
+  checkInEnd?: string | null;
+  status?: FederationEventStatus;
+  ranking?: number | null;
+  rankingTo?: number | null;
+  pointGain?: string | null;
+  finalGain?: string | null;
+  isFinal?: boolean | null;
+  completionStatus?: string | null;
+};
 
 type CompetitorGroup = {
   key: string;
@@ -141,7 +171,8 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
           ),
         )
         .map((entry) => {
-          const result = entry.__typename === 'ActivityCompetitionResult' ? entry : null;
+          const result = entry.ranking !== undefined ? entry : null;
+          const status = formatResultStatus(entry.completionStatus);
           const category =
             formatCategoryName(entry.federation, entry.category, entry.competitionType) ||
             entry.competitionExternalId ||
@@ -165,23 +196,26 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
                         {result.participants != null && ` z ${result.participants}`}
                       </>
                     )
-                  : entry.__typename === 'ActivityCompetitionBrief'
-                    ? entry.checkInEnd?.slice(0, 5)
-                    : null}
+                  : entry.checkInEnd?.slice(0, 5)}
               </div>
               <CompetitionLink
                 entry={entry}
                 competitionId={entry.competitionExternalId}
-                className="min-w-0 font-semibold text-accent-11"
+                className={cn(
+                  'min-w-0 font-semibold text-accent-11',
+                  entry.status === 'CANCELLED' && 'line-through',
+                )}
               >
                 {category}
               </CompetitionLink>
               {result && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
                   {Number(result.pointGain) > 0 && `+${Number(result.pointGain)}b`}
-                  {result.isFinal && ' F'}
+                  {/* TODO: Use finalGain once existing ČSTS results have been reimported. */}
+                  {entry.federation === 'csts' && result.isFinal && ' F'}
                 </div>
               )}
+              {status && <div className="col-span-full text-neutral-11">{status}</div>}
             </div>
           );
         })}
@@ -253,32 +287,85 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
   const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
-  const [{ data, fetching }] = useQuery({
-    query: ActivityTimelineDocument,
-    variables: {
-      since: startDate.toISOString(),
-      until: add(startDate, 1, 'week').toISOString(),
-      personIds,
-      cohortId,
-      kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT'],
-    },
-    requestPolicy: 'cache-and-network',
+  const date = {
+    since: format(startDate, 'yyyy-MM-dd'),
+    until: format(add(startDate, 1, 'week'), 'yyyy-MM-dd'),
+  };
+  const clubScope: CompetitionParticipantCondition = {
+    currentTenant: personIds == null,
+    personIds,
+    cohortId,
+  };
+  const participant: CompetitionParticipantCondition = {
+    ...clubScope,
+    personIds: onlyMine
+      ? (personIds?.filter((id) => auth.personIds.includes(id)) ?? auth.personIds)
+      : personIds,
+  };
+  const { data, fetching, error, pagination } = usePaginatedQuery({
+    query: CompetitionParticipationsDocument,
+    variables: (offset) => ({ participant, date, offset }),
+    limit: 50,
+    pageKey: 'competitionPage',
+    getTotal: (data) => data?.competitions?.totalCount,
   });
-  const entries = (data?.activityTimelineList ?? []).filter(
-    (item): item is CompetitionEntry =>
-      item.__typename === 'ActivityCompetitionBrief' ||
-      item.__typename === 'ActivityCompetitionResult',
+  const [{ data: clubData, fetching: clubFetching }] = useQuery({
+    query: ClubCompetitionLocationsDocument,
+    variables: { participant: clubScope, date },
+    pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
+  });
+  const visible: CompetitionEntry[] = (data?.competitions?.nodes ?? []).flatMap(
+    (competition) => {
+      const common = {
+        federation: competition.federation,
+        competitionId: competition.id,
+        competitionExternalId: competition.externalId,
+        competitionEventId: competition.event?.id ?? null,
+        competitionEventExternalId: competition.event?.externalId ?? null,
+        competitionEventName: competition.event?.name ?? null,
+        competitionEventLocation:
+          competition.event?.location || competition.event?.city || null,
+        competitionDate: competition.startDate,
+        competitionType: competition.competitionType,
+        category: competition.category,
+        participants: competition.participantsTotal,
+        checkInEnd: competition.checkInEnd,
+        status: competition.status,
+      };
+      return [
+        ...competition.results.map((result) => ({
+          ...common,
+          ...result,
+          id: `${competition.id}:${result.competitorId}`,
+          competitorName: result.competitor?.name ?? result.competitorId,
+        })),
+        ...competition.entries.map((entry) => ({
+          ...common,
+          ...entry,
+          id: `${competition.id}:${entry.competitorId}`,
+          competitorName: entry.competitor?.name ?? entry.competitorId,
+        })),
+      ];
+    },
   );
-  const visible = onlyMine
-    ? entries.filter((entry) => auth.personIds.includes(entry.personId ?? ''))
-    : entries;
   const locations = [
-    ...new Set(entries.flatMap((entry) => entry.competitionEventLocation || [])),
+    ...new Set(
+      (clubData?.competitions?.nodes ?? []).flatMap(
+        (competition) => competition.event?.location || competition.event?.city || [],
+      ),
+    ),
   ];
 
   return (
     <section className="flex flex-col relative">
-      <WeekPicker title="Soutěže" startDate={startDate} onChange={setStartDate} />
+      <WeekPicker
+        title="Soutěže"
+        startDate={startDate}
+        onChange={(date) => {
+          setStartDate(date);
+          pagination.onPageChange(1);
+        }}
+      />
 
       {allowOnlyMine && (
         <div className="absolute top-7 right-0">
@@ -286,32 +373,43 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
             name="competitions-only-mine"
             label="Pouze moje"
             checked={onlyMine}
-            onChange={(event) => setOnlyMine(event.currentTarget.checked)}
+            onChange={(event) => {
+              setOnlyMine(event.currentTarget.checked);
+              pagination.onPageChange(1);
+            }}
             className="mt-1 shrink-0"
           />
         </div>
       )}
 
-      {fetching ? (
+      {error ? (
+        <FormError error={error} />
+      ) : fetching ? (
         <p className="text-sm text-neutral-9">Načítám...</p>
       ) : (
         visible.length === 0 && (
           <div className="text-sm text-neutral-9">
             <p>Žádné soutěže tento týden.</p>
-            {onlyMine && locations.length > 0 && (
+            {onlyMine && !clubFetching && !!clubData?.competitions?.nodes.length && (
               <button
                 type="button"
                 className="underline text-accent-12"
-                onClick={() => setOnlyMine(false)}
+                onClick={() => {
+                  setOnlyMine(false);
+                  pagination.onPageChange(1);
+                }}
               >
-                Další soutěže s klubovou účastí: {locations.join(', ')}.
+                Další soutěže s klubovou účastí
+                {locations.length > 0 ? `: ${locations.join(', ')}` : ''}
+                {clubData?.competitions?.pageInfo.hasNextPage ? '…' : '.'}
               </button>
             )}
           </div>
         )
       )}
 
-      <CompetitionPanelFrame entries={visible} />
+      {!error && !fetching && <CompetitionPanelFrame entries={visible} />}
+      <Pagination {...pagination} />
     </section>
   );
 });

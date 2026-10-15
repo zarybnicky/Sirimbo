@@ -1,0 +1,76 @@
+fragment ParticipationCompetition on Competition {
+  id
+  federation
+  externalId
+  startDate
+  checkInEnd
+  status
+  competitionType
+  participantsTotal
+  event {
+    id
+    externalId
+    name
+    location
+    city
+  }
+  category {
+    ...CompetitionCategory
+  }
+}
+
+query CompetitionParticipations(
+  $participant: CompetitionParticipantCondition!
+  $date: CompetitionDateCondition!
+  $offset: Int! = 0
+) {
+  competitions(
+    first: 50
+    offset: $offset
+    condition: { participation: { participant: $participant, date: $date } }
+    orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+  ) {
+    totalCount
+    nodes {
+      ...ParticipationCompetition
+      entries: entriesList(
+        condition: { participant: $participant, cancelled: false, hasResult: false }
+        orderBy: COMPETITOR_ID_ASC
+      ) {
+        competitionId
+        competitorId
+        competitor { id name }
+      }
+      results: resultsList(condition: { participant: $participant }, orderBy: COMPETITOR_ID_ASC) {
+        competitionId
+        competitorId
+        competitor { id name }
+        ranking
+        rankingTo
+        pointGain
+        finalGain
+        isFinal
+        completionStatus
+      }
+    }
+  }
+}
+
+query ClubCompetitionLocations(
+  $participant: CompetitionParticipantCondition!
+  $date: CompetitionDateCondition!
+) {
+  competitions(
+    first: 100
+    condition: { participation: { participant: $participant, date: $date } }
+    orderBy: [START_DATE_ASC, ID_ASC]
+  ) {
+    nodes {
+      id
+      event { id location city }
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}

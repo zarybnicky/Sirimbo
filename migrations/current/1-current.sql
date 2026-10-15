@@ -33,7 +33,8 @@ COMMENT ON TABLE federated.event_official IS '@name federation_event_official
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
 @behavior -insert -update -delete -list
 @ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
-@ref couples via:public.couple_federation_link;public.couple';
+@ref couples via:public.couple_federation_link;public.couple
+@ref competitions via:federated.competition_participation;federated.competition';
 COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
@@ -169,7 +170,8 @@ grant select on person_federation_link to anonymous;
 comment on table person is '@omit create
 @ref federationPeople via:public.person_federation_link;federated.person
 @ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
-@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry
+@ref federationCompetitions via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competition_participation;federated.competition';
 
 drop function if exists csts_athlete;
 drop function if exists person_csts_progress;
@@ -196,7 +198,8 @@ grant select on couple_federation_link to anonymous;
 comment on table couple is '@simpleCollections only
 @behavior -query:resource:list -query:resource:connection
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor
-@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry
+@ref federationCompetitions via:public.couple_federation_link;federated.competitor;federated.competition_participation;federated.competition behavior:"+connection -list"';
 
 do $$
 begin
@@ -531,3 +534,8 @@ begin
   end if;
 end;
 $$;
+
+create index if not exists competition_start_date_idx
+  on federated.competition (start_date) include (id);
+
+--!include views/competition_participation.sql

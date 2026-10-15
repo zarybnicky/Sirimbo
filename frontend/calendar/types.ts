@@ -1,5 +1,8 @@
 import type { EventWithTrainerFragment } from '@/graphql/Event';
-import type { CompetitionEntry } from '@/ui/Competitions';
+import type {
+  ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
+  ActivityTimelineItem_ActivityCompetitionResult_Fragment,
+} from '@/graphql/ActivityTimeline';
 
 export type DateRange = {
   since: Date;
@@ -26,7 +29,10 @@ export type CalendarCompetitionEvent = CalendarItemBase & {
   id: string;
   title: string;
   eventLocation: string | null;
-  items: CompetitionEntry[];
+  items: (
+    | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
+    | ActivityTimelineItem_ActivityCompetitionResult_Fragment
+  )[];
 };
 
 export type CalendarBirthdayEvent = CalendarItemBase & {
