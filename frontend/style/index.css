@@ -61,6 +61,8 @@
   --color-green-11: hsl(153deg 67% 28.5%);
   --color-green-12: hsl(155deg 40% 14%);
 
+  --color-warning-11: #ad5700;
+
   --color-danger-3: #fbe4e8;
   --color-danger-9: #d94b67;
   --color-danger-10: #e05570;
@@ -203,6 +205,8 @@
       --color-green-10: hsl(151deg 49.3% 46.5%);
       --color-green-11: hsl(151deg 50% 53.2%);
       --color-green-12: hsl(137deg 72% 94%);
+
+      --color-warning-11: #ffca16;
 
       --color-danger-3: #471823;
       --color-danger-11: #ffb4c2;

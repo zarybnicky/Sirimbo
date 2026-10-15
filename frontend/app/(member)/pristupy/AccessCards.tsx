@@ -25,11 +25,13 @@ import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
-import { SelectField, type SelectOption } from '@/ui/fields/select';
+import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
+import { TextField } from '@/ui/fields/text';
+import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { Clock3, CreditCard, KeyRound } from 'lucide-react';
 import Link from 'next/link';
-import { parseAsString, useQueryState } from 'nuqs';
+import { parseAsString, parseAsStringLiteral, useQueryState, useQueryStates } from 'nuqs';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
@@ -42,13 +44,13 @@ const compactDateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
 type ActivityStatus = 'never' | '<30' | '<90' | '>90';
 type AccessStatus = 'none' | ActivityStatus;
 type AccessFacet = 'all' | AccessStatus;
-const facetOrder: readonly AccessFacet[] = ['all', 'none', 'never', '<30', '<90', '>90'];
+const facetOrder: readonly AccessFacet[] = ['all', 'none', 'never', '>90', '<90', '<30'];
 const facetLabels = {
   all: 'Všichni',
   never: 'Nikdy',
-  '<30': 'Během posledních 30 dní',
-  '<90': 'Před 30 až 90 dny',
-  '>90': 'Před více než 90 dny',
+  '>90': '≥ 90 dní',
+  '<90': '30–90 dní',
+  '<30': '< 30 dní',
 } satisfies Record<Exclude<AccessFacet, 'none'>, string>;
 
 function activityStatus(timestamp?: string): ActivityStatus {
@@ -61,8 +63,8 @@ function activityClassName(status: AccessStatus) {
   return status === '<30'
     ? 'text-green-11'
     : status === '<90'
-      ? 'text-neutral-11'
-      : 'text-danger-10';
+      ? 'text-warning-11'
+      : 'text-danger-11';
 }
 
 const normalizeEmail = (email?: string | null) => email?.trim().toLowerCase() ?? '';
@@ -154,9 +156,16 @@ export function AccessCards() {
 
 const PeopleAccessTab = React.memo(function PeopleAccessTab() {
   const { enableStarletImport = false } = useTenantConfig();
-  const [webFacet, setWebFacet] = React.useState<AccessFacet>('all');
-  const [cardFacet, setCardFacet] = React.useState<AccessFacet>('all');
-  const [{ data, error }] = useQuery({
+  const [{ web: webFacet, card, search }, setFilters] = useQueryStates(
+    {
+      web: parseAsStringLiteral(facetOrder).withDefault('all'),
+      card: parseAsStringLiteral(facetOrder).withDefault('all'),
+      search: parseAsString.withDefault(''),
+    },
+    { shallow: true, scroll: false },
+  );
+  const cardFacet = enableStarletImport ? card : 'all';
+  const [{ data, error, fetching }] = useQuery({
     query: PeopleAccessOverviewDocument,
     variables: { includeCredentials: enableStarletImport },
   });
@@ -180,30 +189,44 @@ const PeopleAccessTab = React.memo(function PeopleAccessTab() {
       ),
     [credentialsByPerson, people],
   );
-  const facetCounts = React.useMemo(
-    () => ({
-      web: Map.groupBy(accessRows, (row) => row.webStatus),
-      card: Map.groupBy(accessRows, (row) => row.cardStatus),
-    }),
-    [accessRows],
-  );
-  const filteredRows = React.useMemo(
-    () =>
-      accessRows.filter(
-        (row) =>
-          (webFacet === 'all' || row.webStatus === webFacet) &&
-          (cardFacet === 'all' || row.cardStatus === cardFacet),
+  const searchedRows = React.useMemo(() => {
+    const terms = search.trim().toLocaleLowerCase('cs').normalize('NFD')
+      .replaceAll(/\p{M}/gu, '')
+      .split(/\s+/)
+      .filter(Boolean);
+    return accessRows.filter(({ person }) => {
+      const name = person.name.toLocaleLowerCase('cs').normalize('NFD')
+        .replaceAll(/\p{M}/gu, '');
+      return terms.every((term) => name.includes(term));
+    });
+  }, [accessRows, search]);
+  const { filteredRows, webFacetOptions, cardFacetOptions } = React.useMemo(() => {
+    const webRows = searchedRows.filter(
+      (row) => cardFacet === 'all' || row.cardStatus === cardFacet,
+    );
+    const cardRows = searchedRows.filter(
+      (row) => webFacet === 'all' || row.webStatus === webFacet,
+    );
+    const webCounts = Map.groupBy(webRows, (row) => row.webStatus);
+    const cardCounts = Map.groupBy(cardRows, (row) => row.cardStatus);
+    return {
+      filteredRows: webRows.filter(
+        (row) => webFacet === 'all' || row.webStatus === webFacet,
       ),
-    [accessRows, cardFacet, webFacet],
-  );
-  const webFacetOptions = facetOrder.map((value) => ({
-    value,
-    label: `${value === 'none' ? 'Bez účtu' : facetLabels[value]} (${value === 'all' ? accessRows.length : (facetCounts.web.get(value)?.length ?? 0)})`,
-  })) satisfies SelectOption<AccessFacet>[];
-  const cardFacetOptions = facetOrder.map((value) => ({
-    value,
-    label: `${value === 'none' ? 'Bez aktivní karty' : facetLabels[value]} (${value === 'all' ? accessRows.length : (facetCounts.card.get(value)?.length ?? 0)})`,
-  })) satisfies SelectOption<AccessFacet>[];
+      webFacetOptions: facetOrder.map((value) => ({
+        value,
+        className: value === 'all' ? undefined : activityClassName(value),
+        label: value === 'none' ? 'Bez účtu' : facetLabels[value],
+        count: value === 'all' ? webRows.length : (webCounts.get(value)?.length ?? 0),
+      })),
+      cardFacetOptions: facetOrder.map((value) => ({
+        value,
+        className: value === 'all' ? undefined : activityClassName(value),
+        label: value === 'none' ? 'Bez aktivní karty' : facetLabels[value],
+        count: value === 'all' ? cardRows.length : (cardCounts.get(value)?.length ?? 0),
+      })),
+    };
+  }, [searchedRows, cardFacet, webFacet]);
   const usersByEmail = React.useMemo(
     () => Map.groupBy(data?.users?.nodes ?? [], (x) => normalizeEmail(x.uEmail)),
     [data?.users?.nodes],
@@ -296,23 +319,56 @@ const PeopleAccessTab = React.memo(function PeopleAccessTab() {
           />
         </div>
       )}
-      <div className="mb-2 grid gap-2 sm:max-w-xl sm:grid-cols-2">
-        <SelectField
+      <div className="mb-3 grid gap-3">
+        <FacetRadioGroup
+          name="web-access"
           label="Poslední přihlášení"
           value={webFacet}
-          onChange={setWebFacet}
+          defaultValue="all"
+          onChange={(web) => setFilters({ web }, { history: 'push' })}
           options={webFacetOptions}
-          selectClassName="py-1.5 text-xs"
         />
         {enableStarletImport && (
-          <SelectField
+          <FacetRadioGroup
+            name="card-access"
             label="Poslední vstup kartou"
             value={cardFacet}
-            onChange={setCardFacet}
+            defaultValue="all"
+            onChange={(card) => setFilters({ card }, { history: 'push' })}
             options={cardFacetOptions}
-            selectClassName="py-1.5 text-xs"
           />
         )}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p role="status" className="text-sm text-neutral-11">
+            {fetching
+              ? 'Načítám…'
+              : error
+                ? null
+                : `Zobrazeno ${filteredRows.length} z ${people.length} osob`}
+          </p>
+          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
+            {(search || webFacet !== 'all' || cardFacet !== 'all') && (
+              <button
+                type="button"
+                className={buttonCls({ variant: 'outline', size: 'sm' })}
+                onClick={() => setFilters(
+                  { search: null, web: null, card: null }, { history: 'push' },
+                )}
+              >
+                Zrušit filtry
+              </button>
+            )}
+            <TextField
+              name="access-search"
+              type="search"
+              aria-label="Hledat osobu"
+              placeholder="Jméno nebo příjmení"
+              className="w-56 max-w-full"
+              value={search}
+              onChange={(event) => setFilters({ search: event.currentTarget.value })}
+            />
+          </div>
+        </div>
       </div>
       <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
         <div
@@ -345,7 +401,7 @@ const PeopleAccessTab = React.memo(function PeopleAccessTab() {
             credentialActionMap={credentialActionMap}
           />
         ))}
-        {filteredRows.length === 0 && (
+        {!fetching && !error && filteredRows.length === 0 && (
           <p className="px-3 py-2 text-sm text-neutral-11">
             {people.length === 0 ? 'Žádné osoby.' : 'Žádné osoby pro vybrané filtry.'}
           </p>
