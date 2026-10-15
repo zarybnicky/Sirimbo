@@ -4,8 +4,7 @@ import * as React from 'react';
 import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useClient, useQuery } from 'urql';
-import { TitleBar } from '@/ui/TitleBar';
-import { buttonCls } from '@/ui/style';
+import { PageHeader } from '@/ui/TitleBar';
 import { cn } from '@/lib/cn';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
@@ -45,15 +44,18 @@ export function Crm() {
 
   return (
     <div className="container col-feature">
-      <TitleBar title="Odeslané formuláře">
-        <button
-          type="button"
-          className={buttonCls({ variant: 'outline' })}
-          onClick={() => exportFormResponses(client)}
-        >
-          Export všech
-        </button>
-      </TitleBar>
+      <PageHeader
+        title="Odeslané formuláře"
+        actions={[
+          {
+            id: 'crm.export',
+            key: 'crm.export',
+            label: 'Export všech',
+            group: 'primary',
+            execute: () => exportFormResponses(client),
+          },
+        ]}
+      />
 
       <div className="grow">
         {types.map((type, index) => (

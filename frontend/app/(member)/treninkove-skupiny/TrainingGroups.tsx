@@ -7,9 +7,9 @@ import { cn } from '@/lib/cn';
 import { slugify } from '@/lib/slugify';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { exportCohort } from '@/ui/reports/export-cohort';
-import { buttonCls, cardCls } from '@/ui/style';
+import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { useClient, useQuery } from 'urql';
@@ -25,21 +25,23 @@ export function TrainingGroups() {
 
   return (
     <div className={cn(auth.isLoggedIn ? 'col-full-width p-4' : 'col-popout')}>
-      {auth.isLoggedIn && (
-        <TitleBar title="Tréninkové skupiny">
-          {auth.isTrainer && (
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() =>
-                exportCohort(client, cohorts?.cohortsList?.map((x) => x.id) || [])
-              }
-            >
-              Export všech
-            </button>
-          )}
-        </TitleBar>
-      )}
+      <PageHeader
+        title="Tréninkové skupiny"
+        actions={
+          auth.isTrainer
+            ? [
+                {
+                  id: 'cohort.exportAll',
+                  key: 'cohort.exportAll',
+                  label: 'Export všech',
+                  group: 'primary',
+                  execute: () =>
+                    exportCohort(client, cohorts?.cohortsList?.map((x) => x.id) || []),
+                },
+              ]
+            : undefined
+        }
+      />
 
       <div className={cn('pl-8', auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
         {cohorts?.cohortsList?.map((item) => (

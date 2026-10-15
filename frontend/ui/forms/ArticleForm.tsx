@@ -7,8 +7,7 @@ import {
 } from '@/graphql/Articles';
 import { useActions } from '@/lib/actions';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { ActionGroup } from '@/ui/ActionGroup';
-import { TitleBar } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/TitleBar';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -116,9 +115,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit)}>
-      <TitleBar title={title}>
-        <ActionGroup actions={actions} />
-      </TitleBar>
+      <PageHeader title={title} actions={actions} />
 
       <FormError error={result.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />

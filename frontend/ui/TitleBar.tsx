@@ -6,32 +6,6 @@ import { ActionGroup } from '@/ui/ActionGroup';
 import { ResolvedAction } from '@/lib/actions';
 import { cn } from '@/lib/cn';
 
-type TitleBarProps = {
-  title?: string | null;
-  children?: React.ReactNode;
-};
-
-export function TitleBar({
-  title,
-  children,
-  variant = 'heading',
-  ...typography
-}: TitleBarProps & Parameters<typeof typographyCls>[0]) {
-  return (
-    <div className="mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-baseline relative">
-      <h1
-        className={typographyCls({
-          spacing: variant === 'heading' ? 'topLevel' : 'default',
-          ...typography,
-        })}
-      >
-        {title}
-      </h1>
-      <div className="flex items-center flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-
 type PageHeaderProps<Id extends string = string> = Parameters<typeof typographyCls>[0] & {
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
