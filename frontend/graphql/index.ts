@@ -5859,7 +5859,7 @@ export type FederationCompetitor = {
   /** Reads and enables pagination through a set of `Couple`. */
   couplesList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
-  externalId: Scalars['BigInt']['output'];
+  externalId: Scalars['String']['output'];
   federation: Scalars['String']['output'];
   /** Reads a single `Federation` that is related to this `FederationCompetitor`. */
   federationByFederation: Maybe<Federation>;
@@ -6167,7 +6167,7 @@ export type FederationCompetitorCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
-  externalId?: InputMaybe<Scalars['BigInt']['input']>;
+  externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -7206,7 +7206,7 @@ export type JudgeScore = {
   __typename?: 'JudgeScore';
   /** Reads a single `CompetitionRoundDance` that is related to this `JudgeScore`. */
   competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode: Maybe<CompetitionRoundDance>;
-  competitorId: Scalars['BigInt']['output'];
+  competitorId: Scalars['String']['output'];
   component: ScoreComponent;
   danceCode: Scalars['String']['output'];
   danceOrder: Scalars['Int']['output'];
@@ -7224,7 +7224,7 @@ export type JudgeScore = {
  */
 export type JudgeScoreCondition = {
   /** Checks for equality with the object’s `competitorId` field. */
-  competitorId?: InputMaybe<Scalars['BigInt']['input']>;
+  competitorId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `component` field. */
   component?: InputMaybe<ScoreComponent>;
   /** Checks for equality with the object’s `danceCode` field. */
@@ -10126,7 +10126,7 @@ export type QueryFederationCompetitorArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFederationCompetitorByFederationAndExternalIdArgs = {
-  externalId: Scalars['BigInt']['input'];
+  externalId: Scalars['String']['input'];
   federation: Scalars['String']['input'];
 };
 
@@ -15152,7 +15152,7 @@ export type GraphCacheResolvers = {
     components?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentsConnection> | string>,
     couplesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCouplesListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    externalId?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    externalId?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<Federation> | string>,
     id?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15439,7 +15439,7 @@ export type GraphCacheResolvers = {
   },
   JudgeScore?: {
     competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, WithTypename<CompetitionRoundDance> | string>,
-    competitorId?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    competitorId?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['String']['output'] | string>,
     component?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, ScoreComponent | string>,
     danceCode?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['String']['output'] | string>,
     danceOrder?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['Int']['output'] | string>,

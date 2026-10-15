@@ -244,7 +244,7 @@ INSERT INTO federated.competitor (federation, external_id, competitor_type, name
 SELECT input.federation, input.external_id, input.competitor_type, input.name
 FROM unnest(
   :federation::text[],
-  :externalId::bigint[],
+  :externalId::text[],
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
@@ -252,10 +252,10 @@ ON CONFLICT (id) DO NOTHING;
 
 /* @name EnsureCompetitorsWithComponents */
 WITH competitor_input AS (
-  SELECT federation, external_id, federation || ':' || external_id::text AS id, competitor_type, name
+  SELECT federation, external_id, federation || ':' || external_id AS id, competitor_type, name
   FROM unnest(
     :federation::text[],
-    :externalId::bigint[],
+    :externalId::text[],
     :type::federated.competitor_type[],
     :label::text[]
   ) AS input(federation, external_id, competitor_type, name)
@@ -305,7 +305,7 @@ INSERT INTO federated.competitor (federation, external_id, competitor_type, name
 SELECT input.federation, input.external_id, input.competitor_type, input.name
 FROM unnest(
   :federation::text[],
-  :externalId::bigint[],
+  :externalId::text[],
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
@@ -1086,7 +1086,7 @@ FROM unnest(
   :scoreDanceOrder::int[],
   :scoreDanceCode::text[],
   :scoreJudgePersonId::bigint[],
-  :scoreCompetitorId::bigint[],
+  :scoreCompetitorId::text[],
   :scoreComponent::federated.score_component[],
   :score::numeric(10,3)[],
   :rawScore::text[]
@@ -1243,7 +1243,7 @@ WITH input AS (
     :danceOrder::int[],
     :danceCode::text[],
     :judgePersonId::bigint[],
-    :competitorId::bigint[],
+    :competitorId::text[],
     :component::federated.score_component[],
     :score::numeric(10,3)[]
   ) AS input(
@@ -1309,7 +1309,7 @@ WITH scoped_rounds AS (
     ON js.round_id = p.round_id
    AND js.dance_order = rd.dance_order
    AND js.dance_code = rd.dance_code
-   AND competition.federation || ':' || js.competitor_id::text = p.competitor_id
+   AND competition.federation || ':' || js.competitor_id = p.competitor_id
   GROUP BY
     p.round_id, p.round_index, p.scoring_method, p.competitor_id,
     p.ranking, p.ranking_to, rd.dance_order

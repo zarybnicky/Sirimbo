@@ -17,7 +17,7 @@ type Props = {
 };
 
 const getCompetitor = cache(async (federation: string, externalId: string) => {
-  if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
+  if (!/^[a-zA-Z0-9-]{1,64}$/.test(externalId)) notFound();
   const id = `${federation}:${externalId}`;
   const { federationCompetitor: competitor } = await executeGraphql(
     FederationCompetitorDocument,

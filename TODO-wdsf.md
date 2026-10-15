@@ -4,7 +4,6 @@
 
 - [ ] Redesign reusable faceted search for competitors, then app people/couples; retain inline class, points/finals, and ranklist placement where relevant.
 - [ ] Derive competitor age categories from their members.
-- [ ] Make `/federated` suitable for ordinary users before linking it throughout the main app.
 - [x] Retain local person/couple links in competition results. Results and registrations share the query fragment and link rendering.
 - [x] Derive ČSTS event status from competition completion, while preserving explicit cancellation.
 
@@ -65,9 +64,27 @@ couple competitor but does not attach lead/follow components, so public reports
 that join through `federated.competitor_component` cannot associate WDSF couple
 results with local `person.wdsf_id` values.
 
-A `wdsfCoupleIndex` is likely a better first target than a per-couple loader if
-`/api/1/couple` exposes enough current and historical composition data. The loader
-should seed or upsert:
+Inspection on 2026-10-15:
+
+- [x] Preserve short string competitor IDs: couples keep `rls-` / `wdsf-`,
+  teams use `team-`, and solo competitors use `person-`. The generated primary
+  key adds the federation; scores store only the short ID. Person MINs stay numeric.
+  The cache contains 74,499 distinct `rls-` and 18,042 `wdsf-` couple IDs.
+  Their numeric suffixes do not overlap, but 1,729 also occur as team IDs.
+  The migration deletes ambiguous WDSF competitors and their results/scores,
+  then marks cached participants for reprocessing. Cached responses and other
+  federations' data are retained. Deploy the schema and updated worker together;
+  WDSF results remain incomplete until that replay finishes.
+- [WDSF documents](https://github.com/jaykay-design/WDSF-API/wiki/Media-Types#applicationvndworlddancesportcouple)
+  `rls-` as registered couples and `wdsf-` as non-RLS couples. A `wdsf-` couple
+  can have one or both members supplied only by name; do not invent MINs for them.
+- `/api/1/couple` returned 6,100 active couples with member links, but omitted
+  both retired samples. Historical coverage needs `/api/1/couple/<full-id>`
+  discovery from participant links as well as the active index.
+- Detail samples `rls-9427` and `wdsf-477800` both resolved. The former has both
+  member MINs; the latter has a woman's MIN and `customManName`.
+
+The composition loader should seed or upsert:
 
 - `federated.competitor` rows for WDSF couples
 - `federated.person` rows for the linked people when only IDs/names are present

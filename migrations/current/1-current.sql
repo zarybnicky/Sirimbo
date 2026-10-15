@@ -1,3 +1,5 @@
+lock table crawler.frontier in exclusive mode;
+
 COMMENT ON TABLE public.announcement_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE public.article_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 
@@ -487,3 +489,45 @@ create index if not exists person_external_id_text_idx on federated.person ((ext
 --!include functions/couple_age_group.sql
 
 COMMENT ON FUNCTION federated.class_rank(text) IS '@behavior -*';
+
+do $$
+begin
+  if exists (
+    select 1 from pg_attribute
+    where attrelid = 'federated.competitor'::regclass
+      and attname = 'external_id' and atttypid = 'bigint'::regtype
+  ) then
+    delete from federated.judge_score s
+    using federated.competition_round r, federated.competition c
+    where s.round_id = r.id and r.competition_id = c.id and c.federation = 'wdsf';
+
+    delete from federated.competition_round_result where competitor_id like 'wdsf:%';
+    delete from federated.competition_result where competitor_id like 'wdsf:%';
+    delete from federated.competition_entry where competitor_id like 'wdsf:%';
+    delete from federated.competitor_category_progress where competitor_id like 'wdsf:%';
+    delete from federated.competitor_club_affiliation where competitor_id like 'wdsf:%';
+    delete from federated.ranklist_entry where competitor_id like 'wdsf:%';
+    delete from federated.competitor where federation = 'wdsf';
+
+    -- Move the generated expression to a text column without dropping the ID
+    -- column or its foreign keys. Other federations retain their existing IDs.
+    alter table federated.competitor add column external_id_text text;
+    update federated.competitor set external_id_text = external_id::text;
+    alter table federated.competitor alter column external_id_text set not null;
+    alter table federated.competitor alter column id
+      set expression as (federation || ':' || external_id_text);
+    alter table federated.competitor drop column external_id;
+    alter table federated.competitor rename column external_id_text to external_id;
+    alter table federated.competitor
+      add constraint competitor_federation_external_id_key unique (federation, external_id);
+    create index competitor_external_id_text_idx on federated.competitor (external_id);
+
+    alter table federated.judge_score alter column competitor_id type text using competitor_id::text;
+
+    update crawler.frontier set process_status = 'pending',
+      last_process_error = null, last_process_error_at = null
+    where federation = 'wdsf' and kind = 'participant'
+      and last_successful_response_id is not null;
+  end if;
+end;
+$$;

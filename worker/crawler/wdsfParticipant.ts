@@ -524,8 +524,7 @@ function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
   const couple = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple');
   if (couple) {
     const externalId = couple.href
-      .replace('https://services.worlddancesport.org/api/1/couple/rls-', '')
-      .replace('https://services.worlddancesport.org/api/1/couple/wdsf-', '');
+      .replace('https://services.worlddancesport.org/api/1/couple/', '');
     return {
       externalId,
       type: 'couple',
@@ -535,7 +534,7 @@ function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
 
   const team = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/team');
   if (team) {
-    const externalId = team.href.replace('https://services.worlddancesport.org/api/1/team/', '');
+    const externalId = team.href.replace('https://services.worlddancesport.org/api/1/team/', 'team-');
     return {
       externalId,
       type: 'team',
@@ -547,7 +546,7 @@ function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
   if (athlete) {
     const externalId = athlete.href.replace('https://services.worlddancesport.org/api/1/person/', '');
     return {
-      externalId,
+      externalId: `person-${externalId}`,
       type: 'solo',
       label: (p.PerformanceName ?? p.name)?.trim() ?? '',
       personExternalId: externalId,

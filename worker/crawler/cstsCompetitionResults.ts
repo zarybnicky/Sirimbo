@@ -331,7 +331,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     scoreDanceOrder: number;
     scoreDanceCode: DanceCode;
     scoreJudgePersonId: number;
-    scoreCompetitorId: number;
+    scoreCompetitorId: string;
     scoreComponent: score_component;
     score: number;
     rawScore: string;
@@ -492,7 +492,7 @@ function scoresForRound(args: {
     scoreDanceOrder: number;
     scoreDanceCode: DanceCode;
     scoreJudgePersonId: number;
-    scoreCompetitorId: number;
+    scoreCompetitorId: string;
     scoreComponent: score_component;
     score: number;
     rawScore: string;
@@ -510,7 +510,7 @@ function scoresForRound(args: {
         scoreDanceOrder: danceIndex + 1,
         scoreDanceCode: round.dances[danceIndex],
         scoreJudgePersonId: judge.id,
-        scoreCompetitorId: competitorId,
+        scoreCompetitorId: competitorId.toString(),
         scoreComponent: parsed.component,
         score: parsed.score,
         rawScore: /\([wd]\)$/.test(raw) ? raw : '',

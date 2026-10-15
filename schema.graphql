@@ -7499,7 +7499,7 @@ type FederationCompetitor {
     orderBy: [CouplesOrderBy!]
   ): [Couple!]!
   createdAt: Datetime!
-  externalId: BigInt!
+  externalId: String!
   federation: String!
 
   """
@@ -7840,7 +7840,7 @@ input FederationCompetitorCondition {
   createdAt: Datetime
 
   """Checks for equality with the object’s `externalId` field."""
-  externalId: BigInt
+  externalId: String
 
   """Checks for equality with the object’s `federation` field."""
   federation: String
@@ -9254,7 +9254,7 @@ type JudgeScore {
   Reads a single `CompetitionRoundDance` that is related to this `JudgeScore`.
   """
   competitionRoundDanceByRoundIdAndDanceOrderAndDanceCode: CompetitionRoundDance
-  competitorId: BigInt!
+  competitorId: String!
   component: ScoreComponent!
   danceCode: String!
   danceOrder: Int!
@@ -9275,7 +9275,7 @@ for equality and combined with a logical ‘and.’
 """
 input JudgeScoreCondition {
   """Checks for equality with the object’s `competitorId` field."""
-  competitorId: BigInt
+  competitorId: String
 
   """Checks for equality with the object’s `component` field."""
   component: ScoreComponent
@@ -12586,7 +12586,7 @@ type Query {
   federationCompetitor(id: String!): FederationCompetitor
 
   """Get a single `FederationCompetitor`."""
-  federationCompetitorByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationCompetitor
+  federationCompetitorByFederationAndExternalId(externalId: String!, federation: String!): FederationCompetitor
 
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
