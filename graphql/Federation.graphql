@@ -339,6 +339,7 @@ fragment FederationMapEvent on FederationEvent {
   externalId
   name
   startDate
+  endDate
   location
   city
   country
@@ -346,6 +347,9 @@ fragment FederationMapEvent on FederationEvent {
   postalCode
   venueLat
   venueLng
+  competitions(first: 0) {
+    totalCount
+  }
 }
 
 query FederationEvents(
@@ -363,10 +367,6 @@ query FederationEvents(
       nodes {
         ...FederationMapEvent
         status
-        endDate
-        competitions(first: 0) {
-          totalCount
-        }
       }
     }
   }

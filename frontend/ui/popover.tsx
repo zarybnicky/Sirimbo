@@ -9,6 +9,8 @@ export const Popover = PopoverPrimitive.Root;
 
 export const PopoverTrigger = PopoverPrimitive.Trigger;
 
+export const PopoverAnchor = PopoverPrimitive.Anchor;
+
 function PopoverPortal({
   children,
   className,
@@ -34,9 +36,9 @@ export const PopoverContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
     portalClassName?: string;
   }
->(function PopoverContent({ className, children, ...props }, ref) {
+>(function PopoverContent({ className, portalClassName, children, ...props }, ref) {
   return (
-    <PopoverPortal>
+    <PopoverPortal className={portalClassName}>
       <PopoverPrimitive.Content
         ref={ref}
         className={cn(

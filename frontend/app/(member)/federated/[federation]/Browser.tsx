@@ -26,7 +26,7 @@ import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
-import EventMap, { defaultMapShapes, eventMonths, mapShapes } from '../EventMap';
+import EventMap, { defaultMapViews, eventMonthColors, eventMonths, mapViews } from '../EventMap';
 import { YearPicker } from '../YearPicker';
 import { SelectField } from '@/ui/fields/select';
 import {
@@ -70,8 +70,8 @@ function useBrowserState(federation: string) {
       search: parseAsString.withDefault(''),
       month: parseAsNumberLiteral<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).withDefault(0),
       year: parseAsInteger.withDefault(new Date().getFullYear()),
-      shape: parseAsStringLiteral(mapShapes.map((s) => s.value))
-        .withDefault(defaultMapShapes[federation] ?? 'world'),
+      shape: parseAsStringLiteral(mapViews.map((s) => s.value))
+        .withDefault(defaultMapViews[federation] ?? 'world'),
       missing: parseAsBoolean.withDefault(false),
       map: parseAsBoolean.withDefault(true),
       page: parseAsInteger,
@@ -214,6 +214,9 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
               className="peer sr-only"
             />
             <span className="block rounded-lg border border-neutral-4 px-1.5 py-1 text-xs hover:bg-neutral-3 peer-checked:border-accent-8 peer-checked:bg-accent-3 peer-checked:text-accent-11 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-8">
+              {month > 0 && (
+                <span aria-hidden="true" className="mr-1 inline-block size-2 rounded-full" style={{ backgroundColor: eventMonthColors[month - 1] }} />
+              )}
               {label}
             </span>
           </label>
@@ -243,10 +246,10 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
         {showMap && (
           <SelectField
             name="shape"
-            label="Mapa"
+            label="Pohled"
             value={filters.shape}
             onChange={(shape) => setFilters({ shape }, { history: 'push' })}
-            options={mapShapes}
+            options={mapViews}
           />
         )}
         <p role="status" className="ml-auto text-sm text-neutral-11">
@@ -257,7 +260,7 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
       {!error && (
         <>
           {showMap && (
-            <EventMap key={filters.shape} events={visible} shape={filters.shape} />
+            <EventMap key={filters.shape === 'czechia' ? 'czechia' : 'world'} events={visible} view={filters.shape} federation={federation} />
           )}
           <Table
             columns={['date', 'event', 'status', 'location', 'country', 'competitions']}
