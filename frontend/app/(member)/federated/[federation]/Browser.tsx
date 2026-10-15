@@ -6,12 +6,12 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Table } from '@/ui/Table';
-import { z } from 'zod';
 import { ArrowDown, ArrowUpDown } from 'lucide-react';
 import {
   parseAsArrayOf,
   parseAsBoolean,
   parseAsInteger,
+  parseAsNumberLiteral,
   parseAsString,
   parseAsStringLiteral,
   useQueryStates,
@@ -26,16 +26,19 @@ import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
-import EventMap from '../EventMap';
+import EventMap, { defaultMapShapes, eventMonths, mapShapes } from '../EventMap';
+import { YearPicker } from '../YearPicker';
+import { SelectField } from '@/ui/fields/select';
 import {
   FederationCompetitorFacetsDocument,
   FederationCompetitorsDocument,
   type FederationCompetitorsQueryVariables,
+  FederationEventFacetsDocument,
   FederationEventsDocument,
   FederationPeopleDocument,
 } from '@/graphql/Federation';
 
-const views = ['events', 'map', 'people', 'competitors'] as const;
+const views = ['events', 'people', 'competitors'] as const;
 
 const competitorTypes = [
   'COUPLE',
@@ -61,11 +64,16 @@ const clearedCompetitorFilters = {
   page: null,
 };
 
-function useBrowserState() {
+function useBrowserState(federation: string) {
   const [filters, setFilters] = useQueryStates(
     {
       search: parseAsString.withDefault(''),
-      date: parseAsString.withDefault(''),
+      month: parseAsNumberLiteral<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).withDefault(0),
+      year: parseAsInteger.withDefault(new Date().getFullYear()),
+      shape: parseAsStringLiteral(mapShapes.map((s) => s.value))
+        .withDefault(defaultMapShapes[federation] ?? 'world'),
+      missing: parseAsBoolean.withDefault(false),
+      map: parseAsBoolean.withDefault(false),
       page: parseAsInteger,
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
       ageGroup: parseAsArrayOf(parseAsString).withDefault([]),
@@ -90,7 +98,7 @@ function useBrowserState() {
 type BrowserProps = { federation: string } & ReturnType<typeof useBrowserState>;
 
 export function Browser({ federation }: { federation: string }) {
-  const state = useBrowserState();
+  const state = useBrowserState(federation);
   const props = { federation, ...state };
   return (
     <TabMenu
@@ -102,7 +110,6 @@ export function Browser({ federation }: { federation: string }) {
             {
               view: selected,
               search: null,
-              date: null,
               sort: null,
               descending: null,
               ...clearedCompetitorFilters,
@@ -113,9 +120,6 @@ export function Browser({ federation }: { federation: string }) {
     >
       <Tab id="events" title="Events">
         <Events {...props} />
-      </Tab>
-      <Tab id="map" title="Mapa">
-        <EventMap federation={federation} />
       </Tab>
       <Tab id="people" title="People">
         <People {...props} />
@@ -130,13 +134,11 @@ export function Browser({ federation }: { federation: string }) {
 function Results({
   browser: { filters, setFilters, searchPending },
   result,
-  invalidDate = false,
   controls,
   children,
 }: {
   browser: BrowserProps;
   result: Pick<ReturnType<typeof usePaginatedQuery>, 'fetching' | 'error' | 'pagination'>;
-  invalidDate?: boolean;
   controls?: ReactNode;
   children: ReactNode;
 }) {
@@ -148,23 +150,23 @@ function Results({
       <div className="flex flex-wrap items-end gap-3 mb-2">
         <TextField
           name="search"
-          label={filters.view === 'events' ? 'Name, location or event ID' : 'Name or ID'}
+          label="Název nebo ID"
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value, page: null })}
         />
         {controls}
       </div>
-      <FormError error={invalidDate ? 'Invalid date' : error} />
+      <FormError error={error} />
       <p role="status" className="my-2 text-sm text-neutral-11">
         {isPending
-          ? 'Loading…'
-          : !children || invalidDate || error
+          ? 'Načítám…'
+          : !children || error
             ? null
             : total === 0
-              ? '0 results'
-              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} of ${total}`}
+              ? '0 výsledků'
+              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} z ${total}`}
       </p>
-      {!invalidDate && !error && children && (
+      {!error && children && (
         <>
           {children}
           <Pagination {...pagination} />
@@ -174,70 +176,128 @@ function Results({
   );
 }
 
-function Events(props: BrowserProps) {
-  const { federation, filters, setFilters, search, searchPending } = props;
-  const invalidDate = !!filters.date && !z.iso.date().safeParse(filters.date).success;
-  const result = usePaginatedQuery({
+function Events({ federation, filters, setFilters, search, searchPending }: BrowserProps) {
+  const [facets] = useQuery({ query: FederationEventFacetsDocument, variables: { federation } });
+  const years = (facets.data?.federation?.eventFacets?.years ?? []).filter((y) => y !== null).toReversed();
+  const [result] = useQuery({
     query: FederationEventsDocument,
-    pause: searchPending || invalidDate,
-    variables: (offset) => ({ federation, search, onDate: filters.date || null, offset }),
-    limit: 50,
-    getTotal: (data) => data.federation?.events.totalCount,
+    pause: searchPending,
+    variables: {
+      federation,
+      search,
+      date: { since: `${filters.year}-01-01`, until: `${filters.year + 1}-01-01` },
+    },
   });
-  const item = result.data?.federation;
-  const isPending = result.fetching || searchPending;
+  const events = result.data?.federation?.events.nodes ?? [];
+  const filtered = events.filter((e) => filters.month === 0 || Number(e.startDate.slice(5, 7)) === filters.month);
+  const missing = filtered.filter((e) => e.venueLat === null || e.venueLng === null);
+  const visible = filters.missing ? missing : filtered;
+  const isPending = result.fetching || facets.fetching || searchPending;
+  const error = result.error || facets.error;
   return (
-    <Results
-      browser={props}
-      result={result}
-      invalidDate={invalidDate}
-      controls={
+    <div className="min-w-0">
+      <YearPicker
+        years={years}
+        value={filters.year}
+        onChange={(year) => setFilters({ year }, { history: 'push' })}
+      />
+      <div role="group" aria-label="Měsíc" className="mb-4 flex flex-wrap gap-0.5">
+        {['Celý rok', ...eventMonths].map((label, month) => (
+          <label key={month} className="relative cursor-pointer">
+            <input
+              type="radio"
+              name="month"
+              value={month}
+              checked={filters.month === month}
+              onChange={() => setFilters({ month }, { history: 'push' })}
+              className="peer sr-only"
+            />
+            <span className="block rounded-lg border border-neutral-4 px-1.5 py-1 text-xs hover:bg-neutral-3 peer-checked:border-accent-8 peer-checked:bg-accent-3 peer-checked:text-accent-11 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-8">
+              {label}
+            </span>
+          </label>
+        ))}
+      </div>
+      <div className="mb-4 flex flex-wrap items-end gap-3">
         <TextField
-          name="date"
-          label="Date"
-          type="date"
-          value={filters.date}
-          onChange={(event) => setFilters({ date: event.target.value, page: null })}
+          name="search"
+          label="Name, location or event ID"
+          value={filters.search}
+          onChange={(event) => setFilters({ search: event.target.value })}
         />
-      }
-    >
-      {item && (
-        <Table
-          columns={['date', 'event', 'status', 'location', 'country', 'competitions']}
-          busy={isPending}
-          empty="No events found"
-        >
-          {item.events.nodes.map((event) => (
-            <tr key={event.id} className="border-t border-neutral-4">
-              <td className="whitespace-nowrap">
-                {formatDateOnly(event.startDate)}
-                {event.endDate && event.endDate !== event.startDate && (
-                  <> – {formatDateOnly(event.endDate)}</>
-                )}
-              </td>
-              <th scope="row">
-                <Link
-                  className={cn(
-                    'text-accent-11',
-                    event.status === 'CANCELLED' ? 'line-through' : 'underline',
+        <Checkbox
+          name="missing"
+          label={`Bez souřadnic (${missing.length})`}
+          checked={filters.missing}
+          onChange={(event) => setFilters({ missing: event.target.checked })}
+        />
+        <Checkbox
+          name="map"
+          label="Zobrazit mapu"
+          checked={filters.map}
+          onChange={(event) => setFilters({ map: event.target.checked })}
+        />
+        {filters.map && (
+          <SelectField
+            name="shape"
+            label="Mapa"
+            value={filters.shape}
+            onChange={(shape) => setFilters({ shape }, { history: 'push' })}
+            options={mapShapes}
+          />
+        )}
+        <p role="status" className="ml-auto text-sm text-neutral-11">
+          {isPending ? 'Loading…' : !error && `${visible.length} events`}
+        </p>
+      </div>
+      <FormError error={error} />
+      {!error && (
+        <>
+          {filters.map && (
+            <EventMap key={filters.shape} events={filtered} shape={filters.shape} />
+          )}
+          <Table
+            columns={['date', 'event', 'status', 'location', 'country', 'competitions']}
+            busy={isPending}
+            empty="No events found"
+          >
+            {visible.map((event) => (
+              <tr key={event.id} className="border-t border-neutral-4">
+                <td className="whitespace-nowrap">
+                  {formatDateOnly(event.startDate)}
+                  {event.endDate && event.endDate !== event.startDate && (
+                    <> – {formatDateOnly(event.endDate)}</>
                   )}
-                  href={`/federated/${federation}/${event.externalId}`}
-                  prefetch={false}
-                >
-                  {event.name || event.externalId}
-                </Link>
-              </th>
-              <td className="whitespace-nowrap">
-                {event.status.toLowerCase().replaceAll('_', ' ')}
-              </td>
-              <td>{event.location || event.city}</td>
-              <td>{event.country}</td>
-              <td>{event.competitions.totalCount}</td>
-            </tr>
-          ))}
-        </Table>
+                </td>
+                <th scope="row">
+                  <Link
+                    className={cn(
+                      'text-accent-11',
+                      event.status === 'CANCELLED' ? 'line-through' : 'underline',
+                    )}
+                    href={`/federated/${federation}/${event.externalId}`}
+                    prefetch={false}
+                  >
+                    {event.name || event.externalId}
+                  </Link>
+                </th>
+                <td className="whitespace-nowrap">
+                  {event.status.toLowerCase().replaceAll('_', ' ')}
+                </td>
+                <td>
+                  <div>{event.location || event.city}</div>
+                  <div className="text-neutral-11">
+                    {[event.streetAddress, event.postalCode].filter(Boolean).join(', ')}
+                  </div>
+                </td>
+                <td>{event.country}</td>
+                <td>{event.competitions.totalCount}</td>
+              </tr>
+            ))}
+          </Table>
+        </>
       )}
-    </Results>
+    </div>
   );
 }
 

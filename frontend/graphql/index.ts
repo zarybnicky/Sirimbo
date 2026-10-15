@@ -6427,7 +6427,6 @@ export type FederationEventCondition = {
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
-  onDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `organizingClubId` field. */
   organizingClubId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `postalCode` field. */

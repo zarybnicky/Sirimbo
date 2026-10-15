@@ -321,31 +321,49 @@ query Federation($federation: String!) {
   }
 }
 
+query FederationEventFacets($federation: String!) {
+  federation(code: $federation) {
+    code
+    eventFacets {
+      years {
+        year
+        eventCount
+        mappedEventCount
+      }
+    }
+  }
+}
+
+fragment FederationMapEvent on FederationEvent {
+  id
+  externalId
+  name
+  startDate
+  location
+  city
+  country
+  streetAddress
+  postalCode
+  venueLat
+  venueLng
+}
+
 query FederationEvents(
   $federation: String!
   $search: String
-  $onDate: Date
-  $offset: Int! = 0
+  $date: CompetitionDateCondition!
 ) {
   federation(code: $federation) {
     code
     events(
-      first: 50
-      offset: $offset
-      condition: { search: $search, onDate: $onDate }
+      first: 300
+      condition: { search: $search, date: $date }
       orderBy: [START_DATE_DESC, ID_DESC]
     ) {
-      totalCount
       nodes {
-        id
-        externalId
-        name
+        ...FederationMapEvent
         status
-        startDate
         endDate
-        location
-        city
-        country
         competitions(first: 0) {
           totalCount
         }

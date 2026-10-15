@@ -166,13 +166,6 @@ const plugins: GraphileConfig.Plugin[] = [
       return value ? latest : sql`not (${latest})`;
     },
   ),
-  addPgTableCondition(
-    { schemaName: 'federated', tableName: 'event' },
-    'onDate',
-    (build) => ({ type: build.getInputTypeByName('Date') }),
-    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
-      value == null ? null : sql`${row}.range @> ${sqlValueWithCodec(value, TYPES.date)}`,
-  ),
   ...(['eventId', 'competitionId'] as const).map((field) =>
     addPgTableCondition(
       { schemaName: 'crawler', tableName: 'frontier' },

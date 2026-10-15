@@ -8207,7 +8207,6 @@ input FederationEventCondition {
   """Checks for equality with the object’s `name` field."""
   name: String
   officialPersonId: String
-  onDate: Date
 
   """Checks for equality with the object’s `organizingClubId` field."""
   organizingClubId: BigInt

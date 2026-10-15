@@ -171,7 +171,7 @@ test('federation search normalizes names and treats search text literally', asyn
   }
 });
 
-test('event date conditions include both ends of a multi-day event', async () => {
+test('event date conditions filter start dates with an exclusive upper bound', async () => {
   const {
     rows: [event],
   } = await pool.query(`
@@ -182,15 +182,6 @@ test('event date conditions include both ends of a multi-day event', async () =>
   const query = `query Events($condition: FederationEventCondition) {
     matches: federationEvents(first: 1, condition: $condition) { totalCount nodes { id } }
   }`;
-  for (const [onDate, count] of [
-    [event.start_date, 1],
-    [event.end_date, 1],
-    [event.after_date, 0],
-  ]) {
-    const result = await request(query, { condition: { id: event.id, onDate } });
-    assert.equal(result.errors, undefined);
-    assert.equal(result.data.matches.totalCount, count);
-  }
   for (const [date, count] of [
     [{ since: event.start_date, until: event.after_date }, 1],
     [{ until: event.start_date }, 0],
