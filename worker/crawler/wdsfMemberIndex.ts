@@ -23,7 +23,7 @@ export const wdsfMemberIndex: JsonLoader<z.output<typeof requestSchema>> = {
   mode: 'json',
   revalidatePeriod: '2 day',
   buildRequest: () => ({
-    url: new URL('https://services.worlddancesport.org/api/1/person'),
+    url: new URL('https://services.worlddancesport.org/api/1/person?status=Any'),
     init: {
       headers: {
         Authorization: process.env.WDSF_AUTH!,
