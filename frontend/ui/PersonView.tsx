@@ -5,6 +5,7 @@ import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { CompetitionHistory } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
@@ -187,16 +188,13 @@ export const PersonView = React.memo(function PersonView({
           <PersonMembershipView item={item} />
         </Tab>
         <Tab id="fed" title="Soutěžní">
-          {competitors.length === 0 &&
-            item.federationRanklistEntries.nodes.length === 0 && (
-              <p className="my-4 text-neutral-11">Žádné soutěžní údaje.</p>
-            )}
           {competitors.length > 0 && (
             <div className="my-4">
               <FederationCategoryProgress competitors={competitors} />
             </div>
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
+          <CompetitionHistory personId={id} />
         </Tab>
         {isAdminOrCurrentPerson && (
           <>

@@ -8,6 +8,7 @@ import { useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { CompetitionHistory } from '@/ui/Competitions';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
@@ -89,12 +90,9 @@ export function Couple({ id }: { id: string }) {
         </Tab>
 
         <Tab id="fed" title="Soutěžní">
-          {item.federationCompetitors.nodes.length === 0 &&
-            item.federationRanklistEntries.nodes.length === 0 && (
-              <p className="my-4 text-neutral-11">Žádné soutěžní údaje.</p>
-            )}
-
-          {item.federationCompetitors.nodes.length > 0 && (
+          {item.federationCompetitors.nodes.some(
+            (competitor) => competitor.categoryProgressesList.length > 0,
+          ) && (
             <div className="my-4">
               <FederationCategoryProgress
                 competitors={item.federationCompetitors.nodes}
@@ -102,6 +100,7 @@ export function Couple({ id }: { id: string }) {
             </div>
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
+          <CompetitionHistory coupleId={id} />
         </Tab>
       </TabMenu>
     </>

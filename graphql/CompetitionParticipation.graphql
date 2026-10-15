@@ -21,14 +21,15 @@ fragment ParticipationCompetition on Competition {
 
 query CompetitionParticipations(
   $participant: CompetitionParticipantCondition!
-  $date: CompetitionDateCondition!
+  $date: CompetitionDateCondition
   $offset: Int! = 0
+  $orderBy: [CompetitionsOrderBy!] = [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
 ) {
   competitions(
     first: 50
     offset: $offset
     condition: { participation: { participant: $participant, date: $date } }
-    orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+    orderBy: $orderBy
   ) {
     totalCount
     nodes {

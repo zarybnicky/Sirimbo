@@ -1,6 +1,8 @@
 import {
   CompetitionParticipationsDocument,
   ClubCompetitionLocationsDocument,
+  type CompetitionParticipationsQuery,
+  type CompetitionParticipationsQueryVariables,
 } from '@/graphql/CompetitionParticipation';
 import type {
   CompetitionType,
@@ -14,7 +16,7 @@ import { FormError } from '@/ui/form';
 import { format } from 'date-fns';
 import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
-import { numericDateFormatter, formatResultStatus } from '@/ui/format';
+import { formatDateOnly, formatResultStatus } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
@@ -98,25 +100,23 @@ function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
     days.set(dayKey, day);
   }
 
-  return [...days.entries()]
-    .toSorted(([a], [b]) => String(a ?? '').localeCompare(String(b ?? '')))
-    .map(([dayKey, events]) => ({
-      key: dayKey,
-      competitionDate: dayKey || null,
-      eventGroups: [...events.entries()]
-        .map(([eventKey, entries]) => ({
-          key: eventKey,
-          eventName: entries[0]?.competitionEventName ?? '',
-          eventLocation: entries[0]?.competitionEventLocation ?? '',
-          entry: entries[0],
-          competitorGroups: groupByCompetitor(entries),
-        }))
-        .toSorted(
-          (a, b) =>
-            a.eventName.localeCompare(b.eventName) ||
-            a.eventLocation.localeCompare(b.eventLocation),
-        ),
-    }));
+  return [...days.entries()].map(([dayKey, events]) => ({
+    key: dayKey,
+    competitionDate: dayKey || null,
+    eventGroups: [...events.entries()]
+      .map(([eventKey, entries]) => ({
+        key: eventKey,
+        eventName: entries[0]?.competitionEventName ?? '',
+        eventLocation: entries[0]?.competitionEventLocation ?? '',
+        entry: entries[0],
+        competitorGroups: groupByCompetitor(entries),
+      }))
+      .toSorted(
+        (a, b) =>
+          a.eventName.localeCompare(b.eventName) ||
+          a.eventLocation.localeCompare(b.eventLocation),
+      ),
+  }));
 }
 
 function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry[] }) {
@@ -130,9 +130,7 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
                 <h6 className="text-xs text-neutral-11">
                   {event.eventLocation ?? ''}
                   {', '}
-                  {numericDateFormatter.format(
-                    new Date(`${day.competitionDate}T00:00:00`),
-                  )}
+                  {day.competitionDate && formatDateOnly(day.competitionDate)}
                 </h6>
                 <div className="text-sm font-semibold leading-tight text-neutral-12">
                   <CompetitionLink entry={event.entry}>
@@ -277,6 +275,78 @@ export function CompetitionLink({
   );
 }
 
+function competitionEntries(
+  competitions: NonNullable<CompetitionParticipationsQuery['competitions']>['nodes'],
+): CompetitionEntry[] {
+  return competitions.flatMap((competition) => {
+    const common = {
+      federation: competition.federation,
+      competitionId: competition.id,
+      competitionExternalId: competition.externalId,
+      competitionEventId: competition.event?.id ?? null,
+      competitionEventExternalId: competition.event?.externalId ?? null,
+      competitionEventName: competition.event?.name ?? null,
+      competitionEventLocation:
+        competition.event?.location || competition.event?.city || null,
+      competitionDate: competition.startDate,
+      competitionType: competition.competitionType,
+      category: competition.category,
+      participants: competition.participantsTotal,
+      checkInEnd: competition.checkInEnd,
+      status: competition.status,
+    };
+    return [
+      ...competition.results.map((result) => ({
+        ...common,
+        ...result,
+        id: `${competition.id}:${result.competitorId}`,
+        competitorName: result.competitor?.name ?? result.competitorId,
+      })),
+      ...competition.entries.map((entry) => ({
+        ...common,
+        ...entry,
+        id: `${competition.id}:${entry.competitorId}`,
+        competitorName: entry.competitor?.name ?? entry.competitorId,
+      })),
+    ];
+  });
+}
+
+export function CompetitionHistory({
+  personId,
+  coupleId,
+}: { personId: string; coupleId?: never } | { coupleId: string; personId?: never }) {
+  const { data, fetching, error, pagination } = usePaginatedQuery({
+    query: CompetitionParticipationsDocument,
+    variables: (offset): CompetitionParticipationsQueryVariables => ({
+      participant: personId != null ? { personIds: [personId] } : { coupleId },
+      orderBy: ['START_DATE_DESC', 'ID_DESC'],
+      offset,
+    }),
+    limit: 50,
+    pageKey: 'competitionPage',
+    getTotal: (data) => data?.competitions?.totalCount,
+  });
+
+  return (
+    <section className="my-4">
+      <h2 className="mb-2 text-lg font-bold">Soutěže a výsledky</h2>
+      {error ? (
+        <FormError error={error} />
+      ) : fetching ? (
+        <p role="status" className="text-sm text-neutral-11">
+          Načítám...
+        </p>
+      ) : data?.competitions?.nodes.length ? (
+        <CompetitionPanelFrame entries={competitionEntries(data.competitions.nodes)} />
+      ) : (
+        <p className="text-sm text-neutral-11">Žádné registrace ani výsledky soutěží.</p>
+      )}
+      <Pagination {...pagination} />
+    </section>
+  );
+}
+
 export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   personIds,
   cohortId,
@@ -314,40 +384,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     variables: { participant: clubScope, date },
     pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
   });
-  const visible: CompetitionEntry[] = (data?.competitions?.nodes ?? []).flatMap(
-    (competition) => {
-      const common = {
-        federation: competition.federation,
-        competitionId: competition.id,
-        competitionExternalId: competition.externalId,
-        competitionEventId: competition.event?.id ?? null,
-        competitionEventExternalId: competition.event?.externalId ?? null,
-        competitionEventName: competition.event?.name ?? null,
-        competitionEventLocation:
-          competition.event?.location || competition.event?.city || null,
-        competitionDate: competition.startDate,
-        competitionType: competition.competitionType,
-        category: competition.category,
-        participants: competition.participantsTotal,
-        checkInEnd: competition.checkInEnd,
-        status: competition.status,
-      };
-      return [
-        ...competition.results.map((result) => ({
-          ...common,
-          ...result,
-          id: `${competition.id}:${result.competitorId}`,
-          competitorName: result.competitor?.name ?? result.competitorId,
-        })),
-        ...competition.entries.map((entry) => ({
-          ...common,
-          ...entry,
-          id: `${competition.id}:${entry.competitorId}`,
-          competitorName: entry.competitor?.name ?? entry.competitorId,
-        })),
-      ];
-    },
-  );
+  const visible = competitionEntries(data?.competitions?.nodes ?? []);
   const locations = [
     ...new Set(
       (clubData?.competitions?.nodes ?? []).flatMap(
