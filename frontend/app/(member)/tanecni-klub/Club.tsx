@@ -5,7 +5,7 @@ import {
   type MembershipApplicationFragment,
 } from '@/graphql/MembershipApplication';
 import { RichTextView } from '@/ui/RichTextView';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { formatAddress, moneyFormatter } from '@/ui/format';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';

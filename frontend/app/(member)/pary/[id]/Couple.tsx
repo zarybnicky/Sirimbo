@@ -1,7 +1,7 @@
 'use client';
 
 import { CoupleDocument } from '@/graphql/Memberships';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
 import { useQuery } from 'urql';
@@ -34,6 +34,8 @@ export function Couple({ id }: { id: string }) {
     <>
       <PageHeader
         title={title}
+        breadcrumbLabel="Pár"
+        breadcrumbs={[{ label: 'Páry', href: '/pary' }]}
         actions={actions}
         subtitle={
           <span className="inline-flex flex-wrap items-center gap-2">

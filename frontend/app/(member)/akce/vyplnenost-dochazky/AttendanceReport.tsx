@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useQuery } from 'urql';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { isTruthy } from '@/lib/truthyFilter';
 import { fullDateFormatter } from '@/ui/format';
@@ -75,7 +75,10 @@ export function AttendanceReport() {
 
   return (
     <div className="container col-feature space-y-6 py-6">
-      <PageHeader title="Vyplněnost docházky" />
+      <PageHeader
+        title="Vyplněnost docházky"
+        breadcrumbs={[{ label: 'Akce', href: '/akce' }]}
+      />
 
       <section className="text-sm text-neutral-10">
         {period.displaySince &&

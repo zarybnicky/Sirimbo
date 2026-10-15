@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { cache } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Competitors } from './Competitors';
 import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
@@ -60,13 +60,13 @@ export default async function FederatedPersonPage({ params }: Props) {
     <Layout requireUser>
       <PageHeader
         title={name}
+        breadcrumbLabel="Person"
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
             label: person.federationByFederation?.name ?? federation,
             href: `${base}?view=people`,
           },
-          { label: name },
         ]}
       />
       <dl className="text-sm tabular">

@@ -14,7 +14,7 @@ import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -55,6 +55,13 @@ export function EventPageClient({
       <div className="col-feature">
         <PageHeader
           title={formatEventName(event) || ''}
+          breadcrumbLabel="Termín"
+          breadcrumbs={[
+            { label: 'Akce', href: '/akce' },
+            ...(event.seriesId
+              ? [{ label: 'Termíny', href: `/terminy/${event.seriesId}` }]
+              : []),
+          ]}
           subtitle={formatEventType(event.type)}
           actions={actions}
           primary={primaryAction}

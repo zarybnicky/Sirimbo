@@ -1,7 +1,5 @@
 import { PersonView } from '@/ui/PersonView';
-import { CornerLeftUp } from 'lucide-react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Člen',
@@ -15,16 +13,5 @@ export default async function MemberPage({
 }) {
   const { id } = await params;
 
-  return (
-    <>
-      <div className="lg:hidden pt-4">
-        <Link href="/clenove" className="flex gap-2 pt-4">
-          <CornerLeftUp className="size-4" />
-          Zpět na seznam
-        </Link>
-      </div>
-
-      <PersonView id={id} />
-    </>
-  );
+  return <PersonView id={id} parent={{ label: 'Členové', href: '/clenove' }} />;
 }

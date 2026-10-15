@@ -1,7 +1,7 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationListDocument } from '@/graphql/Federation';

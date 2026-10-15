@@ -3,7 +3,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { LocationMap } from '@/ui/LocationMap';
 import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata } from 'next';
 import Image from '@/ui/Image';
 import Link from 'next/link';

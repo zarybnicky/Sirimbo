@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -51,13 +51,13 @@ export default async function EventPage({ params }: Props) {
       <PageHeader
         title={title}
         subtitle={date}
+        breadcrumbLabel="Event"
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
           },
-          { label: title, truncate: true },
         ]}
       />
       <dl className="text-sm tabular">

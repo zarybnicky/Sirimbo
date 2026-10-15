@@ -4,7 +4,7 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { slugify } from '@/lib/slugify';
 import { ArticleCard } from '@/ui/ArticleCard';
 import { Pagination } from '@/ui/Pagination';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata } from 'next';
 
 const pageSize = 12;

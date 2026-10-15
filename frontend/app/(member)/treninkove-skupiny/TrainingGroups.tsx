@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn';
 import { slugify } from '@/lib/slugify';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { exportCohort } from '@/ui/reports/export-cohort';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';

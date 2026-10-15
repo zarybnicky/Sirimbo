@@ -3,7 +3,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { CrawlerResponseDocument } from '@/graphql/Crawler';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 
 export const metadata = {
   title: 'Crawler response',
@@ -35,6 +35,7 @@ export default async function ResponsePage({
     <Layout requireSystemAdmin>
       <PageHeader
         title={`Response ${response.id}`}
+        breadcrumbLabel="Response"
         breadcrumbs={[
           { label: 'Crawler', href: '/admin/crawler' },
           {
@@ -45,7 +46,6 @@ export default async function ResponsePage({
             },
           },
           { label: frontierTitle, href: `/admin/crawler/${id}` },
-          { label: `Response ${response.id}` },
         ]}
       />
       <dl className="text-sm tabular">

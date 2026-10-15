@@ -15,7 +15,7 @@ import {
 import { TextField } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { buttonCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
@@ -82,7 +82,7 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
         title={target || 'Crawler'}
         breadcrumbs={
           target
-            ? [{ label: 'Crawler', href: '/admin/crawler' }, { label: target }]
+            ? [{ label: 'Crawler', href: '/admin/crawler' }]
             : undefined
         }
       />

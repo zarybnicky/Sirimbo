@@ -1,26 +1,32 @@
 'use client';
 
-import React from 'react';
 import { PersonMembershipsDocument } from '@/graphql/Person';
-import { PageHeader } from '@/ui/TitleBar';
-import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
-import { useQuery } from 'urql';
+import { useActions } from '@/lib/actions';
+import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
-import { parseAsString, useQueryState } from 'nuqs';
-import { Tab, TabMenu } from '@/ui/TabMenu';
+import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
+import { FederationLink } from '@/ui/federation-links';
+import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
+import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
+import { PageHeader } from '@/ui/PageHeader';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
-import { personActions } from '@/lib/actions/person';
-import { useActions } from '@/lib/actions';
-import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { FederationLink } from '@/ui/federation-links';
-import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
-import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
-import { Globe, Music2 } from 'lucide-react';
+import { Tab, TabMenu } from '@/ui/TabMenu';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
+import { Globe, Music2 } from 'lucide-react';
+import { parseAsString, useQueryState } from 'nuqs';
+import React from 'react';
+import { useQuery } from 'urql';
 
-export const PersonView = React.memo(function PersonView({ id }: { id: string }) {
+export const PersonView = React.memo(function PersonView({
+  id,
+  parent,
+}: {
+  id: string;
+  parent?: { label: string; href: string };
+}) {
   const auth = useAuth();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
@@ -144,6 +150,8 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
     <>
       <PageHeader
         title={item.name}
+        breadcrumbLabel="Člen"
+        breadcrumbs={parent ? [parent] : undefined}
         subtitle={
           subtitleParts.length > 0 ? (
             <span className="inline-flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] *:after:mx-1.5 *:after:text-neutral-9">

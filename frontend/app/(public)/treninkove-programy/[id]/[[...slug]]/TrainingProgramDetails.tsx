@@ -10,7 +10,7 @@ import { slugify } from '@/lib/slugify';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
 import { cardCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 
@@ -28,7 +28,13 @@ export function TrainingProgramDetails({
 
   return (
     <>
-      <PageHeader title={item.name} />
+      <PageHeader
+        title={item.name}
+        breadcrumbLabel="Program"
+        breadcrumbs={[
+          { label: 'Tréninkové programy', href: '/treninkove-programy' },
+        ]}
+      />
       <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.cohortsList.map((cohort) => (

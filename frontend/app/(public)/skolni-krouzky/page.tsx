@@ -1,5 +1,5 @@
 import { buttonCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import Image from '@/ui/Image';
 import type { Metadata } from 'next';
 

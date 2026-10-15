@@ -4,7 +4,7 @@ import * as React from 'react';
 import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useClient, useQuery } from 'urql';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { cn } from '@/lib/cn';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 

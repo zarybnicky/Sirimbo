@@ -1,6 +1,6 @@
 'use client';
 
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import React from 'react';
 import { parseAsString, useQueryState } from 'nuqs';
 import { Tab, TabMenu } from '@/ui/TabMenu';

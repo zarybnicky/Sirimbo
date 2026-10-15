@@ -9,7 +9,7 @@ import { eventInstanceActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { cn } from '@/lib/cn';
 import { isTruthy } from '@/lib/truthyFilter';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { FormError } from '@/ui/form';
 import {
   formatEventType,
@@ -115,7 +115,14 @@ export function EventSeries({
 
   return (
     <>
-      <PageHeader title={series.name || 'Termíny'} actions={actions} />
+      <PageHeader
+        title={series.name || 'Termíny'}
+        breadcrumbLabel="Termíny"
+        breadcrumbs={[
+          { label: 'Akce', href: '/akce' },
+        ]}
+        actions={actions}
+      />
       <dl className="mb-4 text-sm tabular">
         {common.filter(isTruthy).map((detail) => (
           <React.Fragment key={detail.key}>

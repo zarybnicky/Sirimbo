@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { computeRange, type PeriodPreset, PeriodSelector } from '@/ui/PeriodSelector';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';

@@ -9,8 +9,8 @@ import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
-import { PageHeader } from '@/ui/TitleBar';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
+import { PageHeader } from '@/ui/PageHeader';
 import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
@@ -51,6 +51,10 @@ export function TrainingGroup({
     <>
       <PageHeader
         title={cohort.name}
+        breadcrumbLabel="Skupina"
+        breadcrumbs={[
+          { label: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+        ]}
         subtitle={[
           cohort.location,
           members.length +

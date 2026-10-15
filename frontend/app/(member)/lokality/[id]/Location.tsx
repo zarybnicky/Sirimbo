@@ -10,7 +10,7 @@ import { LocationMap } from '@/ui/LocationMap';
 import { LocationAddress } from '@/ui/LocationAddress';
 import { RichTextView } from '@/ui/RichTextView';
 import { badgeCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import Image from '@/ui/Image';
 import Link from 'next/link';
 import * as React from 'react';
@@ -66,7 +66,8 @@ export function Location({
           ) : undefined
         }
         actions={actions}
-        breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }, { label: location.name }]}
+        breadcrumbLabel="Lokalita"
+        breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }]}
       />
 
       <h2 className="mb-2 text-lg font-bold">Právě probíhá</h2>

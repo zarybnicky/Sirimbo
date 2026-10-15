@@ -5,7 +5,7 @@ import { slugify } from '@/lib/slugify';
 import { EventButton } from '@/ui/EventButton';
 import { moneyFormatter, numericFullFormatter } from '@/ui/format';
 import { cardCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 
@@ -23,7 +23,8 @@ export function Payment({ id }: { id: string }) {
     <>
       <PageHeader
         title={pageTitle}
-        breadcrumbs={[{ label: 'Platby', href: '/platby' }, { label: pageTitle }]}
+        breadcrumbLabel="Platba"
+        breadcrumbs={[{ label: 'Platby', href: '/platby' }]}
       />
 
       {fetching && <p>Načítám…</p>}

@@ -38,9 +38,6 @@ export const EventRegistrations = memo(function EventRegistrations({
 
   return (
     <div className="prose prose-accent max-w-none">
-      {auth.isTrainer && instance.seriesId && (
-        <Link href={`/terminy/${instance.seriesId}`}>Zpět na seznam termínů</Link>
-      )}
       <table className="mt-0">
         <thead>
           <tr>

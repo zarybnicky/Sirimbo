@@ -3,7 +3,7 @@
 import { AnnouncementDocument } from '@/graphql/Announcement';
 import { useQuery } from 'urql';
 import { AnnouncementMeta } from '@/ui/AnnouncementShared';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { AnnouncementForm } from '@/ui/forms/AnnouncementForm';
 import { RichTextView } from '@/ui/RichTextView';
 import { FileAttachments } from '@/ui/FileAttachments';
@@ -32,7 +32,8 @@ export function Announcement({ id, edit = false }: { id: string; edit?: boolean 
     <>
       <PageHeader
         title={pageTitle}
-        breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }, { label: pageTitle }]}
+        breadcrumbLabel={editing ? 'Upravit příspěvek' : 'Příspěvek'}
+        breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }]}
         primary="announcement.edit"
         actions={
           data

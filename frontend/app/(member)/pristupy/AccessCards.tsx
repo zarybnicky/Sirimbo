@@ -23,7 +23,7 @@ import { ActionGroup } from '@/ui/ActionGroup';
 import { dateTimeFormatter } from '@/ui/format';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { SelectField, type SelectOption } from '@/ui/fields/select';
 import { SubmitButton } from '@/ui/submit';

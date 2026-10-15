@@ -8,7 +8,7 @@ import { userActions } from '@/lib/actions/user';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { ActionRow } from '@/ui/ActionRow';
 import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -34,7 +34,8 @@ export function User({ id }: { id: string }) {
     <>
       <PageHeader
         title={pageTitle}
-        breadcrumbs={[{ label: 'Členové', href: '/clenove' }, { label: pageTitle }]}
+        breadcrumbLabel="Uživatel"
+        breadcrumbs={[{ label: 'Členové', href: '/clenove' }]}
       />
 
       {fetching && <p>Načítám...</p>}

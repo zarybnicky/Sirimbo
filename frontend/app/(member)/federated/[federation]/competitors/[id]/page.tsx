@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Members, History } from './Tables';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
 import { formatAgeGroup } from '@/ui/csts';
@@ -51,13 +51,13 @@ export default async function CompetitorPage({ params }: Props) {
     <Layout requireUser>
       <PageHeader
         title={title}
+        breadcrumbLabel="Competitor"
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
             label: competitor.federationByFederation?.name ?? federation,
             href: `${base}?view=competitors`,
           },
-          { label: title },
         ]}
       />
       <dl className="text-sm tabular">

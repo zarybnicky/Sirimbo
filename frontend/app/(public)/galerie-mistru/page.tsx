@@ -1,5 +1,5 @@
 import { ServiceCard } from '@/ui/ServiceCard';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

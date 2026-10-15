@@ -3,7 +3,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { CrawlerTargetDocument } from '@/graphql/Crawler';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Responses } from './Responses';
 import { numericFullFormatter } from '@/ui/format';
 
@@ -31,6 +31,7 @@ export default async function FrontierPage({
     <Layout requireSystemAdmin>
       <PageHeader
         title={title}
+        breadcrumbLabel="Frontier"
         breadcrumbs={[
           { label: 'Crawler', href: '/admin/crawler' },
           {
@@ -40,7 +41,6 @@ export default async function FrontierPage({
               query: { federation: frontier.federation, kind: frontier.kind },
             },
           },
-          { label: title },
         ]}
       />
       <dl className="text-sm tabular">

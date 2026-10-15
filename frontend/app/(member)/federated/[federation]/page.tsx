@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationDocument } from '@/graphql/Federation';
@@ -36,7 +36,8 @@ export default async function FederationPage({ params }: Props) {
     <Layout requireUser>
       <PageHeader
         title={item.name}
-        breadcrumbs={[{ label: 'Federations', href: '/federated' }, { label: item.name }]}
+        breadcrumbLabel="Federation"
+        breadcrumbs={[{ label: 'Federations', href: '/federated' }]}
       />
       <Browser federation={federation} />
     </Layout>

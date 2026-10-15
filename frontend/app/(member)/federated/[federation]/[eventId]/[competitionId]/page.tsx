@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Results, Registrations } from './Tables';
 import { RoundNav } from './RoundNav';
 import { formatDateOnly, dateTimeFormatter } from '@/ui/format';
@@ -61,6 +61,7 @@ export default async function CompetitionPage({ params }: Props) {
             </span>
           </span>
         }
+        breadcrumbLabel="Competition"
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
@@ -70,9 +71,7 @@ export default async function CompetitionPage({ params }: Props) {
           {
             label: event.name || event.externalId,
             href: `/federated/${federation}/${eventId}`,
-            truncate: true,
           },
-          { label: title },
         ]}
       />
       <RoundNav

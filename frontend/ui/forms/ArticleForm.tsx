@@ -7,7 +7,7 @@ import {
 } from '@/graphql/Articles';
 import { useActions } from '@/lib/actions';
 import { ErrorPage } from '@/ui/ErrorPage';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError } from '@/ui/form';
@@ -115,7 +115,12 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit)}>
-      <PageHeader title={title} actions={actions} />
+      <PageHeader
+        title={title}
+        breadcrumbLabel={id ? 'Upravit článek' : undefined}
+        breadcrumbs={[{ label: 'Aktuality', href: '/aktuality' }]}
+        actions={actions}
+      />
 
       <FormError error={result.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />

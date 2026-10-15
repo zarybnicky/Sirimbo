@@ -8,7 +8,7 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { formatDateOnly, scoringMethodLabels } from '@/ui/format';
 import { RoundNav } from '../../RoundNav';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { Results } from './Results';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
 
@@ -74,6 +74,7 @@ export default async function RoundPage({ params }: Props) {
             </span>
           </span>
         }
+        breadcrumbLabel="Competition"
         breadcrumbs={[
           { label: 'Federations', href: '/federated' },
           {
@@ -83,10 +84,7 @@ export default async function RoundPage({ params }: Props) {
           {
             label: competition.event.name || eventId,
             href: `/federated/${federation}/${eventId}`,
-            truncate: true,
           },
-          { label: title, href },
-          { label: round.roundLabel || round.roundKey },
         ]}
       />
       <RoundNav href={href} rounds={competition.roundsList} current={round.roundKey} />

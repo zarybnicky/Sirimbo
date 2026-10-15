@@ -1,6 +1,6 @@
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { StarletImport } from './StarletImport';

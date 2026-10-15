@@ -1,5 +1,5 @@
 import { Mail, Phone } from 'lucide-react';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { cardCls } from '@/ui/style';
 import type { Metadata } from 'next';
 

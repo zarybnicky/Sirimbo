@@ -3,7 +3,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';
 import { fullDateFormatter } from '@/ui/format';
 import { RichTextView } from '@/ui/RichTextView';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -85,7 +85,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <>
-      <PageHeader title={item.atJmeno} />
+      <PageHeader
+        title={item.atJmeno}
+        breadcrumbLabel="Článek"
+        breadcrumbs={[{ label: 'Články', href: '/clanky' }]}
+      />
       {item.createdAt && (
         <div className="text-neutral-11 mb-6 -mt-4">
           {fullDateFormatter.format(new Date(item.createdAt))}

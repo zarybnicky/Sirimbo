@@ -6,7 +6,7 @@ import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { PersonView } from '@/ui/PersonView';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { useAuth, useAuthLoading, useTenantConfig } from '@/lib/auth';
 import { LockKeyhole } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';

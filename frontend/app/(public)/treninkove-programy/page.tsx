@@ -1,6 +1,6 @@
 
 import { buttonCls } from '@/ui/style';
-import { PageHeader } from '@/ui/TitleBar';
+import { PageHeader } from '@/ui/PageHeader';
 import { TrainingPrograms } from '@/ui/TrainingPrograms';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
