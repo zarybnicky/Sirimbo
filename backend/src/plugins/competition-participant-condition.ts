@@ -86,9 +86,9 @@ const plugins: GraphileConfig.Plugin[] = [
         date: CompetitionDateCondition
       }
       input CompetitionDateCondition {
-        """Inclusive competition start date."""
+        """Inclusive event or competition start date."""
         since: Date
-        """Exclusive competition start date."""
+        """Exclusive event or competition start date."""
         until: Date
       }
     `,
@@ -131,12 +131,14 @@ const plugins: GraphileConfig.Plugin[] = [
         ),
     ),
   ),
-  addPgTableCondition(
-    { schemaName: 'federated', tableName: 'competition' },
-    'date',
-    (build) => ({ type: build.getInputTypeByName('CompetitionDateCondition') }),
-    (value, { sqlTableAlias: row }) =>
-      datePredicate(sql`${row}.start_date`, value as DateCondition | null),
+  ...(['event', 'competition'] as const).map((tableName) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName },
+      'date',
+      (build) => ({ type: build.getInputTypeByName('CompetitionDateCondition') }),
+      (value, { sqlTableAlias: row }) =>
+        datePredicate(sql`${row}.start_date`, value as DateCondition | null),
+    ),
   ),
 ];
 

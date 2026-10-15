@@ -191,6 +191,15 @@ test('event date conditions include both ends of a multi-day event', async () =>
     assert.equal(result.errors, undefined);
     assert.equal(result.data.matches.totalCount, count);
   }
+  for (const [date, count] of [
+    [{ since: event.start_date, until: event.after_date }, 1],
+    [{ until: event.start_date }, 0],
+    [{ since: event.end_date }, 0],
+  ] as const) {
+    const result = await request(query, { condition: { id: event.id, date } });
+    assert.equal(result.errors, undefined);
+    assert.equal(result.data.matches.totalCount, count);
+  }
 });
 
 test('participation scopes match the legacy reports under tenant RLS', async () => {
@@ -319,7 +328,8 @@ test('pagination checks variables on every execution, including cached documents
   const query =
     'query People($limit: Int) { federationPeople(first: $limit) { nodes { id } } }';
   assert.equal((await request(query, { limit: 1 })).errors, undefined);
-  for (const limit of [101, -1, null])
+  assert.equal((await request(query, { limit: 300 })).errors, undefined);
+  for (const limit of [301, -1, null])
     assert.match(
       (await request(query, { limit })).errors?.[0]?.message ?? '',
       /requires first or last/,
@@ -345,7 +355,7 @@ test('pagination checks variables on every execution, including cached documents
 
 test('nested connections and fragments cannot bypass pagination limits', async () => {
   const query = `query { federationPeople(first: 1) { nodes { ...Person } } }
-    fragment Person on FederationPerson { competitorComponents(first: 101) { nodes { role } } }`;
+    fragment Person on FederationPerson { competitorComponents(first: 301) { nodes { role } } }`;
   assert.match(
     (await request(query)).errors?.[0]?.message ?? '',
     /requires first or last/,
@@ -354,12 +364,12 @@ test('nested connections and fragments cannot bypass pagination limits', async (
 
 test('crawler pagination and public aliases remain unrestricted', async () => {
   const result = await request(
-    '{ crawlerTargets(first: 101) { nodes { id } } }',
+    '{ crawlerTargets(first: 301) { nodes { id } } }',
     {},
     { is_system_admin: true },
   );
   assert.equal(result.errors, undefined);
-  assert.equal(result.data.crawlerTargets.nodes.length, 101);
+  assert.equal(result.data.crawlerTargets.nodes.length, 301);
   const aliases = Array.from({ length: 31 }, (_, i) => `a${i}: __typename`).join(' ');
   assert.equal((await request(`{ ${aliases} }`)).errors, undefined);
 });
@@ -370,7 +380,7 @@ test('bounded nested connections no longer have a multiplicative cost budget', a
       competitorComponents(first: $first) { nodes { role } }
     } }
   }`;
-  for (const first of [1, 100])
+  for (const first of [1, 300])
     assert.equal((await request(query, { first })).errors, undefined);
 });
 

@@ -13725,6 +13725,15 @@
             ]
           },
           {
+            "name": "eventFacets",
+            "type": {
+              "kind": "OBJECT",
+              "name": "FederationEventFacet",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "events",
             "type": {
               "kind": "NON_NULL",
@@ -16226,6 +16235,28 @@
       },
       {
         "kind": "OBJECT",
+        "name": "FederationEventFacet",
+        "fields": [
+          {
+            "name": "years",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "name": "FederationEventYear",
+                  "kind": "OBJECT",
+                  "ofType": null
+                }
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "FederationEventOfficial",
         "fields": [
           {
@@ -16387,6 +16418,46 @@
                 "name": "FederationEventOfficial",
                 "kind": "OBJECT",
                 "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationEventYear",
+        "fields": [
+          {
+            "name": "eventCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "mappedEventCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "year",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
               }
             },
             "args": []

@@ -2273,10 +2273,10 @@ input CompetitionCondition {
 }
 
 input CompetitionDateCondition {
-  """Inclusive competition start date."""
+  """Inclusive event or competition start date."""
   since: Date
 
-  """Exclusive competition start date."""
+  """Exclusive event or competition start date."""
   until: Date
 }
 
@@ -7094,6 +7094,7 @@ type Federation {
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection!
+  eventFacets: FederationEventFacet
 
   """Reads and enables pagination through a set of `FederationEvent`."""
   events(
@@ -8180,6 +8181,7 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `country` field."""
   country: String
+  date: CompetitionDateCondition
 
   """Checks for equality with the object’s `endDate` field."""
   endDate: Date
@@ -8240,6 +8242,10 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `websiteUrl` field."""
   websiteUrl: String
+}
+
+type FederationEventFacet {
+  years: [FederationEventYear]!
 }
 
 type FederationEventOfficial {
@@ -8333,6 +8339,12 @@ enum FederationEventStatus {
   PLANNED
   POSTPONED
   UNKNOWN
+}
+
+type FederationEventYear {
+  eventCount: Int!
+  mappedEventCount: Int!
+  year: Int!
 }
 
 """A connection to a list of `FederationEvent` values."""

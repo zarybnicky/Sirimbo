@@ -1,53 +1,7 @@
 /** Types generated for queries found in "app/(standalone)/tools/tools.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-export type DateOrString = Date | string;
-
 export type stringArray = (string)[];
-
-/** 'CompetitionEventLocations' parameters type */
-export interface ICompetitionEventLocationsParams {
-  federation: string;
-  fromDate: DateOrString;
-  toDate: DateOrString;
-}
-
-/** 'CompetitionEventLocations' return type */
-export interface ICompetitionEventLocationsResult {
-  location: string | null;
-  name: string | null;
-  startDate: string;
-  venueLat: number;
-  venueLng: number;
-}
-
-/** 'CompetitionEventLocations' query type */
-export interface ICompetitionEventLocationsQuery {
-  params: ICompetitionEventLocationsParams;
-  result: ICompetitionEventLocationsResult;
-}
-
-const competitionEventLocationsIR: any = {"usedParamSet":{"federation":true,"fromDate":true,"toDate":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":206,"b":217}]},{"name":"fromDate","required":true,"transform":{"type":"scalar"},"locs":[{"a":246,"b":255}]},{"name":"toDate","required":true,"transform":{"type":"scalar"},"locs":[{"a":267,"b":274}]}],"statement":"select\n    e.name as \"name\",\n    e.location as \"location\",\n    e.start_date::text as \"startDate!\",\n    e.venue_lat as \"venueLat!\",\n    e.venue_lng as \"venueLng!\"\nfrom federated.event e\nwhere e.federation = :federation!\n  and e.start_date between :fromDate!::date and :toDate!::date\n  and e.venue_lat is not null\n  and e.venue_lng is not null\norder by e.start_date"};
-
-/**
- * Query generated from SQL:
- * ```
- * select
- *     e.name as "name",
- *     e.location as "location",
- *     e.start_date::text as "startDate!",
- *     e.venue_lat as "venueLat!",
- *     e.venue_lng as "venueLng!"
- * from federated.event e
- * where e.federation = :federation!
- *   and e.start_date between :fromDate!::date and :toDate!::date
- *   and e.venue_lat is not null
- *   and e.venue_lng is not null
- * order by e.start_date
- * ```
- */
-export const competitionEventLocations = new PreparedQuery<ICompetitionEventLocationsParams,ICompetitionEventLocationsResult>(competitionEventLocationsIR);
-
 
 /** 'CompetitionSankeyLinks' parameters type */
 export interface ICompetitionSankeyLinksParams {

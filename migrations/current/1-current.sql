@@ -503,6 +503,7 @@ create index if not exists competitor_external_id_text_idx on federated.competit
 create index if not exists person_external_id_text_idx on federated.person ((external_id::text));
 
 --!include functions/federation_competitor_facets.sql
+--!include functions/federation_event_facets.sql
 --!include functions/person_age_group.sql
 --!include functions/couple_age_group.sql
 

@@ -39,11 +39,11 @@ function checkQueryLimits(
       if (
         (args.first == null && args.last == null) ||
         [args.first, args.last].some(
-          (value) => value != null && (typeof value !== 'number' || value < 0 || value > 100),
+          (value) => value != null && (typeof value !== 'number' || value < 0 || value > 300),
         )
       ) {
         errors.push(new GraphQLError(
-          `${typeInfo.getParentType()?.name}.${field.name} requires first or last between 0 and 100.`,
+          `${typeInfo.getParentType()?.name}.${field.name} requires first or last between 0 and 300.`,
           { nodes: node },
         ));
       }

@@ -1,0 +1,44 @@
+query FederationEventFacets($federation: String!) {
+  federation(code: $federation) {
+    code
+    eventFacets {
+      years {
+        year
+        eventCount
+        mappedEventCount
+      }
+    }
+  }
+}
+
+fragment FederationMapEvent on FederationEvent {
+  id
+  externalId
+  name
+  startDate
+  location
+  city
+  country
+  streetAddress
+  postalCode
+  venueLat
+  venueLng
+}
+
+query FederationMapEvents(
+  $federation: String!
+  $date: CompetitionDateCondition!
+) {
+  federation(code: $federation) {
+    code
+    events(
+      first: 300
+      condition: { date: $date }
+      orderBy: [START_DATE_ASC, ID_ASC]
+    ) {
+      nodes {
+        ...FederationMapEvent
+      }
+    }
+  }
+}

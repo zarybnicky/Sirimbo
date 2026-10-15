@@ -1804,9 +1804,9 @@ export type CompetitionCondition = {
 };
 
 export type CompetitionDateCondition = {
-  /** Inclusive competition start date. */
+  /** Inclusive event or competition start date. */
   since?: InputMaybe<Scalars['Date']['input']>;
-  /** Exclusive competition start date. */
+  /** Exclusive event or competition start date. */
   until?: InputMaybe<Scalars['Date']['input']>;
 };
 
@@ -5665,6 +5665,7 @@ export type Federation = {
   competitorFacetsList: Maybe<Array<FederationCompetitorFacetsRecord>>;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
   competitors: FederationCompetitorsConnection;
+  eventFacets: Maybe<FederationEventFacet>;
   /** Reads and enables pagination through a set of `FederationEvent`. */
   events: FederationEventsConnection;
   /** Reads and enables pagination through a set of `FederationPersonLicense`. */
@@ -6408,6 +6409,7 @@ export type FederationEventCondition = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `country` field. */
   country?: InputMaybe<Scalars['String']['input']>;
+  date?: InputMaybe<CompetitionDateCondition>;
   /** Checks for equality with the object’s `endDate` field. */
   endDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
@@ -6449,6 +6451,11 @@ export type FederationEventCondition = {
   venueLocationSource?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `websiteUrl` field. */
   websiteUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FederationEventFacet = {
+  __typename?: 'FederationEventFacet';
+  years: Array<Maybe<FederationEventYear>>;
 };
 
 export type FederationEventOfficial = {
@@ -6526,6 +6533,13 @@ export type FederationEventStatus =
   | 'PLANNED'
   | 'POSTPONED'
   | 'UNKNOWN';
+
+export type FederationEventYear = {
+  __typename?: 'FederationEventYear';
+  eventCount: Scalars['Int']['output'];
+  mappedEventCount: Scalars['Int']['output'];
+  year: Scalars['Int']['output'];
+};
 
 /** A connection to a list of `FederationEvent` values. */
 export type FederationEventsConnection = {
@@ -13732,9 +13746,11 @@ export type GraphCacheKeysConfig = {
   FederationCompetitorsEdge?: (data: WithTypename<FederationCompetitorsEdge>) => null | string,
   FederationCoupleAgeRule?: (data: WithTypename<FederationCoupleAgeRule>) => null | string,
   FederationEvent?: (data: WithTypename<FederationEvent>) => null | string,
+  FederationEventFacet?: (data: WithTypename<FederationEventFacet>) => null | string,
   FederationEventOfficial?: (data: WithTypename<FederationEventOfficial>) => null | string,
   FederationEventOfficialsConnection?: (data: WithTypename<FederationEventOfficialsConnection>) => null | string,
   FederationEventOfficialsEdge?: (data: WithTypename<FederationEventOfficialsEdge>) => null | string,
+  FederationEventYear?: (data: WithTypename<FederationEventYear>) => null | string,
   FederationEventsConnection?: (data: WithTypename<FederationEventsConnection>) => null | string,
   FederationEventsEdge?: (data: WithTypename<FederationEventsEdge>) => null | string,
   FederationPeopleConnection?: (data: WithTypename<FederationPeopleConnection>) => null | string,
@@ -15181,6 +15197,7 @@ export type GraphCacheResolvers = {
     competitions?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
     competitorFacetsList?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorFacetsListArgs, Array<WithTypename<FederationCompetitorFacetsRecord> | string>>,
     competitors?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
+    eventFacets?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, WithTypename<FederationEventFacet> | string>,
     events?: GraphCacheResolver<WithTypename<Federation>, FederationEventsArgs, WithTypename<FederationEventsConnection> | string>,
     licenses?: GraphCacheResolver<WithTypename<Federation>, FederationLicensesArgs, WithTypename<FederationPersonLicensesConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15339,6 +15356,9 @@ export type GraphCacheResolvers = {
     venueLocationSource?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     websiteUrl?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  FederationEventFacet?: {
+    years?: GraphCacheResolver<WithTypename<FederationEventFacet>, Record<string, never>, Array<WithTypename<FederationEventYear> | string>>
+  },
   FederationEventOfficial?: {
     discipline?: GraphCacheResolver<WithTypename<FederationEventOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
     event?: GraphCacheResolver<WithTypename<FederationEventOfficial>, Record<string, never>, WithTypename<FederationEvent> | string>,
@@ -15357,6 +15377,11 @@ export type GraphCacheResolvers = {
   FederationEventOfficialsEdge?: {
     cursor?: GraphCacheResolver<WithTypename<FederationEventOfficialsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<FederationEventOfficialsEdge>, Record<string, never>, WithTypename<FederationEventOfficial> | string>
+  },
+  FederationEventYear?: {
+    eventCount?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>,
+    mappedEventCount?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>,
+    year?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   FederationEventsConnection?: {
     edges?: GraphCacheResolver<WithTypename<FederationEventsConnection>, Record<string, never>, Array<WithTypename<FederationEventsEdge> | string>>,
@@ -17818,6 +17843,7 @@ export type GraphCacheUpdaters = {
     competitions?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitionsArgs>,
     competitorFacetsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitorFacetsListArgs>,
     competitors?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitorsArgs>,
+    eventFacets?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, Record<string, never>>,
     events?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationEventsArgs>,
     licenses?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationLicensesArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, Record<string, never>>,
@@ -17976,6 +18002,9 @@ export type GraphCacheUpdaters = {
     venueLocationSource?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     websiteUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>
   },
+  FederationEventFacet?: {
+    years?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventFacet>>, Record<string, never>>
+  },
   FederationEventOfficial?: {
     discipline?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficial>>, Record<string, never>>,
     event?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficial>>, Record<string, never>>,
@@ -17994,6 +18023,11 @@ export type GraphCacheUpdaters = {
   FederationEventOfficialsEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsEdge>>, Record<string, never>>
+  },
+  FederationEventYear?: {
+    eventCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>,
+    mappedEventCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>,
+    year?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>
   },
   FederationEventsConnection?: {
     edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsConnection>>, Record<string, never>>,

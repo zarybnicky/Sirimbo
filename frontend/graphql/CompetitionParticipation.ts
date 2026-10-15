@@ -7,9 +7,9 @@ import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type CompetitionDateCondition = {
-  /** Inclusive competition start date. */
+  /** Inclusive event or competition start date. */
   since?: string | null | undefined;
-  /** Exclusive competition start date. */
+  /** Exclusive event or competition start date. */
   until?: string | null | undefined;
 };
 

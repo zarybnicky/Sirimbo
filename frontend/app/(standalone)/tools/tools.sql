@@ -1,17 +1,3 @@
-/* @name CompetitionEventLocations */
-select
-    e.name as "name",
-    e.location as "location",
-    e.start_date::text as "startDate!",
-    e.venue_lat as "venueLat!",
-    e.venue_lng as "venueLng!"
-from federated.event e
-where e.federation = :federation!
-  and e.start_date between :fromDate!::date and :toDate!::date
-  and e.venue_lat is not null
-  and e.venue_lng is not null
-order by e.start_date;
-
 /* @name CompetitionSankeyLinks */
 with base as (
     select
