@@ -137,7 +137,19 @@ query Couple($id: BigInt!) {
       nodes { ...FederationRanking }
     }
     federationCompetitors(first: 100, orderBy: [FEDERATION_ASC, EXTERNAL_ID_ASC]) {
-      nodes { id federation externalId }
+      nodes {
+        id
+        federation
+        externalId
+        name
+        categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
+          categoryId
+          category { ...CompetitionCategory }
+          points
+          domesticFinals
+          foreignFinals
+        }
+      }
     }
   }
 }

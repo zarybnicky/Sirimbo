@@ -21,7 +21,7 @@ export function FederationLink({
     <Link
       href={`/federated/${federation}/${entity}/${externalId}`}
       className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-11 underline hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >

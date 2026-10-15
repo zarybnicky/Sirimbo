@@ -1,6 +1,4 @@
 import type { CoupleFragment } from '@/graphql/Memberships';
-import type { FederationRankingFragment } from '@/graphql/Federation';
-import { FederationRankings } from '@/ui/FederationRankings';
 import { memo } from 'react';
 import type { PersonMembershipsQuery } from '@/graphql/Person';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -84,13 +82,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.allCouplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
         ?.map((couple) => (
-          <CoupleRow
-            key={couple.id}
-            item={couple}
-            rankings={item.federationRanklistEntries.nodes.filter((entry) =>
-              entry.competitor?.couplesList?.some((x) => x.id === couple.id),
-            )}
-          />
+          <CoupleRow key={couple.id} item={couple} />
         ))}
 
       <div className="flex justify-between items-baseline flex-wrap gap-4">
@@ -294,13 +286,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
   );
 });
 
-function CoupleRow({
-  item,
-  rankings,
-}: {
-  item: CoupleFragment;
-  rankings: FederationRankingFragment[];
-}) {
+function CoupleRow({ item }: { item: CoupleFragment }) {
   const actions = useActions(coupleActions, item);
   return (
     <div>
@@ -312,7 +298,6 @@ function CoupleRow({
           <span>{formatOpenDateRange(item)}</span>
         </div>
       </ActionRow>
-      <FederationRankings entries={rankings} />
     </div>
   );
 }

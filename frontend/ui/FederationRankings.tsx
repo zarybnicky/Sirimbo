@@ -1,6 +1,7 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
 import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
+import { Table } from '@/ui/Table';
 
 const disciplineNames: Record<string, string> = {
   Standard: 'STT',
@@ -28,6 +29,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           kind: snapshot.kind,
           ageGroup: category.ageGroup,
           competitorType: category.competitorType,
+          series: category.series,
           ageRange:
             category.ageGroupDetails?.coupleRules[0]?.olderAge ??
             category.ageGroupDetails?.age ??
@@ -127,59 +129,52 @@ export function FederationRankings({
 }: {
   entries: FederationRankingFragment[];
 }) {
-  const snapshots = Object.groupBy(
-    ranklistRows(entries),
-    (row) => `${row.federation}:${row.kind}:${row.date}`,
+  const rows = ranklistRows(entries);
+  if (rows.length === 0) return null;
+  const columns = [...new Set(rows.map((row) => row.discipline))].toSorted(
+    (a, b) => disciplineOrder.indexOf(a) - disciplineOrder.indexOf(b),
   );
-  return Object.entries(snapshots).map(([key, rows]) => {
-    if (!rows) return null;
-    const columns = [...new Set(rows.map((row) => row.discipline))].toSorted(
-      (a, b) => disciplineOrder.indexOf(a) - disciplineOrder.indexOf(b),
-    );
-    return (
-      <div key={key} className="my-2 overflow-x-auto">
-        <table className="w-full text-sm text-left">
-          <caption className="mb-2 text-left text-lg font-semibold">
-            Ranklist {rows[0]?.federation} ({formatDateOnly(rows[0]!.date)})
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col" className="py-1 pr-3 font-medium">
-                Kategorie
-              </th>
-              {columns.map((discipline) => (
-                <th
-                  key={discipline}
-                  scope="col"
-                  className="px-2 py-1 text-right font-medium"
-                >
-                  {disciplineNames[discipline] ?? discipline}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(Object.groupBy(rows, (row) => row.category)).map(
-              ([category, entries]) => (
-                <tr key={category} className="border-t border-neutral-4">
-                  <th scope="row" className="py-1 pr-3 font-normal">
-                    {category}
-                  </th>
-                  {columns.map((discipline) => (
-                    <td key={discipline} className="px-2 py-1 text-right">
-                      {entries
-                        ?.filter((entry) => entry.discipline === discipline)
-                        .map((entry) => (
-                          <div key={entry.id}>{entry.placement}</div>
-                        ))}
-                    </td>
-                  ))}
-                </tr>
-              ),
-            )}
-          </tbody>
-        </table>
-      </div>
-    );
-  });
+  const groups = Object.groupBy(rows, (row) =>
+    [
+      row.federation,
+      row.category,
+      row.series === 'DanceSport'
+        ? null
+        : row.series === 'DanceForAll'
+          ? 'TPV'
+          : row.series,
+      `(${formatDateOnly(row.date)})`,
+    ]
+      .filter(Boolean)
+      .join(' '),
+  );
+  return (
+    <Table
+      className="my-2"
+      caption="Ranklist"
+      columns={[
+        'Kategorie',
+        ...columns.map((discipline) => (
+          <span key={discipline} className="block text-right">
+            {disciplineNames[discipline] ?? discipline}
+          </span>
+        )),
+      ]}
+    >
+      {Object.entries(groups).map(([label, entries]) => (
+        <tr key={label} className="border-t border-neutral-4">
+          <th scope="row">{label}</th>
+          {columns.map((discipline) => (
+            <td key={discipline} className="text-right">
+              {entries
+                ?.filter((entry) => entry.discipline === discipline)
+                .map((entry) => (
+                  <div key={entry.id}>{entry.placement}</div>
+                ))}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </Table>
+  );
 }

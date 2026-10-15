@@ -9,23 +9,27 @@ export function Table({
   className,
   busy,
 }: {
-  columns: ReactNode[];
+  columns: (ReactNode | { label: ReactNode; colSpan: number })[];
   caption?: ReactNode;
   children: ReactNode;
   empty?: string;
   className?: string;
   busy?: boolean;
 }) {
-  const headers = columns.filter((column) => column != null && column !== false);
+  const headers = columns
+    .filter((c) => !!c)
+    .map((c) =>
+      typeof c === 'object' && c !== null && 'label' in c ? c : { label: c, colSpan: 1 },
+    );
   const rows = Children.toArray(children);
   return (
     <div className={cn('overflow-x-auto', className)} aria-busy={busy}>
-      <table className="w-full text-left text-sm tabular-nums [&>*>tr>*]:px-2 [&>*>tr>*]:py-1 [&>tbody>tr>th]:font-normal">
+      <table className="w-full text-left text-sm tabular-nums [&>*>tr>*]:px-2 [&>*>tr>*]:py-1 [&>*>tr>:first-child]:pl-0 [&>*>tr>:last-child]:pr-0 [&>tbody>tr>th]:font-normal">
         {caption && <caption className="text-left font-bold mb-2">{caption}</caption>}
         <thead>
           <tr>
-            {headers.map((label, index) => (
-              <th key={index} scope="col">
+            {headers.map(({ label, colSpan }, i) => (
+              <th key={i} scope={colSpan > 1 ? 'colgroup' : 'col'} colSpan={colSpan}>
                 {label}
               </th>
             ))}
@@ -36,7 +40,9 @@ export function Table({
             ? rows
             : empty && (
                 <tr>
-                  <td colSpan={headers.length}>{empty}</td>
+                  <td colSpan={headers.reduce((sum, header) => sum + header.colSpan, 0)}>
+                    {empty}
+                  </td>
                 </tr>
               )}
         </tbody>

@@ -11,11 +11,18 @@ import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
+import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
+import { Tab, TabMenu } from '@/ui/TabMenu';
+import { parseAsString, useQueryState } from 'nuqs';
 
 export function Couple({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const item = data?.couple;
   const actions = useActions(coupleActions, item);
+  const [tab, setTab] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
 
   if (!item) return null;
   const personIds = [item.man, item.woman].flatMap((person) =>
@@ -73,8 +80,28 @@ export function Couple({ id }: { id: string }) {
         <div>{formatOpenDateRange(item)}</div>
         <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
       </div>
-      <FederationRankings entries={item.federationRanklistEntries.nodes} />
-      <ActivityTimeline personIds={personIds} includeJudging />
+
+      <TabMenu selected={tab} onSelect={setTab}>
+        <Tab id="activity" title="Aktivita">
+          <ActivityTimeline personIds={personIds} includeJudging />
+        </Tab>
+
+        <Tab id="fed" title="Soutěžní">
+          {item.federationCompetitors.nodes.length === 0 &&
+            item.federationRanklistEntries.nodes.length === 0 && (
+              <p className="my-4 text-neutral-11">Žádné soutěžní údaje.</p>
+            )}
+
+          {item.federationCompetitors.nodes.length > 0 && (
+            <div className="my-4">
+              <FederationCategoryProgress
+                competitors={item.federationCompetitors.nodes}
+              />
+            </div>
+          )}
+          <FederationRankings entries={item.federationRanklistEntries.nodes} />
+        </Tab>
+      </TabMenu>
     </>
   );
 }

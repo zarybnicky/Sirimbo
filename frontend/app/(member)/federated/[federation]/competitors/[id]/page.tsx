@@ -1,3 +1,4 @@
+import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -7,7 +8,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/TitleBar';
 import { Members, History } from './Tables';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
-import { formatAgeGroup, formatCategoryName } from '@/ui/csts';
+import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
@@ -65,26 +66,9 @@ export default async function CompetitorPage({ params }: Props) {
         <dt>age group</dt>
         <dd>{formatAgeGroup(competitor.ageGroup) || '-'}</dd>
       </dl>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Category progress</h2>
-      <Table columns={['category', 'points']} empty="No category progress">
-        {competitor.categoryProgressesList
-          .toSorted((a, b) =>
-            (formatCategoryName(federation, a.category) || a.categoryId).localeCompare(
-              formatCategoryName(federation, b.category) || b.categoryId,
-            ),
-          )
-          .map((progress) => (
-            <tr key={progress.categoryId} className="border-t border-neutral-4">
-              <th scope="row">
-                {formatCategoryName(federation, progress.category) || progress.categoryId}
-              </th>
-              <td>
-                {Number(progress.points)}F
-                {progress.domesticFinals + progress.foreignFinals}
-              </td>
-            </tr>
-          ))}
-      </Table>
+
+      <FederationCategoryProgress competitors={[{ ...competitor, federation }]} />
+
       {competitor.couplesList.length > 0 && (
         <>
           <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>

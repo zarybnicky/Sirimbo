@@ -15,7 +15,8 @@ import { personActions } from '@/lib/actions/person';
 import { useActions } from '@/lib/actions';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { FederationLink } from '@/ui/federation-links';
-import { FederationRankBadge } from '@/ui/FederationRankings';
+import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
+import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Globe, Music2 } from 'lucide-react';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 
@@ -56,6 +57,15 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
 
   if (!item) return null;
 
+  const competitors = Object.values(
+    Object.groupBy(item.federationCategoryProgresses.nodes, (x) => x.competitorId),
+  ).flatMap((progress) => {
+    const competitor = progress?.[0]?.competitor;
+    return competitor && progress
+      ? [{ ...competitor, categoryProgressesList: progress }]
+      : [];
+  });
+
   const subtitleParts = [
     <span key="category" className="inline-flex flex-wrap items-center gap-2">
       {categoryProgress}
@@ -81,9 +91,11 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
         {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
       </FederationLink>
     )),
-    <span key="ranklist" className="inline-flex flex-wrap items-center gap-2">
-      <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
-    </span>,
+    item.federationRanklistEntries.nodes.length > 0 && (
+      <span key="ranklist" className="inline-flex flex-wrap items-center gap-2">
+        <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
+      </span>
+    ),
   ].filter(Boolean);
 
   const socialLinks = [
@@ -165,6 +177,18 @@ export const PersonView = React.memo(function PersonView({ id }: { id: string })
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="info" title="Členství">
           <PersonMembershipView item={item} />
+        </Tab>
+        <Tab id="fed" title="Soutěžní">
+          {competitors.length === 0 &&
+            item.federationRanklistEntries.nodes.length === 0 && (
+              <p className="my-4 text-neutral-11">Žádné soutěžní údaje.</p>
+            )}
+          {competitors.length > 0 && (
+            <div className="my-4">
+              <FederationCategoryProgress competitors={competitors} />
+            </div>
+          )}
+          <FederationRankings entries={item.federationRanklistEntries.nodes} />
         </Tab>
         {isAdminOrCurrentPerson && (
           <>
