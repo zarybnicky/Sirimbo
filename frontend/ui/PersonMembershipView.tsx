@@ -25,6 +25,7 @@ import { tenantMembershipActions } from '@/lib/actions/tenantMembership';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
@@ -170,12 +171,24 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           <div className="flex justify-between items-baseline flex-wrap gap-4">
             <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
             {auth.isAdmin && (
-              <Dialog>
-                <DialogTrigger.Add size="sm" text="Přidat k registrovanému uživateli" />
-                <DialogContent>
-                  <LinkUserToPersonForm personId={item.id} />
-                </DialogContent>
-              </Dialog>
+              <ActionGroup
+                actions={[
+                  {
+                    id: 'person.invite',
+                    key: 'person.invite',
+                    label: 'Pozvat e-mailem',
+                    group: 'add',
+                    render: () => <CreateInvitationForm personId={item.id} />,
+                  },
+                  {
+                    id: 'person.linkUser',
+                    key: 'person.linkUser',
+                    label: 'Přiřadit existující účet',
+                    group: 'add',
+                    render: () => <LinkUserToPersonForm personId={item.id} />,
+                  },
+                ]}
+              />
             )}
           </div>
 
@@ -192,33 +205,21 @@ export const PersonMembershipView = memo(function PersonMembershipView({
             </ActionRow>
           ))}
 
-          {auth.isAdmin && (
-            <>
-              <div className="flex justify-between items-baseline flex-wrap gap-4">
-                <h3 className="text-lg font-semibold mt-4 mb-2">Pozvánky</h3>
-                <Dialog>
-                  <DialogTrigger.Add size="sm" />
-                  <DialogContent>
-                    <CreateInvitationForm personId={item.id} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-
-              {item.personInvitationsList?.map((invitation) => (
-                <ActionRow
-                  key={invitation.id}
-                  actions={invitationActionMap.get(invitation.id)!}
-                >
-                  <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
-                    <b className="wrap-break-word">{invitation.email}</b>
-                    <span>
-                      vytvořena {fullDateFormatter.format(new Date(invitation.createdAt))}
-                    </span>
-                  </div>
-                </ActionRow>
-              ))}
-            </>
-          )}
+          {auth.isAdmin &&
+            item.personInvitationsList?.map((invitation) => (
+              <ActionRow
+                key={invitation.id}
+                actions={invitationActionMap.get(invitation.id)!}
+              >
+                <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
+                  <b className="wrap-break-word">({invitation.email})</b>
+                  <span>
+                    pozvánka odeslána{' '}
+                    {fullDateFormatter.format(new Date(invitation.createdAt))}
+                  </span>
+                </div>
+              </ActionRow>
+            ))}
 
           {auth.isAdmin && enableStarletImport && (
             <>
