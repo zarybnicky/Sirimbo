@@ -10,6 +10,11 @@ begin
     return null;
   end if;
 
+  -- Serialize initial charging with registration changes and their deferred sync.
+  select * into i from event_instance
+  where id = i.id and tenant_id = current_tenant_id() for no key update;
+  if not found or i.is_cancelled then return null; end if;
+
   select p.* into created_payment from payment p where p.event_instance_id = i.id;
 
   if found then

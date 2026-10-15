@@ -4,7 +4,7 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
 
 ## Must dos
 - **Rebuild new, empty tables during development.** For tables introduced by the current work, edit the original definition instead of accumulating `alter table` statements. You can drop and recreate these tables without additional approval when they contain no data to preserve. For existing tables or columns, require explicit task authorization before dropping them. Recreating a table does not restore its data.
-- **Refresh supporting metadata.** Whenever you define or change a table, function, or trigger, include the accompanying `comment on ...` statements (for Graphile hints) and explicit `grant`/`revoke` statements to keep permissions consistent.
+- **Refresh API metadata and permissions.** For relations and functions exposed through the public API, maintain the relevant Graphile comments and explicit grants/revokes. The API currently uses the `public`, `federated`, and `crawler` schemas. This requirement is about API exposure, not the name of the schema. It does not apply to internal relations, internal functions, or triggers; do not add metadata or permission boilerplate to them solely to satisfy this rule.
 - **Use existing helpers.** Reuse helpers for policy resets, background jobs, and watcher notifications. Use `graphile_worker.add_job(...)` with an existing task from `worker/tasks/`. Use `postgraphile_watch.notify_watchers_*()` for watcher notifications.
 - **Document complex operations inline.** Add concise SQL comments explaining non-obvious sequences, especially when coordinating multiple triggers/functions.
 

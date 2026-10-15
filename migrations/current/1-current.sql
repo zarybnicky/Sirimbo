@@ -539,3 +539,5 @@ create index if not exists competition_start_date_idx
   on federated.competition (start_date) include (id);
 
 --!include views/competition_participation.sql
+--!include functions/tg_eir__sync_lesson_payment.sql
+--!include functions/create_event_instance_payment.sql
