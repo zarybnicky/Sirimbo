@@ -386,23 +386,31 @@ ORDER BY rn, next_fetch_at, last_fetched_at NULLS FIRST, id
 LIMIT :capacity;
 
 /* @name GetNextPendingProcess */
-SELECT
-  f.id AS "id!",
-  f.federation AS "federation!",
-  f.kind AS "kind!",
-  f.key AS "key!",
-  jr.url,
-  jr.http_status,
-  jr.error,
-  jrc.content
-FROM crawler.frontier f
-JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
-JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
-WHERE process_status = 'pending'
-  AND fetch_status = 'ok'
-ORDER BY discovered_at, last_fetched_at
-FOR UPDATE OF f SKIP LOCKED
-LIMIT :limit;
+WITH pending AS MATERIALIZED (
+  SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content,
+    c.id AS competition_id
+  FROM crawler.frontier f
+  JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
+  JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+  LEFT JOIN federated.competition c
+    ON c.federation = 'wdsf' AND c.external_id = CASE
+      WHEN f.federation = 'wdsf' AND f.kind = 'participant'
+      THEN jrc.content->>'competitionId'
+    END
+  WHERE process_status = 'pending' AND fetch_status = 'ok'
+  ORDER BY discovered_at, last_fetched_at
+  FOR UPDATE OF f SKIP LOCKED
+  LIMIT :limit
+), owned_competitions AS MATERIALIZED (
+  SELECT c.id FROM federated.competition c
+  WHERE c.id IN (SELECT competition_id FROM pending)
+  ORDER BY c.id
+  FOR NO KEY UPDATE SKIP LOCKED
+)
+SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!",
+  url, http_status, error, content,
+  competition_id IS NULL OR competition_id IN (SELECT id FROM owned_competitions) AS "canProcess!"
+FROM pending;
 
 /* @name GetPendingProcessById */
 SELECT
@@ -536,6 +544,12 @@ FROM unnest(
   :kinds::text[],
   :keys::text[]
 ) AS input(federation, kind, key)
+WHERE NOT EXISTS (
+  SELECT 1 FROM crawler.frontier existing
+  WHERE (existing.federation, existing.kind, existing.key) = (input.federation, input.kind, input.key)
+    AND existing.process_status <> 'error' AND existing.fetch_status <> 'gone'
+)
+ORDER BY federation, kind, key
 ON CONFLICT (federation, kind, key) DO UPDATE
 SET process_status = 'pending',
     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,

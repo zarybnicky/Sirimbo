@@ -6,6 +6,8 @@ const preset: GraphileConfig.Preset = {
     pollInterval: 500,
     connectionString: process.env.DATABASE_URL,
     concurrentJobs: 5,
+    completeJobBatchDelay: 0,
+    failJobBatchDelay: 0,
     fileExtensions: [".js", ".cjs", ".mjs", ".ts", ".cts", ".mts"],
   },
 };

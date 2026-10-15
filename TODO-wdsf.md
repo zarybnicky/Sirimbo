@@ -13,7 +13,13 @@ on their next load.
 
 ## Competition results and round marks
 
+- [x] Preserve round dance and judge positions across partial WDSF participant responses and changed official panels. Extend dance programs without renumbering stored scores.
+- [x] Give Bolero, Mambo, and Swing distinct dance codes. Reject duplicate normalized dances instead of overwriting scores.
 - [ ] Store official WDSF final dance results and AJS rankings/scores; current round aggregates sum judges' marks.
+
+The migration reconstructs inconsistent WDSF rounds from cached participants.
+On 2026-10-15, all 15,557 scores from 148 participants in five repaired competitions
+matched their cached responses, including judge, dance, component, and value.
 
 ## Ranklists
 
@@ -42,6 +48,8 @@ on their next load.
 - [ ] Add system-admin refetch/reprocess actions using worker scheduling, with resulting status and errors.
 - [ ] Rename physical `json_response` / `json_response_cache` tables (low priority).
 - [ ] Resume the WDSF completeness/recovery/replay investigation in a separate session; explicitly shelved, with no production access.
+- [ ] Resolve the 29 older WDSF member failures for `Hip Hop Freestyle` / `Hip-Hop Freestyle` license disciplines.
+- [ ] Check concurrent first-time competitor inserts: one retryable deadlock occurred during the final participant replay after the round/result locking fix.
 
 ## Deferred
 
@@ -56,13 +64,16 @@ on their next load.
 
 ### Couple and team composition
 
-- [ ] Implement couple and team composition loaders so person-based reports can associate WDSF results with their members.
+- [x] Import couple composition so person-based reports can associate WDSF results with their members.
+- [ ] Finish couple fetching and verify composition coverage after the competitor-ID reconstruction.
+- [ ] Add team composition when a concrete consumer needs it.
 
-The old scraper fetched `/api/1/couple/rls-<id>` from participant detail links and
-stored male/female member IDs. The current `wdsfParticipant` loader creates a
-couple competitor but does not attach lead/follow components, so public reports
-that join through `federated.competitor_component` cannot associate WDSF couple
-results with local `person.wdsf_id` values.
+`wdsfCouple` fetches `/api/1/couple/<full-id>` and replaces lead/follow components
+using the explicit member MINs. Participant indexes and details discover couples;
+the migration also seeds couples already stored locally. The loader creates missing
+people by MIN and schedules their member loaders, which remain responsible for names.
+Name-only partners do not create synthetic people. Existing reports and local links
+use these components as each couple is fetched.
 
 Inspection on 2026-10-15:
 
@@ -84,16 +95,8 @@ Inspection on 2026-10-15:
 - Detail samples `rls-9427` and `wdsf-477800` both resolved. The former has both
   member MINs; the latter has a woman's MIN and `customManName`.
 
-The composition loader should seed or upsert:
-
-- `federated.competitor` rows for WDSF couples
-- `federated.person` rows for the linked people when only IDs/names are present
-- `federated.competitor_component` rows with `lead` / `follow` roles
-- any country/national-reference metadata that belongs to the couple or entry
-
-The same pattern is missing for teams, formations, groups, duos, and trios.
-Add a `wdsfTeamIndex` or equivalent team-family loaders before claiming full WDSF
-participant coverage.
+Couple country, age, division, status, retirement/blocking dates, national reference,
+and custom names are parsed but not yet stored. Team-family composition remains deferred.
 
 ### Member metadata
 
@@ -209,14 +212,14 @@ must preserve precision honestly. Do not store `YYYY-01-01` as a fake date of bi
 
 ### Participant-driven follow-up frontiers
 
-- [ ] Restore follow-up discovery for missing couple, team, and person details.
+- [x] Discover couple details from participant indexes and details, then discover their members.
+- [ ] Add follow-up discovery for teams and solo participant member details when needed.
 
 The branch participant loader queued `couple`, `team`, or `person` frontiers from
 participant detail links. Keep that mechanism, but prefer index-driven loaders when
 the endpoint supports them:
 
-- `wdsfCoupleIndex` from `/api/1/couple` should probably seed couple composition
-  before relying on per-participant couple details.
+- An active couple index can extend coverage beyond couples seen in competitions.
 - `wdsfTeamIndex` or a team-family index should seed team, formation, group, duo,
   and trio composition.
 - Participant detail can still queue missing detail frontiers as a repair path.

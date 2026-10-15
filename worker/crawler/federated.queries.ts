@@ -78,7 +78,7 @@ export interface IEnsurePeopleQuery {
   result: IEnsurePeopleResult;
 }
 
-const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":197,"b":210}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":229}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nON CONFLICT (id) DO NOTHING"};
+const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":197,"b":210}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":229}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nORDER BY federation, external_id\nON CONFLICT (id) DO NOTHING"};
 
 /**
  * Query generated from SQL:
@@ -91,6 +91,7 @@ const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true
  *   :canonicalName::text[],
  *   :gender::federated.gender[]
  * ) AS i (federation, external_id, canonical_name, gender)
+ * ORDER BY federation, external_id
  * ON CONFLICT (id) DO NOTHING
  * ```
  */
@@ -502,7 +503,7 @@ export interface IEnsureCompetitorsQuery {
   result: IEnsureCompetitorsResult;
 }
 
-const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO NOTHING"};
+const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nORDER BY federation, external_id\nON CONFLICT (id) DO NOTHING"};
 
 /**
  * Query generated from SQL:
@@ -515,6 +516,7 @@ const ensureCompetitorsIR: any = {"usedParamSet":{"federation":true,"externalId"
  *   :type::federated.competitor_type[],
  *   :label::text[]
  * ) AS input(federation, external_id, competitor_type, name)
+ * ORDER BY federation, external_id
  * ON CONFLICT (id) DO NOTHING
  * ```
  */
@@ -620,7 +622,7 @@ export interface IUpsertCompetitorsDetailedQuery {
   result: IUpsertCompetitorsDetailedResult;
 }
 
-const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
+const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nWHERE NOT EXISTS (\n  SELECT 1 FROM federated.competitor c\n  WHERE c.id = input.federation || ':' || input.external_id\n    AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type\n    AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)\n)\nORDER BY federation, external_id\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
 
 /**
  * Query generated from SQL:
@@ -633,6 +635,13 @@ const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"ext
  *   :type::federated.competitor_type[],
  *   :label::text[]
  * ) AS input(federation, external_id, competitor_type, name)
+ * WHERE NOT EXISTS (
+ *   SELECT 1 FROM federated.competitor c
+ *   WHERE c.id = input.federation || ':' || input.external_id
+ *     AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type
+ *     AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)
+ * )
+ * ORDER BY federation, external_id
  * ON CONFLICT (id) DO UPDATE
  *   SET competitor_type = EXCLUDED.competitor_type,
  *       name = CASE
@@ -654,6 +663,7 @@ export interface IMergeCompetitorComponentsParams {
   competitorId?: stringArray | null | void;
   personId?: stringArray | null | void;
   role?: competitor_roleArray | null | void;
+  scopeCompetitorId?: stringArray | null | void;
 }
 
 /** 'MergeCompetitorComponents' return type */
@@ -665,7 +675,7 @@ export interface IMergeCompetitorComponentsQuery {
   result: IMergeCompetitorComponentsResult;
 }
 
-const mergeCompetitorComponentsIR: any = {"usedParamSet":{"competitorId":true,"personId":true,"role":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":76,"b":88},{"a":266,"b":278}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":111}]},{"name":"role","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]}],"statement":"WITH source AS (\n  SELECT competitor_id, person_id, role\n  FROM unnest(\n    :competitorId::text[],\n    :personId::text[],\n    :role::federated.competitor_role[]\n  ) AS input(competitor_id, person_id, role)\n), scope AS (\n  SELECT DISTINCT competitor_id\n  FROM unnest(:competitorId::text[]) AS input(competitor_id)\n), upserted AS (\n  INSERT INTO federated.competitor_component (competitor_id, person_id, role)\n  SELECT s.competitor_id, s.person_id, s.role\n  FROM source s\n  ON CONFLICT (competitor_id, person_id) DO UPDATE\n    SET role = EXCLUDED.role\n    WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role\n)\nDELETE FROM federated.competitor_component t\nWHERE t.competitor_id IN (SELECT competitor_id FROM scope)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competitor_id = t.competitor_id\n      AND s.person_id = t.person_id\n  )"};
+const mergeCompetitorComponentsIR: any = {"usedParamSet":{"competitorId":true,"personId":true,"role":true,"scopeCompetitorId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":76,"b":88},{"a":303,"b":315}]},{"name":"personId","required":false,"transform":{"type":"scalar"},"locs":[{"a":103,"b":111}]},{"name":"role","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":130}]},{"name":"scopeCompetitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":275,"b":292}]}],"statement":"WITH source AS (\n  SELECT competitor_id, person_id, role\n  FROM unnest(\n    :competitorId::text[],\n    :personId::text[],\n    :role::federated.competitor_role[]\n  ) AS input(competitor_id, person_id, role)\n), scope AS (\n  SELECT DISTINCT competitor_id\n  FROM unnest(coalesce(:scopeCompetitorId::text[], :competitorId::text[])) AS input(competitor_id)\n), upserted AS (\n  INSERT INTO federated.competitor_component (competitor_id, person_id, role)\n  SELECT s.competitor_id, s.person_id, s.role\n  FROM source s\n  WHERE NOT EXISTS (\n    SELECT 1 FROM federated.competitor_component c\n    WHERE (c.competitor_id, c.person_id) = (s.competitor_id, s.person_id)\n      AND c.role IS NOT DISTINCT FROM s.role\n  )\n  ORDER BY s.competitor_id, s.person_id\n  ON CONFLICT (competitor_id, person_id) DO UPDATE\n    SET role = EXCLUDED.role\n    WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role\n)\nDELETE FROM federated.competitor_component t\nWHERE t.competitor_id IN (SELECT competitor_id FROM scope)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competitor_id = t.competitor_id\n      AND s.person_id = t.person_id\n  )"};
 
 /**
  * Query generated from SQL:
@@ -679,11 +689,17 @@ const mergeCompetitorComponentsIR: any = {"usedParamSet":{"competitorId":true,"p
  *   ) AS input(competitor_id, person_id, role)
  * ), scope AS (
  *   SELECT DISTINCT competitor_id
- *   FROM unnest(:competitorId::text[]) AS input(competitor_id)
+ *   FROM unnest(coalesce(:scopeCompetitorId::text[], :competitorId::text[])) AS input(competitor_id)
  * ), upserted AS (
  *   INSERT INTO federated.competitor_component (competitor_id, person_id, role)
  *   SELECT s.competitor_id, s.person_id, s.role
  *   FROM source s
+ *   WHERE NOT EXISTS (
+ *     SELECT 1 FROM federated.competitor_component c
+ *     WHERE (c.competitor_id, c.person_id) = (s.competitor_id, s.person_id)
+ *       AND c.role IS NOT DISTINCT FROM s.role
+ *   )
+ *   ORDER BY s.competitor_id, s.person_id
  *   ON CONFLICT (competitor_id, person_id) DO UPDATE
  *     SET role = EXCLUDED.role
  *     WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role
@@ -2047,6 +2063,38 @@ const insertRoundDetailsIR: any = {"usedParamSet":{"danceRoundId":true,"danceCod
 export const insertRoundDetails = new PreparedQuery<IInsertRoundDetailsParams,IInsertRoundDetailsResult>(insertRoundDetailsIR);
 
 
+/** 'GetCompetitionRoundPrograms' parameters type */
+export interface IGetCompetitionRoundProgramsParams {
+  competitionId?: NumberOrString | null | void;
+}
+
+/** 'GetCompetitionRoundPrograms' return type */
+export interface IGetCompetitionRoundProgramsResult {
+  danceCode: string;
+  roundKey: string;
+}
+
+/** 'GetCompetitionRoundPrograms' query type */
+export interface IGetCompetitionRoundProgramsQuery {
+  params: IGetCompetitionRoundProgramsParams;
+  result: IGetCompetitionRoundProgramsResult;
+}
+
+const getCompetitionRoundProgramsIR: any = {"usedParamSet":{"competitionId":true},"params":[{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":208,"b":221}]}],"statement":"SELECT cr.round_key AS \"roundKey!\", dpd.dance_code AS \"danceCode!\"\nFROM federated.competition_round cr\nJOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id\nWHERE cr.competition_id = :competitionId\nORDER BY cr.round_key, dpd.dance_order"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT cr.round_key AS "roundKey!", dpd.dance_code AS "danceCode!"
+ * FROM federated.competition_round cr
+ * JOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id
+ * WHERE cr.competition_id = :competitionId
+ * ORDER BY cr.round_key, dpd.dance_order
+ * ```
+ */
+export const getCompetitionRoundPrograms = new PreparedQuery<IGetCompetitionRoundProgramsParams,IGetCompetitionRoundProgramsResult>(getCompetitionRoundProgramsIR);
+
+
 /** 'UpsertCompetitionRoundsNonDestructive' parameters type */
 export interface IUpsertCompetitionRoundsNonDestructiveParams {
   competitionId?: NumberOrString | null | void;
@@ -2069,7 +2117,7 @@ export interface IUpsertCompetitionRoundsNonDestructiveQuery {
   result: IUpsertCompetitionRoundsNonDestructiveResult;
 }
 
-const upsertCompetitionRoundsNonDestructiveIR: any = {"usedParamSet":{"roundKey":true,"roundLabel":true,"roundIndex":true,"danceProgramId":true,"scoringMethod":true,"competitionId":true},"params":[{"name":"roundKey","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":150}]},{"name":"roundLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":165,"b":175}]},{"name":"roundIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":190,"b":200}]},{"name":"danceProgramId","required":false,"transform":{"type":"scalar"},"locs":[{"a":214,"b":228}]},{"name":"scoringMethod","required":false,"transform":{"type":"scalar"},"locs":[{"a":245,"b":258}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":530,"b":543},{"a":751,"b":764}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_key)\n    round_key, round_label, round_index, dance_program_id, scoring_method\n  FROM unnest(\n    :roundKey::text[],\n    :roundLabel::text[],\n    :roundIndex::int[],\n    :danceProgramId::bigint[],\n    :scoringMethod::federated.scoring_method[]\n  ) AS input(round_key, round_label, round_index, dance_program_id, scoring_method)\n  ORDER BY round_key, round_index\n), existing AS (\n  SELECT cr.id, cr.round_key\n  FROM input\n  JOIN federated.competition_round cr\n    ON cr.competition_id = :competitionId\n   AND cr.round_key = input.round_key\n), upserted AS (\n  INSERT INTO federated.competition_round (\n    competition_id, round_key, round_label, round_index, dance_program_id, scoring_method\n  )\n  SELECT\n    :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method\n  FROM input\n  ON CONFLICT (competition_id, round_key) DO UPDATE\n    SET round_label = EXCLUDED.round_label,\n        round_index = EXCLUDED.round_index,\n        dance_program_id = CASE\n          WHEN EXISTS (\n            SELECT 1\n            FROM federated.round_dance rd\n            WHERE rd.round_id = federated.competition_round.id\n          )\n          THEN federated.competition_round.dance_program_id\n          ELSE EXCLUDED.dance_program_id\n        END,\n        scoring_method = EXCLUDED.scoring_method\n    WHERE federated.competition_round.round_label IS DISTINCT FROM EXCLUDED.round_label\n       OR federated.competition_round.round_index IS DISTINCT FROM EXCLUDED.round_index\n       OR (\n         federated.competition_round.dance_program_id IS DISTINCT FROM EXCLUDED.dance_program_id\n         AND NOT EXISTS (\n           SELECT 1\n           FROM federated.round_dance rd\n           WHERE rd.round_id = federated.competition_round.id\n         )\n       )\n       OR federated.competition_round.scoring_method IS DISTINCT FROM EXCLUDED.scoring_method\n  RETURNING id, round_key\n)\nSELECT\n  coalesce(upserted.id, existing.id) AS \"id!\",\n  input.round_key AS \"roundKey!\"\nFROM input\nLEFT JOIN existing ON existing.round_key = input.round_key\nLEFT JOIN upserted ON upserted.round_key = input.round_key\nORDER BY input.round_index"};
+const upsertCompetitionRoundsNonDestructiveIR: any = {"usedParamSet":{"roundKey":true,"roundLabel":true,"roundIndex":true,"danceProgramId":true,"scoringMethod":true,"competitionId":true},"params":[{"name":"roundKey","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":150}]},{"name":"roundLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":165,"b":175}]},{"name":"roundIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":190,"b":200}]},{"name":"danceProgramId","required":false,"transform":{"type":"scalar"},"locs":[{"a":214,"b":228}]},{"name":"scoringMethod","required":false,"transform":{"type":"scalar"},"locs":[{"a":245,"b":258}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":530,"b":543},{"a":744,"b":757},{"a":943,"b":956}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_key)\n    round_key, round_label, round_index, dance_program_id, scoring_method\n  FROM unnest(\n    :roundKey::text[],\n    :roundLabel::text[],\n    :roundIndex::int[],\n    :danceProgramId::bigint[],\n    :scoringMethod::federated.scoring_method[]\n  ) AS input(round_key, round_label, round_index, dance_program_id, scoring_method)\n  ORDER BY round_key, round_index\n), existing AS (\n  SELECT cr.id, cr.round_key\n  FROM input\n  JOIN federated.competition_round cr\n    ON cr.competition_id = :competitionId AND cr.round_key = input.round_key\n), upserted AS (\n  INSERT INTO federated.competition_round (\n    competition_id, round_key, round_label, round_index, dance_program_id, scoring_method\n  )\n  SELECT :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method\n  FROM input\n  WHERE NOT EXISTS (\n    SELECT 1 FROM federated.competition_round cr\n    WHERE cr.competition_id = :competitionId AND cr.round_key = input.round_key\n      AND (cr.round_label, cr.round_index, cr.dance_program_id, cr.scoring_method)\n        IS NOT DISTINCT FROM (input.round_label, input.round_index, input.dance_program_id, input.scoring_method)\n  )\n  ORDER BY round_key\n  ON CONFLICT (competition_id, round_key) DO UPDATE\n    SET round_label = EXCLUDED.round_label,\n        round_index = EXCLUDED.round_index,\n        dance_program_id = EXCLUDED.dance_program_id,\n        scoring_method = EXCLUDED.scoring_method\n  RETURNING id, round_key\n)\nSELECT coalesce(upserted.id, existing.id) AS \"id!\", input.round_key AS \"roundKey!\"\nFROM input\nLEFT JOIN existing ON existing.round_key = input.round_key\nLEFT JOIN upserted ON upserted.round_key = input.round_key\nORDER BY input.round_index"};
 
 /**
  * Query generated from SQL:
@@ -2089,44 +2137,28 @@ const upsertCompetitionRoundsNonDestructiveIR: any = {"usedParamSet":{"roundKey"
  *   SELECT cr.id, cr.round_key
  *   FROM input
  *   JOIN federated.competition_round cr
- *     ON cr.competition_id = :competitionId
- *    AND cr.round_key = input.round_key
+ *     ON cr.competition_id = :competitionId AND cr.round_key = input.round_key
  * ), upserted AS (
  *   INSERT INTO federated.competition_round (
  *     competition_id, round_key, round_label, round_index, dance_program_id, scoring_method
  *   )
- *   SELECT
- *     :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method
+ *   SELECT :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method
  *   FROM input
+ *   WHERE NOT EXISTS (
+ *     SELECT 1 FROM federated.competition_round cr
+ *     WHERE cr.competition_id = :competitionId AND cr.round_key = input.round_key
+ *       AND (cr.round_label, cr.round_index, cr.dance_program_id, cr.scoring_method)
+ *         IS NOT DISTINCT FROM (input.round_label, input.round_index, input.dance_program_id, input.scoring_method)
+ *   )
+ *   ORDER BY round_key
  *   ON CONFLICT (competition_id, round_key) DO UPDATE
  *     SET round_label = EXCLUDED.round_label,
  *         round_index = EXCLUDED.round_index,
- *         dance_program_id = CASE
- *           WHEN EXISTS (
- *             SELECT 1
- *             FROM federated.round_dance rd
- *             WHERE rd.round_id = federated.competition_round.id
- *           )
- *           THEN federated.competition_round.dance_program_id
- *           ELSE EXCLUDED.dance_program_id
- *         END,
+ *         dance_program_id = EXCLUDED.dance_program_id,
  *         scoring_method = EXCLUDED.scoring_method
- *     WHERE federated.competition_round.round_label IS DISTINCT FROM EXCLUDED.round_label
- *        OR federated.competition_round.round_index IS DISTINCT FROM EXCLUDED.round_index
- *        OR (
- *          federated.competition_round.dance_program_id IS DISTINCT FROM EXCLUDED.dance_program_id
- *          AND NOT EXISTS (
- *            SELECT 1
- *            FROM federated.round_dance rd
- *            WHERE rd.round_id = federated.competition_round.id
- *          )
- *        )
- *        OR federated.competition_round.scoring_method IS DISTINCT FROM EXCLUDED.scoring_method
  *   RETURNING id, round_key
  * )
- * SELECT
- *   coalesce(upserted.id, existing.id) AS "id!",
- *   input.round_key AS "roundKey!"
+ * SELECT coalesce(upserted.id, existing.id) AS "id!", input.round_key AS "roundKey!"
  * FROM input
  * LEFT JOIN existing ON existing.round_key = input.round_key
  * LEFT JOIN upserted ON upserted.round_key = input.round_key
@@ -2152,7 +2184,7 @@ export interface IUpsertRoundDancesQuery {
   result: IUpsertRoundDancesResult;
 }
 
-const upsertRoundDancesIR: any = {"usedParamSet":{"roundId":true,"danceCode":true,"danceOrder":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":118,"b":125}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":151}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":166,"b":176}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_id, dance_order)\n    round_id, dance_code, dance_order\n  FROM unnest(\n    :roundId::bigint[],\n    :danceCode::text[],\n    :danceOrder::int[]\n  ) AS input(round_id, dance_code, dance_order)\n  ORDER BY round_id, dance_order\n), source AS (\n  SELECT input.round_id, cr.dance_program_id, input.dance_code, input.dance_order\n  FROM input\n  JOIN federated.competition_round cr ON cr.id = input.round_id\n)\nINSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)\nSELECT round_id, dance_program_id, dance_code, dance_order\nFROM source\nON CONFLICT (round_id, dance_order) DO UPDATE\n  SET dance_program_id = EXCLUDED.dance_program_id,\n      dance_code = EXCLUDED.dance_code\n  WHERE federated.round_dance.dance_program_id IS DISTINCT FROM EXCLUDED.dance_program_id\n     OR federated.round_dance.dance_code IS DISTINCT FROM EXCLUDED.dance_code"};
+const upsertRoundDancesIR: any = {"usedParamSet":{"roundId":true,"danceCode":true,"danceOrder":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":118,"b":125}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":151}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":166,"b":176}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_id, dance_order)\n    round_id, dance_code, dance_order\n  FROM unnest(\n    :roundId::bigint[],\n    :danceCode::text[],\n    :danceOrder::int[]\n  ) AS input(round_id, dance_code, dance_order)\n  ORDER BY round_id, dance_order\n), source AS (\n  SELECT input.round_id, cr.dance_program_id, input.dance_code, input.dance_order\n  FROM input\n  JOIN federated.competition_round cr ON cr.id = input.round_id\n)\nINSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)\nSELECT round_id, dance_program_id, dance_code, dance_order\nFROM source\nWHERE NOT EXISTS (\n  SELECT 1 FROM federated.round_dance rd\n  WHERE (rd.round_id, rd.dance_order) = (source.round_id, source.dance_order)\n    AND (rd.dance_program_id, rd.dance_code)\n      IS NOT DISTINCT FROM (source.dance_program_id, source.dance_code)\n)\nORDER BY round_id, dance_order\nON CONFLICT (round_id, dance_order) DO UPDATE\n  SET dance_program_id = EXCLUDED.dance_program_id,\n      dance_code = EXCLUDED.dance_code\n  WHERE federated.round_dance.dance_program_id IS DISTINCT FROM EXCLUDED.dance_program_id\n     OR federated.round_dance.dance_code IS DISTINCT FROM EXCLUDED.dance_code"};
 
 /**
  * Query generated from SQL:
@@ -2174,6 +2206,13 @@ const upsertRoundDancesIR: any = {"usedParamSet":{"roundId":true,"danceCode":tru
  * INSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)
  * SELECT round_id, dance_program_id, dance_code, dance_order
  * FROM source
+ * WHERE NOT EXISTS (
+ *   SELECT 1 FROM federated.round_dance rd
+ *   WHERE (rd.round_id, rd.dance_order) = (source.round_id, source.dance_order)
+ *     AND (rd.dance_program_id, rd.dance_code)
+ *       IS NOT DISTINCT FROM (source.dance_program_id, source.dance_code)
+ * )
+ * ORDER BY round_id, dance_order
  * ON CONFLICT (round_id, dance_order) DO UPDATE
  *   SET dance_program_id = EXCLUDED.dance_program_id,
  *       dance_code = EXCLUDED.dance_code
@@ -2264,7 +2303,7 @@ export interface IUpsertCompetitionRoundJudgesQuery {
   result: IUpsertCompetitionRoundJudgesResult;
 }
 
-const upsertCompetitionRoundJudgesIR: any = {"usedParamSet":{"roundId":true,"personJudgeId":true,"judgeIndex":true,"judgeLabel":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":167,"b":174}]},{"name":"personJudgeId","required":false,"transform":{"type":"scalar"},"locs":[{"a":191,"b":204}]},{"name":"judgeIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":219,"b":229}]},{"name":"judgeLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":243,"b":253}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_id, person_judge_id)\n    round_id, person_judge_id, judge_index, nullif(judge_label, '') AS judge_label\n  FROM unnest(\n    :roundId::bigint[],\n    :personJudgeId::text[],\n    :judgeIndex::int[],\n    :judgeLabel::text[]\n  ) AS input(round_id, person_judge_id, judge_index, judge_label)\n  ORDER BY round_id, person_judge_id, judge_index\n)\nINSERT INTO federated.competition_round_judge (\n  round_id, person_judge_id, judge_index, judge_label\n)\nSELECT round_id, person_judge_id, judge_index, judge_label\nFROM input\nON CONFLICT (round_id, person_judge_id) DO UPDATE\n  SET judge_index = EXCLUDED.judge_index,\n      judge_label = EXCLUDED.judge_label\n  WHERE federated.competition_round_judge.judge_index IS DISTINCT FROM EXCLUDED.judge_index\n     OR federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label"};
+const upsertCompetitionRoundJudgesIR: any = {"usedParamSet":{"roundId":true,"personJudgeId":true,"judgeIndex":true,"judgeLabel":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":167,"b":174}]},{"name":"personJudgeId","required":false,"transform":{"type":"scalar"},"locs":[{"a":191,"b":204}]},{"name":"judgeIndex","required":false,"transform":{"type":"scalar"},"locs":[{"a":219,"b":229}]},{"name":"judgeLabel","required":false,"transform":{"type":"scalar"},"locs":[{"a":243,"b":253}]}],"statement":"WITH input AS (\n  SELECT DISTINCT ON (round_id, person_judge_id)\n    round_id, person_judge_id, judge_index, nullif(judge_label, '') AS judge_label\n  FROM unnest(\n    :roundId::bigint[],\n    :personJudgeId::text[],\n    :judgeIndex::int[],\n    :judgeLabel::text[]\n  ) AS input(round_id, person_judge_id, judge_index, judge_label)\n  ORDER BY round_id, person_judge_id, judge_index\n), added AS (\n  -- Panel edits must not renumber judges already attached to this round.\n  SELECT input.round_id, input.person_judge_id,\n    coalesce((SELECT max(j.judge_index) FROM federated.competition_round_judge j\n              WHERE j.round_id = input.round_id), 0)\n      + row_number() OVER (PARTITION BY input.round_id ORDER BY input.judge_index, input.person_judge_id) AS judge_index\n  FROM input\n  WHERE NOT EXISTS (\n    SELECT 1 FROM federated.competition_round_judge j\n    WHERE (j.round_id, j.person_judge_id) = (input.round_id, input.person_judge_id)\n  )\n)\nINSERT INTO federated.competition_round_judge (\n  round_id, person_judge_id, judge_index, judge_label\n)\nSELECT input.round_id, input.person_judge_id,\n  coalesce(j.judge_index, added.judge_index), input.judge_label\nFROM input\nLEFT JOIN federated.competition_round_judge j USING (round_id, person_judge_id)\nLEFT JOIN added USING (round_id, person_judge_id)\nWHERE j.person_judge_id IS NULL OR j.judge_label IS DISTINCT FROM input.judge_label\nORDER BY input.round_id, input.person_judge_id\nON CONFLICT (round_id, person_judge_id) DO UPDATE\n  SET judge_label = EXCLUDED.judge_label\n  WHERE federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label"};
 
 /**
  * Query generated from SQL:
@@ -2279,17 +2318,31 @@ const upsertCompetitionRoundJudgesIR: any = {"usedParamSet":{"roundId":true,"per
  *     :judgeLabel::text[]
  *   ) AS input(round_id, person_judge_id, judge_index, judge_label)
  *   ORDER BY round_id, person_judge_id, judge_index
+ * ), added AS (
+ *   -- Panel edits must not renumber judges already attached to this round.
+ *   SELECT input.round_id, input.person_judge_id,
+ *     coalesce((SELECT max(j.judge_index) FROM federated.competition_round_judge j
+ *               WHERE j.round_id = input.round_id), 0)
+ *       + row_number() OVER (PARTITION BY input.round_id ORDER BY input.judge_index, input.person_judge_id) AS judge_index
+ *   FROM input
+ *   WHERE NOT EXISTS (
+ *     SELECT 1 FROM federated.competition_round_judge j
+ *     WHERE (j.round_id, j.person_judge_id) = (input.round_id, input.person_judge_id)
+ *   )
  * )
  * INSERT INTO federated.competition_round_judge (
  *   round_id, person_judge_id, judge_index, judge_label
  * )
- * SELECT round_id, person_judge_id, judge_index, judge_label
+ * SELECT input.round_id, input.person_judge_id,
+ *   coalesce(j.judge_index, added.judge_index), input.judge_label
  * FROM input
+ * LEFT JOIN federated.competition_round_judge j USING (round_id, person_judge_id)
+ * LEFT JOIN added USING (round_id, person_judge_id)
+ * WHERE j.person_judge_id IS NULL OR j.judge_label IS DISTINCT FROM input.judge_label
+ * ORDER BY input.round_id, input.person_judge_id
  * ON CONFLICT (round_id, person_judge_id) DO UPDATE
- *   SET judge_index = EXCLUDED.judge_index,
- *       judge_label = EXCLUDED.judge_label
- *   WHERE federated.competition_round_judge.judge_index IS DISTINCT FROM EXCLUDED.judge_index
- *      OR federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label
+ *   SET judge_label = EXCLUDED.judge_label
+ *   WHERE federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label
  * ```
  */
 export const upsertCompetitionRoundJudges = new PreparedQuery<IUpsertCompetitionRoundJudgesParams,IUpsertCompetitionRoundJudgesResult>(upsertCompetitionRoundJudgesIR);
@@ -2315,7 +2368,7 @@ export interface IUpsertJudgeScoresQuery {
   result: IUpsertJudgeScoresResult;
 }
 
-const upsertJudgeScoresIR: any = {"usedParamSet":{"roundId":true,"danceOrder":true,"danceCode":true,"judgePersonId":true,"competitorId":true,"component":true,"score":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":132,"b":139}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":156,"b":166}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":189}]},{"name":"judgePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":204,"b":217}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":234,"b":246}]},{"name":"component","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":270}]},{"name":"score","required":false,"transform":{"type":"scalar"},"locs":[{"a":306,"b":311}]}],"statement":"WITH input AS (\n  SELECT\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  FROM unnest(\n    :roundId::bigint[],\n    :danceOrder::int[],\n    :danceCode::text[],\n    :judgePersonId::bigint[],\n    :competitorId::text[],\n    :component::federated.score_component[],\n    :score::numeric(10,3)[]\n  ) AS input(\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  )\n), source AS (\n  SELECT DISTINCT ON (round_id, dance_order, judge_person_id, competitor_id, component)\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  FROM input\n  ORDER BY round_id, dance_order, judge_person_id, competitor_id, component\n)\nINSERT INTO federated.judge_score (\n  round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\n)\nSELECT\n  round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, null\nFROM source\nON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) DO UPDATE\n  SET dance_code = EXCLUDED.dance_code,\n      score = EXCLUDED.score,\n      raw_score = EXCLUDED.raw_score\n  WHERE federated.judge_score.dance_code IS DISTINCT FROM EXCLUDED.dance_code\n     OR federated.judge_score.score IS DISTINCT FROM EXCLUDED.score\n     OR federated.judge_score.raw_score IS DISTINCT FROM EXCLUDED.raw_score"};
+const upsertJudgeScoresIR: any = {"usedParamSet":{"roundId":true,"danceOrder":true,"danceCode":true,"judgePersonId":true,"competitorId":true,"component":true,"score":true},"params":[{"name":"roundId","required":false,"transform":{"type":"scalar"},"locs":[{"a":132,"b":139}]},{"name":"danceOrder","required":false,"transform":{"type":"scalar"},"locs":[{"a":156,"b":166}]},{"name":"danceCode","required":false,"transform":{"type":"scalar"},"locs":[{"a":180,"b":189}]},{"name":"judgePersonId","required":false,"transform":{"type":"scalar"},"locs":[{"a":204,"b":217}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":234,"b":246}]},{"name":"component","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":270}]},{"name":"score","required":false,"transform":{"type":"scalar"},"locs":[{"a":306,"b":311}]}],"statement":"WITH input AS (\n  SELECT\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  FROM unnest(\n    :roundId::bigint[],\n    :danceOrder::int[],\n    :danceCode::text[],\n    :judgePersonId::bigint[],\n    :competitorId::text[],\n    :component::federated.score_component[],\n    :score::numeric(10,3)[]\n  ) AS input(\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  )\n), source AS (\n  SELECT DISTINCT ON (round_id, dance_order, judge_person_id, competitor_id, component)\n    round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score\n  FROM input\n  ORDER BY round_id, dance_order, judge_person_id, competitor_id, component\n)\nINSERT INTO federated.judge_score (\n  round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, raw_score\n)\nSELECT\n  round_id, dance_order, dance_code,\n  judge_person_id, competitor_id, component, score, null\nFROM source\nORDER BY round_id, dance_order, judge_person_id, competitor_id, component\nON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) DO UPDATE\n  SET dance_code = EXCLUDED.dance_code,\n      score = EXCLUDED.score,\n      raw_score = EXCLUDED.raw_score\n  WHERE federated.judge_score.dance_code IS DISTINCT FROM EXCLUDED.dance_code\n     OR federated.judge_score.score IS DISTINCT FROM EXCLUDED.score\n     OR federated.judge_score.raw_score IS DISTINCT FROM EXCLUDED.raw_score"};
 
 /**
  * Query generated from SQL:
@@ -2348,6 +2401,7 @@ const upsertJudgeScoresIR: any = {"usedParamSet":{"roundId":true,"danceOrder":tr
  *   round_id, dance_order, dance_code,
  *   judge_person_id, competitor_id, component, score, null
  * FROM source
+ * ORDER BY round_id, dance_order, judge_person_id, competitor_id, component
  * ON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) DO UPDATE
  *   SET dance_code = EXCLUDED.dance_code,
  *       score = EXCLUDED.score,
@@ -2374,7 +2428,7 @@ export interface IRefreshCompetitionRoundResultsQuery {
   result: IRefreshCompetitionRoundResultsResult;
 }
 
-const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":true},"params":[{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":136,"b":149},{"a":554,"b":567},{"a":974,"b":987}]}],"statement":"WITH scoped_rounds AS (\n  SELECT id, round_key, round_index, scoring_method\n  FROM federated.competition_round\n  WHERE competition_id = :competitionId\n), presence AS (\n  SELECT\n    sr.id AS round_id,\n    sr.round_index,\n    sr.scoring_method,\n    cr.competitor_id,\n    cr.ranking,\n    cr.ranking_to,\n    last_round.round_index AS last_round_index\n  FROM federated.competition_result cr\n  JOIN scoped_rounds last_round ON last_round.round_key = cr.last_round\n  JOIN scoped_rounds sr ON sr.round_index <= last_round.round_index\n  WHERE cr.competition_id = :competitionId\n), dance_scores AS (\n  SELECT\n    p.round_id,\n    p.round_index,\n    p.scoring_method,\n    p.competitor_id,\n    p.ranking,\n    p.ranking_to,\n    rd.dance_order,\n    CASE\n      WHEN p.scoring_method = 'skating_marks' THEN coalesce(sum(js.score), 0)::numeric(10,3)\n      ELSE sum(js.score)::numeric(10,3)\n    END AS dance_score\n  FROM presence p\n  JOIN federated.competition competition ON competition.id = :competitionId\n  JOIN federated.round_dance rd ON rd.round_id = p.round_id\n  LEFT JOIN federated.judge_score js\n    ON js.round_id = p.round_id\n   AND js.dance_order = rd.dance_order\n   AND js.dance_code = rd.dance_code\n   AND competition.federation || ':' || js.competitor_id = p.competitor_id\n  GROUP BY\n    p.round_id, p.round_index, p.scoring_method, p.competitor_id,\n    p.ranking, p.ranking_to, rd.dance_order\n), round_scores AS (\n  SELECT\n    ds.round_id,\n    ds.round_index,\n    ds.scoring_method,\n    ds.competitor_id,\n    ds.ranking,\n    ds.ranking_to,\n    CASE\n      WHEN ds.scoring_method = 'skating_marks'\n        OR count(ds.dance_score) FILTER (WHERE ds.dance_score IS NOT NULL) > 0\n      THEN sum(ds.dance_score)::numeric(10,3)\n      ELSE NULL\n    END AS overall_score,\n    CASE\n      WHEN ds.scoring_method = 'skating_marks'\n        OR count(ds.dance_score) FILTER (WHERE ds.dance_score IS NOT NULL) > 0\n      THEN array_agg(ds.dance_score::real ORDER BY ds.dance_order)\n      ELSE NULL\n    END AS dance_results\n  FROM dance_scores ds\n  GROUP BY\n    ds.round_id, ds.round_index, ds.scoring_method, ds.competitor_id,\n    ds.ranking, ds.ranking_to\n), ranked AS (\n  SELECT\n    round_scores.*,\n    CASE\n      WHEN scoring_method = 'skating_marks' AND overall_score IS NOT NULL THEN\n        rank() OVER (PARTITION BY round_id ORDER BY overall_score DESC NULLS LAST)::int\n      WHEN scoring_method = 'skating_places' THEN\n        ranking\n      ELSE NULL\n    END AS overall_ranking,\n    CASE\n      WHEN scoring_method = 'skating_marks' AND overall_score IS NOT NULL THEN\n        count(*) OVER (PARTITION BY round_id, overall_score)::int\n      ELSE NULL\n    END AS tie_count\n  FROM round_scores\n), source AS (\n  SELECT\n    ranked.round_id,\n    ranked.competitor_id,\n    ranked.overall_ranking,\n    CASE\n      WHEN ranked.overall_ranking IS NULL THEN NULL\n      WHEN ranked.scoring_method = 'skating_places' THEN\n        coalesce(ranked.ranking_to, ranked.ranking)\n      ELSE ranked.overall_ranking + ranked.tie_count - 1\n    END AS overall_ranking_to,\n    EXISTS (\n      SELECT 1\n      FROM presence later\n      WHERE later.competitor_id = ranked.competitor_id\n        AND later.last_round_index > ranked.round_index\n    ) AS qualified_next,\n    ranked.overall_score,\n    ranked.dance_results\n  FROM ranked\n), upserted AS (\n  INSERT INTO federated.competition_round_result (\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n  SELECT\n    round_id, competitor_id, overall_ranking, overall_ranking_to,\n    qualified_next, overall_score, dance_results\n  FROM source\n  ON CONFLICT (round_id, competitor_id) DO UPDATE\n    SET overall_ranking = EXCLUDED.overall_ranking,\n        overall_ranking_to = EXCLUDED.overall_ranking_to,\n        qualified_next = EXCLUDED.qualified_next,\n        overall_score = EXCLUDED.overall_score,\n        dance_results = EXCLUDED.dance_results\n    WHERE federated.competition_round_result.overall_ranking IS DISTINCT FROM EXCLUDED.overall_ranking\n       OR federated.competition_round_result.overall_ranking_to IS DISTINCT FROM EXCLUDED.overall_ranking_to\n       OR federated.competition_round_result.qualified_next IS DISTINCT FROM EXCLUDED.qualified_next\n       OR federated.competition_round_result.overall_score IS DISTINCT FROM EXCLUDED.overall_score\n       OR federated.competition_round_result.dance_results IS DISTINCT FROM EXCLUDED.dance_results\n  RETURNING 1\n), touched AS (\n  SELECT count(*) FROM upserted\n)\nDELETE FROM federated.competition_round_result crr\nUSING scoped_rounds sr, touched\nWHERE crr.round_id = sr.id\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source\n    WHERE source.round_id = crr.round_id\n      AND source.competitor_id = crr.competitor_id\n  )"};
+const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":true},"params":[{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":136,"b":149},{"a":683,"b":696}]}],"statement":"WITH scoped_rounds AS (\n  SELECT id, round_key, round_index, scoring_method\n  FROM federated.competition_round\n  WHERE competition_id = :competitionId\n), presence AS (\n  SELECT\n    sr.id AS round_id,\n    sr.round_index,\n    sr.scoring_method,\n    cr.competitor_id,\n    competitor.external_id AS competitor_external_id,\n    cr.ranking,\n    cr.ranking_to,\n    last_round.round_index AS last_round_index\n  FROM federated.competition_result cr\n  JOIN federated.competitor competitor ON competitor.id = cr.competitor_id\n  JOIN scoped_rounds last_round ON last_round.round_key = cr.last_round\n  JOIN scoped_rounds sr ON sr.round_index <= last_round.round_index\n  WHERE cr.competition_id = :competitionId\n), scores AS MATERIALIZED (\n  SELECT js.round_id, js.dance_order, js.dance_code, js.competitor_id, sum(js.score)::numeric(10,3) AS score\n  FROM federated.judge_score js\n  JOIN scoped_rounds sr ON sr.id = js.round_id\n  GROUP BY js.round_id, js.dance_order, js.dance_code, js.competitor_id\n), dance_scores AS (\n  SELECT\n    p.round_id,\n    p.round_index,\n    p.scoring_method,\n    p.competitor_id,\n    p.ranking,\n    p.ranking_to,\n    rd.dance_order,\n    CASE\n      WHEN p.scoring_method = 'skating_marks' THEN coalesce(js.score, 0)::numeric(10,3)\n      ELSE js.score\n    END AS dance_score\n  FROM presence p\n  JOIN federated.round_dance rd ON rd.round_id = p.round_id\n  LEFT JOIN scores js\n    ON js.round_id = p.round_id\n   AND js.dance_order = rd.dance_order\n   AND js.dance_code = rd.dance_code\n   AND js.competitor_id = p.competitor_external_id\n), round_scores AS (\n  SELECT\n    ds.round_id,\n    ds.round_index,\n    ds.scoring_method,\n    ds.competitor_id,\n    ds.ranking,\n    ds.ranking_to,\n    CASE\n      WHEN ds.scoring_method = 'skating_marks'\n        OR count(ds.dance_score) FILTER (WHERE ds.dance_score IS NOT NULL) > 0\n      THEN sum(ds.dance_score)::numeric(10,3)\n      ELSE NULL\n    END AS overall_score,\n    CASE\n      WHEN ds.scoring_method = 'skating_marks'\n        OR count(ds.dance_score) FILTER (WHERE ds.dance_score IS NOT NULL) > 0\n      THEN array_agg(ds.dance_score::real ORDER BY ds.dance_order)\n      ELSE NULL\n    END AS dance_results\n  FROM dance_scores ds\n  GROUP BY\n    ds.round_id, ds.round_index, ds.scoring_method, ds.competitor_id,\n    ds.ranking, ds.ranking_to\n), ranked AS (\n  SELECT\n    round_scores.*,\n    CASE\n      WHEN scoring_method = 'skating_marks' AND overall_score IS NOT NULL THEN\n        rank() OVER (PARTITION BY round_id ORDER BY overall_score DESC NULLS LAST)::int\n      WHEN scoring_method = 'skating_places' THEN\n        ranking\n      ELSE NULL\n    END AS overall_ranking,\n    CASE\n      WHEN scoring_method = 'skating_marks' AND overall_score IS NOT NULL THEN\n        count(*) OVER (PARTITION BY round_id, overall_score)::int\n      ELSE NULL\n    END AS tie_count\n  FROM round_scores\n), source AS (\n  SELECT\n    ranked.round_id,\n    ranked.competitor_id,\n    ranked.overall_ranking,\n    CASE\n      WHEN ranked.overall_ranking IS NULL THEN NULL\n      WHEN ranked.scoring_method = 'skating_places' THEN\n        coalesce(ranked.ranking_to, ranked.ranking)\n      ELSE ranked.overall_ranking + ranked.tie_count - 1\n    END AS overall_ranking_to,\n    EXISTS (\n      SELECT 1\n      FROM presence later\n      WHERE later.competitor_id = ranked.competitor_id\n        AND later.last_round_index > ranked.round_index\n    ) AS qualified_next,\n    ranked.overall_score,\n    ranked.dance_results\n  FROM ranked\n), upserted AS (\n  INSERT INTO federated.competition_round_result (\n    round_id, competitor_id, overall_ranking, overall_ranking_to, qualified_next, overall_score, dance_results\n  )\n  SELECT\n    round_id, competitor_id, overall_ranking, overall_ranking_to,\n    qualified_next, overall_score, dance_results\n  FROM source\n  WHERE NOT EXISTS (\n    SELECT 1 FROM federated.competition_round_result r\n    WHERE (r.round_id, r.competitor_id) = (source.round_id, source.competitor_id)\n      AND (r.overall_ranking, r.overall_ranking_to, r.qualified_next, r.overall_score, r.dance_results)\n        IS NOT DISTINCT FROM (source.overall_ranking, source.overall_ranking_to,\n          source.qualified_next, source.overall_score, source.dance_results)\n  )\n  ORDER BY round_id, competitor_id\n  ON CONFLICT (round_id, competitor_id) DO UPDATE\n    SET overall_ranking = EXCLUDED.overall_ranking,\n        overall_ranking_to = EXCLUDED.overall_ranking_to,\n        qualified_next = EXCLUDED.qualified_next,\n        overall_score = EXCLUDED.overall_score,\n        dance_results = EXCLUDED.dance_results\n    WHERE federated.competition_round_result.overall_ranking IS DISTINCT FROM EXCLUDED.overall_ranking\n       OR federated.competition_round_result.overall_ranking_to IS DISTINCT FROM EXCLUDED.overall_ranking_to\n       OR federated.competition_round_result.qualified_next IS DISTINCT FROM EXCLUDED.qualified_next\n       OR federated.competition_round_result.overall_score IS DISTINCT FROM EXCLUDED.overall_score\n       OR federated.competition_round_result.dance_results IS DISTINCT FROM EXCLUDED.dance_results\n  RETURNING 1\n), touched AS (\n  SELECT count(*) FROM upserted\n)\nDELETE FROM federated.competition_round_result crr\nUSING scoped_rounds sr, touched\nWHERE crr.round_id = sr.id\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source\n    WHERE source.round_id = crr.round_id\n      AND source.competitor_id = crr.competitor_id\n  )"};
 
 /**
  * Query generated from SQL:
@@ -2389,13 +2443,20 @@ const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":t
  *     sr.round_index,
  *     sr.scoring_method,
  *     cr.competitor_id,
+ *     competitor.external_id AS competitor_external_id,
  *     cr.ranking,
  *     cr.ranking_to,
  *     last_round.round_index AS last_round_index
  *   FROM federated.competition_result cr
+ *   JOIN federated.competitor competitor ON competitor.id = cr.competitor_id
  *   JOIN scoped_rounds last_round ON last_round.round_key = cr.last_round
  *   JOIN scoped_rounds sr ON sr.round_index <= last_round.round_index
  *   WHERE cr.competition_id = :competitionId
+ * ), scores AS MATERIALIZED (
+ *   SELECT js.round_id, js.dance_order, js.dance_code, js.competitor_id, sum(js.score)::numeric(10,3) AS score
+ *   FROM federated.judge_score js
+ *   JOIN scoped_rounds sr ON sr.id = js.round_id
+ *   GROUP BY js.round_id, js.dance_order, js.dance_code, js.competitor_id
  * ), dance_scores AS (
  *   SELECT
  *     p.round_id,
@@ -2406,20 +2467,16 @@ const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":t
  *     p.ranking_to,
  *     rd.dance_order,
  *     CASE
- *       WHEN p.scoring_method = 'skating_marks' THEN coalesce(sum(js.score), 0)::numeric(10,3)
- *       ELSE sum(js.score)::numeric(10,3)
+ *       WHEN p.scoring_method = 'skating_marks' THEN coalesce(js.score, 0)::numeric(10,3)
+ *       ELSE js.score
  *     END AS dance_score
  *   FROM presence p
- *   JOIN federated.competition competition ON competition.id = :competitionId
  *   JOIN federated.round_dance rd ON rd.round_id = p.round_id
- *   LEFT JOIN federated.judge_score js
+ *   LEFT JOIN scores js
  *     ON js.round_id = p.round_id
  *    AND js.dance_order = rd.dance_order
  *    AND js.dance_code = rd.dance_code
- *    AND competition.federation || ':' || js.competitor_id = p.competitor_id
- *   GROUP BY
- *     p.round_id, p.round_index, p.scoring_method, p.competitor_id,
- *     p.ranking, p.ranking_to, rd.dance_order
+ *    AND js.competitor_id = p.competitor_external_id
  * ), round_scores AS (
  *   SELECT
  *     ds.round_id,
@@ -2488,6 +2545,14 @@ const refreshCompetitionRoundResultsIR: any = {"usedParamSet":{"competitionId":t
  *     round_id, competitor_id, overall_ranking, overall_ranking_to,
  *     qualified_next, overall_score, dance_results
  *   FROM source
+ *   WHERE NOT EXISTS (
+ *     SELECT 1 FROM federated.competition_round_result r
+ *     WHERE (r.round_id, r.competitor_id) = (source.round_id, source.competitor_id)
+ *       AND (r.overall_ranking, r.overall_ranking_to, r.qualified_next, r.overall_score, r.dance_results)
+ *         IS NOT DISTINCT FROM (source.overall_ranking, source.overall_ranking_to,
+ *           source.qualified_next, source.overall_score, source.dance_results)
+ *   )
+ *   ORDER BY round_id, competitor_id
  *   ON CONFLICT (round_id, competitor_id) DO UPDATE
  *     SET overall_ranking = EXCLUDED.overall_ranking,
  *         overall_ranking_to = EXCLUDED.overall_ranking_to,

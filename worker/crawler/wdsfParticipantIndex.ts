@@ -60,19 +60,19 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     return undefined;
   },
   async load(_, parsed) {
-    // Competitor reference needs to be fron link
-    // participant Id == marks
-    // name can serve as a backup competitor name
-    // TODO(wdsf): Use parsed names, countries, national references, and team
-    // metadata to seed competitor/couple/team loaders instead of dropping them.
-
-    const participantIds = parsed.map(x => x.id.toString());
     return {
-      upsertFrontier: participantIds.map((key) => ({
-        federation: 'wdsf',
-        kind: 'participant',
-        key,
-      })),
+      upsertFrontier: parsed.flatMap((participant) => {
+        const couple = participant.link.find(
+          (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/couple',
+        );
+        return [
+          { federation: 'wdsf', kind: 'participant', key: participant.id.toString() },
+          ...(couple ? [{
+            federation: 'wdsf', kind: 'couple',
+            key: new URL(couple.href).pathname.split('/').at(-1)!,
+          }] : []),
+        ];
+      }),
     };
   },
 };

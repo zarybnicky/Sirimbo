@@ -33,19 +33,26 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
 
   let processed = 0;
   let foundNoMoreRows = false;
+  let runAt: Date | undefined;
   const byKind = new Map<string, ProcessorStats>();
   const started = performance.now();
 
   await withPgClient(async (client) => {
     while (performance.now() - started < BUDGET_MS) {
       await client.query('BEGIN');
-      const frontiers = await getNextPendingProcess.run(
+      const pending = await getNextPendingProcess.run(
         { limit: PROCESS_BATCH_SIZE },
         client,
       );
-      if (frontiers.length === 0) {
+      if (pending.length === 0) {
         foundNoMoreRows = true;
         await client.query('ROLLBACK');
+        break;
+      }
+      const frontiers = pending.filter((frontier) => frontier.canProcess);
+      if (frontiers.length === 0) {
+        await client.query('ROLLBACK');
+        runAt = new Date(Date.now() + 100);
         break;
       }
 
@@ -83,6 +90,11 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
       } catch (e) {
         await client.query('ROLLBACK');
 
+        if (e instanceof Error && 'code' in e && e.code === '40P01') {
+          logger.warn('Processing batch deadlocked; leaving its frontiers pending for retry');
+          break;
+        }
+
         if (!failedFrontier) throw e;
         const { id, federation, kind } = failedFrontier;
         const error = formatException(e);
@@ -108,7 +120,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
     }
 
     if (!foundNoMoreRows) {
-      await helpers.addJob('frontier_process', { isFullRebuild });
+      await helpers.addJob('frontier_process', { isFullRebuild }, { runAt });
     }
   });
 };

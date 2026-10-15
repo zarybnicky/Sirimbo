@@ -28,6 +28,7 @@ import { wdsfParticipantIndex } from './wdsfParticipantIndex.ts';
 import { wdsfParticipant } from './wdsfParticipant.ts';
 import { wdsfOfficialIndex } from './wdsfOfficialIndex.ts';
 import { wdsfAgeGroups } from './wdsfAgeGroups.ts';
+import { wdsfCouple } from './wdsfCouple.ts';
 
 export const LOADERS = {
   wdsf: {
@@ -37,6 +38,8 @@ export const LOADERS = {
 
     // https://services.worlddancesport.org/api/1/person/10116109
     member: wdsfMember,
+    // https://services.worlddancesport.org/api/1/couple/rls-123
+    couple: wdsfCouple,
 
     // https://www.worlddancesport.org/Calendar/Competitions?Month=2&Year=2026 => /Events/Voesendorf-Vienna-Austria-21022026-22022026-8685
     // https://services.worlddancesport.org/api/1/competition?from=2025/11/01
@@ -52,8 +55,7 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/official?competitionId=64306 - includes letters of judges
     officialIndex: wdsfOfficialIndex,
 
-    // TODO(wdsf): wdsfCoupleIndex from /api/1/couple and wdsfTeamIndex for team-family entries.
-    // https://services.worlddancesport.org/api/1/couple
+    // TODO(wdsf): Active couple index and team composition, when needed.
     // https://services.worlddancesport.org/api/1/participant?coupleId=rls-1912
     // https://services.worlddancesport.org/api/1/ranking?ageGroup=???&discipline=???&division=???
     // https://services.worlddancesport.org/api/1/country

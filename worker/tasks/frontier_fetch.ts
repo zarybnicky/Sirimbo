@@ -114,6 +114,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
   });
 
   if (fetchStatus !== 'ok') return;
+  if (frontier.federation === 'wdsf' && frontier.kind === 'participant') return;
 
   await withPgClient(async (client) => {
     await client.query('BEGIN');

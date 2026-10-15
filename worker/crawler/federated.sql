@@ -7,6 +7,7 @@ FROM unnest(
   :canonicalName::text[],
   :gender::federated.gender[]
 ) AS i (federation, external_id, canonical_name, gender)
+ORDER BY federation, external_id
 ON CONFLICT (id) DO NOTHING;
 
 /* @name MergePersonLicenses */
@@ -248,6 +249,7 @@ FROM unnest(
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
+ORDER BY federation, external_id
 ON CONFLICT (id) DO NOTHING;
 
 /* @name EnsureCompetitorsWithComponents */
@@ -309,6 +311,13 @@ FROM unnest(
   :type::federated.competitor_type[],
   :label::text[]
 ) AS input(federation, external_id, competitor_type, name)
+WHERE NOT EXISTS (
+  SELECT 1 FROM federated.competitor c
+  WHERE c.id = input.federation || ':' || input.external_id
+    AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type
+    AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)
+)
+ORDER BY federation, external_id
 ON CONFLICT (id) DO UPDATE
   SET competitor_type = EXCLUDED.competitor_type,
       name = CASE
@@ -331,11 +340,17 @@ WITH source AS (
   ) AS input(competitor_id, person_id, role)
 ), scope AS (
   SELECT DISTINCT competitor_id
-  FROM unnest(:competitorId::text[]) AS input(competitor_id)
+  FROM unnest(coalesce(:scopeCompetitorId::text[], :competitorId::text[])) AS input(competitor_id)
 ), upserted AS (
   INSERT INTO federated.competitor_component (competitor_id, person_id, role)
   SELECT s.competitor_id, s.person_id, s.role
   FROM source s
+  WHERE NOT EXISTS (
+    SELECT 1 FROM federated.competitor_component c
+    WHERE (c.competitor_id, c.person_id) = (s.competitor_id, s.person_id)
+      AND c.role IS NOT DISTINCT FROM s.role
+  )
+  ORDER BY s.competitor_id, s.person_id
   ON CONFLICT (competitor_id, person_id) DO UPDATE
     SET role = EXCLUDED.role
     WHERE federated.competitor_component.role IS DISTINCT FROM EXCLUDED.role
@@ -1094,6 +1109,13 @@ FROM unnest(
   round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score
 );
 
+/* @name GetCompetitionRoundPrograms */
+SELECT cr.round_key AS "roundKey!", dpd.dance_code AS "danceCode!"
+FROM federated.competition_round cr
+JOIN federated.dance_program_dance dpd ON dpd.program_id = cr.dance_program_id
+WHERE cr.competition_id = :competitionId
+ORDER BY cr.round_key, dpd.dance_order;
+
 /* @name UpsertCompetitionRoundsNonDestructive */
 WITH input AS (
   SELECT DISTINCT ON (round_key)
@@ -1110,44 +1132,28 @@ WITH input AS (
   SELECT cr.id, cr.round_key
   FROM input
   JOIN federated.competition_round cr
-    ON cr.competition_id = :competitionId
-   AND cr.round_key = input.round_key
+    ON cr.competition_id = :competitionId AND cr.round_key = input.round_key
 ), upserted AS (
   INSERT INTO federated.competition_round (
     competition_id, round_key, round_label, round_index, dance_program_id, scoring_method
   )
-  SELECT
-    :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method
+  SELECT :competitionId, round_key, round_label, round_index, dance_program_id, scoring_method
   FROM input
+  WHERE NOT EXISTS (
+    SELECT 1 FROM federated.competition_round cr
+    WHERE cr.competition_id = :competitionId AND cr.round_key = input.round_key
+      AND (cr.round_label, cr.round_index, cr.dance_program_id, cr.scoring_method)
+        IS NOT DISTINCT FROM (input.round_label, input.round_index, input.dance_program_id, input.scoring_method)
+  )
+  ORDER BY round_key
   ON CONFLICT (competition_id, round_key) DO UPDATE
     SET round_label = EXCLUDED.round_label,
         round_index = EXCLUDED.round_index,
-        dance_program_id = CASE
-          WHEN EXISTS (
-            SELECT 1
-            FROM federated.round_dance rd
-            WHERE rd.round_id = federated.competition_round.id
-          )
-          THEN federated.competition_round.dance_program_id
-          ELSE EXCLUDED.dance_program_id
-        END,
+        dance_program_id = EXCLUDED.dance_program_id,
         scoring_method = EXCLUDED.scoring_method
-    WHERE federated.competition_round.round_label IS DISTINCT FROM EXCLUDED.round_label
-       OR federated.competition_round.round_index IS DISTINCT FROM EXCLUDED.round_index
-       OR (
-         federated.competition_round.dance_program_id IS DISTINCT FROM EXCLUDED.dance_program_id
-         AND NOT EXISTS (
-           SELECT 1
-           FROM federated.round_dance rd
-           WHERE rd.round_id = federated.competition_round.id
-         )
-       )
-       OR federated.competition_round.scoring_method IS DISTINCT FROM EXCLUDED.scoring_method
   RETURNING id, round_key
 )
-SELECT
-  coalesce(upserted.id, existing.id) AS "id!",
-  input.round_key AS "roundKey!"
+SELECT coalesce(upserted.id, existing.id) AS "id!", input.round_key AS "roundKey!"
 FROM input
 LEFT JOIN existing ON existing.round_key = input.round_key
 LEFT JOIN upserted ON upserted.round_key = input.round_key
@@ -1171,6 +1177,13 @@ WITH input AS (
 INSERT INTO federated.round_dance (round_id, dance_program_id, dance_code, dance_order)
 SELECT round_id, dance_program_id, dance_code, dance_order
 FROM source
+WHERE NOT EXISTS (
+  SELECT 1 FROM federated.round_dance rd
+  WHERE (rd.round_id, rd.dance_order) = (source.round_id, source.dance_order)
+    AND (rd.dance_program_id, rd.dance_code)
+      IS NOT DISTINCT FROM (source.dance_program_id, source.dance_code)
+)
+ORDER BY round_id, dance_order
 ON CONFLICT (round_id, dance_order) DO UPDATE
   SET dance_program_id = EXCLUDED.dance_program_id,
       dance_code = EXCLUDED.dance_code
@@ -1222,17 +1235,31 @@ WITH input AS (
     :judgeLabel::text[]
   ) AS input(round_id, person_judge_id, judge_index, judge_label)
   ORDER BY round_id, person_judge_id, judge_index
+), added AS (
+  -- Panel edits must not renumber judges already attached to this round.
+  SELECT input.round_id, input.person_judge_id,
+    coalesce((SELECT max(j.judge_index) FROM federated.competition_round_judge j
+              WHERE j.round_id = input.round_id), 0)
+      + row_number() OVER (PARTITION BY input.round_id ORDER BY input.judge_index, input.person_judge_id) AS judge_index
+  FROM input
+  WHERE NOT EXISTS (
+    SELECT 1 FROM federated.competition_round_judge j
+    WHERE (j.round_id, j.person_judge_id) = (input.round_id, input.person_judge_id)
+  )
 )
 INSERT INTO federated.competition_round_judge (
   round_id, person_judge_id, judge_index, judge_label
 )
-SELECT round_id, person_judge_id, judge_index, judge_label
+SELECT input.round_id, input.person_judge_id,
+  coalesce(j.judge_index, added.judge_index), input.judge_label
 FROM input
+LEFT JOIN federated.competition_round_judge j USING (round_id, person_judge_id)
+LEFT JOIN added USING (round_id, person_judge_id)
+WHERE j.person_judge_id IS NULL OR j.judge_label IS DISTINCT FROM input.judge_label
+ORDER BY input.round_id, input.person_judge_id
 ON CONFLICT (round_id, person_judge_id) DO UPDATE
-  SET judge_index = EXCLUDED.judge_index,
-      judge_label = EXCLUDED.judge_label
-  WHERE federated.competition_round_judge.judge_index IS DISTINCT FROM EXCLUDED.judge_index
-     OR federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label;
+  SET judge_label = EXCLUDED.judge_label
+  WHERE federated.competition_round_judge.judge_label IS DISTINCT FROM EXCLUDED.judge_label;
 
 /* @name UpsertJudgeScores */
 WITH input AS (
@@ -1263,6 +1290,7 @@ SELECT
   round_id, dance_order, dance_code,
   judge_person_id, competitor_id, component, score, null
 FROM source
+ORDER BY round_id, dance_order, judge_person_id, competitor_id, component
 ON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) DO UPDATE
   SET dance_code = EXCLUDED.dance_code,
       score = EXCLUDED.score,
@@ -1282,13 +1310,20 @@ WITH scoped_rounds AS (
     sr.round_index,
     sr.scoring_method,
     cr.competitor_id,
+    competitor.external_id AS competitor_external_id,
     cr.ranking,
     cr.ranking_to,
     last_round.round_index AS last_round_index
   FROM federated.competition_result cr
+  JOIN federated.competitor competitor ON competitor.id = cr.competitor_id
   JOIN scoped_rounds last_round ON last_round.round_key = cr.last_round
   JOIN scoped_rounds sr ON sr.round_index <= last_round.round_index
   WHERE cr.competition_id = :competitionId
+), scores AS MATERIALIZED (
+  SELECT js.round_id, js.dance_order, js.dance_code, js.competitor_id, sum(js.score)::numeric(10,3) AS score
+  FROM federated.judge_score js
+  JOIN scoped_rounds sr ON sr.id = js.round_id
+  GROUP BY js.round_id, js.dance_order, js.dance_code, js.competitor_id
 ), dance_scores AS (
   SELECT
     p.round_id,
@@ -1299,20 +1334,16 @@ WITH scoped_rounds AS (
     p.ranking_to,
     rd.dance_order,
     CASE
-      WHEN p.scoring_method = 'skating_marks' THEN coalesce(sum(js.score), 0)::numeric(10,3)
-      ELSE sum(js.score)::numeric(10,3)
+      WHEN p.scoring_method = 'skating_marks' THEN coalesce(js.score, 0)::numeric(10,3)
+      ELSE js.score
     END AS dance_score
   FROM presence p
-  JOIN federated.competition competition ON competition.id = :competitionId
   JOIN federated.round_dance rd ON rd.round_id = p.round_id
-  LEFT JOIN federated.judge_score js
+  LEFT JOIN scores js
     ON js.round_id = p.round_id
    AND js.dance_order = rd.dance_order
    AND js.dance_code = rd.dance_code
-   AND competition.federation || ':' || js.competitor_id = p.competitor_id
-  GROUP BY
-    p.round_id, p.round_index, p.scoring_method, p.competitor_id,
-    p.ranking, p.ranking_to, rd.dance_order
+   AND js.competitor_id = p.competitor_external_id
 ), round_scores AS (
   SELECT
     ds.round_id,
@@ -1381,6 +1412,14 @@ WITH scoped_rounds AS (
     round_id, competitor_id, overall_ranking, overall_ranking_to,
     qualified_next, overall_score, dance_results
   FROM source
+  WHERE NOT EXISTS (
+    SELECT 1 FROM federated.competition_round_result r
+    WHERE (r.round_id, r.competitor_id) = (source.round_id, source.competitor_id)
+      AND (r.overall_ranking, r.overall_ranking_to, r.qualified_next, r.overall_score, r.dance_results)
+        IS NOT DISTINCT FROM (source.overall_ranking, source.overall_ranking_to,
+          source.qualified_next, source.overall_score, source.dance_results)
+  )
+  ORDER BY round_id, competitor_id
   ON CONFLICT (round_id, competitor_id) DO UPDATE
     SET overall_ranking = EXCLUDED.overall_ranking,
         overall_ranking_to = EXCLUDED.overall_ranking_to,

@@ -1,5 +1,20 @@
 lock table crawler.frontier in exclusive mode;
 
+-- A partial WDSF response can introduce more dances into an existing round.
+-- Keep its dance rows attached when the program expands.
+ALTER TABLE federated.round_dance
+  DROP CONSTRAINT round_dance_round_id_dance_program_id_fkey,
+  ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey
+    FOREIGN KEY (round_id, dance_program_id)
+    REFERENCES federated.competition_round (id, dance_program_id)
+    ON UPDATE CASCADE ON DELETE CASCADE;
+
+INSERT INTO federated.dance (code, name, discipline) VALUES
+  ('BO', 'Bolero', 'rhythm'),
+  ('MA', 'Mambo', 'rhythm'),
+  ('SG', 'Swing', 'rhythm')
+ON CONFLICT (code) DO NOTHING;
+
 COMMENT ON TABLE public.announcement_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 COMMENT ON TABLE public.article_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 
@@ -541,3 +556,49 @@ create index if not exists competition_start_date_idx
 --!include views/competition_participation.sql
 --!include functions/tg_eir__sync_lesson_payment.sql
 --!include functions/create_event_instance_payment.sql
+
+insert into crawler.frontier (federation, kind, key)
+select federation, 'couple', external_id from federated.competitor
+where federation = 'wdsf' and competitor_type = 'couple'
+on conflict (federation, kind, key) do nothing;
+
+-- Older participant loads used positions in partial dance arrays as round-wide
+-- positions. Reconstruct only inconsistent rounds from their cached participants.
+WITH affected AS MATERIALIZED (
+  SELECT DISTINCT rd.round_id, c.external_id
+  FROM federated.round_dance rd
+  JOIN federated.competition_round cr ON cr.id = rd.round_id
+  JOIN federated.competition c ON c.id = cr.competition_id
+  JOIN federated.category cat ON cat.id = c.category_id
+  JOIN federated.dance_program_dance dpd
+    ON dpd.program_id = rd.dance_program_id AND dpd.dance_code = rd.dance_code
+  WHERE c.federation = 'wdsf' AND (
+    rd.dance_order <> dpd.dance_order
+    OR (cat.discipline = 'RHYTHM' AND rd.dance_code = 'OT')
+  )
+), participants AS (
+  SELECT e->>'id' AS key
+  FROM (SELECT DISTINCT external_id FROM affected) a
+  JOIN crawler.frontier f
+    ON f.federation = 'wdsf' AND f.kind = 'participantIndex' AND f.key = a.external_id
+  JOIN crawler.json_response r ON r.id = f.last_successful_response_id
+  JOIN crawler.json_response_cache cache USING (content_hash)
+  CROSS JOIN LATERAL jsonb_array_elements(cache.content) e
+), requeued AS (
+  UPDATE crawler.frontier f
+  SET process_status = 'pending', last_process_error = null, last_process_error_at = null
+  FROM participants p
+  WHERE f.federation = 'wdsf' AND f.kind = 'participant' AND f.key = p.key
+    AND f.last_successful_response_id IS NOT NULL
+)
+DELETE FROM federated.competition_round cr USING affected a
+WHERE cr.id = a.round_id;
+
+UPDATE crawler.frontier
+SET process_status = 'pending', last_process_error = null, last_process_error_at = null
+WHERE federation = 'wdsf' AND kind = 'participant' AND process_status = 'error'
+  AND last_successful_response_id IS NOT NULL
+  AND (last_process_error LIKE '%judge_score_round_id_dance_order_dance_code_fkey%'
+    OR last_process_error LIKE '%round_dance_dance_program_id_dance_code_fkey%'
+    OR last_process_error LIKE '%competition_round_judge_round_id_judge_index_key%');
+>>>>>>> 0da45759 (Add wdsfCouple scraping, fix batch processing deadlocks)

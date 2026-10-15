@@ -5,6 +5,7 @@ import {
   ensurePeople,
   getCompetitionAdjudicatorMap,
   getCompetitionContext,
+  getCompetitionRoundPrograms,
   mergeCompetitorComponents,
   type score_component,
   type scoring_method,
@@ -308,9 +309,6 @@ async function loadWdsfParticipant(
   const competitor = resolveCompetitor(p);
   if (!competitor) return;
 
-  // TODO(wdsf): Couple/team competitors remain component-less here. Add
-  // wdsfCoupleIndex/wdsfTeamIndex loaders that resolve members and merge
-  // competitor components before relying on WDSF couple/team reports.
   const competitorId = `wdsf:${competitor.externalId}`;
   await ensureCompetitors.run(
     {
@@ -375,7 +373,13 @@ async function loadWdsfParticipant(
     );
   }
 
-  return loadWdsfRoundDetails(client, context.id, p, competitor);
+  const effects = await loadWdsfRoundDetails(client, context.id, p, competitor);
+  return {
+    ...effects,
+    upsertFrontier: competitor.type === 'couple'
+      ? [{ federation: 'wdsf', kind: 'couple', key: competitor.externalId }]
+      : [],
+  };
 }
 
 async function loadWdsfRoundDetails(
@@ -422,7 +426,23 @@ async function loadWdsfRoundDetails(
     );
   }
 
-  const danceProgramIds = await getDanceProgramIds(rounds.map((r) => r.dances.map((d) => d.code)));
+  const existingPrograms = new Map<string, DanceCode[]>();
+  for (const row of await getCompetitionRoundPrograms.run({ competitionId }, client)) {
+    const codes = existingPrograms.get(row.roundKey) ?? [];
+    codes.push(row.danceCode as DanceCode);
+    existingPrograms.set(row.roundKey, codes);
+  }
+  // Participant responses can omit dances. Extend the round's program without
+  // changing positions already used by other participants' scores.
+  const programs = rounds.map((round) => {
+    const codes = [...new Set([
+      ...(existingPrograms.get(round.key) ?? []),
+      ...round.dances.map((dance) => dance.code),
+    ])];
+    for (const dance of round.dances) dance.order = codes.indexOf(dance.code) + 1;
+    return codes;
+  });
+  const danceProgramIds = await getDanceProgramIds(programs);
   const roundRows = await upsertCompetitionRoundsNonDestructive.run(
     {
       competitionId,
@@ -581,6 +601,9 @@ function supportedRounds(rounds: Round[]): SupportedRound[] {
       }
       if (!hasSupportedScores && !dances.some((dance) => dance.code !== 'OT')) {
         return [];
+      }
+      if (new Set(dances.map((dance) => dance.code)).size !== dances.length) {
+        throw new Error(`WDSF round ${round.name} has duplicate normalized dances: ${round.dances.map((dance) => dance.name).join(', ')}`);
       }
 
       return [{

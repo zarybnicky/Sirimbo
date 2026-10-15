@@ -841,6 +841,7 @@ export interface IGetNextPendingProcessParams {
 
 /** 'GetNextPendingProcess' return type */
 export interface IGetNextPendingProcessResult {
+  canProcess: boolean;
   content: Json;
   error: string | null;
   federation: string;
@@ -857,28 +858,36 @@ export interface IGetNextPendingProcessQuery {
   result: IGetNextPendingProcessResult;
 }
 
-const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":454,"b":459}]}],"statement":"SELECT\n  f.id AS \"id!\",\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jr.url,\n  jr.http_status,\n  jr.error,\n  jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE process_status = 'pending'\n  AND fetch_status = 'ok'\nORDER BY discovered_at, last_fetched_at\nFOR UPDATE OF f SKIP LOCKED\nLIMIT :limit"};
+const getNextPendingProcessIR: any = {"usedParamSet":{"limit":true},"params":[{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":663,"b":668}]}],"statement":"WITH pending AS MATERIALIZED (\n  SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content,\n    c.id AS competition_id\n  FROM crawler.frontier f\n  JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\n  JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\n  LEFT JOIN federated.competition c\n    ON c.federation = 'wdsf' AND c.external_id = CASE\n      WHEN f.federation = 'wdsf' AND f.kind = 'participant'\n      THEN jrc.content->>'competitionId'\n    END\n  WHERE process_status = 'pending' AND fetch_status = 'ok'\n  ORDER BY discovered_at, last_fetched_at\n  FOR UPDATE OF f SKIP LOCKED\n  LIMIT :limit\n), owned_competitions AS MATERIALIZED (\n  SELECT c.id FROM federated.competition c\n  WHERE c.id IN (SELECT competition_id FROM pending)\n  ORDER BY c.id\n  FOR NO KEY UPDATE SKIP LOCKED\n)\nSELECT id AS \"id!\", federation AS \"federation!\", kind AS \"kind!\", key AS \"key!\",\n  url, http_status, error, content,\n  competition_id IS NULL OR competition_id IN (SELECT id FROM owned_competitions) AS \"canProcess!\"\nFROM pending"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT
- *   f.id AS "id!",
- *   f.federation AS "federation!",
- *   f.kind AS "kind!",
- *   f.key AS "key!",
- *   jr.url,
- *   jr.http_status,
- *   jr.error,
- *   jrc.content
- * FROM crawler.frontier f
- * JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
- * JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
- * WHERE process_status = 'pending'
- *   AND fetch_status = 'ok'
- * ORDER BY discovered_at, last_fetched_at
- * FOR UPDATE OF f SKIP LOCKED
- * LIMIT :limit
+ * WITH pending AS MATERIALIZED (
+ *   SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content,
+ *     c.id AS competition_id
+ *   FROM crawler.frontier f
+ *   JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
+ *   JOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash
+ *   LEFT JOIN federated.competition c
+ *     ON c.federation = 'wdsf' AND c.external_id = CASE
+ *       WHEN f.federation = 'wdsf' AND f.kind = 'participant'
+ *       THEN jrc.content->>'competitionId'
+ *     END
+ *   WHERE process_status = 'pending' AND fetch_status = 'ok'
+ *   ORDER BY discovered_at, last_fetched_at
+ *   FOR UPDATE OF f SKIP LOCKED
+ *   LIMIT :limit
+ * ), owned_competitions AS MATERIALIZED (
+ *   SELECT c.id FROM federated.competition c
+ *   WHERE c.id IN (SELECT competition_id FROM pending)
+ *   ORDER BY c.id
+ *   FOR NO KEY UPDATE SKIP LOCKED
+ * )
+ * SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!",
+ *   url, http_status, error, content,
+ *   competition_id IS NULL OR competition_id IN (SELECT id FROM owned_competitions) AS "canProcess!"
+ * FROM pending
  * ```
  */
 export const getNextPendingProcess = new PreparedQuery<IGetNextPendingProcessParams,IGetNextPendingProcessResult>(getNextPendingProcessIR);
@@ -1318,7 +1327,7 @@ export interface IUpsertFrontiersQuery {
   result: IUpsertFrontiersResult;
 }
 
-const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,"keys":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":113}]},{"name":"kinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":131}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":144,"b":148}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nSELECT federation, kind, key\nFROM unnest(\n  :federations::text[],\n  :kinds::text[],\n  :keys::text[]\n) AS input(federation, kind, key)\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
+const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,"keys":true},"params":[{"name":"federations","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":113}]},{"name":"kinds","required":false,"transform":{"type":"scalar"},"locs":[{"a":126,"b":131}]},{"name":"keys","required":false,"transform":{"type":"scalar"},"locs":[{"a":144,"b":148}]}],"statement":"INSERT INTO crawler.frontier AS f (federation, kind, key)\nSELECT federation, kind, key\nFROM unnest(\n  :federations::text[],\n  :kinds::text[],\n  :keys::text[]\n) AS input(federation, kind, key)\nWHERE NOT EXISTS (\n  SELECT 1 FROM crawler.frontier existing\n  WHERE (existing.federation, existing.kind, existing.key) = (input.federation, input.kind, input.key)\n    AND existing.process_status <> 'error' AND existing.fetch_status <> 'gone'\n)\nORDER BY federation, kind, key\nON CONFLICT (federation, kind, key) DO UPDATE\nSET process_status = 'pending',\n    fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,\n    next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END\nWHERE f.process_status = 'error'\n   OR f.fetch_status = 'gone'"};
 
 /**
  * Query generated from SQL:
@@ -1330,6 +1339,12 @@ const upsertFrontiersIR: any = {"usedParamSet":{"federations":true,"kinds":true,
  *   :kinds::text[],
  *   :keys::text[]
  * ) AS input(federation, kind, key)
+ * WHERE NOT EXISTS (
+ *   SELECT 1 FROM crawler.frontier existing
+ *   WHERE (existing.federation, existing.kind, existing.key) = (input.federation, input.kind, input.key)
+ *     AND existing.process_status <> 'error' AND existing.fetch_status <> 'gone'
+ * )
+ * ORDER BY federation, kind, key
  * ON CONFLICT (federation, kind, key) DO UPDATE
  * SET process_status = 'pending',
  *     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
