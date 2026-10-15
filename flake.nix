@@ -15,6 +15,7 @@
     overlays.default = final: prev: {
       graphile-migrate = final.callPackage ./nix/graphile-migrate {};
       ruian-address-cache = final.callPackage ./nix/ruian-address-cache.nix {};
+      geonames-city-cache = final.callPackage ./nix/geonames-city-cache.nix {};
 
       rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
@@ -59,6 +60,7 @@
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
           RUIAN_ADDRESS_SOURCE = pkgs.ruian-address-cache;
+          GEONAMES_CITY_SOURCE = pkgs.geonames-city-cache;
         };
         shellHook = ''
           unset PYTHONPATH
@@ -73,7 +75,8 @@
         rozpisovnik-api
         rozpisovnik-worker
         rozpisovnik-migrations
-        ruian-address-cache;
+        ruian-address-cache
+        geonames-city-cache;
     });
 
     checks = forAllSystems (pkgs: {

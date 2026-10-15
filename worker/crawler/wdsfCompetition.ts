@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
+import { resolveEventVenueLocations } from './eventVenueLocation.ts';
 import {
   type competition_type,
   type competitor_type,
@@ -349,6 +350,7 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       class: c.type,
       competitorType,
     });
+    const [venue] = await resolveEventVenueLocations([{ city: c.location, country: c.country }]);
     await upsertEvents.run(
       {
         federation: ['wdsf'],
@@ -358,6 +360,10 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
         location: [c.location.trim()],
         country: [c.country.trim()],
         name: [[c.location.trim(), c.country.trim()].filter(Boolean).join(', ')],
+        venueLat: venue ? [venue.lat] : undefined,
+        venueLng: venue ? [venue.lng] : undefined,
+        venueLocationSource: venue ? [venue.source] : undefined,
+        venueLocationRef: venue?.ref ? [venue.ref] : undefined,
       },
       client,
     );

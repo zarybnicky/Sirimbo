@@ -219,6 +219,7 @@ in {
           SMTP_PASS = cfg.smtp.pass;
           WDSF_AUTH = cfg.wdsfAuth;
           RUIAN_ADDRESS_SOURCE = toString pkgs.ruian-address-cache;
+          GEONAMES_CITY_SOURCE = toString pkgs.geonames-city-cache;
 
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";

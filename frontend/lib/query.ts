@@ -190,6 +190,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     FederationCompetitorCategoryProgress: (x) => `${x.competitorId}:${x.categoryId}`,
     FederationEventOfficial: (x) =>
       `${x.eventId}:${x.personId}:${x.role}:${x.discipline}`,
+    IntRange: () => null,
+    IntRangeBound: () => null,
     PersonFederationCandidatesRecord: () => null,
     Price: () => null,
     RanklistEntry: (x) => `${x.snapshotId}:${x.competitorId}`,

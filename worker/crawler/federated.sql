@@ -467,7 +467,8 @@ ON CONFLICT (federation, external_id) DO UPDATE
 
 /* @name UpsertEvents */
 INSERT INTO federated.event (
-  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id
+  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,
+  venue_lat, venue_lng, venue_location_source, venue_location_ref
 )
 SELECT
   federation,
@@ -478,7 +479,8 @@ SELECT
   nullif(location, ''),
   nullif(city, ''),
   nullif(country, ''),
-  CAST(NULLIF(organizing_club_id, '') AS bigint)
+  CAST(NULLIF(organizing_club_id, '') AS bigint),
+  venue_lat, venue_lng, venue_location_source, venue_location_ref
 FROM unnest(
   :federation::text[],
   :externalId::text[],
@@ -488,9 +490,14 @@ FROM unnest(
   :location::text[],
   :city::text[],
   :country::text[],
-  :organizingClubId::text[]
+  :organizingClubId::text[],
+  :venueLat::double precision[],
+  :venueLng::double precision[],
+  :venueLocationSource::text[],
+  :venueLocationRef::text[]
 ) AS input(
-  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id
+  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,
+  venue_lat, venue_lng, venue_location_source, venue_location_ref
 )
 ON CONFLICT (federation, external_id) DO UPDATE
   SET name = COALESCE(EXCLUDED.name, federated.event.name),
@@ -499,7 +506,15 @@ ON CONFLICT (federation, external_id) DO UPDATE
       location = COALESCE(EXCLUDED.location, federated.event.location),
       city = COALESCE(EXCLUDED.city, federated.event.city),
       country = COALESCE(EXCLUDED.country, federated.event.country),
-      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id);
+      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id),
+      venue_lat = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+        THEN EXCLUDED.venue_lat ELSE federated.event.venue_lat END,
+      venue_lng = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+        THEN EXCLUDED.venue_lng ELSE federated.event.venue_lng END,
+      venue_location_source = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+        THEN EXCLUDED.venue_location_source ELSE federated.event.venue_location_source END,
+      venue_location_ref = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+        THEN EXCLUDED.venue_location_ref ELSE federated.event.venue_location_ref END;
 
 /* @name UpsertEventsDetailed */
 INSERT INTO federated.event (

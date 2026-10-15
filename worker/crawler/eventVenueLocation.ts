@@ -7,6 +7,7 @@ import {
   listValue,
 } from '@duckdb/node-api';
 import proj4 from 'proj4';
+import { initializeGeonamesCityCache, resolveGeonamesCities } from './geonamesCity.ts';
 
 proj4.defs(
   'EPSG:5514',
@@ -24,14 +25,15 @@ type LocationSource =
   | 'ruian_street_postal'
   | 'ruian_postal_city'
   | 'ruian_postal'
-  | 'ruian_city';
+  | 'ruian_city'
+  | 'geonames_city';
 
 export type EventVenueLocationInput = {
   country: string;
   city: string;
-  streetAddress: string;
-  postalCode: string;
-  geoReference: string;
+  streetAddress?: string;
+  postalCode?: string;
+  geoReference?: string;
 };
 
 type EventVenueLocationResolution = {
@@ -60,10 +62,20 @@ let ruianDbPromise: Promise<{ connection: DuckDBConnection; sourcePath: string }
   null;
 
 export async function initializeEventVenueLocationCache() {
-  await getRuianDb();
+  await Promise.all([getRuianDb(), initializeGeonamesCityCache()]);
 }
 
 export async function resolveEventVenueLocations(events: EventVenueLocationInput[]) {
+  const results = await resolveRuianVenueLocations(events);
+  const missing = events.flatMap((event, i) =>
+    results[i] ? [] : [{ ...event, index: i }],
+  );
+  const cities = await resolveGeonamesCities(missing);
+  for (const [i, event] of missing.entries()) results[event.index] = cities[i] ?? null;
+  return results;
+}
+
+async function resolveRuianVenueLocations(events: EventVenueLocationInput[]) {
   const results: Array<EventVenueLocationResolution | null> = Array(events.length).fill(
     null,
   );
@@ -266,7 +278,7 @@ export async function resolveEventVenueLocations(events: EventVenueLocationInput
   return results;
 }
 
-function parseCoordinateText(value: string) {
+function parseCoordinateText(value = '') {
   if (!value.trim()) return null;
   const text = value.replace(/(\d),(\d)/g, '$1.$2');
 
@@ -341,7 +353,7 @@ function coordinateInCzechia(lat: number, lng: number) {
   );
 }
 
-function parseStreetAddress(value: string): ParsedAddress {
+function parseStreetAddress(value = ''): ParsedAddress {
   const text = value
     .replace(/\bul\.\s*/gi, '')
     .split(',')[0]!
@@ -418,7 +430,7 @@ async function readRows<T extends Record<string, unknown>>(
   return reader.getRowObjectsJson() as T[];
 }
 
-function normalizePostalCode(value: string) {
+function normalizePostalCode(value = '') {
   const postalCode = value.replace(/\s+/g, '');
   return /^\d{5}$/.test(postalCode) ? Number(postalCode) : null;
 }

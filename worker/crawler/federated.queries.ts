@@ -911,6 +911,10 @@ export interface IUpsertEventsParams {
   name?: stringArray | null | void;
   organizingClubId?: stringArray | null | void;
   startDate?: DateOrStringArray | null | void;
+  venueLat?: numberArray | null | void;
+  venueLng?: numberArray | null | void;
+  venueLocationRef?: stringArray | null | void;
+  venueLocationSource?: stringArray | null | void;
 }
 
 /** 'UpsertEvents' return type */
@@ -922,13 +926,14 @@ export interface IUpsertEventsQuery {
   result: IUpsertEventsResult;
 }
 
-const upsertEventsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"name":true,"startDate":true,"endDate":true,"location":true,"city":true,"country":true,"organizingClubId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":344,"b":354}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":367,"b":377}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":390,"b":394}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":407,"b":416}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":429,"b":436}]},{"name":"location","required":false,"transform":{"type":"scalar"},"locs":[{"a":449,"b":457}]},{"name":"city","required":false,"transform":{"type":"scalar"},"locs":[{"a":470,"b":474}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":487,"b":494}]},{"name":"organizingClubId","required":false,"transform":{"type":"scalar"},"locs":[{"a":507,"b":523}]}],"statement":"INSERT INTO federated.event (\n  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id\n)\nSELECT\n  federation,\n  external_id,\n  nullif(name, ''),\n  start_date,\n  end_date,\n  nullif(location, ''),\n  nullif(city, ''),\n  nullif(country, ''),\n  CAST(NULLIF(organizing_club_id, '') AS bigint)\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :name::text[],\n  :startDate::date[],\n  :endDate::date[],\n  :location::text[],\n  :city::text[],\n  :country::text[],\n  :organizingClubId::text[]\n) AS input(\n  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id\n)\nON CONFLICT (federation, external_id) DO UPDATE\n  SET name = COALESCE(EXCLUDED.name, federated.event.name),\n      start_date = LEAST(EXCLUDED.start_date, federated.event.start_date),\n      end_date = GREATEST(EXCLUDED.end_date, federated.event.end_date),\n      location = COALESCE(EXCLUDED.location, federated.event.location),\n      city = COALESCE(EXCLUDED.city, federated.event.city),\n      country = COALESCE(EXCLUDED.country, federated.event.country),\n      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id)"};
+const upsertEventsIR: any = {"usedParamSet":{"federation":true,"externalId":true,"name":true,"startDate":true,"endDate":true,"location":true,"city":true,"country":true,"organizingClubId":true,"venueLat":true,"venueLng":true,"venueLocationSource":true,"venueLocationRef":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":478,"b":488}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":501,"b":511}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":524,"b":528}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":541,"b":550}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":563,"b":570}]},{"name":"location","required":false,"transform":{"type":"scalar"},"locs":[{"a":583,"b":591}]},{"name":"city","required":false,"transform":{"type":"scalar"},"locs":[{"a":604,"b":608}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":621,"b":628}]},{"name":"organizingClubId","required":false,"transform":{"type":"scalar"},"locs":[{"a":641,"b":657}]},{"name":"venueLat","required":false,"transform":{"type":"scalar"},"locs":[{"a":670,"b":678}]},{"name":"venueLng","required":false,"transform":{"type":"scalar"},"locs":[{"a":703,"b":711}]},{"name":"venueLocationSource","required":false,"transform":{"type":"scalar"},"locs":[{"a":736,"b":755}]},{"name":"venueLocationRef","required":false,"transform":{"type":"scalar"},"locs":[{"a":768,"b":784}]}],"statement":"INSERT INTO federated.event (\n  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,\n  venue_lat, venue_lng, venue_location_source, venue_location_ref\n)\nSELECT\n  federation,\n  external_id,\n  nullif(name, ''),\n  start_date,\n  end_date,\n  nullif(location, ''),\n  nullif(city, ''),\n  nullif(country, ''),\n  CAST(NULLIF(organizing_club_id, '') AS bigint),\n  venue_lat, venue_lng, venue_location_source, venue_location_ref\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :name::text[],\n  :startDate::date[],\n  :endDate::date[],\n  :location::text[],\n  :city::text[],\n  :country::text[],\n  :organizingClubId::text[],\n  :venueLat::double precision[],\n  :venueLng::double precision[],\n  :venueLocationSource::text[],\n  :venueLocationRef::text[]\n) AS input(\n  federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,\n  venue_lat, venue_lng, venue_location_source, venue_location_ref\n)\nON CONFLICT (federation, external_id) DO UPDATE\n  SET name = COALESCE(EXCLUDED.name, federated.event.name),\n      start_date = LEAST(EXCLUDED.start_date, federated.event.start_date),\n      end_date = GREATEST(EXCLUDED.end_date, federated.event.end_date),\n      location = COALESCE(EXCLUDED.location, federated.event.location),\n      city = COALESCE(EXCLUDED.city, federated.event.city),\n      country = COALESCE(EXCLUDED.country, federated.event.country),\n      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id),\n      venue_lat = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL\n        THEN EXCLUDED.venue_lat ELSE federated.event.venue_lat END,\n      venue_lng = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL\n        THEN EXCLUDED.venue_lng ELSE federated.event.venue_lng END,\n      venue_location_source = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL\n        THEN EXCLUDED.venue_location_source ELSE federated.event.venue_location_source END,\n      venue_location_ref = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL\n        THEN EXCLUDED.venue_location_ref ELSE federated.event.venue_location_ref END"};
 
 /**
  * Query generated from SQL:
  * ```
  * INSERT INTO federated.event (
- *   federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id
+ *   federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,
+ *   venue_lat, venue_lng, venue_location_source, venue_location_ref
  * )
  * SELECT
  *   federation,
@@ -939,7 +944,8 @@ const upsertEventsIR: any = {"usedParamSet":{"federation":true,"externalId":true
  *   nullif(location, ''),
  *   nullif(city, ''),
  *   nullif(country, ''),
- *   CAST(NULLIF(organizing_club_id, '') AS bigint)
+ *   CAST(NULLIF(organizing_club_id, '') AS bigint),
+ *   venue_lat, venue_lng, venue_location_source, venue_location_ref
  * FROM unnest(
  *   :federation::text[],
  *   :externalId::text[],
@@ -949,9 +955,14 @@ const upsertEventsIR: any = {"usedParamSet":{"federation":true,"externalId":true
  *   :location::text[],
  *   :city::text[],
  *   :country::text[],
- *   :organizingClubId::text[]
+ *   :organizingClubId::text[],
+ *   :venueLat::double precision[],
+ *   :venueLng::double precision[],
+ *   :venueLocationSource::text[],
+ *   :venueLocationRef::text[]
  * ) AS input(
- *   federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id
+ *   federation, external_id, name, start_date, end_date, location, city, country, organizing_club_id,
+ *   venue_lat, venue_lng, venue_location_source, venue_location_ref
  * )
  * ON CONFLICT (federation, external_id) DO UPDATE
  *   SET name = COALESCE(EXCLUDED.name, federated.event.name),
@@ -960,7 +971,15 @@ const upsertEventsIR: any = {"usedParamSet":{"federation":true,"externalId":true
  *       location = COALESCE(EXCLUDED.location, federated.event.location),
  *       city = COALESCE(EXCLUDED.city, federated.event.city),
  *       country = COALESCE(EXCLUDED.country, federated.event.country),
- *       organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id)
+ *       organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id),
+ *       venue_lat = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+ *         THEN EXCLUDED.venue_lat ELSE federated.event.venue_lat END,
+ *       venue_lng = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+ *         THEN EXCLUDED.venue_lng ELSE federated.event.venue_lng END,
+ *       venue_location_source = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+ *         THEN EXCLUDED.venue_location_source ELSE federated.event.venue_location_source END,
+ *       venue_location_ref = CASE WHEN federated.event.venue_lat IS NULL AND federated.event.venue_lng IS NULL
+ *         THEN EXCLUDED.venue_location_ref ELSE federated.event.venue_location_ref END
  * ```
  */
 export const upsertEvents = new PreparedQuery<IUpsertEventsParams,IUpsertEventsResult>(upsertEventsIR);
