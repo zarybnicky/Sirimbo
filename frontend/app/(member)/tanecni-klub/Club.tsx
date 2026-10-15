@@ -22,7 +22,7 @@ import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
-import { CstsIdBackfillWidget } from '@/ui/CstsIdBackfillWidget';
+import { FederationIdBackfillWidget } from '@/ui/FederationIdBackfillWidget';
 import { badgeCls } from '@/ui/style';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -89,7 +89,10 @@ export function Club() {
           </Tab>
         )}
         <Tab id="csts" title="ČSTS IDT" requireAdmin>
-          <CstsIdBackfillWidget />
+          <FederationIdBackfillWidget federation="csts" />
+        </Tab>
+        <Tab id="wdsf" title="WDSF MIN" requireAdmin>
+          <FederationIdBackfillWidget federation="wdsf" />
         </Tab>
       </TabMenu>
     </>

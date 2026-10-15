@@ -3222,6 +3222,35 @@ type Couple {
     orderBy: [EventInstanceRegistrationsOrderBy!]
   ): [EventInstanceRegistration!]!
 
+  """Reads and enables pagination through a set of `Competition`."""
+  federationCompetitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
+
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
     """Read all values in the set after (below) this cursor."""
@@ -7481,6 +7510,35 @@ type FederationCompetitor {
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionResultsConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  competitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
   competitorType: CompetitorType!
 
   """
@@ -11054,15 +11112,6 @@ type Person {
     orderBy: [CouplesOrderBy!]
   ): [Couple!]!
   createdAt: Datetime!
-  cstsCandidatesList(
-    """Only read the first `n` values of the set."""
-    first: Int
-    limit: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    threshold: Float
-  ): [PersonCstsCandidatesRecord!]
   cstsId: Int
   email: String
 
@@ -11134,6 +11183,17 @@ type Person {
   ): [EventInstanceTrainer!]!
   externalIds: [String]
   facebookUrl: String
+  federationCandidatesList(
+    federation: String
+
+    """Only read the first `n` values of the set."""
+    first: Int
+    limit: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    threshold: Float
+  ): [PersonFederationCandidatesRecord!]
 
   """
   Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
@@ -11167,6 +11227,35 @@ type Person {
     """
     orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationCompetitorCategoryProgressesConnection!
+
+  """Reads and enables pagination through a set of `Competition`."""
+  federationCompetitions(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Competition`."""
+    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionsConnection!
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(
@@ -11558,7 +11647,7 @@ input PersonCondition {
   websiteUrl: String
 }
 
-type PersonCstsCandidatesRecord {
+type PersonFederationCandidatesRecord {
   ageGroup: String
   id: Int
   name: String

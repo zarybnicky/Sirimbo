@@ -204,9 +204,9 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
   }
 }
 
-query MissingCstsIdCandidates {
+query MissingFederationIdCandidates($condition: PersonCondition!, $federation: String!) {
   people(
-    condition: { cstsId: null, membership: { state: CURRENT } }
+    condition: $condition
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
   ) {
     nodes {
@@ -214,8 +214,9 @@ query MissingCstsIdCandidates {
       name
       birthDate
       cstsId
+      wdsfId
       ageGroup
-      cstsCandidatesList(limit: 10, threshold: 0.4) {
+      federationCandidatesList(federation: $federation, limit: 10, threshold: 0.4) {
         id
         name
         ageGroup
@@ -249,11 +250,12 @@ mutation UpdatePerson($input: UpdatePersonInput!) {
   }
 }
 
-mutation UpdatePersonCstsId($input: UpdatePersonInput!) {
+mutation UpdatePersonFederationId($input: UpdatePersonInput!) {
   updatePerson(input: $input) {
     person {
       id
       cstsId
+      wdsfId
     }
   }
 }

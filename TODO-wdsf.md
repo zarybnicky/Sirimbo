@@ -33,7 +33,7 @@ matched their cached responses, including judge, dance, component, and value.
 
 - [x] [Competitions.tsx](frontend/ui/Competitions.tsx): use shared rows with subgrid alignment, internal event/competition links, and category labels across federations in dashboard, calendar, and timeline cards.
 - [x] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): use internal federation event/competition links for judging, including event-only assignments, with federation-appropriate category labels.
-- [ ] [CstsIdBackfillWidget.tsx](frontend/ui/CstsIdBackfillWidget.tsx) / `person_csts_candidates`: generalize federation selection and candidate matching; retain fuzzy suggestions and explicit selection.
+- [x] [FederationIdBackfillWidget.tsx](frontend/ui/FederationIdBackfillWidget.tsx) / `person_federation_candidates`: shared ČSTS/WDSF matching with fuzzy suggestions, explicit selection and undo. Cache candidate scores under each local person so another person's match cannot overwrite them.
 
 ## Clubs and affiliations
 

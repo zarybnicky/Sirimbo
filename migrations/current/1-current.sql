@@ -601,4 +601,7 @@ WHERE federation = 'wdsf' AND kind = 'participant' AND process_status = 'error'
   AND (last_process_error LIKE '%judge_score_round_id_dance_order_dance_code_fkey%'
     OR last_process_error LIKE '%round_dance_dance_program_id_dance_code_fkey%'
     OR last_process_error LIKE '%competition_round_judge_round_id_judge_index_key%');
->>>>>>> 0da45759 (Add wdsfCouple scraping, fix batch processing deadlocks)
+
+drop function if exists public.person_csts_candidates(public.person, integer, real);
+
+--!include functions/person_federation_candidates.sql
