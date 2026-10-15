@@ -14,6 +14,7 @@ import type { PoolClient } from 'pg';
 import { mapCompetitorType } from './cstsEnums.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
+import type { LoaderEffect } from './effects.ts';
 
 const rankingPointsSchema = z.object({
   id: z.number(),
@@ -118,9 +119,12 @@ export const cstsMember: JsonLoader<Response> = {
     return parsed;
   },
   async load(client, parsed) {
+    const upsertFrontier: NonNullable<LoaderEffect['upsertFrontier']>[number][] = [];
     for (const athlete of parsed.collection) {
-      await loadCstsAthlete(client, athlete);
+      const effects = await loadCstsAthlete(client, athlete);
+      upsertFrontier.push(...effects.upsertFrontier);
     }
+    return { upsertFrontier };
   },
 };
 
@@ -272,6 +276,13 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
   if (progress.length) {
     await mergeCompetitorProgress.run(progress.params, client);
   }
+  return {
+    upsertFrontier: people.params.externalId.map((key) => ({
+      federation: 'csts',
+      kind: 'member',
+      key,
+    })),
+  };
 }
 
 function buildLabel(data: Athlete, rp: RankingPoints, type: string): string {

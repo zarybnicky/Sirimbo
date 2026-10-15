@@ -142,6 +142,13 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       { federation: 'csts', eventId: eventId.toString(), ...entries.params },
       client,
     );
+    return {
+      upsertFrontier: components.params.personExternalId.map((key) => ({
+        federation: 'csts',
+        kind: 'member',
+        key,
+      })),
+    };
   },
 };
 

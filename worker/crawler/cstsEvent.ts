@@ -248,6 +248,11 @@ export const cstsEvent: JsonLoader<Response> = {
 
     return {
       upsertFrontier: [
+        ...people.params.externalId.map((key) => ({
+          federation: 'csts',
+          kind: 'member',
+          key,
+        })),
         {
           federation: 'csts',
           kind: 'eventCompetitors',

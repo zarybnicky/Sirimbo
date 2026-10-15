@@ -114,6 +114,13 @@ function cstsPersonIndexLoader(
         },
         client,
       );
+      return {
+        upsertFrontier: licenses.params.externalId.map((key) => ({
+          federation: 'csts',
+          kind: 'member',
+          key,
+        })),
+      };
     },
   };
 }

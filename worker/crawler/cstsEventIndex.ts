@@ -66,6 +66,8 @@ const eventSchema = z.object({
         referenceNumber: z.number().optional(),
         registrationFee: z.number().optional(),
         finalRegistrationFee: z.number().optional(),
+        registrationFeeSettleDate: z.iso.datetime({ offset: true }).optional(),
+        finalRegistrationFeeSettleDate: z.iso.datetime({ offset: true }).optional(),
         hallOpening: z.iso.time().optional(),
         competitionsStart: z.iso.time().optional(),
         juryMeeting: z.iso.datetime({ offset: true }).optional(),
@@ -86,6 +88,11 @@ const eventSchema = z.object({
 });
 
 const responseSchema = z.object({
+  paging: z.object({
+    page: z.number(),
+    pageSize: z.number(),
+    totalCount: z.number(),
+  }).optional(),
   collection: z.array(eventSchema),
 });
 

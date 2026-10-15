@@ -134,7 +134,7 @@ export const cstsCompetitionResults: JsonLoader<Response> = {
     return undefined;
   },
   async load(client, parsed) {
-    await loadCstsCompetitionResults(client, parsed.entity);
+    return loadCstsCompetitionResults(client, parsed.entity);
   },
 };
 
@@ -413,6 +413,12 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
       client,
     );
   }
+  return {
+    upsertFrontier: [
+      ...people.params.externalId,
+      ...components.params.personExternalId,
+    ].map((key) => ({ federation: 'csts', kind: 'member', key })),
+  };
 }
 
 function parseCstsMarks(marks: string) {
