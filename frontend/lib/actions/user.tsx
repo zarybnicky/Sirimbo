@@ -1,6 +1,6 @@
 import { Link2 } from 'lucide-react';
 import { defineActions } from '@/lib/actions';
-import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
+import { LinkPersonToUserForm } from '@/ui/forms/LinkPersonToUserForm';
 
 export const userActions = defineActions<{ id: string }>()([
   {
@@ -9,6 +9,6 @@ export const userActions = defineActions<{ id: string }>()([
     label: 'Přiřadit osobu',
     icon: Link2,
     requireAdmin: true,
-    render: ({ item }) => <LinkUserToPersonForm userId={item.id} />,
+    render: ({ item }) => <LinkPersonToUserForm userId={item.id} />,
   },
 ]);

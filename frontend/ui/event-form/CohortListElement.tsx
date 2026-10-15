@@ -47,7 +47,9 @@ export function CohortListElement({ onAdd, onRemove }: {
                 sideOffset={5}
               >
                 <ComboboxSearchArea
-                  options={cohorts.filter((x) => !x.isArchived).map((x) => ({ id: x.id, label: x.name }))}
+                  options={cohorts
+                    .filter((x) => !x.isArchived && !fields.some((selected) => selected.cohortId === x.id))
+                    .map((x) => ({ id: x.id, label: x.name }))}
                   onChange={(id) => {
                     if (id && !fields.some((cohort) => cohort.cohortId === id)) {
                       onAdd(id);

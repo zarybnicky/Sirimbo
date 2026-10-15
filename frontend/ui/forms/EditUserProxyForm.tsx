@@ -16,7 +16,7 @@ const Form = z.object({
 
 export function EditUserProxyForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
+  const { reset, control, handleSubmit, setError } = useForm({
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({ query: UserProxyDocument, variables: { id }, pause: !id });
@@ -50,7 +50,11 @@ export function EditUserProxyForm({ id }: { id: string }) {
         },
       },
     });
-    if (!result.error) onSuccess();
+    if (result.error) {
+      setError('root.server', { message: result.error.message });
+      return;
+    }
+    onSuccess();
   };
 
   return (

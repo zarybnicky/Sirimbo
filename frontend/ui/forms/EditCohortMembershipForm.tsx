@@ -19,7 +19,7 @@ const Form = z.object({
 
 export function EditCohortMembershipForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit } = useForm({
+  const { reset, control, handleSubmit, setError } = useForm({
     resolver: zodResolver(Form),
   });
   const [query] = useQuery({
@@ -54,7 +54,11 @@ export function EditCohortMembershipForm({ id }: { id: string }) {
         },
       },
     });
-    if (!result.error) onSuccess();
+    if (result.error) {
+      setError('root.server', { message: result.error.message });
+      return;
+    }
+    onSuccess();
   };
 
   return (

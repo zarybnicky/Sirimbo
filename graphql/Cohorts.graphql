@@ -50,25 +50,6 @@ query Cohort($id: BigInt!) {
   }
 }
 
-query AddToCohortOptions($personId: BigInt!) {
-  person(id: $personId) {
-    id
-    cohortMembershipsList {
-      id
-      cohortId
-      status
-      cohort {
-        id
-        name
-      }
-    }
-  }
-  cohortsList(condition: { isArchived: false }, orderBy: [ORDERING_ASC]) {
-    id
-    name
-  }
-}
-
 mutation CreateCohort($input: CohortInput!) {
   createCohort(input: {cohort: $input}) {
     cohort {

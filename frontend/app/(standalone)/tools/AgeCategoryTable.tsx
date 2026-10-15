@@ -1,4 +1,4 @@
-import { formatAgeGroup, compareAgeRanges, type AgeRange } from '@/ui/csts';
+import { type AgeRange, compareAgeRanges, formatAgeGroup } from '@/ui/csts';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { executeGraphql } from '@/lib/server/graphql';
 
@@ -33,15 +33,10 @@ export async function AgeCategoryTable() {
   const year = new Date().getFullYear();
   const { ageGroupsList } = await executeGraphql(AgeGroupRulesDocument);
   const categories = (ageGroupsList ?? [])
-    .flatMap((group) =>
-      group.coupleRules.map((rule) => ({
-        code: group.code,
-        name: formatAgeGroup(group.code, group.name),
-        older: rule.olderAge,
-        younger: rule.youngerAge,
-      })),
+    .flatMap(({ coupleRules, code, name }) =>
+      coupleRules.map((rule) => ({ code, name, ...rule })),
     )
-    .toSorted((a, b) => compareAgeRanges(a.older, b.older));
+    .toSorted((a, b) => compareAgeRanges(a.olderAge, b.olderAge));
 
   return (
     <table className="grid grid-cols-[auto_min-content_1fr_min-content_1fr] gap-x-4 gap-y-1">
@@ -55,19 +50,19 @@ export async function AgeCategoryTable() {
       <tbody className="contents">
         {categories.map((c) => (
           <tr key={c.code} className="contents">
-            <td className="self-center">{c.name}</td>
+            <td className="self-center">{formatAgeGroup(c.code, c.name)}</td>
             <td className="self-center text-center px-0">
               <span className="bg-accent-3 py-1 px-2 rounded-md whitespace-nowrap">
-                {formatAge(c.older)}
+                {formatAge(c.olderAge)}
               </span>
             </td>
-            <td className="self-center px-0">{formatYears(year, c.older)}</td>
+            <td className="self-center px-0">{formatYears(year, c.olderAge)}</td>
             <td className="self-center text-center px-0">
               <span className="bg-accent-3 py-1 px-2 rounded-md whitespace-nowrap">
-                {formatAge(c.younger)}
+                {formatAge(c.youngerAge)}
               </span>
             </td>
-            <td className="self-center px-0">{formatYears(year, c.younger)}</td>
+            <td className="self-center px-0">{formatYears(year, c.youngerAge)}</td>
           </tr>
         ))}
       </tbody>

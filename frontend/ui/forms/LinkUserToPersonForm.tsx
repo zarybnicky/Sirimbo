@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { UserListDocument } from '@/graphql/CurrentUser';
-import { LinkUserPeopleDocument } from '@/graphql/Person';
+import { PersonMembershipsDocument } from '@/graphql/Person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { DialogTitle } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
@@ -14,43 +14,42 @@ import { z } from 'zod';
 
 const Form = z.object({
   userId: z.string().min(1, 'Vyberte uživatelský účet'),
-  personId: z.string().min(1, 'Vyberte osobu'),
 });
 
-export function LinkUserToPersonForm({ personId, userId }: {
-  personId: string;
-  userId?: never;
-} | {
-  personId?: never;
-  userId: string;
-}) {
+export function LinkUserToPersonForm({ personId }: { personId: string }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, setError } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { userId: userId ?? '', personId: personId ?? '' },
+    defaultValues: { userId: '' },
   });
-  const [userQuery] = useQuery({ query: UserListDocument, pause: !!userId });
-  const [personQuery] = useQuery({ query: LinkUserPeopleDocument, pause: !!personId });
+  const [list] = useQuery({ query: UserListDocument });
+  const [query] = useQuery({
+    query: PersonMembershipsDocument,
+    variables: { id: personId },
+  });
   const [result, create] = useMutation(CreateUserProxyDocument);
-  const userOptions = React.useMemo(
-    () =>
-      (userQuery.data?.users?.nodes ?? []).map((user) => ({
-        id: user.id,
-        label: [user.uEmail, user.uLogin].filter(isTruthy).join(', '),
-      })),
-    [userQuery.data?.users?.nodes],
-  );
-  const personOptions = React.useMemo(
-    () => (personQuery.data?.people?.nodes ?? []).map((person) => ({
-      id: person.id,
-      label: person.name,
-    })),
-    [personQuery.data?.people?.nodes],
-  );
+  const owner = query.data?.person;
+  const options = React.useMemo(() => {
+    if (!owner) return [];
+    const linkedIds = new Set(
+      (owner.userProxiesList ?? [])
+        .filter((x) => x.status !== 'EXPIRED')
+        .map((x) => x.user?.id),
+    );
+    return (list.data?.users?.nodes ?? [])
+      .filter((item) => !linkedIds.has(item.id))
+      .map((item) => ({ id: item.id, label: [item.uEmail, item.uLogin].filter(isTruthy).join(', ') }));
+  }, [owner, list.data]);
+  const fetching = query.fetching || list.fetching;
+  const queryError = query.error || list.error;
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
+    if (fetching || queryError || !options.some((x) => x.id === values.userId)) {
+      setError('userId', { message: 'Vyberte dostupnou položku ze seznamu.' });
+      return;
+    }
     const response = await create({
-      input: { userProxy: values },
+      input: { userProxy: { personId, ...values } },
     });
     if (response.error) {
       setError('root.server', { message: response.error.message });
@@ -61,17 +60,20 @@ export function LinkUserToPersonForm({ personId, userId }: {
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
-      <DialogTitle>{userId ? 'Přiřadit osobu' : 'Přiřadit existující účet'}</DialogTitle>
-      <FormError error={result.error || (userId ? personQuery.error : userQuery.error)} />
+      <DialogTitle>Přiřadit existující účet</DialogTitle>
+      <FormError error={result.error || queryError} />
       <ComboboxElement
         control={control}
-        name={userId ? 'personId' : 'userId'}
-        options={userId ? personOptions : userOptions}
-        label={userId ? 'Osoba' : 'Uživatelský účet'}
-        placeholder={userId ? 'Vyberte osobu' : 'Vyberte účet'}
+        name="userId"
+        options={options}
+        label="Uživatelský účet"
+        placeholder="Vyberte účet"
       />
-      <SubmitButton control={control}>
-        {userId ? 'Přiřadit osobu' : 'Přiřadit účet'}
+      <SubmitButton
+        control={control}
+        disabled={fetching || !!queryError || options.length === 0}
+      >
+        Přiřadit účet
       </SubmitButton>
     </form>
   );

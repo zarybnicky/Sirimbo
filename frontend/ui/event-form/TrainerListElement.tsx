@@ -72,10 +72,14 @@ export function TrainerListElement({
             >
               <ComboboxSearchArea
                 onChange={(id) => {
-                  if (id) append({ personId: id, lessonsOffered: 0 });
+                  if (id && !fields.some((trainer) => trainer.personId === id)) {
+                    append({ personId: id, lessonsOffered: 0 });
+                  }
                   setOpen(false);
                 }}
-                options={enabledTrainers}
+                options={enabledTrainers.filter(
+                  (trainer) => !fields.some((selected) => selected.personId === trainer.id),
+                )}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>

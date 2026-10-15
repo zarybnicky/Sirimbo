@@ -68,6 +68,7 @@ fragment TenantAdministrator on TenantAdministrator {
 
 fragment CohortMembership on CohortMembership {
   id
+  cohortId
   since
   until
   status

@@ -126,7 +126,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         ))}
 
       {item.tenantTrainersList
-        .filter((x) => x.tenantId === tenantId && x.status === 'ACTIVE')
+        .filter((x) => x.tenantId === tenantId)
         .map((item) => (
           <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
             <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">

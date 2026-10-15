@@ -1,8 +1,6 @@
+import { PersonMembershipsDocument } from '@/graphql/Person';
 import { DialogTitle } from '@/ui/dialog';
-import {
-  AddToCohortOptionsDocument,
-  SyncCohortMembershipsDocument,
-} from '@/graphql/Cohorts';
+import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import { FieldHelper, FormError, useFormResult } from '@/ui/form';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { SubmitButton } from '@/ui/submit';
@@ -24,15 +22,19 @@ export function AddToCohortForm({ personId }: { personId: string }) {
   const selectedIds = field.value;
   const [result, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
   const [query] = useQuery({
-    query: AddToCohortOptionsDocument,
-    variables: { personId },
-    requestPolicy: 'network-only',
+    query: PersonMembershipsDocument,
+    variables: { id: personId },
   });
+  const [cohortQuery] = useQuery({
+    query: CohortListDocument,
+    variables: { archived: false },
+  });
+  const queryError = query.error || cohortQuery.error;
   const person = query.data?.person;
   const memberships =
     person?.cohortMembershipsList.filter((x) => x.status !== 'EXPIRED') ?? [];
   const existingIds = new Set(memberships.map((x) => x.cohortId));
-  const cohorts = query.data?.cohortsList ?? [];
+  const cohorts = cohortQuery.data?.cohortsList ?? [];
   const toAdd = cohorts.filter(
     (x) => selectedIds.includes(x.id) && !existingIds.has(x.id),
   );
@@ -51,7 +53,6 @@ export function AddToCohortForm({ personId }: { personId: string }) {
   ];
 
   const onSubmit = async () => {
-    if (!person || query.error || query.fetching) return;
     const cohortIds = rows.filter((x) => x.status !== 'PENDING').map((x) => x.cohortId);
     const result = await syncCohorts({
       input: { personId, cohortIds: [...new Set(cohortIds)] },
@@ -66,7 +67,7 @@ export function AddToCohortForm({ personId }: { personId: string }) {
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přidat do skupiny</DialogTitle>
-      <FormError error={result.error || query.error} />
+      <FormError error={result.error || queryError} />
       {query.fetching && !person && <p>Načítám skupiny…</p>}
       {!query.fetching && !query.error && !person && <p>Osoba nebyla nalezena.</p>}
       {person && (
@@ -83,7 +84,11 @@ export function AddToCohortForm({ personId }: { personId: string }) {
                     <span
                       className={status === 'NEW' ? 'text-accent-11' : 'text-neutral-11'}
                     >
-                      {status === 'NEW' ? 'Bude přidáno' : status === 'PENDING' ? 'Naplánováno' : 'Stávající'}
+                      {status === 'NEW'
+                        ? 'Bude přidáno'
+                        : status === 'PENDING'
+                          ? 'Naplánováno'
+                          : 'Stávající'}
                     </span>
                     {status === 'NEW' && (
                       <button
@@ -120,7 +125,7 @@ export function AddToCohortForm({ personId }: { personId: string }) {
       )}
       <SubmitButton
         control={control}
-        disabled={!person || !!query.error || query.fetching || toAdd.length === 0}
+        disabled={!person || !!queryError || query.fetching || cohortQuery.fetching || toAdd.length === 0}
       >
         Uložit změny
       </SubmitButton>
