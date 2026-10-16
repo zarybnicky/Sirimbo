@@ -6269,6 +6269,12 @@ input EventInstanceCondition {
   updatedAt: Datetime
 }
 
+type EventInstanceFacetsRecord {
+  count: Int
+  facet: String
+  value: String
+}
+
 """
 Represents an update to a `EventInstance`. Fields that are set will be updated.
 """
@@ -11685,6 +11691,12 @@ input PersonCondition {
   websiteUrl: String
 }
 
+type PersonFacetsRecord {
+  count: Int
+  facet: String
+  value: String
+}
+
 type PersonFederationCandidatesRecord {
   ageGroup: String
   id: Int!
@@ -11876,6 +11888,11 @@ input PersonMembershipCondition {
 
   """The membership state to filter by."""
   state: PersonMembershipState
+
+  """
+  Membership states to include. An empty list includes current and former people; overrides state.
+  """
+  states: [PersonMembershipState!]
 }
 
 """Which tenant membership state a person membership filter targets."""
@@ -12609,6 +12626,22 @@ type Query {
 
   """Get a single `EventInstance`."""
   eventInstance(id: BigInt!): EventInstance
+  eventInstanceFacetsList(
+    endRange: Datetime
+
+    """Only read the first `n` values of the set."""
+    first: Int
+    locationIds: [BigInt]
+
+    """Skip the first `n` values."""
+    offset: Int
+    onlyTypes: [EventType]
+    parentId: BigInt
+    participantIds: [BigInt]
+    scope: EventInstanceRangeScope
+    startRange: Datetime
+    trainerIds: [BigInt]
+  ): [EventInstanceFacetsRecord!]
 
   """Get a single `EventInstanceRegistration`."""
   eventInstanceRegistration(id: BigInt!): EventInstanceRegistration
@@ -12670,6 +12703,7 @@ type Query {
     """Skip the first `n` values."""
     offset: Int
     onlyType: EventType
+    onlyTypes: [EventType]
     parentId: BigInt
     participantIds: [BigInt]
     scope: EventInstanceRangeScope
@@ -13051,6 +13085,17 @@ type Query {
 
   """Get a single `Person`."""
   person(id: BigInt!): Person
+  personFacetsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+    inCohorts: [BigInt]
+    isAdmin: Boolean
+    isTrainer: Boolean
+    membershipStates: [String]
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [PersonFacetsRecord!]
 
   """Get a single `PersonInvitation`."""
   personInvitation(id: BigInt!): PersonInvitation

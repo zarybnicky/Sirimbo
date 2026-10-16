@@ -15,19 +15,21 @@ create or replace function event_instances_for_range(
   participant_ids bigint[] = null,
   parent_id bigint = null,
   scope event_instance_range_scope = 'all',
-  location_ids bigint[] = null
+  location_ids bigint[] = null,
+  only_types event_type[] = null
 ) returns setof event_instance as $$
   with mine as (
     select instance_id from event_instance_registration
-    where person_id = any (current_person_ids()) and registration_status = 'active'
+    where person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active'
     union all
     select instance_id from event_instance_trainer
-    where person_id = any (current_person_ids())
+    where person_id = any ((select current_person_ids())::bigint[])
   )
   select i.*
   from event_instance i
   where i.tenant_id = current_tenant_id()
     and (only_type is null or i.type = only_type)
+    and (only_types is null or i.type = any(only_types))
     and case
       when $6 is not null then i.parent_id = $6
         and (scope <> 'mine' or i.id in (select instance_id from mine))

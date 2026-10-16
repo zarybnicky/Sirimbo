@@ -1,3 +1,4 @@
+import { LIST_TYPES, TYPES } from '@dataplan/pg';
 import { addPgTableCondition } from 'postgraphile/utils';
 import type { GraphQLInputType } from 'graphql';
 
@@ -8,6 +9,7 @@ type MembershipState = 'current' | 'former';
 
 type MembershipCondition = {
   state?: MembershipState | null;
+  states?: readonly MembershipState[] | null;
   inCohorts?: readonly string[] | null;
   isTrainer?: boolean | null;
   isAdmin?: boolean | null;
@@ -47,67 +49,6 @@ function expectCohorts(value: unknown): readonly string[] | null {
   return value;
 }
 
-function visibleMembershipPredicate(
-  state: MembershipState,
-  sql: SqlTag,
-  personAlias: SQL,
-) {
-  return state === 'current'
-    ? sql`${personAlias}.id in (
-        select tm.person_id from public.current_tenant_membership tm
-        union
-        select tt.person_id from public.current_tenant_trainer tt
-        union
-        select ta.person_id from public.current_tenant_administrator ta
-      )`
-    : sql`${personAlias}.id in (
-        select person_id from public.tenant_membership
-        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
-        union
-        select person_id from public.tenant_trainer
-        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
-        union
-        select person_id from public.tenant_administrator
-        where tenant_id = (select public.current_tenant_id()) and status = 'expired'
-        except
-        (
-          select person_id from public.current_tenant_membership
-          union
-          select person_id from public.current_tenant_trainer
-          union
-          select person_id from public.current_tenant_administrator
-        )
-      )`;
-}
-
-function rolePredicate(
-  roleTable: 'current_tenant_trainer' | 'current_tenant_administrator',
-  historicalTable: 'tenant_trainer' | 'tenant_administrator',
-  flag: boolean | null | undefined,
-  state: MembershipState,
-  sql: SqlTag,
-  personAlias: SQL,
-) {
-  if (flag == null) return null;
-
-  const exists =
-    state === 'current'
-      ? sql`exists (
-          select 1
-          from ${sql.identifier('public', roleTable)} role
-          where role.person_id = ${personAlias}.id
-        )`
-      : sql`exists (
-          select 1
-          from ${sql.identifier('public', historicalTable)} role
-          where role.person_id = ${personAlias}.id
-            and role.tenant_id = (select public.current_tenant_id())
-            and role.status = 'expired'
-        )`;
-
-  return flag ? exists : sql`not (${exists})`;
-}
-
 const PersonMembershipConditionTypesPlugin: GraphileConfig.Plugin = {
   name: 'PersonMembershipConditionTypesPlugin',
   version: '0.0.0',
@@ -145,6 +86,10 @@ const PersonMembershipConditionTypesPlugin: GraphileConfig.Plugin = {
                   description: 'The membership state to filter by.',
                   type: stateType,
                 },
+                states: {
+                  description: 'Membership states to include. An empty list includes current and former people; overrides state.',
+                  type: new GraphQLList(new GraphQLNonNull(stateType)),
+                },
                 inCohorts: {
                   description:
                     'Cohort IDs to match. An empty list means people without a matching cohort membership.',
@@ -181,82 +126,33 @@ const PersonMembershipConditionPlugin = addPgTableCondition(
       type: expectInputType(build, 'PersonMembershipCondition'),
     };
   },
-  (rawValue, { sql, sqlTableAlias: personAlias, sqlValueWithCodec, build }) => {
+  (rawValue, { sql, sqlTableAlias: personAlias, sqlValueWithCodec }) => {
     const condition = expectMembershipCondition(rawValue);
     if (condition == null) return null;
 
-    const state = expectState(condition.state);
+    const states = condition.states == null
+      ? [expectState(condition.state)]
+      : condition.states.length ? condition.states.map(expectState) : ['current', 'former'];
     const cohorts = expectCohorts(condition.inCohorts);
     const predicates: SQL[] = [];
-    if (condition.state != null) {
-      predicates.push(visibleMembershipPredicate(state, sql, personAlias));
-    }
-
+    if (condition.states != null || condition.state != null) predicates.push(sql`m.in_state`);
     if (cohorts) {
-      if (cohorts.length === 0) {
-        predicates.push(
-          state === 'current'
-            ? sql`not exists (
-                select 1
-                from public.current_cohort_membership cm
-                where cm.person_id = ${personAlias}.id
-              )`
-            : sql`not exists (
-                select 1
-                from public.cohort_membership cm
-                where cm.person_id = ${personAlias}.id
-                  and cm.tenant_id = (select public.current_tenant_id())
-                  and cm.status = 'expired'
-              )`,
-        );
-      } else {
-        const cohortIdCodec =
-          build.input.pgRegistry.pgResources.cohort?.codec.attributes.id?.codec;
-        if (!cohortIdCodec) {
-          throw new Error('Failed to resolve cohort ID codec');
-        }
-        const values = cohorts.map((cohort) => sqlValueWithCodec(cohort, cohortIdCodec));
-        predicates.push(
-          state === 'current'
-            ? sql`exists (
-                select 1
-                from public.current_cohort_membership cm
-                where cm.person_id = ${personAlias}.id
-                  and cm.cohort_id in (${sql.join(values, ', ')})
-              )`
-            : sql`exists (
-                select 1
-                from public.cohort_membership cm
-                where cm.person_id = ${personAlias}.id
-                  and cm.tenant_id = (select public.current_tenant_id())
-                  and cm.status = 'expired'
-                  and cm.cohort_id in (${sql.join(values, ', ')})
-              )`,
-        );
-      }
+      predicates.push(cohorts.length === 0
+        ? sql`cardinality(m.cohort_ids) = 0`
+        : sql`m.cohort_ids && ${sqlValueWithCodec(cohorts, LIST_TYPES.bigint)}`);
     }
-
-    const trainerPredicate = rolePredicate(
-      'current_tenant_trainer',
-      'tenant_trainer',
-      condition.isTrainer,
-      state,
-      sql,
-      personAlias,
-    );
-    if (trainerPredicate) predicates.push(trainerPredicate);
-
-    const adminPredicate = rolePredicate(
-      'current_tenant_administrator',
-      'tenant_administrator',
-      condition.isAdmin,
-      state,
-      sql,
-      personAlias,
-    );
-    if (adminPredicate) predicates.push(adminPredicate);
-
-    return predicates.length ? sql`(${sql.join(predicates, ') and (')})` : null;
+    for (const [column, value] of [
+      ['is_trainer', condition.isTrainer],
+      ['is_admin', condition.isAdmin],
+    ] as const) {
+      if (value != null) predicates.push(sql`m.${sql.identifier(column)} = ${sqlValueWithCodec(value, TYPES.boolean)}`);
+    }
+    return predicates.length ? sql`${personAlias}.id in (
+      select m.person_id
+      from unnest(${sqlValueWithCodec(states, LIST_TYPES.text)}) s(state)
+      cross join lateral app_private.person_membership_candidates(s.state) m
+      where ${sql.join(predicates, ' and ')}
+    )` : null;
   },
 );
 

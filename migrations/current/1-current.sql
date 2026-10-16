@@ -615,3 +615,6 @@ create index if not exists event_instance_registration_active_person_idx
 --!include views/person_last_activity.sql
 
 --!include functions/federation_people_facets.sql
+--!include functions/person_facets.sql
+--!include functions/event_instances_for_range.sql
+--!include functions/event_instance_facets.sql
