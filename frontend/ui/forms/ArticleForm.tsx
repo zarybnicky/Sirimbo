@@ -10,6 +10,7 @@ import { ErrorPage } from '@/ui/ErrorPage';
 import { PageHeader } from '@/ui/PageHeader';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
+import { DatePickerElement } from '@/ui/fields/date';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useRouter } from 'next/navigation';
@@ -19,7 +20,6 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckboxElement } from '../fields/checkbox';
 import { FilePicker, ImageUrlField } from '@/ui/forms/FilePicker';
 import { isTruthy } from '@/lib/truthyFilter';
 
@@ -31,7 +31,8 @@ const Form = z.object({
     (val) => (val === '' ? null : val),
     z.string().nullable().default(null),
   ),
-  isVisible: z.boolean().prefault(true),
+  isVisible: z.boolean().prefault(false),
+  publishedAt: z.date().nullable().prefault(null),
   attachmentIds: z.array(z.string()).prefault([]),
 });
 
@@ -55,7 +56,8 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         atPreview: data?.atPreview ?? '',
         atText: data?.atText ?? '',
         titlePhotoUrl: data?.titlePhotoUrl ?? '',
-        isVisible: data?.isVisible ?? true,
+        isVisible: data?.isVisible ?? false,
+        publishedAt: data?.publishedAt ? new Date(data.publishedAt) : null,
         attachmentIds:
           data?.explicitAttachments.nodes.map((x) => x.file?.id).filter(isTruthy) ?? [],
       },
@@ -67,7 +69,12 @@ export function ArticleForm({ id = '' }: { id?: string }) {
     );
   }, [data, reset]);
 
-  const onSubmit = async (values: z.infer<typeof Form>) => {
+  const onSubmit: Parameters<typeof handleSubmit>[0] = async (values, event) => {
+    const intent = (event?.nativeEvent as SubmitEvent | undefined)?.submitter?.getAttribute(
+      'value',
+    );
+    const isVisible =
+      intent === 'publish' ? true : intent === 'unpublish' ? false : values.isVisible;
     const result = await upsert({
       input: {
         info: {
@@ -76,19 +83,23 @@ export function ArticleForm({ id = '' }: { id?: string }) {
           preview: values.atPreview,
           body: values.atText,
           titlePhotoUrl: values.titlePhotoUrl,
-          isVisible: values.isVisible,
+          isVisible,
+          publishedAt: values.publishedAt?.toISOString() ?? null,
         },
         attachments: values.attachmentIds,
       },
     });
-    if (!result.error && !id) {
+    if (result.error) return;
+    toast.success(
+      intent === 'publish'
+        ? 'Článek byl zveřejněn.'
+        : intent === 'unpublish'
+          ? 'Článek byl schován.'
+          : 'Uloženo.',
+    );
+    if (!id) {
       const newId = result.data?.upsertArticle?.aktuality?.id;
-      toast.success('Přidáno.');
-      if (newId) {
-        router.replace(`/aktuality/${newId}`);
-      } else {
-        reset();
-      }
+      if (newId) router.replace(`/aktuality/${newId}`);
     }
   };
   const actions = useActions(
@@ -125,7 +136,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       <FormError error={result.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <ImageUrlField control={control} name="titlePhotoUrl" label="Titulní fotka" />
-      <CheckboxElement control={control} name="isVisible" value="1" label="Veřejný" />
+      <DatePickerElement control={control} name="publishedAt" label="Datum prvního zveřejnění" />
 
       <RichTextEditor
         control={control}
@@ -140,7 +151,26 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         enableImageUpload
       />
       <FilePicker value={attachmentIds.value ?? []} onChange={attachmentIds.onChange} />
-      <SubmitButton control={control} />
+      <div className="flex flex-wrap gap-2">
+        <SubmitButton
+          control={control}
+          name="intent"
+          value="save"
+          disabled={!!id && !data}
+        >
+          {data?.isVisible ? 'Uložit změny' : 'Uložit koncept'}
+        </SubmitButton>
+
+        <SubmitButton
+          control={control}
+          name="intent"
+          value={data?.isVisible ? 'unpublish' : 'publish'}
+          variant="outline"
+          disabled={!!id && !data}
+        >
+          {data?.isVisible ? 'Schovat' : 'Zveřejnit'}
+        </SubmitButton>
+      </div>
     </form>
   );
 }

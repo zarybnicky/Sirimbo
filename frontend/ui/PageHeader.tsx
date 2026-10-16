@@ -102,7 +102,7 @@ export function PageHeader<Id extends string = string>({
         {title}
       </h1>
 
-      {subtitle && <p className="mt-1 text-sm text-accent-12">{subtitle}</p>}
+      {subtitle && <div className="mt-1 text-sm text-accent-12">{subtitle}</div>}
     </div>
   );
 }

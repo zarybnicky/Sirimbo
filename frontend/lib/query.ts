@@ -367,6 +367,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         });
         invalidateQueryFields(cache, ['accessCredentialsList']);
       },
+      upsertArticle(_result, _args, cache) {
+        invalidateQueryFields(cache, ['aktualities']);
+      },
       upsertLocation(result, _args, cache, _info) {
         const location = result.upsertLocation?.location;
         if (location) cache.invalidate({ __typename: 'Location', id: location.id });

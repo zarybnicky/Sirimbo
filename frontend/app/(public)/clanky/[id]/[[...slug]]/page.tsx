@@ -59,7 +59,7 @@ export async function generateMetadata(
       title: item.atJmeno,
       description,
       url: canonicalPath,
-      publishedTime: item.createdAt ?? undefined,
+      publishedTime: item.publishedAt ?? undefined,
       modifiedTime: item.updatedAt ?? undefined,
       ...(item.titlePhotoUrl
         ? { images: [{ url: item.titlePhotoUrl, alt: item.atJmeno }] }
@@ -90,11 +90,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         breadcrumbLabel="Článek"
         breadcrumbs={[{ label: 'Články', href: '/clanky' }]}
       />
-      {item.createdAt && (
-        <div className="text-neutral-11 mb-6 -mt-4">
-          {fullDateFormatter.format(new Date(item.createdAt))}
-        </div>
-      )}
+      <div className="text-neutral-11 mb-6 -mt-4">
+        {item.publishedAt
+          ? fullDateFormatter.format(new Date(item.publishedAt))
+          : 'Koncept'}
+        {!item.isVisible ? ', skrytý' : ''}
+      </div>
       <RichTextView value={item.atText} />
       <FileAttachments attachments={item.explicitAttachments.nodes} />
     </>

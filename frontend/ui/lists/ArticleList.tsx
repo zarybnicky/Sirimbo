@@ -65,8 +65,10 @@ export function ArticleList() {
                 currentId === item.id ? 'text-white' : 'text-neutral-11',
               )}
             >
-              {item.createdAt ? fullDateFormatter.format(new Date(item.createdAt)) : ''}
-              {item.isVisible ? '' : ', skrytý'}
+              {item.publishedAt
+                ? fullDateFormatter.format(new Date(item.publishedAt))
+                : 'Koncept'}
+              {!item.isVisible && item.publishedAt ? ', skrytý' : ''}
             </div>
           </Link>
         ))}

@@ -7,6 +7,7 @@ fragment Article on Aktuality {
   atText
   createdAt
   updatedAt
+  publishedAt
   titlePhotoUrl
   isVisible
   explicitAttachments: attachments(condition: {inline: false}) {
@@ -25,7 +26,7 @@ query Article($id: BigInt!) {
 }
 
 query Articles($first: Int, $offset: Int, $visibleOnly: Boolean) {
-  aktualities(first: $first, offset: $offset, orderBy: [CREATED_AT_DESC], condition:  {
+  aktualities(first: $first, offset: $offset, orderBy: [PUBLISHED_AT_DESC, ID_DESC], condition:  {
      isVisible: $visibleOnly
   }) {
     totalCount

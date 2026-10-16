@@ -7,7 +7,8 @@ create type article_type_input as (
   preview text,
   body text,
   title_photo_url text,
-  is_visible boolean
+  is_visible boolean,
+  published_at timestamptz
 );
 
 create or replace function upsert_article(info article_type_input, attachments bigint[] default null)
@@ -18,13 +19,14 @@ declare
 begin
   if info.id is null then
     insert into aktuality (
-      at_jmeno, at_preview, at_text, title_photo_url, is_visible
+      at_jmeno, at_preview, at_text, title_photo_url, is_visible, published_at
     ) values (
       info.title,
       coalesce(info.preview, ''),
       coalesce(info.body, ''),
       info.title_photo_url,
-      coalesce(info.is_visible, true)
+      coalesce(info.is_visible, true),
+      coalesce(info.published_at, case when coalesce(info.is_visible, true) then now() end)
     ) returning * into result;
   else
     select * into result from aktuality where id = info.id;
@@ -61,7 +63,12 @@ begin
       at_preview = coalesce(info.preview, ''),
       at_text = coalesce(info.body, ''),
       title_photo_url = info.title_photo_url,
-      is_visible = coalesce(info.is_visible, true)
+      is_visible = coalesce(info.is_visible, true),
+      published_at = coalesce(
+        info.published_at,
+        published_at,
+        case when coalesce(info.is_visible, true) then now() end
+      )
     where id = info.id
     returning * into result;
   end if;
