@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { PersonLastActivityFragment } from '@/graphql/Person';
+import { useTenantConfig } from '@/lib/auth';
 import { cn } from '@/lib/cn';
 import { dateTimeFormatter, formatDateOnly } from '@/ui/format';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
@@ -38,10 +39,12 @@ export function PersonActivityBadges({
 }: {
   activity: PersonLastActivityFragment;
 }) {
+  const { enableStarletImport } = useTenantConfig();
   const [now] = useState(Date.now);
   return (
     <div className="flex flex-wrap gap-1">
       {signals.map(({ key, label, greenDays, amberDays }) => {
+        if (key === 'cardEntryAt' && !enableStarletImport) return null;
         const value = activity[key];
         const date = value
           ? new Date(key === 'competitionOn' ? `${value}T00:00:00` : value)
@@ -51,7 +54,7 @@ export function PersonActivityBadges({
         const middle = ageDays !== null && ageDays < amberDays;
         const status =
           ageDays === null
-            ? 'Bez záznamu'
+            ? null
             : recent
               ? `< ${greenDays} dní`
               : middle
@@ -63,13 +66,14 @@ export function PersonActivityBadges({
               ? formatDateOnly(value)
               : dateTimeFormatter.format(date)
             : 'Bez záznamu';
+        const title = `${label}: ${formatted}${status ? ` (${status})` : ''}`;
         return (
           <Popover key={key}>
             <PopoverTrigger asChild>
               <button
                 type="button"
-                title={`${label}: ${formatted} (${status})`}
-                aria-label={`${label}: ${formatted}, ${status}`}
+                title={title}
+                aria-label={title}
                 className={cn(
                   'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs hover:bg-neutral-4 focus-visible:outline-2 focus-visible:outline-accent-9',
                   ageDays === null
@@ -87,8 +91,8 @@ export function PersonActivityBadges({
             </PopoverTrigger>
             <PopoverContent className="max-w-80 text-sm" side="top" align="start">
               <p className="pr-6 font-semibold">{label}</p>
-              <p>{date ? <time dateTime={value!}>{formatted}</time> : formatted}</p>
-              {date && <p className="text-neutral-11">{status}</p>}
+              <p>{value ? <time dateTime={value}>{formatted}</time> : formatted}</p>
+              {status && <p className="text-neutral-11">{status}</p>}
             </PopoverContent>
           </Popover>
         );

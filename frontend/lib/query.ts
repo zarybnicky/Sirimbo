@@ -195,6 +195,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     IntRange: () => null,
     IntRangeBound: () => null,
     PersonFederationCandidatesRecord: () => null,
+    PersonLastActivity: () => null,
     Price: () => null,
     RanklistEntry: (x) => `${x.snapshotId}:${x.competitorId}`,
     ScoreboardRecord: (x) => x.personId || null,
