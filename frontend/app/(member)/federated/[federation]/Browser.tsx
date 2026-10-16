@@ -234,7 +234,7 @@ function Events(props: BrowserProps) {
     Number(filters.cancelled) +
     Number(filters.missing) +
     Number(filters.hasResults !== null);
-  const [showFilters, setShowFilters] = useState(activeFacetCount > 0);
+  const [showFilters, setShowFilters] = useState(true);
 
   const [facets] = useQuery({
     query: FederationEventFacetsDocument,

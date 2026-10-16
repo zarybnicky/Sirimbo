@@ -76,7 +76,7 @@ export default async function RoundPage({ params }: Props) {
         }
         breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Organizace', href: '/federated' },
+          { label: 'Soutěžní data', href: '/federated' },
           {
             label: competition.event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,

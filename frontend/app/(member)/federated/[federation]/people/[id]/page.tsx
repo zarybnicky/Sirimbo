@@ -59,7 +59,7 @@ export default async function FederatedPersonPage({ params }: Props) {
         title={name}
         breadcrumbLabel="Osoba"
         breadcrumbs={[
-          { label: 'Organizace', href: '/federated' },
+          { label: 'Soutěžní data', href: '/federated' },
           {
             label: person.federationByFederation?.name ?? federation,
             href: `/federated/${federation}?view=people`,

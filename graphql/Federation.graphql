@@ -48,9 +48,6 @@ query FederationList($condition: FederationCondition, $withCounts: Boolean! = tr
     events(first: 0) @include(if: $withCounts) {
       totalCount
     }
-    competitions(first: 0) @include(if: $withCounts) {
-      totalCount
-    }
     people(first: 0) @include(if: $withCounts) {
       totalCount
     }

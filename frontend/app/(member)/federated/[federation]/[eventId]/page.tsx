@@ -55,7 +55,7 @@ export default async function EventPage({ params }: Props) {
         subtitle={date}
         breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Organizace', href: '/federated' },
+          { label: 'Soutěžní data', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,

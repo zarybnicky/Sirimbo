@@ -117,9 +117,9 @@ const memberMenu: MenuStructItem[] = [
       { type: 'link', title: 'Žebříček', href: '/zebricek', requireMember: true },
       {
         type: 'link',
-        title: 'Federated data',
+        title: 'Soutěžní data',
         href: '/federated',
-        requireSystemAdmin: true,
+        requireMember: true,
       },
     ],
   },

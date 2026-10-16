@@ -52,7 +52,7 @@ export default async function CompetitorPage({ params }: Props) {
         title={competitor.name || competitor.id}
         breadcrumbLabel="Soutěžící"
         breadcrumbs={[
-          { label: 'Organizace', href: '/federated' },
+          { label: 'Soutěžní data', href: '/federated' },
           {
             label: competitor.federationByFederation?.name ?? federation,
             href: `/federated/${federation}?view=competitors`,
