@@ -49,7 +49,6 @@ export function TenantForm() {
       />
       <RichTextEditor
         control={control}
-        initialState={data?.tenant?.description}
         name="description"
         label="Základní informace"
       />

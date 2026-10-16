@@ -139,7 +139,6 @@ export function LocationForm({ id = '' }: { id?: string }) {
       />
       <RichTextEditor
         control={control}
-        initialState={item?.description}
         name="description"
         label="Popis"
       />

@@ -16,7 +16,6 @@ const Editor = dynamic(() => import('@/ui/fields/richtext.client'), {
 type RichTextEditorProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
-  initialState?: string;
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
@@ -29,7 +28,6 @@ export function RichTextEditor<T extends FieldValues>({
   label,
   className,
   helperText,
-  initialState,
   enableImageUpload,
 }: RichTextEditorProps<T>) {
   const { field, fieldState } = useController({ name, control });
@@ -42,7 +40,7 @@ export function RichTextEditor<T extends FieldValues>({
           name={name}
           onChange={field.onChange}
           onBlur={field.onBlur}
-          initialState={initialState}
+          value={field.value ?? ''}
           enableImageUpload={enableImageUpload}
         />
         {fieldState.error && <FieldErrorIcon />}

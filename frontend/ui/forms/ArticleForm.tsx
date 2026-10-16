@@ -129,14 +129,12 @@ export function ArticleForm({ id = '' }: { id?: string }) {
 
       <RichTextEditor
         control={control}
-        initialState={data?.atPreview}
         name="atPreview"
         label="Shrnutí"
         enableImageUpload
       />
       <RichTextEditor
         control={control}
-        initialState={data?.atText}
         name="atText"
         label="Text"
         enableImageUpload

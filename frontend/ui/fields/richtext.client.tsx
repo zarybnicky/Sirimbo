@@ -39,36 +39,23 @@ export type EditorProps = {
   name: string;
   onChange?: (state: string) => void;
   onBlur?: () => void;
-  initialState?: string;
+  value: string;
   enableImageUpload?: boolean;
 };
 
 export default function Editor(props: EditorProps) {
-  const { name, onChange, onBlur, initialState, enableImageUpload = false } = props;
-  const realInitial = React.useMemo(() => {
-    return decodeHTML(initialState);
-  }, [initialState]);
+  const { name, onChange, onBlur, value, enableImageUpload = false } = props;
 
   const [editor, setEditor] = React.useState<ClassicEditor | null>(null);
-  const [value, setValue] = React.useState(realInitial);
   const [libraryOpen, setLibraryOpen] = React.useState(false);
   const fileLibraryPlugin = React.useMemo(
     () => createFileLibraryIntegrationPlugin(() => setLibraryOpen(true)),
     [],
   );
 
-  React.useEffect(() => {
-    if (editor) {
-      editor.setData(realInitial);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronize form with CKEditor
-      setValue(realInitial);
-    }
-  }, [editor, realInitial]);
-
   const cb = React.useCallback(
     (_: unknown, editor: ClassicEditor) => {
       onChange?.(editor.getData());
-      setValue(editor.getData());
     },
     [onChange],
   );
@@ -162,7 +149,7 @@ export default function Editor(props: EditorProps) {
               }
             : {}),
         }}
-        data={realInitial}
+        data={value}
         onChange={cb}
         onReady={setEditor}
         onBlur={onBlur}
@@ -176,12 +163,6 @@ export default function Editor(props: EditorProps) {
       ) : null}
     </>
   );
-}
-
-function decodeHTML(html?: string): string {
-  const el = document.createElement('textarea');
-  el.innerHTML = html || '';
-  return el.value;
 }
 
 function EditorClassPlugin(editor: ClassicEditor) {

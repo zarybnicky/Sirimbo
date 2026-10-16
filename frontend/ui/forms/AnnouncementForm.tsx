@@ -160,7 +160,6 @@ export function AnnouncementForm({
 
       <TextFieldElement control={control} name="title" label="Nadpis" required />
       <RichTextEditor
-        initialState={data?.body}
         control={control}
         name="body"
         label="Text"

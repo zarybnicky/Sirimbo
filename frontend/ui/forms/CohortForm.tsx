@@ -110,7 +110,6 @@ export function CohortForm({ id = '' }: { id?: string }) {
 
       <RichTextEditor
         control={control}
-        initialState={data?.description}
         name="description"
         label="Popis"
       />

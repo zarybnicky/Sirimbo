@@ -236,7 +236,6 @@ export function EditPersonForm({ id }: { id: string }) {
       <div className="col-full">
         <RichTextEditor
           control={control}
-          initialState={data?.note}
           name="note"
           label="Poznámky"
         />

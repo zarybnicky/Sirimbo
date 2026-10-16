@@ -24,7 +24,6 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
   const instance = data?.eventInstance;
-  const values = getValues();
 
   React.useEffect(() => {
     if (!instance || getValues('summary') || getValues('description')) return;
@@ -57,14 +56,12 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
               <Tab id="summary" title="Shrnutí">
                 <RichTextEditor
                   name="summary"
-                  initialState={values.summary || instance.summary || ''}
                   control={control}
                 />
               </Tab>
               <Tab id="description" title="Dlouhý popis">
                 <RichTextEditor
                   name="description"
-                  initialState={values.description || instance.description || ''}
                   control={control}
                 />
               </Tab>
