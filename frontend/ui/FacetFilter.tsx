@@ -51,6 +51,7 @@ export function FacetFilter<Value extends string>({
       </fieldset>
     );
   }
+
   const selected = value.map((v) => options.find((o) => o.value === v)?.label ?? v);
   return (
     <DropdownMenu>
@@ -66,6 +67,7 @@ export function FacetFilter<Value extends string>({
           `: ${selected.length > 2 ? selected.length : selected.join(', ')}`}
         <ChevronDown />
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
         {options.map((option) => (
           <DropdownMenuButton

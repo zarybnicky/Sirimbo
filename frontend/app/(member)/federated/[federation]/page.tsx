@@ -36,8 +36,8 @@ export default async function FederationPage({ params }: Props) {
     <Layout requireUser>
       <PageHeader
         title={item.name}
-        breadcrumbLabel="Federation"
-        breadcrumbs={[{ label: 'Federations', href: '/federated' }]}
+        breadcrumbLabel={item.name}
+        breadcrumbs={[{ label: 'Organizace', href: '/federated' }]}
       />
       <Browser federation={federation} />
     </Layout>

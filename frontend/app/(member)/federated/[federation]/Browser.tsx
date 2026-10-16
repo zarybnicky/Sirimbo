@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Table } from '@/ui/Table';
-import { ArrowDown, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUpDown, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import {
   parseAsArrayOf,
   parseAsBoolean,
@@ -70,10 +70,10 @@ const classOrder = [
   'Open',
 ].toReversed();
 const facets = [
-  { key: 'type', label: 'Type' },
-  { key: 'class', label: 'Class' },
-  { key: 'discipline', label: 'Discipline' },
-  { key: 'ageGroup', label: 'Age group' },
+  { key: 'type', label: 'Typ' },
+  { key: 'class', label: 'Třída' },
+  { key: 'discipline', label: 'Disciplína' },
+  { key: 'ageGroup', label: 'Věk' },
 ] as const;
 const clearedCompetitorFilters = {
   type: null,
@@ -142,13 +142,13 @@ export function Browser({ federation }: { federation: string }) {
           );
       }}
     >
-      <Tab id="events" title="Events">
+      <Tab id="events" title="Soutěže">
         <Events {...props} />
       </Tab>
-      <Tab id="people" title="People">
+      <Tab id="people" title="Lidé">
         <People {...props} />
       </Tab>
-      <Tab id="competitors" title="Competitors">
+      <Tab id="competitors" title="Soutěžící">
         <Competitors key={federation} {...props} />
       </Tab>
     </TabMenu>
@@ -173,8 +173,7 @@ function Results({
   const isPending = fetching || searchPending;
   return (
     <>
-      {controls}
-      <div className="my-3 flex flex-wrap items-center gap-2 border-y border-neutral-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 py-2">
         <p
           role="status"
           className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
@@ -184,21 +183,22 @@ function Results({
             : !children || error
               ? null
               : total === 0
-                ? '0 výsledků'
-                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} z ${total}`}
+                ? '0 / 0'
+                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
         </p>
         {actions}
         <TextField
           name="search"
           type="search"
-          aria-label="Název nebo ID"
-          placeholder="Název nebo ID…"
+          aria-label="Jméno nebo ID"
+          placeholder="Jméno nebo ID…"
           className="min-w-40 flex-1 sm:max-w-64 ml-auto"
           inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value, page: null })}
         />
       </div>
+      {controls}
       <FormError error={error} />
       {!error && children && (
         <>
@@ -278,7 +278,10 @@ function Events({
       <div className="my-2 flex flex-wrap items-end gap-3">
         <TextField
           name="search"
-          label="Name, location or event ID"
+          type="search"
+          aria-label="Jméno nebo ID"
+          placeholder="Jméno nebo ID…"
+          inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value })}
         />
@@ -375,7 +378,7 @@ function People(props: BrowserProps) {
   return (
     <Results browser={props} result={result}>
       {item && (
-        <Table columns={['person', 'age group']} busy={isPending} empty="No people found">
+        <Table columns={['Jméno', 'Věk']} busy={isPending} empty="Źádní lidé nenalezení">
           {item.people.nodes.map((row) => (
             <tr key={row.id} className="border-t border-neutral-4">
               <th scope="row">
@@ -400,6 +403,10 @@ function People(props: BrowserProps) {
 
 function Competitors(props: BrowserProps) {
   const { federation, filters, setFilters, search, searchPending } = props;
+  const [showFilters, setShowFilters] = useState(() =>
+    facets.some(({ key }) => filters[key].length > 0),
+  );
+  const activeFacetCount = facets.filter(({ key }) => filters[key].length > 0).length;
   const filterVariables = {
     federation,
     search,
@@ -416,9 +423,13 @@ function Competitors(props: BrowserProps) {
     requestPolicy: 'cache-first',
   });
 
-  const fetchedFacets = facetResult.data?.federation?.competitorFacetsList
+  const fetchedFacets = facetResult.data?.federation?.competitorFacetsList;
   const [facetOptions, setFacetOptions] = useState(fetchedFacets ?? []);
-  if (facetResult.data !== undefined && fetchedFacets !== facetOptions && !!fetchedFacets?.length) {
+  if (
+    facetResult.data !== undefined &&
+    fetchedFacets !== facetOptions &&
+    !!fetchedFacets?.length
+  ) {
     setFacetOptions(fetchedFacets ?? []);
   }
 
@@ -474,7 +485,13 @@ function Competitors(props: BrowserProps) {
       }}
       controls={
         <>
-          <div className="grid w-full justify-items-start gap-2">
+          <div
+            id="competitor-facets"
+            className={cn(
+              'mb-3 w-full justify-items-start gap-2',
+              showFilters ? 'grid' : 'hidden',
+            )}
+          >
             {facets.map(({ key, label }) => {
               const counts = new Map(
                 facetOptions
@@ -511,6 +528,7 @@ function Competitors(props: BrowserProps) {
                   return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || alphabetical;
                 },
               );
+              if (values.length === 0) return null;
               return (
                 <FacetFilter
                   key={key}
@@ -529,12 +547,7 @@ function Competitors(props: BrowserProps) {
                             : value,
                     count: counts.get(value) ?? 0,
                   }))}
-                  onChange={(value) =>
-                    setFilters({
-                      [key]: value,
-                      page: null,
-                    })
-                  }
+                  onChange={(value) => setFilters({ [key]: value, page: null })}
                 />
               );
             })}
@@ -543,12 +556,27 @@ function Competitors(props: BrowserProps) {
       }
       actions={
         <>
-          {(filters.competedThisYear ||
+          <button
+            type="button"
+            aria-expanded={showFilters}
+            aria-controls="competitor-facets"
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setShowFilters((visible) => !visible)}
+          >
+            <SlidersHorizontal className="size-3" aria-hidden />
+            Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
+            <ChevronDown
+              className={cn('size-3', showFilters && 'rotate-180')}
+              aria-hidden
+            />
+          </button>
+          {(filters.search !== '' ||
+            filters.competedThisYear ||
             facets.some(({ key }) => filters[key].length > 0)) && (
             <button
               type="button"
               className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
-              onClick={() => setFilters(clearedCompetitorFilters)}
+              onClick={() => setFilters({ ...clearedCompetitorFilters, search: null })}
             >
               Zrušit filtry
             </button>
@@ -572,7 +600,7 @@ function Competitors(props: BrowserProps) {
           <table className="w-full text-left text-sm tabular-nums">
             <thead>
               <tr>
-                {['competitor', 'type', 'age group', ...disciplines].map((label) => (
+                {['Jméno', 'Typ', 'Věk', ...disciplines].map((label) => (
                   <th
                     key={label}
                     scope="col"
@@ -585,7 +613,7 @@ function Competitors(props: BrowserProps) {
                           : 'ascending'
                     }
                   >
-                    {label === 'type' || label === 'age group' ? (
+                    {label === 'Typ' || label === 'Věk' ? (
                       label
                     ) : (
                       <button

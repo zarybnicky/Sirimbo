@@ -20,11 +20,9 @@ export function FederationCategoryProgress({
       federation: competitor.federation,
     })),
   );
+  if (entries.length === 0) return null;
   return (
-    <Table
-      columns={['Kategorie', { label: 'Body', colSpan: 2 }]}
-      empty="Žádný postup v kategoriích"
-    >
+    <Table columns={['Kategorie', { label: 'Body', colSpan: 2 }]} >
       {entries
         .toSorted(
           (a, b) =>
