@@ -360,6 +360,9 @@ query FederationEvents(
 ) {
   federation(code: $federation) {
     code
+    cancelledEvents: events(first: 0, condition: { search: $search, date: $date, status: CANCELLED }) {
+      totalCount
+    }
     events(
       first: 300
       condition: { search: $search, date: $date, includeCancelled: $includeCancelled }

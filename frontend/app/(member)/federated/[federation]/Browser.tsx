@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
+import { format } from 'date-fns';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -28,7 +29,6 @@ import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
 import EventMap, { defaultMapViews, eventMonthColors, eventMonths, mapViews } from '../EventMap';
 import { YearPicker } from '../YearPicker';
-import { SelectField } from '@/ui/fields/select';
 import {
   FederationCompetitorFacetsDocument,
   FederationCompetitorsDocument,
@@ -187,13 +187,15 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
       federation,
       search,
       includeCancelled: filters.cancelled,
-      date: { since: `${filters.year}-01-01`, until: `${filters.year + 1}-01-01` },
+      date: {
+        since: format(new Date(filters.year, (filters.month || 1) - 1, 1), 'yyyy-MM-dd'),
+        until: format(new Date(filters.year, filters.month || 12, 1), 'yyyy-MM-dd'),
+      },
     },
   });
   const events = result.data?.federation?.events.nodes ?? [];
-  const filtered = events.filter((e) => filters.month === 0 || Number(e.startDate.slice(5, 7)) === filters.month);
-  const missing = filtered.filter((e) => e.venueLat === null || e.venueLng === null);
-  const visible = filters.missing ? missing : filtered;
+  const missing = events.filter((e) => e.venueLat === null || e.venueLng === null);
+  const visible = filters.missing ? missing : events;
   const showMap = filters.map && visible.some((e) => e.venueLat !== null && e.venueLng !== null);
   const isPending = result.fetching || facets.fetching || searchPending;
   const error = result.error || facets.error;
@@ -231,35 +233,24 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value })}
         />
-        <div >
-          <Checkbox
-            name="cancelled"
-            label="Zobrazit zrušené"
-            checked={filters.cancelled}
-            onChange={(event) => setFilters({ cancelled: event.target.checked })}
-          />
-          <Checkbox
-            name="missing"
-            label={`Bez souřadnic (${missing.length})`}
-            checked={filters.missing}
-            onChange={(event) => setFilters({ missing: event.target.checked })}
-          />
-          <Checkbox
-            name="map"
-            label="Zobrazit mapu"
-            checked={filters.map}
-            onChange={(event) => setFilters({ map: event.target.checked })}
-          />
-        </div>
-        {showMap && (
-          <SelectField
-            name="shape"
-            label="Pohled"
-            value={filters.shape}
-            onChange={(shape) => setFilters({ shape }, { history: 'push' })}
-            options={mapViews}
-          />
-        )}
+        <Checkbox
+          name="cancelled"
+          label={`Zrušené (${result.data?.federation?.cancelledEvents.totalCount ?? '…'})`}
+          checked={filters.cancelled}
+          onChange={(event) => setFilters({ cancelled: event.target.checked })}
+        />
+        <Checkbox
+          name="missing"
+          label={`Bez souřadnic (${missing.length})`}
+          checked={filters.missing}
+          onChange={(event) => setFilters({ missing: event.target.checked })}
+        />
+        <Checkbox
+          name="map"
+          label="Zobrazit mapu"
+          checked={filters.map}
+          onChange={(event) => setFilters({ map: event.target.checked })}
+        />
         <p role="status" className="ml-auto text-sm text-neutral-11">
           {isPending ? 'Načítám…' : !error && `${visible.length} událostí`}
         </p>
@@ -268,7 +259,13 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
       {!error && (
         <>
           {showMap && (
-            <EventMap key={filters.shape === 'czechia' ? 'czechia' : 'world'} events={visible} view={filters.shape} federation={federation} />
+            <EventMap
+              key={filters.shape === 'czechia' ? 'czechia' : 'world'}
+              events={visible}
+              view={filters.shape}
+              onViewChange={(shape) => setFilters({ shape }, { history: 'push' })}
+              federation={federation}
+            />
           )}
           <Table
             columns={['date', 'event', 'location', 'country', 'competitions']}

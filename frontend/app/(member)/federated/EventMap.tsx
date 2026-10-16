@@ -19,6 +19,7 @@ import { buttonCls } from '@/ui/style';
 import { geoRobinson } from 'd3-geo-projection';
 import type { FederationMapEventFragment } from '@/graphql/Federation';
 import { FormError } from '@/ui/form';
+import { SelectField } from '@/ui/fields/select';
 import { formatDateOnly } from '@/ui/format';
 import { Popover, PopoverContent, PopoverAnchor } from '@/ui/popover';
 import { cn } from '@/lib/cn';
@@ -68,10 +69,12 @@ const europe = {
 export default function EventMap({
   events,
   view,
+  onViewChange,
   federation,
 }: {
   events: FederationMapEventFragment[];
   view: MapView;
+  onViewChange: (view: MapView) => void;
   federation: string;
 }) {
   const locations = React.useMemo(() => eventLocations(events), [events]);
@@ -213,7 +216,15 @@ export default function EventMap({
         )}
       </div>
       {map && (
-        <div className="absolute right-2 top-2 flex gap-1">
+        <div className="absolute right-2 top-2 flex items-center gap-1">
+          <SelectField
+            name="shape"
+            aria-label="Pohled"
+            value={view}
+            onChange={onViewChange}
+            options={mapViews}
+            selectClassName="h-8 rounded-xl py-0"
+          />
           {(
             [
               ['Přiblížit', Plus, transform.k >= 8, 2],
