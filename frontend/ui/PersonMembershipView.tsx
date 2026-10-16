@@ -34,6 +34,12 @@ export const PersonMembershipView = memo(function PersonMembershipView({
   const { enableStarletImport } = useTenantConfig();
   const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
   const tenantId = useTenantId();
+  const showClubs =
+    auth.isSystemAdmin || (auth.isAdmin && auth.adminTenantIds.length > 1);
+  const visibleMembership = (membership: { tenantId: string }) =>
+    membership.tenantId === tenantId ||
+    auth.isSystemAdmin ||
+    (auth.isAdmin && auth.adminTenantIds.includes(membership.tenantId));
   const actions = useActions(personActions, item);
   const cohortMembershipActionMap = useActionMap(
     cohortMembershipActions,
@@ -114,53 +120,68 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         />
       </div>
 
-      {item.tenantAdministratorsList
-        .filter((x) => x.tenantId === tenantId)
-        .map((item) => (
-          <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
-            <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Správce</b>
-              {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
-            </div>
-          </ActionRow>
-        ))}
+      {item.tenantAdministratorsList.filter(visibleMembership).map((item) => (
+        <ActionRow
+          key={item.id}
+          actions={
+            auth.isSystemAdmin || item.tenantId === tenantId
+              ? tenantAdministratorActionMap.get(item.id)!
+              : []
+          }
+        >
+          <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Správce{showClubs && ` · ${item.tenantName}`}</b>
+            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
+          </div>
+        </ActionRow>
+      ))}
 
-      {item.tenantTrainersList
-        .filter((x) => x.tenantId === tenantId)
-        .map((item) => (
-          <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
-            <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Trenér</b>
-              {auth.isAdmin && (
-                <>
-                  <div>
-                    {moneyFormatter.format({
-                      amount: item.memberPrice45MinAmount,
-                      currency: item.currency,
-                    }) || '-'}{' '}
-                    {item.guestPrice45MinAmount &&
-                    item.memberPrice45MinAmount !== item.guestPrice45MinAmount
-                      ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
-                      : ''}
-                    {' / 45min'}
-                  </div>
-                  <span>{formatOpenDateRange(item)}</span>
-                </>
-              )}
-            </div>
-          </ActionRow>
-        ))}
+      {item.tenantTrainersList.filter(visibleMembership).map((item) => (
+        <ActionRow
+          key={item.id}
+          actions={
+            auth.isSystemAdmin || item.tenantId === tenantId
+              ? tenantTrainerActionMap.get(item.id)!
+              : []
+          }
+        >
+          <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Trenér{showClubs && ` · ${item.tenantName}`}</b>
+            {auth.isAdmin && (
+              <>
+                <div>
+                  {moneyFormatter.format({
+                    amount: item.memberPrice45MinAmount,
+                    currency: item.currency,
+                  }) || '-'}{' '}
+                  {item.guestPrice45MinAmount &&
+                  item.memberPrice45MinAmount !== item.guestPrice45MinAmount
+                    ? `(${moneyFormatter.format({ amount: item.guestPrice45MinAmount, currency: item.currency })})`
+                    : ''}
+                  {' / 45min'}
+                </div>
+                <span>{formatOpenDateRange(item)}</span>
+              </>
+            )}
+          </div>
+        </ActionRow>
+      ))}
 
-      {item.tenantMembershipsList
-        .filter((x) => x.tenantId === tenantId)
-        .map((item) => (
-          <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
-            <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <b>Člen</b>
-              {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
-            </div>
-          </ActionRow>
-        ))}
+      {item.tenantMembershipsList.filter(visibleMembership).map((item) => (
+        <ActionRow
+          key={item.id}
+          actions={
+            auth.isSystemAdmin || item.tenantId === tenantId
+              ? tenantMembershipActionMap.get(item.id)!
+              : []
+          }
+        >
+          <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+            <b>Člen{showClubs && ` · ${item.tenantName}`}</b>
+            {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
+          </div>
+        </ActionRow>
+      ))}
 
       {isAdminOrCurrentPerson && (
         <>

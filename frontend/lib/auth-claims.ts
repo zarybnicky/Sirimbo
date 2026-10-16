@@ -49,6 +49,7 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: stri
     userId: claims?.user_id,
     personIds: claims?.my_person_ids ?? [],
     tenantIds: claims?.my_tenant_ids?.map(Number) ?? [],
+    adminTenantIds: claims?.admin_tenant_ids ?? [],
     cohortIds: claims?.my_cohort_ids ?? [],
     coupleIds: claims?.my_couple_ids ?? [],
     isExternal: !claims?.my_person_ids.length,

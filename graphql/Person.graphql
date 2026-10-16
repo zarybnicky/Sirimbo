@@ -261,6 +261,24 @@ query FederationIdIssues($federation: String!) {
       birthDate
       cstsId
       wdsfId
+      tenantMembershipsList {
+        id
+        tenantId
+        tenantName
+        status
+      }
+      tenantTrainersList {
+        id
+        tenantId
+        tenantName
+        status
+      }
+      tenantAdministratorsList {
+        id
+        tenantId
+        tenantName
+        status
+      }
       federationPeople(first: 1, condition: { federation: $federation }) {
         nodes {
           id

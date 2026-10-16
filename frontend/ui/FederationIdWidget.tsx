@@ -1,4 +1,5 @@
 import { FederationIdIssuesDocument } from '@/graphql/Person';
+import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
@@ -31,6 +32,9 @@ export function FederationIdWidget({ federation }: { federation: Federation }) {
 }
 
 function FederationIdIssues({ federation }: { federation: Federation }) {
+  const auth = useAuth();
+  const showClubs =
+    auth.isSystemAdmin || (auth.isAdmin && auth.adminTenantIds.length > 1);
   const [query] = useQuery({
     query: FederationIdIssuesDocument,
     variables: { federation },
@@ -66,9 +70,12 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
             {idLabel} {id}{' '}
             {id > 0 ? (
               <FederationLink entity="people" federation={federation} externalId={id}>
-                {people[0]!.federationPeople.nodes[0]?.canonicalName || `${idLabel} ${id}`}
+                {people[0]!.federationPeople.nodes[0]?.canonicalName ||
+                  `${idLabel} ${id}`}
               </FederationLink>
-            ) : 'Neplatné ID'}
+            ) : (
+              'Neplatné ID'
+            )}
           </h3>
           {people.map((person) => (
             <div
@@ -87,6 +94,28 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
                     {formatDateOnly(person.birthDate)}
                   </span>
                 )}
+                {showClubs &&
+                  [
+                    ...Map.groupBy(
+                      [
+                        ...person.tenantMembershipsList,
+                        ...person.tenantTrainersList,
+                        ...person.tenantAdministratorsList,
+                      ].filter(
+                        (m) =>
+                          auth.isSystemAdmin || auth.adminTenantIds.includes(m.tenantId),
+                      ),
+                      (membership) => membership.tenantId,
+                    ),
+                  ].map(([tenantId, memberships]) => (
+                    <span key={tenantId} className="text-neutral-11">
+                      {memberships[0]!.tenantName ?? tenantId}
+                      {memberships.every((m) => m.status !== 'ACTIVE') &&
+                        (memberships.some((m) => m.status === 'PENDING')
+                          ? ' (budoucí)'
+                          : ' (bývalý)')}
+                    </span>
+                  ))}
               </div>
               <Dialog>
                 <DialogTrigger.Edit size="sm" />
