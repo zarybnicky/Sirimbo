@@ -1,6 +1,6 @@
 import { TextField } from '@/ui/fields/text';
 import React from 'react';
-import { PersonListDocument } from '@/graphql/Person';
+import { PersonFacetsDocument, PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useClient, useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
@@ -29,24 +29,31 @@ export function PersonList() {
   const [search, setSearch] = useSessionStorage('personfilter-search', '');
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
 
-  const cohortOptions = React.useMemo(
-    () => [
-      { id: 'none', label: 'Bez skupiny' },
-      ...(cohorts?.cohortsList?.map((x) => ({ id: x.id, label: x.name })) || []),
-    ],
-    [cohorts],
-  );
   const [tab] = useQueryState('tab');
-
-  const [{ data }] = useQuery({
-    query: PersonListDocument,
+  const variables = {
+    inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
+    isAdmin: !!isAdmin || null,
+    isTrainer: !!isTrainer || null,
+    membershipStates: [includeFormer ? 'FORMER' as const : 'CURRENT' as const],
+  };
+  const [{ data }] = useQuery({ query: PersonListDocument, variables });
+  const [facetResult] = useQuery({
+    query: PersonFacetsDocument,
     variables: {
-      inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
-      isAdmin: !!isAdmin || null,
-      isTrainer: !!isTrainer || null,
-      membershipState: includeFormer ? 'FORMER' : 'CURRENT',
+      ...variables,
+      membershipStates: variables.membershipStates.map((state) => state.toLowerCase()),
     },
   });
+  const [facetData, setFacetData] = React.useState(facetResult.data);
+  if (facetResult.data !== undefined && facetResult.data !== facetData) {
+    setFacetData(facetResult.data);
+  }
+  const counts: Record<string, Record<string, number>> | undefined = facetData
+    ? {}
+    : undefined;
+  for (const { facet, value, count } of facetData?.personFacetsList ?? []) {
+    (counts![facet!] ??= {})[value!] = count ?? 0;
+  }
   const nodes = React.useMemo(() => {
     return (data?.people?.nodes || [])
       .toSorted((a, b) =>
@@ -69,14 +76,7 @@ export function PersonList() {
 
   const fuzzy = useFuzzySearch(
     nodes,
-    [
-      'id',
-      'name',
-      'cohort',
-      'phone',
-      'email',
-      'yearOfBirth',
-    ],
+    ['id', 'name', 'cohort', 'phone', 'email', 'yearOfBirth'],
     search || '',
   );
 
@@ -97,24 +97,35 @@ export function PersonList() {
           {auth.isAdmin && <CreatePersonDialog />}
         </div>
 
-        <div className="mt-2 w-full flex gap-2 justify-end">
+        <div className="mt-2 w-full flex flex-wrap gap-2 justify-end">
           <ComboboxButton
             value={cohort}
             onChange={setCohort}
-            placeholder="jen skupina"
-            options={cohortOptions}
+            placeholder="skupina"
+            options={[
+              {
+                id: 'none',
+                label: `Bez skupiny (${counts ? (counts.cohort?.none ?? 0) : '…'})`,
+              },
+              ...(cohorts?.cohortsList ?? []).map((x) => ({
+                id: x.id,
+                label: `${x.name} (${counts ? (counts.cohort?.[x.id] ?? 0) : '…'})`,
+              })),
+            ]}
           />
 
           <button
             type="button"
+            aria-pressed={!!includeFormer}
             className={buttonCls({
               size: 'sm',
               variant: includeFormer ? 'primary' : 'outline',
             })}
             onClick={() => setIncludeFormer((x) => (x ? null : '1'))}
           >
-            Zobrazit bývalé
+            Bývalí ({counts ? (counts.state?.former ?? 0) : '…'})
           </button>
+
           <button
             type="button"
             className={buttonCls({
@@ -123,8 +134,9 @@ export function PersonList() {
             })}
             onClick={() => setIsTrainer((x) => (x ? null : '1'))}
           >
-            Jen trenéři
+            Trenéři ({counts ? (counts.trainer?.true ?? 0) : '…'})
           </button>
+
           <button
             type="button"
             className={buttonCls({
@@ -133,7 +145,7 @@ export function PersonList() {
             })}
             onClick={() => setIsAdmin((x) => (x ? null : '1'))}
           >
-            Jen správci
+            Správci ({counts ? (counts.admin?.true ?? 0) : '…'})
           </button>
         </div>
 

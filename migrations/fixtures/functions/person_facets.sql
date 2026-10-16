@@ -1,5 +1,5 @@
-drop function app_private.person_membership_candidates;
-drop function person_facets;
+drop function if exists app_private.person_membership_candidates;
+drop function if exists person_facets;
 
 create or replace function app_private.person_membership_candidates(membership_state text)
 returns table(person_id bigint, in_state boolean, cohort_ids bigint[], is_trainer boolean, is_admin boolean)

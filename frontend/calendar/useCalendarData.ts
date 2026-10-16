@@ -1,11 +1,22 @@
 import { formatCategoryName } from '@/ui/csts';
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
-import { EventRangeDocument, type EventRangeQuery, type EventRangeQueryVariables } from '@/graphql/Event';
+import {
+  CalendarFacetsDocument,
+  EventRangeDocument,
+  type EventRangeQuery,
+  type EventRangeQueryVariables,
+} from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
-import { useClient, useQuery } from 'urql';
-import type { CalendarCompetitionEvent, CalendarEvent, CalendarInstanceEvent, DateRange, Resource } from './types';
+import { useClient, useQuery, type OperationContext } from 'urql';
+import type {
+  CalendarCompetitionEvent,
+  CalendarEvent,
+  CalendarInstanceEvent,
+  DateRange,
+  Resource,
+} from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { eventTypes as allEventTypes } from '@/calendar/state';
 
@@ -34,7 +45,14 @@ const calendarDay = (date: string) => ({
 
 function prepareVariables(
   range: DateRange,
-  { onlyMine, trainerIds, participantIds, eventTypes, parentId, locationId }: CalendarFilters,
+  {
+    onlyMine,
+    trainerIds,
+    participantIds,
+    eventTypes,
+    parentId,
+    locationId,
+  }: CalendarFilters,
 ): EventRangeQueryVariables {
   return {
     start: startOf(range.since, 'day').toISOString(),
@@ -42,7 +60,7 @@ function prepareVariables(
     trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     participantIds: participantIds.length > 0 ? participantIds : undefined,
     locationIds: locationId ? [locationId] : undefined,
-    type: eventTypes.length === 1 ? eventTypes[0] : undefined,
+    types: eventTypes,
     scope: onlyMine ? 'MINE' : parentId || locationId ? 'ALL' : 'RELEVANT',
     parentId,
   };
@@ -51,12 +69,9 @@ function prepareVariables(
 function mapEventsToCalendar(
   list: EventRangeQuery['list'] | undefined,
   groupBy: CalendarGroupBy,
-  eventTypes: EventType[],
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
   const events: CalendarInstanceEvent[] = [];
   const resourceMap = new Map<string, Resource>();
-  const visibleTypes = new Set(eventTypes);
-  const filterTypes = eventTypes.length !== allEventTypes.length;
 
   const assignResource = (
     resourceIds: string[],
@@ -68,7 +83,6 @@ function mapEventsToCalendar(
   };
 
   for (const instance of list ?? []) {
-    if (filterTypes && (!instance.type || !visibleTypes.has(instance.type))) continue;
     const start = new Date(instance.since);
     const end = new Date(instance.until);
     const resourceIds: string[] = [];
@@ -116,19 +130,37 @@ export function useCalendarData(
     variables,
     requestPolicy: 'cache-and-network',
   });
+  const [facetResult, refreshFacets] = useQuery({
+    query: CalendarFacetsDocument,
+    variables,
+    requestPolicy: 'cache-and-network',
+  });
+  const [facetData, setFacetData] = React.useState(facetResult.data);
+  if (facetResult.data !== undefined && facetResult.data !== facetData) {
+    setFacetData(facetResult.data);
+  }
+  const facets: Record<string, Record<string, number>> | undefined = facetData
+    ? { type: {}, trainer: {}, participant: {}, location: {} }
+    : undefined;
+  for (const { facet, value, count } of facetData?.eventInstanceFacetsList ?? []) {
+    (facets![facet!] ??= {})[value!] = count ?? 0;
+  }
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
   const showActivities =
-    !filters.parentId && !filters.locationId && filters.eventTypes.length === allEventTypes.length;
+    !filters.parentId &&
+    !filters.locationId &&
+    filters.eventTypes.length === allEventTypes.length;
   const [{ data: activityData, fetching: activityFetching }] = useQuery({
     query: ActivityTimelineDocument,
     variables: {
       since: variables.start,
       until: variables.end,
-      personIds: filters.participantIds.length > 0
+      personIds:
+        filters.participantIds.length > 0
           ? filters.participantIds
           : filters.onlyMine
-              ? filters.myPersonIds
-              : undefined,
+            ? filters.myPersonIds
+            : undefined,
       kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
     },
     requestPolicy: 'cache-and-network',
@@ -151,7 +183,7 @@ export function useCalendarData(
   }, [client, date, filters, view]);
 
   const { events, resources } = React.useMemo(() => {
-    const schedule = mapEventsToCalendar(data?.list, effectiveGroupBy, filters.eventTypes);
+    const schedule = mapEventsToCalendar(data?.list, effectiveGroupBy);
     const competitionsByEvent = new Map<string, CalendarCompetitionEvent>();
     const seen = new Set<string>();
     const birthdays: CalendarEvent[] = [];
@@ -216,19 +248,17 @@ export function useCalendarData(
       events: [...schedule.events, ...competitions, ...birthdays],
       resources: schedule.resources,
     };
-  }, [
-    activityData?.activityTimelineList,
-    data?.list,
-    effectiveGroupBy,
-    filters.eventTypes,
-    showActivities,
-  ]);
+  }, [activityData?.activityTimelineList, data?.list, effectiveGroupBy, showActivities]);
 
   return {
     range,
     events,
     resources,
     fetching: fetching || (showActivities && activityFetching),
-    refresh,
+    facets,
+    refresh: (context?: Partial<OperationContext>) => {
+      refresh(context);
+      refreshFacets(context);
+    },
   };
 }

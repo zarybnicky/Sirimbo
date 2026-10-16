@@ -10,7 +10,7 @@ import { buttonCls } from '@/ui/style';
 import { useQueryState } from 'nuqs';
 import { CheckCircle2, Circle, Filter } from 'lucide-react';
 
-export function EventTypeFilter() {
+export function EventTypeFilter({ counts }: { counts?: Record<string, number> }) {
   const [selected, setSelected] = useQueryState('types', calendarFilterParsers.types);
   const label =
     selected.length === eventTypes.length
@@ -49,6 +49,9 @@ export function EventTypeFilter() {
           >
             {selected.includes(type) ? <CheckCircle2 /> : <Circle />}
             {formatEventType(type)}
+            <span className="ml-auto tabular-nums text-neutral-11">
+              {counts ? (counts[type] ?? 0) : '...'}
+            </span>
           </DropdownMenuButton>
         ))}
       </DropdownMenuContent>

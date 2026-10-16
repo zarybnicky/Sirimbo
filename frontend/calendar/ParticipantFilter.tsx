@@ -12,7 +12,7 @@ import { CheckIcon, Filter } from 'lucide-react';
 import { isTruthy } from '@/lib/truthyFilter';
 import { PersonListDocument } from '@/graphql/Person';
 
-export function ParticipantFilter() {
+export function ParticipantFilter({ counts }: { counts?: Record<string, number> }) {
   const [ids, setIds] = useQueryState('participants', calendarFilterParsers.participants);
   const [{ data }] = useQuery({
     query: PersonListDocument,
@@ -48,6 +48,9 @@ export function ParticipantFilter() {
           >
             <CheckIcon />
             {x.name}
+            <span className="ml-auto tabular-nums text-neutral-11">
+              {counts ? (counts[x.id] ?? 0) : '…'}
+            </span>
           </DropdownMenuButton>
         ))}
         {other.map((x) => (
@@ -59,6 +62,9 @@ export function ParticipantFilter() {
             }}
           >
             {x.name}
+            <span className="ml-auto tabular-nums text-neutral-11">
+              {counts ? (counts[x.id] ?? 0) : '…'}
+            </span>
           </DropdownMenuButton>
         ))}
       </DropdownMenuContent>

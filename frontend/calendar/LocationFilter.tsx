@@ -11,9 +11,11 @@ import { CheckCircle2, Circle, MapPin } from 'lucide-react';
 import { useQuery } from 'urql';
 
 export function LocationFilter({
+  counts,
   value,
   onChange,
 }: {
+  counts?: Record<string, number>;
   value: string | null;
   onChange: (id: string | null) => void;
 }) {
@@ -39,6 +41,9 @@ export function LocationFilter({
           <DropdownMenuButton key={location.id} onSelect={() => onChange(location.id)}>
             {value === location.id ? <CheckCircle2 /> : <Circle />}
             {location.name}
+            <span className="ml-auto tabular-nums text-neutral-11">
+              {counts ? (counts[location.id] ?? 0) : '…'}
+            </span>
           </DropdownMenuButton>
         ))}
       </DropdownMenuContent>

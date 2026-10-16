@@ -65,6 +65,8 @@ export type PersonMembershipCondition = {
   isTrainer?: boolean | null | undefined;
   /** The membership state to filter by. */
   state?: PersonMembershipState | null | undefined;
+  /** Membership states to include. An empty list includes current and former people; overrides state. */
+  states?: Array<PersonMembershipState> | null | undefined;
 };
 
 /** Which tenant membership state a person membership filter targets. */

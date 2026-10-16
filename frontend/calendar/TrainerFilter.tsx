@@ -18,15 +18,20 @@ export type TrainerFilterOption = {
 };
 
 export function TrainerFilter({
+  counts,
   availableTrainers,
   showAllResources,
   onShowAllResourcesChange,
 }: {
+  counts?: Record<string, number>;
   availableTrainers?: readonly TrainerFilterOption[];
   showAllResources?: boolean;
   onShowAllResourcesChange?: (showAllResources: boolean) => void;
 }) {
-  const [trainerIds, setTrainerIds] = useQueryState('trainers', calendarFilterParsers.trainers);
+  const [trainerIds, setTrainerIds] = useQueryState(
+    'trainers',
+    calendarFilterParsers.trainers,
+  );
   const [{ data: tenant }] = useQuery({
     query: TrainerOptionsDocument,
     pause: availableTrainers !== undefined,
@@ -70,6 +75,9 @@ export function TrainerFilter({
           >
             {trainerIds.includes(x.id) ? <CheckCircle2 /> : <Circle />}
             {x.name}
+            <span className="ml-auto tabular-nums text-neutral-11">
+              {counts ? (counts[x.id] ?? 0) : '…'}
+            </span>
           </DropdownMenuButton>
         ))}
       </DropdownMenuContent>

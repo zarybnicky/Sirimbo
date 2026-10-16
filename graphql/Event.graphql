@@ -486,7 +486,7 @@ query EventList {
 query EventRange(
   $start: Datetime!
   $end: Datetime!
-  $type: EventType
+  $types: [EventType!]
   $trainerIds: [BigInt]
   $participantIds: [BigInt]
   $scope: EventInstanceRangeScope,
@@ -496,7 +496,8 @@ query EventRange(
   list: eventInstancesForRangeList(
     startRange: $start
     endRange: $end
-    onlyType: $type,
+    onlyType: null
+    onlyTypes: $types
     trainerIds: $trainerIds,
     participantIds: $participantIds,
     scope: $scope,
@@ -504,6 +505,27 @@ query EventRange(
     locationIds: $locationIds
   ) {
     ...EventWithTrainer
+  }
+}
+
+query CalendarFacets(
+  $start: Datetime!
+  $end: Datetime!
+  $types: [EventType!]
+  $trainerIds: [BigInt]
+  $participantIds: [BigInt]
+  $scope: EventInstanceRangeScope
+  $parentId: BigInt
+  $locationIds: [BigInt]
+) {
+  eventInstanceFacetsList(
+    startRange: $start, endRange: $end, onlyTypes: $types,
+    trainerIds: $trainerIds, participantIds: $participantIds,
+    scope: $scope, parentId: $parentId, locationIds: $locationIds
+  ) {
+    facet
+    value
+    count
   }
 }
 

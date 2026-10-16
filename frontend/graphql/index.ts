@@ -5071,6 +5071,13 @@ export type EventInstanceCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+export type EventInstanceFacetsRecord = {
+  __typename?: 'EventInstanceFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
+};
+
 /** Represents an update to a `EventInstance`. Fields that are set will be updated. */
 export type EventInstancePatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
@@ -9196,6 +9203,13 @@ export type PersonCondition = {
   websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PersonFacetsRecord = {
+  __typename?: 'PersonFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
+};
+
 export type PersonFederationCandidatesRecord = {
   __typename?: 'PersonFederationCandidatesRecord';
   ageGroup: Maybe<Scalars['String']['output']>;
@@ -9370,6 +9384,8 @@ export type PersonMembershipCondition = {
   isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
   /** The membership state to filter by. */
   state?: InputMaybe<PersonMembershipState>;
+  /** Membership states to include. An empty list includes current and former people; overrides state. */
+  states?: InputMaybe<Array<PersonMembershipState>>;
 };
 
 /** Which tenant membership state a person membership filter targets. */
@@ -9587,6 +9603,7 @@ export type Query = {
   dancesList: Maybe<Array<Dance>>;
   /** Get a single `EventInstance`. */
   eventInstance: Maybe<EventInstance>;
+  eventInstanceFacetsList: Maybe<Array<EventInstanceFacetsRecord>>;
   /** Get a single `EventInstanceRegistration`. */
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -9665,6 +9682,7 @@ export type Query = {
   peopleWithoutAccessWithInvitationList: Maybe<Array<Person>>;
   /** Get a single `Person`. */
   person: Maybe<Person>;
+  personFacetsList: Maybe<Array<PersonFacetsRecord>>;
   /** Get a single `PersonInvitation`. */
   personInvitation: Maybe<PersonInvitation>;
   /** Get a single `PersonInvitation`. */
@@ -10137,6 +10155,21 @@ export type QueryEventInstanceArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEventInstanceFacetsListArgs = {
+  endRange?: InputMaybe<Scalars['Datetime']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  onlyTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
+  parentId?: InputMaybe<Scalars['BigInt']['input']>;
+  participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  scope?: InputMaybe<EventInstanceRangeScope>;
+  startRange?: InputMaybe<Scalars['Datetime']['input']>;
+  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEventInstanceRegistrationArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -10170,6 +10203,7 @@ export type QueryEventInstancesForRangeListArgs = {
   locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   onlyType?: InputMaybe<EventType>;
+  onlyTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   scope?: InputMaybe<EventInstanceRangeScope>;
@@ -10479,6 +10513,17 @@ export type QueryPeopleWithoutAccessWithInvitationListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPersonArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPersonFacetsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  inCohorts?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
+  isTrainer?: InputMaybe<Scalars['Boolean']['input']>;
+  membershipStates?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -13757,6 +13802,7 @@ export type GraphCacheKeysConfig = {
   EventExternalRegistration?: (data: WithTypename<EventExternalRegistration>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
   EventInstanceApproxPriceRecord?: (data: WithTypename<EventInstanceApproxPriceRecord>) => null | string,
+  EventInstanceFacetsRecord?: (data: WithTypename<EventInstanceFacetsRecord>) => null | string,
   EventInstanceRegistration?: (data: WithTypename<EventInstanceRegistration>) => null | string,
   EventInstanceRegistrationInfo?: (data: WithTypename<EventInstanceRegistrationInfo>) => null | string,
   EventInstanceRegistrationsConnection?: (data: WithTypename<EventInstanceRegistrationsConnection>) => null | string,
@@ -13834,6 +13880,7 @@ export type GraphCacheKeysConfig = {
   PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
   PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
+  PersonFacetsRecord?: (data: WithTypename<PersonFacetsRecord>) => null | string,
   PersonFederationCandidatesRecord?: (data: WithTypename<PersonFederationCandidatesRecord>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
   PersonLastActivity?: (data: WithTypename<PersonLastActivity>) => null | string,
@@ -13969,6 +14016,7 @@ export type GraphCacheResolvers = {
     danceProgramsList?: GraphCacheResolver<WithTypename<Query>, QueryDanceProgramsListArgs, Array<WithTypename<DanceProgram> | string>>,
     dancesList?: GraphCacheResolver<WithTypename<Query>, QueryDancesListArgs, Array<WithTypename<Dance> | string>>,
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
+    eventInstanceFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceFacetsListArgs, Array<WithTypename<EventInstanceFacetsRecord> | string>>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationArgs, WithTypename<EventInstanceRegistration> | string>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
@@ -14013,6 +14061,7 @@ export type GraphCacheResolvers = {
     peopleWithoutAccessWithExistingAccountList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithExistingAccountListArgs, Array<WithTypename<Person> | string>>,
     peopleWithoutAccessWithInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithInvitationListArgs, Array<WithTypename<Person> | string>>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
+    personFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryPersonFacetsListArgs, Array<WithTypename<PersonFacetsRecord> | string>>,
     personInvitation?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationArgs, WithTypename<PersonInvitation> | string>,
     personInvitationByAccessToken?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationByAccessTokenArgs, WithTypename<PersonInvitation> | string>,
     ranklist?: GraphCacheResolver<WithTypename<Query>, QueryRanklistArgs, WithTypename<Ranklist> | string>,
@@ -15131,6 +15180,11 @@ export type GraphCacheResolvers = {
     amount?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  EventInstanceFacetsRecord?: {
+    count?: GraphCacheResolver<WithTypename<EventInstanceFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    facet?: GraphCacheResolver<WithTypename<EventInstanceFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<EventInstanceFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   EventInstanceRegistration?: {
     attendanceCreatedAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     attendanceNote?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15804,6 +15858,11 @@ export type GraphCacheResolvers = {
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
     websiteUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>
+  },
+  PersonFacetsRecord?: {
+    count?: GraphCacheResolver<WithTypename<PersonFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    facet?: GraphCacheResolver<WithTypename<PersonFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<PersonFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
   },
   PersonFederationCandidatesRecord?: {
     ageGroup?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16551,6 +16610,7 @@ export type GraphCacheUpdaters = {
     danceProgramsList?: GraphCacheUpdateResolver<{ danceProgramsList: Maybe<Array<WithTypename<DanceProgram>>> }, QueryDanceProgramsListArgs>,
     dancesList?: GraphCacheUpdateResolver<{ dancesList: Maybe<Array<WithTypename<Dance>>> }, QueryDancesListArgs>,
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
+    eventInstanceFacetsList?: GraphCacheUpdateResolver<{ eventInstanceFacetsList: Maybe<Array<WithTypename<EventInstanceFacetsRecord>>> }, QueryEventInstanceFacetsListArgs>,
     eventInstanceRegistration?: GraphCacheUpdateResolver<{ eventInstanceRegistration: Maybe<WithTypename<EventInstanceRegistration>> }, QueryEventInstanceRegistrationArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<{ eventInstanceRegistrations: Maybe<WithTypename<EventInstanceRegistrationsConnection>> }, QueryEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<{ eventInstanceRegistrationsList: Maybe<Array<WithTypename<EventInstanceRegistration>>> }, QueryEventInstanceRegistrationsListArgs>,
@@ -16595,6 +16655,7 @@ export type GraphCacheUpdaters = {
     peopleWithoutAccessWithExistingAccountList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithExistingAccountList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithExistingAccountListArgs>,
     peopleWithoutAccessWithInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithInvitationListArgs>,
     person?: GraphCacheUpdateResolver<{ person: Maybe<WithTypename<Person>> }, QueryPersonArgs>,
+    personFacetsList?: GraphCacheUpdateResolver<{ personFacetsList: Maybe<Array<WithTypename<PersonFacetsRecord>>> }, QueryPersonFacetsListArgs>,
     personInvitation?: GraphCacheUpdateResolver<{ personInvitation: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationArgs>,
     personInvitationByAccessToken?: GraphCacheUpdateResolver<{ personInvitationByAccessToken: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationByAccessTokenArgs>,
     ranklist?: GraphCacheUpdateResolver<{ ranklist: Maybe<WithTypename<Ranklist>> }, QueryRanklistArgs>,
@@ -17793,6 +17854,11 @@ export type GraphCacheUpdaters = {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>
   },
+  EventInstanceFacetsRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceFacetsRecord>>, Record<string, never>>,
+    facet?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceFacetsRecord>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceFacetsRecord>>, Record<string, never>>
+  },
   EventInstanceRegistration?: {
     attendanceCreatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     attendanceNote?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
@@ -18466,6 +18532,11 @@ export type GraphCacheUpdaters = {
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonUserProxiesListArgs>,
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     websiteUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>
+  },
+  PersonFacetsRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFacetsRecord>>, Record<string, never>>,
+    facet?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFacetsRecord>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFacetsRecord>>, Record<string, never>>
   },
   PersonFederationCandidatesRecord?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,

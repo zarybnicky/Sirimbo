@@ -146,7 +146,7 @@ export function Calendar({
     [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationId],
   );
 
-  const { fetching, range, events, resources, refresh } = useCalendarData(
+  const { fetching, range, events, resources, facets, refresh } = useCalendarData(
     view,
     date,
     filters,
@@ -308,13 +308,14 @@ export function Calendar({
             </button>
           )}
           <TrainerFilter
+            counts={facets?.trainer}
             availableTrainers={availableTrainers}
             showAllResources={columnMode === 'all'}
             onShowAllResourcesChange={handleShowAllResourcesChange}
           />
-          {auth.isLoggedIn && <ParticipantFilter />}
-          <EventTypeFilter />
-          <LocationFilter value={locationId} onChange={setLocationId} />
+          {auth.isLoggedIn && <ParticipantFilter counts={facets?.participant} />}
+          <EventTypeFilter counts={facets?.type} />
+          <LocationFilter counts={facets?.location} value={locationId} onChange={setLocationId} />
           {fetching && <Spinner />}
         </div>
 

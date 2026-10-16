@@ -173,7 +173,7 @@ query UnpaidPayments {
   }
 }
 
-query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState = CURRENT) {
+query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState = CURRENT, $membershipStates: [PersonMembershipState!]) {
   people(
     condition: {
       membership: {
@@ -181,6 +181,7 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
         isTrainer: $isTrainer
         isAdmin: $isAdmin
         state: $membershipState
+        states: $membershipStates
       }
     }
   ) {
@@ -327,5 +328,13 @@ mutation UpdatePersonFederationId($input: UpdatePersonInput!) {
 mutation DeletePerson($id: BigInt!) {
   deletePerson(input: { id: $id }) {
     __typename
+  }
+}
+
+query PersonFacets($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipStates: [String!]) {
+  personFacetsList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin, membershipStates: $membershipStates) {
+    facet
+    value
+    count
   }
 }
