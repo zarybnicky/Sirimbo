@@ -18,7 +18,6 @@ import {
   useQueryStates,
 } from 'nuqs';
 import { TextField } from '@/ui/fields/text';
-import { Checkbox } from '@/ui/fields/checkbox';
 import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
@@ -27,13 +26,8 @@ import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
-import EventMap, {
-  defaultMapViews,
-  eventMonthColors,
-  eventMonths,
-  mapViews,
-} from '../EventMap';
-import { YearPicker } from '../YearPicker';
+import EventMap, { defaultMapViews, mapViews } from '../EventMap';
+import { PeriodPicker } from '../PeriodPicker';
 import {
   FederationCompetitorFacetsDocument,
   FederationCompetitorsDocument,
@@ -112,6 +106,7 @@ function useBrowserState(federation: string) {
       ),
       missing: parseAsBoolean.withDefault(false),
       cancelled: parseAsBoolean.withDefault(false),
+      hasResults: parseAsBoolean,
       map: parseAsBoolean.withDefault(true),
       page: parseAsInteger,
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
@@ -181,12 +176,14 @@ function Results({
   result,
   controls,
   actions,
+  searchLabel = 'Jméno nebo ID',
   children,
 }: {
   browser: BrowserProps;
   result: Pick<ReturnType<typeof usePaginatedQuery>, 'fetching' | 'error' | 'pagination'>;
   controls?: ReactNode;
   actions?: ReactNode;
+  searchLabel?: string;
   children: ReactNode;
 }) {
   const { fetching, error, pagination } = result;
@@ -211,8 +208,8 @@ function Results({
         <TextField
           name="search"
           type="search"
-          aria-label="Jméno nebo ID"
-          placeholder="Jméno nebo ID…"
+          aria-label={searchLabel}
+          placeholder={`${searchLabel}…`}
           className="min-w-40 flex-1 sm:max-w-64 ml-auto"
           inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
           value={filters.search}
@@ -231,156 +228,197 @@ function Results({
   );
 }
 
-function Events({
-  federation,
-  filters,
-  setFilters,
-  search,
-  searchPending,
-}: BrowserProps) {
+function Events(props: BrowserProps) {
+  const { federation, filters, setFilters, search, searchPending } = props;
+  const activeFacetCount =
+    Number(filters.cancelled) +
+    Number(filters.missing) +
+    Number(filters.hasResults !== null);
+  const [showFilters, setShowFilters] = useState(activeFacetCount > 0);
+
   const [facets] = useQuery({
     query: FederationEventFacetsDocument,
     variables: { federation, includeCancelled: filters.cancelled },
   });
-  const years = (facets.data?.federation?.eventFacets?.years ?? [])
-    .filter((y) => y !== null)
-    .toReversed();
-  const [result] = useQuery({
+  const [facetData, setFacetData] = useState(facets.data);
+  if (facets.data !== undefined && facets.data !== facetData) {
+    setFacetData(facets.data);
+  }
+
+  const result = usePaginatedQuery({
     query: FederationEventsDocument,
     pause: searchPending,
-    variables: {
+    variables: (offset) => ({
       federation,
       search,
+      offset,
       includeCancelled: filters.cancelled,
+      hasResults: filters.hasResults,
+      hasCoordinates: filters.missing ? false : null,
       date: {
         since: format(new Date(filters.year, (filters.month || 1) - 1, 1), 'yyyy-MM-dd'),
         until: format(new Date(filters.year, filters.month || 12, 1), 'yyyy-MM-dd'),
       },
-    },
+    }),
+    limit: 300,
+    getTotal: (data) => data.federation?.events.totalCount,
   });
+  const [counts, setCounts] = useState(result.data?.federation);
+  if (result.data !== undefined && result.data.federation !== counts) {
+    setCounts(result.data.federation);
+  }
   const events = result.data?.federation?.events.nodes ?? [];
-  const missing = events.filter((e) => e.venueLat === null || e.venueLng === null);
-  const visible = filters.missing ? missing : events;
-  const showMap =
-    filters.map && visible.some((e) => e.venueLat !== null && e.venueLng !== null);
   const isPending = result.fetching || facets.fetching || searchPending;
-  const error = result.error || facets.error;
+
   return (
     <div className="min-w-0">
-      <YearPicker
-        years={years}
-        value={filters.year}
-        onChange={(year) => setFilters({ year }, { history: 'push' })}
+      <PeriodPicker
+        years={(facetData?.federation?.eventFacets?.years ?? [])
+          .filter((y) => y !== null)
+          .toReversed()}
+        year={filters.year}
+        month={filters.month}
+        onChange={(period) => setFilters({ ...period, page: null }, { history: 'push' })}
       />
-      <div role="group" aria-label="Měsíc" className="my-2 flex flex-wrap gap-0.5">
-        {['Celý rok', ...eventMonths].map((label, month) => (
-          <label key={month} className="relative cursor-pointer">
-            <input
-              type="radio"
-              name="month"
-              value={month}
-              checked={filters.month === month}
-              onChange={() => setFilters({ month }, { history: 'push' })}
-              className="peer sr-only"
-            />
-            <span className="block rounded-lg border border-neutral-4 px-1.5 py-1 text-xs hover:bg-neutral-3 peer-checked:border-accent-8 peer-checked:bg-accent-3 peer-checked:text-accent-11 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-8">
-              {month > 0 && (
-                <span
-                  aria-hidden="true"
-                  className="mr-1 inline-block size-2 rounded-full"
-                  style={{ backgroundColor: eventMonthColors[month - 1] }}
-                />
-              )}
-              {label}
-            </span>
-          </label>
-        ))}
-      </div>
-      <div className="my-2 flex flex-wrap items-end gap-3">
-        <TextField
-          name="search"
-          type="search"
-          aria-label="Jméno nebo ID"
-          placeholder="Jméno nebo ID…"
-          inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
-          value={filters.search}
-          onChange={(event) => setFilters({ search: event.target.value })}
-        />
-        <Checkbox
-          name="cancelled"
-          label={`Zrušené (${result.data?.federation?.cancelledEvents.totalCount ?? '…'})`}
-          checked={filters.cancelled}
-          onChange={(event) => setFilters({ cancelled: event.target.checked })}
-        />
-        <Checkbox
-          name="missing"
-          label={`Bez souřadnic (${missing.length})`}
-          checked={filters.missing}
-          onChange={(event) => setFilters({ missing: event.target.checked })}
-        />
-        <Checkbox
-          name="map"
-          label="Zobrazit mapu"
-          checked={filters.map}
-          onChange={(event) => setFilters({ map: event.target.checked })}
-        />
-        <p role="status" className="ml-auto text-sm text-neutral-11">
-          {isPending ? 'Načítám…' : !error && `${visible.length} událostí`}
-        </p>
-      </div>
-      <FormError error={error} />
-      {!error && (
-        <>
-          {showMap && (
+
+      <Results
+        browser={props}
+        result={{ ...result, fetching: isPending, error: result.error ?? facets.error }}
+        searchLabel="Název, místo nebo ID"
+        actions={
+          <>
+            <button
+              type="button"
+              aria-expanded={showFilters}
+              aria-controls="event-facets"
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+              onClick={() => setShowFilters((visible) => !visible)}
+            >
+              <SlidersHorizontal className="size-3" aria-hidden />
+              Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
+              <ChevronDown
+                className={cn('size-3', showFilters && 'rotate-180')}
+                aria-hidden
+              />
+            </button>
+
+            <button
+              type="button"
+              aria-pressed={filters.map}
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+              onClick={() => setFilters({ map: !filters.map })}
+            >
+              Mapa
+            </button>
+
+            {(filters.search !== '' || activeFacetCount > 0) && (
+              <button
+                type="button"
+                className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
+                onClick={() =>
+                  setFilters({
+                    search: null,
+                    cancelled: null,
+                    missing: null,
+                    hasResults: null,
+                    page: null,
+                  })
+                }
+              >
+                Zrušit filtry
+              </button>
+            )}
+          </>
+        }
+        controls={
+          <div
+            id="event-facets"
+            className={cn(
+              'mb-3 flex-wrap items-center gap-1',
+              showFilters ? 'flex' : 'hidden',
+            )}
+          >
+            {(
+              [
+                ['hasResults', true, 'S výsledky', counts?.withResults.totalCount],
+                ['hasResults', false, 'Bez výsledků', counts?.withoutResults.totalCount],
+                [
+                  'cancelled',
+                  true,
+                  'Včetně zrušených',
+                  counts?.cancelledEvents.totalCount,
+                ],
+                ['missing', true, 'Bez souřadnic', counts?.missingCoordinates.totalCount],
+              ] as const
+            ).map(([key, value, label, count]) => (
+              <button
+                key={`${key}-${value}`}
+                type="button"
+                aria-pressed={filters[key] === value}
+                className={buttonCls({
+                  display: 'compact',
+                  variant: 'facet',
+                  size: 'sm',
+                })}
+                onClick={() =>
+                  setFilters({ [key]: filters[key] === value ? null : value, page: null })
+                }
+              >
+                {label}
+                <span className="tabular-nums opacity-75">{count ?? '…'}</span>
+              </button>
+            ))}
+          </div>
+        }
+      >
+        {filters.map &&
+          events.some((e) => e.venueLat !== null && e.venueLng !== null) && (
             <EventMap
               key={filters.shape === 'czechia' ? 'czechia' : 'world'}
-              events={visible}
+              events={events}
               view={filters.shape}
               onViewChange={(shape) => setFilters({ shape }, { history: 'push' })}
               federation={federation}
             />
           )}
-          <Table
-            columns={['date', 'event', 'location', 'country', 'competitions']}
-            busy={isPending}
-            empty="Žádné události"
-          >
-            {visible.map((event) => (
-              <tr key={event.id} className="border-t border-neutral-4">
-                <td className="whitespace-nowrap">
-                  {formatDateOnly(event.startDate)}
-                  {event.endDate && event.endDate !== event.startDate && (
-                    <> – {formatDateOnly(event.endDate)}</>
+
+        <Table
+          columns={['Datum', 'Soutěž', 'Místo', 'Země', 'Soutěží']}
+          busy={isPending}
+          empty="Žádné události"
+        >
+          {events.map((event) => (
+            <tr key={event.id} className="border-t border-neutral-4">
+              <td className="whitespace-nowrap">
+                {formatDateOnly(event.startDate)}
+                {event.endDate && event.endDate !== event.startDate && (
+                  <> – {formatDateOnly(event.endDate)}</>
+                )}
+              </td>
+              <th scope="row">
+                <Link
+                  className={cn(
+                    'text-accent-11',
+                    event.status === 'CANCELLED' ? 'line-through' : 'underline',
                   )}
-                </td>
-                <th scope="row">
-                  <Link
-                    className={cn(
-                      'text-accent-11',
-                      event.status === 'CANCELLED' ? 'line-through' : 'underline',
-                    )}
-                    href={`/federated/${federation}/${event.externalId}`}
-                    prefetch={false}
-                  >
-                    {event.name || event.externalId}
-                  </Link>
-                  {event.status === 'CANCELLED' && (
-                    <div className="text-xs text-neutral-11">Zrušeno</div>
-                  )}
-                </th>
-                <td>
-                  <div>{event.location || event.city}</div>
-                  <div className="text-neutral-11">
-                    {[event.streetAddress, event.postalCode].filter(Boolean).join(', ')}
-                  </div>
-                </td>
-                <td>{event.country}</td>
-                <td>{event.competitions.totalCount}</td>
-              </tr>
-            ))}
-          </Table>
-        </>
-      )}
+                  href={`/federated/${federation}/${event.externalId}`}
+                  prefetch={false}
+                >
+                  {event.name || event.externalId}
+                </Link>
+                {event.status === 'CANCELLED' && (
+                  <div className="text-xs text-neutral-11">Zrušeno</div>
+                )}
+              </th>
+              <td>
+                <div>{event.location || event.city}</div>
+              </td>
+              <td>{event.country}</td>
+              <td>{event.competitions.totalCount}</td>
+            </tr>
+          ))}
+        </Table>
+      </Results>
     </div>
   );
 }

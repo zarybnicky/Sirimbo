@@ -357,17 +357,38 @@ query FederationEvents(
   $search: String
   $date: CompetitionDateCondition!
   $includeCancelled: Boolean!
+  $hasResults: Boolean
+  $hasCoordinates: Boolean
+  $offset: Int! = 0
 ) {
   federation(code: $federation) {
     code
-    cancelledEvents: events(first: 0, condition: { search: $search, date: $date, status: CANCELLED }) {
-      totalCount
-    }
+    withResults: events(first: 0, condition: {
+      search: $search, date: $date, includeCancelled: $includeCancelled,
+      hasCoordinates: $hasCoordinates, hasResults: true
+    }) { totalCount }
+    withoutResults: events(first: 0, condition: {
+      search: $search, date: $date, includeCancelled: $includeCancelled,
+      hasCoordinates: $hasCoordinates, hasResults: false
+    }) { totalCount }
+    cancelledEvents: events(first: 0, condition: {
+      search: $search, date: $date, status: CANCELLED,
+      hasCoordinates: $hasCoordinates, hasResults: $hasResults
+    }) { totalCount }
+    missingCoordinates: events(first: 0, condition: {
+      search: $search, date: $date, includeCancelled: $includeCancelled,
+      hasCoordinates: false, hasResults: $hasResults
+    }) { totalCount }
     events(
       first: 300
-      condition: { search: $search, date: $date, includeCancelled: $includeCancelled }
+      offset: $offset
+      condition: {
+        search: $search, date: $date, includeCancelled: $includeCancelled,
+        hasResults: $hasResults, hasCoordinates: $hasCoordinates
+      }
       orderBy: [START_DATE_DESC, ID_DESC]
     ) {
+      totalCount
       nodes {
         ...FederationMapEvent
         status
