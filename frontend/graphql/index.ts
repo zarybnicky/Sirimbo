@@ -8818,7 +8818,7 @@ export type Person = {
   eventInstanceTrainersList: Array<EventInstanceTrainer>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   facebookUrl: Maybe<Scalars['String']['output']>;
-  federationCandidatesList: Maybe<Array<PersonFederationCandidatesRecord>>;
+  federationCandidatesList: Array<PersonFederationCandidatesRecord>;
   /** Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`. */
   federationCategoryProgresses: FederationCompetitorCategoryProgressesConnection;
   /** Reads and enables pagination through a set of `Competition`. */
@@ -9168,9 +9168,9 @@ export type PersonCondition = {
 export type PersonFederationCandidatesRecord = {
   __typename?: 'PersonFederationCandidatesRecord';
   ageGroup: Maybe<Scalars['String']['output']>;
-  id: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
   name: Maybe<Scalars['String']['output']>;
-  similarity: Maybe<Scalars['Float']['output']>;
+  similarity: Scalars['Float']['output'];
 };
 
 /** An input for mutations affecting `Person` */

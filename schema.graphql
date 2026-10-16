@@ -11204,7 +11204,7 @@ type Person {
     """Skip the first `n` values."""
     offset: Int
     threshold: Float
-  ): [PersonFederationCandidatesRecord!]
+  ): [PersonFederationCandidatesRecord!]!
 
   """
   Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
@@ -11660,9 +11660,9 @@ input PersonCondition {
 
 type PersonFederationCandidatesRecord {
   ageGroup: String
-  id: Int
+  id: Int!
   name: String
-  similarity: Float
+  similarity: Float!
 }
 
 """An input for mutations affecting `Person`"""

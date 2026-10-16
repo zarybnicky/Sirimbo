@@ -22234,13 +22234,16 @@
           {
             "name": "federationCandidatesList",
             "type": {
-              "kind": "LIST",
+              "kind": "NON_NULL",
               "ofType": {
-                "kind": "NON_NULL",
+                "kind": "LIST",
                 "ofType": {
-                  "name": "PersonFederationCandidatesRecord",
-                  "kind": "OBJECT",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "PersonFederationCandidatesRecord",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
                 }
               }
             },
@@ -23398,8 +23401,11 @@
           {
             "name": "id",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -23414,8 +23420,11 @@
           {
             "name": "similarity",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }

@@ -207,7 +207,6 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
 query MissingFederationIdCandidates($condition: PersonCondition!, $federation: String!) {
   ageGroupsList {
     code
-    aliases
     personAge {
       start { value }
       end { value }
