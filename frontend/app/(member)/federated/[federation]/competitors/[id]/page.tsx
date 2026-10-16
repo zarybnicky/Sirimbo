@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
@@ -58,14 +59,13 @@ export default async function CompetitorPage({ params }: Props) {
           },
         ]}
       />
-      <dl className="text-sm tabular">
-        <dt>ID</dt>
-        <dd>{externalId}</dd>
-        <dt>Typ</dt>
-        <dd>{competitor.competitorType.toLowerCase()}</dd>
-        <dt>Věk</dt>
-        <dd>{formatAgeGroup(competitor.ageGroup) || '-'}</dd>
-      </dl>
+      <DefinitionList
+        items={{
+          ID: externalId,
+          Typ: competitor.competitorType.toLowerCase(),
+          Věk: formatAgeGroup(competitor.ageGroup),
+        }}
+      />
 
       <FederationCategoryProgress competitors={[{ ...competitor, federation }]} />
 

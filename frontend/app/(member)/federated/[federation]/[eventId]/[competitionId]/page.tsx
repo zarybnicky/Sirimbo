@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { formatCategoryName } from '@/ui/csts';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
@@ -81,43 +82,25 @@ export default async function CompetitionPage({ params }: Props) {
         href={`/federated/${federation}/${eventId}/${competitionId}`}
       />
 
-      <dl className="text-sm tabular">
-        {federation === 'csts' && (
-          <>
-            <dt>Zdroj</dt>
-            <dd>
-              <CstsResultsLink
-                eventId={event.externalId}
-                competitionId={competition.externalId}
-              >
-                Výsledky
-              </CstsResultsLink>
-            </dd>
-          </>
-        )}
-        <dt>Stav</dt>
-        <dd>{competition.status.toLowerCase().replaceAll('_', ' ')}</dd>
-        {competition.competitionType && (
-          <>
-            <dt>Typ</dt>
-            <dd>{competition.competitionType?.toLowerCase().replaceAll('_', ' ') || '-'}</dd>
-          </>
-        )}
-        {competition.checkInEnd && (
-          <>
-            <dt>Konec prezence</dt>
-            <dd>{competition.checkInEnd?.slice(0, 5) || '-'}</dd>
-          </>
-        )}
-        <dt>Účastníků</dt>
-        <dd>{competition.participantsTotal ?? competition.results.length ?? '-'}</dd>
-        {competition.completedAt && (
-          <>
-            <dt>Dokončena v</dt>
-            <dd>{dateTimeFormatter.format(new Date(competition.completedAt))}</dd>
-          </>
-        )}
-      </dl>
+      <DefinitionList
+        items={{
+          Zdroj: federation === 'csts' && (
+            <CstsResultsLink
+              eventId={event.externalId}
+              competitionId={competition.externalId}
+            >
+              Výsledky
+            </CstsResultsLink>
+          ),
+          Stav: competition.status.toLowerCase().replaceAll('_', ' '),
+          Typ: competition.competitionType?.toLowerCase().replaceAll('_', ' '),
+          'Konec prezence': competition.checkInEnd?.slice(0, 5),
+          Účastníků: competition.participantsTotal ?? competition.results.length,
+          'Dokončena v':
+            competition.completedAt &&
+            dateTimeFormatter.format(new Date(competition.completedAt)),
+        }}
+      />
 
       <Results federation={federation} results={competition.results} />
       <Registrations

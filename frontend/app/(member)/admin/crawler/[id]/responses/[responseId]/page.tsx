@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { notFound } from 'next/navigation';
 import { executeGraphql } from '@/lib/server/graphql';
 import { CrawlerResponseDocument } from '@/graphql/Crawler';
@@ -48,12 +49,12 @@ export default async function ResponsePage({
           { label: frontierTitle, href: `/admin/crawler/${id}` },
         ]}
       />
-      <dl className="text-sm tabular">
-        <dt>url</dt>
-        <dd>{response.url}</dd>
-        <dt>http</dt>
-        <dd>{response.httpStatus ?? '-'}</dd>
-      </dl>
+      <DefinitionList
+        items={{
+          url: response.url,
+          http: response.httpStatus ?? '-',
+        }}
+      />
       {response.error && (
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}

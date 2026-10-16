@@ -6436,6 +6436,8 @@ export type FederationEventCondition = {
   floorSize?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `geoReference` field. */
   geoReference?: InputMaybe<Scalars['String']['input']>;
+  hasCoordinates?: InputMaybe<Scalars['Boolean']['input']>;
+  hasResults?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;

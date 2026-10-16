@@ -1,5 +1,6 @@
 'use client';
 
+import { DefinitionList } from '@/ui/DefinitionList';
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
@@ -46,44 +47,18 @@ export function Scoreboard() {
       <div className="space-y-4">
         <section>
           <p>Skóre se skládá z:</p>
-          <dl className="tabular text-sm">
-            <div>
-              <dt>Individuální lekce</dt>
-              <dd>1b, max. 4b/týden</dd>
-            </div>
-            <div>
-              <dt>Pohybovka, performance</dt>
-              <dd>1b</dd>
-            </div>
-            <div>
-              <dt>Vedená hodina</dt>
-              <dd>1b</dd>
-            </div>
-            <div>
-              <dt>Practice</dt>
-              <dd>2b</dd>
-            </div>
-            <div>
-              <dt>Jednodenní klubová akce</dt>
-              <dd>3b</dd>
-            </div>
-            <div>
-              <dt>Vícedenní klubová akce</dt>
-              <dd>5b</dd>
-            </div>
-            <div>
-              <dt>Účast na soutěži</dt>
-              <dd>
-                <s>2b</s>
-              </dd>
-            </div>
-            <div>
-              <dt>Sportovní aktivita</dt>
-              <dd>
-                <s>1b</s>
-              </dd>
-            </div>
-          </dl>
+          <DefinitionList
+            items={{
+              'Individuální lekce': '1b, max. 4b/týden',
+              'Pohybovka, performance': '1b',
+              'Vedená hodina': '1b',
+              Practice: '2b',
+              'Jednodenní klubová akce': '3b',
+              'Vícedenní klubová akce': '5b',
+              'Účast na soutěži': <s>2b</s>,
+              'Sportovní aktivita': <s>1b</s>,
+            }}
+          />
         </section>
 
         <section className="not-prose rounded-lg border border-neutral-6 p-4 space-y-4">

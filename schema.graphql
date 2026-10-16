@@ -8209,6 +8209,8 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `geoReference` field."""
   geoReference: String
+  hasCoordinates: Boolean
+  hasResults: Boolean
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt

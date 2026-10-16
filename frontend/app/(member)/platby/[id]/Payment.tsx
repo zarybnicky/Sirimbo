@@ -2,6 +2,7 @@
 
 import { PaymentDocument } from '@/graphql/Payment';
 import { slugify } from '@/lib/slugify';
+import { DefinitionList } from '@/ui/DefinitionList';
 import { EventButton } from '@/ui/EventButton';
 import { moneyFormatter, numericFullFormatter } from '@/ui/format';
 import { cardCls } from '@/ui/style';
@@ -32,26 +33,19 @@ export function Payment({ id }: { id: string }) {
       {!fetching && !error && !payment && <p>Platba nebyla nalezena.</p>}
       {payment && (
         <div className="space-y-4">
-          <dl className="text-sm tabular">
-            <dt>ID</dt>
-            <dd>{payment.id}</dd>
-            <dt>Stav</dt>
-            <dd>{payment.status}</dd>
-            <dt>Vytvořena</dt>
-            <dd>{numericFullFormatter.format(new Date(payment.createdAt))}</dd>
-            <dt>Splatnost</dt>
-            {payment.dueAt && (
-              <dd>{numericFullFormatter.format(new Date(payment.dueAt))}</dd>
-            )}
-            <dt>Uhrazena</dt>
-            {payment.paidAt && (
-              <dd>{numericFullFormatter.format(new Date(payment.paidAt))}</dd>
-            )}
-            <dt>Variabilní symbol</dt>
-            <dd>{payment.variableSymbol}</dd>
-            <dt>Specifický symbol</dt>
-            <dd>{payment.specificSymbol}</dd>
-          </dl>
+          <DefinitionList
+            items={{
+              ID: payment.id,
+              Stav: payment.status,
+              Vytvořena: numericFullFormatter.format(new Date(payment.createdAt)),
+              Splatnost:
+                payment.dueAt && numericFullFormatter.format(new Date(payment.dueAt)),
+              Uhrazena:
+                payment.paidAt && numericFullFormatter.format(new Date(payment.paidAt)),
+              'Variabilní symbol': payment.variableSymbol,
+              'Specifický symbol': payment.specificSymbol,
+            }}
+          />
 
           {payment.cohortSubscription && (
             <div>

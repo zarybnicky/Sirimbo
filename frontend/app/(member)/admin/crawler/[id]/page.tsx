@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { notFound } from 'next/navigation';
 import { executeGraphql } from '@/lib/server/graphql';
 import { CrawlerTargetDocument } from '@/graphql/Crawler';
@@ -43,29 +44,26 @@ export default async function FrontierPage({
           },
         ]}
       />
-      <dl className="text-sm tabular">
-        <dt>id</dt>
-        <dd>{frontier.id}</dd>
-        <dt>fetch status</dt>
-        <dd>{frontier.fetchStatus.toLowerCase()}</dd>
-        <dt>process status</dt>
-        <dd>{frontier.processStatus.toLowerCase()}</dd>
-        <dt>error count</dt>
-        <dd>{frontier.errorCount}</dd>
-        {(
-          [
-            ['discovered', frontier.discoveredAt],
-            ['last fetched', frontier.lastFetchedAt],
-            ['next fetch', frontier.nextFetchAt],
-            ['last process error', frontier.lastProcessErrorAt],
-          ] as const
-        ).map(([label, date]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{date ? numericFullFormatter.format(new Date(date)) : '-'}</dd>
-          </div>
-        ))}
-      </dl>
+      <DefinitionList
+        items={{
+          id: frontier.id,
+          'fetch status': frontier.fetchStatus.toLowerCase(),
+          'process status': frontier.processStatus.toLowerCase(),
+          'error count': frontier.errorCount,
+          discovered: frontier.discoveredAt
+            ? numericFullFormatter.format(new Date(frontier.discoveredAt))
+            : '-',
+          'last fetched': frontier.lastFetchedAt
+            ? numericFullFormatter.format(new Date(frontier.lastFetchedAt))
+            : '-',
+          'next fetch': frontier.nextFetchAt
+            ? numericFullFormatter.format(new Date(frontier.nextFetchAt))
+            : '-',
+          'last process error': frontier.lastProcessErrorAt
+            ? numericFullFormatter.format(new Date(frontier.lastProcessErrorAt))
+            : '-',
+        }}
+      />
       {frontier.lastProcessError && (
         <pre className="whitespace-pre-wrap break-all text-sm">
           {frontier.lastProcessError}

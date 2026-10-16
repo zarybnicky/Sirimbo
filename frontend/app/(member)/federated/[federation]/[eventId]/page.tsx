@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -61,30 +62,24 @@ export default async function EventPage({ params }: Props) {
           },
         ]}
       />
-      <dl className="text-sm tabular">
-        {federation === 'csts' && (
-          <>
-            <dt>Zdroj</dt>
-            <dd>
-              <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>
-            </dd>
-          </>
-        )}
-        <dt>Stav</dt>
-        <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
-        <dt>Místo konání</dt>
-        <dd>
-          {[
-            event.location,
-            event.streetAddress,
-            event.city,
-            event.postalCode,
-            event.country,
-          ]
-            .filter(Boolean)
-            .join(', ') || '-'}
-        </dd>
-      </dl>
+      <DefinitionList
+        items={{
+          Zdroj: federation === 'csts' && (
+            <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>
+          ),
+          Stav: event.status.toLowerCase().replaceAll('_', ' '),
+          'Místo konání':
+            [
+              event.location,
+              event.streetAddress,
+              event.city,
+              event.postalCode,
+              event.country,
+            ]
+              .filter(Boolean)
+              .join(', ') || '-',
+        }}
+      />
 
       <Competitions federation={federation} eventId={eventId} />
       <Officials federation={federation} officials={event.officials.nodes} />

@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { formatCategoryName } from '@/ui/csts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -92,10 +93,9 @@ export default async function RoundPage({ params }: Props) {
         current={round.roundKey}
       />
 
-      <dl className="text-sm tabular">
-        <dt>Typ hodnocení</dt>
-        <dd>{scoringMethodLabels[round.scoringMethod]}</dd>
-      </dl>
+      <DefinitionList
+        items={{ 'Typ hodnocení': scoringMethodLabels[round.scoringMethod] }}
+      />
 
       <Results
         key={round.id}

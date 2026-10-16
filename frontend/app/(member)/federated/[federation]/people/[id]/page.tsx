@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -66,50 +67,26 @@ export default async function FederatedPersonPage({ params }: Props) {
         ]}
       />
 
-      <dl className="text-sm tabular">
-        <dt>ID</dt>
-        <dd>{person.externalId}</dd>
-        {federation === 'csts' && (
-          <>
-            <dt>Zdroj</dt>
-            <dd>
-              <a
-                href={`https://www.csts.cz/dancesport/evidence/lide/${person.externalId}/osobni_udaje`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 text-accent-11 underline"
-              >
-                ČSTS profile
-                <ExternalLink className="size-3.5" aria-hidden="true" />
-              </a>
-            </dd>
-          </>
-        )}
-        {person.dob && (
-          <>
-            <dt>Datum narození</dt>
-            <dd>{formatDateOnly(person.dob)}</dd>
-          </>
-        )}
-        {person.gender && (
-          <>
-            <dt>Pohlaví</dt>
-            <dd>{person.gender.toLowerCase()}</dd>
-          </>
-        )}
-        {person.nationality && (
-          <>
-            <dt>Národnost</dt>
-            <dd>{person.nationality}</dd>
-          </>
-        )}
-        {person.ageGroup && (
-          <>
-            <dt>Věk</dt>
-            <dd>{formatAgeGroup(person.ageGroup)}</dd>
-          </>
-        )}
-      </dl>
+      <DefinitionList
+        items={{
+          ID: person.externalId,
+          Zdroj: federation === 'csts' && (
+            <a
+              href={`https://www.csts.cz/dancesport/evidence/lide/${person.externalId}/osobni_udaje`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-accent-11 underline"
+            >
+              ČSTS profile
+              <ExternalLink className="size-3.5" aria-hidden="true" />
+            </a>
+          ),
+          'Datum narození': person.dob && formatDateOnly(person.dob),
+          Pohlaví: person.gender?.toLowerCase(),
+          Národnost: person.nationality,
+          Věk: person.ageGroup && formatAgeGroup(person.ageGroup),
+        }}
+      />
 
       {person.peopleList.length > 0 && (
         <>

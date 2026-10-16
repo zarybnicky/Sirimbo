@@ -1,3 +1,4 @@
+import { DefinitionList } from '@/ui/DefinitionList';
 import { PostingFragment } from '@/graphql/Payment';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
 import { useActionMap } from '@/lib/actions';
@@ -39,27 +40,24 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
           {x.payment?.cohortSubscription && (
             <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.name}</h4>
           )}
-          <dl className="not-prose mb-2">
-            <dt>Částka</dt>
-            <dd>{moneyFormatter.format(x.price)}</dd>
-            <dt>Účet</dt>
-            <dd>{query.data?.tenant?.bankAccount || '-'}</dd>
-            <dt>Variabilní symbol</dt>
-            <dd>{x.payment?.variableSymbol}</dd>
-            <dt>Specifický symbol</dt>
-            <dd>{x.payment?.specificSymbol}</dd>
-            <dt>Zpráva</dt>
-            <dd>
-              {person.firstName} {person.lastName},{' '}
-              {x.payment?.cohortSubscription?.cohort?.name ?? describePosting(x.payment)}
-            </dd>
-            {x.payment?.dueAt && (
-              <>
-                <dt>Splatnost</dt>
-                <dd>{fullDateFormatter.format(new Date(x.payment?.dueAt))}</dd>
-              </>
-            )}
-          </dl>
+          <DefinitionList
+            className="not-prose mb-2"
+            items={{
+              Částka: moneyFormatter.format(x.price),
+              Účet: query.data?.tenant?.bankAccount || '-',
+              'Variabilní symbol': x.payment?.variableSymbol,
+              'Specifický symbol': x.payment?.specificSymbol,
+              Zpráva: (
+                <>
+                  {person.firstName} {person.lastName},{' '}
+                  {x.payment?.cohortSubscription?.cohort?.name ??
+                    describePosting(x.payment)}
+                </>
+              ),
+              Splatnost:
+                x.payment?.dueAt && fullDateFormatter.format(new Date(x.payment.dueAt)),
+            }}
+          />
 
           {query.data?.tenant?.bankAccount && x.price?.amount && (
             <div className="border-4 border-transparent dark:border-white w-fit">

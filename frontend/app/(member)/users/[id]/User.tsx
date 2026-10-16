@@ -1,5 +1,6 @@
 'use client';
 
+import { DefinitionList } from '@/ui/DefinitionList';
 import { UserDetailDocument } from '@/graphql/CurrentUser';
 import { useActionMap, useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
@@ -44,31 +45,26 @@ export function User({ id }: { id: string }) {
 
       {user && (
         <div className="space-y-6">
-          <dl className="tabular text-sm">
-            <dt>ID</dt>
-            <dd>{user.id}</dd>
-            <dt>E-mail</dt>
-            <dd>
-              <a className="underline" href={`mailto:${user.uEmail}`}>
-                {user.uEmail}
-              </a>
-            </dd>
-            <dt>Jméno</dt>
-            <dd>{[user.uJmeno, user.uPrijmeni].filter(Boolean).join(' ')}</dd>
-            <dt>Vytvořen</dt>
-            <dd>{numericFullFormatter.format(new Date(user.createdAt))}</dd>
-            <dt>Poslední přihlášení</dt>
-            {user.lastLogin && (
-              <dd>{numericFullFormatter.format(new Date(user.lastLogin))}</dd>
-            )}
-            <dt>Naposledy aktivní</dt>
-            {user.lastActiveAt && (
-              <dd>
-                {numericFullFormatter.format(new Date(user.lastActiveAt))}
-                {` (${user.lastVersion})`}
-              </dd>
-            )}
-          </dl>
+          <DefinitionList
+            items={{
+              ID: user.id,
+              'E-mail': (
+                <a className="underline" href={`mailto:${user.uEmail}`}>
+                  {user.uEmail}
+                </a>
+              ),
+              Jméno: [user.uJmeno, user.uPrijmeni].filter(Boolean).join(' '),
+              Vytvořen: numericFullFormatter.format(new Date(user.createdAt)),
+              'Poslední přihlášení':
+                user.lastLogin && numericFullFormatter.format(new Date(user.lastLogin)),
+              'Naposledy aktivní': user.lastActiveAt && (
+                <>
+                  {numericFullFormatter.format(new Date(user.lastActiveAt))}
+                  {` (${user.lastVersion})`}
+                </>
+              ),
+            }}
+          />
 
           <section>
             <div className="flex justify-between items-baseline flex-wrap gap-4">

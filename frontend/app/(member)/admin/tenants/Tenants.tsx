@@ -1,5 +1,6 @@
 'use client';
 
+import { DefinitionList } from '@/ui/DefinitionList';
 import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { FormError } from '@/ui/form';
@@ -163,16 +164,15 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
       </div>
       <p className="whitespace-pre-wrap text-sm text-neutral-12">{tenant.description}</p>
 
-      <dl className="text-sm text-neutral-12">
-        <dt>Bankovní účet</dt>
-        <dd>{tenant.bankAccount || '-'}</dd>
-        <dt>Domény</dt>
-        <dd>{tenant.origins?.join(', ') ?? '-'}</dd>
-        <dt>IČO / DIČ</dt>
-        <dd>{[tenant.czIco ?? '-', tenant.czDic].filter(Boolean).join(' / ')}</dd>
-        <dt>Adresa</dt>
-        <dd>{formatAddress(tenant.address) || '-'}</dd>
-      </dl>
+      <DefinitionList
+        className="text-sm text-neutral-12"
+        items={{
+          'Bankovní účet': tenant.bankAccount || '-',
+          Domény: tenant.origins?.join(', ') ?? '-',
+          'IČO / DIČ': [tenant.czIco ?? '-', tenant.czDic].filter(Boolean).join(' / '),
+          Adresa: formatAddress(tenant.address) || '-',
+        }}
+      />
     </div>
   );
 }
