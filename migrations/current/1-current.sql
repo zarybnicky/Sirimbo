@@ -606,3 +606,10 @@ WHERE federation = 'wdsf' AND kind = 'participant' AND process_status = 'error'
 drop function if exists public.person_csts_candidates(public.person, integer, real);
 
 --!include functions/person_federation_candidates.sql
+
+create index if not exists event_instance_registration_active_person_idx
+  on event_instance_registration (tenant_id, person_id)
+  include (instance_id, status)
+  where registration_status = 'active';
+
+--!include views/person_last_activity.sql

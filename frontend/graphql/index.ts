@@ -8841,6 +8841,8 @@ export type Person = {
   isAdmin: Maybe<Scalars['Boolean']['output']>;
   isMember: Maybe<Scalars['Boolean']['output']>;
   isTrainer: Maybe<Scalars['Boolean']['output']>;
+  /** Reads a single `PersonLastActivity` that is related to this `Person`. */
+  lastActivity: Maybe<PersonLastActivity>;
   lastName: Scalars['String']['output'];
   name: Scalars['String']['output'];
   nationalIdNumber: Maybe<Scalars['String']['output']>;
@@ -9276,6 +9278,18 @@ export type PersonInvitationsOrderBy =
   | 'UPDATED_AT_DESC'
   | 'USED_AT_ASC'
   | 'USED_AT_DESC';
+
+export type PersonLastActivity = {
+  __typename?: 'PersonLastActivity';
+  cardEntryAt: Maybe<Scalars['Datetime']['output']>;
+  competitionOn: Maybe<Scalars['Date']['output']>;
+  /** Reads a single `Person` that is related to this `PersonLastActivity`. */
+  person: Maybe<Person>;
+  personId: Scalars['BigInt']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  trainingAt: Maybe<Scalars['Datetime']['output']>;
+  webAt: Maybe<Scalars['Datetime']['output']>;
+};
 
 export type PersonLicenseDiscipline =
   | 'BREAKING'
@@ -13798,6 +13812,7 @@ export type GraphCacheKeysConfig = {
   Person?: (data: WithTypename<Person>) => null | string,
   PersonFederationCandidatesRecord?: (data: WithTypename<PersonFederationCandidatesRecord>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
+  PersonLastActivity?: (data: WithTypename<PersonLastActivity>) => null | string,
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
   Ranklist?: (data: WithTypename<Ranklist>) => null | string,
@@ -15734,6 +15749,7 @@ export type GraphCacheResolvers = {
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    lastActivity?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<PersonLastActivity> | string>,
     lastName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     nationalIdNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15775,6 +15791,15 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     usedAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  PersonLastActivity?: {
+    cardEntryAt?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    competitionOn?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['Date']['output'] | string>,
+    person?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, WithTypename<Person> | string>,
+    personId?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    tenantId?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    trainingAt?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    webAt?: GraphCacheResolver<WithTypename<PersonLastActivity>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   Posting?: {
     account?: GraphCacheResolver<WithTypename<Posting>, Record<string, never>, WithTypename<Account> | string>,
@@ -18380,6 +18405,7 @@ export type GraphCacheUpdaters = {
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    lastActivity?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     nationalIdNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -18421,6 +18447,15 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     usedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>
+  },
+  PersonLastActivity?: {
+    cardEntryAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    competitionOn?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    trainingAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>,
+    webAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonLastActivity>>, Record<string, never>>
   },
   Posting?: {
     account?: GraphCacheUpdateResolver<Maybe<WithTypename<Posting>>, Record<string, never>>,

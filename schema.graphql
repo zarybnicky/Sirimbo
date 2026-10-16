@@ -11334,6 +11334,9 @@ type Person {
   isAdmin: Boolean
   isMember: Boolean
   isTrainer: Boolean
+
+  """Reads a single `PersonLastActivity` that is related to this `Person`."""
+  lastActivity: PersonLastActivity
   lastName: String!
   name: String!
   nationalIdNumber: String
@@ -11770,6 +11773,18 @@ enum PersonInvitationsOrderBy {
   UPDATED_AT_DESC
   USED_AT_ASC
   USED_AT_DESC
+}
+
+type PersonLastActivity {
+  cardEntryAt: Datetime
+  competitionOn: Date
+
+  """Reads a single `Person` that is related to this `PersonLastActivity`."""
+  person: Person
+  personId: BigInt!
+  tenantId: BigInt!
+  trainingAt: Datetime
+  webAt: Datetime
 }
 
 enum PersonLicenseDiscipline {
