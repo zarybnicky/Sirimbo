@@ -4,9 +4,10 @@ import {
   type MissingFederationIdCandidatesQuery,
 } from '@/graphql/Person';
 import { FederationLink } from '@/ui/federation-links';
-import { formatAgeGroup } from '@/ui/csts';
+import { formatAgeGroup, type AgeRange } from '@/ui/csts';
 import { buttonCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { FormError } from './form';
@@ -38,12 +39,40 @@ export function FederationIdBackfillWidget({
     Record<string, Candidate>
   >({});
 
+  const ageRanges = new Map(
+    (data?.ageGroupsList ?? []).flatMap((group) =>
+      [group.code, ...group.aliases]
+        .filter(Boolean)
+        .map((alias) => [ageKey(alias), group.personAge ?? group.age]),
+    ),
+  );
   const people = (data?.people?.nodes ?? [])
-    .filter((person) => person[idField] == null || selectedByPerson[person.id])
-    .toSorted((a, b) => bestCandidateSimilarity(b) - bestCandidateSimilarity(a));
+    .filter((person) => person[idField] === null || selectedByPerson[person.id])
+    .map((person) => {
+      const selected = selectedByPerson[person.id];
+      return {
+        ...person,
+        candidates: (selected ? [selected] : (person.federationCandidatesList ?? []))
+          .map((candidate) => ({
+            ...candidate,
+            ageRank: ageMatchRank(
+              ageRanges.get(ageKey(person.ageGroup)),
+              ageRanges.get(ageKey(candidate.ageGroup)),
+            ),
+          }))
+          .filter((candidate) => candidate.id !== null && candidate.ageRank < 3)
+          .toSorted(
+            (a, b) => a.ageRank - b.ageRank || (b.similarity ?? 0) - (a.similarity ?? 0),
+          )
+          .slice(0, 10),
+      };
+    })
+    .toSorted(
+      (a, b) => (b.candidates[0]?.similarity ?? -1) - (a.candidates[0]?.similarity ?? -1),
+    );
 
   async function selectCandidate(person: Person, candidate: Candidate | null) {
-    if (candidate && candidate.id == null) return;
+    if (candidate && candidate.id === null) return;
     setPending(person.id);
     setMutationError(null);
     const result = await updatePerson({
@@ -68,7 +97,7 @@ export function FederationIdBackfillWidget({
 
       {fetching && !data ? (
         <div className="text-sm text-neutral-11">Načítám kandidáty...</div>
-      ) : people.length === 0 ? (
+      ) : !data?.people ? null : people.length === 0 ? (
         <div className="text-sm text-neutral-11">
           Všichni aktuální členové mají {federation === 'csts' ? 'ČSTS IDT' : 'WDSF MIN'}{' '}
           vyplněné.
@@ -77,9 +106,6 @@ export function FederationIdBackfillWidget({
         <div className="grid gap-2">
           {people.map((person) => {
             const selectedCandidate = selectedByPerson[person.id];
-            const candidates = selectedCandidate
-              ? [selectedCandidate]
-              : (person.federationCandidatesList ?? []);
 
             return (
               <div
@@ -87,7 +113,12 @@ export function FederationIdBackfillWidget({
                 className="grid gap-2 border-b border-neutral-4 py-3 text-sm"
               >
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <div className="font-bold">{person.name}</div>
+                  <Link
+                    href={`/clenove/${person.id}`}
+                    className="font-bold text-accent-11 underline"
+                  >
+                    {person.name}
+                  </Link>
                   <div className="text-neutral-11">
                     {[
                       formatAgeGroup(person.ageGroup),
@@ -99,12 +130,12 @@ export function FederationIdBackfillWidget({
                 </div>
 
                 <div className="grid gap-1">
-                  {candidates.length === 0 && (
+                  {person.candidates.length === 0 && (
                     <div className="text-neutral-11">Žádní kandidáti.</div>
                   )}
-                  {candidates.map(
+                  {person.candidates.map(
                     (candidate) =>
-                      candidate.id != null && (
+                      candidate.id !== null && (
                         <div
                           key={candidate.id}
                           className={`flex flex-wrap items-center justify-between gap-2 rounded-md px-2 py-1.5 ${selectedCandidate ? 'bg-accent-2 text-accent-12' : 'bg-neutral-2'}`}
@@ -127,7 +158,7 @@ export function FederationIdBackfillWidget({
                               {candidate.ageGroup && <span>{candidate.ageGroup}</span>}
                               <span>
                                 Shoda jména{' '}
-                                {candidate.similarity == null
+                                {candidate.similarity === null
                                   ? '-'
                                   : `${Math.round(candidate.similarity * 100)} %`}
                               </span>
@@ -164,11 +195,13 @@ export function FederationIdBackfillWidget({
   );
 }
 
-function bestCandidateSimilarity(person: Person) {
-  return Math.max(
-    -1,
-    ...(person.federationCandidatesList ?? []).map(
-      (candidate) => candidate.similarity ?? -1,
-    ),
-  );
+function ageKey(value: string | null) {
+  return value?.toLowerCase().replaceAll(/[^a-z0-9]/g, '') ?? '';
+}
+
+function ageMatchRank(a: AgeRange | null | undefined, b: AgeRange | null | undefined) {
+  if (!a || !b) return 1;
+  const start = Math.max(a.start?.value ?? -Infinity, b.start?.value ?? -Infinity);
+  const end = Math.min(a.end?.value ?? Infinity, b.end?.value ?? Infinity);
+  return start < end ? 0 : start === end ? 2 : 3;
 }

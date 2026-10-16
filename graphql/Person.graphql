@@ -205,6 +205,18 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
 }
 
 query MissingFederationIdCandidates($condition: PersonCondition!, $federation: String!) {
+  ageGroupsList {
+    code
+    aliases
+    personAge {
+      start { value }
+      end { value }
+    }
+    age {
+      start { value }
+      end { value }
+    }
+  }
   people(
     condition: $condition
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
@@ -216,7 +228,7 @@ query MissingFederationIdCandidates($condition: PersonCondition!, $federation: S
       cstsId
       wdsfId
       ageGroup
-      federationCandidatesList(federation: $federation, limit: 10, threshold: 0.4) {
+      federationCandidatesList(federation: $federation, limit: 50, threshold: 0.4) {
         id
         name
         ageGroup
