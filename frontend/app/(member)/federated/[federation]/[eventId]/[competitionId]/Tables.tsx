@@ -6,6 +6,7 @@ import type {
   CompetitionParticipantFragment,
   FederationCompetitionQuery,
 } from '@/graphql/Federation';
+import { cn } from '@/lib/cn';
 
 type Competition = NonNullable<FederationCompetitionQuery['competition']>;
 
@@ -17,22 +18,19 @@ export function Results({
   results: Competition['results'];
 }) {
   if (results.length === 0) return null;
-  const showPoints = results.some((result) => result.pointGain != null);
-  const showFinalGain = results.some((result) =>
-    federation === 'csts' ? result.isFinal : result.finalGain != null,
-  );
+  const showPoints = results.some((x) => !!x.pointGain);
+  const showLocalMatches = results.some(x => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length);
 
   return (
     <>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Results</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Výsledky</h2>
       <Table
         columns={[
-          'rank',
-          'start number',
-          'competitor',
-          showPoints && 'points',
-          showFinalGain && 'final gain',
-          'local matches',
+          'Umístění',
+          'Start. č.',
+          'Soutěžící',
+          showPoints && 'Body',
+          showLocalMatches && 'V klubu',
         ]}
       >
         {results.map((result) => {
@@ -61,22 +59,22 @@ export function Results({
                 {status && <div className="text-xs text-neutral-11">{status}</div>}
               </th>
               {showPoints && (
-                <td>{result.pointGain == null ? null : Number(result.pointGain)}</td>
-              )}
-              {showFinalGain && (
                 <td>
+                  {result.pointGain == null ? null : Number(result.pointGain)}
                   {federation === 'csts'
                     ? result.isFinal
-                      ? 'F'
+                      ? ' F'
                       : ''
                     : result.finalGain == null
                       ? null
                       : Number(result.finalGain)}
                 </td>
               )}
-              <td>
-                <LocalMatches participant={result.competitor} />
-              </td>
+              {showLocalMatches && (
+                <td>
+                  <LocalMatches participant={result.competitor} />
+                </td>
+              )}
             </tr>
           );
         })}
@@ -96,14 +94,19 @@ export function Registrations({
 }) {
   if (hasResults && entries.length === 0) return null;
 
+  const showLocalMatches = entries.some(x => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length);
+
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">
-        {hasResults ? 'Registrations without results' : 'Registrations'}
+        {hasResults ? 'No-show' : 'Přihlášení'}
       </h2>
       <Table
-        columns={['competitor', 'registration', 'local matches']}
-        empty="No registrations"
+        columns={[
+          'Jméno',
+          showLocalMatches && 'V klubu',
+        ]}
+        empty="Žádné přihlášky"
       >
         {entries.map(({ competitor, competitorId, cancelled }) => {
           return (
@@ -111,7 +114,7 @@ export function Registrations({
               <th scope="row">
                 {competitor ? (
                   <Link
-                    className="text-accent-11 underline"
+                    className={cn("text-accent-11 underline", cancelled ? 'line-through' : '')}
                     href={`/federated/${federation}/competitors/${competitor?.externalId}`}
                     prefetch={false}
                   >
@@ -121,10 +124,11 @@ export function Registrations({
                   competitorId
                 )}
               </th>
-              <td>{cancelled ? 'cancelled' : 'registered'}</td>
-              <td>
-                <LocalMatches participant={competitor} />
-              </td>
+              {showLocalMatches && (
+                <td>
+                  <LocalMatches participant={competitor} />
+                </td>
+              )}
             </tr>
           );
         })}

@@ -46,14 +46,15 @@ export default async function EventPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, eventId } = await params;
   const { event, title, date } = await getEvent(federation, eventId);
+
   return (
     <Layout requireUser>
       <PageHeader
         title={title}
         subtitle={date}
-        breadcrumbLabel="Event"
+        breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Federations', href: '/federated' },
+          { label: 'Organizace', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
@@ -63,15 +64,15 @@ export default async function EventPage({ params }: Props) {
       <dl className="text-sm tabular">
         {federation === 'csts' && (
           <>
-            <dt>source</dt>
+            <dt>Zdroj</dt>
             <dd>
               <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>
             </dd>
           </>
         )}
-        <dt>status</dt>
+        <dt>Stav</dt>
         <dd>{event.status.toLowerCase().replaceAll('_', ' ')}</dd>
-        <dt>venue</dt>
+        <dt>Místo konání</dt>
         <dd>
           {[
             event.location,
@@ -84,11 +85,10 @@ export default async function EventPage({ params }: Props) {
             .join(', ') || '-'}
         </dd>
       </dl>
+
       <Competitions federation={federation} eventId={eventId} />
       <Officials federation={federation} officials={event.officials.nodes} />
-      {auth.isSystemAdmin && (
-        <Sources federation={federation} condition={{ eventId: event.id }} hideEmpty />
-      )}
+      <Sources federation={federation} condition={{ eventId: event.id }} />
     </Layout>
   );
 }

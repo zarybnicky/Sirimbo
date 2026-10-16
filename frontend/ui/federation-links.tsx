@@ -30,10 +30,10 @@ export function FederationLink({
   );
 }
 
-export function LocalPersonLinks({ people }: { people: { id: string; name: string }[] }) {
+export function LocalPersonLinks({ people }: { people?: { id: string; name: string }[] }) {
   return (
     <>
-      {people.map((person, index) => (
+      {people?.map((person, index) => (
         <span key={person.id}>
           {index > 0 && ', '}
           <Link className="text-accent-11 underline" href={`/clenove/${person.id}`}>

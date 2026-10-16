@@ -44,11 +44,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CompetitionPage({ params }: Props) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
+
   const { federation, eventId, competitionId } = await params;
   const { event, competition } = await getCompetition(federation, eventId, competitionId);
   const title =
     formatCategoryName(federation, competition.category, competition.competitionType) ||
     competition.externalId;
+
   return (
     <Layout requireUser>
       <PageHeader
@@ -61,9 +63,9 @@ export default async function CompetitionPage({ params }: Props) {
             </span>
           </span>
         }
-        breadcrumbLabel="Competition"
+        breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Federations', href: '/federated' },
+          { label: 'Organizace', href: '/federated' },
           {
             label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
@@ -78,35 +80,45 @@ export default async function CompetitionPage({ params }: Props) {
         rounds={competition.rounds}
         href={`/federated/${federation}/${eventId}/${competitionId}`}
       />
+
       <dl className="text-sm tabular">
         {federation === 'csts' && (
           <>
-            <dt>source</dt>
+            <dt>Zdroj</dt>
             <dd>
               <CstsResultsLink
                 eventId={event.externalId}
                 competitionId={competition.externalId}
               >
-                ČSTS results
+                Výsledky
               </CstsResultsLink>
             </dd>
           </>
         )}
-        <dt>status</dt>
+        <dt>Stav</dt>
         <dd>{competition.status.toLowerCase().replaceAll('_', ' ')}</dd>
-        <dt>type</dt>
-        <dd>{competition.competitionType?.toLowerCase().replaceAll('_', ' ') || '-'}</dd>
-        <dt>check-in end</dt>
-        <dd>{competition.checkInEnd?.slice(0, 5) || '-'}</dd>
-        <dt>participants reported</dt>
-        <dd>{competition.participantsTotal ?? '-'}</dd>
-        <dt>completed</dt>
-        <dd>
-          {competition.completedAt
-            ? dateTimeFormatter.format(new Date(competition.completedAt))
-            : '-'}
-        </dd>
+        {competition.competitionType && (
+          <>
+            <dt>Typ</dt>
+            <dd>{competition.competitionType?.toLowerCase().replaceAll('_', ' ') || '-'}</dd>
+          </>
+        )}
+        {competition.checkInEnd && (
+          <>
+            <dt>Konec prezence</dt>
+            <dd>{competition.checkInEnd?.slice(0, 5) || '-'}</dd>
+          </>
+        )}
+        <dt>Účastníků</dt>
+        <dd>{competition.participantsTotal ?? competition.results.length ?? '-'}</dd>
+        {competition.completedAt && (
+          <>
+            <dt>Dokončena v</dt>
+            <dd>{dateTimeFormatter.format(new Date(competition.completedAt))}</dd>
+          </>
+        )}
       </dl>
+
       <Results federation={federation} results={competition.results} />
       <Registrations
         federation={federation}
@@ -123,9 +135,7 @@ export default async function CompetitionPage({ params }: Props) {
           competition.rounds.length === 0
         }
       />
-      {auth.isSystemAdmin && (
-        <Sources federation={federation} condition={{ competitionId: competition.id }} />
-      )}
+      <Sources federation={federation} condition={{ competitionId: competition.id }} />
     </Layout>
   );
 }

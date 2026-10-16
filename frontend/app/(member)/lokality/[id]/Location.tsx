@@ -66,7 +66,7 @@ export function Location({
           ) : undefined
         }
         actions={actions}
-        breadcrumbLabel="Lokalita"
+        breadcrumbLabel="Místo"
         breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }]}
       />
 

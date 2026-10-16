@@ -292,9 +292,7 @@ function TimelineDay({
               Narozeniny
             </div>
             <div className="text-sm">
-              <LocalPersonLinks
-                people={birthdayItems.flatMap((item) => item.person ?? [])}
-              />
+              <LocalPersonLinks people={birthdayItems.flatMap((x) => x.person ?? [])} />
             </div>
           </div>
         )}

@@ -17,37 +17,28 @@ export function Competitors({
 }) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: FederationPersonCompetitorsDocument,
-    variables: (offset) => ({
-      federation,
-      externalId,
-      competitorsOffset: offset,
-    }),
+    variables: (offset) => ({ federation, externalId, competitorsOffset: offset }),
     limit: 100,
     getTotal: (data) =>
       data?.federationPersonByFederationAndExternalId?.competitorComponents?.totalCount,
   });
-  const competitors =
-    data?.federationPersonByFederationAndExternalId?.competitorComponents;
-  const base = `/federated/${federation}`;
   if (error) return <FormError error={error} />;
-  if (!competitors) return <Spinner />;
+  if (!data || fetching) return <Spinner />;
+
+  const competitors =
+    data.federationPersonByFederationAndExternalId?.competitorComponents.nodes || [];
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
-      <h2 className="mt-4 mb-2 text-lg font-bold">Competitors</h2>
-      <Table columns={['competitor', 'type', 'role']} empty="No competitors">
-        {competitors.nodes.map(({ competitorId, competitor, role }) => (
+      <h2 className="mt-4 mb-2 text-lg font-bold">Soutěžící</h2>
+      <Table columns={['Soutěžící', 'Typ', 'Role']} empty="Žádní soutěžící">
+        {competitors.map(({ competitorId, competitor, role }) => (
           <tr key={competitorId} className="border-t border-neutral-4">
             <th scope="row">
               {competitor ? (
                 <Link
                   className="text-accent-11 underline"
-                  href={`${base}/competitors/${competitor.externalId}`}
+                  href={`/federated/${federation}/competitors/${competitor.externalId}`}
                 >
                   {competitor.name || competitorId}
                 </Link>

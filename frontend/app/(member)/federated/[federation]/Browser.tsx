@@ -146,7 +146,7 @@ export function Browser({ federation }: { federation: string }) {
         <Events {...props} />
       </Tab>
       <Tab id="people" title="Lidé">
-        <People {...props} />
+        <People key={federation} {...props} />
       </Tab>
       <Tab id="competitors" title="Soutěžící">
         <Competitors key={federation} {...props} />

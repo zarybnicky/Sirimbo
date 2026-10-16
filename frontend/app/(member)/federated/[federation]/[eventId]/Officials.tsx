@@ -20,32 +20,30 @@ export function Officials({
   showJudges?: boolean;
 }) {
   const rows = officials
-    .filter((official) => showJudges || official.role !== 'ADJUDICATOR')
+    .filter((x) => showJudges || x.role !== 'ADJUDICATOR')
     .toSorted(
       (a, b) =>
         a.role.localeCompare(b.role) ||
-        (a.person?.canonicalName ?? a.personId).localeCompare(
-          b.person?.canonicalName ?? b.personId,
-        ) ||
+        (a.person?.canonicalName ?? '').localeCompare(b.person?.canonicalName ?? '') ||
         (a.discipline ?? '').localeCompare(b.discipline ?? ''),
     );
   if (rows.length === 0) return null;
-  const showDiscipline = rows.some((official) => official.discipline);
-  const showGrade = rows.some((official) => official.grade);
-  const showLabel = rows.some((official) => official.judgeLabel);
-  const showMatches = rows.some((official) => official.person?.peopleList.length);
+  const showDiscipline = rows.some((x) => x.discipline);
+  const showGrade = rows.some((x) => x.grade);
+  const showLabel = rows.some((x) => x.judgeLabel);
+  const showLocalMatches = rows.some((x) => x.person?.peopleList.length);
 
   return (
     <>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Officials</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Funkcionáři</h2>
       <Table
         columns={[
-          'role',
-          'person',
-          showMatches && 'local matches',
-          showLabel && 'label',
-          showDiscipline && 'discipline',
-          showGrade && 'grade',
+          'Role',
+          'Jméno',
+          showLabel && 'Popis',
+          showDiscipline && 'Disciplína',
+          showGrade && 'Třída',
+          showLocalMatches && 'V klubu',
         ]}
       >
         {rows.map((official) => (
@@ -72,16 +70,14 @@ export function Officials({
                 official.personId
               )}
             </th>
-            {showMatches && (
-              <td>
-                {official.person && (
-                  <LocalPersonLinks people={official.person.peopleList} />
-                )}
-              </td>
-            )}
             {showLabel && <td>{official.judgeLabel}</td>}
             {showDiscipline && <td>{official.discipline}</td>}
             {showGrade && <td>{official.grade}</td>}
+            {showLocalMatches && (
+              <td>
+                <LocalPersonLinks people={official.person?.peopleList} />
+              </td>
+            )}
           </tr>
         ))}
       </Table>

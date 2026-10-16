@@ -17,12 +17,11 @@ type Props = {
   params: Promise<{ federation: string; id: string }>;
 };
 
-const getCompetitor = cache(async (federation: string, externalId: string) => {
-  if (!/^[a-zA-Z0-9-]{1,64}$/.test(externalId)) notFound();
-  const id = `${federation}:${externalId}`;
+const getCompetitor = cache(async (federation: string, id: string) => {
+  if (!/^[a-zA-Z0-9-]{1,64}$/.test(id)) notFound();
   const { federationCompetitor: competitor } = await executeGraphql(
     FederationCompetitorDocument,
-    { id },
+    { id: `${federation}:${id}` },
   );
   if (!competitor) notFound();
   return competitor;
@@ -42,28 +41,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CompetitorPage({ params }: Props) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
+
   const { federation, id: externalId } = await params;
   const competitor = await getCompetitor(federation, externalId);
-  const id = competitor.id;
-  const title = competitor.name || competitor.id;
-  const base = `/federated/${federation}`;
+
   return (
     <Layout requireUser>
       <PageHeader
-        title={title}
-        breadcrumbLabel="Competitor"
+        title={competitor.name || competitor.id}
+        breadcrumbLabel="Soutěžící"
         breadcrumbs={[
-          { label: 'Federations', href: '/federated' },
+          { label: 'Organizace', href: '/federated' },
           {
             label: competitor.federationByFederation?.name ?? federation,
-            href: `${base}?view=competitors`,
+            href: `/federated/${federation}?view=competitors`,
           },
         ]}
       />
       <dl className="text-sm tabular">
-        <dt>type</dt>
+        <dt>ID</dt>
+        <dd>{externalId}</dd>
+        <dt>Typ</dt>
         <dd>{competitor.competitorType.toLowerCase()}</dd>
-        <dt>age group</dt>
+        <dt>Věk</dt>
         <dd>{formatAgeGroup(competitor.ageGroup) || '-'}</dd>
       </dl>
 
@@ -71,7 +71,7 @@ export default async function CompetitorPage({ params }: Props) {
 
       {competitor.couplesList.length > 0 && (
         <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
+          <h2 className="mt-4 mb-2 text-lg font-bold">V klubu</h2>
           <Table columns={['couple', 'partnership']}>
             {competitor.couplesList.map((couple) => (
               <tr key={couple.id} className="border-t border-neutral-4">
@@ -86,8 +86,8 @@ export default async function CompetitorPage({ params }: Props) {
           </Table>
         </>
       )}
-      <Members federation={federation} id={id} />
-      <History federation={federation} id={id} />
+      <Members federation={federation} id={competitor.id} />
+      <History federation={federation} id={competitor.id} />
     </Layout>
   );
 }

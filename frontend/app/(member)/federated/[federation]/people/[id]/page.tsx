@@ -23,10 +23,7 @@ const getPerson = cache(async (federation: string, externalId: string) => {
   if (!/^[0-9]{1,18}$/.test(externalId)) notFound();
   const { federationPersonByFederationAndExternalId: person } = await executeGraphql(
     FederationPersonDocument,
-    {
-      federation,
-      externalId,
-    },
+    { federation, externalId },
   );
   if (!person) notFound();
   return {
@@ -54,25 +51,27 @@ export default async function FederatedPersonPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
   const { federation, id: externalId } = await params;
   const { person, name } = await getPerson(federation, externalId);
-  const matches = person.peopleList;
-  const base = `/federated/${federation}`;
+
   return (
     <Layout requireUser>
       <PageHeader
         title={name}
-        breadcrumbLabel="Person"
+        breadcrumbLabel="Osoba"
         breadcrumbs={[
-          { label: 'Federations', href: '/federated' },
+          { label: 'Organizace', href: '/federated' },
           {
             label: person.federationByFederation?.name ?? federation,
-            href: `${base}?view=people`,
+            href: `/federated/${federation}?view=people`,
           },
         ]}
       />
+
       <dl className="text-sm tabular">
+        <dt>ID</dt>
+        <dd>{person.externalId}</dd>
         {federation === 'csts' && (
           <>
-            <dt>source</dt>
+            <dt>Zdroj</dt>
             <dd>
               <a
                 href={`https://www.csts.cz/dancesport/evidence/lide/${person.externalId}/osobni_udaje`}
@@ -86,40 +85,37 @@ export default async function FederatedPersonPage({ params }: Props) {
             </dd>
           </>
         )}
-        <dt>date of birth</dt>
-        <dd>{person.dob ? formatDateOnly(person.dob) : '-'}</dd>
-        <dt>gender</dt>
-        <dd>{person.gender?.toLowerCase() || '-'}</dd>
-        <dt>nationality</dt>
-        <dd>{person.nationality || '-'}</dd>
-        <dt>age group</dt>
-        <dd>{formatAgeGroup(person.ageGroup) || '-'}</dd>
+        {person.dob && (
+          <>
+            <dt>Datum narození</dt>
+            <dd>{formatDateOnly(person.dob)}</dd>
+          </>
+        )}
+        {person.gender && (
+          <>
+            <dt>Pohlaví</dt>
+            <dd>{person.gender.toLowerCase()}</dd>
+          </>
+        )}
+        {person.nationality && (
+          <>
+            <dt>Národnost</dt>
+            <dd>{person.nationality}</dd>
+          </>
+        )}
+        {person.ageGroup && (
+          <>
+            <dt>Věk</dt>
+            <dd>{formatAgeGroup(person.ageGroup)}</dd>
+          </>
+        )}
       </dl>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Licences</h2>
-      <Table
-        columns={['kind', 'discipline', 'grade', 'status', 'valid until']}
-        empty="No licences"
-      >
-        {person.licenses.nodes.map((license) => (
-          <tr
-            key={`${license.kind}:${license.discipline}`}
-            className="border-t border-neutral-4"
-          >
-            <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
-            <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
-            <td>{license.grade || '-'}</td>
-            <td>{license.status.toLowerCase()}</td>
-            <td className="whitespace-nowrap tabular-nums">
-              {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
-            </td>
-          </tr>
-        ))}
-      </Table>
-      {matches.length > 0 && (
+
+      {person.peopleList.length > 0 && (
         <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">Local matches</h2>
+          <h2 className="mt-4 mb-2 text-lg font-bold">V klubu</h2>
           <Table columns={['person', 'active affiliations']}>
-            {matches.map((match) => (
+            {person.peopleList.map((match) => (
               <tr key={match.id} className="border-t border-neutral-4">
                 <th scope="row">
                   <Link
@@ -142,24 +138,45 @@ export default async function FederatedPersonPage({ params }: Props) {
                     ),
                   ]
                     .toSorted((a, b) => a.localeCompare(b))
-                    .join(', ') || 'No active affiliation'}
+                    .join(', ') || 'Mimo jakýkoli klub'}
                 </td>
               </tr>
             ))}
           </Table>
         </>
       )}
+
       <Competitors federation={federation} externalId={externalId} />
+
+      <h2 className="mt-4 mb-2 text-lg font-bold">Licence</h2>
+      <Table
+        columns={['Druh', 'Disciplína', 'Třída', 'Stav', 'Platná do']}
+        empty="Žádné licence"
+      >
+        {person.licenses.nodes.map((license) => (
+          <tr
+            key={`${license.kind}:${license.discipline}`}
+            className="border-t border-neutral-4"
+          >
+            <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
+            <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
+            <td>{license.grade || '-'}</td>
+            <td>{license.status.toLowerCase()}</td>
+            <td className="whitespace-nowrap tabular-nums">
+              {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
+            </td>
+          </tr>
+        ))}
+      </Table>
+
       {(person.eventOfficialAssignments.totalCount > 0 ||
         person.competitionOfficialAssignments.totalCount > 0) && (
         <OfficialAssignments federation={federation} id={person.id} />
       )}
-      {auth.isSystemAdmin && (
-        <Sources
-          federation={federation}
-          condition={{ federation, kind: 'member', key: person.externalId }}
-        />
-      )}
+      <Sources
+        federation={federation}
+        condition={{ federation, kind: 'member', key: person.externalId }}
+      />
     </Layout>
   );
 }

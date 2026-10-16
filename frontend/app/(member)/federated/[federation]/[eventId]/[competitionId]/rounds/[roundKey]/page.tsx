@@ -47,14 +47,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function RoundPage({ params }: Props) {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return <Layout requireUser />;
+
   const { federation, eventId, competitionId, roundKey } = await params;
   const { competition } = await getRound(federation, competitionId, roundKey);
+
   const round = competition?.round[0];
   if (!competition || competition.event?.externalId !== eventId || !round) notFound();
-  const href = `/federated/${federation}/${eventId}/${competitionId}`;
-  const hasNextRound =
-    competition.roundsList.findIndex((r) => r.id === round.id) <
-    competition.roundsList.length - 1;
+
   const startNumbers = new Map(
     competition.resultsList.map((r) => [r.competitorId, r.startNumber]),
   );
@@ -74,9 +73,9 @@ export default async function RoundPage({ params }: Props) {
             </span>
           </span>
         }
-        breadcrumbLabel="Competition"
+        breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Federations', href: '/federated' },
+          { label: 'Organizace', href: '/federated' },
           {
             label: competition.event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
@@ -87,19 +86,29 @@ export default async function RoundPage({ params }: Props) {
           },
         ]}
       />
-      <RoundNav href={href} rounds={competition.roundsList} current={round.roundKey} />
+      <RoundNav
+        href={`/federated/${federation}/${eventId}/${competitionId}`}
+        rounds={competition.roundsList}
+        current={round.roundKey}
+      />
+
       <dl className="text-sm tabular">
-        <dt>scoring method</dt>
+        <dt>Typ hodnocení</dt>
         <dd>{scoringMethodLabels[round.scoringMethod]}</dd>
       </dl>
+
       <Results
         key={round.id}
         federation={federation}
         round={round}
         startNumbers={startNumbers}
-        hasNextRound={hasNextRound}
+        hasNextRound={
+          competition.roundsList.findIndex((r) => r.id === round.id) <
+          competition.roundsList.length - 1
+        }
       />
-      <h2 className="mt-4 mb-2 text-lg font-bold">Judges</h2>
+
+      <h2 className="mt-4 mb-2 text-lg font-bold">Porota</h2>
       <dl className="text-sm tabular">
         {round.judgesList.map((judge) => (
           <div key={judge.personJudgeId}>
@@ -121,7 +130,7 @@ export default async function RoundPage({ params }: Props) {
                   </FederationLink>
                   {judge.personJudge.peopleList.length > 0 && (
                     <span className="ml-2 text-sm">
-                      Local: <LocalPersonLinks people={judge.personJudge.peopleList} />
+                      V klubu: <LocalPersonLinks people={judge.personJudge.peopleList} />
                     </span>
                   )}
                 </>

@@ -21,34 +21,27 @@ export function OfficialAssignments({
 }) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: FederationPersonOfficialAssignmentsDocument,
-    variables: (offset) => ({
-      id,
-      offset,
-    }),
+    variables: (offset) => ({ id, offset }),
     limit: 20,
     pageKey: 'officialsPage',
     getTotal: (data) => data?.federationEvents?.totalCount,
   });
-  const events = data?.federationEvents;
-  const base = `/federated/${federation}`;
+
   if (error) return <FormError error={error} />;
-  if (!events) return <Spinner />;
+  if (!data || fetching) return <Spinner />;
+  const events = data.federationEvents?.nodes || [];
 
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Official assignments</h2>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
-      <Table columns={['date', 'event', 'assignments']}>
-        {events.nodes.map((event) => {
+
+      <Table columns={['Datum', 'Soutěž', 'Role']}>
+        {events.map((event) => {
           const roles = [
             ...new Set([
-              ...event.officials.nodes.map((official) => official.role),
-              ...event.competitionsList.flatMap((competition) =>
-                competition.officials.nodes.map((official) => official.role),
+              ...event.officials.nodes.map((x) => x.role),
+              ...event.competitionsList.flatMap((comp) =>
+                comp.officials.nodes.map((x) => x.role),
               ),
             ]),
           ].toSorted();
@@ -57,7 +50,7 @@ export function OfficialAssignments({
               <td className="whitespace-nowrap">{formatDateOnly(event.startDate)}</td>
               <th scope="row">
                 <Link
-                  href={`${base}/${event.externalId}`}
+                  href={`/federated/${federation}/${event.externalId}`}
                   prefetch={false}
                   className={cn(
                     'text-accent-11',
@@ -69,21 +62,19 @@ export function OfficialAssignments({
               </th>
               <td className="space-y-2">
                 {roles.map((role) => {
-                  const competitions = event.competitionsList.filter((competition) =>
-                    competition.officials.nodes.some(
-                      (official) => official.role === role,
-                    ),
+                  const competitions = event.competitionsList.filter((comp) =>
+                    comp.officials.nodes.some((x) => x.role === role),
                   );
                   return (
                     <div key={role}>
                       {role.toLowerCase().replaceAll('_', ' ')}
                       {event.officials.nodes
-                        .filter((official) => official.role === role)
-                        .map((official) => (
-                          <span key={official.discipline} className="text-neutral-11">
-                            {[official.discipline, official.grade]
+                        .filter((x) => x.role === role)
+                        .map(({ discipline, grade }) => (
+                          <span key={discipline} className="text-neutral-11">
+                            {[discipline, grade]
                               .filter(Boolean)
-                              .map((value) => ` · ${value}`)
+                              .map((x) => ` · ${x}`)
                               .join('')}
                           </span>
                         ))}
@@ -91,34 +82,33 @@ export function OfficialAssignments({
                         <details>
                           <summary className="cursor-pointer text-neutral-11">
                             {competitions.length}{' '}
-                            {competitions.length === 1 ? 'competition' : 'competitions'}
+                            {competitions.length === 1 ? 'soutěž' : 'soutěží'}
                           </summary>
                           <ul className="space-y-1 mt-1">
-                            {competitions.map((competition) => (
-                              <li key={competition.id}>
+                            {competitions.map((comp) => (
+                              <li key={comp.id}>
                                 <Link
-                                  href={`${base}/${event.externalId}/${competition.externalId}`}
+                                  href={`/federated/${federation}/${event.externalId}/${comp.externalId}`}
                                   prefetch={false}
                                   className={cn(
                                     'text-accent-11',
-                                    competition.status === 'CANCELLED'
+                                    comp.status === 'CANCELLED'
                                       ? 'line-through'
                                       : 'underline',
                                   )}
                                 >
                                   {formatCategoryName(
                                     federation,
-                                    competition.category,
-                                    competition.competitionType,
-                                  ) || competition.externalId}
+                                    comp.category,
+                                    comp.competitionType,
+                                  ) || comp.externalId}
                                 </Link>
-                                {competition.startDate !== event.startDate &&
-                                  competition.startDate && (
-                                    <span className="text-neutral-11">
-                                      {' '}
-                                      · {formatDateOnly(competition.startDate)}
-                                    </span>
-                                  )}
+                                {comp.startDate !== event.startDate && comp.startDate && (
+                                  <span className="text-neutral-11">
+                                    {' '}
+                                    · {formatDateOnly(comp.startDate)}
+                                  </span>
+                                )}
                               </li>
                             ))}
                           </ul>
