@@ -101,8 +101,8 @@ function CategoryList({
   if (!person?.cstsId)
     return (
       <div className="flex justify-center">
-        <div className="px-2 border-2 border-neutral-8 rounded-full text-neutral-9 text-xs">
-          ? chybí IDT
+        <div className="px-1.5 border-2 border-neutral-8 rounded-full text-neutral-9 text-xs">
+          nemá IDT
         </div>
       </div>
     );
@@ -113,7 +113,6 @@ function CategoryList({
     <div className="flex flex-col leading-tight text-center">
       <div className="font-medium">
         {[
-          formatAgeGroup(person.ageGroup),
           formatClass(item.category?.class),
           item.category?.discipline === 'Standard_Latin'
             ? 'STT+LAT'
@@ -148,7 +147,7 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   );
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] pb-4">
+    <div className="grid grid-cols-[minmax(0,1fr)_max-content_max-content] gap-x-4 gap-y-3 lg:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content] pb-4">
       {members.map((membership) => (
         <div
           key={membership.id}
@@ -178,10 +177,13 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
             )}
           </ActionRow>
 
-          <div className="order-3 lg:order-2">
+          <div className="font-medium text-right">
+            {formatAgeGroup(membership.person?.ageGroup)}
+          </div>
+          <div>
             <CategoryList person={membership.person} discipline="Standard" />
           </div>
-          <div className="order-4 lg:order-3">
+          <div>
             <CategoryList person={membership.person} discipline="Latin" />
           </div>
         </div>
