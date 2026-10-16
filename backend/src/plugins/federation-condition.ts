@@ -8,6 +8,30 @@ type CategoryProgressCondition = {
 };
 
 const plugins: GraphileConfig.Plugin[] = [
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'event' },
+    'statuses',
+    (build) => ({
+      type: new build.graphql.GraphQLList(
+        new build.graphql.GraphQLNonNull(
+          build.getInputTypeByName('FederationEventStatus'),
+        ),
+      ),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      if (value === null || value === undefined) return null;
+      const statuses = value as string[];
+      return statuses.length
+        ? sql`${row}.status in (${sql.join(
+            statuses.map(
+              (status) =>
+                sql`${sqlValueWithCodec(status, TYPES.text)}::federated.event_status`,
+            ),
+            ', ',
+          )})`
+        : sql`false`;
+    },
+  ),
   extendSchema({
     typeDefs: `
       input CompetitorCategoryProgressCondition {
