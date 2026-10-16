@@ -34,6 +34,30 @@ const plugins: GraphileConfig.Plugin[] = [
     (value, { sql, sqlTableAlias: row }) =>
       value === false ? sql`${row}.status <> 'cancelled'` : null,
   ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'event' },
+    'hasResults',
+    (build) => ({ type: build.graphql.GraphQLBoolean }),
+    (value, { sql, sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const exists = sql`exists (
+        select 1 from federated.competition c
+        join federated.competition_result r on r.competition_id = c.id
+        where c.event_id = ${row}.id
+      )`;
+      return value ? exists : sql`not ${exists}`;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'event' },
+    'hasCoordinates',
+    (build) => ({ type: build.graphql.GraphQLBoolean }),
+    (value, { sql, sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const hasCoordinates = sql`(${row}.venue_lat is not null and ${row}.venue_lng is not null)`;
+      return value ? hasCoordinates : sql`not ${hasCoordinates}`;
+    },
+  ),
   extendSchema({
     typeDefs: `
       input CompetitorCategoryProgressCondition {
