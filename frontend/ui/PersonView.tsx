@@ -11,6 +11,7 @@ import { FederationLink } from '@/ui/federation-links';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 import { PageHeader } from '@/ui/PageHeader';
+import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
 import { PersonWorkReportView } from '@/ui/PersonWorkReportView';
@@ -31,7 +32,7 @@ export const PersonView = React.memo(function PersonView({
   const auth = useAuth();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
-    variables: { id },
+    variables: { id, includeActivity: auth.isTrainer },
     pause: !id,
   });
   const [tab, setTab] = useQueryState(
@@ -164,6 +165,12 @@ export const PersonView = React.memo(function PersonView({
         }
         actions={actions}
       />
+
+      {auth.isTrainer && item.lastActivity && (
+        <div className="-mt-2 mb-4">
+          <PersonActivityBadges activity={item.lastActivity} />
+        </div>
+      )}
 
       {socialLinks.length > 0 && (
         <div className="-mt-2 mb-4 flex flex-wrap gap-2">

@@ -114,9 +114,12 @@ query PersonPayments($id: BigInt!) {
   }
 }
 
-query PersonMemberships($id: BigInt!) {
+query PersonMemberships($id: BigInt!, $includeActivity: Boolean! = false) {
   person(id: $id) {
     ...PersonWithLinks
+    lastActivity @include(if: $includeActivity) {
+      ...PersonLastActivity
+    }
     ageGroup
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
       nodes {
