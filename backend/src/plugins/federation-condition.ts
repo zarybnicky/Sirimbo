@@ -8,6 +8,25 @@ type CategoryProgressCondition = {
 };
 
 const plugins: GraphileConfig.Plugin[] = [
+  ...([
+    ['ageGroups', 'age_group_code'],
+    ['genders', 'gender'],
+    ['nationalities', 'nationality'],
+  ] as const).map(([field, column]) => addPgTableCondition(
+    { schemaName: 'federated', tableName: 'person' },
+    field,
+    (build) => ({
+      type: new build.graphql.GraphQLList(new build.graphql.GraphQLNonNull(build.graphql.GraphQLString)),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      const values = value as string[] | null;
+      if (!values?.length) return null;
+      const expression = column === 'age_group_code'
+        ? sql`coalesce(${row}.age_group_code, nullif(${row}.age_group, ''), 'unknown')`
+        : sql`coalesce(nullif(${row}.${sql.identifier(column)}::text, ''), 'unknown')`;
+      return sql`${expression} in (${sql.join(values.map((v) => sqlValueWithCodec(v, TYPES.text)), ', ')})`;
+    },
+  )),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
     'includeCancelled',
