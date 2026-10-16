@@ -247,6 +247,31 @@ query MissingFederationIdCandidates($condition: PersonCondition!, $federation: S
   }
 }
 
+query FederationIdIssues($federation: String!) {
+  current: people(condition: { membership: { state: CURRENT } }) {
+    nodes { id }
+  }
+  former: people(condition: { membership: { state: FORMER } }) {
+    nodes { id }
+  }
+  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC, ID_ASC]) {
+    nodes {
+      id
+      name
+      birthDate
+      cstsId
+      wdsfId
+      federationPeople(first: 1, condition: { federation: $federation }) {
+        nodes {
+          id
+          canonicalName
+          dob
+        }
+      }
+    }
+  }
+}
+
 query PersonWithLinksList {
   people(condition: { membership: { state: CURRENT } }) {
     nodes {

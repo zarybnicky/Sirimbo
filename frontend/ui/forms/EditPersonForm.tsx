@@ -73,7 +73,7 @@ const Form = z.object({
     postalCode: z.string().nullish().prefault(''),
     region: z.string().nullish().prefault(''),
     street: z.string().nullish().prefault(''),
-  }),
+  }).nullish(),
 });
 
 export function EditPersonForm({ id }: { id: string }) {
@@ -107,7 +107,11 @@ export function EditPersonForm({ id }: { id: string }) {
     const result = await update({
       input: {
         id,
-        patch: values,
+        patch: {
+          ...values,
+          cstsId: values.cstsId ?? null,
+          wdsfId: values.wdsfId ?? null,
+        },
       },
     });
     if (!result.error) onSuccess();

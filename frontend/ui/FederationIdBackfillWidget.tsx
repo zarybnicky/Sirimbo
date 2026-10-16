@@ -11,6 +11,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { FormError } from './form';
+import { Spinner } from './Spinner';
 
 type Person = NonNullable<MissingFederationIdCandidatesQuery['people']>['nodes'][number];
 type Candidate = Person['federationCandidatesList'][number];
@@ -22,17 +23,16 @@ export function FederationIdBackfillWidget({
 }) {
   const idField = federation === 'csts' ? 'cstsId' : 'wdsfId';
   const idLabel = federation === 'csts' ? 'IDT' : 'MIN';
-  const [{ data, fetching, error }] = useQuery({
+  const [{ data, error }] = useQuery({
     query: MissingFederationIdCandidatesDocument,
     variables: {
       federation,
       condition: { [idField]: null, membership: { state: 'CURRENT' } },
     },
   });
-  const [{ error: mutationError }, updatePerson] = useMutation(
+  const [{ error: mutationError, fetching: saving }, updatePerson] = useMutation(
     UpdatePersonFederationIdDocument,
   );
-  const [pending, setPending] = React.useState<string | null>(null);
   const [selectedByPerson, setSelectedByPerson] = React.useState<
     Record<string, Candidate | null>
   >({});
@@ -65,27 +65,20 @@ export function FederationIdBackfillWidget({
     );
 
   async function selectCandidate(person: Person, candidate: Candidate | null) {
-    setPending(person.id);
     const result = await updatePerson({
       input: { id: person.id, patch: { [idField]: candidate?.id ?? null } },
     });
-    setPending(null);
     if (!result.error) {
       setSelectedByPerson((selected) => ({ ...selected, [person.id]: candidate }));
     }
   }
 
-  if (!data?.people) {
-    return fetching ? (
-      <div className="text-sm text-neutral-11">Načítám kandidáty...</div>
-    ) : (
-      <FormError error={mutationError ?? error} />
-    );
-  }
+  if (!data?.people) return error ? <FormError error={error} /> : <Spinner />;
 
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-2" aria-busy={saving}>
       <FormError error={mutationError ?? error} />
+      {saving && <Spinner />}
       {people.length === 0 && (
         <div className="text-sm text-neutral-11">
           Všichni aktuální členové mají {federation === 'csts' ? 'ČSTS IDT' : 'WDSF MIN'}{' '}
@@ -147,17 +140,13 @@ export function FederationIdBackfillWidget({
                 <button
                   type="button"
                   className={buttonCls({ size: 'sm', variant: 'outline' })}
-                  disabled={pending !== null}
+                  disabled={saving}
                   onClick={() =>
                     selectCandidate(person, person.selected ? null : candidate)
                   }
                 >
                   {person.selected ? <Undo2 /> : <Check />}
-                  {pending === person.id
-                    ? 'Ukládám...'
-                    : person.selected
-                      ? 'Zpět'
-                      : 'Vybrat'}
+                  {person.selected ? 'Zpět' : 'Vybrat'}
                 </button>
               </div>
             ))}
