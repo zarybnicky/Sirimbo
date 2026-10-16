@@ -1,3 +1,10 @@
+fragment PersonLastActivity on PersonLastActivity {
+  webAt
+  cardEntryAt
+  trainingAt
+  competitionOn
+}
+
 fragment PersonBasic on Person {
   id
   name

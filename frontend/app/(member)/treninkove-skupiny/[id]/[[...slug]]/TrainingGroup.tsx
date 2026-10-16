@@ -11,6 +11,7 @@ import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { PageHeader } from '@/ui/PageHeader';
+import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PeopleAccessOverview } from '@/ui/PeopleAccessOverview';
 import Link from 'next/link';
 import React from 'react';
@@ -34,7 +35,7 @@ export function TrainingGroup({
   );
   const [{ data }] = useQuery({
     query: CohortWithMembersDocument,
-    variables: { id: initialCohort.id },
+    variables: { id: initialCohort.id, includeActivity: auth.isTrainer },
   });
   const cohort = data?.entity ?? initialCohort;
 
@@ -53,9 +54,7 @@ export function TrainingGroup({
       <PageHeader
         title={cohort.name}
         breadcrumbLabel="Skupina"
-        breadcrumbs={[
-          { label: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
-        ]}
+        breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
         subtitle={[
           cohort.location,
           members.length +
@@ -76,7 +75,7 @@ export function TrainingGroup({
       {auth.isLoggedIn && (
         <TabMenu selected={tab} onSelect={setTab}>
           <Tab id="members" title={`Členové (${members.length})`}>
-            <TrainingGroupMembers members={members} />
+            <TrainingGroupMembers members={members} showActivity={auth.isTrainer} />
           </Tab>
           <Tab id="access" title="Přístupy" requireAdmin>
             <PeopleAccessOverview cohortId={cohort.id} />
@@ -137,7 +136,9 @@ function CategoryList({
 
 const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   members,
+  showActivity,
 }: {
+  showActivity: boolean;
   members: NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList'];
 }) {
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
@@ -147,28 +148,31 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   );
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[1fr_minmax(0,14rem)_minmax(0,14rem)_auto] pb-4">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] pb-4">
       {members.map((membership) => (
         <div
           key={membership.id}
           className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
         >
           <ActionRow
-            className="mb-0 min-w-max"
+            className="col-span-full mb-0 min-w-0 lg:col-span-1"
             actions={[
               ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
               ...membershipActionMap.get(membership.id)!,
             ]}
           >
             {membership.person ? (
-              <span className="inline-flex items-center gap-1">
+              <div className="min-w-0 flex flex-col items-start gap-1">
                 <Link
                   className="font-bold underline"
                   href={`/clenove/${membership.person.id}`}
                 >
                   {membership.person.name}
                 </Link>
-              </span>
+                {showActivity && membership.person.lastActivity && (
+                  <PersonActivityBadges activity={membership.person.lastActivity} />
+                )}
+              </div>
             ) : (
               '?'
             )}

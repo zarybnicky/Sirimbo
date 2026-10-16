@@ -1,4 +1,5 @@
 import { CohortWithMembersDocument } from '@/graphql/Cohorts';
+import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';
 import { stripHtml } from '@/lib/stripHtml';
@@ -13,7 +14,11 @@ type Props = {
 
 const getTrainingGroup = cache(async (id: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
-  return executeGraphql(CohortWithMembersDocument, { id }).then((x) => x.entity);
+  const { auth } = await getRequestContext();
+  return executeGraphql(CohortWithMembersDocument, {
+    id,
+    includeActivity: auth.isTrainer,
+  }).then((x) => x.entity);
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

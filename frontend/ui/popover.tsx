@@ -43,7 +43,7 @@ export const PopoverContent = React.forwardRef<
         ref={ref}
         className={cn(
           'z-30 data-[side=top]:animate-slideUpAndFade data-[side=bottom]:animate-slideDownAndFade',
-          'border border-neutral-7 bg-neutral-1 text-neutral-12 p-5 shadow-lg',
+          'border border-neutral-7 bg-neutral-1 text-neutral-12 p-3 shadow-lg',
           'sm:max-w-lg rounded-lg overflow-y-auto max-h-full',
           className,
         )}
@@ -51,7 +51,7 @@ export const PopoverContent = React.forwardRef<
       >
         {/* <PopoverPrimitive.Arrow className="fill-current text-white" /> */}
         {children}
-        <PopoverPrimitive.Close className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white">
+        <PopoverPrimitive.Close className="absolute right-3 top-3 rounded-xs opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white">
           <X className="size-4" />
           <span className="sr-only">Close</span>
         </PopoverPrimitive.Close>

@@ -26,7 +26,7 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolea
   }
 }
 
-query CohortWithMembers($id: BigInt!) {
+query CohortWithMembers($id: BigInt!, $includeActivity: Boolean! = false) {
   entity: cohort(id: $id) {
     ...Cohort
     cohortMembershipsList(condition: {status: ACTIVE}) {
@@ -34,6 +34,9 @@ query CohortWithMembers($id: BigInt!) {
       person {
         ...PersonBasic
         id
+        lastActivity @include(if: $includeActivity) {
+          ...PersonLastActivity
+        }
         ageGroup
         cstsId
         federationCategoryProgresses(first: 100) {
