@@ -11,6 +11,7 @@ import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { PageHeader } from '@/ui/PageHeader';
+import { PeopleAccessOverview } from '@/ui/PeopleAccessOverview';
 import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
@@ -76,6 +77,9 @@ export function TrainingGroup({
         <TabMenu selected={tab} onSelect={setTab}>
           <Tab id="members" title={`Členové (${members.length})`}>
             <TrainingGroupMembers members={members} />
+          </Tab>
+          <Tab id="access" title="Přístupy" requireAdmin>
+            <PeopleAccessOverview cohortId={cohort.id} />
           </Tab>
           <Tab id="activity" title="Aktivita">
             <ActivityTimeline cohortId={cohort.id} />
