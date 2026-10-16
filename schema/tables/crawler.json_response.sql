@@ -13,12 +13,20 @@ CREATE TABLE crawler.json_response (
     CONSTRAINT json_response_observation_count_check CHECK ((observation_count > 0))
 );
 
+COMMENT ON TABLE crawler.json_response IS '@name crawler_response
+@behavior -insert -update -delete -list';
+
+GRANT SELECT ON TABLE crawler.json_response TO system_admin;
+ALTER TABLE crawler.json_response ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE ONLY crawler.json_response
     ADD CONSTRAINT json_response_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY crawler.json_response
     ADD CONSTRAINT json_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.json_response_cache(content_hash);
 ALTER TABLE ONLY crawler.json_response
     ADD CONSTRAINT json_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
+
+CREATE POLICY system_admin_read ON crawler.json_response FOR SELECT TO system_admin USING (true);
 
 CREATE INDEX json_response_content_hash_idx ON crawler.json_response USING btree (content_hash);
 CREATE UNIQUE INDEX json_response_current_frontier_idx ON crawler.json_response USING btree (frontier_id) WHERE upper_inf(sys_period);

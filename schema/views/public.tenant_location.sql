@@ -16,7 +16,7 @@ CREATE VIEW public.tenant_location WITH (security_invoker='true') AS
    FROM public.location;
 
 COMMENT ON VIEW public.tenant_location IS '@primaryKey id
-@unique tenant_id,id
+@unique tenant_id,id|@behavior -query:resource:single
 @foreignKey (tenant_id) references tenant(id)
 @foreignKey (tenant_id,cover_image_id) references file(tenant_id,id)|@fieldName coverImage|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @simpleCollections only

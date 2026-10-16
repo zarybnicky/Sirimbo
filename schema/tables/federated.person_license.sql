@@ -9,6 +9,9 @@ CREATE TABLE federated.person_license (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+COMMENT ON TABLE federated.person_license IS '@name federation_person_license
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.person_license TO anonymous;
 
 ALTER TABLE ONLY federated.person_license

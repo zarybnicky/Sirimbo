@@ -16,3 +16,5 @@ CREATE FUNCTION federated.class_rank(class text) RETURNS integer
     else 0
   end;
 $$;
+
+COMMENT ON FUNCTION federated.class_rank(class text) IS '@behavior -*';

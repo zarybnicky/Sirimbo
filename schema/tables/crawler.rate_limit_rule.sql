@@ -8,5 +8,13 @@ CREATE TABLE crawler.rate_limit_rule (
     CONSTRAINT rate_limit_rule_per_interval_check CHECK ((per_interval > '00:00:00'::interval))
 );
 
+COMMENT ON TABLE crawler.rate_limit_rule IS '@name crawler_rate_limit_rule
+@behavior -insert -update -delete -list';
+
+GRANT SELECT ON TABLE crawler.rate_limit_rule TO system_admin;
+ALTER TABLE crawler.rate_limit_rule ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE ONLY crawler.rate_limit_rule
     ADD CONSTRAINT rate_limit_rule_pkey PRIMARY KEY (host);
+
+CREATE POLICY system_admin_read ON crawler.rate_limit_rule FOR SELECT TO system_admin USING (true);

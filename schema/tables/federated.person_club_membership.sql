@@ -6,6 +6,9 @@ CREATE TABLE federated.person_club_membership (
     CONSTRAINT person_club_membership_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
 );
 
+COMMENT ON TABLE federated.person_club_membership IS '@name federation_person_club_membership
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.person_club_membership TO anonymous;
 
 ALTER TABLE ONLY federated.person_club_membership

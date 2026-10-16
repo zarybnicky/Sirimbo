@@ -12,9 +12,11 @@ CREATE TABLE federated.competition (
     excused_total integer,
     completed_at timestamp with time zone,
     competition_type federated.competition_type,
+    status federated.event_status DEFAULT 'unknown'::federated.event_status NOT NULL,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
+COMMENT ON TABLE federated.competition IS '@behavior -insert -update -delete -list';
 COMMENT ON COLUMN federated.competition.competition_type IS 'Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.';
 
 GRANT SELECT ON TABLE federated.competition TO anonymous;
@@ -40,3 +42,4 @@ ALTER TABLE ONLY federated.competition
 
 CREATE INDEX competition_category_id_idx ON federated.competition USING btree (category_id);
 CREATE INDEX competition_event_id_idx ON federated.competition USING btree (event_id);
+CREATE INDEX competition_start_date_idx ON federated.competition USING btree (start_date) INCLUDE (id);

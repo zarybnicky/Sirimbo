@@ -42,3 +42,8 @@ CREATE VIEW crawler.frontier_fetch_job AS
    FROM (jobs j
      JOIN crawler.frontier f ON ((f.id = j.frontier_id)))
   WHERE (j.frontier_id IS NOT NULL);
+
+COMMENT ON VIEW crawler.frontier_fetch_job IS '@name crawler_fetch_job
+@behavior -insert -update -delete -list';
+
+GRANT SELECT ON TABLE crawler.frontier_fetch_job TO system_admin;

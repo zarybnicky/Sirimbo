@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict sulyJKf0z5uswbSRAH63iSxeq2CqnAk2bISUbxnkXYs1PHk23E7uQgh2VHggLP3
+\restrict 0yKtEfQNrPVaVZlrEsWrtb17bx4kvbcmf0QHnABgWWfJabfepVSvDkXKMn0mTIR
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -217,6 +217,75 @@ CREATE TYPE federated.competitor_type AS ENUM (
     'group',
     'team'
 );
+
+
+--
+-- Name: event_status; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.event_status AS ENUM (
+    'unknown',
+    'planned',
+    'in_progress',
+    'completed',
+    'postponed',
+    'cancelled'
+);
+
+
+--
+-- Name: TYPE event_status; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TYPE federated.event_status IS '@name federation_event_status';
+
+
+--
+-- Name: federation_event_year; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.federation_event_year AS (
+	year integer,
+	event_count integer,
+	mapped_event_count integer
+);
+
+
+--
+-- Name: COLUMN federation_event_year.year; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.federation_event_year.year IS '@notNull';
+
+
+--
+-- Name: COLUMN federation_event_year.event_count; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.federation_event_year.event_count IS '@notNull';
+
+
+--
+-- Name: COLUMN federation_event_year.mapped_event_count; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.federation_event_year.mapped_event_count IS '@notNull';
+
+
+--
+-- Name: federation_event_facets; Type: TYPE; Schema: federated; Owner: -
+--
+
+CREATE TYPE federated.federation_event_facets AS (
+	years federated.federation_event_year[]
+);
+
+
+--
+-- Name: COLUMN federation_event_facets.years; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.federation_event_facets.years IS '@notNull';
 
 
 --
@@ -482,8 +551,31 @@ CREATE TABLE federated.category (
     gender_group text DEFAULT 'mixed'::text NOT NULL,
     class text NOT NULL,
     competitor_type federated.competitor_type DEFAULT 'couple'::federated.competitor_type NOT NULL,
-    base_dance_program_id bigint
+    base_dance_program_id bigint,
+    age_group_code text
 );
+
+
+--
+-- Name: TABLE category; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.category IS '@behavior -insert -update -delete +list -connection';
+
+
+--
+-- Name: COLUMN category.age_group; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.category.age_group IS '@behavior -*';
+
+
+--
+-- Name: COLUMN category.age_group_code; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.category.age_group_code IS '@name ageGroup
+@behavior -insert -update';
 
 
 --
@@ -843,6 +935,32 @@ CREATE TYPE public.payment_status AS ENUM (
     'unpaid',
     'paid'
 );
+
+
+--
+-- Name: person_federation_candidates_record; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.person_federation_candidates_record AS (
+	id integer,
+	name text,
+	age_group text,
+	similarity real
+);
+
+
+--
+-- Name: COLUMN person_federation_candidates_record.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person_federation_candidates_record.id IS '@notNull';
+
+
+--
+-- Name: COLUMN person_federation_candidates_record.similarity; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person_federation_candidates_record.similarity IS '@notNull';
 
 
 --
@@ -1465,6 +1583,51 @@ $_$;
 
 
 --
+-- Name: person_membership_candidates(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.person_membership_candidates(membership_state text) RETURNS TABLE(person_id bigint, in_state boolean, cohort_ids bigint[], is_trainer boolean, is_admin boolean)
+    LANGUAGE sql STABLE
+    AS $$
+  with current_people as (
+    select person_id from current_tenant_membership
+    union select person_id from current_tenant_trainer
+    union select person_id from current_tenant_administrator
+  ), former_people as (
+    select person_id from tenant_membership where tenant_id = current_tenant_id() and status = 'expired'
+    union select person_id from tenant_trainer where tenant_id = current_tenant_id() and status = 'expired'
+    union select person_id from tenant_administrator where tenant_id = current_tenant_id() and status = 'expired'
+  ), trainers as (
+    select person_id from current_tenant_trainer where membership_state = 'current'
+    union all
+    select person_id from tenant_trainer
+    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
+  ), admins as (
+    select person_id from current_tenant_administrator where membership_state = 'current'
+    union all
+    select person_id from tenant_administrator
+    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
+  ), cohorts as (
+    select person_id, cohort_id from current_cohort_membership where membership_state = 'current'
+    union all
+    select person_id, cohort_id from cohort_membership
+    where membership_state = 'former' and tenant_id = current_tenant_id() and status = 'expired'
+  )
+  select p.id,
+    case membership_state
+      when 'current' then p.id in (select person_id from current_people)
+      when 'former' then p.id in (select person_id from former_people)
+        and p.id not in (select person_id from current_people)
+      else false
+    end,
+    array(select distinct cohort_id from cohorts where person_id = p.id),
+    p.id in (select person_id from trainers),
+    p.id in (select person_id from admins)
+  from person p;
+$$;
+
+
+--
 -- Name: queue_announcement_notifications(bigint); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2039,6 +2202,46 @@ $$;
 
 
 --
+-- Name: tg_eir__sync_lesson_payment(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_eir__sync_lesson_payment() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+declare
+  instance_id bigint;
+  instance event_instance;
+  payment_id bigint;
+begin
+  for instance_id in select distinct unnest(array[old.instance_id, new.instance_id]) loop
+    select * into instance from event_instance where id = instance_id for no key update;
+    if not found then continue; end if;
+
+    if (
+      not exists (select 1 from payment where event_instance_id = instance.id)
+      or array(select d.person_id from payment_debtor d join payment p on p.id = d.payment_id
+          where p.event_instance_id = instance.id order by d.person_id)
+        = array(select distinct r.person_id from event_instance_registration r
+          where r.instance_id = instance.id and r.registration_status = 'active'
+            and r.person_id is not null and not instance.is_cancelled order by r.person_id)
+    ) then
+      continue;
+    end if;
+
+    delete from payment where event_instance_id = instance.id;
+    if not instance.is_cancelled and instance.type = 'lesson' and instance.since < now() then
+      payment_id := (create_event_instance_payment(instance)).id;
+      update payment set status = 'unpaid' where id = payment_id;
+      perform resolve_payment_with_credit(payment.*) from payment where id = payment_id;
+    end if;
+  end loop;
+  return null;
+end;
+$$;
+
+
+--
 -- Name: tg_event_instance__delete_payment_on_cancellation(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2257,6 +2460,27 @@ begin
   return new;
 end;
 $$;
+
+
+--
+-- Name: tg_resolve_age_group(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_resolve_age_group() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  new.age_group_code := federated.resolve_age_group(new.age_group);
+  return new;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION tg_resolve_age_group(); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.tg_resolve_age_group() IS '@behavior -*';
 
 
 --
@@ -2647,6 +2871,13 @@ $$;
 
 
 --
+-- Name: FUNCTION reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone); Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON FUNCTION crawler.reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone) IS '@behavior -*';
+
+
+--
 -- Name: store_response(bigint, text, integer, text, jsonb, crawler.fetch_status); Type: FUNCTION; Schema: crawler; Owner: -
 --
 
@@ -2716,6 +2947,13 @@ $$;
 
 
 --
+-- Name: FUNCTION store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status); Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) IS '@behavior -*';
+
+
+--
 -- Name: class_rank(text); Type: FUNCTION; Schema: federated; Owner: -
 --
 
@@ -2737,6 +2975,168 @@ CREATE FUNCTION federated.class_rank(class text) RETURNS integer
     else 0
   end;
 $$;
+
+
+--
+-- Name: FUNCTION class_rank(class text); Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON FUNCTION federated.class_rank(class text) IS '@behavior -*';
+
+
+--
+-- Name: federation; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.federation (
+    code text NOT NULL,
+    name text NOT NULL
+);
+
+
+--
+-- Name: TABLE federation; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.federation IS '@behavior -insert -update -delete +list -connection';
+
+
+--
+-- Name: federation_competitor_facets(federated.federation, text, federated.competitor_type[], text[], text[], text[], date); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.federation_competitor_facets(federation federated.federation, search text DEFAULT NULL::text, competitor_types federated.competitor_type[] DEFAULT NULL::federated.competitor_type[], age_groups text[] DEFAULT NULL::text[], classes text[] DEFAULT NULL::text[], disciplines text[] DEFAULT NULL::text[], competed_since date DEFAULT NULL::date) RETURNS TABLE(facet text, value text, count integer)
+    LANGUAGE sql STABLE
+    AS $$
+  with candidates as materialized (
+    select c.id, c.competitor_type::text as competitor_type,
+      cat.age_group_code, cat.class, cat.discipline,
+      coalesce(cardinality(competitor_types), 0) = 0 or c.competitor_type = any(competitor_types) as type_matches,
+      coalesce(cardinality(age_groups), 0) = 0 or cat.age_group_code = any(
+        array(select federated.resolve_age_group(value) from unnest(age_groups) value)
+      ) as age_matches,
+      coalesce(cardinality(classes), 0) = 0 or cat.class = any(classes) as class_matches,
+      coalesce(cardinality(disciplines), 0) = 0 or cat.discipline = any(disciplines) as discipline_matches
+    from federated.competitor c
+    left join federated.competitor_category_progress p on p.competitor_id = c.id
+    left join federated.category cat on cat.id = p.category_id
+    where c.federation = federation.code
+      and (nullif(trim(search), '') is null or c.external_id::text = trim(search) or c.id = trim(search)
+        or c.search_name like '%' || replace(replace(replace(
+          app_private.normalize_name(trim(search)), '!', '!!'), '%', '!%'), '_', '!_') || '%' escape '!')
+      and (competed_since is null or exists (
+        select 1 from federated.competition_result r
+        join federated.competition comp on comp.id = r.competition_id
+        where r.competitor_id = c.id and comp.start_date >= competed_since and comp.start_date <= current_date
+      ))
+  )
+  select option.facet, option.value, count(distinct c.id)::integer
+  from candidates c
+  cross join lateral (values
+    ('type', c.competitor_type, c.age_matches and c.class_matches and c.discipline_matches),
+    ('ageGroup', c.age_group_code, c.type_matches and c.class_matches and c.discipline_matches),
+    ('class', c.class, c.type_matches and c.age_matches and c.discipline_matches),
+    ('discipline', c.discipline, c.type_matches and c.age_matches and c.class_matches)
+  ) option(facet, value, matches)
+  where option.matches and option.value is not null
+  group by option.facet, option.value
+  order by option.facet, option.value;
+$$;
+
+
+--
+-- Name: FUNCTION federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date); Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) IS '@behavior +list -connection';
+
+
+--
+-- Name: federation_event_facets(federated.federation, boolean); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean DEFAULT true) RETURNS federated.federation_event_facets
+    LANGUAGE sql STABLE
+    AS $$
+  select row(array(
+    select row(
+      extract(year from e.start_date)::integer,
+      count(*) filter (where include_cancelled is distinct from false or e.status <> 'cancelled')::integer,
+      count(*) filter (
+        where (include_cancelled is distinct from false or e.status <> 'cancelled')
+          and e.venue_lat is not null and e.venue_lng is not null
+      )::integer
+    )::federated.federation_event_year
+    from federated.event e
+    where e.federation = federation.code
+    group by extract(year from e.start_date)
+    order by extract(year from e.start_date) desc
+  ))::federated.federation_event_facets;
+$$;
+
+
+--
+-- Name: federation_people_facets(federated.federation, text, text[], text[], text[]); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.federation_people_facets(federation federated.federation, search text DEFAULT NULL::text, age_groups text[] DEFAULT NULL::text[], genders text[] DEFAULT NULL::text[], nationalities text[] DEFAULT NULL::text[]) RETURNS TABLE(facet text, value text, count integer)
+    LANGUAGE sql STABLE
+    AS $$
+  with candidates as (
+    select
+      coalesce(p.age_group_code, nullif(p.age_group, ''), 'unknown') as age_group,
+      coalesce(p.gender::text, 'unknown') as gender,
+      coalesce(nullif(p.nationality, ''), 'unknown') as nationality
+    from federated.person p
+    where p.federation = federation.code
+      and (nullif(trim(search), '') is null or p.external_id::text = trim(search) or p.id = trim(search)
+        or p.search_name like '%' || replace(replace(replace(
+          app_private.normalize_name(trim(search)), '!', '!!'), '%', '!%'), '_', '!_') || '%' escape '!')
+  ), matches as (
+    select *,
+      coalesce(cardinality(age_groups), 0) = 0 or age_group = any(age_groups) as age_matches,
+      coalesce(cardinality(genders), 0) = 0 or gender = any(genders) as gender_matches,
+      coalesce(cardinality(nationalities), 0) = 0 or nationality = any(nationalities) as nationality_matches
+    from candidates
+  )
+  select option.facet, option.value, count(*)::integer
+  from matches m
+  cross join lateral (values
+    ('ageGroup', m.age_group, m.gender_matches and m.nationality_matches),
+    ('gender', m.gender, m.age_matches and m.nationality_matches),
+    ('nationality', m.nationality, m.age_matches and m.gender_matches)
+  ) option(facet, value, matches)
+  where option.matches
+  group by option.facet, option.value
+  order by option.facet, option.value;
+$$;
+
+
+--
+-- Name: FUNCTION federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]); Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) IS '@behavior +list -connection';
+
+
+--
+-- Name: resolve_age_group(text); Type: FUNCTION; Schema: federated; Owner: -
+--
+
+CREATE FUNCTION federated.resolve_age_group(source_name text) RETURNS text
+    LANGUAGE sql STABLE STRICT
+    AS $$
+  select code from federated.age_group
+  where regexp_replace(lower(source_name), '[^a-z0-9]', '', 'g')
+    = any(array_prepend(regexp_replace(lower(code), '[^a-z0-9]', '', 'g'), aliases));
+$$;
+
+
+--
+-- Name: FUNCTION resolve_age_group(source_name text); Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON FUNCTION federated.resolve_age_group(source_name text) IS '@behavior -*';
 
 
 --
@@ -3269,12 +3669,14 @@ begin
   if include_judging then
     return query
       with scoped_people as (
-        select distinct p.id, p.name, p.csts_id, p.wdsf_id
+        select p.id, p.name
         from person p
-        where (exists (select 1 from current_tenant_membership where person_id = p.id)
-           or exists (select 1 from current_tenant_trainer where person_id = p.id)
-           or exists (select 1 from current_tenant_administrator where person_id = p.id))
-          and (p_person_ids is null or p.id = any(p_person_ids))
+        where (p.id = any(p_person_ids)
+           or (p_person_ids is null and (
+             exists (select 1 from current_tenant_membership where person_id = p.id)
+             or exists (select 1 from current_tenant_trainer where person_id = p.id)
+             or exists (select 1 from current_tenant_administrator where person_id = p.id)
+           )))
           and (p_cohort_id is null or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
       ),
       federated_people as (
@@ -3284,9 +3686,9 @@ begin
           fp.id as federated_person_id,
           fp.federation
         from scoped_people sp
+        join person_federation_link link on link.person_id = sp.id
         join federated.person fp
-          on (fp.federation = 'csts' and fp.external_id = sp.csts_id)
-          or (fp.federation = 'wdsf' and fp.external_id = sp.wdsf_id)
+          on (fp.federation, fp.external_id) = (link.federation, link.external_id)
       )
       select distinct
         ('judging:event:' || e.id || ':' || fp.person_id)::text as id,
@@ -3482,10 +3884,12 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
     LANGUAGE sql STABLE
     AS $$
   with scoped_people as (
-    select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from current_tenant_membership tm
-    join person p on p.id = tm.person_id
-    where (p_person_ids is null or p.id = any(p_person_ids))
+    select p.id, p.name
+    from person p
+    where (p.id = any(p_person_ids)
+       or (p_person_ids is null and exists (
+         select 1 from current_tenant_membership where person_id = p.id
+       )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
@@ -3496,15 +3900,9 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
       fp.id as federated_person_id,
       fp.federation
     from scoped_people sp
-    cross join lateral (
-      values
-        ('csts'::text, sp.csts_id::bigint),
-        ('wdsf'::text, sp.wdsf_id::bigint)
-    ) ids(federation, external_id)
+    join person_federation_link link on link.person_id = sp.id
     join federated.person fp
-      on fp.federation = ids.federation
-     and fp.external_id = ids.external_id
-     and ids.external_id <> 0
+      on (fp.federation, fp.external_id) = (link.federation, link.external_id)
   )
   select
     fp.person_id,
@@ -3531,15 +3929,13 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from federated.competition comp
+  from federated_people fp
+  join federated.competitor_component cc on cc.person_id = fp.federated_person_id
+  join federated.competitor c on c.id = cc.competitor_id
+  join federated.competition_entry ce on ce.competitor_id = c.id and not ce.cancelled
+  join federated.competition comp on comp.id = ce.competition_id
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
-  join federated.competition_entry ce
-    on ce.competition_id = comp.id
-   and not ce.cancelled
-  join federated.competitor c on c.id = ce.competitor_id
-  join federated.competitor_component cc on cc.competitor_id = c.id
-  join federated_people fp on fp.federated_person_id = cc.person_id
   left join lateral (
     select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
     from federated.dance_program_dance dpd
@@ -3572,34 +3968,13 @@ COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohor
 CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('week'::text, now()))::date - 2), p_until date DEFAULT (date_trunc('week'::text, now()))::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with scoped_competitions as (
-    select *
-    from federated.competition
-    where start_date >= p_since
-      and start_date < p_until
-  ),
-  latest_rounds as (
-    select distinct on (r.competition_id)
-      r.id,
-      r.competition_id
-    from federated.competition_round r
-    join scoped_competitions comp on comp.id = r.competition_id
-    order by r.competition_id, r.round_index desc, (r.round_key = 'F') desc, r.id desc
-  ),
-  competition_dances as (
-    select
-      r.competition_id,
-      array_agg(d.name order by rd.dance_order) as dances
-    from latest_rounds r
-    join federated.round_dance rd on rd.round_id = r.id
-    join federated.dance d on d.code = rd.dance_code
-    group by r.competition_id
-  ),
-  scoped_people as (
-    select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from current_tenant_membership tm
-    join person p on p.id = tm.person_id
-    where (p_person_ids is null or p.id = any(p_person_ids))
+  with scoped_people as (
+    select p.id, p.name
+    from person p
+    where (p.id = any(p_person_ids)
+       or (p_person_ids is null and exists (
+         select 1 from current_tenant_membership where person_id = p.id
+       )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
@@ -3610,15 +3985,9 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('wee
       fp.id as federated_person_id,
       fp.federation
     from scoped_people sp
-    cross join lateral (
-      values
-        ('csts'::text, sp.csts_id::bigint),
-        ('wdsf'::text, sp.wdsf_id::bigint)
-    ) ids(federation, external_id)
+    join person_federation_link link on link.person_id = sp.id
     join federated.person fp
-      on fp.federation = ids.federation
-     and fp.external_id = ids.external_id
-     and ids.external_id <> 0
+      on (fp.federation, fp.external_id) = (link.federation, link.external_id)
   )
   select
     fp.person_id,
@@ -3645,14 +4014,27 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('wee
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from scoped_competitions comp
+  from federated_people fp
+  join federated.competitor_component cc on cc.person_id = fp.federated_person_id
+  join federated.competitor c on c.id = cc.competitor_id
+  join federated.competition_result cr on cr.competitor_id = c.id
+  join federated.competition comp on comp.id = cr.competition_id
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
-  join federated.competition_result cr on cr.competition_id = comp.id
-  join federated.competitor c on c.id = cr.competitor_id
-  join federated.competitor_component cc on cc.competitor_id = c.id
-  join federated_people fp on fp.federated_person_id = cc.person_id
-  left join competition_dances dances on dances.competition_id = comp.id
+  left join lateral (
+    select array_agg(d.name order by rd.dance_order) as dances
+    from (
+      select r.id
+      from federated.competition_round r
+      where r.competition_id = comp.id
+      order by r.round_index desc, (r.round_key = 'F') desc, r.id desc
+      limit 1
+    ) r
+    join federated.round_dance rd on rd.round_id = r.id
+    join federated.dance d on d.code = rd.dance_code
+  ) dances on true
+  where comp.start_date >= p_since
+    and comp.start_date < p_until
   order by
     comp.start_date,
     fp.person_name,
@@ -3722,7 +4104,11 @@ END])) STORED NOT NULL,
 -- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person IS '@omit create';
+COMMENT ON TABLE public.person IS '@omit create
+@ref federationPeople via:public.person_federation_link;federated.person
+@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry
+@ref federationCompetitions via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competition_participation;federated.competition';
 
 
 --
@@ -3792,6 +4178,77 @@ $$;
 
 
 --
+-- Name: couple; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.couple (
+    id bigint NOT NULL,
+    man_id bigint NOT NULL,
+    woman_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_pary_id bigint,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT couple_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.couple IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection
+@ref federationCompetitors via:public.couple_federation_link;federated.competitor
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry
+@ref federationCompetitions via:public.couple_federation_link;federated.competitor;federated.competition_participation;federated.competition behavior:"+connection -list"';
+
+
+--
+-- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
+
+
+--
+-- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.active_range IS '@omit';
+
+
+--
+-- Name: couple_age_group(public.couple); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.couple_age_group(c public.couple) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select r.age_group_code
+  from person m, person w, federated.couple_age_rule r
+  where m.id = c.man_id and w.id = c.woman_id
+    and m.birth_date is not null and w.birth_date is not null
+    and r.division = 'General'
+    and r.age_group_code <> 'Under_21'
+    and r.older_age @> (extract(year from current_date)::int - extract(year from least(m.birth_date, w.birth_date))::int)
+    and r.younger_age @> (extract(year from current_date)::int - extract(year from greatest(m.birth_date, w.birth_date))::int)
+  order by lower(r.older_age) desc nulls last, upper(r.older_age)
+  limit 1;
+$$;
+
+
+--
+-- Name: FUNCTION couple_age_group(c public.couple); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.couple_age_group(c public.couple) IS '@behavior -queryField';
+
+
+--
 -- Name: create_credit_transaction_for_person(bigint, text, numeric, text, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -3815,16 +4272,19 @@ CREATE FUNCTION public.create_event_instance_payment(i public.event_instance) RE
     LANGUAGE plpgsql
     AS $$
 declare
-  created_payment public.payment;
+  created_payment payment;
   duration numeric(19, 4);
 begin
   if current_tenant_id() <> 2 then
     return null;
   end if;
 
-  select p.* into created_payment
-  from public.payment p
-  where p.event_instance_id = i.id;
+  -- Serialize initial charging with registration changes and their deferred sync.
+  select * into i from event_instance
+  where id = i.id and tenant_id = current_tenant_id() for no key update;
+  if not found or i.is_cancelled then return null; end if;
+
+  select p.* into created_payment from payment p where p.event_instance_id = i.id;
 
   if found then
     return created_payment;
@@ -3832,7 +4292,7 @@ begin
 
   if i.type <> 'lesson' or not exists (
     select 1
-    from public.event_instance_registration registration
+    from event_instance_registration registration
     where registration.instance_id = i.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
@@ -3842,31 +4302,31 @@ begin
 
   duration := extract(epoch from (i.until - i.since)) / 60;
 
-  insert into public.payment (accounting_period_id, status, event_instance_id, due_at)
+  insert into payment (accounting_period_id, status, event_instance_id, due_at)
   values (
-    (select id from public.accounting_period where tenant_id = current_tenant_id() and range @> now()),
+    (select id from accounting_period where tenant_id = current_tenant_id() and range @> now()),
     'tentative', i.id, now() + interval '2 weeks'
   )
   on conflict (event_instance_id) where event_instance_id is not null do nothing
   returning * into created_payment;
 
   if not found then
-    return (select p from public.payment p where p.event_instance_id = i.id);
+    return (select p from payment p where p.event_instance_id = i.id);
   end if;
 
-  insert into public.payment_recipient (payment_id, account_id, amount)
+  insert into payment_recipient (payment_id, account_id, amount)
   select distinct on (account.id)
     created_payment.id,
     account.id,
     trainer.member_price_45min_amount / 45 * duration
-  from public.event_instance_trainers(i) trainer
-  cross join lateral public.person_account(trainer.person_id, trainer.currency) account
+  from event_instance_trainers(i) trainer
+  cross join lateral person_account(trainer.person_id, trainer.currency) account
   where trainer.tenant_id = current_tenant_id()
     and trainer.member_price_45min_amount is not null;
 
-  insert into public.payment_debtor (payment_id, person_id)
+  insert into payment_debtor (payment_id, person_id)
   select distinct created_payment.id, registration.person_id
-  from public.event_instance_registration registration
+  from event_instance_registration registration
   where registration.instance_id = i.id
     and registration.person_id is not null
     and registration.registration_status = 'active';
@@ -4107,17 +4567,6 @@ $$;
 
 
 --
--- Name: csts_athlete(integer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.csts_athlete(idt integer) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select canonical_name from federated.person where federation = 'csts' and external_id = idt;
-$$;
-
-
---
 -- Name: current_account_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4222,6 +4671,55 @@ $$;
 --
 
 COMMENT ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) IS '@simpleCollections only';
+
+
+--
+-- Name: event_instance_facets(timestamp with time zone, timestamp with time zone, public.event_type[], bigint[], bigint[], bigint, public.event_instance_range_scope, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[] DEFAULT NULL::public.event_type[], trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT 'all'::public.event_instance_range_scope, location_ids bigint[] DEFAULT NULL::bigint[]) RETURNS TABLE(facet text, value text, count integer)
+    LANGUAGE sql STABLE
+    AS $_$
+  with candidates as (
+    select i.id, i.type, i.location_id,
+      array(select distinct person_id from event_instance_trainer where instance_id = i.id) as trainers,
+      array(select distinct person_id from event_instance_registration
+        where instance_id = i.id and registration_status = 'active') as participants
+    from event_instances_for_range(null, start_range, end_range,
+      parent_id => $6, scope => $7) i
+  ), matches as (
+    select *,
+      only_types is null or type = any(only_types) as type_matches,
+      trainer_ids is null or trainers && trainer_ids as trainer_matches,
+      participant_ids is null or participants && participant_ids as participant_matches,
+      location_ids is null or location_id = any(location_ids) as location_matches
+    from candidates
+  )
+  select option.facet, option.value, count(distinct m.id)::integer
+  from matches m
+  cross join lateral (
+    select 'type' as facet, upper(m.type::text) as value
+    where m.trainer_matches and m.participant_matches and m.location_matches
+    union all
+    select 'trainer', unnest(m.trainers)::text
+    where m.type_matches and m.participant_matches and m.location_matches
+    union all
+    select 'participant', unnest(m.participants)::text
+    where m.type_matches and m.trainer_matches and m.location_matches
+    union all
+    select 'location', m.location_id::text
+    where m.type_matches and m.trainer_matches and m.participant_matches and m.location_id is not null
+  ) option
+  group by option.facet, option.value
+  order by option.facet, option.value;
+$_$;
+
+
+--
+-- Name: FUNCTION event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) IS '@behavior +list -connection';
 
 
 --
@@ -4492,23 +4990,24 @@ COMMENT ON FUNCTION public.event_instance_trainers(v_instance public.event_insta
 
 
 --
--- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], bigint, public.event_instance_range_scope, bigint[]); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_instances_for_range(public.event_type, timestamp with time zone, timestamp with time zone, bigint[], bigint[], bigint, public.event_instance_range_scope, bigint[], public.event_type[]); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT 'all'::public.event_instance_range_scope, location_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone DEFAULT NULL::timestamp with time zone, trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], parent_id bigint DEFAULT NULL::bigint, scope public.event_instance_range_scope DEFAULT 'all'::public.event_instance_range_scope, location_ids bigint[] DEFAULT NULL::bigint[], only_types public.event_type[] DEFAULT NULL::public.event_type[]) RETURNS SETOF public.event_instance
     LANGUAGE sql STABLE
     AS $_$
   with mine as (
     select instance_id from event_instance_registration
-    where person_id = any (current_person_ids()) and registration_status = 'active'
+    where person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active'
     union all
     select instance_id from event_instance_trainer
-    where person_id = any (current_person_ids())
+    where person_id = any ((select current_person_ids())::bigint[])
   )
   select i.*
   from event_instance i
   where i.tenant_id = current_tenant_id()
     and (only_type is null or i.type = only_type)
+    and (only_types is null or i.type = any(only_types))
     and case
       when $6 is not null then i.parent_id = $6
         and (scope <> 'mine' or i.id in (select instance_id from mine))
@@ -4532,10 +5031,10 @@ $_$;
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) IS '@simpleCollections only';
 
 
 --
@@ -5081,47 +5580,6 @@ COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc
 
 
 --
--- Name: couple; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.couple (
-    id bigint NOT NULL,
-    man_id bigint NOT NULL,
-    woman_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_pary_id bigint,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT couple_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.couple IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
-
-
---
--- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.couple.active_range IS '@omit';
-
-
---
 -- Name: person_active_couples(public.person); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -5140,6 +5598,25 @@ $$;
 --
 
 COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCollections only';
+
+
+--
+-- Name: person_age_group(public.person); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.person_age_group(p public.person) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select code from federated.age_group
+  where person_age @> (extract(year from current_date)::int - extract(year from p.birth_date)::int);
+$$;
+
+
+--
+-- Name: FUNCTION person_age_group(p public.person); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.person_age_group(p public.person) IS '@behavior -queryField';
 
 
 --
@@ -5175,84 +5652,78 @@ $$;
 
 
 --
--- Name: person_csts_candidates(public.person, integer, real); Type: FUNCTION; Schema: public; Owner: -
+-- Name: person_facets(text[], bigint[], boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer DEFAULT 10, threshold real DEFAULT 0.4) RETURNS TABLE(id integer, name text, age_group text, similarity real)
+CREATE FUNCTION public.person_facets(membership_states text[] DEFAULT ARRAY['current'::text], in_cohorts bigint[] DEFAULT NULL::bigint[], is_trainer boolean DEFAULT NULL::boolean, is_admin boolean DEFAULT NULL::boolean) RETURNS TABLE(facet text, value text, count integer)
     LANGUAGE sql STABLE
     AS $_$
-  with params as (
-    select
-      greatest(0.3::real, least(coalesce(threshold, 0.4), 1::real)) as effective_threshold,
-      greatest(0, least(coalesce($2, 10), 50)) as effective_limit
-  ),
-  scored_candidates as (
-    select
-      fp.external_id::integer as id,
-      fp.canonical_name as name,
-      fp.age_group,
-      score.name_score,
-      case
-        when in_person.birth_date is not null and fp.dob is not null and fp.dob = in_person.birth_date then 1
-        else 0
-      end as dob_score
-      -- Future year-of-birth range scoring belongs here once federated.person.yob_range exists.
-    from params
-    join federated.person fp on true
-    cross join lateral (
-      select public.similarity(fp.search_name, in_person.search_name) as name_score
-    ) score
-    where in_person.search_name is not null
-      and fp.federation = 'csts'
-      and fp.external_id between 0 and 2147483647
-      and fp.search_name % in_person.search_name
-      and score.name_score >= params.effective_threshold
+  with candidates as (
+    select s.state, m.*,
+      in_cohorts is null or case when cardinality(in_cohorts) = 0
+        then cardinality(m.cohort_ids) = 0 else m.cohort_ids && in_cohorts end as cohort_matches,
+       $3 is null or m.is_trainer = $3 as trainer_matches,
+       $4 is null or m.is_admin = $4 as admin_matches
+    from (values ('current'), ('former')) s(state)
+    cross join lateral app_private.person_membership_candidates(s.state) m
+    where m.in_state
   )
-  select scored_candidates.id, scored_candidates.name, scored_candidates.age_group, scored_candidates.name_score
-  from scored_candidates
-  order by
-    scored_candidates.dob_score desc,
-    scored_candidates.name_score desc,
-    scored_candidates.name,
-    scored_candidates.id
-  limit (select effective_limit from params);
+  select option.facet, option.value, count(distinct c.person_id)::integer
+  from candidates c
+  cross join lateral (
+    select 'cohort' as facet, unnest(case when cardinality(c.cohort_ids) = 0
+      then array['none'] else c.cohort_ids::text[] end) as value
+    where (coalesce(cardinality(membership_states), 0) = 0 or c.state = any(membership_states)) and c.trainer_matches and c.admin_matches
+    union all
+    select 'trainer', c.is_trainer::text
+    where (coalesce(cardinality(membership_states), 0) = 0 or c.state = any(membership_states)) and c.cohort_matches and c.admin_matches
+    union all
+    select 'admin', c.is_admin::text
+    where (coalesce(cardinality(membership_states), 0) = 0 or c.state = any(membership_states)) and c.cohort_matches and c.trainer_matches
+    union all
+    select 'state', c.state
+    where c.cohort_matches and c.trainer_matches and c.admin_matches
+  ) option
+  group by option.facet, option.value
+  order by option.facet, option.value;
 $_$;
 
 
 --
--- Name: FUNCTION person_csts_candidates(in_person public.person, "limit" integer, threshold real); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean) IS '@behavior +list -connection';
 
 
 --
--- Name: person_csts_progress(public.person); Type: FUNCTION; Schema: public; Owner: -
+-- Name: person_federation_candidates(public.person, text, integer, real); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.person_csts_progress(in_person public.person) RETURNS TABLE(competitor_name text, category federated.category, points numeric, finals integer)
+CREATE FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer DEFAULT 10, threshold real DEFAULT 0.4) RETURNS SETOF public.person_federation_candidates_record
     LANGUAGE sql STABLE
-    AS $$
-select
-  competitor.name as competitor_name,
-  row(category.*) as category,
-  ccp.points,
-  ccp.domestic_finals + ccp.foreign_finals as finals
-from federated.person p
-       join federated.competitor_component cp on cp.person_id = p.id
-       join federated.competitor on competitor.id = cp.competitor_id
-       join federated.competitor_category_progress ccp on competitor.id = ccp.competitor_id
-       join federated.category on ccp.category_id = category.id
-where p.federation = 'csts'
-  and p.external_id = in_person.csts_id::bigint;
-$$;
+    AS $_$
+  select fp.external_id::integer, fp.canonical_name, fp.age_group_code,
+    similarity(fp.search_name, in_person.search_name) as name_score
+  from federated.person fp
+  where fp.federation = $2
+    and fp.external_id between 0 and 2147483647
+    and fp.search_name % in_person.search_name
+    and similarity(fp.search_name, in_person.search_name)
+      >= greatest(0.3::real, least(coalesce(threshold, 0.4), 1::real))
+  order by
+    coalesce(fp.dob = in_person.birth_date, false) desc,
+    name_score desc, fp.canonical_name, fp.external_id
+  limit greatest(0, least(coalesce($3, 10), 50));
+$_$;
 
 
 --
--- Name: FUNCTION person_csts_progress(in_person public.person); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_csts_progress(in_person public.person) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@simpleCollections only
+@notNull';
 
 
 --
@@ -7164,17 +7635,6 @@ COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit'
 
 
 --
--- Name: wdsf_athlete(integer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.wdsf_athlete(min integer) RETURNS text
-    LANGUAGE sql STABLE
-    AS $$
-  select canonical_name from federated.person where federation = 'wdsf' and external_id = min;
-$$;
-
-
---
 -- Name: app_table_overview; Type: VIEW; Schema: app_private; Owner: -
 --
 
@@ -7556,6 +8016,14 @@ CREATE TABLE crawler.frontier (
 
 
 --
+-- Name: TABLE frontier; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.frontier IS '@name crawler_target
+@behavior -insert -update -delete -list';
+
+
+--
 -- Name: json_response; Type: TABLE; Schema: crawler; Owner: -
 --
 
@@ -7576,10 +8044,18 @@ CREATE TABLE crawler.json_response (
 
 
 --
+-- Name: TABLE json_response; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.json_response IS '@name crawler_response
+@behavior -insert -update -delete -list';
+
+
+--
 -- Name: frontier_failure; Type: VIEW; Schema: crawler; Owner: -
 --
 
-CREATE VIEW crawler.frontier_failure AS
+CREATE VIEW crawler.frontier_failure WITH (security_invoker='true') AS
  SELECT f.id,
     f.federation,
     f.kind,
@@ -7614,6 +8090,38 @@ CREATE VIEW crawler.frontier_failure AS
    FROM (crawler.frontier f
      LEFT JOIN crawler.json_response jr ON ((jr.id = f.last_response_id)))
   WHERE ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (f.process_status = 'error'::crawler.process_status));
+
+
+--
+-- Name: VIEW frontier_failure; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON VIEW crawler.frontier_failure IS '@name crawler_target_failure
+@behavior -insert -update -delete -list';
+
+
+--
+-- Name: frontier_failure_group; Type: VIEW; Schema: crawler; Owner: -
+--
+
+CREATE VIEW crawler.frontier_failure_group WITH (security_invoker='true') AS
+ SELECT federation,
+    kind,
+    failure,
+    http_status,
+    "left"(regexp_replace(COALESCE(NULLIF(error_text, ''::text), '-'::text), '\s+'::text, ' '::text, 'g'::text), 180) AS error_fingerprint,
+    (count(*))::integer AS count,
+    max(failed_at) AS failed_at
+   FROM crawler.frontier_failure
+  GROUP BY federation, kind, failure, http_status, ("left"(regexp_replace(COALESCE(NULLIF(error_text, ''::text), '-'::text), '\s+'::text, ' '::text, 'g'::text), 180));
+
+
+--
+-- Name: VIEW frontier_failure_group; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON VIEW crawler.frontier_failure_group IS '@name crawler_target_failure_group
+@behavior +list -connection -insert -update -delete';
 
 
 --
@@ -7667,6 +8175,14 @@ CREATE VIEW crawler.frontier_fetch_job AS
 
 
 --
+-- Name: VIEW frontier_fetch_job; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON VIEW crawler.frontier_fetch_job IS '@name crawler_fetch_job
+@behavior -insert -update -delete -list';
+
+
+--
 -- Name: frontier_id_seq; Type: SEQUENCE; Schema: crawler; Owner: -
 --
 
@@ -7686,6 +8202,35 @@ ALTER SEQUENCE crawler.frontier_id_seq OWNED BY crawler.frontier.id;
 
 
 --
+-- Name: frontier_summary; Type: VIEW; Schema: crawler; Owner: -
+--
+
+CREATE VIEW crawler.frontier_summary WITH (security_invoker='true') AS
+ SELECT federation,
+    kind,
+    (count(*))::integer AS total,
+    (count(*) FILTER (WHERE (fetch_status = 'pending'::crawler.fetch_status)))::integer AS fetch_pending,
+    (count(*) FILTER (WHERE (fetch_status = 'transient'::crawler.fetch_status)))::integer AS fetch_transient,
+    (count(*) FILTER (WHERE (fetch_status = 'error'::crawler.fetch_status)))::integer AS fetch_error,
+    (count(*) FILTER (WHERE (process_status = 'ok'::crawler.process_status)))::integer AS done,
+    (count(*) FILTER (WHERE (process_status = 'error'::crawler.process_status)))::integer AS process_error,
+    (count(*) FILTER (WHERE ((process_status = 'pending'::crawler.process_status) AND (fetch_status = 'ok'::crawler.fetch_status))))::integer AS process_ready,
+    max(last_fetched_at) AS latest,
+    (count(*) FILTER (WHERE ((next_fetch_at <= now()) AND (fetch_status = ANY (ARRAY['pending'::crawler.fetch_status, 'transient'::crawler.fetch_status])))))::integer AS fetch_due,
+    (count(*) FILTER (WHERE ((next_fetch_at <= now()) AND (fetch_status = 'ok'::crawler.fetch_status) AND (process_status = 'ok'::crawler.process_status))))::integer AS refetch_due
+   FROM crawler.frontier
+  GROUP BY federation, kind;
+
+
+--
+-- Name: VIEW frontier_summary; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON VIEW crawler.frontier_summary IS '@name crawler_target_summary
+@behavior +list -connection -insert -update -delete';
+
+
+--
 -- Name: incremental_ranges; Type: TABLE; Schema: crawler; Owner: -
 --
 
@@ -7698,6 +8243,14 @@ CREATE TABLE crawler.incremental_ranges (
 
 
 --
+-- Name: TABLE incremental_ranges; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.incremental_ranges IS '@name crawler_incremental_range
+@behavior -insert -update -delete -list';
+
+
+--
 -- Name: json_response_cache; Type: TABLE; Schema: crawler; Owner: -
 --
 
@@ -7705,6 +8258,14 @@ CREATE TABLE crawler.json_response_cache (
     content_hash text GENERATED ALWAYS AS (encode(public.digest((content)::text, 'sha256'::text), 'hex'::text)) STORED NOT NULL,
     content jsonb NOT NULL
 );
+
+
+--
+-- Name: TABLE json_response_cache; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.json_response_cache IS '@name crawler_response_cache
+@behavior -insert -update -delete -list';
 
 
 --
@@ -7742,6 +8303,78 @@ CREATE TABLE crawler.rate_limit_rule (
 
 
 --
+-- Name: TABLE rate_limit_rule; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.rate_limit_rule IS '@name crawler_rate_limit_rule
+@behavior -insert -update -delete -list';
+
+
+--
+-- Name: age_group; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.age_group (
+    code text NOT NULL,
+    name text NOT NULL,
+    aliases text[] DEFAULT '{}'::text[] NOT NULL,
+    allowed_to_dance_in text[] DEFAULT '{}'::text[] NOT NULL,
+    age int4range,
+    person_age int4range,
+    is_person boolean DEFAULT false NOT NULL,
+    is_couple boolean DEFAULT false NOT NULL,
+    is_team boolean DEFAULT false NOT NULL,
+    is_competition boolean DEFAULT false NOT NULL,
+    divisions text[] DEFAULT '{}'::text[] NOT NULL,
+    CONSTRAINT age_group_age_check CHECK ((NOT isempty(age))),
+    CONSTRAINT age_group_person_age_check CHECK ((NOT isempty(person_age)))
+);
+
+
+--
+-- Name: TABLE age_group; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.age_group IS '@name age_group
+@behavior -insert -update -delete +list -connection';
+
+
+--
+-- Name: COLUMN age_group.aliases; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.age_group.aliases IS '@behavior -filterBy -orderBy';
+
+
+--
+-- Name: COLUMN age_group.allowed_to_dance_in; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.age_group.allowed_to_dance_in IS '@behavior -filterBy -orderBy';
+
+
+--
+-- Name: COLUMN age_group.age; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.age_group.age IS '@behavior -filterBy -orderBy';
+
+
+--
+-- Name: COLUMN age_group.person_age; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.age_group.person_age IS '@behavior -filterBy -orderBy';
+
+
+--
+-- Name: COLUMN age_group.divisions; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.age_group.divisions IS '@behavior -filterBy -orderBy';
+
+
+--
 -- Name: category_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
 --
 
@@ -7773,8 +8406,16 @@ CREATE TABLE federated.competition (
     excused_total integer,
     completed_at timestamp with time zone,
     competition_type federated.competition_type,
+    status federated.event_status DEFAULT 'unknown'::federated.event_status NOT NULL,
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
+
+
+--
+-- Name: TABLE competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition IS '@behavior -insert -update -delete -list';
 
 
 --
@@ -7794,6 +8435,13 @@ CREATE TABLE federated.competition_entry (
     cancelled boolean DEFAULT false NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: TABLE competition_entry; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -7818,8 +8466,16 @@ CREATE TABLE federated.competition_official (
     competition_id bigint NOT NULL,
     person_id text NOT NULL,
     role federated.official_role NOT NULL,
-    external_id text
+    external_id text,
+    judge_label text
 );
+
+
+--
+-- Name: TABLE competition_official; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_official IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -7843,6 +8499,40 @@ CREATE TABLE federated.competition_result (
 
 
 --
+-- Name: TABLE competition_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
+-- Name: competition_participation; Type: VIEW; Schema: federated; Owner: -
+--
+
+CREATE VIEW federated.competition_participation WITH (security_invoker='true') AS
+ SELECT competition_result.competition_id,
+    competition_result.competitor_id
+   FROM federated.competition_result
+UNION ALL
+ SELECT e.competition_id,
+    e.competitor_id
+   FROM federated.competition_entry e
+  WHERE ((NOT e.cancelled) AND (NOT (EXISTS ( SELECT 1
+           FROM federated.competition_result r
+          WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id))))));
+
+
+--
+-- Name: VIEW competition_participation; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON VIEW federated.competition_participation IS '@primaryKey competition_id,competitor_id
+@foreignKey (competition_id) references federated.competition (id)|@fieldName competition|@foreignFieldName participations
+@foreignKey (competitor_id) references federated.competitor (id)|@fieldName competitor|@foreignFieldName competitionParticipations
+@behavior -single -list -connection -insert -update -delete';
+
+
+--
 -- Name: competition_round; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7856,6 +8546,13 @@ CREATE TABLE federated.competition_round (
     scoring_method federated.scoring_method NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: TABLE competition_round; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_round IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
 
 
 --
@@ -7885,6 +8582,13 @@ CREATE TABLE federated.competition_round_judge (
 
 
 --
+-- Name: TABLE competition_round_judge; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_round_judge IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
 -- Name: competition_round_result; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7901,18 +8605,60 @@ CREATE TABLE federated.competition_round_result (
 
 
 --
+-- Name: TABLE competition_round_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competition_round_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
 -- Name: competitor; Type: TABLE; Schema: federated; Owner: -
 --
 
 CREATE TABLE federated.competitor (
-    id text GENERATED ALWAYS AS (((federation || ':'::text) || (external_id)::text)) STORED NOT NULL,
+    id text GENERATED ALWAYS AS (((federation || ':'::text) || external_id)) STORED NOT NULL,
     federation text NOT NULL,
-    external_id bigint NOT NULL,
     competitor_type federated.competitor_type NOT NULL,
     age_group text,
     name text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    age_group_code text,
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(name)) STORED,
+    external_id text CONSTRAINT competitor_external_id_text_not_null NOT NULL
 );
+
+
+--
+-- Name: TABLE competitor; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competitor IS '@name federation_competitor
+@behavior -insert -update -delete -list
+@ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
+@ref couples via:public.couple_federation_link;public.couple
+@ref competitions via:federated.competition_participation;federated.competition';
+
+
+--
+-- Name: COLUMN competitor.age_group; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competitor.age_group IS '@behavior -*';
+
+
+--
+-- Name: COLUMN competitor.age_group_code; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competitor.age_group_code IS '@name ageGroup
+@behavior -insert -update';
+
+
+--
+-- Name: COLUMN competitor.search_name; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competitor.search_name IS '@behavior -*';
 
 
 --
@@ -7929,6 +8675,14 @@ CREATE TABLE federated.competitor_category_progress (
 
 
 --
+-- Name: TABLE competitor_category_progress; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
 -- Name: competitor_club_affiliation; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7939,6 +8693,14 @@ CREATE TABLE federated.competitor_club_affiliation (
     valid_to date,
     CONSTRAINT competitor_club_affiliation_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
 );
+
+
+--
+-- Name: TABLE competitor_club_affiliation; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competitor_club_affiliation IS '@name federation_competitor_club_affiliation
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -7953,6 +8715,50 @@ CREATE TABLE federated.competitor_component (
 
 
 --
+-- Name: TABLE competitor_component; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
+-- Name: couple_age_rule; Type: TABLE; Schema: federated; Owner: -
+--
+
+CREATE TABLE federated.couple_age_rule (
+    age_group_code text NOT NULL,
+    division text DEFAULT 'General'::text NOT NULL,
+    older_age int4range NOT NULL,
+    younger_age int4range NOT NULL,
+    CONSTRAINT couple_age_rule_older_age_check CHECK ((NOT isempty(older_age))),
+    CONSTRAINT couple_age_rule_younger_age_check CHECK ((NOT isempty(younger_age)))
+);
+
+
+--
+-- Name: TABLE couple_age_rule; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.couple_age_rule IS '@name federation_couple_age_rule
+@behavior -insert -update -delete +list -connection -query:resource:single -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN couple_age_rule.older_age; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.couple_age_rule.older_age IS '@behavior -filterBy -orderBy';
+
+
+--
+-- Name: COLUMN couple_age_rule.younger_age; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.couple_age_rule.younger_age IS '@behavior -filterBy -orderBy';
+
+
+--
 -- Name: dance; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7961,6 +8767,13 @@ CREATE TABLE federated.dance (
     name text NOT NULL,
     discipline text NOT NULL
 );
+
+
+--
+-- Name: TABLE dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.dance IS '@behavior -insert -update -delete +list -connection';
 
 
 --
@@ -7978,6 +8791,13 @@ CREATE TABLE federated.dance_program (
 
 
 --
+-- Name: TABLE dance_program; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.dance_program IS '@behavior -insert -update -delete +list -connection';
+
+
+--
 -- Name: dance_program_dance; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -7986,6 +8806,13 @@ CREATE TABLE federated.dance_program_dance (
     dance_code text NOT NULL,
     dance_order integer NOT NULL
 );
+
+
+--
+-- Name: TABLE dance_program_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.dance_program_dance IS '@behavior -insert -update -delete +list -connection';
 
 
 --
@@ -8031,8 +8858,17 @@ CREATE TABLE federated.event (
     venue_lng double precision,
     venue_location_source text,
     venue_location_ref text,
+    status federated.event_status DEFAULT 'unknown'::federated.event_status NOT NULL,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
+
+
+--
+-- Name: TABLE event; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.event IS '@name federation_event
+@behavior -insert -update -delete -list';
 
 
 --
@@ -8063,13 +8899,11 @@ CREATE TABLE federated.event_official (
 
 
 --
--- Name: federation; Type: TABLE; Schema: federated; Owner: -
+-- Name: TABLE event_official; Type: COMMENT; Schema: federated; Owner: -
 --
 
-CREATE TABLE federated.federation (
-    code text NOT NULL,
-    name text NOT NULL
-);
+COMMENT ON TABLE federated.event_official IS '@name federation_event_official
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8085,6 +8919,13 @@ CREATE TABLE federated.federation_club (
     country text,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: TABLE federation_club; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.federation_club IS '@behavior -insert -update -delete -list';
 
 
 --
@@ -8110,11 +8951,18 @@ CREATE TABLE federated.judge_score (
     dance_order integer NOT NULL,
     dance_code text NOT NULL,
     judge_person_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     component federated.score_component NOT NULL,
     score numeric(10,3) NOT NULL,
     raw_score text
 );
+
+
+--
+-- Name: TABLE judge_score; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.judge_score IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8135,8 +8983,33 @@ CREATE TABLE federated.person (
     medical_checkup_expiration date,
     medical_checkup_type text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    search_name text GENERATED ALWAYS AS (app_private.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
+    age_group_code text
 );
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.person IS '@name federation_person
+@behavior -insert -update -delete -list
+@ref people via:public.person_federation_link;public.person behavior:"+list -connection"';
+
+
+--
+-- Name: COLUMN person.age_group; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.person.age_group IS '@behavior -*';
+
+
+--
+-- Name: COLUMN person.age_group_code; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.person.age_group_code IS '@name ageGroup
+@behavior -insert -update';
 
 
 --
@@ -8150,6 +9023,14 @@ CREATE TABLE federated.person_club_membership (
     valid_to date,
     CONSTRAINT person_club_membership_check CHECK (((valid_to IS NULL) OR (valid_to >= valid_from)))
 );
+
+
+--
+-- Name: TABLE person_club_membership; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.person_club_membership IS '@name federation_person_club_membership
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8169,6 +9050,14 @@ CREATE TABLE federated.person_license (
 
 
 --
+-- Name: TABLE person_license; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.person_license IS '@name federation_person_license
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
 -- Name: ranklist; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -8178,6 +9067,13 @@ CREATE TABLE federated.ranklist (
     category_id bigint NOT NULL,
     name text NOT NULL
 );
+
+
+--
+-- Name: TABLE ranklist; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.ranklist IS '@behavior -insert -update -delete -list';
 
 
 --
@@ -8192,6 +9088,13 @@ CREATE TABLE federated.ranklist_entry (
     points numeric(10,3),
     CONSTRAINT ranklist_entry_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
+
+
+--
+-- Name: TABLE ranklist_entry; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.ranklist_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8221,6 +9124,13 @@ CREATE TABLE federated.ranklist_snapshot (
 
 
 --
+-- Name: TABLE ranklist_snapshot; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.ranklist_snapshot IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+
+--
 -- Name: ranklist_snapshot_id_seq; Type: SEQUENCE; Schema: federated; Owner: -
 --
 
@@ -8244,6 +9154,15 @@ CREATE TABLE federated.round_dance (
     dance_code text NOT NULL,
     dance_order integer NOT NULL
 );
+
+
+--
+-- Name: TABLE round_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON TABLE federated.round_dance IS '@name competition_round_dance
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single
+@ref dance singular via:federated.dance_program_dance;federated.dance';
 
 
 --
@@ -8392,7 +9311,7 @@ CREATE TABLE public.announcement_attachment (
 -- Name: TABLE announcement_attachment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.announcement_attachment IS '@omit create,update,delete';
+COMMENT ON TABLE public.announcement_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8461,7 +9380,7 @@ CREATE TABLE public.article_attachment (
 -- Name: TABLE article_attachment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.article_attachment IS '@omit create,update,delete';
+COMMENT ON TABLE public.article_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 
 
 --
@@ -8573,6 +9492,61 @@ ALTER TABLE public.cohort_subscription ALTER COLUMN id ADD GENERATED BY DEFAULT 
     NO MAXVALUE
     CACHE 1
 );
+
+
+--
+-- Name: person_federation_link; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_federation_link WITH (security_invoker='true') AS
+ SELECT person.id AS person_id,
+    'csts'::text AS federation,
+    (person.csts_id)::bigint AS external_id
+   FROM public.person
+  WHERE (person.csts_id <> 0)
+UNION ALL
+ SELECT person.id AS person_id,
+    'wdsf'::text AS federation,
+    (person.wdsf_id)::bigint AS external_id
+   FROM public.person
+  WHERE (person.wdsf_id <> 0);
+
+
+--
+-- Name: VIEW person_federation_link; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.person_federation_link IS '@primaryKey person_id,federation
+@foreignKey (person_id) references public.person (id)
+@foreignKey (federation,external_id) references federated.person (federation,external_id)
+@behavior -single -list -connection -insert -update -delete';
+
+
+--
+-- Name: couple_federation_link; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.couple_federation_link WITH (security_invoker='true') AS
+ SELECT c.id AS couple_id,
+    fc.id AS competitor_id
+   FROM (((((((public.couple c
+     JOIN public.person_federation_link ml ON ((ml.person_id = c.man_id)))
+     JOIN federated.person mp ON (((mp.federation = ml.federation) AND (mp.external_id = ml.external_id))))
+     JOIN federated.competitor_component mc ON (((mc.person_id = mp.id) AND (mc.role = 'lead'::federated.competitor_role))))
+     JOIN federated.competitor fc ON (((fc.id = mc.competitor_id) AND (fc.competitor_type = 'couple'::federated.competitor_type))))
+     JOIN federated.competitor_component wc ON (((wc.competitor_id = fc.id) AND (wc.role = 'follow'::federated.competitor_role))))
+     JOIN federated.person wp ON ((wp.id = wc.person_id)))
+     JOIN public.person_federation_link wl ON (((wl.person_id = c.woman_id) AND ((wl.federation = wp.federation) AND (wl.external_id = wp.external_id)))));
+
+
+--
+-- Name: VIEW couple_federation_link; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.couple_federation_link IS '@primaryKey couple_id,competitor_id
+@foreignKey (couple_id) references public.couple (id)
+@foreignKey (competitor_id) references federated.competitor (id)
+@behavior -single -list -connection -insert -update -delete';
 
 
 --
@@ -9009,8 +9983,8 @@ CREATE TABLE public.location_image (
 -- Name: TABLE location_image; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.location_image IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.location_image IS '@simpleCollections only
+@behavior -insert -update -delete -query:resource:connection -query:resource:list';
 
 
 --
@@ -9182,6 +10156,106 @@ ALTER TABLE public.person_invitation ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 
 
 --
+-- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_proxy (
+    user_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now(),
+    until timestamp with time zone,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT user_proxy_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_proxy IS '@simpleCollections only
+@behavior -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
+
+
+--
+-- Name: person_last_activity; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.person_last_activity WITH (security_barrier='false') AS
+ SELECT ( SELECT public.current_tenant_id() AS current_tenant_id) AS tenant_id,
+    p.id AS person_id,
+    web.web_at,
+    card.card_entry_at,
+    training.training_at,
+    competition.competition_on
+   FROM ((((public.person p
+     LEFT JOIN LATERAL ( SELECT max(u.last_active_at) AS web_at
+           FROM (public.user_proxy up
+             JOIN public.users u ON ((u.id = up.user_id)))
+          WHERE ((up.person_id = p.id) AND (up.status = 'active'::public.relationship_status))) web ON (true))
+     LEFT JOIN LATERAL ( SELECT e.occurred_at AS card_entry_at
+           FROM public.access_event e
+          WHERE ((e.tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (e.person_id = p.id) AND e.allowed AND (e.occurred_at <= now()))
+          ORDER BY e.occurred_at DESC
+         LIMIT 1) card ON (true))
+     LEFT JOIN LATERAL ( SELECT max(e.since) AS training_at
+           FROM (public.event_instance_registration r
+             JOIN public.event_instance e ON (((e.id = r.instance_id) AND (e.tenant_id = r.tenant_id))))
+          WHERE ((r.person_id = p.id) AND (r.tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (r.registration_status = 'active'::public.event_instance_registration_status) AND ((r.status = 'attended'::public.attendance_type) OR (e.type = 'lesson'::public.event_type)) AND (NOT e.is_cancelled) AND (e.since <= now()) AND (e.type = ANY (ARRAY['lesson'::public.event_type, 'group'::public.event_type, 'camp'::public.event_type])))) training ON (true))
+     LEFT JOIN LATERAL ( SELECT max(c.start_date) AS competition_on
+           FROM ((((( VALUES ('csts'::text,(p.csts_id)::bigint), ('wdsf'::text,(p.wdsf_id)::bigint)) l(federation, external_id)
+             JOIN federated.person fp ON (((fp.federation = l.federation) AND (fp.external_id = l.external_id))))
+             JOIN federated.competitor_component cc ON ((cc.person_id = fp.id)))
+             JOIN federated.competition_result r ON ((r.competitor_id = cc.competitor_id)))
+             JOIN federated.competition c ON ((c.id = r.competition_id)))
+          WHERE ((l.external_id <> 0) AND (c.start_date <= CURRENT_DATE))) competition ON (true))
+  WHERE (( SELECT pg_has_role(CURRENT_USER, 'trainer'::name, 'member'::text) AS pg_has_role) AND ((EXISTS ( SELECT
+           FROM public.current_tenant_membership m
+          WHERE (m.person_id = p.id))) OR (EXISTS ( SELECT
+           FROM public.current_tenant_trainer t
+          WHERE (t.person_id = p.id))) OR (EXISTS ( SELECT
+           FROM public.current_tenant_administrator a
+          WHERE (a.person_id = p.id))) OR (EXISTS ( SELECT
+           FROM public.current_cohort_membership cm
+          WHERE (cm.person_id = p.id)))));
+
+
+--
+-- Name: VIEW person_last_activity; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.person_last_activity IS '@primaryKey person_id
+@unique tenant_id,person_id
+@foreignKey (person_id) references public.person (id)|@foreignFieldName lastActivity
+@behavior -query:resource:single -query:resource:list -query:resource:connection -insert -update -delete';
+
+
+--
+-- Name: COLUMN person_last_activity.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person_last_activity.tenant_id IS '@notNull';
+
+
+--
+-- Name: COLUMN person_last_activity.person_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person_last_activity.person_id IS '@notNull';
+
+
+--
 -- Name: posting_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -9334,7 +10408,7 @@ CREATE VIEW public.tenant_location WITH (security_invoker='true') AS
 --
 
 COMMENT ON VIEW public.tenant_location IS '@primaryKey id
-@unique tenant_id,id
+@unique tenant_id,id|@behavior -query:resource:single
 @foreignKey (tenant_id) references tenant(id)
 @foreignKey (tenant_id,cover_image_id) references file(tenant_id,id)|@fieldName coverImage|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @simpleCollections only
@@ -9422,9 +10496,8 @@ CREATE VIEW public.tenant_location_image WITH (security_invoker='true') AS
 COMMENT ON VIEW public.tenant_location_image IS '@primaryKey tenant_id,location_id,file_id
 @foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName location|@foreignFieldName images
 @foreignKey (tenant_id,file_id) references file(tenant_id,id)|@fieldName file|@foreignFieldName locationImages
-@omit create,update,delete
 @simpleCollections only
-@behavior -insert -update -delete';
+@behavior -insert -update -delete -query:resource:connection -query:resource:list';
 
 
 --
@@ -9488,39 +10561,6 @@ ALTER TABLE public.transaction ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENT
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: user_proxy; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_proxy (
-    user_id bigint NOT NULL,
-    person_id bigint NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now(),
-    until timestamp with time zone,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT user_proxy_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.user_proxy IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
 
 
 --
@@ -9821,6 +10861,14 @@ ALTER TABLE ONLY crawler.rate_limit_rule
 
 
 --
+-- Name: age_group age_group_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.age_group
+    ADD CONSTRAINT age_group_pkey PRIMARY KEY (code);
+
+
+--
 -- Name: category category_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -9861,6 +10909,13 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: CONSTRAINT competition_federation_id_key ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_federation_id_key ON federated.competition IS '@behavior -query:resource:single';
+
+
+--
 -- Name: competition competition_id_category_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -9869,11 +10924,25 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: CONSTRAINT competition_id_category_id_key ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_id_category_id_key ON federated.competition IS '@behavior -query:resource:single';
+
+
+--
 -- Name: competition competition_id_event_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_id_event_id_key UNIQUE (id, event_id);
+
+
+--
+-- Name: CONSTRAINT competition_id_event_id_key ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_id_event_id_key ON federated.competition IS '@behavior -query:resource:single';
 
 
 --
@@ -9917,11 +10986,25 @@ ALTER TABLE ONLY federated.competition_round
 
 
 --
+-- Name: CONSTRAINT competition_round_id_competition_id_key ON competition_round; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_id_competition_id_key ON federated.competition_round IS '@behavior -query:resource:single';
+
+
+--
 -- Name: competition_round competition_round_id_dance_program_id_key; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_id_dance_program_id_key UNIQUE (id, dance_program_id);
+
+
+--
+-- Name: CONSTRAINT competition_round_id_dance_program_id_key ON competition_round; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_id_dance_program_id_key ON federated.competition_round IS '@behavior -query:resource:single';
 
 
 --
@@ -10005,6 +11088,14 @@ ALTER TABLE ONLY federated.competitor
 
 
 --
+-- Name: couple_age_rule couple_age_rule_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.couple_age_rule
+    ADD CONSTRAINT couple_age_rule_pkey PRIMARY KEY (age_group_code, division);
+
+
+--
 -- Name: dance dance_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -10061,6 +11152,13 @@ ALTER TABLE ONLY federated.event
 
 
 --
+-- Name: CONSTRAINT event_federation_id_key ON event; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_federation_id_key ON federated.event IS '@behavior -query:resource:single';
+
+
+--
 -- Name: event_official event_official_pkey; Type: CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -10090,6 +11188,13 @@ ALTER TABLE ONLY federated.federation_club
 
 ALTER TABLE ONLY federated.federation_club
     ADD CONSTRAINT federation_club_federation_id_key UNIQUE (federation, id);
+
+
+--
+-- Name: CONSTRAINT federation_club_federation_id_key ON federation_club; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT federation_club_federation_id_key ON federated.federation_club IS '@behavior -query:resource:single';
 
 
 --
@@ -10210,6 +11315,13 @@ ALTER TABLE ONLY federated.round_dance
 
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_round_id_dance_order_dance_code_key UNIQUE (round_id, dance_order, dance_code);
+
+
+--
+-- Name: CONSTRAINT round_dance_round_id_dance_order_dance_code_key ON round_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT round_dance_round_id_dance_order_dance_code_key ON federated.round_dance IS '@behavior -query:resource:single';
 
 
 --
@@ -10349,6 +11461,13 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
+-- Name: CONSTRAINT cohort_group_tenant_id_id_key ON cohort_group; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_group_tenant_id_id_key ON public.cohort_group IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+
+
+--
 -- Name: cohort_membership cohort_membership_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10386,6 +11505,13 @@ ALTER TABLE ONLY public.cohort_subscription
 
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
+-- Name: CONSTRAINT cohort_tenant_id_id_key ON cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cohort_tenant_id_id_key ON public.cohort IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
 
 
 --
@@ -10461,6 +11587,13 @@ ALTER TABLE ONLY public.event_instance
 
 
 --
+-- Name: CONSTRAINT event_instance_tenant_id_id_key ON event_instance; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_instance_tenant_id_id_key ON public.event_instance IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+
+
+--
 -- Name: event_instance_trainer event_instance_trainer_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10498,6 +11631,13 @@ ALTER TABLE ONLY public.event_series
 
 ALTER TABLE ONLY public.event_series
     ADD CONSTRAINT event_series_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
+-- Name: CONSTRAINT event_series_tenant_id_id_key ON event_series; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_series_tenant_id_id_key ON public.event_series IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
 
 
 --
@@ -10605,6 +11745,13 @@ ALTER TABLE ONLY public.payment
 
 
 --
+-- Name: CONSTRAINT payment_tenant_id_id_key ON payment; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT payment_tenant_id_id_key ON public.payment IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+
+
+--
 -- Name: person_invitation person_invitation_access_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10693,6 +11840,13 @@ ALTER TABLE ONLY public.location
 
 
 --
+-- Name: CONSTRAINT tenant_location_tenant_id_id_key ON location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT tenant_location_tenant_id_id_key ON public.location IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+
+
+--
 -- Name: tenant_membership tenant_membership_no_overlap; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10754,6 +11908,13 @@ ALTER TABLE ONLY public.transaction
 
 ALTER TABLE ONLY public.transaction
     ADD CONSTRAINT transaction_tenant_id_id_key UNIQUE (tenant_id, id);
+
+
+--
+-- Name: CONSTRAINT transaction_tenant_id_id_key ON transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT transaction_tenant_id_id_key ON public.transaction IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
 
 
 --
@@ -10969,6 +12130,13 @@ CREATE INDEX json_response_frontier_fetched_desc_idx ON crawler.json_response US
 
 
 --
+-- Name: category_age_group_code_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX category_age_group_code_idx ON federated.category USING btree (age_group_code);
+
+
+--
 -- Name: competition_category_id_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -11067,6 +12235,20 @@ CREATE INDEX competition_round_result_round_id_overall_ranking_idx ON federated.
 
 
 --
+-- Name: competition_start_date_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competition_start_date_idx ON federated.competition USING btree (start_date) INCLUDE (id);
+
+
+--
+-- Name: competitor_age_group_code_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competitor_age_group_code_idx ON federated.competitor USING btree (age_group_code);
+
+
+--
 -- Name: competitor_category_progress_competitor_id_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -11085,6 +12267,20 @@ CREATE INDEX competitor_club_affiliation_club_id_valid_from_valid_to_idx ON fede
 --
 
 CREATE INDEX competitor_component_person_id_idx ON federated.competitor_component USING btree (person_id);
+
+
+--
+-- Name: competitor_external_id_text_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competitor_external_id_text_idx ON federated.competitor USING btree (external_id);
+
+
+--
+-- Name: competitor_search_name_trgm_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX competitor_search_name_trgm_idx ON federated.competitor USING gin (search_name public.gin_trgm_ops);
 
 
 --
@@ -11151,6 +12347,13 @@ CREATE INDEX idx_person_search_name_trgm ON federated.person USING gin (search_n
 
 
 --
+-- Name: person_age_group_code_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX person_age_group_code_idx ON federated.person USING btree (age_group_code);
+
+
+--
 -- Name: person_club_membership_club_id_valid_from_valid_to_idx; Type: INDEX; Schema: federated; Owner: -
 --
 
@@ -11162,6 +12365,13 @@ CREATE INDEX person_club_membership_club_id_valid_from_valid_to_idx ON federated
 --
 
 CREATE INDEX person_club_membership_person_id_valid_from_valid_to_idx ON federated.person_club_membership USING btree (person_id, valid_from, valid_to);
+
+
+--
+-- Name: person_external_id_text_idx; Type: INDEX; Schema: federated; Owner: -
+--
+
+CREATE INDEX person_external_id_text_idx ON federated.person USING btree (((external_id)::text));
 
 
 --
@@ -11470,6 +12680,13 @@ CREATE INDEX event_instance_parent_id_idx ON public.event_instance USING btree (
 --
 
 CREATE INDEX event_instance_range_idx ON public.event_instance USING gist (range);
+
+
+--
+-- Name: event_instance_registration_active_person_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_instance_registration_active_person_idx ON public.event_instance_registration USING btree (tenant_id, person_id) INCLUDE (instance_id, status) WHERE (registration_status = 'active'::public.event_instance_registration_status);
 
 
 --
@@ -12096,6 +13313,27 @@ CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
 
 
 --
+-- Name: category _resolve_age_group; Type: TRIGGER; Schema: federated; Owner: -
+--
+
+CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.category FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
+
+
+--
+-- Name: competitor _resolve_age_group; Type: TRIGGER; Schema: federated; Owner: -
+--
+
+CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.competitor FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
+
+
+--
+-- Name: person _resolve_age_group; Type: TRIGGER; Schema: federated; Owner: -
+--
+
+CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.person FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
+
+
+--
 -- Name: access_credential _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -12544,6 +13782,13 @@ CREATE TRIGGER _600_notify_announcement_update AFTER UPDATE ON public.announceme
 
 
 --
+-- Name: event_instance_registration _800_sync_lesson_payment; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE CONSTRAINT TRIGGER _800_sync_lesson_payment AFTER INSERT OR DELETE OR UPDATE OF instance_id, person_id, registration_status ON public.event_instance_registration DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION app_private.tg_eir__sync_lesson_payment();
+
+
+--
 -- Name: file _900_delete_object; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -12727,11 +13972,25 @@ ALTER TABLE ONLY crawler.frontier
 
 
 --
+-- Name: CONSTRAINT frontier_last_response_id_fkey ON frontier; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON CONSTRAINT frontier_last_response_id_fkey ON crawler.frontier IS '@foreignFieldName targetsWithLatestResponse';
+
+
+--
 -- Name: frontier frontier_last_successful_response_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
 --
 
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
+
+
+--
+-- Name: CONSTRAINT frontier_last_successful_response_id_fkey ON frontier; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON CONSTRAINT frontier_last_successful_response_id_fkey ON crawler.frontier IS '@foreignFieldName targetsWithLastSuccessfulResponse';
 
 
 --
@@ -12743,6 +14002,13 @@ ALTER TABLE ONLY crawler.json_response
 
 
 --
+-- Name: CONSTRAINT json_response_content_hash_fkey ON json_response; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON CONSTRAINT json_response_content_hash_fkey ON crawler.json_response IS '@foreignFieldName responses';
+
+
+--
 -- Name: json_response json_response_frontier_id_fkey; Type: FK CONSTRAINT; Schema: crawler; Owner: -
 --
 
@@ -12751,11 +14017,43 @@ ALTER TABLE ONLY crawler.json_response
 
 
 --
+-- Name: CONSTRAINT json_response_frontier_id_fkey ON json_response; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON CONSTRAINT json_response_frontier_id_fkey ON crawler.json_response IS '@foreignFieldName responses';
+
+
+--
+-- Name: category category_age_group_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.category
+    ADD CONSTRAINT category_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
+
+
+--
+-- Name: CONSTRAINT category_age_group_code_fkey ON category; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT category_age_group_code_fkey ON federated.category IS '@fieldName ageGroupDetails
+@foreignFieldName categories
+@foreignSimpleFieldName categories
+@backwardBehavior +list -connection';
+
+
+--
 -- Name: category category_base_dance_program_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_base_dance_program_id_fkey FOREIGN KEY (base_dance_program_id) REFERENCES federated.dance_program(id);
+
+
+--
+-- Name: CONSTRAINT category_base_dance_program_id_fkey ON category; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT category_base_dance_program_id_fkey ON federated.category IS '@foreignFieldName categories';
 
 
 --
@@ -12775,11 +14073,26 @@ ALTER TABLE ONLY federated.competition_entry
 
 
 --
+-- Name: CONSTRAINT competition_entry_competition_id_fkey ON competition_entry; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_entry_competition_id_fkey ON federated.competition_entry IS '@foreignFieldName entries
+@backwardBehavior +list';
+
+
+--
 -- Name: competition_entry competition_entry_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_entry
     ADD CONSTRAINT competition_entry_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+
+
+--
+-- Name: CONSTRAINT competition_entry_competitor_id_fkey ON competition_entry; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_entry_competitor_id_fkey ON federated.competition_entry IS '@foreignFieldName competitionEntries';
 
 
 --
@@ -12791,11 +14104,26 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: CONSTRAINT competition_event_id_fkey ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_event_id_fkey ON federated.competition IS '@foreignFieldName competitions
+@backwardBehavior +list';
+
+
+--
 -- Name: competition competition_federation_event_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_event_id_fkey FOREIGN KEY (federation, event_id) REFERENCES federated.event(federation, id);
+
+
+--
+-- Name: CONSTRAINT competition_federation_event_id_fkey ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_federation_event_id_fkey ON federated.competition IS '@behavior -single -connection -list';
 
 
 --
@@ -12807,11 +14135,25 @@ ALTER TABLE ONLY federated.competition
 
 
 --
+-- Name: CONSTRAINT competition_federation_fkey ON competition; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_federation_fkey ON federated.competition IS '@foreignFieldName competitions';
+
+
+--
 -- Name: competition_official competition_official_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_official
     ADD CONSTRAINT competition_official_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT competition_official_competition_id_fkey ON competition_official; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_official_competition_id_fkey ON federated.competition_official IS '@foreignFieldName officials';
 
 
 --
@@ -12823,11 +14165,26 @@ ALTER TABLE ONLY federated.competition_official
 
 
 --
+-- Name: CONSTRAINT competition_official_person_id_fkey ON competition_official; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_official_person_id_fkey ON federated.competition_official IS '@foreignFieldName competitionOfficialAssignments';
+
+
+--
 -- Name: competition_result competition_result_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_result
     ADD CONSTRAINT competition_result_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
+
+
+--
+-- Name: CONSTRAINT competition_result_competition_id_fkey ON competition_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_result_competition_id_fkey ON federated.competition_result IS '@foreignFieldName results
+@backwardBehavior +list';
 
 
 --
@@ -12839,11 +14196,26 @@ ALTER TABLE ONLY federated.competition_result
 
 
 --
+-- Name: CONSTRAINT competition_result_competitor_id_fkey ON competition_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_result_competitor_id_fkey ON federated.competition_result IS '@foreignFieldName competitionResults';
+
+
+--
 -- Name: competition_round competition_round_competition_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
+
+
+--
+-- Name: CONSTRAINT competition_round_competition_id_fkey ON competition_round; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_competition_id_fkey ON federated.competition_round IS '@foreignFieldName rounds
+@backwardBehavior +list -connection';
 
 
 --
@@ -12863,11 +14235,26 @@ ALTER TABLE ONLY federated.competition_round_judge
 
 
 --
+-- Name: CONSTRAINT competition_round_judge_person_judge_id_fkey ON competition_round_judge; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_judge_person_judge_id_fkey ON federated.competition_round_judge IS '@foreignFieldName roundJudgeAssignments';
+
+
+--
 -- Name: competition_round_judge competition_round_judge_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_round_judge
     ADD CONSTRAINT competition_round_judge_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT competition_round_judge_round_id_fkey ON competition_round_judge; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_judge_round_id_fkey ON federated.competition_round_judge IS '@foreignFieldName judges
+@backwardBehavior +list -connection';
 
 
 --
@@ -12879,11 +14266,42 @@ ALTER TABLE ONLY federated.competition_round_result
 
 
 --
+-- Name: CONSTRAINT competition_round_result_competitor_id_fkey ON competition_round_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_result_competitor_id_fkey ON federated.competition_round_result IS '@foreignFieldName roundResults';
+
+
+--
 -- Name: competition_round_result competition_round_result_round_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competition_round_result
     ADD CONSTRAINT competition_round_result_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT competition_round_result_round_id_fkey ON competition_round_result; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competition_round_result_round_id_fkey ON federated.competition_round_result IS '@foreignFieldName results
+@backwardBehavior +list -connection';
+
+
+--
+-- Name: competitor competitor_age_group_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.competitor
+    ADD CONSTRAINT competitor_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
+
+
+--
+-- Name: CONSTRAINT competitor_age_group_code_fkey ON competitor; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_age_group_code_fkey ON federated.competitor IS '@fieldName ageGroupDetails
+@backwardBehavior -single -list -connection';
 
 
 --
@@ -12895,11 +14313,26 @@ ALTER TABLE ONLY federated.competitor_category_progress
 
 
 --
+-- Name: CONSTRAINT competitor_category_progress_category_id_fkey ON competitor_category_progress; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_category_progress_category_id_fkey ON federated.competitor_category_progress IS '@foreignFieldName competitorProgresses';
+
+
+--
 -- Name: competitor_category_progress competitor_category_progress_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competitor_category_progress
     ADD CONSTRAINT competitor_category_progress_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+
+
+--
+-- Name: CONSTRAINT competitor_category_progress_competitor_id_fkey ON competitor_category_progress; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_category_progress_competitor_id_fkey ON federated.competitor_category_progress IS '@foreignFieldName categoryProgresses
+@backwardBehavior +list -connection';
 
 
 --
@@ -12911,11 +14344,25 @@ ALTER TABLE ONLY federated.competitor_club_affiliation
 
 
 --
+-- Name: CONSTRAINT competitor_club_affiliation_club_id_fkey ON competitor_club_affiliation; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_club_affiliation_club_id_fkey ON federated.competitor_club_affiliation IS '@foreignFieldName competitorAffiliations';
+
+
+--
 -- Name: competitor_club_affiliation competitor_club_affiliation_competitor_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competitor_club_affiliation
     ADD CONSTRAINT competitor_club_affiliation_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+
+
+--
+-- Name: CONSTRAINT competitor_club_affiliation_competitor_id_fkey ON competitor_club_affiliation; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_club_affiliation_competitor_id_fkey ON federated.competitor_club_affiliation IS '@foreignFieldName clubAffiliations';
 
 
 --
@@ -12927,11 +14374,25 @@ ALTER TABLE ONLY federated.competitor_component
 
 
 --
+-- Name: CONSTRAINT competitor_component_competitor_id_fkey ON competitor_component; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_component_competitor_id_fkey ON federated.competitor_component IS '@foreignFieldName components';
+
+
+--
 -- Name: competitor_component competitor_component_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.competitor_component
     ADD CONSTRAINT competitor_component_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+
+
+--
+-- Name: CONSTRAINT competitor_component_person_id_fkey ON competitor_component; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_component_person_id_fkey ON federated.competitor_component IS '@foreignFieldName competitorComponents';
 
 
 --
@@ -12943,11 +14404,43 @@ ALTER TABLE ONLY federated.competitor
 
 
 --
+-- Name: CONSTRAINT competitor_federation_fkey ON competitor; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT competitor_federation_fkey ON federated.competitor IS '@foreignFieldName competitors';
+
+
+--
+-- Name: couple_age_rule couple_age_rule_age_group_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.couple_age_rule
+    ADD CONSTRAINT couple_age_rule_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
+
+
+--
+-- Name: CONSTRAINT couple_age_rule_age_group_code_fkey ON couple_age_rule; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT couple_age_rule_age_group_code_fkey ON federated.couple_age_rule IS '@fieldName ageGroupDetails
+@foreignFieldName coupleRules
+@foreignSimpleFieldName coupleRules
+@backwardBehavior +list -connection';
+
+
+--
 -- Name: dance_program_dance dance_program_dance_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.dance_program_dance
     ADD CONSTRAINT dance_program_dance_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
+
+
+--
+-- Name: CONSTRAINT dance_program_dance_dance_code_fkey ON dance_program_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT dance_program_dance_dance_code_fkey ON federated.dance_program_dance IS '@foreignFieldName dancePrograms';
 
 
 --
@@ -12959,11 +14452,25 @@ ALTER TABLE ONLY federated.dance_program_dance
 
 
 --
+-- Name: CONSTRAINT dance_program_dance_program_id_fkey ON dance_program_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT dance_program_dance_program_id_fkey ON federated.dance_program_dance IS '@foreignFieldName dances';
+
+
+--
 -- Name: event event_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+
+--
+-- Name: CONSTRAINT event_federation_fkey ON event; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_federation_fkey ON federated.event IS '@foreignFieldName events';
 
 
 --
@@ -12975,11 +14482,25 @@ ALTER TABLE ONLY federated.event
 
 
 --
+-- Name: CONSTRAINT event_federation_organizing_club_id_fkey ON event; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_federation_organizing_club_id_fkey ON federated.event IS '@behavior -single -connection -list';
+
+
+--
 -- Name: event_official event_official_event_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.event_official
     ADD CONSTRAINT event_official_event_id_fkey FOREIGN KEY (event_id) REFERENCES federated.event(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT event_official_event_id_fkey ON event_official; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_official_event_id_fkey ON federated.event_official IS '@foreignFieldName officials';
 
 
 --
@@ -12991,11 +14512,25 @@ ALTER TABLE ONLY federated.event_official
 
 
 --
+-- Name: CONSTRAINT event_official_person_id_fkey ON event_official; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_official_person_id_fkey ON federated.event_official IS '@foreignFieldName eventOfficialAssignments';
+
+
+--
 -- Name: event event_organizing_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_organizing_club_id_fkey FOREIGN KEY (organizing_club_id) REFERENCES federated.federation_club(id);
+
+
+--
+-- Name: CONSTRAINT event_organizing_club_id_fkey ON event; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_organizing_club_id_fkey ON federated.event IS '@foreignFieldName events';
 
 
 --
@@ -13007,11 +14542,25 @@ ALTER TABLE ONLY federated.federation_club
 
 
 --
+-- Name: CONSTRAINT federation_club_federation_fkey ON federation_club; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT federation_club_federation_fkey ON federated.federation_club IS '@foreignFieldName clubs';
+
+
+--
 -- Name: judge_score judge_score_round_id_dance_order_dance_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey ON judge_score; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey ON federated.judge_score IS '@foreignFieldName judgeScores';
 
 
 --
@@ -13023,11 +14572,42 @@ ALTER TABLE ONLY federated.judge_score
 
 
 --
+-- Name: CONSTRAINT judge_score_round_id_fkey ON judge_score; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT judge_score_round_id_fkey ON federated.judge_score IS '@foreignFieldName judgeScores
+@backwardBehavior +list -connection';
+
+
+--
+-- Name: person person_age_group_code_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
+--
+
+ALTER TABLE ONLY federated.person
+    ADD CONSTRAINT person_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
+
+
+--
+-- Name: CONSTRAINT person_age_group_code_fkey ON person; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_age_group_code_fkey ON federated.person IS '@fieldName ageGroupDetails
+@backwardBehavior -single -list -connection';
+
+
+--
 -- Name: person_club_membership person_club_membership_club_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.person_club_membership
     ADD CONSTRAINT person_club_membership_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
+
+
+--
+-- Name: CONSTRAINT person_club_membership_club_id_fkey ON person_club_membership; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_club_membership_club_id_fkey ON federated.person_club_membership IS '@foreignFieldName personMemberships';
 
 
 --
@@ -13039,11 +14619,25 @@ ALTER TABLE ONLY federated.person_club_membership
 
 
 --
+-- Name: CONSTRAINT person_club_membership_person_id_fkey ON person_club_membership; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_club_membership_person_id_fkey ON federated.person_club_membership IS '@foreignFieldName clubMemberships';
+
+
+--
 -- Name: person person_federation_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+
+--
+-- Name: CONSTRAINT person_federation_fkey ON person; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_federation_fkey ON federated.person IS '@foreignFieldName people';
 
 
 --
@@ -13055,11 +14649,25 @@ ALTER TABLE ONLY federated.person_license
 
 
 --
+-- Name: CONSTRAINT person_license_federation_fkey ON person_license; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_license_federation_fkey ON federated.person_license IS '@foreignFieldName licenses';
+
+
+--
 -- Name: person_license person_license_person_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.person_license
     ADD CONSTRAINT person_license_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id) ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT person_license_person_id_fkey ON person_license; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT person_license_person_id_fkey ON federated.person_license IS '@foreignFieldName licenses';
 
 
 --
@@ -13079,6 +14687,13 @@ ALTER TABLE ONLY federated.ranklist_entry
 
 
 --
+-- Name: CONSTRAINT ranklist_entry_competitor_id_fkey ON ranklist_entry; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT ranklist_entry_competitor_id_fkey ON federated.ranklist_entry IS '@foreignFieldName ranklistEntries';
+
+
+--
 -- Name: ranklist_entry ranklist_entry_snapshot_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
@@ -13092,6 +14707,13 @@ ALTER TABLE ONLY federated.ranklist_entry
 
 ALTER TABLE ONLY federated.ranklist
     ADD CONSTRAINT ranklist_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+
+--
+-- Name: CONSTRAINT ranklist_federation_fkey ON ranklist; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT ranklist_federation_fkey ON federated.ranklist IS '@foreignFieldName ranklists';
 
 
 --
@@ -13111,11 +14733,26 @@ ALTER TABLE ONLY federated.round_dance
 
 
 --
+-- Name: CONSTRAINT round_dance_dance_program_id_dance_code_fkey ON round_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT round_dance_dance_program_id_dance_code_fkey ON federated.round_dance IS '@foreignFieldName roundDances';
+
+
+--
 -- Name: round_dance round_dance_round_id_dance_program_id_fkey; Type: FK CONSTRAINT; Schema: federated; Owner: -
 --
 
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON DELETE CASCADE;
+    ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT round_dance_round_id_dance_program_id_fkey ON round_dance; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON CONSTRAINT round_dance_round_id_dance_program_id_fkey ON federated.round_dance IS '@foreignFieldName dances
+@backwardBehavior +list -connection';
 
 
 --
@@ -14304,6 +15941,71 @@ ALTER TABLE app_private.platby_raw ENABLE ROW LEVEL SECURITY;
 --
 
 CREATE POLICY view_my ON app_private.platby_item FOR SELECT TO member USING ((pi_id_user = public.current_user_id()));
+
+
+--
+-- Name: frontier; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.frontier ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: incremental_ranges; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.incremental_ranges ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: json_response; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.json_response ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: json_response_cache; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.json_response_cache ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: rate_limit_rule; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.rate_limit_rule ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: frontier system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.frontier FOR SELECT TO system_admin USING (true);
+
+
+--
+-- Name: incremental_ranges system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.incremental_ranges FOR SELECT TO system_admin USING (true);
+
+
+--
+-- Name: json_response system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.json_response FOR SELECT TO system_admin USING (true);
+
+
+--
+-- Name: json_response_cache system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.json_response_cache FOR SELECT TO system_admin USING (true);
+
+
+--
+-- Name: rate_limit_rule system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.rate_limit_rule FOR SELECT TO system_admin USING (true);
 
 
 --
@@ -15696,6 +17398,13 @@ GRANT USAGE ON SCHEMA app_private TO anonymous;
 
 
 --
+-- Name: SCHEMA crawler; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA crawler TO system_admin;
+
+
+--
 -- Name: SCHEMA federated; Type: ACL; Schema: -; Owner: -
 --
 
@@ -15716,6 +17425,13 @@ GRANT ALL ON SCHEMA public TO anonymous;
 --
 
 GRANT ALL ON SCHEMA wdsf TO postgres;
+
+
+--
+-- Name: TYPE event_status; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT ALL ON TYPE federated.event_status TO anonymous;
 
 
 --
@@ -15838,6 +17554,14 @@ GRANT ALL ON FUNCTION app_private.normalize_name(text) TO anonymous;
 
 
 --
+-- Name: FUNCTION person_membership_candidates(membership_state text); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.person_membership_candidates(membership_state text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_private.person_membership_candidates(membership_state text) TO anonymous;
+
+
+--
 -- Name: FUNCTION queue_announcement_notifications(in_announcement_id bigint); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -15917,6 +17641,13 @@ REVOKE ALL ON FUNCTION app_private.tg_event_instance_trainer__refresh_manager_pe
 
 
 --
+-- Name: FUNCTION tg_resolve_age_group(); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.tg_resolve_age_group() FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION visible_announcement_ids(); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -15952,10 +17683,56 @@ GRANT ALL ON FUNCTION app_private.visible_user_proxy_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone); Type: ACL; Schema: crawler; Owner: -
+--
+
+REVOKE ALL ON FUNCTION crawler.reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone) FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status); Type: ACL; Schema: crawler; Owner: -
 --
 
 REVOKE ALL ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) FROM PUBLIC;
+
+
+--
+-- Name: TABLE federation; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.federation TO anonymous;
+
+
+--
+-- Name: FUNCTION federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date); Type: ACL; Schema: federated; Owner: -
+--
+
+REVOKE ALL ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) FROM PUBLIC;
+GRANT ALL ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) TO anonymous;
+
+
+--
+-- Name: FUNCTION federation_event_facets(federation federated.federation, include_cancelled boolean); Type: ACL; Schema: federated; Owner: -
+--
+
+REVOKE ALL ON FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean) FROM PUBLIC;
+GRANT ALL ON FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean) TO anonymous;
+
+
+--
+-- Name: FUNCTION federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]); Type: ACL; Schema: federated; Owner: -
+--
+
+REVOKE ALL ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) TO anonymous;
+
+
+--
+-- Name: FUNCTION resolve_age_group(source_name text); Type: ACL; Schema: federated; Owner: -
+--
+
+REVOKE ALL ON FUNCTION federated.resolve_age_group(source_name text) FROM PUBLIC;
+GRANT ALL ON FUNCTION federated.resolve_age_group(source_name text) TO anonymous;
 
 
 --
@@ -16113,6 +17890,20 @@ GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigin
 
 
 --
+-- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.couple TO anonymous;
+
+
+--
+-- Name: FUNCTION couple_age_group(c public.couple); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.couple_age_group(c public.couple) TO anonymous;
+
+
+--
 -- Name: FUNCTION create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric, v_currency text, v_date timestamp with time zone); Type: ACL; Schema: public; Owner: -
 --
 
@@ -16152,13 +17943,6 @@ GRANT ALL ON FUNCTION public.create_next_cohort_subscription_payment(c public.co
 --
 
 GRANT ALL ON FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) TO anonymous;
-
-
---
--- Name: FUNCTION csts_athlete(idt integer); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.csts_athlete(idt integer) TO anonymous;
 
 
 --
@@ -16208,6 +17992,14 @@ GRANT ALL ON FUNCTION public.digest(text, text) TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.event_instance_approx_price(v_instance public.event_instance) TO anonymous;
+
+
+--
+-- Name: FUNCTION event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION public.event_instance_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) TO anonymous;
 
 
 --
@@ -16281,10 +18073,10 @@ GRANT ALL ON FUNCTION public.event_instance_trainers(v_instance public.event_ins
 
 
 --
--- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[]) TO anonymous;
+GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) TO anonymous;
 
 
 --
@@ -16464,17 +18256,17 @@ GRANT ALL ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT a
 
 
 --
--- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.couple TO anonymous;
-
-
---
 -- Name: FUNCTION person_active_couples(p public.person); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.person_active_couples(p public.person) TO anonymous;
+
+
+--
+-- Name: FUNCTION person_age_group(p public.person); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.person_age_group(p public.person) TO anonymous;
 
 
 --
@@ -16492,17 +18284,18 @@ GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
 
 
 --
--- Name: FUNCTION person_csts_candidates(in_person public.person, "limit" integer, threshold real); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.person_csts_candidates(in_person public.person, "limit" integer, threshold real) TO anonymous;
+REVOKE ALL ON FUNCTION public.person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean) FROM PUBLIC;
+GRANT ALL ON FUNCTION public.person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean) TO anonymous;
 
 
 --
--- Name: FUNCTION person_csts_progress(in_person public.person); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.person_csts_progress(in_person public.person) TO anonymous;
+GRANT ALL ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) TO anonymous;
 
 
 --
@@ -16843,13 +18636,6 @@ REVOKE ALL ON FUNCTION public.verify_function(f regproc, relid regclass) FROM PU
 
 
 --
--- Name: FUNCTION wdsf_athlete(min integer); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.wdsf_athlete(min integer) TO anonymous;
-
-
---
 -- Name: TABLE platby_category; Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -16934,6 +18720,76 @@ GRANT SELECT,USAGE ON SEQUENCE app_private.platby_raw_pr_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE frontier; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.frontier TO system_admin;
+
+
+--
+-- Name: TABLE json_response; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.json_response TO system_admin;
+
+
+--
+-- Name: TABLE frontier_failure; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.frontier_failure TO system_admin;
+
+
+--
+-- Name: TABLE frontier_failure_group; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.frontier_failure_group TO system_admin;
+
+
+--
+-- Name: TABLE frontier_fetch_job; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.frontier_fetch_job TO system_admin;
+
+
+--
+-- Name: TABLE frontier_summary; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.frontier_summary TO system_admin;
+
+
+--
+-- Name: TABLE incremental_ranges; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.incremental_ranges TO system_admin;
+
+
+--
+-- Name: TABLE json_response_cache; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.json_response_cache TO system_admin;
+
+
+--
+-- Name: TABLE rate_limit_rule; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.rate_limit_rule TO system_admin;
+
+
+--
+-- Name: TABLE age_group; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.age_group TO anonymous;
+
+
+--
 -- Name: TABLE competition; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -16959,6 +18815,13 @@ GRANT SELECT ON TABLE federated.competition_official TO anonymous;
 --
 
 GRANT SELECT ON TABLE federated.competition_result TO anonymous;
+
+
+--
+-- Name: TABLE competition_participation; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.competition_participation TO anonymous;
 
 
 --
@@ -17011,6 +18874,13 @@ GRANT SELECT ON TABLE federated.competitor_component TO anonymous;
 
 
 --
+-- Name: TABLE couple_age_rule; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.couple_age_rule TO anonymous;
+
+
+--
 -- Name: TABLE dance; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -17043,13 +18913,6 @@ GRANT SELECT ON TABLE federated.event TO anonymous;
 --
 
 GRANT SELECT ON TABLE federated.event_official TO anonymous;
-
-
---
--- Name: TABLE federation; Type: ACL; Schema: federated; Owner: -
---
-
-GRANT SELECT ON TABLE federated.federation TO anonymous;
 
 
 --
@@ -17239,6 +19102,20 @@ GRANT SELECT,USAGE ON SEQUENCE public.cohort_membership_id_seq TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.cohort_subscription_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE person_federation_link; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.person_federation_link TO anonymous;
+
+
+--
+-- Name: TABLE couple_federation_link; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.couple_federation_link TO anonymous;
 
 
 --
@@ -17536,6 +19413,20 @@ GRANT SELECT,USAGE ON SEQUENCE public.person_invitation_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.user_proxy TO anonymous;
+
+
+--
+-- Name: TABLE person_last_activity; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.person_last_activity TO anonymous;
+
+
+--
 -- Name: SEQUENCE posting_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17628,13 +19519,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.transaction_id_seq TO anonymous;
 
 
 --
--- Name: TABLE user_proxy; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.user_proxy TO anonymous;
-
-
---
 -- Name: SEQUENCE user_proxy_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -17687,5 +19571,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict sulyJKf0z5uswbSRAH63iSxeq2CqnAk2bISUbxnkXYs1PHk23E7uQgh2VHggLP3
+\unrestrict 0yKtEfQNrPVaVZlrEsWrtb17bx4kvbcmf0QHnABgWWfJabfepVSvDkXKMn0mTIR
 

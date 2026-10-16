@@ -5,6 +5,8 @@ CREATE TABLE federated.competition_round_judge (
     judge_label text
 );
 
+COMMENT ON TABLE federated.competition_round_judge IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.competition_round_judge TO anonymous;
 
 ALTER TABLE ONLY federated.competition_round_judge

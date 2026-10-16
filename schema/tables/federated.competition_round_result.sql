@@ -9,6 +9,8 @@ CREATE TABLE federated.competition_round_result (
     CONSTRAINT competition_round_result_check CHECK (((overall_ranking IS NULL) OR (overall_ranking_to IS NULL) OR (overall_ranking_to >= overall_ranking)))
 );
 
+COMMENT ON TABLE federated.competition_round_result IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.competition_round_result TO anonymous;
 
 ALTER TABLE ONLY federated.competition_round_result

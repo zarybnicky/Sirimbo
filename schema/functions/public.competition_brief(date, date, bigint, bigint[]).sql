@@ -2,10 +2,12 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
     LANGUAGE sql STABLE
     AS $$
   with scoped_people as (
-    select distinct p.id, p.name, p.csts_id, p.wdsf_id
-    from current_tenant_membership tm
-    join person p on p.id = tm.person_id
-    where (p_person_ids is null or p.id = any(p_person_ids))
+    select p.id, p.name
+    from person p
+    where (p.id = any(p_person_ids)
+       or (p_person_ids is null and exists (
+         select 1 from current_tenant_membership where person_id = p.id
+       )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
   ),
@@ -16,15 +18,9 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
       fp.id as federated_person_id,
       fp.federation
     from scoped_people sp
-    cross join lateral (
-      values
-        ('csts'::text, sp.csts_id::bigint),
-        ('wdsf'::text, sp.wdsf_id::bigint)
-    ) ids(federation, external_id)
+    join person_federation_link link on link.person_id = sp.id
     join federated.person fp
-      on fp.federation = ids.federation
-     and fp.external_id = ids.external_id
-     and ids.external_id <> 0
+      on (fp.federation, fp.external_id) = (link.federation, link.external_id)
   )
   select
     fp.person_id,
@@ -51,15 +47,13 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
     comp.competition_type,
     e.external_id as event_external_id,
     comp.external_id as competition_external_id
-  from federated.competition comp
+  from federated_people fp
+  join federated.competitor_component cc on cc.person_id = fp.federated_person_id
+  join federated.competitor c on c.id = cc.competitor_id
+  join federated.competition_entry ce on ce.competitor_id = c.id and not ce.cancelled
+  join federated.competition comp on comp.id = ce.competition_id
   join federated.event e on e.id = comp.event_id
   join federated.category cat on cat.id = comp.category_id
-  join federated.competition_entry ce
-    on ce.competition_id = comp.id
-   and not ce.cancelled
-  join federated.competitor c on c.id = ce.competitor_id
-  join federated.competitor_component cc on cc.competitor_id = c.id
-  join federated_people fp on fp.federated_person_id = cc.person_id
   left join lateral (
     select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
     from federated.dance_program_dance dpd

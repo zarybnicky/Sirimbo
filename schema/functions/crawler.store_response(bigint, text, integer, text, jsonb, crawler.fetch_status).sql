@@ -62,4 +62,6 @@ begin
 end;
 $$;
 
+COMMENT ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) IS '@behavior -*';
+
 REVOKE ALL ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) FROM PUBLIC;

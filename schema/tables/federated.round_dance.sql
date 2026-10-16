@@ -5,6 +5,10 @@ CREATE TABLE federated.round_dance (
     dance_order integer NOT NULL
 );
 
+COMMENT ON TABLE federated.round_dance IS '@name competition_round_dance
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single
+@ref dance singular via:federated.dance_program_dance;federated.dance';
+
 GRANT SELECT ON TABLE federated.round_dance TO anonymous;
 
 ALTER TABLE ONLY federated.round_dance
@@ -14,4 +18,4 @@ ALTER TABLE ONLY federated.round_dance
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_dance_program_id_dance_code_fkey FOREIGN KEY (dance_program_id, dance_code) REFERENCES federated.dance_program_dance(program_id, dance_code);
 ALTER TABLE ONLY federated.round_dance
-    ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON DELETE CASCADE;
+    ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON UPDATE CASCADE ON DELETE CASCADE;

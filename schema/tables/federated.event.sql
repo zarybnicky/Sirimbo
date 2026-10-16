@@ -23,8 +23,12 @@ CREATE TABLE federated.event (
     venue_lng double precision,
     venue_location_source text,
     venue_location_ref text,
+    status federated.event_status DEFAULT 'unknown'::federated.event_status NOT NULL,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
+
+COMMENT ON TABLE federated.event IS '@name federation_event
+@behavior -insert -update -delete -list';
 
 GRANT SELECT ON TABLE federated.event TO anonymous;
 

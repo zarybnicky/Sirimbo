@@ -259,12 +259,14 @@ begin
   if include_judging then
     return query
       with scoped_people as (
-        select distinct p.id, p.name, p.csts_id, p.wdsf_id
+        select p.id, p.name
         from person p
-        where (exists (select 1 from current_tenant_membership where person_id = p.id)
-           or exists (select 1 from current_tenant_trainer where person_id = p.id)
-           or exists (select 1 from current_tenant_administrator where person_id = p.id))
-          and (p_person_ids is null or p.id = any(p_person_ids))
+        where (p.id = any(p_person_ids)
+           or (p_person_ids is null and (
+             exists (select 1 from current_tenant_membership where person_id = p.id)
+             or exists (select 1 from current_tenant_trainer where person_id = p.id)
+             or exists (select 1 from current_tenant_administrator where person_id = p.id)
+           )))
           and (p_cohort_id is null or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
       ),
       federated_people as (
@@ -274,9 +276,9 @@ begin
           fp.id as federated_person_id,
           fp.federation
         from scoped_people sp
+        join person_federation_link link on link.person_id = sp.id
         join federated.person fp
-          on (fp.federation = 'csts' and fp.external_id = sp.csts_id)
-          or (fp.federation = 'wdsf' and fp.external_id = sp.wdsf_id)
+          on (fp.federation, fp.external_id) = (link.federation, link.external_id)
       )
       select distinct
         ('judging:event:' || e.id || ':' || fp.person_id)::text as id,

@@ -35,3 +35,7 @@ BEGIN
   END IF;
 END;
 $$;
+
+COMMENT ON FUNCTION crawler.reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone) IS '@behavior -*';
+
+REVOKE ALL ON FUNCTION crawler.reserve_request(in_host text, OUT granted boolean, OUT allowed_at timestamp with time zone) FROM PUBLIC;

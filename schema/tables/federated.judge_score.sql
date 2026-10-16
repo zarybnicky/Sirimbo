@@ -3,11 +3,13 @@ CREATE TABLE federated.judge_score (
     dance_order integer NOT NULL,
     dance_code text NOT NULL,
     judge_person_id bigint NOT NULL,
-    competitor_id bigint NOT NULL,
+    competitor_id text NOT NULL,
     component federated.score_component NOT NULL,
     score numeric(10,3) NOT NULL,
     raw_score text
 );
+
+COMMENT ON TABLE federated.judge_score IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 

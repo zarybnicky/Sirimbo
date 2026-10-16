@@ -16,6 +16,12 @@ CREATE TABLE crawler.frontier (
     last_successful_response_id bigint
 );
 
+COMMENT ON TABLE crawler.frontier IS '@name crawler_target
+@behavior -insert -update -delete -list';
+
+GRANT SELECT ON TABLE crawler.frontier TO system_admin;
+ALTER TABLE crawler.frontier ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_federation_kind_key_key UNIQUE (federation, kind, key);
 ALTER TABLE ONLY crawler.frontier
@@ -24,6 +30,8 @@ ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_response_id_fkey FOREIGN KEY (last_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
+
+CREATE POLICY system_admin_read ON crawler.frontier FOR SELECT TO system_admin USING (true);
 
 CREATE INDEX frontier_failure_idx ON crawler.frontier USING btree (federation, kind, id) WHERE ((fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (process_status = 'error'::crawler.process_status));
 CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (federation, kind);

@@ -13,7 +13,10 @@ CREATE TABLE public.couple (
 );
 
 COMMENT ON TABLE public.couple IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+@behavior -query:resource:list -query:resource:connection
+@ref federationCompetitors via:public.couple_federation_link;federated.competitor
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry
+@ref federationCompetitions via:public.couple_federation_link;federated.competitor;federated.competition_participation;federated.competition behavior:"+connection -list"';
 COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
 COMMENT ON COLUMN public.couple.active_range IS '@omit';
 

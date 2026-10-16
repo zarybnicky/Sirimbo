@@ -5,7 +5,7 @@ CREATE TABLE public.announcement_attachment (
     inline boolean DEFAULT false NOT NULL
 );
 
-COMMENT ON TABLE public.announcement_attachment IS '@omit create,update,delete';
+COMMENT ON TABLE public.announcement_attachment IS '@behavior -insert -update -delete -query:resource:connection -query:resource:list -query:resource:single';
 
 GRANT ALL ON TABLE public.announcement_attachment TO anonymous;
 ALTER TABLE public.announcement_attachment ENABLE ROW LEVEL SECURITY;

@@ -2,8 +2,11 @@ CREATE TABLE federated.competition_official (
     competition_id bigint NOT NULL,
     person_id text NOT NULL,
     role federated.official_role NOT NULL,
-    external_id text
+    external_id text,
+    judge_label text
 );
+
+COMMENT ON TABLE federated.competition_official IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 GRANT SELECT ON TABLE federated.competition_official TO anonymous;
 

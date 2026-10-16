@@ -1,4 +1,4 @@
-CREATE VIEW crawler.frontier_failure AS
+CREATE VIEW crawler.frontier_failure WITH (security_invoker='true') AS
  SELECT f.id,
     f.federation,
     f.kind,
@@ -33,3 +33,8 @@ CREATE VIEW crawler.frontier_failure AS
    FROM (crawler.frontier f
      LEFT JOIN crawler.json_response jr ON ((jr.id = f.last_response_id)))
   WHERE ((f.fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (f.process_status = 'error'::crawler.process_status));
+
+COMMENT ON VIEW crawler.frontier_failure IS '@name crawler_target_failure
+@behavior -insert -update -delete -list';
+
+GRANT SELECT ON TABLE crawler.frontier_failure TO system_admin;

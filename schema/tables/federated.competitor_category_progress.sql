@@ -6,6 +6,9 @@ CREATE TABLE federated.competitor_category_progress (
     foreign_finals integer DEFAULT 0 NOT NULL
 );
 
+COMMENT ON TABLE federated.competitor_category_progress IS '@name federation_competitor_category_progress
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.competitor_category_progress TO anonymous;
 
 ALTER TABLE ONLY federated.competitor_category_progress

@@ -4,8 +4,8 @@ CREATE TABLE public.location_image (
     file_id bigint CONSTRAINT tenant_location_image_file_id_not_null NOT NULL
 );
 
-COMMENT ON TABLE public.location_image IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.location_image IS '@simpleCollections only
+@behavior -insert -update -delete -query:resource:connection -query:resource:list';
 
 GRANT ALL ON TABLE public.location_image TO anonymous;
 ALTER TABLE public.location_image ENABLE ROW LEVEL SECURITY;

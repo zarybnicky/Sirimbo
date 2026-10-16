@@ -4,6 +4,9 @@ CREATE TABLE federated.competitor_component (
     role federated.competitor_role NOT NULL
 );
 
+COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.competitor_component TO anonymous;
 
 ALTER TABLE ONLY federated.competitor_component

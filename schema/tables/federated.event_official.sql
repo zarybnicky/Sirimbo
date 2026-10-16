@@ -6,6 +6,9 @@ CREATE TABLE federated.event_official (
     grade text
 );
 
+COMMENT ON TABLE federated.event_official IS '@name federation_event_official
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
 GRANT SELECT ON TABLE federated.event_official TO anonymous;
 
 ALTER TABLE ONLY federated.event_official

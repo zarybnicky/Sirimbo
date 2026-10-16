@@ -9,6 +9,8 @@ CREATE TABLE federated.competition_round (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
+COMMENT ON TABLE federated.competition_round IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+
 GRANT SELECT ON TABLE federated.competition_round TO anonymous;
 
 ALTER TABLE ONLY federated.competition_round

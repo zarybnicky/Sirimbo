@@ -58,7 +58,9 @@ CREATE TRIGGER _200_eir_attendance_timestamps BEFORE INSERT OR UPDATE OF person_
 CREATE TRIGGER _500_eir_refresh_stats_del AFTER DELETE ON public.event_instance_registration REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 CREATE TRIGGER _500_eir_refresh_stats_ins AFTER INSERT ON public.event_instance_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
 CREATE TRIGGER _500_eir_refresh_stats_upd AFTER UPDATE ON public.event_instance_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_eir__refresh_stats_stmt();
+CREATE CONSTRAINT TRIGGER _800_sync_lesson_payment AFTER INSERT OR DELETE OR UPDATE OF instance_id, person_id, registration_status ON public.event_instance_registration DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION app_private.tg_eir__sync_lesson_payment();
 
+CREATE INDEX event_instance_registration_active_person_idx ON public.event_instance_registration USING btree (tenant_id, person_id) INCLUDE (instance_id, status) WHERE (registration_status = 'active'::public.event_instance_registration_status);
 CREATE INDEX event_instance_registration_couple_id_idx ON public.event_instance_registration USING btree (couple_id);
 CREATE INDEX event_instance_registration_instance_id_idx ON public.event_instance_registration USING btree (instance_id);
 CREATE INDEX event_instance_registration_parent_id_idx ON public.event_instance_registration USING btree (parent_registration_id);
