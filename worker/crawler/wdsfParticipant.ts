@@ -272,7 +272,7 @@ export const wdsfParticipant: JsonLoader<Participant> = {
       },
     },
   }),
-  revalidatePeriod: '7d',
+  revalidatePeriod: '10d',
   mapResponseToStatus({ httpStatus }) {
     if (httpStatus === 404) return 'gone';
     if (httpStatus === 500) return 'error';
