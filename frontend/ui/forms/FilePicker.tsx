@@ -135,7 +135,7 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
           )}
         >
           <Upload />
-          {uploading ? 'Nahrávám…' : imagesOnly ? 'Nahrát obrázky' : 'Nahrát soubory'}
+          {uploading ? 'Nahrávám…' : imagesOnly ? 'Nahrát obrázky' : 'Nahrát'}
           <input
             className="sr-only"
             type="file"
