@@ -321,10 +321,10 @@ query Federation($federation: String!) {
   }
 }
 
-query FederationEventFacets($federation: String!) {
+query FederationEventFacets($federation: String!, $includeCancelled: Boolean!) {
   federation(code: $federation) {
     code
-    eventFacets {
+    eventFacets(includeCancelled: $includeCancelled) {
       years {
         year
         eventCount
@@ -356,12 +356,13 @@ query FederationEvents(
   $federation: String!
   $search: String
   $date: CompetitionDateCondition!
+  $includeCancelled: Boolean!
 ) {
   federation(code: $federation) {
     code
     events(
       first: 300
-      condition: { search: $search, date: $date }
+      condition: { search: $search, date: $date, includeCancelled: $includeCancelled }
       orderBy: [START_DATE_DESC, ID_DESC]
     ) {
       nodes {

@@ -13731,7 +13731,15 @@
               "name": "FederationEventFacet",
               "ofType": null
             },
-            "args": []
+            "args": [
+              {
+                "name": "includeCancelled",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
           },
           {
             "name": "events",

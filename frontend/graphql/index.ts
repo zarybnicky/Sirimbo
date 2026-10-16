@@ -5724,6 +5724,11 @@ export type FederationCompetitorsArgs = {
 };
 
 
+export type FederationEventFacetsArgs = {
+  includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type FederationEventsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -6422,6 +6427,7 @@ export type FederationEventCondition = {
   geoReference?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `location` field. */
   location?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
@@ -15196,7 +15202,7 @@ export type GraphCacheResolvers = {
     competitions?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
     competitorFacetsList?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorFacetsListArgs, Array<WithTypename<FederationCompetitorFacetsRecord> | string>>,
     competitors?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
-    eventFacets?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, WithTypename<FederationEventFacet> | string>,
+    eventFacets?: GraphCacheResolver<WithTypename<Federation>, FederationEventFacetsArgs, WithTypename<FederationEventFacet> | string>,
     events?: GraphCacheResolver<WithTypename<Federation>, FederationEventsArgs, WithTypename<FederationEventsConnection> | string>,
     licenses?: GraphCacheResolver<WithTypename<Federation>, FederationLicensesArgs, WithTypename<FederationPersonLicensesConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -17842,7 +17848,7 @@ export type GraphCacheUpdaters = {
     competitions?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitionsArgs>,
     competitorFacetsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitorFacetsListArgs>,
     competitors?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationCompetitorsArgs>,
-    eventFacets?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, Record<string, never>>,
+    eventFacets?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationEventFacetsArgs>,
     events?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationEventsArgs>,
     licenses?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationLicensesArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, Record<string, never>>,

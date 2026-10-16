@@ -7094,7 +7094,7 @@ type Federation {
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
   ): FederationCompetitorsConnection!
-  eventFacets: FederationEventFacet
+  eventFacets(includeCancelled: Boolean): FederationEventFacet
 
   """Reads and enables pagination through a set of `FederationEvent`."""
   events(
@@ -8200,6 +8200,7 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+  includeCancelled: Boolean
 
   """Checks for equality with the object’s `location` field."""
   location: String

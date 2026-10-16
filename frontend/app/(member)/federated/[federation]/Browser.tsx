@@ -73,6 +73,7 @@ function useBrowserState(federation: string) {
       shape: parseAsStringLiteral(mapViews.map((s) => s.value))
         .withDefault(defaultMapViews[federation] ?? 'world'),
       missing: parseAsBoolean.withDefault(false),
+      cancelled: parseAsBoolean.withDefault(false),
       map: parseAsBoolean.withDefault(true),
       page: parseAsInteger,
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
@@ -177,7 +178,7 @@ function Results({
 }
 
 function Events({ federation, filters, setFilters, search, searchPending }: BrowserProps) {
-  const [facets] = useQuery({ query: FederationEventFacetsDocument, variables: { federation } });
+  const [facets] = useQuery({ query: FederationEventFacetsDocument, variables: { federation, includeCancelled: filters.cancelled } });
   const years = (facets.data?.federation?.eventFacets?.years ?? []).filter((y) => y !== null).toReversed();
   const [result] = useQuery({
     query: FederationEventsDocument,
@@ -185,6 +186,7 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
     variables: {
       federation,
       search,
+      includeCancelled: filters.cancelled,
       date: { since: `${filters.year}-01-01`, until: `${filters.year + 1}-01-01` },
     },
   });
@@ -231,6 +233,12 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
         />
         <div >
           <Checkbox
+            name="cancelled"
+            label="Zobrazit zrušené"
+            checked={filters.cancelled}
+            onChange={(event) => setFilters({ cancelled: event.target.checked })}
+          />
+          <Checkbox
             name="missing"
             label={`Bez souřadnic (${missing.length})`}
             checked={filters.missing}
@@ -263,7 +271,7 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
             <EventMap key={filters.shape === 'czechia' ? 'czechia' : 'world'} events={visible} view={filters.shape} federation={federation} />
           )}
           <Table
-            columns={['date', 'event', 'status', 'location', 'country', 'competitions']}
+            columns={['date', 'event', 'location', 'country', 'competitions']}
             busy={isPending}
             empty="Žádné události"
           >
@@ -286,10 +294,8 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
                   >
                     {event.name || event.externalId}
                   </Link>
+                  {event.status === 'CANCELLED' && <div className="text-xs text-neutral-11">Zrušeno</div>}
                 </th>
-                <td className="whitespace-nowrap">
-                  {event.status.toLowerCase().replaceAll('_', ' ')}
-                </td>
                 <td>
                   <div>{event.location || event.city}</div>
                   <div className="text-neutral-11">

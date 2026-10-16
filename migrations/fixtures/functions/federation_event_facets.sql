@@ -16,14 +16,19 @@ comment on column federated.federation_event_year.event_count is '@notNull';
 comment on column federated.federation_event_year.mapped_event_count is '@notNull';
 comment on column federated.federation_event_facets.years is '@notNull';
 
-create function federated.federation_event_facets(federation federated.federation)
+create function federated.federation_event_facets(
+  federation federated.federation, include_cancelled boolean default true
+)
 returns federated.federation_event_facets
 language sql stable as $$
   select row(array(
     select row(
       extract(year from e.start_date)::integer,
-      count(*)::integer,
-      count(*) filter (where e.venue_lat is not null and e.venue_lng is not null)::integer
+      count(*) filter (where include_cancelled is distinct from false or e.status <> 'cancelled')::integer,
+      count(*) filter (
+        where (include_cancelled is distinct from false or e.status <> 'cancelled')
+          and e.venue_lat is not null and e.venue_lng is not null
+      )::integer
     )::federated.federation_event_year
     from federated.event e
     where e.federation = federation.code
