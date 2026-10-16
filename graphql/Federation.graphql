@@ -376,13 +376,16 @@ query FederationEvents(
   }
 }
 
-query FederationPeople($federation: String!, $search: String, $offset: Int! = 0) {
+query FederationPeople(
+  $federation: String!, $search: String, $offset: Int! = 0,
+  $ageGroups: [String!], $genders: [String!], $nationalities: [String!]
+) {
   federation(code: $federation) {
     code
     people(
       first: 50
       offset: $offset
-      condition: { search: $search }
+      condition: { search: $search, ageGroups: $ageGroups, genders: $genders, nationalities: $nationalities }
       orderBy: [SEARCH_NAME_ASC, EXTERNAL_ID_ASC]
     ) {
       totalCount
@@ -393,7 +396,28 @@ query FederationPeople($federation: String!, $search: String, $offset: Int! = 0)
         firstName
         lastName
         ageGroup
+        ageGroupDetails { code name }
+        gender
+        nationality
       }
+    }
+  }
+}
+
+query FederationPeopleFacets(
+  $federation: String!, $search: String,
+  $ageGroups: [String!], $genders: [String!], $nationalities: [String!]
+) {
+  ageGroupsList {
+    code
+    personAge { start { value } end { value } }
+  }
+  federation(code: $federation) {
+    code
+    peopleFacetsList(search: $search, ageGroups: $ageGroups, genders: $genders, nationalities: $nationalities) {
+      facet
+      value
+      count
     }
   }
 }

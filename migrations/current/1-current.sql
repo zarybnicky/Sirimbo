@@ -613,3 +613,5 @@ create index if not exists event_instance_registration_active_person_idx
   where registration_status = 'active';
 
 --!include views/person_last_activity.sql
+
+--!include functions/federation_people_facets.sql

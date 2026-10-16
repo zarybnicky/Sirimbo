@@ -41,6 +41,7 @@ import {
   FederationEventFacetsDocument,
   FederationEventsDocument,
   FederationPeopleDocument,
+  FederationPeopleFacetsDocument,
 } from '@/graphql/Federation';
 
 const views = ['events', 'people', 'competitors'] as const;
@@ -69,12 +70,26 @@ const classOrder = [
   'M',
   'Open',
 ].toReversed();
+
 const facets = [
   { key: 'type', label: 'Typ' },
   { key: 'class', label: 'Třída' },
   { key: 'discipline', label: 'Disciplína' },
   { key: 'ageGroup', label: 'Věk' },
 ] as const;
+
+const peopleFacets = [
+  { key: 'ageGroup', label: 'Věk' },
+  { key: 'gender', label: 'Pohlaví' },
+  { key: 'nationality', label: 'Národnost' },
+] as const;
+
+const genderLabels: Record<string, string> = {
+  male: 'Muž',
+  female: 'Žena',
+  unknown: 'Neuvedeno',
+};
+
 const clearedCompetitorFilters = {
   type: null,
   ageGroup: null,
@@ -101,6 +116,10 @@ function useBrowserState(federation: string) {
       page: parseAsInteger,
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
       ageGroup: parseAsArrayOf(parseAsString).withDefault([]),
+      gender: parseAsArrayOf(
+        parseAsStringLiteral(['male', 'female', 'unknown'] as const),
+      ).withDefault([]),
+      nationality: parseAsArrayOf(parseAsString).withDefault([]),
       class: parseAsArrayOf(parseAsString).withDefault([]),
       discipline: parseAsArrayOf(parseAsString).withDefault([]),
       competedThisYear: parseAsBoolean.withDefault(false),
@@ -137,6 +156,8 @@ export function Browser({ federation }: { federation: string }) {
               sort: null,
               descending: null,
               ...clearedCompetitorFilters,
+              gender: null,
+              nationality: null,
             },
             { history: 'push' },
           );
@@ -365,20 +386,146 @@ function Events({
 }
 
 function People(props: BrowserProps) {
-  const { federation, search, searchPending } = props;
+  const { federation, filters, setFilters, search, searchPending } = props;
+  const activeFacetCount = peopleFacets.filter((x) => filters[x.key].length > 0).length;
+  const [showFilters, setShowFilters] = useState(activeFacetCount > 0);
+
+  const variables = {
+    federation,
+    search,
+    ageGroups: filters.ageGroup,
+    genders: filters.gender,
+    nationalities: filters.nationality,
+  };
+
+  const [facetResult] = useQuery({
+    query: FederationPeopleFacetsDocument,
+    variables,
+    pause: searchPending,
+  });
+  const [facetData, setFacetData] = useState(facetResult.data);
+  if (facetResult.data !== undefined && facetResult.data !== facetData) {
+    setFacetData(facetResult.data);
+  }
+  const facetOptions = facetData?.federation?.peopleFacetsList ?? [];
+
+  const ageRanges = new Map(
+    (facetData?.ageGroupsList ?? []).map((group) => [group.code, group.personAge]),
+  );
   const result = usePaginatedQuery({
     query: FederationPeopleDocument,
     pause: searchPending,
-    variables: (offset) => ({ federation, search, offset }),
+    variables: (offset) => ({ ...variables, offset }),
     limit: 50,
     getTotal: (data) => data.federation?.people.totalCount,
   });
   const item = result.data?.federation;
   const isPending = result.fetching || searchPending;
   return (
-    <Results browser={props} result={result}>
+    <Results
+      browser={props}
+      result={{
+        ...result,
+        fetching: result.fetching || facetResult.fetching,
+        error: result.error ?? facetResult.error,
+      }}
+      controls={
+        <div
+          id="people-facets"
+          className={cn(
+            'mb-3 w-full justify-items-start gap-2',
+            showFilters ? 'grid' : 'hidden',
+          )}
+        >
+          {peopleFacets.map(({ key, label }) => {
+            const counts = new Map(
+              facetOptions
+                .filter((option) => option.facet === key)
+                .map((option) => [option.value!, option.count ?? 0]),
+            );
+            const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
+              (a, b) => {
+                if (a === 'unknown' || b === 'unknown')
+                  return Number(a === 'unknown') - Number(b === 'unknown');
+                if (key === 'ageGroup')
+                  return (
+                    compareAgeRanges(
+                      ageRanges.get(a) ?? null,
+                      ageRanges.get(b) ?? null,
+                    ) || a.localeCompare(b, 'cs', { numeric: true })
+                  );
+                return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b);
+              },
+            );
+            return (
+              <FacetFilter
+                key={key}
+                label={label}
+                inline
+                maxVisibleOptions={key === 'nationality' ? 5 : undefined}
+                moreLabel="Další"
+                clearLabel="Zrušit výběr"
+                value={filters[key]}
+                options={values.map((value) => ({
+                  value,
+                  label:
+                    value === 'unknown'
+                      ? 'Neuvedeno'
+                      : key === 'ageGroup'
+                        ? (formatAgeGroup(value) ?? value)
+                        : key === 'gender'
+                          ? genderLabels[value]!
+                          : value,
+                  count: counts.get(value) ?? 0,
+                }))}
+                onChange={(value) => setFilters({ [key]: value, page: null })}
+              />
+            );
+          })}
+        </div>
+      }
+      actions={
+        <>
+          <button
+            type="button"
+            aria-expanded={showFilters}
+            aria-controls="people-facets"
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setShowFilters((visible) => !visible)}
+          >
+            <SlidersHorizontal className="size-3" aria-hidden />
+            Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
+            <ChevronDown
+              className={cn('size-3', showFilters && 'rotate-180')}
+              aria-hidden
+            />
+          </button>
+          {(filters.search !== '' || activeFacetCount > 0) && (
+            <button
+              type="button"
+              className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
+              onClick={() =>
+                setFilters({
+                  search: null,
+                  ageGroup: null,
+                  gender: null,
+                  nationality: null,
+                  page: null,
+                })
+              }
+            >
+              Zrušit filtry
+            </button>
+          )}
+        </>
+      }
+    >
       {item && (
-        <Table columns={['Jméno', 'Věk']} busy={isPending} empty="Źádní lidé nenalezení">
+        <Table
+          columns={['Jméno', 'Věk', 'Pohlaví', 'Národnost']}
+          busy={isPending}
+          empty="Źádní lidé nenalezení"
+        >
           {item.people.nodes.map((row) => (
             <tr key={row.id} className="border-t border-neutral-4">
               <th scope="row">
@@ -392,7 +539,13 @@ function People(props: BrowserProps) {
                     row.id}
                 </Link>
               </th>
-              <td>{formatAgeGroup(row.ageGroup) || '-'}</td>
+              <td>
+                {formatAgeGroup(row.ageGroupDetails?.code, row.ageGroupDetails?.name) ||
+                  row.ageGroup ||
+                  '–'}
+              </td>
+              <td>{genderLabels[row.gender?.toLowerCase() ?? 'unknown']}</td>
+              <td>{row.nationality || '–'}</td>
             </tr>
           ))}
         </Table>

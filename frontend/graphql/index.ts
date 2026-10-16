@@ -5673,6 +5673,7 @@ export type Federation = {
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `FederationPerson`. */
   people: FederationPeopleConnection;
+  peopleFacetsList: Maybe<Array<FederationPeopleFacetsRecord>>;
   /** Reads and enables pagination through a set of `Ranklist`. */
   ranklists: RanklistsConnection;
 };
@@ -5759,6 +5760,16 @@ export type FederationPeopleArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FederationPeopleOrderBy>>;
+};
+
+
+export type FederationPeopleFacetsListArgs = {
+  ageGroups?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  genders?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  nationalities?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -6644,6 +6655,13 @@ export type FederationPeopleEdge = {
   node: FederationPerson;
 };
 
+export type FederationPeopleFacetsRecord = {
+  __typename?: 'FederationPeopleFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
+};
+
 /** Methods to use when ordering `FederationPerson`. */
 export type FederationPeopleOrderBy =
   | 'AGE_GROUP_ASC'
@@ -6858,6 +6876,7 @@ export type FederationPersonClubMembershipsOrderBy =
 export type FederationPersonCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
+  ageGroups?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Checks for equality with the object’s `canonicalName` field. */
   canonicalName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -6872,6 +6891,7 @@ export type FederationPersonCondition = {
   firstName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `gender` field. */
   gender?: InputMaybe<Gender>;
+  genders?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
@@ -6880,6 +6900,7 @@ export type FederationPersonCondition = {
   medicalCheckupExpiration?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `medicalCheckupType` field. */
   medicalCheckupType?: InputMaybe<Scalars['String']['input']>;
+  nationalities?: InputMaybe<Array<Scalars['String']['input']>>;
   /** Checks for equality with the object’s `nationality` field. */
   nationality?: InputMaybe<Scalars['String']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
@@ -13774,6 +13795,7 @@ export type GraphCacheKeysConfig = {
   FederationEventsEdge?: (data: WithTypename<FederationEventsEdge>) => null | string,
   FederationPeopleConnection?: (data: WithTypename<FederationPeopleConnection>) => null | string,
   FederationPeopleEdge?: (data: WithTypename<FederationPeopleEdge>) => null | string,
+  FederationPeopleFacetsRecord?: (data: WithTypename<FederationPeopleFacetsRecord>) => null | string,
   FederationPerson?: (data: WithTypename<FederationPerson>) => null | string,
   FederationPersonClubMembership?: (data: WithTypename<FederationPersonClubMembership>) => null | string,
   FederationPersonClubMembershipsConnection?: (data: WithTypename<FederationPersonClubMembershipsConnection>) => null | string,
@@ -15222,6 +15244,7 @@ export type GraphCacheResolvers = {
     licenses?: GraphCacheResolver<WithTypename<Federation>, FederationLicensesArgs, WithTypename<FederationPersonLicensesConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, Scalars['String']['output'] | string>,
     people?: GraphCacheResolver<WithTypename<Federation>, FederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
+    peopleFacetsList?: GraphCacheResolver<WithTypename<Federation>, FederationPeopleFacetsListArgs, Array<WithTypename<FederationPeopleFacetsRecord> | string>>,
     ranklists?: GraphCacheResolver<WithTypename<Federation>, FederationRanklistsArgs, WithTypename<RanklistsConnection> | string>
   },
   FederationClub?: {
@@ -15422,6 +15445,11 @@ export type GraphCacheResolvers = {
   FederationPeopleEdge?: {
     cursor?: GraphCacheResolver<WithTypename<FederationPeopleEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<FederationPeopleEdge>, Record<string, never>, WithTypename<FederationPerson> | string>
+  },
+  FederationPeopleFacetsRecord?: {
+    count?: GraphCacheResolver<WithTypename<FederationPeopleFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    facet?: GraphCacheResolver<WithTypename<FederationPeopleFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<FederationPeopleFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
   },
   FederationPerson?: {
     ageGroup?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -17878,6 +17906,7 @@ export type GraphCacheUpdaters = {
     licenses?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationLicensesArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, Record<string, never>>,
     people?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationPeopleArgs>,
+    peopleFacetsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationPeopleFacetsListArgs>,
     ranklists?: GraphCacheUpdateResolver<Maybe<WithTypename<Federation>>, FederationRanklistsArgs>
   },
   FederationClub?: {
@@ -18078,6 +18107,11 @@ export type GraphCacheUpdaters = {
   FederationPeopleEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleEdge>>, Record<string, never>>
+  },
+  FederationPeopleFacetsRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleFacetsRecord>>, Record<string, never>>,
+    facet?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleFacetsRecord>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleFacetsRecord>>, Record<string, never>>
   },
   FederationPerson?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,

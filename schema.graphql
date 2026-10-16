@@ -7185,6 +7185,18 @@ type Federation {
     """The method to use when ordering `FederationPerson`."""
     orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationPeopleConnection!
+  peopleFacetsList(
+    ageGroups: [String]
+
+    """Only read the first `n` values of the set."""
+    first: Int
+    genders: [String]
+    nationalities: [String]
+
+    """Skip the first `n` values."""
+    offset: Int
+    search: String
+  ): [FederationPeopleFacetsRecord!]
 
   """Reads and enables pagination through a set of `Ranklist`."""
   ranklists(
@@ -8458,6 +8470,12 @@ type FederationPeopleEdge {
   node: FederationPerson!
 }
 
+type FederationPeopleFacetsRecord {
+  count: Int
+  facet: String
+  value: String
+}
+
 """Methods to use when ordering `FederationPerson`."""
 enum FederationPeopleOrderBy {
   AGE_GROUP_ASC
@@ -8801,6 +8819,7 @@ tested for equality and combined with a logical ‘and.’
 input FederationPersonCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
+  ageGroups: [String!]
 
   """Checks for equality with the object’s `canonicalName` field."""
   canonicalName: String
@@ -8822,6 +8841,7 @@ input FederationPersonCondition {
 
   """Checks for equality with the object’s `gender` field."""
   gender: Gender
+  genders: [String!]
 
   """Checks for equality with the object’s `id` field."""
   id: String
@@ -8836,6 +8856,7 @@ input FederationPersonCondition {
 
   """Checks for equality with the object’s `medicalCheckupType` field."""
   medicalCheckupType: String
+  nationalities: [String!]
 
   """Checks for equality with the object’s `nationality` field."""
   nationality: String

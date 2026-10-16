@@ -15,6 +15,8 @@ export function FacetFilter<Value extends string>({
   onChange,
   clearLabel = 'Clear',
   inline = false,
+  maxVisibleOptions = Infinity,
+  moreLabel = 'More',
 }: {
   label: string;
   value: readonly Value[];
@@ -22,61 +24,44 @@ export function FacetFilter<Value extends string>({
   onChange: (value: Value[]) => void;
   clearLabel?: string;
   inline?: boolean;
+  maxVisibleOptions?: number;
+  moreLabel?: string;
 }) {
-  if (inline) {
-    return (
-      <fieldset className="min-w-0 w-full">
-        <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">{label}</legend>
-        <div className="flex flex-wrap gap-1 sm:ml-20">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              aria-pressed={value.includes(option.value)}
-              disabled={option.count === 0 && !value.includes(option.value)}
-              onClick={() => onChange(
-                value.includes(option.value)
-                  ? value.filter((v) => v !== option.value)
-                  : [...value, option.value],
-              )}
-              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-            >
-              {option.label}
-              {option.count != null && (
-                <span className="tabular-nums opacity-75">{option.count}</span>
-              )}
-            </button>
-          ))}
-        </div>
-      </fieldset>
-    );
-  }
-
+  const visibleOptions = options.filter(
+    (option, index) => index < maxVisibleOptions || value.includes(option.value),
+  );
+  const overflowOptions = inline
+    ? options.filter(
+        (option, index) => index >= maxVisibleOptions && !value.includes(option.value),
+      )
+    : options;
   const selected = value.map((v) => options.find((o) => o.value === v)?.label ?? v);
-  return (
+  const dropdown = (
     <DropdownMenu>
       <DropdownMenuTrigger
         disabled={options.length === 0 && value.length === 0}
         className={buttonCls({
-          variant: value.length > 0 ? 'primary' : 'outline',
+          display: inline ? 'compact' : 'button',
+          variant: inline ? 'facet' : value.length > 0 ? 'primary' : 'outline',
           size: 'sm',
         })}
       >
-        {label}
-        {selected.length > 0 &&
+        {inline ? `${moreLabel} (${overflowOptions.length})` : label}
+        {!inline &&
+          selected.length > 0 &&
           `: ${selected.length > 2 ? selected.length : selected.join(', ')}`}
         <ChevronDown />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
-        {options.map((option) => (
+        {overflowOptions.map((option) => (
           <DropdownMenuButton
             key={option.value}
             role="menuitemcheckbox"
             aria-checked={value.includes(option.value)}
             disabled={option.count === 0 && !value.includes(option.value)}
             onSelect={(event) => {
-              event.preventDefault();
+              if (!inline) event.preventDefault();
               onChange(
                 value.includes(option.value)
                   ? value.filter((v) => v !== option.value)
@@ -93,7 +78,7 @@ export function FacetFilter<Value extends string>({
             )}
           </DropdownMenuButton>
         ))}
-        {value.length > 0 && (
+        {!inline && value.length > 0 && (
           <DropdownMenuButton onSelect={() => onChange([])}>
             {clearLabel}
           </DropdownMenuButton>
@@ -101,4 +86,39 @@ export function FacetFilter<Value extends string>({
       </DropdownMenuContent>
     </DropdownMenu>
   );
+  if (inline) {
+    return (
+      <fieldset className="min-w-0 w-full">
+        <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">
+          {label}
+        </legend>
+        <div className="flex flex-wrap gap-1 sm:ml-20">
+          {visibleOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={value.includes(option.value)}
+              disabled={option.count === 0 && !value.includes(option.value)}
+              onClick={() =>
+                onChange(
+                  value.includes(option.value)
+                    ? value.filter((v) => v !== option.value)
+                    : [...value, option.value],
+                )
+              }
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            >
+              {option.label}
+              {option.count != null && (
+                <span className="tabular-nums opacity-75">{option.count}</span>
+              )}
+            </button>
+          ))}
+          {overflowOptions.length > 0 && dropdown}
+        </div>
+      </fieldset>
+    );
+  }
+
+  return dropdown;
 }
