@@ -185,6 +185,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     EventConflict: () => null,
     EventInstanceRegistrationInfo: () => null,
     Federation: (x) => x.code || null,
+    FederationCoupleAgeRule: (x) => x.ageGroupCode || null,
     FederationCompetitorFacetsRecord: () => null,
     FederationEventFacet: () => null,
     FederationEventYear: () => null,

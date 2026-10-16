@@ -6,7 +6,9 @@ export const buttonCls = tv({
     display: {
       none: ' ',
       button:
-        'inline-flex gap-1 shadow-md uppercase font-medium justify-center items-center',
+        'inline-flex items-center justify-center gap-1 shadow-md uppercase font-medium',
+      compact:
+        'inline-flex items-center justify-center gap-1 shadow-sm whitespace-nowrap',
       listItem:
         'flex w-full items-center px-2.5 py-2 text-left hover:bg-accent-3 active:bg-accent-5',
     },
@@ -15,8 +17,12 @@ export const buttonCls = tv({
       primary:
         'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
       outline:
-        'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5',
+        'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 ' +
+        'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
+      facet:
+        'border border-accent-5 bg-accent-2/50 text-accent-12 hover:bg-accent-3 disabled:opacity-50 ' +
+        'aria-pressed:border-accent-8 aria-pressed:bg-accent-5 aria-pressed:text-accent-12 aria-pressed:font-medium aria-pressed:hover:bg-accent-5',
     },
     size: {
       none: ' ',

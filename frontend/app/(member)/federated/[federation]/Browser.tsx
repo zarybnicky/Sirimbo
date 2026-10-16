@@ -27,7 +27,12 @@ import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
-import EventMap, { defaultMapViews, eventMonthColors, eventMonths, mapViews } from '../EventMap';
+import EventMap, {
+  defaultMapViews,
+  eventMonthColors,
+  eventMonths,
+  mapViews,
+} from '../EventMap';
 import { YearPicker } from '../YearPicker';
 import {
   FederationCompetitorFacetsDocument,
@@ -49,11 +54,26 @@ const competitorTypes = [
   'GROUP',
   'FORMATION',
 ] as const satisfies readonly CompetitorType[];
+const classOrder = [
+  'Entry',
+  'Novice',
+  'Bronze',
+  'Silver',
+  'Gold',
+  'E',
+  'D',
+  'C',
+  'B',
+  'A',
+  'S',
+  'M',
+  'Open',
+].toReversed();
 const facets = [
   { key: 'type', label: 'Type' },
-  { key: 'ageGroup', label: 'Age group' },
   { key: 'class', label: 'Class' },
   { key: 'discipline', label: 'Discipline' },
+  { key: 'ageGroup', label: 'Age group' },
 ] as const;
 const clearedCompetitorFilters = {
   type: null,
@@ -68,10 +88,13 @@ function useBrowserState(federation: string) {
   const [filters, setFilters] = useQueryStates(
     {
       search: parseAsString.withDefault(''),
-      month: parseAsNumberLiteral<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).withDefault(0),
+      month: parseAsNumberLiteral<number>([
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+      ]).withDefault(0),
       year: parseAsInteger.withDefault(new Date().getFullYear()),
-      shape: parseAsStringLiteral(mapViews.map((s) => s.value))
-        .withDefault(defaultMapViews[federation] ?? 'world'),
+      shape: parseAsStringLiteral(mapViews.map((s) => s.value)).withDefault(
+        defaultMapViews[federation] ?? 'world',
+      ),
       missing: parseAsBoolean.withDefault(false),
       cancelled: parseAsBoolean.withDefault(false),
       map: parseAsBoolean.withDefault(true),
@@ -126,7 +149,7 @@ export function Browser({ federation }: { federation: string }) {
         <People {...props} />
       </Tab>
       <Tab id="competitors" title="Competitors">
-        <Competitors {...props} />
+        <Competitors key={federation} {...props} />
       </Tab>
     </TabMenu>
   );
@@ -136,11 +159,13 @@ function Results({
   browser: { filters, setFilters, searchPending },
   result,
   controls,
+  actions,
   children,
 }: {
   browser: BrowserProps;
   result: Pick<ReturnType<typeof usePaginatedQuery>, 'fetching' | 'error' | 'pagination'>;
   controls?: ReactNode;
+  actions?: ReactNode;
   children: ReactNode;
 }) {
   const { fetching, error, pagination } = result;
@@ -148,25 +173,33 @@ function Results({
   const isPending = fetching || searchPending;
   return (
     <>
-      <div className="flex flex-wrap items-end gap-3 mb-2">
+      {controls}
+      <div className="my-3 flex flex-wrap items-center gap-2 border-y border-neutral-4 py-2">
+        <p
+          role="status"
+          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
+        >
+          {isPending
+            ? 'Načítám…'
+            : !children || error
+              ? null
+              : total === 0
+                ? '0 výsledků'
+                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} z ${total}`}
+        </p>
+        {actions}
         <TextField
           name="search"
-          label="Název nebo ID"
+          type="search"
+          aria-label="Název nebo ID"
+          placeholder="Název nebo ID…"
+          className="min-w-40 flex-1 sm:max-w-64 ml-auto"
+          inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
           value={filters.search}
           onChange={(event) => setFilters({ search: event.target.value, page: null })}
         />
-        {controls}
       </div>
       <FormError error={error} />
-      <p role="status" className="my-2 text-sm text-neutral-11">
-        {isPending
-          ? 'Načítám…'
-          : !children || error
-            ? null
-            : total === 0
-              ? '0 výsledků'
-              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} z ${total}`}
-      </p>
       {!error && children && (
         <>
           {children}
@@ -177,9 +210,20 @@ function Results({
   );
 }
 
-function Events({ federation, filters, setFilters, search, searchPending }: BrowserProps) {
-  const [facets] = useQuery({ query: FederationEventFacetsDocument, variables: { federation, includeCancelled: filters.cancelled } });
-  const years = (facets.data?.federation?.eventFacets?.years ?? []).filter((y) => y !== null).toReversed();
+function Events({
+  federation,
+  filters,
+  setFilters,
+  search,
+  searchPending,
+}: BrowserProps) {
+  const [facets] = useQuery({
+    query: FederationEventFacetsDocument,
+    variables: { federation, includeCancelled: filters.cancelled },
+  });
+  const years = (facets.data?.federation?.eventFacets?.years ?? [])
+    .filter((y) => y !== null)
+    .toReversed();
   const [result] = useQuery({
     query: FederationEventsDocument,
     pause: searchPending,
@@ -196,7 +240,8 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
   const events = result.data?.federation?.events.nodes ?? [];
   const missing = events.filter((e) => e.venueLat === null || e.venueLng === null);
   const visible = filters.missing ? missing : events;
-  const showMap = filters.map && visible.some((e) => e.venueLat !== null && e.venueLng !== null);
+  const showMap =
+    filters.map && visible.some((e) => e.venueLat !== null && e.venueLng !== null);
   const isPending = result.fetching || facets.fetching || searchPending;
   const error = result.error || facets.error;
   return (
@@ -219,7 +264,11 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
             />
             <span className="block rounded-lg border border-neutral-4 px-1.5 py-1 text-xs hover:bg-neutral-3 peer-checked:border-accent-8 peer-checked:bg-accent-3 peer-checked:text-accent-11 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-8">
               {month > 0 && (
-                <span aria-hidden="true" className="mr-1 inline-block size-2 rounded-full" style={{ backgroundColor: eventMonthColors[month - 1] }} />
+                <span
+                  aria-hidden="true"
+                  className="mr-1 inline-block size-2 rounded-full"
+                  style={{ backgroundColor: eventMonthColors[month - 1] }}
+                />
               )}
               {label}
             </span>
@@ -291,7 +340,9 @@ function Events({ federation, filters, setFilters, search, searchPending }: Brow
                   >
                     {event.name || event.externalId}
                   </Link>
-                  {event.status === 'CANCELLED' && <div className="text-xs text-neutral-11">Zrušeno</div>}
+                  {event.status === 'CANCELLED' && (
+                    <div className="text-xs text-neutral-11">Zrušeno</div>
+                  )}
                 </th>
                 <td>
                   <div>{event.location || event.city}</div>
@@ -364,7 +415,13 @@ function Competitors(props: BrowserProps) {
     pause: searchPending,
     requestPolicy: 'cache-first',
   });
-  const facetOptions = facetResult.data?.federation?.competitorFacetsList ?? [];
+
+  const fetchedFacets = facetResult.data?.federation?.competitorFacetsList
+  const [facetOptions, setFacetOptions] = useState(fetchedFacets ?? []);
+  if (facetResult.data !== undefined && fetchedFacets !== facetOptions && !!fetchedFacets?.length) {
+    setFacetOptions(fetchedFacets ?? []);
+  }
+
   const ageRanges = new Map(
     (facetResult.data?.ageGroupsList ?? []).map((group) => [
       group.code,
@@ -405,7 +462,7 @@ function Competitors(props: BrowserProps) {
     ),
   ]);
   const disciplines = [...new Set(['Standard', 'Latin', ...availableDisciplines])].filter(
-    (discipline) => availableDisciplines.has(discipline),
+    (x) => availableDisciplines.has(x),
   );
   return (
     <Results
@@ -417,69 +474,96 @@ function Competitors(props: BrowserProps) {
       }}
       controls={
         <>
-          {' '}
-          {facets.map(({ key, label }) => {
-            const counts = new Map(
-              facetOptions
-                .filter((option) => option.facet === key)
-                .map((option) => [
-                  key === 'type' ? option.value!.toUpperCase() : option.value!,
-                  option.count ?? 0,
-                ]),
-            );
-            const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
-              (a, b) =>
-                key === 'ageGroup'
-                  ? compareAgeRanges(ageRanges.get(a) ?? null, ageRanges.get(b) ?? null)
-                  : a.localeCompare(b, 'en', { numeric: true }),
-            );
-            return (
-              <FacetFilter
-                key={key}
-                label={label}
-                value={filters[key]}
-                options={values.map((value) => ({
-                  value,
-                  label:
-                    key === 'type'
-                      ? value.toLowerCase()
-                      : key === 'ageGroup'
-                        ? (formatAgeGroup(value) ?? value)
-                        : key === 'class'
-                          ? (formatClass(value) ?? value)
-                          : value,
-                  count: counts.get(value) ?? 0,
-                }))}
-                onChange={(value) =>
-                  setFilters({
-                    [key]: value,
-                    page: null,
-                  })
-                }
-              />
-            );
-          })}
-          <Checkbox
-            name="competedThisYear"
-            label="Competed this year"
-            checked={filters.competedThisYear}
-            onChange={(event) =>
-              setFilters({
-                competedThisYear: event.currentTarget.checked,
-                page: null,
-              })
-            }
-          />
+          <div className="grid w-full justify-items-start gap-2">
+            {facets.map(({ key, label }) => {
+              const counts = new Map(
+                facetOptions
+                  .filter((option) => option.facet === key)
+                  .map((option) => [
+                    key === 'type' ? option.value!.toUpperCase() : option.value!,
+                    option.count ?? 0,
+                  ]),
+              );
+              const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
+                (a, b) => {
+                  const alphabetical = a.localeCompare(b, 'en', { numeric: true });
+                  if (key === 'ageGroup') {
+                    return (
+                      compareAgeRanges(
+                        ageRanges.get(a) ?? null,
+                        ageRanges.get(b) ?? null,
+                      ) || alphabetical
+                    );
+                  }
+                  if (key === 'class') {
+                    const aRank = classOrder.indexOf(a);
+                    const bRank = classOrder.indexOf(b);
+                    return (
+                      (aRank === -1 ? classOrder.length : aRank) -
+                        (bRank === -1 ? classOrder.length : bRank) || alphabetical
+                    );
+                  }
+                  if (key === 'discipline') {
+                    const aRank = a === 'Standard' ? 0 : a === 'Latin' ? 1 : 2;
+                    const bRank = b === 'Standard' ? 0 : b === 'Latin' ? 1 : 2;
+                    if (aRank !== bRank) return aRank - bRank;
+                  }
+                  return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || alphabetical;
+                },
+              );
+              return (
+                <FacetFilter
+                  key={key}
+                  label={label}
+                  inline
+                  value={filters[key]}
+                  options={values.map((value) => ({
+                    value,
+                    label:
+                      key === 'type'
+                        ? value.toLowerCase()
+                        : key === 'ageGroup'
+                          ? (formatAgeGroup(value) ?? value)
+                          : key === 'class'
+                            ? (formatClass(value) ?? value)
+                            : value,
+                    count: counts.get(value) ?? 0,
+                  }))}
+                  onChange={(value) =>
+                    setFilters({
+                      [key]: value,
+                      page: null,
+                    })
+                  }
+                />
+              );
+            })}
+          </div>
+        </>
+      }
+      actions={
+        <>
           {(filters.competedThisYear ||
             facets.some(({ key }) => filters[key].length > 0)) && (
             <button
               type="button"
-              className={buttonCls({ variant: 'outline', size: 'sm' })}
+              className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
               onClick={() => setFilters(clearedCompetitorFilters)}
             >
-              Clear filters
+              Zrušit filtry
             </button>
           )}
+          <div className="flex-1" />
+          <button
+            type="button"
+            aria-pressed={filters.competedThisYear}
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() =>
+              setFilters({ competedThisYear: !filters.competedThisYear, page: null })
+            }
+          >
+            Soutěžil tento rok
+          </button>
         </>
       }
     >
