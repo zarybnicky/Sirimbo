@@ -22,6 +22,8 @@ import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
+import { cn } from '@/lib/cn';
+import { buttonCls, buttonGroupCls } from '@/ui/style';
 
 export function TrainingGroup({
   initialCohort,
@@ -110,7 +112,7 @@ function CategoryList({
   if (!item) return null;
 
   return (
-    <div className="flex flex-col leading-tight text-center">
+    <div className="flex gap-0.5 items-baseline justify-between leading-tight text-center">
       <div className="font-medium">
         {[
           formatClass(item.category?.class),
@@ -125,7 +127,7 @@ function CategoryList({
           .filter(Boolean)
           .join(' ')}
       </div>
-      <div className="text-xs text-neutral-11">
+      <div className="text-sm text-neutral-11">
         {Number.parseFloat(item.points ?? '0')} /{' '}
         {item.domesticFinals + item.foreignFinals}F
       </div>
@@ -140,6 +142,10 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   showActivity: boolean;
   members: NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList'];
 }) {
+  const [view, setView] = React.useState<'activity' | 'competitive'>(
+    showActivity ? 'activity' : 'competitive',
+  );
+  const activityView = showActivity && view === 'activity';
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(
     personActions,
@@ -147,45 +153,86 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   );
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_max-content_max-content] gap-x-4 gap-y-3 lg:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content] pb-4">
+    <div
+      className={cn(
+        'grid gap-x-4 gap-y-3 pb-4',
+        activityView
+          ? 'grid-cols-1 lg:grid-cols-[minmax(0,1fr)_max-content]'
+          : 'grid-cols-[minmax(0,1fr)_max-content_max-content] lg:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
+      )}
+    >
+      {showActivity && (
+        <div
+          role="group"
+          aria-label="Zobrazení členů"
+          className={buttonGroupCls({ className: 'col-span-full justify-self-end' })}
+        >
+          {(
+            [
+              ['activity', 'Aktivita'],
+              ['competitive', 'Soutěžní info'],
+            ] as const
+          ).map(([mode, label]) => (
+            <button
+              key={mode}
+              type="button"
+              aria-pressed={view === mode}
+              className={buttonCls({
+                variant: view === mode ? 'primary' : 'outline',
+                size: 'sm',
+              })}
+              onClick={() => setView(mode)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       {members.map((membership) => (
         <div
           key={membership.id}
-          className="col-span-full grid grid-cols-subgrid items-center gap-x-4 gap-y-2 text-sm"
+          className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm"
         >
           <ActionRow
-            className="col-span-full mb-0 min-w-0 lg:col-span-1"
+            className={cn(
+              'mb-0 min-w-0',
+              activityView ? 'col-span-1' : 'col-span-full lg:col-span-1',
+            )}
             actions={[
               ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
               ...membershipActionMap.get(membership.id)!,
             ]}
           >
             {membership.person ? (
-              <div className="min-w-0 flex flex-col items-start gap-1">
-                <Link
-                  className="font-bold underline"
-                  href={`/clenove/${membership.person.id}`}
-                >
-                  {membership.person.name}
-                </Link>
-                {showActivity && membership.person.lastActivity && (
-                  <PersonActivityBadges activity={membership.person.lastActivity} />
-                )}
-              </div>
+              <Link
+                className="min-w-0 font-bold underline"
+                href={`/clenove/${membership.person.id}`}
+              >
+                {membership.person.name}
+              </Link>
             ) : (
               '?'
             )}
           </ActionRow>
 
-          <div className="font-medium text-right">
-            {formatAgeGroup(membership.person?.ageGroup)}
-          </div>
-          <div>
-            <CategoryList person={membership.person} discipline="Standard" />
-          </div>
-          <div>
-            <CategoryList person={membership.person} discipline="Latin" />
-          </div>
+          {activityView && membership.person?.lastActivity && (
+            <div className="min-w-0 lg:justify-self-end">
+              <PersonActivityBadges activity={membership.person.lastActivity} />
+            </div>
+          )}
+          {!activityView && (
+            <>
+              <div className="font-medium text-right">
+                {formatAgeGroup(membership.person?.ageGroup)}
+              </div>
+              <div>
+                <CategoryList person={membership.person} discipline="Standard" />
+              </div>
+              <div>
+                <CategoryList person={membership.person} discipline="Latin" />
+              </div>
+            </>
+          )}
         </div>
       ))}
     </div>
