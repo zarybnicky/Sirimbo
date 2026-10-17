@@ -81,26 +81,15 @@ SELECT tap.is(
   ARRAY[920001, 920004, 920005, 920006]::bigint[],
   'trainers additionally see their own unpublished announcements'
 );
-SELECT tap.lives_ok(
-  $$update announcement set title = 'Updated own draft' where id = 920005$$,
-  'trainers can update their own announcements'
-);
-SELECT tap.lives_ok(
-  $$
-    do $body$
-    declare
-      changed integer;
-    begin
-      update announcement set title = 'Blocked update' where id = 920008;
-      get diagnostics changed = row_count;
-      if changed <> 0 then
-        raise exception 'updated % rows', changed;
-      end if;
-    end
-    $body$
-  $$,
-  'trainers cannot update announcements by another author'
-);
+WITH changed AS (
+  UPDATE announcement SET title = 'Updated own draft' WHERE id = 920005 RETURNING title
+)
+SELECT tap.is((SELECT title FROM changed), 'Updated own draft',
+  'trainers can update their own announcements');
+WITH changed AS (
+  UPDATE announcement SET title = 'Blocked update' WHERE id = 920008 RETURNING id
+)
+SELECT tap.is(count(*), 0::bigint, 'trainers cannot update announcements by another author') FROM changed;
 SELECT tap.lives_ok(
   $$
     do $body$

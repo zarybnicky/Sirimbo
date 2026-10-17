@@ -12,8 +12,8 @@ SELECT tap.lives_ok($$INSERT INTO membership_application
   (id, first_name, last_name, gender, nationality, created_by, prefix_title, suffix_title, bio) OVERRIDING SYSTEM VALUE
   VALUES (-8500, 'Test', 'Applicant', 'unspecified', '', -8500, '', '', '')$$,
   'logged-in nonmember can submit an application');
-SELECT tap.lives_ok($$UPDATE membership_application SET note='Edited' WHERE id=-8500$$,
-  'applicant can edit a pending application');
+WITH changed AS (UPDATE membership_application SET note='Edited' WHERE id=-8500 RETURNING note)
+SELECT tap.is((SELECT note FROM changed), 'Edited', 'applicant can edit a pending application');
 SELECT tap.throws_ok($$UPDATE membership_application SET status='approved' WHERE id=-8500$$,
   '42501', null, 'applicant cannot approve their application');
 SELECT tap.throws_ok($$INSERT INTO membership_application

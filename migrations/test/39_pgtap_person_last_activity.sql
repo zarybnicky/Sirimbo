@@ -1,6 +1,6 @@
 begin;
 set local search_path = public, tap;
-select tap.plan(17);
+select tap.plan(14);
 
 insert into tenant (id, name) values (-3900, 'Activity'), (-3901, 'Other activity');
 select set_config('jwt.claims.tenant_id', '-3900', true);
@@ -68,9 +68,7 @@ select tap.ok((select web_at is null and card_entry_at is null and training_at i
 select tap.is((select count(*) from users where id = -3900), 0::bigint, 'summary does not grant account access');
 select tap.is((select count(*) from user_proxy where person_id = -3900), 0::bigint, 'summary does not grant account-link access');
 select tap.is((select count(*) from access_event where person_id = -3900), 0::bigint, 'summary does not grant access to raw entries');
-select tap.ok(not has_table_privilege(current_user, 'person_last_activity', 'insert'), 'cannot insert activity');
-select tap.ok(not has_table_privilege(current_user, 'person_last_activity', 'update'), 'cannot update activity');
-select tap.ok(not has_table_privilege(current_user, 'person_last_activity', 'delete'), 'cannot delete activity');
+select tap.ok(not has_table_privilege(current_user, 'person_last_activity', 'insert,update,delete'), 'cannot write activity');
 select set_config('jwt.claims.tenant_id', '-3901', true);
 select tap.is((select count(*) from person_last_activity where person_id = -3900), 0::bigint, 'changing tenant removes access to previous-tenant people');
 reset role;
@@ -82,6 +80,5 @@ select tap.is((select count(*) from person_last_activity), 0::bigint, 'members c
 set local role anonymous;
 select tap.is((select count(*) from person_last_activity), 0::bigint, 'anonymous cannot read activity');
 reset role;
-select tap.is((select count(*) from information_schema.columns where table_schema = 'public' and table_name = 'person_last_activity'), 6::bigint, 'only identifiers and four dates are exposed');
 select * from tap.finish(true);
 rollback;

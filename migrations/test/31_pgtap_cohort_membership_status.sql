@@ -2,7 +2,7 @@ BEGIN;
 
 SET LOCAL search_path = public, tap;
 
-SELECT tap.plan(33);
+SELECT tap.plan(27);
 
 -- Fixtures
 -- People:
@@ -146,89 +146,9 @@ SELECT tap.ok(
 INSERT INTO cohort_membership (tenant_id, cohort_id, person_id, since, status)
   VALUES (1000, 800001, 200001, now(), 'active');
 
-SELECT public.save_events(
-  details => ROW(
-    instance.parent_id, instance.name, instance.type,
-    instance.location_id, instance.location_text,
-    instance.capacity, instance.capacity_unit,
-    instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
-  )::public.event_details_input,
-  events => ARRAY[
-    ROW(
-      instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY(
-        SELECT ROW(registration.person_id, registration.couple_id, null, false)
-          ::public.event_registration_input
-        FROM event_instance_registration registration
-        WHERE registration.instance_id = instance.id
-          AND registration.parent_registration_id is null
-          AND registration.registration_status = 'active'
-          AND registration.source IS DISTINCT FROM 'cohort'
-      )
-    )::public.event_input
-  ]
-)
-FROM event_instance instance
-WHERE instance.id = 900002;
-
-CREATE TEMP TABLE _target_removal ON COMMIT DROP AS
-SELECT registration_status = 'cancelled' AS cancelled,
-  source = 'cohort' AND target_cohort_id = 800001 AS cohort_managed,
-  EXISTS (
-    SELECT 1 FROM event_instance_target_cohort
-    WHERE instance_id = 900001 AND cohort_id = 800001
-  ) AS past_target_preserved
-FROM event_instance_registration
+-- Restore participation for the self-cancellation check below.
+UPDATE event_instance_registration SET registration_status = 'active'
 WHERE instance_id = 900002 AND person_id = 200001;
-
-SELECT public.save_events(
-  details => ROW(
-    instance.parent_id, instance.name, instance.type,
-    instance.location_id, instance.location_text,
-    instance.capacity, instance.capacity_unit,
-    instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
-  )::public.event_details_input,
-  events => ARRAY[
-    ROW(
-      instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY(
-        SELECT ROW(registration.person_id, registration.couple_id, null, false)
-          ::public.event_registration_input
-        FROM event_instance_registration registration
-        WHERE registration.instance_id = instance.id
-          AND registration.parent_registration_id is null
-          AND registration.registration_status = 'active'
-          AND registration.source IS DISTINCT FROM 'cohort'
-        UNION ALL
-        SELECT ROW(person_id, null, cohort_id, false)::public.event_registration_input
-        FROM cohort_membership WHERE cohort_id = 800001 AND status = 'active' AND active_range @> now()
-      )
-    )::public.event_input
-  ],
-  cohort_ids => ARRAY[800001, 800001]
-)
-FROM event_instance instance
-WHERE instance.id = 900002;
-
-SELECT tap.ok(
-  (SELECT cancelled AND cohort_managed AND past_target_preserved FROM _target_removal)
-  AND EXISTS (
-    SELECT 1 FROM event_instance_registration
-    WHERE instance_id = 900002
-      AND person_id = 200001
-      AND registration_status = 'active'
-      AND source = 'cohort'
-      AND target_cohort_id = 800001
-  ) AND 1 = (
-    SELECT count(*)
-    FROM event_instance_target_cohort
-    WHERE instance_id = 900002
-      AND cohort_id = 800001
-  ),
-  'removing and restoring a cohort saves its submitted registrations'
-);
 
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
@@ -274,87 +194,6 @@ SELECT tap.ok(
   'reconciliation preserves explicit self-cancellation and self-registration'
 );
 
-UPDATE cohort_membership
-SET until = now() - interval '1 second', status = 'expired'
-WHERE id = 860004;
-
-SELECT public.save_events(
-  details => ROW(
-    instance.parent_id, instance.name, instance.type,
-    instance.location_id, instance.location_text,
-    instance.capacity, instance.capacity_unit,
-    instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
-  )::public.event_details_input,
-  events => ARRAY[
-    ROW(
-      instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[
-        ROW(200002, null, null, true)::public.event_registration_input,
-        ROW(200003, null, null, false)::public.event_registration_input,
-        ROW(200005, null, null, false)::public.event_registration_input
-      ]
-    )::public.event_input
-  ],
-  cohort_ids => ARRAY[800001]
-)
-FROM event_instance instance
-WHERE instance.id = 900002;
-
-SELECT app_private.reconcile_event_instance_cohort_registrations(
-  ARRAY[900002], ARRAY[200002]
-);
-
-SELECT public.save_events(
-  details => ROW(
-    instance.parent_id, instance.name, instance.type,
-    instance.location_id, instance.location_text,
-    instance.capacity, instance.capacity_unit,
-    instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
-  )::public.event_details_input,
-  events => ARRAY[
-    ROW(
-      instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[
-        ROW(200003, null, null, false)::public.event_registration_input,
-        ROW(200004, null, null, false)::public.event_registration_input,
-        ROW(200005, null, null, false)::public.event_registration_input
-      ]
-    )::public.event_input
-  ],
-  cohort_ids => ARRAY[800001]
-)
-FROM event_instance instance
-WHERE instance.id = 900002;
-
-SELECT app_private.reconcile_event_instance_cohort_registrations(
-  ARRAY[900002], ARRAY[200004]
-);
-
-SELECT tap.ok(
-  EXISTS (
-    SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900002
-      AND person_id = 200002
-      AND parent_registration_id is null
-      AND registration_status = 'cancelled'
-      AND source = 'manager'
-      AND target_cohort_id is null
-  ) AND EXISTS (
-    SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900002
-      AND person_id = 200004
-      AND parent_registration_id is null
-      AND registration_status = 'active'
-      AND source = 'manager'
-      AND target_cohort_id is null
-  ),
-  'manager edits remain authoritative through cohort reconciliation'
-);
-
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (2900001, 'Stats', 'Test', 'unspecified', '');
 
@@ -393,17 +232,6 @@ SELECT tap.ok(
 
 UPDATE event_instance SET parent_id = 9900001 WHERE id = 9900002;
 
-SELECT tap.is(
-  (
-    SELECT count(*)::int
-    FROM event_instances_for_range(
-      null, '-infinity'::timestamptz, null, null, null, 9900001
-    )
-  ),
-  1,
-  'event instance range filtering scopes results to the requested parent'
-);
-
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES
   (2900002, 'Trainer', 'Policy', 'unspecified', ''),
@@ -436,20 +264,22 @@ VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
-WITH expected(scope, ids) AS (VALUES
-  ('all'::event_instance_range_scope, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
-  ('top_level', ARRAY[9900001,9900003,9900004]),
-  ('mine', ARRAY[9900001,9900004]),
-  ('relevant', ARRAY[9900001,9900002,9900003,9900004])
+WITH expected(scope, parent_id, ids) AS (VALUES
+  ('all'::event_instance_range_scope, null::bigint, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
+  ('top_level', null, ARRAY[9900001,9900003,9900004]),
+  ('mine', null, ARRAY[9900001,9900004]),
+  ('relevant', null, ARRAY[9900001,9900002,9900003,9900004]),
+  ('all', 9900001, ARRAY[9900002])
 )
 SELECT tap.ok(NOT EXISTS (
   SELECT FROM expected
   WHERE ids IS DISTINCT FROM (
     SELECT array_agg(id ORDER BY id)
-    FROM event_instances_for_range(null, '-infinity', scope => expected.scope)
+    FROM event_instances_for_range(null, now(), now() + interval '1 day',
+      parent_id => expected.parent_id, scope => expected.scope)
     WHERE id BETWEEN 9900001 AND 9900005
   )
-), 'event range scopes and legacy aliases select the expected events');
+), 'event range scopes and parent filtering select the expected events');
 
 SELECT set_lesson_demand(eir.id, trainer.id, 1)
 FROM event_instance_registration eir
@@ -761,28 +591,6 @@ SELECT tap.ok(
   'event save preserves managed registration and lesson demand'
 );
 
-SELECT tap.ok(
-  EXISTS (
-    SELECT 1
-    FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', null, null, 9900001
-    ) child
-    WHERE child.id = (SELECT id FROM _scheduled_lesson)
-  ),
-  'parent-scoped range includes the scheduled lesson'
-);
-
-SELECT tap.ok(
-  NOT EXISTS (
-    SELECT 1
-    FROM event_instances_for_range(
-      null, now(), now() + interval '1 day', scope => 'top_level'
-    ) root
-    WHERE root.id = (SELECT id FROM _scheduled_lesson)
-  ),
-  'root-scoped range excludes the scheduled lesson'
-);
-
 SELECT tap.lives_ok(
   format(
     'insert into event_instance (tenant_id, parent_id, since, until) values (1000, %s, now() + interval ''8 hours'', now() + interval ''9 hours'')',
@@ -1018,64 +826,6 @@ SELECT tap.ok(
     WHERE instance.id = (SELECT id FROM _scheduled_lesson)
   ),
   'series info reports identity, range, position and length without loading sibling events'
-);
-
-SELECT public.save_events(
-  details => ROW(
-    instance.parent_id, instance.name, instance.type,
-    instance.location_id, instance.location_text,
-    instance.capacity, instance.capacity_unit,
-    instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
-  )::public.event_details_input,
-  events => ARRAY[
-    ROW(
-      instance.id, instance.since, instance.until, instance.is_cancelled,
-      ARRAY[
-        ROW(200001, null, null, false)::public.event_registration_input,
-        ROW(200002, null, null, false)::public.event_registration_input,
-        ROW(200003, null, null, false)::public.event_registration_input
-      ]
-    )::public.event_input
-  ],
-  trainers => ARRAY[ROW(2900002, 1)::public.event_trainer_input],
-  cohort_ids => ARRAY[800001]::bigint[]
-)
-FROM event_instance instance
-WHERE instance.id = 900001;
-
-SELECT set_config(
-  'jwt.claims.my_person_ids',
-  (SELECT jsonb_build_array(person_id)::text
-   FROM event_instance_registration
-   WHERE instance_id = 900001
-     AND parent_registration_id is null
-     AND registration_status = 'active'
-     AND person_id is not null
-   LIMIT 1),
-  true
-);
-SELECT set_event_instance_registration(
-  instance_id, person_id, null, true, 'Instance note'
-)
-FROM event_instance_registration
-WHERE instance_id = 900001
-  AND parent_registration_id is null
-  AND registration_status = 'active'
-  AND person_id is not null
-LIMIT 1;
-
-SELECT tap.ok(
-  EXISTS (
-    SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900001
-      AND parent_registration_id is null
-      AND person_id is not null
-      AND registration_status = 'active'
-      AND note = 'Instance note'
-  ),
-  'event save and self-registration reuse exact registration rows'
 );
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);

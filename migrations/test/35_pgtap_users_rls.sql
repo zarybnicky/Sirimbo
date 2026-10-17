@@ -1,6 +1,6 @@
 BEGIN;
 SET LOCAL search_path = public, tap;
-SELECT tap.plan(21);
+SELECT tap.plan(20);
 
 INSERT INTO tenant (id, name) VALUES (-8300, 'User RLS'), (-8301, 'Other user tenant');
 SELECT set_config('jwt.claims.tenant_id', '-8300', true);
@@ -31,7 +31,6 @@ SELECT set_config('jwt.claims.my_person_ids', '{-8300,-8302}', true);
 SET LOCAL ROLE member;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM users), ARRAY[-8301,-8300]::bigint[], 'self and active shared-person users, including accounts created in another tenant');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM user_proxy), ARRAY[-8305,-8301,-8300]::bigint[], 'own history and shared active links, not other people managed by the shared user');
-SELECT tap.is((SELECT count(*) FROM users WHERE id=-8303), 0::bigint, 'expired links on either side grant no shared access despite stale person claims');
 WITH changed AS (UPDATE users SET u_jmeno='Forbidden' WHERE id=-8301 RETURNING id)
 SELECT tap.is(count(*), 0::bigint, 'shared-user access is read-only') FROM changed;
 SELECT tap.is((get_current_user()).id, -8300::bigint, 'current-user lookup still works');

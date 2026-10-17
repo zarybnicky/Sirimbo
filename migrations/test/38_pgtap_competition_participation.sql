@@ -1,7 +1,7 @@
 begin;
 
 set local search_path to public, tap;
-select tap.plan(5);
+select tap.plan(3);
 
 insert into federated.federation (code, name) values ('participation-test', 'Test');
 insert into federated.category (id, name, series, discipline, age_group, class)
@@ -40,11 +40,7 @@ select tap.is(
   3::bigint, 'results remain available through the composite-key relation'
 );
 select tap.ok(not has_table_privilege(current_user,
-  'federated.competition_participation', 'insert'), 'anonymous cannot insert participation');
-select tap.ok(not has_table_privilege(current_user,
-  'federated.competition_participation', 'update'), 'anonymous cannot update participation');
-select tap.ok(not has_table_privilege(current_user,
-  'federated.competition_participation', 'delete'), 'anonymous cannot delete participation');
+  'federated.competition_participation', 'insert,update,delete'), 'anonymous cannot write participation');
 reset role;
 
 select tap.finish(true);

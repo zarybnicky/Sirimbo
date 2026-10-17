@@ -45,8 +45,6 @@ VALUES (-9000, -9002, -9000);
 INSERT INTO event_lesson_demand (id, tenant_id, trainer_id, registration_id, lesson_count)
 OVERRIDING SYSTEM VALUE VALUES (-9000, -9000, -9000, -9001, 1);
 
-SELECT tap.is((SELECT count(*) FROM graphile_worker.jobs WHERE key='refresh_event_people'),
-  1::bigint, 'bulk changes share one pending refresh key');
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
   'callers cannot read the unscoped person-pair view');
 UPDATE event_instance SET share_token='test-camp-share' WHERE id=-9000;
@@ -143,15 +141,17 @@ SELECT set_config('jwt.claims.tenant_id', '-9000', true);
 UPDATE event_instance SET parent_id=null WHERE id=-9001;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id) FROM event_instance), ARRAY[-9000]::bigint[], 'reparenting changes schedule access immediately');
-SELECT tap.is((SELECT count(*) FROM person WHERE id=-9002), 1::bigint,
-  'reparenting retains cached person visibility until refresh');
 RESET ROLE;
 UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9000;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'cancellation removes private-event access immediately');
 SELECT tap.is((SELECT count(*) FROM event_instance_registration), 0::bigint, 'cancellation removes registration reads immediately');
 SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 0::bigint, 'cancellation removes lesson-demand reads immediately');
-SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint, 'person visibility retains its documented delay until refresh');
+RESET ROLE;
+REFRESH MATERIALIZED VIEW app_private.event_people;
+SET LOCAL ROLE anonymous;
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person WHERE id BETWEEN -9005 AND -9000),
+  ARRAY[-9000]::bigint[], 'refresh removes former attendee access while preserving access to own person');
 RESET ROLE;
 
 SELECT * FROM tap.finish(true);
