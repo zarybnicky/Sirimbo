@@ -7,5 +7,7 @@ create policy trainer_select on event_instance_target_cohort to trainer
   using (app_private.can_trainer_edit_instance(instance_id));
 create policy member_view on event_instance_target_cohort for select to member
   using (instance_id in (select id from event_instance));
+create policy attendee_view on event_instance_target_cohort for select to anonymous
+  using (instance_id in (select app_private.attended_event_ids()));
 create policy event_share_view on event_instance_target_cohort for select to anonymous
   using (instance_id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]));

@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
 SET LOCAL search_path = public, tap;
 GRANT USAGE ON SCHEMA tap TO anonymous;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO anonymous;
-SELECT tap.plan(17);
+SELECT tap.plan(21);
 
 INSERT INTO tenant (id, name) VALUES (-8300, 'User RLS'), (-8301, 'Other user tenant');
 SELECT set_config('jwt.claims.tenant_id', '-8300', true);
@@ -47,6 +47,14 @@ SELECT tap.is((SELECT count(*) FROM users WHERE id=-8302), 0::bigint, 'byline do
 RESET ROLE;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT count(*) FROM users), 2::bigint, 'logged-in nonmember retains self and shared-user access');
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-8300), 1::bigint, 'own person is visible without membership');
+SELECT set_config('jwt.claims.tenant_id', '-8301', true);
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-8300), 1::bigint, 'own person remains visible in another tenant');
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-8301), 0::bigint, 'unrelated person remains hidden');
+SELECT set_config('jwt.claims.my_person_ids', '{}', true);
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-8300), 0::bigint, 'no person claims grant no own-person access');
+SELECT set_config('jwt.claims.my_person_ids', '{-8300,-8302}', true);
+SELECT set_config('jwt.claims.tenant_id', '-8300', true);
 SELECT tap.lives_ok($$SELECT change_password('new-test-password')$$, 'nonmember can change own password');
 SELECT set_config('jwt.claims.user_id', '', true);
 SELECT tap.is((SELECT count(*) FROM users), 0::bigint, 'unauthenticated caller sees no user accounts');

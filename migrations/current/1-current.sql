@@ -27,3 +27,15 @@ alter table aktuality
 grant all on table aktuality to anonymous;
 
 --!include functions/upsert_article.sql
+
+--!include views/event_people.sql
+--!include functions/attended_event_ids.sql
+--!include functions/tg_event_people__refresh.sql
+--!include functions/visible_person_ids.sql
+
+--!include policies/event_instance.sql
+--!include policies/event_instance_trainer.sql
+--!include policies/event_instance_target_cohort.sql
+--!include policies/cohort.sql
+--!include policies/event_instance_registration.sql
+--!include policies/event_lesson_demand.sql
