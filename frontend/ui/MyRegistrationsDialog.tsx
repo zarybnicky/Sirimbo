@@ -11,7 +11,6 @@ import { TextField } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, formatRegistrant } from '@/ui/format';
 import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
-import { NewExternalRegistrationForm } from '@/ui/forms/NewExternalRegistrationForm';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
@@ -19,7 +18,6 @@ import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 
@@ -117,17 +115,11 @@ export function MyRegistrationsDialog({
   initialRegistrationId?: string;
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
-  const auth = useAuth();
-  const search = useSearchParams();
-  const preview = search?.get('registration') === 'preview';
   const [query] = useQuery({
     query: EventRegistrationDialogDocument,
     variables: { id: instanceId },
-    pause: auth.personIds.length === 0 && !preview,
   });
 
-  if (auth.personIds.length === 0 && !preview)
-    return <NewExternalRegistrationForm instanceId={instanceId} />;
   if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
   if (!query.data.instance) return <FormError error="Termín není dostupný." />;
 
@@ -150,7 +142,6 @@ function RegistrationsDialogContent({
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const auth = useAuth();
-  const preview = useSearchParams()?.get('registration') === 'preview';
   const isManager = auth.canManageInstance(instance);
   const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
@@ -184,7 +175,7 @@ function RegistrationsDialogContent({
   const page = selected
     ? 'editor'
     : selection.kind === 'candidates'
-      ? preview && !candidatesLoading && !candidateError && candidates.length === 0
+      ? !candidatesLoading && !candidateError && candidates.length === 0
         ? 'new-person'
         : 'candidates'
       : selection.kind === 'new-person'
@@ -261,7 +252,7 @@ function RegistrationsDialogContent({
             <ChevronRight />
           </IconButton>
         )}
-        {page === 'candidates' && preview && (
+        {page === 'candidates' && (
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: 'outline' })}
@@ -271,15 +262,14 @@ function RegistrationsDialogContent({
             Nová osoba
           </button>
         )}
-        {(page === 'overview' || registration) &&
-          (preview || isManager || candidates.length > 0) && (
-            <IconButton
-              label="Přidat přihlášku"
-              onClick={() => setSelection({ kind: 'candidates' })}
-            >
-              <Plus />
-            </IconButton>
-          )}
+        {(page === 'overview' || registration) && (
+          <IconButton
+            label="Přidat přihlášku"
+            onClick={() => setSelection({ kind: 'candidates' })}
+          >
+            <Plus />
+          </IconButton>
+        )}
         {selected && !registration && (
           <button
             type="button"

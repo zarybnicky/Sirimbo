@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     if (otp.intent === 'event_handoff') {
       if (String(tenant.id) !== otp.tenant_id) throw new Error('Wrong tenant');
       destination = new URL(
-        `/termin/${otp.event_id}?registration=preview&signup=1`,
+        `/termin/${otp.event_id}?signup=1`,
         origin,
       );
     }

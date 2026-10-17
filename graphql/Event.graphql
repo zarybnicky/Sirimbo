@@ -580,12 +580,6 @@ fragment EventExternalRegistration on EventExternalRegistration {
   lastName
 }
 
-mutation RegisterToEventExternal($input: CreateEventExternalRegistrationInput!) {
-  createEventExternalRegistration(input: $input) {
-    __typename
-  }
-}
-
 mutation SetLessonDemand($input: SetLessonDemandInput!) {
   setLessonDemand(input: $input) {
     eventLessonDemand {
