@@ -113,9 +113,15 @@ in {
         "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
       ];
 
+      systemd.sockets.rozpisovnik-api = {
+        wantedBy = [ "sockets.target" ];
+        listenStreams = [ "127.0.0.1:${toString cfg.backend.port}" ];
+        socketConfig.Accept = false;
+      };
+
       systemd.services.rozpisovnik-api = {
-        after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "network-online.target" "postgresql.service" ];
+        after = [ "network-online.target" "postgresql.service" "rozpisovnik-api.socket" ];
+        requires = [ "network-online.target" "postgresql.service" "rozpisovnik-api.socket" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = config.my.seaweedfs.buckets.olymp.environment // {
@@ -151,6 +157,7 @@ in {
           WorkingDirectory = "${pkgs.rozpisovnik-api}/share";
           Restart = "always";
           RestartSec = "10s";
+          TimeoutStopSec = "30s";
         };
       };
 

@@ -15,17 +15,13 @@ import preset from './graphile.config.ts';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
 import { createServer } from 'node:http';
 import { authContext } from './auth.ts';
+import { pool } from './db.ts';
 
 const app = express();
 
 app.use(compression({ threshold: 0 }));
 app.use(helmet());
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  }),
-);
+app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
 app.use(morgan('tiny'));
 
@@ -36,29 +32,37 @@ app.use(express.text({ type: 'application/graphql' }));
 app.use(authContext());
 
 const server = createServer(app);
-server.on('error', (e) => {
-  console.error(e);
-});
+const graphile = postgraphile(preset);
 
-
-postgraphile(preset)
-  .createServ(grafserv)
-  .addTo(app, server)
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
-
-server.listen(preset.grafserv?.port ?? 5200, () => {
+server.on('listening', () => {
   const address = server.address();
   if (typeof address === 'string') {
-    console.log(`PostGraphile listening on ${address} 🚀`);
+    console.log(`PostGraphile listening on ${address}`);
   } else if (address !== null) {
-    const href = `http://localhost:${address.port}/graphiql`;
-    console.log(`PostGraphiQL available at ${href} 🚀`);
+    console.log(`PostGraphile listening on ${address.port}`);
   }
 });
 
-process.on('unhandledRejection', (reason) => {
-  throw reason;
+process.on('unhandledRejection', (e) => {
+  throw e;
 });
+
+await graphile.getSchema();
+await graphile.createServ(grafserv).addTo(app, server);
+
+if (process.env.LISTEN_FDS) {
+  server.listen({ fd: 3 });
+} else {
+  server.listen(preset.grafserv?.port ?? 5200);
+}
+
+function shutdown() {
+  server.close(async (e) => {
+    if (e) throw e;
+    await graphile.release();
+    await pool.end();
+    process.exit(0);
+  });
+}
+process.once('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);

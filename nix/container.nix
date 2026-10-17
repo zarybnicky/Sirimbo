@@ -29,6 +29,15 @@
 
   systemd.services.rozpisovnik-api.environment.POSTGRAPHILE_DONT_WATCH = "1";
 
+  my.seaweedfs.buckets.olymp.environment = {
+    S3_BUCKET = "public";
+    AWS_REGION = "us-west-1";
+    AWS_ENDPOINT_URL_S3 = "http://olymp-test:9000";
+    AWS_ACCESS_KEY_ID = "00000000";
+    AWS_SECRET_ACCESS_KEY = "000000000000";
+    AWS_EC2_METADATA_DISABLED = "true";
+  };
+
   services.mailhog.enable = true;
   services.olymp = {
     stateDir = "/var/lib/olymp";
@@ -50,13 +59,6 @@
       tls = false;
       host = "127.0.0.1";
       port = 1025;
-    };
-    s3 = {
-      bucket = "public";
-      region = "us-west-1";
-      endpoint = "http://olymp-test:9000";
-      accessKeyId = "00000000";
-      secretAccessKey = "000000000000";
     };
     otel = {
       endpoint = "http://localhost:4318";
