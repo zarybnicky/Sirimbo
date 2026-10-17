@@ -120,6 +120,7 @@ const authHelpersAtom = atom<AuthState>((get) => {
   const persons = user.userProxiesList.flatMap((x) => (x.person ? [x.person] : []));
   return {
     ...auth,
+    isMember: auth.isMember || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin,
     user,
     persons,
     couples: persons.flatMap((x) => x.allCouplesList || []),

@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   if (auth.isLoggedIn && auth.personIds.length === 0) redirect('/profil');
 
   return (
-    <Layout className="grow content relative content-stretch">
+    <Layout requireUser className="grow content relative content-stretch">
       <Dashboard />
     </Layout>
   );

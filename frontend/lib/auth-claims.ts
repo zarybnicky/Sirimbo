@@ -80,9 +80,9 @@ export function canAccess(
 ) {
   return (
     (!x.requireUser || auth.isLoggedIn) &&
-    (!x.requireMember || auth.isMember || auth.isTrainer) &&
-    (!x.requireTrainer || auth.isTrainer) &&
-    (!x.requireAdmin || auth.isAdmin) &&
+    (!x.requireMember || auth.isMember || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin) &&
+    (!x.requireTrainer || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin) &&
+    (!x.requireAdmin || auth.isAdmin || auth.isSystemAdmin) &&
     (!x.requireSystemAdmin || auth.isSystemAdmin) &&
     (!x.requirePublicSite || !!tenant.publicSite) &&
     (!x.requireStarletImport || !!tenant.enableStarletImport)
