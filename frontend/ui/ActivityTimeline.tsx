@@ -1,14 +1,16 @@
 import {
   ActivityTimelineDocument,
-  type ActivityTimelineItem_ActivityCompetitionBrief_Fragment,
-  type ActivityTimelineItem_ActivityCompetitionResult_Fragment,
   type ActivityTimelineItem_ActivityEventAttendance_Fragment,
   type ActivityTimelineItem_ActivityJudging_Fragment,
   type ActivityTimelineItemFragment,
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
-import { CompetitionEventContent, CompetitionLink } from '@/ui/Competitions';
+import {
+  CompetitionEventContent,
+  CompetitionLink,
+  groupCompetitionEvents,
+} from '@/ui/Competitions';
 import { formatCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
@@ -23,9 +25,6 @@ import { LocalPersonLinks } from './federation-links';
 type TimelineMode = 'future' | 'past';
 type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
 type EventAttendanceItem = ActivityTimelineItem_ActivityEventAttendance_Fragment;
-type CompetitionItem =
-  | ActivityTimelineItem_ActivityCompetitionBrief_Fragment
-  | ActivityTimelineItem_ActivityCompetitionResult_Fragment;
 type JudgingItem = ActivityTimelineItem_ActivityJudging_Fragment;
 
 const BASE_FILTERS = [
@@ -253,7 +252,13 @@ function TimelineDay({
   isCohort: boolean;
 }) {
   const eventGroups = new Map<string, [EventAttendanceItem, ...EventAttendanceItem[]]>();
-  const competitionGroups = new Map<string, [CompetitionItem, ...CompetitionItem[]]>();
+  const competitionGroups = groupCompetitionEvents(
+    items.filter(
+      (item) =>
+        item.__typename === 'ActivityCompetitionBrief' ||
+        item.__typename === 'ActivityCompetitionResult',
+    ),
+  );
   const judgingGroups = new Map<string, [JudgingItem, ...JudgingItem[]]>();
 
   const birthdayItems = items.filter((x) => x.__typename === 'ActivityBirthday');
@@ -262,12 +267,6 @@ function TimelineDay({
     if (item.__typename === 'ActivityEventAttendance' && item.eventInstance) {
       const key = item.eventInstance.id;
       eventGroups.set(key, [...(eventGroups.get(key) ?? []), item]);
-    } else if (
-      item.__typename === 'ActivityCompetitionBrief' ||
-      item.__typename === 'ActivityCompetitionResult'
-    ) {
-      const key = item.competitionEventId!;
-      competitionGroups.set(key, [...(competitionGroups.get(key) ?? []), item]);
     } else if (item.__typename === 'ActivityJudging') {
       const key = item.competitionEventId!;
       judgingGroups.set(key, [...(judgingGroups.get(key) ?? []), item]);
@@ -297,20 +296,16 @@ function TimelineDay({
           </div>
         )}
 
-        {competitionGroups.size > 0 && (
+        {competitionGroups.length > 0 && (
           <div className="flex flex-wrap justify-start gap-2 opacity-90">
-            {[...competitionGroups].map(([key, items]) => (
+            {competitionGroups.map(({ key, entries }) => (
               <div
                 key={`competition:${key}`}
                 className={cardCls({
                   className: 'w-full rounded-lg border-green-7 bg-green-2 p-3',
                 })}
               >
-                <CompetitionEventContent
-                  title={items[0].competitionEventName ?? ''}
-                  location={items[0].competitionEventLocation}
-                  entries={items}
-                />
+                <CompetitionEventContent entries={entries} />
               </div>
             ))}
           </div>

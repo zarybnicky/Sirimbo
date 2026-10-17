@@ -213,11 +213,7 @@ function CompetitionTimeGridEvent({
         '@container/competition rbc-event absolute max-h-full min-h-5 overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
       )}
     >
-      <CompetitionEventContent
-        title={event.title}
-        location={event.eventLocation}
-        entries={event.items}
-      />
+      <CompetitionEventContent entries={event.items} />
     </div>
   );
 }

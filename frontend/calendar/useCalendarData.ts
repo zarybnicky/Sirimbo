@@ -1,4 +1,4 @@
-import { formatCategoryName } from '@/ui/csts';
+import { groupCompetitionEvents, type CompetitionEntry } from '@/ui/Competitions';
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
 import {
@@ -184,8 +184,7 @@ export function useCalendarData(
 
   const { events, resources } = React.useMemo(() => {
     const schedule = mapEventsToCalendar(data?.list, effectiveGroupBy);
-    const competitionsByEvent = new Map<string, CalendarCompetitionEvent>();
-    const seen = new Set<string>();
+    const competitionItems: CompetitionEntry[] = [];
     const birthdays: CalendarEvent[] = [];
 
     for (const item of showActivities ? (activityData?.activityTimelineList ?? []) : []) {
@@ -193,24 +192,7 @@ export function useCalendarData(
         item.__typename === 'ActivityCompetitionBrief' ||
         item.__typename === 'ActivityCompetitionResult'
       ) {
-        const date = item.competitionDate;
-        const competitorKey = `${item.competitionId}:${item.competitorId}`;
-        if (!date || seen.has(competitorKey)) continue;
-        seen.add(competitorKey);
-
-        const eventKey = `${date}:${item.competitionEventId ?? ''}`;
-        const competition = competitionsByEvent.get(eventKey) ?? {
-          kind: 'competition',
-          id: `competition:${date}:${item.competitionEventId ?? 'unknown'}`,
-          title: item.competitionEventName!,
-          eventLocation: item.competitionEventLocation,
-          ...calendarDay(date),
-          resourceIds:
-            effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
-          items: [],
-        };
-        competition.items.push(item);
-        competitionsByEvent.set(eventKey, competition);
+        if (item.competitionDate) competitionItems.push(item);
       } else if (item.__typename === 'ActivityBirthday') {
         const date = item.activityDate!;
         birthdays.push({
@@ -229,17 +211,16 @@ export function useCalendarData(
       }
     }
 
-    const competitions = [...competitionsByEvent.values()];
-    for (const competition of competitions) {
-      competition.items.sort(
-        (a, b) =>
-          a.__typename.localeCompare(b.__typename) ||
-          (a.competitorName ?? '').localeCompare(b.competitorName ?? '') ||
-          formatCategoryName(a.federation, a.category, a.competitionType).localeCompare(
-            formatCategoryName(b.federation, b.category, b.competitionType),
-          ),
-      );
-    }
+    const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
+      competitionItems,
+    ).map(({ key, entries }) => ({
+      kind: 'competition',
+      id: `competition:${key}`,
+      title: entries[0]!.competitionEventName ?? '',
+      ...calendarDay(entries[0]!.competitionDate!),
+      resourceIds: effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
+      items: entries,
+    }));
 
     if (effectiveGroupBy !== 'none' && competitions.length > 0) {
       schedule.resources.push(competitionResource);

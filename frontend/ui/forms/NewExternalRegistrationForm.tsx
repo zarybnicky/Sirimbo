@@ -60,12 +60,6 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
       <fieldset className="grid lg:grid-cols-2 gap-2">
         <FormError error={result.error} />
 
-        {/*<TextFieldElement
-          control={control}
-          name="prefixTitle"
-          label="Titul před jménem"
-        />
-        <TextFieldElement control={control} name="suffixTitle" label="Titul za jménem" />*/}
         <TextFieldElement
           control={control}
           name="firstName"
@@ -99,21 +93,12 @@ export function NewExternalRegistrationForm({ instanceId }: { instanceId: string
           placeholder="vyberte národnost"
           options={countryOptions}
         />
-        {
-          /*watch('nationality') === '203' ? (
-          <TextFieldElement
-            control={control}
-            name="taxIdentificationNumber"
-            label="Rodné číslo"
-            placeholder="1111119999"
-          />
-        ) : */ <DatePickerElement
-            control={control}
-            name="birthDate"
-            label="Datum narození"
-            valueMode="date"
-          />
-        }
+        <DatePickerElement
+          control={control}
+          name="birthDate"
+          label="Datum narození"
+          valueMode="date"
+        />
 
         <div className="col-full">
           <TextAreaElement control={control} name="note" label="Poznámky" />

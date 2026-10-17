@@ -22,6 +22,7 @@ import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
+import { ArrowLeftRight } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -51,161 +52,225 @@ export type CompetitionEntry = {
   completionStatus?: string | null;
 };
 
-type CompetitorGroup = {
-  key: string;
-  competitorName: string;
-  entries: CompetitionEntry[];
-};
-
 type CompetitionScope = {
   personIds?: string[];
   cohortId?: string;
 };
 
-function groupByCompetitor(items: readonly CompetitionEntry[] | null | undefined) {
-  const seen = new Set<string>();
-  const groups = new Map<string, CompetitorGroup>();
-
-  for (const item of items ?? []) {
-    const dedupeKey = `${item.competitionId}:${item.competitorId}`;
-    if (seen.has(dedupeKey)) continue;
-    seen.add(dedupeKey);
-
-    const groupKey = item.competitorId ?? '';
-    const group = groups.get(groupKey) ?? {
-      key: groupKey,
-      competitorName: item.competitorName ?? '',
-      entries: [],
-    };
-
-    group.entries.push(item);
-    groups.set(groupKey, group);
-  }
-
-  return [...groups.values()].toSorted((a, b) =>
-    a.competitorName.localeCompare(b.competitorName),
-  );
+function entryLabel(entry: CompetitionEntry, competition: boolean) {
+  return competition
+    ? formatCategoryName(entry.federation, entry.category, entry.competitionType) || ''
+    : (entry.competitorName ?? '');
 }
 
-function groupByDayEvent(rows: readonly CompetitionEntry[] | null | undefined) {
-  const days = new Map<string, Map<string, CompetitionEntry[]>>();
+function checkInTime(entries: readonly CompetitionEntry[]) {
+  return entries.find((x) => x.checkInEnd)?.checkInEnd;
+}
 
-  for (const row of rows ?? []) {
-    const dayKey = row.competitionDate ?? '';
-    const eventKey = `${row.competitionEventId}:${row.competitionEventName}:${row.competitionEventLocation}`;
-    const day = days.get(dayKey) ?? new Map<string, CompetitionEntry[]>();
-    const entries = day.get(eventKey) ?? [];
-    entries.push(row);
-    day.set(eventKey, entries);
-    days.set(dayKey, day);
-  }
-
-  return [...days.entries()].map(([dayKey, events]) => ({
-    key: dayKey,
-    competitionDate: dayKey || null,
-    eventGroups: [...events.entries()]
-      .map(([eventKey, entries]) => ({
-        key: eventKey,
-        eventName: entries[0]?.competitionEventName ?? '',
-        eventLocation: entries[0]?.competitionEventLocation ?? '',
-        entry: entries[0],
-        competitorGroups: groupByCompetitor(entries),
+export function groupCompetitionEvents(entries: readonly CompetitionEntry[]) {
+  return [...Map.groupBy(entries, (x) => x.competitionDate).values()].flatMap((day) =>
+    [...Map.groupBy(day, (x) => x.competitionEventId)]
+      .map(([eventId, entries]) => ({
+        key: `${entries[0]!.competitionDate ?? ''}:${eventId ?? ''}`,
+        entries,
       }))
       .toSorted(
         (a, b) =>
-          a.eventName.localeCompare(b.eventName) ||
-          a.eventLocation.localeCompare(b.eventLocation),
+          (a.entries[0]!.competitionEventName ?? '').localeCompare(
+            b.entries[0]!.competitionEventName ?? '',
+          ) ||
+          (a.entries[0]!.competitionEventLocation ?? '').localeCompare(
+            b.entries[0]!.competitionEventLocation ?? '',
+          ),
       ),
-  }));
-}
-
-function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry[] }) {
-  return (
-    <>
-      {groupByDayEvent(entries).map((day) => (
-        <React.Fragment key={day.key}>
-          {day.eventGroups.map((event) => (
-            <section key={event.key} className="flex flex-col gap-1 justify-start">
-              <div className="min-w-0 pt-2">
-                <h6 className="text-xs text-neutral-11">
-                  {event.eventLocation ?? ''}
-                  {', '}
-                  {day.competitionDate && formatDateOnly(day.competitionDate)}
-                </h6>
-                <div className="text-sm font-semibold leading-tight text-neutral-12">
-                  <CompetitionLink entry={event.entry}>
-                    {event.eventName ?? ''}
-                  </CompetitionLink>
-                </div>
-              </div>
-              {event.competitorGroups.map((group) => (
-                <article
-                  key={group.key}
-                  className={cardCls({
-                    className: 'rounded-lg border-neutral-6 p-2 pb-1',
-                  })}
-                >
-                  <CompetitionCompetitorGroup group={group} />
-                </article>
-              ))}
-            </section>
-          ))}
-        </React.Fragment>
-      ))}
-    </>
   );
 }
 
-function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
+function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry[] }) {
+  return groupCompetitionEvents(entries).map(({ key, entries }) => (
+    <section key={key} className="pt-2">
+      <CompetitionEventContent entries={entries} cards />
+    </section>
+  ));
+}
+
+export function CompetitionEventContent({
+  entries,
+  cards = false,
+}: {
+  entries: readonly CompetitionEntry[];
+  cards?: boolean;
+}) {
+  const [override, setOverride] = React.useState<boolean | null>(null);
+  const event = entries[0];
+  if (!event) return null;
+  const unique = new Map<string, CompetitionEntry>();
+  for (const entry of entries) {
+    const key = `${entry.competitionId}:${entry.competitorId}`;
+    if (!unique.has(key)) unique.set(key, entry);
+  }
+  const competitors = Map.groupBy(unique.values(), (entry) => entry.competitorId);
+  const competitions = Map.groupBy(unique.values(), (entry) => entry.competitionId);
+  const canToggle = competitors.size > 1 && competitions.size > 1;
+  const byCompetition =
+    canToggle && override !== null ? override : competitions.size < competitors.size;
+  const groups = [...(byCompetition ? competitions : competitors)].toSorted(
+    ([, a], [, b]) =>
+      (byCompetition
+        ? (checkInTime(a) ?? '24:00').localeCompare(checkInTime(b) ?? '24:00')
+        : 0) ||
+      entryLabel(a[0]!, byCompetition).localeCompare(entryLabel(b[0]!, byCompetition)),
+  );
+
   return (
-    <div className="grid grid-cols-[minmax(3rem,max-content)_minmax(0,1fr)_max-content] gap-x-2 @max-[99px]/competition:grid-cols-1">
-      <h5 className="col-span-full wrap-break-word pb-1 text-sm font-medium leading-tight text-neutral-12">
-        {group.competitorName}
+    <div className="flex flex-col gap-1">
+      <div
+        className={cn(
+          'text-sm font-semibold leading-tight',
+          cards ? 'text-neutral-12' : 'text-green-11',
+        )}
+      >
+        <CompetitionLink
+          entry={event}
+          className={cards ? undefined : 'text-green-11 hover:text-green-12'}
+        >
+          {event.competitionEventName}
+        </CompetitionLink>
+      </div>
+      <div
+        className={cn(
+          'flex items-baseline justify-between gap-2 text-xs leading-tight',
+          cards ? 'text-neutral-11' : 'text-green-11',
+        )}
+      >
+        <span className="min-w-0 truncate">
+          {[
+            event.competitionEventLocation,
+            cards && event.competitionDate && formatDateOnly(event.competitionDate),
+          ]
+            .filter(Boolean)
+            .join(', ')}
+        </span>
+        {canToggle && (
+          <button
+            type="button"
+            aria-label={
+              byCompetition ? 'Seskupit podle účastníků' : 'Seskupit podle soutěží'
+            }
+            className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
+            onClick={() => setOverride(!byCompetition)}
+          >
+            <ArrowLeftRight className="size-3" aria-hidden />
+            {byCompetition ? 'Soutěže' : 'Účastníci'}
+          </button>
+        )}
+      </div>
+      {groups.map(([key, entries]) => (
+        <article
+          key={key}
+          className={
+            cards
+              ? cardCls({ className: 'rounded-lg border-neutral-6 p-2 pb-1' })
+              : 'border-t border-green-6 pt-2 first-of-type:border-t-0'
+          }
+        >
+          <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function CompetitionLabel({
+  entry,
+  competition,
+}: {
+  entry: CompetitionEntry;
+  competition: boolean;
+}) {
+  return competition ? (
+    <CompetitionLink
+      entry={entry}
+      competitionId={entry.competitionExternalId}
+      className={cn('text-accent-11', entry.status === 'CANCELLED' && 'line-through')}
+    >
+      {entryLabel(entry, true)}
+    </CompetitionLink>
+  ) : (
+    <>{entry.competitorName}</>
+  );
+}
+
+function CompetitionGroupContent({
+  entries,
+  byCompetition,
+}: {
+  entries: readonly CompetitionEntry[];
+  byCompetition: boolean;
+}) {
+  const checkInEnd = byCompetition && checkInTime(entries);
+  const showLeadingColumn =
+    !byCompetition || entries.some((x) => x.ranking !== undefined);
+  return (
+    <div
+      className={cn(
+        'grid gap-x-2 @max-[99px]/competition:grid-cols-1',
+        showLeadingColumn
+          ? 'grid-cols-[max-content_minmax(0,1fr)_max-content]'
+          : 'grid-cols-[minmax(0,1fr)_max-content]',
+      )}
+    >
+      <h5 className="col-span-full flex items-baseline gap-2 wrap-break-word pb-1 text-sm font-medium leading-tight text-neutral-12">
+        {checkInEnd && (
+          <span className="shrink-0 text-xs tabular-nums text-neutral-11">
+            {checkInEnd.slice(0, 5)}
+          </span>
+        )}
+        <span className="min-w-0">
+          <CompetitionLabel entry={entries[0]!} competition={byCompetition} />
+        </span>
       </h5>
-      {group.entries
-        .toSorted((a, b) =>
-          formatCategoryName(a.federation, a.category, a.competitionType).localeCompare(
-            formatCategoryName(b.federation, b.category, b.competitionType),
-          ),
+      {entries
+        .toSorted(
+          (a, b) =>
+            Number(a.ranking === undefined) - Number(b.ranking === undefined) ||
+            (a.ranking ?? Infinity) - (b.ranking ?? Infinity) ||
+            Number(b.isFinal ?? false) - Number(a.isFinal ?? false) ||
+            Number(b.pointGain ?? 0) - Number(a.pointGain ?? 0) ||
+            (a.ranking === undefined
+              ? (a.checkInEnd ?? '24:00').localeCompare(b.checkInEnd ?? '24:00')
+              : 0) ||
+            entryLabel(a, !byCompetition).localeCompare(entryLabel(b, !byCompetition)),
         )
         .map((entry) => {
           const result = entry.ranking !== undefined ? entry : null;
           const status = formatResultStatus(entry.completionStatus);
-          const category =
-            formatCategoryName(entry.federation, entry.category, entry.competitionType) ||
-            entry.competitionExternalId ||
-            entry.competitionId;
           return (
             <div
               key={entry.id}
               className="col-span-full grid grid-cols-subgrid items-baseline py-1.5 text-xs"
             >
-              <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
-                {result
-                  ? result.ranking != null && (
-                      <>
-                        <span className={result.ranking <= 3 ? 'text-accent-11' : ''}>
-                          {result.ranking}
-                          {result.rankingTo && result.rankingTo !== result.ranking
-                            ? `–${result.rankingTo}`
-                            : ''}
-                          .
-                        </span>
-                        {result.participants != null && ` z ${result.participants}`}
-                      </>
-                    )
-                  : entry.checkInEnd?.slice(0, 5)}
+              {showLeadingColumn && (
+                <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
+                  {result
+                    ? result.ranking != null && (
+                        <>
+                          <span className={result.ranking <= 3 ? 'text-accent-11' : ''}>
+                            {result.ranking}
+                            {result.rankingTo && result.rankingTo !== result.ranking
+                              ? `–${result.rankingTo}`
+                              : ''}
+                            .
+                          </span>
+                          {result.participants != null && ` z ${result.participants}`}
+                        </>
+                      )
+                    : !byCompetition && entry.checkInEnd?.slice(0, 5)}
+                </div>
+              )}
+              <div className="min-w-0 font-semibold text-neutral-12">
+                <CompetitionLabel entry={entry} competition={!byCompetition} />
               </div>
-              <CompetitionLink
-                entry={entry}
-                competitionId={entry.competitionExternalId}
-                className={cn(
-                  'min-w-0 font-semibold text-accent-11',
-                  entry.status === 'CANCELLED' && 'line-through',
-                )}
-              >
-                {category}
-              </CompetitionLink>
               {result && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
                   {Number(result.pointGain) > 0 && `+${Number(result.pointGain)}b`}
@@ -218,36 +283,6 @@ function CompetitionCompetitorGroup({ group }: { group: CompetitorGroup }) {
           );
         })}
     </div>
-  );
-}
-
-export function CompetitionEventContent({
-  title,
-  location,
-  entries,
-}: {
-  title: string;
-  location?: string | null;
-  entries: readonly CompetitionEntry[];
-}) {
-  return (
-    <>
-      <div className="mb-1 text-sm font-semibold leading-tight text-green-11">
-        <CompetitionLink entry={entries[0]} className="text-green-11 hover:text-green-12">
-          {title}
-        </CompetitionLink>
-      </div>
-      {location && (
-        <div className="truncate text-xs leading-tight text-green-11">{location}</div>
-      )}
-      <div>
-        {groupByCompetitor(entries).map((group) => (
-          <div key={group.key} className="border-t border-green-6 pt-2 first:border-t-0">
-            <CompetitionCompetitorGroup group={group} />
-          </div>
-        ))}
-      </div>
-    </>
   );
 }
 
@@ -295,20 +330,12 @@ function competitionEntries(
       checkInEnd: competition.checkInEnd,
       status: competition.status,
     };
-    return [
-      ...competition.results.map((result) => ({
-        ...common,
-        ...result,
-        id: `${competition.id}:${result.competitorId}`,
-        competitorName: result.competitor?.name ?? result.competitorId,
-      })),
-      ...competition.entries.map((entry) => ({
-        ...common,
-        ...entry,
-        id: `${competition.id}:${entry.competitorId}`,
-        competitorName: entry.competitor?.name ?? entry.competitorId,
-      })),
-    ];
+    return [...competition.results, ...competition.entries].map((entry) => ({
+      ...common,
+      ...entry,
+      id: `${competition.id}:${entry.competitorId}`,
+      competitorName: entry.competitor?.name ?? entry.competitorId,
+    }));
   });
 }
 
