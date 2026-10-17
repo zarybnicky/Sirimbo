@@ -24,9 +24,20 @@ alter table aktuality
   add constraint aktuality_visible_requires_published_at
   check (not is_visible or published_at is not null);
 
-grant all on table aktuality to anonymous;
-
 --!include functions/upsert_article.sql
+
+alter table event_instance_registration
+  add column if not exists created_by bigint references users(id) on delete set null;
+alter table event_instance_registration alter column created_by set default current_user_id();
+
+comment on column event_instance_registration.created_by is '@omit';
+comment on constraint event_instance_registration_created_by_fkey on event_instance_registration is '@omit';
+
+alter table person_invitation add column if not exists instance_id bigint references event_instance(id) on delete set null;
+
+comment on column person_invitation.instance_id is '@omit';
+comment on constraint person_invitation_instance_id_fkey on person_invitation is '@omit';
+
 --!include functions/ensure_couple_person_registrations.sql
 --!include functions/save_events.sql
 --!include functions/set_event_instance_registration.sql
@@ -64,5 +75,4 @@ grant all on table aktuality to anonymous;
 --!include policies/tenant_membership.sql
 --!include policies/tenant_settings.sql
 --!include policies/tenant_trainer.sql
-
-drop function if exists app_private.attended_event_ids();
+--!include policies/aktuality.sql

@@ -15,12 +15,13 @@ export const metadata: Metadata = {
 export default async function InvitationPage({
   searchParams,
 }: {
-  searchParams: Promise<{ token?: string | string[] }>;
+  searchParams: Promise<{ token?: string | string[]; from?: string | string[] }>;
 }) {
   const { auth } = await getRequestContext();
 
   const search = await searchParams;
   const token = Array.isArray(search.token) ? search.token[0] : search.token;
+  const from = Array.isArray(search.from) ? search.from[0] : search.from;
   const invitation = z.uuid().safeParse(token).success
     ? await executeGraphql(InvitationInfoDocument, { token })
     : null;
@@ -29,12 +30,14 @@ export default async function InvitationPage({
     return auth.isLoggedIn ? (
       <InvitationAcceptanceForm
         token={token}
+        from={from}
         name={invitation.invitationName}
         accountEmail={auth.email ?? ''}
       />
     ) : (
       <InvitationRegistrationForm
         token={token}
+        from={from}
         email={invitation.invitationInfo}
         name={invitation.invitationName}
       />

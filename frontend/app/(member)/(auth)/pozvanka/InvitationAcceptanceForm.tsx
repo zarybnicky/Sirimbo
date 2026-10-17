@@ -11,11 +11,12 @@ type Props = {
   token: string;
   name: string;
   accountEmail: string;
+  from?: string;
 };
 
-export function InvitationAcceptanceForm({ token, name, accountEmail }: Props) {
+export function InvitationAcceptanceForm({ token, name, accountEmail, from }: Props) {
   const accept = useAsyncCallback(async () => {
-    const result = await acceptInvitationAction({ token });
+    const result = await acceptInvitationAction({ token }, from);
     if ('error' in result) throw new Error(result.error);
     window.location.assign(result.redirectTo);
   });

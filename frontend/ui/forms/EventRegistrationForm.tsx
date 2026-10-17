@@ -12,7 +12,13 @@ import { SubmitButton } from '@/ui/submit';
 import { useConfirm } from '@/ui/Confirm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Minus, Plus } from 'lucide-react';
-import { type Control, useController, useForm } from 'react-hook-form';
+import {
+  type Control,
+  type FieldPathByValue,
+  type FieldValues,
+  useController,
+  useForm,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -156,21 +162,21 @@ export function EventRegistrationForm({
   );
 }
 
-function LessonRequestField({
+export function LessonRequestField<T extends FieldValues>({
   control,
   name,
   trainer,
   current,
   readOnly,
 }: {
-  control: Control<FormValues>;
-  name: `lessonCounts.${number}`;
+  control: Control<T>;
+  name: FieldPathByValue<T, number>;
   trainer: EventInstanceTrainerFragment;
   current: number;
   readOnly: boolean;
 }) {
   const { field } = useController({ control, name });
-  const value = field.value ?? 0;
+  const value = typeof field.value === 'number' ? field.value : 0;
   const label = trainer.person?.name;
   const max =
     trainer.lessonsOffered === null

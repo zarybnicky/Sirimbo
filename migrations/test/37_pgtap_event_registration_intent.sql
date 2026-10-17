@@ -4,6 +4,8 @@ SELECT tap.no_plan();
 
 INSERT INTO tenant (id, name) VALUES (-8600, 'Registration intent tests');
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
+INSERT INTO users (id, u_email, u_pass)
+VALUES (-8650, 'registration-creator@test.invalid', 'test-password');
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (-8601, 'Alice', 'Intent', 'unspecified', ''),
        (-8602, 'Bob', 'Intent', 'unspecified', ''),
@@ -275,6 +277,72 @@ RESET ROLE;
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok('select app_private.reconcile_event_instance_cohort_registrations(array[-1]::bigint[])',
   '42501', null, 'ordinary members cannot directly invoke cohort reconciliation');
+RESET ROLE;
+
+SELECT set_config('jwt.claims.tenant_id', '-8600', true);
+INSERT INTO event_instance (id, tenant_id, since, until, is_public, capacity)
+OVERRIDING SYSTEM VALUE VALUES (-8650, -8600, now()+interval '1 day', now()+interval '2 days', true, 1);
+INSERT INTO event_instance_trainer (id, instance_id, person_id, lessons_offered)
+OVERRIDING SYSTEM VALUE VALUES (-8650, -8650, -8604, 2);
+CREATE FUNCTION pg_temp.signup(
+  first_name text DEFAULT 'Camp', note text DEFAULT 'Food note', lessons integer DEFAULT 1
+) RETURNS event_instance_registration LANGUAGE sql AS $$
+  SELECT set_event_instance_registration(-8650, null, null, true,
+    p_person => ROW(first_name, 'Guest', 'unspecified', '203', lower(first_name) || '@example.invalid',
+      '+420123456789', null, null, null)::event_registration_person_input,
+    p_note => note, p_lesson_trainer_ids => ARRAY[-8650]::bigint[], p_lesson_counts => ARRAY[lessons]);
+$$;
+
+CREATE TEMP TABLE submitted (id bigint, person_id bigint);
+GRANT ALL ON submitted TO anonymous;
+SELECT set_config('jwt.claims.my_person_ids', '{}', true);
+SELECT set_config('jwt.claims.my_couple_ids', '{}', true);
+SELECT set_config('jwt.claims.user_id', '', true);
+SET LOCAL ROLE anonymous;
+SELECT tap.throws_ok($$SELECT set_event_instance_registration(-8650, -8601, null, true)$$,
+  '42501', 'ACCESS_DENIED', 'public signup cannot select an unrelated person');
+INSERT INTO submitted SELECT id, person_id FROM pg_temp.signup();
+SELECT tap.is((SELECT id FROM pg_temp.signup()),
+  (SELECT id FROM submitted), 'an identical retry returns the same registration even when capacity is now full');
+SELECT tap.throws_ok($$SELECT pg_temp.signup(note => 'Changed note')$$,
+  '22023', 'CAPACITY_EXCEEDED', 'different details do not match or overwrite the existing registration');
+SELECT tap.throws_ok($$SELECT pg_temp.signup(lessons => 2)$$,
+  '22023', 'CAPACITY_EXCEEDED', 'different lesson requests do not match or overwrite the existing registration');
+SELECT set_config('jwt.claims.user_id', '-8650', true);
+SELECT tap.throws_ok($$SELECT pg_temp.signup()$$,
+  '22023', 'CAPACITY_EXCEEDED', 'matching details submitted by another creator do not reuse the registration');
+SELECT set_config('jwt.claims.user_id', '', true);
+SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,
+  '22023', 'CAPACITY_EXCEEDED', 'new-person signup obeys event capacity');
+RESET ROLE;
+SELECT tap.is((SELECT count(*) FROM person WHERE email IN ('camp@example.invalid', 'second@example.invalid')),
+  1::bigint, 'retries and failed submissions leave no extra people');
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r JOIN submitted s ON s.id=r.id
+  JOIN event_lesson_demand d ON d.registration_id=r.id WHERE r.note='Food note' AND d.lesson_count=1),
+  'signup saves the note and lesson request together');
+SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT person_id FROM submitted) AND instance_id=-8650),
+  1::bigint, 'signup creates one event invitation across retries');
+SELECT tap.is((SELECT count(*) FROM tenant_membership WHERE person_id=(SELECT person_id FROM submitted)),
+  0::bigint, 'camp registration does not create club membership');
+UPDATE event_instance SET is_locked=true, capacity=null WHERE id=-8650;
+DELETE FROM event_instance_trainer WHERE id=-8650;
+SET LOCAL ROLE anonymous;
+SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,
+  '28000', 'NOT_ALLOWED', 'an event without trainers still enforces its registration lock');
+SELECT set_config('jwt.claims.tenant_id', '1', true);
+SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,
+  '22023', 'INSTANCE_NOT_FOUND', 'new-person signup cannot cross the request tenant');
+RESET ROLE;
+
+SELECT set_config('jwt.claims.tenant_id', '-8600', true);
+SET LOCAL ROLE trainer;
+SELECT tap.lives_ok($$SELECT set_event_instance_registration(-8650, -8601, null, true)$$,
+  'a tenant trainer can register people in a locked event without assigned trainers');
+RESET ROLE;
+SET LOCAL ROLE administrator;
+SELECT set_config('jwt.claims.user_id', '-8650', true);
+SELECT tap.is((SELECT created_by FROM set_event_instance_registration(-8650, -8602, null, true)),
+  -8650::bigint, 'administrator registration succeeds without a membership lookup and records its creator');
 RESET ROLE;
 
 SELECT * FROM tap.finish(true);

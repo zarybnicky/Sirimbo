@@ -6869,6 +6869,19 @@ input EventRegistrationInputRecordInput {
   targetCohortId: BigInt
 }
 
+"""An input for mutations affecting `EventRegistrationPersonInputRecord`"""
+input EventRegistrationPersonInputRecordInput {
+  birthDate: Date
+  cstsId: Int
+  email: String
+  firstName: String
+  gender: GenderType
+  lastName: String
+  nationality: String
+  phone: String
+  wdsfId: Int
+}
+
 enum EventRegistrationSource {
   COHORT
   MANAGER
@@ -13975,6 +13988,7 @@ input SetEventInstanceRegistrationInput {
   pLessonCounts: [Int]
   pLessonTrainerIds: [BigInt]
   pNote: String
+  pPerson: EventRegistrationPersonInputRecordInput
   pPersonId: BigInt
 }
 

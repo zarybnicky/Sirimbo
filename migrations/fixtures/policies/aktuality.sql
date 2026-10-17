@@ -6,3 +6,5 @@ create policy admin_all on aktuality to administrator
   using (true);
 create policy public_view on aktuality for select
   using (is_visible);
+
+grant all on table aktuality to anonymous;

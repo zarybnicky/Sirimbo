@@ -83,6 +83,7 @@ export async function registerAction(
 
 export async function acceptInvitationAction(
   input: RegisterUsingInvitationInput,
+  from?: string | null,
 ): Promise<AuthActionResult> {
   try {
     const data = await executeGraphql(RegisterUsingInvitationDocument, { input });
@@ -96,5 +97,5 @@ export async function acceptInvitationAction(
         error instanceof Error ? error.message : 'Pozvánku se nepodařilo přijmout',
     };
   }
-  return { redirectTo: '/dashboard' };
+  return { redirectTo: sanitizeReturnURL(from, 'https://app.invalid') ?? '/dashboard' };
 }

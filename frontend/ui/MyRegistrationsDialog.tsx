@@ -17,8 +17,12 @@ import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
+import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
+
+const EventSignupForm = dynamic(() => import('@/ui/forms/EventSignupForm'));
 
 type Registrant = {
   id: string;
@@ -32,7 +36,7 @@ type Selection =
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
-type RegistrationInstance = NonNullable<EventRegistrationDialogQuery['instance']>;
+type RegistrationEvent = NonNullable<EventRegistrationDialogQuery['instance']>;
 
 const registrant = (registration: EventInstanceRegistrationFragment): Registrant => ({
   id: registration.id,
@@ -41,38 +45,38 @@ const registrant = (registration: EventInstanceRegistrationFragment): Registrant
   coupleId: registration.coupleId,
 });
 
-function useRegistrationCandidates(
-  instance: RegistrationInstance,
-  isManager: boolean,
-  enabled: boolean,
-) {
+export function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
   const auth = useAuth();
+  const isManager = auth.canManageInstance(event);
+
   const [query] = useQuery({
     query: EventRegistrationCandidatesDocument,
     pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(
-    instance.registrationsList.flatMap((r) =>
+    event.registrationsList.flatMap((r) =>
       r.personId
         ? [r.personId]
         : [r.couple?.man?.id, r.couple?.woman?.id].filter((id): id is string => !!id),
     ),
   );
+
   const people = isManager ? (query.data?.people?.nodes ?? []) : auth.persons;
   const couples = isManager
     ? (query.data?.tenant?.couplesList ?? [])
     : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
         (c) => c.status === 'ACTIVE',
       );
+
   const capacityLeft =
-    instance.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
+    event.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates: Registrant[] = [
     ...people
       .filter((x) => !registeredPeople.has(x.id))
-      .map((p) => ({
-        id: `person:${p.id}`,
-        label: p.name,
-        personId: p.id,
+      .map(({ id, name }) => ({
+        id: `person:${id}`,
+        label: name,
+        personId: id,
         coupleId: null,
       })),
     ...couples
@@ -80,7 +84,7 @@ function useRegistrationCandidates(
         (c) =>
           !registeredPeople.has(c.man?.id ?? '') &&
           !registeredPeople.has(c.woman?.id ?? '') &&
-          (isManager || capacityLeft >= (instance.capacityUnit === 'PEOPLE' ? 2 : 1)),
+          (isManager || capacityLeft >= (event.capacityUnit === 'PEOPLE' ? 2 : 1)),
       )
       .map((couple) => ({
         id: `couple:${couple.id}`,
@@ -89,7 +93,7 @@ function useRegistrationCandidates(
         coupleId: couple.id,
       })),
   ]
-    .filter(() => isManager || (!instance.isLocked && capacityLeft >= 1))
+    .filter(() => isManager || (!event.isLocked && capacityLeft >= 1))
     .toSorted((a, b) => a.label.localeCompare(b.label));
 
   return {
@@ -107,15 +111,20 @@ export function MyRegistrationsDialog({
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
+  const search = useSearchParams();
+  const preview = search?.get('registration') === 'preview' && !initialRegistrationId;
   const [query] = useQuery({
     query: EventRegistrationDialogDocument,
     variables: { id: instanceId },
-    pause: auth.isExternal,
+    pause: auth.isExternal && !preview,
   });
 
-  if (auth.isExternal) return <NewExternalRegistrationForm instanceId={instanceId} />;
+  if (auth.isExternal && !preview)
+    return <NewExternalRegistrationForm instanceId={instanceId} />;
   if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
   if (!query.data.instance) return <FormError error="Termín není dostupný." />;
+
+  if (preview) return <EventSignupForm instance={query.data.instance} />;
 
   return (
     <RegistrationsDialogContent
@@ -129,7 +138,7 @@ function RegistrationsDialogContent({
   instance,
   initialRegistrationId,
 }: {
-  instance: RegistrationInstance;
+  instance: RegistrationEvent;
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
@@ -166,7 +175,7 @@ function RegistrationsDialogContent({
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(instance, isManager, page === 'candidates');
+  } = useRegistrationCandidates(instance, page === 'candidates');
   const [setRegistrationResult, setRegistration] = useMutation(
     SetEventRegistrationDocument,
   );

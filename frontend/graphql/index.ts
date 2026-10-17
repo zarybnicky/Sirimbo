@@ -5552,6 +5552,19 @@ export type EventRegistrationInputRecordInput = {
   targetCohortId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+/** An input for mutations affecting `EventRegistrationPersonInputRecord` */
+export type EventRegistrationPersonInputRecordInput = {
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  cstsId?: InputMaybe<Scalars['Int']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<GenderType>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  nationality?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  wdsfId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type EventRegistrationSource =
   | 'COHORT'
   | 'MANAGER'
@@ -11289,6 +11302,7 @@ export type SetEventInstanceRegistrationInput = {
   pLessonCounts?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   pLessonTrainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pNote?: InputMaybe<Scalars['String']['input']>;
+  pPerson?: InputMaybe<EventRegistrationPersonInputRecordInput>;
   pPersonId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 

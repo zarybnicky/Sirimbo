@@ -135,6 +135,19 @@ export type EventRegistrationInputRecordInput = {
   targetCohortId?: string | null | undefined;
 };
 
+/** An input for mutations affecting `EventRegistrationPersonInputRecord` */
+export type EventRegistrationPersonInputRecordInput = {
+  birthDate?: string | null | undefined;
+  cstsId?: number | null | undefined;
+  email?: string | null | undefined;
+  firstName?: string | null | undefined;
+  gender?: GenderType | null | undefined;
+  lastName?: string | null | undefined;
+  nationality?: string | null | undefined;
+  phone?: string | null | undefined;
+  wdsfId?: number | null | undefined;
+};
+
 export type EventRegistrationSource =
   | 'COHORT'
   | 'MANAGER'
@@ -167,6 +180,11 @@ export type EventType =
   | 'HOLIDAY'
   | 'LESSON'
   | 'RESERVATION';
+
+export type GenderType =
+  | 'MAN'
+  | 'UNSPECIFIED'
+  | 'WOMAN';
 
 /** All input for the `moveEventInstance` mutation. */
 export type MoveEventInstanceInput = {
@@ -220,6 +238,7 @@ export type SetEventInstanceRegistrationInput = {
   pLessonCounts?: Array<number | null | undefined> | null | undefined;
   pLessonTrainerIds?: Array<string | null | undefined> | null | undefined;
   pNote?: string | null | undefined;
+  pPerson?: EventRegistrationPersonInputRecordInput | null | undefined;
   pPersonId?: string | null | undefined;
 };
 

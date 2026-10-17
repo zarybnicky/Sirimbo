@@ -21,9 +21,10 @@ type Props = {
   token: string;
   email: string;
   name: string;
+  from?: string;
 };
 
-export function InvitationRegistrationForm({ token, email, name }: Props) {
+export function InvitationRegistrationForm({ token, email, name, from }: Props) {
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
     defaultValues: { token: token ?? '', email: email ?? '', passwd: '' },
@@ -31,7 +32,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
   const [error, setError] = React.useState('');
   const onSubmit = async (values: z.infer<typeof Form>) => {
     setError('');
-    const result = await acceptInvitationAction(values);
+    const result = await acceptInvitationAction(values, from);
     if ('error' in result) {
       setError(result.error);
     } else {
@@ -76,7 +77,7 @@ export function InvitationRegistrationForm({ token, email, name }: Props) {
           Máte už účet?{' '}
           <Link
             className="text-accent-11 underline"
-            href={`/login?from=${encodeURIComponent(`/pozvanka?token=${token}`)}`}
+            href={`/login?from=${encodeURIComponent(`/pozvanka?token=${token}${from ? `&from=${encodeURIComponent(from)}` : ''}`)}`}
           >
             Přihlaste se
           </Link>{' '}
