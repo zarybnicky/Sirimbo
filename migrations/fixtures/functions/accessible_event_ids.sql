@@ -19,3 +19,5 @@ as $$
   where tenant_id = (select public.current_tenant_id())
     and id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]);
 $$;
+
+grant execute on function app_private.accessible_event_ids to anonymous;

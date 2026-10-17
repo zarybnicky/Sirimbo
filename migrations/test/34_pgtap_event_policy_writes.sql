@@ -1,6 +1,6 @@
 BEGIN;
 SET LOCAL search_path = public, tap;
-SELECT tap.plan(14);
+SELECT tap.plan(10);
 
 INSERT INTO tenant (id, name) VALUES (-8200, 'Event RLS'), (-8201, 'Other tenant');
 SELECT set_config('jwt.claims.tenant_id', '-8200', true);
@@ -27,15 +27,8 @@ VALUES (-8200, -8200, -8200, -8202, 'unknown'),
 INSERT INTO event_lesson_demand (id, tenant_id, trainer_id, registration_id, lesson_count)
 OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8200, 1), (-8201, -8201, -8202, -8201, 1);
-INSERT INTO event_external_registration (
-  id, tenant_id, instance_id, first_name, last_name, nationality, birth_date,
-  tax_identification_number, email, phone
-) OVERRIDING SYSTEM VALUE
-VALUES (-8200, -8200, -8200, 'External', 'One', '', '2000-01-01', '', 'one@test.invalid', ''),
-       (-8201, -8201, -8202, 'External', 'Two', '', '2000-01-01', '', 'two@test.invalid', '');
 
 SET LOCAL ROLE administrator;
-SELECT tap.is((SELECT count(*) FROM event_external_registration), 1::bigint, 'administrator external registrations stay in tenant');
 SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 1::bigint, 'administrator lesson demands stay in tenant');
 RESET ROLE;
 SET LOCAL ROLE trainer;
@@ -45,14 +38,6 @@ SELECT tap.throws_ok(
 SELECT tap.throws_ok(
   $$UPDATE event_instance_trainer SET instance_id=-8201 WHERE id=-8200$$,
   '42501'::char(5), null, 'trainer cannot move an assignment onto an unauthorized event');
-SELECT tap.throws_ok(
-  $$INSERT INTO event_external_registration (instance_id, first_name, last_name, nationality,
-    birth_date, tax_identification_number, email, phone)
-    VALUES (-8201,'External','Blocked','','2000-01-01','','blocked@test.invalid','')$$,
-  '42501'::char(5), null, 'trainer cannot register an external person on an unauthorized private event');
-SELECT tap.throws_ok(
-  $$UPDATE event_external_registration SET instance_id=-8201 WHERE id=-8200$$,
-  '42501'::char(5), null, 'trainer cannot move external registrations to an unauthorized event');
 SELECT tap.throws_ok($$
   SELECT save_events(
     jsonb_populate_record(null::event_details_input,
@@ -89,14 +74,6 @@ SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_instanc
 SELECT tap.ok((SELECT NOT app_private.can_trainer_edit_instance(id) FROM saved_policy_event), 'caller loses edit rights after handoff');
 SELECT tap.is((SELECT count(*) FROM event_instance_target_cohort WHERE instance_id IN (SELECT id FROM saved_policy_event)), 1::bigint, 'cohort target survives handoff');
 
-RESET ROLE;
-UPDATE event_instance SET is_public=true WHERE id=-8201;
-SET LOCAL ROLE anonymous;
-SELECT tap.lives_ok($$
-  INSERT INTO event_external_registration (instance_id, first_name, last_name, nationality,
-    birth_date, tax_identification_number, email, phone)
-  VALUES (-8201,'External','Public','','2000-01-01','','public@test.invalid','')
-$$, 'anonymous public event registration still works');
 RESET ROLE;
 SELECT * FROM tap.finish(true);
 ROLLBACK;

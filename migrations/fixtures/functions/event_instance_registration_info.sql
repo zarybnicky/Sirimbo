@@ -22,14 +22,10 @@ as $$
       count(*) filter (where person_id = any(current_person_ids())) > 0 as my
     from event_instance_registration
     where instance_id = inst.id and registration_status = 'active'
-  ), external_counts as (
-    select count(*)::integer as registrations
-    from event_external_registration
-    where instance_id = inst.id
   )
   select row(
-    registrations.registrations + external.registrations,
-    registrations.people + external.registrations,
+    registrations.registrations,
+    registrations.people,
     case
       when inst.capacity is null or inst.capacity <= 0 then null
       else inst.capacity
@@ -37,12 +33,10 @@ as $$
             when 'people' then registrations.people
             when 'registrations' then registrations.registrations
           end
-        - external.registrations
     end,
     registrations.my
   )::event_instance_registration_info
-  from registration_counts registrations
-  cross join external_counts external;
+  from registration_counts registrations;
 $$;
 
 grant all on function event_instance_registration_info to anonymous;

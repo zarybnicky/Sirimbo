@@ -228,9 +228,6 @@ query EventExport($id: BigInt!) {
         }
       }
     }
-    externalRegistrations: eventExternalRegistrationsByInstanceIdList {
-      ...EventExternalRegistration
-    }
   }
 }
 
@@ -252,9 +249,6 @@ query EventPayments($id: BigInt!) {
 fragment EventPage on EventInstance {
   ...EventWithTrainer
   description
-  externalRegistrations: eventExternalRegistrationsByInstanceIdList {
-    ...EventExternalRegistration
-  }
 }
 
 query EventWithAttendance($id: BigInt!) {
@@ -265,6 +259,12 @@ query EventWithAttendance($id: BigInt!) {
         parentRegistrationId
         ...EventInstanceRegistration
         ...EventRegistrationAttendance
+        person {
+          id
+          isMember
+          isTrainer
+          isAdmin
+        }
       }
     }
     paymentsList(first: 1) {
@@ -555,29 +555,6 @@ mutation DeleteEvent($id: BigInt!) {
   deleteEventInstance(input: { id: $id }) {
     __typename
   }
-}
-
-mutation DeleteEventExternalRegistration($id: BigInt!) {
-  deleteEventExternalRegistration(input: { id: $id }) {
-    __typename
-  }
-}
-
-fragment EventExternalRegistration on EventExternalRegistration {
-  id
-  birthDate
-  nationality
-  note
-  phone
-  prefixTitle
-  suffixTitle
-  taxIdentificationNumber
-  updatedAt
-  createdAt
-  email
-  instanceId
-  firstName
-  lastName
 }
 
 mutation SetLessonDemand($input: SetLessonDemandInput!) {

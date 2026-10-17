@@ -89,3 +89,18 @@ alter table otp_token add constraint otp_token_intent_check check (
 );
 
 --!include functions/otp_login.sql
+
+do $$
+begin
+  if to_regclass('public.event_external_registration') is not null then
+    lock table public.event_external_registration in access exclusive mode;
+    if exists (select 1 from public.event_external_registration) then
+      raise exception 'Convert external registrations with the manual script before removing the table';
+    end if;
+  end if;
+end;
+$$;
+
+--!include functions/event_instance_registration_info.sql
+
+drop table if exists public.event_external_registration;

@@ -3611,33 +3611,6 @@ export type CreateCreditTransactionForPersonPayloadTransactionEdgeArgs = {
   orderBy?: Array<TransactionsOrderBy>;
 };
 
-/** All input for the create `EventExternalRegistration` mutation. */
-export type CreateEventExternalRegistrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `EventExternalRegistration` to be created by this mutation. */
-  eventExternalRegistration: EventExternalRegistrationInput;
-};
-
-/** The output of our create `EventExternalRegistration` mutation. */
-export type CreateEventExternalRegistrationPayload = {
-  __typename?: 'CreateEventExternalRegistrationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `EventExternalRegistration` that was created by this mutation. */
-  eventExternalRegistration: Maybe<EventExternalRegistration>;
-  /** Reads a single `EventInstance` that is related to this `EventExternalRegistration`. */
-  instance: Maybe<EventInstance>;
-  /** Reads a single `User` that is related to this `EventExternalRegistration`. */
-  userByCreatedBy: Maybe<User>;
-};
-
 /** All input for the create `EventSeries` mutation. */
 export type CreateEventSeriesInput = {
   /**
@@ -4308,32 +4281,6 @@ export type DeleteCouplePayload = {
   woman: Maybe<Person>;
 };
 
-/** All input for the `deleteEventExternalRegistration` mutation. */
-export type DeleteEventExternalRegistrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['BigInt']['input'];
-};
-
-/** The output of our delete `EventExternalRegistration` mutation. */
-export type DeleteEventExternalRegistrationPayload = {
-  __typename?: 'DeleteEventExternalRegistrationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']['output']>;
-  /** The `EventExternalRegistration` that was deleted by this mutation. */
-  eventExternalRegistration: Maybe<EventExternalRegistration>;
-  /** Reads a single `EventInstance` that is related to this `EventExternalRegistration`. */
-  instance: Maybe<EventInstance>;
-  /** Reads a single `User` that is related to this `EventExternalRegistration`. */
-  userByCreatedBy: Maybe<User>;
-};
-
 /** All input for the `deleteEventInstance` mutation. */
 export type DeleteEventInstanceInput = {
   /**
@@ -4755,123 +4702,12 @@ export type EventDetailsInputRecordInput = {
 
 export type EventExternalRegistration = {
   __typename?: 'EventExternalRegistration';
-  birthDate: Maybe<Scalars['Date']['output']>;
-  createdAt: Scalars['Datetime']['output'];
-  createdBy: Maybe<Scalars['BigInt']['output']>;
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
-  /** Reads a single `EventInstance` that is related to this `EventExternalRegistration`. */
-  instance: Maybe<EventInstance>;
-  instanceId: Scalars['BigInt']['output'];
   lastName: Scalars['String']['output'];
-  nationality: Scalars['String']['output'];
   note: Maybe<Scalars['String']['output']>;
-  phone: Scalars['String']['output'];
-  prefixTitle: Scalars['String']['output'];
-  suffixTitle: Scalars['String']['output'];
-  taxIdentificationNumber: Maybe<Scalars['String']['output']>;
-  tenantId: Scalars['BigInt']['output'];
-  updatedAt: Scalars['Datetime']['output'];
-  /** Reads a single `User` that is related to this `EventExternalRegistration`. */
-  userByCreatedBy: Maybe<User>;
 };
-
-/**
- * A condition to be used against `EventExternalRegistration` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type EventExternalRegistrationCondition = {
-  /** Checks for equality with the object’s `birthDate` field. */
-  birthDate?: InputMaybe<Scalars['Date']['input']>;
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `createdBy` field. */
-  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `email` field. */
-  email?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `firstName` field. */
-  firstName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `instanceId` field. */
-  instanceId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `lastName` field. */
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `nationality` field. */
-  nationality?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `note` field. */
-  note?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `phone` field. */
-  phone?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `prefixTitle` field. */
-  prefixTitle?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `suffixTitle` field. */
-  suffixTitle?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `taxIdentificationNumber` field. */
-  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** An input for mutations affecting `EventExternalRegistration` */
-export type EventExternalRegistrationInput = {
-  birthDate?: InputMaybe<Scalars['Date']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdBy?: InputMaybe<Scalars['BigInt']['input']>;
-  email: Scalars['String']['input'];
-  firstName: Scalars['String']['input'];
-  instanceId: Scalars['BigInt']['input'];
-  lastName: Scalars['String']['input'];
-  nationality: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
-  phone: Scalars['String']['input'];
-  prefixTitle?: InputMaybe<Scalars['String']['input']>;
-  suffixTitle?: InputMaybe<Scalars['String']['input']>;
-  taxIdentificationNumber?: InputMaybe<Scalars['String']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `EventExternalRegistration`. */
-export type EventExternalRegistrationsOrderBy =
-  | 'BIRTH_DATE_ASC'
-  | 'BIRTH_DATE_DESC'
-  | 'CREATED_AT_ASC'
-  | 'CREATED_AT_DESC'
-  | 'CREATED_BY_ASC'
-  | 'CREATED_BY_DESC'
-  | 'EMAIL_ASC'
-  | 'EMAIL_DESC'
-  | 'FIRST_NAME_ASC'
-  | 'FIRST_NAME_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'INSTANCE_ID_ASC'
-  | 'INSTANCE_ID_DESC'
-  | 'LAST_NAME_ASC'
-  | 'LAST_NAME_DESC'
-  | 'NATIONALITY_ASC'
-  | 'NATIONALITY_DESC'
-  | 'NATURAL'
-  | 'NOTE_ASC'
-  | 'NOTE_DESC'
-  | 'PHONE_ASC'
-  | 'PHONE_DESC'
-  | 'PREFIX_TITLE_ASC'
-  | 'PREFIX_TITLE_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'SUFFIX_TITLE_ASC'
-  | 'SUFFIX_TITLE_DESC'
-  | 'TAX_IDENTIFICATION_NUMBER_ASC'
-  | 'TAX_IDENTIFICATION_NUMBER_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC'
-  | 'UPDATED_AT_ASC'
-  | 'UPDATED_AT_DESC';
 
 /** An input for mutations affecting `EventInputRecord` */
 export type EventInputRecordInput = {
@@ -4892,7 +4728,7 @@ export type EventInstance = {
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
   enableNotes: Maybe<Scalars['Boolean']['output']>;
-  /** Reads and enables pagination through a set of `EventExternalRegistration`. */
+  /** @deprecated Use eventInstanceRegistrationsByInstanceIdList. */
   eventExternalRegistrationsByInstanceIdList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByInstanceId: EventInstanceRegistrationsConnection;
@@ -4953,14 +4789,6 @@ export type EventInstanceChildEventInstancesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventInstancesOrderBy>>;
-};
-
-
-export type EventInstanceEventExternalRegistrationsByInstanceIdListArgs = {
-  condition?: InputMaybe<EventExternalRegistrationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventExternalRegistrationsOrderBy>>;
 };
 
 
@@ -7908,8 +7736,6 @@ export type Mutation = {
   /** Creates a single `Couple`. */
   createCouple: Maybe<CreateCouplePayload>;
   createCreditTransactionForPerson: Maybe<CreateCreditTransactionForPersonPayload>;
-  /** Creates a single `EventExternalRegistration`. */
-  createEventExternalRegistration: Maybe<CreateEventExternalRegistrationPayload>;
   /** Creates a single `EventSeries`. */
   createEventSeries: Maybe<CreateEventSeriesPayload>;
   /** Creates a single `Location`. */
@@ -7939,8 +7765,6 @@ export type Mutation = {
   deleteCohortMembership: Maybe<DeleteCohortMembershipPayload>;
   /** Deletes a single `Couple` using a unique key. */
   deleteCouple: Maybe<DeleteCouplePayload>;
-  /** Deletes a single `EventExternalRegistration` using a unique key. */
-  deleteEventExternalRegistration: Maybe<DeleteEventExternalRegistrationPayload>;
   /** Deletes a single `EventInstance` using a unique key. */
   deleteEventInstance: Maybe<DeleteEventInstancePayload>;
   /** Deletes a single `EventSeries` using a unique key. */
@@ -8077,12 +7901,6 @@ export type MutationCreateCreditTransactionForPersonArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateEventExternalRegistrationArgs = {
-  input: CreateEventExternalRegistrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEventSeriesArgs = {
   input: CreateEventSeriesInput;
 };
@@ -8169,12 +7987,6 @@ export type MutationDeleteCohortMembershipArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCoupleArgs = {
   input: DeleteCoupleInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteEventExternalRegistrationArgs = {
-  input: DeleteEventExternalRegistrationInput;
 };
 
 
@@ -11540,8 +11352,6 @@ export type Tenant = {
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
   description: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `EventExternalRegistration`. */
-  eventExternalRegistrationsList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrations: EventInstanceRegistrationsConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
@@ -11697,14 +11507,6 @@ export type TenantCohortsListArgs = {
 export type TenantCouplesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type TenantEventExternalRegistrationsListArgs = {
-  condition?: InputMaybe<EventExternalRegistrationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventExternalRegistrationsOrderBy>>;
 };
 
 
@@ -13435,8 +13237,6 @@ export type User = {
   /** Reads and enables pagination through a set of `Announcement`. */
   authoredAnnouncements: AnnouncementsConnection;
   createdAt: Scalars['Datetime']['output'];
-  /** Reads and enables pagination through a set of `EventExternalRegistration`. */
-  eventExternalRegistrationsByCreatedByList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `File`. */
   filesByUploadedBy: FilesConnection;
   id: Scalars['BigInt']['output'];
@@ -13485,14 +13285,6 @@ export type UserAuthoredAnnouncementsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AnnouncementsOrderBy>>;
-};
-
-
-export type UserEventExternalRegistrationsByCreatedByListArgs = {
-  condition?: InputMaybe<EventExternalRegistrationCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<EventExternalRegistrationsOrderBy>>;
 };
 
 
@@ -13781,7 +13573,6 @@ export type GraphCacheKeysConfig = {
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
   CreateCouplePayload?: (data: WithTypename<CreateCouplePayload>) => null | string,
   CreateCreditTransactionForPersonPayload?: (data: WithTypename<CreateCreditTransactionForPersonPayload>) => null | string,
-  CreateEventExternalRegistrationPayload?: (data: WithTypename<CreateEventExternalRegistrationPayload>) => null | string,
   CreateEventSeriesPayload?: (data: WithTypename<CreateEventSeriesPayload>) => null | string,
   CreateLocationPayload?: (data: WithTypename<CreateLocationPayload>) => null | string,
   CreateMembershipApplicationPayload?: (data: WithTypename<CreateMembershipApplicationPayload>) => null | string,
@@ -13804,7 +13595,6 @@ export type GraphCacheKeysConfig = {
   DeleteCohortMembershipPayload?: (data: WithTypename<DeleteCohortMembershipPayload>) => null | string,
   DeleteCohortPayload?: (data: WithTypename<DeleteCohortPayload>) => null | string,
   DeleteCouplePayload?: (data: WithTypename<DeleteCouplePayload>) => null | string,
-  DeleteEventExternalRegistrationPayload?: (data: WithTypename<DeleteEventExternalRegistrationPayload>) => null | string,
   DeleteEventInstancePayload?: (data: WithTypename<DeleteEventInstancePayload>) => null | string,
   DeleteEventSeriesPayload?: (data: WithTypename<DeleteEventSeriesPayload>) => null | string,
   DeleteLocationPayload?: (data: WithTypename<DeleteLocationPayload>) => null | string,
@@ -14904,12 +14694,6 @@ export type GraphCacheResolvers = {
     transaction?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Transaction> | string>,
     transactionEdge?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
   },
-  CreateEventExternalRegistrationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<CreateEventExternalRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventExternalRegistration?: GraphCacheResolver<WithTypename<CreateEventExternalRegistrationPayload>, Record<string, never>, WithTypename<EventExternalRegistration> | string>,
-    instance?: GraphCacheResolver<WithTypename<CreateEventExternalRegistrationPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
-    userByCreatedBy?: GraphCacheResolver<WithTypename<CreateEventExternalRegistrationPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   CreateEventSeriesPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventSeriesPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventSeries?: GraphCacheResolver<WithTypename<CreateEventSeriesPayload>, Record<string, never>, WithTypename<EventSeries> | string>,
@@ -15035,12 +14819,6 @@ export type GraphCacheResolvers = {
     man?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Person> | string>,
     woman?: GraphCacheResolver<WithTypename<DeleteCouplePayload>, Record<string, never>, WithTypename<Person> | string>
   },
-  DeleteEventExternalRegistrationPayload?: {
-    clientMutationId?: GraphCacheResolver<WithTypename<DeleteEventExternalRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventExternalRegistration?: GraphCacheResolver<WithTypename<DeleteEventExternalRegistrationPayload>, Record<string, never>, WithTypename<EventExternalRegistration> | string>,
-    instance?: GraphCacheResolver<WithTypename<DeleteEventExternalRegistrationPayload>, Record<string, never>, WithTypename<EventInstance> | string>,
-    userByCreatedBy?: GraphCacheResolver<WithTypename<DeleteEventExternalRegistrationPayload>, Record<string, never>, WithTypename<User> | string>
-  },
   DeleteEventInstancePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstance?: GraphCacheResolver<WithTypename<DeleteEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
@@ -15133,24 +14911,11 @@ export type GraphCacheResolvers = {
     secondUntil?: GraphCacheResolver<WithTypename<EventConflict>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   EventExternalRegistration?: {
-    birthDate?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['Date']['output'] | string>,
-    createdAt?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    createdBy?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     email?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
     firstName?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    instance?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, WithTypename<EventInstance> | string>,
-    instanceId?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     lastName?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    nationality?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    note?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    phone?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    prefixTitle?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    suffixTitle?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    taxIdentificationNumber?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>,
-    tenantId?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    updatedAt?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    userByCreatedBy?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, WithTypename<User> | string>
+    note?: GraphCacheResolver<WithTypename<EventExternalRegistration>, Record<string, never>, Scalars['String']['output'] | string>
   },
   EventInstance?: {
     approxPriceList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceApproxPriceListArgs, Array<WithTypename<EventInstanceApproxPriceRecord> | string>>,
@@ -15160,7 +14925,7 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
-    eventExternalRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
+    eventExternalRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
@@ -16131,7 +15896,6 @@ export type GraphCacheResolvers = {
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventExternalRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventExternalRegistrationsListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
@@ -16457,7 +16221,6 @@ export type GraphCacheResolvers = {
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    eventExternalRegistrationsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserEventExternalRegistrationsByCreatedByListArgs, Array<WithTypename<EventExternalRegistration> | string>>,
     filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FilesConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     lastActiveAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -16506,7 +16269,6 @@ export type GraphCacheOptimisticUpdaters = {
   createCohortMembership?: GraphCacheOptimisticMutationResolver<MutationCreateCohortMembershipArgs, Maybe<WithTypename<CreateCohortMembershipPayload>>>,
   createCouple?: GraphCacheOptimisticMutationResolver<MutationCreateCoupleArgs, Maybe<WithTypename<CreateCouplePayload>>>,
   createCreditTransactionForPerson?: GraphCacheOptimisticMutationResolver<MutationCreateCreditTransactionForPersonArgs, Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>>,
-  createEventExternalRegistration?: GraphCacheOptimisticMutationResolver<MutationCreateEventExternalRegistrationArgs, Maybe<WithTypename<CreateEventExternalRegistrationPayload>>>,
   createEventSeries?: GraphCacheOptimisticMutationResolver<MutationCreateEventSeriesArgs, Maybe<WithTypename<CreateEventSeriesPayload>>>,
   createLocation?: GraphCacheOptimisticMutationResolver<MutationCreateLocationArgs, Maybe<WithTypename<CreateLocationPayload>>>,
   createMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationCreateMembershipApplicationArgs, Maybe<WithTypename<CreateMembershipApplicationPayload>>>,
@@ -16522,7 +16284,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteCohort?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortArgs, Maybe<WithTypename<DeleteCohortPayload>>>,
   deleteCohortMembership?: GraphCacheOptimisticMutationResolver<MutationDeleteCohortMembershipArgs, Maybe<WithTypename<DeleteCohortMembershipPayload>>>,
   deleteCouple?: GraphCacheOptimisticMutationResolver<MutationDeleteCoupleArgs, Maybe<WithTypename<DeleteCouplePayload>>>,
-  deleteEventExternalRegistration?: GraphCacheOptimisticMutationResolver<MutationDeleteEventExternalRegistrationArgs, Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>>,
   deleteEventInstance?: GraphCacheOptimisticMutationResolver<MutationDeleteEventInstanceArgs, Maybe<WithTypename<DeleteEventInstancePayload>>>,
   deleteEventSeries?: GraphCacheOptimisticMutationResolver<MutationDeleteEventSeriesArgs, Maybe<WithTypename<DeleteEventSeriesPayload>>>,
   deleteLocation?: GraphCacheOptimisticMutationResolver<MutationDeleteLocationArgs, Maybe<WithTypename<DeleteLocationPayload>>>,
@@ -16710,7 +16471,6 @@ export type GraphCacheUpdaters = {
     createCohortMembership?: GraphCacheUpdateResolver<{ createCohortMembership: Maybe<WithTypename<CreateCohortMembershipPayload>> }, MutationCreateCohortMembershipArgs>,
     createCouple?: GraphCacheUpdateResolver<{ createCouple: Maybe<WithTypename<CreateCouplePayload>> }, MutationCreateCoupleArgs>,
     createCreditTransactionForPerson?: GraphCacheUpdateResolver<{ createCreditTransactionForPerson: Maybe<WithTypename<CreateCreditTransactionForPersonPayload>> }, MutationCreateCreditTransactionForPersonArgs>,
-    createEventExternalRegistration?: GraphCacheUpdateResolver<{ createEventExternalRegistration: Maybe<WithTypename<CreateEventExternalRegistrationPayload>> }, MutationCreateEventExternalRegistrationArgs>,
     createEventSeries?: GraphCacheUpdateResolver<{ createEventSeries: Maybe<WithTypename<CreateEventSeriesPayload>> }, MutationCreateEventSeriesArgs>,
     createLocation?: GraphCacheUpdateResolver<{ createLocation: Maybe<WithTypename<CreateLocationPayload>> }, MutationCreateLocationArgs>,
     createMembershipApplication?: GraphCacheUpdateResolver<{ createMembershipApplication: Maybe<WithTypename<CreateMembershipApplicationPayload>> }, MutationCreateMembershipApplicationArgs>,
@@ -16726,7 +16486,6 @@ export type GraphCacheUpdaters = {
     deleteCohort?: GraphCacheUpdateResolver<{ deleteCohort: Maybe<WithTypename<DeleteCohortPayload>> }, MutationDeleteCohortArgs>,
     deleteCohortMembership?: GraphCacheUpdateResolver<{ deleteCohortMembership: Maybe<WithTypename<DeleteCohortMembershipPayload>> }, MutationDeleteCohortMembershipArgs>,
     deleteCouple?: GraphCacheUpdateResolver<{ deleteCouple: Maybe<WithTypename<DeleteCouplePayload>> }, MutationDeleteCoupleArgs>,
-    deleteEventExternalRegistration?: GraphCacheUpdateResolver<{ deleteEventExternalRegistration: Maybe<WithTypename<DeleteEventExternalRegistrationPayload>> }, MutationDeleteEventExternalRegistrationArgs>,
     deleteEventInstance?: GraphCacheUpdateResolver<{ deleteEventInstance: Maybe<WithTypename<DeleteEventInstancePayload>> }, MutationDeleteEventInstanceArgs>,
     deleteEventSeries?: GraphCacheUpdateResolver<{ deleteEventSeries: Maybe<WithTypename<DeleteEventSeriesPayload>> }, MutationDeleteEventSeriesArgs>,
     deleteLocation?: GraphCacheUpdateResolver<{ deleteLocation: Maybe<WithTypename<DeleteLocationPayload>> }, MutationDeleteLocationArgs>,
@@ -17579,12 +17338,6 @@ export type GraphCacheUpdaters = {
     transaction?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, Record<string, never>>,
     transactionEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateCreditTransactionForPersonPayload>>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs>
   },
-  CreateEventExternalRegistrationPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventExternalRegistrationPayload>>, Record<string, never>>,
-    eventExternalRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventExternalRegistrationPayload>>, Record<string, never>>,
-    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventExternalRegistrationPayload>>, Record<string, never>>,
-    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventExternalRegistrationPayload>>, Record<string, never>>
-  },
   CreateEventSeriesPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventSeriesPayload>>, Record<string, never>>,
     eventSeries?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateEventSeriesPayload>>, Record<string, never>>,
@@ -17710,12 +17463,6 @@ export type GraphCacheUpdaters = {
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>,
     woman?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteCouplePayload>>, Record<string, never>>
   },
-  DeleteEventExternalRegistrationPayload?: {
-    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>, Record<string, never>>,
-    eventExternalRegistration?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>, Record<string, never>>,
-    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>, Record<string, never>>,
-    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventExternalRegistrationPayload>>, Record<string, never>>
-  },
   DeleteEventInstancePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
     eventInstance?: GraphCacheUpdateResolver<Maybe<WithTypename<DeleteEventInstancePayload>>, Record<string, never>>,
@@ -17808,24 +17555,11 @@ export type GraphCacheUpdaters = {
     secondUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<EventConflict>>, Record<string, never>>
   },
   EventExternalRegistration?: {
-    birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    createdBy?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    instance?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    instanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
     lastName?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    phone?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    prefixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    suffixTitle?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>,
-    userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>
+    note?: GraphCacheUpdateResolver<Maybe<WithTypename<EventExternalRegistration>>, Record<string, never>>
   },
   EventInstance?: {
     approxPriceList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceApproxPriceListArgs>,
@@ -17835,7 +17569,7 @@ export type GraphCacheUpdaters = {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
-    eventExternalRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventExternalRegistrationsByInstanceIdListArgs>,
+    eventExternalRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, Record<string, never>>,
     eventInstanceRegistrationsByInstanceId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs>,
     eventInstanceRegistrationsByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstance>>, EventInstanceEventInstanceTrainersByInstanceIdListArgs>,
@@ -18806,7 +18540,6 @@ export type GraphCacheUpdaters = {
     czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
-    eventExternalRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventExternalRegistrationsListArgs>,
     eventInstanceRegistrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceRegistrationsListArgs>,
     eventInstanceTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantEventInstanceTargetCohortsListArgs>,
@@ -19132,7 +18865,6 @@ export type GraphCacheUpdaters = {
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
-    eventExternalRegistrationsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventExternalRegistrationsByCreatedByListArgs>,
     filesByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserFilesByUploadedByArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     lastActiveAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,

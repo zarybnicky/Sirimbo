@@ -52,17 +52,6 @@ export async function exportEventParticipants(client: Client, id: string) {
     addPerson(registration.couple?.man);
     addPerson(registration.couple?.woman);
   }
-  for (const x of event?.externalRegistrations || []) {
-    worksheet.addRow({
-      firstName: x.firstName,
-      lastName: x.lastName,
-      birthNumber: x.taxIdentificationNumber,
-      birthDate: x.birthDate ? fullDateFormatter.format(new Date(x.birthDate)) : '',
-      phone: x.phone,
-      email: x.email,
-      cohorts: '',
-    });
-  }
 
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), `${name}.xlsx`);

@@ -1,8 +1,7 @@
 import { memo } from 'react';
 import type { EventWithAttendanceQuery } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
-import { eventRegistrationActions, eventExternalRegistrationActions } from '@/lib/actions/eventInstance';
-import { ActionRow } from '@/ui/ActionRow';
+import { eventRegistrationActions } from '@/lib/actions/eventInstance';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { dateTimeFormatter, formatCoupleName, numericDateFormatter } from '@/ui/format';
@@ -26,11 +25,6 @@ export const EventRegistrations = memo(function EventRegistrations({
     .flatMap((r) => [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)]);
   const attendees = rows.filter((r) => r.person && r.status);
   const canEditAttendance = auth.canManageInstance(instance);
-  const externalRegistrations = instance.externalRegistrations;
-  const externalRegistrationActionMap = useActionMap(
-    eventExternalRegistrationActions,
-    externalRegistrations,
-  );
   const registrationActionMap = useActionMap(
     eventRegistrationActions,
     registrations.filter((r) => !r.parentRegistrationId).map((r) => ({ ...r, instance })),
@@ -75,6 +69,11 @@ export const EventRegistrations = memo(function EventRegistrations({
                       ) : x.couple ? (
                         <Link href={`/pary/${x.couple.id}`}>{formatCoupleName(x.couple)}</Link>
                       ) : null}
+                      {x.person && !x.person.isMember && !x.person.isTrainer && !x.person.isAdmin && (
+                        <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
+                          Externí
+                        </span>
+                      )}
                       {canEditAttendance && instance.seriesId && x.person && (
                         <div className="text-xs text-neutral-9">
                           Poslední účast: {x.lastAttended ? dateTimeFormatter.format(new Date(x.lastAttended)) : '-'}
@@ -103,26 +102,6 @@ export const EventRegistrations = memo(function EventRegistrations({
               </tr>
             );
           })}
-          {externalRegistrations.length > 0 && (
-            <tr>
-              <th colSpan={auth.isTrainer ? 2 : 1}>Externí přihlášky</th>
-            </tr>
-          )}
-          {externalRegistrations.map((r) => (
-            <tr key={r.id}>
-              <td colSpan={auth.isTrainer ? 2 : 1}>
-                <ActionRow actions={externalRegistrationActionMap.get(r.id)!} className="mb-0">
-                  <div>
-                    {r.prefixTitle} {r.firstName} {r.lastName}{' '}
-                    {r.suffixTitle}
-                    {auth.isTrainer && r.note && (
-                      <div className="whitespace-pre-wrap text-sm text-neutral-11">{r.note}</div>
-                    )}
-                  </div>
-                </ActionRow>
-              </td>
-            </tr>
-          ))}
         </tbody>
       </table>
     </div>

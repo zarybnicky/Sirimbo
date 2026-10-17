@@ -419,9 +419,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       moveEventInstance(_result, _args, cache, _info) {
         invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
       },
-      deleteEventExternalRegistration(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'EventExternalRegistration', id: args.input.id });
-      },
 
       createPerson(_result, _args, cache, _info) {
         for (const field of cache

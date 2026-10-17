@@ -31,11 +31,7 @@ CREATE or replace FUNCTION event_instance_remaining_person_spots(inst event_inst
             and registration.parent_registration_id is null
             and registration.registration_status = 'active'
         )
-      end - (
-        select count(*)::integer
-        from event_external_registration external_registration
-        where external_registration.instance_id = inst.id
-      )
+      end
   end;
 $$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
 

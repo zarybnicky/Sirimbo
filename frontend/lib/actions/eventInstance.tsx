@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import {
   DeleteEventDocument,
-  DeleteEventExternalRegistrationDocument,
   type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
   UpdateEventDocument,
@@ -193,19 +192,6 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     visible: ({ auth, item }) => auth.canManageInstance(item),
     execute: async ({ item, client }) => {
       await exportEventRegistrations(client, item.id);
-    },
-  },
-]);
-
-export const eventExternalRegistrationActions = defineActions<{ id: string }>()([
-  {
-    id: 'eventExternalRegistration.delete',
-    label: 'Smazat',
-    icon: Trash2,
-    variant: 'danger',
-    requireAdmin: true,
-    execute: async ({ item, mutate }) => {
-      await mutate(DeleteEventExternalRegistrationDocument, { id: item.id });
     },
   },
 ]);
