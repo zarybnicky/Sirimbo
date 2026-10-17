@@ -1,4 +1,4 @@
-create or replace function app_private.attended_event_ids() returns setof bigint
+create or replace function app_private.accessible_event_ids() returns setof bigint
 language sql stable security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
@@ -13,5 +13,9 @@ as $$
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
-  select id from attended;
+  select id from attended
+  union
+  select id from public.event_instance
+  where tenant_id = (select public.current_tenant_id())
+    and id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]);
 $$;

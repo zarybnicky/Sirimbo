@@ -16,7 +16,5 @@ create policy member_view on event_instance for select to member
   using (is_visible);
 create policy public_view on event_instance for select to anonymous
   using (is_public);
-create policy attendee_view on event_instance for select to anonymous
-  using (id in (select app_private.attended_event_ids()));
-create policy event_share_view on event_instance for select to anonymous
-  using (id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]));
+create policy event_access_view on event_instance for select to anonymous
+  using (id in (select app_private.accessible_event_ids()));

@@ -27,10 +27,13 @@ alter table aktuality
 grant all on table aktuality to anonymous;
 
 --!include functions/upsert_article.sql
+--!include functions/event_sharing.sql
+
+drop function if exists app_private.attended_event_ids();
 
 drop materialized view if exists app_private.event_people;
 --!include views/event_people.sql
---!include functions/attended_event_ids.sql
+--!include functions/accessible_event_ids.sql
 --!include functions/tg_event_people__refresh.sql
 --!include functions/visible_person_ids.sql
 

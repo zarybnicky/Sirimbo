@@ -1,4 +1,4 @@
-create function event_instance_share_token(i event_instance)
+create or replace function event_instance_share_token(i event_instance)
   returns text
   language sql
   stable
@@ -12,7 +12,7 @@ as $$
 $$;
 grant execute on function event_instance_share_token to anonymous;
 
-create function set_event_sharing(id bigint, p_enabled boolean)
+create or replace function set_event_sharing(id bigint, p_enabled boolean)
   returns text
   language plpgsql
   volatile
@@ -40,19 +40,15 @@ $$;
 
 grant execute on function set_event_sharing to anonymous;
 
-create or replace function app_private.event_share_claims(p_tenant_id bigint, p_share text)
-returns table (
-  instance_ids bigint[],
-  person_ids bigint[],
-  couple_ids bigint[],
-  cohort_ids bigint[]
-)
-language sql
-stable
-security definer
-set search_path = pg_catalog, public, pg_temp
+drop function if exists app_private.event_share_claims;
+
+create function app_private.event_share_claims(p_tenant_id bigint, p_share text)
+  returns table (instance_ids bigint[], person_ids bigint[], couple_ids bigint[])
+  language sql stable
+  security definer
+  set search_path = pg_catalog, public, pg_temp
 as $$
-  with root as (
+  with recursive root as (
     select id
     from event_instance
     where tenant_id = p_tenant_id
@@ -69,8 +65,11 @@ as $$
   ),
   events as (
     select id from root
-    union all
-    select id from event_instance where parent_id in (select id from root)
+    union
+    select child.id
+    from event_instance child
+    join events parent on child.parent_id = parent.id
+    where child.tenant_id = p_tenant_id
   ),
   trainers as (
     select person_id
@@ -83,11 +82,6 @@ as $$
     where instance_id in (select id from events)
       and parent_registration_id is null
       and registration_status = 'active'
-  ),
-  targets as (
-    select cohort_id
-    from event_instance_target_cohort
-    where instance_id in (select id from events)
   )
   select
     array(select id from events),
@@ -106,8 +100,7 @@ as $$
       select distinct couple_id
       from registrations
       where couple_id is not null
-    ),
-    array(select distinct cohort_id from targets)
+    )
   where exists (select 1 from root);
 $$;
 

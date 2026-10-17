@@ -206,7 +206,7 @@ test('participation scopes match the legacy reports under tenant RLS', async () 
     await client.query("set local role member; set local jwt.claims.my_tenant_ids = '{1,3}'");
     for (const key of [
       'my_person_ids', 'my_cohort_ids', 'my_couple_ids',
-      'shared.event_ids', 'shared.person_ids', 'shared.couple_ids', 'shared.cohort_ids',
+      'shared.event_ids', 'shared.person_ids', 'shared.couple_ids',
     ]) {
       await client.query('select set_config($1, $2, true)', [`jwt.claims.${key}`, '{}']);
     }

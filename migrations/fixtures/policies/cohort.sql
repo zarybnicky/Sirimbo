@@ -8,5 +8,4 @@ create policy public_view on cohort for select to anonymous
   using (is_visible
      or id in (
        select cohort_id from event_instance_target_cohort
-       where instance_id in (select app_private.attended_event_ids()))
-     or id = any ((select current_setting('jwt.claims.shared.cohort_ids', true))::bigint[]));
+       where instance_id in (select app_private.accessible_event_ids())));
