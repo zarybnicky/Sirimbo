@@ -1,5 +1,8 @@
 select app_private.drop_policies('public.aktuality');
 
-CREATE POLICY current_tenant ON aktuality AS RESTRICTIVE USING (tenant_id = (SELECT current_tenant_id()));
-CREATE POLICY admin_all ON aktuality TO administrator USING (true);
-CREATE POLICY public_view ON aktuality FOR SELECT USING (is_visible);
+create policy current_tenant on aktuality as restrictive
+  using (tenant_id = (select current_tenant_id()));
+create policy admin_all on aktuality to administrator
+  using (true);
+create policy public_view on aktuality for select
+  using (is_visible);

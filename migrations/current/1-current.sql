@@ -28,6 +28,7 @@ grant all on table aktuality to anonymous;
 
 --!include functions/upsert_article.sql
 
+drop materialized view if exists app_private.event_people;
 --!include views/event_people.sql
 --!include functions/attended_event_ids.sql
 --!include functions/tg_event_people__refresh.sql
@@ -39,3 +40,22 @@ grant all on table aktuality to anonymous;
 --!include policies/cohort.sql
 --!include policies/event_instance_registration.sql
 --!include policies/event_lesson_demand.sql
+--!include policies/file.sql
+--!include policies/person.sql
+--!include policies/access_event.sql
+--!include policies/accounting_period.sql
+--!include policies/cohort_group.sql
+--!include policies/cohort_membership.sql
+--!include policies/cohort_subscription.sql
+--!include policies/dokumenty.sql
+--!include policies/form_responses.sql
+--!include policies/location.sql
+--!include policies/location_image.sql
+--!include policies/person_invitation.sql
+--!include policies/scoreboard_manual_adjustment.sql
+--!include policies/security_event.sql
+--!include policies/tenant.sql
+--!include policies/tenant_administrator.sql
+--!include policies/tenant_membership.sql
+--!include policies/tenant_settings.sql
+--!include policies/tenant_trainer.sql

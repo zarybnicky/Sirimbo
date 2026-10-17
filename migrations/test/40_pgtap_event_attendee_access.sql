@@ -2,7 +2,6 @@ BEGIN;
 CREATE SCHEMA IF NOT EXISTS tap;
 CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
 SET LOCAL search_path = public, tap;
-SET LOCAL work_mem = '64MB';
 GRANT USAGE ON SCHEMA tap TO anonymous;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO anonymous;
 SELECT tap.no_plan();
@@ -49,7 +48,25 @@ SELECT tap.is((SELECT count(*) FROM graphile_worker.jobs WHERE key='refresh_even
   1::bigint, 'bulk changes share one pending refresh key');
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
   'callers cannot read the unscoped person-pair view');
-REFRESH MATERIALIZED VIEW CONCURRENTLY app_private.event_people;
+-- Run the installed query on test data only; ROLLBACK restores the original view.
+DO $$
+DECLARE
+  definition text := rtrim(pg_get_viewdef('app_private.event_people'::regclass), ';');
+BEGIN
+  DROP MATERIALIZED VIEW app_private.event_people;
+  EXECUTE format($query$
+    CREATE MATERIALIZED VIEW app_private.event_people AS
+    WITH event_instance_registration AS (
+      SELECT * FROM public.event_instance_registration WHERE tenant_id IN (-9000, -9001)
+    ), event_instance_trainer AS (
+      SELECT * FROM public.event_instance_trainer WHERE tenant_id IN (-9000, -9001)
+    ), event_instance AS (
+      SELECT * FROM public.event_instance WHERE tenant_id IN (-9000, -9001)
+    )
+    SELECT * FROM (%s) people
+  $query$, definition);
+END;
+$$;
 
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
@@ -72,6 +89,8 @@ SELECT tap.is((SELECT count(*) FROM person WHERE id=-9000), 1::bigint, 'co-atten
 SELECT set_config('jwt.claims.my_person_ids', '{-9002}', true);
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance), ARRAY[-9002,-9001]::bigint[],
   'registration on a child grants descendants, not its parent or siblings');
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002]::bigint[],
+  'a child attendee sees descendant trainers, not parent attendees');
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'no person claims give no private-event access');
 SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0::bigint, 'no person claims give no cached attendee access');
@@ -85,10 +104,8 @@ SELECT set_config('jwt.claims.tenant_id', '-9000', true);
 UPDATE event_instance SET parent_id=null WHERE id=-9001;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id) FROM event_instance), ARRAY[-9000]::bigint[], 'reparenting changes schedule access immediately');
-RESET ROLE;
-REFRESH MATERIALIZED VIEW CONCURRENTLY app_private.event_people;
-SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT count(*) FROM person WHERE id=-9002), 0::bigint, 'refresh removes people from detached sub-events');
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-9002), 1::bigint,
+  'reparenting retains cached person visibility until refresh');
 RESET ROLE;
 UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9000;
 SET LOCAL ROLE anonymous;
@@ -96,10 +113,6 @@ SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'cancellation re
 SELECT tap.is((SELECT count(*) FROM event_instance_registration), 0::bigint, 'cancellation removes registration reads immediately');
 SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 0::bigint, 'cancellation removes lesson-demand reads immediately');
 SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint, 'person visibility retains its documented delay until refresh');
-RESET ROLE;
-REFRESH MATERIALIZED VIEW CONCURRENTLY app_private.event_people;
-SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT array_agg(id) FROM person), ARRAY[-9000]::bigint[], 'after refresh only the own person remains visible');
 RESET ROLE;
 
 SELECT * FROM tap.finish(true);

@@ -1,14 +1,15 @@
 select app_private.drop_policies('public.event_external_registration');
 
-CREATE POLICY current_tenant ON event_external_registration AS RESTRICTIVE
-  USING (tenant_id = (SELECT current_tenant_id()));
-CREATE POLICY admin_all ON event_external_registration TO administrator USING (true);
-CREATE POLICY register_public ON event_external_registration FOR INSERT TO anonymous
-  WITH CHECK ((SELECT instance.is_public FROM event_instance instance WHERE instance_id = instance.id));
-CREATE POLICY trainer_same_tenant ON event_external_registration TO trainer
-  USING (app_private.can_trainer_edit_instance(instance_id));
-CREATE POLICY view_visible_instance ON event_external_registration FOR SELECT TO member
-  USING (instance_id = any (SELECT id from event_instance));
-CREATE POLICY admin_my ON event_external_registration TO member
-  USING ((SELECT not instance.is_locked FROM event_instance instance WHERE instance_id = instance.id)
-     AND (created_by = current_user_id()));
+create policy current_tenant on event_external_registration as restrictive
+  using (tenant_id = (select current_tenant_id()));
+create policy admin_all on event_external_registration to administrator
+  using (true);
+create policy register_public on event_external_registration for insert to anonymous
+  with check ((select i.is_public from event_instance as i where event_external_registration.instance_id = i.id));
+create policy trainer_same_tenant on event_external_registration to trainer
+  using (app_private.can_trainer_edit_instance(instance_id));
+create policy view_visible_instance on event_external_registration for select to member
+  using (instance_id = any (select id from event_instance));
+create policy admin_my on event_external_registration to member
+  using ((select not i.is_locked from event_instance as i where event_external_registration.instance_id = i.id)
+     and (created_by = current_user_id()));

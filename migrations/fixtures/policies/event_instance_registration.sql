@@ -2,7 +2,8 @@ select app_private.drop_policies('public.event_instance_registration');
 
 create policy current_tenant on event_instance_registration as restrictive
   using (tenant_id = (select current_tenant_id()));
-create policy admin_all on event_instance_registration to administrator using (true);
+create policy admin_all on event_instance_registration to administrator
+  using (true);
 create policy trainer_insert on event_instance_registration for insert to trainer
   with check (app_private.can_trainer_edit_instance(instance_id));
 create policy trainer_update on event_instance_registration for update to trainer

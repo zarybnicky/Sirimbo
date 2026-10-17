@@ -1,9 +1,10 @@
 select app_private.drop_policies('public.event_lesson_demand');
 
-CREATE POLICY current_tenant ON event_lesson_demand AS RESTRICTIVE
-  USING (tenant_id = (SELECT current_tenant_id()));
-CREATE POLICY admin_all ON event_lesson_demand TO administrator USING (true);
-CREATE POLICY view_visible_instance ON event_lesson_demand FOR SELECT
-  USING (EXISTS (SELECT 1 FROM event_instance_registration r WHERE r.id = event_lesson_demand.registration_id));
+create policy current_tenant on event_lesson_demand as restrictive
+  using (tenant_id = (select current_tenant_id()));
+create policy admin_all on event_lesson_demand to administrator
+  using (true);
+create policy view_visible_instance on event_lesson_demand for select
+  using (exists (select 1 from event_instance_registration r where r.id = event_lesson_demand.registration_id));
 
-GRANT ALL ON event_lesson_demand TO anonymous;
+grant all on event_lesson_demand to anonymous;

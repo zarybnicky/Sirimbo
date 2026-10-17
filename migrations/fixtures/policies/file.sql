@@ -6,7 +6,7 @@ create policy admin_all on file to administrator
 create policy uploader_manage on file to trainer
   using (uploaded_by = (select current_user_id()));
 create policy visible on file for select
-  using (id in (select id from app_private.visible_file_ids() visible(id)));
+  using (id in (select id from app_private.visible_file_ids()));
 
 select app_private.drop_policies('public.announcement_attachment');
 create policy current_tenant on announcement_attachment as restrictive
@@ -14,10 +14,12 @@ create policy current_tenant on announcement_attachment as restrictive
 create policy admin_all on announcement_attachment to administrator
   using (true);
 create policy trainer_manage on announcement_attachment to trainer
-  using (announcement_id in (
-    select id from announcement where author_id = (select current_user_id())));
+  using (exists (
+    select 1 from announcement a
+    where a.id = announcement_attachment.announcement_id
+      and a.author_id = (select current_user_id())));
 create policy member_view on announcement_attachment for select
-  using (announcement_id in (select id from announcement));
+  using (exists (select 1 from announcement a where a.id = announcement_attachment.announcement_id));
 
 select app_private.drop_policies('public.article_attachment');
 create policy current_tenant on article_attachment as restrictive
@@ -25,4 +27,4 @@ create policy current_tenant on article_attachment as restrictive
 create policy admin_all on article_attachment to administrator
   using (true);
 create policy public_view on article_attachment for select
-  using (aktuality_id in (select id from aktuality));
+  using (exists (select 1 from aktuality a where a.id = article_attachment.aktuality_id));
