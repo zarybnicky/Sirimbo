@@ -22,7 +22,7 @@ declare
   registration_source event_registration_source;
   required_capacity integer;
   remaining_capacity integer;
-  lesson_demand record;
+  request record;
 begin
   if p_is_registered is null or num_nonnulls(p_person_id, p_couple_id) <> 1 then
     raise exception 'INVALID_REGISTRANT' using errcode = '22023';
@@ -73,9 +73,10 @@ begin
   select * into registration
   from event_instance_registration
   where instance_id = p_instance_id
-    and parent_registration_id is null
     and person_id is not distinct from p_person_id
-    and couple_id is not distinct from p_couple_id;
+    and couple_id is not distinct from p_couple_id
+  order by (registration_status = 'active') desc, (parent_registration_id is null) desc, id desc
+  limit 1;
   registration_found := found;
 
   if not p_is_registered then
@@ -86,7 +87,7 @@ begin
     update event_instance_registration
     set registration_status = 'cancelled',
         target_cohort_id = null,
-        source = case when id = registration.id then registration_source end
+        source = registration_source
     where id = registration.id or parent_registration_id = registration.id;
 
     select * into registration from event_instance_registration where id = registration.id;
@@ -117,8 +118,20 @@ begin
       remaining_capacity := event_instance_remaining_person_spots(target_instance);
       required_capacity := case
         when target_instance.capacity_unit = 'people' and p_couple_id is not null then 2
+        when target_instance.capacity_unit = 'registrations' and exists (
+          select 1 from event_instance_registration parent
+          where parent.id = registration.parent_registration_id and parent.registration_status = 'active'
+        ) then 0
         else 1
       end;
+      if p_couple_id is not null then
+        required_capacity := required_capacity - (
+          select count(*)::integer from event_instance_registration r
+          join couple c on c.id = p_couple_id and r.person_id in (c.man_id, c.woman_id)
+          where r.instance_id = p_instance_id and r.registration_status = 'active'
+            and (target_instance.capacity_unit = 'people' or r.parent_registration_id is null)
+        );
+      end if;
       if remaining_capacity is not null and remaining_capacity < required_capacity then
         raise exception 'CAPACITY_EXCEEDED' using errcode = '22023';
       end if;
@@ -128,9 +141,12 @@ begin
       update event_instance_registration
       set registration_status = 'active',
           target_cohort_id = null,
-          source = case when id = registration.id
-            then registration_source end
-      where id = registration.id or parent_registration_id = registration.id;
+          source = registration_source,
+          parent_registration_id = (
+            select parent.id from event_instance_registration parent
+            where parent.id = registration.parent_registration_id and parent.registration_status = 'active'
+          )
+      where id = registration.id;
 
       if p_note is not null then
         update event_instance_registration set note = p_note where id = registration.id;
@@ -143,15 +159,11 @@ begin
         case when p_person_id is not null then 'unknown'::attendance_type end,
         p_note
       ) returning * into registration;
-
-      insert into event_instance_registration (
-        instance_id, parent_registration_id, person_id, status
-      )
-      select p_instance_id, registration.id, person.person_id, 'unknown'
-      from couple
-      cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
-      where couple.id = p_couple_id;
     end if;
+  end if;
+
+  if p_couple_id is not null then
+    perform app_private.ensure_couple_person_registrations(registration.id);
   end if;
 
   select * into registration from event_instance_registration where id = registration.id;

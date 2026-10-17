@@ -29,6 +29,11 @@ VALUES (-9000, -9000, -9000, -9000, 'unknown', 'active'),
        (-9003, -9000, -9000, -9004, 'unknown', 'cancelled'),
        (-9004, -9001, -9004, -9000, 'unknown', 'active'),
        (-9005, -9001, -9004, -9005, 'unknown', 'active');
+INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
+VALUES (-9000, -9000, -9001, now() - interval '1 year');
+INSERT INTO event_instance_registration (id, instance_id, couple_id) OVERRIDING SYSTEM VALUE
+VALUES (-9006, -9000, -9000);
+UPDATE event_instance_registration SET parent_registration_id=-9006 WHERE id IN (-9000, -9001);
 INSERT INTO event_instance_trainer (id, tenant_id, instance_id, person_id) OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, -9000, -9003), (-9001, -9000, -9002, -9003);
 INSERT INTO cohort (id, tenant_id, name, color_rgb, is_visible) OVERRIDING SYSTEM VALUE
@@ -44,6 +49,12 @@ SELECT tap.is((SELECT count(*) FROM graphile_worker.jobs WHERE key='refresh_even
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
   'callers cannot read the unscoped person-pair view');
 UPDATE event_instance SET share_token='test-camp-share' WHERE id=-9000;
+UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9001;
+SELECT tap.ok(
+  (SELECT NOT (-9001 = ANY(person_ids)) AND couple_ids = ARRAY[-9000]::bigint[]
+   FROM app_private.event_share_claims(-9000, 'test-camp-share')),
+  'sharing retains the registered couple but does not reconstruct its cancelled partner');
+UPDATE event_instance_registration SET registration_status='active' WHERE id=-9001;
 SELECT tap.is(
   (SELECT array_agg(id ORDER BY id) FROM app_private.event_share_claims(-9000, 'test-camp-share') s,
     unnest(s.instance_ids) id), ARRAY[-9002,-9001,-9000]::bigint[],
@@ -88,11 +99,16 @@ BEGIN
   $query$, definition);
 END;
 $$;
+SELECT tap.results_eq(
+  $$SELECT unnest(person_ids) FROM app_private.event_share_claims(-9000, 'test-camp-share') ORDER BY 1$$,
+  $$SELECT visible_person_id FROM app_private.event_people
+    WHERE tenant_id=-9000 AND viewer_person_id=-9000 ORDER BY 1$$,
+  'sharing and attendance expose the same people, including generated partner registrations');
 
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
   ARRAY[-9002,-9001,-9000]::bigint[], 'a nonmember sees the registered event, child, and grandchild only');
-SELECT tap.is((SELECT count(*) FROM event_instance_registration), 4::bigint,
+SELECT tap.is((SELECT count(*) FROM event_instance_registration), 5::bigint,
   'attendees see all registrations of accessible events, including cancellation history');
 SELECT tap.is((SELECT count(*) FROM event_instance_trainer), 2::bigint, 'attendees see trainers throughout the schedule');
 SELECT tap.is((SELECT count(*) FROM event_instance_target_cohort), 1::bigint, 'attendees see target assignments');

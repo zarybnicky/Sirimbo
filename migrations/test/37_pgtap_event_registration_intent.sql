@@ -123,12 +123,26 @@ SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration
     AND registration_status = 'cancelled' AND source = 'cohort'),
   'removing one cohort keeps shared members and cancels only omitted registrations');
 
+CREATE TEMP TABLE original_partners AS
+SELECT id, person_id FROM event_instance_registration
+WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap');
+UPDATE event_instance_registration SET status='attended', attendance_note='Keep partner attendance'
+WHERE id IN (SELECT id FROM original_partners);
+INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
+SELECT r.id, t.id, 1 FROM original_partners r
+JOIN event_instance_trainer t ON t.instance_id = (SELECT id FROM cases WHERE name = 'overlap')
+WHERE r.person_id=-8601;
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[{"couple_id":-8601}]')
 FROM cases WHERE name = 'overlap';
 SELECT tap.is((SELECT count(*) FROM event_instance_registration
   WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id IS NOT NULL
     AND registration_status = 'active' AND parent_registration_id IS NOT NULL), 2::bigint,
   'a couple replaces individual registrations without duplicate person rows');
+SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
+  WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NOT NULL
+    AND registration_status='active' AND source='manager' AND attendance_note='Keep partner attendance')
+  AND EXISTS (SELECT 1 FROM event_lesson_demand WHERE registration_id IN (SELECT id FROM original_partners)),
+  'forming a couple reuses person rows, attendance and personal lesson requests');
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"couple_id":-8601,"is_cancelled":true},
   {"person_id":-8601,"is_cancelled":true},{"person_id":-8602,"is_cancelled":true}
@@ -151,6 +165,65 @@ SELECT tap.is((SELECT count(*) FROM event_instance_registration
   WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'
     AND parent_registration_id IS NULL AND person_id IS NOT NULL), 2::bigint,
   'individuals can replace an existing couple');
+SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
+  WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NULL
+    AND registration_status='active' AND attendance_note='Keep partner attendance')
+  AND EXISTS (SELECT 1 FROM event_lesson_demand WHERE registration_id IN (SELECT id FROM original_partners)),
+  'repeated couple/individual changes preserve the original person rows and requests');
+
+INSERT INTO cases VALUES ('self couple', pg_temp.save_group(null, '{}'));
+UPDATE event_instance SET is_public=true, capacity=2 WHERE id=(SELECT id FROM cases WHERE name='self couple');
+UPDATE event_instance_trainer SET lessons_offered=10 WHERE instance_id=(SELECT id FROM cases WHERE name='self couple');
+SELECT set_config('jwt.claims.my_person_ids', '{-8601,-8602}', true);
+SELECT set_config('jwt.claims.my_couple_ids', '{-8601}', true);
+GRANT SELECT ON cases TO anonymous;
+SET LOCAL ROLE anonymous;
+SELECT set_event_instance_registration(id, -8601, null, true, 'Personal note') FROM cases WHERE name='self couple';
+RESET ROLE;
+CREATE TEMP TABLE self_person AS SELECT r.id, t.id AS trainer_id
+FROM event_instance_registration r JOIN event_instance_trainer t ON t.instance_id=r.instance_id
+WHERE r.instance_id=(SELECT id FROM cases WHERE name='self couple') AND r.person_id=-8601;
+GRANT SELECT ON self_person TO anonymous;
+SET LOCAL ROLE anonymous;
+SELECT set_lesson_demand(r.id, t.id, 1) FROM self_person r
+CROSS JOIN event_instance_trainer t WHERE t.instance_id=(SELECT id FROM cases WHERE name='self couple');
+SELECT tap.lives_ok(format('select set_event_instance_registration(%s, null, -8601, true)',
+  (SELECT id FROM cases WHERE name='self couple')),
+  'a couple needs only one free place when one partner is already registered');
+SELECT tap.is((SELECT id FROM event_instance_registration
+  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND person_id=-8601 AND registration_status='active'),
+  (SELECT id FROM self_person), 'self registration attaches the original person row');
+SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
+  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
+  'both reused and new partner rows inherit the couple registration source');
+SELECT tap.lives_ok(format('select set_lesson_demand(%s, %s, 2)',
+  (SELECT id FROM self_person),
+  (SELECT id FROM event_instance_trainer WHERE instance_id=(SELECT id FROM cases WHERE name='self couple'))),
+  'personal lesson requests remain editable after joining a couple registration');
+SELECT set_config('jwt.claims.tenant_id', '1', true);
+SELECT tap.throws_ok(format('select set_lesson_demand(%s, %s, 1)', id, trainer_id),
+  '28000', 'INSTANCE_NOT_FOUND', 'lesson requests cannot be written through another tenant') FROM self_person;
+SELECT set_config('jwt.claims.tenant_id', '-8600', true);
+RESET ROLE;
+UPDATE event_instance SET capacity_unit='registrations', capacity=1 WHERE id=(SELECT id FROM cases WHERE name='self couple');
+SET LOCAL ROLE anonymous;
+SELECT set_event_instance_registration(id, -8601, null, false) FROM cases WHERE name='self couple';
+SELECT tap.lives_ok(format('select set_event_instance_registration(%s, -8601, null, true)',
+  (SELECT id FROM cases WHERE name='self couple')),
+  'rejoining an active couple needs no additional registration-unit place');
+SELECT set_event_instance_registration(id, null, -8601, false) FROM cases WHERE name='self couple';
+SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
+  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
+  'cancelling a couple propagates the source to its person rows');
+SELECT set_event_instance_registration(id, -8601, null, true) FROM cases WHERE name='self couple';
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r
+  JOIN event_lesson_demand d ON d.registration_id=r.id
+  WHERE r.id=(SELECT id FROM self_person) AND r.parent_registration_id IS NULL
+    AND r.registration_status='active' AND r.note='Personal note' AND d.lesson_count=2),
+  'individual signup after couple cancellation keeps the original row and personal requests');
+RESET ROLE;
+SELECT set_config('jwt.claims.my_person_ids', '{}', true);
+SELECT set_config('jwt.claims.my_couple_ids', '{}', true);
 
 INSERT INTO cases VALUES ('past', pg_temp.save_group(null, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},{"person_id":-8602,"target_cohort_id":-8601}

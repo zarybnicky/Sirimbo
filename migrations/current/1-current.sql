@@ -27,6 +27,10 @@ alter table aktuality
 grant all on table aktuality to anonymous;
 
 --!include functions/upsert_article.sql
+--!include functions/ensure_couple_person_registrations.sql
+--!include functions/save_events.sql
+--!include functions/set_event_instance_registration.sql
+--!include functions/set_lesson_demand.sql
 --!include functions/event_sharing.sql
 
 drop function if exists app_private.attended_event_ids();

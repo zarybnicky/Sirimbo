@@ -80,7 +80,6 @@ as $$
     select person_id, couple_id
     from event_instance_registration
     where instance_id in (select id from events)
-      and parent_registration_id is null
       and registration_status = 'active'
   )
   select
@@ -89,12 +88,6 @@ as $$
       select person_id from trainers
       union
       select person_id from registrations where person_id is not null
-      union
-      select couple.man_id
-      from registrations join couple on couple.id = registrations.couple_id
-      union
-      select couple.woman_id
-      from registrations join couple on couple.id = registrations.couple_id
     ),
     array(
       select distinct couple_id

@@ -896,8 +896,8 @@ SELECT tap.ok(
     FROM event_instance_registration
     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
       AND person_id = 2900003
-      AND parent_registration_id is null
-      AND registration_status = 'cancelled'
+      AND parent_registration_id is not null
+      AND registration_status = 'active'
       AND source = 'manager'
   ) AND EXISTS (
     SELECT 1
@@ -949,8 +949,9 @@ SELECT tap.ok(
     JOIN event_lesson_demand demand ON demand.trainer_id = trainer.id
     JOIN event_instance_registration registration ON registration.id = demand.registration_id
     WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
-      AND registration.registration_status = 'cancelled'
-      AND event_instance_trainer_lessons_remaining(trainer) = 2
+      AND registration.registration_status = 'active'
+      AND registration.parent_registration_id is not null
+      AND event_instance_trainer_lessons_remaining(trainer) = 0
   ),
   'event save updates exact settings and replaces registrations consistently'
 );

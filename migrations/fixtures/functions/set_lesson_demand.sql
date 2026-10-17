@@ -1,7 +1,7 @@
 drop function if exists set_lesson_demand;
 
 CREATE FUNCTION set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) RETURNS event_lesson_demand
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql STRICT
   SECURITY DEFINER
   SET search_path TO pg_catalog, public, pg_temp
 AS $$
@@ -16,13 +16,14 @@ declare
 begin
   select * into registration
   from event_instance_registration
-  where id = $1 and parent_registration_id is null;
+  where id = $1;
 
   if not found then
     raise exception 'REGISTRATION_NOT_FOUND' using errcode = '28000';
   end if;
 
-  select * into instance from event_instance where id = registration.instance_id;
+  select * into instance from event_instance
+  where id = registration.instance_id and tenant_id = current_tenant_id();
 
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';
@@ -32,7 +33,7 @@ begin
     or (registration.couple_id is not null and registration.couple_id = any(current_couple_ids()));
   is_manager := app_private.is_system_admin(current_user_id())
     or exists (select 1 from current_tenant_administrator where person_id = any(current_person_ids()))
-    or and app_private.can_trainer_edit_instance(instance.id);
+    or app_private.can_trainer_edit_instance(instance.id);
 
   if not is_self and not is_manager then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
