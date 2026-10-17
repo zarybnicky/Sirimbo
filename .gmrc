@@ -48,6 +48,7 @@
     //   "command": "if [ \"$IN_TESTS\" = \"1\" ]; then psql -f ./scripts/test-seed $GM_DBURL; fi",
     // },
     "10-postgraphile-watch.sql",
+    "test/00_setup.sql",
     "test/10_check_plpgsql.sql",
     "test/20_check_sql_functions.sql",
     {

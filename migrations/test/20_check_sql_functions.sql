@@ -128,7 +128,7 @@ BEGIN
     FROM pg_class c
     JOIN pg_namespace n ON n.oid = c.relnamespace
     WHERE c.relkind IN ('v','m')  -- view, matview
-      AND n.nspname NOT IN ('pg_catalog','information_schema')
+      AND n.nspname = ANY (regexp_split_to_array(current_setting('app.check_schemas'), '\s*,\s*'))
   LOOP
     EXECUTE format('EXPLAIN SELECT * FROM %I.%I LIMIT 0', r.nspname, r.relname);
   END LOOP;

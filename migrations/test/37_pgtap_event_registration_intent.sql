@@ -1,6 +1,4 @@
 BEGIN;
-CREATE SCHEMA IF NOT EXISTS tap;
-CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
 SET LOCAL search_path = public, tap;
 SELECT tap.no_plan();
 
@@ -193,8 +191,6 @@ SELECT tap.throws_ok($$SELECT pg_temp.save_group(null, '{}',
   'a registration cannot name an unselected cohort');
 
 GRANT SELECT ON cases TO trainer;
-GRANT USAGE ON SCHEMA tap TO trainer, anonymous;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO trainer, anonymous;
 SELECT set_config('jwt.claims.my_person_ids', '[-8604]', true);
 SET LOCAL ROLE trainer;
 SELECT tap.lives_ok(format('select pg_temp.save_group(%s, array[-8601]::bigint[], %L::jsonb)',

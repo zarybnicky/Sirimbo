@@ -1,12 +1,6 @@
 BEGIN;
 
-CREATE SCHEMA IF NOT EXISTS tap;
-CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
-DO $$
-BEGIN
-  execute 'set search_path to ' || current_setting('search_path') || ',tap';
-END
-$$;
+SET LOCAL search_path = public, tap;
 
 SELECT tap.plan(11);
 
@@ -68,8 +62,6 @@ SELECT tap.is(
   'an ended publication becomes archived'
 );
 
-GRANT USAGE ON SCHEMA tap TO member;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO member;
 SELECT set_config('jwt.claims.my_person_ids', '[220001]', true);
 SET LOCAL ROLE member;
 

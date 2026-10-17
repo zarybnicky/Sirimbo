@@ -1,9 +1,5 @@
 begin;
-create schema if not exists tap;
-create extension if not exists pgtap schema tap;
 set local search_path = public, tap;
-grant usage on schema tap to anonymous;
-grant execute on all functions in schema tap to anonymous;
 select tap.plan(17);
 
 insert into tenant (id, name) values (-3900, 'Activity'), (-3901, 'Other activity');

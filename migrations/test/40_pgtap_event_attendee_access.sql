@@ -1,9 +1,5 @@
 BEGIN;
-CREATE SCHEMA IF NOT EXISTS tap;
-CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
 SET LOCAL search_path = public, tap;
-GRANT USAGE ON SCHEMA tap TO anonymous;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO anonymous;
 SELECT tap.no_plan();
 
 INSERT INTO tenant (id, name) VALUES (-9000, 'Camp host'), (-9001, 'Home club');

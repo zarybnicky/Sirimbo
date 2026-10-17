@@ -1,12 +1,6 @@
 BEGIN;
 
-CREATE SCHEMA IF NOT EXISTS tap;
-CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
-DO $$
-BEGIN
-  execute 'set search_path to ' || current_setting('search_path') || ',tap';
-END
-$$;
+SET LOCAL search_path = public, tap;
 
 SELECT tap.plan(33);
 
@@ -466,8 +460,6 @@ WHERE eir.instance_id = 900001
   AND eir.parent_registration_id IS NULL;
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
-GRANT USAGE ON SCHEMA tap TO trainer;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA tap TO trainer;
 SET LOCAL ROLE trainer;
 
 SELECT tap.lives_ok(

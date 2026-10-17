@@ -1,8 +1,5 @@
 begin;
 
-create schema if not exists tap;
-create extension if not exists pgtap schema tap;
-grant usage on schema tap to anonymous;
 set local search_path to public, tap;
 select tap.plan(5);
 
