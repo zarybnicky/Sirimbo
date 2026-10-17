@@ -65,6 +65,9 @@ export function EventPageClient({
           subtitle={formatEventType(event.type)}
           actions={actions}
           primary={primaryAction}
+          primaryVariant={
+            primaryAction === 'eventInstance.registrations' ? 'primary' : 'outline'
+          }
         />
       </div>
       <TabMenu

@@ -8,5 +8,7 @@ create policy trainer_same_tenant on event_instance_trainer to trainer
   using (app_private.can_trainer_edit_instance(instance_id));
 create policy member_view on event_instance_trainer for select to member
   using (true);
+create policy public_view on event_instance_trainer for select to anonymous
+  using (instance_id in (select id from event_instance where is_public));
 create policy event_access_view on event_instance_trainer for select to anonymous
   using (instance_id in (select app_private.accessible_event_ids()));

@@ -32,7 +32,7 @@ type Registrant = {
 };
 
 type Selection =
-  | { kind: 'overview' | 'candidates' }
+  | { kind: 'overview' | 'candidates' | 'new-person' }
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
@@ -45,7 +45,7 @@ const registrant = (registration: EventInstanceRegistrationFragment): Registrant
   coupleId: registration.coupleId,
 });
 
-export function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
+function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
   const auth = useAuth();
   const isManager = auth.canManageInstance(event);
 
@@ -112,19 +112,17 @@ export function MyRegistrationsDialog({
 }) {
   const auth = useAuth();
   const search = useSearchParams();
-  const preview = search?.get('registration') === 'preview' && !initialRegistrationId;
+  const preview = search?.get('registration') === 'preview';
   const [query] = useQuery({
     query: EventRegistrationDialogDocument,
     variables: { id: instanceId },
-    pause: auth.isExternal && !preview,
+    pause: auth.personIds.length === 0 && !preview,
   });
 
-  if (auth.isExternal && !preview)
+  if (auth.personIds.length === 0 && !preview)
     return <NewExternalRegistrationForm instanceId={instanceId} />;
   if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
   if (!query.data.instance) return <FormError error="Termín není dostupný." />;
-
-  if (preview) return <EventSignupForm instance={query.data.instance} />;
 
   return (
     <RegistrationsDialogContent
@@ -142,6 +140,7 @@ function RegistrationsDialogContent({
   initialRegistrationId?: string;
 }) {
   const auth = useAuth();
+  const preview = useSearchParams()?.get('registration') === 'preview';
   const isManager = auth.canManageInstance(instance);
   const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
@@ -166,16 +165,20 @@ function RegistrationsDialogContent({
     : selection.kind === 'candidate'
       ? selection.registrant
       : undefined;
-  const page = selected
-    ? 'editor'
-    : selection.kind === 'candidates'
-      ? 'candidates'
-      : 'overview';
   const {
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(instance, page === 'candidates');
+  } = useRegistrationCandidates(instance, selection.kind === 'candidates');
+  const page = selected
+    ? 'editor'
+    : selection.kind === 'candidates'
+      ? preview && !candidatesLoading && !candidateError && candidates.length === 0
+        ? 'new-person'
+        : 'candidates'
+      : selection.kind === 'new-person'
+        ? 'new-person'
+        : 'overview';
   const [setRegistrationResult, setRegistration] = useMutation(
     SetEventRegistrationDocument,
   );
@@ -210,6 +213,14 @@ function RegistrationsDialogContent({
   return (
     <>
       <div className="flex items-center gap-2 pr-8">
+        {page === 'new-person' && candidates.length > 0 && (
+          <IconButton
+            label="Zpět na výběr osoby"
+            onClick={() => setSelection({ kind: 'candidates' })}
+          >
+            <ChevronLeft />
+          </IconButton>
+        )}
         {page !== 'overview' && registrations.length > 0 && (
           <IconButton
             label="Zobrazit přihlášky"
@@ -224,7 +235,14 @@ function RegistrationsDialogContent({
           </IconButton>
         )}
         <DialogTitle className="grow">
-          {selected?.label ?? (page === 'candidates' ? 'Koho přihlásit' : 'Přihlášky')}
+          {selected?.label ??
+            (page === 'candidates'
+              ? 'Koho přihlásit'
+              : page === 'new-person'
+                ? candidates.length > 0 || registrations.length > 0
+                  ? 'Nová osoba'
+                  : 'Přihláška'
+                : 'Přihlášky')}
           {canCycle && ` (${i + 1}/${registrations.length})`}
         </DialogTitle>
         {canCycle && (
@@ -232,8 +250,18 @@ function RegistrationsDialogContent({
             <ChevronRight />
           </IconButton>
         )}
+        {page === 'candidates' && preview && (
+          <button
+            type="button"
+            className={buttonCls({ size: 'sm', variant: 'outline' })}
+            onClick={() => setSelection({ kind: 'new-person' })}
+          >
+            <Plus />
+            Nová osoba
+          </button>
+        )}
         {(page === 'overview' || registration) &&
-          (isManager || candidates.length > 0) && (
+          (preview || isManager || candidates.length > 0) && (
             <IconButton
               label="Přidat přihlášku"
               onClick={() => setSelection({ kind: 'candidates' })}
@@ -275,6 +303,8 @@ function RegistrationsDialogContent({
             <div className="text-neutral-11">Není koho dalšího přihlásit.</div>
           )}
         </>
+      ) : page === 'new-person' ? (
+        <EventSignupForm instance={instance} />
       ) : (
         selected && (
           <EventRegistrationForm

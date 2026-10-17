@@ -11,7 +11,7 @@ CREATE or replace FUNCTION event_instance_trainer_lessons_remaining(e event_inst
       where demand.trainer_id = e.id
     )
   end;
-$$ LANGUAGE sql STABLE;
+$$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
 
 CREATE or replace FUNCTION event_instance_remaining_person_spots(inst event_instance) RETURNS integer AS $$
   select case

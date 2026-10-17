@@ -24,13 +24,13 @@ export function Dashboard() {
           <Tab id="myLessons" title="Moje události">
             <MyEventsList />
           </Tab>
-          <Tab id="competitions" title="Soutěže">
+          <Tab id="competitions" title="Soutěže" requireMember>
             <CompetitionWeekPanel allowOnlyMine />
           </Tab>
-          <Tab id="myAnnouncements" title="Aktuality">
+          <Tab id="myAnnouncements" title="Aktuality" requireMember>
             <MyAnnouncements />
           </Tab>
-          <Tab id="stickyAnnouncements" title="Stálá nástěnka">
+          <Tab id="stickyAnnouncements" title="Stálá nástěnka" requireMember>
             <StickyAnnouncements />
           </Tab>
         </TabMenu>
@@ -39,10 +39,10 @@ export function Dashboard() {
       <div className="hidden xl:grid grid-cols-3 gap-4">
         <div className="flex flex-col gap-8">
           <MyEventsList />
-          <CompetitionWeekPanel allowOnlyMine />
+          {auth.isMember && <CompetitionWeekPanel allowOnlyMine />}
         </div>
-        <MyAnnouncements />
-        <StickyAnnouncements />
+        {auth.isMember && <MyAnnouncements />}
+        {auth.isMember && <StickyAnnouncements />}
       </div>
     </div>
   );

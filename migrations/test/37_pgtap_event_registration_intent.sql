@@ -301,7 +301,17 @@ SELECT set_config('jwt.claims.user_id', '', true);
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok($$SELECT set_event_instance_registration(-8650, -8601, null, true)$$,
   '42501', 'ACCESS_DENIED', 'public signup cannot select an unrelated person');
+SELECT tap.is((SELECT array_agg(id) FROM event_instance_trainer
+  WHERE instance_id IN (-8650, (SELECT id FROM cases WHERE name='fresh'))), ARRAY[-8650]::bigint[],
+  'unregistered visitors see public-event trainers, not private-event trainers');
 INSERT INTO submitted SELECT id, person_id FROM pg_temp.signup();
+SELECT tap.is((SELECT event_instance_trainer_lessons_remaining(t)
+  FROM event_instance_trainer t WHERE id=-8650), 1,
+  'public lesson availability includes requests belonging to other people');
+SELECT set_config('jwt.claims.tenant_id', '1', true);
+SELECT tap.is((SELECT count(*) FROM event_instance_trainer WHERE id=-8650), 0::bigint,
+  'public-event trainers remain hidden in another tenant');
+SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 SELECT tap.is((SELECT id FROM pg_temp.signup()),
   (SELECT id FROM submitted), 'an identical retry returns the same registration even when capacity is now full');
 SELECT tap.throws_ok($$SELECT pg_temp.signup(note => 'Changed note')$$,

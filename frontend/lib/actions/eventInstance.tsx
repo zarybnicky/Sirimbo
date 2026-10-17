@@ -7,6 +7,7 @@ import {
   Share2,
   Square,
   Trash2,
+  UserPlus,
 } from 'lucide-react';
 import {
   DeleteEventDocument,
@@ -53,7 +54,7 @@ function canOpenRegistrations({
     !!item.registrationInfo?.my ||
     (!!(item.isPublic || item.isVisible) &&
       !item.isLocked &&
-      (!auth.isExternal ||
+      (auth.personIds.length > 0 ||
         !item.capacity ||
         (item.registrationInfo?.remainingCapacity ?? 0) > 0))
   );
@@ -75,6 +76,7 @@ export const eventInstanceActions = defineActions<EventWithTrainerFragment>()([
     id: 'eventInstance.registrations',
     group: 'primary',
     label: registrationActionLabel,
+    icon: UserPlus,
     visible: canOpenRegistrations,
     render: ({ item }) => <MyRegistrationsDialog instanceId={item.id} />,
   },

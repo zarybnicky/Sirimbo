@@ -9,6 +9,7 @@ type PageHeaderProps<Id extends string = string> = {
   variant?: NonNullable<Parameters<typeof typographyCls>[0]>['variant'];
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
+  primaryVariant?: 'primary' | 'outline';
   groups?: Record<'add', Id[]>;
   breadcrumbs?: { label: string; href: LinkProps['href'] }[];
   title: string;
@@ -23,6 +24,7 @@ export function PageHeader<Id extends string = string>({
   subtitle,
   actions,
   primary,
+  primaryVariant,
   groups,
   variant = 'heading',
 }: PageHeaderProps<Id>) {
@@ -85,6 +87,7 @@ export function PageHeader<Id extends string = string>({
             <ActionGroup
               className="ml-auto flex-wrap justify-end"
               primary={primary}
+              primaryVariant={primaryVariant}
               groups={groups}
               actions={actions}
             />

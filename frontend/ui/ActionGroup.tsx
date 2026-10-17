@@ -84,6 +84,7 @@ export function ActionGroup<Id extends string = string>({
   primary,
   groups,
   variant = 'toolbar',
+  primaryVariant = 'outline',
   align,
   iconOnly = false,
 }: {
@@ -92,6 +93,7 @@ export function ActionGroup<Id extends string = string>({
   primary?: Id | readonly Id[];
   groups?: Partial<Record<'add', readonly Id[]>>;
   variant?: 'toolbar' | 'row';
+  primaryVariant?: 'primary' | 'outline';
   align?: 'start' | 'end';
   iconOnly?: boolean;
 }) {
@@ -151,7 +153,7 @@ export function ActionGroup<Id extends string = string>({
             key={a.key}
             href={a.href}
             title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: 'outline', size: 'sm' })}
+            className={buttonCls({ variant: primaryVariant, size: 'sm' })}
           >
             {a.icon && <a.icon className="size-4" />}
             <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
@@ -162,7 +164,7 @@ export function ActionGroup<Id extends string = string>({
             type="button"
             disabled={pending === a.key}
             title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: 'outline', size: 'sm' })}
+            className={buttonCls({ variant: primaryVariant, size: 'sm' })}
             onClick={() => fire(a)}
           >
             {a.icon && <a.icon className="size-4" />}

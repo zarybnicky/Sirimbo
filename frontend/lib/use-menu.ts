@@ -76,7 +76,6 @@ const memberMenu: MenuStructItem[] = [
     type: 'link',
     title: 'Nástěnka',
     href: '/dashboard?tab=myAnnouncements',
-    requireMember: true,
   },
   {
     type: 'link',
@@ -98,7 +97,7 @@ const memberMenu: MenuStructItem[] = [
         requireMember: true,
       },
       { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce', requireMember: true },
+      { type: 'link', title: 'Seznam akcí', href: '/akce' },
     ],
   },
   {

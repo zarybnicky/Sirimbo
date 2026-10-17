@@ -39,22 +39,24 @@ export function TabMenu({ className, children, selected, onSelect }: TabMenuProp
 
   return (
     <>
-      <nav
-        className={cn(
-          'print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto',
-          className,
-        )}
-      >
-        {tabs.map((tab) => (
-          <TabButton
-            key={tab.id}
-            id={tab.id}
-            title={tab.title}
-            selected={active.id}
-            onSelect={onSelect}
-          />
-        ))}
-      </nav>
+      {tabs.length > 1 && (
+        <nav
+          className={cn(
+            'print:hidden border-b border-neutral-7 mb-2 flex space-x-4 max-w-full overflow-y-auto',
+            className,
+          )}
+        >
+          {tabs.map((tab) => (
+            <TabButton
+              key={tab.id}
+              id={tab.id}
+              title={tab.title}
+              selected={active.id}
+              onSelect={onSelect}
+            />
+          ))}
+        </nav>
+      )}
 
       <React.Fragment key={active.id}>{active.children}</React.Fragment>
     </>

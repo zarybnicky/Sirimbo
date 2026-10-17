@@ -42,6 +42,7 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include functions/save_events.sql
 --!include functions/set_event_instance_registration.sql
 --!include functions/set_lesson_demand.sql
+--!include functions/event_remaining_x.sql
 --!include functions/event_share_claims.sql
 
 --!include views/event_people.sql
