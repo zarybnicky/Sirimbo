@@ -7,7 +7,7 @@ import {
 import { useAuth } from '@/lib/auth';
 import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError } from '@/ui/form';
-import { buttonCls } from '@/ui/style';
+import { buttonCls, typographyCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { useConfirm } from '@/ui/Confirm';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -118,13 +118,16 @@ export function EventRegistrationForm({
           control={control}
           disabled={readOnly}
           label="Poznámky k registraci, požadavky na stravu apod."
+          placeholder="Alergie, stravovací omezení, další požadavky…"
           name="note"
         />
       )}
 
       {lessonTrainers.length > 0 && (
         <fieldset className="grid gap-2">
-          <legend>Požadavky na lekce</legend>
+          <legend className={typographyCls({ variant: 'label' })}>
+            Požadavky na lekce
+          </legend>
           {lessonTrainers.map((trainer, index) => (
             <LessonRequestField
               key={trainer.id}

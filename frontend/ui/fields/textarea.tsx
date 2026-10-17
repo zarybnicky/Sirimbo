@@ -4,6 +4,7 @@ import {
   type FieldHelperProps,
   FieldLabel,
 } from '@/ui/form';
+import { inputCls } from '@/ui/style';
 import React from 'react';
 import {
   type Control,
@@ -37,13 +38,8 @@ function TextArea({
   return (
     <div className={className}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <div className="mt-1 relative rounded-md shadow-xs">
-        <textarea
-          id={name}
-          name={name}
-          {...props}
-          className="bg-accent-3 text-accent-12 shadow-xs focus:ring-accent-7 focus:border-accent-8 block w-full sm:text-sm border-accent-7 rounded-md"
-        />
+      <div className="relative rounded-md shadow-xs">
+        <textarea id={name} name={name} {...props} className={inputCls()} />
         {error && <FieldErrorIcon />}
       </div>
       <FieldHelper error={error} helperText={helperText} />

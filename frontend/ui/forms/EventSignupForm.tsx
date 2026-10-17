@@ -14,6 +14,7 @@ import { TextAreaElement } from '@/ui/fields/textarea';
 import { FormError, useFormResult } from '@/ui/form';
 import { LessonRequestField } from '@/ui/forms/EventRegistrationForm';
 import { SubmitButton } from '@/ui/submit';
+import { typographyCls } from '@/ui/style';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -109,6 +110,7 @@ export default function EventSignupForm({
           control={control}
           name="person.email"
           label="E-mail"
+          placeholder="@"
           type="email"
           required
           autoComplete="email"
@@ -117,11 +119,19 @@ export default function EventSignupForm({
           control={control}
           name="person.phone"
           label="Telefon"
+          placeholder="+420..."
           type="tel"
           required
           autoComplete="tel"
         />
 
+        <ComboboxElement
+          control={control}
+          name="person.nationality"
+          label="Národnost"
+          placeholder="Vyberte národnost"
+          options={countryOptions}
+        />
         <RadioButtonGroupElement
           control={control}
           name="person.gender"
@@ -132,44 +142,41 @@ export default function EventSignupForm({
           ]}
         />
 
-        <ComboboxElement
-          control={control}
-          name="person.nationality"
-          label="Národnost"
-          placeholder="Vyberte národnost"
-          options={countryOptions}
-        />
-        <DatePickerElement
-          control={control}
-          name="person.birthDate"
-          label="Datum narození"
-          valueMode="date"
-        />
-
-        <FederationIdFieldElement
-          control={control}
-          name="person.cstsId"
-          federation="csts"
-          label="ČSTS IDT"
-        />
-        <FederationIdFieldElement
-          control={control}
-          name="person.wdsfId"
-          federation="wdsf"
-          label="WDSF MIN"
-        />
+        <div className="grid gap-2 sm:col-span-2 sm:grid-cols-3">
+          <DatePickerElement
+            control={control}
+            name="person.birthDate"
+            label="Datum narození"
+            valueMode="date"
+          />
+          <FederationIdFieldElement
+            control={control}
+            name="person.cstsId"
+            federation="csts"
+            label="ČSTS IDT"
+          />
+          <FederationIdFieldElement
+            control={control}
+            name="person.wdsfId"
+            federation="wdsf"
+            label="WDSF MIN"
+          />
+        </div>
       </fieldset>
       {showNotes && (
         <TextAreaElement
           control={control}
           name="note"
           label="Poznámky k registraci, požadavky na stravu apod."
+          placeholder="Alergie, stravovací omezení, další požadavky…"
         />
       )}
 
       {trainers.length > 0 && (
         <fieldset className="grid gap-2">
-          <legend>Požadavky na lekce</legend>
+          <legend className={typographyCls({ variant: 'label' })}>
+            Požadavky na lekce
+          </legend>
           {trainers.map((trainer, i) => (
             <LessonRequestField
               key={trainer.id}

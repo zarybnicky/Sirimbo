@@ -6,6 +6,7 @@ import {
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
+import { EventLoginPrompt } from '@/ui/EventLoginPrompt';
 import { TextField } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, formatRegistrant } from '@/ui/format';
@@ -94,7 +95,11 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
       })),
   ]
     .filter(() => isManager || (!event.isLocked && capacityLeft >= 1))
-    .toSorted((a, b) => a.label.localeCompare(b.label));
+    .toSorted((a, b) => {
+      const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
+      const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);
+      return Number(bMine) - Number(aMine) || a.label.localeCompare(b.label);
+    });
 
   return {
     candidates,
@@ -106,9 +111,11 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
 export function MyRegistrationsDialog({
   instanceId,
   initialRegistrationId,
+  initialPage,
 }: {
   instanceId: string;
   initialRegistrationId?: string;
+  initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const auth = useAuth();
   const search = useSearchParams();
@@ -128,6 +135,7 @@ export function MyRegistrationsDialog({
     <RegistrationsDialogContent
       instance={query.data.instance}
       initialRegistrationId={initialRegistrationId}
+      initialPage={initialPage}
     />
   );
 }
@@ -135,9 +143,11 @@ export function MyRegistrationsDialog({
 function RegistrationsDialogContent({
   instance,
   initialRegistrationId,
+  initialPage,
 }: {
   instance: RegistrationEvent;
   initialRegistrationId?: string;
+  initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const auth = useAuth();
   const preview = useSearchParams()?.get('registration') === 'preview';
@@ -149,6 +159,7 @@ function RegistrationsDialogContent({
         (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
       );
   const [selection, setSelection] = React.useState<Selection>(() => {
+    if (initialPage) return { kind: initialPage };
     const initial =
       registrations.find((r) => r.id === initialRegistrationId) ??
       (registrations.length === 1 ? registrations[0] : undefined);
@@ -304,7 +315,10 @@ function RegistrationsDialogContent({
           )}
         </>
       ) : page === 'new-person' ? (
-        <EventSignupForm instance={instance} />
+        <>
+          <EventLoginPrompt instanceId={instance.id} />
+          <EventSignupForm instance={instance} />
+        </>
       ) : (
         selected && (
           <EventRegistrationForm

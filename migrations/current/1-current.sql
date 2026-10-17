@@ -77,3 +77,15 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include policies/tenant_settings.sql
 --!include policies/tenant_trainer.sql
 --!include policies/aktuality.sql
+
+alter table otp_token
+  add column if not exists intent text not null default 'password_reset',
+  add column if not exists event_id bigint references event_instance(id) on delete cascade;
+
+alter table otp_token drop constraint if exists otp_token_intent_check;
+alter table otp_token add constraint otp_token_intent_check check (
+  (intent = 'password_reset' and event_id is null)
+  or (intent = 'event_handoff' and event_id is not null)
+);
+
+--!include functions/otp_login.sql

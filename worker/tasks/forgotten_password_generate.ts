@@ -1,7 +1,7 @@
 import type { Task } from 'graphile-worker';
 
 const task: Task<'forgotten_password_generate'> = async (payload, workerUtils) => {
-  const { origin, intent, users } = payload;
+  const { origin, users } = payload;
   const user = users.find((x) => x);
 
   if (!user) return;
@@ -13,7 +13,7 @@ const task: Task<'forgotten_password_generate'> = async (payload, workerUtils) =
       subject: '[Rozpisovnik] Zapomenuté heslo',
     },
     variables: {
-      origin: origin + `/otp?intent=${intent}&token=`,
+      origin: origin + '/otp?token=',
       users,
     },
   });

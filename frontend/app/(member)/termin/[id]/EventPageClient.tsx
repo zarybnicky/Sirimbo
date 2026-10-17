@@ -15,6 +15,8 @@ import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/PageHeader';
+import { Dialog, DialogContent } from '@/ui/dialog';
+import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -44,6 +46,7 @@ export function EventPageClient({
     'tab',
     parseAsString.withOptions({ history: 'push' }),
   );
+  const [signup, setSignup] = useQueryState('signup');
 
   const numRegistrations = event.registrationInfo?.registrations ?? 0;
   const hasPayments = [event, ...event.childEventInstancesList].some(
@@ -52,6 +55,14 @@ export function EventPageClient({
 
   return (
     <Layout hideTopMenuIfLoggedIn>
+      {signup === '1' && (
+        <Dialog open onOpenChange={() => setSignup(null)}>
+          <DialogContent>
+            <MyRegistrationsDialog instanceId={event.id} initialPage="candidates" />
+          </DialogContent>
+        </Dialog>
+      )}
+
       <div className="col-feature">
         <PageHeader
           title={formatEventName(event) || ''}
@@ -70,6 +81,7 @@ export function EventPageClient({
           }
         />
       </div>
+
       <TabMenu
         className="col-feature"
         selected={tab === 'attendance' ? 'registrations' : tab}
