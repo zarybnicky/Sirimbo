@@ -98,8 +98,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       'jwt.claims.my_cohort_ids': '{}',
       'jwt.claims.my_couple_ids': '{}',
       'jwt.claims.shared.event_ids': '{}',
-      'jwt.claims.shared.person_ids': '{}',
-      'jwt.claims.shared.couple_ids': '{}',
   };
   const token = getBearerOrCookie(req);
   const claims = token ? verifySessionToken(token) : undefined;
@@ -130,8 +128,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       rows: [share],
     } = await pool.query<{
       instance_ids: string[];
-      person_ids: string[];
-      couple_ids: string[];
     }>('select * from app_private.event_share_claims($1, $2)', [
       tenantId,
       eventShare,
@@ -139,8 +135,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
 
     if (share) {
       settings['jwt.claims.shared.event_ids'] = `{${share.instance_ids.join(',')}}`;
-      settings['jwt.claims.shared.person_ids'] = `{${share.person_ids.join(',')}}`;
-      settings['jwt.claims.shared.couple_ids'] = `{${share.couple_ids.join(',')}}`;
     }
   }
 

@@ -1,21 +1,5 @@
-create or replace function event_instance_share_token(i event_instance)
-  returns text
-  language sql
-  stable
-as $$
-  select share_token
-  from event_instance
-  where id = $1.id
-    and (pg_has_role(current_user, 'administrator', 'member')
-      or (pg_has_role(current_user, 'trainer', 'member')
-      and app_private.can_trainer_edit_instance($1.id)))
-$$;
-grant execute on function event_instance_share_token to anonymous;
-
-create or replace function set_event_sharing(id bigint, p_enabled boolean)
-  returns text
-  language plpgsql
-  volatile
+create or replace function set_event_sharing(id bigint, p_enabled boolean) returns text
+  language plpgsql volatile
 as $$
 declare
   v_share_token text;
@@ -39,62 +23,3 @@ end;
 $$;
 
 grant execute on function set_event_sharing to anonymous;
-
-drop function if exists app_private.event_share_claims;
-
-create function app_private.event_share_claims(p_tenant_id bigint, p_share text)
-  returns table (instance_ids bigint[], person_ids bigint[], couple_ids bigint[])
-  language sql stable
-  security definer
-  set search_path = pg_catalog, public, pg_temp
-as $$
-  with recursive root as (
-    select id
-    from event_instance
-    where tenant_id = p_tenant_id
-      and (
-        share_token = p_share
-        or (
-          is_public
-          and has_public_details
-          and id = case
-            when p_share ~ '^\d{1,18}$' then p_share::bigint
-          end
-        )
-      )
-  ),
-  events as (
-    select id from root
-    union
-    select child.id
-    from event_instance child
-    join events parent on child.parent_id = parent.id
-    where child.tenant_id = p_tenant_id
-  ),
-  trainers as (
-    select person_id
-    from event_instance_trainer
-    where instance_id in (select id from events)
-  ),
-  registrations as (
-    select person_id, couple_id
-    from event_instance_registration
-    where instance_id in (select id from events)
-      and registration_status = 'active'
-  )
-  select
-    array(select id from events),
-    array(
-      select person_id from trainers
-      union
-      select person_id from registrations where person_id is not null
-    ),
-    array(
-      select distinct couple_id
-      from registrations
-      where couple_id is not null
-    )
-  where exists (select 1 from root);
-$$;
-
-revoke all on function app_private.event_share_claims from public;

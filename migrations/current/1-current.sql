@@ -31,7 +31,7 @@ grant all on table aktuality to anonymous;
 --!include functions/save_events.sql
 --!include functions/set_event_instance_registration.sql
 --!include functions/set_lesson_demand.sql
---!include functions/event_sharing.sql
+--!include functions/event_share_claims.sql
 
 drop function if exists app_private.attended_event_ids();
 
@@ -49,6 +49,7 @@ drop materialized view if exists app_private.event_people;
 --!include policies/event_lesson_demand.sql
 --!include policies/file.sql
 --!include policies/person.sql
+--!include policies/couple.sql
 --!include policies/access_event.sql
 --!include policies/accounting_period.sql
 --!include policies/cohort_group.sql

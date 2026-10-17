@@ -30,7 +30,8 @@ VALUES (-9000, -9000, -9000, -9000, 'unknown', 'active'),
        (-9004, -9001, -9004, -9000, 'unknown', 'active'),
        (-9005, -9001, -9004, -9005, 'unknown', 'active');
 INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
-VALUES (-9000, -9000, -9001, now() - interval '1 year');
+VALUES (-9000, -9000, -9001, now() - interval '1 year'),
+       (-9001, -9000, -9005, now() - interval '2 years');
 INSERT INTO event_instance_registration (id, instance_id, couple_id) OVERRIDING SYSTEM VALUE
 VALUES (-9006, -9000, -9000);
 UPDATE event_instance_registration SET parent_registration_id=-9006 WHERE id IN (-9000, -9001);
@@ -50,11 +51,6 @@ SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', '
   'callers cannot read the unscoped person-pair view');
 UPDATE event_instance SET share_token='test-camp-share' WHERE id=-9000;
 UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9001;
-SELECT tap.ok(
-  (SELECT NOT (-9001 = ANY(person_ids)) AND couple_ids = ARRAY[-9000]::bigint[]
-   FROM app_private.event_share_claims(-9000, 'test-camp-share')),
-  'sharing retains the registered couple but does not reconstruct its cancelled partner');
-UPDATE event_instance_registration SET registration_status='active' WHERE id=-9001;
 SELECT tap.is(
   (SELECT array_agg(id ORDER BY id) FROM app_private.event_share_claims(-9000, 'test-camp-share') s,
     unnest(s.instance_ids) id), ARRAY[-9002,-9001,-9000]::bigint[],
@@ -65,6 +61,10 @@ SELECT set_config('jwt.claims.shared.event_ids', instance_ids::text, true)
 FROM app_private.event_share_claims(-9000, 'test-camp-share');
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SET LOCAL ROLE anonymous;
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9000]::bigint[],
+  'sharing includes active person registrations and trainers, not cancelled partners');
+SELECT tap.is((SELECT array_agg(id) FROM couple), ARRAY[-9000]::bigint[],
+  'sharing exposes the registered couple, not other partnerships of its attendees');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
   ARRAY[-9002,-9001,-9000]::bigint[], 'share-only access includes the full event tree');
 SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[],
@@ -76,9 +76,16 @@ SELECT tap.is((SELECT count(*) FROM event_instance_target_cohort), 1::bigint,
 SELECT set_config('jwt.claims.tenant_id', '-9001', true);
 SELECT tap.is((SELECT count(*) FROM app_private.accessible_event_ids()), 0::bigint,
   'shared event IDs cannot grant access in another tenant');
+SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0::bigint,
+  'shared event IDs cannot expose people in another tenant');
 RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
 SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SET LOCAL ROLE administrator;
+SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint,
+  'admins need neither a registration nor a share link to see participants');
+RESET ROLE;
+UPDATE event_instance_registration SET registration_status='active' WHERE id=-9001;
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 -- Run the installed query on test data only; ROLLBACK restores the original view.
 DO $$
@@ -99,11 +106,6 @@ BEGIN
   $query$, definition);
 END;
 $$;
-SELECT tap.results_eq(
-  $$SELECT unnest(person_ids) FROM app_private.event_share_claims(-9000, 'test-camp-share') ORDER BY 1$$,
-  $$SELECT visible_person_id FROM app_private.event_people
-    WHERE tenant_id=-9000 AND viewer_person_id=-9000 ORDER BY 1$$,
-  'sharing and attendance expose the same people, including generated partner registrations');
 
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
