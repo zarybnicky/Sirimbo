@@ -4,7 +4,7 @@ import {
   type MissingFederationIdCandidatesQuery,
 } from '@/graphql/Person';
 import { FederationLink } from '@/ui/federation-links';
-import { formatAgeGroup, type AgeRange } from '@/ui/csts';
+import { formatAgeGroup } from '@/ui/csts';
 import { buttonCls } from '@/ui/style';
 import { Check, Undo2 } from 'lucide-react';
 import Link from 'next/link';
@@ -34,12 +34,12 @@ export function FederationIdBackfillWidget({
     UpdatePersonFederationIdDocument,
   );
   const [selectedByPerson, setSelectedByPerson] = React.useState<
-    Record<string, Candidate | null>
+    Record<string, {
+      candidate: Candidate;
+      undo: { cstsId?: null; wdsfId?: null };
+    } | null>
   >({});
 
-  const ageRanges = new Map(
-    data?.ageGroupsList?.map((g) => [g.code, g.personAge ?? g.age]),
-  );
   const people = (data?.people?.nodes ?? [])
     .filter((p) => p[idField] === null || selectedByPerson[p.id])
     .map((person) => {
@@ -47,17 +47,7 @@ export function FederationIdBackfillWidget({
       return {
         ...person,
         selected,
-        candidates: (selected ? [selected] : person.federationCandidatesList)
-          .map((c) => ({
-            ...c,
-            ageRank: ageMatchRank(
-              ageRanges.get(person.ageGroup ?? ''),
-              ageRanges.get(c.ageGroup ?? ''),
-            ),
-          }))
-          .filter((c) => c.ageRank < 3)
-          .toSorted((a, b) => a.ageRank - b.ageRank || b.similarity - a.similarity)
-          .slice(0, 10),
+        candidates: selected ? [selected.candidate] : person.federationCandidatesList,
       };
     })
     .toSorted(
@@ -65,11 +55,28 @@ export function FederationIdBackfillWidget({
     );
 
   async function selectCandidate(person: Person, candidate: Candidate | null) {
+    const patch = candidate
+      ? {
+          cstsId: person.cstsId == null ? candidate.cstsId ?? undefined : undefined,
+          wdsfId: person.wdsfId == null ? candidate.wdsfId ?? undefined : undefined,
+        }
+      : selectedByPerson[person.id]?.undo ?? {};
     const result = await updatePerson({
-      input: { id: person.id, patch: { [idField]: candidate?.id ?? null } },
+      input: { id: person.id, patch },
     });
     if (!result.error) {
-      setSelectedByPerson((selected) => ({ ...selected, [person.id]: candidate }));
+      setSelectedByPerson((selected) => ({
+        ...selected,
+        [person.id]: candidate
+          ? {
+              candidate,
+              undo: {
+                cstsId: patch.cstsId ? null : undefined,
+                wdsfId: patch.wdsfId ? null : undefined,
+              },
+            }
+          : null,
+      }));
     }
   }
 
@@ -131,7 +138,13 @@ export function FederationIdBackfillWidget({
                     <span>
                       {idLabel} {candidate.id}
                     </span>
-                    <span>{Math.round(candidate.similarity * 100)} %</span>
+                    {federation === 'wdsf' && candidate.cstsId && (
+                      <span>IDT {candidate.cstsId}</span>
+                    )}
+                    {federation === 'csts' && candidate.wdsfId && (
+                      <span>MIN {candidate.wdsfId}</span>
+                    )}
+                    {candidate.birthYear && <span>{candidate.birthYear}</span>}
                     {candidate.ageGroup && (
                       <span>{formatAgeGroup(candidate.ageGroup)}</span>
                     )}
@@ -155,11 +168,4 @@ export function FederationIdBackfillWidget({
       ))}
     </div>
   );
-}
-
-function ageMatchRank(a: AgeRange | null | undefined, b: AgeRange | null | undefined) {
-  if (!a || !b) return 1;
-  const start = Math.max(a.start?.value ?? -Infinity, b.start?.value ?? -Infinity);
-  const end = Math.min(a.end?.value ?? Infinity, b.end?.value ?? Infinity);
-  return start < end ? 0 : start === end ? 2 : 3;
 }

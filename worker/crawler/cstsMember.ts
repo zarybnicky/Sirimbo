@@ -139,6 +139,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     nationality: string;
     ageGroup: string;
     medicalCheckupExpiration: string;
+    birthYear: number;
+    nationalReference: string;
   }>(
     [
       'federation',
@@ -150,6 +152,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
       'nationality',
       'ageGroup',
       'medicalCheckupExpiration',
+      'birthYear',
+      'nationalReference',
     ],
     ['federation', 'externalId'],
   );
@@ -186,6 +190,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     nationality: '',
     ageGroup: data.age,
     medicalCheckupExpiration: data.medicalCheckupExpiration ?? '',
+    birthYear: 0,
+    nationalReference: '',
   });
 
   const progressByCompetitor = new Map<string, Map<string, ProgressEntry>>();

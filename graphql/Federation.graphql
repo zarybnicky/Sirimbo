@@ -28,16 +28,25 @@ fragment FederationCategoryProgress on FederationCompetitorCategoryProgress {
   foreignFinals
 }
 
-query FederationPersonLookup($federation: String!, $externalId: BigInt!) {
-  federationPersonByFederationAndExternalId(
+query FederationPersonLookup(
+  $federation: String!, $externalId: BigInt!, $byId: Boolean! = true,
+  $firstName: String! = "", $lastName: String! = "", $gender: GenderType, $birthDate: Date
+) {
+  person: federationPersonByFederationAndExternalId(
     federation: $federation
     externalId: $externalId
-  ) {
+  ) @include(if: $byId) {
     id
     externalId
     canonicalName
     firstName
     lastName
+  }
+  candidates: federationPersonCandidatesList(
+    firstName: $firstName, lastName: $lastName, federation: $federation,
+    gender: $gender, birthDate: $birthDate
+  ) @skip(if: $byId) {
+    ...FederationPersonCandidate
   }
 }
 

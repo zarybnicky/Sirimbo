@@ -153,7 +153,8 @@ WHERE t.federation = :federation
 
 /* @name UpsertPeopleDetailed */
 INSERT INTO federated.person (
-  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration
+  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,
+  birth_year, national_reference
 )
 SELECT
   federation,
@@ -164,7 +165,9 @@ SELECT
   gender,
   nullif(nationality, ''),
   nullif(age_group, ''),
-  CAST(NULLIF(medical_checkup_expiration, '') AS date)
+  CAST(NULLIF(medical_checkup_expiration, '') AS date),
+  nullif(birth_year, 0),
+  nullif(national_reference, '')
 FROM unnest(
   :federation::text[],
   :externalId::bigint[],
@@ -174,9 +177,12 @@ FROM unnest(
   :gender::federated.gender[],
   :nationality::text[],
   :ageGroup::text[],
-  :medicalCheckupExpiration::text[]
+  :medicalCheckupExpiration::text[],
+  :birthYear::integer[],
+  :nationalReference::text[]
 ) AS input(
-  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration)
+  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,
+  birth_year, national_reference)
 ON CONFLICT (id)
   DO UPDATE SET
     canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),
@@ -189,7 +195,9 @@ ON CONFLICT (id)
     END,
     nationality = EXCLUDED.nationality,
     age_group = EXCLUDED.age_group,
-    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration
+    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration,
+    birth_year = EXCLUDED.birth_year,
+    national_reference = EXCLUDED.national_reference
   WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)
      OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name
      OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name
@@ -200,7 +208,9 @@ ON CONFLICT (id)
         END
      OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality
      OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group
-     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration;
+     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration
+     OR federated.person.birth_year IS DISTINCT FROM EXCLUDED.birth_year
+     OR federated.person.national_reference IS DISTINCT FROM EXCLUDED.national_reference;
 
 /* @name GetAllCategories */
 SELECT id, series, discipline, age_group AS "ageGroup",

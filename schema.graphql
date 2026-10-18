@@ -8291,6 +8291,8 @@ type FederationPeopleFacetsRecord {
 enum FederationPeopleOrderBy {
   AGE_GROUP_ASC
   AGE_GROUP_DESC
+  BIRTH_YEAR_ASC
+  BIRTH_YEAR_DESC
   CANONICAL_NAME_ASC
   CANONICAL_NAME_DESC
   CREATED_AT_ASC
@@ -8327,6 +8329,7 @@ type FederationPerson {
 
   """Reads a single `AgeGroup` that is related to this `FederationPerson`."""
   ageGroupDetails: AgeGroup
+  birthYear: Int
   canonicalName: String
 
   """
@@ -8631,6 +8634,9 @@ input FederationPersonCondition {
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
   ageGroups: [String!]
+
+  """Checks for equality with the object’s `birthYear` field."""
+  birthYear: Int
 
   """Checks for equality with the object’s `canonicalName` field."""
   canonicalName: String
@@ -11486,9 +11492,13 @@ type PersonFacetsRecord {
 
 type PersonFederationCandidatesRecord {
   ageGroup: String
+  birthYear: Int
+  cstsId: Int
   id: Int!
+  isStrongMatch: Boolean!
   name: String
   similarity: Float!
+  wdsfId: Int
 }
 
 """An input for mutations affecting `Person`"""
@@ -12679,6 +12689,21 @@ type Query {
 
   """Get a single `FederationPerson`."""
   federationPersonByFederationAndExternalId(externalId: BigInt!, federation: String!): FederationPerson
+  federationPersonCandidatesList(
+    birthDate: Date
+    federation: String
+
+    """Only read the first `n` values of the set."""
+    first: Int
+    firstName: String
+    gender: GenderType
+    lastName: String
+    limit: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    threshold: Float
+  ): [PersonFederationCandidatesRecord!]!
 
   """Reads a set of `Federation`."""
   federationsList(

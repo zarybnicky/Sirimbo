@@ -104,3 +104,26 @@ $$;
 --!include functions/event_instance_registration_info.sql
 
 drop table if exists public.event_external_registration;
+
+alter table federated.person
+  add column if not exists birth_year integer,
+  add column if not exists national_reference text;
+
+comment on column federated.person.national_reference is '@behavior -*';
+
+create index if not exists federated_person_wdsf_national_reference_idx
+  on federated.person (national_reference) where federation = 'wdsf';
+
+-- Reuse already fetched details instead of waiting for the next crawler refresh.
+update federated.person p
+set birth_year = nullif((c.content->>'yearOfBirth')::integer, 0),
+    national_reference = nullif(c.content->>'nationalReference', '')
+from crawler.frontier f
+join crawler.json_response r on r.id = f.last_successful_response_id
+join crawler.json_response_cache c using (content_hash)
+where f.federation = 'wdsf' and f.kind = 'member'
+  and p.federation = 'wdsf' and p.external_id::text = f.key
+  and (p.birth_year, p.national_reference) is distinct from
+    (nullif((c.content->>'yearOfBirth')::integer, 0), nullif(c.content->>'nationalReference', ''));
+
+--!include functions/person_federation_candidates.sql

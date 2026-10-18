@@ -6522,6 +6522,8 @@ export type FederationPeopleFacetsRecord = {
 export type FederationPeopleOrderBy =
   | 'AGE_GROUP_ASC'
   | 'AGE_GROUP_DESC'
+  | 'BIRTH_YEAR_ASC'
+  | 'BIRTH_YEAR_DESC'
   | 'CANONICAL_NAME_ASC'
   | 'CANONICAL_NAME_DESC'
   | 'CREATED_AT_ASC'
@@ -6557,6 +6559,7 @@ export type FederationPerson = {
   ageGroup: Maybe<Scalars['String']['output']>;
   /** Reads a single `AgeGroup` that is related to this `FederationPerson`. */
   ageGroupDetails: Maybe<AgeGroup>;
+  birthYear: Maybe<Scalars['Int']['output']>;
   canonicalName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationPersonClubMembership`. */
   clubMemberships: FederationPersonClubMembershipsConnection;
@@ -6733,6 +6736,8 @@ export type FederationPersonCondition = {
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
   ageGroups?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Checks for equality with the object’s `birthYear` field. */
+  birthYear?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `canonicalName` field. */
   canonicalName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -9044,9 +9049,13 @@ export type PersonFacetsRecord = {
 export type PersonFederationCandidatesRecord = {
   __typename?: 'PersonFederationCandidatesRecord';
   ageGroup: Maybe<Scalars['String']['output']>;
+  birthYear: Maybe<Scalars['Int']['output']>;
+  cstsId: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
+  isStrongMatch: Scalars['Boolean']['output'];
   name: Maybe<Scalars['String']['output']>;
   similarity: Scalars['Float']['output'];
+  wdsfId: Maybe<Scalars['Int']['output']>;
 };
 
 /** An input for mutations affecting `Person` */
@@ -9474,6 +9483,7 @@ export type Query = {
   federationPerson: Maybe<FederationPerson>;
   /** Get a single `FederationPerson`. */
   federationPersonByFederationAndExternalId: Maybe<FederationPerson>;
+  federationPersonCandidatesList: Array<PersonFederationCandidatesRecord>;
   /** Reads a set of `Federation`. */
   federationsList: Maybe<Array<Federation>>;
   /** Get a single `File`. */
@@ -10180,6 +10190,20 @@ export type QueryFederationPersonArgs = {
 export type QueryFederationPersonByFederationAndExternalIdArgs = {
   externalId: Scalars['BigInt']['input'];
   federation: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFederationPersonCandidatesListArgs = {
+  birthDate?: InputMaybe<Scalars['Date']['input']>;
+  federation?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<GenderType>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  threshold?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -13848,6 +13872,7 @@ export type GraphCacheResolvers = {
     federationPeople?: GraphCacheResolver<WithTypename<Query>, QueryFederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
     federationPerson?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonArgs, WithTypename<FederationPerson> | string>,
     federationPersonByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonByFederationAndExternalIdArgs, WithTypename<FederationPerson> | string>,
+    federationPersonCandidatesList?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonCandidatesListArgs, Array<WithTypename<PersonFederationCandidatesRecord> | string>>,
     federationsList?: GraphCacheResolver<WithTypename<Query>, QueryFederationsListArgs, Array<WithTypename<Federation> | string>>,
     file?: GraphCacheResolver<WithTypename<Query>, QueryFileArgs, WithTypename<File> | string>,
     fileByObjectKey?: GraphCacheResolver<WithTypename<Query>, QueryFileByObjectKeyArgs, WithTypename<File> | string>,
@@ -15296,6 +15321,7 @@ export type GraphCacheResolvers = {
   FederationPerson?: {
     ageGroup?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     ageGroupDetails?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, WithTypename<AgeGroup> | string>,
+    birthYear?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Int']['output'] | string>,
     canonicalName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     clubMemberships?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonClubMembershipsArgs, WithTypename<FederationPersonClubMembershipsConnection> | string>,
     competitionOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionOfficialAssignmentsArgs, WithTypename<CompetitionOfficialsConnection> | string>,
@@ -15652,9 +15678,13 @@ export type GraphCacheResolvers = {
   },
   PersonFederationCandidatesRecord?: {
     ageGroup?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    birthYear?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    cstsId?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    isStrongMatch?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['String']['output'] | string>,
-    similarity?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Float']['output'] | string>
+    similarity?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Float']['output'] | string>,
+    wdsfId?: GraphCacheResolver<WithTypename<PersonFederationCandidatesRecord>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   PersonInvitation?: {
     accessToken?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['UUID']['output'] | string>,
@@ -16414,6 +16444,7 @@ export type GraphCacheUpdaters = {
     federationPeople?: GraphCacheUpdateResolver<{ federationPeople: Maybe<WithTypename<FederationPeopleConnection>> }, QueryFederationPeopleArgs>,
     federationPerson?: GraphCacheUpdateResolver<{ federationPerson: Maybe<WithTypename<FederationPerson>> }, QueryFederationPersonArgs>,
     federationPersonByFederationAndExternalId?: GraphCacheUpdateResolver<{ federationPersonByFederationAndExternalId: Maybe<WithTypename<FederationPerson>> }, QueryFederationPersonByFederationAndExternalIdArgs>,
+    federationPersonCandidatesList?: GraphCacheUpdateResolver<{ federationPersonCandidatesList: Array<WithTypename<PersonFederationCandidatesRecord>> }, QueryFederationPersonCandidatesListArgs>,
     federationsList?: GraphCacheUpdateResolver<{ federationsList: Maybe<Array<WithTypename<Federation>>> }, QueryFederationsListArgs>,
     file?: GraphCacheUpdateResolver<{ file: Maybe<WithTypename<File>> }, QueryFileArgs>,
     fileByObjectKey?: GraphCacheUpdateResolver<{ fileByObjectKey: Maybe<WithTypename<File>> }, QueryFileByObjectKeyArgs>,
@@ -17940,6 +17971,7 @@ export type GraphCacheUpdaters = {
   FederationPerson?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     ageGroupDetails?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
+    birthYear?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     canonicalName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     clubMemberships?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonClubMembershipsArgs>,
     competitionOfficialAssignments?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonCompetitionOfficialAssignmentsArgs>,
@@ -18296,9 +18328,13 @@ export type GraphCacheUpdaters = {
   },
   PersonFederationCandidatesRecord?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
+    birthYear?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
+    cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
+    isStrongMatch?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
-    similarity?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>
+    similarity?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>,
+    wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFederationCandidatesRecord>>, Record<string, never>>
   },
   PersonInvitation?: {
     accessToken?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,

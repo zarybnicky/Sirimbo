@@ -59,7 +59,7 @@ const personSchema = z.object({
   nationality: z.string().nullable(),
   country: z.string().nullable(),
   ageGroup: z.string().nullable(),
-  yearOfBirth: z.number(),
+  yearOfBirth: z.number().int(),
   nationalReference: z.string().nullable(),
   licenses: z.array(
     z.object({
@@ -97,8 +97,7 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
     return undefined;
   },
   async load(client, member) {
-    // TODO(wdsf): Persist parsed member fields we currently drop: nickname,
-    // yearOfBirth, nationalReference, and WDSF license blocking dates.
+    // TODO(wdsf): Persist nickname and WDSF license blocking dates.
     await upsertPeopleDetailed.run(
       {
         federation: ['wdsf'],
@@ -110,6 +109,8 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
         nationality: [member.nationality ?? member.country ?? ''],
         ageGroup: [member.ageGroup ?? ''],
         medicalCheckupExpiration: [''],
+        birthYear: [member.yearOfBirth],
+        nationalReference: [member.nationalReference ?? ''],
       },
       client,
     );
