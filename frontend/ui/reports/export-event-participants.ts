@@ -1,13 +1,10 @@
-import {
-  EventExportDocument,
-  type EventRegistrantFragment,
-} from '@/graphql/Event';
+import { EventParticipantsExportDocument } from '@/graphql/Event';
 import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventParticipants(client: Client, id: string) {
-  const result = await client.query(EventExportDocument, { id }).toPromise();
+  const result = await client.query(EventParticipantsExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
   const { event } = result.data ?? {};
   if (!event) throw new Error("Událost nenalezena");
@@ -33,10 +30,8 @@ export async function exportEventParticipants(client: Client, id: string) {
     column.alignment = { horizontal: 'center' };
   }
 
-  const personIds = new Set<string>();
-  const addPerson = (x: EventRegistrantFragment | null | undefined) => {
-    if (!x || personIds.has(x.id)) return;
-    personIds.add(x.id);
+  for (const { person: x } of event.registrations) {
+    if (!x) continue;
     worksheet.addRow({
       firstName: x.firstName,
       lastName: x.lastName,
@@ -46,11 +41,6 @@ export async function exportEventParticipants(client: Client, id: string) {
       email: x.email,
       cohorts: x.cohortMembershipsList.map((x) => x.cohort?.name).join(', '),
     });
-  };
-  for (const registration of event.registrations.nodes) {
-    addPerson(registration.person);
-    addPerson(registration.couple?.man);
-    addPerson(registration.couple?.woman);
   }
 
   const buf = await workbook.xlsx.writeBuffer();

@@ -200,6 +200,22 @@ fragment EventRegistrant on Person {
   }
 }
 
+query EventParticipantsExport($id: BigInt!) {
+  event: eventInstance(id: $id) {
+    id
+    name
+    type
+    registrations: eventInstanceRegistrationsByInstanceIdList(
+      condition: { coupleId: null, registrationStatus: ACTIVE }
+    ) {
+      id
+      person {
+        ...EventRegistrant
+      }
+    }
+  }
+}
+
 query EventExport($id: BigInt!) {
   event: eventInstance(id: $id) {
     id
@@ -214,18 +230,6 @@ query EventExport($id: BigInt!) {
       totalCount
       nodes {
         ...EventInstanceRegistration
-        person {
-          ...EventRegistrant
-        }
-        couple {
-          id
-          man {
-            ...EventRegistrant
-          }
-          woman {
-            ...EventRegistrant
-          }
-        }
       }
     }
   }

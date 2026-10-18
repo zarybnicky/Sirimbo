@@ -13,30 +13,21 @@ create or replace function event_instance_registration_info(inst event_instance)
   language sql stable security definer
   set search_path = public, pg_catalog, pg_temp
 as $$
-  with registration_counts as (
-    select
-      count(*) filter (where parent_registration_id is null)::integer
-        as registrations,
-      count(*) filter (where person_id is not null)::integer
-        as people,
-      count(*) filter (where person_id = any(current_person_ids())) > 0 as my
-    from event_instance_registration
-    where instance_id = inst.id and registration_status = 'active'
-  )
   select row(
-    registrations.registrations,
-    registrations.people,
+    count(*) filter (where parent_registration_id is null)::integer,
+    count(person_id)::integer,
     case
       when inst.capacity is null or inst.capacity <= 0 then null
       else inst.capacity
         - case inst.capacity_unit
-            when 'people' then registrations.people
-            when 'registrations' then registrations.registrations
+            when 'people' then count(person_id)::integer
+            when 'registrations' then count(*) filter (where parent_registration_id is null)::integer
           end
     end,
-    registrations.my
+    count(*) filter (where person_id = any(current_person_ids())) > 0
   )::event_instance_registration_info
-  from registration_counts registrations;
+  from event_instance_registration
+  where instance_id = inst.id and registration_status = 'active';
 $$;
 
 grant all on function event_instance_registration_info to anonymous;
