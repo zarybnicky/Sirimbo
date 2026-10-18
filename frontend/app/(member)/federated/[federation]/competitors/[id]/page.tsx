@@ -73,11 +73,7 @@ export default async function CompetitorPage({ params }: Props) {
         }}
       />
 
-      {competitor.latestEntryAt && competitor.latestEntryAt > today && (
-        <p className="text-sm text-neutral-11">Nadcházející soutěže</p>
-      )}
-
-      <FederationCategoryProgress competitors={[{ ...competitor, federation }]} />
+      <FederationCategoryProgress singleFederation competitors={[{ ...competitor, federation }]} />
 
       {competitor.couplesList.length > 0 && (
         <>

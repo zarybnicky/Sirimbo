@@ -653,16 +653,22 @@ function Competitors(props: BrowserProps) {
   });
   const item = result.data?.federation;
   const isPending = result.fetching || searchPending;
-  const availableDisciplines = new Set([
-    ...facetOptions
-      .filter((facet) => facet.facet === 'discipline')
-      .map((facet) => facet.value!),
-    ...(item?.competitors?.nodes ?? []).flatMap((competitor) =>
+  const competitors = (item?.competitors.nodes ?? []).map((competitor) => ({
+    ...competitor,
+    categoryProgressesList: competitor.categoryProgressesList.filter(
+      (p) =>
+        p.category?.class !== 'Entry' ||
+        Number(p.points) !== 0 ||
+        p.domesticFinals + p.foreignFinals !== 0,
+    ),
+  }));
+  const availableDisciplines = new Set(
+    competitors.flatMap((competitor) =>
       competitor.categoryProgressesList.flatMap((p) =>
         p.category ? [p.category.discipline] : [],
       ),
     ),
-  ]);
+  );
   const disciplines = [...new Set(['Standard', 'Latin', ...availableDisciplines])].filter(
     (x) => availableDisciplines.has(x),
   );
@@ -841,15 +847,9 @@ function Competitors(props: BrowserProps) {
                 )}
               </tr>
             </thead>
-            {item.competitors.nodes.map((row) => {
+            {competitors.map((row) => {
               const progressByAge = Object.groupBy(
                 row.categoryProgressesList
-                  .filter(
-                    (p) =>
-                      p.category?.class !== 'Entry' ||
-                      Number(p.points) !== 0 ||
-                      p.domesticFinals + p.foreignFinals !== 0,
-                  )
                   .toSorted((a, b) =>
                     (a.category?.class ?? '').localeCompare(b.category?.class ?? ''),
                   ),
@@ -933,7 +933,7 @@ function Competitors(props: BrowserProps) {
                 </tbody>
               );
             })}
-            {item.competitors.nodes.length === 0 && (
+            {competitors.length === 0 && (
               <tbody>
                 <tr>
                   <td colSpan={4 + disciplines.length} className="px-2 py-1">

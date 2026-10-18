@@ -4,7 +4,9 @@ import { Table } from '@/ui/Table';
 
 export function FederationCategoryProgress({
   competitors,
+  singleFederation = false,
 }: {
+  singleFederation?: boolean;
   competitors: {
     id: string;
     federation: string;
@@ -13,16 +15,17 @@ export function FederationCategoryProgress({
     >['categoryProgressesList'];
   }[];
 }) {
-  const entries = competitors.flatMap((competitor) =>
-    competitor.categoryProgressesList.map((progress) => ({
-      ...progress,
-      competitorId: competitor.id,
-      federation: competitor.federation,
+  const entries = competitors.flatMap((c) =>
+    c.categoryProgressesList.map((x) => ({
+      ...x,
+      competitorId: c.id,
+      federation: c.federation,
     })),
   );
   if (entries.length === 0) return null;
+
   return (
-    <Table columns={['Kategorie', { label: 'Body', colSpan: 2 }]} >
+    <Table columns={['Kategorie', { label: 'Body', colSpan: 2 }]}>
       {entries
         .toSorted(
           (a, b) =>
@@ -38,12 +41,15 @@ export function FederationCategoryProgress({
             className="border-t border-neutral-4"
           >
             <th scope="row">
-              {progress.federation === 'csts'
-                ? 'ČSTS'
-                : progress.federation.toUpperCase()}
-              {' · '}
-              {formatCategoryName(progress.federation, progress.category) ||
-                progress.categoryId}
+              {!singleFederation && (
+                <>
+                  {progress.federation === 'csts'
+                    ? 'ČSTS'
+                    : progress.federation.toUpperCase()}
+                  {' · '}
+                </>
+              )}
+              {formatCategoryName(progress.federation, progress.category)}
             </th>
             <td width="36" className="text-right">
               {Number(progress.points)}b
