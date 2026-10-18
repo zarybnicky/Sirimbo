@@ -11,7 +11,12 @@ export async function exportEventParticipants(client: Client, id: string) {
 
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const name = event.name || formatEventName(event) || 'Sheet 1';
+  const name = event.name || formatEventName({
+    ...event,
+    registrations: {
+      nodes: event.registrations.nodes.filter((x) => x.parentRegistrationId === null),
+    },
+  }) || 'Sheet 1';
   const worksheet = workbook.addWorksheet(name.replaceAll(/[^a-zA-Z0-9\s]/g, ''));
 
   worksheet.columns = [
@@ -30,7 +35,7 @@ export async function exportEventParticipants(client: Client, id: string) {
     column.alignment = { horizontal: 'center' };
   }
 
-  for (const { person: x } of event.registrations) {
+  for (const { person: x } of event.registrations.nodes) {
     if (!x) continue;
     worksheet.addRow({
       firstName: x.firstName,

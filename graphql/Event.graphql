@@ -205,12 +205,34 @@ query EventParticipantsExport($id: BigInt!) {
     id
     name
     type
-    registrations: eventInstanceRegistrationsByInstanceIdList(
-      condition: { coupleId: null, registrationStatus: ACTIVE }
-    ) {
+    trainersList: eventInstanceTrainersByInstanceIdList {
       id
       person {
-        ...EventRegistrant
+        id
+        name
+      }
+    }
+    registrations: eventInstanceRegistrationsByInstanceId(
+      condition: { registrationStatus: ACTIVE }
+    ) {
+      nodes {
+        id
+        parentRegistrationId
+        person {
+          ...EventRegistrant
+          name
+        }
+        couple {
+          id
+          man {
+            id
+            lastName
+          }
+          woman {
+            id
+            lastName
+          }
+        }
       }
     }
   }
