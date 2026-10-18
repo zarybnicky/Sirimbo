@@ -5778,6 +5778,8 @@ export type FederationCompetitor = {
   /** Reads a single `Federation` that is related to this `FederationCompetitor`. */
   federationByFederation: Maybe<Federation>;
   id: Scalars['String']['output'];
+  latestEntryAt: Maybe<Scalars['Date']['output']>;
+  latestResultAt: Maybe<Scalars['Date']['output']>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Person`. */
   peopleList: Array<Person>;
@@ -6097,6 +6099,10 @@ export type FederationCompetitorCondition = {
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `latestEntryAt` field. */
+  latestEntryAt?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `latestResultAt` field. */
+  latestResultAt?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
@@ -6145,6 +6151,10 @@ export type FederationCompetitorsOrderBy =
   | 'FEDERATION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LATEST_ENTRY_AT_ASC'
+  | 'LATEST_ENTRY_AT_DESC'
+  | 'LATEST_RESULT_AT_ASC'
+  | 'LATEST_RESULT_AT_DESC'
   | 'NAME_ASC'
   | 'NAME_DESC'
   | 'NATURAL'
@@ -15153,6 +15163,8 @@ export type GraphCacheResolvers = {
     federation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<Federation> | string>,
     id?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
+    latestEntryAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Date']['output'] | string>,
+    latestResultAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Date']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorPeopleListArgs, Array<WithTypename<Person> | string>>,
     ranklistEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
@@ -17803,6 +17815,8 @@ export type GraphCacheUpdaters = {
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     federationByFederation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    latestEntryAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    latestResultAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     peopleList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorPeopleListArgs>,
     ranklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRanklistEntriesArgs>,

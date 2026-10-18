@@ -14800,6 +14800,22 @@
             "args": []
           },
           {
+            "name": "latestEntryAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "latestResultAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "name",
             "type": {
               "kind": "SCALAR",

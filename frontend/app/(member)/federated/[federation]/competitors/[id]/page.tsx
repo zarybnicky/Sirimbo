@@ -8,7 +8,7 @@ import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { Members, History } from './Tables';
-import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
+import { formatCoupleName, formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -45,6 +45,7 @@ export default async function CompetitorPage({ params }: Props) {
 
   const { federation, id: externalId } = await params;
   const competitor = await getCompetitor(federation, externalId);
+  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <Layout requireUser>
@@ -64,8 +65,17 @@ export default async function CompetitorPage({ params }: Props) {
           ID: externalId,
           Typ: competitor.competitorType.toLowerCase(),
           Věk: formatAgeGroup(competitor.ageGroup),
+          'Poslední soutěž':
+            (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +
+            (competitor.latestEntryAt && competitor.latestEntryAt > today
+              ? ' (+ budoucí)'
+              : ''),
         }}
       />
+
+      {competitor.latestEntryAt && competitor.latestEntryAt > today && (
+        <p className="text-sm text-neutral-11">Nadcházející soutěže</p>
+      )}
 
       <FederationCategoryProgress competitors={[{ ...competitor, federation }]} />
 

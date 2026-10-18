@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { format } from 'date-fns';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -256,8 +255,8 @@ function Events(props: BrowserProps) {
       hasResults: filters.hasResults,
       hasCoordinates: filters.missing ? false : null,
       date: {
-        since: format(new Date(filters.year, (filters.month || 1) - 1, 1), 'yyyy-MM-dd'),
-        until: format(new Date(filters.year, filters.month || 12, 1), 'yyyy-MM-dd'),
+        since: new Date(Date.UTC(filters.year, (filters.month || 1) - 1, 1)).toISOString().slice(0, 10),
+        until: new Date(Date.UTC(filters.year, filters.month || 12, 1)).toISOString().slice(0, 10),
       },
     }),
     limit: 300,
@@ -594,6 +593,7 @@ function People(props: BrowserProps) {
 
 function Competitors(props: BrowserProps) {
   const { federation, filters, setFilters, search, searchPending } = props;
+  const today = new Date().toISOString().slice(0, 10);
   const [showFilters, setShowFilters] = useState(() =>
     facets.some(({ key }) => filters[key].length > 0),
   );
@@ -791,49 +791,54 @@ function Competitors(props: BrowserProps) {
           <table className="w-full text-left text-sm tabular-nums">
             <thead>
               <tr>
-                {['Jméno', 'Typ', 'Věk', ...disciplines].map((label) => (
-                  <th
-                    key={label}
-                    scope="col"
-                    className="px-2 py-1"
-                    aria-sort={
-                      filters.sort !== label
-                        ? undefined
-                        : filters.descending
-                          ? 'descending'
-                          : 'ascending'
-                    }
-                  >
-                    {label === 'Typ' || label === 'Věk' ? (
-                      label
-                    ) : (
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-1 text-accent-11"
-                        onClick={() =>
-                          setFilters({
-                            sort: label,
-                            descending:
-                              filters.sort === label
-                                ? !filters.descending
-                                : label !== 'competitor',
-                            page: null,
-                          })
-                        }
-                      >
-                        {label}
-                        {filters.sort === label ? (
-                          <ArrowDown
-                            className={cn('size-4', !filters.descending && 'rotate-180')}
-                            aria-hidden
-                          />
-                        ) : (
-                          <ArrowUpDown className="size-4" aria-hidden />
-                        )}
-                      </button>
-                    )}
-                  </th>
-                ))}
+                {['Jméno', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map(
+                  (label) => (
+                    <th
+                      key={label}
+                      scope="col"
+                      className="px-2 py-1"
+                      aria-sort={
+                        filters.sort !== label
+                          ? undefined
+                          : filters.descending
+                            ? 'descending'
+                            : 'ascending'
+                      }
+                    >
+                      {['Typ', 'Věk', 'Poslední soutěž'].includes(label) ? (
+                        label
+                      ) : (
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1 text-accent-11"
+                          onClick={() =>
+                            setFilters({
+                              sort: label,
+                              descending:
+                                filters.sort === label
+                                  ? !filters.descending
+                                  : label !== 'competitor',
+                              page: null,
+                            })
+                          }
+                        >
+                          {label}
+                          {filters.sort === label ? (
+                            <ArrowDown
+                              className={cn(
+                                'size-4',
+                                !filters.descending && 'rotate-180',
+                              )}
+                              aria-hidden
+                            />
+                          ) : (
+                            <ArrowUpDown className="size-4" aria-hidden />
+                          )}
+                        </button>
+                      )}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             {item.competitors.nodes.map((row) => {
@@ -878,6 +883,7 @@ function Competitors(props: BrowserProps) {
                               {row.name || row.id}
                             </Link>
                           </th>
+
                           <td rowSpan={ageGroups.length} className="px-2 py-1 align-top">
                             {row.competitorType.toLowerCase()}
                           </td>
@@ -886,15 +892,27 @@ function Competitors(props: BrowserProps) {
                       <td className="px-2 py-1 whitespace-nowrap align-top">
                         {formatAgeGroup(ageGroup) || '–'}
                       </td>
-                      {disciplines.map((discipline) => {
+
+                      {index === 0 && (
+                        <td
+                          rowSpan={ageGroups.length}
+                          className="px-2 py-1 whitespace-nowrap align-top"
+                        >
+                          {row.latestResultAt ? formatDateOnly(row.latestResultAt) : ''}
+                          {row.latestEntryAt && row.latestEntryAt > today && (
+                            <div className="text-xs text-neutral-11">
+                              (+ budoucí)
+                            </div>
+                          )}
+                        </td>
+                      )}
+
+                      {disciplines.map((x) => {
                         const entries = (progressByAge[ageGroup] ?? []).filter(
-                          (p) => p.category?.discipline === discipline,
+                          (p) => p.category?.discipline === x,
                         );
                         return (
-                          <td
-                            key={discipline}
-                            className="px-2 py-1 align-top whitespace-nowrap"
-                          >
+                          <td key={x} className="px-2 py-1 align-top whitespace-nowrap">
                             {entries.length > 0
                               ? entries.map((p) => (
                                   <div key={p.categoryId}>
@@ -918,7 +936,7 @@ function Competitors(props: BrowserProps) {
             {item.competitors.nodes.length === 0 && (
               <tbody>
                 <tr>
-                  <td colSpan={3 + disciplines.length} className="px-2 py-1">
+                  <td colSpan={4 + disciplines.length} className="px-2 py-1">
                     No competitors found
                   </td>
                 </tr>

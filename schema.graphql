@@ -7419,6 +7419,8 @@ type FederationCompetitor {
   """
   federationByFederation: Federation
   id: String!
+  latestEntryAt: Date
+  latestResultAt: Date
   name: String
 
   """Reads and enables pagination through a set of `Person`."""
@@ -7760,6 +7762,12 @@ input FederationCompetitorCondition {
   """Checks for equality with the object’s `id` field."""
   id: String
 
+  """Checks for equality with the object’s `latestEntryAt` field."""
+  latestEntryAt: Date
+
+  """Checks for equality with the object’s `latestResultAt` field."""
+  latestResultAt: Date
+
   """Checks for equality with the object’s `name` field."""
   name: String
   search: String
@@ -7813,6 +7821,10 @@ enum FederationCompetitorsOrderBy {
   FEDERATION_DESC
   ID_ASC
   ID_DESC
+  LATEST_ENTRY_AT_ASC
+  LATEST_ENTRY_AT_DESC
+  LATEST_RESULT_AT_ASC
+  LATEST_RESULT_AT_DESC
   NAME_ASC
   NAME_DESC
   NATURAL

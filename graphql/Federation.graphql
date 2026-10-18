@@ -301,6 +301,8 @@ query FederationCompetitor($id: String!) {
     name
     competitorType
     ageGroup
+    latestResultAt
+    latestEntryAt
     federationByFederation {
       code
       name
@@ -485,6 +487,8 @@ query FederationCompetitors(
         externalId
         name
         competitorType
+        latestResultAt
+        latestEntryAt
         categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
           competitorId
           categoryId

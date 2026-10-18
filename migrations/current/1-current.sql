@@ -114,7 +114,6 @@ comment on column federated.person.national_reference is '@behavior -*';
 create index if not exists federated_person_wdsf_national_reference_idx
   on federated.person (national_reference) where federation = 'wdsf';
 
--- Reuse already fetched details instead of waiting for the next crawler refresh.
 update federated.person p
 set birth_year = nullif((c.content->>'yearOfBirth')::integer, 0),
     national_reference = nullif(c.content->>'nationalReference', '')
@@ -127,3 +126,36 @@ where f.federation = 'wdsf' and f.kind = 'member'
     (nullif((c.content->>'yearOfBirth')::integer, 0), nullif(c.content->>'nationalReference', ''));
 
 --!include functions/person_federation_candidates.sql
+
+alter table federated.competitor
+  add column if not exists latest_result_at date,
+  add column if not exists latest_entry_at date;
+
+--!include functions/refresh_competitor_activity.sql
+
+with results as (
+  select r.competitor_id, max(c.start_date) as latest_result_at
+  from federated.competition_result r
+  join federated.competition c on c.id = r.competition_id
+  group by r.competitor_id
+), entries as (
+  select e.competitor_id, max(c.start_date) as latest_entry_at
+  from federated.competition_entry e
+  join federated.competition c on c.id = e.competition_id
+  where not e.cancelled and not exists (
+    select 1 from federated.competition_result r
+    where (r.competition_id, r.competitor_id) = (e.competition_id, e.competitor_id)
+  )
+  group by e.competitor_id
+), activity as (
+  select c.id, r.latest_result_at, e.latest_entry_at
+  from federated.competitor c
+  left join results r on r.competitor_id = c.id
+  left join entries e on e.competitor_id = c.id
+)
+update federated.competitor c
+set latest_result_at = a.latest_result_at, latest_entry_at = a.latest_entry_at
+from activity a
+where c.id = a.id
+  and (c.latest_result_at, c.latest_entry_at) is distinct from
+    (a.latest_result_at, a.latest_entry_at);
