@@ -1,6 +1,6 @@
 import {
-  SetEventRegistrationDocument,
   type EventRegistrationDialogQuery,
+  SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { countryOptions } from '@/lib/countries';
@@ -39,7 +39,7 @@ const Form = z.object({
   lessonCounts: z.array(z.number().int().min(0)),
 });
 
-export default function EventSignupForm({
+export function EventSignupForm({
   instance,
 }: {
   instance: NonNullable<EventRegistrationDialogQuery['instance']>;

@@ -1,5 +1,5 @@
 import { DialogTitle } from '@/ui/dialog';
-import { CreateCoupleDocument, CoupleFormPeopleDocument } from '@/graphql/Memberships';
+import { CoupleFormPeopleDocument, CreateCoupleDocument } from '@/graphql/Memberships';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatAgeGroup, getCoupleAgeGroups } from '@/ui/csts';
@@ -92,6 +92,7 @@ export function CreateCoupleForm({
       ];
     })
     .toSorted((a, b) => a.ageDifference - b.ageDifference);
+
   const selectedGroups = getCoupleAgeGroups(
     man?.birthDate,
     woman?.birthDate,
@@ -117,10 +118,8 @@ export function CreateCoupleForm({
     <form className="grid gap-3 text-sm" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přidat do páru</DialogTitle>
       <FormError error={result.error ?? peopleResult.error ?? rulesResult.error} />
-      {(['man', 'woman'] as const).map((field) => {
-        const id = field === 'man' ? manId : womanId;
-        const person = field === 'man' ? man : woman;
-        return id ? (
+      {(['man', 'woman'] as const).map((field) =>
+        (field === 'man' ? manId : womanId) ? (
           <div key={field}>
             <FieldLabel>{field === 'man' ? 'Partner' : 'Partnerka'}</FieldLabel>
             <button
@@ -131,15 +130,16 @@ export function CreateCoupleForm({
                 setShowEveryone(false);
               }}
             >
-              <span>{person?.label ?? 'Načítám…'}</span>
+              <span>{(field === 'man' ? man : woman)?.label ?? 'Načítám…'}</span>
               <Pencil className="size-4 shrink-0 opacity-50" aria-hidden="true" />
               <span className="sr-only">
                 {field === 'man' ? 'Změnit partnera' : 'Změnit partnerku'}
               </span>
             </button>
           </div>
-        ) : null;
-      })}
+        ) : null,
+      )}
+
       {selectedGroups.length > 0 && (
         <div className="text-neutral-11">
           Věková kategorie:{' '}
@@ -148,6 +148,7 @@ export function CreateCoupleForm({
             .join(' / ')}
         </div>
       )}
+
       {(!manId || !womanId) && (
         <div>
           <div className="flex flex-wrap items-center justify-between gap-2">

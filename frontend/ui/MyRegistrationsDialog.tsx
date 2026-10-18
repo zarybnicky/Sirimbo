@@ -17,11 +17,9 @@ import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
-import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-
-const EventSignupForm = dynamic(() => import('@/ui/forms/EventSignupForm'));
+import { EventSignupForm } from '@/ui/forms/EventSignupForm.tsx';
 
 type Registrant = {
   id: string;
