@@ -124,6 +124,8 @@ in {
         requires = [ "network-online.target" "postgresql.service" "rozpisovnik-api.socket" ];
         wantedBy = [ "multi-user.target" ];
 
+        stopIfChanged = false; # Socket activated
+
         environment = config.my.seaweedfs.buckets.olymp.environment // {
           DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
           NODE_ENV = if cfg.backend.debug then "development" else "production";
