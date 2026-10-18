@@ -1285,7 +1285,7 @@ export interface IUpsertCompetitionsQuery {
   result: IUpsertCompetitionsResult;
 }
 
-const upsertCompetitionsIR: any = {"usedParamSet":{"federation":true,"eventExternalId":true,"externalId":true,"categoryId":true,"startDate":true,"endDate":true,"participantsTotal":true,"checkInEnd":true,"completedAt":true,"registrationFee":true,"excusedTotal":true,"competitionType":true,"status":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":82},{"a":894,"b":904}]},{"name":"eventExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":117}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":163,"b":173}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":188,"b":198}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":215,"b":224}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":239,"b":246}]},{"name":"participantsTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":278}]},{"name":"checkInEnd","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":302}]},{"name":"completedAt","required":false,"transform":{"type":"scalar"},"locs":[{"a":317,"b":328}]},{"name":"registrationFee","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":358}]},{"name":"excusedTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":373,"b":385}]},{"name":"competitionType","required":false,"transform":{"type":"scalar"},"locs":[{"a":399,"b":414}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":451,"b":457}]}],"statement":"WITH event AS (\n  SELECT id\n  FROM federated.event\n  WHERE federation = :federation AND external_id = :eventExternalId\n), input AS (\n  SELECT *\n  FROM unnest(\n    :externalId::text[],\n    :categoryId::bigint[],\n    :startDate::date[],\n    :endDate::date[],\n    :participantsTotal::int[],\n    :checkInEnd::text[],\n    :completedAt::text[],\n    :registrationFee::text[],\n    :excusedTotal::int[],\n    :competitionType::federated.competition_type[],\n    :status::federated.event_status[]\n  ) AS input(\n    external_id, category_id, start_date, end_date, participants_total,\n    check_in_end, completed_at, registration_fee, excused_total, competition_type, status\n  )\n)\nINSERT INTO federated.competition (\n  federation, external_id, event_id, category_id, start_date, end_date, participants_total,\n  check_in_end, completed_at, registration_fee, excused_total, competition_type, status\n)\nSELECT\n  :federation,\n  input.external_id,\n  event.id,\n  input.category_id,\n  input.start_date,\n  input.end_date,\n  input.participants_total,\n  nullif(input.check_in_end, '')::time,\n  nullif(input.completed_at, '')::timestamptz,\n  nullif(input.registration_fee, '')::numeric(10,3),\n  input.excused_total,\n  input.competition_type,\n  coalesce(input.status, 'unknown')\nFROM input\nCROSS JOIN event\nON CONFLICT (federation, external_id) DO UPDATE\n  SET event_id = EXCLUDED.event_id,\n      category_id = EXCLUDED.category_id,\n      start_date = EXCLUDED.start_date,\n      end_date = EXCLUDED.end_date,\n      participants_total = EXCLUDED.participants_total,\n      check_in_end = EXCLUDED.check_in_end,\n      completed_at = EXCLUDED.completed_at,\n      registration_fee = EXCLUDED.registration_fee,\n      excused_total = EXCLUDED.excused_total,\n      competition_type = EXCLUDED.competition_type,\n      status = EXCLUDED.status"};
+const upsertCompetitionsIR: any = {"usedParamSet":{"federation":true,"eventExternalId":true,"externalId":true,"categoryId":true,"startDate":true,"endDate":true,"participantsTotal":true,"checkInEnd":true,"completedAt":true,"registrationFee":true,"excusedTotal":true,"competitionType":true,"status":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":72,"b":82},{"a":894,"b":904}]},{"name":"eventExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":102,"b":117}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":163,"b":173}]},{"name":"categoryId","required":false,"transform":{"type":"scalar"},"locs":[{"a":188,"b":198}]},{"name":"startDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":215,"b":224}]},{"name":"endDate","required":false,"transform":{"type":"scalar"},"locs":[{"a":239,"b":246}]},{"name":"participantsTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":261,"b":278}]},{"name":"checkInEnd","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":302}]},{"name":"completedAt","required":false,"transform":{"type":"scalar"},"locs":[{"a":317,"b":328}]},{"name":"registrationFee","required":false,"transform":{"type":"scalar"},"locs":[{"a":343,"b":358}]},{"name":"excusedTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":373,"b":385}]},{"name":"competitionType","required":false,"transform":{"type":"scalar"},"locs":[{"a":399,"b":414}]},{"name":"status","required":false,"transform":{"type":"scalar"},"locs":[{"a":451,"b":457}]}],"statement":"WITH event AS (\n  SELECT id\n  FROM federated.event\n  WHERE federation = :federation AND external_id = :eventExternalId\n), input AS (\n  SELECT *\n  FROM unnest(\n    :externalId::text[],\n    :categoryId::bigint[],\n    :startDate::date[],\n    :endDate::date[],\n    :participantsTotal::int[],\n    :checkInEnd::text[],\n    :completedAt::text[],\n    :registrationFee::text[],\n    :excusedTotal::int[],\n    :competitionType::federated.competition_type[],\n    :status::federated.event_status[]\n  ) AS input(\n    external_id, category_id, start_date, end_date, participants_total,\n    check_in_end, completed_at, registration_fee, excused_total, competition_type, status\n  )\n)\nINSERT INTO federated.competition (\n  federation, external_id, event_id, category_id, start_date, end_date, participants_total,\n  check_in_end, completed_at, registration_fee, excused_total, competition_type, status\n)\nSELECT\n  :federation,\n  input.external_id,\n  event.id,\n  input.category_id,\n  input.start_date,\n  input.end_date,\n  input.participants_total,\n  nullif(input.check_in_end, '')::time,\n  nullif(input.completed_at, '')::timestamptz,\n  nullif(input.registration_fee, '')::numeric(10,3),\n  input.excused_total,\n  input.competition_type,\n  coalesce(input.status, 'unknown')\nFROM input\nCROSS JOIN event\nON CONFLICT (federation, external_id) DO UPDATE\n  SET event_id = EXCLUDED.event_id,\n      category_id = EXCLUDED.category_id,\n      start_date = EXCLUDED.start_date,\n      end_date = EXCLUDED.end_date,\n      participants_total = coalesce(EXCLUDED.participants_total, federated.competition.participants_total),\n      check_in_end = EXCLUDED.check_in_end,\n      completed_at = EXCLUDED.completed_at,\n      registration_fee = EXCLUDED.registration_fee,\n      excused_total = coalesce(EXCLUDED.excused_total, federated.competition.excused_total),\n      competition_type = EXCLUDED.competition_type,\n      status = EXCLUDED.status"};
 
 /**
  * Query generated from SQL:
@@ -1338,11 +1338,11 @@ const upsertCompetitionsIR: any = {"usedParamSet":{"federation":true,"eventExter
  *       category_id = EXCLUDED.category_id,
  *       start_date = EXCLUDED.start_date,
  *       end_date = EXCLUDED.end_date,
- *       participants_total = EXCLUDED.participants_total,
+ *       participants_total = coalesce(EXCLUDED.participants_total, federated.competition.participants_total),
  *       check_in_end = EXCLUDED.check_in_end,
  *       completed_at = EXCLUDED.completed_at,
  *       registration_fee = EXCLUDED.registration_fee,
- *       excused_total = EXCLUDED.excused_total,
+ *       excused_total = coalesce(EXCLUDED.excused_total, federated.competition.excused_total),
  *       competition_type = EXCLUDED.competition_type,
  *       status = EXCLUDED.status
  * ```
@@ -1654,6 +1654,56 @@ const mergeCompetitionEntriesByEventIdIR: any = {"usedParamSet":{"competitionExt
  * ```
  */
 export const mergeCompetitionEntriesByEventId = new PreparedQuery<IMergeCompetitionEntriesByEventIdParams,IMergeCompetitionEntriesByEventIdResult>(mergeCompetitionEntriesByEventIdIR);
+
+
+/** 'MergeWdsfCompetitionEntries' parameters type */
+export interface IMergeWdsfCompetitionEntriesParams {
+  cancelled?: booleanArray | null | void;
+  competitionId?: NumberOrString | null | void;
+  competitorId?: stringArray | null | void;
+  excusedTotal?: number | null | void;
+  participantsTotal?: number | null | void;
+}
+
+/** 'MergeWdsfCompetitionEntries' return type */
+export type IMergeWdsfCompetitionEntriesResult = void;
+
+/** 'MergeWdsfCompetitionEntries' query type */
+export interface IMergeWdsfCompetitionEntriesQuery {
+  params: IMergeWdsfCompetitionEntriesParams;
+  result: IMergeWdsfCompetitionEntriesResult;
+}
+
+const mergeWdsfCompetitionEntriesIR: any = {"usedParamSet":{"competitorId":true,"cancelled":true,"participantsTotal":true,"excusedTotal":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":77}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":97}]},{"name":"participantsTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":219,"b":236},{"a":407,"b":424}]},{"name":"excusedTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":260,"b":272},{"a":432,"b":444}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":305},{"a":563,"b":576},{"a":982,"b":995}]}],"statement":"WITH source AS (\n  SELECT competitor_id, cancelled\n  FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)\n), totals AS (\n  UPDATE federated.competition\n  SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int\n  WHERE id = :competitionId::bigint AND federation = 'wdsf'\n    AND (participants_total, excused_total) IS DISTINCT FROM\n      (:participantsTotal::int, :excusedTotal::int)\n), upserted AS (\n  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)\n  SELECT :competitionId::bigint, competitor_id, cancelled\n  FROM source\n  ORDER BY competitor_id\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET cancelled = EXCLUDED.cancelled\n    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled\n)\n-- The participant index is a full registration snapshot; results are independent.\nDELETE FROM federated.competition_entry e\nWHERE e.competition_id = :competitionId::bigint\n  AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH source AS (
+ *   SELECT competitor_id, cancelled
+ *   FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)
+ * ), totals AS (
+ *   UPDATE federated.competition
+ *   SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int
+ *   WHERE id = :competitionId::bigint AND federation = 'wdsf'
+ *     AND (participants_total, excused_total) IS DISTINCT FROM
+ *       (:participantsTotal::int, :excusedTotal::int)
+ * ), upserted AS (
+ *   INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
+ *   SELECT :competitionId::bigint, competitor_id, cancelled
+ *   FROM source
+ *   ORDER BY competitor_id
+ *   ON CONFLICT (competition_id, competitor_id) DO UPDATE
+ *     SET cancelled = EXCLUDED.cancelled
+ *     WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+ * )
+ * -- The participant index is a full registration snapshot; results are independent.
+ * DELETE FROM federated.competition_entry e
+ * WHERE e.competition_id = :competitionId::bigint
+ *   AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id)
+ * ```
+ */
+export const mergeWdsfCompetitionEntries = new PreparedQuery<IMergeWdsfCompetitionEntriesParams,IMergeWdsfCompetitionEntriesResult>(mergeWdsfCompetitionEntriesIR);
 
 
 /** 'UpsertCompetitionEntries' parameters type */

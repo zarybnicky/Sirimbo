@@ -416,6 +416,7 @@ FROM pending;
 SELECT
   f.federation AS "federation!",
   f.kind AS "kind!",
+  f.key AS "key!",
   jrc.content
 FROM crawler.frontier f
 JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id

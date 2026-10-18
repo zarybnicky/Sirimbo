@@ -717,11 +717,11 @@ ON CONFLICT (federation, external_id) DO UPDATE
       category_id = EXCLUDED.category_id,
       start_date = EXCLUDED.start_date,
       end_date = EXCLUDED.end_date,
-      participants_total = EXCLUDED.participants_total,
+      participants_total = coalesce(EXCLUDED.participants_total, federated.competition.participants_total),
       check_in_end = EXCLUDED.check_in_end,
       completed_at = EXCLUDED.completed_at,
       registration_fee = EXCLUDED.registration_fee,
-      excused_total = EXCLUDED.excused_total,
+      excused_total = coalesce(EXCLUDED.excused_total, federated.competition.excused_total),
       competition_type = EXCLUDED.competition_type,
       status = EXCLUDED.status;
 
@@ -878,6 +878,30 @@ WHERE t.competition_id IN (SELECT id FROM competitions)
     WHERE s.competition_id = t.competition_id
       AND s.competitor_id = t.competitor_id
   );
+
+/* @name MergeWdsfCompetitionEntries */
+WITH source AS (
+  SELECT competitor_id, cancelled
+  FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)
+), totals AS (
+  UPDATE federated.competition
+  SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int
+  WHERE id = :competitionId::bigint AND federation = 'wdsf'
+    AND (participants_total, excused_total) IS DISTINCT FROM
+      (:participantsTotal::int, :excusedTotal::int)
+), upserted AS (
+  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
+  SELECT :competitionId::bigint, competitor_id, cancelled
+  FROM source
+  ORDER BY competitor_id
+  ON CONFLICT (competition_id, competitor_id) DO UPDATE
+    SET cancelled = EXCLUDED.cancelled
+    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+)
+-- The participant index is a full registration snapshot; results are independent.
+DELETE FROM federated.competition_entry e
+WHERE e.competition_id = :competitionId::bigint
+  AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id);
 
 /* @name UpsertCompetitionEntries */
 WITH source AS (

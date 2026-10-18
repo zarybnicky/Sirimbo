@@ -6,6 +6,7 @@ import { loaderFor } from './handlers.ts';
 type ProcessableFrontier = {
   federation: string;
   kind: string;
+  key: string;
   content: unknown;
 };
 
@@ -23,5 +24,5 @@ export async function loadFrontier(
     loader.mode === 'json'
       ? wrapSchema(loader.schema).parse(frontier.content, { reportInput: true })
       : frontier.content;
-  return loader.load(client, content);
+  return loader.load(client, content, frontier.key);
 }

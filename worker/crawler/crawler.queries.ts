@@ -902,6 +902,7 @@ export interface IGetPendingProcessByIdParams {
 export interface IGetPendingProcessByIdResult {
   content: Json;
   federation: string;
+  key: string;
   kind: string;
 }
 
@@ -911,7 +912,7 @@ export interface IGetPendingProcessByIdQuery {
   result: IGetPendingProcessByIdResult;
 }
 
-const getPendingProcessByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":258,"b":260}]}],"statement":"SELECT\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint\n  AND process_status = 'pending'\n  AND fetch_status = 'ok'\nFOR UPDATE OF f SKIP LOCKED"};
+const getPendingProcessByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":277,"b":279}]}],"statement":"SELECT\n  f.federation AS \"federation!\",\n  f.kind AS \"kind!\",\n  f.key AS \"key!\",\n  jrc.content\nFROM crawler.frontier f\nJOIN crawler.json_response jr ON jr.id = f.last_successful_response_id\nJOIN crawler.json_response_cache jrc ON jr.content_hash = jrc.content_hash\nWHERE f.id = :id::bigint\n  AND process_status = 'pending'\n  AND fetch_status = 'ok'\nFOR UPDATE OF f SKIP LOCKED"};
 
 /**
  * Query generated from SQL:
@@ -919,6 +920,7 @@ const getPendingProcessByIdIR: any = {"usedParamSet":{"id":true},"params":[{"nam
  * SELECT
  *   f.federation AS "federation!",
  *   f.kind AS "kind!",
+ *   f.key AS "key!",
  *   jrc.content
  * FROM crawler.frontier f
  * JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id

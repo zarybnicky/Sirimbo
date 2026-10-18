@@ -9,7 +9,6 @@ import {
   mergeCompetitorComponents,
   type score_component,
   type scoring_method,
-  upsertCompetitionEntries,
   upsertCompetitionRoundJudges,
   upsertCompetitionResults,
   upsertCompetitionRoundsNonDestructive,
@@ -340,15 +339,6 @@ async function loadWdsfParticipant(
     );
   }
 
-  await upsertCompetitionEntries.run(
-    {
-      competitionId: context.id,
-      competitorId: [competitorId],
-      cancelled: [p.status === 'Excused' || p.status === 'Noshow' || p.status === 'Withdrawn'],
-    },
-    client,
-  );
-
   // TODO(wdsf): Persist parsed participant metadata such as basepoints,
   // country, nationalreference, and team country.
   const ranking = parsePositiveRank(p.rank);
@@ -540,7 +530,8 @@ async function loadWdsfRoundDetails(
   return { refreshRoundResult: [competitionId] };
 }
 
-function resolveCompetitor(p: Participant): ResolvedCompetitor | null {
+export function resolveCompetitor(p: Pick<Participant, 'link'> &
+  Partial<Pick<Participant, 'name' | 'Team' | 'PerformanceName'>>): ResolvedCompetitor | null {
   const couple = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple');
   if (couple) {
     const externalId = couple.href

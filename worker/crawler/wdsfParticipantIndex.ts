@@ -1,5 +1,13 @@
 import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
+import {
+  type competitor_type,
+  ensureCompetitors,
+  getCompetitionContext,
+  mergeWdsfCompetitionEntries,
+} from './federated.queries.ts';
+import { makePgtypedCollection } from './pgtypedCollection.ts';
+import { resolveCompetitor } from './wdsfParticipant.ts';
 
 const status = z.enum([
   'Disqualified',
@@ -59,7 +67,63 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     if (httpStatus === 500) return 'error';
     return undefined;
   },
-  async load(_, parsed) {
+  async load(client, parsed, key) {
+    const [competition] = await getCompetitionContext.run(
+      { federation: 'wdsf', externalId: key },
+      client,
+    );
+    if (!competition) throw new Error(`Competition wdsf:${key} is missing`);
+
+    const competitors = makePgtypedCollection<{
+      federation: string;
+      externalId: string;
+      type: competitor_type;
+      label: string;
+    }>(['federation', 'externalId', 'type', 'label'], ['federation', 'externalId']);
+
+    const entries = makePgtypedCollection<{
+      competitorId: string;
+      cancelled: boolean;
+    }>(['competitorId', 'cancelled'], ['competitorId']);
+
+    let participantsTotal = 0;
+    for (const participant of parsed) {
+      const competitionLink = participant.link.find(
+        (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/competition',
+      );
+      if (competitionLink && new URL(competitionLink.href).pathname.split('/').at(-1) !== key) {
+        throw new Error(`Participant ${participant.id} does not belong to competition wdsf:${key}`);
+      }
+
+      const active = ['Present', 'Registered', 'Provisional'].includes(participant.status);
+      if (active) participantsTotal++;
+
+      const competitor = resolveCompetitor(participant);
+      if (!competitor) continue;
+
+      competitors.add({
+        federation: 'wdsf',
+        externalId: competitor.externalId,
+        type: competitor.type,
+        label: competitor.label,
+      });
+      entries.add({
+        competitorId: `wdsf:${competitor.externalId}`,
+        cancelled: ['Excused', 'Noshow', 'Withdrawn'].includes(participant.status),
+      });
+    }
+
+    if (competitors.length) await ensureCompetitors.run(competitors.params, client);
+    await mergeWdsfCompetitionEntries.run(
+      {
+        competitionId: competition.id,
+        participantsTotal,
+        excusedTotal: parsed.length - participantsTotal,
+        ...entries.params,
+      },
+      client,
+    );
+
     return {
       upsertFrontier: parsed.flatMap((participant) => {
         const couple = participant.link.find(
