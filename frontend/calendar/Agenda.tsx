@@ -11,13 +11,15 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import { capitalize, longDayFormatter } from '@/ui/format';
-import { cardCls } from '@/ui/style';
+import { capitalize, fullDateFormatter, longDayFormatter } from '@/ui/format';
+import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import { add, startOf } from 'date-arithmetic';
-import { Cake } from 'lucide-react';
+import { startOf } from 'date-arithmetic';
+import { Cake, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import { useAtomValue } from 'jotai';
+import { dragListenersAtom } from './state';
 
 type MapItem = {
   birthdays: CalendarBirthdayEvent[];
@@ -28,7 +30,10 @@ type MapItem = {
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-function Agenda({ events }: ViewProps): React.ReactNode {
+function Agenda({ events, parentId }: ViewProps): React.ReactNode {
+  const auth = useAuth();
+  const { onSelectSlot } = useAtomValue(dragListenersAtom);
+
   const dataByDay = React.useMemo(() => {
     const map = new Map<number, MapItem>();
     for (const calendarEvent of events) {
@@ -99,8 +104,26 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       {dataByDay.map(([date, dateEntry]) => (
         <React.Fragment key={date}>
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className="text-xl tracking-tight">
+            <div className="flex items-center text-xl tracking-tight">
               {capitalize(longDayFormatter.format(new Date(date)))}
+              {auth.isTrainer && (
+                <button
+                  type="button"
+                  aria-label={`Přidat událost na ${fullDateFormatter.format(new Date(date))}`}
+                  className={buttonCls({ display: 'none', variant: 'none' })}
+                  onClick={() => {
+                    const start = new Date(date);
+                    onSelectSlot?.({
+                      start,
+                      end: start,
+                      slots: [start],
+                      action: 'day',
+                    });
+                  }}
+                >
+                  <Plus />
+                </button>
+              )}
             </div>
             {dateEntry.birthdays.map((calendarEvent) => (
               <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />
@@ -123,7 +146,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
               <GroupLesson key={instance.id} instance={instance} />
             ))}
             {dateEntry.lessons.map(([ids, items]) => (
-              <LessonGroup key={ids} items={items} />
+              <LessonGroup key={ids} items={items} parentId={parentId} />
             ))}
           </div>
         </React.Fragment>
@@ -175,21 +198,14 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
   );
 }
 
-function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
+function LessonGroup({
+  items,
+  parentId,
+}: {
+  items: EventWithTrainerFragment[];
+  parentId?: string;
+}) {
   const auth = useAuth();
-
-  const nextEventDefaults = React.useMemo(() => {
-    const last = items.at(-1);
-    const since = last ? new Date(last.until) : new Date();
-
-    return {
-      since,
-      until: add(since, 45, 'minutes'),
-      trainerPersonIds: last?.trainersList?.map(({ personId }) => personId) ?? [],
-      locationId: last?.location?.id ?? null,
-      locationText: last?.locationText ?? '',
-    };
-  }, [items]);
 
   return (
     <div
@@ -207,7 +223,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
             className="absolute top-1 right-0"
           />
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            <CreateEventForm defaults={nextEventDefaults} />
+            <CreateEventForm after={items.at(-1)} parentId={parentId} />
           </DialogContent>
         </Dialog>
       )}

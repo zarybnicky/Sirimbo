@@ -234,6 +234,7 @@ export function useCalendarData(
   return {
     range,
     events,
+    instances: data?.list ?? [],
     resources,
     fetching: fetching || (showActivities && activityFetching),
     facets,

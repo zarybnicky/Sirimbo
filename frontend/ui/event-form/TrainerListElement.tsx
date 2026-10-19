@@ -11,13 +11,7 @@ import type { EventFormControl } from '@/ui/event-form/types';
 import { useQuery } from 'urql';
 import { EventFormOptionsDocument } from '@/graphql/Event';
 
-export function TrainerListElement({
-  control,
-  mode,
-}: {
-  control: EventFormControl;
-  mode: 'create' | 'edit';
-}) {
+export function TrainerListElement({ control }: { control: EventFormControl }) {
   const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
@@ -36,18 +30,6 @@ export function TrainerListElement({
     () => (auth.isAdmin ? trainers : trainers.filter((x) => auth.isMyPerson(x.id))),
     [trainers, auth],
   );
-
-  React.useEffect(() => {
-    const firstTrainer = enabledTrainers.at(0);
-    if (
-      mode === 'create' &&
-      fields.length === 0 &&
-      enabledTrainers.length === 1 &&
-      firstTrainer
-    ) {
-      append({ personId: firstTrainer.id, lessonsOffered: 0 });
-    }
-  }, [append, enabledTrainers, fields.length, mode]);
 
   return (
     <>

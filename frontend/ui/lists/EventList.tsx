@@ -6,12 +6,11 @@ import { TextField } from '@/ui/fields/text';
 import { formatEventType, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
-import { add, endOf, startOf } from 'date-arithmetic';
+import { endOf, startOf } from 'date-arithmetic';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
-import type { CreateEventDefaults } from '@/calendar/eventDefaults';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
@@ -90,17 +89,7 @@ export function EventList() {
   const currentId = useSearchParams()?.get('instance') ?? undefined;
   const auth = useAuth();
 
-  const createDefaults = React.useMemo<CreateEventDefaults>(() => {
-    const day = startOf(endOf(new Date(), 'week', 1), 'day');
-    return {
-      type: 'CAMP',
-      since: add(day, 9, 'hours'),
-      until: add(day, 17, 'hours'),
-      trainerPersonIds: [],
-      locationId: null,
-      locationText: '',
-    };
-  }, []);
+  const [createDate] = React.useState(() => startOf(endOf(new Date(), 'week', 1), 'day'));
 
   return (
     <div className="flex flex-col h-full">
@@ -111,7 +100,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <CreateEventForm defaults={createDefaults} />
+              <CreateEventForm type="CAMP" date={createDate} trainerPersonIds={[]} />
             </DialogContent>
           </Dialog>
         )}

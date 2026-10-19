@@ -1,19 +1,18 @@
+import type { SlotInfo } from '@/calendar/types';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
+import type { EventFormType } from '@/ui/event-form/types';
 import { add, eq } from 'date-arithmetic';
-import type { CalendarEvent, CalendarInstanceEvent, SlotInfo } from '@/calendar/types';
-import { EventType } from '@/graphql';
 
 export type CreateEventDefaults = {
-  type?: EventType;
-  since: Date;
-  until: Date;
-  trainerPersonIds: string[];
-  locationId: string | null;
-  locationText: string;
-};
-
-type AuthPerson = {
-  id: string;
-  isTrainer: boolean | null;
+  date?: Date;
+  after?: EventWithTrainerFragment;
+  events?: readonly EventWithTrainerFragment[];
+  type?: EventFormType['type'];
+  since?: Date;
+  until?: Date;
+  trainerPersonIds?: readonly string[];
+  locationId?: string | null;
+  locationText?: string;
 };
 
 export function parseResourceKey(key: string | undefined) {
@@ -35,63 +34,76 @@ export function splitIntoLessonRanges(since: Date, until: Date) {
   return ranges;
 }
 
-export function defaultsFromSlot(
-  slot: SlotInfo,
-  events: readonly CalendarEvent[],
-  persons: readonly AuthPerson[],
-  onlyMine: null | boolean,
-): CreateEventDefaults {
+export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
+  if (slot.action === 'day') return { date: slot.start };
+
   const [resourceType, resourceId] = parseResourceKey(slot.resource?.resourceId);
-  const trainerPersonIds: string[] = [];
-
-  if (resourceType === 'person' && resourceId) {
-    trainerPersonIds.push(resourceId);
-  } else if (onlyMine && !slot.resource) {
-    const trainer = persons.find((person) => person.isTrainer);
-    if (trainer) trainerPersonIds.push(trainer.id);
-  }
-
-  const defaults: CreateEventDefaults = {
+  return {
     type: resourceType === 'eventType' && resourceId === 'GROUP' ? 'GROUP' : undefined,
     since: slot.start,
-    until: slot.action === 'click' ? add(slot.start, 45, 'minutes') : slot.end,
-    trainerPersonIds,
-    locationId: null,
-    locationText: '',
+    until: slot.action === 'select' ? slot.end : undefined,
+    trainerPersonIds:
+      resourceType === 'person' && resourceId
+        ? [resourceId]
+        : slot.resource && !resourceType
+          ? []
+          : undefined,
+    locationId: resourceType === 'location' ? resourceId : undefined,
+    locationText: resourceType === 'locationText' ? resourceId : undefined,
   };
-
-  if (resourceType === 'location' && resourceId) {
-    defaults.locationId = resourceId;
-  } else if (resourceType === 'locationText' && resourceId) {
-    defaults.locationText = resourceId;
-  } else if (trainerPersonIds[0]) {
-    const closest = findClosest(events, trainerPersonIds[0], defaults.since);
-    if (closest?.instance.locationText) {
-      defaults.locationText = closest.instance.locationText;
-    }
-    if (closest?.instance.location?.id) {
-      defaults.locationId = closest.instance.location.id;
-      defaults.locationText = '';
-    }
-  }
-
-  return defaults;
 }
 
-function findClosest(events: readonly CalendarEvent[], personId: string, since: Date) {
-  let closestPrev: CalendarInstanceEvent | undefined;
+export function createEventDefaults(
+  input: CreateEventDefaults,
+  fallback: { trainerPersonIds: readonly string[]; isLocked: boolean },
+): EventFormType {
+  const { after, events = [], type = 'LESSON' } = input;
+  const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
+  if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
+  const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
+  const trainerPersonIds = input.trainerPersonIds ??
+    after?.trainersList.map((x) => x.personId) ?? fallback.trainerPersonIds;
 
-  for (const event of events) {
-    if (
-      event.kind === 'event' &&
-      eq(event.start, since, 'day') &&
-      event.instance.trainersList?.some((x) => x.personId === personId) &&
-      event.end <= since &&
-      (!closestPrev || closestPrev.start < event.start)
-    ) {
-      closestPrev = event;
+  let previous = after;
+  if (!previous) {
+    for (const event of events) {
+      if (
+        !event.isCancelled &&
+        eq(new Date(event.since), since, 'day') &&
+        new Date(event.until) <= since &&
+        event.trainersList.some((x) => trainerPersonIds.includes(x.personId)) &&
+        (!previous || new Date(event.since) > new Date(previous.since))
+      ) {
+        previous = event;
+      }
     }
   }
+  const explicitLocation = input.locationId !== undefined || input.locationText !== undefined;
+  const locationId = explicitLocation ? input.locationId : previous?.location?.id;
+  const locationText = explicitLocation
+    ? input.locationText ?? ''
+    : previous?.location?.id ? '' : previous?.locationText ?? '';
 
-  return closestPrev;
+  return {
+    name: '',
+    type,
+    locationId: locationText ? 'other' : locationId ?? 'none',
+    locationText,
+    capacity: type === 'LESSON' ? 1 : 0,
+    capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
+    isVisible: true,
+    isPublic: false,
+    hasPublicDetails: false,
+    isLocked: fallback.isLocked,
+    enableNotes: false,
+    instances: [{
+      itemId: null,
+      since: since.toISOString(),
+      until: until.toISOString(),
+      isCancelled: false,
+    }],
+    trainers: trainerPersonIds.map((personId) => ({ personId, lessonsOffered: 0 })),
+    cohorts: [],
+    registrations: [],
+  };
 }

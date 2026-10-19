@@ -1,18 +1,47 @@
+import { BoundedDayPicker } from '@/calendar/BoundedDayPicker';
+import {
+  CalendarViews,
+  type CalendarView,
+  type CalendarViewKey,
+} from '@/calendar/CalendarViews';
+import { DateNavigator } from '@/calendar/DateNavigator';
+import { EventTypeFilter } from '@/calendar/EventTypeFilter';
+import { GroupByPicker } from '@/calendar/GroupByPicker';
+import { LocationFilter } from '@/calendar/LocationFilter';
+import { ParticipantFilter } from '@/calendar/ParticipantFilter';
+import TimeGrid from '@/calendar/TimeGrid';
+import { TrainerFilter, type TrainerFilterOption } from '@/calendar/TrainerFilter';
+import { ViewPicker } from '@/calendar/ViewPicker';
+import {
+  defaultsFromSlot,
+  parseResourceKey,
+  type CreateEventDefaults,
+} from '@/calendar/eventDefaults';
+import { useCalendarData } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
+import { useAuth } from '@/lib/auth';
+import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
-import { useAuth } from '@/lib/auth';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { createParser, parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryState, useQueryStates } from 'nuqs';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
+import { useAtomValue, useSetAtom } from 'jotai';
+import {
+  createParser,
+  parseAsBoolean,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryState,
+  useQueryStates,
+} from 'nuqs';
 import React from 'react';
 import { useMutation } from 'urql';
+import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import {
-  dragListenersAtom,
   calendarFilterParsers,
-  type ExternalDragSubject,
+  dragListenersAtom,
   groupByAtom,
+  type ExternalDragSubject,
 } from './state';
 import type {
   CalendarInstanceEvent,
@@ -21,28 +50,6 @@ import type {
   SlotInfo,
   ViewProps,
 } from './types';
-import { Spinner } from '@/ui/Spinner';
-import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import {
-  type CalendarView,
-  type CalendarViewKey,
-  CalendarViews,
-} from '@/calendar/CalendarViews';
-import { useCalendarData } from '@/calendar/useCalendarData';
-import { TrainerFilter, type TrainerFilterOption } from '@/calendar/TrainerFilter';
-import { GroupByPicker } from '@/calendar/GroupByPicker';
-import { ViewPicker } from '@/calendar/ViewPicker';
-import { DateNavigator } from '@/calendar/DateNavigator';
-import { ParticipantFilter } from '@/calendar/ParticipantFilter';
-import { EventTypeFilter } from '@/calendar/EventTypeFilter';
-import { LocationFilter } from '@/calendar/LocationFilter';
-import { BoundedDayPicker } from '@/calendar/BoundedDayPicker';
-import TimeGrid from '@/calendar/TimeGrid';
-import {
-  type CreateEventDefaults,
-  defaultsFromSlot,
-  parseResourceKey,
-} from '@/calendar/eventDefaults';
 
 const emptyArray: readonly [] = [];
 const calendarDateParser = createParser({
@@ -146,12 +153,8 @@ export function Calendar({
     [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationId],
   );
 
-  const { fetching, range, events, resources, facets, refresh } = useCalendarData(
-    view,
-    date,
-    filters,
-    groupBy,
-  );
+  const { fetching, range, events, instances, resources, facets, refresh } =
+    useCalendarData(view, date, filters, groupBy);
   const displayedResources = React.useMemo(() => {
     const resourceMap = new Map(
       resources.map((resource) => [resource.resourceId, resource]),
@@ -227,14 +230,14 @@ export function Calendar({
 
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
-      const defaults = defaultsFromSlot(slot, events, auth.persons, onlyMine);
+      const defaults = defaultsFromSlot(slot);
       if (locationId) {
         defaults.locationId = locationId;
         defaults.locationText = '';
       }
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
-    [onlyMine, auth.persons, events, locationId],
+    [locationId],
   );
 
   const onDrillDown = React.useCallback(
@@ -268,6 +271,7 @@ export function Calendar({
 
   const viewElement = (
     <view.component
+      parentId={parentId}
       range={range}
       events={events}
       backgroundEvents={emptyArray}
@@ -343,7 +347,9 @@ export function Calendar({
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            {creating && <CreateEventForm defaults={creating} parentId={parentId} />}
+            {creating && (
+              <CreateEventForm {...creating} events={instances} parentId={parentId} />
+            )}
           </DialogContent>
         </Dialog>
       )}

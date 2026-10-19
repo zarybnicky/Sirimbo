@@ -1,4 +1,5 @@
 import {
+  createEventDefaults,
   splitIntoLessonRanges,
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
@@ -8,8 +9,9 @@ import {
   SaveEventsDocument,
   type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
+  type EventFormOptionsQuery,
 } from '@/graphql/Event';
-import { useTenantConfig } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -92,20 +94,18 @@ function EventEditor({
   parentId,
   seriesId,
   existingRegistrations = [],
+  options,
   mode,
 }: {
   defaultValues: EventFormType;
   parentId?: string | null;
   seriesId?: string | null;
   existingRegistrations?: EventInstanceRegistrationFragment[];
+  options: EventFormOptionsQuery;
   mode: 'create' | 'edit';
 }) {
   const { onSuccess } = useFormResult();
   const [result, saveEvents] = useMutation(SaveEventsDocument);
-  const [{ data: tenant }] = useQuery({
-    query: EventFormOptionsDocument,
-    pause: mode === 'edit',
-  });
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm<EventFormInput, unknown, EventFormType>({
@@ -126,18 +126,18 @@ function EventEditor({
   const isSplitting = canSplit && splitLessons;
   const splitRegistrationOptions = React.useMemo(
     () => [
-      ...(tenant?.tenant?.couplesList ?? []).flatMap((couple) =>
+      ...(options.tenant?.couplesList ?? []).flatMap((couple) =>
         couple.status === 'ACTIVE'
           ? [{ id: `couple:${couple.id}`, label: formatCoupleName(couple) }]
           : [],
       ),
-      ...(tenant?.tenant?.tenantMembershipsList ?? []).flatMap((membership) =>
-        membership.person?.id
-          ? [{ id: `person:${membership.person.id}`, label: membership.person.name }]
+      ...(options.tenant?.tenantMembershipsList ?? []).flatMap(({ person }) =>
+        person?.id
+          ? [{ id: `person:${person.id}`, label: person.name }]
           : [],
       ),
     ],
-    [tenant],
+    [options],
   );
 
   React.useEffect(() => {
@@ -232,7 +232,7 @@ function EventEditor({
               nameSince="instances.0.since"
               nameUntil="instances.0.until"
             />
-            <TrainerListElement control={control} mode={mode} />
+            <TrainerListElement control={control} />
             <LocationField control={control} />
             <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
               {lessonRanges.map((range) => {
@@ -272,7 +272,7 @@ function EventEditor({
             />
             <InstanceListElement control={control} />
             <LocationField control={control} />
-            <TrainerListElement control={control} mode={mode} />
+            <TrainerListElement control={control} />
             <ParticipantListElement savedRegistrations={existingRegistrations} />
           </>
         )}
@@ -293,46 +293,28 @@ function EventEditor({
 }
 
 export function CreateEventForm({
-  defaults,
   parentId,
-}: {
-  defaults: CreateEventDefaults;
-  parentId?: string;
-}) {
+  ...input
+}: CreateEventDefaults & { parentId?: string }) {
+  const auth = useAuth();
   const { lockEventsByDefault } = useTenantConfig();
-  const type = defaults.type ?? 'LESSON';
+  const [{ data, error }] = useQuery({ query: EventFormOptionsDocument });
+  if (!data) return error ? <FormError error={error} /> : <div>Načítám…</div>;
+
+  const trainers = (data.tenant?.tenantTrainersList ?? [])
+    .flatMap((x) => x.person ?? [])
+    .filter((x) => auth.isAdmin || auth.isMyPerson(x.id));
+  const trainer = auth.persons.find((p) => p.isTrainer && trainers.some((x) => x.id === p.id)) ?? (trainers.length === 1 ? trainers[0] : undefined);
 
   return (
     <EventEditor
       mode="create"
-      parentId={parentId}
-      defaultValues={{
-        name: '',
-        type,
-        locationId: defaults.locationText ? 'other' : (defaults.locationId ?? 'none'),
-        locationText: defaults.locationText,
-        capacity: type === 'LESSON' ? 1 : 0,
-        capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
-        isVisible: true,
-        isPublic: false,
-        hasPublicDetails: false,
+      parentId={parentId ?? input.after?.parentId}
+      options={data}
+      defaultValues={createEventDefaults(input, {
+        trainerPersonIds: trainer ? [trainer.id] : [],
         isLocked: lockEventsByDefault,
-        enableNotes: false,
-        instances: [
-          {
-            itemId: null,
-            since: defaults.since.toISOString(),
-            until: defaults.until.toISOString(),
-            isCancelled: false,
-          },
-        ],
-        trainers: defaults.trainerPersonIds.map((personId) => ({
-          personId,
-          lessonsOffered: 0,
-        })),
-        cohorts: [],
-        registrations: [],
-      }}
+      })}
     />
   );
 }
@@ -345,12 +327,8 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
     variables: { id: event.id },
     requestPolicy: 'network-only',
   });
-  const registrationsEvent = query.data?.event;
-  const registrations =
-    registrationsEvent?.id === event.id
-      ? registrationsEvent.registrationsList
-      : undefined;
 
+  const registrations = query.data?.event?.registrationsList;
   if ((!registrations && query.fetching) || (!options.data && options.fetching)) {
     return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
   }
@@ -371,6 +349,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
       mode="edit"
       parentId={event.parentId}
       seriesId={event.seriesId}
+      options={options.data}
       existingRegistrations={registrations}
       defaultValues={{
         name: event.name ?? '',
@@ -401,7 +380,6 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
           personId: r.personId,
           coupleId: r.coupleId,
           isCancelled: false,
-          // The recorded origin is certain; membership dates recover overlapping cohorts.
           cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
             .filter(({ cohortId }) => cohortId === r.targetCohortId ||
               options.data?.tenant?.cohortsList.find((x) => x.id === cohortId)?.cohortMembershipsList

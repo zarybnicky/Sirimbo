@@ -51,6 +51,7 @@ export interface Resource {
 }
 
 export type ViewProps = {
+  parentId?: string;
   range: DateRange;
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];
@@ -63,7 +64,7 @@ export type SlotInfo = {
   start: Date;
   end: Date;
   slots: Date[];
-  action: 'select' | 'click';
+  action: 'select' | 'click' | 'day';
   /** For "TimeGrid" views */
   resource?: Resource;
   /** For "select" action */
