@@ -9,7 +9,7 @@ export type DateRange = {
 type CalendarItemBase = {
   start: Date;
   end: Date;
-  resourceIds: readonly string[];
+  resourceKeys: readonly string[];
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
@@ -45,9 +45,15 @@ export type CalendarEvent =
   | CalendarCompetitionEvent
   | CalendarBirthdayEvent;
 
-export interface Resource {
-  resourceId: string;
-  resourceTitle: string;
+export type ResourceRef =
+  | { type: 'person' | 'location' | 'locationText'; id: string }
+  | { type: 'competition' | 'unassigned' };
+
+export type Resource = ResourceRef & { resourceTitle: string };
+
+export function resourceKey(resource?: ResourceRef): string {
+  if (!resource) return '__nothing__';
+  return 'id' in resource ? `${resource.type}:${resource.id}` : resource.type;
 }
 
 export type ViewProps = {

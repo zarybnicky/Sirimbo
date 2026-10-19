@@ -5,7 +5,6 @@ import {
   type EventRegistrationsQuery,
   SaveEventsDocument,
 } from '@/graphql/Event';
-import { parseResourceKey } from '@/calendar/eventDefaults';
 import { cn } from '@/lib/cn';
 import {
   dragSubjectAtom,
@@ -104,14 +103,14 @@ export const CampSchedule = React.memo(function CampSchedule({
       const trainerPersonId = request?.trainer?.personId;
       if (!registration || !trainerPersonId) throw new Error('Požadavek už neexistuje');
 
-      const [resourceType, resourceId] = parseResourceKey(info.resource?.resourceId);
+      const { resource } = info;
       const result = await saveEvents({
         input: {
           details: {
             parentId: id,
             type: 'LESSON',
-            locationId: resourceType === 'location' ? resourceId : null,
-            locationText: resourceType === 'locationText' ? resourceId : '',
+            locationId: resource?.type === 'location' ? resource.id : null,
+            locationText: resource?.type === 'locationText' ? resource.id : '',
             capacity: 1,
             capacityUnit: 'REGISTRATIONS',
           },
@@ -399,12 +398,12 @@ function LessonRequests({
                       title="Přetáhnout do rozpisu"
                       className="flex cursor-grab items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-neutral-3 active:cursor-grabbing"
                       onDragStart={(event) => {
-                        const subject = {
+                        const subject: ExternalDragSubject = {
                           id: request.id,
                           durationMinutes: 45,
-                          ...(lockTrainers && trainerPersonId
-                            ? { resourceId: `person:${trainerPersonId}` }
-                            : {}),
+                          resource: lockTrainers && trainerPersonId
+                            ? { type: 'person', id: trainerPersonId }
+                            : undefined,
                         };
                         event.dataTransfer.effectAllowed = 'copy';
                         event.dataTransfer.setData(

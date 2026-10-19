@@ -7,6 +7,7 @@ import type {
   DragAction,
   DragDirection,
   InteractionInfo,
+  ResourceRef,
   SlotInfo,
 } from './types';
 
@@ -35,7 +36,7 @@ export const dragSubjectAtom = atom<DragSubject>(null);
 export type ExternalDragSubject = {
   id: string;
   durationMinutes: number;
-  resourceId?: string;
+  resource?: ResourceRef;
 };
 export const externalDragDataType = 'application/x-tkolymp-calendar-item';
 export const externalDragSubjectAtom = atom<ExternalDragSubject | null>(null);
@@ -75,12 +76,6 @@ export const calendarConflictsFor = (instanceId: string | null | undefined) =>
     if (!instanceId) return emptyConflicts;
     return conflicts[instanceId] ?? emptyConflicts;
   });
-
-// declare function onDropFromOutside(info: {
-//   start: Date;
-//   end: Date;
-//   resourceId?: string;
-// }): void;
 
 // declare function dragFromOutsideItem(): CalendarEvent | undefined;
 

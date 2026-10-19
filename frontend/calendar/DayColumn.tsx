@@ -13,7 +13,7 @@ import Selection, {
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import { diff } from './localizer';
-import type { CalendarEvent, CalendarInstanceEvent, Resource } from './types';
+import { resourceKey, type CalendarEvent, type CalendarInstanceEvent, type Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import {
   dragListenersAtom,
@@ -295,8 +295,8 @@ function DayColumn({
       const bounds = getBoundsForNode(columnRef.current!);
       if (
         !subject ||
-        (subject.resourceId
-          ? subject.resourceId !== resource?.resourceId ||
+        (subject.resource
+          ? resourceKey(subject.resource) !== resourceKey(resource) ||
             !pointTargetsDate(gridRef.current!, date, point)
           : !eventTargetsNode(columnRef.current!, point.target))
       ) {
@@ -326,8 +326,8 @@ function DayColumn({
       setBackgroundState(EMPTY);
       if (
         !subject ||
-        (subject.resourceId
-          ? subject.resourceId !== resource?.resourceId ||
+        (subject.resource
+          ? resourceKey(subject.resource) !== resourceKey(resource) ||
             !pointTargetsDate(gridRef.current!, date, point)
           : !eventTargetsNode(columnRef.current!, point.target))
       )

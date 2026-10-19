@@ -35,7 +35,7 @@ function ev(
     kind: 'event',
     start: new Date(`${DAY}T${start}`),
     end: new Date(`${DAY}T${end}`),
-    resourceIds: [],
+    resourceKeys: [],
     id: `inst-${id}`,
     instance: {
       id: `inst-${id}`,

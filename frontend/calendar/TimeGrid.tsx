@@ -16,7 +16,7 @@ import {
   maxTimeAtom,
   minTimeAtom,
 } from './state';
-import type { CalendarEvent, DateRange, Resource, ViewProps } from './types';
+import { resourceKey, type CalendarEvent, type DateRange, type Resource, type ViewProps } from './types';
 import { useDragAutoScroll } from './useDragAutoScroll';
 import { dayFormatter } from '@/ui/format';
 
@@ -177,7 +177,7 @@ export default React.memo(function TimeGrid({
           ? resourceDayGroups.map(({ resource, columns, allDayRange, allDayEvents }) => (
               <div
                 className="rbc-time-header-content"
-                key={resource?.resourceId ?? '__nothing__'}
+                key={resourceKey(resource)}
                 style={{ flexGrow: columns.length, minWidth: columns.length * 140 }}
               >
                 {resource && (
@@ -207,7 +207,7 @@ export default React.memo(function TimeGrid({
                 <div className={cn('rbc-row', grid.resources.length <= 1 && 'hidden')}>
                   {columns.map(({ resource }) => (
                     <div
-                      key={resource?.resourceId ?? '__nothing__'}
+                      key={resourceKey(resource)}
                       className="rbc-header"
                     >
                       {resource?.resourceTitle ?? ''}
@@ -244,7 +244,7 @@ export default React.memo(function TimeGrid({
                 <DayColumn
                   gridRef={containerRef}
                   resource={resource}
-                  key={`${resource?.resourceId ?? '__nothing__'}-${+date}`}
+                  key={`${resourceKey(resource)}-${+date}`}
                   date={date}
                   events={grid.events[rIdx]![dIdx]!}
                   backgroundEvents={grid.bg[rIdx]![dIdx]!}
@@ -256,7 +256,7 @@ export default React.memo(function TimeGrid({
                 <DayColumn
                   gridRef={containerRef}
                   resource={resource}
-                  key={`${+date}-${resource?.resourceId ?? '__nothing__'}`}
+                  key={`${+date}-${resourceKey(resource)}`}
                   date={date}
                   events={events}
                   backgroundEvents={backgroundEvents}
@@ -321,7 +321,7 @@ function buildGrid(
   const resourceIdx = new Map<string, number>();
   if (hasResources)
     for (let i = 0; i < resources.length; i++)
-      resourceIdx.set(resources[i]!.resourceId, i);
+      resourceIdx.set(resourceKey(resources[i]!), i);
 
   const dayIdx = new Map<number, number>();
   for (let i = 0; i < days.length; i++) dayIdx.set(+days[i]!, i);
@@ -343,9 +343,9 @@ function buildGrid(
       const evStart = startOf(new Date(Math.max(+ev.start, +viewStart)), 'day');
       const evEnd = startOf(new Date(Math.min(+ev.end, +viewEnd)), 'day');
 
-      const ids = hasResources ? ev.resourceIds : ['__nothing__'];
-      for (const rid of ids) {
-        const r = hasResources ? resourceIdx.get(rid) : 0;
+      const keys = hasResources ? ev.resourceKeys : [resourceKey()];
+      for (const key of keys) {
+        const r = hasResources ? resourceIdx.get(key) : 0;
         if (r === undefined) continue;
 
         for (let d = evStart; +d <= +evEnd; d = add(d, 1, 'day')) {

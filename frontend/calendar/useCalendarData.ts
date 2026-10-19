@@ -10,12 +10,13 @@ import {
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery, type OperationContext } from 'urql';
-import type {
-  CalendarCompetitionEvent,
-  CalendarEvent,
-  CalendarInstanceEvent,
-  DateRange,
-  Resource,
+import {
+  resourceKey,
+  type CalendarCompetitionEvent,
+  type CalendarEvent,
+  type CalendarInstanceEvent,
+  type DateRange,
+  type Resource,
 } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { eventTypes as allEventTypes } from '@/calendar/state';
@@ -32,7 +33,7 @@ export type CalendarFilters = {
 };
 
 const competitionResource: Resource = {
-  resourceId: '__competition__',
+  type: 'competition',
   resourceTitle: 'Soutěže',
 };
 
@@ -74,35 +75,35 @@ function mapEventsToCalendar(
   const resourceMap = new Map<string, Resource>();
 
   const assignResource = (
-    resourceIds: string[],
-    resourceId: string,
-    resourceTitle: string,
+    resourceKeys: string[],
+    resource: Resource,
   ) => {
-    resourceIds.push(resourceId);
-    resourceMap.set(resourceId, { resourceId, resourceTitle });
+    const key = resourceKey(resource);
+    resourceKeys.push(key);
+    resourceMap.set(key, resource);
   };
 
   for (const instance of list ?? []) {
     const start = new Date(instance.since);
     const end = new Date(instance.until);
-    const resourceIds: string[] = [];
+    const resourceKeys: string[] = [];
 
     if (groupBy === 'trainer') {
       for (const { person, personId } of instance.trainersList) {
-        assignResource(resourceIds, `person:${personId}`, person?.name || '');
+        assignResource(resourceKeys, { type: 'person', id: personId, resourceTitle: person?.name || '' });
       }
     } else if (groupBy === 'room') {
       const { location, locationText } = instance;
       if (location?.id) {
-        assignResource(resourceIds, `location:${location.id}`, location.name);
+        assignResource(resourceKeys, { type: 'location', id: location.id, resourceTitle: location.name });
       } else if (locationText) {
-        assignResource(resourceIds, `locationText:${locationText}`, locationText);
+        assignResource(resourceKeys, { type: 'locationText', id: locationText, resourceTitle: locationText });
       }
     }
-    if (groupBy !== 'none' && resourceIds.length === 0) {
-      assignResource(resourceIds, '', '-');
+    if (groupBy !== 'none' && resourceKeys.length === 0) {
+      assignResource(resourceKeys, { type: 'unassigned', resourceTitle: '-' });
     }
-    events.push({ kind: 'event', id: instance.id, instance, resourceIds, start, end });
+    events.push({ kind: 'event', id: instance.id, instance, resourceKeys, start, end });
   }
 
   return {
@@ -125,14 +126,8 @@ export function useCalendarData(
   }, [view, date]);
   const variables = prepareVariables(range, filters);
 
-  const [{ data, fetching }, refresh] = useQuery({
-    query: EventRangeDocument,
-    variables,
-  });
-  const [facetResult, refreshFacets] = useQuery({
-    query: CalendarFacetsDocument,
-    variables,
-  });
+  const [{ data, fetching }, refresh] = useQuery({ query: EventRangeDocument, variables });
+  const [facetResult, refreshFacets] = useQuery({ query: CalendarFacetsDocument, variables });
   const [facetData, setFacetData] = React.useState(facetResult.data);
   if (facetResult.data !== undefined && facetResult.data !== facetData) {
     setFacetData(facetResult.data);
@@ -143,6 +138,11 @@ export function useCalendarData(
   for (const { facet, value, count } of facetData?.eventInstanceFacetsList ?? []) {
     (facets![facet!] ??= {})[value!] = count ?? 0;
   }
+
+  const refreshCalendar = React.useCallback((context?: Partial<OperationContext>) => {
+    refresh(context);
+    refreshFacets(context);
+  }, [refresh, refreshFacets]);
 
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
   const showActivities =
@@ -204,7 +204,7 @@ export function useCalendarData(
           },
           date,
           ...calendarDay(date),
-          resourceIds: [],
+          resourceKeys: [],
         });
       }
     }
@@ -216,7 +216,7 @@ export function useCalendarData(
       id: `competition:${key}`,
       title: entries[0]!.competitionEventName ?? '',
       ...calendarDay(entries[0]!.competitionDate!),
-      resourceIds: effectiveGroupBy === 'none' ? [] : [competitionResource.resourceId],
+      resourceKeys: effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
       items: entries,
     }));
 
@@ -236,9 +236,6 @@ export function useCalendarData(
     resources,
     fetching: fetching || (showActivities && activityFetching),
     facets,
-    refresh: (context?: Partial<OperationContext>) => {
-      refresh(context);
-      refreshFacets(context);
-    },
+    refresh: refreshCalendar,
   };
 }

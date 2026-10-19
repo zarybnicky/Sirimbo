@@ -15,12 +15,6 @@ export type CreateEventDefaults = {
   locationText?: string;
 };
 
-export function parseResourceKey(key: string | undefined) {
-  const pos = key?.indexOf(':') ?? -1;
-  if (!key || pos === -1) return ['', ''] as const;
-  return [key.slice(0, pos), key.slice(pos + 1)] as const;
-}
-
 export function splitIntoLessonRanges(since: Date, until: Date) {
   const ranges: { since: Date; until: Date }[] = [];
   let start = since;
@@ -37,18 +31,18 @@ export function splitIntoLessonRanges(since: Date, until: Date) {
 export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
   if (slot.action === 'day') return { date: slot.start };
 
-  const [resourceType, resourceId] = parseResourceKey(slot.resource?.resourceId);
+  const { resource } = slot;
   return {
     since: slot.start,
     until: slot.action === 'select' ? slot.end : undefined,
     trainerPersonIds:
-      resourceType === 'person' && resourceId
-        ? [resourceId]
-        : slot.resource && !resourceType
+      resource?.type === 'person'
+        ? [resource.id]
+        : resource?.type === 'unassigned' || resource?.type === 'competition'
           ? []
           : undefined,
-    locationId: resourceType === 'location' ? resourceId : undefined,
-    locationText: resourceType === 'locationText' ? resourceId : undefined,
+    locationId: resource?.type === 'location' ? resource.id : undefined,
+    locationText: resource?.type === 'locationText' ? resource.id : undefined,
   };
 }
 

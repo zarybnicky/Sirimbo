@@ -14,7 +14,6 @@ import { TrainerFilter, type TrainerFilterOption } from '@/calendar/TrainerFilte
 import { ViewPicker } from '@/calendar/ViewPicker';
 import {
   defaultsFromSlot,
-  parseResourceKey,
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
 import { useCalendarData } from '@/calendar/useCalendarData';
@@ -43,12 +42,14 @@ import {
   groupByAtom,
   type ExternalDragSubject,
 } from './state';
-import type {
-  CalendarInstanceEvent,
-  DateRange,
-  InteractionInfo,
-  SlotInfo,
-  ViewProps,
+import {
+  resourceKey,
+  type CalendarInstanceEvent,
+  type DateRange,
+  type InteractionInfo,
+  type Resource,
+  type SlotInfo,
+  type ViewProps,
 } from './types';
 
 const emptyArray: readonly [] = [];
@@ -157,23 +158,25 @@ export function Calendar({
     useCalendarData(view, date, filters, groupBy);
   const displayedResources = React.useMemo(() => {
     const resourceMap = new Map(
-      resources.map((resource) => [resource.resourceId, resource]),
+      resources.map((resource) => [resourceKey(resource), resource]),
     );
     if (!onlyMine && groupBy === 'trainer') {
       for (const trainer of availableTrainers ?? []) {
-        resourceMap.set(`person:${trainer.id}`, {
-          resourceId: `person:${trainer.id}`,
+        const resource: Resource = {
+          type: 'person',
+          id: trainer.id,
           resourceTitle: trainer.name,
-        });
+        };
+        resourceMap.set(resourceKey(resource), resource);
       }
     }
 
     const selectedResources =
       !onlyMine && groupBy === 'trainer' && effectiveTrainerIds.length > 0
-        ? new Set(effectiveTrainerIds.map((trainerId) => `person:${trainerId}`))
+        ? new Set(effectiveTrainerIds)
         : null;
     return [...resourceMap.values()]
-      .filter((resource) => !selectedResources || selectedResources.has(resource.resourceId))
+      .filter((x) => !selectedResources || (x.type === 'person' && selectedResources.has(x.id)))
       .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
   }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
   const handleShowAllResourcesChange = React.useCallback(
@@ -185,16 +188,16 @@ export function Calendar({
   const [, moveEvent] = useMutation(MoveEventDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
-      const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
+      const { resource } = info;
 
       await moveEvent({
         input: {
           id: instance.id,
           since: info.start.toISOString(),
           until: info.end.toISOString(),
-          trainerPersonId: type === 'person' && resourceId ? resourceId : null,
-          locationId: type === 'location' && resourceId ? resourceId : null,
-          locationText: type === 'locationText' && resourceId ? resourceId : null,
+          trainerPersonId: resource?.type === 'person' ? resource.id : null,
+          locationId: resource?.type === 'location' ? resource.id : null,
+          locationText: resource?.type === 'locationText' ? resource.id : null,
         },
       });
     },
