@@ -1,11 +1,8 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { EventFormInput, EventFormType, EventParticipantOption } from './types';
-import React from 'react';
 import { buttonCls } from '@/ui/style';
-import { Popover, PopoverTrigger } from '@/ui/popover';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
-import { ComboboxSearchArea } from '@/ui/fields/Combobox';
+import { ComboboxButton } from '@/ui/fields/Combobox';
 import { cn } from '@/lib/cn';
 import type { EventFormOptionsQuery } from '@/graphql/Event';
 import { CohortListElement } from './CohortListElement';
@@ -19,7 +16,6 @@ export function ParticipantListElement({
 }) {
   const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
   const registrations = useWatch({ control, name: 'registrations' }) ?? [];
-  const [open, setOpen] = React.useState<'person' | 'couple' | null>(null);
 
   const active = registrations.filter((x) => !x.isCancelled);
   const selected = new Set(
@@ -77,7 +73,6 @@ export function ParticipantListElement({
       })));
     }
     setValue('registrations', next, { shouldDirty: true });
-    setOpen(null);
   };
 
   return (
@@ -86,40 +81,28 @@ export function ParticipantListElement({
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
         <b className="grow">Účastníci ({selected.size})</b>
         {(['couple', 'person'] as const).map((kind) => (
-          <Popover
+          <ComboboxButton
             key={kind}
-            open={open === kind}
-            onOpenChange={(value) => setOpen(value ? kind : null)}
-          >
-            <PopoverTrigger asChild>
+            align="end"
+            side="top"
+            trigger={
               <button
                 type="button"
                 className={buttonCls({ size: 'xs', variant: 'outline' })}
               >
                 <Plus /> {kind === 'couple' ? 'Pár' : 'Člověk'}
               </button>
-            </PopoverTrigger>
-            <PopoverPrimitive.Portal>
-              <PopoverPrimitive.Content
-                className="z-40 max-h-(--radix-popover-content-available-height)"
-                align="end"
-                side="top"
-                sideOffset={5}
-              >
-                <ComboboxSearchArea
-                  options={[...options.values()].filter(
-                    (x) =>
-                      x.id.startsWith(`${kind}:`) &&
-                      !selected.has(x.id) &&
-                      !x.personIds.some((p) => couplePeople.has(p)),
-                  )}
-                  onChange={(id) => {
-                    if (id) change(id, true);
-                  }}
-                />
-              </PopoverPrimitive.Content>
-            </PopoverPrimitive.Portal>
-          </Popover>
+            }
+            options={[...options.values()].filter(
+              (x) =>
+                x.id.startsWith(`${kind}:`) &&
+                !selected.has(x.id) &&
+                !x.personIds.some((p) => couplePeople.has(p)),
+            )}
+            onChange={(id) => {
+              if (id) change(id, true);
+            }}
+          />
         ))}
       </div>
       <div className={cn('grid gap-x-2 gap-y-1', selected.size > 6 && 'grid-cols-2')}>

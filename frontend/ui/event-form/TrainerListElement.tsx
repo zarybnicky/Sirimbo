@@ -1,10 +1,7 @@
-import { ComboboxSearchArea } from '@/ui/fields/Combobox';
+import { ComboboxButton } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls, checkboxInputCls } from '@/ui/style';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
-import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
 
@@ -14,7 +11,6 @@ export function TrainerListElement({ control, trainers }: {
   control: EventFormControl;
   trainers: EventTrainerOption[];
 }) {
-  const [open, setOpen] = React.useState(false);
   const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
   const [type, value] = useWatch({ control, name: ['type', 'trainers'] });
 
@@ -23,34 +19,24 @@ export function TrainerListElement({ control, trainers }: {
       <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
         <b>Trenéři</b>
 
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
+        <ComboboxButton
+          align="end"
+          side="top"
+          trigger={
             <button
               type="button"
               className={buttonCls({ size: 'xs', variant: 'outline' })}
             >
               <Plus /> Trenér
             </button>
-          </PopoverTrigger>
-          <PopoverPrimitive.Portal>
-            <PopoverPrimitive.Content
-              className="z-40"
-              align="end"
-              side="top"
-              sideOffset={5}
-            >
-              <ComboboxSearchArea
-                onChange={(id) => {
-                  if (id && !fields.some((trainer) => trainer.personId === id)) {
-                    append({ personId: id, lessonsOffered: 0 });
-                  }
-                  setOpen(false);
-                }}
-                options={trainers.filter((x) => x.enabled && !fields.some((y) => y.personId === x.id))}
-              />
-            </PopoverPrimitive.Content>
-          </PopoverPrimitive.Portal>
-        </Popover>
+          }
+          onChange={(id) => {
+            if (id && !fields.some((trainer) => trainer.personId === id)) {
+              append({ personId: id, lessonsOffered: 0 });
+            }
+          }}
+          options={trainers.filter((x) => x.enabled && !fields.some((y) => y.personId === x.id))}
+        />
       </div>
 
       {fields.map((trainer, trainerIndex) => {

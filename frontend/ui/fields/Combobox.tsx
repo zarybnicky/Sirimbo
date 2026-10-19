@@ -126,8 +126,14 @@ export function ComboboxButton({
   placeholder,
   className,
   buttonClassName,
+  trigger,
   ...props
-}: Omit<ComboboxProps, 'label' | 'onBlur'> & { buttonClassName?: string }) {
+}: Omit<ComboboxProps, 'label' | 'onBlur' | 'value' | 'placeholder'> & {
+  value?: string | null;
+  placeholder?: string;
+  buttonClassName?: string;
+  trigger?: React.ReactElement;
+}) {
   const [open, setOpen] = React.useState(false);
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {
@@ -138,23 +144,25 @@ export function ComboboxButton({
   );
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <Popover.Root modal open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <button
-          type="button"
-          className={cn(
-            buttonCls({ variant: open ? 'primary' : 'outline', size: 'sm' }),
-            buttonClassName,
-          )}
-        >
-          {value ? options.find((item) => item.id === value)?.label : placeholder}
-          <ChevronDown />
-        </button>
+        {trigger ?? (
+          <button
+            type="button"
+            className={cn(
+              buttonCls({ variant: open ? 'primary' : 'outline', size: 'sm' }),
+              buttonClassName,
+            )}
+          >
+            {value ? options.find((item) => item.id === value)?.label : placeholder}
+            <ChevronDown />
+          </button>
+        )}
       </Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content
-          className={cn('z-40', className)}
+          className={cn('z-40 max-h-(--radix-popover-content-available-height)', className)}
           align="start"
           side="bottom"
           sideOffset={5}

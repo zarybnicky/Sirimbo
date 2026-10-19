@@ -43,7 +43,7 @@ export function TrainingGroups() {
         }
       />
 
-      <div className={cn('pl-8', auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : '')}>
+      <div className={auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : ''}>
         {cohorts?.cohortsList?.map((item) => (
           <div
             key={item.id}
