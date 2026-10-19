@@ -45,3 +45,11 @@ export const EventForm = z.object({
 export type EventFormInput = z.input<typeof EventForm>;
 export type EventFormType = z.infer<typeof EventForm>;
 export type EventFormControl = Control<EventFormInput, unknown, EventFormType>;
+
+export type EventParticipantOption = {
+  id: string;
+  label: string;
+  personId: string | null;
+  coupleId: string | null;
+  personIds: string[];
+};

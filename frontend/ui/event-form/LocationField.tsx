@@ -1,30 +1,27 @@
-import { EventFormOptionsDocument } from '@/graphql/Event';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FieldHelper } from '@/ui/form';
 import { buttonCls } from '@/ui/style';
 import React from 'react';
 import { useController } from 'react-hook-form';
-import { useQuery } from 'urql';
 import type { EventFormControl } from './types';
 
-export function LocationField({ control }: { control: EventFormControl }) {
+export function LocationField({ control, locations }: {
+  control: EventFormControl;
+  locations: { id: string; name: string }[];
+}) {
   const { field, fieldState } = useController({ control, name: 'locationId' });
   const locationId = field.value;
   const { field: locationText } = useController({ control, name: 'locationText' });
   const { onChange: setLocationText, value: locationTextValue } = locationText;
   const [editing, setEditing] = React.useState(!locationId || locationId === 'none');
-  const [{ data: tenant }] = useQuery({ query: EventFormOptionsDocument });
   const locationOptions = React.useMemo(
     () => [
       { id: 'none', label: 'Žádné' },
-      ...(tenant?.tenant?.locationsList?.map((location) => ({
-        id: location.id,
-        label: location.name,
-      })) ?? []),
+      ...locations.map(({ id, name }) => ({ id, label: name })),
       { id: 'other', label: 'Jiné...' },
     ],
-    [tenant],
+    [locations],
   );
 
   React.useEffect(() => {

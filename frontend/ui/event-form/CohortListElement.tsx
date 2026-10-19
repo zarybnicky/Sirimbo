@@ -6,11 +6,9 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { useQuery } from 'urql';
-import { EventFormOptionsDocument } from '@/graphql/Event';
-import { FormError } from '@/ui/form';
 
-export function CohortListElement({ onAdd, onRemove }: {
+export function CohortListElement({ cohorts, onAdd, onRemove }: {
+  cohorts: { id: string; name: string; isArchived: boolean }[];
   onAdd: (cohortId: string) => void;
   onRemove: (cohortId: string) => void;
 }) {
@@ -18,11 +16,6 @@ export function CohortListElement({ onAdd, onRemove }: {
   const [open, setOpen] = React.useState(false);
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove } = useFieldArray({ name: 'cohorts', control });
-
-  const [{ data, fetching, error }] = useQuery({
-    query: EventFormOptionsDocument,
-  });
-  const cohorts = data?.tenant?.cohortsList ?? [];
 
   return (
     <>
@@ -48,12 +41,12 @@ export function CohortListElement({ onAdd, onRemove }: {
               >
                 <ComboboxSearchArea
                   options={cohorts
-                    .filter((x) => !x.isArchived && !fields.some((selected) => selected.cohortId === x.id))
-                    .map((x) => ({ id: x.id, label: x.name }))}
-                  onChange={(id) => {
-                    if (id && !fields.some((cohort) => cohort.cohortId === id)) {
-                      onAdd(id);
-                      append({ cohortId: id });
+                    .filter((x) => !x.isArchived && !fields.some((y) => y.cohortId === x.id))
+                    .map(({ id, name }) => ({ id, label: name }))}
+                  onChange={(cohortId) => {
+                    if (cohortId && !fields.some((c) => c.cohortId === cohortId)) {
+                      onAdd(cohortId);
+                      append({ cohortId });
                     }
                     setOpen(false);
                   }}
@@ -64,12 +57,10 @@ export function CohortListElement({ onAdd, onRemove }: {
         </div>
       )}
 
-      <FormError error={error} />
       {fields.map((cohort, index) => (
         <div key={cohort.id} className="flex items-center gap-2">
           <span className="grow">
-            {cohorts.find((x) => x.id === cohort.cohortId)?.name ??
-              (fetching ? 'Načítám…' : cohort.cohortId)}
+            {cohorts.find((x) => x.id === cohort.cohortId)?.name}
           </span>
           <button
             type="button"

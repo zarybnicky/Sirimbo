@@ -1,72 +1,25 @@
 import { useFormContext, useWatch } from 'react-hook-form';
-import type { EventFormInput, EventFormType } from './types';
+import type { EventFormInput, EventFormType, EventParticipantOption } from './types';
 import React from 'react';
 import { buttonCls } from '@/ui/style';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
-import { formatCoupleName } from '@/ui/format';
 import { cn } from '@/lib/cn';
-import { useQuery } from 'urql';
-import {
-  EventFormOptionsDocument,
-  type EventInstanceRegistrationFragment,
-} from '@/graphql/Event';
-import { FormError } from '@/ui/form';
-import { isTruthy } from '@/lib/truthyFilter';
+import type { EventFormOptionsQuery } from '@/graphql/Event';
 import { CohortListElement } from './CohortListElement';
 
 export function ParticipantListElement({
-  savedRegistrations = [],
+  options,
+  cohorts,
 }: {
-  savedRegistrations?: EventInstanceRegistrationFragment[];
+  options: Map<string, EventParticipantOption>;
+  cohorts: NonNullable<EventFormOptionsQuery['tenant']>['cohortsList'];
 }) {
   const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
   const registrations = useWatch({ control, name: 'registrations' }) ?? [];
   const [open, setOpen] = React.useState<'person' | 'couple' | null>(null);
-  const [{ data, error }] = useQuery({ query: EventFormOptionsDocument });
-
-  // Saved participants remain available even after leaving the club or a couple.
-  const options = new Map<
-    string,
-    {
-      id: string;
-      label: string;
-      personId: string | null;
-      coupleId: string | null;
-      personIds: string[];
-    }
-  >();
-  for (const person of [
-    ...savedRegistrations.map(({ person }) => person),
-    ...(data?.tenant?.cohortsList ?? []).flatMap((cohort) =>
-      cohort.cohortMembershipsList.map((x) => x.person),
-    ),
-    ...(data?.tenant?.tenantMembershipsList ?? []).map((x) => x.person),
-  ]) {
-    if (!person) continue;
-    options.set(`person:${person.id}`, {
-      id: `person:${person.id}`,
-      label: person.name,
-      personId: person.id,
-      coupleId: null,
-      personIds: [person.id],
-    });
-  }
-  for (const couple of [
-    ...savedRegistrations.map((x) => x.couple),
-    ...(data?.tenant?.couplesList ?? []).filter((c) => c.status === 'ACTIVE'),
-  ]) {
-    if (!couple) continue;
-    options.set(`couple:${couple.id}`, {
-      id: `couple:${couple.id}`,
-      label: formatCoupleName(couple),
-      personId: null,
-      coupleId: couple.id,
-      personIds: [couple.man?.id, couple.woman?.id].filter(isTruthy),
-    });
-  }
 
   const active = registrations.filter((x) => !x.isCancelled);
   const selected = new Set(
@@ -81,7 +34,7 @@ export function ParticipantListElement({
   const addCohort = (cohortId: string) => {
     const next = [...registrations];
     const now = Date.now();
-    const cohort = data?.tenant?.cohortsList.find((x) => x.id === cohortId);
+    const cohort = cohorts.find((x) => x.id === cohortId);
     for (const membership of cohort?.cohortMembershipsList ?? []) {
       const personId = membership.person?.id;
       if (
@@ -129,7 +82,7 @@ export function ParticipantListElement({
 
   return (
     <>
-      <CohortListElement onAdd={addCohort} onRemove={removeCohort} />
+      <CohortListElement cohorts={cohorts} onAdd={addCohort} onRemove={removeCohort} />
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
         <b className="grow">Účastníci ({selected.size})</b>
         {(['couple', 'person'] as const).map((kind) => (
@@ -169,7 +122,6 @@ export function ParticipantListElement({
           </Popover>
         ))}
       </div>
-      <FormError error={error} />
       <div className={cn('grid gap-x-2 gap-y-1', selected.size > 6 && 'grid-cols-2')}>
         {active.map(({ personId, coupleId, cohortIds }) => {
           const id = personId ? `person:${personId}` : `couple:${coupleId}`;
@@ -179,7 +131,7 @@ export function ParticipantListElement({
                 {options.get(id)?.label}
                 {!!cohortIds?.length && (
                   <span className="ml-1 text-xs text-neutral-11">
-                    ({cohortIds.map((id) => data?.tenant?.cohortsList.find((x) => x.id === id)?.name).join(', ')})
+                    ({cohortIds.map((id) => cohorts.find((x) => x.id === id)?.name).join(', ')})
                   </span>
                 )}
               </div>

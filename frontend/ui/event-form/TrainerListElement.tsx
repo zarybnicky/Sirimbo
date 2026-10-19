@@ -2,34 +2,21 @@ import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
 import { Popover, PopoverTrigger } from '@/ui/popover';
 import { buttonCls, checkboxInputCls } from '@/ui/style';
-import { useAuth } from '@/lib/auth';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Plus, X } from 'lucide-react';
 import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
-import { useQuery } from 'urql';
-import { EventFormOptionsDocument } from '@/graphql/Event';
 
-export function TrainerListElement({ control }: { control: EventFormControl }) {
-  const auth = useAuth();
+export type EventTrainerOption = { id: string; label: string; enabled: boolean };
+
+export function TrainerListElement({ control, trainers }: {
+  control: EventFormControl;
+  trainers: EventTrainerOption[];
+}) {
   const [open, setOpen] = React.useState(false);
   const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
   const [type, value] = useWatch({ control, name: ['type', 'trainers'] });
-
-  const [{ data: tenant }] = useQuery({ query: EventFormOptionsDocument });
-  const trainers = React.useMemo(
-    () =>
-      (tenant?.tenant?.tenantTrainersList ?? []).flatMap(({ person }) =>
-        person ? [{ id: person.id, label: person.name }] : [],
-      ),
-    [tenant],
-  );
-
-  const enabledTrainers = React.useMemo(
-    () => (auth.isAdmin ? trainers : trainers.filter((x) => auth.isMyPerson(x.id))),
-    [trainers, auth],
-  );
 
   return (
     <>
@@ -59,9 +46,7 @@ export function TrainerListElement({ control }: { control: EventFormControl }) {
                   }
                   setOpen(false);
                 }}
-                options={enabledTrainers.filter(
-                  (trainer) => !fields.some((selected) => selected.personId === trainer.id),
-                )}
+                options={trainers.filter((x) => x.enabled && !fields.some((y) => y.personId === x.id))}
               />
             </PopoverPrimitive.Content>
           </PopoverPrimitive.Portal>

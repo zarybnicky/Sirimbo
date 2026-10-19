@@ -9,9 +9,9 @@ import {
   SaveEventsDocument,
   type EventInstanceRegistrationFragment,
   type EventWithTrainerFragment,
-  type EventFormOptionsQuery,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
+import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -21,87 +21,83 @@ import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/form
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListElement';
-import { EventForm, type EventFormInput, type EventFormType } from './types';
+import {
+  EventForm,
+  type EventFormInput,
+  type EventFormType,
+  type EventParticipantOption,
+} from './types';
 
 const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-type Option = { id: string; label: string };
+function useEventFormOptions(savedRegistrations?: EventInstanceRegistrationFragment[]) {
+  const auth = useAuth();
+  const [query] = useQuery({ query: EventFormOptionsDocument });
+  const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
+    .filter(keyIsNonNull('person'))
+    .map(({ person }) => ({
+      id: person.id,
+      label: person.name,
+      enabled: auth.isAdmin || auth.isMyPerson(person.id),
+    }));
 
-const SplitRegistrationPicker = React.memo(function SplitRegistrationPicker({
-  rangeKey,
-  value,
-  options,
-  setSplitIds,
-}: {
-  rangeKey: string;
-  value: string | null;
-  options: Option[];
-  setSplitIds: React.Dispatch<React.SetStateAction<Record<string, string | null>>>;
-}) {
-  return (
-    <ComboboxButton
-      value={value}
-      options={options}
-      placeholder="Volno"
-      buttonClassName={
-        value
-          ? undefined
-          : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
-      }
-      onChange={(selected) =>
-        setSplitIds((current) => ({ ...current, [rangeKey]: selected ?? null }))
-      }
-    />
-  );
-});
+  const participants = React.useMemo(() => {
+    const tenant = query.data?.tenant;
+    const participants = new Map<string, EventParticipantOption>();
 
-function EventAccessFields() {
-  const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
-  const [type, isPublic] = useWatch({ control, name: ['type', 'isPublic'] });
+    for (const { person } of [
+      ...(savedRegistrations ?? []),
+      ...(tenant?.cohortsList ?? []).flatMap((x) => x.cohortMembershipsList),
+      ...(tenant?.tenantMembershipsList ?? []),
+    ]) {
+      if (!person) continue;
+      participants.set(`person:${person.id}`, {
+        id: `person:${person.id}`,
+        label: person.name,
+        personId: person.id,
+        coupleId: null,
+        personIds: [person.id],
+      });
+    }
+    for (const couple of [
+      ...(savedRegistrations ?? []).map((x) => x.couple),
+      ...(tenant?.couplesList ?? []).filter((x) => x.status === 'ACTIVE'),
+    ]) {
+      if (!couple) continue;
+      participants.set(`couple:${couple.id}`, {
+        id: `couple:${couple.id}`,
+        label: formatCoupleName(couple),
+        personId: null,
+        coupleId: couple.id,
+        personIds: [couple.man?.id, couple.woman?.id].filter(isTruthy),
+      });
+    }
 
-  React.useEffect(() => {
-    if (!isPublic) setValue('hasPublicDetails', false);
-  }, [isPublic, setValue]);
-
-  return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-1">
-      <CheckboxElement name="isVisible" label="Viditelná pro členy" />
-      <CheckboxElement name="isLocked" label="Zakázat přihlašování/odhlašování" />
-      <CheckboxElement name="isPublic" label="Zveřejnit přihlášky" />
-      <CheckboxElement
-        name="hasPublicDetails"
-        label="Zveřejnit program"
-        disabled={!isPublic}
-      />
-      {(type === 'RESERVATION' || type === 'CAMP') && (
-        <CheckboxElement name="enableNotes" label="Povolit poznámky k přihlášce" />
-      )}
-    </div>
-  );
+    return participants;
+  }, [query.data?.tenant, savedRegistrations]);
+  return { ...query, trainers, participants };
 }
 
 function EventEditor({
   defaultValues,
   parentId,
   seriesId,
-  existingRegistrations = [],
   options,
   mode,
 }: {
   defaultValues: EventFormType;
   parentId?: string | null;
   seriesId?: string | null;
-  existingRegistrations?: EventInstanceRegistrationFragment[];
-  options: EventFormOptionsQuery;
+  options: ReturnType<typeof useEventFormOptions>;
   mode: 'create' | 'edit';
 }) {
   const { onSuccess } = useFormResult();
@@ -112,8 +108,13 @@ function EventEditor({
     resolver: zodResolver(EventForm),
     defaultValues,
   });
-  const { control, handleSubmit } = form;
-  const [type, instances] = useWatch({ control, name: ['type', 'instances'] });
+  const { control, handleSubmit, setValue } = form;
+  const [type, instances, isPublic] = useWatch({ control, name: ['type', 'instances', 'isPublic'] });
+
+  React.useEffect(() => {
+    if (!isPublic) setValue('hasPublicDetails', false);
+  }, [isPublic, setValue]);
+
   const first = instances[0];
   const lessonRanges = first
     ? splitIntoLessonRanges(new Date(first.since), new Date(first.until))
@@ -124,21 +125,6 @@ function EventEditor({
     lessonRanges.length >= 2 &&
     instances.length === 1;
   const isSplitting = canSplit && splitLessons;
-  const splitRegistrationOptions = React.useMemo(
-    () => [
-      ...(options.tenant?.couplesList ?? []).flatMap((couple) =>
-        couple.status === 'ACTIVE'
-          ? [{ id: `couple:${couple.id}`, label: formatCoupleName(couple) }]
-          : [],
-      ),
-      ...(options.tenant?.tenantMembershipsList ?? []).flatMap(({ person }) =>
-        person?.id
-          ? [{ id: `person:${person.id}`, label: person.name }]
-          : [],
-      ),
-    ],
-    [options],
-  );
 
   React.useEffect(() => {
     if (!canSplit && splitLessons) {
@@ -150,17 +136,17 @@ function EventEditor({
   const onSubmit = async (values: EventFormType) => {
     const events = isSplitting
       ? lessonRanges.map(({ since, until }) => {
-          const sinceString = since.toISOString();
-          const [registrationType, registrationId] =
-            splitIds[sinceString]?.split(':') ?? [];
+          const registration = options.participants.get(
+            splitIds[since.toISOString()] ?? '',
+          );
           return {
-            since: sinceString,
+            since: since.toISOString(),
             until: until.toISOString(),
-            registrations: registrationId
+            registrations: registration
               ? [
                   {
-                    personId: registrationType === 'person' ? registrationId : null,
-                    coupleId: registrationType === 'couple' ? registrationId : null,
+                    personId: registration.personId,
+                    coupleId: registration.coupleId,
                   },
                 ]
               : [],
@@ -171,26 +157,29 @@ function EventEditor({
           since,
           until,
           isCancelled,
-          registrations: values.registrations.map(({ cohortIds, ...registration }) => ({
-            ...registration,
+          registrations: values.registrations.map(({ cohortIds, ...reg }) => ({
+            ...reg,
             targetCohortId: cohortIds[0] ?? null,
           })),
         }));
-    const name = values.name.trim();
-    const isLesson = values.type === 'LESSON';
+
     const result = await saveEvents({
       input: {
         details: {
           parentId,
-          name: isSplitting ? null : name || null,
+          name: isSplitting ? null : values.name.trim() || null,
           type: values.type,
           locationId: !['none', 'other'].includes(values.locationId)
             ? values.locationId
             : null,
           locationText: values.locationId === 'none' ? '' : values.locationText,
-          capacity: mode === 'edit' ? values.capacity : isLesson ? 1 : 0,
+          capacity: mode === 'edit' ? values.capacity : values.type === 'LESSON' ? 1 : 0,
           capacityUnit:
-            mode === 'edit' ? values.capacityUnit : isLesson ? 'REGISTRATIONS' : 'PEOPLE',
+            mode === 'edit'
+              ? values.capacityUnit
+              : values.type === 'LESSON'
+                ? 'REGISTRATIONS'
+                : 'PEOPLE',
           isVisible: values.isVisible,
           isPublic: values.isPublic,
           hasPublicDetails: values.hasPublicDetails,
@@ -204,7 +193,7 @@ function EventEditor({
           !isSplitting && events.length > 1
             ? seriesId
               ? { id: seriesId }
-              : { name }
+              : { name: values.name.trim() }
             : null,
       },
     });
@@ -214,7 +203,7 @@ function EventEditor({
   return (
     <FormProvider {...form}>
       <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-        <FormError error={result.error} />
+        <FormError error={result.error ?? options.error} />
 
         {canSplit && (
           <Checkbox
@@ -232,8 +221,11 @@ function EventEditor({
               nameSince="instances.0.since"
               nameUntil="instances.0.until"
             />
-            <TrainerListElement control={control} />
-            <LocationField control={control} />
+            <TrainerListElement control={control} trainers={options.trainers} />
+            <LocationField
+              control={control}
+              locations={options.data?.tenant?.locationsList ?? []}
+            />
             <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
               {lessonRanges.map((range) => {
                 const key = range.since.toISOString();
@@ -246,11 +238,12 @@ function EventEditor({
                       {shortTimeFormatter.formatRange(range.since, range.until)}
                     </span>
                     <div className="sm:justify-self-end">
-                      <SplitRegistrationPicker
-                        rangeKey={key}
+                      <ComboboxButton
                         value={splitIds[key] ?? null}
-                        options={splitRegistrationOptions}
-                        setSplitIds={setSplitIds}
+                        options={[...options.participants.values()]}
+                        placeholder="Volno"
+                        buttonClassName={splitIds[key] ? undefined : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'}
+                        onChange={(x) => setSplitIds((prev) => ({ ...prev, [key]: x ?? null }))}
                       />
                     </div>
                   </div>
@@ -271,13 +264,27 @@ function EventEditor({
               label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
             />
             <InstanceListElement control={control} />
-            <LocationField control={control} />
-            <TrainerListElement control={control} />
-            <ParticipantListElement savedRegistrations={existingRegistrations} />
+            <LocationField
+              control={control}
+              locations={options.data?.tenant?.locationsList ?? []}
+            />
+            <TrainerListElement control={control} trainers={options.trainers} />
+            <ParticipantListElement
+              options={options.participants}
+              cohorts={options.data?.tenant?.cohortsList ?? []}
+            />
           </>
         )}
 
-        <EventAccessFields />
+        <div className="flex flex-wrap items-baseline justify-between gap-x-1">
+          <CheckboxElement name="isVisible" label="Viditelná pro členy" />
+          <CheckboxElement name="isLocked" label="Zakázat přihlašování/odhlašování" />
+          <CheckboxElement name="isPublic" label="Zveřejnit přihlášky" />
+          <CheckboxElement name="hasPublicDetails" label="Zveřejnit program" disabled={!isPublic} />
+          {(type === 'RESERVATION' || type === 'CAMP') && (
+            <CheckboxElement name="enableNotes" label="Povolit poznámky k přihlášce" />
+          )}
+        </div>
         {mode === 'edit' && (
           <CheckboxElement name="instances.0.isCancelled" label="Zrušeno" />
         )}
@@ -298,19 +305,20 @@ export function CreateEventForm({
 }: CreateEventDefaults & { parentId?: string }) {
   const auth = useAuth();
   const { lockEventsByDefault } = useTenantConfig();
-  const [{ data, error }] = useQuery({ query: EventFormOptionsDocument });
-  if (!data) return error ? <FormError error={error} /> : <div>Načítám…</div>;
+  const options = useEventFormOptions();
+  if (!options.data)
+    return options.error ? <FormError error={options.error} /> : <div>Načítám…</div>;
 
-  const trainers = (data.tenant?.tenantTrainersList ?? [])
-    .flatMap((x) => x.person ?? [])
-    .filter((x) => auth.isAdmin || auth.isMyPerson(x.id));
-  const trainer = auth.persons.find((p) => p.isTrainer && trainers.some((x) => x.id === p.id)) ?? (trainers.length === 1 ? trainers[0] : undefined);
+  const enabledTrainers = options.trainers.filter((x) => x.enabled);
+  const trainer =
+    auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id)) ??
+    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined);
 
   return (
     <EventEditor
       mode="create"
       parentId={parentId ?? input.after?.parentId}
-      options={data}
+      options={options}
       defaultValues={createEventDefaults(input, {
         trainerPersonIds: trainer ? [trainer.id] : [],
         isLocked: lockEventsByDefault,
@@ -321,7 +329,6 @@ export function CreateEventForm({
 
 export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
   const [now] = React.useState(() => Date.now());
-  const [options] = useQuery({ query: EventFormOptionsDocument });
   const [query] = useQuery({
     query: EventEditorRegistrationsDocument,
     variables: { id: event.id },
@@ -329,6 +336,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
   });
 
   const registrations = query.data?.event?.registrationsList;
+  const options = useEventFormOptions(registrations);
   if ((!registrations && query.fetching) || (!options.data && options.fetching)) {
     return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
   }
@@ -349,8 +357,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
       mode="edit"
       parentId={event.parentId}
       seriesId={event.seriesId}
-      options={options.data}
-      existingRegistrations={registrations}
+      options={options}
       defaultValues={{
         name: event.name ?? '',
         type: event.type ?? 'LESSON',
