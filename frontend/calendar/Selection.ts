@@ -355,12 +355,17 @@ class Selection extends TypedEventTarget<EventMap> {
 
     // User drag-clicked in the Selectable area
     if (!click) {
-      return setTimeout(() =>
+      const removeClickListener = addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
+      return setTimeout(() => {
+        removeClickListener();
         this.dispatchTypedEvent(
           'select',
           new CustomEvent('select', { detail: this.selectRect }),
-        ),
-      );
+        );
+      });
     }
     return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
   }
