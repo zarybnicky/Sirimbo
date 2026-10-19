@@ -1,6 +1,5 @@
 import { FieldHelper, FieldLabel } from '@/ui/form';
-import { buttonCls, inputCls } from '@/ui/style';
-import { InputGroup } from '@/ui/fields/text';
+import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import {
   formatDatePickerValue,
   parseDatePickerValue,
@@ -46,7 +45,7 @@ export function DatePickerElement<T extends FieldValues>({
   return (
     <div className={className}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <InputGroup>
+      <div className={inputGroupCls()}>
         <input
           id={name}
           name={name}
@@ -77,7 +76,7 @@ export function DatePickerElement<T extends FieldValues>({
             <X />
           </button>
         )}
-      </InputGroup>
+      </div>
       <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );

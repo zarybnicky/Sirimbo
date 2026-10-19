@@ -2,8 +2,7 @@ import { type FileFragment, FileListDocument } from '@/graphql/File';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { FieldHelper, FieldLabel } from '@/ui/form';
-import { InputGroup } from '@/ui/fields/text';
-import { buttonCls, inputCls } from '@/ui/style';
+import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import {
   Check,
   FileText,
@@ -214,7 +213,7 @@ export function ImageUrlField<T extends FieldValues>({
   return (
     <div>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <InputGroup>
+      <div className={inputGroupCls()}>
         <input
           ref={inputRef}
           id={name}
@@ -283,7 +282,7 @@ export function ImageUrlField<T extends FieldValues>({
             <span className="sr-only">Vybrat existující obrázek</span>
           </button>
         </FileLibrary>
-      </InputGroup>
+      </div>
 
       <FieldHelper error={fieldState.error} helperText={error} />
       {value && <ImagePreview key={value} src={value} />}
@@ -379,7 +378,7 @@ function FileLibrary({
 
         <label className="block">
           <span className="sr-only">Hledat soubory</span>
-          <InputGroup>
+          <div className={inputGroupCls()}>
             <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
               <Search className="size-4" aria-hidden="true" />
             </span>
@@ -391,7 +390,7 @@ function FileLibrary({
               placeholder="Hledat podle názvu"
               className={inputCls({ className: 'min-w-0 grow' })}
             />
-          </InputGroup>
+          </div>
         </label>
 
         <div className="min-h-48 overflow-y-auto overscroll-contain">

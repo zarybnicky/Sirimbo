@@ -221,11 +221,11 @@ function EventEditor({
               nameSince="instances.0.since"
               nameUntil="instances.0.until"
             />
-            <TrainerListElement control={control} trainers={options.trainers} />
             <LocationField
               control={control}
               locations={options.data?.tenant?.locationsList ?? []}
             />
+            <TrainerListElement control={control} trainers={options.trainers} />
             <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
               {lessonRanges.map((range) => {
                 const key = range.since.toISOString();

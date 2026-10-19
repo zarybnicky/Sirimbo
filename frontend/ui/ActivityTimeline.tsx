@@ -137,7 +137,6 @@ function ActivityTimelineScope({
       kinds,
       eventTypes,
     },
-    requestPolicy: 'cache-and-network',
   });
 
   const days = React.useMemo(() => {

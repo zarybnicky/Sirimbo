@@ -116,7 +116,6 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
                     onSelectSlot?.({
                       start,
                       end: start,
-                      slots: [start],
                       action: 'day',
                     });
                   }}

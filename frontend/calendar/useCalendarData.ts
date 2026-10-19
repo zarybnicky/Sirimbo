@@ -128,12 +128,10 @@ export function useCalendarData(
   const [{ data, fetching }, refresh] = useQuery({
     query: EventRangeDocument,
     variables,
-    requestPolicy: 'cache-and-network',
   });
   const [facetResult, refreshFacets] = useQuery({
     query: CalendarFacetsDocument,
     variables,
-    requestPolicy: 'cache-and-network',
   });
   const [facetData, setFacetData] = React.useState(facetResult.data);
   if (facetResult.data !== undefined && facetResult.data !== facetData) {
@@ -145,6 +143,7 @@ export function useCalendarData(
   for (const { facet, value, count } of facetData?.eventInstanceFacetsList ?? []) {
     (facets![facet!] ??= {})[value!] = count ?? 0;
   }
+
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
   const showActivities =
     !filters.parentId &&
@@ -163,7 +162,6 @@ export function useCalendarData(
             : undefined,
       kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
     },
-    requestPolicy: 'cache-and-network',
     pause: !showActivities,
   });
 

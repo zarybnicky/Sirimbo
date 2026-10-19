@@ -63,26 +63,9 @@ export type ViewProps = {
 export type SlotInfo = {
   start: Date;
   end: Date;
-  slots: Date[];
   action: 'select' | 'click' | 'day';
   /** For "TimeGrid" views */
   resource?: Resource;
-  /** For "select" action */
-  bounds?: {
-    x: number;
-    y: number;
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
-  /** For "click" actions */
-  box?: {
-    x: number;
-    y: number;
-    clientX?: number;
-    clientY?: number;
-  };
 };
 
 export type DragAction = 'resize' | 'move';

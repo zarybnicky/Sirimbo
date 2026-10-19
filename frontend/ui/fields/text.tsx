@@ -4,7 +4,7 @@ import {
   type FieldHelperProps,
   FieldLabel,
 } from '@/ui/form';
-import { inputCls, inputGroupCls } from '@/ui/style';
+import { inputCls } from '@/ui/style';
 import React from 'react';
 import {
   type Control,
@@ -20,13 +20,6 @@ type Extras = {
   helperText?: React.ReactNode;
   prefix?: React.ReactNode;
 };
-
-export function InputGroup({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={inputGroupCls({ className })} {...props} />;
-}
 
 export type TextFieldElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,

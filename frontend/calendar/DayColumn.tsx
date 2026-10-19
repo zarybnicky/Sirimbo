@@ -12,7 +12,7 @@ import Selection, {
 } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import { diff, range } from './localizer';
+import { diff } from './localizer';
 import type { CalendarEvent, CalendarInstanceEvent, Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import {
@@ -137,7 +137,7 @@ function DayColumn({
       };
     };
 
-    selector.addEventListener('selecting', ({ detail: point }) => {
+    const updateSelection = ({ detail: point }: CustomEvent<ClientPoint | Bounds>) => {
       setBackgroundState((backgroundState) => {
         const newState = selectionState(point, backgroundState);
         return backgroundState.start !== newState.start ||
@@ -146,18 +146,10 @@ function DayColumn({
           ? newState
           : backgroundState;
       });
-    });
+    };
 
-    selector.addEventListener('selectStart', ({ detail: point }) => {
-      setBackgroundState((backgroundState) => {
-        const newState = selectionState(point, backgroundState);
-        return backgroundState.start !== newState.start ||
-          backgroundState.end !== newState.end ||
-          backgroundState.selecting !== newState.selecting
-          ? newState
-          : backgroundState;
-      });
-    });
+    selector.addEventListener('selecting', updateSelection);
+    selector.addEventListener('selectStart', updateSelection);
 
     selector.addEventListener('click', ({ detail: point }) => {
       setBackgroundState((backgroundState) => {
@@ -166,28 +158,24 @@ function DayColumn({
         }
         const { startDate, endDate } = selectionState(point, backgroundState);
         onSelectSlot?.({
-          slots: range(startDate, endDate, 'hours'),
           start: startDate,
           end: endDate,
           resource,
           action: 'click',
-          box: point,
         });
         return EMPTY;
       });
     });
 
-    selector.addEventListener('select', ({ detail: bounds }) => {
+    selector.addEventListener('select', () => {
       setBackgroundState((backgroundState) => {
         if (!backgroundState.selecting) return backgroundState;
         const { startDate, endDate } = backgroundState;
         onSelectSlot?.({
-          slots: range(startDate!, endDate!, 'hours'),
           start: startDate!,
           end: endDate!,
           resource,
           action: 'select',
-          bounds,
         });
         return EMPTY;
       });

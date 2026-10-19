@@ -1,8 +1,7 @@
 'use client';
 
 import { SetEventSharingDocument, type EventWithTrainerFragment } from '@/graphql/Event';
-import { InputGroup } from '@/ui/fields/text';
-import { buttonCls, inputCls } from '@/ui/style';
+import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { DialogDescription, DialogTitle } from '@/ui/dialog';
 import { Copy, Link2Off } from 'lucide-react';
 import React from 'react';
@@ -38,7 +37,7 @@ export default function EventShareDialog({ item }: { item: EventWithTrainerFragm
 
       {path ? (
         <>
-          <InputGroup>
+          <div className={inputGroupCls()}>
             <input
               readOnly
               value={path}
@@ -59,7 +58,7 @@ export default function EventShareDialog({ item }: { item: EventWithTrainerFragm
             >
               <Copy />
             </button>
-          </InputGroup>
+          </div>
           <button
             type="button"
             className={buttonCls({ variant: 'outline' })}

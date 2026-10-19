@@ -101,7 +101,6 @@ interface EventMap {
 class Selection extends TypedEventTarget<EventMap> {
   public container: () => HTMLElement | null;
   public options: {
-    validContainers?: string[];
     shouldSelect: (point: ClientPoint) => boolean;
   };
   public selecting = false;
@@ -118,7 +117,6 @@ class Selection extends TypedEventTarget<EventMap> {
   constructor(
     container: () => HTMLElement | null,
     options: {
-      validContainers?: string[];
       shouldSelect: (point: ClientPoint) => boolean;
     }
   ) {
@@ -313,17 +311,6 @@ class Selection extends TypedEventTarget<EventMap> {
     }
   }
 
-  // Check whether provided event target element
-  // - is contained within a valid container
-  isWithinValidContainer(e: MouseEvent | TouchEvent | KeyboardEvent) {
-    if (!this.options.validContainers?.length || !e.target) {
-      return true;
-    }
-    return this.options.validContainers.some(
-      (target) => !!(e.target as HTMLElement)?.closest(target),
-    );
-  }
-
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
     if ('key' in e && e.key !== 'Escape') return;
     if (e.type === 'mouseup' || e.type === 'touchend') {
@@ -346,11 +333,7 @@ class Selection extends TypedEventTarget<EventMap> {
     const node = this.container();
     const inRoot = !node || node.contains(e.target as Node | null);
 
-    if (
-      (e as KeyboardEvent).key === 'Escape' ||
-      e.type === 'touchcancel' ||
-      !this.isWithinValidContainer(e)
-    ) {
+    if ((e as KeyboardEvent).key === 'Escape' || e.type === 'touchcancel') {
       this.initialEventData = undefined;
       latestActiveClientPoint = undefined;
       return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));

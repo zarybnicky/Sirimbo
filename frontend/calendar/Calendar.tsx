@@ -173,11 +173,7 @@ export function Calendar({
         ? new Set(effectiveTrainerIds.map((trainerId) => `person:${trainerId}`))
         : null;
     return [...resourceMap.values()]
-      .filter((resource) => {
-        if (!selectedResources) return true;
-        const [resourceType] = parseResourceKey(resource.resourceId);
-        return resourceType === 'eventType' || selectedResources.has(resource.resourceId);
-      })
+      .filter((resource) => !selectedResources || selectedResources.has(resource.resourceId))
       .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
   }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
   const handleShowAllResourcesChange = React.useCallback(
@@ -190,7 +186,6 @@ export function Calendar({
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
       const [type, resourceId] = parseResourceKey(info.resource?.resourceId);
-      if (type === 'eventType' && resourceId !== instance.type) return;
 
       await moveEvent({
         input: {

@@ -10,8 +10,7 @@ import {
 import React from 'react';
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { cn } from '@/lib/cn';
-import { buttonCls, inputCls } from '@/ui/style';
-import { InputGroup } from '@/ui/fields/text';
+import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { rankItem } from '@tanstack/match-sorter-utils';
 
 type Item = { id: string | null; label: string };
@@ -193,8 +192,10 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
         rankItem(keywords?.[0] ?? '', search.trim()).rank
       }
     >
-      <InputGroup
-        className="-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none"
+      <div
+        className={inputGroupCls({
+          className: '-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none',
+        })}
         cmdk-input-wrapper=""
       >
         <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
@@ -222,7 +223,7 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
             <span className="sr-only">Vymazat výběr</span>
           </button>
         )}
-      </InputGroup>
+      </div>
 
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
       <Command.List

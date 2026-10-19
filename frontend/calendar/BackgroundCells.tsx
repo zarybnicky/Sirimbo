@@ -137,11 +137,9 @@ function BackgroundCells({
         const currentSlot = getSlotAtX(rowBox, point.x, range.length);
         if (currentSlot !== -1) {
           onSelectSlot?.({
-            slots: [range[currentSlot]!],
             start: range[currentSlot]!,
             end: range[currentSlot]!,
             action: 'click',
-            box: point,
             resource,
           });
         }
@@ -149,15 +147,13 @@ function BackgroundCells({
       });
     });
 
-    selector.addEventListener('select', ({ detail: bounds }) => {
+    selector.addEventListener('select', () => {
       setState(({ start, end }) => {
         if (start && end && end !== -1 && start !== -1) {
           onSelectSlot?.({
-            slots: range.slice(start, end + 1),
             start: range[start]!,
             end: range[end]!,
             action: 'select',
-            bounds,
             resource,
           });
         }

@@ -76,7 +76,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
       trainerIds: [id],
     },
     pause: !id,
-    requestPolicy: 'cache-and-network',
   });
 
   const reports = React.useMemo(() => {

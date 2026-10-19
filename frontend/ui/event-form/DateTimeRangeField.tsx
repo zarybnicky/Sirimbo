@@ -1,7 +1,6 @@
 import { cn } from '@/lib/cn';
-import { InputGroup } from '@/ui/fields/text';
 import { FieldHelper } from '@/ui/form';
-import { inputCls } from '@/ui/style';
+import { inputCls, inputGroupCls } from '@/ui/style';
 import {
   addHours,
   addMilliseconds,
@@ -23,12 +22,10 @@ export function DateTimeRangeField({
   control,
   nameSince,
   nameUntil,
-  className,
 }: {
   control: EventFormControl;
   nameSince: `instances.${number}.since`;
   nameUntil: `instances.${number}.until`;
-  className?: string;
 }) {
   const since = useController({ control, name: nameSince });
   const until = useController({ control, name: nameUntil });
@@ -62,63 +59,64 @@ export function DateTimeRangeField({
     if (nextUntil) until.field.onChange(nextUntil.toISOString());
   };
 
+  const timeInputClassName = inputCls({
+    className: cn('min-w-0', showEndDate && 'grow basis-24'),
+  });
+  const startDateInput = (
+    <input
+      type="date"
+      value={startDate}
+      aria-label={type === 'CAMP' ? 'Začátek (datum)' : 'Datum'}
+      onChange={(event) => setSince(event.currentTarget.value, startTime)}
+      className={inputCls({
+        className: showEndDate ? 'min-w-0 grow basis-36' : 'w-40 shadow-xs',
+      })}
+    />
+  );
+  const startTimeInput = (
+    <input
+      type="time"
+      step={60}
+      value={startTime}
+      required
+      aria-label="Začátek"
+      onChange={(event) => setSince(startDate, event.currentTarget.value)}
+      className={timeInputClassName}
+    />
+  );
+  const endTimeInput = (
+    <input
+      type="time"
+      step={60}
+      value={endTime}
+      required
+      aria-label="Konec"
+      aria-invalid={rangeError ? true : undefined}
+      onChange={(event) => setUntil(endDate, event.currentTarget.value)}
+      className={timeInputClassName}
+    />
+  );
+
   return (
-    <div className={cn('min-w-0 flex-1', className)}>
+    <div className="min-w-0 flex-1">
       <div className={cn('flex gap-2', type === 'CAMP' ? 'flex-col' : 'flex-wrap')}>
         {showEndDate ? (
-          <InputGroup className="w-full sm:w-auto">
-            <input
-              type="date"
-              value={startDate}
-              aria-label={type === 'CAMP' ? 'Začátek (datum)' : 'Datum'}
-              onChange={(event) => setSince(event.currentTarget.value, startTime)}
-              className={inputCls({ className: 'min-w-0 grow basis-36' })}
-            />
-            <input
-              type="time"
-              step={60}
-              value={startTime}
-              required
-              aria-label="Začátek"
-              onChange={(event) => setSince(startDate, event.currentTarget.value)}
-              className={inputCls({ className: 'min-w-0 grow basis-24' })}
-            />
-          </InputGroup>
+          <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
+            {startDateInput}
+            {startTimeInput}
+          </div>
         ) : (
           <>
-            <input
-              type="date"
-              value={startDate}
-              aria-label="Datum"
-              onChange={(event) => setSince(event.currentTarget.value, startTime)}
-              className={inputCls({ className: 'w-40 shadow-xs' })}
-            />
-            <InputGroup className="w-56 max-w-full">
-              <input
-                type="time"
-                step={60}
-                value={startTime}
-                required
-                aria-label="Začátek"
-                onChange={(event) => setSince(startDate, event.currentTarget.value)}
-                className={inputCls({ className: 'min-w-0' })}
-              />
-              <input
-                type="time"
-                step={60}
-                value={endTime}
-                required
-                aria-label="Konec"
-                aria-invalid={rangeError ? true : undefined}
-                onChange={(event) => setUntil(startDate, event.currentTarget.value)}
-                className={inputCls({ className: 'min-w-0' })}
-              />
-            </InputGroup>
+            {startDateInput}
+            <div className={inputGroupCls({ className: 'w-56 max-w-full' })}>
+              {startTimeInput}
+              {endTimeInput}
+            </div>
           </>
         )}
 
         {showEndDate && (
-          <InputGroup className="w-full sm:w-auto">
+          <div className={inputGroupCls({ className: 'w-full sm:w-auto' })}>
             <input
               type="date"
               value={endDate}
@@ -128,17 +126,8 @@ export function DateTimeRangeField({
               onChange={(event) => setUntil(event.currentTarget.value, endTime)}
               className={inputCls({ className: 'min-w-0 grow basis-36' })}
             />
-            <input
-              type="time"
-              step={60}
-              value={endTime}
-              required
-              aria-label="Konec"
-              aria-invalid={rangeError ? true : undefined}
-              onChange={(event) => setUntil(endDate, event.currentTarget.value)}
-              className={inputCls({ className: 'min-w-0 grow basis-24' })}
-            />
-          </InputGroup>
+            {endTimeInput}
+          </div>
         )}
       </div>
       <FieldHelper error={rangeError} />

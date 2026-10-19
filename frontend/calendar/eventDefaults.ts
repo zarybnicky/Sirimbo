@@ -1,6 +1,6 @@
 import type { SlotInfo } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
-import type { EventFormType } from '@/ui/event-form/types';
+import { EventForm, type EventFormType } from '@/ui/event-form/types';
 import { add, eq } from 'date-arithmetic';
 
 export type CreateEventDefaults = {
@@ -39,7 +39,6 @@ export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
 
   const [resourceType, resourceId] = parseResourceKey(slot.resource?.resourceId);
   return {
-    type: resourceType === 'eventType' && resourceId === 'GROUP' ? 'GROUP' : undefined,
     since: slot.start,
     until: slot.action === 'select' ? slot.end : undefined,
     trainerPersonIds:
@@ -84,26 +83,18 @@ export function createEventDefaults(
     ? input.locationText ?? ''
     : previous?.location?.id ? '' : previous?.locationText ?? '';
 
-  return {
-    name: '',
+  return EventForm.parse({
     type,
     locationId: locationText ? 'other' : locationId ?? 'none',
     locationText,
     capacity: type === 'LESSON' ? 1 : 0,
     capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
     isVisible: true,
-    isPublic: false,
-    hasPublicDetails: false,
     isLocked: fallback.isLocked,
-    enableNotes: false,
     instances: [{
-      itemId: null,
       since: since.toISOString(),
       until: until.toISOString(),
-      isCancelled: false,
     }],
     trainers: trainerPersonIds.map((personId) => ({ personId, lessonsOffered: 0 })),
-    cohorts: [],
-    registrations: [],
-  };
+  });
 }

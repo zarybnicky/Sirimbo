@@ -59,7 +59,6 @@ function DateContentRow({
     if (!auth.isTrainer) return;
 
     const selector = new Selection(() => containerRef.current, {
-      validContainers: [],
       shouldSelect() {
         const action = store.get(dragSubjectAtom)?.action;
         return action === 'move' || action === 'resize';
