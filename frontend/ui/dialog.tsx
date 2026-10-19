@@ -140,7 +140,7 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       aria-describedby={undefined}
       className={cn(
-        'relative z-50 grid w-full gap-4 rounded-lg border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg',
+        'relative z-50 grid w-full grid-cols-1 gap-4 rounded-lg border border-neutral-7 bg-neutral-1 text-neutral-12 p-6 shadow-lg',
         'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
         'max-h-full overflow-y-auto overscroll-contain touch-pan-y sm:max-w-lg',
         className,
