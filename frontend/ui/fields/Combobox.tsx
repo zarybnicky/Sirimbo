@@ -181,7 +181,9 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   return (
     <Command
       className="rounded-md border border-accent-7 bg-neutral-1 h-full max-h-full relative"
-      filter={(value, search) => rankItem(value, search).rank}
+      filter={(_value, search, keywords) =>
+        rankItem(keywords?.[0] ?? '', search.trim()).rank
+      }
     >
       <InputGroup
         className="-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none"
@@ -227,8 +229,9 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
         {options.map((item) => (
           <Command.Item
             value={`${item.id}: ${item.label}`}
+            keywords={[item.label]}
             key={item.id}
-            onSelect={(value) => onChange(value.split(/: (.*)/, 1)[0] || null)}
+            onSelect={() => onChange(item.id)}
             className={cn(
               'relative flex p-2 cursor-default select-none items-center rounded-xs',
               'text-sm outline-hidden data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
