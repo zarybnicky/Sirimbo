@@ -145,7 +145,7 @@ fragment EventTrainer on EventTrainer {
   }
 }
 
-fragment EventLessonDemand on EventLessonDemand {
+fragment EventLessonRequest on EventLessonRequest {
   id
   registrationId
   lessonCount
@@ -179,8 +179,8 @@ fragment EventInstanceRegistration on EventInstanceRegistration {
   couple {
     ...Couple
   }
-  requests: eventLessonDemandsByRegistrationIdList {
-    ...EventLessonDemand
+  requests: lessonRequestsList {
+    ...EventLessonRequest
   }
 }
 
@@ -587,7 +587,7 @@ mutation DeleteEvent($id: BigInt!) {
 
 mutation SetLessonDemand($input: SetLessonDemandInput!) {
   setLessonDemand(input: $input) {
-    eventLessonDemand {
+    eventLessonRequest {
       id
       lessonCount
       trainerId

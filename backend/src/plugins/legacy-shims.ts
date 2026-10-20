@@ -25,6 +25,13 @@ export const LegacyShimsPlugin = extendSchema({
   },
 });
 
+const legacyFields: Record<string, Record<string, string>> = {
+  Tenant: { tenantLocationsList: 'locationsList' },
+  EventInstance: { eventInstanceTrainersByInstanceIdList: 'eventTrainersList' },
+  EventInstanceRegistration: { eventLessonDemandsByRegistrationIdList: 'lessonRequestsList' },
+  SetLessonDemandPayload: { eventLessonDemand: 'eventLessonRequest' },
+};
+
 export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
   name: 'LegacyRelationAliasesPlugin',
   schema: {
@@ -32,23 +39,17 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
       GraphQLObjectType_fields: {
         after: ['PgRelationsPlugin'],
         callback(fields, _build, { Self }) {
-          if (Self.name === 'Tenant' && fields.locationsList) {
-            return {
+          for (const [legacy, canonical] of Object.entries(legacyFields[Self.name] ?? {})) {
+            if (!fields[canonical]) continue;
+            fields = {
               ...fields,
-              tenantLocationsList: {
-                ...fields.locationsList,
-                deprecationReason: 'Use locationsList.',
+              [legacy]: {
+                ...fields[canonical],
+                deprecationReason: `Use ${canonical}.`,
               },
             };
           }
-          if (Self.name !== 'EventInstance' || !fields.eventTrainersList) return fields;
-          return {
-            ...fields,
-            eventInstanceTrainersByInstanceIdList: {
-              ...fields.eventTrainersList,
-              deprecationReason: 'Use eventTrainersList.',
-            },
-          };
+          return fields;
         },
       },
     },

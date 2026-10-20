@@ -285,3 +285,12 @@ comment on constraint access_event_location_fkey on public.access_event is '@fie
 
 comment on constraint event_instance_location_fkey on public.event_instance is '@fieldName location
 @foreignFieldName events';
+
+comment on table event_lesson_demand is '@name event_lesson_request
+@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
+
+comment on constraint event_lesson_demand_registration_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
+comment on constraint event_lesson_demand_trainer_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
+comment on constraint event_lesson_demand_tenant_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
