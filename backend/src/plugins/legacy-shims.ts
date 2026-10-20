@@ -32,6 +32,15 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
       GraphQLObjectType_fields: {
         after: ['PgRelationsPlugin'],
         callback(fields, _build, { Self }) {
+          if (Self.name === 'Tenant' && fields.locationsList) {
+            return {
+              ...fields,
+              tenantLocationsList: {
+                ...fields.locationsList,
+                deprecationReason: 'Use locationsList.',
+              },
+            };
+          }
           if (Self.name !== 'EventInstance' || !fields.eventTrainersList) return fields;
           return {
             ...fields,

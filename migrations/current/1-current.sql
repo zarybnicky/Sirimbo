@@ -257,6 +257,9 @@ comment on table event_instance_target_cohort is '@name event_target_cohort
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
+comment on constraint event_instance_target_cohort_instance_id_fkey on event_instance_target_cohort is '@fieldName event
+@foreignFieldName targetCohorts';
+
 comment on table event_instance_trainer is '@name event_trainer
 @omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
@@ -267,3 +270,18 @@ comment on constraint event_instance_trainer_tenant_id_instance_id_fkey on event
 
 --!include functions/event_instance_trainer_tenant_trainer.sql
 --!include functions/event_instance_trainers.sql
+
+drop view if exists public.tenant_location_image;
+drop view if exists public.tenant_location;
+
+comment on table public.access_event is '@omit create,update,delete
+@simpleCollections only';
+
+comment on table public.event_instance is '@omit create
+@simpleCollections only';
+
+comment on constraint access_event_location_fkey on public.access_event is '@fieldName location
+@foreignFieldName accessEvents';
+
+comment on constraint event_instance_location_fkey on public.event_instance is '@fieldName location
+@foreignFieldName events';

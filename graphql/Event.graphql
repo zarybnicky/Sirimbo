@@ -11,7 +11,7 @@ fragment EventInstance on EventInstance {
   since
   until
   locationText
-  location: locationRecord {
+  location {
     id
     name
   }
@@ -363,7 +363,7 @@ query EventRegistrations($id: BigInt!) {
     since
     until
     locationText
-    location: locationRecord {
+    location {
       id
       name
     }
@@ -615,7 +615,7 @@ mutation MoveEvent($input: MoveEventInstanceInput!) {
       since
       until
       locationText
-      location: locationRecord {
+      location {
         id
         name
       }
