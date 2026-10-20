@@ -68,5 +68,10 @@ create or replace function trainer_group_attendance_completion(
   order by filled_ratio asc nulls last, person_id;
 $_$;
 
+comment on column trainer_group_attendance_completion.total_instances is '@name totalEvents';
+comment on column trainer_group_attendance_completion.filled_instances is '@name filledEvents';
+comment on column trainer_group_attendance_completion.partially_filled_instances is '@name partiallyFilledEvents';
+comment on column trainer_group_attendance_completion.unfilled_instances is '@name unfilledEvents';
+
 comment on function trainer_group_attendance_completion is '@simpleCollections only';
 grant all on function trainer_group_attendance_completion to anonymous;

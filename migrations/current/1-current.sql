@@ -260,6 +260,8 @@ comment on table event_instance_target_cohort is '@name event_target_cohort
 comment on constraint event_instance_target_cohort_instance_id_fkey on event_instance_target_cohort is '@fieldName event
 @foreignFieldName targetCohorts';
 
+comment on column event_instance_target_cohort.instance_id is '@name eventId';
+
 comment on table event_instance_trainer is '@name event_trainer
 @omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
@@ -267,6 +269,8 @@ comment on table event_instance_trainer is '@name event_trainer
 
 comment on constraint event_instance_trainer_tenant_id_instance_id_fkey on event_instance_trainer is '@fieldName event
 @foreignFieldName eventTrainers';
+
+comment on column event_instance_trainer.instance_id is '@name eventId';
 
 --!include functions/event_instance_trainer_tenant_trainer.sql
 --!include functions/event_instance_trainers.sql
@@ -312,6 +316,17 @@ comment on constraint event_instance_parent_id_fkey on event_instance is '@field
 comment on constraint payment_event_instance_id_fkey on payment is '@fieldName event
 @foreignFieldName payments';
 
+comment on column payment.event_instance_id is '@name eventId';
+
 comment on type event_instance_registration_status is '@name event_registration_status';
 
 --!include functions/activity_timeline.sql
+--!include functions/event_overlaps_reports.sql
+--!include functions/event_instance_approx_price.sql
+
+drop function if exists event_instance_facets;
+drop function if exists move_event_instance;
+
+--!include functions/event_facets.sql
+--!include functions/move_event.sql
+--!include functions/trainer_group_attendance_completion.sql

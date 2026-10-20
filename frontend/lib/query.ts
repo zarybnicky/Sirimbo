@@ -4,7 +4,7 @@ import type {
   GraphCacheConfig,
   Location,
   Maybe,
-  MoveEventInstancePayload,
+  MoveEventPayload,
   Person,
   WithTypename,
 } from '@/graphql';
@@ -181,7 +181,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     CrawlerTargetFailureGroup: () => null,
     DatetimeRange: () => null,
     DatetimeRangeBound: () => null,
-    EventInstanceApproxPriceRecord: () => null,
+    EventApproxPriceRecord: () => null,
     EventConflict: () => null,
     EventRegistrationInfo: () => null,
     Federation: (x) => x.code || null,
@@ -203,14 +203,14 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     TenantSetting: (x) => x.tenantId || null,
   },
   optimistic: {
-    moveEventInstance({ input }, cache): Maybe<WithTypename<MoveEventInstancePayload>> {
+    moveEvent({ input }, cache): Maybe<WithTypename<MoveEventPayload>> {
       if (!input.id) return null;
       const trainers = cache.resolve(
         { __typename: 'Event', id: input.id },
         'eventTrainersList',
       );
       return {
-        __typename: 'MoveEventInstancePayload',
+        __typename: 'MoveEventPayload',
         event: {
           __typename: 'Event',
           id: input.id,
@@ -416,7 +416,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         }
         invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
-      moveEventInstance(_result, _args, cache, _info) {
+      moveEvent(_result, _args, cache, _info) {
         invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
 

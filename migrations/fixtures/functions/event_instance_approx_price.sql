@@ -27,4 +27,5 @@ as $$
 $$;
 
 grant all on function event_instance_approx_price to anonymous;
-comment on function event_instance_approx_price is '@simpleCollections only';
+comment on function event_instance_approx_price is '@name event_approx_price
+@simpleCollections only';

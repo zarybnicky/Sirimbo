@@ -11,10 +11,10 @@ fragment EventConflict on EventConflict {
     id
     name
   }
-  first: firstInstance {
+  first: firstEvent {
     ...EventWithTrainer
   }
-  second: secondInstance {
+  second: secondEvent {
     ...EventWithTrainer
   }
 }

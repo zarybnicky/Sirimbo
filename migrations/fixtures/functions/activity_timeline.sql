@@ -45,6 +45,8 @@ comment on view activity_timeline_item is $$
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 $$;
 
+comment on column activity_timeline_item.event_instance_id is '@name eventId';
+
 grant select on activity_timeline_item to anonymous;
 
 create or replace function activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds activity_timeline_kind[] DEFAULT NULL::activity_timeline_kind[], p_event_types event_type[] DEFAULT NULL::event_type[])

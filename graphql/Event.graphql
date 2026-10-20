@@ -544,7 +544,7 @@ query CalendarFacets(
   $parentId: BigInt
   $locationIds: [BigInt]
 ) {
-  eventInstanceFacetsList(
+  eventFacetsList(
     startRange: $start, endRange: $end, onlyTypes: $types,
     trainerIds: $trainerIds, participantIds: $participantIds,
     scope: $scope, parentId: $parentId, locationIds: $locationIds
@@ -606,8 +606,8 @@ mutation SetEventRegistration($input: SetEventInstanceRegistrationInput!) {
   }
 }
 
-mutation MoveEvent($input: MoveEventInstanceInput!) {
-  moveEventInstance(input: $input) {
+mutation MoveEvent($input: MoveEventInput!) {
+  moveEvent(input: $input) {
     event {
       id
       since

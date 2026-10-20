@@ -38,10 +38,10 @@ export function AttendanceReport() {
     const source = data?.trainerGroupAttendanceCompletionList ?? [];
     const rows = source.filter(isTruthy).map((row) => ({
       name: row.person?.name ?? '-',
-      total: row.totalInstances ?? 0,
-      filled: row.filledInstances ?? 0,
-      partial: row.partiallyFilledInstances ?? 0,
-      unfilled: row.unfilledInstances ?? 0,
+      total: row.totalEvents ?? 0,
+      filled: row.filledEvents ?? 0,
+      partial: row.partiallyFilledEvents ?? 0,
+      unfilled: row.unfilledEvents ?? 0,
       pending: row.pendingAttendances ?? 0,
       ratio: row.filledRatio,
     }));

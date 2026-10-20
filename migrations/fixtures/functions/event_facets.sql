@@ -1,4 +1,4 @@
-create or replace function event_instance_facets(
+create or replace function event_facets(
   start_range timestamptz,
   end_range timestamptz,
   only_types event_type[] default null,
@@ -42,6 +42,6 @@ language sql stable as $$
   group by option.facet, option.value
   order by option.facet, option.value;
 $$;
-comment on function event_instance_facets is '@behavior +list -connection';
-revoke all on function event_instance_facets from public;
-grant execute on function event_instance_facets to anonymous;
+comment on function event_facets is '@behavior +list -connection';
+revoke all on function event_facets from public;
+grant execute on function event_facets to anonymous;

@@ -19,12 +19,14 @@ create type event_conflict as (
 
 comment on type event_conflict is E'
 @foreignKey (person_id) references person (id)
-@foreignKey (first_instance_id) references event_instance (id)
-@foreignKey (second_instance_id) references event_instance (id)
+@foreignKey (first_instance_id) references event_instance (id)|@fieldName firstEvent
+@foreignKey (second_instance_id) references event_instance (id)|@fieldName secondEvent
 ';
 comment on column event_conflict.person_id is '@notNull';
-comment on column event_conflict.first_instance_id is '@notNull';
-comment on column event_conflict.second_instance_id is '@notNull';
+comment on column event_conflict.first_instance_id is '@notNull
+@name firstEventId';
+comment on column event_conflict.second_instance_id is '@notNull
+@name secondEventId';
 comment on column event_conflict.overlap_range is '@notNull';
 
 create or replace function event_overlaps_attendee_report(p_since timestamptz, p_until timestamptz)

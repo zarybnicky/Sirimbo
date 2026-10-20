@@ -135,7 +135,7 @@ export function useCalendarData(
   const facets: Record<string, Record<string, number>> | undefined = facetData
     ? { type: {}, trainer: {}, participant: {}, location: {} }
     : undefined;
-  for (const { facet, value, count } of facetData?.eventInstanceFacetsList ?? []) {
+  for (const { facet, value, count } of facetData?.eventFacetsList ?? []) {
     (facets![facet!] ??= {})[value!] = count ?? 0;
   }
 

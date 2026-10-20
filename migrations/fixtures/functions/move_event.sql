@@ -1,4 +1,4 @@
-create or replace function move_event_instance(
+create or replace function move_event(
   id bigint,
   since timestamptz,
   until timestamptz,
@@ -12,22 +12,22 @@ declare
   inst event_instance;
 begin
   update event_instance
-  set since = move_event_instance.since,
-      until = move_event_instance.until,
+  set since = move_event.since,
+      until = move_event.until,
       location_id = case
-        when move_event_instance.location_id is not null then move_event_instance.location_id
-        when move_event_instance.location_text is not null then null
+        when move_event.location_id is not null then move_event.location_id
+        when move_event.location_text is not null then null
         else event_instance.location_id
       end,
       location_text = case
-        when move_event_instance.location_id is not null then ''
-        else coalesce(move_event_instance.location_text, event_instance.location_text)
+        when move_event.location_id is not null then ''
+        else coalesce(move_event.location_text, event_instance.location_text)
       end
-  where event_instance.id = move_event_instance.id
+  where event_instance.id = move_event.id
   returning * into inst;
 
   if not found then
-    raise exception 'Event instance % not found', move_event_instance.id;
+    raise exception 'Event instance % not found', move_event.id;
   end if;
 
   if trainer_person_id is not null then
@@ -47,5 +47,4 @@ begin
 end;
 $$;
 
-grant execute on function move_event_instance to anonymous;
-comment on function move_event_instance is '@resultFieldName eventInstance';
+grant execute on function move_event to anonymous;
