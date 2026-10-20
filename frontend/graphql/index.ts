@@ -1660,7 +1660,6 @@ export type Competition = {
   category: Maybe<Category>;
   categoryId: Scalars['BigInt']['output'];
   checkInEnd: Maybe<Scalars['Time']['output']>;
-  /** Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship. */
   competitionType: Maybe<CompetitionType>;
   completedAt: Maybe<Scalars['Datetime']['output']>;
   endDate: Maybe<Scalars['Date']['output']>;
@@ -4619,7 +4618,6 @@ export type EventInstance = {
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
   /** Reads a single `EventSeries` that is related to this `EventInstance`. */
   series: Maybe<EventSeries>;
-  /** Groups related events without supplying inherited event values. */
   seriesId: Maybe<Scalars['BigInt']['output']>;
   seriesInfo: Maybe<SeriesInfo>;
   shareToken: Maybe<Scalars['String']['output']>;
@@ -4793,7 +4791,6 @@ export type EventInstancePatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
-  /** Groups related events without supplying inherited event values. */
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   stats?: InputMaybe<Scalars['JSON']['input']>;
@@ -5039,7 +5036,6 @@ export type EventInstanceTrainer = {
   /** Reads a single `EventInstance` that is related to this `EventInstanceTrainer`. */
   instance: Maybe<EventInstance>;
   instanceId: Scalars['BigInt']['output'];
-  /** Maximum lesson requests for this trainer on this instance; NULL means unlimited. */
   lessonsOffered: Maybe<Scalars['Int']['output']>;
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
   name: Maybe<Scalars['String']['output']>;

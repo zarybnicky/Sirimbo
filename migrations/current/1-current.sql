@@ -242,3 +242,10 @@ comment on column federated.judge_score.component is '@behavior +attribute:order
 comment on column federated.competitor_component.role is '@behavior +attribute:orderBy';
 
 --!include views/person_last_activity.sql
+
+comment on column event_instance_trainer.lessons_offered is '';
+comment on column event_instance.series_id is '';
+comment on column app_private.system_admin_user.user_id is '';
+comment on column app_private.system_admin_user.created_at is '';
+comment on column app_private.system_admin_user.created_by is '';
+comment on column federated.competition.competition_type is '';

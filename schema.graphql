@@ -2038,10 +2038,6 @@ type Competition {
   category: Category
   categoryId: BigInt!
   checkInEnd: Time
-
-  """
-  Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.
-  """
   competitionType: CompetitionType
   completedAt: Datetime
   endDate: Date
@@ -5725,8 +5721,6 @@ type EventInstance {
 
   """Reads a single `EventSeries` that is related to this `EventInstance`."""
   series: EventSeries
-
-  """Groups related events without supplying inherited event values."""
   seriesId: BigInt
   seriesInfo: SeriesInfo
   shareToken: String
@@ -5882,8 +5876,6 @@ input EventInstancePatch {
   name: String
   parentId: BigInt
   range: DatetimeRangeInput
-
-  """Groups related events without supplying inherited event values."""
   seriesId: BigInt
   since: Datetime
   stats: JSON
@@ -6227,10 +6219,6 @@ type EventInstanceTrainer {
   """
   instance: EventInstance
   instanceId: BigInt!
-
-  """
-  Maximum lesson requests for this trainer on this instance; NULL means unlimited.
-  """
   lessonsOffered: Int
   lessonsRemaining: Int
   name: String
