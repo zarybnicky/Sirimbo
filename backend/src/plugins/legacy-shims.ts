@@ -13,7 +13,7 @@ export const LegacyShimsPlugin = extendSchema({
 
     extend type EventInstance {
       eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]!
-        @deprecated(reason: "Use eventInstanceRegistrationsByInstanceIdList.")
+        @deprecated(reason: "Use registrationsList.")
     }
   `,
   objects: {
@@ -27,8 +27,13 @@ export const LegacyShimsPlugin = extendSchema({
 
 const legacyFields: Record<string, Record<string, string>> = {
   Tenant: { tenantLocationsList: 'locationsList' },
-  EventInstance: { eventInstanceTrainersByInstanceIdList: 'eventTrainersList' },
-  EventInstanceRegistration: { eventLessonDemandsByRegistrationIdList: 'lessonRequestsList' },
+  EventInstance: {
+    eventInstanceTrainersByInstanceIdList: 'eventTrainersList',
+    eventInstanceRegistrationsByInstanceIdList: 'registrationsList',
+  },
+  EventRegistration: { eventLessonDemandsByRegistrationIdList: 'lessonRequestsList' },
+  Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
+  SetEventInstanceRegistrationPayload: { eventInstanceRegistration: 'eventRegistration' },
   SetLessonDemandPayload: { eventLessonDemand: 'eventLessonRequest' },
 };
 

@@ -1,6 +1,6 @@
 import {
   DeleteEventDocument,
-  type EventInstanceRegistrationFragment,
+  type EventRegistrationFragment,
   EventRegistrationsDocument,
   type EventRegistrationsQuery,
   SaveEventsDocument,
@@ -33,7 +33,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { Calendar } from './Calendar';
 
-const emptyRegistrations: EventInstanceRegistrationFragment[] = [];
+const emptyRegistrations: EventRegistrationFragment[] = [];
 
 export const CampSchedule = React.memo(function CampSchedule({
   id,
@@ -257,7 +257,7 @@ export const CampSchedule = React.memo(function CampSchedule({
 type ScheduledLesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
 
 function scheduledTrainers(
-  registration: EventInstanceRegistrationFragment,
+  registration: EventRegistrationFragment,
   lessons: ScheduledLesson[],
 ) {
   const counts = new Map<string, { count: number; name: string }>();
@@ -307,7 +307,7 @@ function LessonRequests({
   error,
   lockTrainers,
 }: {
-  registrations: EventInstanceRegistrationFragment[];
+  registrations: EventRegistrationFragment[];
   scheduledLessons: ScheduledLesson[];
   fetching: boolean;
   error: React.ReactNode | Error;

@@ -1,5 +1,5 @@
 import {
-  type EventInstanceRegistrationFragment,
+  type EventRegistrationFragment,
   EventRegistrationCandidatesDocument,
   EventRegistrationDialogDocument,
   type EventRegistrationDialogQuery,
@@ -35,7 +35,7 @@ type Selection =
 
 type RegistrationEvent = NonNullable<EventRegistrationDialogQuery['instance']>;
 
-const registrant = (registration: EventInstanceRegistrationFragment): Registrant => ({
+const registrant = (registration: EventRegistrationFragment): Registrant => ({
   id: registration.id,
   label: formatRegistrant(registration),
   personId: registration.personId,

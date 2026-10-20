@@ -7,7 +7,7 @@ import {
   EventEditorRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
-  type EventInstanceRegistrationFragment,
+  type EventRegistrationFragment,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
@@ -39,7 +39,7 @@ const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-function useEventFormOptions(savedRegistrations?: EventInstanceRegistrationFragment[]) {
+function useEventFormOptions(savedRegistrations?: EventRegistrationFragment[]) {
   const auth = useAuth();
   const [query] = useQuery({ query: EventFormOptionsDocument });
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])

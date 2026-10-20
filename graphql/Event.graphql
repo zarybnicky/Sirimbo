@@ -93,7 +93,7 @@ fragment EventWithTrainer on EventInstance {
       colorRgb
     }
   }
-  registrations: eventInstanceRegistrationsByInstanceId(
+  registrations(
     condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     first: 3
   ) {
@@ -120,7 +120,7 @@ fragment EventWithTrainer on EventInstance {
   }
 }
 
-fragment EventRegistrationAttendance on EventInstanceRegistration {
+fragment EventRegistrationAttendance on EventRegistration {
   id
   status
   attendanceNote
@@ -160,7 +160,7 @@ fragment EventLessonRequest on EventLessonRequest {
   }
 }
 
-fragment EventInstanceRegistration on EventInstanceRegistration {
+fragment EventRegistration on EventRegistration {
   id
   instanceId
   source
@@ -212,9 +212,7 @@ query EventParticipantsExport($id: BigInt!) {
         name
       }
     }
-    registrations: eventInstanceRegistrationsByInstanceId(
-      condition: { registrationStatus: ACTIVE }
-    ) {
+    registrations(condition: { registrationStatus: ACTIVE }) {
       nodes {
         id
         parentRegistrationId
@@ -246,12 +244,12 @@ query EventExport($id: BigInt!) {
     trainersList: eventTrainersList {
       ...EventTrainer
     }
-    registrations: eventInstanceRegistrationsByInstanceId(
+    registrations(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       totalCount
       nodes {
-        ...EventInstanceRegistration
+        ...EventRegistration
       }
     }
   }
@@ -280,10 +278,10 @@ fragment EventPage on EventInstance {
 query EventWithAttendance($id: BigInt!) {
   event: eventInstance(id: $id) {
     ...EventPage
-    eventInstanceRegistrationsByInstanceId(condition: { registrationStatus: ACTIVE }) {
+    attendanceRegistrations: registrations(condition: { registrationStatus: ACTIVE }) {
       nodes {
         parentRegistrationId
-        ...EventInstanceRegistration
+        ...EventRegistration
         ...EventRegistrationAttendance
         person {
           id
@@ -316,10 +314,10 @@ query EventDescription($id: BigInt!) {
 query EventEditorRegistrations($id: BigInt!) {
   event: eventInstance(id: $id) {
     id
-    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+    registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
-      ...EventInstanceRegistration
+      ...EventRegistration
     }
   }
 }
@@ -338,10 +336,10 @@ query EventRegistrationDialog($id: BigInt!) {
     trainersList: eventTrainersList {
       ...EventTrainer
     }
-    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+    registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
-      ...EventInstanceRegistration
+      ...EventRegistration
     }
   }
 }
@@ -352,10 +350,10 @@ query EventRegistrations($id: BigInt!) {
     trainersList: eventTrainersList {
       ...EventTrainer
     }
-    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+    registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
-      ...EventInstanceRegistration
+      ...EventRegistration
     }
   }
   scheduledLessons: eventInstancesList(condition: { parentId: $id, type: LESSON }) {
@@ -380,7 +378,7 @@ query EventRegistrations($id: BigInt!) {
         currency
       }
     }
-    registrationsList: eventInstanceRegistrationsByInstanceIdList(
+    registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       id
@@ -597,10 +595,10 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
 
 mutation SetEventRegistration($input: SetEventInstanceRegistrationInput!) {
   setEventInstanceRegistration(input: $input) {
-    eventInstanceRegistration {
-      ...EventInstanceRegistration
+    eventRegistration {
+      ...EventRegistration
       registrationStatus
-      instance {
+      event {
         id
         remainingPersonSpots
       }
@@ -634,7 +632,7 @@ mutation MoveEvent($input: MoveEventInstanceInput!) {
 
 mutation UpdateAttendance($input: UpdateAttendanceInput!) {
   updateAttendance(input: $input) {
-    eventInstanceRegistration {
+    eventRegistration {
       id
       status
       attendanceNote

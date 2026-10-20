@@ -298,7 +298,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       setLessonDemand(_result, args, cache, _info) {
         const registration = {
-          __typename: 'EventInstanceRegistration' as const,
+          __typename: 'EventRegistration' as const,
           id: args.input.instanceRegistrationId,
         };
         const instanceId = cache.resolve(registration, 'instanceId');

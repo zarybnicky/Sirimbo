@@ -14,7 +14,7 @@ export const EventRegistrations = memo(function EventRegistrations({
   instance: NonNullable<EventWithAttendanceQuery['event']>;
 }) {
   const auth = useAuth();
-  const registrations = instance.eventInstanceRegistrationsByInstanceId.nodes;
+  const registrations = instance.attendanceRegistrations.nodes;
   const sortedRegistrations = registrations
     .toSorted((a, b) =>
       (a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple))

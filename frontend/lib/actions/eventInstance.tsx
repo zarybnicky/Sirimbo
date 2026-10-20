@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import {
   DeleteEventDocument,
-  type EventInstanceRegistrationFragment,
+  type EventRegistrationFragment,
   type EventWithTrainerFragment,
   UpdateEventDocument,
 } from '@/graphql/Event';
@@ -25,7 +25,7 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-export const eventRegistrationActions = defineActions<EventInstanceRegistrationFragment & {
+export const eventRegistrationActions = defineActions<EventRegistrationFragment & {
   instance: EventWithTrainerFragment;
 }>()([
   {

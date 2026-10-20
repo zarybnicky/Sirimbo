@@ -1,5 +1,5 @@
 import {
-  type EventInstanceRegistrationFragment,
+  type EventRegistrationFragment,
   type EventTrainerFragment,
   type EventRegistrationDialogQuery,
   SetEventRegistrationDocument,
@@ -39,8 +39,8 @@ export function EventRegistrationForm({
 }: {
   instance: NonNullable<EventRegistrationDialogQuery['instance']>;
   registrant:
-    | EventInstanceRegistrationFragment
-    | Pick<EventInstanceRegistrationFragment, 'personId' | 'coupleId'>;
+    | EventRegistrationFragment
+    | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;
   onSaved: () => void;
   onCancelled: () => void;
 }) {

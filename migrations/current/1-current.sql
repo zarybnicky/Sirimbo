@@ -294,3 +294,13 @@ comment on table event_lesson_demand is '@name event_lesson_request
 comment on constraint event_lesson_demand_registration_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
 comment on constraint event_lesson_demand_trainer_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
 comment on constraint event_lesson_demand_tenant_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
+
+comment on table event_instance_registration is '@name event_registration
+@omit create,update,delete
+@simpleCollections both';
+
+comment on constraint event_instance_registration_instance_id_fkey on event_instance_registration is '@fieldName event
+@foreignFieldName registrations';
+
+comment on constraint event_instance_registration_parent_registration_id_fkey on event_instance_registration is '@fieldName parentRegistration
+@foreignFieldName childRegistrations';

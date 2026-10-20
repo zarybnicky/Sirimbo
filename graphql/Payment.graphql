@@ -41,7 +41,7 @@ fragment Payment on Payment {
         name
       }
     }
-    registrations: eventInstanceRegistrationsByInstanceId(
+    registrations(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
       first: 3
     ) {
