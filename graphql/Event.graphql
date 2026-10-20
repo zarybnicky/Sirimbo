@@ -73,7 +73,7 @@ fragment EventWithTrainer on EventInstance {
     amount
     currency
   }
-  trainersList: eventInstanceTrainersByInstanceIdList {
+  trainersList: eventTrainersList {
     id
     personId
     lessonsOffered
@@ -134,7 +134,7 @@ fragment EventRegistrationAttendance on EventInstanceRegistration {
   }
 }
 
-fragment EventInstanceTrainer on EventInstanceTrainer {
+fragment EventTrainer on EventTrainer {
   id
   personId
   lessonsOffered
@@ -205,7 +205,7 @@ query EventParticipantsExport($id: BigInt!) {
     id
     name
     type
-    trainersList: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventTrainersList {
       id
       person {
         id
@@ -243,8 +243,8 @@ query EventExport($id: BigInt!) {
     id
     name
     type
-    trainersList: eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainer
+    trainersList: eventTrainersList {
+      ...EventTrainer
     }
     registrations: eventInstanceRegistrationsByInstanceId(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -335,8 +335,8 @@ query EventRegistrationDialog($id: BigInt!) {
     registrationInfo {
       remainingCapacity
     }
-    trainersList: eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainer
+    trainersList: eventTrainersList {
+      ...EventTrainer
     }
     registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -349,8 +349,8 @@ query EventRegistrationDialog($id: BigInt!) {
 query EventRegistrations($id: BigInt!) {
   event: eventInstance(id: $id) {
     id
-    trainersList: eventInstanceTrainersByInstanceIdList {
-      ...EventInstanceTrainer
+    trainersList: eventTrainersList {
+      ...EventTrainer
     }
     registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -367,15 +367,18 @@ query EventRegistrations($id: BigInt!) {
       id
       name
     }
-    trainersList {
+    trainersList: eventTrainersList {
       id
       personId
       person {
         id
         name
       }
-      memberPrice45MinAmount
-      currency
+      tenantTrainer {
+        id
+        memberPrice45MinAmount
+        currency
+      }
     }
     registrationsList: eventInstanceRegistrationsByInstanceIdList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -466,7 +469,7 @@ query CampTrainerOverview($id: BigInt!) {
     id
     since
     until
-    trainersList: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventTrainersList {
       id
       personId
       person {
@@ -483,19 +486,18 @@ query CampTrainerOverview($id: BigInt!) {
     type
     since
     until
-    trainersList: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventTrainersList {
       id
       personId
       person {
         id
         name
       }
-    }
-    payoutTrainers: trainersList {
-      id
-      personId
-      memberPayout45MinAmount
-      currency
+      tenantTrainer {
+        id
+        memberPayout45MinAmount
+        currency
+      }
     }
   }
 }
@@ -617,7 +619,7 @@ mutation MoveEvent($input: MoveEventInstanceInput!) {
         id
         name
       }
-      trainersList: eventInstanceTrainersByInstanceIdList {
+      trainersList: eventTrainersList {
         id
         personId
         person {

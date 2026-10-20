@@ -249,3 +249,21 @@ comment on column app_private.system_admin_user.user_id is '';
 comment on column app_private.system_admin_user.created_at is '';
 comment on column app_private.system_admin_user.created_by is '';
 comment on column federated.competition.competition_type is '';
+
+comment on table federated.age_group is '@behavior -insert -update -delete +list -connection';
+
+comment on table event_instance_target_cohort is '@name event_target_cohort
+@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
+
+comment on table event_instance_trainer is '@name event_trainer
+@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
+
+comment on constraint event_instance_trainer_tenant_id_instance_id_fkey on event_instance_trainer is '@fieldName event
+@foreignFieldName eventTrainers';
+
+--!include functions/event_instance_trainer_tenant_trainer.sql
+--!include functions/event_instance_trainers.sql

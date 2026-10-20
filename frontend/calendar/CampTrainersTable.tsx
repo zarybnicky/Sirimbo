@@ -62,7 +62,7 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
         };
         row.eventsByDay.set(dayKey, [...(row.eventsByDay.get(dayKey) ?? []), event]);
 
-        const payout = event.payoutTrainers?.find((x) => x.personId === trainer.personId);
+        const payout = trainer.tenantTrainer;
         if (payout?.memberPayout45MinAmount && payout.currency) {
           const amount =
             (Number(payout.memberPayout45MinAmount) *

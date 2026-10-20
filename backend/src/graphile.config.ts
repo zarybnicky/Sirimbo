@@ -10,7 +10,7 @@ import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
 import currentUserPlugin from './plugins/current-user.ts';
 import { FailedLoginPlugin } from './plugins/failed-login.ts';
-import { LegacyShimsPlugin } from './plugins/legacy-shims.ts';
+import { LegacyRelationAliasesPlugin, LegacyShimsPlugin } from './plugins/legacy-shims.ts';
 import federationConditionPlugins from './plugins/federation-condition.ts';
 import competitionParticipantConditionPlugins from './plugins/competition-participant-condition.ts';
 import federationOrderPlugin from './plugins/federation-order.ts';
@@ -39,6 +39,7 @@ const preset: GraphileConfig.Preset = {
     federationOrderPlugin,
     FailedLoginPlugin,
     LegacyShimsPlugin,
+    LegacyRelationAliasesPlugin,
     OTELPlugin,
     QueryControlsPlugin,
   ],

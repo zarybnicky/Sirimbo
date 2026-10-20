@@ -304,7 +304,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         const instanceId = cache.resolve(registration, 'instanceId');
         cache.invalidate(registration);
         cache.invalidate({
-          __typename: 'EventInstanceTrainer',
+          __typename: 'EventTrainer',
           id: args.input.instanceTrainerId,
         });
         if (typeof instanceId === 'string') {

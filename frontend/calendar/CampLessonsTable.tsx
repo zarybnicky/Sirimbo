@@ -73,8 +73,6 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
         (sum, x) => sum + (x.couple ? 2 : 1),
         0,
       );
-      const priceTrainers = new Map((lesson.trainersList ?? []).map((t) => [t.personId, t]));
-
       for (const trainer of lesson.trainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
@@ -98,7 +96,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
           cell.lessons.push(lesson);
           row.cells.set(trainerId, cell);
 
-          const priceTrainer = priceTrainers.get(trainerId);
+          const priceTrainer = trainer.tenantTrainer;
           if (priceTrainer?.memberPrice45MinAmount && priceTrainer.currency) {
             const amount =
               (Number(priceTrainer.memberPrice45MinAmount) *

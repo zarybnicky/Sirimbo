@@ -1,6 +1,6 @@
 import {
   type EventInstanceRegistrationFragment,
-  type EventInstanceTrainerFragment,
+  type EventTrainerFragment,
   type EventRegistrationDialogQuery,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
@@ -174,7 +174,7 @@ export function LessonRequestField<T extends FieldValues>({
 }: {
   control: Control<T>;
   name: FieldPathByValue<T, number>;
-  trainer: EventInstanceTrainerFragment;
+  trainer: EventTrainerFragment;
   current: number;
   readOnly: boolean;
 }) {

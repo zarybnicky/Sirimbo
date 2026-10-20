@@ -33,7 +33,7 @@ fragment Payment on Payment {
     since
     until
     type
-    trainersList: eventInstanceTrainersByInstanceIdList {
+    trainersList: eventTrainersList {
       id
       personId
       person {
