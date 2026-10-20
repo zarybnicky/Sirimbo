@@ -31,16 +31,21 @@ const legacyFields: Record<string, Record<string, string>> = {
   Mutation: {
     updateEventInstance: 'updateEvent',
     deleteEventInstance: 'deleteEvent',
+    setEventInstanceRegistration: 'setEventRegistration',
+    setLessonDemand: 'setLessonRequest',
   },
   Event: {
     childEventInstancesList: 'childEventsList',
     eventInstanceTrainersByInstanceIdList: 'eventTrainersList',
     eventInstanceRegistrationsByInstanceIdList: 'registrationsList',
   },
-  EventRegistration: { eventLessonDemandsByRegistrationIdList: 'lessonRequestsList' },
+  EventRegistration: {
+    instanceId: 'eventId',
+    eventLessonDemandsByRegistrationIdList: 'lessonRequestsList',
+  },
   Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
-  SetEventInstanceRegistrationPayload: { eventInstanceRegistration: 'eventRegistration' },
-  SetLessonDemandPayload: { eventLessonDemand: 'eventLessonRequest' },
+  SetEventRegistrationPayload: { eventInstanceRegistration: 'eventRegistration' },
+  SetLessonRequestPayload: { eventLessonDemand: 'eventLessonRequest' },
   SaveEventsPayload: { eventInstances: 'events' },
   UpdateEventPayload: { eventInstance: 'event' },
   DeleteEventPayload: { eventInstance: 'event' },
@@ -51,7 +56,7 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
   schema: {
     hooks: {
       GraphQLObjectType_fields: {
-        after: ['PgRelationsPlugin', 'PgMutationUpdateDeletePlugin'],
+        after: ['PgRelationsPlugin', 'PgMutationUpdateDeletePlugin', 'PgCustomTypeFieldPlugin'],
         callback(fields, build, { Self }) {
           const { GraphQLInputObjectType, GraphQLNonNull, getNamedType, isInputObjectType } =
             build.graphql;

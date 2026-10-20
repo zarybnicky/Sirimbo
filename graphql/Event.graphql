@@ -162,7 +162,7 @@ fragment EventLessonRequest on EventLessonRequest {
 
 fragment EventRegistration on EventRegistration {
   id
-  instanceId
+  eventId
   source
   targetCohortId
   registrationStatus
@@ -583,8 +583,8 @@ mutation DeleteEvent($id: BigInt!) {
   }
 }
 
-mutation SetLessonDemand($input: SetLessonDemandInput!) {
-  setLessonDemand(input: $input) {
+mutation SetLessonRequest($input: SetLessonRequestInput!) {
+  setLessonRequest(input: $input) {
     eventLessonRequest {
       id
       lessonCount
@@ -593,8 +593,8 @@ mutation SetLessonDemand($input: SetLessonDemandInput!) {
   }
 }
 
-mutation SetEventRegistration($input: SetEventInstanceRegistrationInput!) {
-  setEventInstanceRegistration(input: $input) {
+mutation SetEventRegistration($input: SetEventRegistrationInput!) {
+  setEventRegistration(input: $input) {
     eventRegistration {
       ...EventRegistration
       registrationStatus

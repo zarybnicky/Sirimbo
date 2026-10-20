@@ -1,3 +1,4 @@
+drop function if exists set_event_registration;
 drop function if exists set_event_instance_registration;
 drop function if exists register_to_event;
 drop function if exists app_private.set_event_instance_registration;
@@ -15,7 +16,7 @@ create type event_registration_person_input as (
   wdsf_id integer
 );
 
-create function set_event_instance_registration(
+create function set_event_registration(
   p_instance_id bigint,
   p_person_id bigint,
   p_couple_id bigint,
@@ -256,7 +257,7 @@ begin
         demand(trainer_id, lesson_count)
       order by demand.trainer_id
     loop
-      perform app_private.set_lesson_demand(registration, request.trainer_id, request.lesson_count);
+      perform app_private.set_lesson_request(registration, request.trainer_id, request.lesson_count);
     end loop;
   end if;
 
@@ -269,5 +270,4 @@ begin
 end;
 $$;
 
-grant execute on function set_event_instance_registration to anonymous;
-comment on function set_event_instance_registration is '@resultFieldName eventInstanceRegistration';
+grant execute on function set_event_registration to anonymous;

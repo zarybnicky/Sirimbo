@@ -42,8 +42,8 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 
 --!include functions/ensure_couple_person_registrations.sql
 --!include functions/save_events.sql
---!include functions/set_event_instance_registration.sql
---!include functions/set_lesson_demand.sql
+--!include functions/set_lesson_request.sql
+--!include functions/set_event_registration.sql
 --!include functions/event_remaining_x.sql
 --!include functions/event_share_claims.sql
 
@@ -306,6 +306,8 @@ comment on table event_instance_registration is '@name event_registration
 
 comment on constraint event_instance_registration_instance_id_fkey on event_instance_registration is '@fieldName event
 @foreignFieldName registrations';
+
+comment on column event_instance_registration.instance_id is '@name eventId';
 
 comment on constraint event_instance_registration_parent_registration_id_fkey on event_instance_registration is '@fieldName parentRegistration
 @foreignFieldName childRegistrations';

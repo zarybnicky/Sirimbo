@@ -1,4 +1,7 @@
-create or replace function app_private.set_lesson_demand(
+drop function if exists set_lesson_demand;
+drop function if exists app_private.set_lesson_demand;
+
+create or replace function app_private.set_lesson_request(
   registration event_instance_registration,
   instance_trainer_id bigint,
   lesson_count integer
@@ -52,7 +55,7 @@ begin
 end;
 $$;
 
-create or replace function set_lesson_demand(
+create or replace function set_lesson_request(
   instance_registration_id bigint,
   instance_trainer_id bigint,
   lesson_count integer
@@ -100,9 +103,8 @@ begin
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 
-  return app_private.set_lesson_demand(registration, $2, $3);
+  return app_private.set_lesson_request(registration, $2, $3);
 end;
 $$;
 
-grant all on function set_lesson_demand to anonymous;
-comment on function set_lesson_demand is '@resultFieldName eventLessonDemand';
+grant all on function set_lesson_request to anonymous;

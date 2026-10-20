@@ -180,16 +180,16 @@ SELECT set_config('jwt.claims.my_person_ids', '{-8601,-8602}', true);
 SELECT set_config('jwt.claims.my_couple_ids', '{-8601}', true);
 GRANT SELECT ON cases TO anonymous;
 SET LOCAL ROLE anonymous;
-SELECT set_event_instance_registration(id, -8601, null, true, 'Personal note') FROM cases WHERE name='self couple';
+SELECT set_event_registration(id, -8601, null, true, 'Personal note') FROM cases WHERE name='self couple';
 RESET ROLE;
 CREATE TEMP TABLE self_person AS SELECT r.id, t.id AS trainer_id
 FROM event_instance_registration r JOIN event_instance_trainer t ON t.instance_id=r.instance_id
 WHERE r.instance_id=(SELECT id FROM cases WHERE name='self couple') AND r.person_id=-8601;
 GRANT SELECT ON self_person TO anonymous;
 SET LOCAL ROLE anonymous;
-SELECT set_lesson_demand(r.id, t.id, 1) FROM self_person r
+SELECT set_lesson_request(r.id, t.id, 1) FROM self_person r
 CROSS JOIN event_instance_trainer t WHERE t.instance_id=(SELECT id FROM cases WHERE name='self couple');
-SELECT tap.lives_ok(format('select set_event_instance_registration(%s, null, -8601, true)',
+SELECT tap.lives_ok(format('select set_event_registration(%s, null, -8601, true)',
   (SELECT id FROM cases WHERE name='self couple')),
   'a couple needs only one free place when one partner is already registered');
 SELECT tap.is((SELECT id FROM event_instance_registration
@@ -198,26 +198,26 @@ SELECT tap.is((SELECT id FROM event_instance_registration
 SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
   WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
   'both reused and new partner rows inherit the couple registration source');
-SELECT tap.lives_ok(format('select set_lesson_demand(%s, %s, 2)',
+SELECT tap.lives_ok(format('select set_lesson_request(%s, %s, 2)',
   (SELECT id FROM self_person),
   (SELECT id FROM event_instance_trainer WHERE instance_id=(SELECT id FROM cases WHERE name='self couple'))),
   'personal lesson requests remain editable after joining a couple registration');
 SELECT set_config('jwt.claims.tenant_id', '1', true);
-SELECT tap.throws_ok(format('select set_lesson_demand(%s, %s, 1)', id, trainer_id),
+SELECT tap.throws_ok(format('select set_lesson_request(%s, %s, 1)', id, trainer_id),
   '28000', 'INSTANCE_NOT_FOUND', 'lesson requests cannot be written through another tenant') FROM self_person;
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 RESET ROLE;
 UPDATE event_instance SET capacity_unit='registrations', capacity=1 WHERE id=(SELECT id FROM cases WHERE name='self couple');
 SET LOCAL ROLE anonymous;
-SELECT set_event_instance_registration(id, -8601, null, false) FROM cases WHERE name='self couple';
-SELECT tap.lives_ok(format('select set_event_instance_registration(%s, -8601, null, true)',
+SELECT set_event_registration(id, -8601, null, false) FROM cases WHERE name='self couple';
+SELECT tap.lives_ok(format('select set_event_registration(%s, -8601, null, true)',
   (SELECT id FROM cases WHERE name='self couple')),
   'rejoining an active couple needs no additional registration-unit place');
-SELECT set_event_instance_registration(id, null, -8601, false) FROM cases WHERE name='self couple';
+SELECT set_event_registration(id, null, -8601, false) FROM cases WHERE name='self couple';
 SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
   WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
   'cancelling a couple propagates the source to its person rows');
-SELECT set_event_instance_registration(id, -8601, null, true) FROM cases WHERE name='self couple';
+SELECT set_event_registration(id, -8601, null, true) FROM cases WHERE name='self couple';
 SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r
   JOIN event_lesson_demand d ON d.registration_id=r.id
   WHERE r.id=(SELECT id FROM self_person) AND r.parent_registration_id IS NULL
@@ -287,7 +287,7 @@ OVERRIDING SYSTEM VALUE VALUES (-8650, -8650, -8604, 2);
 CREATE FUNCTION pg_temp.signup(
   first_name text DEFAULT 'Camp', note text DEFAULT 'Food note', lessons integer DEFAULT 1
 ) RETURNS event_instance_registration LANGUAGE sql AS $$
-  SELECT set_event_instance_registration(-8650, null, null, true,
+  SELECT set_event_registration(-8650, null, null, true,
     p_person => ROW(first_name, 'Guest', 'unspecified', '203', lower(first_name) || '@example.invalid',
       '+420123456789', null, null, null)::event_registration_person_input,
     p_note => note, p_lesson_trainer_ids => ARRAY[-8650]::bigint[], p_lesson_counts => ARRAY[lessons]);
@@ -299,7 +299,7 @@ SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SELECT set_config('jwt.claims.my_couple_ids', '{}', true);
 SELECT set_config('jwt.claims.user_id', '', true);
 SET LOCAL ROLE anonymous;
-SELECT tap.throws_ok($$SELECT set_event_instance_registration(-8650, -8601, null, true)$$,
+SELECT tap.throws_ok($$SELECT set_event_registration(-8650, -8601, null, true)$$,
   '42501', 'ACCESS_DENIED', 'public signup cannot select an unrelated person');
 SELECT tap.is((SELECT array_agg(id) FROM event_instance_trainer
   WHERE instance_id IN (-8650, (SELECT id FROM cases WHERE name='fresh'))), ARRAY[-8650]::bigint[],
@@ -346,12 +346,12 @@ RESET ROLE;
 
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 SET LOCAL ROLE trainer;
-SELECT tap.lives_ok($$SELECT set_event_instance_registration(-8650, -8601, null, true)$$,
+SELECT tap.lives_ok($$SELECT set_event_registration(-8650, -8601, null, true)$$,
   'a tenant trainer can register people in a locked event without assigned trainers');
 RESET ROLE;
 SET LOCAL ROLE administrator;
 SELECT set_config('jwt.claims.user_id', '-8650', true);
-SELECT tap.is((SELECT created_by FROM set_event_instance_registration(-8650, -8602, null, true)),
+SELECT tap.is((SELECT created_by FROM set_event_registration(-8650, -8602, null, true)),
   -8650::bigint, 'administrator registration succeeds without a membership lookup and records its creator');
 RESET ROLE;
 

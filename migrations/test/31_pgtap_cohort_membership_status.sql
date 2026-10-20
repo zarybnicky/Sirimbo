@@ -153,7 +153,7 @@ WHERE instance_id = 900002 AND person_id = 200001;
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
 
-SELECT set_event_instance_registration(900002, 200001, null, false);
+SELECT set_event_registration(900002, 200001, null, false);
 
 SELECT app_private.reconcile_event_instance_cohort_registrations(
   ARRAY[900002], ARRAY[200001]
@@ -165,7 +165,7 @@ SET until = now() - interval '1 second', status = 'expired'
 WHERE id = 860003;
 SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200003]', true);
-SELECT set_event_instance_registration(900002, 200003, null, true);
+SELECT set_event_registration(900002, 200003, null, true);
 
 SELECT app_private.reconcile_event_instance_cohort_registrations(
   ARRAY[900002], ARRAY[200003]
@@ -281,7 +281,7 @@ SELECT tap.ok(NOT EXISTS (
   )
 ), 'event range scopes and parent filtering select the expected events');
 
-SELECT set_lesson_demand(eir.id, trainer.id, 1)
+SELECT set_lesson_request(eir.id, trainer.id, 1)
 FROM event_instance_registration eir
 JOIN event_instance_trainer trainer
   ON trainer.instance_id = eir.instance_id AND trainer.person_id = 2900002
@@ -413,7 +413,7 @@ FROM public.save_events(
   cohort_ids => ARRAY[800002]::bigint[]
 );
 
-SELECT set_event_instance_registration(
+SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson),
   2900005,
   null,
@@ -446,10 +446,10 @@ SELECT tap.ok(
   'an assigned trainer can create a managed registration with lesson demands'
 );
 
-SELECT set_event_instance_registration(
+SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson), 2900002, null, true
 );
-SELECT set_event_instance_registration(
+SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson), 2900002, null, false
 );
 
@@ -466,7 +466,7 @@ SELECT tap.ok(
 );
 
 SELECT tap.throws_ok(
-  $$SELECT set_event_instance_registration(9900003, 2900003, null, true)$$,
+  $$SELECT set_event_registration(9900003, 2900003, null, true)$$,
   '42501'::char(5),
   null,
   'a trainer cannot use the registration function for another trainer''s instance'
@@ -500,7 +500,7 @@ FROM public.save_events(
 )
 GROUP BY series_id;
 
-SELECT set_lesson_demand(registration.id, trainer.id, 1)
+SELECT set_lesson_request(registration.id, trainer.id, 1)
 FROM event_instance_registration registration
 JOIN event_instance_trainer trainer ON trainer.instance_id = registration.instance_id
 WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
@@ -613,7 +613,7 @@ VALUES (2950001, 2900003, 2900005, now());
 
 SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[2900005]', true);
-SELECT set_event_instance_registration(
+SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson),
   2900005,
   null,
@@ -630,7 +630,7 @@ CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
 SELECT event_instance_remaining_person_spots(instance) = 0 AS at_capacity
 FROM event_instance instance
 WHERE id = (SELECT id FROM _scheduled_lesson);
-SELECT set_event_instance_registration(
+SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson), 2900005, null, false
 );
 

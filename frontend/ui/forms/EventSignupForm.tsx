@@ -81,7 +81,7 @@ export function EventSignupForm({
       pLessonCounts: values.lessonCounts,
     };
     const response = await register({ input });
-    if (!response.error && response.data?.setEventInstanceRegistration) {
+    if (!response.error && response.data?.setEventRegistration) {
       toast.success('Přihláška uložena. Potvrzení a pozvánku vám pošleme e-mailem.');
       onSuccess();
     }
