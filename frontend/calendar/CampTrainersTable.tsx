@@ -27,8 +27,8 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
     const rows = new Map<string, Row>();
     const days = new Map<string, Date>();
 
-    if (!query.data?.eventInstance) return { rows: [], days: [] };
-    const event = query.data.eventInstance;
+    if (!query.data?.event) return { rows: [], days: [] };
+    const event = query.data.event;
 
     for (
       let day = startOf(new Date(event.since), 'day');

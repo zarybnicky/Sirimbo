@@ -49,7 +49,7 @@ export function EventPageClient({
   const [signup, setSignup] = useQueryState('signup');
 
   const numRegistrations = event.registrationInfo?.registrations ?? 0;
-  const hasPayments = [event, ...event.childEventInstancesList].some(
+  const hasPayments = [event, ...event.childEventsList].some(
     (e) => e.paymentsList.length > 0,
   );
 
@@ -103,14 +103,14 @@ export function EventPageClient({
             </div>
           </Tab>
         )}
-        {event.type === 'CAMP' && event.childEventInstancesList.length > 0 && (
+        {event.type === 'CAMP' && event.childEventsList.length > 0 && (
           <Tab id="lessons" title="Lekce" requireTrainer>
             <div className="col-full-width relative">
               <CampLessonsTable id={event.id} />
             </div>
           </Tab>
         )}
-        {event.type === 'CAMP' && event.childEventInstancesList.length > 0 && (
+        {event.type === 'CAMP' && event.childEventsList.length > 0 && (
           <Tab id="trainers" title="Trenéři" requireTrainer>
             <div className="col-full-width relative">
               <CampTrainersTable id={event.id} />

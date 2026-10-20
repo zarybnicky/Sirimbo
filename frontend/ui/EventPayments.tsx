@@ -19,9 +19,9 @@ export const EventPayments = memo(function EventPayments({ id }: { id: string })
     variables: { id },
   });
 
-  const event = data?.eventInstance;
+  const event = data?.event;
   const payments = event
-    ? [event, ...event.childEventInstancesList].flatMap((e) => e.paymentsList)
+    ? [event, ...event.childEventsList].flatMap((e) => e.paymentsList)
     : [];
   const actionMap = useActionMap(paymentActions, payments);
 

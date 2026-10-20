@@ -8,6 +8,8 @@ create type event_instance_registration_info as (
   my boolean
 );
 
+comment on type event_instance_registration_info is '@name event_registration_info';
+
 create or replace function event_instance_registration_info(inst event_instance)
   returns event_instance_registration_info
   language sql stable security definer

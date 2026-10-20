@@ -277,7 +277,8 @@ drop view if exists public.tenant_location;
 comment on table public.access_event is '@omit create,update,delete
 @simpleCollections only';
 
-comment on table public.event_instance is '@omit create
+comment on table public.event_instance is '@name event
+@omit create
 @simpleCollections only';
 
 comment on constraint access_event_location_fkey on public.access_event is '@fieldName location
@@ -304,3 +305,13 @@ comment on constraint event_instance_registration_instance_id_fkey on event_inst
 
 comment on constraint event_instance_registration_parent_registration_id_fkey on event_instance_registration is '@fieldName parentRegistration
 @foreignFieldName childRegistrations';
+
+comment on constraint event_instance_parent_id_fkey on event_instance is '@fieldName parent
+@foreignFieldName childEvents';
+
+comment on constraint payment_event_instance_id_fkey on payment is '@fieldName event
+@foreignFieldName payments';
+
+comment on type event_instance_registration_status is '@name event_registration_status';
+
+--!include functions/activity_timeline.sql

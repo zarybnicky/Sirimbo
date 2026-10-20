@@ -32,7 +32,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const [{ data }] = useQuery({ query: EventListDocument });
 
   const nodes: EventNode[] = React.useMemo(() => {
-    return (data?.eventInstancesList ?? []).map((instance) => {
+    return (data?.eventsList ?? []).map((instance) => {
       return {
         id: instance.id,
         title: instance.name || formatEventType(instance.type),

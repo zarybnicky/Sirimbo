@@ -204,7 +204,7 @@ export function describePosting(
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
-  const instance = payment.eventInstance;
+  const instance = payment.event;
   const type = instance?.type;
   if (!type) {
     return '';

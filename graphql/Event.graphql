@@ -1,4 +1,4 @@
-fragment EventInstance on EventInstance {
+fragment Event on Event {
   seriesId
   parentId
   parent {
@@ -45,8 +45,8 @@ mutation UpdateEventSeries($id: BigInt!, $patch: EventSeriesPatch!) {
   }
 }
 
-fragment EventWithTrainer on EventInstance {
-  ...EventInstance
+fragment EventWithTrainer on Event {
+  ...Event
   seriesId
   seriesInfo {
     id
@@ -201,7 +201,7 @@ fragment EventRegistrant on Person {
 }
 
 query EventParticipantsExport($id: BigInt!) {
-  event: eventInstance(id: $id) {
+  event(id: $id) {
     id
     name
     type
@@ -237,7 +237,7 @@ query EventParticipantsExport($id: BigInt!) {
 }
 
 query EventExport($id: BigInt!) {
-  event: eventInstance(id: $id) {
+  event(id: $id) {
     id
     name
     type
@@ -256,12 +256,12 @@ query EventExport($id: BigInt!) {
 }
 
 query EventPayments($id: BigInt!) {
-  eventInstance(id: $id) {
+  event(id: $id) {
     id
     paymentsList {
       ...PaymentDetail
     }
-    childEventInstancesList(orderBy: SINCE_ASC) {
+    childEventsList(orderBy: SINCE_ASC) {
       id
       paymentsList {
         ...PaymentDetail
@@ -270,13 +270,13 @@ query EventPayments($id: BigInt!) {
   }
 }
 
-fragment EventPage on EventInstance {
+fragment EventPage on Event {
   ...EventWithTrainer
   description
 }
 
 query EventWithAttendance($id: BigInt!) {
-  event: eventInstance(id: $id) {
+  event(id: $id) {
     ...EventPage
     attendanceRegistrations: registrations(condition: { registrationStatus: ACTIVE }) {
       nodes {
@@ -294,7 +294,7 @@ query EventWithAttendance($id: BigInt!) {
     paymentsList(first: 1) {
       id
     }
-    childEventInstancesList {
+    childEventsList {
       id
       paymentsList(first: 1) {
         id
@@ -304,7 +304,7 @@ query EventWithAttendance($id: BigInt!) {
 }
 
 query EventDescription($id: BigInt!) {
-  eventInstance(id: $id) {
+  event(id: $id) {
     id
     summary
     description
@@ -312,7 +312,7 @@ query EventDescription($id: BigInt!) {
 }
 
 query EventEditorRegistrations($id: BigInt!) {
-  event: eventInstance(id: $id) {
+  event(id: $id) {
     id
     registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
@@ -323,7 +323,7 @@ query EventEditorRegistrations($id: BigInt!) {
 }
 
 query EventRegistrationDialog($id: BigInt!) {
-  instance: eventInstance(id: $id) {
+  instance: event(id: $id) {
     id
     type
     isLocked
@@ -345,7 +345,7 @@ query EventRegistrationDialog($id: BigInt!) {
 }
 
 query EventRegistrations($id: BigInt!) {
-  event: eventInstance(id: $id) {
+  event(id: $id) {
     id
     trainersList: eventTrainersList {
       ...EventTrainer
@@ -356,7 +356,7 @@ query EventRegistrations($id: BigInt!) {
       ...EventRegistration
     }
   }
-  scheduledLessons: eventInstancesList(condition: { parentId: $id, type: LESSON }) {
+  scheduledLessons: eventsList(condition: { parentId: $id, type: LESSON }) {
     id
     since
     until
@@ -463,7 +463,7 @@ query EventFormOptions {
 }
 
 query CampTrainerOverview($id: BigInt!) {
-  eventInstance(id: $id) {
+  event(id: $id) {
     id
     since
     until
@@ -476,7 +476,7 @@ query CampTrainerOverview($id: BigInt!) {
       }
     }
   }
-  scheduledEvents: eventInstancesList(
+  scheduledEvents: eventsList(
     condition: { parentId: $id, isCancelled: false }
     orderBy: SINCE_ASC
   ) {
@@ -501,7 +501,7 @@ query CampTrainerOverview($id: BigInt!) {
 }
 
 query EventList {
-  eventInstancesList(
+  eventsList(
     condition: { type: CAMP, parentId: null }
     orderBy: SINCE_DESC
   ) {
@@ -557,7 +557,7 @@ query CalendarFacets(
 
 mutation SaveEvents($input: SaveEventsInput!) {
   saveEvents(input: $input) {
-    eventInstances {
+    events {
       id
     }
   }
@@ -569,16 +569,16 @@ mutation SetEventSharing($input: SetEventSharingInput!) {
   }
 }
 
-mutation UpdateEvent($id: BigInt!, $patch: EventInstancePatch!) {
-  updateEventInstance(input: { id: $id, patch: $patch }) {
-    eventInstance {
-      ...EventInstance
+mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
+  updateEvent(input: { id: $id, patch: $patch }) {
+    event {
+      ...Event
     }
   }
 }
 
 mutation DeleteEvent($id: BigInt!) {
-  deleteEventInstance(input: { id: $id }) {
+  deleteEvent(input: { id: $id }) {
     __typename
   }
 }
@@ -608,7 +608,7 @@ mutation SetEventRegistration($input: SetEventInstanceRegistrationInput!) {
 
 mutation MoveEvent($input: MoveEventInstanceInput!) {
   moveEventInstance(input: $input) {
-    eventInstance {
+    event {
       id
       since
       until

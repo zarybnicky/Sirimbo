@@ -11,13 +11,13 @@ export const LegacyShimsPlugin = extendSchema({
       lastName: String!
     }
 
-    extend type EventInstance {
+    extend type Event {
       eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]!
         @deprecated(reason: "Use registrationsList.")
     }
   `,
   objects: {
-    EventInstance: {
+    Event: {
       plans: {
         eventExternalRegistrationsByInstanceIdList: () => constant([]),
       },
@@ -27,7 +27,13 @@ export const LegacyShimsPlugin = extendSchema({
 
 const legacyFields: Record<string, Record<string, string>> = {
   Tenant: { tenantLocationsList: 'locationsList' },
-  EventInstance: {
+  Query: { eventInstance: 'event' },
+  Mutation: {
+    updateEventInstance: 'updateEvent',
+    deleteEventInstance: 'deleteEvent',
+  },
+  Event: {
+    childEventInstancesList: 'childEventsList',
     eventInstanceTrainersByInstanceIdList: 'eventTrainersList',
     eventInstanceRegistrationsByInstanceIdList: 'registrationsList',
   },
@@ -35,6 +41,9 @@ const legacyFields: Record<string, Record<string, string>> = {
   Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
   SetEventInstanceRegistrationPayload: { eventInstanceRegistration: 'eventRegistration' },
   SetLessonDemandPayload: { eventLessonDemand: 'eventLessonRequest' },
+  SaveEventsPayload: { eventInstances: 'events' },
+  UpdateEventPayload: { eventInstance: 'event' },
+  DeleteEventPayload: { eventInstance: 'event' },
 };
 
 export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
@@ -42,14 +51,38 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
   schema: {
     hooks: {
       GraphQLObjectType_fields: {
-        after: ['PgRelationsPlugin'],
-        callback(fields, _build, { Self }) {
+        after: ['PgRelationsPlugin', 'PgMutationUpdateDeletePlugin'],
+        callback(fields, build, { Self }) {
+          const { GraphQLInputObjectType, GraphQLNonNull, getNamedType, isInputObjectType } =
+            build.graphql;
           for (const [legacy, canonical] of Object.entries(legacyFields[Self.name] ?? {})) {
             if (!fields[canonical]) continue;
+            const field = fields[canonical];
+            let args = field.args;
+            if (Self.name === 'Mutation') {
+              const input = getNamedType(args!.input.type);
+              if (!isInputObjectType(input)) {
+                throw new Error(`Expected an input object for ${canonical}.`);
+              }
+              // Keep variable declarations using the old input name, including input-field plans.
+              args = {
+                ...args,
+                input: {
+                  ...args!.input,
+                  type: new GraphQLNonNull(
+                    new GraphQLInputObjectType({
+                      ...input.toConfig(),
+                      name: `${build.inflection.upperCamelCase(legacy)}Input`,
+                    }),
+                  ),
+                },
+              };
+            }
             fields = {
               ...fields,
               [legacy]: {
-                ...fields[canonical],
+                ...field,
+                args,
                 deprecationReason: `Use ${canonical}.`,
               },
             };

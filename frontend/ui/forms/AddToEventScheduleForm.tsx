@@ -27,7 +27,7 @@ export function AddToEventScheduleForm({
   const [{ data, error, fetching }] = useQuery({ query: EventListDocument });
   const options = React.useMemo(
     () =>
-      (data?.eventInstancesList ?? [])
+      (data?.eventsList ?? [])
         .filter((event) => event.id !== eventId)
         .map((event) => ({
           id: event.id,

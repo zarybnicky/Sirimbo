@@ -1,11 +1,11 @@
 import type {
-  EventInstance,
+  Event as CalendarEvent,
+  EventTrainer,
   GraphCacheConfig,
   Location,
   Maybe,
   MoveEventInstancePayload,
   Person,
-  TenantTrainer,
   WithTypename,
 } from '@/graphql';
 import { storeRef, tenantIdAtom, tokenAtom } from '@/lib/auth';
@@ -183,7 +183,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     DatetimeRangeBound: () => null,
     EventInstanceApproxPriceRecord: () => null,
     EventConflict: () => null,
-    EventInstanceRegistrationInfo: () => null,
+    EventRegistrationInfo: () => null,
     Federation: (x) => x.code || null,
     FederationCoupleAgeRule: (x) => x.ageGroupCode || null,
     FederationCompetitorFacetsRecord: () => null,
@@ -206,13 +206,13 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     moveEventInstance({ input }, cache): Maybe<WithTypename<MoveEventInstancePayload>> {
       if (!input.id) return null;
       const trainers = cache.resolve(
-        { __typename: 'EventInstance', id: input.id },
-        'trainersList',
+        { __typename: 'Event', id: input.id },
+        'eventTrainersList',
       );
       return {
         __typename: 'MoveEventInstancePayload',
-        eventInstance: {
-          __typename: 'EventInstance',
+        event: {
+          __typename: 'Event',
           id: input.id,
           ...(input.since != null ? { since: input.since } : {}),
           ...(input.until != null ? { until: input.until } : {}),
@@ -225,21 +225,21 @@ const cacheConfig: Partial<GraphCacheConfig> = {
               : null,
           locationText:
             typeof input.locationText === 'string' ? input.locationText : null,
-          trainersList:
+          eventTrainersList:
             !input.trainerPersonId || (Array.isArray(trainers) && trainers.length > 1)
               ? []
               : [
                   {
-                    __typename: 'TenantTrainer' as const,
-                    id: `optimistic-tenant-trainer:${input.trainerPersonId}`,
+                    __typename: 'EventTrainer' as const,
+                    id: `optimistic-event-trainer:${input.id}:${input.trainerPersonId}`,
                     personId: input.trainerPersonId,
                     person: {
                       __typename: 'Person' as const,
                       id: input.trainerPersonId,
                     } as Person,
-                  } as TenantTrainer,
+                  } as EventTrainer,
                 ],
-        } as EventInstance,
+        } as CalendarEvent,
       };
     },
   },
@@ -308,26 +308,26 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           id: args.input.instanceTrainerId,
         });
         if (typeof instanceId === 'string') {
-          cache.invalidate({ __typename: 'EventInstance', id: instanceId });
+          cache.invalidate({ __typename: 'Event', id: instanceId });
         }
       },
 
       setEventInstanceRegistration(_result, args, cache, _info) {
         if (args.input.pInstanceId) {
           cache.invalidate({
-            __typename: 'EventInstance',
+            __typename: 'Event',
             id: args.input.pInstanceId,
           });
         }
       },
       setEventSharing(_result, args, cache, _info) {
         if (args.input.id) {
-          cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
+          cache.invalidate({ __typename: 'Event', id: args.input.id });
         }
       },
       updateEventSeries(result, _args, cache, _info) {
         for (const event of result.updateEventSeries?.eventSeries?.eventsList ?? []) {
-          cache.invalidate({ __typename: 'EventInstance', id: event.id });
+          cache.invalidate({ __typename: 'Event', id: event.id });
         }
       },
 
@@ -405,19 +405,19 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'UserProxy', id: args.input.id });
       },
 
-      deleteEventInstance(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'EventInstance', id: args.input.id });
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+      deleteEvent(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.id });
+        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
-      updateEventInstance(result, _args, cache, _info) {
-        const instanceId = result.updateEventInstance?.eventInstance?.id;
+      updateEvent(result, _args, cache, _info) {
+        const instanceId = result.updateEvent?.event?.id;
         if (instanceId) {
-          cache.invalidate({ __typename: 'EventInstance', id: instanceId });
+          cache.invalidate({ __typename: 'Event', id: instanceId });
         }
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
       moveEventInstance(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
 
       createPerson(_result, _args, cache, _info) {
@@ -436,10 +436,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       saveEvents(result, _args, cache, _info) {
-        for (const event of result.saveEvents?.eventInstances ?? []) {
-          cache.invalidate({ __typename: 'EventInstance', id: event.id });
+        for (const event of result.saveEvents?.events ?? []) {
+          cache.invalidate({ __typename: 'Event', id: event.id });
         }
-        invalidateQueryFields(cache, ['eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
       },
 
       createPersonInvitation(_result, args, cache, _info) {

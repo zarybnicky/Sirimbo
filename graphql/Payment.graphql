@@ -27,7 +27,7 @@ fragment Payment on Payment {
       name
     }
   }
-  eventInstance {
+  event {
     id
     name
     since
@@ -115,7 +115,7 @@ fragment Account on Account {
 query Payment($id: BigInt!) {
   payment(id: $id) {
     ...PaymentDetail
-    eventInstance {
+    event {
       ...EventWithTrainer
     }
   }

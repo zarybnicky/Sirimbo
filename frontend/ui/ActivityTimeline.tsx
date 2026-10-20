@@ -263,8 +263,8 @@ function TimelineDay({
   const birthdayItems = items.filter((x) => x.__typename === 'ActivityBirthday');
 
   for (const item of items) {
-    if (item.__typename === 'ActivityEventAttendance' && item.eventInstance) {
-      const key = item.eventInstance.id;
+    if (item.__typename === 'ActivityEventAttendance' && item.event) {
+      const key = item.event.id;
       eventGroups.set(key, [...(eventGroups.get(key) ?? []), item]);
     } else if (item.__typename === 'ActivityJudging') {
       const key = item.competitionEventId!;
@@ -273,7 +273,7 @@ function TimelineDay({
   }
 
   const eventRows = [...eventGroups.values()].toSorted((a, b) =>
-    (a[0]?.eventInstance?.since ?? '').localeCompare(b[0]?.eventInstance?.since ?? ''),
+    (a[0]?.event?.since ?? '').localeCompare(b[0]?.event?.since ?? ''),
   );
 
   return (
@@ -362,13 +362,13 @@ function TimelineDay({
             {eventRows.map((items) => (
               <EventButton
                 key={items[0].id}
-                instance={items[0].eventInstance!}
+                instance={items[0].event!}
                 viewer="auto"
                 suffix={
-                  ((mode === 'past' && items[0].eventInstance?.type !== 'LESSON') ||
+                  ((mode === 'past' && items[0].event?.type !== 'LESSON') ||
                     isCohort) && (
                     <AttendanceSummary
-                      compact={isCohort && items[0].eventInstance?.type !== 'LESSON'}
+                      compact={isCohort && items[0].event?.type !== 'LESSON'}
                       items={items}
                     />
                   )

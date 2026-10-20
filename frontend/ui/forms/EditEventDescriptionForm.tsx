@@ -23,7 +23,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
   const [result, update] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
-  const instance = data?.eventInstance;
+  const instance = data?.event;
 
   React.useEffect(() => {
     if (!instance || getValues('summary') || getValues('description')) return;

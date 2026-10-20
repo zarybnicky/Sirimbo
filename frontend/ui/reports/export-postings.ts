@@ -24,8 +24,8 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       let date = x?.transaction?.effectiveDate;
       let desc = describePosting(payment, x);
 
-      if (payment?.eventInstance) {
-        date = payment.eventInstance.since;
+      if (payment?.event) {
+        date = payment.event.since;
       }
 
       const cohort = payment?.cohortSubscription?.cohort;
