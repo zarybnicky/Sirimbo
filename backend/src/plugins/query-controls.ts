@@ -10,7 +10,7 @@ import {
   visitWithTypeInfo,
   type DocumentNode,
   type GraphQLSchema,
-} from 'graphql';
+} from 'postgraphile/graphql';
 import { queryDepthRule } from './query-depth.ts';
 
 function checkQueryLimits(

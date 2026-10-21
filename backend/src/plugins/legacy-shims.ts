@@ -1,4 +1,4 @@
-import { constant } from 'grafast';
+import { constant } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
 export const LegacyShimsPlugin = extendSchema({

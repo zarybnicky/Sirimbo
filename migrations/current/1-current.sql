@@ -159,3 +159,15 @@ from activity a
 where c.id = a.id
   and (c.latest_result_at, c.latest_entry_at) is distinct from
     (a.latest_result_at, a.latest_entry_at);
+
+do $$
+begin
+  if not exists (select 1 from pg_catalog.pg_constraint where conrelid = 'public.file'::regclass and conname = 'file_tenant_id_id_key') then
+    alter table public.file
+      add constraint file_tenant_id_id_key unique using index file_tenant_id_id_idx;
+  end if;
+end;
+$$;
+
+comment on constraint file_tenant_id_id_key on public.file
+  is '@behavior -query:resource:single';

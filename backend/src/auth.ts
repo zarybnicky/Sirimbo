@@ -1,7 +1,7 @@
 import {
     makePgAdaptorWithPgClient,
     type NodePostgresPgClient,
-} from '@dataplan/pg/adaptors/pg';
+} from 'postgraphile/adaptors/pg';
 import express from 'express';
 import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';

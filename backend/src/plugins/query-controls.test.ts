@@ -4,7 +4,7 @@ import { createServer, type Server } from 'node:http';
 import { after, before, test } from 'node:test';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import { parse, validate, type GraphQLSchema } from 'graphql';
+import { parse, validate, type GraphQLSchema } from 'postgraphile/graphql';
 import { readFileSync, readdirSync } from 'node:fs';
 import { queryDepthRule } from './query-depth.ts';
 import jwt from 'jsonwebtoken';

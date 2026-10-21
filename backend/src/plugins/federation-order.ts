@@ -1,5 +1,5 @@
-import { TYPES, listOfCodec, type PgSelectQueryBuilder } from '@dataplan/pg';
-import { lambda } from 'grafast';
+import { TYPES, listOfCodec, type PgSelectQueryBuilder } from 'postgraphile/@dataplan/pg';
+import { lambda } from 'postgraphile/grafast';
 import { orderByAscDesc } from 'postgraphile/utils';
 
 const progressCodec = listOfCodec(TYPES.numeric);

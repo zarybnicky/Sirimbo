@@ -1,4 +1,4 @@
-import { makePgService } from '@dataplan/pg/adaptors/pg';
+import { makePgService } from 'postgraphile/adaptors/pg';
 import { PgSimplifyInflectionPreset } from '@graphile/simplify-inflection';
 import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';
@@ -60,6 +60,7 @@ const preset: GraphileConfig.Preset = {
   },
   gather: {
     pgJwtTypes: ['public.jwt_token'],
+    pgFakeConstraintsAutofixForeignKeyUniqueness: false,
     installWatchFixtures: true,
   },
   schema: {

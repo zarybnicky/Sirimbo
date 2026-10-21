@@ -1,4 +1,4 @@
-import { getOperationAST, Kind, valueFromASTUntyped, type FieldNode } from 'graphql';
+import { getOperationAST, Kind, valueFromASTUntyped, type FieldNode } from 'postgraphile/graphql';
 import { pool } from '../db.ts';
 
 export const FailedLoginPlugin: GraphileConfig.Plugin = {

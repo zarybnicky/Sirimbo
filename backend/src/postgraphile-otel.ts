@@ -1,8 +1,8 @@
 import { type Span, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Result } from 'postgraphile/grafserv';
-import { print } from 'graphql';
+import { print } from 'postgraphile/graphql';
 
-declare module 'grafast' {
+declare module 'postgraphile/grafast' {
   interface ExecutionExtra {
     /**
      * Add any attributes to the span for this execution.

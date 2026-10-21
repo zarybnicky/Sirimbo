@@ -1,5 +1,5 @@
-import { sqlValueWithCodec, TYPES } from '@dataplan/pg';
-import { sql, type SQL } from 'pg-sql2';
+import { sqlValueWithCodec, TYPES } from 'postgraphile/@dataplan/pg';
+import { sql, type SQL } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type ParticipantCondition = {

@@ -1,4 +1,4 @@
-import { TYPES } from '@dataplan/pg';
+import { TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type CategoryProgressCondition = {

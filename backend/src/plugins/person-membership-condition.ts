@@ -1,6 +1,6 @@
-import { LIST_TYPES, TYPES } from '@dataplan/pg';
+import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition } from 'postgraphile/utils';
-import type { GraphQLInputType } from 'graphql';
+import type { GraphQLInputType } from 'postgraphile/graphql';
 
 type SqlTag = GraphileBuild.Build['sql'];
 type SQL = ReturnType<SqlTag>;
