@@ -145,15 +145,24 @@ export function formatDateOnly(value: string) {
   return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
 }
 
-export const numericFullFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: false,
-});
+function createNumericDateTimeFormatter() {
+  const formatter = new Intl.DateTimeFormat('cs-CZ', {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  return {
+    format(value?: Date | number) {
+      return formatter.format(value).replaceAll(/\.\s+/g, '.');
+    },
+  };
+}
+
+export const numericFullFormatter = createNumericDateTimeFormatter();
 
 export const moneyFormatter = {
   format(

@@ -1,9 +1,10 @@
 'use client';
 
+import { PowerIcon } from 'lucide-react';
 import { AccessEventOverviewDocument } from '@/graphql/AccessCredential';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { useTenantConfig } from '@/lib/auth';
-import { dateTimeFormatter } from '@/ui/format';
+import { numericFullFormatter } from '@/ui/format';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/PageHeader';
@@ -65,21 +66,22 @@ const EventsTab = React.memo(function EventsTab() {
           className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm"
         >
           <span>
-            <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
-            {' · '}
+            <b className="tabular-nums leading-tight pe-2">
+              {numericFullFormatter.format(new Date(event.occurredAt))}
+            </b>
             {event.person ? (
               <Link className="underline" href={`/clenove/${event.person.id}`}>
                 {event.person.name}
               </Link>
-            ) : (
+            ) : event.code !== '00000000' ? (
               <>
                 {mifareCodeToLabel(event.code)}
                 <code className="ml-2 text-neutral-11">{event.code}</code>
               </>
-            )}
+            ) : <PowerIcon className="inline size-3 -mt-0.75 text-accent-11" />}
           </span>
-          <span className="ml-auto text-neutral-11">
-            {dateTimeFormatter.format(new Date(event.occurredAt))}
+          <span className="ml-auto text-neutral-11 tabular-nums">
+            {event.allowed ? 'Povoleno' : 'Zamítnuto'}
             {event.location && (
               <>
                 {' · '}
@@ -88,9 +90,6 @@ const EventsTab = React.memo(function EventsTab() {
                 </Link>
               </>
             )}
-            {' · '}
-            {event.device}
-            {event.reason && ` · ${event.reason}`}
           </span>
           {!event.allowed && !allowedCodes.has(`${event.kind}:${event.code}`) && (
             <Dialog>

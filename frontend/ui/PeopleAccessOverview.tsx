@@ -20,6 +20,7 @@ import { cn } from '@/lib/cn';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { TextField } from '@/ui/fields/text';
+import { numericFullFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { Clock3, CreditCard, KeyRound } from 'lucide-react';
@@ -28,11 +29,6 @@ import { parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
-
-const compactDateTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  dateStyle: 'short',
-  timeStyle: 'short',
-});
 
 type ActivityStatus = 'never' | '<30' | '<90' | '>90';
 type AccessStatus = 'none' | ActivityStatus;
@@ -490,8 +486,8 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             >
               <Clock3 className="size-3 shrink-0" aria-hidden="true" />
               {lastWebActivity ? (
-                <time className="truncate leading-tight" dateTime={lastWebActivity}>
-                  {compactDateTimeFormatter.format(new Date(lastWebActivity))}
+                <time className="truncate tabular-nums leading-tight" dateTime={lastWebActivity}>
+                  {numericFullFormatter.format(new Date(lastWebActivity))}
                 </time>
               ) : (
                 '-'
@@ -539,8 +535,8 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             >
               <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
               {lastCardActivity ? (
-                <time className="truncate leading-tight" dateTime={lastCardActivity}>
-                  {compactDateTimeFormatter.format(new Date(lastCardActivity))}
+                <time className="truncate tabular-nums leading-tight" dateTime={lastCardActivity}>
+                  {numericFullFormatter.format(new Date(lastCardActivity))}
                 </time>
               ) : (
                 '-'
