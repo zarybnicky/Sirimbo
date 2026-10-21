@@ -9,7 +9,7 @@ import { CompetitionHistory } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
-import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
+import { FederationRankings } from '@/ui/FederationRankings';
 import { PageHeader } from '@/ui/PageHeader';
 import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
@@ -99,11 +99,6 @@ export const PersonView = React.memo(function PersonView({
         {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
       </FederationLink>
     )),
-    item.federationRanklistEntries.nodes.length > 0 && (
-      <span key="ranklist" className="inline-flex flex-wrap items-center gap-2">
-        <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
-      </span>
-    ),
   ].filter(Boolean);
 
   const socialLinks = [

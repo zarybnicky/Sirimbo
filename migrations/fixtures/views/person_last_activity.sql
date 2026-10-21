@@ -58,5 +58,5 @@ comment on view person_last_activity is '@primaryKey person_id
 comment on column person_last_activity.tenant_id is '@notNull';
 comment on column person_last_activity.person_id is '@notNull';
 
-revoke all on public.person_last_activity from public;
-grant select on public.person_last_activity to anonymous;
+revoke all on person_last_activity from public;
+grant select on person_last_activity to anonymous;
