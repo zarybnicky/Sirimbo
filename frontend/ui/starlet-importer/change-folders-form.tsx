@@ -68,26 +68,28 @@ export function ChangeFoldersForm() {
   }, [token?.auth_ok]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
+    const selectedFolders = Object.entries(values.folders)
+      .filter((x) => x[1])
+      .map((x) => [x[0], folders.find((y) => y.key === x[0])?.name ?? '?']);
     const foldersResult = await updateSettings({
       input: {
         path: ['evidenceFolders'],
-        newValue: JSON.stringify(
-          Object.entries(values.folders)
-            .filter((x) => x[1])
-            .map((x) => [x[0], folders.find((y) => y.key === x[0])?.name ?? '?']),
-        ),
+        newValue: JSON.stringify(selectedFolders),
+        // TODO: Enable with dynamicJson.
+        // newValue: selectedFolders,
       },
     });
     if (foldersResult.error) return;
 
+    const selectedSeasons = Object.entries(values.seasons)
+      .filter((x) => x[1])
+      .map((x) => [x[0], seasons.find((y) => y.key === x[0])?.name ?? '?']);
     const seasonsResult = await updateSettings({
       input: {
         path: ['evidenceSeasons'],
-        newValue: JSON.stringify(
-          Object.entries(values.seasons)
-            .filter((x) => x[1])
-            .map((x) => [x[0], seasons.find((y) => y.key === x[0])?.name ?? '?']),
-        ),
+        newValue: JSON.stringify(selectedSeasons),
+        // TODO: Enable with dynamicJson.
+        // newValue: selectedSeasons,
       },
     });
     if (!seasonsResult.error) onSuccess();

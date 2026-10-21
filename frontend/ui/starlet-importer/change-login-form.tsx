@@ -25,6 +25,8 @@ export function ChangeLoginForm() {
       input: {
         path: ['evidenceAuth'],
         newValue: JSON.stringify(values),
+        // TODO: Enable with dynamicJson.
+        // newValue: values,
       },
     });
     if (!result.error) onSuccess();

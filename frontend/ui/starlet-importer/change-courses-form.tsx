@@ -55,19 +55,20 @@ export function ChangeCoursesForm() {
   }, [folders, token?.auth_ok, seasons]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
+    const selectedCourses = Object.entries(values.courses)
+      .filter((x) => x[1])
+      .map((x) => {
+        const c = courses.find((y) => y.key === x[0]);
+        const code = c ? c.code : '?';
+        const name = c ? `${c.name}${c.period ? ` (${c.period})` : ''}` : '?';
+        return [x[0], code, name];
+      });
     const result = await update({
       input: {
         path: ['evidenceCourses'],
-        newValue: JSON.stringify(
-          Object.entries(values.courses)
-            .filter((x) => x[1])
-            .map((x) => {
-              const c = courses.find((y) => y.key === x[0]);
-              const code = c ? c.code : '?';
-              const name = c ? `${c.name}${c.period ? ` (${c.period})` : ''}` : '?';
-              return [x[0], code, name];
-            }),
-        ),
+        newValue: JSON.stringify(selectedCourses),
+        // TODO: Enable with dynamicJson.
+        // newValue: selectedCourses,
       },
     });
     if (!result.error) onSuccess();

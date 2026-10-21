@@ -28,7 +28,13 @@ export default async function ResponsePage({
   if (!response || response.frontierId !== id || !response.frontier) notFound();
   const { frontier } = response;
   const rawContent = response.crawlerResponseCache?.content;
-  const content = typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
+  let content = rawContent;
+  if (typeof content === 'string') {
+    try {
+      content = JSON.parse(content);
+    } catch {
+    }
+  }
 
   const frontierTitle = `${frontier.federation}:${frontier.kind}${frontier.key ? `:${frontier.key}` : ''}`;
 
@@ -59,7 +65,7 @@ export default async function ResponsePage({
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}
       <pre className="col-feature overflow-x-auto text-sm">
-        {content == null
+        {rawContent == null
           ? 'No cached content'
           : typeof content === 'string'
             ? content
