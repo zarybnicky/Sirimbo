@@ -42,9 +42,7 @@ export function ExhibitionRequestForm() {
     const url = window.location.toString();
     const result = await submit({
       type: 'Zájemce o vystoupení',
-      data: JSON.stringify(data),
-      // TODO: Enable with dynamicJson.
-      // data,
+      data,
       url,
     });
     if (!result.error) toast.success('Brzy se vám ozveme!');

@@ -66,9 +66,7 @@ export function ChangeCoursesForm() {
     const result = await update({
       input: {
         path: ['evidenceCourses'],
-        newValue: JSON.stringify(selectedCourses),
-        // TODO: Enable with dynamicJson.
-        // newValue: selectedCourses,
+        newValue: selectedCourses,
       },
     });
     if (!result.error) onSuccess();

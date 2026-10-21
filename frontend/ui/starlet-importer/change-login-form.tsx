@@ -24,9 +24,7 @@ export function ChangeLoginForm() {
     const result = await update({
       input: {
         path: ['evidenceAuth'],
-        newValue: JSON.stringify(values),
-        // TODO: Enable with dynamicJson.
-        // newValue: values,
+        newValue: values,
       },
     });
     if (!result.error) onSuccess();

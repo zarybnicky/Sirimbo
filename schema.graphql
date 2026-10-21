@@ -1186,9 +1186,6 @@ type ArchiveCohortPayload {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CohortsEdge
-
-  """Reads a single `CohortGroup` that is related to this `Cohort`."""
-  cohortGroup: CohortGroup
 }
 
 type ArticleAttachment {
@@ -4421,12 +4418,6 @@ type CreateAccessCredentialPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `AccessCredential`."""
-  person: Person
-
-  """Reads a single `User` that is related to this `AccessCredential`."""
-  userByCreatedBy: User
 }
 
 """All input for the create `Cohort` mutation."""
@@ -4461,14 +4452,8 @@ type CreateCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Cohort` that is related to this `CohortMembership`."""
-  cohort: Cohort
-
   """The `CohortMembership` that was created by this mutation."""
   cohortMembership: CohortMembership
-
-  """Reads a single `Person` that is related to this `CohortMembership`."""
-  person: Person
 }
 
 """The output of our create `Cohort` mutation."""
@@ -4481,9 +4466,6 @@ type CreateCohortPayload {
 
   """The `Cohort` that was created by this mutation."""
   cohort: Cohort
-
-  """Reads a single `CohortGroup` that is related to this `Cohort`."""
-  cohortGroup: CohortGroup
 }
 
 """All input for the create `Couple` mutation."""
@@ -4508,12 +4490,6 @@ type CreateCouplePayload {
 
   """The `Couple` that was created by this mutation."""
   couple: Couple
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  man: Person
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  woman: Person
 }
 
 """All input for the `createCreditTransactionForPerson` mutation."""
@@ -4537,9 +4513,6 @@ type CreateCreditTransactionForPersonPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Payment` that is related to this `Transaction`."""
-  payment: Payment
   transaction: Transaction
 
   """An edge for our `Transaction`. May be used by Relay 1."""
@@ -4599,9 +4572,6 @@ type CreateLocationPayload {
   """
   clientMutationId: String
 
-  """Reads a single `File` that is related to this `Location`."""
-  coverImage: File
-
   """The `Location` that was created by this mutation."""
   location: Location
 }
@@ -4628,9 +4598,6 @@ type CreateMembershipApplicationPayload {
 
   """The `MembershipApplication` that was created by this mutation."""
   membershipApplication: MembershipApplication
-
-  """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
 }
 
 """All input for the `createPerson` mutation."""
@@ -4668,9 +4635,6 @@ type CreatePersonInvitationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `PersonInvitation`."""
-  person: Person
 
   """The `PersonInvitation` that was created by this mutation."""
   personInvitation: PersonInvitation
@@ -4712,16 +4676,6 @@ type CreateScoreboardManualAdjustmentPayload {
   """
   clientMutationId: String
 
-  """
-  Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`.
-  """
-  cohort: Cohort
-
-  """
-  Reads a single `Person` that is related to this `ScoreboardManualAdjustment`.
-  """
-  person: Person
-
   """The `ScoreboardManualAdjustment` that was created by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -4745,9 +4699,6 @@ type CreateTenantAdministratorPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantAdministrator`."""
-  person: Person
 
   """The `TenantAdministrator` that was created by this mutation."""
   tenantAdministrator: TenantAdministrator
@@ -4779,9 +4730,6 @@ type CreateTenantMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `TenantMembership`."""
-  person: Person
-
   """The `TenantMembership` that was created by this mutation."""
   tenantMembership: TenantMembership
 
@@ -4812,9 +4760,6 @@ type CreateTenantTrainerPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `TenantTrainer`."""
-  person: Person
-
   """The `TenantTrainer` that was created by this mutation."""
   tenantTrainer: TenantTrainer
 
@@ -4844,12 +4789,6 @@ type CreateUserProxyPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `UserProxy`."""
-  person: Person
-
-  """Reads a single `User` that is related to this `UserProxy`."""
-  user: User
 
   """The `UserProxy` that was created by this mutation."""
   userProxy: UserProxy
@@ -5210,9 +5149,6 @@ type DeleteAktualityPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
 }
 
 """All input for the `deleteAnnouncement` mutation."""
@@ -5235,9 +5171,6 @@ type DeleteAnnouncementPayload {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnnouncementsEdge
-
-  """Reads a single `User` that is related to this `Announcement`."""
-  author: User
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -5274,14 +5207,8 @@ type DeleteCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Cohort` that is related to this `CohortMembership`."""
-  cohort: Cohort
-
   """The `CohortMembership` that was deleted by this mutation."""
   cohortMembership: CohortMembership
-
-  """Reads a single `Person` that is related to this `CohortMembership`."""
-  person: Person
 }
 
 """The output of our delete `Cohort` mutation."""
@@ -5294,9 +5221,6 @@ type DeleteCohortPayload {
 
   """The `Cohort` that was deleted by this mutation."""
   cohort: Cohort
-
-  """Reads a single `CohortGroup` that is related to this `Cohort`."""
-  cohortGroup: CohortGroup
 }
 
 """All input for the `deleteCouple` mutation."""
@@ -5319,12 +5243,6 @@ type DeleteCouplePayload {
 
   """The `Couple` that was deleted by this mutation."""
   couple: Couple
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  man: Person
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  woman: Person
 }
 
 """All input for the `deleteEventInstance` mutation."""
@@ -5347,22 +5265,6 @@ type DeleteEventInstancePayload {
 
   """The `EventInstance` that was deleted by this mutation."""
   eventInstance: EventInstance
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-
-  """Reads a single `Location` that is related to this `EventInstance`."""
-  locationRecord: Location
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstance`.
-  """
-  parent: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `EventInstance`."""
-  series: EventSeries
 }
 
 """All input for the `deleteEventSeries` mutation."""
@@ -5411,9 +5313,6 @@ type DeleteLocationPayload {
   """
   clientMutationId: String
 
-  """Reads a single `File` that is related to this `Location`."""
-  coverImage: File
-
   """The `Location` that was deleted by this mutation."""
   location: Location
 }
@@ -5438,9 +5337,6 @@ type DeleteMembershipApplicationPayload {
 
   """The `MembershipApplication` that was deleted by this mutation."""
   membershipApplication: MembershipApplication
-
-  """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
 }
 
 """All input for the `deletePayment` mutation."""
@@ -5460,12 +5356,6 @@ type DeletePaymentPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `CohortSubscription` that is related to this `Payment`."""
-  cohortSubscription: CohortSubscription
-
-  """Reads a single `EventInstance` that is related to this `Payment`."""
-  eventInstance: EventInstance
 
   """The `Payment` that was deleted by this mutation."""
   payment: Payment
@@ -5510,9 +5400,6 @@ type DeletePersonInvitationPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `PersonInvitation`."""
-  person: Person
-
   """The `PersonInvitation` that was deleted by this mutation."""
   personInvitation: PersonInvitation
 }
@@ -5553,16 +5440,6 @@ type DeleteScoreboardManualAdjustmentPayload {
   """
   clientMutationId: String
 
-  """
-  Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`.
-  """
-  cohort: Cohort
-
-  """
-  Reads a single `Person` that is related to this `ScoreboardManualAdjustment`.
-  """
-  person: Person
-
   """The `ScoreboardManualAdjustment` that was deleted by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -5584,9 +5461,6 @@ type DeleteTenantAdministratorPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantAdministrator`."""
-  person: Person
 
   """The `TenantAdministrator` that was deleted by this mutation."""
   tenantAdministrator: TenantAdministrator
@@ -5616,9 +5490,6 @@ type DeleteTenantMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `TenantMembership`."""
-  person: Person
-
   """The `TenantMembership` that was deleted by this mutation."""
   tenantMembership: TenantMembership
 
@@ -5646,9 +5517,6 @@ type DeleteTenantTrainerPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantTrainer`."""
-  person: Person
 
   """The `TenantTrainer` that was deleted by this mutation."""
   tenantTrainer: TenantTrainer
@@ -5678,9 +5546,6 @@ type DeleteTransactionPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Payment` that is related to this `Transaction`."""
-  payment: Payment
-
   """The `Transaction` that was deleted by this mutation."""
   transaction: Transaction
 
@@ -5708,12 +5573,6 @@ type DeleteUserProxyPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `UserProxy`."""
-  person: Person
-
-  """Reads a single `User` that is related to this `UserProxy`."""
-  user: User
 
   """The `UserProxy` that was deleted by this mutation."""
   userProxy: UserProxy
@@ -9197,7 +9056,7 @@ input IntervalInput {
 }
 
 """
-A JavaScript object encoded in the JSON format as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
 
@@ -9840,22 +9699,6 @@ type MoveEventInstancePayload {
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventInstancesEdge
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-
-  """Reads a single `Location` that is related to this `EventInstance`."""
-  locationRecord: Location
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstance`.
-  """
-  parent: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `EventInstance`."""
-  series: EventSeries
 }
 
 """
@@ -13466,9 +13309,6 @@ type RejectMembershipApplicationPayload {
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MembershipApplicationsEdge
-
-  """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
 }
 
 enum RelationshipStatus {
@@ -13803,11 +13643,6 @@ type SetEventInstanceRegistrationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Reads a single `Couple` that is related to this `EventInstanceRegistration`.
-  """
-  couple: Couple
   eventInstanceRegistration: EventInstanceRegistration
 
   """An edge for our `EventInstanceRegistration`. May be used by Relay 1."""
@@ -13815,26 +13650,6 @@ type SetEventInstanceRegistrationPayload {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsEdge
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstanceRegistration`.
-  """
-  instance: EventInstance
-
-  """
-  Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`.
-  """
-  parentRegistration: EventInstanceRegistration
-
-  """
-  Reads a single `Person` that is related to this `EventInstanceRegistration`.
-  """
-  person: Person
-
-  """
-  Reads a single `Cohort` that is related to this `EventInstanceRegistration`.
-  """
-  targetCohort: Cohort
 }
 
 """All input for the `setEventSharing` mutation."""
@@ -13884,16 +13699,6 @@ type SetLessonDemandPayload {
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventLessonDemandsEdge
-
-  """
-  Reads a single `EventInstanceRegistration` that is related to this `EventLessonDemand`.
-  """
-  registration: EventInstanceRegistration
-
-  """
-  Reads a single `EventInstanceTrainer` that is related to this `EventLessonDemand`.
-  """
-  trainer: EventInstanceTrainer
 }
 
 """All input for the `submitForm` mutation."""
@@ -15766,12 +15571,6 @@ type UpdateAccessCredentialPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `AccessCredential`."""
-  person: Person
-
-  """Reads a single `User` that is related to this `AccessCredential`."""
-  userByCreatedBy: User
 }
 
 """All input for the `updateAnnouncement` mutation."""
@@ -15800,9 +15599,6 @@ type UpdateAnnouncementPayload {
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnnouncementsEdge
 
-  """Reads a single `User` that is related to this `Announcement`."""
-  author: User
-
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
@@ -15829,11 +15625,6 @@ type UpdateAttendancePayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """
-  Reads a single `Couple` that is related to this `EventInstanceRegistration`.
-  """
-  couple: Couple
   eventInstanceRegistration: EventInstanceRegistration
 
   """An edge for our `EventInstanceRegistration`. May be used by Relay 1."""
@@ -15841,26 +15632,6 @@ type UpdateAttendancePayload {
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): EventInstanceRegistrationsEdge
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstanceRegistration`.
-  """
-  instance: EventInstance
-
-  """
-  Reads a single `EventInstanceRegistration` that is related to this `EventInstanceRegistration`.
-  """
-  parentRegistration: EventInstanceRegistration
-
-  """
-  Reads a single `Person` that is related to this `EventInstanceRegistration`.
-  """
-  person: Person
-
-  """
-  Reads a single `Cohort` that is related to this `EventInstanceRegistration`.
-  """
-  targetCohort: Cohort
 }
 
 """All input for the `updateCohort` mutation."""
@@ -15901,14 +15672,8 @@ type UpdateCohortMembershipPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Cohort` that is related to this `CohortMembership`."""
-  cohort: Cohort
-
   """The `CohortMembership` that was updated by this mutation."""
   cohortMembership: CohortMembership
-
-  """Reads a single `Person` that is related to this `CohortMembership`."""
-  person: Person
 }
 
 """The output of our update `Cohort` mutation."""
@@ -15921,9 +15686,6 @@ type UpdateCohortPayload {
 
   """The `Cohort` that was updated by this mutation."""
   cohort: Cohort
-
-  """Reads a single `CohortGroup` that is related to this `Cohort`."""
-  cohortGroup: CohortGroup
 }
 
 """All input for the `updateCouple` mutation."""
@@ -15951,12 +15713,6 @@ type UpdateCouplePayload {
 
   """The `Couple` that was updated by this mutation."""
   couple: Couple
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  man: Person
-
-  """Reads a single `Person` that is related to this `Couple`."""
-  woman: Person
 }
 
 """All input for the `updateEventInstance` mutation."""
@@ -15984,22 +15740,6 @@ type UpdateEventInstancePayload {
 
   """The `EventInstance` that was updated by this mutation."""
   eventInstance: EventInstance
-
-  """
-  Reads a single `TenantLocation` that is related to this `EventInstance`.
-  """
-  location: TenantLocation
-
-  """Reads a single `Location` that is related to this `EventInstance`."""
-  locationRecord: Location
-
-  """
-  Reads a single `EventInstance` that is related to this `EventInstance`.
-  """
-  parent: EventInstance
-
-  """Reads a single `EventSeries` that is related to this `EventInstance`."""
-  series: EventSeries
 }
 
 """All input for the `updateEventSeries` mutation."""
@@ -16058,9 +15798,6 @@ type UpdateLocationPayload {
   """
   clientMutationId: String
 
-  """Reads a single `File` that is related to this `Location`."""
-  coverImage: File
-
   """The `Location` that was updated by this mutation."""
   location: Location
 }
@@ -16090,9 +15827,6 @@ type UpdateMembershipApplicationPayload {
 
   """The `MembershipApplication` that was updated by this mutation."""
   membershipApplication: MembershipApplication
-
-  """Reads a single `User` that is related to this `MembershipApplication`."""
-  userByCreatedBy: User
 }
 
 """All input for the `updatePayment` mutation."""
@@ -16117,12 +15851,6 @@ type UpdatePaymentPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `CohortSubscription` that is related to this `Payment`."""
-  cohortSubscription: CohortSubscription
-
-  """Reads a single `EventInstance` that is related to this `Payment`."""
-  eventInstance: EventInstance
 
   """The `Payment` that was updated by this mutation."""
   payment: Payment
@@ -16184,16 +15912,6 @@ type UpdateScoreboardManualAdjustmentPayload {
   """
   clientMutationId: String
 
-  """
-  Reads a single `Cohort` that is related to this `ScoreboardManualAdjustment`.
-  """
-  cohort: Cohort
-
-  """
-  Reads a single `Person` that is related to this `ScoreboardManualAdjustment`.
-  """
-  person: Person
-
   """The `ScoreboardManualAdjustment` that was updated by this mutation."""
   scoreboardManualAdjustment: ScoreboardManualAdjustment
 }
@@ -16220,9 +15938,6 @@ type UpdateTenantAdministratorPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantAdministrator`."""
-  person: Person
 
   """The `TenantAdministrator` that was updated by this mutation."""
   tenantAdministrator: TenantAdministrator
@@ -16271,9 +15986,6 @@ type UpdateTenantMembershipPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `Person` that is related to this `TenantMembership`."""
-  person: Person
 
   """The `TenantMembership` that was updated by this mutation."""
   tenantMembership: TenantMembership
@@ -16380,9 +16092,6 @@ type UpdateTenantTrainerPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `TenantTrainer`."""
-  person: Person
-
   """The `TenantTrainer` that was updated by this mutation."""
   tenantTrainer: TenantTrainer
 
@@ -16416,12 +16125,6 @@ type UpdateUserProxyPayload {
   """
   clientMutationId: String
 
-  """Reads a single `Person` that is related to this `UserProxy`."""
-  person: Person
-
-  """Reads a single `User` that is related to this `UserProxy`."""
-  user: User
-
   """The `UserProxy` that was updated by this mutation."""
   userProxy: UserProxy
 }
@@ -16448,9 +16151,6 @@ type UpsertAnnouncementPayload {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnnouncementsEdge
-
-  """Reads a single `User` that is related to this `Announcement`."""
-  author: User
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -16486,9 +16186,6 @@ type UpsertArticlePayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `User` that is related to this `Aktuality`."""
-  userByAtKdo: User
 }
 
 """All input for the `upsertLocation` mutation."""
@@ -16510,9 +16207,6 @@ type UpsertLocationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """Reads a single `File` that is related to this `Location`."""
-  coverImage: File
   location: Location
 
   """An edge for our `Location`. May be used by Relay 1."""

@@ -2910,15 +2910,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "cohortGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortGroup",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -9006,24 +8997,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -9041,28 +9014,10 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "cohortMembership",
             "type": {
               "kind": "OBJECT",
               "name": "CohortMembership",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
               "ofType": null
             },
             "args": []
@@ -9090,15 +9045,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "cohortGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortGroup",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -9123,24 +9069,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "man",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "woman",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -9154,15 +9082,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "payment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Payment",
-              "ofType": null
             },
             "args": []
           },
@@ -9267,15 +9186,6 @@
             "args": []
           },
           {
-            "name": "coverImage",
-            "type": {
-              "kind": "OBJECT",
-              "name": "File",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "location",
             "type": {
               "kind": "OBJECT",
@@ -9307,15 +9217,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -9329,15 +9230,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -9416,24 +9308,6 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "scoreboardManualAdjustment",
             "type": {
               "kind": "OBJECT",
@@ -9454,15 +9328,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -9517,15 +9382,6 @@
             "args": []
           },
           {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "tenantMembership",
             "type": {
               "kind": "OBJECT",
@@ -9576,15 +9432,6 @@
             "args": []
           },
           {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "tenantTrainer",
             "type": {
               "kind": "OBJECT",
@@ -9631,24 +9478,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
             },
             "args": []
           },
@@ -10278,15 +10107,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "userByAtKdo",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -10331,15 +10151,6 @@
             ]
           },
           {
-            "name": "author",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
@@ -10363,28 +10174,10 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "cohortMembership",
             "type": {
               "kind": "OBJECT",
               "name": "CohortMembership",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
               "ofType": null
             },
             "args": []
@@ -10412,15 +10205,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "cohortGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortGroup",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -10445,24 +10229,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "man",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "woman",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -10484,42 +10250,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "locationRecord",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "parent",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "series",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
               "ofType": null
             },
             "args": []
@@ -10590,15 +10320,6 @@
             "args": []
           },
           {
-            "name": "coverImage",
-            "type": {
-              "kind": "OBJECT",
-              "name": "File",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "location",
             "type": {
               "kind": "OBJECT",
@@ -10630,15 +10351,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -10652,24 +10364,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "cohortSubscription",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortSubscription",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
             },
             "args": []
           },
@@ -10694,15 +10388,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -10781,24 +10466,6 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "scoreboardManualAdjustment",
             "type": {
               "kind": "OBJECT",
@@ -10819,15 +10486,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -10882,15 +10540,6 @@
             "args": []
           },
           {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "tenantMembership",
             "type": {
               "kind": "OBJECT",
@@ -10937,15 +10586,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -11000,15 +10640,6 @@
             "args": []
           },
           {
-            "name": "payment",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Payment",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "transaction",
             "type": {
               "kind": "OBJECT",
@@ -11055,24 +10686,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
             },
             "args": []
           },
@@ -19240,42 +18853,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "locationRecord",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "parent",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "series",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -29024,15 +28601,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -29505,15 +29073,6 @@
             "args": []
           },
           {
-            "name": "couple",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Couple",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "eventInstanceRegistration",
             "type": {
               "kind": "OBJECT",
@@ -29547,42 +29106,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "instance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "parentRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstanceRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "targetCohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -29656,24 +29179,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "registration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstanceRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "trainer",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstanceTrainer",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -33768,24 +33273,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -33830,15 +33317,6 @@
             ]
           },
           {
-            "name": "author",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "clientMutationId",
             "type": {
               "kind": "SCALAR",
@@ -33858,15 +33336,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "couple",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Couple",
-              "ofType": null
             },
             "args": []
           },
@@ -33904,42 +33373,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "instance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "parentRegistration",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstanceRegistration",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "targetCohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -33957,28 +33390,10 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "cohortMembership",
             "type": {
               "kind": "OBJECT",
               "name": "CohortMembership",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
               "ofType": null
             },
             "args": []
@@ -34006,15 +33421,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "cohortGroup",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortGroup",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -34039,24 +33445,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "man",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "woman",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -34078,42 +33466,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "location",
-            "type": {
-              "kind": "OBJECT",
-              "name": "TenantLocation",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "locationRecord",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Location",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "parent",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "series",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventSeries",
               "ofType": null
             },
             "args": []
@@ -34184,15 +33536,6 @@
             "args": []
           },
           {
-            "name": "coverImage",
-            "type": {
-              "kind": "OBJECT",
-              "name": "File",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "location",
             "type": {
               "kind": "OBJECT",
@@ -34224,15 +33567,6 @@
               "ofType": null
             },
             "args": []
-          },
-          {
-            "name": "userByCreatedBy",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -34246,24 +33580,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "cohortSubscription",
-            "type": {
-              "kind": "OBJECT",
-              "name": "CohortSubscription",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "eventInstance",
-            "type": {
-              "kind": "OBJECT",
-              "name": "EventInstance",
-              "ofType": null
             },
             "args": []
           },
@@ -34342,24 +33658,6 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "scoreboardManualAdjustment",
             "type": {
               "kind": "OBJECT",
@@ -34380,15 +33678,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -34439,15 +33728,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
             },
             "args": []
           },
@@ -34626,15 +33906,6 @@
             "args": []
           },
           {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "tenantTrainer",
             "type": {
               "kind": "OBJECT",
@@ -34681,24 +33952,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "person",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Person",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "user",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
             },
             "args": []
           },
@@ -34752,15 +34005,6 @@
                 }
               }
             ]
-          },
-          {
-            "name": "author",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           },
           {
             "name": "clientMutationId",
@@ -34819,15 +34063,6 @@
               "name": "Any"
             },
             "args": []
-          },
-          {
-            "name": "userByAtKdo",
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "args": []
           }
         ],
         "interfaces": []
@@ -34841,15 +34076,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "coverImage",
-            "type": {
-              "kind": "OBJECT",
-              "name": "File",
-              "ofType": null
             },
             "args": []
           },

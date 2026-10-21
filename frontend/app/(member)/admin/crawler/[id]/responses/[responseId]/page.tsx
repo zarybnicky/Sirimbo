@@ -32,8 +32,7 @@ export default async function ResponsePage({
   if (typeof content === 'string') {
     try {
       content = JSON.parse(content);
-    } catch {
-    }
+    } catch {}
   }
 
   const frontierTitle = `${frontier.federation}:${frontier.kind}${frontier.key ? `:${frontier.key}` : ''}`;

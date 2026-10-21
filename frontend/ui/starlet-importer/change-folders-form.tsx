@@ -74,9 +74,7 @@ export function ChangeFoldersForm() {
     const foldersResult = await updateSettings({
       input: {
         path: ['evidenceFolders'],
-        newValue: JSON.stringify(selectedFolders),
-        // TODO: Enable with dynamicJson.
-        // newValue: selectedFolders,
+        newValue: selectedFolders,
       },
     });
     if (foldersResult.error) return;
@@ -87,9 +85,7 @@ export function ChangeFoldersForm() {
     const seasonsResult = await updateSettings({
       input: {
         path: ['evidenceSeasons'],
-        newValue: JSON.stringify(selectedSeasons),
-        // TODO: Enable with dynamicJson.
-        // newValue: selectedSeasons,
+        newValue: selectedSeasons,
       },
     });
     if (!seasonsResult.error) onSuccess();

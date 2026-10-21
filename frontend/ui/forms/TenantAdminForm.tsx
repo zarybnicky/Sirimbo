@@ -72,9 +72,7 @@ export function TenantAdminEdit({ tenant }: Readonly<{ tenant: TenantFullFragmen
 
     const saved = await replaceSettings({
       tenantId: tenant.id,
-      settings: values.settings,
-      // TODO: Enable with dynamicJson.
-      // settings: JSON.parse(values.settings),
+      settings: JSON.parse(values.settings),
     });
     if (!saved.error) onSuccess();
   };
