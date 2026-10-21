@@ -575,28 +575,6 @@ export type AgeGroupsOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
-/** A connection to a list of `Aktuality` values. */
-export type AktualitiesConnection = {
-  __typename?: 'AktualitiesConnection';
-  /** A list of edges which contains the `Aktuality` and cursor to aid in pagination. */
-  edges: Array<AktualitiesEdge>;
-  /** A list of `Aktuality` objects. */
-  nodes: Array<Aktuality>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Aktuality` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Aktuality` edge in the connection. */
-export type AktualitiesEdge = {
-  __typename?: 'AktualitiesEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Aktuality` at the end of the edge. */
-  node: Aktuality;
-};
-
 /** Methods to use when ordering `Aktuality`. */
 export type AktualitiesOrderBy =
   | 'AT_FOTO_ASC'
@@ -639,7 +617,7 @@ export type Aktuality = {
   atPreview: Scalars['String']['output'];
   atText: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `ArticleAttachment`. */
-  attachments: ArticleAttachmentsConnection;
+  attachments: ArticleAttachmentConnection;
   createdAt: Maybe<Scalars['Datetime']['output']>;
   id: Scalars['BigInt']['output'];
   isVisible: Scalars['Boolean']['output'];
@@ -695,12 +673,34 @@ export type AktualityCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `Aktuality` values. */
+export type AktualityConnection = {
+  __typename?: 'AktualityConnection';
+  /** A list of edges which contains the `Aktuality` and cursor to aid in pagination. */
+  edges: Array<AktualityEdge>;
+  /** A list of `Aktuality` objects. */
+  nodes: Array<Aktuality>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Aktuality` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Aktuality` edge in the connection. */
+export type AktualityEdge = {
+  __typename?: 'AktualityEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Aktuality` at the end of the edge. */
+  node: Aktuality;
+};
+
 export type Announcement = {
   __typename?: 'Announcement';
   /** Reads and enables pagination through a set of `AnnouncementAudience`. */
-  announcementAudiences: AnnouncementAudiencesConnection;
+  announcementAudiences: AnnouncementAudienceConnection;
   /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
-  attachments: AnnouncementAttachmentsConnection;
+  attachments: AnnouncementAttachmentConnection;
   /** Reads a single `User` that is related to this `Announcement`. */
   author: Maybe<User>;
   authorId: Maybe<Scalars['BigInt']['output']>;
@@ -767,10 +767,10 @@ export type AnnouncementAttachmentCondition = {
 };
 
 /** A connection to a list of `AnnouncementAttachment` values. */
-export type AnnouncementAttachmentsConnection = {
-  __typename?: 'AnnouncementAttachmentsConnection';
+export type AnnouncementAttachmentConnection = {
+  __typename?: 'AnnouncementAttachmentConnection';
   /** A list of edges which contains the `AnnouncementAttachment` and cursor to aid in pagination. */
-  edges: Array<AnnouncementAttachmentsEdge>;
+  edges: Array<AnnouncementAttachmentEdge>;
   /** A list of `AnnouncementAttachment` objects. */
   nodes: Array<AnnouncementAttachment>;
   /** Information to aid in pagination. */
@@ -780,8 +780,8 @@ export type AnnouncementAttachmentsConnection = {
 };
 
 /** A `AnnouncementAttachment` edge in the connection. */
-export type AnnouncementAttachmentsEdge = {
-  __typename?: 'AnnouncementAttachmentsEdge';
+export type AnnouncementAttachmentEdge = {
+  __typename?: 'AnnouncementAttachmentEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AnnouncementAttachment` at the end of the edge. */
@@ -832,6 +832,28 @@ export type AnnouncementAudienceCondition = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+/** A connection to a list of `AnnouncementAudience` values. */
+export type AnnouncementAudienceConnection = {
+  __typename?: 'AnnouncementAudienceConnection';
+  /** A list of edges which contains the `AnnouncementAudience` and cursor to aid in pagination. */
+  edges: Array<AnnouncementAudienceEdge>;
+  /** A list of `AnnouncementAudience` objects. */
+  nodes: Array<AnnouncementAudience>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AnnouncementAudience` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `AnnouncementAudience` edge in the connection. */
+export type AnnouncementAudienceEdge = {
+  __typename?: 'AnnouncementAudienceEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `AnnouncementAudience` at the end of the edge. */
+  node: AnnouncementAudience;
+};
+
 export type AnnouncementAudienceRole =
   | 'ADMINISTRATOR'
   | 'MEMBER'
@@ -842,28 +864,6 @@ export type AnnouncementAudienceTypeInputRecordInput = {
   audienceRole?: InputMaybe<AnnouncementAudienceRole>;
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
-/** A connection to a list of `AnnouncementAudience` values. */
-export type AnnouncementAudiencesConnection = {
-  __typename?: 'AnnouncementAudiencesConnection';
-  /** A list of edges which contains the `AnnouncementAudience` and cursor to aid in pagination. */
-  edges: Array<AnnouncementAudiencesEdge>;
-  /** A list of `AnnouncementAudience` objects. */
-  nodes: Array<AnnouncementAudience>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `AnnouncementAudience` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `AnnouncementAudience` edge in the connection. */
-export type AnnouncementAudiencesEdge = {
-  __typename?: 'AnnouncementAudiencesEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `AnnouncementAudience` at the end of the edge. */
-  node: AnnouncementAudience;
 };
 
 /** Methods to use when ordering `AnnouncementAudience`. */
@@ -911,6 +911,28 @@ export type AnnouncementCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `Announcement` values. */
+export type AnnouncementConnection = {
+  __typename?: 'AnnouncementConnection';
+  /** A list of edges which contains the `Announcement` and cursor to aid in pagination. */
+  edges: Array<AnnouncementEdge>;
+  /** A list of `Announcement` objects. */
+  nodes: Array<Announcement>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Announcement` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Announcement` edge in the connection. */
+export type AnnouncementEdge = {
+  __typename?: 'AnnouncementEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Announcement` at the end of the edge. */
+  node: Announcement;
+};
+
 /** Represents an update to a `Announcement`. Fields that are set will be updated. */
 export type AnnouncementPatch = {
   authorId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -941,28 +963,6 @@ export type AnnouncementTypeInputRecordInput = {
   scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<AnnouncementStatus>;
   title?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** A connection to a list of `Announcement` values. */
-export type AnnouncementsConnection = {
-  __typename?: 'AnnouncementsConnection';
-  /** A list of edges which contains the `Announcement` and cursor to aid in pagination. */
-  edges: Array<AnnouncementsEdge>;
-  /** A list of `Announcement` objects. */
-  nodes: Array<Announcement>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Announcement` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Announcement` edge in the connection. */
-export type AnnouncementsEdge = {
-  __typename?: 'AnnouncementsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Announcement` at the end of the edge. */
-  node: Announcement;
 };
 
 /** Methods to use when ordering `Announcement`. */
@@ -1019,7 +1019,7 @@ export type ArchiveCohortPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   cohort: Maybe<Cohort>;
   /** An edge for our `Cohort`. May be used by Relay 1. */
-  cohortEdge: Maybe<CohortsEdge>;
+  cohortEdge: Maybe<CohortEdge>;
 };
 
 
@@ -1056,10 +1056,10 @@ export type ArticleAttachmentCondition = {
 };
 
 /** A connection to a list of `ArticleAttachment` values. */
-export type ArticleAttachmentsConnection = {
-  __typename?: 'ArticleAttachmentsConnection';
+export type ArticleAttachmentConnection = {
+  __typename?: 'ArticleAttachmentConnection';
   /** A list of edges which contains the `ArticleAttachment` and cursor to aid in pagination. */
-  edges: Array<ArticleAttachmentsEdge>;
+  edges: Array<ArticleAttachmentEdge>;
   /** A list of `ArticleAttachment` objects. */
   nodes: Array<ArticleAttachment>;
   /** Information to aid in pagination. */
@@ -1069,8 +1069,8 @@ export type ArticleAttachmentsConnection = {
 };
 
 /** A `ArticleAttachment` edge in the connection. */
-export type ArticleAttachmentsEdge = {
-  __typename?: 'ArticleAttachmentsEdge';
+export type ArticleAttachmentEdge = {
+  __typename?: 'ArticleAttachmentEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `ArticleAttachment` at the end of the edge. */
@@ -1141,16 +1141,16 @@ export type Category = {
   baseDanceProgramId: Maybe<Scalars['BigInt']['output']>;
   class: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Competition`. */
-  competitions: CompetitionsConnection;
+  competitions: CompetitionConnection;
   /** Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`. */
-  competitorProgresses: FederationCompetitorCategoryProgressesConnection;
+  competitorProgresses: FederationCompetitorCategoryProgressConnection;
   competitorType: CompetitorType;
   discipline: Scalars['String']['output'];
   genderGroup: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Ranklist`. */
-  ranklists: RanklistsConnection;
+  ranklists: RanklistConnection;
   series: Scalars['String']['output'];
 };
 
@@ -1235,7 +1235,7 @@ export type ChangePasswordPayload = {
 export type Cohort = {
   __typename?: 'Cohort';
   /** Reads and enables pagination through a set of `AnnouncementAudience`. */
-  announcementAudiences: AnnouncementAudiencesConnection;
+  announcementAudiences: AnnouncementAudienceConnection;
   /** Reads a single `CohortGroup` that is related to this `Cohort`. */
   cohortGroup: Maybe<CohortGroup>;
   cohortGroupId: Maybe<Scalars['BigInt']['output']>;
@@ -1246,7 +1246,7 @@ export type Cohort = {
   colorRgb: Scalars['String']['output'];
   description: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrationsByTargetCohortId: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByTargetCohortIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTargetCohort`. */
@@ -1351,6 +1351,15 @@ export type CohortCondition = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+/** A `Cohort` edge in the connection. */
+export type CohortEdge = {
+  __typename?: 'CohortEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Cohort` at the end of the edge. */
+  node: Cohort;
+};
+
 export type CohortGroup = {
   __typename?: 'CohortGroup';
   /** Reads and enables pagination through a set of `Cohort`. */
@@ -1391,10 +1400,10 @@ export type CohortGroupCondition = {
 };
 
 /** A connection to a list of `CohortGroup` values. */
-export type CohortGroupsConnection = {
-  __typename?: 'CohortGroupsConnection';
+export type CohortGroupConnection = {
+  __typename?: 'CohortGroupConnection';
   /** A list of edges which contains the `CohortGroup` and cursor to aid in pagination. */
-  edges: Array<CohortGroupsEdge>;
+  edges: Array<CohortGroupEdge>;
   /** A list of `CohortGroup` objects. */
   nodes: Array<CohortGroup>;
   /** Information to aid in pagination. */
@@ -1404,8 +1413,8 @@ export type CohortGroupsConnection = {
 };
 
 /** A `CohortGroup` edge in the connection. */
-export type CohortGroupsEdge = {
-  __typename?: 'CohortGroupsEdge';
+export type CohortGroupEdge = {
+  __typename?: 'CohortGroupEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CohortGroup` at the end of the edge. */
@@ -1639,15 +1648,6 @@ export type CohortSubscriptionsOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
-/** A `Cohort` edge in the connection. */
-export type CohortsEdge = {
-  __typename?: 'CohortsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Cohort` at the end of the edge. */
-  node: Cohort;
-};
-
 /** Methods to use when ordering `Cohort`. */
 export type CohortsOrderBy =
   | 'COHORT_GROUP_ID_ASC'
@@ -1685,7 +1685,7 @@ export type Competition = {
   completedAt: Maybe<Scalars['Datetime']['output']>;
   endDate: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `CompetitionEntry`. */
-  entries: CompetitionEntriesConnection;
+  entries: CompetitionEntryConnection;
   /** Reads and enables pagination through a set of `CompetitionEntry`. */
   entriesList: Array<CompetitionEntry>;
   /** Reads a single `FederationEvent` that is related to this `Competition`. */
@@ -1698,11 +1698,11 @@ export type Competition = {
   federationByFederation: Maybe<Federation>;
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `CompetitionOfficial`. */
-  officials: CompetitionOfficialsConnection;
+  officials: CompetitionOfficialConnection;
   participantsTotal: Maybe<Scalars['Int']['output']>;
   registrationFee: Maybe<Scalars['BigFloat']['output']>;
   /** Reads and enables pagination through a set of `CompetitionResult`. */
-  results: CompetitionResultsConnection;
+  results: CompetitionResultConnection;
   /** Reads and enables pagination through a set of `CompetitionResult`. */
   resultsList: Array<CompetitionResult>;
   /** Reads and enables pagination through a set of `CompetitionRound`. */
@@ -1807,6 +1807,19 @@ export type CompetitionCondition = {
   status?: InputMaybe<FederationEventStatus>;
 };
 
+/** A connection to a list of `Competition` values. */
+export type CompetitionConnection = {
+  __typename?: 'CompetitionConnection';
+  /** A list of edges which contains the `Competition` and cursor to aid in pagination. */
+  edges: Array<CompetitionEdge>;
+  /** A list of `Competition` objects. */
+  nodes: Array<Competition>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Competition` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
 export type CompetitionDateCondition = {
   /** Inclusive event or competition start date. */
   since?: InputMaybe<Scalars['Date']['input']>;
@@ -1814,26 +1827,13 @@ export type CompetitionDateCondition = {
   until?: InputMaybe<Scalars['Date']['input']>;
 };
 
-/** A connection to a list of `CompetitionEntry` values. */
-export type CompetitionEntriesConnection = {
-  __typename?: 'CompetitionEntriesConnection';
-  /** A list of edges which contains the `CompetitionEntry` and cursor to aid in pagination. */
-  edges: Array<CompetitionEntriesEdge>;
-  /** A list of `CompetitionEntry` objects. */
-  nodes: Array<CompetitionEntry>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `CompetitionEntry` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `CompetitionEntry` edge in the connection. */
-export type CompetitionEntriesEdge = {
-  __typename?: 'CompetitionEntriesEdge';
+/** A `Competition` edge in the connection. */
+export type CompetitionEdge = {
+  __typename?: 'CompetitionEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `CompetitionEntry` at the end of the edge. */
-  node: CompetitionEntry;
+  /** The `Competition` at the end of the edge. */
+  node: Competition;
 };
 
 /** Methods to use when ordering `CompetitionEntry`. */
@@ -1879,6 +1879,28 @@ export type CompetitionEntryCondition = {
   participant?: InputMaybe<CompetitionParticipantCondition>;
 };
 
+/** A connection to a list of `CompetitionEntry` values. */
+export type CompetitionEntryConnection = {
+  __typename?: 'CompetitionEntryConnection';
+  /** A list of edges which contains the `CompetitionEntry` and cursor to aid in pagination. */
+  edges: Array<CompetitionEntryEdge>;
+  /** A list of `CompetitionEntry` objects. */
+  nodes: Array<CompetitionEntry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CompetitionEntry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CompetitionEntry` edge in the connection. */
+export type CompetitionEntryEdge = {
+  __typename?: 'CompetitionEntryEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `CompetitionEntry` at the end of the edge. */
+  node: CompetitionEntry;
+};
+
 export type CompetitionOfficial = {
   __typename?: 'CompetitionOfficial';
   /** Reads a single `Competition` that is related to this `CompetitionOfficial`. */
@@ -1910,10 +1932,10 @@ export type CompetitionOfficialCondition = {
 };
 
 /** A connection to a list of `CompetitionOfficial` values. */
-export type CompetitionOfficialsConnection = {
-  __typename?: 'CompetitionOfficialsConnection';
+export type CompetitionOfficialConnection = {
+  __typename?: 'CompetitionOfficialConnection';
   /** A list of edges which contains the `CompetitionOfficial` and cursor to aid in pagination. */
-  edges: Array<CompetitionOfficialsEdge>;
+  edges: Array<CompetitionOfficialEdge>;
   /** A list of `CompetitionOfficial` objects. */
   nodes: Array<CompetitionOfficial>;
   /** Information to aid in pagination. */
@@ -1923,8 +1945,8 @@ export type CompetitionOfficialsConnection = {
 };
 
 /** A `CompetitionOfficial` edge in the connection. */
-export type CompetitionOfficialsEdge = {
-  __typename?: 'CompetitionOfficialsEdge';
+export type CompetitionOfficialEdge = {
+  __typename?: 'CompetitionOfficialEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionOfficial` at the end of the edge. */
@@ -2014,10 +2036,10 @@ export type CompetitionResultCondition = {
 };
 
 /** A connection to a list of `CompetitionResult` values. */
-export type CompetitionResultsConnection = {
-  __typename?: 'CompetitionResultsConnection';
+export type CompetitionResultConnection = {
+  __typename?: 'CompetitionResultConnection';
   /** A list of edges which contains the `CompetitionResult` and cursor to aid in pagination. */
-  edges: Array<CompetitionResultsEdge>;
+  edges: Array<CompetitionResultEdge>;
   /** A list of `CompetitionResult` objects. */
   nodes: Array<CompetitionResult>;
   /** Information to aid in pagination. */
@@ -2027,8 +2049,8 @@ export type CompetitionResultsConnection = {
 };
 
 /** A `CompetitionResult` edge in the connection. */
-export type CompetitionResultsEdge = {
-  __typename?: 'CompetitionResultsEdge';
+export type CompetitionResultEdge = {
+  __typename?: 'CompetitionResultEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionResult` at the end of the edge. */
@@ -2142,6 +2164,19 @@ export type CompetitionRoundCondition = {
   scoringMethod?: InputMaybe<ScoringMethod>;
 };
 
+/** A connection to a list of `CompetitionRound` values. */
+export type CompetitionRoundConnection = {
+  __typename?: 'CompetitionRoundConnection';
+  /** A list of edges which contains the `CompetitionRound` and cursor to aid in pagination. */
+  edges: Array<CompetitionRoundEdge>;
+  /** A list of `CompetitionRound` objects. */
+  nodes: Array<CompetitionRound>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CompetitionRound` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
 export type CompetitionRoundDance = {
   __typename?: 'CompetitionRoundDance';
   /** Reads a single `Dance` that is related to this `CompetitionRoundDance`. */
@@ -2152,7 +2187,7 @@ export type CompetitionRoundDance = {
   danceProgramDanceByDanceProgramIdAndDanceCode: Maybe<DanceProgramDance>;
   danceProgramId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `JudgeScore`. */
-  judgeScores: JudgeScoresConnection;
+  judgeScores: JudgeScoreConnection;
   /** Reads a single `CompetitionRound` that is related to this `CompetitionRoundDance`. */
   roundDanceProgram: Maybe<CompetitionRound>;
   roundId: Scalars['BigInt']['output'];
@@ -2185,10 +2220,10 @@ export type CompetitionRoundDanceCondition = {
 };
 
 /** A connection to a list of `CompetitionRoundDance` values. */
-export type CompetitionRoundDancesConnection = {
-  __typename?: 'CompetitionRoundDancesConnection';
+export type CompetitionRoundDanceConnection = {
+  __typename?: 'CompetitionRoundDanceConnection';
   /** A list of edges which contains the `CompetitionRoundDance` and cursor to aid in pagination. */
-  edges: Array<CompetitionRoundDancesEdge>;
+  edges: Array<CompetitionRoundDanceEdge>;
   /** A list of `CompetitionRoundDance` objects. */
   nodes: Array<CompetitionRoundDance>;
   /** Information to aid in pagination. */
@@ -2198,8 +2233,8 @@ export type CompetitionRoundDancesConnection = {
 };
 
 /** A `CompetitionRoundDance` edge in the connection. */
-export type CompetitionRoundDancesEdge = {
-  __typename?: 'CompetitionRoundDancesEdge';
+export type CompetitionRoundDanceEdge = {
+  __typename?: 'CompetitionRoundDanceEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionRoundDance` at the end of the edge. */
@@ -2219,6 +2254,15 @@ export type CompetitionRoundDancesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'ROUND_ID_ASC'
   | 'ROUND_ID_DESC';
+
+/** A `CompetitionRound` edge in the connection. */
+export type CompetitionRoundEdge = {
+  __typename?: 'CompetitionRoundEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `CompetitionRound` at the end of the edge. */
+  node: CompetitionRound;
+};
 
 export type CompetitionRoundJudge = {
   __typename?: 'CompetitionRoundJudge';
@@ -2248,10 +2292,10 @@ export type CompetitionRoundJudgeCondition = {
 };
 
 /** A connection to a list of `CompetitionRoundJudge` values. */
-export type CompetitionRoundJudgesConnection = {
-  __typename?: 'CompetitionRoundJudgesConnection';
+export type CompetitionRoundJudgeConnection = {
+  __typename?: 'CompetitionRoundJudgeConnection';
   /** A list of edges which contains the `CompetitionRoundJudge` and cursor to aid in pagination. */
-  edges: Array<CompetitionRoundJudgesEdge>;
+  edges: Array<CompetitionRoundJudgeEdge>;
   /** A list of `CompetitionRoundJudge` objects. */
   nodes: Array<CompetitionRoundJudge>;
   /** Information to aid in pagination. */
@@ -2261,8 +2305,8 @@ export type CompetitionRoundJudgesConnection = {
 };
 
 /** A `CompetitionRoundJudge` edge in the connection. */
-export type CompetitionRoundJudgesEdge = {
-  __typename?: 'CompetitionRoundJudgesEdge';
+export type CompetitionRoundJudgeEdge = {
+  __typename?: 'CompetitionRoundJudgeEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionRoundJudge` at the end of the edge. */
@@ -2320,10 +2364,10 @@ export type CompetitionRoundResultCondition = {
 };
 
 /** A connection to a list of `CompetitionRoundResult` values. */
-export type CompetitionRoundResultsConnection = {
-  __typename?: 'CompetitionRoundResultsConnection';
+export type CompetitionRoundResultConnection = {
+  __typename?: 'CompetitionRoundResultConnection';
   /** A list of edges which contains the `CompetitionRoundResult` and cursor to aid in pagination. */
-  edges: Array<CompetitionRoundResultsEdge>;
+  edges: Array<CompetitionRoundResultEdge>;
   /** A list of `CompetitionRoundResult` objects. */
   nodes: Array<CompetitionRoundResult>;
   /** Information to aid in pagination. */
@@ -2333,8 +2377,8 @@ export type CompetitionRoundResultsConnection = {
 };
 
 /** A `CompetitionRoundResult` edge in the connection. */
-export type CompetitionRoundResultsEdge = {
-  __typename?: 'CompetitionRoundResultsEdge';
+export type CompetitionRoundResultEdge = {
+  __typename?: 'CompetitionRoundResultEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionRoundResult` at the end of the edge. */
@@ -2358,28 +2402,6 @@ export type CompetitionRoundResultsOrderBy =
   | 'QUALIFIED_NEXT_DESC'
   | 'ROUND_ID_ASC'
   | 'ROUND_ID_DESC';
-
-/** A connection to a list of `CompetitionRound` values. */
-export type CompetitionRoundsConnection = {
-  __typename?: 'CompetitionRoundsConnection';
-  /** A list of edges which contains the `CompetitionRound` and cursor to aid in pagination. */
-  edges: Array<CompetitionRoundsEdge>;
-  /** A list of `CompetitionRound` objects. */
-  nodes: Array<CompetitionRound>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `CompetitionRound` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `CompetitionRound` edge in the connection. */
-export type CompetitionRoundsEdge = {
-  __typename?: 'CompetitionRoundsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `CompetitionRound` at the end of the edge. */
-  node: CompetitionRound;
-};
 
 /** Methods to use when ordering `CompetitionRound`. */
 export type CompetitionRoundsOrderBy =
@@ -2412,28 +2434,6 @@ export type CompetitionType =
   | 'SUPER_LEAGUE'
   | 'TOP_LEVEL'
   | 'UNKNOWN';
-
-/** A connection to a list of `Competition` values. */
-export type CompetitionsConnection = {
-  __typename?: 'CompetitionsConnection';
-  /** A list of edges which contains the `Competition` and cursor to aid in pagination. */
-  edges: Array<CompetitionsEdge>;
-  /** A list of `Competition` objects. */
-  nodes: Array<Competition>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Competition` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Competition` edge in the connection. */
-export type CompetitionsEdge = {
-  __typename?: 'CompetitionsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Competition` at the end of the edge. */
-  node: Competition;
-};
 
 /** Methods to use when ordering `Competition`. */
 export type CompetitionsOrderBy =
@@ -2520,7 +2520,7 @@ export type ConfirmMembershipApplicationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
-  personEdge: Maybe<PeopleEdge>;
+  personEdge: Maybe<PersonEdge>;
 };
 
 
@@ -2534,15 +2534,15 @@ export type Couple = {
   ageGroup: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrations: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `Competition`. */
-  federationCompetitions: CompetitionsConnection;
+  federationCompetitions: CompetitionConnection;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
-  federationCompetitors: FederationCompetitorsConnection;
+  federationCompetitors: FederationCompetitorConnection;
   /** Reads and enables pagination through a set of `RanklistEntry`. */
-  federationRanklistEntries: RanklistEntriesConnection;
+  federationRanklistEntries: RanklistEntryConnection;
   id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   man: Maybe<Person>;
@@ -2736,10 +2736,10 @@ export type CrawlerFetchJobCondition = {
 };
 
 /** A connection to a list of `CrawlerFetchJob` values. */
-export type CrawlerFetchJobsConnection = {
-  __typename?: 'CrawlerFetchJobsConnection';
+export type CrawlerFetchJobConnection = {
+  __typename?: 'CrawlerFetchJobConnection';
   /** A list of edges which contains the `CrawlerFetchJob` and cursor to aid in pagination. */
-  edges: Array<CrawlerFetchJobsEdge>;
+  edges: Array<CrawlerFetchJobEdge>;
   /** A list of `CrawlerFetchJob` objects. */
   nodes: Array<CrawlerFetchJob>;
   /** Information to aid in pagination. */
@@ -2749,8 +2749,8 @@ export type CrawlerFetchJobsConnection = {
 };
 
 /** A `CrawlerFetchJob` edge in the connection. */
-export type CrawlerFetchJobsEdge = {
-  __typename?: 'CrawlerFetchJobsEdge';
+export type CrawlerFetchJobEdge = {
+  __typename?: 'CrawlerFetchJobEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CrawlerFetchJob` at the end of the edge. */
@@ -2819,10 +2819,10 @@ export type CrawlerIncrementalRangeCondition = {
 };
 
 /** A connection to a list of `CrawlerIncrementalRange` values. */
-export type CrawlerIncrementalRangesConnection = {
-  __typename?: 'CrawlerIncrementalRangesConnection';
+export type CrawlerIncrementalRangeConnection = {
+  __typename?: 'CrawlerIncrementalRangeConnection';
   /** A list of edges which contains the `CrawlerIncrementalRange` and cursor to aid in pagination. */
-  edges: Array<CrawlerIncrementalRangesEdge>;
+  edges: Array<CrawlerIncrementalRangeEdge>;
   /** A list of `CrawlerIncrementalRange` objects. */
   nodes: Array<CrawlerIncrementalRange>;
   /** Information to aid in pagination. */
@@ -2832,8 +2832,8 @@ export type CrawlerIncrementalRangesConnection = {
 };
 
 /** A `CrawlerIncrementalRange` edge in the connection. */
-export type CrawlerIncrementalRangesEdge = {
-  __typename?: 'CrawlerIncrementalRangesEdge';
+export type CrawlerIncrementalRangeEdge = {
+  __typename?: 'CrawlerIncrementalRangeEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CrawlerIncrementalRange` at the end of the edge. */
@@ -2881,10 +2881,10 @@ export type CrawlerRateLimitRuleCondition = {
 };
 
 /** A connection to a list of `CrawlerRateLimitRule` values. */
-export type CrawlerRateLimitRulesConnection = {
-  __typename?: 'CrawlerRateLimitRulesConnection';
+export type CrawlerRateLimitRuleConnection = {
+  __typename?: 'CrawlerRateLimitRuleConnection';
   /** A list of edges which contains the `CrawlerRateLimitRule` and cursor to aid in pagination. */
-  edges: Array<CrawlerRateLimitRulesEdge>;
+  edges: Array<CrawlerRateLimitRuleEdge>;
   /** A list of `CrawlerRateLimitRule` objects. */
   nodes: Array<CrawlerRateLimitRule>;
   /** Information to aid in pagination. */
@@ -2894,8 +2894,8 @@ export type CrawlerRateLimitRulesConnection = {
 };
 
 /** A `CrawlerRateLimitRule` edge in the connection. */
-export type CrawlerRateLimitRulesEdge = {
-  __typename?: 'CrawlerRateLimitRulesEdge';
+export type CrawlerRateLimitRuleEdge = {
+  __typename?: 'CrawlerRateLimitRuleEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CrawlerRateLimitRule` at the end of the edge. */
@@ -2934,9 +2934,9 @@ export type CrawlerResponse = {
   observationCount: Scalars['BigInt']['output'];
   sysPeriod: Maybe<DatetimeRange>;
   /** Reads and enables pagination through a set of `CrawlerTarget`. */
-  targetsWithLastSuccessfulResponse: CrawlerTargetsConnection;
+  targetsWithLastSuccessfulResponse: CrawlerTargetConnection;
   /** Reads and enables pagination through a set of `CrawlerTarget`. */
-  targetsWithLatestResponse: CrawlerTargetsConnection;
+  targetsWithLatestResponse: CrawlerTargetConnection;
   url: Scalars['String']['output'];
 };
 
@@ -2967,7 +2967,7 @@ export type CrawlerResponseCache = {
   content: Scalars['JSON']['output'];
   contentHash: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CrawlerResponse`. */
-  responses: CrawlerResponsesConnection;
+  responses: CrawlerResponseConnection;
 };
 
 
@@ -2993,10 +2993,10 @@ export type CrawlerResponseCacheCondition = {
 };
 
 /** A connection to a list of `CrawlerResponseCache` values. */
-export type CrawlerResponseCachesConnection = {
-  __typename?: 'CrawlerResponseCachesConnection';
+export type CrawlerResponseCacheConnection = {
+  __typename?: 'CrawlerResponseCacheConnection';
   /** A list of edges which contains the `CrawlerResponseCache` and cursor to aid in pagination. */
-  edges: Array<CrawlerResponseCachesEdge>;
+  edges: Array<CrawlerResponseCacheEdge>;
   /** A list of `CrawlerResponseCache` objects. */
   nodes: Array<CrawlerResponseCache>;
   /** Information to aid in pagination. */
@@ -3006,8 +3006,8 @@ export type CrawlerResponseCachesConnection = {
 };
 
 /** A `CrawlerResponseCache` edge in the connection. */
-export type CrawlerResponseCachesEdge = {
-  __typename?: 'CrawlerResponseCachesEdge';
+export type CrawlerResponseCacheEdge = {
+  __typename?: 'CrawlerResponseCacheEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CrawlerResponseCache` at the end of the edge. */
@@ -3052,10 +3052,10 @@ export type CrawlerResponseCondition = {
 };
 
 /** A connection to a list of `CrawlerResponse` values. */
-export type CrawlerResponsesConnection = {
-  __typename?: 'CrawlerResponsesConnection';
+export type CrawlerResponseConnection = {
+  __typename?: 'CrawlerResponseConnection';
   /** A list of edges which contains the `CrawlerResponse` and cursor to aid in pagination. */
-  edges: Array<CrawlerResponsesEdge>;
+  edges: Array<CrawlerResponseEdge>;
   /** A list of `CrawlerResponse` objects. */
   nodes: Array<CrawlerResponse>;
   /** Information to aid in pagination. */
@@ -3065,8 +3065,8 @@ export type CrawlerResponsesConnection = {
 };
 
 /** A `CrawlerResponse` edge in the connection. */
-export type CrawlerResponsesEdge = {
-  __typename?: 'CrawlerResponsesEdge';
+export type CrawlerResponseEdge = {
+  __typename?: 'CrawlerResponseEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CrawlerResponse` at the end of the edge. */
@@ -3119,7 +3119,7 @@ export type CrawlerTarget = {
   nextFetchAt: Scalars['Datetime']['output'];
   processStatus: ProcessStatus;
   /** Reads and enables pagination through a set of `CrawlerResponse`. */
-  responses: CrawlerResponsesConnection;
+  responses: CrawlerResponseConnection;
 };
 
 
@@ -3171,6 +3171,28 @@ export type CrawlerTargetCondition = {
   nextFetchAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `processStatus` field. */
   processStatus?: InputMaybe<ProcessStatus>;
+};
+
+/** A connection to a list of `CrawlerTarget` values. */
+export type CrawlerTargetConnection = {
+  __typename?: 'CrawlerTargetConnection';
+  /** A list of edges which contains the `CrawlerTarget` and cursor to aid in pagination. */
+  edges: Array<CrawlerTargetEdge>;
+  /** A list of `CrawlerTarget` objects. */
+  nodes: Array<CrawlerTarget>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CrawlerTarget` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CrawlerTarget` edge in the connection. */
+export type CrawlerTargetEdge = {
+  __typename?: 'CrawlerTargetEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `CrawlerTarget` at the end of the edge. */
+  node: CrawlerTarget;
 };
 
 export type CrawlerTargetFailure = {
@@ -3229,6 +3251,28 @@ export type CrawlerTargetFailureCondition = {
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A connection to a list of `CrawlerTargetFailure` values. */
+export type CrawlerTargetFailureConnection = {
+  __typename?: 'CrawlerTargetFailureConnection';
+  /** A list of edges which contains the `CrawlerTargetFailure` and cursor to aid in pagination. */
+  edges: Array<CrawlerTargetFailureEdge>;
+  /** A list of `CrawlerTargetFailure` objects. */
+  nodes: Array<CrawlerTargetFailure>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CrawlerTargetFailure` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CrawlerTargetFailure` edge in the connection. */
+export type CrawlerTargetFailureEdge = {
+  __typename?: 'CrawlerTargetFailureEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `CrawlerTargetFailure` at the end of the edge. */
+  node: CrawlerTargetFailure;
+};
+
 export type CrawlerTargetFailureGroup = {
   __typename?: 'CrawlerTargetFailureGroup';
   count: Maybe<Scalars['Int']['output']>;
@@ -3278,28 +3322,6 @@ export type CrawlerTargetFailureGroupsOrderBy =
   | 'KIND_ASC'
   | 'KIND_DESC'
   | 'NATURAL';
-
-/** A connection to a list of `CrawlerTargetFailure` values. */
-export type CrawlerTargetFailuresConnection = {
-  __typename?: 'CrawlerTargetFailuresConnection';
-  /** A list of edges which contains the `CrawlerTargetFailure` and cursor to aid in pagination. */
-  edges: Array<CrawlerTargetFailuresEdge>;
-  /** A list of `CrawlerTargetFailure` objects. */
-  nodes: Array<CrawlerTargetFailure>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `CrawlerTargetFailure` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `CrawlerTargetFailure` edge in the connection. */
-export type CrawlerTargetFailuresEdge = {
-  __typename?: 'CrawlerTargetFailuresEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `CrawlerTargetFailure` at the end of the edge. */
-  node: CrawlerTargetFailure;
-};
 
 /** Methods to use when ordering `CrawlerTargetFailure`. */
 export type CrawlerTargetFailuresOrderBy =
@@ -3408,28 +3430,6 @@ export type CrawlerTargetSummaryCondition = {
   refetchDue?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `total` field. */
   total?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** A connection to a list of `CrawlerTarget` values. */
-export type CrawlerTargetsConnection = {
-  __typename?: 'CrawlerTargetsConnection';
-  /** A list of edges which contains the `CrawlerTarget` and cursor to aid in pagination. */
-  edges: Array<CrawlerTargetsEdge>;
-  /** A list of `CrawlerTarget` objects. */
-  nodes: Array<CrawlerTarget>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `CrawlerTarget` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `CrawlerTarget` edge in the connection. */
-export type CrawlerTargetsEdge = {
-  __typename?: 'CrawlerTargetsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `CrawlerTarget` at the end of the edge. */
-  node: CrawlerTarget;
 };
 
 /** Methods to use when ordering `CrawlerTarget`. */
@@ -3584,7 +3584,7 @@ export type CreateCreditTransactionForPersonPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   transaction: Maybe<Transaction>;
   /** An edge for our `Transaction`. May be used by Relay 1. */
-  transactionEdge: Maybe<TransactionsEdge>;
+  transactionEdge: Maybe<TransactionEdge>;
 };
 
 
@@ -3719,7 +3719,7 @@ export type CreatePersonPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   p: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
-  personEdge: Maybe<PeopleEdge>;
+  personEdge: Maybe<PersonEdge>;
 };
 
 
@@ -3773,7 +3773,7 @@ export type CreateTenantAdministratorPayload = {
   /** The `TenantAdministrator` that was created by this mutation. */
   tenantAdministrator: Maybe<TenantAdministrator>;
   /** An edge for our `TenantAdministrator`. May be used by Relay 1. */
-  tenantAdministratorEdge: Maybe<TenantAdministratorsEdge>;
+  tenantAdministratorEdge: Maybe<TenantAdministratorEdge>;
 };
 
 
@@ -3804,7 +3804,7 @@ export type CreateTenantMembershipPayload = {
   /** The `TenantMembership` that was created by this mutation. */
   tenantMembership: Maybe<TenantMembership>;
   /** An edge for our `TenantMembership`. May be used by Relay 1. */
-  tenantMembershipEdge: Maybe<TenantMembershipsEdge>;
+  tenantMembershipEdge: Maybe<TenantMembershipEdge>;
 };
 
 
@@ -3835,7 +3835,7 @@ export type CreateTenantTrainerPayload = {
   /** The `TenantTrainer` that was created by this mutation. */
   tenantTrainer: Maybe<TenantTrainer>;
   /** An edge for our `TenantTrainer`. May be used by Relay 1. */
-  tenantTrainerEdge: Maybe<TenantTrainersEdge>;
+  tenantTrainerEdge: Maybe<TenantTrainerEdge>;
 };
 
 
@@ -3900,7 +3900,7 @@ export type DanceProgram = {
   categoriesList: Array<Category>;
   code: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `CompetitionRound`. */
-  competitionRounds: CompetitionRoundsConnection;
+  competitionRounds: CompetitionRoundConnection;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `DanceProgramDance`. */
   dancesList: Array<DanceProgramDance>;
@@ -3966,7 +3966,7 @@ export type DanceProgramDance = {
   program: Maybe<DanceProgram>;
   programId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `CompetitionRoundDance`. */
-  roundDances: CompetitionRoundDancesConnection;
+  roundDances: CompetitionRoundDanceConnection;
 };
 
 
@@ -4119,7 +4119,7 @@ export type DeleteAktualityPayload = {
   /** The `Aktuality` that was deleted by this mutation. */
   aktuality: Maybe<Aktuality>;
   /** An edge for our `Aktuality`. May be used by Relay 1. */
-  aktualityEdge: Maybe<AktualitiesEdge>;
+  aktualityEdge: Maybe<AktualityEdge>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -4149,7 +4149,7 @@ export type DeleteAnnouncementPayload = {
   /** The `Announcement` that was deleted by this mutation. */
   announcement: Maybe<Announcement>;
   /** An edge for our `Announcement`. May be used by Relay 1. */
-  announcementEdge: Maybe<AnnouncementsEdge>;
+  announcementEdge: Maybe<AnnouncementEdge>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -4400,7 +4400,7 @@ export type DeletePersonPayload = {
   /** The `Person` that was deleted by this mutation. */
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
-  personEdge: Maybe<PeopleEdge>;
+  personEdge: Maybe<PersonEdge>;
 };
 
 
@@ -4452,7 +4452,7 @@ export type DeleteTenantAdministratorPayload = {
   /** The `TenantAdministrator` that was deleted by this mutation. */
   tenantAdministrator: Maybe<TenantAdministrator>;
   /** An edge for our `TenantAdministrator`. May be used by Relay 1. */
-  tenantAdministratorEdge: Maybe<TenantAdministratorsEdge>;
+  tenantAdministratorEdge: Maybe<TenantAdministratorEdge>;
 };
 
 
@@ -4482,7 +4482,7 @@ export type DeleteTenantMembershipPayload = {
   /** The `TenantMembership` that was deleted by this mutation. */
   tenantMembership: Maybe<TenantMembership>;
   /** An edge for our `TenantMembership`. May be used by Relay 1. */
-  tenantMembershipEdge: Maybe<TenantMembershipsEdge>;
+  tenantMembershipEdge: Maybe<TenantMembershipEdge>;
 };
 
 
@@ -4512,7 +4512,7 @@ export type DeleteTenantTrainerPayload = {
   /** The `TenantTrainer` that was deleted by this mutation. */
   tenantTrainer: Maybe<TenantTrainer>;
   /** An edge for our `TenantTrainer`. May be used by Relay 1. */
-  tenantTrainerEdge: Maybe<TenantTrainersEdge>;
+  tenantTrainerEdge: Maybe<TenantTrainerEdge>;
 };
 
 
@@ -4542,7 +4542,7 @@ export type DeleteTransactionPayload = {
   /** The `Transaction` that was deleted by this mutation. */
   transaction: Maybe<Transaction>;
   /** An edge for our `Transaction`. May be used by Relay 1. */
-  transactionEdge: Maybe<TransactionsEdge>;
+  transactionEdge: Maybe<TransactionEdge>;
 };
 
 
@@ -4645,7 +4645,7 @@ export type EventInstance = {
   /** @deprecated Use eventInstanceRegistrationsByInstanceIdList. */
   eventExternalRegistrationsByInstanceIdList: Array<EventExternalRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrationsByInstanceId: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrationsByInstanceId: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByInstanceIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
@@ -4819,6 +4819,15 @@ export type EventInstanceCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A `EventInstance` edge in the connection. */
+export type EventInstanceEdge = {
+  __typename?: 'EventInstanceEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventInstance` at the end of the edge. */
+  node: EventInstance;
+};
+
 export type EventInstanceFacetsRecord = {
   __typename?: 'EventInstanceFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
@@ -4873,7 +4882,7 @@ export type EventInstanceRegistration = {
   coupleId: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrationsByParentRegistrationId: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrationsByParentRegistrationId: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsByParentRegistrationIdList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventLessonDemand`. */
@@ -4966,6 +4975,28 @@ export type EventInstanceRegistrationCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `EventInstanceRegistration` values. */
+export type EventInstanceRegistrationConnection = {
+  __typename?: 'EventInstanceRegistrationConnection';
+  /** A list of edges which contains the `EventInstanceRegistration` and cursor to aid in pagination. */
+  edges: Array<EventInstanceRegistrationEdge>;
+  /** A list of `EventInstanceRegistration` objects. */
+  nodes: Array<EventInstanceRegistration>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EventInstanceRegistration` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `EventInstanceRegistration` edge in the connection. */
+export type EventInstanceRegistrationEdge = {
+  __typename?: 'EventInstanceRegistrationEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventInstanceRegistration` at the end of the edge. */
+  node: EventInstanceRegistration;
+};
+
 export type EventInstanceRegistrationInfo = {
   __typename?: 'EventInstanceRegistrationInfo';
   my: Maybe<Scalars['Boolean']['output']>;
@@ -4977,28 +5008,6 @@ export type EventInstanceRegistrationInfo = {
 export type EventInstanceRegistrationStatus =
   | 'ACTIVE'
   | 'CANCELLED';
-
-/** A connection to a list of `EventInstanceRegistration` values. */
-export type EventInstanceRegistrationsConnection = {
-  __typename?: 'EventInstanceRegistrationsConnection';
-  /** A list of edges which contains the `EventInstanceRegistration` and cursor to aid in pagination. */
-  edges: Array<EventInstanceRegistrationsEdge>;
-  /** A list of `EventInstanceRegistration` objects. */
-  nodes: Array<EventInstanceRegistration>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `EventInstanceRegistration` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `EventInstanceRegistration` edge in the connection. */
-export type EventInstanceRegistrationsEdge = {
-  __typename?: 'EventInstanceRegistrationsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `EventInstanceRegistration` at the end of the edge. */
-  node: EventInstanceRegistration;
-};
 
 /** Methods to use when ordering `EventInstanceRegistration`. */
 export type EventInstanceRegistrationsOrderBy =
@@ -5158,15 +5167,6 @@ export type EventInstanceTrainersOrderBy =
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
 
-/** A `EventInstance` edge in the connection. */
-export type EventInstancesEdge = {
-  __typename?: 'EventInstancesEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `EventInstance` at the end of the edge. */
-  node: EventInstance;
-};
-
 /** Methods to use when ordering `EventInstance`. */
 export type EventInstancesOrderBy =
   | 'CAPACITY_ASC'
@@ -5258,8 +5258,8 @@ export type EventLessonDemandCondition = {
 };
 
 /** A `EventLessonDemand` edge in the connection. */
-export type EventLessonDemandsEdge = {
-  __typename?: 'EventLessonDemandsEdge';
+export type EventLessonDemandEdge = {
+  __typename?: 'EventLessonDemandEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `EventLessonDemand` at the end of the edge. */
@@ -5426,24 +5426,24 @@ export type EventType =
 export type Federation = {
   __typename?: 'Federation';
   /** Reads and enables pagination through a set of `FederationClub`. */
-  clubs: FederationClubsConnection;
+  clubs: FederationClubConnection;
   code: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Competition`. */
-  competitions: CompetitionsConnection;
+  competitions: CompetitionConnection;
   competitorFacetsList: Maybe<Array<FederationCompetitorFacetsRecord>>;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
-  competitors: FederationCompetitorsConnection;
+  competitors: FederationCompetitorConnection;
   eventFacets: Maybe<FederationEventFacet>;
   /** Reads and enables pagination through a set of `FederationEvent`. */
-  events: FederationEventsConnection;
+  events: FederationEventConnection;
   /** Reads and enables pagination through a set of `FederationPersonLicense`. */
-  licenses: FederationPersonLicensesConnection;
+  licenses: FederationPersonLicenseConnection;
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `FederationPerson`. */
-  people: FederationPeopleConnection;
+  people: FederationPersonConnection;
   peopleFacetsList: Maybe<Array<FederationPeopleFacetsRecord>>;
   /** Reads and enables pagination through a set of `Ranklist`. */
-  ranklists: RanklistsConnection;
+  ranklists: RanklistConnection;
 };
 
 
@@ -5555,11 +5555,11 @@ export type FederationClub = {
   __typename?: 'FederationClub';
   city: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`. */
-  competitorAffiliations: FederationCompetitorClubAffiliationsConnection;
+  competitorAffiliations: FederationCompetitorClubAffiliationConnection;
   country: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `FederationEvent`. */
-  events: FederationEventsConnection;
+  events: FederationEventConnection;
   externalId: Scalars['String']['output'];
   federation: Scalars['String']['output'];
   /** Reads a single `Federation` that is related to this `FederationClub`. */
@@ -5567,7 +5567,7 @@ export type FederationClub = {
   id: Scalars['BigInt']['output'];
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `FederationPersonClubMembership`. */
-  personMemberships: FederationPersonClubMembershipsConnection;
+  personMemberships: FederationPersonClubMembershipConnection;
 };
 
 
@@ -5625,10 +5625,10 @@ export type FederationClubCondition = {
 };
 
 /** A connection to a list of `FederationClub` values. */
-export type FederationClubsConnection = {
-  __typename?: 'FederationClubsConnection';
+export type FederationClubConnection = {
+  __typename?: 'FederationClubConnection';
   /** A list of edges which contains the `FederationClub` and cursor to aid in pagination. */
-  edges: Array<FederationClubsEdge>;
+  edges: Array<FederationClubEdge>;
   /** A list of `FederationClub` objects. */
   nodes: Array<FederationClub>;
   /** Information to aid in pagination. */
@@ -5638,8 +5638,8 @@ export type FederationClubsConnection = {
 };
 
 /** A `FederationClub` edge in the connection. */
-export type FederationClubsEdge = {
-  __typename?: 'FederationClubsEdge';
+export type FederationClubEdge = {
+  __typename?: 'FederationClubEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationClub` at the end of the edge. */
@@ -5674,16 +5674,16 @@ export type FederationCompetitor = {
   /** Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`. */
   categoryProgressesList: Array<FederationCompetitorCategoryProgress>;
   /** Reads and enables pagination through a set of `FederationCompetitorClubAffiliation`. */
-  clubAffiliations: FederationCompetitorClubAffiliationsConnection;
+  clubAffiliations: FederationCompetitorClubAffiliationConnection;
   /** Reads and enables pagination through a set of `CompetitionEntry`. */
-  competitionEntries: CompetitionEntriesConnection;
+  competitionEntries: CompetitionEntryConnection;
   /** Reads and enables pagination through a set of `CompetitionResult`. */
-  competitionResults: CompetitionResultsConnection;
+  competitionResults: CompetitionResultConnection;
   /** Reads and enables pagination through a set of `Competition`. */
-  competitions: CompetitionsConnection;
+  competitions: CompetitionConnection;
   competitorType: CompetitorType;
   /** Reads and enables pagination through a set of `FederationCompetitorComponent`. */
-  components: FederationCompetitorComponentsConnection;
+  components: FederationCompetitorComponentConnection;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
@@ -5698,9 +5698,9 @@ export type FederationCompetitor = {
   /** Reads and enables pagination through a set of `Person`. */
   peopleList: Array<Person>;
   /** Reads and enables pagination through a set of `RanklistEntry`. */
-  ranklistEntries: RanklistEntriesConnection;
+  ranklistEntries: RanklistEntryConnection;
   /** Reads and enables pagination through a set of `CompetitionRoundResult`. */
-  roundResults: CompetitionRoundResultsConnection;
+  roundResults: CompetitionRoundResultConnection;
 };
 
 
@@ -5835,10 +5835,10 @@ export type FederationCompetitorCategoryProgressCondition = {
 };
 
 /** A connection to a list of `FederationCompetitorCategoryProgress` values. */
-export type FederationCompetitorCategoryProgressesConnection = {
-  __typename?: 'FederationCompetitorCategoryProgressesConnection';
+export type FederationCompetitorCategoryProgressConnection = {
+  __typename?: 'FederationCompetitorCategoryProgressConnection';
   /** A list of edges which contains the `FederationCompetitorCategoryProgress` and cursor to aid in pagination. */
-  edges: Array<FederationCompetitorCategoryProgressesEdge>;
+  edges: Array<FederationCompetitorCategoryProgressEdge>;
   /** A list of `FederationCompetitorCategoryProgress` objects. */
   nodes: Array<FederationCompetitorCategoryProgress>;
   /** Information to aid in pagination. */
@@ -5848,8 +5848,8 @@ export type FederationCompetitorCategoryProgressesConnection = {
 };
 
 /** A `FederationCompetitorCategoryProgress` edge in the connection. */
-export type FederationCompetitorCategoryProgressesEdge = {
-  __typename?: 'FederationCompetitorCategoryProgressesEdge';
+export type FederationCompetitorCategoryProgressEdge = {
+  __typename?: 'FederationCompetitorCategoryProgressEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationCompetitorCategoryProgress` at the end of the edge. */
@@ -5900,10 +5900,10 @@ export type FederationCompetitorClubAffiliationCondition = {
 };
 
 /** A connection to a list of `FederationCompetitorClubAffiliation` values. */
-export type FederationCompetitorClubAffiliationsConnection = {
-  __typename?: 'FederationCompetitorClubAffiliationsConnection';
+export type FederationCompetitorClubAffiliationConnection = {
+  __typename?: 'FederationCompetitorClubAffiliationConnection';
   /** A list of edges which contains the `FederationCompetitorClubAffiliation` and cursor to aid in pagination. */
-  edges: Array<FederationCompetitorClubAffiliationsEdge>;
+  edges: Array<FederationCompetitorClubAffiliationEdge>;
   /** A list of `FederationCompetitorClubAffiliation` objects. */
   nodes: Array<FederationCompetitorClubAffiliation>;
   /** Information to aid in pagination. */
@@ -5913,8 +5913,8 @@ export type FederationCompetitorClubAffiliationsConnection = {
 };
 
 /** A `FederationCompetitorClubAffiliation` edge in the connection. */
-export type FederationCompetitorClubAffiliationsEdge = {
-  __typename?: 'FederationCompetitorClubAffiliationsEdge';
+export type FederationCompetitorClubAffiliationEdge = {
+  __typename?: 'FederationCompetitorClubAffiliationEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationCompetitorClubAffiliation` at the end of the edge. */
@@ -5960,10 +5960,10 @@ export type FederationCompetitorComponentCondition = {
 };
 
 /** A connection to a list of `FederationCompetitorComponent` values. */
-export type FederationCompetitorComponentsConnection = {
-  __typename?: 'FederationCompetitorComponentsConnection';
+export type FederationCompetitorComponentConnection = {
+  __typename?: 'FederationCompetitorComponentConnection';
   /** A list of edges which contains the `FederationCompetitorComponent` and cursor to aid in pagination. */
-  edges: Array<FederationCompetitorComponentsEdge>;
+  edges: Array<FederationCompetitorComponentEdge>;
   /** A list of `FederationCompetitorComponent` objects. */
   nodes: Array<FederationCompetitorComponent>;
   /** Information to aid in pagination. */
@@ -5973,8 +5973,8 @@ export type FederationCompetitorComponentsConnection = {
 };
 
 /** A `FederationCompetitorComponent` edge in the connection. */
-export type FederationCompetitorComponentsEdge = {
-  __typename?: 'FederationCompetitorComponentsEdge';
+export type FederationCompetitorComponentEdge = {
+  __typename?: 'FederationCompetitorComponentEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationCompetitorComponent` at the end of the edge. */
@@ -6022,18 +6022,11 @@ export type FederationCompetitorCondition = {
   search?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type FederationCompetitorFacetsRecord = {
-  __typename?: 'FederationCompetitorFacetsRecord';
-  count: Maybe<Scalars['Int']['output']>;
-  facet: Maybe<Scalars['String']['output']>;
-  value: Maybe<Scalars['String']['output']>;
-};
-
 /** A connection to a list of `FederationCompetitor` values. */
-export type FederationCompetitorsConnection = {
-  __typename?: 'FederationCompetitorsConnection';
+export type FederationCompetitorConnection = {
+  __typename?: 'FederationCompetitorConnection';
   /** A list of edges which contains the `FederationCompetitor` and cursor to aid in pagination. */
-  edges: Array<FederationCompetitorsEdge>;
+  edges: Array<FederationCompetitorEdge>;
   /** A list of `FederationCompetitor` objects. */
   nodes: Array<FederationCompetitor>;
   /** Information to aid in pagination. */
@@ -6043,12 +6036,19 @@ export type FederationCompetitorsConnection = {
 };
 
 /** A `FederationCompetitor` edge in the connection. */
-export type FederationCompetitorsEdge = {
-  __typename?: 'FederationCompetitorsEdge';
+export type FederationCompetitorEdge = {
+  __typename?: 'FederationCompetitorEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationCompetitor` at the end of the edge. */
   node: FederationCompetitor;
+};
+
+export type FederationCompetitorFacetsRecord = {
+  __typename?: 'FederationCompetitorFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
 };
 
 /** Methods to use when ordering `FederationCompetitor`. */
@@ -6122,7 +6122,7 @@ export type FederationEvent = {
   addressNote: Maybe<Scalars['String']['output']>;
   city: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Competition`. */
-  competitions: CompetitionsConnection;
+  competitions: CompetitionConnection;
   /** Reads and enables pagination through a set of `Competition`. */
   competitionsList: Array<Competition>;
   contactEmail: Maybe<Scalars['String']['output']>;
@@ -6140,7 +6140,7 @@ export type FederationEvent = {
   location: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationEventOfficial`. */
-  officials: FederationEventOfficialsConnection;
+  officials: FederationEventOfficialConnection;
   /** Reads a single `FederationClub` that is related to this `FederationEvent`. */
   organizingClub: Maybe<FederationClub>;
   organizingClubId: Maybe<Scalars['BigInt']['output']>;
@@ -6249,6 +6249,28 @@ export type FederationEventCondition = {
   websiteUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A connection to a list of `FederationEvent` values. */
+export type FederationEventConnection = {
+  __typename?: 'FederationEventConnection';
+  /** A list of edges which contains the `FederationEvent` and cursor to aid in pagination. */
+  edges: Array<FederationEventEdge>;
+  /** A list of `FederationEvent` objects. */
+  nodes: Array<FederationEvent>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `FederationEvent` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `FederationEvent` edge in the connection. */
+export type FederationEventEdge = {
+  __typename?: 'FederationEventEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `FederationEvent` at the end of the edge. */
+  node: FederationEvent;
+};
+
 export type FederationEventFacet = {
   __typename?: 'FederationEventFacet';
   years: Array<Maybe<FederationEventYear>>;
@@ -6285,10 +6307,10 @@ export type FederationEventOfficialCondition = {
 };
 
 /** A connection to a list of `FederationEventOfficial` values. */
-export type FederationEventOfficialsConnection = {
-  __typename?: 'FederationEventOfficialsConnection';
+export type FederationEventOfficialConnection = {
+  __typename?: 'FederationEventOfficialConnection';
   /** A list of edges which contains the `FederationEventOfficial` and cursor to aid in pagination. */
-  edges: Array<FederationEventOfficialsEdge>;
+  edges: Array<FederationEventOfficialEdge>;
   /** A list of `FederationEventOfficial` objects. */
   nodes: Array<FederationEventOfficial>;
   /** Information to aid in pagination. */
@@ -6298,8 +6320,8 @@ export type FederationEventOfficialsConnection = {
 };
 
 /** A `FederationEventOfficial` edge in the connection. */
-export type FederationEventOfficialsEdge = {
-  __typename?: 'FederationEventOfficialsEdge';
+export type FederationEventOfficialEdge = {
+  __typename?: 'FederationEventOfficialEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationEventOfficial` at the end of the edge. */
@@ -6335,28 +6357,6 @@ export type FederationEventYear = {
   eventCount: Scalars['Int']['output'];
   mappedEventCount: Scalars['Int']['output'];
   year: Scalars['Int']['output'];
-};
-
-/** A connection to a list of `FederationEvent` values. */
-export type FederationEventsConnection = {
-  __typename?: 'FederationEventsConnection';
-  /** A list of edges which contains the `FederationEvent` and cursor to aid in pagination. */
-  edges: Array<FederationEventsEdge>;
-  /** A list of `FederationEvent` objects. */
-  nodes: Array<FederationEvent>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `FederationEvent` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `FederationEvent` edge in the connection. */
-export type FederationEventsEdge = {
-  __typename?: 'FederationEventsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `FederationEvent` at the end of the edge. */
-  node: FederationEvent;
 };
 
 /** Methods to use when ordering `FederationEvent`. */
@@ -6413,28 +6413,6 @@ export type FederationEventsOrderBy =
   | 'WEBSITE_URL_ASC'
   | 'WEBSITE_URL_DESC';
 
-/** A connection to a list of `FederationPerson` values. */
-export type FederationPeopleConnection = {
-  __typename?: 'FederationPeopleConnection';
-  /** A list of edges which contains the `FederationPerson` and cursor to aid in pagination. */
-  edges: Array<FederationPeopleEdge>;
-  /** A list of `FederationPerson` objects. */
-  nodes: Array<FederationPerson>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `FederationPerson` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `FederationPerson` edge in the connection. */
-export type FederationPeopleEdge = {
-  __typename?: 'FederationPeopleEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `FederationPerson` at the end of the edge. */
-  node: FederationPerson;
-};
-
 export type FederationPeopleFacetsRecord = {
   __typename?: 'FederationPeopleFacetsRecord';
   count: Maybe<Scalars['Int']['output']>;
@@ -6486,15 +6464,15 @@ export type FederationPerson = {
   birthYear: Maybe<Scalars['Int']['output']>;
   canonicalName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationPersonClubMembership`. */
-  clubMemberships: FederationPersonClubMembershipsConnection;
+  clubMemberships: FederationPersonClubMembershipConnection;
   /** Reads and enables pagination through a set of `CompetitionOfficial`. */
-  competitionOfficialAssignments: CompetitionOfficialsConnection;
+  competitionOfficialAssignments: CompetitionOfficialConnection;
   /** Reads and enables pagination through a set of `FederationCompetitorComponent`. */
-  competitorComponents: FederationCompetitorComponentsConnection;
+  competitorComponents: FederationCompetitorComponentConnection;
   createdAt: Scalars['Datetime']['output'];
   dob: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `FederationEventOfficial`. */
-  eventOfficialAssignments: FederationEventOfficialsConnection;
+  eventOfficialAssignments: FederationEventOfficialConnection;
   externalId: Scalars['BigInt']['output'];
   federation: Scalars['String']['output'];
   /** Reads a single `Federation` that is related to this `FederationPerson`. */
@@ -6504,14 +6482,14 @@ export type FederationPerson = {
   id: Scalars['String']['output'];
   lastName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `FederationPersonLicense`. */
-  licenses: FederationPersonLicensesConnection;
+  licenses: FederationPersonLicenseConnection;
   medicalCheckupExpiration: Maybe<Scalars['Date']['output']>;
   medicalCheckupType: Maybe<Scalars['String']['output']>;
   nationality: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Person`. */
   peopleList: Array<Person>;
   /** Reads and enables pagination through a set of `CompetitionRoundJudge`. */
-  roundJudgeAssignments: CompetitionRoundJudgesConnection;
+  roundJudgeAssignments: CompetitionRoundJudgeConnection;
   searchName: Maybe<Scalars['String']['output']>;
 };
 
@@ -6617,10 +6595,10 @@ export type FederationPersonClubMembershipCondition = {
 };
 
 /** A connection to a list of `FederationPersonClubMembership` values. */
-export type FederationPersonClubMembershipsConnection = {
-  __typename?: 'FederationPersonClubMembershipsConnection';
+export type FederationPersonClubMembershipConnection = {
+  __typename?: 'FederationPersonClubMembershipConnection';
   /** A list of edges which contains the `FederationPersonClubMembership` and cursor to aid in pagination. */
-  edges: Array<FederationPersonClubMembershipsEdge>;
+  edges: Array<FederationPersonClubMembershipEdge>;
   /** A list of `FederationPersonClubMembership` objects. */
   nodes: Array<FederationPersonClubMembership>;
   /** Information to aid in pagination. */
@@ -6630,8 +6608,8 @@ export type FederationPersonClubMembershipsConnection = {
 };
 
 /** A `FederationPersonClubMembership` edge in the connection. */
-export type FederationPersonClubMembershipsEdge = {
-  __typename?: 'FederationPersonClubMembershipsEdge';
+export type FederationPersonClubMembershipEdge = {
+  __typename?: 'FederationPersonClubMembershipEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationPersonClubMembership` at the end of the edge. */
@@ -6693,6 +6671,28 @@ export type FederationPersonCondition = {
   searchName?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A connection to a list of `FederationPerson` values. */
+export type FederationPersonConnection = {
+  __typename?: 'FederationPersonConnection';
+  /** A list of edges which contains the `FederationPerson` and cursor to aid in pagination. */
+  edges: Array<FederationPersonEdge>;
+  /** A list of `FederationPerson` objects. */
+  nodes: Array<FederationPerson>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `FederationPerson` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `FederationPerson` edge in the connection. */
+export type FederationPersonEdge = {
+  __typename?: 'FederationPersonEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `FederationPerson` at the end of the edge. */
+  node: FederationPerson;
+};
+
 export type FederationPersonLicense = {
   __typename?: 'FederationPersonLicense';
   createdAt: Scalars['Datetime']['output'];
@@ -6733,10 +6733,10 @@ export type FederationPersonLicenseCondition = {
 };
 
 /** A connection to a list of `FederationPersonLicense` values. */
-export type FederationPersonLicensesConnection = {
-  __typename?: 'FederationPersonLicensesConnection';
+export type FederationPersonLicenseConnection = {
+  __typename?: 'FederationPersonLicenseConnection';
   /** A list of edges which contains the `FederationPersonLicense` and cursor to aid in pagination. */
-  edges: Array<FederationPersonLicensesEdge>;
+  edges: Array<FederationPersonLicenseEdge>;
   /** A list of `FederationPersonLicense` objects. */
   nodes: Array<FederationPersonLicense>;
   /** Information to aid in pagination. */
@@ -6746,8 +6746,8 @@ export type FederationPersonLicensesConnection = {
 };
 
 /** A `FederationPersonLicense` edge in the connection. */
-export type FederationPersonLicensesEdge = {
-  __typename?: 'FederationPersonLicensesEdge';
+export type FederationPersonLicenseEdge = {
+  __typename?: 'FederationPersonLicenseEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FederationPersonLicense` at the end of the edge. */
@@ -6796,9 +6796,9 @@ export type FetchStatus =
 export type File = {
   __typename?: 'File';
   /** Reads and enables pagination through a set of `AnnouncementAttachment`. */
-  announcementAttachments: AnnouncementAttachmentsConnection;
+  announcementAttachments: AnnouncementAttachmentConnection;
   /** Reads and enables pagination through a set of `ArticleAttachment`. */
-  articleAttachments: ArticleAttachmentsConnection;
+  articleAttachments: ArticleAttachmentConnection;
   byteSize: Maybe<Scalars['BigInt']['output']>;
   contentType: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
@@ -6886,10 +6886,10 @@ export type FileCondition = {
 };
 
 /** A connection to a list of `File` values. */
-export type FilesConnection = {
-  __typename?: 'FilesConnection';
+export type FileConnection = {
+  __typename?: 'FileConnection';
   /** A list of edges which contains the `File` and cursor to aid in pagination. */
-  edges: Array<FilesEdge>;
+  edges: Array<FileEdge>;
   /** A list of `File` objects. */
   nodes: Array<File>;
   /** Information to aid in pagination. */
@@ -6899,8 +6899,8 @@ export type FilesConnection = {
 };
 
 /** A `File` edge in the connection. */
-export type FilesEdge = {
-  __typename?: 'FilesEdge';
+export type FileEdge = {
+  __typename?: 'FileEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `File` at the end of the edge. */
@@ -6970,10 +6970,10 @@ export type FormResponseCondition = {
 };
 
 /** A connection to a list of `FormResponse` values. */
-export type FormResponsesConnection = {
-  __typename?: 'FormResponsesConnection';
+export type FormResponseConnection = {
+  __typename?: 'FormResponseConnection';
   /** A list of edges which contains the `FormResponse` and cursor to aid in pagination. */
-  edges: Array<FormResponsesEdge>;
+  edges: Array<FormResponseEdge>;
   /** A list of `FormResponse` objects. */
   nodes: Array<FormResponse>;
   /** Information to aid in pagination. */
@@ -6983,8 +6983,8 @@ export type FormResponsesConnection = {
 };
 
 /** A `FormResponse` edge in the connection. */
-export type FormResponsesEdge = {
-  __typename?: 'FormResponsesEdge';
+export type FormResponseEdge = {
+  __typename?: 'FormResponseEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FormResponse` at the end of the edge. */
@@ -7121,10 +7121,10 @@ export type JudgeScoreCondition = {
 };
 
 /** A connection to a list of `JudgeScore` values. */
-export type JudgeScoresConnection = {
-  __typename?: 'JudgeScoresConnection';
+export type JudgeScoreConnection = {
+  __typename?: 'JudgeScoreConnection';
   /** A list of edges which contains the `JudgeScore` and cursor to aid in pagination. */
-  edges: Array<JudgeScoresEdge>;
+  edges: Array<JudgeScoreEdge>;
   /** A list of `JudgeScore` objects. */
   nodes: Array<JudgeScore>;
   /** Information to aid in pagination. */
@@ -7134,8 +7134,8 @@ export type JudgeScoresConnection = {
 };
 
 /** A `JudgeScore` edge in the connection. */
-export type JudgeScoresEdge = {
-  __typename?: 'JudgeScoresEdge';
+export type JudgeScoreEdge = {
+  __typename?: 'JudgeScoreEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `JudgeScore` at the end of the edge. */
@@ -7262,6 +7262,15 @@ export type LocationDetailsInputRecordInput = {
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** A `Location` edge in the connection. */
+export type LocationEdge = {
+  __typename?: 'LocationEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Location` at the end of the edge. */
+  node: Location;
+};
+
 export type LocationImage = {
   __typename?: 'LocationImage';
   /** Reads a single `File` that is related to this `LocationImage`. */
@@ -7330,15 +7339,6 @@ export type LocationPatch = {
   showInLists?: InputMaybe<Scalars['Boolean']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A `Location` edge in the connection. */
-export type LocationsEdge = {
-  __typename?: 'LocationsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Location` at the end of the edge. */
-  node: Location;
 };
 
 /** Methods to use when ordering `Location`. */
@@ -7497,6 +7497,15 @@ export type MembershipApplicationCondition = {
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** A `MembershipApplication` edge in the connection. */
+export type MembershipApplicationEdge = {
+  __typename?: 'MembershipApplicationEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `MembershipApplication` at the end of the edge. */
+  node: MembershipApplication;
+};
+
 /** An input for mutations affecting `MembershipApplication` */
 export type MembershipApplicationInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
@@ -7547,15 +7556,6 @@ export type MembershipApplicationPatch = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** A `MembershipApplication` edge in the connection. */
-export type MembershipApplicationsEdge = {
-  __typename?: 'MembershipApplicationsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `MembershipApplication` at the end of the edge. */
-  node: MembershipApplication;
 };
 
 /** Methods to use when ordering `MembershipApplication`. */
@@ -7633,7 +7633,7 @@ export type MoveEventInstancePayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   eventInstance: Maybe<EventInstance>;
   /** An edge for our `EventInstance`. May be used by Relay 1. */
-  eventInstanceEdge: Maybe<EventInstancesEdge>;
+  eventInstanceEdge: Maybe<EventInstanceEdge>;
 };
 
 
@@ -8285,7 +8285,7 @@ export type Payment = {
   status: PaymentStatus;
   tenantId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `Transaction`. */
-  transactions: TransactionsConnection;
+  transactions: TransactionConnection;
   updatedAt: Scalars['Datetime']['output'];
   variableSymbol: Maybe<Scalars['String']['output']>;
 };
@@ -8498,28 +8498,6 @@ export type PaymentsOrderBy =
   | 'VARIABLE_SYMBOL_ASC'
   | 'VARIABLE_SYMBOL_DESC';
 
-/** A connection to a list of `Person` values. */
-export type PeopleConnection = {
-  __typename?: 'PeopleConnection';
-  /** A list of edges which contains the `Person` and cursor to aid in pagination. */
-  edges: Array<PeopleEdge>;
-  /** A list of `Person` objects. */
-  nodes: Array<Person>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Person` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Person` edge in the connection. */
-export type PeopleEdge = {
-  __typename?: 'PeopleEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Person` at the end of the edge. */
-  node: Person;
-};
-
 /** Methods to use when ordering `Person`. */
 export type PeopleOrderBy =
   | 'ADDRESS_ASC'
@@ -8599,7 +8577,7 @@ export type Person = {
   cstsId: Maybe<Scalars['Int']['output']>;
   email: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrations: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTrainer`. */
@@ -8608,13 +8586,13 @@ export type Person = {
   facebookUrl: Maybe<Scalars['String']['output']>;
   federationCandidatesList: Array<PersonFederationCandidatesRecord>;
   /** Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`. */
-  federationCategoryProgresses: FederationCompetitorCategoryProgressesConnection;
+  federationCategoryProgresses: FederationCompetitorCategoryProgressConnection;
   /** Reads and enables pagination through a set of `Competition`. */
-  federationCompetitions: CompetitionsConnection;
+  federationCompetitions: CompetitionConnection;
   /** Reads and enables pagination through a set of `FederationPerson`. */
-  federationPeople: FederationPeopleConnection;
+  federationPeople: FederationPersonConnection;
   /** Reads and enables pagination through a set of `RanklistEntry`. */
-  federationRanklistEntries: RanklistEntriesConnection;
+  federationRanklistEntries: RanklistEntryConnection;
   firstName: Scalars['String']['output'];
   gender: GenderType;
   hasAccess: Maybe<Scalars['Boolean']['output']>;
@@ -8643,15 +8621,15 @@ export type Person = {
   suffixTitle: Scalars['String']['output'];
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
-  tenantAdministrators: TenantAdministratorsConnection;
+  tenantAdministrators: TenantAdministratorConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
-  tenantMemberships: TenantMembershipsConnection;
+  tenantMemberships: TenantMembershipConnection;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
-  tenantTrainers: TenantTrainersConnection;
+  tenantTrainers: TenantTrainerConnection;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
   tenantTrainersList: Array<TenantTrainer>;
   tiktokUsername: Maybe<Scalars['String']['output']>;
@@ -8953,6 +8931,28 @@ export type PersonCondition = {
   wdsfId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `websiteUrl` field. */
   websiteUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Person` values. */
+export type PersonConnection = {
+  __typename?: 'PersonConnection';
+  /** A list of edges which contains the `Person` and cursor to aid in pagination. */
+  edges: Array<PersonEdge>;
+  /** A list of `Person` objects. */
+  nodes: Array<Person>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Person` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Person` edge in the connection. */
+export type PersonEdge = {
+  __typename?: 'PersonEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Person` at the end of the edge. */
+  node: Person;
 };
 
 export type PersonFacetsRecord = {
@@ -9275,13 +9275,13 @@ export type Query = {
   /** Reads a set of `AgeGroup`. */
   ageGroupsList: Maybe<Array<AgeGroup>>;
   /** Reads and enables pagination through a set of `Aktuality`. */
-  aktualities: Maybe<AktualitiesConnection>;
+  aktualities: Maybe<AktualityConnection>;
   /** Get a single `Aktuality`. */
   aktuality: Maybe<Aktuality>;
   /** Get a single `Announcement`. */
   announcement: Maybe<Announcement>;
   /** Reads and enables pagination through a set of `Announcement`. */
-  announcements: Maybe<AnnouncementsConnection>;
+  announcements: Maybe<AnnouncementConnection>;
   /** Reads a set of `Category`. */
   categoriesList: Maybe<Array<Category>>;
   /** Get a single `Category`. */
@@ -9293,7 +9293,7 @@ export type Query = {
   /** Get a single `CohortGroup`. */
   cohortGroup: Maybe<CohortGroup>;
   /** Reads and enables pagination through a set of `CohortGroup`. */
-  cohortGroups: Maybe<CohortGroupsConnection>;
+  cohortGroups: Maybe<CohortGroupConnection>;
   /** Get a single `CohortMembership`. */
   cohortMembership: Maybe<CohortMembership>;
   /** Reads a set of `Cohort`. */
@@ -9307,27 +9307,27 @@ export type Query = {
   /** Get a single `CompetitionRound`. */
   competitionRoundByCompetitionIdAndRoundKey: Maybe<CompetitionRound>;
   /** Reads and enables pagination through a set of `Competition`. */
-  competitions: Maybe<CompetitionsConnection>;
+  competitions: Maybe<CompetitionConnection>;
   /** Get a single `Couple`. */
   couple: Maybe<Couple>;
   /** Reads and enables pagination through a set of `CrawlerFetchJob`. */
-  crawlerFetchJobs: Maybe<CrawlerFetchJobsConnection>;
+  crawlerFetchJobs: Maybe<CrawlerFetchJobConnection>;
   /** Get a single `CrawlerIncrementalRange`. */
   crawlerIncrementalRange: Maybe<CrawlerIncrementalRange>;
   /** Reads and enables pagination through a set of `CrawlerIncrementalRange`. */
-  crawlerIncrementalRanges: Maybe<CrawlerIncrementalRangesConnection>;
+  crawlerIncrementalRanges: Maybe<CrawlerIncrementalRangeConnection>;
   /** Get a single `CrawlerRateLimitRule`. */
   crawlerRateLimitRule: Maybe<CrawlerRateLimitRule>;
   /** Reads and enables pagination through a set of `CrawlerRateLimitRule`. */
-  crawlerRateLimitRules: Maybe<CrawlerRateLimitRulesConnection>;
+  crawlerRateLimitRules: Maybe<CrawlerRateLimitRuleConnection>;
   /** Get a single `CrawlerResponse`. */
   crawlerResponse: Maybe<CrawlerResponse>;
   /** Get a single `CrawlerResponseCache`. */
   crawlerResponseCache: Maybe<CrawlerResponseCache>;
   /** Reads and enables pagination through a set of `CrawlerResponseCache`. */
-  crawlerResponseCaches: Maybe<CrawlerResponseCachesConnection>;
+  crawlerResponseCaches: Maybe<CrawlerResponseCacheConnection>;
   /** Reads and enables pagination through a set of `CrawlerResponse`. */
-  crawlerResponses: Maybe<CrawlerResponsesConnection>;
+  crawlerResponses: Maybe<CrawlerResponseConnection>;
   /** Get a single `CrawlerTarget`. */
   crawlerTarget: Maybe<CrawlerTarget>;
   /** Get a single `CrawlerTarget`. */
@@ -9335,11 +9335,11 @@ export type Query = {
   /** Reads a set of `CrawlerTargetFailureGroup`. */
   crawlerTargetFailureGroupsList: Maybe<Array<CrawlerTargetFailureGroup>>;
   /** Reads and enables pagination through a set of `CrawlerTargetFailure`. */
-  crawlerTargetFailures: Maybe<CrawlerTargetFailuresConnection>;
+  crawlerTargetFailures: Maybe<CrawlerTargetFailureConnection>;
   /** Reads a set of `CrawlerTargetSummary`. */
   crawlerTargetSummariesList: Maybe<Array<CrawlerTargetSummary>>;
   /** Reads and enables pagination through a set of `CrawlerTarget`. */
-  crawlerTargets: Maybe<CrawlerTargetsConnection>;
+  crawlerTargets: Maybe<CrawlerTargetConnection>;
   currentClaims: Maybe<Scalars['JSON']['output']>;
   /** Get a single `Dance`. */
   dance: Maybe<Dance>;
@@ -9363,7 +9363,7 @@ export type Query = {
   /** Get a single `EventInstanceRegistration`. */
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrations: Maybe<EventInstanceRegistrationsConnection>;
+  eventInstanceRegistrations: Maybe<EventInstanceRegistrationConnection>;
   /** Reads a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsList: Maybe<Array<EventInstanceRegistration>>;
   eventInstancesForRangeList: Maybe<Array<EventInstance>>;
@@ -9380,21 +9380,21 @@ export type Query = {
   /** Get a single `FederationClub`. */
   federationClubByFederationAndExternalId: Maybe<FederationClub>;
   /** Reads and enables pagination through a set of `FederationClub`. */
-  federationClubs: Maybe<FederationClubsConnection>;
+  federationClubs: Maybe<FederationClubConnection>;
   /** Get a single `FederationCompetitor`. */
   federationCompetitor: Maybe<FederationCompetitor>;
   /** Get a single `FederationCompetitor`. */
   federationCompetitorByFederationAndExternalId: Maybe<FederationCompetitor>;
   /** Reads and enables pagination through a set of `FederationCompetitor`. */
-  federationCompetitors: Maybe<FederationCompetitorsConnection>;
+  federationCompetitors: Maybe<FederationCompetitorConnection>;
   /** Get a single `FederationEvent`. */
   federationEvent: Maybe<FederationEvent>;
   /** Get a single `FederationEvent`. */
   federationEventByFederationAndExternalId: Maybe<FederationEvent>;
   /** Reads and enables pagination through a set of `FederationEvent`. */
-  federationEvents: Maybe<FederationEventsConnection>;
+  federationEvents: Maybe<FederationEventConnection>;
   /** Reads and enables pagination through a set of `FederationPerson`. */
-  federationPeople: Maybe<FederationPeopleConnection>;
+  federationPeople: Maybe<FederationPersonConnection>;
   /** Get a single `FederationPerson`. */
   federationPerson: Maybe<FederationPerson>;
   /** Get a single `FederationPerson`. */
@@ -9407,11 +9407,11 @@ export type Query = {
   /** Get a single `File`. */
   fileByObjectKey: Maybe<File>;
   /** Reads and enables pagination through a set of `File`. */
-  files: Maybe<FilesConnection>;
+  files: Maybe<FileConnection>;
   /** Get a single `FormResponse`. */
   formResponse: Maybe<FormResponse>;
   /** Reads and enables pagination through a set of `FormResponse`. */
-  formResponses: Maybe<FormResponsesConnection>;
+  formResponses: Maybe<FormResponseConnection>;
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   invitationInfo: Maybe<Scalars['String']['output']>;
@@ -9433,7 +9433,7 @@ export type Query = {
   /** Get a single `PaymentRecipient`. */
   paymentRecipient: Maybe<PaymentRecipient>;
   /** Reads and enables pagination through a set of `Person`. */
-  people: Maybe<PeopleConnection>;
+  people: Maybe<PersonConnection>;
   peopleWithoutAccessOrInvitationList: Maybe<Array<Person>>;
   peopleWithoutAccessWithExistingAccountList: Maybe<Array<Person>>;
   peopleWithoutAccessWithInvitationList: Maybe<Array<Person>>;
@@ -9449,7 +9449,7 @@ export type Query = {
   /** Get a single `Ranklist`. */
   ranklistByFederationAndCategoryId: Maybe<Ranklist>;
   /** Reads and enables pagination through a set of `Ranklist`. */
-  ranklists: Maybe<RanklistsConnection>;
+  ranklists: Maybe<RanklistConnection>;
   refreshJwt: Maybe<Scalars['JwtToken']['output']>;
   scoreboardEntriesList: Maybe<Array<ScoreboardRecord>>;
   /** Get a single `ScoreboardManualAdjustment`. */
@@ -9476,13 +9476,13 @@ export type Query = {
   /** Get a single `Transaction`. */
   transaction: Maybe<Transaction>;
   /** Reads and enables pagination through a set of `Transaction`. */
-  transactions: Maybe<TransactionsConnection>;
+  transactions: Maybe<TransactionConnection>;
   /** Get a single `User`. */
   user: Maybe<User>;
   /** Get a single `UserProxy`. */
   userProxy: Maybe<UserProxy>;
   /** Reads and enables pagination through a set of `User`. */
-  users: Maybe<UsersConnection>;
+  users: Maybe<UserConnection>;
 };
 
 
@@ -10475,7 +10475,7 @@ export type Ranklist = {
   id: Scalars['BigInt']['output'];
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `RanklistSnapshot`. */
-  ranklistSnapshots: RanklistSnapshotsConnection;
+  ranklistSnapshots: RanklistSnapshotConnection;
 };
 
 
@@ -10504,26 +10504,26 @@ export type RanklistCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** A connection to a list of `RanklistEntry` values. */
-export type RanklistEntriesConnection = {
-  __typename?: 'RanklistEntriesConnection';
-  /** A list of edges which contains the `RanklistEntry` and cursor to aid in pagination. */
-  edges: Array<RanklistEntriesEdge>;
-  /** A list of `RanklistEntry` objects. */
-  nodes: Array<RanklistEntry>;
+/** A connection to a list of `Ranklist` values. */
+export type RanklistConnection = {
+  __typename?: 'RanklistConnection';
+  /** A list of edges which contains the `Ranklist` and cursor to aid in pagination. */
+  edges: Array<RanklistEdge>;
+  /** A list of `Ranklist` objects. */
+  nodes: Array<Ranklist>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `RanklistEntry` you could get from the connection. */
+  /** The count of *all* `Ranklist` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `RanklistEntry` edge in the connection. */
-export type RanklistEntriesEdge = {
-  __typename?: 'RanklistEntriesEdge';
+/** A `Ranklist` edge in the connection. */
+export type RanklistEdge = {
+  __typename?: 'RanklistEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `RanklistEntry` at the end of the edge. */
-  node: RanklistEntry;
+  /** The `Ranklist` at the end of the edge. */
+  node: Ranklist;
 };
 
 /** Methods to use when ordering `RanklistEntry`. */
@@ -10573,6 +10573,28 @@ export type RanklistEntryCondition = {
   snapshotId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+/** A connection to a list of `RanklistEntry` values. */
+export type RanklistEntryConnection = {
+  __typename?: 'RanklistEntryConnection';
+  /** A list of edges which contains the `RanklistEntry` and cursor to aid in pagination. */
+  edges: Array<RanklistEntryEdge>;
+  /** A list of `RanklistEntry` objects. */
+  nodes: Array<RanklistEntry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RanklistEntry` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `RanklistEntry` edge in the connection. */
+export type RanklistEntryEdge = {
+  __typename?: 'RanklistEntryEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `RanklistEntry` at the end of the edge. */
+  node: RanklistEntry;
+};
+
 export type RanklistSnapshot = {
   __typename?: 'RanklistSnapshot';
   asOfDate: Scalars['Date']['output'];
@@ -10581,7 +10603,7 @@ export type RanklistSnapshot = {
   /** Reads a single `Ranklist` that is related to this `RanklistSnapshot`. */
   ranklist: Maybe<Ranklist>;
   /** Reads and enables pagination through a set of `RanklistEntry`. */
-  ranklistEntriesBySnapshotId: RanklistEntriesConnection;
+  ranklistEntriesBySnapshotId: RanklistEntryConnection;
   ranklistId: Scalars['BigInt']['output'];
 };
 
@@ -10612,10 +10634,10 @@ export type RanklistSnapshotCondition = {
 };
 
 /** A connection to a list of `RanklistSnapshot` values. */
-export type RanklistSnapshotsConnection = {
-  __typename?: 'RanklistSnapshotsConnection';
+export type RanklistSnapshotConnection = {
+  __typename?: 'RanklistSnapshotConnection';
   /** A list of edges which contains the `RanklistSnapshot` and cursor to aid in pagination. */
-  edges: Array<RanklistSnapshotsEdge>;
+  edges: Array<RanklistSnapshotEdge>;
   /** A list of `RanklistSnapshot` objects. */
   nodes: Array<RanklistSnapshot>;
   /** Information to aid in pagination. */
@@ -10625,8 +10647,8 @@ export type RanklistSnapshotsConnection = {
 };
 
 /** A `RanklistSnapshot` edge in the connection. */
-export type RanklistSnapshotsEdge = {
-  __typename?: 'RanklistSnapshotsEdge';
+export type RanklistSnapshotEdge = {
+  __typename?: 'RanklistSnapshotEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `RanklistSnapshot` at the end of the edge. */
@@ -10646,28 +10668,6 @@ export type RanklistSnapshotsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'RANKLIST_ID_ASC'
   | 'RANKLIST_ID_DESC';
-
-/** A connection to a list of `Ranklist` values. */
-export type RanklistsConnection = {
-  __typename?: 'RanklistsConnection';
-  /** A list of edges which contains the `Ranklist` and cursor to aid in pagination. */
-  edges: Array<RanklistsEdge>;
-  /** A list of `Ranklist` objects. */
-  nodes: Array<Ranklist>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Ranklist` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Ranklist` edge in the connection. */
-export type RanklistsEdge = {
-  __typename?: 'RanklistsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Ranklist` at the end of the edge. */
-  node: Ranklist;
-};
 
 /** Methods to use when ordering `Ranklist`. */
 export type RanklistsOrderBy =
@@ -10749,7 +10749,7 @@ export type RejectMembershipApplicationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   membershipApplication: Maybe<MembershipApplication>;
   /** An edge for our `MembershipApplication`. May be used by Relay 1. */
-  membershipApplicationEdge: Maybe<MembershipApplicationsEdge>;
+  membershipApplicationEdge: Maybe<MembershipApplicationEdge>;
 };
 
 
@@ -11066,7 +11066,7 @@ export type SetEventInstanceRegistrationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** An edge for our `EventInstanceRegistration`. May be used by Relay 1. */
-  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationsEdge>;
+  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationEdge>;
 };
 
 
@@ -11119,7 +11119,7 @@ export type SetLessonDemandPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   eventLessonDemand: Maybe<EventLessonDemand>;
   /** An edge for our `EventLessonDemand`. May be used by Relay 1. */
-  eventLessonDemandEdge: Maybe<EventLessonDemandsEdge>;
+  eventLessonDemandEdge: Maybe<EventLessonDemandEdge>;
 };
 
 
@@ -11239,7 +11239,7 @@ export type SystemAdminUpdateTenantPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   tenant: Maybe<Tenant>;
   /** An edge for our `Tenant`. May be used by Relay 1. */
-  tenantEdge: Maybe<TenantsEdge>;
+  tenantEdge: Maybe<TenantEdge>;
 };
 
 
@@ -11258,14 +11258,14 @@ export type Tenant = {
   accountsList: Array<Account>;
   address: Maybe<AddressDomain>;
   /** Reads and enables pagination through a set of `Aktuality`. */
-  aktualities: AktualitiesConnection;
+  aktualities: AktualityConnection;
   /** Reads and enables pagination through a set of `AnnouncementAudience`. */
-  announcementAudiences: AnnouncementAudiencesConnection;
+  announcementAudiences: AnnouncementAudienceConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
-  announcements: AnnouncementsConnection;
+  announcements: AnnouncementConnection;
   bankAccount: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `CohortGroup`. */
-  cohortGroups: CohortGroupsConnection;
+  cohortGroups: CohortGroupConnection;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
   /** Reads and enables pagination through a set of `CohortSubscription`. */
@@ -11277,7 +11277,7 @@ export type Tenant = {
   czIco: Scalars['String']['output'];
   description: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
-  eventInstanceRegistrations: EventInstanceRegistrationsConnection;
+  eventInstanceRegistrations: EventInstanceRegistrationConnection;
   /** Reads and enables pagination through a set of `EventInstanceRegistration`. */
   eventInstanceRegistrationsList: Array<EventInstanceRegistration>;
   /** Reads and enables pagination through a set of `EventInstanceTargetCohort`. */
@@ -11291,9 +11291,9 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `EventSeries`. */
   eventSeries: EventSeriesConnection;
   /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
+  files: FileConnection;
   /** Reads and enables pagination through a set of `FormResponse`. */
-  formResponses: FormResponsesConnection;
+  formResponses: FormResponseConnection;
   id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `Location`. */
   locationsList: Array<Location>;
@@ -11314,25 +11314,25 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `ScoreboardManualAdjustment`. */
   scoreboardManualAdjustmentsList: Array<ScoreboardManualAdjustment>;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
-  tenantAdministrators: TenantAdministratorsConnection;
+  tenantAdministrators: TenantAdministratorConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
   /** Reads and enables pagination through a set of `TenantLocation`. */
   tenantLocationsList: Array<TenantLocation>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
-  tenantMemberships: TenantMembershipsConnection;
+  tenantMemberships: TenantMembershipConnection;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMembershipsList: Array<TenantMembership>;
   /** Reads a single `TenantSetting` that is related to this `Tenant`. */
   tenantSetting: Maybe<TenantSetting>;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
-  tenantTrainers: TenantTrainersConnection;
+  tenantTrainers: TenantTrainerConnection;
   /** Reads and enables pagination through a set of `TenantTrainer`. */
   tenantTrainersList: Array<TenantTrainer>;
   /** Reads and enables pagination through a set of `Transaction`. */
-  transactions: TransactionsConnection;
+  transactions: TransactionConnection;
   /** Reads and enables pagination through a set of `User`. */
-  users: UsersConnection;
+  users: UserConnection;
 };
 
 
@@ -11712,6 +11712,28 @@ export type TenantAdministratorCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `TenantAdministrator` values. */
+export type TenantAdministratorConnection = {
+  __typename?: 'TenantAdministratorConnection';
+  /** A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination. */
+  edges: Array<TenantAdministratorEdge>;
+  /** A list of `TenantAdministrator` objects. */
+  nodes: Array<TenantAdministrator>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TenantAdministrator` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TenantAdministrator` edge in the connection. */
+export type TenantAdministratorEdge = {
+  __typename?: 'TenantAdministratorEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `TenantAdministrator` at the end of the edge. */
+  node: TenantAdministrator;
+};
+
 /** An input for mutations affecting `TenantAdministrator` */
 export type TenantAdministratorInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -11736,28 +11758,6 @@ export type TenantAdministratorPatch = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `TenantAdministrator` values. */
-export type TenantAdministratorsConnection = {
-  __typename?: 'TenantAdministratorsConnection';
-  /** A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination. */
-  edges: Array<TenantAdministratorsEdge>;
-  /** A list of `TenantAdministrator` objects. */
-  nodes: Array<TenantAdministrator>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TenantAdministrator` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TenantAdministrator` edge in the connection. */
-export type TenantAdministratorsEdge = {
-  __typename?: 'TenantAdministratorsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `TenantAdministrator` at the end of the edge. */
-  node: TenantAdministrator;
 };
 
 /** Methods to use when ordering `TenantAdministrator`. */
@@ -11804,6 +11804,15 @@ export type TenantCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `origins` field. */
   origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+/** A `Tenant` edge in the connection. */
+export type TenantEdge = {
+  __typename?: 'TenantEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Tenant` at the end of the edge. */
+  node: Tenant;
 };
 
 export type TenantLocation = {
@@ -11999,6 +12008,28 @@ export type TenantMembershipCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `TenantMembership` values. */
+export type TenantMembershipConnection = {
+  __typename?: 'TenantMembershipConnection';
+  /** A list of edges which contains the `TenantMembership` and cursor to aid in pagination. */
+  edges: Array<TenantMembershipEdge>;
+  /** A list of `TenantMembership` objects. */
+  nodes: Array<TenantMembership>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TenantMembership` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TenantMembership` edge in the connection. */
+export type TenantMembershipEdge = {
+  __typename?: 'TenantMembershipEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `TenantMembership` at the end of the edge. */
+  node: TenantMembership;
+};
+
 /** An input for mutations affecting `TenantMembership` */
 export type TenantMembershipInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -12019,28 +12050,6 @@ export type TenantMembershipPatch = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `TenantMembership` values. */
-export type TenantMembershipsConnection = {
-  __typename?: 'TenantMembershipsConnection';
-  /** A list of edges which contains the `TenantMembership` and cursor to aid in pagination. */
-  edges: Array<TenantMembershipsEdge>;
-  /** A list of `TenantMembership` objects. */
-  nodes: Array<TenantMembership>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TenantMembership` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TenantMembership` edge in the connection. */
-export type TenantMembershipsEdge = {
-  __typename?: 'TenantMembershipsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `TenantMembership` at the end of the edge. */
-  node: TenantMembership;
 };
 
 /** Methods to use when ordering `TenantMembership`. */
@@ -12083,19 +12092,19 @@ export type TenantSetting = {
   tenantId: Scalars['BigInt']['output'];
 };
 
-/** Represents an update to a `TenantSetting`. Fields that are set will be updated. */
-export type TenantSettingPatch = {
-  settings?: InputMaybe<Scalars['JSON']['input']>;
-  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
-};
-
 /** A `TenantSetting` edge in the connection. */
-export type TenantSettingsEdge = {
-  __typename?: 'TenantSettingsEdge';
+export type TenantSettingEdge = {
+  __typename?: 'TenantSettingEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `TenantSetting` at the end of the edge. */
   node: TenantSetting;
+};
+
+/** Represents an update to a `TenantSetting`. Fields that are set will be updated. */
+export type TenantSettingPatch = {
+  settings?: InputMaybe<Scalars['JSON']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Methods to use when ordering `TenantSetting`. */
@@ -12185,6 +12194,28 @@ export type TenantTrainerCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `TenantTrainer` values. */
+export type TenantTrainerConnection = {
+  __typename?: 'TenantTrainerConnection';
+  /** A list of edges which contains the `TenantTrainer` and cursor to aid in pagination. */
+  edges: Array<TenantTrainerEdge>;
+  /** A list of `TenantTrainer` objects. */
+  nodes: Array<TenantTrainer>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TenantTrainer` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `TenantTrainer` edge in the connection. */
+export type TenantTrainerEdge = {
+  __typename?: 'TenantTrainerEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `TenantTrainer` at the end of the edge. */
+  node: TenantTrainer;
+};
+
 /** An input for mutations affecting `TenantTrainer` */
 export type TenantTrainerInput = {
   createPayoutPayments?: InputMaybe<Scalars['Boolean']['input']>;
@@ -12231,28 +12262,6 @@ export type TenantTrainerPatch = {
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `TenantTrainer` values. */
-export type TenantTrainersConnection = {
-  __typename?: 'TenantTrainersConnection';
-  /** A list of edges which contains the `TenantTrainer` and cursor to aid in pagination. */
-  edges: Array<TenantTrainersEdge>;
-  /** A list of `TenantTrainer` objects. */
-  nodes: Array<TenantTrainer>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `TenantTrainer` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `TenantTrainer` edge in the connection. */
-export type TenantTrainersEdge = {
-  __typename?: 'TenantTrainersEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `TenantTrainer` at the end of the edge. */
-  node: TenantTrainer;
 };
 
 /** Methods to use when ordering `TenantTrainer`. */
@@ -12302,15 +12311,6 @@ export type TenantTrainersOrderBy =
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
-
-/** A `Tenant` edge in the connection. */
-export type TenantsEdge = {
-  __typename?: 'TenantsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `Tenant` at the end of the edge. */
-  node: Tenant;
-};
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
@@ -12396,18 +12396,11 @@ export type TransactionCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
-export type TransactionSource =
-  | 'AUTO_BANK'
-  | 'AUTO_CREDIT'
-  | 'MANUAL_BANK'
-  | 'MANUAL_CASH'
-  | 'MANUAL_CREDIT';
-
 /** A connection to a list of `Transaction` values. */
-export type TransactionsConnection = {
-  __typename?: 'TransactionsConnection';
+export type TransactionConnection = {
+  __typename?: 'TransactionConnection';
   /** A list of edges which contains the `Transaction` and cursor to aid in pagination. */
-  edges: Array<TransactionsEdge>;
+  edges: Array<TransactionEdge>;
   /** A list of `Transaction` objects. */
   nodes: Array<Transaction>;
   /** Information to aid in pagination. */
@@ -12417,13 +12410,20 @@ export type TransactionsConnection = {
 };
 
 /** A `Transaction` edge in the connection. */
-export type TransactionsEdge = {
-  __typename?: 'TransactionsEdge';
+export type TransactionEdge = {
+  __typename?: 'TransactionEdge';
   /** A cursor for use in pagination. */
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Transaction` at the end of the edge. */
   node: Transaction;
 };
+
+export type TransactionSource =
+  | 'AUTO_BANK'
+  | 'AUTO_CREDIT'
+  | 'MANUAL_BANK'
+  | 'MANUAL_CASH'
+  | 'MANUAL_CREDIT';
 
 /** Methods to use when ordering `Transaction`. */
 export type TransactionsOrderBy =
@@ -12491,7 +12491,7 @@ export type UpdateAnnouncementPayload = {
   /** The `Announcement` that was updated by this mutation. */
   announcement: Maybe<Announcement>;
   /** An edge for our `Announcement`. May be used by Relay 1. */
-  announcementEdge: Maybe<AnnouncementsEdge>;
+  announcementEdge: Maybe<AnnouncementEdge>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -12527,7 +12527,7 @@ export type UpdateAttendancePayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   eventInstanceRegistration: Maybe<EventInstanceRegistration>;
   /** An edge for our `EventInstanceRegistration`. May be used by Relay 1. */
-  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationsEdge>;
+  eventInstanceRegistrationEdge: Maybe<EventInstanceRegistrationEdge>;
 };
 
 
@@ -12759,7 +12759,7 @@ export type UpdatePersonPayload = {
   /** The `Person` that was updated by this mutation. */
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
-  personEdge: Maybe<PeopleEdge>;
+  personEdge: Maybe<PersonEdge>;
 };
 
 
@@ -12815,7 +12815,7 @@ export type UpdateTenantAdministratorPayload = {
   /** The `TenantAdministrator` that was updated by this mutation. */
   tenantAdministrator: Maybe<TenantAdministrator>;
   /** An edge for our `TenantAdministrator`. May be used by Relay 1. */
-  tenantAdministratorEdge: Maybe<TenantAdministratorsEdge>;
+  tenantAdministratorEdge: Maybe<TenantAdministratorEdge>;
 };
 
 
@@ -12859,7 +12859,7 @@ export type UpdateTenantMembershipPayload = {
   /** The `TenantMembership` that was updated by this mutation. */
   tenantMembership: Maybe<TenantMembership>;
   /** An edge for our `TenantMembership`. May be used by Relay 1. */
-  tenantMembershipEdge: Maybe<TenantMembershipsEdge>;
+  tenantMembershipEdge: Maybe<TenantMembershipEdge>;
 };
 
 
@@ -12903,7 +12903,7 @@ export type UpdateTenantSettingPayload = {
   /** The `TenantSetting` that was updated by this mutation. */
   tenantSetting: Maybe<TenantSetting>;
   /** An edge for our `TenantSetting`. May be used by Relay 1. */
-  tenantSettingEdge: Maybe<TenantSettingsEdge>;
+  tenantSettingEdge: Maybe<TenantSettingEdge>;
 };
 
 
@@ -12933,7 +12933,7 @@ export type UpdateTenantSettingsKeyPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   tenantSetting: Maybe<TenantSetting>;
   /** An edge for our `TenantSetting`. May be used by Relay 1. */
-  tenantSettingEdge: Maybe<TenantSettingsEdge>;
+  tenantSettingEdge: Maybe<TenantSettingEdge>;
 };
 
 
@@ -12965,7 +12965,7 @@ export type UpdateTenantTrainerPayload = {
   /** The `TenantTrainer` that was updated by this mutation. */
   tenantTrainer: Maybe<TenantTrainer>;
   /** An edge for our `TenantTrainer`. May be used by Relay 1. */
-  tenantTrainerEdge: Maybe<TenantTrainersEdge>;
+  tenantTrainerEdge: Maybe<TenantTrainerEdge>;
 };
 
 
@@ -13015,7 +13015,7 @@ export type UpsertAnnouncementPayload = {
   __typename?: 'UpsertAnnouncementPayload';
   announcement: Maybe<Announcement>;
   /** An edge for our `Announcement`. May be used by Relay 1. */
-  announcementEdge: Maybe<AnnouncementsEdge>;
+  announcementEdge: Maybe<AnnouncementEdge>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -13045,7 +13045,7 @@ export type UpsertArticlePayload = {
   __typename?: 'UpsertArticlePayload';
   aktuality: Maybe<Aktuality>;
   /** An edge for our `Aktuality`. May be used by Relay 1. */
-  aktualityEdge: Maybe<AktualitiesEdge>;
+  aktualityEdge: Maybe<AktualityEdge>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -13081,7 +13081,7 @@ export type UpsertLocationPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   location: Maybe<Location>;
   /** An edge for our `Location`. May be used by Relay 1. */
-  locationEdge: Maybe<LocationsEdge>;
+  locationEdge: Maybe<LocationEdge>;
 };
 
 
@@ -13095,12 +13095,12 @@ export type User = {
   /** Reads and enables pagination through a set of `AccessCredential`. */
   accessCredentialsByCreatedByList: Array<AccessCredential>;
   /** Reads and enables pagination through a set of `Aktuality`. */
-  aktualitiesByAtKdo: AktualitiesConnection;
+  aktualitiesByAtKdo: AktualityConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
-  authoredAnnouncements: AnnouncementsConnection;
+  authoredAnnouncements: AnnouncementConnection;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `File`. */
-  filesByUploadedBy: FilesConnection;
+  filesByUploadedBy: FileConnection;
   id: Scalars['BigInt']['output'];
   lastActiveAt: Maybe<Scalars['Datetime']['output']>;
   lastLogin: Maybe<Scalars['Datetime']['output']>;
@@ -13210,6 +13210,28 @@ export type UserCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
+/** A connection to a list of `User` values. */
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  /** A list of edges which contains the `User` and cursor to aid in pagination. */
+  edges: Array<UserEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `User` edge in the connection. */
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+};
+
 /** Methods to use when ordering `UserProxy`. */
 export type UserProxiesOrderBy =
   | 'CREATED_AT_ASC'
@@ -13293,28 +13315,6 @@ export type UserProxyPatch = {
   userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
-/** A connection to a list of `User` values. */
-export type UsersConnection = {
-  __typename?: 'UsersConnection';
-  /** A list of edges which contains the `User` and cursor to aid in pagination. */
-  edges: Array<UsersEdge>;
-  /** A list of `User` objects. */
-  nodes: Array<User>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `User` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `User` edge in the connection. */
-export type UsersEdge = {
-  __typename?: 'UsersEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']['output']>;
-  /** The `User` at the end of the edge. */
-  node: User;
-};
-
 /** Methods to use when ordering `User`. */
 export type UsersOrderBy =
   | 'CREATED_AT_ASC'
@@ -13356,80 +13356,80 @@ export type GraphCacheKeysConfig = {
   ActivityJudging?: (data: WithTypename<ActivityJudging>) => null | string,
   AddressDomain?: (data: WithTypename<AddressDomain>) => null | string,
   AgeGroup?: (data: WithTypename<AgeGroup>) => null | string,
-  AktualitiesConnection?: (data: WithTypename<AktualitiesConnection>) => null | string,
-  AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
+  AktualityConnection?: (data: WithTypename<AktualityConnection>) => null | string,
+  AktualityEdge?: (data: WithTypename<AktualityEdge>) => null | string,
   Announcement?: (data: WithTypename<Announcement>) => null | string,
   AnnouncementAttachment?: (data: WithTypename<AnnouncementAttachment>) => null | string,
-  AnnouncementAttachmentsConnection?: (data: WithTypename<AnnouncementAttachmentsConnection>) => null | string,
-  AnnouncementAttachmentsEdge?: (data: WithTypename<AnnouncementAttachmentsEdge>) => null | string,
+  AnnouncementAttachmentConnection?: (data: WithTypename<AnnouncementAttachmentConnection>) => null | string,
+  AnnouncementAttachmentEdge?: (data: WithTypename<AnnouncementAttachmentEdge>) => null | string,
   AnnouncementAudience?: (data: WithTypename<AnnouncementAudience>) => null | string,
-  AnnouncementAudiencesConnection?: (data: WithTypename<AnnouncementAudiencesConnection>) => null | string,
-  AnnouncementAudiencesEdge?: (data: WithTypename<AnnouncementAudiencesEdge>) => null | string,
-  AnnouncementsConnection?: (data: WithTypename<AnnouncementsConnection>) => null | string,
-  AnnouncementsEdge?: (data: WithTypename<AnnouncementsEdge>) => null | string,
+  AnnouncementAudienceConnection?: (data: WithTypename<AnnouncementAudienceConnection>) => null | string,
+  AnnouncementAudienceEdge?: (data: WithTypename<AnnouncementAudienceEdge>) => null | string,
+  AnnouncementConnection?: (data: WithTypename<AnnouncementConnection>) => null | string,
+  AnnouncementEdge?: (data: WithTypename<AnnouncementEdge>) => null | string,
   ArchiveCohortPayload?: (data: WithTypename<ArchiveCohortPayload>) => null | string,
   ArticleAttachment?: (data: WithTypename<ArticleAttachment>) => null | string,
-  ArticleAttachmentsConnection?: (data: WithTypename<ArticleAttachmentsConnection>) => null | string,
-  ArticleAttachmentsEdge?: (data: WithTypename<ArticleAttachmentsEdge>) => null | string,
+  ArticleAttachmentConnection?: (data: WithTypename<ArticleAttachmentConnection>) => null | string,
+  ArticleAttachmentEdge?: (data: WithTypename<ArticleAttachmentEdge>) => null | string,
   Category?: (data: WithTypename<Category>) => null | string,
   ChangePasswordPayload?: (data: WithTypename<ChangePasswordPayload>) => null | string,
   Cohort?: (data: WithTypename<Cohort>) => null | string,
+  CohortEdge?: (data: WithTypename<CohortEdge>) => null | string,
   CohortGroup?: (data: WithTypename<CohortGroup>) => null | string,
-  CohortGroupsConnection?: (data: WithTypename<CohortGroupsConnection>) => null | string,
-  CohortGroupsEdge?: (data: WithTypename<CohortGroupsEdge>) => null | string,
+  CohortGroupConnection?: (data: WithTypename<CohortGroupConnection>) => null | string,
+  CohortGroupEdge?: (data: WithTypename<CohortGroupEdge>) => null | string,
   CohortMembership?: (data: WithTypename<CohortMembership>) => null | string,
   CohortSubscription?: (data: WithTypename<CohortSubscription>) => null | string,
-  CohortsEdge?: (data: WithTypename<CohortsEdge>) => null | string,
   Competition?: (data: WithTypename<Competition>) => null | string,
-  CompetitionEntriesConnection?: (data: WithTypename<CompetitionEntriesConnection>) => null | string,
-  CompetitionEntriesEdge?: (data: WithTypename<CompetitionEntriesEdge>) => null | string,
+  CompetitionConnection?: (data: WithTypename<CompetitionConnection>) => null | string,
+  CompetitionEdge?: (data: WithTypename<CompetitionEdge>) => null | string,
   CompetitionEntry?: (data: WithTypename<CompetitionEntry>) => null | string,
+  CompetitionEntryConnection?: (data: WithTypename<CompetitionEntryConnection>) => null | string,
+  CompetitionEntryEdge?: (data: WithTypename<CompetitionEntryEdge>) => null | string,
   CompetitionOfficial?: (data: WithTypename<CompetitionOfficial>) => null | string,
-  CompetitionOfficialsConnection?: (data: WithTypename<CompetitionOfficialsConnection>) => null | string,
-  CompetitionOfficialsEdge?: (data: WithTypename<CompetitionOfficialsEdge>) => null | string,
+  CompetitionOfficialConnection?: (data: WithTypename<CompetitionOfficialConnection>) => null | string,
+  CompetitionOfficialEdge?: (data: WithTypename<CompetitionOfficialEdge>) => null | string,
   CompetitionResult?: (data: WithTypename<CompetitionResult>) => null | string,
-  CompetitionResultsConnection?: (data: WithTypename<CompetitionResultsConnection>) => null | string,
-  CompetitionResultsEdge?: (data: WithTypename<CompetitionResultsEdge>) => null | string,
+  CompetitionResultConnection?: (data: WithTypename<CompetitionResultConnection>) => null | string,
+  CompetitionResultEdge?: (data: WithTypename<CompetitionResultEdge>) => null | string,
   CompetitionRound?: (data: WithTypename<CompetitionRound>) => null | string,
+  CompetitionRoundConnection?: (data: WithTypename<CompetitionRoundConnection>) => null | string,
   CompetitionRoundDance?: (data: WithTypename<CompetitionRoundDance>) => null | string,
-  CompetitionRoundDancesConnection?: (data: WithTypename<CompetitionRoundDancesConnection>) => null | string,
-  CompetitionRoundDancesEdge?: (data: WithTypename<CompetitionRoundDancesEdge>) => null | string,
+  CompetitionRoundDanceConnection?: (data: WithTypename<CompetitionRoundDanceConnection>) => null | string,
+  CompetitionRoundDanceEdge?: (data: WithTypename<CompetitionRoundDanceEdge>) => null | string,
+  CompetitionRoundEdge?: (data: WithTypename<CompetitionRoundEdge>) => null | string,
   CompetitionRoundJudge?: (data: WithTypename<CompetitionRoundJudge>) => null | string,
-  CompetitionRoundJudgesConnection?: (data: WithTypename<CompetitionRoundJudgesConnection>) => null | string,
-  CompetitionRoundJudgesEdge?: (data: WithTypename<CompetitionRoundJudgesEdge>) => null | string,
+  CompetitionRoundJudgeConnection?: (data: WithTypename<CompetitionRoundJudgeConnection>) => null | string,
+  CompetitionRoundJudgeEdge?: (data: WithTypename<CompetitionRoundJudgeEdge>) => null | string,
   CompetitionRoundResult?: (data: WithTypename<CompetitionRoundResult>) => null | string,
-  CompetitionRoundResultsConnection?: (data: WithTypename<CompetitionRoundResultsConnection>) => null | string,
-  CompetitionRoundResultsEdge?: (data: WithTypename<CompetitionRoundResultsEdge>) => null | string,
-  CompetitionRoundsConnection?: (data: WithTypename<CompetitionRoundsConnection>) => null | string,
-  CompetitionRoundsEdge?: (data: WithTypename<CompetitionRoundsEdge>) => null | string,
-  CompetitionsConnection?: (data: WithTypename<CompetitionsConnection>) => null | string,
-  CompetitionsEdge?: (data: WithTypename<CompetitionsEdge>) => null | string,
+  CompetitionRoundResultConnection?: (data: WithTypename<CompetitionRoundResultConnection>) => null | string,
+  CompetitionRoundResultEdge?: (data: WithTypename<CompetitionRoundResultEdge>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CrawlerFetchJob?: (data: WithTypename<CrawlerFetchJob>) => null | string,
-  CrawlerFetchJobsConnection?: (data: WithTypename<CrawlerFetchJobsConnection>) => null | string,
-  CrawlerFetchJobsEdge?: (data: WithTypename<CrawlerFetchJobsEdge>) => null | string,
+  CrawlerFetchJobConnection?: (data: WithTypename<CrawlerFetchJobConnection>) => null | string,
+  CrawlerFetchJobEdge?: (data: WithTypename<CrawlerFetchJobEdge>) => null | string,
   CrawlerIncrementalRange?: (data: WithTypename<CrawlerIncrementalRange>) => null | string,
-  CrawlerIncrementalRangesConnection?: (data: WithTypename<CrawlerIncrementalRangesConnection>) => null | string,
-  CrawlerIncrementalRangesEdge?: (data: WithTypename<CrawlerIncrementalRangesEdge>) => null | string,
+  CrawlerIncrementalRangeConnection?: (data: WithTypename<CrawlerIncrementalRangeConnection>) => null | string,
+  CrawlerIncrementalRangeEdge?: (data: WithTypename<CrawlerIncrementalRangeEdge>) => null | string,
   CrawlerRateLimitRule?: (data: WithTypename<CrawlerRateLimitRule>) => null | string,
-  CrawlerRateLimitRulesConnection?: (data: WithTypename<CrawlerRateLimitRulesConnection>) => null | string,
-  CrawlerRateLimitRulesEdge?: (data: WithTypename<CrawlerRateLimitRulesEdge>) => null | string,
+  CrawlerRateLimitRuleConnection?: (data: WithTypename<CrawlerRateLimitRuleConnection>) => null | string,
+  CrawlerRateLimitRuleEdge?: (data: WithTypename<CrawlerRateLimitRuleEdge>) => null | string,
   CrawlerResponse?: (data: WithTypename<CrawlerResponse>) => null | string,
   CrawlerResponseCache?: (data: WithTypename<CrawlerResponseCache>) => null | string,
-  CrawlerResponseCachesConnection?: (data: WithTypename<CrawlerResponseCachesConnection>) => null | string,
-  CrawlerResponseCachesEdge?: (data: WithTypename<CrawlerResponseCachesEdge>) => null | string,
-  CrawlerResponsesConnection?: (data: WithTypename<CrawlerResponsesConnection>) => null | string,
-  CrawlerResponsesEdge?: (data: WithTypename<CrawlerResponsesEdge>) => null | string,
+  CrawlerResponseCacheConnection?: (data: WithTypename<CrawlerResponseCacheConnection>) => null | string,
+  CrawlerResponseCacheEdge?: (data: WithTypename<CrawlerResponseCacheEdge>) => null | string,
+  CrawlerResponseConnection?: (data: WithTypename<CrawlerResponseConnection>) => null | string,
+  CrawlerResponseEdge?: (data: WithTypename<CrawlerResponseEdge>) => null | string,
   CrawlerTarget?: (data: WithTypename<CrawlerTarget>) => null | string,
+  CrawlerTargetConnection?: (data: WithTypename<CrawlerTargetConnection>) => null | string,
+  CrawlerTargetEdge?: (data: WithTypename<CrawlerTargetEdge>) => null | string,
   CrawlerTargetFailure?: (data: WithTypename<CrawlerTargetFailure>) => null | string,
+  CrawlerTargetFailureConnection?: (data: WithTypename<CrawlerTargetFailureConnection>) => null | string,
+  CrawlerTargetFailureEdge?: (data: WithTypename<CrawlerTargetFailureEdge>) => null | string,
   CrawlerTargetFailureGroup?: (data: WithTypename<CrawlerTargetFailureGroup>) => null | string,
-  CrawlerTargetFailuresConnection?: (data: WithTypename<CrawlerTargetFailuresConnection>) => null | string,
-  CrawlerTargetFailuresEdge?: (data: WithTypename<CrawlerTargetFailuresEdge>) => null | string,
   CrawlerTargetSummary?: (data: WithTypename<CrawlerTargetSummary>) => null | string,
-  CrawlerTargetsConnection?: (data: WithTypename<CrawlerTargetsConnection>) => null | string,
-  CrawlerTargetsEdge?: (data: WithTypename<CrawlerTargetsEdge>) => null | string,
   CreateAccessCredentialPayload?: (data: WithTypename<CreateAccessCredentialPayload>) => null | string,
   CreateCohortMembershipPayload?: (data: WithTypename<CreateCohortMembershipPayload>) => null | string,
   CreateCohortPayload?: (data: WithTypename<CreateCohortPayload>) => null | string,
@@ -13474,74 +13474,74 @@ export type GraphCacheKeysConfig = {
   EventExternalRegistration?: (data: WithTypename<EventExternalRegistration>) => null | string,
   EventInstance?: (data: WithTypename<EventInstance>) => null | string,
   EventInstanceApproxPriceRecord?: (data: WithTypename<EventInstanceApproxPriceRecord>) => null | string,
+  EventInstanceEdge?: (data: WithTypename<EventInstanceEdge>) => null | string,
   EventInstanceFacetsRecord?: (data: WithTypename<EventInstanceFacetsRecord>) => null | string,
   EventInstanceRegistration?: (data: WithTypename<EventInstanceRegistration>) => null | string,
+  EventInstanceRegistrationConnection?: (data: WithTypename<EventInstanceRegistrationConnection>) => null | string,
+  EventInstanceRegistrationEdge?: (data: WithTypename<EventInstanceRegistrationEdge>) => null | string,
   EventInstanceRegistrationInfo?: (data: WithTypename<EventInstanceRegistrationInfo>) => null | string,
-  EventInstanceRegistrationsConnection?: (data: WithTypename<EventInstanceRegistrationsConnection>) => null | string,
-  EventInstanceRegistrationsEdge?: (data: WithTypename<EventInstanceRegistrationsEdge>) => null | string,
   EventInstanceTargetCohort?: (data: WithTypename<EventInstanceTargetCohort>) => null | string,
   EventInstanceTrainer?: (data: WithTypename<EventInstanceTrainer>) => null | string,
-  EventInstancesEdge?: (data: WithTypename<EventInstancesEdge>) => null | string,
   EventLessonDemand?: (data: WithTypename<EventLessonDemand>) => null | string,
-  EventLessonDemandsEdge?: (data: WithTypename<EventLessonDemandsEdge>) => null | string,
+  EventLessonDemandEdge?: (data: WithTypename<EventLessonDemandEdge>) => null | string,
   EventSeries?: (data: WithTypename<EventSeries>) => null | string,
   EventSeriesConnection?: (data: WithTypename<EventSeriesConnection>) => null | string,
   EventSeriesEdge?: (data: WithTypename<EventSeriesEdge>) => null | string,
   Federation?: (data: WithTypename<Federation>) => null | string,
   FederationClub?: (data: WithTypename<FederationClub>) => null | string,
-  FederationClubsConnection?: (data: WithTypename<FederationClubsConnection>) => null | string,
-  FederationClubsEdge?: (data: WithTypename<FederationClubsEdge>) => null | string,
+  FederationClubConnection?: (data: WithTypename<FederationClubConnection>) => null | string,
+  FederationClubEdge?: (data: WithTypename<FederationClubEdge>) => null | string,
   FederationCompetitor?: (data: WithTypename<FederationCompetitor>) => null | string,
   FederationCompetitorCategoryProgress?: (data: WithTypename<FederationCompetitorCategoryProgress>) => null | string,
-  FederationCompetitorCategoryProgressesConnection?: (data: WithTypename<FederationCompetitorCategoryProgressesConnection>) => null | string,
-  FederationCompetitorCategoryProgressesEdge?: (data: WithTypename<FederationCompetitorCategoryProgressesEdge>) => null | string,
+  FederationCompetitorCategoryProgressConnection?: (data: WithTypename<FederationCompetitorCategoryProgressConnection>) => null | string,
+  FederationCompetitorCategoryProgressEdge?: (data: WithTypename<FederationCompetitorCategoryProgressEdge>) => null | string,
   FederationCompetitorClubAffiliation?: (data: WithTypename<FederationCompetitorClubAffiliation>) => null | string,
-  FederationCompetitorClubAffiliationsConnection?: (data: WithTypename<FederationCompetitorClubAffiliationsConnection>) => null | string,
-  FederationCompetitorClubAffiliationsEdge?: (data: WithTypename<FederationCompetitorClubAffiliationsEdge>) => null | string,
+  FederationCompetitorClubAffiliationConnection?: (data: WithTypename<FederationCompetitorClubAffiliationConnection>) => null | string,
+  FederationCompetitorClubAffiliationEdge?: (data: WithTypename<FederationCompetitorClubAffiliationEdge>) => null | string,
   FederationCompetitorComponent?: (data: WithTypename<FederationCompetitorComponent>) => null | string,
-  FederationCompetitorComponentsConnection?: (data: WithTypename<FederationCompetitorComponentsConnection>) => null | string,
-  FederationCompetitorComponentsEdge?: (data: WithTypename<FederationCompetitorComponentsEdge>) => null | string,
+  FederationCompetitorComponentConnection?: (data: WithTypename<FederationCompetitorComponentConnection>) => null | string,
+  FederationCompetitorComponentEdge?: (data: WithTypename<FederationCompetitorComponentEdge>) => null | string,
+  FederationCompetitorConnection?: (data: WithTypename<FederationCompetitorConnection>) => null | string,
+  FederationCompetitorEdge?: (data: WithTypename<FederationCompetitorEdge>) => null | string,
   FederationCompetitorFacetsRecord?: (data: WithTypename<FederationCompetitorFacetsRecord>) => null | string,
-  FederationCompetitorsConnection?: (data: WithTypename<FederationCompetitorsConnection>) => null | string,
-  FederationCompetitorsEdge?: (data: WithTypename<FederationCompetitorsEdge>) => null | string,
   FederationCoupleAgeRule?: (data: WithTypename<FederationCoupleAgeRule>) => null | string,
   FederationEvent?: (data: WithTypename<FederationEvent>) => null | string,
+  FederationEventConnection?: (data: WithTypename<FederationEventConnection>) => null | string,
+  FederationEventEdge?: (data: WithTypename<FederationEventEdge>) => null | string,
   FederationEventFacet?: (data: WithTypename<FederationEventFacet>) => null | string,
   FederationEventOfficial?: (data: WithTypename<FederationEventOfficial>) => null | string,
-  FederationEventOfficialsConnection?: (data: WithTypename<FederationEventOfficialsConnection>) => null | string,
-  FederationEventOfficialsEdge?: (data: WithTypename<FederationEventOfficialsEdge>) => null | string,
+  FederationEventOfficialConnection?: (data: WithTypename<FederationEventOfficialConnection>) => null | string,
+  FederationEventOfficialEdge?: (data: WithTypename<FederationEventOfficialEdge>) => null | string,
   FederationEventYear?: (data: WithTypename<FederationEventYear>) => null | string,
-  FederationEventsConnection?: (data: WithTypename<FederationEventsConnection>) => null | string,
-  FederationEventsEdge?: (data: WithTypename<FederationEventsEdge>) => null | string,
-  FederationPeopleConnection?: (data: WithTypename<FederationPeopleConnection>) => null | string,
-  FederationPeopleEdge?: (data: WithTypename<FederationPeopleEdge>) => null | string,
   FederationPeopleFacetsRecord?: (data: WithTypename<FederationPeopleFacetsRecord>) => null | string,
   FederationPerson?: (data: WithTypename<FederationPerson>) => null | string,
   FederationPersonClubMembership?: (data: WithTypename<FederationPersonClubMembership>) => null | string,
-  FederationPersonClubMembershipsConnection?: (data: WithTypename<FederationPersonClubMembershipsConnection>) => null | string,
-  FederationPersonClubMembershipsEdge?: (data: WithTypename<FederationPersonClubMembershipsEdge>) => null | string,
+  FederationPersonClubMembershipConnection?: (data: WithTypename<FederationPersonClubMembershipConnection>) => null | string,
+  FederationPersonClubMembershipEdge?: (data: WithTypename<FederationPersonClubMembershipEdge>) => null | string,
+  FederationPersonConnection?: (data: WithTypename<FederationPersonConnection>) => null | string,
+  FederationPersonEdge?: (data: WithTypename<FederationPersonEdge>) => null | string,
   FederationPersonLicense?: (data: WithTypename<FederationPersonLicense>) => null | string,
-  FederationPersonLicensesConnection?: (data: WithTypename<FederationPersonLicensesConnection>) => null | string,
-  FederationPersonLicensesEdge?: (data: WithTypename<FederationPersonLicensesEdge>) => null | string,
+  FederationPersonLicenseConnection?: (data: WithTypename<FederationPersonLicenseConnection>) => null | string,
+  FederationPersonLicenseEdge?: (data: WithTypename<FederationPersonLicenseEdge>) => null | string,
   File?: (data: WithTypename<File>) => null | string,
-  FilesConnection?: (data: WithTypename<FilesConnection>) => null | string,
-  FilesEdge?: (data: WithTypename<FilesEdge>) => null | string,
+  FileConnection?: (data: WithTypename<FileConnection>) => null | string,
+  FileEdge?: (data: WithTypename<FileEdge>) => null | string,
   FormResponse?: (data: WithTypename<FormResponse>) => null | string,
-  FormResponsesConnection?: (data: WithTypename<FormResponsesConnection>) => null | string,
-  FormResponsesEdge?: (data: WithTypename<FormResponsesEdge>) => null | string,
+  FormResponseConnection?: (data: WithTypename<FormResponseConnection>) => null | string,
+  FormResponseEdge?: (data: WithTypename<FormResponseEdge>) => null | string,
   IntRange?: (data: WithTypename<IntRange>) => null | string,
   IntRangeBound?: (data: WithTypename<IntRangeBound>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
   JudgeScore?: (data: WithTypename<JudgeScore>) => null | string,
-  JudgeScoresConnection?: (data: WithTypename<JudgeScoresConnection>) => null | string,
-  JudgeScoresEdge?: (data: WithTypename<JudgeScoresEdge>) => null | string,
+  JudgeScoreConnection?: (data: WithTypename<JudgeScoreConnection>) => null | string,
+  JudgeScoreEdge?: (data: WithTypename<JudgeScoreEdge>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
+  LocationEdge?: (data: WithTypename<LocationEdge>) => null | string,
   LocationImage?: (data: WithTypename<LocationImage>) => null | string,
-  LocationsEdge?: (data: WithTypename<LocationsEdge>) => null | string,
   LogInAsPayload?: (data: WithTypename<LogInAsPayload>) => null | string,
   LoginPayload?: (data: WithTypename<LoginPayload>) => null | string,
   MembershipApplication?: (data: WithTypename<MembershipApplication>) => null | string,
-  MembershipApplicationsEdge?: (data: WithTypename<MembershipApplicationsEdge>) => null | string,
+  MembershipApplicationEdge?: (data: WithTypename<MembershipApplicationEdge>) => null | string,
   MoveEventInstancePayload?: (data: WithTypename<MoveEventInstancePayload>) => null | string,
   OtpLoginPayload?: (data: WithTypename<OtpLoginPayload>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
@@ -13549,9 +13549,9 @@ export type GraphCacheKeysConfig = {
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
   PaymentDebtorPriceRecord?: (data: WithTypename<PaymentDebtorPriceRecord>) => null | string,
   PaymentRecipient?: (data: WithTypename<PaymentRecipient>) => null | string,
-  PeopleConnection?: (data: WithTypename<PeopleConnection>) => null | string,
-  PeopleEdge?: (data: WithTypename<PeopleEdge>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
+  PersonConnection?: (data: WithTypename<PersonConnection>) => null | string,
+  PersonEdge?: (data: WithTypename<PersonEdge>) => null | string,
   PersonFacetsRecord?: (data: WithTypename<PersonFacetsRecord>) => null | string,
   PersonFederationCandidatesRecord?: (data: WithTypename<PersonFederationCandidatesRecord>) => null | string,
   PersonInvitation?: (data: WithTypename<PersonInvitation>) => null | string,
@@ -13559,14 +13559,14 @@ export type GraphCacheKeysConfig = {
   Posting?: (data: WithTypename<Posting>) => null | string,
   Price?: (data: WithTypename<Price>) => null | string,
   Ranklist?: (data: WithTypename<Ranklist>) => null | string,
-  RanklistEntriesConnection?: (data: WithTypename<RanklistEntriesConnection>) => null | string,
-  RanklistEntriesEdge?: (data: WithTypename<RanklistEntriesEdge>) => null | string,
+  RanklistConnection?: (data: WithTypename<RanklistConnection>) => null | string,
+  RanklistEdge?: (data: WithTypename<RanklistEdge>) => null | string,
   RanklistEntry?: (data: WithTypename<RanklistEntry>) => null | string,
+  RanklistEntryConnection?: (data: WithTypename<RanklistEntryConnection>) => null | string,
+  RanklistEntryEdge?: (data: WithTypename<RanklistEntryEdge>) => null | string,
   RanklistSnapshot?: (data: WithTypename<RanklistSnapshot>) => null | string,
-  RanklistSnapshotsConnection?: (data: WithTypename<RanklistSnapshotsConnection>) => null | string,
-  RanklistSnapshotsEdge?: (data: WithTypename<RanklistSnapshotsEdge>) => null | string,
-  RanklistsConnection?: (data: WithTypename<RanklistsConnection>) => null | string,
-  RanklistsEdge?: (data: WithTypename<RanklistsEdge>) => null | string,
+  RanklistSnapshotConnection?: (data: WithTypename<RanklistSnapshotConnection>) => null | string,
+  RanklistSnapshotEdge?: (data: WithTypename<RanklistSnapshotEdge>) => null | string,
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
@@ -13588,23 +13588,23 @@ export type GraphCacheKeysConfig = {
   SystemAdminUpdateTenantPayload?: (data: WithTypename<SystemAdminUpdateTenantPayload>) => null | string,
   Tenant?: (data: WithTypename<Tenant>) => null | string,
   TenantAdministrator?: (data: WithTypename<TenantAdministrator>) => null | string,
-  TenantAdministratorsConnection?: (data: WithTypename<TenantAdministratorsConnection>) => null | string,
-  TenantAdministratorsEdge?: (data: WithTypename<TenantAdministratorsEdge>) => null | string,
+  TenantAdministratorConnection?: (data: WithTypename<TenantAdministratorConnection>) => null | string,
+  TenantAdministratorEdge?: (data: WithTypename<TenantAdministratorEdge>) => null | string,
+  TenantEdge?: (data: WithTypename<TenantEdge>) => null | string,
   TenantLocation?: (data: WithTypename<TenantLocation>) => null | string,
   TenantLocationImage?: (data: WithTypename<TenantLocationImage>) => null | string,
   TenantMembership?: (data: WithTypename<TenantMembership>) => null | string,
-  TenantMembershipsConnection?: (data: WithTypename<TenantMembershipsConnection>) => null | string,
-  TenantMembershipsEdge?: (data: WithTypename<TenantMembershipsEdge>) => null | string,
+  TenantMembershipConnection?: (data: WithTypename<TenantMembershipConnection>) => null | string,
+  TenantMembershipEdge?: (data: WithTypename<TenantMembershipEdge>) => null | string,
   TenantSetting?: (data: WithTypename<TenantSetting>) => null | string,
-  TenantSettingsEdge?: (data: WithTypename<TenantSettingsEdge>) => null | string,
+  TenantSettingEdge?: (data: WithTypename<TenantSettingEdge>) => null | string,
   TenantTrainer?: (data: WithTypename<TenantTrainer>) => null | string,
-  TenantTrainersConnection?: (data: WithTypename<TenantTrainersConnection>) => null | string,
-  TenantTrainersEdge?: (data: WithTypename<TenantTrainersEdge>) => null | string,
-  TenantsEdge?: (data: WithTypename<TenantsEdge>) => null | string,
+  TenantTrainerConnection?: (data: WithTypename<TenantTrainerConnection>) => null | string,
+  TenantTrainerEdge?: (data: WithTypename<TenantTrainerEdge>) => null | string,
   TrainerGroupAttendanceCompletion?: (data: WithTypename<TrainerGroupAttendanceCompletion>) => null | string,
   Transaction?: (data: WithTypename<Transaction>) => null | string,
-  TransactionsConnection?: (data: WithTypename<TransactionsConnection>) => null | string,
-  TransactionsEdge?: (data: WithTypename<TransactionsEdge>) => null | string,
+  TransactionConnection?: (data: WithTypename<TransactionConnection>) => null | string,
+  TransactionEdge?: (data: WithTypename<TransactionEdge>) => null | string,
   UpdateAccessCredentialPayload?: (data: WithTypename<UpdateAccessCredentialPayload>) => null | string,
   UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
   UpdateAttendancePayload?: (data: WithTypename<UpdateAttendancePayload>) => null | string,
@@ -13629,9 +13629,9 @@ export type GraphCacheKeysConfig = {
   UpsertArticlePayload?: (data: WithTypename<UpsertArticlePayload>) => null | string,
   UpsertLocationPayload?: (data: WithTypename<UpsertLocationPayload>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
-  UserProxy?: (data: WithTypename<UserProxy>) => null | string,
-  UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
-  UsersEdge?: (data: WithTypename<UsersEdge>) => null | string
+  UserConnection?: (data: WithTypename<UserConnection>) => null | string,
+  UserEdge?: (data: WithTypename<UserEdge>) => null | string,
+  UserProxy?: (data: WithTypename<UserProxy>) => null | string
 }
 
 export type GraphCacheResolvers = {
@@ -13645,39 +13645,39 @@ export type GraphCacheResolvers = {
     activityTimelineList?: GraphCacheResolver<WithTypename<Query>, QueryActivityTimelineListArgs, Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging> | string>>,
     ageGroup?: GraphCacheResolver<WithTypename<Query>, QueryAgeGroupArgs, WithTypename<AgeGroup> | string>,
     ageGroupsList?: GraphCacheResolver<WithTypename<Query>, QueryAgeGroupsListArgs, Array<WithTypename<AgeGroup> | string>>,
-    aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
+    aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualityConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     announcement?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementArgs, WithTypename<Announcement> | string>,
-    announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    announcements?: GraphCacheResolver<WithTypename<Query>, QueryAnnouncementsArgs, WithTypename<AnnouncementConnection> | string>,
     categoriesList?: GraphCacheResolver<WithTypename<Query>, QueryCategoriesListArgs, Array<WithTypename<Category> | string>>,
     category?: GraphCacheResolver<WithTypename<Query>, QueryCategoryArgs, WithTypename<Category> | string>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheResolver<WithTypename<Query>, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs, WithTypename<Category> | string>,
     cohort?: GraphCacheResolver<WithTypename<Query>, QueryCohortArgs, WithTypename<Cohort> | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupArgs, WithTypename<CohortGroup> | string>,
-    cohortGroups?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
+    cohortGroups?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupsArgs, WithTypename<CohortGroupConnection> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipArgs, WithTypename<CohortMembership> | string>,
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     competition?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionArgs, WithTypename<Competition> | string>,
     competitionByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionByFederationAndExternalIdArgs, WithTypename<Competition> | string>,
     competitionRound?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionRoundArgs, WithTypename<CompetitionRound> | string>,
     competitionRoundByCompetitionIdAndRoundKey?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs, WithTypename<CompetitionRound> | string>,
-    competitions?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
+    competitions?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
-    crawlerFetchJobs?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerFetchJobsArgs, WithTypename<CrawlerFetchJobsConnection> | string>,
+    crawlerFetchJobs?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerFetchJobsArgs, WithTypename<CrawlerFetchJobConnection> | string>,
     crawlerIncrementalRange?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerIncrementalRangeArgs, WithTypename<CrawlerIncrementalRange> | string>,
-    crawlerIncrementalRanges?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerIncrementalRangesArgs, WithTypename<CrawlerIncrementalRangesConnection> | string>,
+    crawlerIncrementalRanges?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerIncrementalRangesArgs, WithTypename<CrawlerIncrementalRangeConnection> | string>,
     crawlerRateLimitRule?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerRateLimitRuleArgs, WithTypename<CrawlerRateLimitRule> | string>,
-    crawlerRateLimitRules?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerRateLimitRulesArgs, WithTypename<CrawlerRateLimitRulesConnection> | string>,
+    crawlerRateLimitRules?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerRateLimitRulesArgs, WithTypename<CrawlerRateLimitRuleConnection> | string>,
     crawlerResponse?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponseArgs, WithTypename<CrawlerResponse> | string>,
     crawlerResponseCache?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponseCacheArgs, WithTypename<CrawlerResponseCache> | string>,
-    crawlerResponseCaches?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponseCachesArgs, WithTypename<CrawlerResponseCachesConnection> | string>,
-    crawlerResponses?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponsesArgs, WithTypename<CrawlerResponsesConnection> | string>,
+    crawlerResponseCaches?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponseCachesArgs, WithTypename<CrawlerResponseCacheConnection> | string>,
+    crawlerResponses?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerResponsesArgs, WithTypename<CrawlerResponseConnection> | string>,
     crawlerTarget?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetArgs, WithTypename<CrawlerTarget> | string>,
     crawlerTargetByFederationAndKindAndKey?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetByFederationAndKindAndKeyArgs, WithTypename<CrawlerTarget> | string>,
     crawlerTargetFailureGroupsList?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailureGroupsListArgs, Array<WithTypename<CrawlerTargetFailureGroup> | string>>,
-    crawlerTargetFailures?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailuresArgs, WithTypename<CrawlerTargetFailuresConnection> | string>,
+    crawlerTargetFailures?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetFailuresArgs, WithTypename<CrawlerTargetFailureConnection> | string>,
     crawlerTargetSummariesList?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetSummariesListArgs, Array<WithTypename<CrawlerTargetSummary> | string>>,
-    crawlerTargets?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetsArgs, WithTypename<CrawlerTargetsConnection> | string>,
+    crawlerTargets?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerTargetsArgs, WithTypename<CrawlerTargetConnection> | string>,
     currentClaims?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JSON']['output'] | string>,
     dance?: GraphCacheResolver<WithTypename<Query>, QueryDanceArgs, WithTypename<Dance> | string>,
     danceProgram?: GraphCacheResolver<WithTypename<Query>, QueryDanceProgramArgs, WithTypename<DanceProgram> | string>,
@@ -13690,7 +13690,7 @@ export type GraphCacheResolvers = {
     eventInstance?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceArgs, WithTypename<EventInstance> | string>,
     eventInstanceFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceFacetsListArgs, Array<WithTypename<EventInstanceFacetsRecord> | string>>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationArgs, WithTypename<EventInstanceRegistration> | string>,
-    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesForRangeListArgs, Array<WithTypename<EventInstance> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
@@ -13700,23 +13700,23 @@ export type GraphCacheResolvers = {
     federation?: GraphCacheResolver<WithTypename<Query>, QueryFederationArgs, WithTypename<Federation> | string>,
     federationClub?: GraphCacheResolver<WithTypename<Query>, QueryFederationClubArgs, WithTypename<FederationClub> | string>,
     federationClubByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryFederationClubByFederationAndExternalIdArgs, WithTypename<FederationClub> | string>,
-    federationClubs?: GraphCacheResolver<WithTypename<Query>, QueryFederationClubsArgs, WithTypename<FederationClubsConnection> | string>,
+    federationClubs?: GraphCacheResolver<WithTypename<Query>, QueryFederationClubsArgs, WithTypename<FederationClubConnection> | string>,
     federationCompetitor?: GraphCacheResolver<WithTypename<Query>, QueryFederationCompetitorArgs, WithTypename<FederationCompetitor> | string>,
     federationCompetitorByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryFederationCompetitorByFederationAndExternalIdArgs, WithTypename<FederationCompetitor> | string>,
-    federationCompetitors?: GraphCacheResolver<WithTypename<Query>, QueryFederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
+    federationCompetitors?: GraphCacheResolver<WithTypename<Query>, QueryFederationCompetitorsArgs, WithTypename<FederationCompetitorConnection> | string>,
     federationEvent?: GraphCacheResolver<WithTypename<Query>, QueryFederationEventArgs, WithTypename<FederationEvent> | string>,
     federationEventByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryFederationEventByFederationAndExternalIdArgs, WithTypename<FederationEvent> | string>,
-    federationEvents?: GraphCacheResolver<WithTypename<Query>, QueryFederationEventsArgs, WithTypename<FederationEventsConnection> | string>,
-    federationPeople?: GraphCacheResolver<WithTypename<Query>, QueryFederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
+    federationEvents?: GraphCacheResolver<WithTypename<Query>, QueryFederationEventsArgs, WithTypename<FederationEventConnection> | string>,
+    federationPeople?: GraphCacheResolver<WithTypename<Query>, QueryFederationPeopleArgs, WithTypename<FederationPersonConnection> | string>,
     federationPerson?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonArgs, WithTypename<FederationPerson> | string>,
     federationPersonByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonByFederationAndExternalIdArgs, WithTypename<FederationPerson> | string>,
     federationPersonCandidatesList?: GraphCacheResolver<WithTypename<Query>, QueryFederationPersonCandidatesListArgs, Array<WithTypename<PersonFederationCandidatesRecord> | string>>,
     federationsList?: GraphCacheResolver<WithTypename<Query>, QueryFederationsListArgs, Array<WithTypename<Federation> | string>>,
     file?: GraphCacheResolver<WithTypename<Query>, QueryFileArgs, WithTypename<File> | string>,
     fileByObjectKey?: GraphCacheResolver<WithTypename<Query>, QueryFileByObjectKeyArgs, WithTypename<File> | string>,
-    files?: GraphCacheResolver<WithTypename<Query>, QueryFilesArgs, WithTypename<FilesConnection> | string>,
+    files?: GraphCacheResolver<WithTypename<Query>, QueryFilesArgs, WithTypename<FileConnection> | string>,
     formResponse?: GraphCacheResolver<WithTypename<Query>, QueryFormResponseArgs, WithTypename<FormResponse> | string>,
-    formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
+    formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponseConnection> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, QueryGetCurrentUserArgs, WithTypename<User> | string>,
     invitationInfo?: GraphCacheResolver<WithTypename<Query>, QueryInvitationInfoArgs, Scalars['String']['output'] | string>,
@@ -13729,7 +13729,7 @@ export type GraphCacheResolvers = {
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     paymentRecipient?: GraphCacheResolver<WithTypename<Query>, QueryPaymentRecipientArgs, WithTypename<PaymentRecipient> | string>,
-    people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PeopleConnection> | string>,
+    people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PersonConnection> | string>,
     peopleWithoutAccessOrInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessOrInvitationListArgs, Array<WithTypename<Person> | string>>,
     peopleWithoutAccessWithExistingAccountList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithExistingAccountListArgs, Array<WithTypename<Person> | string>>,
     peopleWithoutAccessWithInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithInvitationListArgs, Array<WithTypename<Person> | string>>,
@@ -13739,7 +13739,7 @@ export type GraphCacheResolvers = {
     personInvitationByAccessToken?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationByAccessTokenArgs, WithTypename<PersonInvitation> | string>,
     ranklist?: GraphCacheResolver<WithTypename<Query>, QueryRanklistArgs, WithTypename<Ranklist> | string>,
     ranklistByFederationAndCategoryId?: GraphCacheResolver<WithTypename<Query>, QueryRanklistByFederationAndCategoryIdArgs, WithTypename<Ranklist> | string>,
-    ranklists?: GraphCacheResolver<WithTypename<Query>, QueryRanklistsArgs, WithTypename<RanklistsConnection> | string>,
+    ranklists?: GraphCacheResolver<WithTypename<Query>, QueryRanklistsArgs, WithTypename<RanklistConnection> | string>,
     refreshJwt?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, Scalars['JwtToken']['output'] | string>,
     scoreboardEntriesList?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardEntriesListArgs, Array<WithTypename<ScoreboardRecord> | string>>,
     scoreboardManualAdjustment?: GraphCacheResolver<WithTypename<Query>, QueryScoreboardManualAdjustmentArgs, WithTypename<ScoreboardManualAdjustment> | string>,
@@ -13754,10 +13754,10 @@ export type GraphCacheResolvers = {
     tenantsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantsListArgs, Array<WithTypename<Tenant> | string>>,
     trainerGroupAttendanceCompletionList?: GraphCacheResolver<WithTypename<Query>, QueryTrainerGroupAttendanceCompletionListArgs, Array<WithTypename<TrainerGroupAttendanceCompletion> | string>>,
     transaction?: GraphCacheResolver<WithTypename<Query>, QueryTransactionArgs, WithTypename<Transaction> | string>,
-    transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionsConnection> | string>,
+    transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
-    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
+    users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UserConnection> | string>
   },
   AccessCredential?: {
     code?: GraphCacheResolver<WithTypename<AccessCredential>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -13932,16 +13932,6 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, Scalars['String']['output'] | string>,
     personAge?: GraphCacheResolver<WithTypename<AgeGroup>, Record<string, never>, WithTypename<IntRange> | string>
   },
-  AktualitiesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, Array<WithTypename<AktualitiesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, Array<WithTypename<Aktuality> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AktualitiesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  AktualitiesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AktualitiesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AktualitiesEdge>, Record<string, never>, WithTypename<Aktuality> | string>
-  },
   Aktuality?: {
     atFoto?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     atJmeno?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -13949,7 +13939,7 @@ export type GraphCacheResolvers = {
     atKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     atPreview?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
     atText?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['String']['output'] | string>,
-    attachments?: GraphCacheResolver<WithTypename<Aktuality>, AktualityAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
+    attachments?: GraphCacheResolver<WithTypename<Aktuality>, AktualityAttachmentsArgs, WithTypename<ArticleAttachmentConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -13959,9 +13949,19 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
+  AktualityConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AktualityConnection>, Record<string, never>, Array<WithTypename<AktualityEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AktualityConnection>, Record<string, never>, Array<WithTypename<Aktuality> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AktualityConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AktualityConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  AktualityEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AktualityEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<AktualityEdge>, Record<string, never>, WithTypename<Aktuality> | string>
+  },
   Announcement?: {
-    announcementAudiences?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
-    attachments?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
+    announcementAudiences?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAnnouncementAudiencesArgs, WithTypename<AnnouncementAudienceConnection> | string>,
+    attachments?: GraphCacheResolver<WithTypename<Announcement>, AnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentConnection> | string>,
     author?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, WithTypename<User> | string>,
     authorId?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     authorName?: GraphCacheResolver<WithTypename<Announcement>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -13984,15 +13984,15 @@ export type GraphCacheResolvers = {
     inline?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<AnnouncementAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  AnnouncementAttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  AnnouncementAttachmentConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AnnouncementAttachmentConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachmentEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AnnouncementAttachmentConnection>, Record<string, never>, Array<WithTypename<AnnouncementAttachment> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementAttachmentConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AnnouncementAttachmentConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  AnnouncementAttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AnnouncementAttachmentsEdge>, Record<string, never>, WithTypename<AnnouncementAttachment> | string>
+  AnnouncementAttachmentEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AnnouncementAttachmentEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<AnnouncementAttachmentEdge>, Record<string, never>, WithTypename<AnnouncementAttachment> | string>
   },
   AnnouncementAudience?: {
     announcement?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, WithTypename<Announcement> | string>,
@@ -14003,30 +14003,30 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<AnnouncementAudience>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  AnnouncementAudiencesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AnnouncementAudiencesConnection>, Record<string, never>, Array<WithTypename<AnnouncementAudiencesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AnnouncementAudiencesConnection>, Record<string, never>, Array<WithTypename<AnnouncementAudience> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementAudiencesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AnnouncementAudiencesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  AnnouncementAudienceConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AnnouncementAudienceConnection>, Record<string, never>, Array<WithTypename<AnnouncementAudienceEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AnnouncementAudienceConnection>, Record<string, never>, Array<WithTypename<AnnouncementAudience> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementAudienceConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AnnouncementAudienceConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  AnnouncementAudiencesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AnnouncementAudiencesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AnnouncementAudiencesEdge>, Record<string, never>, WithTypename<AnnouncementAudience> | string>
+  AnnouncementAudienceEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AnnouncementAudienceEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<AnnouncementAudienceEdge>, Record<string, never>, WithTypename<AnnouncementAudience> | string>
   },
-  AnnouncementsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Array<WithTypename<AnnouncementsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Array<WithTypename<Announcement> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<AnnouncementsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  AnnouncementConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AnnouncementConnection>, Record<string, never>, Array<WithTypename<AnnouncementEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AnnouncementConnection>, Record<string, never>, Array<WithTypename<Announcement> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<AnnouncementConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<AnnouncementConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  AnnouncementsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<AnnouncementsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<AnnouncementsEdge>, Record<string, never>, WithTypename<Announcement> | string>
+  AnnouncementEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AnnouncementEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<AnnouncementEdge>, Record<string, never>, WithTypename<Announcement> | string>
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     cohort?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
-    cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortsEdge> | string>
+    cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortEdge> | string>
   },
   ArticleAttachment?: {
     aktualityId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14036,15 +14036,15 @@ export type GraphCacheResolvers = {
     inline?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  ArticleAttachmentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Array<WithTypename<ArticleAttachmentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Array<WithTypename<ArticleAttachment> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<ArticleAttachmentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  ArticleAttachmentConnection?: {
+    edges?: GraphCacheResolver<WithTypename<ArticleAttachmentConnection>, Record<string, never>, Array<WithTypename<ArticleAttachmentEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<ArticleAttachmentConnection>, Record<string, never>, Array<WithTypename<ArticleAttachment> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<ArticleAttachmentConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<ArticleAttachmentConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  ArticleAttachmentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<ArticleAttachmentsEdge>, Record<string, never>, WithTypename<ArticleAttachment> | string>
+  ArticleAttachmentEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<ArticleAttachmentEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<ArticleAttachmentEdge>, Record<string, never>, WithTypename<ArticleAttachment> | string>
   },
   Category?: {
     ageGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14052,28 +14052,28 @@ export type GraphCacheResolvers = {
     baseDanceProgram?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, WithTypename<DanceProgram> | string>,
     baseDanceProgramId?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     class?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
-    competitions?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
-    competitorProgresses?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitorProgressesArgs, WithTypename<FederationCompetitorCategoryProgressesConnection> | string>,
+    competitions?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
+    competitorProgresses?: GraphCacheResolver<WithTypename<Category>, CategoryCompetitorProgressesArgs, WithTypename<FederationCompetitorCategoryProgressConnection> | string>,
     competitorType?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, CompetitorType | string>,
     discipline?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
     genderGroup?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>,
-    ranklists?: GraphCacheResolver<WithTypename<Category>, CategoryRanklistsArgs, WithTypename<RanklistsConnection> | string>,
+    ranklists?: GraphCacheResolver<WithTypename<Category>, CategoryRanklistsArgs, WithTypename<RanklistConnection> | string>,
     series?: GraphCacheResolver<WithTypename<Category>, Record<string, never>, Scalars['String']['output'] | string>
   },
   ChangePasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ChangePasswordPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   Cohort?: {
-    announcementAudiences?: GraphCacheResolver<WithTypename<Cohort>, CohortAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
+    announcementAudiences?: GraphCacheResolver<WithTypename<Cohort>, CohortAnnouncementAudiencesArgs, WithTypename<AnnouncementAudienceConnection> | string>,
     cohortGroup?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<CohortGroup> | string>,
     cohortGroupId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Cohort>, CohortCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     colorRgb?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByTargetCohortId?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsByTargetCohortIdList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceRegistrationsByTargetCohortIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
@@ -14086,6 +14086,10 @@ export type GraphCacheResolvers = {
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Cohort>, CohortScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
     tenantId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
+  CohortEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CohortEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CohortEdge>, Record<string, never>, WithTypename<Cohort> | string>
+  },
   CohortGroup?: {
     cohortsList?: GraphCacheResolver<WithTypename<CohortGroup>, CohortGroupCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     description?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14095,15 +14099,15 @@ export type GraphCacheResolvers = {
     ordering?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['Int']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<CohortGroup>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  CohortGroupsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CohortGroupsConnection>, Record<string, never>, Array<WithTypename<CohortGroupsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CohortGroupsConnection>, Record<string, never>, Array<WithTypename<CohortGroup> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CohortGroupsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CohortGroupsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CohortGroupConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CohortGroupConnection>, Record<string, never>, Array<WithTypename<CohortGroupEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CohortGroupConnection>, Record<string, never>, Array<WithTypename<CohortGroup> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CohortGroupConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CohortGroupConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CohortGroupsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CohortGroupsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CohortGroupsEdge>, Record<string, never>, WithTypename<CohortGroup> | string>
+  CohortGroupEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CohortGroupEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CohortGroupEdge>, Record<string, never>, WithTypename<CohortGroup> | string>
   },
   CohortMembership?: {
     cohort?: GraphCacheResolver<WithTypename<CohortMembership>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -14135,10 +14139,6 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  CohortsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CohortsEdge>, Record<string, never>, WithTypename<Cohort> | string>
-  },
   Competition?: {
     category?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, WithTypename<Category> | string>,
     categoryId?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14146,7 +14146,7 @@ export type GraphCacheResolvers = {
     competitionType?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, CompetitionType | string>,
     completedAt?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     endDate?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Date']['output'] | string>,
-    entries?: GraphCacheResolver<WithTypename<Competition>, CompetitionEntriesArgs, WithTypename<CompetitionEntriesConnection> | string>,
+    entries?: GraphCacheResolver<WithTypename<Competition>, CompetitionEntriesArgs, WithTypename<CompetitionEntryConnection> | string>,
     entriesList?: GraphCacheResolver<WithTypename<Competition>, CompetitionEntriesListArgs, Array<WithTypename<CompetitionEntry> | string>>,
     event?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, WithTypename<FederationEvent> | string>,
     eventId?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14155,24 +14155,24 @@ export type GraphCacheResolvers = {
     federation?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, WithTypename<Federation> | string>,
     id?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    officials?: GraphCacheResolver<WithTypename<Competition>, CompetitionOfficialsArgs, WithTypename<CompetitionOfficialsConnection> | string>,
+    officials?: GraphCacheResolver<WithTypename<Competition>, CompetitionOfficialsArgs, WithTypename<CompetitionOfficialConnection> | string>,
     participantsTotal?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Int']['output'] | string>,
     registrationFee?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
-    results?: GraphCacheResolver<WithTypename<Competition>, CompetitionResultsArgs, WithTypename<CompetitionResultsConnection> | string>,
+    results?: GraphCacheResolver<WithTypename<Competition>, CompetitionResultsArgs, WithTypename<CompetitionResultConnection> | string>,
     resultsList?: GraphCacheResolver<WithTypename<Competition>, CompetitionResultsListArgs, Array<WithTypename<CompetitionResult> | string>>,
     roundsList?: GraphCacheResolver<WithTypename<Competition>, CompetitionRoundsListArgs, Array<WithTypename<CompetitionRound> | string>>,
     startDate?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, Scalars['Date']['output'] | string>,
     status?: GraphCacheResolver<WithTypename<Competition>, Record<string, never>, FederationEventStatus | string>
   },
-  CompetitionEntriesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionEntriesConnection>, Record<string, never>, Array<WithTypename<CompetitionEntriesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionEntriesConnection>, Record<string, never>, Array<WithTypename<CompetitionEntry> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionEntriesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionEntriesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionConnection>, Record<string, never>, Array<WithTypename<CompetitionEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionConnection>, Record<string, never>, Array<WithTypename<Competition> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionEntriesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionEntriesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionEntriesEdge>, Record<string, never>, WithTypename<CompetitionEntry> | string>
+  CompetitionEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionEdge>, Record<string, never>, WithTypename<Competition> | string>
   },
   CompetitionEntry?: {
     cancelled?: GraphCacheResolver<WithTypename<CompetitionEntry>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -14181,6 +14181,16 @@ export type GraphCacheResolvers = {
     competitor?: GraphCacheResolver<WithTypename<CompetitionEntry>, Record<string, never>, WithTypename<FederationCompetitor> | string>,
     competitorId?: GraphCacheResolver<WithTypename<CompetitionEntry>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<CompetitionEntry>, Record<string, never>, Scalars['Datetime']['output'] | string>
+  },
+  CompetitionEntryConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionEntryConnection>, Record<string, never>, Array<WithTypename<CompetitionEntryEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionEntryConnection>, Record<string, never>, Array<WithTypename<CompetitionEntry> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionEntryConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionEntryConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  CompetitionEntryEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionEntryEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionEntryEdge>, Record<string, never>, WithTypename<CompetitionEntry> | string>
   },
   CompetitionOfficial?: {
     competition?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, WithTypename<Competition> | string>,
@@ -14191,15 +14201,15 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
     role?: GraphCacheResolver<WithTypename<CompetitionOfficial>, Record<string, never>, OfficialRole | string>
   },
-  CompetitionOfficialsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionOfficialsConnection>, Record<string, never>, Array<WithTypename<CompetitionOfficialsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionOfficialsConnection>, Record<string, never>, Array<WithTypename<CompetitionOfficial> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionOfficialsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionOfficialsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionOfficialConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionOfficialConnection>, Record<string, never>, Array<WithTypename<CompetitionOfficialEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionOfficialConnection>, Record<string, never>, Array<WithTypename<CompetitionOfficial> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionOfficialConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionOfficialConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionOfficialsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionOfficialsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionOfficialsEdge>, Record<string, never>, WithTypename<CompetitionOfficial> | string>
+  CompetitionOfficialEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionOfficialEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionOfficialEdge>, Record<string, never>, WithTypename<CompetitionOfficial> | string>
   },
   CompetitionResult?: {
     competition?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, WithTypename<Competition> | string>,
@@ -14216,15 +14226,15 @@ export type GraphCacheResolvers = {
     rankingTo?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['Int']['output'] | string>,
     startNumber?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['String']['output'] | string>
   },
-  CompetitionResultsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionResultsConnection>, Record<string, never>, Array<WithTypename<CompetitionResultsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionResultsConnection>, Record<string, never>, Array<WithTypename<CompetitionResult> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionResultsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionResultsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionResultConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionResultConnection>, Record<string, never>, Array<WithTypename<CompetitionResultEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionResultConnection>, Record<string, never>, Array<WithTypename<CompetitionResult> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionResultConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionResultConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionResultsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionResultsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionResultsEdge>, Record<string, never>, WithTypename<CompetitionResult> | string>
+  CompetitionResultEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionResultEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionResultEdge>, Record<string, never>, WithTypename<CompetitionResult> | string>
   },
   CompetitionRound?: {
     competition?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, WithTypename<Competition> | string>,
@@ -14242,25 +14252,35 @@ export type GraphCacheResolvers = {
     roundLabel?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, Scalars['String']['output'] | string>,
     scoringMethod?: GraphCacheResolver<WithTypename<CompetitionRound>, Record<string, never>, ScoringMethod | string>
   },
+  CompetitionRoundConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionRoundConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundConnection>, Record<string, never>, Array<WithTypename<CompetitionRound> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
   CompetitionRoundDance?: {
     dance?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, WithTypename<Dance> | string>,
     danceCode?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['String']['output'] | string>,
     danceOrder?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['Int']['output'] | string>,
     danceProgramDanceByDanceProgramIdAndDanceCode?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, WithTypename<DanceProgramDance> | string>,
     danceProgramId?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    judgeScores?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, CompetitionRoundDanceJudgeScoresArgs, WithTypename<JudgeScoresConnection> | string>,
+    judgeScores?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, CompetitionRoundDanceJudgeScoresArgs, WithTypename<JudgeScoreConnection> | string>,
     roundDanceProgram?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, WithTypename<CompetitionRound> | string>,
     roundId?: GraphCacheResolver<WithTypename<CompetitionRoundDance>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  CompetitionRoundDancesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionRoundDancesConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundDancesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundDancesConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundDance> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundDancesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundDancesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionRoundDanceConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionRoundDanceConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundDanceEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundDanceConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundDance> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundDanceConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundDanceConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionRoundDancesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundDancesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionRoundDancesEdge>, Record<string, never>, WithTypename<CompetitionRoundDance> | string>
+  CompetitionRoundDanceEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundDanceEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionRoundDanceEdge>, Record<string, never>, WithTypename<CompetitionRoundDance> | string>
+  },
+  CompetitionRoundEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionRoundEdge>, Record<string, never>, WithTypename<CompetitionRound> | string>
   },
   CompetitionRoundJudge?: {
     judgeIndex?: GraphCacheResolver<WithTypename<CompetitionRoundJudge>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -14270,15 +14290,15 @@ export type GraphCacheResolvers = {
     round?: GraphCacheResolver<WithTypename<CompetitionRoundJudge>, Record<string, never>, WithTypename<CompetitionRound> | string>,
     roundId?: GraphCacheResolver<WithTypename<CompetitionRoundJudge>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  CompetitionRoundJudgesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundJudgesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundJudge> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionRoundJudgeConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundJudgeEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundJudge> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionRoundJudgesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionRoundJudgesEdge>, Record<string, never>, WithTypename<CompetitionRoundJudge> | string>
+  CompetitionRoundJudgeEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionRoundJudgeEdge>, Record<string, never>, WithTypename<CompetitionRoundJudge> | string>
   },
   CompetitionRoundResult?: {
     competitor?: GraphCacheResolver<WithTypename<CompetitionRoundResult>, Record<string, never>, WithTypename<FederationCompetitor> | string>,
@@ -14291,49 +14311,29 @@ export type GraphCacheResolvers = {
     round?: GraphCacheResolver<WithTypename<CompetitionRoundResult>, Record<string, never>, WithTypename<CompetitionRound> | string>,
     roundId?: GraphCacheResolver<WithTypename<CompetitionRoundResult>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  CompetitionRoundResultsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionRoundResultsConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundResultsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundResultsConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundResult> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundResultsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundResultsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CompetitionRoundResultConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CompetitionRoundResultConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundResultEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundResultConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundResult> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundResultConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundResultConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CompetitionRoundResultsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundResultsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionRoundResultsEdge>, Record<string, never>, WithTypename<CompetitionRoundResult> | string>
-  },
-  CompetitionRoundsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionRoundsConnection>, Record<string, never>, Array<WithTypename<CompetitionRoundsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionRoundsConnection>, Record<string, never>, Array<WithTypename<CompetitionRound> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionRoundsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionRoundsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  CompetitionRoundsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionRoundsEdge>, Record<string, never>, WithTypename<CompetitionRound> | string>
-  },
-  CompetitionsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CompetitionsConnection>, Record<string, never>, Array<WithTypename<CompetitionsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CompetitionsConnection>, Record<string, never>, Array<WithTypename<Competition> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CompetitionsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CompetitionsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  CompetitionsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CompetitionsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CompetitionsEdge>, Record<string, never>, WithTypename<Competition> | string>
+  CompetitionRoundResultEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CompetitionRoundResultEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CompetitionRoundResultEdge>, Record<string, never>, WithTypename<CompetitionRoundResult> | string>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, WithTypename<Person> | string>,
-    personEdge?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, ConfirmMembershipApplicationPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>
+    personEdge?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, ConfirmMembershipApplicationPayloadPersonEdgeArgs, WithTypename<PersonEdge> | string>
   },
   Couple?: {
     ageGroup?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Couple>, CoupleEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
-    federationCompetitions?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
-    federationCompetitors?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
-    federationRanklistEntries?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
+    federationCompetitions?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
+    federationCompetitors?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitorsArgs, WithTypename<FederationCompetitorConnection> | string>,
+    federationRanklistEntries?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     man?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     manId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14363,15 +14363,15 @@ export type GraphCacheResolvers = {
     runAt?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     state?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>
   },
-  CrawlerFetchJobsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerFetchJobsConnection>, Record<string, never>, Array<WithTypename<CrawlerFetchJobsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerFetchJobsConnection>, Record<string, never>, Array<WithTypename<CrawlerFetchJob> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerFetchJobsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerFetchJobsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CrawlerFetchJobConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerFetchJobConnection>, Record<string, never>, Array<WithTypename<CrawlerFetchJobEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerFetchJobConnection>, Record<string, never>, Array<WithTypename<CrawlerFetchJob> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerFetchJobConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerFetchJobConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerFetchJobsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerFetchJobsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerFetchJobsEdge>, Record<string, never>, WithTypename<CrawlerFetchJob> | string>
+  CrawlerFetchJobEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerFetchJobEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerFetchJobEdge>, Record<string, never>, WithTypename<CrawlerFetchJob> | string>
   },
   CrawlerIncrementalRange?: {
     federation?: GraphCacheResolver<WithTypename<CrawlerIncrementalRange>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14379,15 +14379,15 @@ export type GraphCacheResolvers = {
     lastChecked?: GraphCacheResolver<WithTypename<CrawlerIncrementalRange>, Record<string, never>, Scalars['Int']['output'] | string>,
     lastKnown?: GraphCacheResolver<WithTypename<CrawlerIncrementalRange>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerIncrementalRangesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesConnection>, Record<string, never>, Array<WithTypename<CrawlerIncrementalRangesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesConnection>, Record<string, never>, Array<WithTypename<CrawlerIncrementalRange> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CrawlerIncrementalRangeConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeConnection>, Record<string, never>, Array<WithTypename<CrawlerIncrementalRangeEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeConnection>, Record<string, never>, Array<WithTypename<CrawlerIncrementalRange> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerIncrementalRangesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangesEdge>, Record<string, never>, WithTypename<CrawlerIncrementalRange> | string>
+  CrawlerIncrementalRangeEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerIncrementalRangeEdge>, Record<string, never>, WithTypename<CrawlerIncrementalRange> | string>
   },
   CrawlerRateLimitRule?: {
     host?: GraphCacheResolver<WithTypename<CrawlerRateLimitRule>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14396,15 +14396,15 @@ export type GraphCacheResolvers = {
     perInterval?: GraphCacheResolver<WithTypename<CrawlerRateLimitRule>, Record<string, never>, WithTypename<Interval> | string>,
     spacing?: GraphCacheResolver<WithTypename<CrawlerRateLimitRule>, Record<string, never>, WithTypename<Interval> | string>
   },
-  CrawlerRateLimitRulesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesConnection>, Record<string, never>, Array<WithTypename<CrawlerRateLimitRulesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesConnection>, Record<string, never>, Array<WithTypename<CrawlerRateLimitRule> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CrawlerRateLimitRuleConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleConnection>, Record<string, never>, Array<WithTypename<CrawlerRateLimitRuleEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleConnection>, Record<string, never>, Array<WithTypename<CrawlerRateLimitRule> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerRateLimitRulesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerRateLimitRulesEdge>, Record<string, never>, WithTypename<CrawlerRateLimitRule> | string>
+  CrawlerRateLimitRuleEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerRateLimitRuleEdge>, Record<string, never>, WithTypename<CrawlerRateLimitRule> | string>
   },
   CrawlerResponse?: {
     contentHash?: GraphCacheResolver<WithTypename<CrawlerResponse>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14418,34 +14418,34 @@ export type GraphCacheResolvers = {
     lastObservedAt?: GraphCacheResolver<WithTypename<CrawlerResponse>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     observationCount?: GraphCacheResolver<WithTypename<CrawlerResponse>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     sysPeriod?: GraphCacheResolver<WithTypename<CrawlerResponse>, Record<string, never>, WithTypename<DatetimeRange> | string>,
-    targetsWithLastSuccessfulResponse?: GraphCacheResolver<WithTypename<CrawlerResponse>, CrawlerResponseTargetsWithLastSuccessfulResponseArgs, WithTypename<CrawlerTargetsConnection> | string>,
-    targetsWithLatestResponse?: GraphCacheResolver<WithTypename<CrawlerResponse>, CrawlerResponseTargetsWithLatestResponseArgs, WithTypename<CrawlerTargetsConnection> | string>,
+    targetsWithLastSuccessfulResponse?: GraphCacheResolver<WithTypename<CrawlerResponse>, CrawlerResponseTargetsWithLastSuccessfulResponseArgs, WithTypename<CrawlerTargetConnection> | string>,
+    targetsWithLatestResponse?: GraphCacheResolver<WithTypename<CrawlerResponse>, CrawlerResponseTargetsWithLatestResponseArgs, WithTypename<CrawlerTargetConnection> | string>,
     url?: GraphCacheResolver<WithTypename<CrawlerResponse>, Record<string, never>, Scalars['String']['output'] | string>
   },
   CrawlerResponseCache?: {
     content?: GraphCacheResolver<WithTypename<CrawlerResponseCache>, Record<string, never>, Scalars['JSON']['output'] | string>,
     contentHash?: GraphCacheResolver<WithTypename<CrawlerResponseCache>, Record<string, never>, Scalars['String']['output'] | string>,
-    responses?: GraphCacheResolver<WithTypename<CrawlerResponseCache>, CrawlerResponseCacheResponsesArgs, WithTypename<CrawlerResponsesConnection> | string>
+    responses?: GraphCacheResolver<WithTypename<CrawlerResponseCache>, CrawlerResponseCacheResponsesArgs, WithTypename<CrawlerResponseConnection> | string>
   },
-  CrawlerResponseCachesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerResponseCachesConnection>, Record<string, never>, Array<WithTypename<CrawlerResponseCachesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerResponseCachesConnection>, Record<string, never>, Array<WithTypename<CrawlerResponseCache> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerResponseCachesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerResponseCachesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CrawlerResponseCacheConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerResponseCacheConnection>, Record<string, never>, Array<WithTypename<CrawlerResponseCacheEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerResponseCacheConnection>, Record<string, never>, Array<WithTypename<CrawlerResponseCache> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerResponseCacheConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerResponseCacheConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerResponseCachesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerResponseCachesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerResponseCachesEdge>, Record<string, never>, WithTypename<CrawlerResponseCache> | string>
+  CrawlerResponseCacheEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerResponseCacheEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerResponseCacheEdge>, Record<string, never>, WithTypename<CrawlerResponseCache> | string>
   },
-  CrawlerResponsesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerResponsesConnection>, Record<string, never>, Array<WithTypename<CrawlerResponsesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerResponsesConnection>, Record<string, never>, Array<WithTypename<CrawlerResponse> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerResponsesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerResponsesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  CrawlerResponseConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerResponseConnection>, Record<string, never>, Array<WithTypename<CrawlerResponseEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerResponseConnection>, Record<string, never>, Array<WithTypename<CrawlerResponse> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerResponseConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerResponseConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  CrawlerResponsesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerResponsesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerResponsesEdge>, Record<string, never>, WithTypename<CrawlerResponse> | string>
+  CrawlerResponseEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerResponseEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerResponseEdge>, Record<string, never>, WithTypename<CrawlerResponse> | string>
   },
   CrawlerTarget?: {
     discoveredAt?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -14465,7 +14465,17 @@ export type GraphCacheResolvers = {
     meta?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['JSON']['output'] | string>,
     nextFetchAt?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     processStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, ProcessStatus | string>,
-    responses?: GraphCacheResolver<WithTypename<CrawlerTarget>, CrawlerTargetResponsesArgs, WithTypename<CrawlerResponsesConnection> | string>
+    responses?: GraphCacheResolver<WithTypename<CrawlerTarget>, CrawlerTargetResponsesArgs, WithTypename<CrawlerResponseConnection> | string>
+  },
+  CrawlerTargetConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerTargetConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerTargetConnection>, Record<string, never>, Array<WithTypename<CrawlerTarget> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerTargetConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerTargetConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  CrawlerTargetEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerTargetEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerTargetEdge>, Record<string, never>, WithTypename<CrawlerTarget> | string>
   },
   CrawlerTargetFailure?: {
     errorCount?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -14484,6 +14494,16 @@ export type GraphCacheResolvers = {
     responseError?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     url?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  CrawlerTargetFailureConnection?: {
+    edges?: GraphCacheResolver<WithTypename<CrawlerTargetFailureConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailureEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<CrawlerTargetFailureConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailure> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<CrawlerTargetFailureConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<CrawlerTargetFailureConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  CrawlerTargetFailureEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<CrawlerTargetFailureEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<CrawlerTargetFailureEdge>, Record<string, never>, WithTypename<CrawlerTargetFailure> | string>
+  },
   CrawlerTargetFailureGroup?: {
     count?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['Int']['output'] | string>,
     errorFingerprint?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14492,16 +14512,6 @@ export type GraphCacheResolvers = {
     federation?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>,
     httpStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['Int']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<CrawlerTargetFailureGroup>, Record<string, never>, Scalars['String']['output'] | string>
-  },
-  CrawlerTargetFailuresConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailuresEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetFailure> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  CrawlerTargetFailuresEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerTargetFailuresEdge>, Record<string, never>, WithTypename<CrawlerTargetFailure> | string>
   },
   CrawlerTargetSummary?: {
     done?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -14516,16 +14526,6 @@ export type GraphCacheResolvers = {
     processReady?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
     refetchDue?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>,
     total?: GraphCacheResolver<WithTypename<CrawlerTargetSummary>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  CrawlerTargetsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<CrawlerTargetsConnection>, Record<string, never>, Array<WithTypename<CrawlerTargetsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<CrawlerTargetsConnection>, Record<string, never>, Array<WithTypename<CrawlerTarget> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<CrawlerTargetsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<CrawlerTargetsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  CrawlerTargetsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<CrawlerTargetsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<CrawlerTargetsEdge>, Record<string, never>, WithTypename<CrawlerTarget> | string>
   },
   CreateAccessCredentialPayload?: {
     accessCredential?: GraphCacheResolver<WithTypename<CreateAccessCredentialPayload>, Record<string, never>, WithTypename<AccessCredential> | string>,
@@ -14546,7 +14546,7 @@ export type GraphCacheResolvers = {
   CreateCreditTransactionForPersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     transaction?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, Record<string, never>, WithTypename<Transaction> | string>,
-    transactionEdge?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
+    transactionEdge?: GraphCacheResolver<WithTypename<CreateCreditTransactionForPersonPayload>, CreateCreditTransactionForPersonPayloadTransactionEdgeArgs, WithTypename<TransactionEdge> | string>
   },
   CreateEventSeriesPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateEventSeriesPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14568,7 +14568,7 @@ export type GraphCacheResolvers = {
   CreatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     p?: GraphCacheResolver<WithTypename<CreatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
-    personEdge?: GraphCacheResolver<WithTypename<CreatePersonPayload>, CreatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>
+    personEdge?: GraphCacheResolver<WithTypename<CreatePersonPayload>, CreatePersonPayloadPersonEdgeArgs, WithTypename<PersonEdge> | string>
   },
   CreateScoreboardManualAdjustmentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14577,17 +14577,17 @@ export type GraphCacheResolvers = {
   CreateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, Record<string, never>, WithTypename<TenantAdministrator> | string>,
-    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, CreateTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorsEdge> | string>
+    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<CreateTenantAdministratorPayload>, CreateTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorEdge> | string>
   },
   CreateTenantMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantMembership?: GraphCacheResolver<WithTypename<CreateTenantMembershipPayload>, Record<string, never>, WithTypename<TenantMembership> | string>,
-    tenantMembershipEdge?: GraphCacheResolver<WithTypename<CreateTenantMembershipPayload>, CreateTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipsEdge> | string>
+    tenantMembershipEdge?: GraphCacheResolver<WithTypename<CreateTenantMembershipPayload>, CreateTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipEdge> | string>
   },
   CreateTenantTrainerPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>,
-    tenantTrainerEdge?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, CreateTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainersEdge> | string>
+    tenantTrainerEdge?: GraphCacheResolver<WithTypename<CreateTenantTrainerPayload>, CreateTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainerEdge> | string>
   },
   CreateUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<CreateUserProxyPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14602,7 +14602,7 @@ export type GraphCacheResolvers = {
   DanceProgram?: {
     categoriesList?: GraphCacheResolver<WithTypename<DanceProgram>, DanceProgramCategoriesListArgs, Array<WithTypename<Category> | string>>,
     code?: GraphCacheResolver<WithTypename<DanceProgram>, Record<string, never>, Scalars['String']['output'] | string>,
-    competitionRounds?: GraphCacheResolver<WithTypename<DanceProgram>, DanceProgramCompetitionRoundsArgs, WithTypename<CompetitionRoundsConnection> | string>,
+    competitionRounds?: GraphCacheResolver<WithTypename<DanceProgram>, DanceProgramCompetitionRoundsArgs, WithTypename<CompetitionRoundConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<DanceProgram>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     dancesList?: GraphCacheResolver<WithTypename<DanceProgram>, DanceProgramDancesListArgs, Array<WithTypename<DanceProgramDance> | string>>,
     discipline?: GraphCacheResolver<WithTypename<DanceProgram>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14616,7 +14616,7 @@ export type GraphCacheResolvers = {
     danceOrder?: GraphCacheResolver<WithTypename<DanceProgramDance>, Record<string, never>, Scalars['Int']['output'] | string>,
     program?: GraphCacheResolver<WithTypename<DanceProgramDance>, Record<string, never>, WithTypename<DanceProgram> | string>,
     programId?: GraphCacheResolver<WithTypename<DanceProgramDance>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    roundDances?: GraphCacheResolver<WithTypename<DanceProgramDance>, DanceProgramDanceRoundDancesArgs, WithTypename<CompetitionRoundDancesConnection> | string>
+    roundDances?: GraphCacheResolver<WithTypename<DanceProgramDance>, DanceProgramDanceRoundDancesArgs, WithTypename<CompetitionRoundDanceConnection> | string>
   },
   DateRange?: {
     end?: GraphCacheResolver<WithTypename<DateRange>, Record<string, never>, WithTypename<DateRangeBound> | string>,
@@ -14636,12 +14636,12 @@ export type GraphCacheResolvers = {
   },
   DeleteAktualityPayload?: {
     aktuality?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, WithTypename<Aktuality> | string>,
-    aktualityEdge?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, DeleteAktualityPayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
+    aktualityEdge?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, DeleteAktualityPayloadAktualityEdgeArgs, WithTypename<AktualityEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteAktualityPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   DeleteAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
-    announcementEdge?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, DeleteAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, DeleteAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteAnnouncementPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   DeleteCohortMembershipPayload?: {
@@ -14684,7 +14684,7 @@ export type GraphCacheResolvers = {
   DeletePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<DeletePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
-    personEdge?: GraphCacheResolver<WithTypename<DeletePersonPayload>, DeletePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>
+    personEdge?: GraphCacheResolver<WithTypename<DeletePersonPayload>, DeletePersonPayloadPersonEdgeArgs, WithTypename<PersonEdge> | string>
   },
   DeleteScoreboardManualAdjustmentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14693,22 +14693,22 @@ export type GraphCacheResolvers = {
   DeleteTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, Record<string, never>, WithTypename<TenantAdministrator> | string>,
-    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, DeleteTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorsEdge> | string>
+    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<DeleteTenantAdministratorPayload>, DeleteTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorEdge> | string>
   },
   DeleteTenantMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantMembership?: GraphCacheResolver<WithTypename<DeleteTenantMembershipPayload>, Record<string, never>, WithTypename<TenantMembership> | string>,
-    tenantMembershipEdge?: GraphCacheResolver<WithTypename<DeleteTenantMembershipPayload>, DeleteTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipsEdge> | string>
+    tenantMembershipEdge?: GraphCacheResolver<WithTypename<DeleteTenantMembershipPayload>, DeleteTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipEdge> | string>
   },
   DeleteTenantTrainerPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>,
-    tenantTrainerEdge?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, DeleteTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainersEdge> | string>
+    tenantTrainerEdge?: GraphCacheResolver<WithTypename<DeleteTenantTrainerPayload>, DeleteTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainerEdge> | string>
   },
   DeleteTransactionPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     transaction?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, Record<string, never>, WithTypename<Transaction> | string>,
-    transactionEdge?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, DeleteTransactionPayloadTransactionEdgeArgs, WithTypename<TransactionsEdge> | string>
+    transactionEdge?: GraphCacheResolver<WithTypename<DeleteTransactionPayload>, DeleteTransactionPayloadTransactionEdgeArgs, WithTypename<TransactionEdge> | string>
   },
   DeleteUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeleteUserProxyPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14746,7 +14746,7 @@ export type GraphCacheResolvers = {
     description?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     eventExternalRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Array<WithTypename<EventExternalRegistration> | string>>,
-    eventInstanceRegistrationsByInstanceId?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByInstanceId?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceRegistrationsByInstanceIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersByInstanceIdList?: GraphCacheResolver<WithTypename<EventInstance>, EventInstanceEventInstanceTrainersByInstanceIdListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     filesLegacy?: GraphCacheResolver<WithTypename<EventInstance>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14786,6 +14786,10 @@ export type GraphCacheResolvers = {
     amount?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<EventInstanceApproxPriceRecord>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  EventInstanceEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<EventInstanceEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<EventInstanceEdge>, Record<string, never>, WithTypename<EventInstance> | string>
+  },
   EventInstanceFacetsRecord?: {
     count?: GraphCacheResolver<WithTypename<EventInstanceFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
     facet?: GraphCacheResolver<WithTypename<EventInstanceFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14798,7 +14802,7 @@ export type GraphCacheResolvers = {
     couple?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, WithTypename<Couple> | string>,
     coupleId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    eventInstanceRegistrationsByParentRegistrationId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrationsByParentRegistrationId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsByParentRegistrationIdList?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventInstanceRegistrationsByParentRegistrationIdListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventLessonDemandsByRegistrationIdList?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, EventInstanceRegistrationEventLessonDemandsByRegistrationIdListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     id?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14818,21 +14822,21 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventInstanceRegistration>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
+  EventInstanceRegistrationConnection?: {
+    edges?: GraphCacheResolver<WithTypename<EventInstanceRegistrationConnection>, Record<string, never>, Array<WithTypename<EventInstanceRegistrationEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<EventInstanceRegistrationConnection>, Record<string, never>, Array<WithTypename<EventInstanceRegistration> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<EventInstanceRegistrationConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<EventInstanceRegistrationConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  EventInstanceRegistrationEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<EventInstanceRegistrationEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<EventInstanceRegistrationEdge>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>
+  },
   EventInstanceRegistrationInfo?: {
     my?: GraphCacheResolver<WithTypename<EventInstanceRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     people?: GraphCacheResolver<WithTypename<EventInstanceRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
     registrations?: GraphCacheResolver<WithTypename<EventInstanceRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
     remainingCapacity?: GraphCacheResolver<WithTypename<EventInstanceRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  EventInstanceRegistrationsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsConnection>, Record<string, never>, Array<WithTypename<EventInstanceRegistrationsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsConnection>, Record<string, never>, Array<WithTypename<EventInstanceRegistration> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  EventInstanceRegistrationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<EventInstanceRegistrationsEdge>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>
   },
   EventInstanceTargetCohort?: {
     cohort?: GraphCacheResolver<WithTypename<EventInstanceTargetCohort>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -14858,10 +14862,6 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventInstanceTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  EventInstancesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<EventInstancesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<EventInstancesEdge>, Record<string, never>, WithTypename<EventInstance> | string>
-  },
   EventLessonDemand?: {
     createdAt?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14873,9 +14873,9 @@ export type GraphCacheResolvers = {
     trainerId?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<EventLessonDemand>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  EventLessonDemandsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<EventLessonDemandsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<EventLessonDemandsEdge>, Record<string, never>, WithTypename<EventLessonDemand> | string>
+  EventLessonDemandEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<EventLessonDemandEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<EventLessonDemandEdge>, Record<string, never>, WithTypename<EventLessonDemand> | string>
   },
   EventSeries?: {
     createdAt?: GraphCacheResolver<WithTypename<EventSeries>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -14896,52 +14896,52 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<EventSeriesEdge>, Record<string, never>, WithTypename<EventSeries> | string>
   },
   Federation?: {
-    clubs?: GraphCacheResolver<WithTypename<Federation>, FederationClubsArgs, WithTypename<FederationClubsConnection> | string>,
+    clubs?: GraphCacheResolver<WithTypename<Federation>, FederationClubsArgs, WithTypename<FederationClubConnection> | string>,
     code?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, Scalars['String']['output'] | string>,
-    competitions?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
+    competitions?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     competitorFacetsList?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorFacetsListArgs, Array<WithTypename<FederationCompetitorFacetsRecord> | string>>,
-    competitors?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorsArgs, WithTypename<FederationCompetitorsConnection> | string>,
+    competitors?: GraphCacheResolver<WithTypename<Federation>, FederationCompetitorsArgs, WithTypename<FederationCompetitorConnection> | string>,
     eventFacets?: GraphCacheResolver<WithTypename<Federation>, FederationEventFacetsArgs, WithTypename<FederationEventFacet> | string>,
-    events?: GraphCacheResolver<WithTypename<Federation>, FederationEventsArgs, WithTypename<FederationEventsConnection> | string>,
-    licenses?: GraphCacheResolver<WithTypename<Federation>, FederationLicensesArgs, WithTypename<FederationPersonLicensesConnection> | string>,
+    events?: GraphCacheResolver<WithTypename<Federation>, FederationEventsArgs, WithTypename<FederationEventConnection> | string>,
+    licenses?: GraphCacheResolver<WithTypename<Federation>, FederationLicensesArgs, WithTypename<FederationPersonLicenseConnection> | string>,
     name?: GraphCacheResolver<WithTypename<Federation>, Record<string, never>, Scalars['String']['output'] | string>,
-    people?: GraphCacheResolver<WithTypename<Federation>, FederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
+    people?: GraphCacheResolver<WithTypename<Federation>, FederationPeopleArgs, WithTypename<FederationPersonConnection> | string>,
     peopleFacetsList?: GraphCacheResolver<WithTypename<Federation>, FederationPeopleFacetsListArgs, Array<WithTypename<FederationPeopleFacetsRecord> | string>>,
-    ranklists?: GraphCacheResolver<WithTypename<Federation>, FederationRanklistsArgs, WithTypename<RanklistsConnection> | string>
+    ranklists?: GraphCacheResolver<WithTypename<Federation>, FederationRanklistsArgs, WithTypename<RanklistConnection> | string>
   },
   FederationClub?: {
     city?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['String']['output'] | string>,
-    competitorAffiliations?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubCompetitorAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationsConnection> | string>,
+    competitorAffiliations?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubCompetitorAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationConnection> | string>,
     country?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    events?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubEventsArgs, WithTypename<FederationEventsConnection> | string>,
+    events?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubEventsArgs, WithTypename<FederationEventConnection> | string>,
     externalId?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, WithTypename<Federation> | string>,
     id?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<FederationClub>, Record<string, never>, Scalars['String']['output'] | string>,
-    personMemberships?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubPersonMembershipsArgs, WithTypename<FederationPersonClubMembershipsConnection> | string>
+    personMemberships?: GraphCacheResolver<WithTypename<FederationClub>, FederationClubPersonMembershipsArgs, WithTypename<FederationPersonClubMembershipConnection> | string>
   },
-  FederationClubsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationClubsConnection>, Record<string, never>, Array<WithTypename<FederationClubsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationClubsConnection>, Record<string, never>, Array<WithTypename<FederationClub> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationClubsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationClubsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationClubConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationClubConnection>, Record<string, never>, Array<WithTypename<FederationClubEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationClubConnection>, Record<string, never>, Array<WithTypename<FederationClub> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationClubConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationClubConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationClubsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationClubsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationClubsEdge>, Record<string, never>, WithTypename<FederationClub> | string>
+  FederationClubEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationClubEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationClubEdge>, Record<string, never>, WithTypename<FederationClub> | string>
   },
   FederationCompetitor?: {
     ageGroup?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     ageGroupDetails?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<AgeGroup> | string>,
     categoryProgressesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCategoryProgressesListArgs, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
-    clubAffiliations?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorClubAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationsConnection> | string>,
-    competitionEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionEntriesArgs, WithTypename<CompetitionEntriesConnection> | string>,
-    competitionResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionResultsArgs, WithTypename<CompetitionResultsConnection> | string>,
-    competitions?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
+    clubAffiliations?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorClubAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationConnection> | string>,
+    competitionEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionEntriesArgs, WithTypename<CompetitionEntryConnection> | string>,
+    competitionResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionResultsArgs, WithTypename<CompetitionResultConnection> | string>,
+    competitions?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     competitorType?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, CompetitorType | string>,
-    components?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentsConnection> | string>,
+    components?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentConnection> | string>,
     couplesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCouplesListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     externalId?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14952,8 +14952,8 @@ export type GraphCacheResolvers = {
     latestResultAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Date']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorPeopleListArgs, Array<WithTypename<Person> | string>>,
-    ranklistEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
-    roundResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRoundResultsArgs, WithTypename<CompetitionRoundResultsConnection> | string>
+    ranklistEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
+    roundResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRoundResultsArgs, WithTypename<CompetitionRoundResultConnection> | string>
   },
   FederationCompetitorCategoryProgress?: {
     category?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgress>, Record<string, never>, WithTypename<Category> | string>,
@@ -14964,15 +14964,15 @@ export type GraphCacheResolvers = {
     foreignFinals?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgress>, Record<string, never>, Scalars['Int']['output'] | string>,
     points?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgress>, Record<string, never>, Scalars['BigFloat']['output'] | string>
   },
-  FederationCompetitorCategoryProgressesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorCategoryProgressesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationCompetitorCategoryProgressConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorCategoryProgressEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationCompetitorCategoryProgressesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressesEdge>, Record<string, never>, WithTypename<FederationCompetitorCategoryProgress> | string>
+  FederationCompetitorCategoryProgressEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgressEdge>, Record<string, never>, WithTypename<FederationCompetitorCategoryProgress> | string>
   },
   FederationCompetitorClubAffiliation?: {
     club?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliation>, Record<string, never>, WithTypename<FederationClub> | string>,
@@ -14982,15 +14982,15 @@ export type GraphCacheResolvers = {
     validFrom?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliation>, Record<string, never>, Scalars['Date']['output'] | string>,
     validTo?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliation>, Record<string, never>, Scalars['Date']['output'] | string>
   },
-  FederationCompetitorClubAffiliationsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorClubAffiliationsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorClubAffiliation> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationCompetitorClubAffiliationConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorClubAffiliationEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorClubAffiliation> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationCompetitorClubAffiliationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationsEdge>, Record<string, never>, WithTypename<FederationCompetitorClubAffiliation> | string>
+  FederationCompetitorClubAffiliationEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationCompetitorClubAffiliationEdge>, Record<string, never>, WithTypename<FederationCompetitorClubAffiliation> | string>
   },
   FederationCompetitorComponent?: {
     competitor?: GraphCacheResolver<WithTypename<FederationCompetitorComponent>, Record<string, never>, WithTypename<FederationCompetitor> | string>,
@@ -14999,30 +14999,30 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<FederationCompetitorComponent>, Record<string, never>, Scalars['String']['output'] | string>,
     role?: GraphCacheResolver<WithTypename<FederationCompetitorComponent>, Record<string, never>, CompetitorRole | string>
   },
-  FederationCompetitorComponentsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorComponentsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorComponent> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationCompetitorComponentConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationCompetitorComponentConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorComponentEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorComponentConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorComponent> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorComponentConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorComponentConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationCompetitorComponentsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationCompetitorComponentsEdge>, Record<string, never>, WithTypename<FederationCompetitorComponent> | string>
+  FederationCompetitorComponentEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorComponentEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationCompetitorComponentEdge>, Record<string, never>, WithTypename<FederationCompetitorComponent> | string>
+  },
+  FederationCompetitorConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationCompetitorConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorConnection>, Record<string, never>, Array<WithTypename<FederationCompetitor> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  FederationCompetitorEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationCompetitorEdge>, Record<string, never>, WithTypename<FederationCompetitor> | string>
   },
   FederationCompetitorFacetsRecord?: {
     count?: GraphCacheResolver<WithTypename<FederationCompetitorFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
     facet?: GraphCacheResolver<WithTypename<FederationCompetitorFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
     value?: GraphCacheResolver<WithTypename<FederationCompetitorFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
-  },
-  FederationCompetitorsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationCompetitorsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitorsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationCompetitorsConnection>, Record<string, never>, Array<WithTypename<FederationCompetitor> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationCompetitorsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationCompetitorsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  FederationCompetitorsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationCompetitorsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationCompetitorsEdge>, Record<string, never>, WithTypename<FederationCompetitor> | string>
   },
   FederationCoupleAgeRule?: {
     ageGroupCode?: GraphCacheResolver<WithTypename<FederationCoupleAgeRule>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15034,7 +15034,7 @@ export type GraphCacheResolvers = {
   FederationEvent?: {
     addressNote?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     city?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
-    competitions?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
+    competitions?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     competitionsList?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventCompetitionsListArgs, Array<WithTypename<Competition> | string>>,
     contactEmail?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     contactName?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15049,7 +15049,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
-    officials?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventOfficialsArgs, WithTypename<FederationEventOfficialsConnection> | string>,
+    officials?: GraphCacheResolver<WithTypename<FederationEvent>, FederationEventOfficialsArgs, WithTypename<FederationEventOfficialConnection> | string>,
     organizingClub?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, WithTypename<FederationClub> | string>,
     organizingClubId?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     postalCode?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15063,6 +15063,16 @@ export type GraphCacheResolvers = {
     venueLocationSource?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     websiteUrl?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>
   },
+  FederationEventConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationEventConnection>, Record<string, never>, Array<WithTypename<FederationEventEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationEventConnection>, Record<string, never>, Array<WithTypename<FederationEvent> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationEventConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationEventConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  FederationEventEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationEventEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationEventEdge>, Record<string, never>, WithTypename<FederationEvent> | string>
+  },
   FederationEventFacet?: {
     years?: GraphCacheResolver<WithTypename<FederationEventFacet>, Record<string, never>, Array<WithTypename<FederationEventYear> | string>>
   },
@@ -15075,40 +15085,20 @@ export type GraphCacheResolvers = {
     personId?: GraphCacheResolver<WithTypename<FederationEventOfficial>, Record<string, never>, Scalars['String']['output'] | string>,
     role?: GraphCacheResolver<WithTypename<FederationEventOfficial>, Record<string, never>, OfficialRole | string>
   },
-  FederationEventOfficialsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationEventOfficialsConnection>, Record<string, never>, Array<WithTypename<FederationEventOfficialsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationEventOfficialsConnection>, Record<string, never>, Array<WithTypename<FederationEventOfficial> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationEventOfficialsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationEventOfficialsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationEventOfficialConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationEventOfficialConnection>, Record<string, never>, Array<WithTypename<FederationEventOfficialEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationEventOfficialConnection>, Record<string, never>, Array<WithTypename<FederationEventOfficial> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationEventOfficialConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationEventOfficialConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationEventOfficialsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationEventOfficialsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationEventOfficialsEdge>, Record<string, never>, WithTypename<FederationEventOfficial> | string>
+  FederationEventOfficialEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationEventOfficialEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationEventOfficialEdge>, Record<string, never>, WithTypename<FederationEventOfficial> | string>
   },
   FederationEventYear?: {
     eventCount?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>,
     mappedEventCount?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>,
     year?: GraphCacheResolver<WithTypename<FederationEventYear>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  FederationEventsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationEventsConnection>, Record<string, never>, Array<WithTypename<FederationEventsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationEventsConnection>, Record<string, never>, Array<WithTypename<FederationEvent> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationEventsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationEventsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  FederationEventsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationEventsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationEventsEdge>, Record<string, never>, WithTypename<FederationEvent> | string>
-  },
-  FederationPeopleConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationPeopleConnection>, Record<string, never>, Array<WithTypename<FederationPeopleEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationPeopleConnection>, Record<string, never>, Array<WithTypename<FederationPerson> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationPeopleConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationPeopleConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  FederationPeopleEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationPeopleEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationPeopleEdge>, Record<string, never>, WithTypename<FederationPerson> | string>
   },
   FederationPeopleFacetsRecord?: {
     count?: GraphCacheResolver<WithTypename<FederationPeopleFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -15120,12 +15110,12 @@ export type GraphCacheResolvers = {
     ageGroupDetails?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, WithTypename<AgeGroup> | string>,
     birthYear?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Int']['output'] | string>,
     canonicalName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
-    clubMemberships?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonClubMembershipsArgs, WithTypename<FederationPersonClubMembershipsConnection> | string>,
-    competitionOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionOfficialAssignmentsArgs, WithTypename<CompetitionOfficialsConnection> | string>,
-    competitorComponents?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentsConnection> | string>,
+    clubMemberships?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonClubMembershipsArgs, WithTypename<FederationPersonClubMembershipConnection> | string>,
+    competitionOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionOfficialAssignmentsArgs, WithTypename<CompetitionOfficialConnection> | string>,
+    competitorComponents?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     dob?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Date']['output'] | string>,
-    eventOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonEventOfficialAssignmentsArgs, WithTypename<FederationEventOfficialsConnection> | string>,
+    eventOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonEventOfficialAssignmentsArgs, WithTypename<FederationEventOfficialConnection> | string>,
     externalId?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, WithTypename<Federation> | string>,
@@ -15133,12 +15123,12 @@ export type GraphCacheResolvers = {
     gender?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Gender | string>,
     id?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     lastName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
-    licenses?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonLicensesArgs, WithTypename<FederationPersonLicensesConnection> | string>,
+    licenses?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonLicensesArgs, WithTypename<FederationPersonLicenseConnection> | string>,
     medicalCheckupExpiration?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Date']['output'] | string>,
     medicalCheckupType?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     nationality?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonPeopleListArgs, Array<WithTypename<Person> | string>>,
-    roundJudgeAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonRoundJudgeAssignmentsArgs, WithTypename<CompetitionRoundJudgesConnection> | string>,
+    roundJudgeAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonRoundJudgeAssignmentsArgs, WithTypename<CompetitionRoundJudgeConnection> | string>,
     searchName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>
   },
   FederationPersonClubMembership?: {
@@ -15149,15 +15139,25 @@ export type GraphCacheResolvers = {
     validFrom?: GraphCacheResolver<WithTypename<FederationPersonClubMembership>, Record<string, never>, Scalars['Date']['output'] | string>,
     validTo?: GraphCacheResolver<WithTypename<FederationPersonClubMembership>, Record<string, never>, Scalars['Date']['output'] | string>
   },
-  FederationPersonClubMembershipsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsConnection>, Record<string, never>, Array<WithTypename<FederationPersonClubMembershipsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsConnection>, Record<string, never>, Array<WithTypename<FederationPersonClubMembership> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationPersonClubMembershipConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipConnection>, Record<string, never>, Array<WithTypename<FederationPersonClubMembershipEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipConnection>, Record<string, never>, Array<WithTypename<FederationPersonClubMembership> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationPersonClubMembershipsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipsEdge>, Record<string, never>, WithTypename<FederationPersonClubMembership> | string>
+  FederationPersonClubMembershipEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationPersonClubMembershipEdge>, Record<string, never>, WithTypename<FederationPersonClubMembership> | string>
+  },
+  FederationPersonConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationPersonConnection>, Record<string, never>, Array<WithTypename<FederationPersonEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationPersonConnection>, Record<string, never>, Array<WithTypename<FederationPerson> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationPersonConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationPersonConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  FederationPersonEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationPersonEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationPersonEdge>, Record<string, never>, WithTypename<FederationPerson> | string>
   },
   FederationPersonLicense?: {
     createdAt?: GraphCacheResolver<WithTypename<FederationPersonLicense>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -15171,19 +15171,19 @@ export type GraphCacheResolvers = {
     status?: GraphCacheResolver<WithTypename<FederationPersonLicense>, Record<string, never>, PersonLicenseStatus | string>,
     validUntil?: GraphCacheResolver<WithTypename<FederationPersonLicense>, Record<string, never>, Scalars['Date']['output'] | string>
   },
-  FederationPersonLicensesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FederationPersonLicensesConnection>, Record<string, never>, Array<WithTypename<FederationPersonLicensesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FederationPersonLicensesConnection>, Record<string, never>, Array<WithTypename<FederationPersonLicense> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FederationPersonLicensesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FederationPersonLicensesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FederationPersonLicenseConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FederationPersonLicenseConnection>, Record<string, never>, Array<WithTypename<FederationPersonLicenseEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FederationPersonLicenseConnection>, Record<string, never>, Array<WithTypename<FederationPersonLicense> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FederationPersonLicenseConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FederationPersonLicenseConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FederationPersonLicensesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FederationPersonLicensesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FederationPersonLicensesEdge>, Record<string, never>, WithTypename<FederationPersonLicense> | string>
+  FederationPersonLicenseEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FederationPersonLicenseEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FederationPersonLicenseEdge>, Record<string, never>, WithTypename<FederationPersonLicense> | string>
   },
   File?: {
-    announcementAttachments?: GraphCacheResolver<WithTypename<File>, FileAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentsConnection> | string>,
-    articleAttachments?: GraphCacheResolver<WithTypename<File>, FileArticleAttachmentsArgs, WithTypename<ArticleAttachmentsConnection> | string>,
+    announcementAttachments?: GraphCacheResolver<WithTypename<File>, FileAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentConnection> | string>,
+    articleAttachments?: GraphCacheResolver<WithTypename<File>, FileArticleAttachmentsArgs, WithTypename<ArticleAttachmentConnection> | string>,
     byteSize?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     contentType?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -15200,15 +15200,15 @@ export type GraphCacheResolvers = {
     url?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, WithTypename<User> | string>
   },
-  FilesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Array<WithTypename<FilesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Array<WithTypename<File> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FilesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FileConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FileConnection>, Record<string, never>, Array<WithTypename<FileEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FileConnection>, Record<string, never>, Array<WithTypename<File> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FileConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FileConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FilesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FilesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FilesEdge>, Record<string, never>, WithTypename<File> | string>
+  FileEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FileEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FileEdge>, Record<string, never>, WithTypename<File> | string>
   },
   FormResponse?: {
     createdAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -15219,15 +15219,15 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     url?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['String']['output'] | string>
   },
-  FormResponsesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<FormResponsesConnection>, Record<string, never>, Array<WithTypename<FormResponsesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<FormResponsesConnection>, Record<string, never>, Array<WithTypename<FormResponse> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<FormResponsesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<FormResponsesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  FormResponseConnection?: {
+    edges?: GraphCacheResolver<WithTypename<FormResponseConnection>, Record<string, never>, Array<WithTypename<FormResponseEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<FormResponseConnection>, Record<string, never>, Array<WithTypename<FormResponse> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<FormResponseConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<FormResponseConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  FormResponsesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<FormResponsesEdge>, Record<string, never>, WithTypename<FormResponse> | string>
+  FormResponseEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<FormResponseEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<FormResponseEdge>, Record<string, never>, WithTypename<FormResponse> | string>
   },
   IntRange?: {
     end?: GraphCacheResolver<WithTypename<IntRange>, Record<string, never>, WithTypename<IntRangeBound> | string>,
@@ -15257,15 +15257,15 @@ export type GraphCacheResolvers = {
     roundId?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     score?: GraphCacheResolver<WithTypename<JudgeScore>, Record<string, never>, Scalars['BigFloat']['output'] | string>
   },
-  JudgeScoresConnection?: {
-    edges?: GraphCacheResolver<WithTypename<JudgeScoresConnection>, Record<string, never>, Array<WithTypename<JudgeScoresEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<JudgeScoresConnection>, Record<string, never>, Array<WithTypename<JudgeScore> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<JudgeScoresConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<JudgeScoresConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  JudgeScoreConnection?: {
+    edges?: GraphCacheResolver<WithTypename<JudgeScoreConnection>, Record<string, never>, Array<WithTypename<JudgeScoreEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<JudgeScoreConnection>, Record<string, never>, Array<WithTypename<JudgeScore> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<JudgeScoreConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<JudgeScoreConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  JudgeScoresEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<JudgeScoresEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<JudgeScoresEdge>, Record<string, never>, WithTypename<JudgeScore> | string>
+  JudgeScoreEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<JudgeScoreEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<JudgeScoreEdge>, Record<string, never>, WithTypename<JudgeScore> | string>
   },
   Location?: {
     accessEventsList?: GraphCacheResolver<WithTypename<Location>, LocationAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
@@ -15287,16 +15287,16 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
+  LocationEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<LocationEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<LocationEdge>, Record<string, never>, WithTypename<Location> | string>
+  },
   LocationImage?: {
     file?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, WithTypename<File> | string>,
     fileId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, WithTypename<Location> | string>,
     locationId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<LocationImage>, Record<string, never>, Scalars['BigInt']['output'] | string>
-  },
-  LocationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<LocationsEdge>, Record<string, never>, WithTypename<Location> | string>
   },
   LogInAsPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<LogInAsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15331,14 +15331,14 @@ export type GraphCacheResolvers = {
     userByCreatedBy?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, WithTypename<User> | string>,
     wdsfId?: GraphCacheResolver<WithTypename<MembershipApplication>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  MembershipApplicationsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<MembershipApplicationsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<MembershipApplicationsEdge>, Record<string, never>, WithTypename<MembershipApplication> | string>
+  MembershipApplicationEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<MembershipApplicationEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<MembershipApplicationEdge>, Record<string, never>, WithTypename<MembershipApplication> | string>
   },
   MoveEventInstancePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstance?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, Record<string, never>, WithTypename<EventInstance> | string>,
-    eventInstanceEdge?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, MoveEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstancesEdge> | string>
+    eventInstanceEdge?: GraphCacheResolver<WithTypename<MoveEventInstancePayload>, MoveEventInstancePayloadEventInstanceEdgeArgs, WithTypename<EventInstanceEdge> | string>
   },
   OtpLoginPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<OtpLoginPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15366,7 +15366,7 @@ export type GraphCacheResolvers = {
     specificSymbol?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['String']['output'] | string>,
     status?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, PaymentStatus | string>,
     tenantId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    transactions?: GraphCacheResolver<WithTypename<Payment>, PaymentTransactionsArgs, WithTypename<TransactionsConnection> | string>,
+    transactions?: GraphCacheResolver<WithTypename<Payment>, PaymentTransactionsArgs, WithTypename<TransactionConnection> | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     variableSymbol?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -15393,16 +15393,6 @@ export type GraphCacheResolvers = {
     paymentId?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  PeopleConnection?: {
-    edges?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Array<WithTypename<PeopleEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Array<WithTypename<Person> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<PeopleConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  PeopleEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<PeopleEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<PeopleEdge>, Record<string, never>, WithTypename<Person> | string>
-  },
   Person?: {
     accessCredentialsList?: GraphCacheResolver<WithTypename<Person>, PersonAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accessEventsList?: GraphCacheResolver<WithTypename<Person>, PersonAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
@@ -15420,16 +15410,16 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     facebookUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     federationCandidatesList?: GraphCacheResolver<WithTypename<Person>, PersonFederationCandidatesListArgs, Array<WithTypename<PersonFederationCandidatesRecord> | string>>,
-    federationCategoryProgresses?: GraphCacheResolver<WithTypename<Person>, PersonFederationCategoryProgressesArgs, WithTypename<FederationCompetitorCategoryProgressesConnection> | string>,
-    federationCompetitions?: GraphCacheResolver<WithTypename<Person>, PersonFederationCompetitionsArgs, WithTypename<CompetitionsConnection> | string>,
-    federationPeople?: GraphCacheResolver<WithTypename<Person>, PersonFederationPeopleArgs, WithTypename<FederationPeopleConnection> | string>,
-    federationRanklistEntries?: GraphCacheResolver<WithTypename<Person>, PersonFederationRanklistEntriesArgs, WithTypename<RanklistEntriesConnection> | string>,
+    federationCategoryProgresses?: GraphCacheResolver<WithTypename<Person>, PersonFederationCategoryProgressesArgs, WithTypename<FederationCompetitorCategoryProgressConnection> | string>,
+    federationCompetitions?: GraphCacheResolver<WithTypename<Person>, PersonFederationCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
+    federationPeople?: GraphCacheResolver<WithTypename<Person>, PersonFederationPeopleArgs, WithTypename<FederationPersonConnection> | string>,
+    federationRanklistEntries?: GraphCacheResolver<WithTypename<Person>, PersonFederationRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -15452,17 +15442,27 @@ export type GraphCacheResolvers = {
     securityEventsList?: GraphCacheResolver<WithTypename<Person>, PersonSecurityEventsListArgs, Array<WithTypename<SecurityEvent> | string>>,
     suffixTitle?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
-    tenantAdministrators?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsArgs, WithTypename<TenantAdministratorsConnection> | string>,
+    tenantAdministrators?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsArgs, WithTypename<TenantAdministratorConnection> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
-    tenantMemberships?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsArgs, WithTypename<TenantMembershipsConnection> | string>,
+    tenantMemberships?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsArgs, WithTypename<TenantMembershipConnection> | string>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
-    tenantTrainers?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersArgs, WithTypename<TenantTrainersConnection> | string>,
+    tenantTrainers?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersArgs, WithTypename<TenantTrainerConnection> | string>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
     tiktokUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<Person>, PersonUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>,
     wdsfId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
     websiteUrl?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>
+  },
+  PersonConnection?: {
+    edges?: GraphCacheResolver<WithTypename<PersonConnection>, Record<string, never>, Array<WithTypename<PersonEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<PersonConnection>, Record<string, never>, Array<WithTypename<Person> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<PersonConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<PersonConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  PersonEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<PersonEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<PersonEdge>, Record<string, never>, WithTypename<Person> | string>
   },
   PersonFacetsRecord?: {
     count?: GraphCacheResolver<WithTypename<PersonFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -15523,17 +15523,17 @@ export type GraphCacheResolvers = {
     federationByFederation?: GraphCacheResolver<WithTypename<Ranklist>, Record<string, never>, WithTypename<Federation> | string>,
     id?: GraphCacheResolver<WithTypename<Ranklist>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     name?: GraphCacheResolver<WithTypename<Ranklist>, Record<string, never>, Scalars['String']['output'] | string>,
-    ranklistSnapshots?: GraphCacheResolver<WithTypename<Ranklist>, RanklistRanklistSnapshotsArgs, WithTypename<RanklistSnapshotsConnection> | string>
+    ranklistSnapshots?: GraphCacheResolver<WithTypename<Ranklist>, RanklistRanklistSnapshotsArgs, WithTypename<RanklistSnapshotConnection> | string>
   },
-  RanklistEntriesConnection?: {
-    edges?: GraphCacheResolver<WithTypename<RanklistEntriesConnection>, Record<string, never>, Array<WithTypename<RanklistEntriesEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<RanklistEntriesConnection>, Record<string, never>, Array<WithTypename<RanklistEntry> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<RanklistEntriesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<RanklistEntriesConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  RanklistConnection?: {
+    edges?: GraphCacheResolver<WithTypename<RanklistConnection>, Record<string, never>, Array<WithTypename<RanklistEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<RanklistConnection>, Record<string, never>, Array<WithTypename<Ranklist> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<RanklistConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<RanklistConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  RanklistEntriesEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<RanklistEntriesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<RanklistEntriesEdge>, Record<string, never>, WithTypename<RanklistEntry> | string>
+  RanklistEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<RanklistEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<RanklistEdge>, Record<string, never>, WithTypename<Ranklist> | string>
   },
   RanklistEntry?: {
     competitor?: GraphCacheResolver<WithTypename<RanklistEntry>, Record<string, never>, WithTypename<FederationCompetitor> | string>,
@@ -15544,33 +15544,33 @@ export type GraphCacheResolvers = {
     snapshot?: GraphCacheResolver<WithTypename<RanklistEntry>, Record<string, never>, WithTypename<RanklistSnapshot> | string>,
     snapshotId?: GraphCacheResolver<WithTypename<RanklistEntry>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
+  RanklistEntryConnection?: {
+    edges?: GraphCacheResolver<WithTypename<RanklistEntryConnection>, Record<string, never>, Array<WithTypename<RanklistEntryEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<RanklistEntryConnection>, Record<string, never>, Array<WithTypename<RanklistEntry> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<RanklistEntryConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<RanklistEntryConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  RanklistEntryEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<RanklistEntryEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<RanklistEntryEdge>, Record<string, never>, WithTypename<RanklistEntry> | string>
+  },
   RanklistSnapshot?: {
     asOfDate?: GraphCacheResolver<WithTypename<RanklistSnapshot>, Record<string, never>, Scalars['Date']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<RanklistSnapshot>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<RanklistSnapshot>, Record<string, never>, Scalars['String']['output'] | string>,
     ranklist?: GraphCacheResolver<WithTypename<RanklistSnapshot>, Record<string, never>, WithTypename<Ranklist> | string>,
-    ranklistEntriesBySnapshotId?: GraphCacheResolver<WithTypename<RanklistSnapshot>, RanklistSnapshotRanklistEntriesBySnapshotIdArgs, WithTypename<RanklistEntriesConnection> | string>,
+    ranklistEntriesBySnapshotId?: GraphCacheResolver<WithTypename<RanklistSnapshot>, RanklistSnapshotRanklistEntriesBySnapshotIdArgs, WithTypename<RanklistEntryConnection> | string>,
     ranklistId?: GraphCacheResolver<WithTypename<RanklistSnapshot>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  RanklistSnapshotsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<RanklistSnapshotsConnection>, Record<string, never>, Array<WithTypename<RanklistSnapshotsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<RanklistSnapshotsConnection>, Record<string, never>, Array<WithTypename<RanklistSnapshot> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<RanklistSnapshotsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<RanklistSnapshotsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  RanklistSnapshotConnection?: {
+    edges?: GraphCacheResolver<WithTypename<RanklistSnapshotConnection>, Record<string, never>, Array<WithTypename<RanklistSnapshotEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<RanklistSnapshotConnection>, Record<string, never>, Array<WithTypename<RanklistSnapshot> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<RanklistSnapshotConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<RanklistSnapshotConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  RanklistSnapshotsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<RanklistSnapshotsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<RanklistSnapshotsEdge>, Record<string, never>, WithTypename<RanklistSnapshot> | string>
-  },
-  RanklistsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<RanklistsConnection>, Record<string, never>, Array<WithTypename<RanklistsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<RanklistsConnection>, Record<string, never>, Array<WithTypename<Ranklist> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<RanklistsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<RanklistsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  RanklistsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<RanklistsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<RanklistsEdge>, Record<string, never>, WithTypename<Ranklist> | string>
+  RanklistSnapshotEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<RanklistSnapshotEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<RanklistSnapshotEdge>, Record<string, never>, WithTypename<RanklistSnapshot> | string>
   },
   RegisterUsingInvitationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RegisterUsingInvitationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15583,7 +15583,7 @@ export type GraphCacheResolvers = {
   RejectMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     membershipApplication?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
-    membershipApplicationEdge?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs, WithTypename<MembershipApplicationsEdge> | string>
+    membershipApplicationEdge?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs, WithTypename<MembershipApplicationEdge> | string>
   },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String']['output'] | string>
@@ -15646,7 +15646,7 @@ export type GraphCacheResolvers = {
   SetEventInstanceRegistrationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
-    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationsEdge> | string>
+    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<SetEventInstanceRegistrationPayload>, SetEventInstanceRegistrationPayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationEdge> | string>
   },
   SetEventSharingPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetEventSharingPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15655,7 +15655,7 @@ export type GraphCacheResolvers = {
   SetLessonDemandPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventLessonDemand?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, Record<string, never>, WithTypename<EventLessonDemand> | string>,
-    eventLessonDemandEdge?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, SetLessonDemandPayloadEventLessonDemandEdgeArgs, WithTypename<EventLessonDemandsEdge> | string>
+    eventLessonDemandEdge?: GraphCacheResolver<WithTypename<SetLessonDemandPayload>, SetLessonDemandPayloadEventLessonDemandEdgeArgs, WithTypename<EventLessonDemandEdge> | string>
   },
   SubmitFormPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SubmitFormPayload>, Record<string, never>, Scalars['String']['output'] | string>
@@ -15692,18 +15692,18 @@ export type GraphCacheResolvers = {
   SystemAdminUpdateTenantPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenant?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, WithTypename<Tenant> | string>,
-    tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantsEdge> | string>
+    tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantEdge> | string>
   },
   Tenant?: {
     accessCredentialsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessCredentialsListArgs, Array<WithTypename<AccessCredential> | string>>,
     accessEventsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
     accountsList?: GraphCacheResolver<WithTypename<Tenant>, TenantAccountsListArgs, Array<WithTypename<Account> | string>>,
     address?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<AddressDomain> | string>,
-    aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
-    announcementAudiences?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementAudiencesArgs, WithTypename<AnnouncementAudiencesConnection> | string>,
-    announcements?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    aktualities?: GraphCacheResolver<WithTypename<Tenant>, TenantAktualitiesArgs, WithTypename<AktualityConnection> | string>,
+    announcementAudiences?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementAudiencesArgs, WithTypename<AnnouncementAudienceConnection> | string>,
+    announcements?: GraphCacheResolver<WithTypename<Tenant>, TenantAnnouncementsArgs, WithTypename<AnnouncementConnection> | string>,
     bankAccount?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
-    cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupsConnection> | string>,
+    cohortGroups?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsArgs, WithTypename<CohortGroupConnection> | string>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     cohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortsListArgs, Array<WithTypename<Cohort> | string>>,
@@ -15711,15 +15711,15 @@ export type GraphCacheResolvers = {
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
-    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationsConnection> | string>,
+    eventInstanceRegistrations?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsArgs, WithTypename<EventInstanceRegistrationConnection> | string>,
     eventInstanceRegistrationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceRegistrationsListArgs, Array<WithTypename<EventInstanceRegistration> | string>>,
     eventInstanceTargetCohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTargetCohortsListArgs, Array<WithTypename<EventInstanceTargetCohort> | string>>,
     eventInstanceTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstanceTrainersListArgs, Array<WithTypename<EventInstanceTrainer> | string>>,
     eventInstancesList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventInstancesListArgs, Array<WithTypename<EventInstance> | string>>,
     eventLessonDemandsList?: GraphCacheResolver<WithTypename<Tenant>, TenantEventLessonDemandsListArgs, Array<WithTypename<EventLessonDemand> | string>>,
     eventSeries?: GraphCacheResolver<WithTypename<Tenant>, TenantEventSeriesArgs, WithTypename<EventSeriesConnection> | string>,
-    files?: GraphCacheResolver<WithTypename<Tenant>, TenantFilesArgs, WithTypename<FilesConnection> | string>,
-    formResponses?: GraphCacheResolver<WithTypename<Tenant>, TenantFormResponsesArgs, WithTypename<FormResponsesConnection> | string>,
+    files?: GraphCacheResolver<WithTypename<Tenant>, TenantFilesArgs, WithTypename<FileConnection> | string>,
+    formResponses?: GraphCacheResolver<WithTypename<Tenant>, TenantFormResponsesArgs, WithTypename<FormResponseConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     locationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantLocationsListArgs, Array<WithTypename<Location> | string>>,
     membershipApplicationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantMembershipApplicationsListArgs, Array<WithTypename<MembershipApplication> | string>>,
@@ -15731,16 +15731,16 @@ export type GraphCacheResolvers = {
     personInvitationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     postingsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsListArgs, Array<WithTypename<Posting> | string>>,
     scoreboardManualAdjustmentsList?: GraphCacheResolver<WithTypename<Tenant>, TenantScoreboardManualAdjustmentsListArgs, Array<WithTypename<ScoreboardManualAdjustment> | string>>,
-    tenantAdministrators?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsArgs, WithTypename<TenantAdministratorsConnection> | string>,
+    tenantAdministrators?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsArgs, WithTypename<TenantAdministratorConnection> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
     tenantLocationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsListArgs, Array<WithTypename<TenantLocation> | string>>,
-    tenantMemberships?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsArgs, WithTypename<TenantMembershipsConnection> | string>,
+    tenantMemberships?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsArgs, WithTypename<TenantMembershipConnection> | string>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantSetting?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, WithTypename<TenantSetting> | string>,
-    tenantTrainers?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersArgs, WithTypename<TenantTrainersConnection> | string>,
+    tenantTrainers?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersArgs, WithTypename<TenantTrainerConnection> | string>,
     tenantTrainersList?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantTrainersListArgs, Array<WithTypename<TenantTrainer> | string>>,
-    transactions?: GraphCacheResolver<WithTypename<Tenant>, TenantTransactionsArgs, WithTypename<TransactionsConnection> | string>,
-    users?: GraphCacheResolver<WithTypename<Tenant>, TenantUsersArgs, WithTypename<UsersConnection> | string>
+    transactions?: GraphCacheResolver<WithTypename<Tenant>, TenantTransactionsArgs, WithTypename<TransactionConnection> | string>,
+    users?: GraphCacheResolver<WithTypename<Tenant>, TenantUsersArgs, WithTypename<UserConnection> | string>
   },
   TenantAdministrator?: {
     createdAt?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -15756,15 +15756,19 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantAdministrator>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  TenantAdministratorsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TenantAdministratorsConnection>, Record<string, never>, Array<WithTypename<TenantAdministratorsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TenantAdministratorsConnection>, Record<string, never>, Array<WithTypename<TenantAdministrator> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TenantAdministratorsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TenantAdministratorsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  TenantAdministratorConnection?: {
+    edges?: GraphCacheResolver<WithTypename<TenantAdministratorConnection>, Record<string, never>, Array<WithTypename<TenantAdministratorEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<TenantAdministratorConnection>, Record<string, never>, Array<WithTypename<TenantAdministrator> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<TenantAdministratorConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<TenantAdministratorConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  TenantAdministratorsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantAdministratorsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantAdministratorsEdge>, Record<string, never>, WithTypename<TenantAdministrator> | string>
+  TenantAdministratorEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantAdministratorEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantAdministratorEdge>, Record<string, never>, WithTypename<TenantAdministrator> | string>
+  },
+  TenantEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantEdge>, Record<string, never>, WithTypename<Tenant> | string>
   },
   TenantLocation?: {
     accessEventsList?: GraphCacheResolver<WithTypename<TenantLocation>, TenantLocationAccessEventsListArgs, Array<WithTypename<AccessEvent> | string>>,
@@ -15805,23 +15809,23 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantMembership>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  TenantMembershipsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TenantMembershipsConnection>, Record<string, never>, Array<WithTypename<TenantMembershipsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TenantMembershipsConnection>, Record<string, never>, Array<WithTypename<TenantMembership> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TenantMembershipsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TenantMembershipsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  TenantMembershipConnection?: {
+    edges?: GraphCacheResolver<WithTypename<TenantMembershipConnection>, Record<string, never>, Array<WithTypename<TenantMembershipEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<TenantMembershipConnection>, Record<string, never>, Array<WithTypename<TenantMembership> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<TenantMembershipConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<TenantMembershipConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  TenantMembershipsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantMembershipsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantMembershipsEdge>, Record<string, never>, WithTypename<TenantMembership> | string>
+  TenantMembershipEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantMembershipEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantMembershipEdge>, Record<string, never>, WithTypename<TenantMembership> | string>
   },
   TenantSetting?: {
     settings?: GraphCacheResolver<WithTypename<TenantSetting>, Record<string, never>, Scalars['JSON']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<TenantSetting>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
-  TenantSettingsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantSettingsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantSettingsEdge>, Record<string, never>, WithTypename<TenantSetting> | string>
+  TenantSettingEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantSettingEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantSettingEdge>, Record<string, never>, WithTypename<TenantSetting> | string>
   },
   TenantTrainer?: {
     createPayoutPayments?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -15848,19 +15852,15 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<TenantTrainer>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  TenantTrainersConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TenantTrainersConnection>, Record<string, never>, Array<WithTypename<TenantTrainersEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TenantTrainersConnection>, Record<string, never>, Array<WithTypename<TenantTrainer> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TenantTrainersConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TenantTrainersConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  TenantTrainerConnection?: {
+    edges?: GraphCacheResolver<WithTypename<TenantTrainerConnection>, Record<string, never>, Array<WithTypename<TenantTrainerEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<TenantTrainerConnection>, Record<string, never>, Array<WithTypename<TenantTrainer> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<TenantTrainerConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<TenantTrainerConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  TenantTrainersEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantTrainersEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantTrainersEdge>, Record<string, never>, WithTypename<TenantTrainer> | string>
-  },
-  TenantsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TenantsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TenantsEdge>, Record<string, never>, WithTypename<Tenant> | string>
+  TenantTrainerEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TenantTrainerEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TenantTrainerEdge>, Record<string, never>, WithTypename<TenantTrainer> | string>
   },
   TrainerGroupAttendanceCompletion?: {
     filledInstances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -15886,15 +15886,15 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Transaction>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
-  TransactionsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<TransactionsConnection>, Record<string, never>, Array<WithTypename<TransactionsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<TransactionsConnection>, Record<string, never>, Array<WithTypename<Transaction> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<TransactionsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<TransactionsConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  TransactionConnection?: {
+    edges?: GraphCacheResolver<WithTypename<TransactionConnection>, Record<string, never>, Array<WithTypename<TransactionEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<TransactionConnection>, Record<string, never>, Array<WithTypename<Transaction> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<TransactionConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<TransactionConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
-  TransactionsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<TransactionsEdge>, Record<string, never>, WithTypename<Transaction> | string>
+  TransactionEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<TransactionEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<TransactionEdge>, Record<string, never>, WithTypename<Transaction> | string>
   },
   UpdateAccessCredentialPayload?: {
     accessCredential?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, WithTypename<AccessCredential> | string>,
@@ -15902,13 +15902,13 @@ export type GraphCacheResolvers = {
   },
   UpdateAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
-    announcementEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, UpdateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, UpdateAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAnnouncementPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   UpdateAttendancePayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, Scalars['String']['output'] | string>,
     eventInstanceRegistration?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, Record<string, never>, WithTypename<EventInstanceRegistration> | string>,
-    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, UpdateAttendancePayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationsEdge> | string>
+    eventInstanceRegistrationEdge?: GraphCacheResolver<WithTypename<UpdateAttendancePayload>, UpdateAttendancePayloadEventInstanceRegistrationEdgeArgs, WithTypename<EventInstanceRegistrationEdge> | string>
   },
   UpdateCohortMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateCohortMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15946,7 +15946,7 @@ export type GraphCacheResolvers = {
   UpdatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, WithTypename<Person> | string>,
-    personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PeopleEdge> | string>
+    personEdge?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, UpdatePersonPayloadPersonEdgeArgs, WithTypename<PersonEdge> | string>
   },
   UpdateScoreboardManualAdjustmentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateScoreboardManualAdjustmentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15955,12 +15955,12 @@ export type GraphCacheResolvers = {
   UpdateTenantAdministratorPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantAdministrator?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, Record<string, never>, WithTypename<TenantAdministrator> | string>,
-    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, UpdateTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorsEdge> | string>
+    tenantAdministratorEdge?: GraphCacheResolver<WithTypename<UpdateTenantAdministratorPayload>, UpdateTenantAdministratorPayloadTenantAdministratorEdgeArgs, WithTypename<TenantAdministratorEdge> | string>
   },
   UpdateTenantMembershipPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantMembershipPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantMembership?: GraphCacheResolver<WithTypename<UpdateTenantMembershipPayload>, Record<string, never>, WithTypename<TenantMembership> | string>,
-    tenantMembershipEdge?: GraphCacheResolver<WithTypename<UpdateTenantMembershipPayload>, UpdateTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipsEdge> | string>
+    tenantMembershipEdge?: GraphCacheResolver<WithTypename<UpdateTenantMembershipPayload>, UpdateTenantMembershipPayloadTenantMembershipEdgeArgs, WithTypename<TenantMembershipEdge> | string>
   },
   UpdateTenantPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15969,17 +15969,17 @@ export type GraphCacheResolvers = {
   UpdateTenantSettingPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantSetting?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, Record<string, never>, WithTypename<TenantSetting> | string>,
-    tenantSettingEdge?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, UpdateTenantSettingPayloadTenantSettingEdgeArgs, WithTypename<TenantSettingsEdge> | string>
+    tenantSettingEdge?: GraphCacheResolver<WithTypename<UpdateTenantSettingPayload>, UpdateTenantSettingPayloadTenantSettingEdgeArgs, WithTypename<TenantSettingEdge> | string>
   },
   UpdateTenantSettingsKeyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantSettingsKeyPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantSetting?: GraphCacheResolver<WithTypename<UpdateTenantSettingsKeyPayload>, Record<string, never>, WithTypename<TenantSetting> | string>,
-    tenantSettingEdge?: GraphCacheResolver<WithTypename<UpdateTenantSettingsKeyPayload>, UpdateTenantSettingsKeyPayloadTenantSettingEdgeArgs, WithTypename<TenantSettingsEdge> | string>
+    tenantSettingEdge?: GraphCacheResolver<WithTypename<UpdateTenantSettingsKeyPayload>, UpdateTenantSettingsKeyPayloadTenantSettingEdgeArgs, WithTypename<TenantSettingEdge> | string>
   },
   UpdateTenantTrainerPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantTrainer?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, Record<string, never>, WithTypename<TenantTrainer> | string>,
-    tenantTrainerEdge?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, UpdateTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainersEdge> | string>
+    tenantTrainerEdge?: GraphCacheResolver<WithTypename<UpdateTenantTrainerPayload>, UpdateTenantTrainerPayloadTenantTrainerEdgeArgs, WithTypename<TenantTrainerEdge> | string>
   },
   UpdateUserProxyPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateUserProxyPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15987,25 +15987,25 @@ export type GraphCacheResolvers = {
   },
   UpsertAnnouncementPayload?: {
     announcement?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, Record<string, never>, WithTypename<Announcement> | string>,
-    announcementEdge?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, UpsertAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementsEdge> | string>,
+    announcementEdge?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, UpsertAnnouncementPayloadAnnouncementEdgeArgs, WithTypename<AnnouncementEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertAnnouncementPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   UpsertArticlePayload?: {
     aktuality?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, WithTypename<Aktuality> | string>,
-    aktualityEdge?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, UpsertArticlePayloadAktualityEdgeArgs, WithTypename<AktualitiesEdge> | string>,
+    aktualityEdge?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, UpsertArticlePayloadAktualityEdgeArgs, WithTypename<AktualityEdge> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertArticlePayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
   UpsertLocationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, Record<string, never>, WithTypename<Location> | string>,
-    locationEdge?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, UpsertLocationPayloadLocationEdgeArgs, WithTypename<LocationsEdge> | string>
+    locationEdge?: GraphCacheResolver<WithTypename<UpsertLocationPayload>, UpsertLocationPayloadLocationEdgeArgs, WithTypename<LocationEdge> | string>
   },
   User?: {
     accessCredentialsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserAccessCredentialsByCreatedByListArgs, Array<WithTypename<AccessCredential> | string>>,
-    aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualitiesConnection> | string>,
-    authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementsConnection> | string>,
+    aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualityConnection> | string>,
+    authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FilesConnection> | string>,
+    filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FileConnection> | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     lastActiveAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     lastLogin?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -16020,6 +16020,16 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     userProxiesList?: GraphCacheResolver<WithTypename<User>, UserUserProxiesListArgs, Array<WithTypename<UserProxy> | string>>
   },
+  UserConnection?: {
+    edges?: GraphCacheResolver<WithTypename<UserConnection>, Record<string, never>, Array<WithTypename<UserEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<UserConnection>, Record<string, never>, Array<WithTypename<User> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<UserConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<UserConnection>, Record<string, never>, Scalars['Int']['output'] | string>
+  },
+  UserEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<UserEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<UserEdge>, Record<string, never>, WithTypename<User> | string>
+  },
   UserProxy?: {
     createdAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -16031,16 +16041,6 @@ export type GraphCacheResolvers = {
     updatedAt?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     user?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, WithTypename<User> | string>,
     userId?: GraphCacheResolver<WithTypename<UserProxy>, Record<string, never>, Scalars['BigInt']['output'] | string>
-  },
-  UsersConnection?: {
-    edges?: GraphCacheResolver<WithTypename<UsersConnection>, Record<string, never>, Array<WithTypename<UsersEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<UsersConnection>, Record<string, never>, Array<WithTypename<User> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<UsersConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<UsersConnection>, Record<string, never>, Scalars['Int']['output'] | string>
-  },
-  UsersEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<UsersEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
-    node?: GraphCacheResolver<WithTypename<UsersEdge>, Record<string, never>, WithTypename<User> | string>
   }
 };
 
@@ -16133,39 +16133,39 @@ export type GraphCacheUpdaters = {
     activityTimelineList?: GraphCacheUpdateResolver<{ activityTimelineList: Maybe<Array<WithTypename<ActivityBirthday> | WithTypename<ActivityCompetitionBrief> | WithTypename<ActivityCompetitionResult> | WithTypename<ActivityEventAttendance> | WithTypename<ActivityJudging>>> }, QueryActivityTimelineListArgs>,
     ageGroup?: GraphCacheUpdateResolver<{ ageGroup: Maybe<WithTypename<AgeGroup>> }, QueryAgeGroupArgs>,
     ageGroupsList?: GraphCacheUpdateResolver<{ ageGroupsList: Maybe<Array<WithTypename<AgeGroup>>> }, QueryAgeGroupsListArgs>,
-    aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualitiesConnection>> }, QueryAktualitiesArgs>,
+    aktualities?: GraphCacheUpdateResolver<{ aktualities: Maybe<WithTypename<AktualityConnection>> }, QueryAktualitiesArgs>,
     aktuality?: GraphCacheUpdateResolver<{ aktuality: Maybe<WithTypename<Aktuality>> }, QueryAktualityArgs>,
     announcement?: GraphCacheUpdateResolver<{ announcement: Maybe<WithTypename<Announcement>> }, QueryAnnouncementArgs>,
-    announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementsConnection>> }, QueryAnnouncementsArgs>,
+    announcements?: GraphCacheUpdateResolver<{ announcements: Maybe<WithTypename<AnnouncementConnection>> }, QueryAnnouncementsArgs>,
     categoriesList?: GraphCacheUpdateResolver<{ categoriesList: Maybe<Array<WithTypename<Category>>> }, QueryCategoriesListArgs>,
     category?: GraphCacheUpdateResolver<{ category: Maybe<WithTypename<Category>> }, QueryCategoryArgs>,
     categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType?: GraphCacheUpdateResolver<{ categoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorType: Maybe<WithTypename<Category>> }, QueryCategoryBySeriesAndDisciplineAndAgeGroupAndGenderGroupAndClassAndCompetitorTypeArgs>,
     cohort?: GraphCacheUpdateResolver<{ cohort: Maybe<WithTypename<Cohort>> }, QueryCohortArgs>,
     cohortGroup?: GraphCacheUpdateResolver<{ cohortGroup: Maybe<WithTypename<CohortGroup>> }, QueryCohortGroupArgs>,
-    cohortGroups?: GraphCacheUpdateResolver<{ cohortGroups: Maybe<WithTypename<CohortGroupsConnection>> }, QueryCohortGroupsArgs>,
+    cohortGroups?: GraphCacheUpdateResolver<{ cohortGroups: Maybe<WithTypename<CohortGroupConnection>> }, QueryCohortGroupsArgs>,
     cohortMembership?: GraphCacheUpdateResolver<{ cohortMembership: Maybe<WithTypename<CohortMembership>> }, QueryCohortMembershipArgs>,
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     competition?: GraphCacheUpdateResolver<{ competition: Maybe<WithTypename<Competition>> }, QueryCompetitionArgs>,
     competitionByFederationAndExternalId?: GraphCacheUpdateResolver<{ competitionByFederationAndExternalId: Maybe<WithTypename<Competition>> }, QueryCompetitionByFederationAndExternalIdArgs>,
     competitionRound?: GraphCacheUpdateResolver<{ competitionRound: Maybe<WithTypename<CompetitionRound>> }, QueryCompetitionRoundArgs>,
     competitionRoundByCompetitionIdAndRoundKey?: GraphCacheUpdateResolver<{ competitionRoundByCompetitionIdAndRoundKey: Maybe<WithTypename<CompetitionRound>> }, QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs>,
-    competitions?: GraphCacheUpdateResolver<{ competitions: Maybe<WithTypename<CompetitionsConnection>> }, QueryCompetitionsArgs>,
+    competitions?: GraphCacheUpdateResolver<{ competitions: Maybe<WithTypename<CompetitionConnection>> }, QueryCompetitionsArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
-    crawlerFetchJobs?: GraphCacheUpdateResolver<{ crawlerFetchJobs: Maybe<WithTypename<CrawlerFetchJobsConnection>> }, QueryCrawlerFetchJobsArgs>,
+    crawlerFetchJobs?: GraphCacheUpdateResolver<{ crawlerFetchJobs: Maybe<WithTypename<CrawlerFetchJobConnection>> }, QueryCrawlerFetchJobsArgs>,
     crawlerIncrementalRange?: GraphCacheUpdateResolver<{ crawlerIncrementalRange: Maybe<WithTypename<CrawlerIncrementalRange>> }, QueryCrawlerIncrementalRangeArgs>,
-    crawlerIncrementalRanges?: GraphCacheUpdateResolver<{ crawlerIncrementalRanges: Maybe<WithTypename<CrawlerIncrementalRangesConnection>> }, QueryCrawlerIncrementalRangesArgs>,
+    crawlerIncrementalRanges?: GraphCacheUpdateResolver<{ crawlerIncrementalRanges: Maybe<WithTypename<CrawlerIncrementalRangeConnection>> }, QueryCrawlerIncrementalRangesArgs>,
     crawlerRateLimitRule?: GraphCacheUpdateResolver<{ crawlerRateLimitRule: Maybe<WithTypename<CrawlerRateLimitRule>> }, QueryCrawlerRateLimitRuleArgs>,
-    crawlerRateLimitRules?: GraphCacheUpdateResolver<{ crawlerRateLimitRules: Maybe<WithTypename<CrawlerRateLimitRulesConnection>> }, QueryCrawlerRateLimitRulesArgs>,
+    crawlerRateLimitRules?: GraphCacheUpdateResolver<{ crawlerRateLimitRules: Maybe<WithTypename<CrawlerRateLimitRuleConnection>> }, QueryCrawlerRateLimitRulesArgs>,
     crawlerResponse?: GraphCacheUpdateResolver<{ crawlerResponse: Maybe<WithTypename<CrawlerResponse>> }, QueryCrawlerResponseArgs>,
     crawlerResponseCache?: GraphCacheUpdateResolver<{ crawlerResponseCache: Maybe<WithTypename<CrawlerResponseCache>> }, QueryCrawlerResponseCacheArgs>,
-    crawlerResponseCaches?: GraphCacheUpdateResolver<{ crawlerResponseCaches: Maybe<WithTypename<CrawlerResponseCachesConnection>> }, QueryCrawlerResponseCachesArgs>,
-    crawlerResponses?: GraphCacheUpdateResolver<{ crawlerResponses: Maybe<WithTypename<CrawlerResponsesConnection>> }, QueryCrawlerResponsesArgs>,
+    crawlerResponseCaches?: GraphCacheUpdateResolver<{ crawlerResponseCaches: Maybe<WithTypename<CrawlerResponseCacheConnection>> }, QueryCrawlerResponseCachesArgs>,
+    crawlerResponses?: GraphCacheUpdateResolver<{ crawlerResponses: Maybe<WithTypename<CrawlerResponseConnection>> }, QueryCrawlerResponsesArgs>,
     crawlerTarget?: GraphCacheUpdateResolver<{ crawlerTarget: Maybe<WithTypename<CrawlerTarget>> }, QueryCrawlerTargetArgs>,
     crawlerTargetByFederationAndKindAndKey?: GraphCacheUpdateResolver<{ crawlerTargetByFederationAndKindAndKey: Maybe<WithTypename<CrawlerTarget>> }, QueryCrawlerTargetByFederationAndKindAndKeyArgs>,
     crawlerTargetFailureGroupsList?: GraphCacheUpdateResolver<{ crawlerTargetFailureGroupsList: Maybe<Array<WithTypename<CrawlerTargetFailureGroup>>> }, QueryCrawlerTargetFailureGroupsListArgs>,
-    crawlerTargetFailures?: GraphCacheUpdateResolver<{ crawlerTargetFailures: Maybe<WithTypename<CrawlerTargetFailuresConnection>> }, QueryCrawlerTargetFailuresArgs>,
+    crawlerTargetFailures?: GraphCacheUpdateResolver<{ crawlerTargetFailures: Maybe<WithTypename<CrawlerTargetFailureConnection>> }, QueryCrawlerTargetFailuresArgs>,
     crawlerTargetSummariesList?: GraphCacheUpdateResolver<{ crawlerTargetSummariesList: Maybe<Array<WithTypename<CrawlerTargetSummary>>> }, QueryCrawlerTargetSummariesListArgs>,
-    crawlerTargets?: GraphCacheUpdateResolver<{ crawlerTargets: Maybe<WithTypename<CrawlerTargetsConnection>> }, QueryCrawlerTargetsArgs>,
+    crawlerTargets?: GraphCacheUpdateResolver<{ crawlerTargets: Maybe<WithTypename<CrawlerTargetConnection>> }, QueryCrawlerTargetsArgs>,
     currentClaims?: GraphCacheUpdateResolver<{ currentClaims: Maybe<Scalars['JSON']['output']> }, Record<string, never>>,
     dance?: GraphCacheUpdateResolver<{ dance: Maybe<WithTypename<Dance>> }, QueryDanceArgs>,
     danceProgram?: GraphCacheUpdateResolver<{ danceProgram: Maybe<WithTypename<DanceProgram>> }, QueryDanceProgramArgs>,
@@ -16178,7 +16178,7 @@ export type GraphCacheUpdaters = {
     eventInstance?: GraphCacheUpdateResolver<{ eventInstance: Maybe<WithTypename<EventInstance>> }, QueryEventInstanceArgs>,
     eventInstanceFacetsList?: GraphCacheUpdateResolver<{ eventInstanceFacetsList: Maybe<Array<WithTypename<EventInstanceFacetsRecord>>> }, QueryEventInstanceFacetsListArgs>,
     eventInstanceRegistration?: GraphCacheUpdateResolver<{ eventInstanceRegistration: Maybe<WithTypename<EventInstanceRegistration>> }, QueryEventInstanceRegistrationArgs>,
-    eventInstanceRegistrations?: GraphCacheUpdateResolver<{ eventInstanceRegistrations: Maybe<WithTypename<EventInstanceRegistrationsConnection>> }, QueryEventInstanceRegistrationsArgs>,
+    eventInstanceRegistrations?: GraphCacheUpdateResolver<{ eventInstanceRegistrations: Maybe<WithTypename<EventInstanceRegistrationConnection>> }, QueryEventInstanceRegistrationsArgs>,
     eventInstanceRegistrationsList?: GraphCacheUpdateResolver<{ eventInstanceRegistrationsList: Maybe<Array<WithTypename<EventInstanceRegistration>>> }, QueryEventInstanceRegistrationsListArgs>,
     eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesForRangeListArgs>,
     eventInstancesList?: GraphCacheUpdateResolver<{ eventInstancesList: Maybe<Array<WithTypename<EventInstance>>> }, QueryEventInstancesListArgs>,
@@ -16188,23 +16188,23 @@ export type GraphCacheUpdaters = {
     federation?: GraphCacheUpdateResolver<{ federation: Maybe<WithTypename<Federation>> }, QueryFederationArgs>,
     federationClub?: GraphCacheUpdateResolver<{ federationClub: Maybe<WithTypename<FederationClub>> }, QueryFederationClubArgs>,
     federationClubByFederationAndExternalId?: GraphCacheUpdateResolver<{ federationClubByFederationAndExternalId: Maybe<WithTypename<FederationClub>> }, QueryFederationClubByFederationAndExternalIdArgs>,
-    federationClubs?: GraphCacheUpdateResolver<{ federationClubs: Maybe<WithTypename<FederationClubsConnection>> }, QueryFederationClubsArgs>,
+    federationClubs?: GraphCacheUpdateResolver<{ federationClubs: Maybe<WithTypename<FederationClubConnection>> }, QueryFederationClubsArgs>,
     federationCompetitor?: GraphCacheUpdateResolver<{ federationCompetitor: Maybe<WithTypename<FederationCompetitor>> }, QueryFederationCompetitorArgs>,
     federationCompetitorByFederationAndExternalId?: GraphCacheUpdateResolver<{ federationCompetitorByFederationAndExternalId: Maybe<WithTypename<FederationCompetitor>> }, QueryFederationCompetitorByFederationAndExternalIdArgs>,
-    federationCompetitors?: GraphCacheUpdateResolver<{ federationCompetitors: Maybe<WithTypename<FederationCompetitorsConnection>> }, QueryFederationCompetitorsArgs>,
+    federationCompetitors?: GraphCacheUpdateResolver<{ federationCompetitors: Maybe<WithTypename<FederationCompetitorConnection>> }, QueryFederationCompetitorsArgs>,
     federationEvent?: GraphCacheUpdateResolver<{ federationEvent: Maybe<WithTypename<FederationEvent>> }, QueryFederationEventArgs>,
     federationEventByFederationAndExternalId?: GraphCacheUpdateResolver<{ federationEventByFederationAndExternalId: Maybe<WithTypename<FederationEvent>> }, QueryFederationEventByFederationAndExternalIdArgs>,
-    federationEvents?: GraphCacheUpdateResolver<{ federationEvents: Maybe<WithTypename<FederationEventsConnection>> }, QueryFederationEventsArgs>,
-    federationPeople?: GraphCacheUpdateResolver<{ federationPeople: Maybe<WithTypename<FederationPeopleConnection>> }, QueryFederationPeopleArgs>,
+    federationEvents?: GraphCacheUpdateResolver<{ federationEvents: Maybe<WithTypename<FederationEventConnection>> }, QueryFederationEventsArgs>,
+    federationPeople?: GraphCacheUpdateResolver<{ federationPeople: Maybe<WithTypename<FederationPersonConnection>> }, QueryFederationPeopleArgs>,
     federationPerson?: GraphCacheUpdateResolver<{ federationPerson: Maybe<WithTypename<FederationPerson>> }, QueryFederationPersonArgs>,
     federationPersonByFederationAndExternalId?: GraphCacheUpdateResolver<{ federationPersonByFederationAndExternalId: Maybe<WithTypename<FederationPerson>> }, QueryFederationPersonByFederationAndExternalIdArgs>,
     federationPersonCandidatesList?: GraphCacheUpdateResolver<{ federationPersonCandidatesList: Array<WithTypename<PersonFederationCandidatesRecord>> }, QueryFederationPersonCandidatesListArgs>,
     federationsList?: GraphCacheUpdateResolver<{ federationsList: Maybe<Array<WithTypename<Federation>>> }, QueryFederationsListArgs>,
     file?: GraphCacheUpdateResolver<{ file: Maybe<WithTypename<File>> }, QueryFileArgs>,
     fileByObjectKey?: GraphCacheUpdateResolver<{ fileByObjectKey: Maybe<WithTypename<File>> }, QueryFileByObjectKeyArgs>,
-    files?: GraphCacheUpdateResolver<{ files: Maybe<WithTypename<FilesConnection>> }, QueryFilesArgs>,
+    files?: GraphCacheUpdateResolver<{ files: Maybe<WithTypename<FileConnection>> }, QueryFilesArgs>,
     formResponse?: GraphCacheUpdateResolver<{ formResponse: Maybe<WithTypename<FormResponse>> }, QueryFormResponseArgs>,
-    formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponsesConnection>> }, QueryFormResponsesArgs>,
+    formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponseConnection>> }, QueryFormResponsesArgs>,
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, QueryGetCurrentUserArgs>,
     invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']['output']> }, QueryInvitationInfoArgs>,
@@ -16217,7 +16217,7 @@ export type GraphCacheUpdaters = {
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
     paymentRecipient?: GraphCacheUpdateResolver<{ paymentRecipient: Maybe<WithTypename<PaymentRecipient>> }, QueryPaymentRecipientArgs>,
-    people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PeopleConnection>> }, QueryPeopleArgs>,
+    people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PersonConnection>> }, QueryPeopleArgs>,
     peopleWithoutAccessOrInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessOrInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessOrInvitationListArgs>,
     peopleWithoutAccessWithExistingAccountList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithExistingAccountList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithExistingAccountListArgs>,
     peopleWithoutAccessWithInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithInvitationListArgs>,
@@ -16227,7 +16227,7 @@ export type GraphCacheUpdaters = {
     personInvitationByAccessToken?: GraphCacheUpdateResolver<{ personInvitationByAccessToken: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationByAccessTokenArgs>,
     ranklist?: GraphCacheUpdateResolver<{ ranklist: Maybe<WithTypename<Ranklist>> }, QueryRanklistArgs>,
     ranklistByFederationAndCategoryId?: GraphCacheUpdateResolver<{ ranklistByFederationAndCategoryId: Maybe<WithTypename<Ranklist>> }, QueryRanklistByFederationAndCategoryIdArgs>,
-    ranklists?: GraphCacheUpdateResolver<{ ranklists: Maybe<WithTypename<RanklistsConnection>> }, QueryRanklistsArgs>,
+    ranklists?: GraphCacheUpdateResolver<{ ranklists: Maybe<WithTypename<RanklistConnection>> }, QueryRanklistsArgs>,
     refreshJwt?: GraphCacheUpdateResolver<{ refreshJwt: Maybe<Scalars['JwtToken']['output']> }, Record<string, never>>,
     scoreboardEntriesList?: GraphCacheUpdateResolver<{ scoreboardEntriesList: Maybe<Array<WithTypename<ScoreboardRecord>>> }, QueryScoreboardEntriesListArgs>,
     scoreboardManualAdjustment?: GraphCacheUpdateResolver<{ scoreboardManualAdjustment: Maybe<WithTypename<ScoreboardManualAdjustment>> }, QueryScoreboardManualAdjustmentArgs>,
@@ -16242,10 +16242,10 @@ export type GraphCacheUpdaters = {
     tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
     trainerGroupAttendanceCompletionList?: GraphCacheUpdateResolver<{ trainerGroupAttendanceCompletionList: Maybe<Array<WithTypename<TrainerGroupAttendanceCompletion>>> }, QueryTrainerGroupAttendanceCompletionListArgs>,
     transaction?: GraphCacheUpdateResolver<{ transaction: Maybe<WithTypename<Transaction>> }, QueryTransactionArgs>,
-    transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionsConnection>> }, QueryTransactionsArgs>,
+    transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionConnection>> }, QueryTransactionsArgs>,
     user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
     userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
-    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UsersConnection>> }, QueryUsersArgs>
+    users?: GraphCacheUpdateResolver<{ users: Maybe<WithTypename<UserConnection>> }, QueryUsersArgs>
   },
   Mutation?: {
     archiveCohort?: GraphCacheUpdateResolver<{ archiveCohort: Maybe<WithTypename<ArchiveCohortPayload>> }, MutationArchiveCohortArgs>,
@@ -16498,16 +16498,6 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>,
     personAge?: GraphCacheUpdateResolver<Maybe<WithTypename<AgeGroup>>, Record<string, never>>
   },
-  AktualitiesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesConnection>>, Record<string, never>>
-  },
-  AktualitiesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualitiesEdge>>, Record<string, never>>
-  },
   Aktuality?: {
     atFoto?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     atJmeno?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
@@ -16524,6 +16514,16 @@ export type GraphCacheUpdaters = {
     titlePhotoUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>,
     userByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<Aktuality>>, Record<string, never>>
+  },
+  AktualityConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityConnection>>, Record<string, never>>
+  },
+  AktualityEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AktualityEdge>>, Record<string, never>>
   },
   Announcement?: {
     announcementAudiences?: GraphCacheUpdateResolver<Maybe<WithTypename<Announcement>>, AnnouncementAnnouncementAudiencesArgs>,
@@ -16550,15 +16550,15 @@ export type GraphCacheUpdaters = {
     inline?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachment>>, Record<string, never>>
   },
-  AnnouncementAttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsConnection>>, Record<string, never>>
+  AnnouncementAttachmentConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentConnection>>, Record<string, never>>
   },
-  AnnouncementAttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentsEdge>>, Record<string, never>>
+  AnnouncementAttachmentEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAttachmentEdge>>, Record<string, never>>
   },
   AnnouncementAudience?: {
     announcement?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudience>>, Record<string, never>>,
@@ -16569,25 +16569,25 @@ export type GraphCacheUpdaters = {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudience>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudience>>, Record<string, never>>
   },
-  AnnouncementAudiencesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesConnection>>, Record<string, never>>
+  AnnouncementAudienceConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceConnection>>, Record<string, never>>
   },
-  AnnouncementAudiencesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudiencesEdge>>, Record<string, never>>
+  AnnouncementAudienceEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementAudienceEdge>>, Record<string, never>>
   },
-  AnnouncementsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsConnection>>, Record<string, never>>
+  AnnouncementConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementConnection>>, Record<string, never>>
   },
-  AnnouncementsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementsEdge>>, Record<string, never>>
+  AnnouncementEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<AnnouncementEdge>>, Record<string, never>>
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
@@ -16602,15 +16602,15 @@ export type GraphCacheUpdaters = {
     inline?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>
   },
-  ArticleAttachmentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsConnection>>, Record<string, never>>
+  ArticleAttachmentConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentConnection>>, Record<string, never>>
   },
-  ArticleAttachmentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentsEdge>>, Record<string, never>>
+  ArticleAttachmentEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachmentEdge>>, Record<string, never>>
   },
   Category?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<Category>>, Record<string, never>>,
@@ -16652,6 +16652,10 @@ export type GraphCacheUpdaters = {
     scoreboardManualAdjustmentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortScoreboardManualAdjustmentsListArgs>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>
   },
+  CohortEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortEdge>>, Record<string, never>>
+  },
   CohortGroup?: {
     cohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, CohortGroupCohortsListArgs>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
@@ -16661,15 +16665,15 @@ export type GraphCacheUpdaters = {
     ordering?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroup>>, Record<string, never>>
   },
-  CohortGroupsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsConnection>>, Record<string, never>>
+  CohortGroupConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupConnection>>, Record<string, never>>
   },
-  CohortGroupsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupsEdge>>, Record<string, never>>
+  CohortGroupEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortGroupEdge>>, Record<string, never>>
   },
   CohortMembership?: {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortMembership>>, Record<string, never>>,
@@ -16701,10 +16705,6 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>
   },
-  CohortsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortsEdge>>, Record<string, never>>
-  },
   Competition?: {
     category?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>,
     categoryId?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>,
@@ -16730,15 +16730,15 @@ export type GraphCacheUpdaters = {
     startDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>,
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<Competition>>, Record<string, never>>
   },
-  CompetitionEntriesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesConnection>>, Record<string, never>>
+  CompetitionConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionConnection>>, Record<string, never>>
   },
-  CompetitionEntriesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntriesEdge>>, Record<string, never>>
+  CompetitionEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEdge>>, Record<string, never>>
   },
   CompetitionEntry?: {
     cancelled?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntry>>, Record<string, never>>,
@@ -16747,6 +16747,16 @@ export type GraphCacheUpdaters = {
     competitor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntry>>, Record<string, never>>,
     competitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntry>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntry>>, Record<string, never>>
+  },
+  CompetitionEntryConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryConnection>>, Record<string, never>>
+  },
+  CompetitionEntryEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionEntryEdge>>, Record<string, never>>
   },
   CompetitionOfficial?: {
     competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
@@ -16757,15 +16767,15 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>,
     role?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficial>>, Record<string, never>>
   },
-  CompetitionOfficialsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsConnection>>, Record<string, never>>
+  CompetitionOfficialConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialConnection>>, Record<string, never>>
   },
-  CompetitionOfficialsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialsEdge>>, Record<string, never>>
+  CompetitionOfficialEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionOfficialEdge>>, Record<string, never>>
   },
   CompetitionResult?: {
     competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
@@ -16782,15 +16792,15 @@ export type GraphCacheUpdaters = {
     rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
     startNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>
   },
-  CompetitionResultsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsConnection>>, Record<string, never>>
+  CompetitionResultConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultConnection>>, Record<string, never>>
   },
-  CompetitionResultsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultsEdge>>, Record<string, never>>
+  CompetitionResultEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResultEdge>>, Record<string, never>>
   },
   CompetitionRound?: {
     competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
@@ -16808,6 +16818,12 @@ export type GraphCacheUpdaters = {
     roundLabel?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>,
     scoringMethod?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRound>>, Record<string, never>>
   },
+  CompetitionRoundConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundConnection>>, Record<string, never>>
+  },
   CompetitionRoundDance?: {
     dance?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
     danceCode?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
@@ -16818,15 +16834,19 @@ export type GraphCacheUpdaters = {
     roundDanceProgram?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>,
     roundId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDance>>, Record<string, never>>
   },
-  CompetitionRoundDancesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesConnection>>, Record<string, never>>
+  CompetitionRoundDanceConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceConnection>>, Record<string, never>>
   },
-  CompetitionRoundDancesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDancesEdge>>, Record<string, never>>
+  CompetitionRoundDanceEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundDanceEdge>>, Record<string, never>>
+  },
+  CompetitionRoundEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundEdge>>, Record<string, never>>
   },
   CompetitionRoundJudge?: {
     judgeIndex?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudge>>, Record<string, never>>,
@@ -16836,15 +16856,15 @@ export type GraphCacheUpdaters = {
     round?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudge>>, Record<string, never>>,
     roundId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudge>>, Record<string, never>>
   },
-  CompetitionRoundJudgesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesConnection>>, Record<string, never>>
+  CompetitionRoundJudgeConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeConnection>>, Record<string, never>>
   },
-  CompetitionRoundJudgesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgesEdge>>, Record<string, never>>
+  CompetitionRoundJudgeEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundJudgeEdge>>, Record<string, never>>
   },
   CompetitionRoundResult?: {
     competitor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResult>>, Record<string, never>>,
@@ -16857,35 +16877,15 @@ export type GraphCacheUpdaters = {
     round?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResult>>, Record<string, never>>,
     roundId?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResult>>, Record<string, never>>
   },
-  CompetitionRoundResultsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsConnection>>, Record<string, never>>
+  CompetitionRoundResultConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultConnection>>, Record<string, never>>
   },
-  CompetitionRoundResultsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultsEdge>>, Record<string, never>>
-  },
-  CompetitionRoundsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsConnection>>, Record<string, never>>
-  },
-  CompetitionRoundsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundsEdge>>, Record<string, never>>
-  },
-  CompetitionsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsConnection>>, Record<string, never>>
-  },
-  CompetitionsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionsEdge>>, Record<string, never>>
+  CompetitionRoundResultEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultEdge>>, Record<string, never>>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,
@@ -16929,15 +16929,15 @@ export type GraphCacheUpdaters = {
     runAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJob>>, Record<string, never>>,
     state?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJob>>, Record<string, never>>
   },
-  CrawlerFetchJobsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsConnection>>, Record<string, never>>
+  CrawlerFetchJobConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobConnection>>, Record<string, never>>
   },
-  CrawlerFetchJobsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobsEdge>>, Record<string, never>>
+  CrawlerFetchJobEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerFetchJobEdge>>, Record<string, never>>
   },
   CrawlerIncrementalRange?: {
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRange>>, Record<string, never>>,
@@ -16945,15 +16945,15 @@ export type GraphCacheUpdaters = {
     lastChecked?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRange>>, Record<string, never>>,
     lastKnown?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRange>>, Record<string, never>>
   },
-  CrawlerIncrementalRangesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesConnection>>, Record<string, never>>
+  CrawlerIncrementalRangeConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeConnection>>, Record<string, never>>
   },
-  CrawlerIncrementalRangesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangesEdge>>, Record<string, never>>
+  CrawlerIncrementalRangeEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerIncrementalRangeEdge>>, Record<string, never>>
   },
   CrawlerRateLimitRule?: {
     host?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRule>>, Record<string, never>>,
@@ -16962,15 +16962,15 @@ export type GraphCacheUpdaters = {
     perInterval?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRule>>, Record<string, never>>,
     spacing?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRule>>, Record<string, never>>
   },
-  CrawlerRateLimitRulesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesConnection>>, Record<string, never>>
+  CrawlerRateLimitRuleConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleConnection>>, Record<string, never>>
   },
-  CrawlerRateLimitRulesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRulesEdge>>, Record<string, never>>
+  CrawlerRateLimitRuleEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerRateLimitRuleEdge>>, Record<string, never>>
   },
   CrawlerResponse?: {
     contentHash?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponse>>, Record<string, never>>,
@@ -16993,25 +16993,25 @@ export type GraphCacheUpdaters = {
     contentHash?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCache>>, Record<string, never>>,
     responses?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCache>>, CrawlerResponseCacheResponsesArgs>
   },
-  CrawlerResponseCachesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesConnection>>, Record<string, never>>
+  CrawlerResponseCacheConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheConnection>>, Record<string, never>>
   },
-  CrawlerResponseCachesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCachesEdge>>, Record<string, never>>
+  CrawlerResponseCacheEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseCacheEdge>>, Record<string, never>>
   },
-  CrawlerResponsesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesConnection>>, Record<string, never>>
+  CrawlerResponseConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseConnection>>, Record<string, never>>
   },
-  CrawlerResponsesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponsesEdge>>, Record<string, never>>
+  CrawlerResponseEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerResponseEdge>>, Record<string, never>>
   },
   CrawlerTarget?: {
     discoveredAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
@@ -17033,6 +17033,16 @@ export type GraphCacheUpdaters = {
     processStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
     responses?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, CrawlerTargetResponsesArgs>
   },
+  CrawlerTargetConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetConnection>>, Record<string, never>>
+  },
+  CrawlerTargetEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetEdge>>, Record<string, never>>
+  },
   CrawlerTargetFailure?: {
     errorCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>,
     errorText?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>,
@@ -17050,6 +17060,16 @@ export type GraphCacheUpdaters = {
     responseError?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>,
     url?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailure>>, Record<string, never>>
   },
+  CrawlerTargetFailureConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureConnection>>, Record<string, never>>
+  },
+  CrawlerTargetFailureEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureEdge>>, Record<string, never>>
+  },
   CrawlerTargetFailureGroup?: {
     count?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
     errorFingerprint?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
@@ -17058,16 +17078,6 @@ export type GraphCacheUpdaters = {
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
     httpStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>,
     kind?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailureGroup>>, Record<string, never>>
-  },
-  CrawlerTargetFailuresConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresConnection>>, Record<string, never>>
-  },
-  CrawlerTargetFailuresEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetFailuresEdge>>, Record<string, never>>
   },
   CrawlerTargetSummary?: {
     done?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
@@ -17082,16 +17092,6 @@ export type GraphCacheUpdaters = {
     processReady?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
     refetchDue?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>,
     total?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetSummary>>, Record<string, never>>
-  },
-  CrawlerTargetsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsConnection>>, Record<string, never>>
-  },
-  CrawlerTargetsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTargetsEdge>>, Record<string, never>>
   },
   CreateAccessCredentialPayload?: {
     accessCredential?: GraphCacheUpdateResolver<Maybe<WithTypename<CreateAccessCredentialPayload>>, Record<string, never>>,
@@ -17352,6 +17352,10 @@ export type GraphCacheUpdaters = {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceApproxPriceRecord>>, Record<string, never>>
   },
+  EventInstanceEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceEdge>>, Record<string, never>>
+  },
   EventInstanceFacetsRecord?: {
     count?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceFacetsRecord>>, Record<string, never>>,
     facet?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceFacetsRecord>>, Record<string, never>>,
@@ -17384,21 +17388,21 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistration>>, Record<string, never>>
   },
+  EventInstanceRegistrationConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationConnection>>, Record<string, never>>
+  },
+  EventInstanceRegistrationEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationEdge>>, Record<string, never>>
+  },
   EventInstanceRegistrationInfo?: {
     my?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationInfo>>, Record<string, never>>,
     people?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationInfo>>, Record<string, never>>,
     registrations?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationInfo>>, Record<string, never>>,
     remainingCapacity?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationInfo>>, Record<string, never>>
-  },
-  EventInstanceRegistrationsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsConnection>>, Record<string, never>>
-  },
-  EventInstanceRegistrationsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceRegistrationsEdge>>, Record<string, never>>
   },
   EventInstanceTargetCohort?: {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTargetCohort>>, Record<string, never>>,
@@ -17424,10 +17428,6 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstanceTrainer>>, Record<string, never>>
   },
-  EventInstancesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventInstancesEdge>>, Record<string, never>>
-  },
   EventLessonDemand?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
@@ -17439,9 +17439,9 @@ export type GraphCacheUpdaters = {
     trainerId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemand>>, Record<string, never>>
   },
-  EventLessonDemandsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandsEdge>>, Record<string, never>>
+  EventLessonDemandEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventLessonDemandEdge>>, Record<string, never>>
   },
   EventSeries?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeries>>, Record<string, never>>,
@@ -17488,15 +17488,15 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClub>>, Record<string, never>>,
     personMemberships?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClub>>, FederationClubPersonMembershipsArgs>
   },
-  FederationClubsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsConnection>>, Record<string, never>>
+  FederationClubConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubConnection>>, Record<string, never>>
   },
-  FederationClubsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubsEdge>>, Record<string, never>>
+  FederationClubEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubEdge>>, Record<string, never>>
   },
   FederationCompetitor?: {
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
@@ -17530,15 +17530,15 @@ export type GraphCacheUpdaters = {
     foreignFinals?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgress>>, Record<string, never>>,
     points?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgress>>, Record<string, never>>
   },
-  FederationCompetitorCategoryProgressesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesConnection>>, Record<string, never>>
+  FederationCompetitorCategoryProgressConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressConnection>>, Record<string, never>>
   },
-  FederationCompetitorCategoryProgressesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressesEdge>>, Record<string, never>>
+  FederationCompetitorCategoryProgressEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgressEdge>>, Record<string, never>>
   },
   FederationCompetitorClubAffiliation?: {
     club?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliation>>, Record<string, never>>,
@@ -17548,15 +17548,15 @@ export type GraphCacheUpdaters = {
     validFrom?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliation>>, Record<string, never>>,
     validTo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliation>>, Record<string, never>>
   },
-  FederationCompetitorClubAffiliationsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsConnection>>, Record<string, never>>
+  FederationCompetitorClubAffiliationConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationConnection>>, Record<string, never>>
   },
-  FederationCompetitorClubAffiliationsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationsEdge>>, Record<string, never>>
+  FederationCompetitorClubAffiliationEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorClubAffiliationEdge>>, Record<string, never>>
   },
   FederationCompetitorComponent?: {
     competitor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponent>>, Record<string, never>>,
@@ -17565,30 +17565,30 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponent>>, Record<string, never>>,
     role?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponent>>, Record<string, never>>
   },
-  FederationCompetitorComponentsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsConnection>>, Record<string, never>>
+  FederationCompetitorComponentConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentConnection>>, Record<string, never>>
   },
-  FederationCompetitorComponentsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentsEdge>>, Record<string, never>>
+  FederationCompetitorComponentEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorComponentEdge>>, Record<string, never>>
+  },
+  FederationCompetitorConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorConnection>>, Record<string, never>>
+  },
+  FederationCompetitorEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorEdge>>, Record<string, never>>
   },
   FederationCompetitorFacetsRecord?: {
     count?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorFacetsRecord>>, Record<string, never>>,
     facet?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorFacetsRecord>>, Record<string, never>>,
     value?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorFacetsRecord>>, Record<string, never>>
-  },
-  FederationCompetitorsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsConnection>>, Record<string, never>>
-  },
-  FederationCompetitorsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorsEdge>>, Record<string, never>>
   },
   FederationCoupleAgeRule?: {
     ageGroupCode?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCoupleAgeRule>>, Record<string, never>>,
@@ -17629,6 +17629,16 @@ export type GraphCacheUpdaters = {
     venueLocationSource?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     websiteUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>
   },
+  FederationEventConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventConnection>>, Record<string, never>>
+  },
+  FederationEventEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventEdge>>, Record<string, never>>
+  },
   FederationEventFacet?: {
     years?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventFacet>>, Record<string, never>>
   },
@@ -17641,40 +17651,20 @@ export type GraphCacheUpdaters = {
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficial>>, Record<string, never>>,
     role?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficial>>, Record<string, never>>
   },
-  FederationEventOfficialsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsConnection>>, Record<string, never>>
+  FederationEventOfficialConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialConnection>>, Record<string, never>>
   },
-  FederationEventOfficialsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialsEdge>>, Record<string, never>>
+  FederationEventOfficialEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventOfficialEdge>>, Record<string, never>>
   },
   FederationEventYear?: {
     eventCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>,
     mappedEventCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>,
     year?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventYear>>, Record<string, never>>
-  },
-  FederationEventsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsConnection>>, Record<string, never>>
-  },
-  FederationEventsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEventsEdge>>, Record<string, never>>
-  },
-  FederationPeopleConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleConnection>>, Record<string, never>>
-  },
-  FederationPeopleEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleEdge>>, Record<string, never>>
   },
   FederationPeopleFacetsRecord?: {
     count?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPeopleFacetsRecord>>, Record<string, never>>,
@@ -17715,15 +17705,25 @@ export type GraphCacheUpdaters = {
     validFrom?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembership>>, Record<string, never>>,
     validTo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembership>>, Record<string, never>>
   },
-  FederationPersonClubMembershipsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsConnection>>, Record<string, never>>
+  FederationPersonClubMembershipConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipConnection>>, Record<string, never>>
   },
-  FederationPersonClubMembershipsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipsEdge>>, Record<string, never>>
+  FederationPersonClubMembershipEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonClubMembershipEdge>>, Record<string, never>>
+  },
+  FederationPersonConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonConnection>>, Record<string, never>>
+  },
+  FederationPersonEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonEdge>>, Record<string, never>>
   },
   FederationPersonLicense?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicense>>, Record<string, never>>,
@@ -17737,15 +17737,15 @@ export type GraphCacheUpdaters = {
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicense>>, Record<string, never>>,
     validUntil?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicense>>, Record<string, never>>
   },
-  FederationPersonLicensesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesConnection>>, Record<string, never>>
+  FederationPersonLicenseConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseConnection>>, Record<string, never>>
   },
-  FederationPersonLicensesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicensesEdge>>, Record<string, never>>
+  FederationPersonLicenseEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPersonLicenseEdge>>, Record<string, never>>
   },
   File?: {
     announcementAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileAnnouncementAttachmentsArgs>,
@@ -17766,15 +17766,15 @@ export type GraphCacheUpdaters = {
     url?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     userByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>
   },
-  FilesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesConnection>>, Record<string, never>>
+  FileConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FileConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FileConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FileConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FileConnection>>, Record<string, never>>
   },
-  FilesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FilesEdge>>, Record<string, never>>
+  FileEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FileEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FileEdge>>, Record<string, never>>
   },
   FormResponse?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
@@ -17785,15 +17785,15 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>,
     url?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponse>>, Record<string, never>>
   },
-  FormResponsesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesConnection>>, Record<string, never>>
+  FormResponseConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseConnection>>, Record<string, never>>
   },
-  FormResponsesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponsesEdge>>, Record<string, never>>
+  FormResponseEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseEdge>>, Record<string, never>>
   },
   IntRange?: {
     end?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRange>>, Record<string, never>>,
@@ -17823,15 +17823,15 @@ export type GraphCacheUpdaters = {
     roundId?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScore>>, Record<string, never>>,
     score?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScore>>, Record<string, never>>
   },
-  JudgeScoresConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresConnection>>, Record<string, never>>
+  JudgeScoreConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreConnection>>, Record<string, never>>
   },
-  JudgeScoresEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoresEdge>>, Record<string, never>>
+  JudgeScoreEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<JudgeScoreEdge>>, Record<string, never>>
   },
   Location?: {
     accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, LocationAccessEventsListArgs>,
@@ -17853,16 +17853,16 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Location>>, Record<string, never>>
   },
+  LocationEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationEdge>>, Record<string, never>>
+  },
   LocationImage?: {
     file?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
     fileId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
     locationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationImage>>, Record<string, never>>
-  },
-  LocationsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<LocationsEdge>>, Record<string, never>>
   },
   LogInAsPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<LogInAsPayload>>, Record<string, never>>,
@@ -17897,9 +17897,9 @@ export type GraphCacheUpdaters = {
     userByCreatedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>,
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplication>>, Record<string, never>>
   },
-  MembershipApplicationsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplicationsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplicationsEdge>>, Record<string, never>>
+  MembershipApplicationEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplicationEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<MembershipApplicationEdge>>, Record<string, never>>
   },
   MoveEventInstancePayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<MoveEventInstancePayload>>, Record<string, never>>,
@@ -17958,16 +17958,6 @@ export type GraphCacheUpdaters = {
     payment?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
     paymentId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>
-  },
-  PeopleConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleConnection>>, Record<string, never>>
-  },
-  PeopleEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PeopleEdge>>, Record<string, never>>
   },
   Person?: {
     accessCredentialsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAccessCredentialsListArgs>,
@@ -18030,6 +18020,16 @@ export type GraphCacheUpdaters = {
     wdsfId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     websiteUrl?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>
   },
+  PersonConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonConnection>>, Record<string, never>>
+  },
+  PersonEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonEdge>>, Record<string, never>>
+  },
   PersonFacetsRecord?: {
     count?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFacetsRecord>>, Record<string, never>>,
     facet?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonFacetsRecord>>, Record<string, never>>,
@@ -18091,15 +18091,15 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Ranklist>>, Record<string, never>>,
     ranklistSnapshots?: GraphCacheUpdateResolver<Maybe<WithTypename<Ranklist>>, RanklistRanklistSnapshotsArgs>
   },
-  RanklistEntriesConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesConnection>>, Record<string, never>>
+  RanklistConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistConnection>>, Record<string, never>>
   },
-  RanklistEntriesEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntriesEdge>>, Record<string, never>>
+  RanklistEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEdge>>, Record<string, never>>
   },
   RanklistEntry?: {
     competitor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntry>>, Record<string, never>>,
@@ -18110,6 +18110,16 @@ export type GraphCacheUpdaters = {
     snapshot?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntry>>, Record<string, never>>,
     snapshotId?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntry>>, Record<string, never>>
   },
+  RanklistEntryConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryConnection>>, Record<string, never>>
+  },
+  RanklistEntryEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistEntryEdge>>, Record<string, never>>
+  },
   RanklistSnapshot?: {
     asOfDate?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshot>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshot>>, Record<string, never>>,
@@ -18118,25 +18128,15 @@ export type GraphCacheUpdaters = {
     ranklistEntriesBySnapshotId?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshot>>, RanklistSnapshotRanklistEntriesBySnapshotIdArgs>,
     ranklistId?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshot>>, Record<string, never>>
   },
-  RanklistSnapshotsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsConnection>>, Record<string, never>>
+  RanklistSnapshotConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotConnection>>, Record<string, never>>
   },
-  RanklistSnapshotsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotsEdge>>, Record<string, never>>
-  },
-  RanklistsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsConnection>>, Record<string, never>>
-  },
-  RanklistsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistsEdge>>, Record<string, never>>
+  RanklistSnapshotEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<RanklistSnapshotEdge>>, Record<string, never>>
   },
   RegisterUsingInvitationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RegisterUsingInvitationPayload>>, Record<string, never>>,
@@ -18322,15 +18322,19 @@ export type GraphCacheUpdaters = {
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministrator>>, Record<string, never>>
   },
-  TenantAdministratorsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsConnection>>, Record<string, never>>
+  TenantAdministratorConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorConnection>>, Record<string, never>>
   },
-  TenantAdministratorsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorsEdge>>, Record<string, never>>
+  TenantAdministratorEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantAdministratorEdge>>, Record<string, never>>
+  },
+  TenantEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantEdge>>, Record<string, never>>
   },
   TenantLocation?: {
     accessEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantLocation>>, TenantLocationAccessEventsListArgs>,
@@ -18371,23 +18375,23 @@ export type GraphCacheUpdaters = {
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembership>>, Record<string, never>>
   },
-  TenantMembershipsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsConnection>>, Record<string, never>>
+  TenantMembershipConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipConnection>>, Record<string, never>>
   },
-  TenantMembershipsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipsEdge>>, Record<string, never>>
+  TenantMembershipEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantMembershipEdge>>, Record<string, never>>
   },
   TenantSetting?: {
     settings?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSetting>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSetting>>, Record<string, never>>
   },
-  TenantSettingsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSettingsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSettingsEdge>>, Record<string, never>>
+  TenantSettingEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSettingEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantSettingEdge>>, Record<string, never>>
   },
   TenantTrainer?: {
     createPayoutPayments?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
@@ -18414,19 +18418,15 @@ export type GraphCacheUpdaters = {
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainer>>, Record<string, never>>
   },
-  TenantTrainersConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersConnection>>, Record<string, never>>
+  TenantTrainerConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerConnection>>, Record<string, never>>
   },
-  TenantTrainersEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainersEdge>>, Record<string, never>>
-  },
-  TenantsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantsEdge>>, Record<string, never>>
+  TenantTrainerEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TenantTrainerEdge>>, Record<string, never>>
   },
   TrainerGroupAttendanceCompletion?: {
     filledInstances?: GraphCacheUpdateResolver<Maybe<WithTypename<TrainerGroupAttendanceCompletion>>, Record<string, never>>,
@@ -18452,15 +18452,15 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Transaction>>, Record<string, never>>
   },
-  TransactionsConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsConnection>>, Record<string, never>>
+  TransactionConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionConnection>>, Record<string, never>>
   },
-  TransactionsEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionsEdge>>, Record<string, never>>
+  TransactionEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionEdge>>, Record<string, never>>
   },
   UpdateAccessCredentialPayload?: {
     accessCredential?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>,
@@ -18586,6 +18586,16 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     userProxiesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserUserProxiesListArgs>
   },
+  UserConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UserConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UserConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UserConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UserConnection>>, Record<string, never>>
+  },
+  UserEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UserEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UserEdge>>, Record<string, never>>
+  },
   UserProxy?: {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
@@ -18597,16 +18607,6 @@ export type GraphCacheUpdaters = {
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     user?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>,
     userId?: GraphCacheUpdateResolver<Maybe<WithTypename<UserProxy>>, Record<string, never>>
-  },
-  UsersConnection?: {
-    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
-    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
-    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>,
-    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersConnection>>, Record<string, never>>
-  },
-  UsersEdge?: {
-    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersEdge>>, Record<string, never>>,
-    node?: GraphCacheUpdateResolver<Maybe<WithTypename<UsersEdge>>, Record<string, never>>
   },
 };
 

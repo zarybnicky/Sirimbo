@@ -624,32 +624,6 @@ enum AgeGroupsOrderBy {
   PRIMARY_KEY_DESC
 }
 
-"""A connection to a list of `Aktuality` values."""
-type AktualitiesConnection {
-  """
-  A list of edges which contains the `Aktuality` and cursor to aid in pagination.
-  """
-  edges: [AktualitiesEdge!]!
-
-  """A list of `Aktuality` objects."""
-  nodes: [Aktuality!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Aktuality` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Aktuality` edge in the connection."""
-type AktualitiesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Aktuality` at the end of the edge."""
-  node: Aktuality!
-}
-
 """Methods to use when ordering `Aktuality`."""
 enum AktualitiesOrderBy {
   AT_FOTO_ASC
@@ -718,7 +692,7 @@ type Aktuality {
 
     """The method to use when ordering `ArticleAttachment`."""
     orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ArticleAttachmentsConnection!
+  ): ArticleAttachmentConnection!
   createdAt: Datetime
   id: BigInt!
   isVisible: Boolean!
@@ -776,6 +750,32 @@ input AktualityCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `Aktuality` values."""
+type AktualityConnection {
+  """
+  A list of edges which contains the `Aktuality` and cursor to aid in pagination.
+  """
+  edges: [AktualityEdge!]!
+
+  """A list of `Aktuality` objects."""
+  nodes: [Aktuality!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Aktuality` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Aktuality` edge in the connection."""
+type AktualityEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Aktuality` at the end of the edge."""
+  node: Aktuality!
+}
+
 type Announcement {
   """Reads and enables pagination through a set of `AnnouncementAudience`."""
   announcementAudiences(
@@ -804,7 +804,7 @@ type Announcement {
 
     """The method to use when ordering `AnnouncementAudience`."""
     orderBy: [AnnouncementAudiencesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesConnection!
+  ): AnnouncementAudienceConnection!
 
   """
   Reads and enables pagination through a set of `AnnouncementAttachment`.
@@ -835,7 +835,7 @@ type Announcement {
 
     """The method to use when ordering `AnnouncementAttachment`."""
     orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAttachmentsConnection!
+  ): AnnouncementAttachmentConnection!
 
   """Reads a single `User` that is related to this `Announcement`."""
   author: User
@@ -888,11 +888,11 @@ input AnnouncementAttachmentCondition {
 }
 
 """A connection to a list of `AnnouncementAttachment` values."""
-type AnnouncementAttachmentsConnection {
+type AnnouncementAttachmentConnection {
   """
   A list of edges which contains the `AnnouncementAttachment` and cursor to aid in pagination.
   """
-  edges: [AnnouncementAttachmentsEdge!]!
+  edges: [AnnouncementAttachmentEdge!]!
 
   """A list of `AnnouncementAttachment` objects."""
   nodes: [AnnouncementAttachment!]!
@@ -907,7 +907,7 @@ type AnnouncementAttachmentsConnection {
 }
 
 """A `AnnouncementAttachment` edge in the connection."""
-type AnnouncementAttachmentsEdge {
+type AnnouncementAttachmentEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -968,25 +968,12 @@ input AnnouncementAudienceCondition {
   tenantId: BigInt
 }
 
-enum AnnouncementAudienceRole {
-  ADMINISTRATOR
-  MEMBER
-  TRAINER
-}
-
-"""An input for mutations affecting `AnnouncementAudienceTypeInputRecord`"""
-input AnnouncementAudienceTypeInputRecordInput {
-  audienceRole: AnnouncementAudienceRole
-  cohortId: BigInt
-  id: BigInt
-}
-
 """A connection to a list of `AnnouncementAudience` values."""
-type AnnouncementAudiencesConnection {
+type AnnouncementAudienceConnection {
   """
   A list of edges which contains the `AnnouncementAudience` and cursor to aid in pagination.
   """
-  edges: [AnnouncementAudiencesEdge!]!
+  edges: [AnnouncementAudienceEdge!]!
 
   """A list of `AnnouncementAudience` objects."""
   nodes: [AnnouncementAudience!]!
@@ -1001,12 +988,25 @@ type AnnouncementAudiencesConnection {
 }
 
 """A `AnnouncementAudience` edge in the connection."""
-type AnnouncementAudiencesEdge {
+type AnnouncementAudienceEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
   """The `AnnouncementAudience` at the end of the edge."""
   node: AnnouncementAudience!
+}
+
+enum AnnouncementAudienceRole {
+  ADMINISTRATOR
+  MEMBER
+  TRAINER
+}
+
+"""An input for mutations affecting `AnnouncementAudienceTypeInputRecord`"""
+input AnnouncementAudienceTypeInputRecordInput {
+  audienceRole: AnnouncementAudienceRole
+  cohortId: BigInt
+  id: BigInt
 }
 
 """Methods to use when ordering `AnnouncementAudience`."""
@@ -1065,6 +1065,32 @@ input AnnouncementCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `Announcement` values."""
+type AnnouncementConnection {
+  """
+  A list of edges which contains the `Announcement` and cursor to aid in pagination.
+  """
+  edges: [AnnouncementEdge!]!
+
+  """A list of `Announcement` objects."""
+  nodes: [Announcement!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Announcement` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Announcement` edge in the connection."""
+type AnnouncementEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Announcement` at the end of the edge."""
+  node: Announcement!
+}
+
 """
 Represents an update to a `Announcement`. Fields that are set will be updated.
 """
@@ -1098,32 +1124,6 @@ input AnnouncementTypeInputRecordInput {
   scheduledUntil: Datetime
   status: AnnouncementStatus
   title: String
-}
-
-"""A connection to a list of `Announcement` values."""
-type AnnouncementsConnection {
-  """
-  A list of edges which contains the `Announcement` and cursor to aid in pagination.
-  """
-  edges: [AnnouncementsEdge!]!
-
-  """A list of `Announcement` objects."""
-  nodes: [Announcement!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Announcement` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Announcement` edge in the connection."""
-type AnnouncementsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Announcement` at the end of the edge."""
-  node: Announcement!
 }
 
 """Methods to use when ordering `Announcement`."""
@@ -1185,7 +1185,7 @@ type ArchiveCohortPayload {
   cohortEdge(
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CohortsEdge
+  ): CohortEdge
 }
 
 type ArticleAttachment {
@@ -1222,11 +1222,11 @@ input ArticleAttachmentCondition {
 }
 
 """A connection to a list of `ArticleAttachment` values."""
-type ArticleAttachmentsConnection {
+type ArticleAttachmentConnection {
   """
   A list of edges which contains the `ArticleAttachment` and cursor to aid in pagination.
   """
-  edges: [ArticleAttachmentsEdge!]!
+  edges: [ArticleAttachmentEdge!]!
 
   """A list of `ArticleAttachment` objects."""
   nodes: [ArticleAttachment!]!
@@ -1241,7 +1241,7 @@ type ArticleAttachmentsConnection {
 }
 
 """A `ArticleAttachment` edge in the connection."""
-type ArticleAttachmentsEdge {
+type ArticleAttachmentEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -1356,7 +1356,7 @@ type Category {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
 
   """
   Reads and enables pagination through a set of `FederationCompetitorCategoryProgress`.
@@ -1389,7 +1389,7 @@ type Category {
     The method to use when ordering `FederationCompetitorCategoryProgress`.
     """
     orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorCategoryProgressesConnection!
+  ): FederationCompetitorCategoryProgressConnection!
   competitorType: CompetitorType!
   discipline: String!
   genderGroup: String!
@@ -1423,7 +1423,7 @@ type Category {
 
     """The method to use when ordering `Ranklist`."""
     orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistsConnection!
+  ): RanklistConnection!
   series: String!
 }
 
@@ -1507,7 +1507,7 @@ type Cohort {
 
     """The method to use when ordering `AnnouncementAudience`."""
     orderBy: [AnnouncementAudiencesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesConnection!
+  ): AnnouncementAudienceConnection!
 
   """Reads a single `CohortGroup` that is related to this `Cohort`."""
   cohortGroup: CohortGroup
@@ -1578,7 +1578,7 @@ type Cohort {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -1684,6 +1684,15 @@ input CohortCondition {
   tenantId: BigInt
 }
 
+"""A `Cohort` edge in the connection."""
+type CohortEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Cohort` at the end of the edge."""
+  node: Cohort!
+}
+
 type CohortGroup {
   """Reads and enables pagination through a set of `Cohort`."""
   cohortsList(
@@ -1734,11 +1743,11 @@ input CohortGroupCondition {
 }
 
 """A connection to a list of `CohortGroup` values."""
-type CohortGroupsConnection {
+type CohortGroupConnection {
   """
   A list of edges which contains the `CohortGroup` and cursor to aid in pagination.
   """
-  edges: [CohortGroupsEdge!]!
+  edges: [CohortGroupEdge!]!
 
   """A list of `CohortGroup` objects."""
   nodes: [CohortGroup!]!
@@ -1751,7 +1760,7 @@ type CohortGroupsConnection {
 }
 
 """A `CohortGroup` edge in the connection."""
-type CohortGroupsEdge {
+type CohortGroupEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2019,15 +2028,6 @@ enum CohortSubscriptionsOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A `Cohort` edge in the connection."""
-type CohortsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Cohort` at the end of the edge."""
-  node: Cohort!
-}
-
 """Methods to use when ordering `Cohort`."""
 enum CohortsOrderBy {
   COHORT_GROUP_ID_ASC
@@ -2095,7 +2095,7 @@ type Competition {
 
     """The method to use when ordering `CompetitionEntry`."""
     orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionEntriesConnection!
+  ): CompetitionEntryConnection!
 
   """Reads and enables pagination through a set of `CompetitionEntry`."""
   entriesList(
@@ -2154,7 +2154,7 @@ type Competition {
 
     """The method to use when ordering `CompetitionOfficial`."""
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionOfficialsConnection!
+  ): CompetitionOfficialConnection!
   participantsTotal: Int
   registrationFee: BigFloat
 
@@ -2185,7 +2185,7 @@ type Competition {
 
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionResultsConnection!
+  ): CompetitionResultConnection!
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
   resultsList(
@@ -2276,6 +2276,23 @@ input CompetitionCondition {
   status: FederationEventStatus
 }
 
+"""A connection to a list of `Competition` values."""
+type CompetitionConnection {
+  """
+  A list of edges which contains the `Competition` and cursor to aid in pagination.
+  """
+  edges: [CompetitionEdge!]!
+
+  """A list of `Competition` objects."""
+  nodes: [Competition!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Competition` you could get from the connection."""
+  totalCount: Int!
+}
+
 input CompetitionDateCondition {
   """Inclusive event or competition start date."""
   since: Date
@@ -2284,32 +2301,13 @@ input CompetitionDateCondition {
   until: Date
 }
 
-"""A connection to a list of `CompetitionEntry` values."""
-type CompetitionEntriesConnection {
-  """
-  A list of edges which contains the `CompetitionEntry` and cursor to aid in pagination.
-  """
-  edges: [CompetitionEntriesEdge!]!
-
-  """A list of `CompetitionEntry` objects."""
-  nodes: [CompetitionEntry!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `CompetitionEntry` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `CompetitionEntry` edge in the connection."""
-type CompetitionEntriesEdge {
+"""A `Competition` edge in the connection."""
+type CompetitionEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `CompetitionEntry` at the end of the edge."""
-  node: CompetitionEntry!
+  """The `Competition` at the end of the edge."""
+  node: Competition!
 }
 
 """Methods to use when ordering `CompetitionEntry`."""
@@ -2364,6 +2362,34 @@ input CompetitionEntryCondition {
   participant: CompetitionParticipantCondition
 }
 
+"""A connection to a list of `CompetitionEntry` values."""
+type CompetitionEntryConnection {
+  """
+  A list of edges which contains the `CompetitionEntry` and cursor to aid in pagination.
+  """
+  edges: [CompetitionEntryEdge!]!
+
+  """A list of `CompetitionEntry` objects."""
+  nodes: [CompetitionEntry!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionEntry` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CompetitionEntry` edge in the connection."""
+type CompetitionEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionEntry` at the end of the edge."""
+  node: CompetitionEntry!
+}
+
 type CompetitionOfficial {
   """
   Reads a single `Competition` that is related to this `CompetitionOfficial`.
@@ -2403,11 +2429,11 @@ input CompetitionOfficialCondition {
 }
 
 """A connection to a list of `CompetitionOfficial` values."""
-type CompetitionOfficialsConnection {
+type CompetitionOfficialConnection {
   """
   A list of edges which contains the `CompetitionOfficial` and cursor to aid in pagination.
   """
-  edges: [CompetitionOfficialsEdge!]!
+  edges: [CompetitionOfficialEdge!]!
 
   """A list of `CompetitionOfficial` objects."""
   nodes: [CompetitionOfficial!]!
@@ -2422,7 +2448,7 @@ type CompetitionOfficialsConnection {
 }
 
 """A `CompetitionOfficial` edge in the connection."""
-type CompetitionOfficialsEdge {
+type CompetitionOfficialEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2531,11 +2557,11 @@ input CompetitionResultCondition {
 }
 
 """A connection to a list of `CompetitionResult` values."""
-type CompetitionResultsConnection {
+type CompetitionResultConnection {
   """
   A list of edges which contains the `CompetitionResult` and cursor to aid in pagination.
   """
-  edges: [CompetitionResultsEdge!]!
+  edges: [CompetitionResultEdge!]!
 
   """A list of `CompetitionResult` objects."""
   nodes: [CompetitionResult!]!
@@ -2550,7 +2576,7 @@ type CompetitionResultsConnection {
 }
 
 """A `CompetitionResult` edge in the connection."""
-type CompetitionResultsEdge {
+type CompetitionResultEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2707,6 +2733,25 @@ input CompetitionRoundCondition {
   scoringMethod: ScoringMethod
 }
 
+"""A connection to a list of `CompetitionRound` values."""
+type CompetitionRoundConnection {
+  """
+  A list of edges which contains the `CompetitionRound` and cursor to aid in pagination.
+  """
+  edges: [CompetitionRoundEdge!]!
+
+  """A list of `CompetitionRound` objects."""
+  nodes: [CompetitionRound!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CompetitionRound` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
 type CompetitionRoundDance {
   """
   Reads a single `Dance` that is related to this `CompetitionRoundDance`.
@@ -2748,7 +2793,7 @@ type CompetitionRoundDance {
 
     """The method to use when ordering `JudgeScore`."""
     orderBy: [JudgeScoresOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JudgeScoresConnection!
+  ): JudgeScoreConnection!
 
   """
   Reads a single `CompetitionRound` that is related to this `CompetitionRoundDance`.
@@ -2776,11 +2821,11 @@ input CompetitionRoundDanceCondition {
 }
 
 """A connection to a list of `CompetitionRoundDance` values."""
-type CompetitionRoundDancesConnection {
+type CompetitionRoundDanceConnection {
   """
   A list of edges which contains the `CompetitionRoundDance` and cursor to aid in pagination.
   """
-  edges: [CompetitionRoundDancesEdge!]!
+  edges: [CompetitionRoundDanceEdge!]!
 
   """A list of `CompetitionRoundDance` objects."""
   nodes: [CompetitionRoundDance!]!
@@ -2795,7 +2840,7 @@ type CompetitionRoundDancesConnection {
 }
 
 """A `CompetitionRoundDance` edge in the connection."""
-type CompetitionRoundDancesEdge {
+type CompetitionRoundDanceEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2816,6 +2861,15 @@ enum CompetitionRoundDancesOrderBy {
   PRIMARY_KEY_DESC
   ROUND_ID_ASC
   ROUND_ID_DESC
+}
+
+"""A `CompetitionRound` edge in the connection."""
+type CompetitionRoundEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CompetitionRound` at the end of the edge."""
+  node: CompetitionRound!
 }
 
 type CompetitionRoundJudge {
@@ -2854,11 +2908,11 @@ input CompetitionRoundJudgeCondition {
 }
 
 """A connection to a list of `CompetitionRoundJudge` values."""
-type CompetitionRoundJudgesConnection {
+type CompetitionRoundJudgeConnection {
   """
   A list of edges which contains the `CompetitionRoundJudge` and cursor to aid in pagination.
   """
-  edges: [CompetitionRoundJudgesEdge!]!
+  edges: [CompetitionRoundJudgeEdge!]!
 
   """A list of `CompetitionRoundJudge` objects."""
   nodes: [CompetitionRoundJudge!]!
@@ -2873,7 +2927,7 @@ type CompetitionRoundJudgesConnection {
 }
 
 """A `CompetitionRoundJudge` edge in the connection."""
-type CompetitionRoundJudgesEdge {
+type CompetitionRoundJudgeEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2943,11 +2997,11 @@ input CompetitionRoundResultCondition {
 }
 
 """A connection to a list of `CompetitionRoundResult` values."""
-type CompetitionRoundResultsConnection {
+type CompetitionRoundResultConnection {
   """
   A list of edges which contains the `CompetitionRoundResult` and cursor to aid in pagination.
   """
-  edges: [CompetitionRoundResultsEdge!]!
+  edges: [CompetitionRoundResultEdge!]!
 
   """A list of `CompetitionRoundResult` objects."""
   nodes: [CompetitionRoundResult!]!
@@ -2962,7 +3016,7 @@ type CompetitionRoundResultsConnection {
 }
 
 """A `CompetitionRoundResult` edge in the connection."""
-type CompetitionRoundResultsEdge {
+type CompetitionRoundResultEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -2987,34 +3041,6 @@ enum CompetitionRoundResultsOrderBy {
   QUALIFIED_NEXT_DESC
   ROUND_ID_ASC
   ROUND_ID_DESC
-}
-
-"""A connection to a list of `CompetitionRound` values."""
-type CompetitionRoundsConnection {
-  """
-  A list of edges which contains the `CompetitionRound` and cursor to aid in pagination.
-  """
-  edges: [CompetitionRoundsEdge!]!
-
-  """A list of `CompetitionRound` objects."""
-  nodes: [CompetitionRound!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `CompetitionRound` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `CompetitionRound` edge in the connection."""
-type CompetitionRoundsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `CompetitionRound` at the end of the edge."""
-  node: CompetitionRound!
 }
 
 """Methods to use when ordering `CompetitionRound`."""
@@ -3049,32 +3075,6 @@ enum CompetitionType {
   SUPER_LEAGUE
   TOP_LEVEL
   UNKNOWN
-}
-
-"""A connection to a list of `Competition` values."""
-type CompetitionsConnection {
-  """
-  A list of edges which contains the `Competition` and cursor to aid in pagination.
-  """
-  edges: [CompetitionsEdge!]!
-
-  """A list of `Competition` objects."""
-  nodes: [Competition!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Competition` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Competition` edge in the connection."""
-type CompetitionsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Competition` at the end of the edge."""
-  node: Competition!
 }
 
 """Methods to use when ordering `Competition`."""
@@ -3169,7 +3169,7 @@ type ConfirmMembershipApplicationPayload {
   personEdge(
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
+  ): PersonEdge
 }
 
 type Couple {
@@ -3205,7 +3205,7 @@ type Couple {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -3253,7 +3253,7 @@ type Couple {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
 
   """Reads and enables pagination through a set of `FederationCompetitor`."""
   federationCompetitors(
@@ -3283,7 +3283,7 @@ type Couple {
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
-  ): FederationCompetitorsConnection!
+  ): FederationCompetitorConnection!
 
   """Reads and enables pagination through a set of `RanklistEntry`."""
   federationRanklistEntries(
@@ -3312,7 +3312,7 @@ type Couple {
 
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistEntriesConnection!
+  ): RanklistEntryConnection!
   id: BigInt!
 
   """Reads a single `Person` that is related to this `Couple`."""
@@ -3482,11 +3482,11 @@ input CrawlerFetchJobCondition {
 }
 
 """A connection to a list of `CrawlerFetchJob` values."""
-type CrawlerFetchJobsConnection {
+type CrawlerFetchJobConnection {
   """
   A list of edges which contains the `CrawlerFetchJob` and cursor to aid in pagination.
   """
-  edges: [CrawlerFetchJobsEdge!]!
+  edges: [CrawlerFetchJobEdge!]!
 
   """A list of `CrawlerFetchJob` objects."""
   nodes: [CrawlerFetchJob!]!
@@ -3501,7 +3501,7 @@ type CrawlerFetchJobsConnection {
 }
 
 """A `CrawlerFetchJob` edge in the connection."""
-type CrawlerFetchJobsEdge {
+type CrawlerFetchJobEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -3574,11 +3574,11 @@ input CrawlerIncrementalRangeCondition {
 }
 
 """A connection to a list of `CrawlerIncrementalRange` values."""
-type CrawlerIncrementalRangesConnection {
+type CrawlerIncrementalRangeConnection {
   """
   A list of edges which contains the `CrawlerIncrementalRange` and cursor to aid in pagination.
   """
-  edges: [CrawlerIncrementalRangesEdge!]!
+  edges: [CrawlerIncrementalRangeEdge!]!
 
   """A list of `CrawlerIncrementalRange` objects."""
   nodes: [CrawlerIncrementalRange!]!
@@ -3593,7 +3593,7 @@ type CrawlerIncrementalRangesConnection {
 }
 
 """A `CrawlerIncrementalRange` edge in the connection."""
-type CrawlerIncrementalRangesEdge {
+type CrawlerIncrementalRangeEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -3646,11 +3646,11 @@ input CrawlerRateLimitRuleCondition {
 }
 
 """A connection to a list of `CrawlerRateLimitRule` values."""
-type CrawlerRateLimitRulesConnection {
+type CrawlerRateLimitRuleConnection {
   """
   A list of edges which contains the `CrawlerRateLimitRule` and cursor to aid in pagination.
   """
-  edges: [CrawlerRateLimitRulesEdge!]!
+  edges: [CrawlerRateLimitRuleEdge!]!
 
   """A list of `CrawlerRateLimitRule` objects."""
   nodes: [CrawlerRateLimitRule!]!
@@ -3665,7 +3665,7 @@ type CrawlerRateLimitRulesConnection {
 }
 
 """A `CrawlerRateLimitRule` edge in the connection."""
-type CrawlerRateLimitRulesEdge {
+type CrawlerRateLimitRuleEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -3738,7 +3738,7 @@ type CrawlerResponse {
 
     """The method to use when ordering `CrawlerTarget`."""
     orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerTargetsConnection!
+  ): CrawlerTargetConnection!
 
   """Reads and enables pagination through a set of `CrawlerTarget`."""
   targetsWithLatestResponse(
@@ -3767,7 +3767,7 @@ type CrawlerResponse {
 
     """The method to use when ordering `CrawlerTarget`."""
     orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerTargetsConnection!
+  ): CrawlerTargetConnection!
   url: String!
 }
 
@@ -3802,7 +3802,7 @@ type CrawlerResponseCache {
 
     """The method to use when ordering `CrawlerResponse`."""
     orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerResponsesConnection!
+  ): CrawlerResponseConnection!
 }
 
 """
@@ -3818,11 +3818,11 @@ input CrawlerResponseCacheCondition {
 }
 
 """A connection to a list of `CrawlerResponseCache` values."""
-type CrawlerResponseCachesConnection {
+type CrawlerResponseCacheConnection {
   """
   A list of edges which contains the `CrawlerResponseCache` and cursor to aid in pagination.
   """
-  edges: [CrawlerResponseCachesEdge!]!
+  edges: [CrawlerResponseCacheEdge!]!
 
   """A list of `CrawlerResponseCache` objects."""
   nodes: [CrawlerResponseCache!]!
@@ -3837,7 +3837,7 @@ type CrawlerResponseCachesConnection {
 }
 
 """A `CrawlerResponseCache` edge in the connection."""
-type CrawlerResponseCachesEdge {
+type CrawlerResponseCacheEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -3893,11 +3893,11 @@ input CrawlerResponseCondition {
 }
 
 """A connection to a list of `CrawlerResponse` values."""
-type CrawlerResponsesConnection {
+type CrawlerResponseConnection {
   """
   A list of edges which contains the `CrawlerResponse` and cursor to aid in pagination.
   """
-  edges: [CrawlerResponsesEdge!]!
+  edges: [CrawlerResponseEdge!]!
 
   """A list of `CrawlerResponse` objects."""
   nodes: [CrawlerResponse!]!
@@ -3912,7 +3912,7 @@ type CrawlerResponsesConnection {
 }
 
 """A `CrawlerResponse` edge in the connection."""
-type CrawlerResponsesEdge {
+type CrawlerResponseEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -3999,7 +3999,7 @@ type CrawlerTarget {
 
     """The method to use when ordering `CrawlerResponse`."""
     orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerResponsesConnection!
+  ): CrawlerResponseConnection!
 }
 
 """
@@ -4057,6 +4057,32 @@ input CrawlerTargetCondition {
 
   """Checks for equality with the object’s `processStatus` field."""
   processStatus: ProcessStatus
+}
+
+"""A connection to a list of `CrawlerTarget` values."""
+type CrawlerTargetConnection {
+  """
+  A list of edges which contains the `CrawlerTarget` and cursor to aid in pagination.
+  """
+  edges: [CrawlerTargetEdge!]!
+
+  """A list of `CrawlerTarget` objects."""
+  nodes: [CrawlerTarget!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CrawlerTarget` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CrawlerTarget` edge in the connection."""
+type CrawlerTargetEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerTarget` at the end of the edge."""
+  node: CrawlerTarget!
 }
 
 type CrawlerTargetFailure {
@@ -4128,6 +4154,34 @@ input CrawlerTargetFailureCondition {
   url: String
 }
 
+"""A connection to a list of `CrawlerTargetFailure` values."""
+type CrawlerTargetFailureConnection {
+  """
+  A list of edges which contains the `CrawlerTargetFailure` and cursor to aid in pagination.
+  """
+  edges: [CrawlerTargetFailureEdge!]!
+
+  """A list of `CrawlerTargetFailure` objects."""
+  nodes: [CrawlerTargetFailure!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CrawlerTargetFailure` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `CrawlerTargetFailure` edge in the connection."""
+type CrawlerTargetFailureEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CrawlerTargetFailure` at the end of the edge."""
+  node: CrawlerTargetFailure!
+}
+
 type CrawlerTargetFailureGroup {
   count: Int
   errorFingerprint: String
@@ -4182,34 +4236,6 @@ enum CrawlerTargetFailureGroupsOrderBy {
   KIND_ASC
   KIND_DESC
   NATURAL
-}
-
-"""A connection to a list of `CrawlerTargetFailure` values."""
-type CrawlerTargetFailuresConnection {
-  """
-  A list of edges which contains the `CrawlerTargetFailure` and cursor to aid in pagination.
-  """
-  edges: [CrawlerTargetFailuresEdge!]!
-
-  """A list of `CrawlerTargetFailure` objects."""
-  nodes: [CrawlerTargetFailure!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `CrawlerTargetFailure` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `CrawlerTargetFailure` edge in the connection."""
-type CrawlerTargetFailuresEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `CrawlerTargetFailure` at the end of the edge."""
-  node: CrawlerTargetFailure!
 }
 
 """Methods to use when ordering `CrawlerTargetFailure`."""
@@ -4331,32 +4357,6 @@ input CrawlerTargetSummaryCondition {
 
   """Checks for equality with the object’s `total` field."""
   total: Int
-}
-
-"""A connection to a list of `CrawlerTarget` values."""
-type CrawlerTargetsConnection {
-  """
-  A list of edges which contains the `CrawlerTarget` and cursor to aid in pagination.
-  """
-  edges: [CrawlerTargetsEdge!]!
-
-  """A list of `CrawlerTarget` objects."""
-  nodes: [CrawlerTarget!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `CrawlerTarget` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `CrawlerTarget` edge in the connection."""
-type CrawlerTargetsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `CrawlerTarget` at the end of the edge."""
-  node: CrawlerTarget!
 }
 
 """Methods to use when ordering `CrawlerTarget`."""
@@ -4519,7 +4519,7 @@ type CreateCreditTransactionForPersonPayload {
   transactionEdge(
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TransactionsEdge
+  ): TransactionEdge
 }
 
 """All input for the create `EventSeries` mutation."""
@@ -4653,7 +4653,7 @@ type CreatePersonPayload {
   personEdge(
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
+  ): PersonEdge
 }
 
 """All input for the create `ScoreboardManualAdjustment` mutation."""
@@ -4707,7 +4707,7 @@ type CreateTenantAdministratorPayload {
   tenantAdministratorEdge(
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantAdministratorsEdge
+  ): TenantAdministratorEdge
 }
 
 """All input for the create `TenantMembership` mutation."""
@@ -4737,7 +4737,7 @@ type CreateTenantMembershipPayload {
   tenantMembershipEdge(
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantMembershipsEdge
+  ): TenantMembershipEdge
 }
 
 """All input for the create `TenantTrainer` mutation."""
@@ -4767,7 +4767,7 @@ type CreateTenantTrainerPayload {
   tenantTrainerEdge(
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantTrainersEdge
+  ): TenantTrainerEdge
 }
 
 """All input for the create `UserProxy` mutation."""
@@ -4880,7 +4880,7 @@ type DanceProgram {
 
     """The method to use when ordering `CompetitionRound`."""
     orderBy: [CompetitionRoundsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundsConnection!
+  ): CompetitionRoundConnection!
   createdAt: Datetime!
 
   """Reads and enables pagination through a set of `DanceProgramDance`."""
@@ -4968,7 +4968,7 @@ type DanceProgramDance {
 
     """The method to use when ordering `CompetitionRoundDance`."""
     orderBy: [CompetitionRoundDancesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundDancesConnection!
+  ): CompetitionRoundDanceConnection!
 }
 
 """
@@ -5142,7 +5142,7 @@ type DeleteAktualityPayload {
   aktualityEdge(
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AktualitiesEdge
+  ): AktualityEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -5170,7 +5170,7 @@ type DeleteAnnouncementPayload {
   announcementEdge(
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementsEdge
+  ): AnnouncementEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -5419,7 +5419,7 @@ type DeletePersonPayload {
   personEdge(
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
+  ): PersonEdge
 }
 
 """All input for the `deleteScoreboardManualAdjustment` mutation."""
@@ -5469,7 +5469,7 @@ type DeleteTenantAdministratorPayload {
   tenantAdministratorEdge(
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantAdministratorsEdge
+  ): TenantAdministratorEdge
 }
 
 """All input for the `deleteTenantMembership` mutation."""
@@ -5497,7 +5497,7 @@ type DeleteTenantMembershipPayload {
   tenantMembershipEdge(
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantMembershipsEdge
+  ): TenantMembershipEdge
 }
 
 """All input for the `deleteTenantTrainer` mutation."""
@@ -5525,7 +5525,7 @@ type DeleteTenantTrainerPayload {
   tenantTrainerEdge(
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantTrainersEdge
+  ): TenantTrainerEdge
 }
 
 """All input for the `deleteTransaction` mutation."""
@@ -5553,7 +5553,7 @@ type DeleteTransactionPayload {
   transactionEdge(
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TransactionsEdge
+  ): TransactionEdge
 }
 
 """All input for the `deleteUserProxy` mutation."""
@@ -5704,7 +5704,7 @@ type EventInstance {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -5918,6 +5918,15 @@ input EventInstanceCondition {
   updatedAt: Datetime
 }
 
+"""A `EventInstance` edge in the connection."""
+type EventInstanceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EventInstance` at the end of the edge."""
+  node: EventInstance!
+}
+
 type EventInstanceFacetsRecord {
   count: Int
   facet: String
@@ -6006,7 +6015,7 @@ type EventInstanceRegistration {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -6131,24 +6140,12 @@ input EventInstanceRegistrationCondition {
   updatedAt: Datetime
 }
 
-type EventInstanceRegistrationInfo {
-  my: Boolean
-  people: Int
-  registrations: Int
-  remainingCapacity: Int
-}
-
-enum EventInstanceRegistrationStatus {
-  ACTIVE
-  CANCELLED
-}
-
 """A connection to a list of `EventInstanceRegistration` values."""
-type EventInstanceRegistrationsConnection {
+type EventInstanceRegistrationConnection {
   """
   A list of edges which contains the `EventInstanceRegistration` and cursor to aid in pagination.
   """
-  edges: [EventInstanceRegistrationsEdge!]!
+  edges: [EventInstanceRegistrationEdge!]!
 
   """A list of `EventInstanceRegistration` objects."""
   nodes: [EventInstanceRegistration!]!
@@ -6163,12 +6160,24 @@ type EventInstanceRegistrationsConnection {
 }
 
 """A `EventInstanceRegistration` edge in the connection."""
-type EventInstanceRegistrationsEdge {
+type EventInstanceRegistrationEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
   """The `EventInstanceRegistration` at the end of the edge."""
   node: EventInstanceRegistration!
+}
+
+type EventInstanceRegistrationInfo {
+  my: Boolean
+  people: Int
+  registrations: Int
+  remainingCapacity: Int
+}
+
+enum EventInstanceRegistrationStatus {
+  ACTIVE
+  CANCELLED
 }
 
 """Methods to use when ordering `EventInstanceRegistration`."""
@@ -6362,15 +6371,6 @@ enum EventInstanceTrainersOrderBy {
   UPDATED_AT_DESC
 }
 
-"""A `EventInstance` edge in the connection."""
-type EventInstancesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `EventInstance` at the end of the edge."""
-  node: EventInstance!
-}
-
 """Methods to use when ordering `EventInstance`."""
 enum EventInstancesOrderBy {
   CAPACITY_ASC
@@ -6474,7 +6474,7 @@ input EventLessonDemandCondition {
 }
 
 """A `EventLessonDemand` edge in the connection."""
-type EventLessonDemandsEdge {
+type EventLessonDemandEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -6687,7 +6687,7 @@ type Federation {
 
     """The method to use when ordering `FederationClub`."""
     orderBy: [FederationClubsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationClubsConnection!
+  ): FederationClubConnection!
   code: String!
 
   """Reads and enables pagination through a set of `Competition`."""
@@ -6717,7 +6717,7 @@ type Federation {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
   competitorFacetsList(
     ageGroups: [String]
     classes: [String]
@@ -6761,7 +6761,7 @@ type Federation {
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
-  ): FederationCompetitorsConnection!
+  ): FederationCompetitorConnection!
   eventFacets(includeCancelled: Boolean): FederationEventFacet
 
   """Reads and enables pagination through a set of `FederationEvent`."""
@@ -6791,7 +6791,7 @@ type Federation {
 
     """The method to use when ordering `FederationEvent`."""
     orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventsConnection!
+  ): FederationEventConnection!
 
   """
   Reads and enables pagination through a set of `FederationPersonLicense`.
@@ -6822,7 +6822,7 @@ type Federation {
 
     """The method to use when ordering `FederationPersonLicense`."""
     orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonLicensesConnection!
+  ): FederationPersonLicenseConnection!
   name: String!
 
   """Reads and enables pagination through a set of `FederationPerson`."""
@@ -6852,7 +6852,7 @@ type Federation {
 
     """The method to use when ordering `FederationPerson`."""
     orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPeopleConnection!
+  ): FederationPersonConnection!
   peopleFacetsList(
     ageGroups: [String]
 
@@ -6893,7 +6893,7 @@ type Federation {
 
     """The method to use when ordering `Ranklist`."""
     orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistsConnection!
+  ): RanklistConnection!
 }
 
 type FederationClub {
@@ -6928,7 +6928,7 @@ type FederationClub {
 
     """The method to use when ordering `FederationCompetitorClubAffiliation`."""
     orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorClubAffiliationsConnection!
+  ): FederationCompetitorClubAffiliationConnection!
   country: String
   createdAt: Datetime!
 
@@ -6959,7 +6959,7 @@ type FederationClub {
 
     """The method to use when ordering `FederationEvent`."""
     orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventsConnection!
+  ): FederationEventConnection!
   externalId: String!
   federation: String!
 
@@ -6997,7 +6997,7 @@ type FederationClub {
 
     """The method to use when ordering `FederationPersonClubMembership`."""
     orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonClubMembershipsConnection!
+  ): FederationPersonClubMembershipConnection!
 }
 
 """
@@ -7028,11 +7028,11 @@ input FederationClubCondition {
 }
 
 """A connection to a list of `FederationClub` values."""
-type FederationClubsConnection {
+type FederationClubConnection {
   """
   A list of edges which contains the `FederationClub` and cursor to aid in pagination.
   """
-  edges: [FederationClubsEdge!]!
+  edges: [FederationClubEdge!]!
 
   """A list of `FederationClub` objects."""
   nodes: [FederationClub!]!
@@ -7045,7 +7045,7 @@ type FederationClubsConnection {
 }
 
 """A `FederationClub` edge in the connection."""
-type FederationClubsEdge {
+type FederationClubEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -7132,7 +7132,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `FederationCompetitorClubAffiliation`."""
     orderBy: [FederationCompetitorClubAffiliationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorClubAffiliationsConnection!
+  ): FederationCompetitorClubAffiliationConnection!
 
   """Reads and enables pagination through a set of `CompetitionEntry`."""
   competitionEntries(
@@ -7161,7 +7161,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `CompetitionEntry`."""
     orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionEntriesConnection!
+  ): CompetitionEntryConnection!
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
   competitionResults(
@@ -7190,7 +7190,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionResultsConnection!
+  ): CompetitionResultConnection!
 
   """Reads and enables pagination through a set of `Competition`."""
   competitions(
@@ -7219,7 +7219,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
   competitorType: CompetitorType!
 
   """
@@ -7251,7 +7251,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `FederationCompetitorComponent`."""
     orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorComponentsConnection!
+  ): FederationCompetitorComponentConnection!
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesList(
@@ -7326,7 +7326,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistEntriesConnection!
+  ): RanklistEntryConnection!
 
   """
   Reads and enables pagination through a set of `CompetitionRoundResult`.
@@ -7357,7 +7357,7 @@ type FederationCompetitor {
 
     """The method to use when ordering `CompetitionRoundResult`."""
     orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundResultsConnection!
+  ): CompetitionRoundResultConnection!
 }
 
 type FederationCompetitorCategoryProgress {
@@ -7401,11 +7401,11 @@ input FederationCompetitorCategoryProgressCondition {
 """
 A connection to a list of `FederationCompetitorCategoryProgress` values.
 """
-type FederationCompetitorCategoryProgressesConnection {
+type FederationCompetitorCategoryProgressConnection {
   """
   A list of edges which contains the `FederationCompetitorCategoryProgress` and cursor to aid in pagination.
   """
-  edges: [FederationCompetitorCategoryProgressesEdge!]!
+  edges: [FederationCompetitorCategoryProgressEdge!]!
 
   """A list of `FederationCompetitorCategoryProgress` objects."""
   nodes: [FederationCompetitorCategoryProgress!]!
@@ -7420,7 +7420,7 @@ type FederationCompetitorCategoryProgressesConnection {
 }
 
 """A `FederationCompetitorCategoryProgress` edge in the connection."""
-type FederationCompetitorCategoryProgressesEdge {
+type FederationCompetitorCategoryProgressEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -7482,11 +7482,11 @@ input FederationCompetitorClubAffiliationCondition {
 """
 A connection to a list of `FederationCompetitorClubAffiliation` values.
 """
-type FederationCompetitorClubAffiliationsConnection {
+type FederationCompetitorClubAffiliationConnection {
   """
   A list of edges which contains the `FederationCompetitorClubAffiliation` and cursor to aid in pagination.
   """
-  edges: [FederationCompetitorClubAffiliationsEdge!]!
+  edges: [FederationCompetitorClubAffiliationEdge!]!
 
   """A list of `FederationCompetitorClubAffiliation` objects."""
   nodes: [FederationCompetitorClubAffiliation!]!
@@ -7501,7 +7501,7 @@ type FederationCompetitorClubAffiliationsConnection {
 }
 
 """A `FederationCompetitorClubAffiliation` edge in the connection."""
-type FederationCompetitorClubAffiliationsEdge {
+type FederationCompetitorClubAffiliationEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -7555,11 +7555,11 @@ input FederationCompetitorComponentCondition {
 }
 
 """A connection to a list of `FederationCompetitorComponent` values."""
-type FederationCompetitorComponentsConnection {
+type FederationCompetitorComponentConnection {
   """
   A list of edges which contains the `FederationCompetitorComponent` and cursor to aid in pagination.
   """
-  edges: [FederationCompetitorComponentsEdge!]!
+  edges: [FederationCompetitorComponentEdge!]!
 
   """A list of `FederationCompetitorComponent` objects."""
   nodes: [FederationCompetitorComponent!]!
@@ -7574,7 +7574,7 @@ type FederationCompetitorComponentsConnection {
 }
 
 """A `FederationCompetitorComponent` edge in the connection."""
-type FederationCompetitorComponentsEdge {
+type FederationCompetitorComponentEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -7632,18 +7632,12 @@ input FederationCompetitorCondition {
   search: String
 }
 
-type FederationCompetitorFacetsRecord {
-  count: Int
-  facet: String
-  value: String
-}
-
 """A connection to a list of `FederationCompetitor` values."""
-type FederationCompetitorsConnection {
+type FederationCompetitorConnection {
   """
   A list of edges which contains the `FederationCompetitor` and cursor to aid in pagination.
   """
-  edges: [FederationCompetitorsEdge!]!
+  edges: [FederationCompetitorEdge!]!
 
   """A list of `FederationCompetitor` objects."""
   nodes: [FederationCompetitor!]!
@@ -7658,12 +7652,18 @@ type FederationCompetitorsConnection {
 }
 
 """A `FederationCompetitor` edge in the connection."""
-type FederationCompetitorsEdge {
+type FederationCompetitorEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
   """The `FederationCompetitor` at the end of the edge."""
   node: FederationCompetitor!
+}
+
+type FederationCompetitorFacetsRecord {
+  count: Int
+  facet: String
+  value: String
 }
 
 """Methods to use when ordering `FederationCompetitor`."""
@@ -7769,7 +7769,7 @@ type FederationEvent {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
 
   """Reads and enables pagination through a set of `Competition`."""
   competitionsList(
@@ -7832,7 +7832,7 @@ type FederationEvent {
 
     """The method to use when ordering `FederationEventOfficial`."""
     orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventOfficialsConnection!
+  ): FederationEventOfficialConnection!
 
   """
   Reads a single `FederationClub` that is related to this `FederationEvent`.
@@ -7938,6 +7938,34 @@ input FederationEventCondition {
   websiteUrl: String
 }
 
+"""A connection to a list of `FederationEvent` values."""
+type FederationEventConnection {
+  """
+  A list of edges which contains the `FederationEvent` and cursor to aid in pagination.
+  """
+  edges: [FederationEventEdge!]!
+
+  """A list of `FederationEvent` objects."""
+  nodes: [FederationEvent!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationEvent` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationEvent` edge in the connection."""
+type FederationEventEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationEvent` at the end of the edge."""
+  node: FederationEvent!
+}
+
 type FederationEventFacet {
   years: [FederationEventYear]!
 }
@@ -7982,11 +8010,11 @@ input FederationEventOfficialCondition {
 }
 
 """A connection to a list of `FederationEventOfficial` values."""
-type FederationEventOfficialsConnection {
+type FederationEventOfficialConnection {
   """
   A list of edges which contains the `FederationEventOfficial` and cursor to aid in pagination.
   """
-  edges: [FederationEventOfficialsEdge!]!
+  edges: [FederationEventOfficialEdge!]!
 
   """A list of `FederationEventOfficial` objects."""
   nodes: [FederationEventOfficial!]!
@@ -8001,7 +8029,7 @@ type FederationEventOfficialsConnection {
 }
 
 """A `FederationEventOfficial` edge in the connection."""
-type FederationEventOfficialsEdge {
+type FederationEventOfficialEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -8039,34 +8067,6 @@ type FederationEventYear {
   eventCount: Int!
   mappedEventCount: Int!
   year: Int!
-}
-
-"""A connection to a list of `FederationEvent` values."""
-type FederationEventsConnection {
-  """
-  A list of edges which contains the `FederationEvent` and cursor to aid in pagination.
-  """
-  edges: [FederationEventsEdge!]!
-
-  """A list of `FederationEvent` objects."""
-  nodes: [FederationEvent!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `FederationEvent` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `FederationEvent` edge in the connection."""
-type FederationEventsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `FederationEvent` at the end of the edge."""
-  node: FederationEvent!
 }
 
 """Methods to use when ordering `FederationEvent`."""
@@ -8122,34 +8122,6 @@ enum FederationEventsOrderBy {
   VENUE_LOCATION_SOURCE_DESC
   WEBSITE_URL_ASC
   WEBSITE_URL_DESC
-}
-
-"""A connection to a list of `FederationPerson` values."""
-type FederationPeopleConnection {
-  """
-  A list of edges which contains the `FederationPerson` and cursor to aid in pagination.
-  """
-  edges: [FederationPeopleEdge!]!
-
-  """A list of `FederationPerson` objects."""
-  nodes: [FederationPerson!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `FederationPerson` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `FederationPerson` edge in the connection."""
-type FederationPeopleEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `FederationPerson` at the end of the edge."""
-  node: FederationPerson!
 }
 
 type FederationPeopleFacetsRecord {
@@ -8232,7 +8204,7 @@ type FederationPerson {
 
     """The method to use when ordering `FederationPersonClubMembership`."""
     orderBy: [FederationPersonClubMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonClubMembershipsConnection!
+  ): FederationPersonClubMembershipConnection!
 
   """Reads and enables pagination through a set of `CompetitionOfficial`."""
   competitionOfficialAssignments(
@@ -8261,7 +8233,7 @@ type FederationPerson {
 
     """The method to use when ordering `CompetitionOfficial`."""
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionOfficialsConnection!
+  ): CompetitionOfficialConnection!
 
   """
   Reads and enables pagination through a set of `FederationCompetitorComponent`.
@@ -8292,7 +8264,7 @@ type FederationPerson {
 
     """The method to use when ordering `FederationCompetitorComponent`."""
     orderBy: [FederationCompetitorComponentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorComponentsConnection!
+  ): FederationCompetitorComponentConnection!
   createdAt: Datetime!
   dob: Date
 
@@ -8325,7 +8297,7 @@ type FederationPerson {
 
     """The method to use when ordering `FederationEventOfficial`."""
     orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventOfficialsConnection!
+  ): FederationEventOfficialConnection!
   externalId: BigInt!
   federation: String!
 
@@ -8367,7 +8339,7 @@ type FederationPerson {
 
     """The method to use when ordering `FederationPersonLicense`."""
     orderBy: [FederationPersonLicensesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPersonLicensesConnection!
+  ): FederationPersonLicenseConnection!
   medicalCheckupExpiration: Date
   medicalCheckupType: String
   nationality: String
@@ -8416,7 +8388,7 @@ type FederationPerson {
 
     """The method to use when ordering `CompetitionRoundJudge`."""
     orderBy: [CompetitionRoundJudgesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionRoundJudgesConnection!
+  ): CompetitionRoundJudgeConnection!
   searchName: String
 }
 
@@ -8455,11 +8427,11 @@ input FederationPersonClubMembershipCondition {
 }
 
 """A connection to a list of `FederationPersonClubMembership` values."""
-type FederationPersonClubMembershipsConnection {
+type FederationPersonClubMembershipConnection {
   """
   A list of edges which contains the `FederationPersonClubMembership` and cursor to aid in pagination.
   """
-  edges: [FederationPersonClubMembershipsEdge!]!
+  edges: [FederationPersonClubMembershipEdge!]!
 
   """A list of `FederationPersonClubMembership` objects."""
   nodes: [FederationPersonClubMembership!]!
@@ -8474,7 +8446,7 @@ type FederationPersonClubMembershipsConnection {
 }
 
 """A `FederationPersonClubMembership` edge in the connection."""
-type FederationPersonClubMembershipsEdge {
+type FederationPersonClubMembershipEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -8554,6 +8526,34 @@ input FederationPersonCondition {
   searchName: String
 }
 
+"""A connection to a list of `FederationPerson` values."""
+type FederationPersonConnection {
+  """
+  A list of edges which contains the `FederationPerson` and cursor to aid in pagination.
+  """
+  edges: [FederationPersonEdge!]!
+
+  """A list of `FederationPerson` objects."""
+  nodes: [FederationPerson!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `FederationPerson` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `FederationPerson` edge in the connection."""
+type FederationPersonEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FederationPerson` at the end of the edge."""
+  node: FederationPerson!
+}
+
 type FederationPersonLicense {
   createdAt: Datetime!
   discipline: PersonLicenseDiscipline!
@@ -8606,11 +8606,11 @@ input FederationPersonLicenseCondition {
 }
 
 """A connection to a list of `FederationPersonLicense` values."""
-type FederationPersonLicensesConnection {
+type FederationPersonLicenseConnection {
   """
   A list of edges which contains the `FederationPersonLicense` and cursor to aid in pagination.
   """
-  edges: [FederationPersonLicensesEdge!]!
+  edges: [FederationPersonLicenseEdge!]!
 
   """A list of `FederationPersonLicense` objects."""
   nodes: [FederationPersonLicense!]!
@@ -8625,7 +8625,7 @@ type FederationPersonLicensesConnection {
 }
 
 """A `FederationPersonLicense` edge in the connection."""
-type FederationPersonLicensesEdge {
+type FederationPersonLicenseEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -8705,7 +8705,7 @@ type File {
 
     """The method to use when ordering `AnnouncementAttachment`."""
     orderBy: [AnnouncementAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAttachmentsConnection!
+  ): AnnouncementAttachmentConnection!
 
   """Reads and enables pagination through a set of `ArticleAttachment`."""
   articleAttachments(
@@ -8734,7 +8734,7 @@ type File {
 
     """The method to use when ordering `ArticleAttachment`."""
     orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ArticleAttachmentsConnection!
+  ): ArticleAttachmentConnection!
   byteSize: BigInt
   contentType: String
   createdAt: Datetime!
@@ -8828,11 +8828,11 @@ input FileCondition {
 }
 
 """A connection to a list of `File` values."""
-type FilesConnection {
+type FileConnection {
   """
   A list of edges which contains the `File` and cursor to aid in pagination.
   """
-  edges: [FilesEdge!]!
+  edges: [FileEdge!]!
 
   """A list of `File` objects."""
   nodes: [File!]!
@@ -8845,7 +8845,7 @@ type FilesConnection {
 }
 
 """A `File` edge in the connection."""
-type FilesEdge {
+type FileEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -8922,11 +8922,11 @@ input FormResponseCondition {
 }
 
 """A connection to a list of `FormResponse` values."""
-type FormResponsesConnection {
+type FormResponseConnection {
   """
   A list of edges which contains the `FormResponse` and cursor to aid in pagination.
   """
-  edges: [FormResponsesEdge!]!
+  edges: [FormResponseEdge!]!
 
   """A list of `FormResponse` objects."""
   nodes: [FormResponse!]!
@@ -8939,7 +8939,7 @@ type FormResponsesConnection {
 }
 
 """A `FormResponse` edge in the connection."""
-type FormResponsesEdge {
+type FormResponseEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -9111,11 +9111,11 @@ input JudgeScoreCondition {
 }
 
 """A connection to a list of `JudgeScore` values."""
-type JudgeScoresConnection {
+type JudgeScoreConnection {
   """
   A list of edges which contains the `JudgeScore` and cursor to aid in pagination.
   """
-  edges: [JudgeScoresEdge!]!
+  edges: [JudgeScoreEdge!]!
 
   """A list of `JudgeScore` objects."""
   nodes: [JudgeScore!]!
@@ -9128,7 +9128,7 @@ type JudgeScoresConnection {
 }
 
 """A `JudgeScore` edge in the connection."""
-type JudgeScoresEdge {
+type JudgeScoreEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -9296,6 +9296,15 @@ input LocationDetailsInputRecordInput {
   showInLists: Boolean
 }
 
+"""A `Location` edge in the connection."""
+type LocationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Location` at the end of the edge."""
+  node: Location!
+}
+
 type LocationImage {
   """Reads a single `File` that is related to this `LocationImage`."""
   file: File
@@ -9369,15 +9378,6 @@ input LocationPatch {
   showInLists: Boolean
   tenantId: BigInt
   updatedAt: Datetime
-}
-
-"""A `Location` edge in the connection."""
-type LocationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Location` at the end of the edge."""
-  node: Location!
 }
 
 """Methods to use when ordering `Location`."""
@@ -9556,6 +9556,15 @@ input MembershipApplicationCondition {
   wdsfId: Int
 }
 
+"""A `MembershipApplication` edge in the connection."""
+type MembershipApplicationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MembershipApplication` at the end of the edge."""
+  node: MembershipApplication!
+}
+
 """An input for mutations affecting `MembershipApplication`"""
 input MembershipApplicationInput {
   bio: String
@@ -9608,15 +9617,6 @@ input MembershipApplicationPatch {
   tenantId: BigInt
   updatedAt: Datetime
   wdsfId: Int
-}
-
-"""A `MembershipApplication` edge in the connection."""
-type MembershipApplicationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MembershipApplication` at the end of the edge."""
-  node: MembershipApplication!
 }
 
 """Methods to use when ordering `MembershipApplication`."""
@@ -9698,7 +9698,7 @@ type MoveEventInstancePayload {
   eventInstanceEdge(
     """The method to use when ordering `EventInstance`."""
     orderBy: [EventInstancesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventInstancesEdge
+  ): EventInstanceEdge
 }
 
 """
@@ -10384,7 +10384,7 @@ type Payment {
 
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TransactionsConnection!
+  ): TransactionConnection!
   updatedAt: Datetime!
   variableSymbol: String
 }
@@ -10598,32 +10598,6 @@ enum PaymentsOrderBy {
   VARIABLE_SYMBOL_DESC
 }
 
-"""A connection to a list of `Person` values."""
-type PeopleConnection {
-  """
-  A list of edges which contains the `Person` and cursor to aid in pagination.
-  """
-  edges: [PeopleEdge!]!
-
-  """A list of `Person` objects."""
-  nodes: [Person!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Person` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Person` edge in the connection."""
-type PeopleEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Person` at the end of the edge."""
-  node: Person!
-}
-
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
   ADDRESS_ASC
@@ -10833,7 +10807,7 @@ type Person {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -10915,7 +10889,7 @@ type Person {
     The method to use when ordering `FederationCompetitorCategoryProgress`.
     """
     orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationCompetitorCategoryProgressesConnection!
+  ): FederationCompetitorCategoryProgressConnection!
 
   """Reads and enables pagination through a set of `Competition`."""
   federationCompetitions(
@@ -10944,7 +10918,7 @@ type Person {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection!
+  ): CompetitionConnection!
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(
@@ -10973,7 +10947,7 @@ type Person {
 
     """The method to use when ordering `FederationPerson`."""
     orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPeopleConnection!
+  ): FederationPersonConnection!
 
   """Reads and enables pagination through a set of `RanklistEntry`."""
   federationRanklistEntries(
@@ -11002,7 +10976,7 @@ type Person {
 
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistEntriesConnection!
+  ): RanklistEntryConnection!
   firstName: String!
   gender: GenderType!
   hasAccess: Boolean
@@ -11121,7 +11095,7 @@ type Person {
 
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantAdministratorsConnection!
+  ): TenantAdministratorConnection!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
@@ -11167,7 +11141,7 @@ type Person {
 
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantMembershipsConnection!
+  ): TenantMembershipConnection!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
@@ -11213,7 +11187,7 @@ type Person {
 
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantTrainersConnection!
+  ): TenantTrainerConnection!
 
   """Reads and enables pagination through a set of `TenantTrainer`."""
   tenantTrainersList(
@@ -11337,6 +11311,32 @@ input PersonCondition {
 
   """Checks for equality with the object’s `websiteUrl` field."""
   websiteUrl: String
+}
+
+"""A connection to a list of `Person` values."""
+type PersonConnection {
+  """
+  A list of edges which contains the `Person` and cursor to aid in pagination.
+  """
+  edges: [PersonEdge!]!
+
+  """A list of `Person` objects."""
+  nodes: [Person!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Person` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Person` edge in the connection."""
+type PersonEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Person` at the end of the edge."""
+  node: Person!
 }
 
 type PersonFacetsRecord {
@@ -11793,7 +11793,7 @@ type Query {
 
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AktualitiesConnection
+  ): AktualityConnection
 
   """Get a single `Aktuality`."""
   aktuality(id: BigInt!): Aktuality
@@ -11828,7 +11828,7 @@ type Query {
 
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementsConnection
+  ): AnnouncementConnection
 
   """Reads a set of `Category`."""
   categoriesList(
@@ -11886,7 +11886,7 @@ type Query {
 
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CohortGroupsConnection
+  ): CohortGroupConnection
 
   """Get a single `CohortMembership`."""
   cohortMembership(id: BigInt!): CohortMembership
@@ -11947,7 +11947,7 @@ type Query {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionsConnection
+  ): CompetitionConnection
 
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
@@ -11979,7 +11979,7 @@ type Query {
 
     """The method to use when ordering `CrawlerFetchJob`."""
     orderBy: [CrawlerFetchJobsOrderBy!] = [NATURAL]
-  ): CrawlerFetchJobsConnection
+  ): CrawlerFetchJobConnection
 
   """Get a single `CrawlerIncrementalRange`."""
   crawlerIncrementalRange(federation: String!, kind: String!): CrawlerIncrementalRange
@@ -12013,7 +12013,7 @@ type Query {
 
     """The method to use when ordering `CrawlerIncrementalRange`."""
     orderBy: [CrawlerIncrementalRangesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerIncrementalRangesConnection
+  ): CrawlerIncrementalRangeConnection
 
   """Get a single `CrawlerRateLimitRule`."""
   crawlerRateLimitRule(host: String!): CrawlerRateLimitRule
@@ -12045,7 +12045,7 @@ type Query {
 
     """The method to use when ordering `CrawlerRateLimitRule`."""
     orderBy: [CrawlerRateLimitRulesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerRateLimitRulesConnection
+  ): CrawlerRateLimitRuleConnection
 
   """Get a single `CrawlerResponse`."""
   crawlerResponse(id: BigInt!): CrawlerResponse
@@ -12080,7 +12080,7 @@ type Query {
 
     """The method to use when ordering `CrawlerResponseCache`."""
     orderBy: [CrawlerResponseCachesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerResponseCachesConnection
+  ): CrawlerResponseCacheConnection
 
   """Reads and enables pagination through a set of `CrawlerResponse`."""
   crawlerResponses(
@@ -12109,7 +12109,7 @@ type Query {
 
     """The method to use when ordering `CrawlerResponse`."""
     orderBy: [CrawlerResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerResponsesConnection
+  ): CrawlerResponseConnection
 
   """Get a single `CrawlerTarget`."""
   crawlerTarget(id: BigInt!): CrawlerTarget
@@ -12161,7 +12161,7 @@ type Query {
 
     """The method to use when ordering `CrawlerTargetFailure`."""
     orderBy: [CrawlerTargetFailuresOrderBy!] = [NATURAL]
-  ): CrawlerTargetFailuresConnection
+  ): CrawlerTargetFailureConnection
 
   """Reads a set of `CrawlerTargetSummary`."""
   crawlerTargetSummariesList(
@@ -12207,7 +12207,7 @@ type Query {
 
     """The method to use when ordering `CrawlerTarget`."""
     orderBy: [CrawlerTargetsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CrawlerTargetsConnection
+  ): CrawlerTargetConnection
   currentClaims: JSON
 
   """Get a single `Dance`."""
@@ -12327,7 +12327,7 @@ type Query {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection
+  ): EventInstanceRegistrationConnection
 
   """Reads a set of `EventInstanceRegistration`."""
   eventInstanceRegistrationsList(
@@ -12437,7 +12437,7 @@ type Query {
 
     """The method to use when ordering `FederationClub`."""
     orderBy: [FederationClubsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationClubsConnection
+  ): FederationClubConnection
 
   """Get a single `FederationCompetitor`."""
   federationCompetitor(id: String!): FederationCompetitor
@@ -12473,7 +12473,7 @@ type Query {
     """The method to use when ordering `FederationCompetitor`."""
     orderBy: [FederationCompetitorsOrderBy!] = [PRIMARY_KEY_ASC]
     orderByCategory: CompetitorCategoryOrder
-  ): FederationCompetitorsConnection
+  ): FederationCompetitorConnection
 
   """Get a single `FederationEvent`."""
   federationEvent(id: BigInt!): FederationEvent
@@ -12508,7 +12508,7 @@ type Query {
 
     """The method to use when ordering `FederationEvent`."""
     orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationEventsConnection
+  ): FederationEventConnection
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(
@@ -12537,7 +12537,7 @@ type Query {
 
     """The method to use when ordering `FederationPerson`."""
     orderBy: [FederationPeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FederationPeopleConnection
+  ): FederationPersonConnection
 
   """Get a single `FederationPerson`."""
   federationPerson(id: String!): FederationPerson
@@ -12610,7 +12610,7 @@ type Query {
 
     """The method to use when ordering `File`."""
     orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FilesConnection
+  ): FileConnection
 
   """Get a single `FormResponse`."""
   formResponse(id: BigInt!): FormResponse
@@ -12642,7 +12642,7 @@ type Query {
 
     """The method to use when ordering `FormResponse`."""
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FormResponsesConnection
+  ): FormResponseConnection
   getCurrentTenant: Tenant
   getCurrentUser(versionId: String): User
   invitationInfo(token: UUID): String
@@ -12727,7 +12727,7 @@ type Query {
 
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PeopleConnection
+  ): PersonConnection
   peopleWithoutAccessOrInvitationList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -12803,7 +12803,7 @@ type Query {
 
     """The method to use when ordering `Ranklist`."""
     orderBy: [RanklistsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistsConnection
+  ): RanklistConnection
   refreshJwt: JwtToken
   scoreboardEntriesList(
     cohortId: BigInt
@@ -12920,7 +12920,7 @@ type Query {
 
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TransactionsConnection
+  ): TransactionConnection
 
   """Get a single `User`."""
   user(id: BigInt!): User
@@ -12955,7 +12955,7 @@ type Query {
 
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersConnection
+  ): UserConnection
 }
 
 type Ranklist {
@@ -12996,7 +12996,7 @@ type Ranklist {
 
     """The method to use when ordering `RanklistSnapshot`."""
     orderBy: [RanklistSnapshotsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistSnapshotsConnection!
+  ): RanklistSnapshotConnection!
 }
 
 """
@@ -13017,30 +13017,30 @@ input RanklistCondition {
   name: String
 }
 
-"""A connection to a list of `RanklistEntry` values."""
-type RanklistEntriesConnection {
+"""A connection to a list of `Ranklist` values."""
+type RanklistConnection {
   """
-  A list of edges which contains the `RanklistEntry` and cursor to aid in pagination.
+  A list of edges which contains the `Ranklist` and cursor to aid in pagination.
   """
-  edges: [RanklistEntriesEdge!]!
+  edges: [RanklistEdge!]!
 
-  """A list of `RanklistEntry` objects."""
-  nodes: [RanklistEntry!]!
+  """A list of `Ranklist` objects."""
+  nodes: [Ranklist!]!
 
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """The count of *all* `RanklistEntry` you could get from the connection."""
+  """The count of *all* `Ranklist` you could get from the connection."""
   totalCount: Int!
 }
 
-"""A `RanklistEntry` edge in the connection."""
-type RanklistEntriesEdge {
+"""A `Ranklist` edge in the connection."""
+type RanklistEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
-  """The `RanklistEntry` at the end of the edge."""
-  node: RanklistEntry!
+  """The `Ranklist` at the end of the edge."""
+  node: Ranklist!
 }
 
 """Methods to use when ordering `RanklistEntry`."""
@@ -13099,6 +13099,32 @@ input RanklistEntryCondition {
   snapshotId: BigInt
 }
 
+"""A connection to a list of `RanklistEntry` values."""
+type RanklistEntryConnection {
+  """
+  A list of edges which contains the `RanklistEntry` and cursor to aid in pagination.
+  """
+  edges: [RanklistEntryEdge!]!
+
+  """A list of `RanklistEntry` objects."""
+  nodes: [RanklistEntry!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `RanklistEntry` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `RanklistEntry` edge in the connection."""
+type RanklistEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RanklistEntry` at the end of the edge."""
+  node: RanklistEntry!
+}
+
 type RanklistSnapshot {
   asOfDate: Date!
   id: BigInt!
@@ -13134,7 +13160,7 @@ type RanklistSnapshot {
 
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): RanklistEntriesConnection!
+  ): RanklistEntryConnection!
   ranklistId: BigInt!
 }
 
@@ -13157,11 +13183,11 @@ input RanklistSnapshotCondition {
 }
 
 """A connection to a list of `RanklistSnapshot` values."""
-type RanklistSnapshotsConnection {
+type RanklistSnapshotConnection {
   """
   A list of edges which contains the `RanklistSnapshot` and cursor to aid in pagination.
   """
-  edges: [RanklistSnapshotsEdge!]!
+  edges: [RanklistSnapshotEdge!]!
 
   """A list of `RanklistSnapshot` objects."""
   nodes: [RanklistSnapshot!]!
@@ -13176,7 +13202,7 @@ type RanklistSnapshotsConnection {
 }
 
 """A `RanklistSnapshot` edge in the connection."""
-type RanklistSnapshotsEdge {
+type RanklistSnapshotEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
@@ -13197,32 +13223,6 @@ enum RanklistSnapshotsOrderBy {
   PRIMARY_KEY_DESC
   RANKLIST_ID_ASC
   RANKLIST_ID_DESC
-}
-
-"""A connection to a list of `Ranklist` values."""
-type RanklistsConnection {
-  """
-  A list of edges which contains the `Ranklist` and cursor to aid in pagination.
-  """
-  edges: [RanklistsEdge!]!
-
-  """A list of `Ranklist` objects."""
-  nodes: [Ranklist!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Ranklist` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Ranklist` edge in the connection."""
-type RanklistsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Ranklist` at the end of the edge."""
-  node: Ranklist!
 }
 
 """Methods to use when ordering `Ranklist`."""
@@ -13308,7 +13308,7 @@ type RejectMembershipApplicationPayload {
   membershipApplicationEdge(
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): MembershipApplicationsEdge
+  ): MembershipApplicationEdge
 }
 
 enum RelationshipStatus {
@@ -13649,7 +13649,7 @@ type SetEventInstanceRegistrationPayload {
   eventInstanceRegistrationEdge(
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsEdge
+  ): EventInstanceRegistrationEdge
 }
 
 """All input for the `setEventSharing` mutation."""
@@ -13698,7 +13698,7 @@ type SetLessonDemandPayload {
   eventLessonDemandEdge(
     """The method to use when ordering `EventLessonDemand`."""
     orderBy: [EventLessonDemandsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventLessonDemandsEdge
+  ): EventLessonDemandEdge
 }
 
 """All input for the `submitForm` mutation."""
@@ -13819,7 +13819,7 @@ type SystemAdminUpdateTenantPayload {
   tenantEdge(
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantsEdge
+  ): TenantEdge
 }
 
 type Tenant {
@@ -13902,7 +13902,7 @@ type Tenant {
 
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AktualitiesConnection!
+  ): AktualityConnection!
 
   """Reads and enables pagination through a set of `AnnouncementAudience`."""
   announcementAudiences(
@@ -13931,7 +13931,7 @@ type Tenant {
 
     """The method to use when ordering `AnnouncementAudience`."""
     orderBy: [AnnouncementAudiencesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementAudiencesConnection!
+  ): AnnouncementAudienceConnection!
 
   """Reads and enables pagination through a set of `Announcement`."""
   announcements(
@@ -13960,7 +13960,7 @@ type Tenant {
 
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementsConnection!
+  ): AnnouncementConnection!
   bankAccount: String!
 
   """Reads and enables pagination through a set of `CohortGroup`."""
@@ -13990,7 +13990,7 @@ type Tenant {
 
     """The method to use when ordering `CohortGroup`."""
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CohortGroupsConnection!
+  ): CohortGroupConnection!
 
   """Reads and enables pagination through a set of `CohortMembership`."""
   cohortMembershipsList(
@@ -14082,7 +14082,7 @@ type Tenant {
 
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsConnection!
+  ): EventInstanceRegistrationConnection!
 
   """
   Reads and enables pagination through a set of `EventInstanceRegistration`.
@@ -14229,7 +14229,7 @@ type Tenant {
 
     """The method to use when ordering `File`."""
     orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FilesConnection!
+  ): FileConnection!
 
   """Reads and enables pagination through a set of `FormResponse`."""
   formResponses(
@@ -14258,7 +14258,7 @@ type Tenant {
 
     """The method to use when ordering `FormResponse`."""
     orderBy: [FormResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FormResponsesConnection!
+  ): FormResponseConnection!
   id: BigInt!
 
   """Reads and enables pagination through a set of `Location`."""
@@ -14428,7 +14428,7 @@ type Tenant {
 
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantAdministratorsConnection!
+  ): TenantAdministratorConnection!
 
   """Reads and enables pagination through a set of `TenantAdministrator`."""
   tenantAdministratorsList(
@@ -14491,7 +14491,7 @@ type Tenant {
 
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantMembershipsConnection!
+  ): TenantMembershipConnection!
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMembershipsList(
@@ -14540,7 +14540,7 @@ type Tenant {
 
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TenantTrainersConnection!
+  ): TenantTrainerConnection!
 
   """Reads and enables pagination through a set of `TenantTrainer`."""
   tenantTrainersList(
@@ -14586,7 +14586,7 @@ type Tenant {
 
     """The method to use when ordering `Transaction`."""
     orderBy: [TransactionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TransactionsConnection!
+  ): TransactionConnection!
 
   """Reads and enables pagination through a set of `User`."""
   users(
@@ -14615,7 +14615,7 @@ type Tenant {
 
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): UsersConnection!
+  ): UserConnection!
 }
 
 type TenantAdministrator {
@@ -14671,6 +14671,34 @@ input TenantAdministratorCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `TenantAdministrator` values."""
+type TenantAdministratorConnection {
+  """
+  A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination.
+  """
+  edges: [TenantAdministratorEdge!]!
+
+  """A list of `TenantAdministrator` objects."""
+  nodes: [TenantAdministrator!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantAdministrator` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantAdministrator` edge in the connection."""
+type TenantAdministratorEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantAdministrator` at the end of the edge."""
+  node: TenantAdministrator!
+}
+
 """An input for mutations affecting `TenantAdministrator`"""
 input TenantAdministratorInput {
   createdAt: Datetime
@@ -14697,34 +14725,6 @@ input TenantAdministratorPatch {
   tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
-}
-
-"""A connection to a list of `TenantAdministrator` values."""
-type TenantAdministratorsConnection {
-  """
-  A list of edges which contains the `TenantAdministrator` and cursor to aid in pagination.
-  """
-  edges: [TenantAdministratorsEdge!]!
-
-  """A list of `TenantAdministrator` objects."""
-  nodes: [TenantAdministrator!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `TenantAdministrator` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `TenantAdministrator` edge in the connection."""
-type TenantAdministratorsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantAdministrator` at the end of the edge."""
-  node: TenantAdministrator!
 }
 
 """Methods to use when ordering `TenantAdministrator`."""
@@ -14781,6 +14781,15 @@ input TenantCondition {
 
   """Checks for equality with the object’s `origins` field."""
   origins: [String]
+}
+
+"""A `Tenant` edge in the connection."""
+type TenantEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Tenant` at the end of the edge."""
+  node: Tenant!
 }
 
 type TenantLocation {
@@ -15022,6 +15031,34 @@ input TenantMembershipCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `TenantMembership` values."""
+type TenantMembershipConnection {
+  """
+  A list of edges which contains the `TenantMembership` and cursor to aid in pagination.
+  """
+  edges: [TenantMembershipEdge!]!
+
+  """A list of `TenantMembership` objects."""
+  nodes: [TenantMembership!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantMembership` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantMembership` edge in the connection."""
+type TenantMembershipEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantMembership` at the end of the edge."""
+  node: TenantMembership!
+}
+
 """An input for mutations affecting `TenantMembership`"""
 input TenantMembershipInput {
   createdAt: Datetime
@@ -15044,34 +15081,6 @@ input TenantMembershipPatch {
   tenantId: BigInt
   until: Datetime
   updatedAt: Datetime
-}
-
-"""A connection to a list of `TenantMembership` values."""
-type TenantMembershipsConnection {
-  """
-  A list of edges which contains the `TenantMembership` and cursor to aid in pagination.
-  """
-  edges: [TenantMembershipsEdge!]!
-
-  """A list of `TenantMembership` objects."""
-  nodes: [TenantMembership!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `TenantMembership` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `TenantMembership` edge in the connection."""
-type TenantMembershipsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantMembership` at the end of the edge."""
-  node: TenantMembership!
 }
 
 """Methods to use when ordering `TenantMembership`."""
@@ -15116,21 +15125,21 @@ type TenantSetting {
   tenantId: BigInt!
 }
 
+"""A `TenantSetting` edge in the connection."""
+type TenantSettingEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantSetting` at the end of the edge."""
+  node: TenantSetting!
+}
+
 """
 Represents an update to a `TenantSetting`. Fields that are set will be updated.
 """
 input TenantSettingPatch {
   settings: JSON
   tenantId: BigInt
-}
-
-"""A `TenantSetting` edge in the connection."""
-type TenantSettingsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantSetting` at the end of the edge."""
-  node: TenantSetting!
 }
 
 """Methods to use when ordering `TenantSetting`."""
@@ -15241,6 +15250,32 @@ input TenantTrainerCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `TenantTrainer` values."""
+type TenantTrainerConnection {
+  """
+  A list of edges which contains the `TenantTrainer` and cursor to aid in pagination.
+  """
+  edges: [TenantTrainerEdge!]!
+
+  """A list of `TenantTrainer` objects."""
+  nodes: [TenantTrainer!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TenantTrainer` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `TenantTrainer` edge in the connection."""
+type TenantTrainerEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantTrainer` at the end of the edge."""
+  node: TenantTrainer!
+}
+
 """An input for mutations affecting `TenantTrainer`"""
 input TenantTrainerInput {
   createPayoutPayments: Boolean
@@ -15291,32 +15326,6 @@ input TenantTrainerPatch {
   updatedAt: Datetime
 }
 
-"""A connection to a list of `TenantTrainer` values."""
-type TenantTrainersConnection {
-  """
-  A list of edges which contains the `TenantTrainer` and cursor to aid in pagination.
-  """
-  edges: [TenantTrainersEdge!]!
-
-  """A list of `TenantTrainer` objects."""
-  nodes: [TenantTrainer!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `TenantTrainer` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `TenantTrainer` edge in the connection."""
-type TenantTrainersEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TenantTrainer` at the end of the edge."""
-  node: TenantTrainer!
-}
-
 """Methods to use when ordering `TenantTrainer`."""
 enum TenantTrainersOrderBy {
   CREATED_AT_ASC
@@ -15364,15 +15373,6 @@ enum TenantTrainersOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-}
-
-"""A `Tenant` edge in the connection."""
-type TenantsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Tenant` at the end of the edge."""
-  node: Tenant!
 }
 
 """Methods to use when ordering `Tenant`."""
@@ -15482,20 +15482,12 @@ input TransactionCondition {
   updatedAt: Datetime
 }
 
-enum TransactionSource {
-  AUTO_BANK
-  AUTO_CREDIT
-  MANUAL_BANK
-  MANUAL_CASH
-  MANUAL_CREDIT
-}
-
 """A connection to a list of `Transaction` values."""
-type TransactionsConnection {
+type TransactionConnection {
   """
   A list of edges which contains the `Transaction` and cursor to aid in pagination.
   """
-  edges: [TransactionsEdge!]!
+  edges: [TransactionEdge!]!
 
   """A list of `Transaction` objects."""
   nodes: [Transaction!]!
@@ -15508,12 +15500,20 @@ type TransactionsConnection {
 }
 
 """A `Transaction` edge in the connection."""
-type TransactionsEdge {
+type TransactionEdge {
   """A cursor for use in pagination."""
   cursor: Cursor
 
   """The `Transaction` at the end of the edge."""
   node: Transaction!
+}
+
+enum TransactionSource {
+  AUTO_BANK
+  AUTO_CREDIT
+  MANUAL_BANK
+  MANUAL_CASH
+  MANUAL_CREDIT
 }
 
 """Methods to use when ordering `Transaction`."""
@@ -15597,7 +15597,7 @@ type UpdateAnnouncementPayload {
   announcementEdge(
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementsEdge
+  ): AnnouncementEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -15631,7 +15631,7 @@ type UpdateAttendancePayload {
   eventInstanceRegistrationEdge(
     """The method to use when ordering `EventInstanceRegistration`."""
     orderBy: [EventInstanceRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventInstanceRegistrationsEdge
+  ): EventInstanceRegistrationEdge
 }
 
 """All input for the `updateCohort` mutation."""
@@ -15886,7 +15886,7 @@ type UpdatePersonPayload {
   personEdge(
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PeopleEdge
+  ): PersonEdge
 }
 
 """All input for the `updateScoreboardManualAdjustment` mutation."""
@@ -15946,7 +15946,7 @@ type UpdateTenantAdministratorPayload {
   tenantAdministratorEdge(
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantAdministratorsEdge
+  ): TenantAdministratorEdge
 }
 
 """All input for the `updateTenant` mutation."""
@@ -15994,7 +15994,7 @@ type UpdateTenantMembershipPayload {
   tenantMembershipEdge(
     """The method to use when ordering `TenantMembership`."""
     orderBy: [TenantMembershipsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantMembershipsEdge
+  ): TenantMembershipEdge
 }
 
 """The output of our update `Tenant` mutation."""
@@ -16039,7 +16039,7 @@ type UpdateTenantSettingPayload {
   tenantSettingEdge(
     """The method to use when ordering `TenantSetting`."""
     orderBy: [TenantSettingsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantSettingsEdge
+  ): TenantSettingEdge
 }
 
 """All input for the `updateTenantSettingsKey` mutation."""
@@ -16066,7 +16066,7 @@ type UpdateTenantSettingsKeyPayload {
   tenantSettingEdge(
     """The method to use when ordering `TenantSetting`."""
     orderBy: [TenantSettingsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantSettingsEdge
+  ): TenantSettingEdge
 }
 
 """All input for the `updateTenantTrainer` mutation."""
@@ -16099,7 +16099,7 @@ type UpdateTenantTrainerPayload {
   tenantTrainerEdge(
     """The method to use when ordering `TenantTrainer`."""
     orderBy: [TenantTrainersOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TenantTrainersEdge
+  ): TenantTrainerEdge
 }
 
 """All input for the `updateUserProxy` mutation."""
@@ -16150,7 +16150,7 @@ type UpsertAnnouncementPayload {
   announcementEdge(
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AnnouncementsEdge
+  ): AnnouncementEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -16179,7 +16179,7 @@ type UpsertArticlePayload {
   aktualityEdge(
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): AktualitiesEdge
+  ): AktualityEdge
 
   """
   The exact same `clientMutationId` that was provided in the mutation input,
@@ -16213,7 +16213,7 @@ type UpsertLocationPayload {
   locationEdge(
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): LocationsEdge
+  ): LocationEdge
 }
 
 type User {
@@ -16261,7 +16261,7 @@ type User {
 
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AktualitiesConnection!
+  ): AktualityConnection!
 
   """Reads and enables pagination through a set of `Announcement`."""
   authoredAnnouncements(
@@ -16290,7 +16290,7 @@ type User {
 
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AnnouncementsConnection!
+  ): AnnouncementConnection!
   createdAt: Datetime!
 
   """Reads and enables pagination through a set of `File`."""
@@ -16320,7 +16320,7 @@ type User {
 
     """The method to use when ordering `File`."""
     orderBy: [FilesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): FilesConnection!
+  ): FileConnection!
   id: BigInt!
   lastActiveAt: Datetime
   lastLogin: Datetime
@@ -16422,6 +16422,32 @@ input UserCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `User` values."""
+type UserConnection {
+  """
+  A list of edges which contains the `User` and cursor to aid in pagination.
+  """
+  edges: [UserEdge!]!
+
+  """A list of `User` objects."""
+  nodes: [User!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `User` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `User` edge in the connection."""
+type UserEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `User` at the end of the edge."""
+  node: User!
+}
+
 """Methods to use when ordering `UserProxy`."""
 enum UserProxiesOrderBy {
   CREATED_AT_ASC
@@ -16514,32 +16540,6 @@ input UserProxyPatch {
   until: Datetime
   updatedAt: Datetime
   userId: BigInt
-}
-
-"""A connection to a list of `User` values."""
-type UsersConnection {
-  """
-  A list of edges which contains the `User` and cursor to aid in pagination.
-  """
-  edges: [UsersEdge!]!
-
-  """A list of `User` objects."""
-  nodes: [User!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `User` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `User` edge in the connection."""
-type UsersEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `User` at the end of the edge."""
-  node: User!
 }
 
 """Methods to use when ordering `User`."""

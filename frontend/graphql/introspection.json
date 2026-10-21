@@ -1873,99 +1873,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AktualitiesConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "AktualitiesEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Aktuality",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AktualitiesEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Aktuality",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "Aktuality",
         "fields": [
           {
@@ -2033,7 +1940,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "ArticleAttachmentsConnection",
+                "name": "ArticleAttachmentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -2175,6 +2082,99 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AktualityConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "AktualityEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "Aktuality",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AktualityEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Aktuality",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Announcement",
         "fields": [
           {
@@ -2182,7 +2182,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementAudiencesConnection",
+                "name": "AnnouncementAudienceConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -2250,7 +2250,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementAttachmentsConnection",
+                "name": "AnnouncementAttachmentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -2513,7 +2513,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementAttachmentsConnection",
+        "name": "AnnouncementAttachmentConnection",
         "fields": [
           {
             "name": "edges",
@@ -2524,7 +2524,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "AnnouncementAttachmentsEdge",
+                    "name": "AnnouncementAttachmentEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -2579,7 +2579,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementAttachmentsEdge",
+        "name": "AnnouncementAttachmentEdge",
         "fields": [
           {
             "name": "cursor",
@@ -2680,7 +2680,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementAudiencesConnection",
+        "name": "AnnouncementAudienceConnection",
         "fields": [
           {
             "name": "edges",
@@ -2691,7 +2691,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "AnnouncementAudiencesEdge",
+                    "name": "AnnouncementAudienceEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -2746,7 +2746,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementAudiencesEdge",
+        "name": "AnnouncementAudienceEdge",
         "fields": [
           {
             "name": "cursor",
@@ -2773,7 +2773,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementsConnection",
+        "name": "AnnouncementConnection",
         "fields": [
           {
             "name": "edges",
@@ -2784,7 +2784,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "AnnouncementsEdge",
+                    "name": "AnnouncementEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -2839,7 +2839,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "AnnouncementsEdge",
+        "name": "AnnouncementEdge",
         "fields": [
           {
             "name": "cursor",
@@ -2889,7 +2889,7 @@
             "name": "cohortEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "CohortsEdge",
+              "name": "CohortEdge",
               "ofType": null
             },
             "args": [
@@ -2985,7 +2985,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ArticleAttachmentsConnection",
+        "name": "ArticleAttachmentConnection",
         "fields": [
           {
             "name": "edges",
@@ -2996,7 +2996,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "ArticleAttachmentsEdge",
+                    "name": "ArticleAttachmentEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -3051,7 +3051,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ArticleAttachmentsEdge",
+        "name": "ArticleAttachmentEdge",
         "fields": [
           {
             "name": "cursor",
@@ -3130,7 +3130,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -3198,7 +3198,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorCategoryProgressesConnection",
+                "name": "FederationCompetitorCategoryProgressConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -3321,7 +3321,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistsConnection",
+                "name": "RanklistConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -3422,7 +3422,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementAudiencesConnection",
+                "name": "AnnouncementAudienceConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -3635,7 +3635,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -3950,6 +3950,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CohortEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Cohort",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CohortGroup",
         "fields": [
           {
@@ -4076,7 +4103,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CohortGroupsConnection",
+        "name": "CohortGroupConnection",
         "fields": [
           {
             "name": "edges",
@@ -4087,7 +4114,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CohortGroupsEdge",
+                    "name": "CohortGroupEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -4142,7 +4169,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CohortGroupsEdge",
+        "name": "CohortGroupEdge",
         "fields": [
           {
             "name": "cursor",
@@ -4493,33 +4520,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CohortsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Cohort",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "Competition",
         "fields": [
           {
@@ -4579,7 +4579,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionEntriesConnection",
+                "name": "CompetitionEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -4770,7 +4770,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionOfficialsConnection",
+                "name": "CompetitionOfficialConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -4854,7 +4854,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionResultsConnection",
+                "name": "CompetitionResultConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -5050,7 +5050,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionEntriesConnection",
+        "name": "CompetitionConnection",
         "fields": [
           {
             "name": "edges",
@@ -5061,7 +5061,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionEntriesEdge",
+                    "name": "CompetitionEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -5079,7 +5079,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionEntry",
+                    "name": "Competition",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -5116,7 +5116,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionEntriesEdge",
+        "name": "CompetitionEdge",
         "fields": [
           {
             "name": "cursor",
@@ -5131,7 +5131,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionEntry",
+                "name": "Competition",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -5203,6 +5203,99 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CompetitionEntryConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CompetitionEntryEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CompetitionEntry",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CompetitionEntryEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CompetitionEntry",
+                "kind": "OBJECT",
+                "ofType": null
               }
             },
             "args": []
@@ -5286,7 +5379,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionOfficialsConnection",
+        "name": "CompetitionOfficialConnection",
         "fields": [
           {
             "name": "edges",
@@ -5297,7 +5390,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionOfficialsEdge",
+                    "name": "CompetitionOfficialEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -5352,7 +5445,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionOfficialsEdge",
+        "name": "CompetitionOfficialEdge",
         "fields": [
           {
             "name": "cursor",
@@ -5501,7 +5594,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionResultsConnection",
+        "name": "CompetitionResultConnection",
         "fields": [
           {
             "name": "edges",
@@ -5512,7 +5605,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionResultsEdge",
+                    "name": "CompetitionResultEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -5567,7 +5660,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionResultsEdge",
+        "name": "CompetitionResultEdge",
         "fields": [
           {
             "name": "cursor",
@@ -5913,6 +6006,72 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CompetitionRoundConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CompetitionRoundEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CompetitionRound",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CompetitionRoundDance",
         "fields": [
           {
@@ -5971,7 +6130,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "JudgeScoresConnection",
+                "name": "JudgeScoreConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -6059,7 +6218,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundDancesConnection",
+        "name": "CompetitionRoundDanceConnection",
         "fields": [
           {
             "name": "edges",
@@ -6070,7 +6229,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionRoundDancesEdge",
+                    "name": "CompetitionRoundDanceEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -6125,7 +6284,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundDancesEdge",
+        "name": "CompetitionRoundDanceEdge",
         "fields": [
           {
             "name": "cursor",
@@ -6141,6 +6300,33 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "CompetitionRoundDance",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CompetitionRoundEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CompetitionRound",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -6218,7 +6404,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundJudgesConnection",
+        "name": "CompetitionRoundJudgeConnection",
         "fields": [
           {
             "name": "edges",
@@ -6229,7 +6415,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionRoundJudgesEdge",
+                    "name": "CompetitionRoundJudgeEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -6284,7 +6470,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundJudgesEdge",
+        "name": "CompetitionRoundJudgeEdge",
         "fields": [
           {
             "name": "cursor",
@@ -6401,7 +6587,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundResultsConnection",
+        "name": "CompetitionRoundResultConnection",
         "fields": [
           {
             "name": "edges",
@@ -6412,7 +6598,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CompetitionRoundResultsEdge",
+                    "name": "CompetitionRoundResultEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -6467,7 +6653,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CompetitionRoundResultsEdge",
+        "name": "CompetitionRoundResultEdge",
         "fields": [
           {
             "name": "cursor",
@@ -6483,192 +6669,6 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "CompetitionRoundResult",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CompetitionRoundsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CompetitionRoundsEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CompetitionRound",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CompetitionRoundsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CompetitionRound",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CompetitionsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CompetitionsEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Competition",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CompetitionsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Competition",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -6703,7 +6703,7 @@
             "name": "personEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "PeopleEdge",
+              "name": "PersonEdge",
               "ofType": null
             },
             "args": [
@@ -6756,7 +6756,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -6877,7 +6877,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -6945,7 +6945,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorsConnection",
+                "name": "FederationCompetitorConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -7020,7 +7020,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistEntriesConnection",
+                "name": "RanklistEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -7323,7 +7323,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerFetchJobsConnection",
+        "name": "CrawlerFetchJobConnection",
         "fields": [
           {
             "name": "edges",
@@ -7334,7 +7334,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CrawlerFetchJobsEdge",
+                    "name": "CrawlerFetchJobEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -7389,7 +7389,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerFetchJobsEdge",
+        "name": "CrawlerFetchJobEdge",
         "fields": [
           {
             "name": "cursor",
@@ -7467,7 +7467,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerIncrementalRangesConnection",
+        "name": "CrawlerIncrementalRangeConnection",
         "fields": [
           {
             "name": "edges",
@@ -7478,7 +7478,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CrawlerIncrementalRangesEdge",
+                    "name": "CrawlerIncrementalRangeEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -7533,7 +7533,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerIncrementalRangesEdge",
+        "name": "CrawlerIncrementalRangeEdge",
         "fields": [
           {
             "name": "cursor",
@@ -7624,7 +7624,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerRateLimitRulesConnection",
+        "name": "CrawlerRateLimitRuleConnection",
         "fields": [
           {
             "name": "edges",
@@ -7635,7 +7635,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CrawlerRateLimitRulesEdge",
+                    "name": "CrawlerRateLimitRuleEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -7690,7 +7690,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerRateLimitRulesEdge",
+        "name": "CrawlerRateLimitRuleEdge",
         "fields": [
           {
             "name": "cursor",
@@ -7827,7 +7827,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CrawlerTargetsConnection",
+                "name": "CrawlerTargetConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -7895,7 +7895,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CrawlerTargetsConnection",
+                "name": "CrawlerTargetConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -8003,7 +8003,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CrawlerResponsesConnection",
+                "name": "CrawlerResponseConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -8071,7 +8071,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerResponseCachesConnection",
+        "name": "CrawlerResponseCacheConnection",
         "fields": [
           {
             "name": "edges",
@@ -8082,7 +8082,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CrawlerResponseCachesEdge",
+                    "name": "CrawlerResponseCacheEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -8137,7 +8137,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerResponseCachesEdge",
+        "name": "CrawlerResponseCacheEdge",
         "fields": [
           {
             "name": "cursor",
@@ -8164,7 +8164,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerResponsesConnection",
+        "name": "CrawlerResponseConnection",
         "fields": [
           {
             "name": "edges",
@@ -8175,7 +8175,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "CrawlerResponsesEdge",
+                    "name": "CrawlerResponseEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -8230,7 +8230,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CrawlerResponsesEdge",
+        "name": "CrawlerResponseEdge",
         "fields": [
           {
             "name": "cursor",
@@ -8432,7 +8432,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CrawlerResponsesConnection",
+                "name": "CrawlerResponseConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -8494,6 +8494,99 @@
                 }
               }
             ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CrawlerTargetConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CrawlerTargetEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CrawlerTarget",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CrawlerTargetEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CrawlerTarget",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -8627,6 +8720,99 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CrawlerTargetFailureConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CrawlerTargetFailureEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "CrawlerTargetFailure",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CrawlerTargetFailureEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "CrawlerTargetFailure",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CrawlerTargetFailureGroup",
         "fields": [
           {
@@ -8682,99 +8868,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CrawlerTargetFailuresConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CrawlerTargetFailuresEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CrawlerTargetFailure",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CrawlerTargetFailuresEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CrawlerTargetFailure",
-                "kind": "OBJECT",
-                "ofType": null
-              }
             },
             "args": []
           }
@@ -8878,99 +8971,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CrawlerTargetsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CrawlerTargetsEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "CrawlerTarget",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CrawlerTargetsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "CrawlerTarget",
-                "kind": "OBJECT",
-                "ofType": null
-              }
             },
             "args": []
           }
@@ -9098,7 +9098,7 @@
             "name": "transactionEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TransactionsEdge",
+              "name": "TransactionEdge",
               "ofType": null
             },
             "args": [
@@ -9270,7 +9270,7 @@
             "name": "personEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "PeopleEdge",
+              "name": "PersonEdge",
               "ofType": null
             },
             "args": [
@@ -9344,7 +9344,7 @@
             "name": "tenantAdministratorEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantAdministratorsEdge",
+              "name": "TenantAdministratorEdge",
               "ofType": null
             },
             "args": [
@@ -9394,7 +9394,7 @@
             "name": "tenantMembershipEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantMembershipsEdge",
+              "name": "TenantMembershipEdge",
               "ofType": null
             },
             "args": [
@@ -9444,7 +9444,7 @@
             "name": "tenantTrainerEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantTrainersEdge",
+              "name": "TenantTrainerEdge",
               "ofType": null
             },
             "args": [
@@ -9656,7 +9656,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionRoundsConnection",
+                "name": "CompetitionRoundConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -9887,7 +9887,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionRoundDancesConnection",
+                "name": "CompetitionRoundDanceConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -10078,7 +10078,7 @@
             "name": "aktualityEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "AktualitiesEdge",
+              "name": "AktualityEdge",
               "ofType": null
             },
             "args": [
@@ -10128,7 +10128,7 @@
             "name": "announcementEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "AnnouncementsEdge",
+              "name": "AnnouncementEdge",
               "ofType": null
             },
             "args": [
@@ -10428,7 +10428,7 @@
             "name": "personEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "PeopleEdge",
+              "name": "PersonEdge",
               "ofType": null
             },
             "args": [
@@ -10502,7 +10502,7 @@
             "name": "tenantAdministratorEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantAdministratorsEdge",
+              "name": "TenantAdministratorEdge",
               "ofType": null
             },
             "args": [
@@ -10552,7 +10552,7 @@
             "name": "tenantMembershipEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantMembershipsEdge",
+              "name": "TenantMembershipEdge",
               "ofType": null
             },
             "args": [
@@ -10602,7 +10602,7 @@
             "name": "tenantTrainerEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantTrainersEdge",
+              "name": "TenantTrainerEdge",
               "ofType": null
             },
             "args": [
@@ -10652,7 +10652,7 @@
             "name": "transactionEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TransactionsEdge",
+              "name": "TransactionEdge",
               "ofType": null
             },
             "args": [
@@ -11051,7 +11051,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -11656,6 +11656,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "EventInstanceEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "EventInstance",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "EventInstanceFacetsRecord",
         "fields": [
           {
@@ -11746,7 +11773,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -12067,46 +12094,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EventInstanceRegistrationInfo",
-        "fields": [
-          {
-            "name": "my",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "people",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "registrations",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "remainingCapacity",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "EventInstanceRegistrationsConnection",
+        "name": "EventInstanceRegistrationConnection",
         "fields": [
           {
             "name": "edges",
@@ -12117,7 +12105,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "EventInstanceRegistrationsEdge",
+                    "name": "EventInstanceRegistrationEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -12172,7 +12160,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EventInstanceRegistrationsEdge",
+        "name": "EventInstanceRegistrationEdge",
         "fields": [
           {
             "name": "cursor",
@@ -12191,6 +12179,45 @@
                 "kind": "OBJECT",
                 "ofType": null
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EventInstanceRegistrationInfo",
+        "fields": [
+          {
+            "name": "my",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "people",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "registrations",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "remainingCapacity",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -12458,33 +12485,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EventInstancesEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "EventInstance",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
         "name": "EventLessonDemand",
         "fields": [
           {
@@ -12587,7 +12587,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "EventLessonDemandsEdge",
+        "name": "EventLessonDemandEdge",
         "fields": [
           {
             "name": "cursor",
@@ -12826,7 +12826,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationClubsConnection",
+                "name": "FederationClubConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -12905,7 +12905,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13057,7 +13057,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorsConnection",
+                "name": "FederationCompetitorConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13149,7 +13149,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationEventsConnection",
+                "name": "FederationEventConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13217,7 +13217,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPersonLicensesConnection",
+                "name": "FederationPersonLicenseConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13296,7 +13296,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPeopleConnection",
+                "name": "FederationPersonConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13431,7 +13431,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistsConnection",
+                "name": "RanklistConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13514,7 +13514,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorClubAffiliationsConnection",
+                "name": "FederationCompetitorClubAffiliationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13601,7 +13601,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationEventsConnection",
+                "name": "FederationEventConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13722,7 +13722,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPersonClubMembershipsConnection",
+                "name": "FederationPersonClubMembershipConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -13790,7 +13790,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationClubsConnection",
+        "name": "FederationClubConnection",
         "fields": [
           {
             "name": "edges",
@@ -13801,7 +13801,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationClubsEdge",
+                    "name": "FederationClubEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -13856,7 +13856,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationClubsEdge",
+        "name": "FederationClubEdge",
         "fields": [
           {
             "name": "cursor",
@@ -13960,7 +13960,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorClubAffiliationsConnection",
+                "name": "FederationCompetitorClubAffiliationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14028,7 +14028,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionEntriesConnection",
+                "name": "CompetitionEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14096,7 +14096,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionResultsConnection",
+                "name": "CompetitionResultConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14164,7 +14164,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14243,7 +14243,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorComponentsConnection",
+                "name": "FederationCompetitorComponentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14494,7 +14494,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistEntriesConnection",
+                "name": "RanklistEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14562,7 +14562,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionRoundResultsConnection",
+                "name": "CompetitionRoundResultConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -14710,7 +14710,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorCategoryProgressesConnection",
+        "name": "FederationCompetitorCategoryProgressConnection",
         "fields": [
           {
             "name": "edges",
@@ -14721,7 +14721,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationCompetitorCategoryProgressesEdge",
+                    "name": "FederationCompetitorCategoryProgressEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -14776,7 +14776,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorCategoryProgressesEdge",
+        "name": "FederationCompetitorCategoryProgressEdge",
         "fields": [
           {
             "name": "cursor",
@@ -14869,7 +14869,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorClubAffiliationsConnection",
+        "name": "FederationCompetitorClubAffiliationConnection",
         "fields": [
           {
             "name": "edges",
@@ -14880,7 +14880,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationCompetitorClubAffiliationsEdge",
+                    "name": "FederationCompetitorClubAffiliationEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -14935,7 +14935,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorClubAffiliationsEdge",
+        "name": "FederationCompetitorClubAffiliationEdge",
         "fields": [
           {
             "name": "cursor",
@@ -15020,7 +15020,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorComponentsConnection",
+        "name": "FederationCompetitorComponentConnection",
         "fields": [
           {
             "name": "edges",
@@ -15031,7 +15031,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationCompetitorComponentsEdge",
+                    "name": "FederationCompetitorComponentEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -15086,7 +15086,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorComponentsEdge",
+        "name": "FederationCompetitorComponentEdge",
         "fields": [
           {
             "name": "cursor",
@@ -15113,38 +15113,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorFacetsRecord",
-        "fields": [
-          {
-            "name": "count",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "facet",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "value",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "FederationCompetitorsConnection",
+        "name": "FederationCompetitorConnection",
         "fields": [
           {
             "name": "edges",
@@ -15155,7 +15124,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationCompetitorsEdge",
+                    "name": "FederationCompetitorEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -15210,7 +15179,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationCompetitorsEdge",
+        "name": "FederationCompetitorEdge",
         "fields": [
           {
             "name": "cursor",
@@ -15229,6 +15198,37 @@
                 "kind": "OBJECT",
                 "ofType": null
               }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationCompetitorFacetsRecord",
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "facet",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "value",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -15322,7 +15322,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -15557,7 +15557,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationEventOfficialsConnection",
+                "name": "FederationEventOfficialConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -15729,6 +15729,99 @@
       },
       {
         "kind": "OBJECT",
+        "name": "FederationEventConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "FederationEventEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "FederationEvent",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationEventEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationEvent",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "FederationEventFacet",
         "fields": [
           {
@@ -15828,7 +15921,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationEventOfficialsConnection",
+        "name": "FederationEventOfficialConnection",
         "fields": [
           {
             "name": "edges",
@@ -15839,7 +15932,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationEventOfficialsEdge",
+                    "name": "FederationEventOfficialEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -15894,7 +15987,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationEventOfficialsEdge",
+        "name": "FederationEventOfficialEdge",
         "fields": [
           {
             "name": "cursor",
@@ -15952,192 +16045,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "FederationEventsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "FederationEventsEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "FederationEvent",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "FederationEventsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationEvent",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "FederationPeopleConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "FederationPeopleEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "FederationPerson",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "FederationPeopleEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "FederationPerson",
-                "kind": "OBJECT",
-                "ofType": null
               }
             },
             "args": []
@@ -16218,7 +16125,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPersonClubMembershipsConnection",
+                "name": "FederationPersonClubMembershipConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16286,7 +16193,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionOfficialsConnection",
+                "name": "CompetitionOfficialConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16354,7 +16261,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorComponentsConnection",
+                "name": "FederationCompetitorComponentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16441,7 +16348,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationEventOfficialsConnection",
+                "name": "FederationEventOfficialConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16575,7 +16482,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPersonLicensesConnection",
+                "name": "FederationPersonLicenseConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16720,7 +16627,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionRoundJudgesConnection",
+                "name": "CompetitionRoundJudgeConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -16862,7 +16769,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationPersonClubMembershipsConnection",
+        "name": "FederationPersonClubMembershipConnection",
         "fields": [
           {
             "name": "edges",
@@ -16873,7 +16780,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationPersonClubMembershipsEdge",
+                    "name": "FederationPersonClubMembershipEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -16928,7 +16835,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationPersonClubMembershipsEdge",
+        "name": "FederationPersonClubMembershipEdge",
         "fields": [
           {
             "name": "cursor",
@@ -16944,6 +16851,99 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "FederationPersonClubMembership",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationPersonConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "FederationPersonEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "FederationPerson",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FederationPersonEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "FederationPerson",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -17062,7 +17062,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationPersonLicensesConnection",
+        "name": "FederationPersonLicenseConnection",
         "fields": [
           {
             "name": "edges",
@@ -17073,7 +17073,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FederationPersonLicensesEdge",
+                    "name": "FederationPersonLicenseEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -17128,7 +17128,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FederationPersonLicensesEdge",
+        "name": "FederationPersonLicenseEdge",
         "fields": [
           {
             "name": "cursor",
@@ -17162,7 +17162,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementAttachmentsConnection",
+                "name": "AnnouncementAttachmentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -17230,7 +17230,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "ArticleAttachmentsConnection",
+                "name": "ArticleAttachmentConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -17530,7 +17530,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FilesConnection",
+        "name": "FileConnection",
         "fields": [
           {
             "name": "edges",
@@ -17541,7 +17541,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FilesEdge",
+                    "name": "FileEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -17596,7 +17596,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FilesEdge",
+        "name": "FileEdge",
         "fields": [
           {
             "name": "cursor",
@@ -17707,7 +17707,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FormResponsesConnection",
+        "name": "FormResponseConnection",
         "fields": [
           {
             "name": "edges",
@@ -17718,7 +17718,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "FormResponsesEdge",
+                    "name": "FormResponseEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -17773,7 +17773,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "FormResponsesEdge",
+        "name": "FormResponseEdge",
         "fields": [
           {
             "name": "cursor",
@@ -18019,7 +18019,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "JudgeScoresConnection",
+        "name": "JudgeScoreConnection",
         "fields": [
           {
             "name": "edges",
@@ -18030,7 +18030,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "JudgeScoresEdge",
+                    "name": "JudgeScoreEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -18085,7 +18085,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "JudgeScoresEdge",
+        "name": "JudgeScoreEdge",
         "fields": [
           {
             "name": "cursor",
@@ -18424,6 +18424,33 @@
       },
       {
         "kind": "OBJECT",
+        "name": "LocationEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Location",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "LocationImage",
         "fields": [
           {
@@ -18473,33 +18500,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LocationsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Location",
-                "kind": "OBJECT",
-                "ofType": null
               }
             },
             "args": []
@@ -18782,7 +18782,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "MembershipApplicationsEdge",
+        "name": "MembershipApplicationEdge",
         "fields": [
           {
             "name": "cursor",
@@ -18832,7 +18832,7 @@
             "name": "eventInstanceEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "EventInstancesEdge",
+              "name": "EventInstanceEdge",
               "ofType": null
             },
             "args": [
@@ -20672,7 +20672,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TransactionsConnection",
+                "name": "TransactionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -20939,99 +20939,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PeopleConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "PeopleEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Person",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PeopleEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Person",
-                "kind": "OBJECT",
-                "ofType": null
               }
             },
             "args": []
@@ -21500,7 +21407,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -21747,7 +21654,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationCompetitorCategoryProgressesConnection",
+                "name": "FederationCompetitorCategoryProgressConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -21815,7 +21722,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CompetitionsConnection",
+                "name": "CompetitionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -21883,7 +21790,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FederationPeopleConnection",
+                "name": "FederationPersonConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -21951,7 +21858,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistEntriesConnection",
+                "name": "RanklistEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -22403,7 +22310,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantAdministratorsConnection",
+                "name": "TenantAdministratorConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -22524,7 +22431,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantMembershipsConnection",
+                "name": "TenantMembershipConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -22645,7 +22552,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantTrainersConnection",
+                "name": "TenantTrainerConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -22846,6 +22753,99 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PersonConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "PersonEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "Person",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PersonEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Person",
+                "kind": "OBJECT",
+                "ofType": null
+              }
             },
             "args": []
           }
@@ -23652,7 +23652,7 @@
             "name": "aktualities",
             "type": {
               "kind": "OBJECT",
-              "name": "AktualitiesConnection",
+              "name": "AktualityConnection",
               "ofType": null
             },
             "args": [
@@ -23757,7 +23757,7 @@
             "name": "announcements",
             "type": {
               "kind": "OBJECT",
-              "name": "AnnouncementsConnection",
+              "name": "AnnouncementConnection",
               "ofType": null
             },
             "args": [
@@ -24002,7 +24002,7 @@
             "name": "cohortGroups",
             "type": {
               "kind": "OBJECT",
-              "name": "CohortGroupsConnection",
+              "name": "CohortGroupConnection",
               "ofType": null
             },
             "args": [
@@ -24237,7 +24237,7 @@
             "name": "competitions",
             "type": {
               "kind": "OBJECT",
-              "name": "CompetitionsConnection",
+              "name": "CompetitionConnection",
               "ofType": null
             },
             "args": [
@@ -24322,7 +24322,7 @@
             "name": "crawlerFetchJobs",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerFetchJobsConnection",
+              "name": "CrawlerFetchJobConnection",
               "ofType": null
             },
             "args": [
@@ -24417,7 +24417,7 @@
             "name": "crawlerIncrementalRanges",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerIncrementalRangesConnection",
+              "name": "CrawlerIncrementalRangeConnection",
               "ofType": null
             },
             "args": [
@@ -24502,7 +24502,7 @@
             "name": "crawlerRateLimitRules",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerRateLimitRulesConnection",
+              "name": "CrawlerRateLimitRuleConnection",
               "ofType": null
             },
             "args": [
@@ -24607,7 +24607,7 @@
             "name": "crawlerResponseCaches",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerResponseCachesConnection",
+              "name": "CrawlerResponseCacheConnection",
               "ofType": null
             },
             "args": [
@@ -24672,7 +24672,7 @@
             "name": "crawlerResponses",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerResponsesConnection",
+              "name": "CrawlerResponseConnection",
               "ofType": null
             },
             "args": [
@@ -24847,7 +24847,7 @@
             "name": "crawlerTargetFailures",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerTargetFailuresConnection",
+              "name": "CrawlerTargetFailureConnection",
               "ofType": null
             },
             "args": [
@@ -24962,7 +24962,7 @@
             "name": "crawlerTargets",
             "type": {
               "kind": "OBJECT",
-              "name": "CrawlerTargetsConnection",
+              "name": "CrawlerTargetConnection",
               "ofType": null
             },
             "args": [
@@ -25443,7 +25443,7 @@
             "name": "eventInstanceRegistrations",
             "type": {
               "kind": "OBJECT",
-              "name": "EventInstanceRegistrationsConnection",
+              "name": "EventInstanceRegistrationConnection",
               "ofType": null
             },
             "args": [
@@ -25891,7 +25891,7 @@
             "name": "federationClubs",
             "type": {
               "kind": "OBJECT",
-              "name": "FederationClubsConnection",
+              "name": "FederationClubConnection",
               "ofType": null
             },
             "args": [
@@ -26006,7 +26006,7 @@
             "name": "federationCompetitors",
             "type": {
               "kind": "OBJECT",
-              "name": "FederationCompetitorsConnection",
+              "name": "FederationCompetitorConnection",
               "ofType": null
             },
             "args": [
@@ -26128,7 +26128,7 @@
             "name": "federationEvents",
             "type": {
               "kind": "OBJECT",
-              "name": "FederationEventsConnection",
+              "name": "FederationEventConnection",
               "ofType": null
             },
             "args": [
@@ -26193,7 +26193,7 @@
             "name": "federationPeople",
             "type": {
               "kind": "OBJECT",
-              "name": "FederationPeopleConnection",
+              "name": "FederationPersonConnection",
               "ofType": null
             },
             "args": [
@@ -26480,7 +26480,7 @@
             "name": "files",
             "type": {
               "kind": "OBJECT",
-              "name": "FilesConnection",
+              "name": "FileConnection",
               "ofType": null
             },
             "args": [
@@ -26565,7 +26565,7 @@
             "name": "formResponses",
             "type": {
               "kind": "OBJECT",
-              "name": "FormResponsesConnection",
+              "name": "FormResponseConnection",
               "ofType": null
             },
             "args": [
@@ -26928,7 +26928,7 @@
             "name": "people",
             "type": {
               "kind": "OBJECT",
-              "name": "PeopleConnection",
+              "name": "PersonConnection",
               "ofType": null
             },
             "args": [
@@ -27257,7 +27257,7 @@
             "name": "ranklists",
             "type": {
               "kind": "OBJECT",
-              "name": "RanklistsConnection",
+              "name": "RanklistConnection",
               "ofType": null
             },
             "args": [
@@ -27720,7 +27720,7 @@
             "name": "transactions",
             "type": {
               "kind": "OBJECT",
-              "name": "TransactionsConnection",
+              "name": "TransactionConnection",
               "ofType": null
             },
             "args": [
@@ -27825,7 +27825,7 @@
             "name": "users",
             "type": {
               "kind": "OBJECT",
-              "name": "UsersConnection",
+              "name": "UserConnection",
               "ofType": null
             },
             "args": [
@@ -27960,7 +27960,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistSnapshotsConnection",
+                "name": "RanklistSnapshotConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -28028,7 +28028,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "RanklistEntriesConnection",
+        "name": "RanklistConnection",
         "fields": [
           {
             "name": "edges",
@@ -28039,7 +28039,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "RanklistEntriesEdge",
+                    "name": "RanklistEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -28057,7 +28057,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "RanklistEntry",
+                    "name": "Ranklist",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -28094,7 +28094,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "RanklistEntriesEdge",
+        "name": "RanklistEdge",
         "fields": [
           {
             "name": "cursor",
@@ -28109,7 +28109,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistEntry",
+                "name": "Ranklist",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -28195,6 +28195,99 @@
       },
       {
         "kind": "OBJECT",
+        "name": "RanklistEntryConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "RanklistEntryEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "RanklistEntry",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RanklistEntryEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "RanklistEntry",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "RanklistSnapshot",
         "fields": [
           {
@@ -28244,7 +28337,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "RanklistEntriesConnection",
+                "name": "RanklistEntryConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -28323,7 +28416,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "RanklistSnapshotsConnection",
+        "name": "RanklistSnapshotConnection",
         "fields": [
           {
             "name": "edges",
@@ -28334,7 +28427,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "RanklistSnapshotsEdge",
+                    "name": "RanklistSnapshotEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -28389,7 +28482,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "RanklistSnapshotsEdge",
+        "name": "RanklistSnapshotEdge",
         "fields": [
           {
             "name": "cursor",
@@ -28405,99 +28498,6 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "RanklistSnapshot",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RanklistsConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "RanklistsEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "Ranklist",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "RanklistsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Ranklist",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -28580,7 +28580,7 @@
             "name": "membershipApplicationEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "MembershipApplicationsEdge",
+              "name": "MembershipApplicationEdge",
               "ofType": null
             },
             "args": [
@@ -29085,7 +29085,7 @@
             "name": "eventInstanceRegistrationEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "EventInstanceRegistrationsEdge",
+              "name": "EventInstanceRegistrationEdge",
               "ofType": null
             },
             "args": [
@@ -29158,7 +29158,7 @@
             "name": "eventLessonDemandEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "EventLessonDemandsEdge",
+              "name": "EventLessonDemandEdge",
               "ofType": null
             },
             "args": [
@@ -29454,7 +29454,7 @@
             "name": "tenantEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantsEdge",
+              "name": "TenantEdge",
               "ofType": null
             },
             "args": [
@@ -29656,7 +29656,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AktualitiesConnection",
+                "name": "AktualityConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -29724,7 +29724,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementAudiencesConnection",
+                "name": "AnnouncementAudienceConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -29792,7 +29792,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementsConnection",
+                "name": "AnnouncementConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -29871,7 +29871,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "CohortGroupsConnection",
+                "name": "CohortGroupConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -30161,7 +30161,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "EventInstanceRegistrationsConnection",
+                "name": "EventInstanceRegistrationConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -30562,7 +30562,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FilesConnection",
+                "name": "FileConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -30630,7 +30630,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FormResponsesConnection",
+                "name": "FormResponseConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31158,7 +31158,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantAdministratorsConnection",
+                "name": "TenantAdministratorConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31332,7 +31332,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantMembershipsConnection",
+                "name": "TenantMembershipConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31462,7 +31462,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TenantTrainersConnection",
+                "name": "TenantTrainerConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31583,7 +31583,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "TransactionsConnection",
+                "name": "TransactionConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31651,7 +31651,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "UsersConnection",
+                "name": "UserConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -31850,7 +31850,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantAdministratorsConnection",
+        "name": "TenantAdministratorConnection",
         "fields": [
           {
             "name": "edges",
@@ -31861,7 +31861,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "TenantAdministratorsEdge",
+                    "name": "TenantAdministratorEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -31916,7 +31916,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantAdministratorsEdge",
+        "name": "TenantAdministratorEdge",
         "fields": [
           {
             "name": "cursor",
@@ -31932,6 +31932,33 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "TenantAdministrator",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TenantEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "Tenant",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -32422,7 +32449,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantMembershipsConnection",
+        "name": "TenantMembershipConnection",
         "fields": [
           {
             "name": "edges",
@@ -32433,7 +32460,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "TenantMembershipsEdge",
+                    "name": "TenantMembershipEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -32488,7 +32515,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantMembershipsEdge",
+        "name": "TenantMembershipEdge",
         "fields": [
           {
             "name": "cursor",
@@ -32544,7 +32571,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantSettingsEdge",
+        "name": "TenantSettingEdge",
         "fields": [
           {
             "name": "cursor",
@@ -32800,7 +32827,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantTrainersConnection",
+        "name": "TenantTrainerConnection",
         "fields": [
           {
             "name": "edges",
@@ -32811,7 +32838,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "TenantTrainersEdge",
+                    "name": "TenantTrainerEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -32866,7 +32893,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TenantTrainersEdge",
+        "name": "TenantTrainerEdge",
         "fields": [
           {
             "name": "cursor",
@@ -32882,33 +32909,6 @@
               "kind": "NON_NULL",
               "ofType": {
                 "name": "TenantTrainer",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "TenantsEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "Tenant",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -33162,7 +33162,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TransactionsConnection",
+        "name": "TransactionConnection",
         "fields": [
           {
             "name": "edges",
@@ -33173,7 +33173,7 @@
                 "ofType": {
                   "kind": "NON_NULL",
                   "ofType": {
-                    "name": "TransactionsEdge",
+                    "name": "TransactionEdge",
                     "kind": "OBJECT",
                     "ofType": null
                   }
@@ -33228,7 +33228,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TransactionsEdge",
+        "name": "TransactionEdge",
         "fields": [
           {
             "name": "cursor",
@@ -33294,7 +33294,7 @@
             "name": "announcementEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "AnnouncementsEdge",
+              "name": "AnnouncementEdge",
               "ofType": null
             },
             "args": [
@@ -33352,7 +33352,7 @@
             "name": "eventInstanceRegistrationEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "EventInstanceRegistrationsEdge",
+              "name": "EventInstanceRegistrationEdge",
               "ofType": null
             },
             "args": [
@@ -33620,7 +33620,7 @@
             "name": "personEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "PeopleEdge",
+              "name": "PersonEdge",
               "ofType": null
             },
             "args": [
@@ -33694,7 +33694,7 @@
             "name": "tenantAdministratorEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantAdministratorsEdge",
+              "name": "TenantAdministratorEdge",
               "ofType": null
             },
             "args": [
@@ -33744,7 +33744,7 @@
             "name": "tenantMembershipEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantMembershipsEdge",
+              "name": "TenantMembershipEdge",
               "ofType": null
             },
             "args": [
@@ -33818,7 +33818,7 @@
             "name": "tenantSettingEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantSettingsEdge",
+              "name": "TenantSettingEdge",
               "ofType": null
             },
             "args": [
@@ -33868,7 +33868,7 @@
             "name": "tenantSettingEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantSettingsEdge",
+              "name": "TenantSettingEdge",
               "ofType": null
             },
             "args": [
@@ -33918,7 +33918,7 @@
             "name": "tenantTrainerEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "TenantTrainersEdge",
+              "name": "TenantTrainerEdge",
               "ofType": null
             },
             "args": [
@@ -33984,7 +33984,7 @@
             "name": "announcementEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "AnnouncementsEdge",
+              "name": "AnnouncementEdge",
               "ofType": null
             },
             "args": [
@@ -34034,7 +34034,7 @@
             "name": "aktualityEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "AktualitiesEdge",
+              "name": "AktualityEdge",
               "ofType": null
             },
             "args": [
@@ -34092,7 +34092,7 @@
             "name": "locationEdge",
             "type": {
               "kind": "OBJECT",
-              "name": "LocationsEdge",
+              "name": "LocationEdge",
               "ofType": null
             },
             "args": [
@@ -34179,7 +34179,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AktualitiesConnection",
+                "name": "AktualityConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -34247,7 +34247,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "AnnouncementsConnection",
+                "name": "AnnouncementConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -34326,7 +34326,7 @@
             "type": {
               "kind": "NON_NULL",
               "ofType": {
-                "name": "FilesConnection",
+                "name": "FileConnection",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -34645,6 +34645,99 @@
       },
       {
         "kind": "OBJECT",
+        "name": "UserConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "UserEdge",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "name": "User",
+                    "kind": "OBJECT",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "PageInfo",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "User",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "UserProxy",
         "fields": [
           {
@@ -34743,99 +34836,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UsersConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "UsersEdge",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "User",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "PageInfo",
-                "kind": "OBJECT",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UsersEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "name": "User",
-                "kind": "OBJECT",
-                "ofType": null
               }
             },
             "args": []

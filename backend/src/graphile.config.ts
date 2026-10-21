@@ -16,6 +16,7 @@ import competitionParticipantConditionPlugins from './plugins/competition-partic
 import federationOrderPlugin from './plugins/federation-order.ts';
 import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
+import { ApiInflectionPlugin } from './plugins/api-inflection.ts';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -32,8 +33,10 @@ const preset: GraphileConfig.Preset = {
     'MutationPayloadQueryPlugin',
     'PgV4BuildPlugin',
     'PgV4BehaviorPlugin',
+    'PgV4InflectionPlugin',
   ],
   plugins: [
+    ApiInflectionPlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,
     ...federationConditionPlugins,
