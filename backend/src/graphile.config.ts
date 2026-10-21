@@ -4,7 +4,7 @@ import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';
 import path from 'path';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
-import { makeV4Preset } from 'postgraphile/presets/v4';
+import { PgV4SmartTagsPlugin } from 'postgraphile/presets/v4';
 import { QueryControlsPlugin } from './plugins/query-controls.ts';
 import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
@@ -21,22 +21,16 @@ import { ApiInflectionPlugin } from './plugins/api-inflection.ts';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const preset: GraphileConfig.Preset = {
-  extends: [
-    PostGraphileAmberPreset,
-    PgSimplifyInflectionPreset,
-    makeV4Preset({ ignoreRBAC: false }),
-  ],
+  extends: [PostGraphileAmberPreset, PgSimplifyInflectionPreset],
 
   disablePlugins: [
     'NodePlugin',
     'QueryQueryPlugin',
     'MutationPayloadQueryPlugin',
-    'PgV4BuildPlugin',
-    'PgV4BehaviorPlugin',
-    'PgV4InflectionPlugin',
-    'PostGraphileV4CompatibilityPlugin',
+    'PgIndexBehaviorsPlugin',
   ],
   plugins: [
+    PgV4SmartTagsPlugin,
     ApiInflectionPlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,
