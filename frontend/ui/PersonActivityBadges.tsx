@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 const signals = [
   {
     key: 'webAt',
-    label: 'Web',
+    label: 'Účet',
     greenDays: 30,
     amberDays: 90,
   },
@@ -49,7 +49,10 @@ export function PersonActivityBadges({
         const date = value
           ? new Date(key === 'competitionOn' ? `${value}T00:00:00` : value)
           : null;
-        const ageDays = date ? (now - date.getTime()) / 86_400_000 : null;
+        const hasDate =
+          date &&
+          (key === 'competitionOn' ? value !== '1970-01-01' : date.getTime() !== 0);
+        const ageDays = hasDate ? (now - date.getTime()) / 86_400_000 : null;
         const recent = ageDays !== null && ageDays < greenDays;
         const middle = ageDays !== null && ageDays < amberDays;
         const status =
@@ -61,11 +64,13 @@ export function PersonActivityBadges({
                 ? `${greenDays}–${amberDays} dní`
                 : `≥ ${amberDays} dní`;
         const formatted =
-          value && date
+          value && hasDate
             ? key === 'competitionOn'
               ? formatDateOnly(value)
               : dateTimeFormatter.format(date)
-            : 'Bez záznamu';
+            : value
+              ? 'Žádný záznam'
+              : 'Nedostupné';
         const title = `${label}: ${formatted}${status ? ` (${status})` : ''}`;
         return (
           <Popover key={key}>
@@ -76,6 +81,7 @@ export function PersonActivityBadges({
                 aria-label={title}
                 className={cn(
                   'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs hover:bg-neutral-4 focus-visible:outline-2 focus-visible:outline-accent-9',
+                  !value && 'opacity-80 line-through',
                   ageDays === null
                     ? 'bg-neutral-3 text-neutral-11'
                     : recent
@@ -91,7 +97,7 @@ export function PersonActivityBadges({
             </PopoverTrigger>
             <PopoverContent className="max-w-80 text-sm" side="top" align="start">
               <p className="pr-6 font-semibold">{label}</p>
-              <p>{value ? <time dateTime={value}>{formatted}</time> : formatted}</p>
+              <p>{value && hasDate ? <time dateTime={value}>{formatted}</time> : formatted}</p>
               {status && <p className="text-neutral-11">{status}</p>}
             </PopoverContent>
           </Popover>

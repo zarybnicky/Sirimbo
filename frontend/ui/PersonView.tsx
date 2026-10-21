@@ -32,7 +32,7 @@ export const PersonView = React.memo(function PersonView({
   const auth = useAuth();
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
-    variables: { id, includeActivity: auth.isTrainer },
+    variables: { id, includeActivity: auth.isTrainer || auth.isMyPerson(id) },
     pause: !id,
   });
   const [tab, setTab] = useQueryState(
@@ -161,7 +161,7 @@ export const PersonView = React.memo(function PersonView({
         actions={actions}
       />
 
-      {auth.isTrainer && item.lastActivity && (
+      {item.lastActivity && (
         <div className="-mt-2 mb-4">
           <PersonActivityBadges activity={item.lastActivity} />
         </div>

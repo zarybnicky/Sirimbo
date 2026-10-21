@@ -1,6 +1,6 @@
 begin;
 set local search_path = public, tap;
-select tap.plan(14);
+select tap.plan(16);
 
 insert into tenant (id, name) values (-3900, 'Activity'), (-3901, 'Other activity');
 select set_config('jwt.claims.tenant_id', '-3900', true);
@@ -64,7 +64,17 @@ select tap.is((select web_at from person_last_activity where person_id = -3900),
 select tap.is((select card_entry_at from person_last_activity where person_id = -3900), now() - interval '2 days', 'card activity excludes denied, future, and other-tenant entries');
 select tap.is((select training_at from person_last_activity where person_id = -3900), now() - interval '2 days', 'lessons are implicitly attended; unknown groups, cancellations, future and other-tenant events are excluded');
 select tap.is((select competition_on from person_last_activity where person_id = -3900), current_date - 20, 'competition uses past results, not entries');
-select tap.ok((select web_at is null and card_entry_at is null and training_at is null and competition_on is null from person_last_activity where person_id = -3901), 'no activity yields nullable dates');
+select tap.ok((select web_at is null and card_entry_at is null and training_at is null and competition_on is null from person_last_activity where person_id = -3901), 'missing sources yield null');
+
+reset role;
+update users set last_active_at = null where id = -3901;
+insert into user_proxy (user_id, person_id) values (-3901, -3901);
+insert into access_credential (person_id, label, code) values (-3901, 'Undated', 'undated-activity-card');
+insert into event_instance_registration (instance_id, person_id, status) values (-3905, -3901, 'unknown');
+insert into federated.person (federation, external_id) values ('csts', 1999999998);
+update person set csts_id = 1999999998 where id = -3901;
+set local role trainer;
+select tap.ok((select web_at = 'epoch'::timestamptz and card_entry_at = 'epoch'::timestamptz and training_at = 'epoch'::timestamptz and competition_on = 'epoch'::date from person_last_activity where person_id = -3901), 'sources without dates yield epoch');
 select tap.is((select count(*) from users where id = -3900), 0::bigint, 'summary does not grant account access');
 select tap.is((select count(*) from user_proxy where person_id = -3900), 0::bigint, 'summary does not grant account-link access');
 select tap.is((select count(*) from access_event where person_id = -3900), 0::bigint, 'summary does not grant access to raw entries');
@@ -76,7 +86,10 @@ select set_config('jwt.claims.tenant_id', '-3900', true);
 set local role administrator;
 select tap.is((select count(*) from person_last_activity where person_id = -3900), 1::bigint, 'administrator can read activity');
 set local role member;
-select tap.is((select count(*) from person_last_activity), 0::bigint, 'members cannot read activity yet');
+select tap.is((select count(*) from person_last_activity), 0::bigint, 'members without current persons cannot read activity');
+select set_config('jwt.claims.my_person_ids', '{-3901,-3902}', true);
+select tap.is((select array_agg(person_id order by person_id) from person_last_activity where person_id between -3902 and -3900), array[-3901]::bigint[], 'member sees self, but not another person or a current person in another tenant');
+select set_config('jwt.claims.my_person_ids', '{}', true);
 set local role anonymous;
 select tap.is((select count(*) from person_last_activity), 0::bigint, 'anonymous cannot read activity');
 reset role;

@@ -238,3 +238,5 @@ comment on column federated.person_license.kind is '@behavior +attribute:orderBy
 comment on column federated.person_license.discipline is '@behavior +attribute:orderBy';
 comment on column federated.judge_score.component is '@behavior +attribute:orderBy';
 comment on column federated.competitor_component.role is '@behavior +attribute:orderBy';
+
+--!include views/person_last_activity.sql
