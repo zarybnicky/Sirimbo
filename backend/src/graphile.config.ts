@@ -34,6 +34,7 @@ const preset: GraphileConfig.Preset = {
     'PgV4BuildPlugin',
     'PgV4BehaviorPlugin',
     'PgV4InflectionPlugin',
+    'PostGraphileV4CompatibilityPlugin',
   ],
   plugins: [
     ApiInflectionPlugin,

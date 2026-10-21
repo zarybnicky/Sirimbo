@@ -270,3 +270,4 @@ end;
 $$;
 
 grant execute on function set_event_instance_registration to anonymous;
+comment on function set_event_instance_registration is '@resultFieldName eventInstanceRegistration';

@@ -137,3 +137,4 @@ end;
 $$;
 
 grant all on function upsert_announcement to anonymous;
+comment on function upsert_announcement is '@resultFieldName announcement';

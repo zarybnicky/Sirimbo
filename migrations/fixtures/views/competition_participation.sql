@@ -10,7 +10,8 @@ where not e.cancelled
     where (r.competition_id, r.competitor_id) = (e.competition_id, e.competitor_id)
   );
 
-comment on view federated.competition_participation is '@primaryKey competition_id,competitor_id
+comment on view federated.competition_participation is '@name competition_participation
+@primaryKey competition_id,competitor_id
 @foreignKey (competition_id) references federated.competition (id)|@fieldName competition|@foreignFieldName participations
 @foreignKey (competitor_id) references federated.competitor (id)|@fieldName competitor|@foreignFieldName competitionParticipations
 @behavior -single -list -connection -insert -update -delete';

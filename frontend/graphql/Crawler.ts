@@ -6,6 +6,18 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type CrawlerFetchStatus =
+  | 'ERROR'
+  | 'GONE'
+  | 'OK'
+  | 'PENDING'
+  | 'TRANSIENT';
+
+export type CrawlerProcessStatus =
+  | 'ERROR'
+  | 'OK'
+  | 'PENDING';
+
 /**
  * A condition to be used against `CrawlerTarget` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
@@ -20,7 +32,7 @@ export type CrawlerTargetCondition = {
   /** Checks for equality with the object’s `federation` field. */
   federation?: string | null | undefined;
   /** Checks for equality with the object’s `fetchStatus` field. */
-  fetchStatus?: FetchStatus | null | undefined;
+  fetchStatus?: CrawlerFetchStatus | null | undefined;
   /** Checks for equality with the object’s `id` field. */
   id?: string | null | undefined;
   /** Checks for equality with the object’s `key` field. */
@@ -38,25 +50,11 @@ export type CrawlerTargetCondition = {
   lastResponseId?: string | null | undefined;
   /** Checks for equality with the object’s `lastSuccessfulResponseId` field. */
   lastSuccessfulResponseId?: string | null | undefined;
-  /** Checks for equality with the object’s `meta` field. */
-  meta?: any;
   /** Checks for equality with the object’s `nextFetchAt` field. */
   nextFetchAt?: string | null | undefined;
   /** Checks for equality with the object’s `processStatus` field. */
-  processStatus?: ProcessStatus | null | undefined;
+  processStatus?: CrawlerProcessStatus | null | undefined;
 };
-
-export type FetchStatus =
-  | 'ERROR'
-  | 'GONE'
-  | 'OK'
-  | 'PENDING'
-  | 'TRANSIENT';
-
-export type ProcessStatus =
-  | 'ERROR'
-  | 'OK'
-  | 'PENDING';
 
 export type CrawlerOverviewQueryVariables = Exact<{
   federation?: string | null | undefined;
@@ -71,7 +69,7 @@ export type CrawlerTargetQueryVariables = Exact<{
 }>;
 
 
-export type CrawlerTargetQuery = { crawlerTarget: { id: string, federation: string, kind: string, key: string, discoveredAt: string, fetchStatus: Types.FetchStatus, processStatus: Types.ProcessStatus, lastFetchedAt: string | null, nextFetchAt: string, errorCount: number, lastProcessError: string | null, lastProcessErrorAt: string | null, lastResponseId: string | null, lastSuccessfulResponseId: string | null } | null };
+export type CrawlerTargetQuery = { crawlerTarget: { id: string, federation: string, kind: string, key: string, discoveredAt: string, fetchStatus: Types.CrawlerFetchStatus, processStatus: Types.CrawlerProcessStatus, lastFetchedAt: string | null, nextFetchAt: string, errorCount: number, lastProcessError: string | null, lastProcessErrorAt: string | null, lastResponseId: string | null, lastSuccessfulResponseId: string | null } | null };
 
 export type CrawlerResponseQueryVariables = Exact<{
   id: string;
@@ -86,7 +84,7 @@ export type CrawlerTargetsQueryVariables = Exact<{
 }>;
 
 
-export type CrawlerTargetsQuery = { crawlerTargets: { totalCount: number, nodes: Array<{ id: string, key: string, fetchStatus: Types.FetchStatus, processStatus: Types.ProcessStatus, errorCount: number, lastFetchedAt: string | null, nextFetchAt: string }> } | null };
+export type CrawlerTargetsQuery = { crawlerTargets: { totalCount: number, nodes: Array<{ id: string, key: string, fetchStatus: Types.CrawlerFetchStatus, processStatus: Types.CrawlerProcessStatus, errorCount: number, lastFetchedAt: string | null, nextFetchAt: string }> } | null };
 
 export type CrawlerSourcesQueryVariables = Exact<{
   condition: Types.CrawlerTargetCondition;
@@ -94,7 +92,7 @@ export type CrawlerSourcesQueryVariables = Exact<{
 }>;
 
 
-export type CrawlerSourcesQuery = { crawlerTargets: { totalCount: number, nodes: Array<{ id: string, kind: string, key: string, fetchStatus: Types.FetchStatus, processStatus: Types.ProcessStatus }> } | null };
+export type CrawlerSourcesQuery = { crawlerTargets: { totalCount: number, nodes: Array<{ id: string, kind: string, key: string, fetchStatus: Types.CrawlerFetchStatus, processStatus: Types.CrawlerProcessStatus }> } | null };
 
 export type CrawlerResponsesQueryVariables = Exact<{
   id: string;

@@ -140,8 +140,6 @@ export type AccessCredentialsOrderBy =
   | 'CREATED_BY_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'KIND_ASC'
-  | 'KIND_DESC'
   | 'LABEL_ASC'
   | 'LABEL_DESC'
   | 'NATURAL'
@@ -151,8 +149,6 @@ export type AccessCredentialsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
@@ -225,8 +221,6 @@ export type AccessEventsOrderBy =
   | 'EXTERNAL_ID_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'KIND_ASC'
-  | 'KIND_DESC'
   | 'LOCATION_ID_ASC'
   | 'LOCATION_ID_DESC'
   | 'NATURAL'
@@ -870,8 +864,6 @@ export type AnnouncementAudienceTypeInputRecordInput = {
 export type AnnouncementAudiencesOrderBy =
   | 'ANNOUNCEMENT_ID_ASC'
   | 'ANNOUNCEMENT_ID_DESC'
-  | 'AUDIENCE_ROLE_ASC'
-  | 'AUDIENCE_ROLE_DESC'
   | 'COHORT_ID_ASC'
   | 'COHORT_ID_DESC'
   | 'ID_ASC'
@@ -984,8 +976,6 @@ export type AnnouncementsOrderBy =
   | 'SCHEDULED_SINCE_DESC'
   | 'SCHEDULED_UNTIL_ASC'
   | 'SCHEDULED_UNTIL_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TITLE_ASC'
@@ -1017,9 +1007,9 @@ export type ArchiveCohortPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  cohort: Maybe<Cohort>;
   /** An edge for our `Cohort`. May be used by Relay 1. */
   cohortEdge: Maybe<CohortEdge>;
+  result: Maybe<Cohort>;
 };
 
 
@@ -1115,8 +1105,6 @@ export type CategoriesOrderBy =
   | 'BASE_DANCE_PROGRAM_ID_DESC'
   | 'CLASS_ASC'
   | 'CLASS_DESC'
-  | 'COMPETITOR_TYPE_ASC'
-  | 'COMPETITOR_TYPE_DESC'
   | 'DISCIPLINE_ASC'
   | 'DISCIPLINE_DESC'
   | 'GENDER_GROUP_ASC'
@@ -1333,8 +1321,6 @@ export type CohortCondition = {
   colorRgb?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `externalIds` field. */
-  externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isArchived` field. */
@@ -1534,8 +1520,6 @@ export type CohortMembershipsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
@@ -1608,8 +1592,6 @@ export type CohortSubscriptionCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `interval` field. */
   interval?: InputMaybe<IntervalInput>;
-  /** Checks for equality with the object’s `price` field. */
-  price?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `renewsOn` field. */
   renewsOn?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -1637,8 +1619,6 @@ export type CohortSubscriptionsOrderBy =
   | 'INTERVAL_ASC'
   | 'INTERVAL_DESC'
   | 'NATURAL'
-  | 'PRICE_ASC'
-  | 'PRICE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'RENEWS_ON_ASC'
@@ -2349,8 +2329,6 @@ export type CompetitionRoundResult = {
 export type CompetitionRoundResultCondition = {
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `danceResults` field. */
-  danceResults?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
   /** Checks for equality with the object’s `overallRanking` field. */
   overallRanking?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `overallRankingTo` field. */
@@ -2421,9 +2399,7 @@ export type CompetitionRoundsOrderBy =
   | 'ROUND_KEY_ASC'
   | 'ROUND_KEY_DESC'
   | 'ROUND_LABEL_ASC'
-  | 'ROUND_LABEL_DESC'
-  | 'SCORING_METHOD_ASC'
-  | 'SCORING_METHOD_DESC';
+  | 'ROUND_LABEL_DESC';
 
 export type CompetitionType =
   | 'CHAMPIONSHIP'
@@ -2441,8 +2417,6 @@ export type CompetitionsOrderBy =
   | 'CATEGORY_ID_DESC'
   | 'CHECK_IN_END_ASC'
   | 'CHECK_IN_END_DESC'
-  | 'COMPETITION_TYPE_ASC'
-  | 'COMPETITION_TYPE_DESC'
   | 'COMPLETED_AT_ASC'
   | 'COMPLETED_AT_DESC'
   | 'END_DATE_ASC'
@@ -2465,9 +2439,7 @@ export type CompetitionsOrderBy =
   | 'REGISTRATION_FEE_ASC'
   | 'REGISTRATION_FEE_DESC'
   | 'START_DATE_ASC'
-  | 'START_DATE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC';
+  | 'START_DATE_DESC';
 
 export type CompetitorCategoryOrder = {
   descending?: Scalars['Boolean']['input'];
@@ -2664,8 +2636,6 @@ export type CouplesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -2677,7 +2647,7 @@ export type CrawlerFetchJob = {
   __typename?: 'CrawlerFetchJob';
   attempts: Maybe<Scalars['Int']['output']>;
   federation: Maybe<Scalars['String']['output']>;
-  fetchStatus: Maybe<FetchStatus>;
+  fetchStatus: Maybe<CrawlerFetchStatus>;
   frontierId: Maybe<Scalars['BigInt']['output']>;
   frontierKey: Maybe<Scalars['String']['output']>;
   host: Maybe<Scalars['String']['output']>;
@@ -2689,7 +2659,7 @@ export type CrawlerFetchJob = {
   lockedAt: Maybe<Scalars['Datetime']['output']>;
   maxAttempts: Maybe<Scalars['Int']['output']>;
   processError: Maybe<Scalars['String']['output']>;
-  processStatus: Maybe<ProcessStatus>;
+  processStatus: Maybe<CrawlerProcessStatus>;
   runAt: Maybe<Scalars['Datetime']['output']>;
   state: Maybe<Scalars['String']['output']>;
 };
@@ -2704,7 +2674,7 @@ export type CrawlerFetchJobCondition = {
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fetchStatus` field. */
-  fetchStatus?: InputMaybe<FetchStatus>;
+  fetchStatus?: InputMaybe<CrawlerFetchStatus>;
   /** Checks for equality with the object’s `frontierId` field. */
   frontierId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `frontierKey` field. */
@@ -2728,7 +2698,7 @@ export type CrawlerFetchJobCondition = {
   /** Checks for equality with the object’s `processError` field. */
   processError?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `processStatus` field. */
-  processStatus?: InputMaybe<ProcessStatus>;
+  processStatus?: InputMaybe<CrawlerProcessStatus>;
   /** Checks for equality with the object’s `runAt` field. */
   runAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `state` field. */
@@ -2763,8 +2733,6 @@ export type CrawlerFetchJobsOrderBy =
   | 'ATTEMPTS_DESC'
   | 'FEDERATION_ASC'
   | 'FEDERATION_DESC'
-  | 'FETCH_STATUS_ASC'
-  | 'FETCH_STATUS_DESC'
   | 'FRONTIER_ID_ASC'
   | 'FRONTIER_ID_DESC'
   | 'FRONTIER_KEY_ASC'
@@ -2788,12 +2756,17 @@ export type CrawlerFetchJobsOrderBy =
   | 'NATURAL'
   | 'PROCESS_ERROR_ASC'
   | 'PROCESS_ERROR_DESC'
-  | 'PROCESS_STATUS_ASC'
-  | 'PROCESS_STATUS_DESC'
   | 'RUN_AT_ASC'
   | 'RUN_AT_DESC'
   | 'STATE_ASC'
   | 'STATE_DESC';
+
+export type CrawlerFetchStatus =
+  | 'ERROR'
+  | 'GONE'
+  | 'OK'
+  | 'PENDING'
+  | 'TRANSIENT';
 
 export type CrawlerIncrementalRange = {
   __typename?: 'CrawlerIncrementalRange';
@@ -2853,6 +2826,11 @@ export type CrawlerIncrementalRangesOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
+
+export type CrawlerProcessStatus =
+  | 'ERROR'
+  | 'OK'
+  | 'PENDING';
 
 export type CrawlerRateLimitRule = {
   __typename?: 'CrawlerRateLimitRule';
@@ -2986,8 +2964,6 @@ export type CrawlerResponseCacheResponsesArgs = {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type CrawlerResponseCacheCondition = {
-  /** Checks for equality with the object’s `content` field. */
-  content?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `contentHash` field. */
   contentHash?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3016,8 +2992,6 @@ export type CrawlerResponseCacheEdge = {
 
 /** Methods to use when ordering `CrawlerResponseCache`. */
 export type CrawlerResponseCachesOrderBy =
-  | 'CONTENT_ASC'
-  | 'CONTENT_DESC'
   | 'CONTENT_HASH_ASC'
   | 'CONTENT_HASH_DESC'
   | 'NATURAL'
@@ -3045,8 +3019,6 @@ export type CrawlerResponseCondition = {
   lastObservedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `observationCount` field. */
   observationCount?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `sysPeriod` field. */
-  sysPeriod?: InputMaybe<DatetimeRangeInput>;
   /** Checks for equality with the object’s `url` field. */
   url?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3102,7 +3074,7 @@ export type CrawlerTarget = {
   discoveredAt: Scalars['Datetime']['output'];
   errorCount: Scalars['Int']['output'];
   federation: Scalars['String']['output'];
-  fetchStatus: FetchStatus;
+  fetchStatus: CrawlerFetchStatus;
   id: Scalars['BigInt']['output'];
   key: Scalars['String']['output'];
   kind: Scalars['String']['output'];
@@ -3117,7 +3089,7 @@ export type CrawlerTarget = {
   lastSuccessfulResponseId: Maybe<Scalars['BigInt']['output']>;
   meta: Scalars['JSON']['output'];
   nextFetchAt: Scalars['Datetime']['output'];
-  processStatus: ProcessStatus;
+  processStatus: CrawlerProcessStatus;
   /** Reads and enables pagination through a set of `CrawlerResponse`. */
   responses: CrawlerResponseConnection;
 };
@@ -3147,7 +3119,7 @@ export type CrawlerTargetCondition = {
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fetchStatus` field. */
-  fetchStatus?: InputMaybe<FetchStatus>;
+  fetchStatus?: InputMaybe<CrawlerFetchStatus>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `key` field. */
@@ -3165,12 +3137,10 @@ export type CrawlerTargetCondition = {
   lastResponseId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lastSuccessfulResponseId` field. */
   lastSuccessfulResponseId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `meta` field. */
-  meta?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `nextFetchAt` field. */
   nextFetchAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `processStatus` field. */
-  processStatus?: InputMaybe<ProcessStatus>;
+  processStatus?: InputMaybe<CrawlerProcessStatus>;
 };
 
 /** A connection to a list of `CrawlerTarget` values. */
@@ -3202,14 +3172,14 @@ export type CrawlerTargetFailure = {
   failedAt: Maybe<Scalars['Datetime']['output']>;
   failure: Maybe<Scalars['String']['output']>;
   federation: Maybe<Scalars['String']['output']>;
-  fetchStatus: Maybe<FetchStatus>;
+  fetchStatus: Maybe<CrawlerFetchStatus>;
   httpStatus: Maybe<Scalars['Int']['output']>;
   id: Maybe<Scalars['BigInt']['output']>;
   key: Maybe<Scalars['String']['output']>;
   kind: Maybe<Scalars['String']['output']>;
   nextFetchAt: Maybe<Scalars['Datetime']['output']>;
   processError: Maybe<Scalars['String']['output']>;
-  processStatus: Maybe<ProcessStatus>;
+  processStatus: Maybe<CrawlerProcessStatus>;
   responseError: Maybe<Scalars['String']['output']>;
   url: Maybe<Scalars['String']['output']>;
 };
@@ -3230,7 +3200,7 @@ export type CrawlerTargetFailureCondition = {
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `fetchStatus` field. */
-  fetchStatus?: InputMaybe<FetchStatus>;
+  fetchStatus?: InputMaybe<CrawlerFetchStatus>;
   /** Checks for equality with the object’s `httpStatus` field. */
   httpStatus?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -3244,7 +3214,7 @@ export type CrawlerTargetFailureCondition = {
   /** Checks for equality with the object’s `processError` field. */
   processError?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `processStatus` field. */
-  processStatus?: InputMaybe<ProcessStatus>;
+  processStatus?: InputMaybe<CrawlerProcessStatus>;
   /** Checks for equality with the object’s `responseError` field. */
   responseError?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `url` field. */
@@ -3335,8 +3305,6 @@ export type CrawlerTargetFailuresOrderBy =
   | 'FAILURE_DESC'
   | 'FEDERATION_ASC'
   | 'FEDERATION_DESC'
-  | 'FETCH_STATUS_ASC'
-  | 'FETCH_STATUS_DESC'
   | 'HTTP_STATUS_ASC'
   | 'HTTP_STATUS_DESC'
   | 'ID_ASC'
@@ -3350,8 +3318,6 @@ export type CrawlerTargetFailuresOrderBy =
   | 'NEXT_FETCH_AT_DESC'
   | 'PROCESS_ERROR_ASC'
   | 'PROCESS_ERROR_DESC'
-  | 'PROCESS_STATUS_ASC'
-  | 'PROCESS_STATUS_DESC'
   | 'RESPONSE_ERROR_ASC'
   | 'RESPONSE_ERROR_DESC'
   | 'URL_ASC'
@@ -3440,8 +3406,6 @@ export type CrawlerTargetsOrderBy =
   | 'ERROR_COUNT_DESC'
   | 'FEDERATION_ASC'
   | 'FEDERATION_DESC'
-  | 'FETCH_STATUS_ASC'
-  | 'FETCH_STATUS_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'KEY_ASC'
@@ -3458,15 +3422,11 @@ export type CrawlerTargetsOrderBy =
   | 'LAST_RESPONSE_ID_DESC'
   | 'LAST_SUCCESSFUL_RESPONSE_ID_ASC'
   | 'LAST_SUCCESSFUL_RESPONSE_ID_DESC'
-  | 'META_ASC'
-  | 'META_DESC'
   | 'NATURAL'
   | 'NEXT_FETCH_AT_ASC'
   | 'NEXT_FETCH_AT_DESC'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'PROCESS_STATUS_ASC'
-  | 'PROCESS_STATUS_DESC';
+  | 'PRIMARY_KEY_DESC';
 
 /** All input for the create `AccessCredential` mutation. */
 export type CreateAccessCredentialInput = {
@@ -4051,22 +4011,6 @@ export type DateRangeBound = {
   inclusive: Scalars['Boolean']['output'];
   /** The value at one end of our range. */
   value: Scalars['Date']['output'];
-};
-
-/** The value at one end of a range. A range can either include this value, or not. */
-export type DateRangeBoundInput = {
-  /** Whether or not the value of this bound is included in the range. */
-  inclusive: Scalars['Boolean']['input'];
-  /** The value at one end of our range. */
-  value: Scalars['Date']['input'];
-};
-
-/** A range of `Date`. */
-export type DateRangeInput = {
-  /** The ending bound of our range. */
-  end?: InputMaybe<DateRangeBoundInput>;
-  /** The starting bound of our range. */
-  start?: InputMaybe<DateRangeBoundInput>;
 };
 
 /** A range of `Datetime`. */
@@ -4793,20 +4737,14 @@ export type EventInstanceCondition = {
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `managerPersonIds` field. */
-  managerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `parentId` field. */
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `range` field. */
-  range?: InputMaybe<DatetimeRangeInput>;
   /** Checks for equality with the object’s `seriesId` field. */
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `stats` field. */
-  stats?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `summary` field. */
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -5034,12 +4972,6 @@ export type EventInstanceRegistrationsOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'REGISTRATION_STATUS_ASC'
-  | 'REGISTRATION_STATUS_DESC'
-  | 'SOURCE_ASC'
-  | 'SOURCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TARGET_COHORT_ID_ASC'
   | 'TARGET_COHORT_ID_DESC'
   | 'TENANT_ID_ASC'
@@ -5171,8 +5103,6 @@ export type EventInstanceTrainersOrderBy =
 export type EventInstancesOrderBy =
   | 'CAPACITY_ASC'
   | 'CAPACITY_DESC'
-  | 'CAPACITY_UNIT_ASC'
-  | 'CAPACITY_UNIT_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
@@ -5208,14 +5138,10 @@ export type EventInstancesOrderBy =
   | 'SERIES_ID_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATS_ASC'
-  | 'STATS_DESC'
   | 'SUMMARY_ASC'
   | 'SUMMARY_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
-  | 'TYPE_ASC'
-  | 'TYPE_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -6055,8 +5981,6 @@ export type FederationCompetitorFacetsRecord = {
 export type FederationCompetitorsOrderBy =
   | 'AGE_GROUP_ASC'
   | 'AGE_GROUP_DESC'
-  | 'COMPETITOR_TYPE_ASC'
-  | 'COMPETITOR_TYPE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'EXTERNAL_ID_ASC'
@@ -6228,8 +6152,6 @@ export type FederationEventCondition = {
   organizingClubId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `postalCode` field. */
   postalCode?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `range` field. */
-  range?: InputMaybe<DateRangeInput>;
   search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `startDate` field. */
   startDate?: InputMaybe<Scalars['Date']['input']>;
@@ -6398,8 +6320,6 @@ export type FederationEventsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'START_DATE_ASC'
   | 'START_DATE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'STREET_ADDRESS_ASC'
   | 'STREET_ADDRESS_DESC'
   | 'VENUE_LAT_ASC'
@@ -6438,8 +6358,6 @@ export type FederationPeopleOrderBy =
   | 'FEDERATION_DESC'
   | 'FIRST_NAME_ASC'
   | 'FIRST_NAME_DESC'
-  | 'GENDER_ASC'
-  | 'GENDER_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'LAST_NAME_ASC'
@@ -6771,8 +6689,6 @@ export type FederationPersonLicensesOrderBy =
   | 'PERSON_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'VALID_UNTIL_ASC'
   | 'VALID_UNTIL_DESC';
 
@@ -6785,13 +6701,6 @@ export type FederationsOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
-
-export type FetchStatus =
-  | 'ERROR'
-  | 'GONE'
-  | 'OK'
-  | 'PENDING'
-  | 'TRANSIENT';
 
 export type File = {
   __typename?: 'File';
@@ -6955,8 +6864,6 @@ export type FormResponse = {
 export type FormResponseCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `data` field. */
-  data?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -6995,8 +6902,6 @@ export type FormResponseEdge = {
 export type FormResponsesOrderBy =
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
-  | 'DATA_ASC'
-  | 'DATA_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'NATURAL'
@@ -7219,8 +7124,6 @@ export type LocationImagesListArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type LocationCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
   /** Checks for equality with the object’s `coverImageId` field. */
   coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -7343,8 +7246,6 @@ export type LocationPatch = {
 
 /** Methods to use when ordering `Location`. */
 export type LocationsOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
   | 'COVER_IMAGE_ID_ASC'
   | 'COVER_IMAGE_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -7574,8 +7475,6 @@ export type MembershipApplicationsOrderBy =
   | 'EMAIL_DESC'
   | 'FIRST_NAME_ASC'
   | 'FIRST_NAME_DESC'
-  | 'GENDER_ASC'
-  | 'GENDER_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'LAST_NAME_ASC'
@@ -7595,8 +7494,6 @@ export type MembershipApplicationsOrderBy =
   | 'PREFIX_TITLE_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'SUFFIX_TITLE_ASC'
   | 'SUFFIX_TITLE_DESC'
   | 'TAX_IDENTIFICATION_NUMBER_ASC'
@@ -8489,8 +8386,6 @@ export type PaymentsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SPECIFIC_SYMBOL_ASC'
   | 'SPECIFIC_SYMBOL_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
@@ -8500,8 +8395,6 @@ export type PaymentsOrderBy =
 
 /** Methods to use when ordering `Person`. */
 export type PeopleOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
   | 'BIO_ASC'
   | 'BIO_DESC'
   | 'BIRTH_DATE_ASC'
@@ -8516,8 +8409,6 @@ export type PeopleOrderBy =
   | 'FACEBOOK_URL_DESC'
   | 'FIRST_NAME_ASC'
   | 'FIRST_NAME_DESC'
-  | 'GENDER_ASC'
-  | 'GENDER_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'INSTAGRAM_USERNAME_ASC'
@@ -8879,8 +8770,6 @@ export type PersonUserProxiesListArgs = {
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
   /** Checks for equality with the object’s `bio` field. */
   bio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `birthDate` field. */
@@ -8891,8 +8780,6 @@ export type PersonCondition = {
   cstsId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `email` field. */
   email?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `externalIds` field. */
-  externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   /** Checks for equality with the object’s `facebookUrl` field. */
   facebookUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `firstName` field. */
@@ -9248,11 +9135,6 @@ export type PriceInput = {
   amount?: InputMaybe<Scalars['BigFloat']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
 };
-
-export type ProcessStatus =
-  | 'ERROR'
-  | 'OK'
-  | 'PENDING';
 
 /** The root query type which gives access points into the data universe. */
 export type Query = {
@@ -10354,9 +10236,7 @@ export type QueryScoreboardManualAdjustmentArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QuerySystemAdminTenantsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -10747,9 +10627,9 @@ export type RejectMembershipApplicationPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  membershipApplication: Maybe<MembershipApplication>;
   /** An edge for our `MembershipApplication`. May be used by Relay 1. */
   membershipApplicationEdge: Maybe<MembershipApplicationEdge>;
+  result: Maybe<MembershipApplication>;
 };
 
 
@@ -11013,10 +10893,6 @@ export type SecurityEventsOrderBy =
   | 'EFFECTIVE_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'KIND_ASC'
-  | 'KIND_DESC'
-  | 'METHOD_ASC'
-  | 'METHOD_DESC'
   | 'NATURAL'
   | 'OCCURRED_AT_ASC'
   | 'OCCURRED_AT_DESC'
@@ -11237,7 +11113,7 @@ export type SystemAdminUpdateTenantPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
-  tenant: Maybe<Tenant>;
+  result: Maybe<Tenant>;
   /** An edge for our `Tenant`. May be used by Relay 1. */
   tenantEdge: Maybe<TenantEdge>;
 };
@@ -11777,8 +11653,6 @@ export type TenantAdministratorsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
@@ -11788,8 +11662,6 @@ export type TenantAdministratorsOrderBy =
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
   /** Checks for equality with the object’s `bankAccount` field. */
   bankAccount?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `czDic` field. */
@@ -11802,8 +11674,6 @@ export type TenantCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `origins` field. */
-  origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 /** A `Tenant` edge in the connection. */
@@ -11870,8 +11740,6 @@ export type TenantLocationImagesListArgs = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type TenantLocationCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: InputMaybe<AddressDomainInput>;
   /** Checks for equality with the object’s `coverImageId` field. */
   coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -11938,8 +11806,6 @@ export type TenantLocationImagesOrderBy =
 
 /** Methods to use when ordering `TenantLocation`. */
 export type TenantLocationsOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
   | 'COVER_IMAGE_ID_ASC'
   | 'COVER_IMAGE_ID_DESC'
   | 'CREATED_AT_ASC'
@@ -12065,8 +11931,6 @@ export type TenantMembershipsOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
@@ -12112,8 +11976,6 @@ export type TenantSettingsOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'SETTINGS_ASC'
-  | 'SETTINGS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
@@ -12158,12 +12020,8 @@ export type TenantTrainerCondition = {
   currency?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `guestPayout45Min` field. */
-  guestPayout45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `guestPayout45MinAmount` field. */
   guestPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
-  /** Checks for equality with the object’s `guestPrice45Min` field. */
-  guestPrice45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `guestPrice45MinAmount` field. */
   guestPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -12172,12 +12030,8 @@ export type TenantTrainerCondition = {
   isExternal?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `memberPayout45Min` field. */
-  memberPayout45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `memberPayout45MinAmount` field. */
   memberPayout45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
-  /** Checks for equality with the object’s `memberPrice45Min` field. */
-  memberPrice45Min?: InputMaybe<PriceInput>;
   /** Checks for equality with the object’s `memberPrice45MinAmount` field. */
   memberPrice45MinAmount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `personId` field. */
@@ -12276,12 +12130,8 @@ export type TenantTrainersOrderBy =
   | 'DESCRIPTION_DESC'
   | 'GUEST_PAYOUT_45MIN_AMOUNT_ASC'
   | 'GUEST_PAYOUT_45MIN_AMOUNT_DESC'
-  | 'GUEST_PAYOUT_45MIN_ASC'
-  | 'GUEST_PAYOUT_45MIN_DESC'
   | 'GUEST_PRICE_45MIN_AMOUNT_ASC'
   | 'GUEST_PRICE_45MIN_AMOUNT_DESC'
-  | 'GUEST_PRICE_45MIN_ASC'
-  | 'GUEST_PRICE_45MIN_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
   | 'IS_EXTERNAL_ASC'
@@ -12290,12 +12140,8 @@ export type TenantTrainersOrderBy =
   | 'IS_VISIBLE_DESC'
   | 'MEMBER_PAYOUT_45MIN_AMOUNT_ASC'
   | 'MEMBER_PAYOUT_45MIN_AMOUNT_DESC'
-  | 'MEMBER_PAYOUT_45MIN_ASC'
-  | 'MEMBER_PAYOUT_45MIN_DESC'
   | 'MEMBER_PRICE_45MIN_AMOUNT_ASC'
   | 'MEMBER_PRICE_45MIN_AMOUNT_DESC'
-  | 'MEMBER_PRICE_45MIN_ASC'
-  | 'MEMBER_PRICE_45MIN_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -12303,8 +12149,6 @@ export type TenantTrainersOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UNTIL_ASC'
@@ -12314,8 +12158,6 @@ export type TenantTrainersOrderBy =
 
 /** Methods to use when ordering `Tenant`. */
 export type TenantsOrderBy =
-  | 'ADDRESS_ASC'
-  | 'ADDRESS_DESC'
   | 'BANK_ACCOUNT_ASC'
   | 'BANK_ACCOUNT_DESC'
   | 'CZ_DIC_ASC'
@@ -12442,8 +12284,6 @@ export type TransactionsOrderBy =
   | 'PAYMENT_ID_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'SOURCE_ASC'
-  | 'SOURCE_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
@@ -13245,8 +13085,6 @@ export type UserProxiesOrderBy =
   | 'PRIMARY_KEY_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'UNTIL_ASC'
   | 'UNTIL_DESC'
   | 'UPDATED_AT_ASC'
@@ -14025,8 +13863,8 @@ export type GraphCacheResolvers = {
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    cohort?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>,
-    cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortEdge> | string>
+    cohortEdge?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, ArchiveCohortPayloadCohortEdgeArgs, WithTypename<CohortEdge> | string>,
+    result?: GraphCacheResolver<WithTypename<ArchiveCohortPayload>, Record<string, never>, WithTypename<Cohort> | string>
   },
   ArticleAttachment?: {
     aktualityId?: GraphCacheResolver<WithTypename<ArticleAttachment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -14347,7 +14185,7 @@ export type GraphCacheResolvers = {
   CrawlerFetchJob?: {
     attempts?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['Int']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>,
-    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, FetchStatus | string>,
+    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, CrawlerFetchStatus | string>,
     frontierId?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     frontierKey?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>,
     host?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14359,7 +14197,7 @@ export type GraphCacheResolvers = {
     lockedAt?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     maxAttempts?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['Int']['output'] | string>,
     processError?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>,
-    processStatus?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, ProcessStatus | string>,
+    processStatus?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, CrawlerProcessStatus | string>,
     runAt?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     state?: GraphCacheResolver<WithTypename<CrawlerFetchJob>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -14451,7 +14289,7 @@ export type GraphCacheResolvers = {
     discoveredAt?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     errorCount?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Int']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['String']['output'] | string>,
-    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, FetchStatus | string>,
+    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, CrawlerFetchStatus | string>,
     id?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     key?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['String']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14464,7 +14302,7 @@ export type GraphCacheResolvers = {
     lastSuccessfulResponseId?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     meta?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['JSON']['output'] | string>,
     nextFetchAt?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    processStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, ProcessStatus | string>,
+    processStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, CrawlerProcessStatus | string>,
     responses?: GraphCacheResolver<WithTypename<CrawlerTarget>, CrawlerTargetResponsesArgs, WithTypename<CrawlerResponseConnection> | string>
   },
   CrawlerTargetConnection?: {
@@ -14483,14 +14321,14 @@ export type GraphCacheResolvers = {
     failedAt?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     failure?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
-    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, FetchStatus | string>,
+    fetchStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, CrawlerFetchStatus | string>,
     httpStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['Int']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     key?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     nextFetchAt?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     processError?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
-    processStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, ProcessStatus | string>,
+    processStatus?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, CrawlerProcessStatus | string>,
     responseError?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>,
     url?: GraphCacheResolver<WithTypename<CrawlerTargetFailure>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -15582,8 +15420,8 @@ export type GraphCacheResolvers = {
   },
   RejectMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    membershipApplication?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>,
-    membershipApplicationEdge?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs, WithTypename<MembershipApplicationEdge> | string>
+    membershipApplicationEdge?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs, WithTypename<MembershipApplicationEdge> | string>,
+    result?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>
   },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String']['output'] | string>
@@ -15691,7 +15529,7 @@ export type GraphCacheResolvers = {
   },
   SystemAdminUpdateTenantPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, WithTypename<Tenant> | string>,
+    result?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, Record<string, never>, WithTypename<Tenant> | string>,
     tenantEdge?: GraphCacheResolver<WithTypename<SystemAdminUpdateTenantPayload>, SystemAdminUpdateTenantPayloadTenantEdgeArgs, WithTypename<TenantEdge> | string>
   },
   Tenant?: {
@@ -16591,8 +16429,8 @@ export type GraphCacheUpdaters = {
   },
   ArchiveCohortPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
-    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>,
-    cohortEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, ArchiveCohortPayloadCohortEdgeArgs>
+    cohortEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, ArchiveCohortPayloadCohortEdgeArgs>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<ArchiveCohortPayload>>, Record<string, never>>
   },
   ArticleAttachment?: {
     aktualityId?: GraphCacheUpdateResolver<Maybe<WithTypename<ArticleAttachment>>, Record<string, never>>,
@@ -18148,8 +17986,8 @@ export type GraphCacheUpdaters = {
   },
   RejectMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
-    membershipApplication?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
-    membershipApplicationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs>
+    membershipApplicationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>
   },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>
@@ -18257,7 +18095,7 @@ export type GraphCacheUpdaters = {
   },
   SystemAdminUpdateTenantPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
-    tenant?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, Record<string, never>>,
     tenantEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<SystemAdminUpdateTenantPayload>>, SystemAdminUpdateTenantPayloadTenantEdgeArgs>
   },
   Tenant?: {

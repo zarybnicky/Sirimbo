@@ -43,6 +43,7 @@ language sql stable as $$
   order by option.facet, option.value;
 $$;
 
-comment on function federated.federation_competitor_facets is '@behavior +list -connection';
+comment on function federated.federation_competitor_facets is '@name federation_competitor_facets
+@behavior +list -connection';
 revoke all on function federated.federation_competitor_facets from public;
 grant execute on function federated.federation_competitor_facets to anonymous;

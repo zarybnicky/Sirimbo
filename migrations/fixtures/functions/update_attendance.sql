@@ -4,3 +4,5 @@ create or replace function update_attendance(eir_id bigint, status attendance_ty
 as $$
   update event_instance_registration set status = $2, attendance_note = $3 where id = $1 returning *;
 $$;
+
+comment on function update_attendance is '@resultFieldName eventInstanceRegistration';

@@ -163,11 +163,78 @@ where c.id = a.id
 do $$
 begin
   if not exists (select 1 from pg_catalog.pg_constraint where conrelid = 'public.file'::regclass and conname = 'file_tenant_id_id_key') then
-    alter table public.file
+    alter table file
       add constraint file_tenant_id_id_key unique using index file_tenant_id_id_idx;
   end if;
 end;
 $$;
 
-comment on constraint file_tenant_id_id_key on public.file
+comment on constraint file_tenant_id_id_key on file
   is '@behavior -query:resource:single';
+
+--!include functions/create_credit_transaction_for_person.sql
+--!include functions/upsert_announcement.sql
+--!include functions/upsert_location.sql
+--!include functions/confirm_membership_application.sql
+--!include functions/create_person.sql
+--!include functions/move_event_instance.sql
+--!include functions/update_attendance.sql
+--!include functions/federation_people_facets.sql
+--!include functions/federation_competitor_facets.sql
+--!include functions/federation_event_facets.sql
+--!include views/competition_participation.sql
+
+comment on table federated.category is '@name category
+@behavior -insert -update -delete +list -connection';
+comment on table federated.federation is '@name federation
+@behavior -insert -update -delete +list -connection';
+comment on table federated.competition is '@name competition
+@behavior -insert -update -delete -list';
+comment on table federated.ranklist_entry is '@name ranklist_entry
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.competition_entry is '@name competition_entry
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.competition_official is '@name competition_official
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.competition_result is '@name competition_result
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.competition_round is '@name competition_round
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list';
+comment on table federated.competition_round_judge is '@name competition_round_judge
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.competition_round_result is '@name competition_round_result
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.dance is '@name dance
+@behavior -insert -update -delete +list -connection';
+comment on table federated.dance_program is '@name dance_program
+@behavior -insert -update -delete +list -connection';
+comment on table federated.dance_program_dance is '@name dance_program_dance
+@behavior -insert -update -delete +list -connection';
+comment on table federated.federation_club is '@name federation_club
+@behavior -insert -update -delete -list';
+comment on table federated.judge_score is '@name judge_score
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+comment on table federated.ranklist is '@name ranklist
+@behavior -insert -update -delete -list';
+comment on table federated.ranklist_snapshot is '@name ranklist_snapshot
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+
+comment on type federated.competitor_role is '@name competitor_role';
+comment on type federated.gender is '@name gender';
+comment on type federated.person_license_discipline is '@name person_license_discipline';
+comment on type federated.person_license_kind is '@name person_license_kind';
+comment on type federated.person_license_status is '@name person_license_status';
+comment on type federated.competition_type is '@name competition_type';
+comment on type federated.competitor_type is '@name competitor_type';
+comment on type federated.official_role is '@name official_role';
+comment on type federated.score_component is '@name score_component';
+comment on type federated.scoring_method is '@name scoring_method';
+comment on function set_event_sharing is '@resultFieldName string';
+comment on function update_tenant_settings_key is '@resultFieldName tenantSetting';
+
+comment on column federated.event_official.role is '@behavior +attribute:orderBy';
+comment on column federated.competition_official.role is '@behavior +attribute:orderBy';
+comment on column federated.person_license.kind is '@behavior +attribute:orderBy';
+comment on column federated.person_license.discipline is '@behavior +attribute:orderBy';
+comment on column federated.judge_score.component is '@behavior +attribute:orderBy';
+comment on column federated.competitor_component.role is '@behavior +attribute:orderBy';

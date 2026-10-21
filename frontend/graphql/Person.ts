@@ -64,8 +64,6 @@ export type PaymentStatus =
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
-  /** Checks for equality with the object’s `address` field. */
-  address?: AddressDomainInput | null | undefined;
   /** Checks for equality with the object’s `bio` field. */
   bio?: string | null | undefined;
   /** Checks for equality with the object’s `birthDate` field. */
@@ -76,8 +74,6 @@ export type PersonCondition = {
   cstsId?: number | null | undefined;
   /** Checks for equality with the object’s `email` field. */
   email?: string | null | undefined;
-  /** Checks for equality with the object’s `externalIds` field. */
-  externalIds?: Array<string | null | undefined> | null | undefined;
   /** Checks for equality with the object’s `facebookUrl` field. */
   facebookUrl?: string | null | undefined;
   /** Checks for equality with the object’s `firstName` field. */

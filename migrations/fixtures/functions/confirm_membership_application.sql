@@ -56,3 +56,4 @@ as $$
 $$;
 
 grant all on function confirm_membership_application to administrator;
+comment on function confirm_membership_application is '@resultFieldName person';

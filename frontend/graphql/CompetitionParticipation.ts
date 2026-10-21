@@ -41,8 +41,6 @@ export type CompetitionsOrderBy =
   | 'CATEGORY_ID_DESC'
   | 'CHECK_IN_END_ASC'
   | 'CHECK_IN_END_DESC'
-  | 'COMPETITION_TYPE_ASC'
-  | 'COMPETITION_TYPE_DESC'
   | 'COMPLETED_AT_ASC'
   | 'COMPLETED_AT_DESC'
   | 'END_DATE_ASC'
@@ -65,9 +63,7 @@ export type CompetitionsOrderBy =
   | 'REGISTRATION_FEE_ASC'
   | 'REGISTRATION_FEE_DESC'
   | 'START_DATE_ASC'
-  | 'START_DATE_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC';
+  | 'START_DATE_DESC';
 
 export type CompetitorType =
   | 'COUPLE'

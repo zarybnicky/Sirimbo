@@ -109,8 +109,6 @@ enum AccessCredentialsOrderBy {
   CREATED_BY_DESC
   ID_ASC
   ID_DESC
-  KIND_ASC
-  KIND_DESC
   LABEL_ASC
   LABEL_DESC
   NATURAL
@@ -120,8 +118,6 @@ enum AccessCredentialsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UNTIL_ASC
@@ -208,8 +204,6 @@ enum AccessEventsOrderBy {
   EXTERNAL_ID_DESC
   ID_ASC
   ID_DESC
-  KIND_ASC
-  KIND_DESC
   LOCATION_ID_ASC
   LOCATION_ID_DESC
   NATURAL
@@ -1013,8 +1007,6 @@ input AnnouncementAudienceTypeInputRecordInput {
 enum AnnouncementAudiencesOrderBy {
   ANNOUNCEMENT_ID_ASC
   ANNOUNCEMENT_ID_DESC
-  AUDIENCE_ROLE_ASC
-  AUDIENCE_ROLE_DESC
   COHORT_ID_ASC
   COHORT_ID_DESC
   ID_ASC
@@ -1145,8 +1137,6 @@ enum AnnouncementsOrderBy {
   SCHEDULED_SINCE_DESC
   SCHEDULED_UNTIL_ASC
   SCHEDULED_UNTIL_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   TITLE_ASC
@@ -1179,13 +1169,13 @@ type ArchiveCohortPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  cohort: Cohort
 
   """An edge for our `Cohort`. May be used by Relay 1."""
   cohortEdge(
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CohortEdge
+  result: Cohort
 }
 
 type ArticleAttachment {
@@ -1301,8 +1291,6 @@ enum CategoriesOrderBy {
   BASE_DANCE_PROGRAM_ID_DESC
   CLASS_ASC
   CLASS_DESC
-  COMPETITOR_TYPE_ASC
-  COMPETITOR_TYPE_DESC
   DISCIPLINE_ASC
   DISCIPLINE_DESC
   GENDER_GROUP_ASC
@@ -1659,9 +1647,6 @@ input CohortCondition {
   """Checks for equality with the object’s `description` field."""
   description: String
 
-  """Checks for equality with the object’s `externalIds` field."""
-  externalIds: [String]
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -1892,8 +1877,6 @@ enum CohortMembershipsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UNTIL_ASC
@@ -1984,9 +1967,6 @@ input CohortSubscriptionCondition {
   """Checks for equality with the object’s `interval` field."""
   interval: IntervalInput
 
-  """Checks for equality with the object’s `price` field."""
-  price: PriceInput
-
   """Checks for equality with the object’s `renewsOn` field."""
   renewsOn: Datetime
 
@@ -2016,8 +1996,6 @@ enum CohortSubscriptionsOrderBy {
   INTERVAL_ASC
   INTERVAL_DESC
   NATURAL
-  PRICE_ASC
-  PRICE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   RENEWS_ON_ASC
@@ -2977,9 +2955,6 @@ input CompetitionRoundResultCondition {
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
 
-  """Checks for equality with the object’s `danceResults` field."""
-  danceResults: [Float]
-
   """Checks for equality with the object’s `overallRanking` field."""
   overallRanking: Int
 
@@ -3062,8 +3037,6 @@ enum CompetitionRoundsOrderBy {
   ROUND_KEY_DESC
   ROUND_LABEL_ASC
   ROUND_LABEL_DESC
-  SCORING_METHOD_ASC
-  SCORING_METHOD_DESC
 }
 
 enum CompetitionType {
@@ -3083,8 +3056,6 @@ enum CompetitionsOrderBy {
   CATEGORY_ID_DESC
   CHECK_IN_END_ASC
   CHECK_IN_END_DESC
-  COMPETITION_TYPE_ASC
-  COMPETITION_TYPE_DESC
   COMPLETED_AT_ASC
   COMPLETED_AT_DESC
   END_DATE_ASC
@@ -3108,8 +3079,6 @@ enum CompetitionsOrderBy {
   REGISTRATION_FEE_DESC
   START_DATE_ASC
   START_DATE_DESC
-  STATUS_ASC
-  STATUS_DESC
 }
 
 input CompetitorCategoryOrder {
@@ -3394,8 +3363,6 @@ enum CouplesOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   UNTIL_ASC
   UNTIL_DESC
   UPDATED_AT_ASC
@@ -3407,7 +3374,7 @@ enum CouplesOrderBy {
 type CrawlerFetchJob {
   attempts: Int
   federation: String
-  fetchStatus: FetchStatus
+  fetchStatus: CrawlerFetchStatus
   frontierId: BigInt
   frontierKey: String
   host: String
@@ -3419,7 +3386,7 @@ type CrawlerFetchJob {
   lockedAt: Datetime
   maxAttempts: Int
   processError: String
-  processStatus: ProcessStatus
+  processStatus: CrawlerProcessStatus
   runAt: Datetime
   state: String
 }
@@ -3436,7 +3403,7 @@ input CrawlerFetchJobCondition {
   federation: String
 
   """Checks for equality with the object’s `fetchStatus` field."""
-  fetchStatus: FetchStatus
+  fetchStatus: CrawlerFetchStatus
 
   """Checks for equality with the object’s `frontierId` field."""
   frontierId: BigInt
@@ -3472,7 +3439,7 @@ input CrawlerFetchJobCondition {
   processError: String
 
   """Checks for equality with the object’s `processStatus` field."""
-  processStatus: ProcessStatus
+  processStatus: CrawlerProcessStatus
 
   """Checks for equality with the object’s `runAt` field."""
   runAt: Datetime
@@ -3515,8 +3482,6 @@ enum CrawlerFetchJobsOrderBy {
   ATTEMPTS_DESC
   FEDERATION_ASC
   FEDERATION_DESC
-  FETCH_STATUS_ASC
-  FETCH_STATUS_DESC
   FRONTIER_ID_ASC
   FRONTIER_ID_DESC
   FRONTIER_KEY_ASC
@@ -3540,12 +3505,18 @@ enum CrawlerFetchJobsOrderBy {
   NATURAL
   PROCESS_ERROR_ASC
   PROCESS_ERROR_DESC
-  PROCESS_STATUS_ASC
-  PROCESS_STATUS_DESC
   RUN_AT_ASC
   RUN_AT_DESC
   STATE_ASC
   STATE_DESC
+}
+
+enum CrawlerFetchStatus {
+  ERROR
+  GONE
+  OK
+  PENDING
+  TRANSIENT
 }
 
 type CrawlerIncrementalRange {
@@ -3614,6 +3585,12 @@ enum CrawlerIncrementalRangesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+}
+
+enum CrawlerProcessStatus {
+  ERROR
+  OK
+  PENDING
 }
 
 type CrawlerRateLimitRule {
@@ -3810,9 +3787,6 @@ A condition to be used against `CrawlerResponseCache` object types. All fields
 are tested for equality and combined with a logical ‘and.’
 """
 input CrawlerResponseCacheCondition {
-  """Checks for equality with the object’s `content` field."""
-  content: JSON
-
   """Checks for equality with the object’s `contentHash` field."""
   contentHash: String
 }
@@ -3847,8 +3821,6 @@ type CrawlerResponseCacheEdge {
 
 """Methods to use when ordering `CrawlerResponseCache`."""
 enum CrawlerResponseCachesOrderBy {
-  CONTENT_ASC
-  CONTENT_DESC
   CONTENT_HASH_ASC
   CONTENT_HASH_DESC
   NATURAL
@@ -3884,9 +3856,6 @@ input CrawlerResponseCondition {
 
   """Checks for equality with the object’s `observationCount` field."""
   observationCount: BigInt
-
-  """Checks for equality with the object’s `sysPeriod` field."""
-  sysPeriod: DatetimeRangeInput
 
   """Checks for equality with the object’s `url` field."""
   url: String
@@ -3949,7 +3918,7 @@ type CrawlerTarget {
   discoveredAt: Datetime!
   errorCount: Int!
   federation: String!
-  fetchStatus: FetchStatus!
+  fetchStatus: CrawlerFetchStatus!
   id: BigInt!
   key: String!
   kind: String!
@@ -3970,7 +3939,7 @@ type CrawlerTarget {
   lastSuccessfulResponseId: BigInt
   meta: JSON!
   nextFetchAt: Datetime!
-  processStatus: ProcessStatus!
+  processStatus: CrawlerProcessStatus!
 
   """Reads and enables pagination through a set of `CrawlerResponse`."""
   responses(
@@ -4020,7 +3989,7 @@ input CrawlerTargetCondition {
   federation: String
 
   """Checks for equality with the object’s `fetchStatus` field."""
-  fetchStatus: FetchStatus
+  fetchStatus: CrawlerFetchStatus
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -4049,14 +4018,11 @@ input CrawlerTargetCondition {
   """
   lastSuccessfulResponseId: BigInt
 
-  """Checks for equality with the object’s `meta` field."""
-  meta: JSON
-
   """Checks for equality with the object’s `nextFetchAt` field."""
   nextFetchAt: Datetime
 
   """Checks for equality with the object’s `processStatus` field."""
-  processStatus: ProcessStatus
+  processStatus: CrawlerProcessStatus
 }
 
 """A connection to a list of `CrawlerTarget` values."""
@@ -4091,14 +4057,14 @@ type CrawlerTargetFailure {
   failedAt: Datetime
   failure: String
   federation: String
-  fetchStatus: FetchStatus
+  fetchStatus: CrawlerFetchStatus
   httpStatus: Int
   id: BigInt
   key: String
   kind: String
   nextFetchAt: Datetime
   processError: String
-  processStatus: ProcessStatus
+  processStatus: CrawlerProcessStatus
   responseError: String
   url: String
 }
@@ -4124,7 +4090,7 @@ input CrawlerTargetFailureCondition {
   federation: String
 
   """Checks for equality with the object’s `fetchStatus` field."""
-  fetchStatus: FetchStatus
+  fetchStatus: CrawlerFetchStatus
 
   """Checks for equality with the object’s `httpStatus` field."""
   httpStatus: Int
@@ -4145,7 +4111,7 @@ input CrawlerTargetFailureCondition {
   processError: String
 
   """Checks for equality with the object’s `processStatus` field."""
-  processStatus: ProcessStatus
+  processStatus: CrawlerProcessStatus
 
   """Checks for equality with the object’s `responseError` field."""
   responseError: String
@@ -4250,8 +4216,6 @@ enum CrawlerTargetFailuresOrderBy {
   FAILURE_DESC
   FEDERATION_ASC
   FEDERATION_DESC
-  FETCH_STATUS_ASC
-  FETCH_STATUS_DESC
   HTTP_STATUS_ASC
   HTTP_STATUS_DESC
   ID_ASC
@@ -4265,8 +4229,6 @@ enum CrawlerTargetFailuresOrderBy {
   NEXT_FETCH_AT_DESC
   PROCESS_ERROR_ASC
   PROCESS_ERROR_DESC
-  PROCESS_STATUS_ASC
-  PROCESS_STATUS_DESC
   RESPONSE_ERROR_ASC
   RESPONSE_ERROR_DESC
   URL_ASC
@@ -4367,8 +4329,6 @@ enum CrawlerTargetsOrderBy {
   ERROR_COUNT_DESC
   FEDERATION_ASC
   FEDERATION_DESC
-  FETCH_STATUS_ASC
-  FETCH_STATUS_DESC
   ID_ASC
   ID_DESC
   KEY_ASC
@@ -4385,15 +4345,11 @@ enum CrawlerTargetsOrderBy {
   LAST_RESPONSE_ID_DESC
   LAST_SUCCESSFUL_RESPONSE_ID_ASC
   LAST_SUCCESSFUL_RESPONSE_ID_DESC
-  META_ASC
-  META_DESC
   NATURAL
   NEXT_FETCH_AT_ASC
   NEXT_FETCH_AT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  PROCESS_STATUS_ASC
-  PROCESS_STATUS_DESC
 }
 
 """All input for the create `AccessCredential` mutation."""
@@ -5052,26 +5008,6 @@ type DateRangeBound {
 
   """The value at one end of our range."""
   value: Date!
-}
-
-"""
-The value at one end of a range. A range can either include this value, or not.
-"""
-input DateRangeBoundInput {
-  """Whether or not the value of this bound is included in the range."""
-  inclusive: Boolean!
-
-  """The value at one end of our range."""
-  value: Date!
-}
-
-"""A range of `Date`."""
-input DateRangeInput {
-  """The ending bound of our range."""
-  end: DateRangeBoundInput
-
-  """The starting bound of our range."""
-  start: DateRangeBoundInput
 }
 
 """
@@ -5881,26 +5817,17 @@ input EventInstanceCondition {
   """Checks for equality with the object’s `locationText` field."""
   locationText: String
 
-  """Checks for equality with the object’s `managerPersonIds` field."""
-  managerPersonIds: [BigInt]
-
   """Checks for equality with the object’s `name` field."""
   name: String
 
   """Checks for equality with the object’s `parentId` field."""
   parentId: BigInt
 
-  """Checks for equality with the object’s `range` field."""
-  range: DatetimeRangeInput
-
   """Checks for equality with the object’s `seriesId` field."""
   seriesId: BigInt
 
   """Checks for equality with the object’s `since` field."""
   since: Datetime
-
-  """Checks for equality with the object’s `stats` field."""
-  stats: JSON
 
   """Checks for equality with the object’s `summary` field."""
   summary: String
@@ -6205,12 +6132,6 @@ enum EventInstanceRegistrationsOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  REGISTRATION_STATUS_ASC
-  REGISTRATION_STATUS_DESC
-  SOURCE_ASC
-  SOURCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TARGET_COHORT_ID_ASC
   TARGET_COHORT_ID_DESC
   TENANT_ID_ASC
@@ -6375,8 +6296,6 @@ enum EventInstanceTrainersOrderBy {
 enum EventInstancesOrderBy {
   CAPACITY_ASC
   CAPACITY_DESC
-  CAPACITY_UNIT_ASC
-  CAPACITY_UNIT_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   DESCRIPTION_ASC
@@ -6412,14 +6331,10 @@ enum EventInstancesOrderBy {
   SERIES_ID_DESC
   SINCE_ASC
   SINCE_DESC
-  STATS_ASC
-  STATS_DESC
   SUMMARY_ASC
   SUMMARY_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
   UNTIL_ASC
   UNTIL_DESC
   UPDATED_AT_ASC
@@ -7670,8 +7585,6 @@ type FederationCompetitorFacetsRecord {
 enum FederationCompetitorsOrderBy {
   AGE_GROUP_ASC
   AGE_GROUP_DESC
-  COMPETITOR_TYPE_ASC
-  COMPETITOR_TYPE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   EXTERNAL_ID_ASC
@@ -7908,9 +7821,6 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `postalCode` field."""
   postalCode: String
-
-  """Checks for equality with the object’s `range` field."""
-  range: DateRangeInput
   search: String
 
   """Checks for equality with the object’s `startDate` field."""
@@ -8108,8 +8018,6 @@ enum FederationEventsOrderBy {
   PRIMARY_KEY_DESC
   START_DATE_ASC
   START_DATE_DESC
-  STATUS_ASC
-  STATUS_DESC
   STREET_ADDRESS_ASC
   STREET_ADDRESS_DESC
   VENUE_LAT_ASC
@@ -8148,8 +8056,6 @@ enum FederationPeopleOrderBy {
   FEDERATION_DESC
   FIRST_NAME_ASC
   FIRST_NAME_DESC
-  GENDER_ASC
-  GENDER_DESC
   ID_ASC
   ID_DESC
   LAST_NAME_ASC
@@ -8650,8 +8556,6 @@ enum FederationPersonLicensesOrderBy {
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  STATUS_ASC
-  STATUS_DESC
   VALID_UNTIL_ASC
   VALID_UNTIL_DESC
 }
@@ -8665,14 +8569,6 @@ enum FederationsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-}
-
-enum FetchStatus {
-  ERROR
-  GONE
-  OK
-  PENDING
-  TRANSIENT
 }
 
 type File {
@@ -8902,9 +8798,6 @@ input FormResponseCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
 
-  """Checks for equality with the object’s `data` field."""
-  data: JSON
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -8951,8 +8844,6 @@ type FormResponseEdge {
 enum FormResponsesOrderBy {
   CREATED_AT_ASC
   CREATED_AT_DESC
-  DATA_ASC
-  DATA_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -9240,9 +9131,6 @@ A condition to be used against `Location` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input LocationCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
   """Checks for equality with the object’s `coverImageId` field."""
   coverImageId: BigInt
 
@@ -9382,8 +9270,6 @@ input LocationPatch {
 
 """Methods to use when ordering `Location`."""
 enum LocationsOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
   COVER_IMAGE_ID_ASC
   COVER_IMAGE_ID_DESC
   CREATED_AT_ASC
@@ -9635,8 +9521,6 @@ enum MembershipApplicationsOrderBy {
   EMAIL_DESC
   FIRST_NAME_ASC
   FIRST_NAME_DESC
-  GENDER_ASC
-  GENDER_DESC
   ID_ASC
   ID_DESC
   LAST_NAME_ASC
@@ -9656,8 +9540,6 @@ enum MembershipApplicationsOrderBy {
   PREFIX_TITLE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  STATUS_ASC
-  STATUS_DESC
   SUFFIX_TITLE_ASC
   SUFFIX_TITLE_DESC
   TAX_IDENTIFICATION_NUMBER_ASC
@@ -10588,8 +10470,6 @@ enum PaymentsOrderBy {
   PRIMARY_KEY_DESC
   SPECIFIC_SYMBOL_ASC
   SPECIFIC_SYMBOL_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UPDATED_AT_ASC
@@ -10600,8 +10480,6 @@ enum PaymentsOrderBy {
 
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
   BIO_ASC
   BIO_DESC
   BIRTH_DATE_ASC
@@ -10616,8 +10494,6 @@ enum PeopleOrderBy {
   FACEBOOK_URL_DESC
   FIRST_NAME_ASC
   FIRST_NAME_DESC
-  GENDER_ASC
-  GENDER_DESC
   ID_ASC
   ID_DESC
   INSTAGRAM_USERNAME_ASC
@@ -11232,9 +11108,6 @@ type Person {
 A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PersonCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
   """Checks for equality with the object’s `bio` field."""
   bio: String
 
@@ -11249,9 +11122,6 @@ input PersonCondition {
 
   """Checks for equality with the object’s `email` field."""
   email: String
-
-  """Checks for equality with the object’s `externalIds` field."""
-  externalIds: [String]
 
   """Checks for equality with the object’s `facebookUrl` field."""
   facebookUrl: String
@@ -11663,12 +11533,6 @@ type Price {
 input PriceInput {
   amount: BigFloat
   currency: String
-}
-
-enum ProcessStatus {
-  ERROR
-  OK
-  PENDING
 }
 
 """The root query type which gives access points into the data universe."""
@@ -12827,14 +12691,8 @@ type Query {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
     """Only read the first `n` values of the set."""
     first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
 
     """
     Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -13302,13 +13160,13 @@ type RejectMembershipApplicationPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  membershipApplication: MembershipApplication
 
   """An edge for our `MembershipApplication`. May be used by Relay 1."""
   membershipApplicationEdge(
     """The method to use when ordering `MembershipApplication`."""
     orderBy: [MembershipApplicationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MembershipApplicationEdge
+  result: MembershipApplication
 }
 
 enum RelationshipStatus {
@@ -13593,10 +13451,6 @@ enum SecurityEventsOrderBy {
   EFFECTIVE_AT_DESC
   ID_ASC
   ID_DESC
-  KIND_ASC
-  KIND_DESC
-  METHOD_ASC
-  METHOD_DESC
   NATURAL
   OCCURRED_AT_ASC
   OCCURRED_AT_DESC
@@ -13813,7 +13667,7 @@ type SystemAdminUpdateTenantPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  tenant: Tenant
+  result: Tenant
 
   """An edge for our `Tenant`. May be used by Relay 1."""
   tenantEdge(
@@ -14744,8 +14598,6 @@ enum TenantAdministratorsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UNTIL_ASC
@@ -14758,9 +14610,6 @@ enum TenantAdministratorsOrderBy {
 A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input TenantCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
   """Checks for equality with the object’s `bankAccount` field."""
   bankAccount: String
 
@@ -14778,9 +14627,6 @@ input TenantCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
-
-  """Checks for equality with the object’s `origins` field."""
-  origins: [String]
 }
 
 """A `Tenant` edge in the connection."""
@@ -14867,9 +14713,6 @@ A condition to be used against `TenantLocation` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input TenantLocationCondition {
-  """Checks for equality with the object’s `address` field."""
-  address: AddressDomainInput
-
   """Checks for equality with the object’s `coverImageId` field."""
   coverImageId: BigInt
 
@@ -14953,8 +14796,6 @@ enum TenantLocationImagesOrderBy {
 
 """Methods to use when ordering `TenantLocation`."""
 enum TenantLocationsOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
   COVER_IMAGE_ID_ASC
   COVER_IMAGE_ID_DESC
   CREATED_AT_ASC
@@ -15096,8 +14937,6 @@ enum TenantMembershipsOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UNTIL_ASC
@@ -15147,8 +14986,6 @@ enum TenantSettingsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SETTINGS_ASC
-  SETTINGS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
 }
@@ -15198,14 +15035,8 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `description` field."""
   description: String
 
-  """Checks for equality with the object’s `guestPayout45Min` field."""
-  guestPayout45Min: PriceInput
-
   """Checks for equality with the object’s `guestPayout45MinAmount` field."""
   guestPayout45MinAmount: BigFloat
-
-  """Checks for equality with the object’s `guestPrice45Min` field."""
-  guestPrice45Min: PriceInput
 
   """Checks for equality with the object’s `guestPrice45MinAmount` field."""
   guestPrice45MinAmount: BigFloat
@@ -15219,14 +15050,8 @@ input TenantTrainerCondition {
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
 
-  """Checks for equality with the object’s `memberPayout45Min` field."""
-  memberPayout45Min: PriceInput
-
   """Checks for equality with the object’s `memberPayout45MinAmount` field."""
   memberPayout45MinAmount: BigFloat
-
-  """Checks for equality with the object’s `memberPrice45Min` field."""
-  memberPrice45Min: PriceInput
 
   """Checks for equality with the object’s `memberPrice45MinAmount` field."""
   memberPrice45MinAmount: BigFloat
@@ -15338,12 +15163,8 @@ enum TenantTrainersOrderBy {
   DESCRIPTION_DESC
   GUEST_PAYOUT_45MIN_AMOUNT_ASC
   GUEST_PAYOUT_45MIN_AMOUNT_DESC
-  GUEST_PAYOUT_45MIN_ASC
-  GUEST_PAYOUT_45MIN_DESC
   GUEST_PRICE_45MIN_AMOUNT_ASC
   GUEST_PRICE_45MIN_AMOUNT_DESC
-  GUEST_PRICE_45MIN_ASC
-  GUEST_PRICE_45MIN_DESC
   ID_ASC
   ID_DESC
   IS_EXTERNAL_ASC
@@ -15352,12 +15173,8 @@ enum TenantTrainersOrderBy {
   IS_VISIBLE_DESC
   MEMBER_PAYOUT_45MIN_AMOUNT_ASC
   MEMBER_PAYOUT_45MIN_AMOUNT_DESC
-  MEMBER_PAYOUT_45MIN_ASC
-  MEMBER_PAYOUT_45MIN_DESC
   MEMBER_PRICE_45MIN_AMOUNT_ASC
   MEMBER_PRICE_45MIN_AMOUNT_DESC
-  MEMBER_PRICE_45MIN_ASC
-  MEMBER_PRICE_45MIN_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC
@@ -15365,8 +15182,6 @@ enum TenantTrainersOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UNTIL_ASC
@@ -15377,8 +15192,6 @@ enum TenantTrainersOrderBy {
 
 """Methods to use when ordering `Tenant`."""
 enum TenantsOrderBy {
-  ADDRESS_ASC
-  ADDRESS_DESC
   BANK_ACCOUNT_ASC
   BANK_ACCOUNT_DESC
   CZ_DIC_ASC
@@ -15533,8 +15346,6 @@ enum TransactionsOrderBy {
   PAYMENT_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SOURCE_ASC
-  SOURCE_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
   UPDATED_AT_ASC
@@ -16461,8 +16272,6 @@ enum UserProxiesOrderBy {
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  STATUS_ASC
-  STATUS_DESC
   UNTIL_ASC
   UNTIL_DESC
   UPDATED_AT_ASC

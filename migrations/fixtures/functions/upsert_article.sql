@@ -78,3 +78,5 @@ end;
 $$;
 
 grant all on function upsert_article to anonymous;
+
+comment on function upsert_article is '@resultFieldName aktuality';

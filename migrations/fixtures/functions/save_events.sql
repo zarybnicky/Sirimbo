@@ -354,5 +354,6 @@ begin
 end;
 $$;
 
-comment on function save_events is '@simpleCollections only';
+comment on function save_events is '@simpleCollections only
+@resultFieldName eventInstances';
 grant execute on function save_events to anonymous;

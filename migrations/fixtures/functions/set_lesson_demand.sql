@@ -105,3 +105,4 @@ end;
 $$;
 
 grant all on function set_lesson_demand to anonymous;
+comment on function set_lesson_demand is '@resultFieldName eventLessonDemand';

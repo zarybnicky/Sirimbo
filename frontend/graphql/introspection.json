@@ -2877,15 +2877,6 @@
             "args": []
           },
           {
-            "name": "cohort",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Cohort",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "cohortEdge",
             "type": {
               "kind": "OBJECT",
@@ -2910,6 +2901,15 @@
                 }
               }
             ]
+          },
+          {
+            "name": "result",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Cohort",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -27413,21 +27413,7 @@
                 }
               },
               {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
                 "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -28568,15 +28554,6 @@
             "args": []
           },
           {
-            "name": "membershipApplication",
-            "type": {
-              "kind": "OBJECT",
-              "name": "MembershipApplication",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "membershipApplicationEdge",
             "type": {
               "kind": "OBJECT",
@@ -28601,6 +28578,15 @@
                 }
               }
             ]
+          },
+          {
+            "name": "result",
+            "type": {
+              "kind": "OBJECT",
+              "name": "MembershipApplication",
+              "ofType": null
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -29442,7 +29428,7 @@
             "args": []
           },
           {
-            "name": "tenant",
+            "name": "result",
             "type": {
               "kind": "OBJECT",
               "name": "Tenant",

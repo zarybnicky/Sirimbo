@@ -48,3 +48,4 @@ end;
 $$;
 
 grant execute on function move_event_instance to anonymous;
+comment on function move_event_instance is '@resultFieldName eventInstance';

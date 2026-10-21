@@ -47,8 +47,6 @@ export type CompetitorType =
 export type FederationCompetitorsOrderBy =
   | 'AGE_GROUP_ASC'
   | 'AGE_GROUP_DESC'
-  | 'COMPETITOR_TYPE_ASC'
-  | 'COMPETITOR_TYPE_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'EXTERNAL_ID_ASC'

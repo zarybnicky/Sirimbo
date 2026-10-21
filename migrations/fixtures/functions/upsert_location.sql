@@ -93,3 +93,5 @@ $$;
 
 revoke all on function upsert_location from anonymous;
 grant all on function upsert_location to administrator;
+
+comment on function upsert_location is '@resultFieldName location';

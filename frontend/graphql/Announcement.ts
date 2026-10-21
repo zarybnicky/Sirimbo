@@ -54,8 +54,6 @@ export type AnnouncementsOrderBy =
   | 'SCHEDULED_SINCE_DESC'
   | 'SCHEDULED_UNTIL_ASC'
   | 'SCHEDULED_UNTIL_DESC'
-  | 'STATUS_ASC'
-  | 'STATUS_DESC'
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC'
   | 'TITLE_ASC'
