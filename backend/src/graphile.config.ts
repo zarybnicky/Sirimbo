@@ -23,13 +23,16 @@ const preset: GraphileConfig.Preset = {
   extends: [
     PostGraphileAmberPreset,
     PgSimplifyInflectionPreset,
-    makeV4Preset({
-      extendedErrors: ['hint', 'detail', 'errcode', 'where'],
-      showErrorStack: 'json',
-    }),
+    makeV4Preset({ ignoreRBAC: false }),
   ],
 
-  disablePlugins: ['NodePlugin', 'QueryQueryPlugin', 'MutationPayloadQueryPlugin'],
+  disablePlugins: [
+    'NodePlugin',
+    'QueryQueryPlugin',
+    'MutationPayloadQueryPlugin',
+    'PgV4BuildPlugin',
+    'PgV4BehaviorPlugin',
+  ],
   plugins: [
     currentUserPlugin,
     ...personMembershipConditionPlugin,
@@ -53,12 +56,16 @@ const preset: GraphileConfig.Preset = {
     port: Number.parseInt(process.env.PORT || '5200', 10),
     watch: !process.env.POSTGRAPHILE_DONT_WATCH,
     graphiql: isDevelopment,
+    maskError: (error) => error,
   },
   gather: {
     pgJwtTypes: ['public.jwt_token'],
     installWatchFixtures: true,
   },
   schema: {
+    dontSwallowErrors: true,
+    jsonScalarAsString: false,
+    pgMutationPayloadRelations: false,
     pgJwtSecret: JWT_SECRET,
     pgJwtSignOptions: {
       algorithm: 'HS256',
