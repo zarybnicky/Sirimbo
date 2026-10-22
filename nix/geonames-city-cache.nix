@@ -5,7 +5,7 @@ let
   cities = fetchurl {
     name = "geonames-cities500-${version}.zip";
     url = "https://download.geonames.org/export/dump/cities500.zip";
-    hash = "sha256-Rv0ESn4NLQl9qpbZB1yMgY6LDjN79YckpPlGN901GtI=";
+    hash = "sha256-O4KSpv/LEdh6o7Lf9Hly+wyMDtckXVQifbjyyhyB/H8=";
   };
   countries = fetchurl {
     name = "geonames-countryInfo-${version}.txt";
