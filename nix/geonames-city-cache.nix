@@ -15,7 +15,7 @@ let
   regions = fetchurl {
     name = "geonames-admin1-${version}.txt";
     url = "https://download.geonames.org/export/dump/admin1CodesASCII.txt";
-    hash = "sha256-HakqYyOl/sMXbz90O/TPQED9Vqh22lXkb7yiPIY6pgo=";
+    hash = "sha256-tXe6o0drvpTwRUVF5Rfhg1QB15xbEQXI4Czx1KUF6Ow=";
   };
 in
 runCommand "geonames-city-cache-${version}.duckdb" {
