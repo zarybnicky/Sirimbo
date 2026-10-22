@@ -11,13 +11,13 @@ create function app_private.set_lesson_request(
 language plpgsql strict
 as $$
 declare
-  trainer event_instance_trainer;
+  trainer event_trainer;
   lesson_demand event_lesson_demand;
   other_lessons bigint;
 begin
   select * into trainer
-  from event_instance_trainer
-  where id = $2 and instance_id = registration.instance_id and tenant_id = current_tenant_id()
+  from event_trainer
+  where id = $2 and event_id = registration.instance_id and tenant_id = current_tenant_id()
   for update;
 
   if not found then

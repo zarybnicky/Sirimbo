@@ -9,8 +9,8 @@ with recursive participants as (
     from event_instance_registration
     where registration_status = 'active' and person_id is not null
     union all
-    select tenant_id, instance_id, person_id, false
-    from event_instance_trainer
+    select tenant_id, event_id, person_id, false
+    from event_trainer
   ) p
   group by tenant_id, instance_id
 ), attended(tenant_id, viewers, instance_id) as (

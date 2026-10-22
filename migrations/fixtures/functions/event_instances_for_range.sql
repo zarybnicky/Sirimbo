@@ -22,7 +22,7 @@ create or replace function event_instances_for_range(
     select instance_id from event_instance_registration
     where person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active'
     union all
-    select instance_id from event_instance_trainer
+    select event_id from event_trainer
     where person_id = any ((select current_person_ids())::bigint[])
   )
   select i.*
@@ -43,7 +43,7 @@ create or replace function event_instances_for_range(
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null
-      or exists (select 1 from event_instance_trainer where instance_id = i.id and person_id = any (trainer_ids)))
+      or exists (select 1 from event_trainer where event_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
       or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
     and (location_ids is null or i.location_id = any (location_ids))

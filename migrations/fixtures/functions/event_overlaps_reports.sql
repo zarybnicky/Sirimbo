@@ -90,7 +90,7 @@ as $$
       ei.range,
       ei.name as event_name
     from event_instance ei
-    join event_instance_trainer eit on ei.id = eit.instance_id
+    join event_trainer eit on ei.id = eit.event_id
     join person p on p.id = eit.person_id
     where not ei.is_cancelled
       and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')

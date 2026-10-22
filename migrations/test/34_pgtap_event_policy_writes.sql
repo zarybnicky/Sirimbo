@@ -17,7 +17,7 @@ OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, now(), now()+interval '1 hour', true, false, false),
        (-8201, -8200, now(), now()+interval '1 hour', true, false, false),
        (-8202, -8201, now(), now()+interval '1 hour', true, false, false);
-INSERT INTO event_instance_trainer (id, tenant_id, instance_id, person_id) OVERRIDING SYSTEM VALUE
+INSERT INTO event_trainer (id, tenant_id, event_id, person_id) OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8200), (-8201, -8200, -8201, -8201),
        (-8202, -8201, -8202, -8201);
 INSERT INTO event_instance_registration (id, tenant_id, instance_id, person_id, status)
@@ -33,10 +33,10 @@ SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 1::bigint, 'administra
 RESET ROLE;
 SET LOCAL ROLE trainer;
 SELECT tap.throws_ok(
-  $$INSERT INTO event_instance_trainer (instance_id, person_id) VALUES (-8201,-8200)$$,
+  $$INSERT INTO event_trainer (event_id, person_id) VALUES (-8201,-8200)$$,
   '42501'::char(5), null, 'trainer cannot self-assign to another trainer event');
 SELECT tap.throws_ok(
-  $$UPDATE event_instance_trainer SET instance_id=-8201 WHERE id=-8200$$,
+  $$UPDATE event_trainer SET event_id=-8201 WHERE id=-8200$$,
   '42501'::char(5), null, 'trainer cannot move an assignment onto an unauthorized event');
 SELECT tap.throws_ok($$
   SELECT save_events(
@@ -59,7 +59,7 @@ SELECT id FROM save_events(
   ARRAY[-8200]::bigint[]
 );
 SELECT tap.is((SELECT count(*) FROM saved_policy_event), 1::bigint, 'save_events creates an event as trainer');
-SELECT tap.is((SELECT count(*) FROM event_instance_trainer WHERE instance_id IN (SELECT id FROM saved_policy_event)), 2::bigint, 'save_events creates multiple trainer assignments');
+SELECT tap.is((SELECT count(*) FROM event_trainer WHERE event_id IN (SELECT id FROM saved_policy_event)), 2::bigint, 'save_events creates multiple trainer assignments');
 SELECT tap.lives_ok($$
   SELECT save_events(
     jsonb_populate_record(null::event_details_input,
@@ -70,7 +70,7 @@ SELECT tap.lives_ok($$
     ARRAY[-8200]::bigint[]
   )
 $$, 'save_events edits and hands off ownership while retaining another trainer');
-SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_instance_trainer WHERE instance_id IN (SELECT id FROM saved_policy_event)), ARRAY[-8202,-8201]::bigint[], 'handoff removes caller and saves replacement trainers');
+SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_trainer WHERE event_id IN (SELECT id FROM saved_policy_event)), ARRAY[-8202,-8201]::bigint[], 'handoff removes caller and saves replacement trainers');
 SELECT tap.ok((SELECT NOT app_private.can_trainer_edit_instance(id) FROM saved_policy_event), 'caller loses edit rights after handoff');
 SELECT tap.is((SELECT count(*) FROM event_target_cohort WHERE event_id IN (SELECT id FROM saved_policy_event)), 1::bigint, 'cohort target survives handoff');
 

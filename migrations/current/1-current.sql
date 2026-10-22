@@ -1,6 +1,7 @@
 do $$
 declare
   target_constraint text;
+  trainer_constraint text;
 begin
   if not exists (
     select 1 from pg_catalog.pg_attribute
@@ -39,6 +40,27 @@ begin
     alter index event_instance_target_cohort_tenant_id_idx rename to event_target_cohort_tenant_id_idx;
     alter sequence event_instance_target_cohort_id_seq rename to event_target_cohort_id_seq;
   end if;
+
+  if to_regclass('public.event_instance_trainer') is not null then
+    alter table event_instance_trainer rename to event_trainer;
+    alter table event_trainer rename column instance_id to event_id;
+
+    for trainer_constraint in
+      select conname from pg_catalog.pg_constraint
+      where conrelid = 'public.event_trainer'::regclass
+        and starts_with(conname::text, 'event_instance_trainer_')
+    loop
+      execute format('alter table event_trainer rename constraint %I to %I',
+        trainer_constraint, replace(replace(trainer_constraint,
+          'event_instance_trainer_', 'event_trainer_'), 'instance_id', 'event_id'));
+    end loop;
+
+    alter index event_instance_trainer_instance_id_idx rename to event_trainer_event_id_idx;
+    alter index event_instance_trainer_person_id_idx rename to event_trainer_person_id_idx;
+    alter index event_instance_trainer_tenant_id_idx rename to event_trainer_tenant_id_idx;
+    alter index event_instance_trainer_tenant_person_instance_idx rename to event_trainer_tenant_person_event_idx;
+    alter sequence event_instance_trainer_id_seq rename to event_trainer_id_seq;
+  end if;
 end;
 $$;
 
@@ -67,6 +89,8 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 
 --!include functions/reconcile_event_instance_cohort_registrations.sql
 --!include functions/tg_cohort_membership__on_status.sql
+--!include functions/can_trainer_edit_instance.sql
+--!include functions/tg_event_instance__refresh_manager_person_ids.sql
 --!include functions/ensure_couple_person_registrations.sql
 --!include functions/save_events.sql
 --!include functions/set_lesson_request.sql
@@ -80,7 +104,7 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include functions/visible_person_ids.sql
 
 --!include policies/event_instance.sql
---!include policies/event_instance_trainer.sql
+--!include policies/event_trainer.sql
 --!include policies/event_target_cohort.sql
 --!include policies/cohort.sql
 --!include policies/event_instance_registration.sql
@@ -279,7 +303,7 @@ comment on column federated.competitor_component.role is '@behavior +attribute:o
 
 --!include views/person_last_activity.sql
 
-comment on column event_instance_trainer.lessons_offered is '';
+comment on column event_trainer.lessons_offered is '';
 comment on column event_instance.series_id is '';
 comment on column app_private.system_admin_user.user_id is '';
 comment on column app_private.system_admin_user.created_at is '';
@@ -295,17 +319,17 @@ comment on constraint event_target_cohort_event_id_fkey on event_target_cohort i
 
 comment on column event_target_cohort.event_id is null;
 
-comment on table event_instance_trainer is '@name event_trainer
-@omit create,update,delete
+comment on table event_trainer is '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
-comment on constraint event_instance_trainer_tenant_id_instance_id_fkey on event_instance_trainer is '@fieldName event
+comment on constraint event_trainer_tenant_id_event_id_fkey on event_trainer is '@fieldName event
 @foreignFieldName eventTrainers';
 
-comment on column event_instance_trainer.instance_id is '@name eventId';
+comment on column event_trainer.event_id is null;
 
---!include functions/event_instance_trainer_tenant_trainer.sql
+--!include functions/event_trainer_name.sql
+--!include functions/event_trainer_tenant_trainer.sql
 --!include functions/event_instance_trainers.sql
 
 drop view if exists tenant_location_image;
@@ -360,6 +384,7 @@ comment on column payment.event_instance_id is '@name eventId';
 drop function if exists event_instance_facets;
 drop function if exists move_event_instance;
 
+--!include functions/event_instances_for_range.sql
 --!include functions/event_facets.sql
 --!include functions/move_event.sql
 --!include functions/trainer_group_attendance_completion.sql

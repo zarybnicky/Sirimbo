@@ -1,5 +1,7 @@
 
-CREATE or replace FUNCTION event_instance_trainer_lessons_remaining(e event_instance_trainer) RETURNS integer AS $$
+drop function if exists event_instance_trainer_lessons_remaining;
+
+CREATE or replace FUNCTION event_trainer_lessons_remaining(e event_trainer) RETURNS integer AS $$
   select case
     when e.lessons_offered is null then null
     else e.lessons_offered - (
@@ -35,5 +37,5 @@ CREATE or replace FUNCTION event_instance_remaining_person_spots(inst event_inst
   end;
 $$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
 
-GRANT ALL ON FUNCTION event_instance_trainer_lessons_remaining(e event_instance_trainer) TO anonymous;
+GRANT ALL ON FUNCTION event_trainer_lessons_remaining(e event_trainer) TO anonymous;
 GRANT ALL ON FUNCTION event_instance_remaining_person_spots(inst event_instance) TO anonymous;

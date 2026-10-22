@@ -18,8 +18,8 @@ on event_instance_registration
 for each statement execute function app_private.tg_event_people__refresh();
 
 create or replace trigger _900_refresh_event_people
-after insert or delete or update of tenant_id, instance_id, person_id
-on event_instance_trainer
+after insert or delete or update of tenant_id, event_id, person_id
+on event_trainer
 for each statement execute function app_private.tg_event_people__refresh();
 
 create or replace trigger _900_refresh_event_people

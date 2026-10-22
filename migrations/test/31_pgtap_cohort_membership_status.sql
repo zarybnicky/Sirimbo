@@ -250,7 +250,7 @@ VALUES
 INSERT INTO event_instance (id, tenant_id, parent_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES (9900005, 1000, 9900003, now() + interval '4 hours', now() + interval '5 hours');
 
-INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
+INSERT INTO event_trainer (tenant_id, event_id, person_id, lessons_offered)
 VALUES
   (1000, 900001, 2900002, 1),
   (1000, 9900001, 2900002, 0),
@@ -283,8 +283,8 @@ SELECT tap.ok(NOT EXISTS (
 
 SELECT set_lesson_request(eir.id, trainer.id, 1)
 FROM event_instance_registration eir
-JOIN event_instance_trainer trainer
-  ON trainer.instance_id = eir.instance_id AND trainer.person_id = 2900002
+JOIN event_trainer trainer
+  ON trainer.event_id = eir.instance_id AND trainer.person_id = 2900002
 WHERE eir.instance_id = 900001
   AND eir.person_id = 200002
   AND eir.parent_registration_id IS NULL;
@@ -420,8 +420,8 @@ SELECT set_event_registration(
   true,
   'Manager registration note',
   ARRAY[
-    (SELECT id FROM event_instance_trainer
-     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+    (SELECT id FROM event_trainer
+     WHERE event_id = (SELECT id FROM _scheduled_lesson)
        AND person_id = 2900002)
   ],
   ARRAY[1]
@@ -502,7 +502,7 @@ GROUP BY series_id;
 
 SELECT set_lesson_request(registration.id, trainer.id, 1)
 FROM event_instance_registration registration
-JOIN event_instance_trainer trainer ON trainer.instance_id = registration.instance_id
+JOIN event_trainer trainer ON trainer.event_id = registration.instance_id
 WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
   AND registration.person_id = 2900003
   AND registration.parent_registration_id is null
@@ -562,11 +562,11 @@ SELECT tap.ok(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_trainer trainer
-    WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_trainer trainer
+    WHERE trainer.event_id = (SELECT id FROM _scheduled_lesson)
       AND trainer.person_id = 2900002
       AND trainer.lessons_offered = 2
-      AND event_instance_trainer_lessons_remaining(trainer) = 0
+      AND event_trainer_lessons_remaining(trainer) = 0
   ),
   'scheduled trainer has two offered lessons and no remaining lessons'
 );
@@ -582,9 +582,9 @@ SELECT tap.ok(
       AND EXISTS (
         SELECT 1
         FROM event_lesson_demand demand
-        JOIN event_instance_trainer trainer ON trainer.id = demand.trainer_id
+        JOIN event_trainer trainer ON trainer.id = demand.trainer_id
         WHERE demand.registration_id = registration.id
-          AND trainer.instance_id = registration.instance_id
+          AND trainer.event_id = registration.instance_id
           AND trainer.person_id = 2900002
       )
   ),
@@ -620,8 +620,8 @@ SELECT set_event_registration(
   true,
   'Self-registration note',
   ARRAY[
-    (SELECT id FROM event_instance_trainer
-     WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+    (SELECT id FROM event_trainer
+     WHERE event_id = (SELECT id FROM _scheduled_lesson)
        AND person_id = 2900002)
   ],
   ARRAY[1]
@@ -646,7 +646,7 @@ SELECT tap.ok(
       AND EXISTS (
         SELECT 1
         FROM event_lesson_demand demand
-        JOIN event_instance_trainer trainer ON trainer.id = demand.trainer_id
+        JOIN event_trainer trainer ON trainer.id = demand.trainer_id
         WHERE demand.registration_id = event_instance_registration.id
           AND demand.lesson_count = 1
           AND trainer.person_id = 2900002
@@ -739,8 +739,8 @@ SELECT tap.ok(
       )
       AND EXISTS (
         SELECT 1
-        FROM event_instance_trainer trainer
-        WHERE trainer.instance_id = copy.id
+        FROM event_trainer trainer
+        WHERE trainer.event_id = copy.id
           AND trainer.person_id = 2900002
           AND trainer.lessons_offered = 2
       )
@@ -753,13 +753,13 @@ SELECT tap.ok(
       )
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance_trainer trainer
+    FROM event_trainer trainer
     JOIN event_lesson_demand demand ON demand.trainer_id = trainer.id
     JOIN event_instance_registration registration ON registration.id = demand.registration_id
-    WHERE trainer.instance_id = (SELECT id FROM _scheduled_lesson)
+    WHERE trainer.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.registration_status = 'active'
       AND registration.parent_registration_id is not null
-      AND event_instance_trainer_lessons_remaining(trainer) = 0
+      AND event_trainer_lessons_remaining(trainer) = 0
   ),
   'event save updates exact settings and replaces registrations consistently'
 );

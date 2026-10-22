@@ -31,14 +31,14 @@ begin
   end if;
 
   if trainer_person_id is not null then
-    update event_instance_trainer
+    update event_trainer
     set person_id = trainer_person_id
-    where instance_id = inst.id
-      and 1 = (select count(*) from event_instance_trainer where instance_id = inst.id);
+    where event_id = inst.id
+      and 1 = (select count(*) from event_trainer where event_id = inst.id);
 
-    if not found and not exists (select 1 from event_instance_trainer where instance_id = inst.id)
+    if not found and not exists (select 1 from event_trainer where event_id = inst.id)
     then
-      insert into event_instance_trainer (instance_id, person_id)
+      insert into event_trainer (event_id, person_id)
       values (inst.id, trainer_person_id);
     end if;
   end if;

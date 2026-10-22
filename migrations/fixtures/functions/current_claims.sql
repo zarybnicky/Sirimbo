@@ -8,4 +8,4 @@ as $$
   where id = nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
 $$;
 
-grant all on function current_claims() to anonymous;
+grant all on function current_claims to anonymous;

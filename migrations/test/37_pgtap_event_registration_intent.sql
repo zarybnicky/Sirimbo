@@ -132,7 +132,7 @@ UPDATE event_instance_registration SET status='attended', attendance_note='Keep 
 WHERE id IN (SELECT id FROM original_partners);
 INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
 SELECT r.id, t.id, 1 FROM original_partners r
-JOIN event_instance_trainer t ON t.instance_id = (SELECT id FROM cases WHERE name = 'overlap')
+JOIN event_trainer t ON t.event_id = (SELECT id FROM cases WHERE name = 'overlap')
 WHERE r.person_id=-8601;
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[{"couple_id":-8601}]')
 FROM cases WHERE name = 'overlap';
@@ -175,7 +175,7 @@ SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
 
 INSERT INTO cases VALUES ('self couple', pg_temp.save_group(null, '{}'));
 UPDATE event_instance SET is_public=true, capacity=2 WHERE id=(SELECT id FROM cases WHERE name='self couple');
-UPDATE event_instance_trainer SET lessons_offered=10 WHERE instance_id=(SELECT id FROM cases WHERE name='self couple');
+UPDATE event_trainer SET lessons_offered=10 WHERE event_id=(SELECT id FROM cases WHERE name='self couple');
 SELECT set_config('jwt.claims.my_person_ids', '{-8601,-8602}', true);
 SELECT set_config('jwt.claims.my_couple_ids', '{-8601}', true);
 GRANT SELECT ON cases TO anonymous;
@@ -183,12 +183,12 @@ SET LOCAL ROLE anonymous;
 SELECT set_event_registration(id, -8601, null, true, 'Personal note') FROM cases WHERE name='self couple';
 RESET ROLE;
 CREATE TEMP TABLE self_person AS SELECT r.id, t.id AS trainer_id
-FROM event_instance_registration r JOIN event_instance_trainer t ON t.instance_id=r.instance_id
+FROM event_instance_registration r JOIN event_trainer t ON t.event_id=r.instance_id
 WHERE r.instance_id=(SELECT id FROM cases WHERE name='self couple') AND r.person_id=-8601;
 GRANT SELECT ON self_person TO anonymous;
 SET LOCAL ROLE anonymous;
 SELECT set_lesson_request(r.id, t.id, 1) FROM self_person r
-CROSS JOIN event_instance_trainer t WHERE t.instance_id=(SELECT id FROM cases WHERE name='self couple');
+CROSS JOIN event_trainer t WHERE t.event_id=(SELECT id FROM cases WHERE name='self couple');
 SELECT tap.lives_ok(format('select set_event_registration(%s, null, -8601, true)',
   (SELECT id FROM cases WHERE name='self couple')),
   'a couple needs only one free place when one partner is already registered');
@@ -200,7 +200,7 @@ SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
   'both reused and new partner rows inherit the couple registration source');
 SELECT tap.lives_ok(format('select set_lesson_request(%s, %s, 2)',
   (SELECT id FROM self_person),
-  (SELECT id FROM event_instance_trainer WHERE instance_id=(SELECT id FROM cases WHERE name='self couple'))),
+  (SELECT id FROM event_trainer WHERE event_id=(SELECT id FROM cases WHERE name='self couple'))),
   'personal lesson requests remain editable after joining a couple registration');
 SELECT set_config('jwt.claims.tenant_id', '1', true);
 SELECT tap.throws_ok(format('select set_lesson_request(%s, %s, 1)', id, trainer_id),
@@ -282,7 +282,7 @@ RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 INSERT INTO event_instance (id, tenant_id, since, until, is_public, capacity)
 OVERRIDING SYSTEM VALUE VALUES (-8650, -8600, now()+interval '1 day', now()+interval '2 days', true, 1);
-INSERT INTO event_instance_trainer (id, instance_id, person_id, lessons_offered)
+INSERT INTO event_trainer (id, event_id, person_id, lessons_offered)
 OVERRIDING SYSTEM VALUE VALUES (-8650, -8650, -8604, 2);
 CREATE FUNCTION pg_temp.signup(
   first_name text DEFAULT 'Camp', note text DEFAULT 'Food note', lessons integer DEFAULT 1
@@ -301,15 +301,15 @@ SELECT set_config('jwt.claims.user_id', '', true);
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok($$SELECT set_event_registration(-8650, -8601, null, true)$$,
   '42501', 'ACCESS_DENIED', 'public signup cannot select an unrelated person');
-SELECT tap.is((SELECT array_agg(id) FROM event_instance_trainer
-  WHERE instance_id IN (-8650, (SELECT id FROM cases WHERE name='fresh'))), ARRAY[-8650]::bigint[],
+SELECT tap.is((SELECT array_agg(id) FROM event_trainer
+  WHERE event_id IN (-8650, (SELECT id FROM cases WHERE name='fresh'))), ARRAY[-8650]::bigint[],
   'unregistered visitors see public-event trainers, not private-event trainers');
 INSERT INTO submitted SELECT id, person_id FROM pg_temp.signup();
-SELECT tap.is((SELECT event_instance_trainer_lessons_remaining(t)
-  FROM event_instance_trainer t WHERE id=-8650), 1,
+SELECT tap.is((SELECT event_trainer_lessons_remaining(t)
+  FROM event_trainer t WHERE id=-8650), 1,
   'public lesson availability includes requests belonging to other people');
 SELECT set_config('jwt.claims.tenant_id', '1', true);
-SELECT tap.is((SELECT count(*) FROM event_instance_trainer WHERE id=-8650), 0::bigint,
+SELECT tap.is((SELECT count(*) FROM event_trainer WHERE id=-8650), 0::bigint,
   'public-event trainers remain hidden in another tenant');
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 SELECT tap.is((SELECT id FROM pg_temp.signup()),
@@ -335,7 +335,7 @@ SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT pe
 SELECT tap.is((SELECT count(*) FROM tenant_membership WHERE person_id=(SELECT person_id FROM submitted)),
   0::bigint, 'camp registration does not create club membership');
 UPDATE event_instance SET is_locked=true, capacity=null WHERE id=-8650;
-DELETE FROM event_instance_trainer WHERE id=-8650;
+DELETE FROM event_trainer WHERE id=-8650;
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,
   '28000', 'NOT_ALLOWED', 'an event without trainers still enforces its registration lock');

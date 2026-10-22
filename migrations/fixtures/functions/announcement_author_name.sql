@@ -8,4 +8,4 @@ as $$
   where stored.id = a.id;
 $$;
 
-grant execute on function announcement_author_name(announcement) to anonymous;
+grant execute on function announcement_author_name to anonymous;

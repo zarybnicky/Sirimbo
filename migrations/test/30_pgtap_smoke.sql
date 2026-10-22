@@ -33,7 +33,7 @@ INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING S
   VALUES (-3001, -3000, -3000, now(), now() + interval '1 hour'),
          (-3002, -3000, -3000, now(), now() + interval '1 hour');
 
-INSERT INTO event_instance_trainer (tenant_id, instance_id, person_id)
+INSERT INTO event_trainer (tenant_id, event_id, person_id)
   VALUES (-3000, -3001, -3001),
          (-3000, -3001, -3003),
          (-3000, -3002, -3002);

@@ -9,13 +9,13 @@ as $$
     select p.id, p.parent_id from event_instance p join chain c on p.id = c.parent_id
   ),
   trainers as (
-    select person_id from event_instance_trainer where instance_id in (select id from chain)
+    select person_id from event_trainer where event_id in (select id from chain)
   )
   select exists (
-    select 1 from trainers where person_id = any (select current_person_ids())
+    select 1 from trainers where person_id = any ((select current_person_ids())::bigint[])
   ) or not exists (
     select 1 from trainers
   );
 $$;
 
-grant all on function app_private.can_trainer_edit_instance(bigint) to anonymous;
+grant all on function app_private.can_trainer_edit_instance to anonymous;
