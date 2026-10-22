@@ -6,7 +6,7 @@ CREATE or replace FUNCTION event_trainer_lessons_remaining(e event_trainer) RETU
     when e.lessons_offered is null then null
     else e.lessons_offered - (
       select coalesce(sum(demand.lesson_count), 0)
-      from event_lesson_demand demand
+      from event_lesson_request demand
       join event_instance_registration registration
         on registration.id = demand.registration_id
        and registration.registration_status = 'active'

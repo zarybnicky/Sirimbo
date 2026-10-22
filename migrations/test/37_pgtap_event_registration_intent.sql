@@ -130,7 +130,7 @@ SELECT id, person_id FROM event_instance_registration
 WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap');
 UPDATE event_instance_registration SET status='attended', attendance_note='Keep partner attendance'
 WHERE id IN (SELECT id FROM original_partners);
-INSERT INTO event_lesson_demand (registration_id, trainer_id, lesson_count)
+INSERT INTO event_lesson_request (registration_id, trainer_id, lesson_count)
 SELECT r.id, t.id, 1 FROM original_partners r
 JOIN event_trainer t ON t.event_id = (SELECT id FROM cases WHERE name = 'overlap')
 WHERE r.person_id=-8601;
@@ -143,7 +143,7 @@ SELECT tap.is((SELECT count(*) FROM event_instance_registration
 SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
   WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NOT NULL
     AND registration_status='active' AND source='manager' AND attendance_note='Keep partner attendance')
-  AND EXISTS (SELECT 1 FROM event_lesson_demand WHERE registration_id IN (SELECT id FROM original_partners)),
+  AND EXISTS (SELECT 1 FROM event_lesson_request WHERE registration_id IN (SELECT id FROM original_partners)),
   'forming a couple reuses person rows, attendance and personal lesson requests');
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"couple_id":-8601,"is_cancelled":true},
@@ -170,7 +170,7 @@ SELECT tap.is((SELECT count(*) FROM event_instance_registration
 SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
   WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NULL
     AND registration_status='active' AND attendance_note='Keep partner attendance')
-  AND EXISTS (SELECT 1 FROM event_lesson_demand WHERE registration_id IN (SELECT id FROM original_partners)),
+  AND EXISTS (SELECT 1 FROM event_lesson_request WHERE registration_id IN (SELECT id FROM original_partners)),
   'repeated couple/individual changes preserve the original person rows and requests');
 
 INSERT INTO cases VALUES ('self couple', pg_temp.save_group(null, '{}'));
@@ -219,7 +219,7 @@ SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
   'cancelling a couple propagates the source to its person rows');
 SELECT set_event_registration(id, -8601, null, true) FROM cases WHERE name='self couple';
 SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r
-  JOIN event_lesson_demand d ON d.registration_id=r.id
+  JOIN event_lesson_request d ON d.registration_id=r.id
   WHERE r.id=(SELECT id FROM self_person) AND r.parent_registration_id IS NULL
     AND r.registration_status='active' AND r.note='Personal note' AND d.lesson_count=2),
   'individual signup after couple cancellation keeps the original row and personal requests');
@@ -328,7 +328,7 @@ RESET ROLE;
 SELECT tap.is((SELECT count(*) FROM person WHERE email IN ('camp@example.invalid', 'second@example.invalid')),
   1::bigint, 'retries and failed submissions leave no extra people');
 SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r JOIN submitted s ON s.id=r.id
-  JOIN event_lesson_demand d ON d.registration_id=r.id WHERE r.note='Food note' AND d.lesson_count=1),
+  JOIN event_lesson_request d ON d.registration_id=r.id WHERE r.note='Food note' AND d.lesson_count=1),
   'signup saves the note and lesson request together');
 SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT person_id FROM submitted) AND instance_id=-8650),
   1::bigint, 'signup creates one event invitation across retries');

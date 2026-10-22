@@ -2,6 +2,7 @@ do $$
 declare
   target_constraint text;
   trainer_constraint text;
+  lesson_constraint text;
 begin
   if not exists (
     select 1 from pg_catalog.pg_attribute
@@ -61,6 +62,26 @@ begin
     alter index event_instance_trainer_tenant_person_instance_idx rename to event_trainer_tenant_person_event_idx;
     alter sequence event_instance_trainer_id_seq rename to event_trainer_id_seq;
   end if;
+
+  if to_regclass('public.event_lesson_demand') is not null then
+    alter table event_lesson_demand rename to event_lesson_request;
+
+    for lesson_constraint in
+      select conname from pg_catalog.pg_constraint
+      where conrelid = 'public.event_lesson_request'::regclass
+        and starts_with(conname::text, 'event_lesson_demand_')
+    loop
+      execute format('alter table event_lesson_request rename constraint %I to %I',
+        lesson_constraint, replace(lesson_constraint, 'event_lesson_demand_', 'event_lesson_request_'));
+    end loop;
+
+    alter table event_lesson_request rename constraint eld_unique_registration_trainer_key
+      to event_lesson_request_registration_id_trainer_id_key;
+    alter index event_lesson_demand_registration_id_idx rename to event_lesson_request_registration_id_idx;
+    alter index event_lesson_demand_tenant_id_idx rename to event_lesson_request_tenant_id_idx;
+    alter index event_lesson_demand_trainer_id_idx rename to event_lesson_request_trainer_id_idx;
+    alter sequence event_lesson_demand_id_seq rename to event_lesson_request_id_seq;
+  end if;
 end;
 $$;
 
@@ -108,7 +129,7 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include policies/event_target_cohort.sql
 --!include policies/cohort.sql
 --!include policies/event_instance_registration.sql
---!include policies/event_lesson_demand.sql
+--!include policies/event_lesson_request.sql
 --!include policies/file.sql
 --!include policies/person.sql
 --!include policies/couple.sql
@@ -274,15 +295,23 @@ comment on table federated.ranklist_snapshot is '@name ranklist_snapshot
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 comment on type federated.competitor_role is '@name competitor_role';
+comment on type federated.competitor_type is '@name competitor_type';
+comment on type federated.competition_type is '@name competition_type';
 comment on type federated.gender is '@name gender';
 comment on type federated.person_license_discipline is '@name person_license_discipline';
 comment on type federated.person_license_kind is '@name person_license_kind';
 comment on type federated.person_license_status is '@name person_license_status';
-comment on type federated.competition_type is '@name competition_type';
-comment on type federated.competitor_type is '@name competitor_type';
 comment on type federated.official_role is '@name official_role';
 comment on type federated.score_component is '@name score_component';
 comment on type federated.scoring_method is '@name scoring_method';
+
+comment on column federated.event_official.role is '@behavior +attribute:orderBy';
+comment on column federated.competition_official.role is '@behavior +attribute:orderBy';
+comment on column federated.person_license.kind is '@behavior +attribute:orderBy';
+comment on column federated.person_license.discipline is '@behavior +attribute:orderBy';
+comment on column federated.judge_score.component is '@behavior +attribute:orderBy';
+comment on column federated.competitor_component.role is '@behavior +attribute:orderBy';
+
 comment on type event_registration_status is null;
 comment on function set_event_sharing is null;
 comment on function update_tenant_settings_key is null;
@@ -294,21 +323,19 @@ comment on function upsert_location is null;
 comment on function create_person is null;
 comment on function create_credit_transaction_for_person is null;
 
-comment on column federated.event_official.role is '@behavior +attribute:orderBy';
-comment on column federated.competition_official.role is '@behavior +attribute:orderBy';
-comment on column federated.person_license.kind is '@behavior +attribute:orderBy';
-comment on column federated.person_license.discipline is '@behavior +attribute:orderBy';
-comment on column federated.judge_score.component is '@behavior +attribute:orderBy';
-comment on column federated.competitor_component.role is '@behavior +attribute:orderBy';
+comment on column event_instance_registration.instance_id is '@name eventId';
+comment on column payment.event_instance_id is '@name eventId';
+
+comment on column event_trainer.event_id is null;
+comment on column event_trainer.lessons_offered is null;
+comment on column event_instance.series_id is null;
+comment on column event_target_cohort.event_id is null;
+comment on column app_private.system_admin_user.user_id is null;
+comment on column app_private.system_admin_user.created_at is null;
+comment on column app_private.system_admin_user.created_by is null;
+comment on column federated.competition.competition_type is null;
 
 --!include views/person_last_activity.sql
-
-comment on column event_trainer.lessons_offered is '';
-comment on column event_instance.series_id is '';
-comment on column app_private.system_admin_user.user_id is '';
-comment on column app_private.system_admin_user.created_at is '';
-comment on column app_private.system_admin_user.created_by is '';
-comment on column federated.competition.competition_type is '';
 
 comment on table event_target_cohort is '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
@@ -317,16 +344,12 @@ comment on table event_target_cohort is '@omit create,update,delete
 comment on constraint event_target_cohort_event_id_fkey on event_target_cohort is '@fieldName event
 @foreignFieldName targetCohorts';
 
-comment on column event_target_cohort.event_id is null;
-
 comment on table event_trainer is '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
 comment on constraint event_trainer_tenant_id_event_id_fkey on event_trainer is '@fieldName event
 @foreignFieldName eventTrainers';
-
-comment on column event_trainer.event_id is null;
 
 --!include functions/event_trainer_name.sql
 --!include functions/event_trainer_tenant_trainer.sql
@@ -348,14 +371,13 @@ comment on constraint access_event_location_fkey on access_event is '@fieldName 
 comment on constraint event_instance_location_fkey on event_instance is '@fieldName location
 @foreignFieldName events';
 
-comment on table event_lesson_demand is '@name event_lesson_request
-@omit create,update,delete
+comment on table event_lesson_request is '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
-comment on constraint event_lesson_demand_registration_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
-comment on constraint event_lesson_demand_trainer_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
-comment on constraint event_lesson_demand_tenant_id_fkey on event_lesson_demand is '@foreignFieldName lessonRequests';
+comment on constraint event_lesson_request_registration_id_fkey on event_lesson_request is '@foreignFieldName lessonRequests';
+comment on constraint event_lesson_request_trainer_id_fkey on event_lesson_request is '@foreignFieldName lessonRequests';
+comment on constraint event_lesson_request_tenant_id_fkey on event_lesson_request is '@foreignFieldName lessonRequests';
 
 comment on table event_instance_registration is '@name event_registration
 @omit create,update,delete
@@ -363,8 +385,6 @@ comment on table event_instance_registration is '@name event_registration
 
 comment on constraint event_instance_registration_instance_id_fkey on event_instance_registration is '@fieldName event
 @foreignFieldName registrations';
-
-comment on column event_instance_registration.instance_id is '@name eventId';
 
 comment on constraint event_instance_registration_parent_registration_id_fkey on event_instance_registration is '@fieldName parentRegistration
 @foreignFieldName childRegistrations';
@@ -374,8 +394,6 @@ comment on constraint event_instance_parent_id_fkey on event_instance is '@field
 
 comment on constraint payment_event_instance_id_fkey on payment is '@fieldName event
 @foreignFieldName payments';
-
-comment on column payment.event_instance_id is '@name eventId';
 
 --!include functions/activity_timeline.sql
 --!include functions/event_overlaps_reports.sql

@@ -24,12 +24,12 @@ INSERT INTO event_instance_registration (id, tenant_id, instance_id, person_id, 
 OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8202, 'unknown'),
        (-8201, -8201, -8202, -8202, 'unknown');
-INSERT INTO event_lesson_demand (id, tenant_id, trainer_id, registration_id, lesson_count)
+INSERT INTO event_lesson_request (id, tenant_id, trainer_id, registration_id, lesson_count)
 OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8200, 1), (-8201, -8201, -8202, -8201, 1);
 
 SET LOCAL ROLE administrator;
-SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 1::bigint, 'administrator lesson demands stay in tenant');
+SELECT tap.is((SELECT count(*) FROM event_lesson_request), 1::bigint, 'administrator lesson demands stay in tenant');
 RESET ROLE;
 SET LOCAL ROLE trainer;
 SELECT tap.throws_ok(

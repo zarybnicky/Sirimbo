@@ -438,7 +438,7 @@ SELECT tap.ok(
       AND registration.note = 'Manager registration note'
       AND EXISTS (
         SELECT 1
-        FROM event_lesson_demand demand
+        FROM event_lesson_request demand
         WHERE demand.registration_id = registration.id
           AND demand.lesson_count = 1
       )
@@ -581,7 +581,7 @@ SELECT tap.ok(
       AND registration.source = 'manager'
       AND EXISTS (
         SELECT 1
-        FROM event_lesson_demand demand
+        FROM event_lesson_request demand
         JOIN event_trainer trainer ON trainer.id = demand.trainer_id
         WHERE demand.registration_id = registration.id
           AND trainer.event_id = registration.instance_id
@@ -645,7 +645,7 @@ SELECT tap.ok(
       AND note = 'Self-registration note'
       AND EXISTS (
         SELECT 1
-        FROM event_lesson_demand demand
+        FROM event_lesson_request demand
         JOIN event_trainer trainer ON trainer.id = demand.trainer_id
         WHERE demand.registration_id = event_instance_registration.id
           AND demand.lesson_count = 1
@@ -754,7 +754,7 @@ SELECT tap.ok(
   ) AND EXISTS (
     SELECT 1
     FROM event_trainer trainer
-    JOIN event_lesson_demand demand ON demand.trainer_id = trainer.id
+    JOIN event_lesson_request demand ON demand.trainer_id = trainer.id
     JOIN event_instance_registration registration ON registration.id = demand.registration_id
     WHERE trainer.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.registration_status = 'active'

@@ -7,12 +7,12 @@ create function app_private.set_lesson_request(
   registration event_instance_registration,
   trainer_id bigint,
   lesson_count integer
-) returns event_lesson_demand
+) returns event_lesson_request
 language plpgsql strict
 as $$
 declare
   trainer event_trainer;
-  lesson_demand event_lesson_demand;
+  lesson_request event_lesson_request;
   other_lessons bigint;
 begin
   select * into trainer
@@ -25,7 +25,7 @@ begin
   end if;
 
   if $3 = 0 then
-    delete from event_lesson_demand eld
+    delete from event_lesson_request eld
     where eld.registration_id = registration.id and eld.trainer_id = $2;
 
     return null;
@@ -37,7 +37,7 @@ begin
 
   if trainer.lessons_offered is not null then
     select coalesce(sum(eld.lesson_count), 0) into other_lessons
-    from event_lesson_demand eld
+    from event_lesson_request eld
     join event_instance_registration other_registration
       on other_registration.id = eld.registration_id
      and other_registration.registration_status = 'active'
@@ -48,12 +48,12 @@ begin
     end if;
   end if;
 
-  insert into event_lesson_demand (registration_id, trainer_id, lesson_count)
+  insert into event_lesson_request (registration_id, trainer_id, lesson_count)
   values (registration.id, $2, $3)
-  on conflict on constraint eld_unique_registration_trainer_key do update set lesson_count = $3
-  returning * into lesson_demand;
+  on conflict on constraint event_lesson_request_registration_id_trainer_id_key do update set lesson_count = $3
+  returning * into lesson_request;
 
-  return lesson_demand;
+  return lesson_request;
 end;
 $$;
 
@@ -61,7 +61,7 @@ create function set_lesson_request(
   registration_id bigint,
   trainer_id bigint,
   lesson_count integer
-) returns event_lesson_demand
+) returns event_lesson_request
 language plpgsql strict security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
@@ -115,7 +115,7 @@ create function set_lesson_demand(
   instance_registration_id bigint,
   instance_trainer_id bigint,
   lesson_count integer
-) returns event_lesson_demand
+) returns event_lesson_request
 language sql strict
 as $$
   select public.set_lesson_request($1, $2, $3);

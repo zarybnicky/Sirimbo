@@ -42,7 +42,7 @@ VALUES (-9000, -9000, 'Hidden target', '000000', false),
        (-9001, -9000, 'Unrelated hidden cohort', '000000', false);
 INSERT INTO event_target_cohort (tenant_id, event_id, cohort_id)
 VALUES (-9000, -9002, -9000);
-INSERT INTO event_lesson_demand (id, tenant_id, trainer_id, registration_id, lesson_count)
+INSERT INTO event_lesson_request (id, tenant_id, trainer_id, registration_id, lesson_count)
 OVERRIDING SYSTEM VALUE VALUES (-9000, -9000, -9000, -9001, 1);
 
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
@@ -113,7 +113,7 @@ SELECT tap.is((SELECT count(*) FROM event_instance_registration), 5::bigint,
 SELECT tap.is((SELECT count(*) FROM event_trainer), 2::bigint, 'attendees see trainers throughout the schedule');
 SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint, 'attendees see target assignments');
 SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[], 'attendees see the referenced hidden cohort only');
-SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 1::bigint, 'attendees see another participant lesson request');
+SELECT tap.is((SELECT count(*) FROM event_lesson_request), 1::bigint, 'attendees see another participant lesson request');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
   'people include other attendees, child attendees, and trainers, not cancelled or foreign attendees');
 WITH changed AS (UPDATE event_instance SET name='Forbidden' WHERE id=-9000 RETURNING id)
@@ -146,7 +146,7 @@ UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'cancellation removes private-event access immediately');
 SELECT tap.is((SELECT count(*) FROM event_instance_registration), 0::bigint, 'cancellation removes registration reads immediately');
-SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 0::bigint, 'cancellation removes lesson-demand reads immediately');
+SELECT tap.is((SELECT count(*) FROM event_lesson_request), 0::bigint, 'cancellation removes lesson-demand reads immediately');
 RESET ROLE;
 REFRESH MATERIALIZED VIEW app_private.event_people;
 SET LOCAL ROLE anonymous;

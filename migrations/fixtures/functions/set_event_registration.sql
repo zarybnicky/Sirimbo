@@ -111,7 +111,7 @@ begin
       )
       and coalesce((
         select jsonb_object_agg(d.trainer_id, d.lesson_count)
-        from event_lesson_demand d where d.registration_id = r.id
+        from event_lesson_request d where d.registration_id = r.id
       ), '{}'::jsonb) = coalesce((
         select jsonb_object_agg(d.trainer_id, d.lesson_count)
         from unnest(lesson_trainer_ids, lesson_counts) d(trainer_id, lesson_count)
@@ -251,7 +251,7 @@ begin
   select * into registration from event_instance_registration where id = registration.id;
 
   if lesson_trainer_ids is not null then
-    delete from event_lesson_demand
+    delete from event_lesson_request
     where registration_id = registration.id
       and trainer_id <> all(lesson_trainer_ids);
 
