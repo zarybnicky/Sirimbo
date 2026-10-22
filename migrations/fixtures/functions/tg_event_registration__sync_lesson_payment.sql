@@ -1,4 +1,7 @@
-create or replace function app_private.tg_eir__sync_lesson_payment()
+drop trigger if exists _800_sync_lesson_payment on event_registration;
+drop function if exists app_private.tg_eir__sync_lesson_payment;
+
+create or replace function app_private.tg_event_registration__sync_lesson_payment()
   returns trigger language plpgsql security definer
   set search_path = pg_catalog, public, pg_temp
 as $$
@@ -24,7 +27,7 @@ begin
 
     delete from payment where event_id = instance.id;
     if not instance.is_cancelled and instance.type = 'lesson' and instance.since < now() then
-      payment_id := (create_event_instance_payment(instance)).id;
+      payment_id := (create_event_payment(instance)).id;
       update payment set status = 'unpaid' where id = payment_id;
       perform resolve_payment_with_credit(payment.*) from payment where id = payment_id;
     end if;
@@ -33,9 +36,8 @@ begin
 end;
 $$;
 
-drop trigger if exists _800_sync_lesson_payment on event_registration;
 create constraint trigger _800_sync_lesson_payment
   after insert or delete or update of event_id, person_id, registration_status
   on event_registration
   deferrable initially deferred for each row
-  execute function app_private.tg_eir__sync_lesson_payment();
+  execute function app_private.tg_event_registration__sync_lesson_payment();

@@ -109,10 +109,10 @@ alter table person_invitation add column if not exists event_id bigint reference
 comment on column person_invitation.event_id is '@omit';
 comment on constraint person_invitation_event_id_fkey on person_invitation is '@omit';
 
---!include functions/reconcile_event_instance_cohort_registrations.sql
+--!include functions/reconcile_event_cohort_registrations.sql
 --!include functions/tg_cohort_membership__on_status.sql
---!include functions/can_trainer_edit_instance.sql
---!include functions/tg_event_instance__refresh_manager_person_ids.sql
+--!include functions/can_trainer_edit_event.sql
+--!include functions/tg_event__refresh_manager_person_ids.sql
 --!include functions/ensure_couple_person_registrations.sql
 --!include functions/save_events.sql
 --!include functions/set_lesson_request.sql
@@ -122,14 +122,15 @@ comment on constraint person_invitation_event_id_fkey on person_invitation is '@
 --!include functions/event_series_info.sql
 --!include functions/event_share_token.sql
 --!include functions/event_sharing.sql
---!include functions/tg_event_instance__validate_parent.sql
---!include functions/tg_event_instance__delete_payment_on_cancellation.sql
+--!include functions/tg_event__validate_parent.sql
+--!include functions/tg_event__delete_payment_on_cancellation.sql
 --!include functions/tg_transaction__effective_date.sql
 --!include functions/create_latest_lesson_payments.sql
 --!include functions/system_admin_tenants.sql
---!include functions/event_instance_stats.sql
---!include functions/create_event_instance_payment.sql
---!include functions/tg_eir__sync_lesson_payment.sql
+--!include functions/event_stats.sql
+--!include functions/tg_event_registration__attendance_timestamps.sql
+--!include functions/create_event_payment.sql
+--!include functions/tg_event_registration__sync_lesson_payment.sql
 --!include functions/event_registration_last_attended.sql
 --!include functions/scoreboard.sql
 --!include functions/event_share_claims.sql
@@ -167,6 +168,9 @@ comment on constraint person_invitation_event_id_fkey on person_invitation is '@
 --!include policies/tenant_settings.sql
 --!include policies/tenant_trainer.sql
 --!include policies/aktuality.sql
+
+-- Drop the old permission helper after its policies have been replaced.
+drop function if exists app_private.can_trainer_edit_instance;
 
 alter table otp_token
   add column if not exists intent text not null default 'password_reset',

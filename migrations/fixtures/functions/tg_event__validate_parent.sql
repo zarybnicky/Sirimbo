@@ -1,4 +1,7 @@
-create or replace function app_private.tg_event_instance__validate_parent()
+drop trigger if exists _200_validate_parent on event;
+drop function if exists app_private.tg_event_instance__validate_parent;
+
+create or replace function app_private.tg_event__validate_parent()
   returns trigger
   language plpgsql
   security definer
@@ -28,7 +31,6 @@ begin
 end;
 $$;
 
-drop trigger if exists _200_validate_parent on event;
 create trigger _200_validate_parent
   before insert or update of tenant_id, parent_id on event
-  for each row execute function app_private.tg_event_instance__validate_parent();
+  for each row execute function app_private.tg_event__validate_parent();

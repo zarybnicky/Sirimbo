@@ -1,8 +1,13 @@
-create or replace function app_private.event_instance_manager_person_ids(p_instance_id bigint)
+drop trigger if exists _500_refresh_manager_person_ids_from_parent on event;
+drop function if exists app_private.tg_event_instance__refresh_manager_person_ids;
+drop function if exists app_private.refresh_event_instance_manager_person_ids;
+drop function if exists app_private.event_instance_manager_person_ids;
+
+create or replace function app_private.event_manager_person_ids(p_event_id bigint)
   returns bigint[] language sql stable parallel safe as $$
   with recursive chain as (
     select id, parent_id
-    from event where id = p_instance_id
+    from event where id = p_event_id
     union all
     select parent.id, parent.parent_id
     from event parent
@@ -15,19 +20,19 @@ create or replace function app_private.event_instance_manager_person_ids(p_insta
   from managers;
 $$;
 
-drop function if exists app_private.refresh_event_instance_manager_person_ids;
+drop function if exists app_private.refresh_event_manager_person_ids;
 
-create function app_private.refresh_event_instance_manager_person_ids(p_instance_id bigint)
+create function app_private.refresh_event_manager_person_ids(p_event_id bigint)
   returns void language sql security definer
   set search_path = pg_catalog, public, pg_temp as $$
   with recursive affected as (
-    select id from event where id = p_instance_id
+    select id from event where id = p_event_id
     union all
     select child.id
     from event child
     join affected parent on child.parent_id = parent.id
   ), desired as (
-    select id, app_private.event_instance_manager_person_ids(id) as person_ids
+    select id, app_private.event_manager_person_ids(id) as person_ids
     from affected
   )
   update event instance
@@ -37,20 +42,19 @@ create function app_private.refresh_event_instance_manager_person_ids(p_instance
     and instance.manager_person_ids is distinct from desired.person_ids
 $$;
 
-grant execute on function app_private.refresh_event_instance_manager_person_ids to anonymous;
+grant execute on function app_private.refresh_event_manager_person_ids to anonymous;
 
-create or replace function app_private.tg_event_instance__refresh_manager_person_ids()
+create or replace function app_private.tg_event__refresh_manager_person_ids()
   returns trigger language plpgsql as $$
 begin
-  perform app_private.refresh_event_instance_manager_person_ids(new.id);
+  perform app_private.refresh_event_manager_person_ids(new.id);
   return null;
 end;
 $$;
 
-drop trigger if exists _500_refresh_manager_person_ids_from_parent on event;
 create trigger _500_refresh_manager_person_ids_from_parent
   after insert or update of parent_id on event
-  for each row execute function app_private.tg_event_instance__refresh_manager_person_ids();
+  for each row execute function app_private.tg_event__refresh_manager_person_ids();
 
 drop trigger if exists _500_refresh_manager_person_ids on event_trainer;
 drop function if exists app_private.tg_event_instance_trainer__refresh_manager_person_ids();
@@ -59,13 +63,13 @@ create or replace function app_private.tg_event_trainer__refresh_manager_person_
   returns trigger language plpgsql as $$
 begin
   if tg_op = 'DELETE' then
-    perform app_private.refresh_event_instance_manager_person_ids(old.event_id);
+    perform app_private.refresh_event_manager_person_ids(old.event_id);
   elsif tg_op = 'INSERT' then
-    perform app_private.refresh_event_instance_manager_person_ids(new.event_id);
+    perform app_private.refresh_event_manager_person_ids(new.event_id);
   elsif old.event_id is distinct from new.event_id
     or old.person_id is distinct from new.person_id then
-    perform app_private.refresh_event_instance_manager_person_ids(old.event_id);
-    perform app_private.refresh_event_instance_manager_person_ids(new.event_id);
+    perform app_private.refresh_event_manager_person_ids(old.event_id);
+    perform app_private.refresh_event_manager_person_ids(new.event_id);
   end if;
   return null;
 end;

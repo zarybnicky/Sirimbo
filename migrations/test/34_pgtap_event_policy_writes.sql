@@ -71,7 +71,7 @@ SELECT tap.lives_ok($$
   )
 $$, 'save_events edits and hands off ownership while retaining another trainer');
 SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_trainer WHERE event_id IN (SELECT id FROM saved_policy_event)), ARRAY[-8202,-8201]::bigint[], 'handoff removes caller and saves replacement trainers');
-SELECT tap.ok((SELECT NOT app_private.can_trainer_edit_instance(id) FROM saved_policy_event), 'caller loses edit rights after handoff');
+SELECT tap.ok((SELECT NOT app_private.can_trainer_edit_event(id) FROM saved_policy_event), 'caller loses edit rights after handoff');
 SELECT tap.is((SELECT count(*) FROM event_target_cohort WHERE event_id IN (SELECT id FROM saved_policy_event)), 1::bigint, 'cohort target survives handoff');
 
 RESET ROLE;

@@ -75,7 +75,7 @@ begin
   ) or (
     pg_has_role(
       coalesce(nullif(current_setting('role'), 'none'), session_user), 'trainer', 'member'
-    ) and app_private.can_trainer_edit_instance(event_id)
+    ) and app_private.can_trainer_edit_event(event_id)
   );
 
   if person is distinct from null then

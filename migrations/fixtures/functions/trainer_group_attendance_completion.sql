@@ -1,3 +1,19 @@
+drop function if exists trainer_group_attendance_completion;
+drop type if exists trainer_group_attendance_completion;
+
+create type trainer_group_attendance_completion as (
+  person_id integer,
+  total_events integer,
+  filled_events integer,
+  partially_filled_events integer,
+  unfilled_events integer,
+  filled_ratio double precision,
+  total_attendances integer,
+  pending_attendances integer
+);
+
+comment on type trainer_group_attendance_completion is '@foreignKey (person_id) references person (id)';
+
 create or replace function trainer_group_attendance_completion(
   since timestamp with time zone default null,
   until timestamp with time zone default null
@@ -39,14 +55,14 @@ create or replace function trainer_group_attendance_completion(
   per_trainer as (
     select
       person_id,
-      count(*) as total_instances,
-      count(*) filter (where attendance_count > 0 and unknown_count = 0) as filled_instances,
+      count(*) as total_events,
+      count(*) filter (where attendance_count > 0 and unknown_count = 0) as filled_events,
       count(*) filter (
         where attendance_count > 0
           and unknown_count > 0
           and unknown_count < attendance_count
-      ) as partially_filled_instances,
-      count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_instances,
+      ) as partially_filled_events,
+      count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_events,
       coalesce(sum(attendance_count), 0) as total_attendances,
       coalesce(sum(unknown_count), 0) as pending_attendances
     from attendance_stats
@@ -54,12 +70,12 @@ create or replace function trainer_group_attendance_completion(
   )
   select
     person_id,
-    total_instances,
-    filled_instances,
-    partially_filled_instances,
-    unfilled_instances,
+    total_events,
+    filled_events,
+    partially_filled_events,
+    unfilled_events,
     case
-      when total_instances > 0 then (filled_instances + partially_filled_instances)::double precision / total_instances
+      when total_events > 0 then (filled_events + partially_filled_events)::double precision / total_events
       else null
     end as filled_ratio,
     total_attendances,
@@ -67,11 +83,6 @@ create or replace function trainer_group_attendance_completion(
   from per_trainer
   order by filled_ratio asc nulls last, person_id;
 $_$;
-
-comment on column trainer_group_attendance_completion.total_instances is '@name totalEvents';
-comment on column trainer_group_attendance_completion.filled_instances is '@name filledEvents';
-comment on column trainer_group_attendance_completion.partially_filled_instances is '@name partiallyFilledEvents';
-comment on column trainer_group_attendance_completion.unfilled_instances is '@name unfilledEvents';
 
 comment on function trainer_group_attendance_completion is '@simpleCollections only';
 grant all on function trainer_group_attendance_completion to anonymous;

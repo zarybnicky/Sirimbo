@@ -1,10 +1,10 @@
-create or replace function app_private.can_trainer_edit_instance(iid bigint)
+create or replace function app_private.can_trainer_edit_event(p_event_id bigint)
   returns boolean
   language sql stable security definer leakproof parallel safe
   set search_path = pg_catalog, public, pg_temp
 as $$
   with recursive chain as (
-    select i.id, i.parent_id from event i where i.id = iid
+    select i.id, i.parent_id from event i where i.id = p_event_id
     union all
     select p.id, p.parent_id from event p join chain c on p.id = c.parent_id
   ),
@@ -18,4 +18,4 @@ as $$
   );
 $$;
 
-grant all on function app_private.can_trainer_edit_instance to anonymous;
+grant all on function app_private.can_trainer_edit_event to anonymous;

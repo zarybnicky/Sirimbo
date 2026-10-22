@@ -5,7 +5,7 @@ create policy current_tenant on event_target_cohort as restrictive
 create policy admin_all on event_target_cohort to administrator
   using (true);
 create policy trainer_select on event_target_cohort to trainer
-  using (app_private.can_trainer_edit_instance(event_id));
+  using (app_private.can_trainer_edit_event(event_id));
 create policy member_view on event_target_cohort for select to member
   using (exists (select 1 from event e where e.id = event_target_cohort.event_id));
 create policy event_access_view on event_target_cohort for select to anonymous

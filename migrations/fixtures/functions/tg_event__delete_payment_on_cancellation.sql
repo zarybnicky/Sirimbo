@@ -1,4 +1,7 @@
-create or replace function app_private.tg_event_instance__delete_payment_on_cancellation()
+drop trigger if exists _500_delete_on_cancellation on event;
+drop function if exists app_private.tg_event_instance__delete_payment_on_cancellation;
+
+create or replace function app_private.tg_event__delete_payment_on_cancellation()
   returns trigger
   language plpgsql
   security definer
@@ -10,7 +13,7 @@ begin
   delete from payment where event_id = OLD.id;
 
   if not new.is_cancelled then
-    select (create_event_instance_payment(i)).id into payment_id
+    select (create_event_payment(i)).id into payment_id
     from event i
     where i.type='lesson'
       and i.id = NEW.id
@@ -28,10 +31,9 @@ begin
 end;
 $$;
 
-drop trigger if exists _500_delete_on_cancellation on event;
 
 create trigger _500_delete_on_cancellation
   after update of is_cancelled on event
   for each row
   when (old.is_cancelled is distinct from new.is_cancelled)
-  execute function app_private.tg_event_instance__delete_payment_on_cancellation();
+  execute function app_private.tg_event__delete_payment_on_cancellation();

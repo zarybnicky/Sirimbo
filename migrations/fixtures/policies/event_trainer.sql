@@ -5,7 +5,7 @@ create policy current_tenant on event_trainer as restrictive
 create policy admin_all on event_trainer to administrator
   using (true);
 create policy trainer_same_tenant on event_trainer to trainer
-  using (app_private.can_trainer_edit_instance(event_id));
+  using (app_private.can_trainer_edit_event(event_id));
 create policy member_view on event_trainer for select to member
   using (true);
 create policy public_view on event_trainer for select to anonymous

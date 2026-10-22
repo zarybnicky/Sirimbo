@@ -5,9 +5,9 @@ create policy current_tenant on event_registration as restrictive
 create policy admin_all on event_registration to administrator
   using (true);
 create policy trainer_insert on event_registration for insert to trainer
-  with check (app_private.can_trainer_edit_instance(event_id));
+  with check (app_private.can_trainer_edit_event(event_id));
 create policy trainer_update on event_registration for update to trainer
-  using (app_private.can_trainer_edit_instance(event_id));
+  using (app_private.can_trainer_edit_event(event_id));
 create policy insert_my on event_registration for insert
   with check (person_id = any((select current_person_ids())::bigint[])
     or couple_id = any((select current_couple_ids())::bigint[]));

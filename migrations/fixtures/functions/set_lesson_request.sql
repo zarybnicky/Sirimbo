@@ -94,7 +94,7 @@ begin
   ) or (
     pg_has_role(
       coalesce(nullif(current_setting('role'), 'none'), session_user), 'trainer', 'member'
-    ) and app_private.can_trainer_edit_instance(instance.id)
+    ) and app_private.can_trainer_edit_event(instance.id)
   );
 
   if not coalesce(is_self, false) and not coalesce(is_manager, false) then

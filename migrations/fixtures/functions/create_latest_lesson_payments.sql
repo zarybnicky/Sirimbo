@@ -11,7 +11,7 @@ begin
   return query WITH created AS (
     SELECT p.*
     FROM event ei
-      JOIN LATERAL create_event_instance_payment(ei) p ON true
+      JOIN LATERAL create_event_payment(ei) p ON true
     WHERE ei.type = 'lesson'
       AND NOT ei.is_cancelled
       AND ei.since < now()

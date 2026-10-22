@@ -155,7 +155,7 @@ SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
 
 SELECT set_event_registration(900002, 200001, null, false);
 
-SELECT app_private.reconcile_event_instance_cohort_registrations(
+SELECT app_private.reconcile_event_cohort_registrations(
   ARRAY[900002], ARRAY[200001]
 );
 
@@ -167,7 +167,7 @@ SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200003]', true);
 SELECT set_event_registration(900002, 200003, null, true);
 
-SELECT app_private.reconcile_event_instance_cohort_registrations(
+SELECT app_private.reconcile_event_cohort_registrations(
   ARRAY[900002], ARRAY[200003]
 );
 

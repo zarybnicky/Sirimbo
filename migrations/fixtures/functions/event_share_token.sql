@@ -8,7 +8,7 @@ as $$
   where id = $1.id
     and (pg_has_role(current_user, 'administrator', 'member')
       or (pg_has_role(current_user, 'trainer', 'member')
-      and app_private.can_trainer_edit_instance($1.id)))
+      and app_private.can_trainer_edit_event($1.id)))
 $$;
 
 grant execute on function event_share_token to anonymous;

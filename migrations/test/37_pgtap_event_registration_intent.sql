@@ -275,7 +275,7 @@ SELECT tap.throws_ok(format('select pg_temp.save_group(%s, array[]::bigint[])',
   (SELECT id FROM cases WHERE name = 'fresh')), 'P0001', null, 'cross-tenant event saves are rejected');
 RESET ROLE;
 SET LOCAL ROLE anonymous;
-SELECT tap.throws_ok('select app_private.reconcile_event_instance_cohort_registrations(array[-1]::bigint[])',
+SELECT tap.throws_ok('select app_private.reconcile_event_cohort_registrations(array[-1]::bigint[])',
   '42501', null, 'ordinary members cannot directly invoke cohort reconciliation');
 RESET ROLE;
 

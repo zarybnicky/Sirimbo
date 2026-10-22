@@ -1,4 +1,6 @@
-create or replace function create_event_instance_payment(i event)
+drop function if exists create_event_instance_payment;
+
+create or replace function create_event_payment(target_event event)
   returns payment
   language plpgsql
 as $$
@@ -11,38 +13,38 @@ begin
   end if;
 
   -- Serialize initial charging with registration changes and their deferred sync.
-  select * into i from event
-  where id = i.id and tenant_id = current_tenant_id() for no key update;
-  if not found or i.is_cancelled then return null; end if;
+  select * into target_event from event
+  where id = target_event.id and tenant_id = current_tenant_id() for no key update;
+  if not found or target_event.is_cancelled then return null; end if;
 
-  select p.* into created_payment from payment p where p.event_id = i.id;
+  select p.* into created_payment from payment p where p.event_id = target_event.id;
 
   if found then
     return created_payment;
   end if;
 
-  if i.type <> 'lesson' or not exists (
+  if target_event.type <> 'lesson' or not exists (
     select 1
     from event_registration registration
-    where registration.event_id = i.id
+    where registration.event_id = target_event.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
   ) then
     return null;
   end if;
 
-  duration := extract(epoch from (i.until - i.since)) / 60;
+  duration := extract(epoch from (target_event.until - target_event.since)) / 60;
 
   insert into payment (accounting_period_id, status, event_id, due_at)
   values (
     (select id from accounting_period where tenant_id = current_tenant_id() and range @> now()),
-    'tentative', i.id, now() + interval '2 weeks'
+    'tentative', target_event.id, now() + interval '2 weeks'
   )
   on conflict (event_id) where event_id is not null do nothing
   returning * into created_payment;
 
   if not found then
-    return (select p from payment p where p.event_id = i.id);
+    return (select p from payment p where p.event_id = target_event.id);
   end if;
 
   insert into payment_recipient (payment_id, account_id, amount)
@@ -50,7 +52,7 @@ begin
     created_payment.id,
     account.id,
     trainer.member_price_45min_amount / 45 * duration
-  from event_trainers(i) trainer
+  from event_trainers(target_event) trainer
   cross join lateral person_account(trainer.person_id, trainer.currency) account
   where trainer.tenant_id = current_tenant_id()
     and trainer.member_price_45min_amount is not null;
@@ -58,7 +60,7 @@ begin
   insert into payment_debtor (payment_id, person_id)
   select distinct created_payment.id, registration.person_id
   from event_registration registration
-  where registration.event_id = i.id
+  where registration.event_id = target_event.id
     and registration.person_id is not null
     and registration.registration_status = 'active';
 
@@ -66,5 +68,5 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION create_event_instance_payment IS '@omit';
-GRANT ALL ON FUNCTION create_event_instance_payment TO anonymous;
+COMMENT ON FUNCTION create_event_payment IS '@omit';
+GRANT ALL ON FUNCTION create_event_payment TO anonymous;

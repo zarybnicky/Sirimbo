@@ -23,7 +23,7 @@ begin
       when tg_op = 'DELETE' then array[old.person_id]
       else array[old.person_id, new.person_id]
     end;
-    perform app_private.reconcile_event_instance_cohort_registrations(event_ids, person_ids);
+    perform app_private.reconcile_event_cohort_registrations(event_ids, person_ids);
   end if;
 
   return case when tg_op = 'DELETE' then old else new end;

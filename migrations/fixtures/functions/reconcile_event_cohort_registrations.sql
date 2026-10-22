@@ -1,7 +1,8 @@
 drop function if exists app_private.reconcile_event_instance_cohort_registrations(bigint[], bigint[], bigint[]);
+drop function if exists app_private.reconcile_event_instance_cohort_registrations(bigint[], bigint[]);
 
-create or replace function app_private.reconcile_event_instance_cohort_registrations(
-  p_instance_ids bigint[],
+create or replace function app_private.reconcile_event_cohort_registrations(
+  p_event_ids bigint[],
   p_person_ids bigint[] default null
 ) returns void
   language sql
@@ -9,7 +10,7 @@ create or replace function app_private.reconcile_event_instance_cohort_registrat
   set search_path = pg_catalog, public, pg_temp
 as $$
   select instance.id from event instance
-  where instance.id = any(p_instance_ids) order by instance.id for update;
+  where instance.id = any(p_event_ids) order by instance.id for update;
 
   -- Direct registrations (including cancellations) take precedence. Couples
   -- already supply their person rows; cohorts supply only the remaining people.
@@ -19,7 +20,7 @@ as $$
     from event instance
     join event_target_cohort target on target.event_id = instance.id
     join cohort_membership membership on membership.cohort_id = target.cohort_id
-    where instance.id = any(p_instance_ids)
+    where instance.id = any(p_event_ids)
       and instance.since >= now()
       and membership.status = 'active' and membership.active_range @> now()
       and (p_person_ids is null or membership.person_id = any(p_person_ids))
@@ -37,7 +38,7 @@ as $$
     update event_registration registration
     set registration_status = 'cancelled'
     from event instance
-    where registration.event_id = any(p_instance_ids)
+    where registration.event_id = any(p_event_ids)
       and instance.id = registration.event_id and instance.since >= now()
       and registration.source = 'cohort'
       and registration.registration_status = 'active'
@@ -60,8 +61,8 @@ as $$
       is distinct from ('active'::event_registration_status, excluded.target_cohort_id);
 $$;
 
-revoke all on function app_private.reconcile_event_instance_cohort_registrations from public;
-grant execute on function app_private.reconcile_event_instance_cohort_registrations to trainer, administrator;
+revoke all on function app_private.reconcile_event_cohort_registrations from public;
+grant execute on function app_private.reconcile_event_cohort_registrations to trainer, administrator;
 
 drop trigger if exists _500_reconcile_registrations on event_target_cohort;
 drop function if exists app_private.tg_event_instance_target_cohort__reconcile();
