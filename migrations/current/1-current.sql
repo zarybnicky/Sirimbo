@@ -24,6 +24,8 @@ alter table aktuality
   add constraint aktuality_visible_requires_published_at
   check (not is_visible or published_at is not null);
 
+grant execute on function app_private.announcement_status_next to anonymous;
+
 --!include functions/upsert_article.sql
 
 alter table event_instance_registration

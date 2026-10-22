@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
-import { buildId } from '@/lib/build-id';
+import { getNewDeploymentId } from '@/lib/build-id';
 import { Serwist } from '@serwist/window';
-
-type DeploymentResponse = {
-  deploymentId?: string | null;
-};
 
 export const UpdateNotifier = React.memo(function UpdateNotifier() {
   const toastRef = useRef<string | number | undefined>(undefined);
@@ -21,22 +17,7 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
           .catch(() => {});
       }
       try {
-        const currentDeploymentId = document.documentElement.dataset.dplId ?? buildId;
-        if (!currentDeploymentId || currentDeploymentId === 'develop') {
-          return;
-        }
-
-        const response = await fetch('/api/health', {
-          cache: 'no-store',
-          headers: { Accept: 'application/json' },
-        });
-        if (!response.ok) return;
-
-        const data = (await response.json()) as DeploymentResponse;
-        const deploymentId = data.deploymentId;
-        if (!deploymentId || deploymentId === 'develop') return;
-
-        if (deploymentId !== currentDeploymentId) {
+        if (await getNewDeploymentId()) {
           if (toastRef.current) return;
 
           toastRef.current = toast.warn(
