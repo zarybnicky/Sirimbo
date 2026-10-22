@@ -98,7 +98,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
           : 'Uloženo.',
     );
     if (!id) {
-      const newId = result.data?.upsertArticle?.aktuality?.id;
+      const newId = result.data?.upsertArticle?.result?.id;
       if (newId) router.replace(`/aktuality/${newId}`);
     }
   };

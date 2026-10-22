@@ -179,13 +179,14 @@ comment on constraint file_tenant_id_id_key on file
 --!include functions/upsert_location.sql
 --!include functions/confirm_membership_application.sql
 --!include functions/create_person.sql
---!include functions/move_event_instance.sql
 --!include functions/update_attendance.sql
 --!include functions/federation_people_facets.sql
 --!include functions/federation_competitor_facets.sql
 --!include functions/federation_event_facets.sql
 --!include views/competition_participation.sql
 
+comment on table federated.age_group is '@name age_group
+@behavior -insert -update -delete +list -connection';
 comment on table federated.category is '@name category
 @behavior -insert -update -delete +list -connection';
 comment on table federated.federation is '@name federation
@@ -231,8 +232,15 @@ comment on type federated.competitor_type is '@name competitor_type';
 comment on type federated.official_role is '@name official_role';
 comment on type federated.score_component is '@name score_component';
 comment on type federated.scoring_method is '@name scoring_method';
-comment on function set_event_sharing is '@resultFieldName string';
-comment on function update_tenant_settings_key is '@resultFieldName tenantSetting';
+comment on function set_event_sharing is null;
+comment on function update_tenant_settings_key is null;
+comment on function confirm_membership_application is null;
+comment on function update_attendance is null;
+comment on function upsert_announcement is null;
+comment on function upsert_article is null;
+comment on function upsert_location is null;
+comment on function create_person is null;
+comment on function create_credit_transaction_for_person is null;
 
 comment on column federated.event_official.role is '@behavior +attribute:orderBy';
 comment on column federated.competition_official.role is '@behavior +attribute:orderBy';
@@ -249,8 +257,6 @@ comment on column app_private.system_admin_user.user_id is '';
 comment on column app_private.system_admin_user.created_at is '';
 comment on column app_private.system_admin_user.created_by is '';
 comment on column federated.competition.competition_type is '';
-
-comment on table federated.age_group is '@behavior -insert -update -delete +list -connection';
 
 comment on table event_instance_target_cohort is '@name event_target_cohort
 @omit create,update,delete

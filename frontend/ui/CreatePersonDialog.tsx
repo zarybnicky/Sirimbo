@@ -217,7 +217,7 @@ export function CreatePersonDialog() {
     });
     if (result.error) return;
 
-    const id = result.data?.createPerson?.p?.id;
+    const id = result.data?.createPerson?.result?.id;
     if (id) {
       const result = await syncCohorts({
         input: {

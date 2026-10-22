@@ -42,7 +42,8 @@ const legacyFields: Record<string, Record<string, string>> = {
     eventLessonDemandsByRegistrationIdList: 'lessonRequestsList',
   },
   Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
-  SaveEventsPayload: { eventInstances: 'events' },
+  SaveEventsPayload: { eventInstances: 'result' },
+  UpsertAnnouncementPayload: { announcement: 'result' },
   UpdateEventPayload: { eventInstance: 'event' },
   DeleteEventPayload: { eventInstance: 'event' },
 };

@@ -298,7 +298,7 @@ query PersonWithLinksList {
 
 mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
-    p {
+    result {
       ...Person
     }
   }

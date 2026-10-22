@@ -55,7 +55,7 @@ mutation DeleteMembershipApplication($input: DeleteMembershipApplicationInput!) 
 
 mutation ConfirmMembershipApplication($input: ConfirmMembershipApplicationInput!) {
   confirmMembershipApplication(input: $input) {
-    person {
+    result {
       ...Person
     }
   }

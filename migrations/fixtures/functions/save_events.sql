@@ -354,6 +354,5 @@ begin
 end;
 $$;
 
-comment on function save_events is '@simpleCollections only
-@resultFieldName eventInstances';
+comment on function save_events is '@behavior +list -connection';
 grant execute on function save_events to anonymous;

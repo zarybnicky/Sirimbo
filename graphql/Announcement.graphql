@@ -107,7 +107,7 @@ query Announcement($id: BigInt!) {
 
 mutation UpsertAnnouncement($input: UpsertAnnouncementInput!) {
   upsertAnnouncement(input: $input) {
-    announcement {
+    result {
       ...Announcement
     }
   }

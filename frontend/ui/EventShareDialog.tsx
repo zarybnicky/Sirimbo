@@ -20,7 +20,7 @@ export default function EventShareDialog({ item }: { item: EventWithTrainerFragm
       },
     });
     if (!result.error) {
-      setToken(result.data?.setEventSharing?.string ?? null);
+      setToken(result.data?.setEventSharing?.result ?? null);
     }
   };
 

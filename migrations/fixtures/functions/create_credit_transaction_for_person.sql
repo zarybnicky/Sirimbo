@@ -10,4 +10,3 @@ create or replace function create_credit_transaction_for_person(v_person_id bigi
 $$;
 
 grant all on function create_credit_transaction_for_person to anonymous;
-comment on function create_credit_transaction_for_person is '@resultFieldName transaction';

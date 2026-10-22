@@ -211,7 +211,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       );
       return {
         __typename: 'MoveEventPayload',
-        event: {
+        result: {
           __typename: 'Event',
           id: input.id,
           ...(input.since != null ? { since: input.since } : {}),
@@ -371,7 +371,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['aktualities']);
       },
       upsertLocation(result, _args, cache, _info) {
-        const location = result.upsertLocation?.location;
+        const location = result.upsertLocation?.result;
         if (location) cache.invalidate({ __typename: 'Location', id: location.id });
         const tenantId = location?.tenantId;
         if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
@@ -436,7 +436,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       saveEvents(result, _args, cache, _info) {
-        for (const event of result.saveEvents?.events ?? []) {
+        for (const event of result.saveEvents?.result ?? []) {
           cache.invalidate({ __typename: 'Event', id: event.id });
         }
         invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);

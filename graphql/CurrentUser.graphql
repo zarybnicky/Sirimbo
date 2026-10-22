@@ -134,7 +134,7 @@ query TenantSettings($tenantId: BigInt!) {
 
 mutation UpdateTenantSettings($input: UpdateTenantSettingsKeyInput!) {
   updateTenantSettingsKey(input: $input) {
-    tenantSetting {
+    result {
       tenantId
       settings
     }

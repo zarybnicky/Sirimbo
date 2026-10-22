@@ -74,4 +74,3 @@ end
 $$;
 
 grant all on function create_person to anonymous;
-comment on function create_person is '@resultFieldName p';

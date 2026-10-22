@@ -557,7 +557,7 @@ query CalendarFacets(
 
 mutation SaveEvents($input: SaveEventsInput!) {
   saveEvents(input: $input) {
-    events {
+    result {
       id
     }
   }
@@ -565,7 +565,7 @@ mutation SaveEvents($input: SaveEventsInput!) {
 
 mutation SetEventSharing($input: SetEventSharingInput!) {
   setEventSharing(input: $input) {
-    string
+    result
   }
 }
 
@@ -585,7 +585,7 @@ mutation DeleteEvent($id: BigInt!) {
 
 mutation SetLessonRequest($input: SetLessonRequestInput!) {
   setLessonRequest(input: $input) {
-    eventLessonRequest {
+    result {
       id
       lessonCount
       trainerId
@@ -595,7 +595,7 @@ mutation SetLessonRequest($input: SetLessonRequestInput!) {
 
 mutation SetEventRegistration($input: SetEventRegistrationInput!) {
   setEventRegistration(input: $input) {
-    eventRegistration {
+    result {
       ...EventRegistration
       registrationStatus
       event {
@@ -608,7 +608,7 @@ mutation SetEventRegistration($input: SetEventRegistrationInput!) {
 
 mutation MoveEvent($input: MoveEventInput!) {
   moveEvent(input: $input) {
-    event {
+    result {
       id
       since
       until
@@ -632,7 +632,7 @@ mutation MoveEvent($input: MoveEventInput!) {
 
 mutation UpdateAttendance($input: UpdateAttendanceInput!) {
   updateAttendance(input: $input) {
-    eventRegistration {
+    result {
       id
       status
       attendanceNote

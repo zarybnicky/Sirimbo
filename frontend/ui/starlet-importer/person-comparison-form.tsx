@@ -177,10 +177,10 @@ export function PersonComparisonForm() {
           },
         });
         if (res.error) throw res.error;
-        if (res.data?.createPerson?.p?.id) {
+        if (res.data?.createPerson?.result?.id) {
           const syncResult = await syncCohorts({
             input: {
-              personId: res.data.createPerson.p.id,
+              personId: res.data.createPerson.result.id,
               cohortIds,
             },
           });

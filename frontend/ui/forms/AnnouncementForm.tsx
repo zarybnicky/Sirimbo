@@ -148,7 +148,7 @@ export function AnnouncementForm({
       },
     });
     if (!result.error) {
-      const newId = result.data?.upsertAnnouncement?.announcement?.id;
+      const newId = result.data?.upsertAnnouncement?.result?.id;
       if (!id && newId) toast.success('Přidáno.');
       onSuccess(newId);
     }

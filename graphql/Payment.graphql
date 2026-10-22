@@ -135,7 +135,7 @@ mutation DeleteTransaction($id: BigInt!) {
 
 mutation CreateCreditTransaction($input: CreateCreditTransactionForPersonInput!) {
   createCreditTransactionForPerson(input: $input) {
-    transaction {
+    result {
       id
       effectiveDate
       postingsList {
