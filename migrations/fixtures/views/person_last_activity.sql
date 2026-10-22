@@ -34,8 +34,8 @@ left join lateral (
     where (r.status = 'attended' or e.type = 'lesson')
       and not e.is_cancelled and e.since <= now()
   ), 'epoch'::timestamptz) as training_at
-  from event_instance_registration r
-  join event_instance e on e.id = r.instance_id and e.tenant_id = r.tenant_id
+  from event_registration r
+  join event_instance e on e.id = r.event_id and e.tenant_id = r.tenant_id
   where r.person_id = p.id and r.tenant_id = (select current_tenant_id())
     and r.registration_status = 'active'
     and e.type in ('lesson', 'group', 'camp')

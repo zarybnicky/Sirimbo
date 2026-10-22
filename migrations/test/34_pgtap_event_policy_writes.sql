@@ -20,7 +20,7 @@ VALUES (-8200, -8200, now(), now()+interval '1 hour', true, false, false),
 INSERT INTO event_trainer (id, tenant_id, event_id, person_id) OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8200), (-8201, -8200, -8201, -8201),
        (-8202, -8201, -8202, -8201);
-INSERT INTO event_instance_registration (id, tenant_id, instance_id, person_id, status)
+INSERT INTO event_registration (id, tenant_id, event_id, person_id, status)
 OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, -8200, -8202, 'unknown'),
        (-8201, -8201, -8202, -8202, 'unknown');

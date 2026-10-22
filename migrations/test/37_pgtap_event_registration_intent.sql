@@ -47,45 +47,45 @@ INSERT INTO cases VALUES ('fresh', pg_temp.save_group(null, ARRAY[-8601]::bigint
   {"person_id":-8602,"is_cancelled":true},
   {"person_id":-8603}
 ]'));
-SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
+SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
   ARRAY[-8603,-8601]::bigint[], 'a fresh event saves exactly the displayed participants');
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8602
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8602
     AND source = 'manager' AND registration_status = 'cancelled'), 'removal before first save is recorded');
 
 INSERT INTO cases VALUES ('duplicates', pg_temp.save_group(null, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},
   {"person_id":-8601,"target_cohort_id":-8601}
 ]'));
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'duplicates')
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'duplicates')
     AND parent_registration_id IS NULL AND person_id = -8601),
   1::bigint, 'duplicate registrations are saved once');
 INSERT INTO cases VALUES ('duplicate couple', pg_temp.save_group(null, ARRAY[-8601]::bigint[], '[
   {"couple_id":-8601},
   {"couple_id":-8601}
 ]'));
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'duplicate couple')
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'duplicate couple')
     AND parent_registration_id IS NULL AND couple_id = -8601),
   1::bigint, 'duplicate couple registrations are saved once');
 
-UPDATE event_instance_registration SET status = 'attended', attendance_note = 'Preserve me'
-WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8601;
-CREATE TEMP TABLE original AS SELECT id FROM event_instance_registration
-WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8601;
+UPDATE event_registration SET status = 'attended', attendance_note = 'Preserve me'
+WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8601;
+CREATE TEMP TABLE original AS SELECT id FROM event_registration
+WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8601;
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},{"person_id":-8603}
 ]') FROM cases WHERE name = 'fresh';
 UPDATE cohort_membership SET status = status WHERE cohort_id = -8601;
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
   2::bigint, 'unchanged saves and background updates preserve individual removals');
 
 SELECT pg_temp.save_group(id, '{}', '[{"person_id":-8601},{"person_id":-8603}]')
 FROM cases WHERE name = 'fresh';
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration WHERE id = (SELECT id FROM original)
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration WHERE id = (SELECT id FROM original)
   AND source = 'manager' AND registration_status = 'active'
   AND status = 'attended' AND attendance_note = 'Preserve me' AND target_cohort_id IS NULL),
   'removing a cohort and re-adding a person preserves the registration and attendance');
@@ -95,21 +95,21 @@ SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8602,"target_cohort_id":-8601},
   {"person_id":-8603,"is_cancelled":true}
 ]') FROM cases WHERE name = 'fresh';
-SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
+SELECT tap.is((SELECT array_agg(person_id ORDER BY person_id) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
   ARRAY[-8602,-8601]::bigint[], 'adding a cohort again restores previously removed members');
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration WHERE id = (SELECT id FROM original)
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration WHERE id = (SELECT id FROM original)
   AND status = 'attended' AND attendance_note = 'Preserve me'), 're-addition retains attendance');
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8603
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND person_id = -8603
     AND registration_status = 'cancelled'), 'unrelated removals remain cancelled');
 
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"is_cancelled":true},{"person_id":-8602,"target_cohort_id":-8601}
 ]') FROM cases WHERE name = 'fresh';
 UPDATE cohort_membership SET status = status WHERE cohort_id = -8601;
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'fresh') AND registration_status = 'active'),
   1::bigint, 'removing a person after adding the cohort wins, including after a background update');
 
 INSERT INTO cases VALUES ('overlap', pg_temp.save_group(null, ARRAY[-8601,-8602]::bigint[], '[
@@ -117,18 +117,18 @@ INSERT INTO cases VALUES ('overlap', pg_temp.save_group(null, ARRAY[-8601,-8602]
 ]'));
 SELECT pg_temp.save_group(id, ARRAY[-8602]::bigint[], '[{"person_id":-8601,"target_cohort_id":-8602}]')
 FROM cases WHERE name = 'overlap';
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id = -8601
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id = -8601
     AND registration_status = 'active' AND target_cohort_id = -8602)
-  AND EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id = -8602
+  AND EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id = -8602
     AND registration_status = 'cancelled' AND source = 'cohort'),
   'removing one cohort keeps shared members and cancels only omitted registrations');
 
 CREATE TEMP TABLE original_partners AS
-SELECT id, person_id FROM event_instance_registration
-WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap');
-UPDATE event_instance_registration SET status='attended', attendance_note='Keep partner attendance'
+SELECT id, person_id FROM event_registration
+WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap');
+UPDATE event_registration SET status='attended', attendance_note='Keep partner attendance'
 WHERE id IN (SELECT id FROM original_partners);
 INSERT INTO event_lesson_request (registration_id, trainer_id, lesson_count)
 SELECT r.id, t.id, 1 FROM original_partners r
@@ -136,11 +136,11 @@ JOIN event_trainer t ON t.event_id = (SELECT id FROM cases WHERE name = 'overlap
 WHERE r.person_id=-8601;
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[{"couple_id":-8601}]')
 FROM cases WHERE name = 'overlap';
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id IS NOT NULL
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND person_id IS NOT NULL
     AND registration_status = 'active' AND parent_registration_id IS NOT NULL), 2::bigint,
   'a couple replaces individual registrations without duplicate person rows');
-SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
+SELECT tap.ok((SELECT count(*) = 2 FROM event_registration
   WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NOT NULL
     AND registration_status='active' AND source='manager' AND attendance_note='Keep partner attendance')
   AND EXISTS (SELECT 1 FROM event_lesson_request WHERE registration_id IN (SELECT id FROM original_partners)),
@@ -150,24 +150,24 @@ SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"is_cancelled":true},{"person_id":-8602,"is_cancelled":true}
 ]') FROM cases WHERE name = 'overlap';
 UPDATE cohort_membership SET status = status WHERE cohort_id = -8601;
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'),
   0::bigint, 'explicitly removing a couple and its members survives background membership updates');
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},{"person_id":-8602,"target_cohort_id":-8601}
 ]') FROM cases WHERE name = 'overlap';
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'),
   2::bigint, 'adding a cohort restores people removed as a couple');
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[{"couple_id":-8601}]')
 FROM cases WHERE name = 'overlap';
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[{"person_id":-8601},{"person_id":-8602}]')
 FROM cases WHERE name = 'overlap';
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'overlap') AND registration_status = 'active'
     AND parent_registration_id IS NULL AND person_id IS NOT NULL), 2::bigint,
   'individuals can replace an existing couple');
-SELECT tap.ok((SELECT count(*) = 2 FROM event_instance_registration
+SELECT tap.ok((SELECT count(*) = 2 FROM event_registration
   WHERE id IN (SELECT id FROM original_partners) AND parent_registration_id IS NULL
     AND registration_status='active' AND attendance_note='Keep partner attendance')
   AND EXISTS (SELECT 1 FROM event_lesson_request WHERE registration_id IN (SELECT id FROM original_partners)),
@@ -183,8 +183,8 @@ SET LOCAL ROLE anonymous;
 SELECT set_event_registration(id, -8601, null, true, 'Personal note') FROM cases WHERE name='self couple';
 RESET ROLE;
 CREATE TEMP TABLE self_person AS SELECT r.id, t.id AS trainer_id
-FROM event_instance_registration r JOIN event_trainer t ON t.event_id=r.instance_id
-WHERE r.instance_id=(SELECT id FROM cases WHERE name='self couple') AND r.person_id=-8601;
+FROM event_registration r JOIN event_trainer t ON t.event_id=r.event_id
+WHERE r.event_id=(SELECT id FROM cases WHERE name='self couple') AND r.person_id=-8601;
 GRANT SELECT ON self_person TO anonymous;
 SET LOCAL ROLE anonymous;
 SELECT set_lesson_request(r.id, t.id, 1) FROM self_person r
@@ -192,11 +192,11 @@ CROSS JOIN event_trainer t WHERE t.event_id=(SELECT id FROM cases WHERE name='se
 SELECT tap.lives_ok(format('select set_event_registration(%s, null, -8601, true)',
   (SELECT id FROM cases WHERE name='self couple')),
   'a couple needs only one free place when one partner is already registered');
-SELECT tap.is((SELECT id FROM event_instance_registration
-  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND person_id=-8601 AND registration_status='active'),
+SELECT tap.is((SELECT id FROM event_registration
+  WHERE event_id=(SELECT id FROM cases WHERE name='self couple') AND person_id=-8601 AND registration_status='active'),
   (SELECT id FROM self_person), 'self registration attaches the original person row');
-SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
+SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
   'both reused and new partner rows inherit the couple registration source');
 SELECT tap.lives_ok(format('select set_lesson_request(%s, %s, 2)',
   (SELECT id FROM self_person),
@@ -214,11 +214,11 @@ SELECT tap.lives_ok(format('select set_event_registration(%s, -8601, null, true)
   (SELECT id FROM cases WHERE name='self couple')),
   'rejoining an active couple needs no additional registration-unit place');
 SELECT set_event_registration(id, null, -8601, false) FROM cases WHERE name='self couple';
-SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
+SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id=(SELECT id FROM cases WHERE name='self couple') AND source IS DISTINCT FROM 'self'),
   'cancelling a couple propagates the source to its person rows');
 SELECT set_event_registration(id, -8601, null, true) FROM cases WHERE name='self couple';
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration r
   JOIN event_lesson_request d ON d.registration_id=r.id
   WHERE r.id=(SELECT id FROM self_person) AND r.parent_registration_id IS NULL
     AND r.registration_status='active' AND r.note='Personal note' AND d.lesson_count=2),
@@ -230,34 +230,34 @@ SELECT set_config('jwt.claims.my_couple_ids', '{}', true);
 INSERT INTO cases VALUES ('past', pg_temp.save_group(null, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},{"person_id":-8602,"target_cohort_id":-8601}
 ]', now() - interval '2 years'));
-UPDATE event_instance_registration SET status = 'attended'
-WHERE instance_id = (SELECT id FROM cases WHERE name = 'past');
+UPDATE event_registration SET status = 'attended'
+WHERE event_id = (SELECT id FROM cases WHERE name = 'past');
 UPDATE cohort_membership SET status = 'expired', until = now()
 WHERE cohort_id = -8601 AND person_id = -8601;
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active'),
   2::bigint, 'membership changes leave past registrations alone');
 SELECT pg_temp.save_group(id, ARRAY[-8601]::bigint[], '[
   {"person_id":-8601,"target_cohort_id":-8601},{"person_id":-8602,"target_cohort_id":-8601}
 ]') FROM cases WHERE name = 'past';
-SELECT tap.is((SELECT count(*) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active'),
+SELECT tap.is((SELECT count(*) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active'),
   2::bigint, 'saving a past lesson retains its displayed list regardless of current membership');
 INSERT INTO cases VALUES ('copy', pg_temp.save_group(null, ARRAY[-8601]::bigint[],
   '[{"person_id":-8602,"target_cohort_id":-8601}]'));
-SELECT tap.is((SELECT array_agg(person_id) FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'copy') AND registration_status = 'active'),
+SELECT tap.is((SELECT array_agg(person_id) FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'copy') AND registration_status = 'active'),
   ARRAY[-8602]::bigint[], 'a future copy saves only the submitted list');
 SELECT pg_temp.save_group(id, '{}') FROM cases WHERE name = 'past';
-SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active')
-  AND (SELECT count(*) FROM event_instance_registration
-    WHERE instance_id = (SELECT id FROM cases WHERE name = 'past') AND status = 'attended') = 2,
+SELECT tap.ok(NOT EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'past') AND registration_status = 'active')
+  AND (SELECT count(*) FROM event_registration
+    WHERE event_id = (SELECT id FROM cases WHERE name = 'past') AND status = 'attended') = 2,
   'removing a past cohort preserves attendance while cancelling its registrations');
 SELECT pg_temp.save_group(id, ARRAY[-8602]::bigint[], '[{"person_id":-8601,"target_cohort_id":-8602}]')
 FROM cases WHERE name = 'past';
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration
-  WHERE instance_id = (SELECT id FROM cases WHERE name = 'past') AND person_id = -8601
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration
+  WHERE event_id = (SELECT id FROM cases WHERE name = 'past') AND person_id = -8601
     AND registration_status = 'active' AND target_cohort_id = -8602 AND status = 'attended'),
   'a replacement past cohort can register someone who joined after the lesson');
 
@@ -286,7 +286,7 @@ INSERT INTO event_trainer (id, event_id, person_id, lessons_offered)
 OVERRIDING SYSTEM VALUE VALUES (-8650, -8650, -8604, 2);
 CREATE FUNCTION pg_temp.signup(
   first_name text DEFAULT 'Camp', note text DEFAULT 'Food note', lessons integer DEFAULT 1
-) RETURNS event_instance_registration LANGUAGE sql AS $$
+) RETURNS event_registration LANGUAGE sql AS $$
   SELECT set_event_registration(-8650, null, null, true,
     person => ROW(first_name, 'Guest', 'unspecified', '203', lower(first_name) || '@example.invalid',
       '+420123456789', null, null, null)::event_registration_person_input,
@@ -327,7 +327,7 @@ SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,
 RESET ROLE;
 SELECT tap.is((SELECT count(*) FROM person WHERE email IN ('camp@example.invalid', 'second@example.invalid')),
   1::bigint, 'retries and failed submissions leave no extra people');
-SELECT tap.ok(EXISTS (SELECT 1 FROM event_instance_registration r JOIN submitted s ON s.id=r.id
+SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration r JOIN submitted s ON s.id=r.id
   JOIN event_lesson_request d ON d.registration_id=r.id WHERE r.note='Food note' AND d.lesson_count=1),
   'signup saves the note and lesson request together');
 SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT person_id FROM submitted) AND instance_id=-8650),

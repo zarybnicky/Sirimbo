@@ -5,6 +5,6 @@ create policy current_tenant on event_lesson_request as restrictive
 create policy admin_all on event_lesson_request to administrator
   using (true);
 create policy view_visible_instance on event_lesson_request for select
-  using (exists (select 1 from event_instance_registration r where r.id = event_lesson_request.registration_id));
+  using (exists (select 1 from event_registration r where r.id = event_lesson_request.registration_id));
 
 grant all on event_lesson_request to anonymous;

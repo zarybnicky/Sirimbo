@@ -23,8 +23,8 @@ begin
 
   if i.type <> 'lesson' or not exists (
     select 1
-    from event_instance_registration registration
-    where registration.instance_id = i.id
+    from event_registration registration
+    where registration.event_id = i.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
   ) then
@@ -57,8 +57,8 @@ begin
 
   insert into payment_debtor (payment_id, person_id)
   select distinct created_payment.id, registration.person_id
-  from event_instance_registration registration
-  where registration.instance_id = i.id
+  from event_registration registration
+  where registration.event_id = i.id
     and registration.person_id is not null
     and registration.registration_status = 'active';
 

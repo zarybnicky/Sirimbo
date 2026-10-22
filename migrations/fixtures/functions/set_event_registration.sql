@@ -25,13 +25,13 @@ create function set_event_registration(
   lesson_trainer_ids bigint[] default null,
   lesson_counts integer[] default null,
   person event_registration_person_input default null
-) returns event_instance_registration
+) returns event_registration
 language plpgsql security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
 declare
   target_instance event_instance;
-  registration event_instance_registration;
+  registration event_registration;
   registration_found boolean;
   is_self boolean;
   is_manager boolean;
@@ -91,9 +91,9 @@ begin
     end if;
 
     select r.* into registration
-    from event_instance_registration r
+    from event_registration r
     join person p on p.id = r.person_id
-    where r.instance_id = event_id
+    where r.event_id = set_event_registration.event_id
       and r.tenant_id = current_tenant_id()
       and r.created_by is not distinct from current_user_id()
       and r.registration_status = 'active'
@@ -153,8 +153,8 @@ begin
   end;
 
   select * into registration
-  from event_instance_registration r
-  where r.instance_id = event_id
+  from event_registration r
+  where r.event_id = set_event_registration.event_id
     and r.person_id is not distinct from set_event_registration.person_id
     and r.couple_id is not distinct from set_event_registration.couple_id
   order by (r.registration_status = 'active') desc, (r.parent_registration_id is null) desc, r.id desc
@@ -166,19 +166,19 @@ begin
       raise exception 'REGISTRATION_NOT_FOUND' using errcode = '22023';
     end if;
 
-    update event_instance_registration
+    update event_registration
     set registration_status = 'cancelled',
         target_cohort_id = null,
         source = registration_source
     where id = registration.id or parent_registration_id = registration.id;
 
-    select * into registration from event_instance_registration where id = registration.id;
+    select * into registration from event_registration where id = registration.id;
     return registration;
   end if;
 
   if registration_found and registration.registration_status = 'active' then
     if note is not null then
-      update event_instance_registration set note = set_event_registration.note where id = registration.id
+      update event_registration set note = set_event_registration.note where id = registration.id
       returning * into registration;
     end if;
   else
@@ -201,16 +201,16 @@ begin
       required_capacity := case
         when target_instance.capacity_unit = 'people' and couple_id is not null then 2
         when target_instance.capacity_unit = 'registrations' and exists (
-          select 1 from event_instance_registration parent
+          select 1 from event_registration parent
           where parent.id = registration.parent_registration_id and parent.registration_status = 'active'
         ) then 0
         else 1
       end;
       if couple_id is not null then
         required_capacity := required_capacity - (
-          select count(*)::integer from event_instance_registration r
+          select count(*)::integer from event_registration r
           join couple c on c.id = set_event_registration.couple_id and r.person_id in (c.man_id, c.woman_id)
-          where r.instance_id = event_id and r.registration_status = 'active'
+          where r.event_id = set_event_registration.event_id and r.registration_status = 'active'
             and (target_instance.capacity_unit = 'people' or r.parent_registration_id is null)
         );
       end if;
@@ -220,22 +220,22 @@ begin
     end if;
 
     if registration_found then
-      update event_instance_registration
+      update event_registration
       set registration_status = 'active',
           target_cohort_id = null,
           source = registration_source,
           parent_registration_id = (
-            select parent.id from event_instance_registration parent
+            select parent.id from event_registration parent
             where parent.id = registration.parent_registration_id and parent.registration_status = 'active'
           )
       where id = registration.id;
 
       if note is not null then
-        update event_instance_registration set note = set_event_registration.note where id = registration.id;
+        update event_registration set note = set_event_registration.note where id = registration.id;
       end if;
     else
-      insert into event_instance_registration (
-        instance_id, person_id, couple_id, source, status, note
+      insert into event_registration (
+        event_id, person_id, couple_id, source, status, note
       ) values (
         event_id, set_event_registration.person_id, set_event_registration.couple_id, registration_source,
         case when set_event_registration.person_id is not null then 'unknown'::attendance_type end,
@@ -248,7 +248,7 @@ begin
     perform app_private.ensure_couple_person_registrations(registration.id);
   end if;
 
-  select * into registration from event_instance_registration where id = registration.id;
+  select * into registration from event_registration where id = registration.id;
 
   if lesson_trainer_ids is not null then
     delete from event_lesson_request
@@ -285,7 +285,7 @@ create function set_event_instance_registration(
   p_lesson_trainer_ids bigint[] default null,
   p_lesson_counts integer[] default null,
   p_person event_registration_person_input default null
-) returns event_instance_registration
+) returns event_registration
 language sql
 as $$
   select public.set_event_registration($1, $2, $3, $4, $5, $6, $7, $8);

@@ -235,16 +235,16 @@ begin
     v_saved_event_ids := array_append(v_saved_event_ids, v_saved_event.id);
 
     perform registration.id
-    from event_instance_registration registration
-    where registration.instance_id = v_saved_event.id
+    from event_registration registration
+    where registration.event_id = v_saved_event.id
     order by registration.id
     for update;
 
     -- Release person slots before replacing couples with individuals or vice versa.
     with removed as (
       select registration.id
-      from event_instance_registration registration
-      where registration.instance_id = v_saved_event.id
+      from event_registration registration
+      where registration.event_id = v_saved_event.id
         and registration.parent_registration_id is null
         and not exists (
           select 1 from unnest(event_to_save.registrations) desired
@@ -253,7 +253,7 @@ begin
             and not coalesce(desired.is_cancelled, false)
         )
     )
-    update event_instance_registration registration
+    update event_registration registration
     set registration_status = 'cancelled',
         source = case when registration.parent_registration_id is null and registration.source is distinct from 'cohort'
           then 'manager'::event_registration_source else registration.source end
@@ -262,23 +262,23 @@ begin
       and (registration.id = removed.id or registration.parent_registration_id = removed.id);
 
     -- Detach person rows from cancelled registrations when submitted as individuals.
-    update event_instance_registration registration
+    update event_registration registration
     set parent_registration_id = null
     where registration.id in (
       select distinct on (r.person_id) r.id
-      from event_instance_registration r
-      join event_instance_registration parent on parent.id = r.parent_registration_id
-      where r.instance_id = v_saved_event.id and parent.registration_status = 'cancelled'
+      from event_registration r
+      join event_registration parent on parent.id = r.parent_registration_id
+      where r.event_id = v_saved_event.id and parent.registration_status = 'cancelled'
         and exists (select 1 from unnest(event_to_save.registrations) desired where desired.person_id = r.person_id)
-        and not exists (select 1 from event_instance_registration standalone
-          where standalone.instance_id = r.instance_id and standalone.person_id = r.person_id
+        and not exists (select 1 from event_registration standalone
+          where standalone.event_id = r.event_id and standalone.person_id = r.person_id
             and standalone.parent_registration_id is null)
       order by r.person_id, r.id desc
     );
 
     -- Save the displayed list and explicit removals; reuse rows to preserve attendance.
-    insert into event_instance_registration as registration (
-      instance_id, person_id, couple_id, target_cohort_id, source, registration_status, status
+    insert into event_registration as registration (
+      event_id, person_id, couple_id, target_cohort_id, source, registration_status, status
     )
     select v_saved_event.id, choice.person_id, choice.couple_id, choice.target_cohort_id,
       case when choice.target_cohort_id is null then 'manager'::event_registration_source else 'cohort'::event_registration_source end,
@@ -290,7 +290,7 @@ begin
         choice(person_id, couple_id, target_cohort_id, is_cancelled, position)
       order by choice.person_id, choice.couple_id, choice.position
     ) choice
-    on conflict (instance_id, couple_id, person_id) where parent_registration_id is null
+    on conflict (event_id, couple_id, person_id) where parent_registration_id is null
     do update set registration_status = excluded.registration_status,
       source = excluded.source,
       target_cohort_id = excluded.target_cohort_id
@@ -298,17 +298,17 @@ begin
       is distinct from (excluded.registration_status, excluded.target_cohort_id);
 
     -- Cancel children of cancelled registrations; reuse person rows for active couple registrations.
-    update event_instance_registration child
+    update event_registration child
     set registration_status = parent.registration_status, source = parent.source
-    from event_instance_registration parent
-    where parent.instance_id = v_saved_event.id
+    from event_registration parent
+    where parent.event_id = v_saved_event.id
       and child.parent_registration_id = parent.id
       and parent.registration_status = 'cancelled'
       and (child.registration_status, child.source) is distinct from (parent.registration_status, parent.source);
 
     perform app_private.ensure_couple_person_registrations(registration.id)
-    from event_instance_registration registration
-    where registration.instance_id = v_saved_event.id
+    from event_registration registration
+    where registration.event_id = v_saved_event.id
       and registration.couple_id is not null
       and registration.registration_status = 'active';
     insert into event_target_cohort (tenant_id, event_id, cohort_id)

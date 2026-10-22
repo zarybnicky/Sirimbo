@@ -4,7 +4,7 @@ drop function if exists app_private.set_lesson_demand;
 drop function if exists app_private.set_lesson_request;
 
 create function app_private.set_lesson_request(
-  registration event_instance_registration,
+  registration event_registration,
   trainer_id bigint,
   lesson_count integer
 ) returns event_lesson_request
@@ -17,7 +17,7 @@ declare
 begin
   select * into trainer
   from event_trainer
-  where id = $2 and event_id = registration.instance_id and tenant_id = current_tenant_id()
+  where id = $2 and event_id = registration.event_id and tenant_id = current_tenant_id()
   for update;
 
   if not found then
@@ -38,7 +38,7 @@ begin
   if trainer.lessons_offered is not null then
     select coalesce(sum(eld.lesson_count), 0) into other_lessons
     from event_lesson_request eld
-    join event_instance_registration other_registration
+    join event_registration other_registration
       on other_registration.id = eld.registration_id
      and other_registration.registration_status = 'active'
     where eld.trainer_id = $2 and eld.registration_id <> registration.id;
@@ -66,13 +66,13 @@ language plpgsql strict security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
 declare
-  registration event_instance_registration;
+  registration event_registration;
   instance event_instance;
   is_manager boolean;
   is_self boolean;
 begin
   select * into registration
-  from event_instance_registration
+  from event_registration
   where id = $1;
 
   if not found then
@@ -81,7 +81,7 @@ begin
 
   select * into instance
   from event_instance
-  where id = registration.instance_id and tenant_id = current_tenant_id();
+  where id = registration.event_id and tenant_id = current_tenant_id();
 
   if not found then
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '28000';

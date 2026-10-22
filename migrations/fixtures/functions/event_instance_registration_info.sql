@@ -27,8 +27,8 @@ as $$
     end,
     count(*) filter (where person_id = any(current_person_ids())) > 0
   )::event_registration_info
-  from event_instance_registration
-  where instance_id = inst.id and registration_status = 'active';
+  from event_registration
+  where event_id = inst.id and registration_status = 'active';
 $$;
 
 grant all on function event_instance_registration_info to anonymous;

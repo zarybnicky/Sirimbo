@@ -1,8 +1,7 @@
 do $$
 declare
-  target_constraint text;
-  trainer_constraint text;
-  lesson_constraint text;
+  renamed_table record;
+  object_name text;
 begin
   if not exists (
     select 1 from pg_catalog.pg_attribute
@@ -23,65 +22,52 @@ begin
     alter type public.event_instance_registration_status rename to event_registration_status;
   end if;
 
-  if to_regclass('public.event_instance_target_cohort') is not null then
-    alter table event_instance_target_cohort rename to event_target_cohort;
-    alter table event_target_cohort rename column instance_id to event_id;
+  for renamed_table in
+    select * from (values
+      ('event_instance_target_cohort', 'event_target_cohort'),
+      ('event_instance_trainer', 'event_trainer'),
+      ('event_lesson_demand', 'event_lesson_request'),
+      ('event_instance_registration', 'event_registration')
+    ) names(old_name, new_name)
+  loop
+    if to_regclass('public.' || renamed_table.old_name) is null then
+      continue;
+    end if;
 
-    for target_constraint in
+    execute format('alter table public.%I rename to %I', renamed_table.old_name, renamed_table.new_name);
+    if starts_with(renamed_table.old_name, 'event_instance_') then
+      execute format('alter table public.%I rename column instance_id to event_id', renamed_table.new_name);
+    end if;
+
+    for object_name in
       select conname from pg_catalog.pg_constraint
-      where conrelid = 'public.event_target_cohort'::regclass
-        and starts_with(conname::text, 'event_instance_target_cohort_')
+      where conrelid = to_regclass('public.' || renamed_table.new_name)
+        and starts_with(conname::text, renamed_table.old_name || '_')
     loop
-      execute format('alter table event_target_cohort rename constraint %I to %I',
-        target_constraint, replace(replace(target_constraint,
-          'event_instance_target_cohort_', 'event_target_cohort_'), 'instance_id', 'event_id'));
+      execute format('alter table public.%I rename constraint %I to %I',
+        renamed_table.new_name, object_name,
+        replace(replace(object_name, renamed_table.old_name, renamed_table.new_name), 'instance_id', 'event_id'));
     end loop;
 
-    alter index event_instance_target_cohort_cohort_id_idx rename to event_target_cohort_cohort_id_idx;
-    alter index event_instance_target_cohort_tenant_id_idx rename to event_target_cohort_tenant_id_idx;
-    alter sequence event_instance_target_cohort_id_seq rename to event_target_cohort_id_seq;
-  end if;
-
-  if to_regclass('public.event_instance_trainer') is not null then
-    alter table event_instance_trainer rename to event_trainer;
-    alter table event_trainer rename column instance_id to event_id;
-
-    for trainer_constraint in
-      select conname from pg_catalog.pg_constraint
-      where conrelid = 'public.event_trainer'::regclass
-        and starts_with(conname::text, 'event_instance_trainer_')
+    -- Constraint-backed indexes follow their constraints; rename the remaining indexes.
+    for object_name in
+      select indexname from pg_catalog.pg_indexes
+      where schemaname = 'public' and tablename = renamed_table.new_name
+        and starts_with(indexname::text, renamed_table.old_name || '_')
     loop
-      execute format('alter table event_trainer rename constraint %I to %I',
-        trainer_constraint, replace(replace(trainer_constraint,
-          'event_instance_trainer_', 'event_trainer_'), 'instance_id', 'event_id'));
+      execute format('alter index public.%I rename to %I', object_name,
+        replace(replace(replace(object_name, renamed_table.old_name, renamed_table.new_name),
+          'instance_id', 'event_id'), '_instance_idx', '_event_idx'));
     end loop;
 
-    alter index event_instance_trainer_instance_id_idx rename to event_trainer_event_id_idx;
-    alter index event_instance_trainer_person_id_idx rename to event_trainer_person_id_idx;
-    alter index event_instance_trainer_tenant_id_idx rename to event_trainer_tenant_id_idx;
-    alter index event_instance_trainer_tenant_person_instance_idx rename to event_trainer_tenant_person_event_idx;
-    alter sequence event_instance_trainer_id_seq rename to event_trainer_id_seq;
-  end if;
+    execute format('alter sequence public.%I rename to %I',
+      renamed_table.old_name || '_id_seq', renamed_table.new_name || '_id_seq');
 
-  if to_regclass('public.event_lesson_demand') is not null then
-    alter table event_lesson_demand rename to event_lesson_request;
-
-    for lesson_constraint in
-      select conname from pg_catalog.pg_constraint
-      where conrelid = 'public.event_lesson_request'::regclass
-        and starts_with(conname::text, 'event_lesson_demand_')
-    loop
-      execute format('alter table event_lesson_request rename constraint %I to %I',
-        lesson_constraint, replace(lesson_constraint, 'event_lesson_demand_', 'event_lesson_request_'));
-    end loop;
-
-    alter table event_lesson_request rename constraint eld_unique_registration_trainer_key
-      to event_lesson_request_registration_id_trainer_id_key;
-    alter index event_lesson_demand_registration_id_idx rename to event_lesson_request_registration_id_idx;
-    alter index event_lesson_demand_tenant_id_idx rename to event_lesson_request_tenant_id_idx;
-    alter index event_lesson_demand_trainer_id_idx rename to event_lesson_request_trainer_id_idx;
-    alter sequence event_lesson_demand_id_seq rename to event_lesson_request_id_seq;
-  end if;
+    if renamed_table.new_name = 'event_lesson_request' then
+      alter table event_lesson_request rename constraint eld_unique_registration_trainer_key
+        to event_lesson_request_registration_id_trainer_id_key;
+    end if;
+  end loop;
 end;
 $$;
 
@@ -96,12 +82,12 @@ grant execute on function app_private.announcement_status_next to anonymous;
 
 --!include functions/upsert_article.sql
 
-alter table event_instance_registration
+alter table event_registration
   add column if not exists created_by bigint references users(id) on delete set null;
-alter table event_instance_registration alter column created_by set default current_user_id();
+alter table event_registration alter column created_by set default current_user_id();
 
-comment on column event_instance_registration.created_by is '@omit';
-comment on constraint event_instance_registration_created_by_fkey on event_instance_registration is '@omit';
+comment on column event_registration.created_by is '@omit';
+comment on constraint event_registration_created_by_fkey on event_registration is '@omit';
 
 alter table person_invitation add column if not exists instance_id bigint references event_instance(id) on delete set null;
 
@@ -117,6 +103,11 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include functions/set_lesson_request.sql
 --!include functions/set_event_registration.sql
 --!include functions/event_remaining_x.sql
+--!include functions/event_instance_stats.sql
+--!include functions/create_event_instance_payment.sql
+--!include functions/tg_eir__sync_lesson_payment.sql
+--!include functions/event_registration_last_attended.sql
+--!include functions/scoreboard.sql
 --!include functions/event_share_claims.sql
 
 --!include views/event_people.sql
@@ -128,7 +119,7 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 --!include policies/event_trainer.sql
 --!include policies/event_target_cohort.sql
 --!include policies/cohort.sql
---!include policies/event_instance_registration.sql
+--!include policies/event_registration.sql
 --!include policies/event_lesson_request.sql
 --!include policies/file.sql
 --!include policies/person.sql
@@ -323,7 +314,7 @@ comment on function upsert_location is null;
 comment on function create_person is null;
 comment on function create_credit_transaction_for_person is null;
 
-comment on column event_instance_registration.instance_id is '@name eventId';
+comment on column event_registration.event_id is null;
 comment on column payment.event_instance_id is '@name eventId';
 
 comment on column event_trainer.event_id is null;
@@ -379,14 +370,13 @@ comment on constraint event_lesson_request_registration_id_fkey on event_lesson_
 comment on constraint event_lesson_request_trainer_id_fkey on event_lesson_request is '@foreignFieldName lessonRequests';
 comment on constraint event_lesson_request_tenant_id_fkey on event_lesson_request is '@foreignFieldName lessonRequests';
 
-comment on table event_instance_registration is '@name event_registration
-@omit create,update,delete
+comment on table event_registration is '@omit create,update,delete
 @simpleCollections both';
 
-comment on constraint event_instance_registration_instance_id_fkey on event_instance_registration is '@fieldName event
+comment on constraint event_registration_event_id_fkey on event_registration is '@fieldName event
 @foreignFieldName registrations';
 
-comment on constraint event_instance_registration_parent_registration_id_fkey on event_instance_registration is '@fieldName parentRegistration
+comment on constraint event_registration_parent_registration_id_fkey on event_registration is '@fieldName parentRegistration
 @foreignFieldName childRegistrations';
 
 comment on constraint event_instance_parent_id_fkey on event_instance is '@fieldName parent

@@ -12,8 +12,8 @@ language sql stable as $$
   with candidates as (
     select i.id, i.type, i.location_id,
       array(select distinct person_id from event_trainer where event_id = i.id) as trainers,
-      array(select distinct person_id from event_instance_registration
-        where instance_id = i.id and registration_status = 'active') as participants
+      array(select distinct person_id from event_registration
+        where event_id = i.id and registration_status = 'active') as participants
     from event_instances_for_range(null, start_range, end_range,
       parent_id => $6, scope => $7) i
   ), matches as (

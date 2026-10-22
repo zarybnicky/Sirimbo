@@ -6,10 +6,10 @@ as $$
     select
       count(*) as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
-    from event_instance_registration registration
+    from event_registration registration
     where
       v_instance.type = 'lesson'
-      and registration.instance_id = v_instance.id
+      and registration.event_id = v_instance.id
       and registration.person_id is not null
       and registration.registration_status = 'active'
   )

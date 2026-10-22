@@ -53,8 +53,8 @@ INSERT INTO event_target_cohort (id, tenant_id, event_id, cohort_id) OVERRIDING 
   VALUES (850101, 1000, 900001, 800001)
   ON CONFLICT (event_id, cohort_id) DO NOTHING;
 
-INSERT INTO event_instance_registration (
-  tenant_id, instance_id, person_id,
+INSERT INTO event_registration (
+  tenant_id, event_id, person_id,
   target_cohort_id, source, status
 )
 SELECT 1000, instance.id, person.id, 800001, 'cohort', 'unknown'
@@ -97,8 +97,8 @@ SELECT tap.ok(
   (SELECT enable_notes FROM event_instance WHERE id = 900002)
   AND EXISTS (
     SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900002
+    FROM event_registration
+    WHERE event_id = 900002
       AND person_id = 200005
       AND parent_registration_id is null
       AND registration_status = 'active'
@@ -111,31 +111,31 @@ SELECT tap.ok(
       AND cohort_id = 800001
   ) AND NOT EXISTS (
     SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900001
+    FROM event_registration
+    WHERE event_id = 900001
       AND person_id = 200005
   ),
   'instance settings and active-cohort registration are stored on the exact future instance'
 );
 
-UPDATE event_instance_registration
+UPDATE event_registration
 SET status = 'attended'
-WHERE instance_id = 900001 AND person_id = 200001;
+WHERE event_id = 900001 AND person_id = 200001;
 
 UPDATE cohort_membership SET until = now() - interval '1 second', status = 'expired' WHERE id = 860001;
 
 SELECT tap.ok(
   EXISTS (
-    SELECT 1 FROM event_instance_registration
-    WHERE instance_id = 900002
+    SELECT 1 FROM event_registration
+    WHERE event_id = 900002
       AND person_id = 200001
       AND registration_status = 'cancelled'
       AND source = 'cohort'
       AND target_cohort_id = 800001
       AND status = 'unknown'
   ) AND EXISTS (
-    SELECT 1 FROM event_instance_registration
-    WHERE instance_id = 900001
+    SELECT 1 FROM event_registration
+    WHERE event_id = 900001
       AND person_id = 200001
       AND registration_status = 'active'
       AND status = 'attended'
@@ -147,8 +147,8 @@ INSERT INTO cohort_membership (tenant_id, cohort_id, person_id, since, status)
   VALUES (1000, 800001, 200001, now(), 'active');
 
 -- Restore participation for the self-cancellation check below.
-UPDATE event_instance_registration SET registration_status = 'active'
-WHERE instance_id = 900002 AND person_id = 200001;
+UPDATE event_registration SET registration_status = 'active'
+WHERE event_id = 900002 AND person_id = 200001;
 
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
@@ -174,8 +174,8 @@ SELECT app_private.reconcile_event_instance_cohort_registrations(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900002
+    FROM event_registration
+    WHERE event_id = 900002
       AND person_id = 200001
       AND parent_registration_id is null
       AND registration_status = 'cancelled'
@@ -183,8 +183,8 @@ SELECT tap.ok(
       AND target_cohort_id is null
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = 900002
+    FROM event_registration
+    WHERE event_id = 900002
       AND person_id = 200003
       AND parent_registration_id is null
       AND registration_status = 'active'
@@ -206,15 +206,15 @@ VALUES
   (9900002, 1000, 9900001, now() + interval '2 hours', now() + interval '3 hours'),
   (9900099, 1000, 9900001, now() - interval '2 hours', now() - interval '1 hour');
 
-INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
+INSERT INTO event_registration (tenant_id, event_id, person_id, source, status)
 VALUES (1000, 9900001, 2900001, 'manager', 'unknown');
 
-UPDATE event_instance_registration
-SET instance_id = 9900002
-WHERE instance_id = 9900001 AND person_id = 2900001;
+UPDATE event_registration
+SET event_id = 9900002
+WHERE event_id = 9900001 AND person_id = 2900001;
 
-INSERT INTO event_instance_registration (
-  tenant_id, instance_id, person_id, source, status
+INSERT INTO event_registration (
+  tenant_id, event_id, person_id, source, status
 )
 VALUES (1000, 9900099, 2900001, 'manager', 'attended');
 
@@ -222,9 +222,9 @@ SELECT tap.ok(
   (SELECT stats->>'TOTAL' = '0' FROM event_instance WHERE id = 9900001)
     AND (SELECT stats->>'TOTAL' = '1' FROM event_instance WHERE id = 9900002)
     AND (
-      SELECT event_instance_registration_last_attended(registration)
-      FROM event_instance_registration registration
-      WHERE registration.instance_id = 9900002
+      SELECT event_registration_last_attended(registration)
+      FROM event_registration registration
+      WHERE registration.event_id = 9900002
         AND registration.person_id = 2900001
     ) = (SELECT since FROM event_instance WHERE id = 9900099),
   'moving attendance refreshes summaries and series history uses exact registrations'
@@ -259,7 +259,7 @@ VALUES
 
 UPDATE event_instance SET is_public = true WHERE id = 9900003;
 
-INSERT INTO event_instance_registration (tenant_id, instance_id, person_id, source, status)
+INSERT INTO event_registration (tenant_id, event_id, person_id, source, status)
 VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
@@ -282,10 +282,10 @@ SELECT tap.ok(NOT EXISTS (
 ), 'event range scopes and parent filtering select the expected events');
 
 SELECT set_lesson_request(eir.id, trainer.id, 1)
-FROM event_instance_registration eir
+FROM event_registration eir
 JOIN event_trainer trainer
-  ON trainer.event_id = eir.instance_id AND trainer.person_id = 2900002
-WHERE eir.instance_id = 900001
+  ON trainer.event_id = eir.event_id AND trainer.person_id = 2900002
+WHERE eir.event_id = 900001
   AND eir.person_id = 200002
   AND eir.parent_registration_id IS NULL;
 
@@ -320,7 +320,7 @@ SELECT tap.lives_ok(
 
 SELECT tap.lives_ok(
   $$
-    insert into event_instance_registration (tenant_id, instance_id, person_id, source, status)
+    insert into event_registration (tenant_id, event_id, person_id, source, status)
     values (1000, 9900001, 2900003, 'manager', 'unknown')
   $$,
   'a trainer can insert attendance for an instance they manage'
@@ -331,13 +331,13 @@ SELECT tap.ok(
     SELECT updated.id = eir.id
       AND updated.status = 'attended'
       AND updated.attendance_note = 'ID-targeted attendance note'
-    FROM event_instance_registration eir
+    FROM event_registration eir
     CROSS JOIN LATERAL public.update_attendance(
       eir.id,
       'attended',
       'ID-targeted attendance note'
     ) updated
-    WHERE eir.instance_id = 900001 AND eir.person_id = 200002
+    WHERE eir.event_id = 900001 AND eir.person_id = 200002
   ),
   'an assigned trainer can update attendance by registration ID'
 );
@@ -347,8 +347,8 @@ SELECT tap.is(
     public.update_attendance(
       (
         SELECT id
-        FROM event_instance_registration
-        WHERE instance_id = 9900003 AND person_id = 2900005
+        FROM event_registration
+        WHERE event_id = 9900003 AND person_id = 2900005
       ),
       'attended',
       'Forbidden update'
@@ -360,9 +360,9 @@ SELECT tap.is(
 
 SELECT tap.throws_ok(
   $$
-    update event_instance_registration
-    set instance_id = 9900003
-    where instance_id = 9900001 and person_id = 2900003
+    update event_registration
+    set event_id = 9900003
+    where event_id = 9900001 and person_id = 2900003
   $$,
   '42501'::char(5),
   null,
@@ -371,7 +371,7 @@ SELECT tap.throws_ok(
 
 SELECT tap.throws_ok(
   $$
-    insert into event_instance_registration (tenant_id, instance_id, person_id, source, status)
+    insert into event_registration (tenant_id, event_id, person_id, source, status)
     values (1000, 9900003, 2900003, 'manager', 'unknown')
   $$,
   '42501'::char(5),
@@ -430,8 +430,8 @@ SELECT set_event_registration(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_registration registration
-    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_registration registration
+    WHERE registration.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900005
       AND registration.registration_status = 'active'
       AND registration.source = 'manager'
@@ -456,8 +456,8 @@ SELECT set_event_registration(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_registration registration
-    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_registration registration
+    WHERE registration.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900002
       AND registration.registration_status = 'cancelled'
       AND registration.source = 'self'
@@ -501,9 +501,9 @@ FROM public.save_events(
 GROUP BY series_id;
 
 SELECT set_lesson_request(registration.id, trainer.id, 1)
-FROM event_instance_registration registration
-JOIN event_trainer trainer ON trainer.event_id = registration.instance_id
-WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+FROM event_registration registration
+JOIN event_trainer trainer ON trainer.event_id = registration.event_id
+WHERE registration.event_id = (SELECT id FROM _scheduled_lesson)
   AND registration.person_id = 2900003
   AND registration.parent_registration_id is null
   AND trainer.person_id = 2900002;
@@ -574,8 +574,8 @@ SELECT tap.ok(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_registration registration
-    WHERE registration.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_registration registration
+    WHERE registration.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.person_id = 2900003
       AND registration.registration_status = 'active'
       AND registration.source = 'manager'
@@ -584,7 +584,7 @@ SELECT tap.ok(
         FROM event_lesson_request demand
         JOIN event_trainer trainer ON trainer.id = demand.trainer_id
         WHERE demand.registration_id = registration.id
-          AND trainer.event_id = registration.instance_id
+          AND trainer.event_id = registration.event_id
           AND trainer.person_id = 2900002
       )
   ),
@@ -637,8 +637,8 @@ SELECT set_event_registration(
 SELECT tap.ok(
   (SELECT at_capacity FROM _self_registration_created)
   AND EXISTS (
-    SELECT 1 FROM event_instance_registration
-    WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+    SELECT 1 FROM event_registration
+    WHERE event_id = (SELECT id FROM _scheduled_lesson)
       AND person_id = 2900005
       AND registration_status = 'cancelled'
       AND source = 'self'
@@ -647,7 +647,7 @@ SELECT tap.ok(
         SELECT 1
         FROM event_lesson_request demand
         JOIN event_trainer trainer ON trainer.id = demand.trainer_id
-        WHERE demand.registration_id = event_instance_registration.id
+        WHERE demand.registration_id = event_registration.id
           AND demand.lesson_count = 1
           AND trainer.person_id = 2900002
       )
@@ -688,21 +688,21 @@ WHERE instance.id = (SELECT id FROM _scheduled_lesson);
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_registration root
-    WHERE root.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_registration root
+    WHERE root.event_id = (SELECT id FROM _scheduled_lesson)
       AND root.couple_id = 2950001
       AND root.registration_status = 'active'
       AND root.source = 'manager'
       AND 2 = (
         SELECT count(*)
-        FROM event_instance_registration child
+        FROM event_registration child
         WHERE child.parent_registration_id = root.id
           AND child.registration_status = 'active'
       )
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance_registration
-    WHERE instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_registration
+    WHERE event_id = (SELECT id FROM _scheduled_lesson)
       AND person_id = 2900003
       AND parent_registration_id is not null
       AND registration_status = 'active'
@@ -746,8 +746,8 @@ SELECT tap.ok(
       )
       AND EXISTS (
         SELECT 1
-        FROM event_instance_registration registration
-        WHERE registration.instance_id = copy.id
+        FROM event_registration registration
+        WHERE registration.event_id = copy.id
           AND registration.couple_id = 2950001
           AND registration.registration_status = 'active'
       )
@@ -755,7 +755,7 @@ SELECT tap.ok(
     SELECT 1
     FROM event_trainer trainer
     JOIN event_lesson_request demand ON demand.trainer_id = trainer.id
-    JOIN event_instance_registration registration ON registration.id = demand.registration_id
+    JOIN event_registration registration ON registration.id = demand.registration_id
     WHERE trainer.event_id = (SELECT id FROM _scheduled_lesson)
       AND registration.registration_status = 'active'
       AND registration.parent_registration_id is not null

@@ -3,7 +3,7 @@ language sql stable security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
   with recursive attended(id) as (
-    select instance_id from public.event_instance_registration
+    select event_id from public.event_registration
     where tenant_id = (select public.current_tenant_id())
       and person_id = any((select public.current_person_ids())::bigint[])
       and registration_status = 'active'

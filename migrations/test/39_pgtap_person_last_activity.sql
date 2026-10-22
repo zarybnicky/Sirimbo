@@ -34,12 +34,12 @@ insert into event_instance (id, tenant_id, since, until, type, is_cancelled)
   (-3904, -3901, now() - interval '1 day', now() - interval '1 day' + interval '1 hour', 'group', false),
   (-3905, -3900, now() - interval '12 hours', now() - interval '11 hours', 'group', false),
   (-3906, -3900, now() - interval '6 hours', now() - interval '5 hours', 'lesson', false);
-insert into event_instance_registration (tenant_id, instance_id, person_id, status) values
+insert into event_registration (tenant_id, event_id, person_id, status) values
   (-3900, -3900, -3900, 'attended'), (-3900, -3901, -3900, 'attended'),
   (-3900, -3902, -3900, 'attended'), (-3900, -3903, -3900, 'unknown'),
   (-3901, -3904, -3900, 'attended'),
   (-3900, -3905, -3900, 'unknown');
-insert into event_instance_registration (tenant_id, instance_id, person_id, status, registration_status)
+insert into event_registration (tenant_id, event_id, person_id, status, registration_status)
   values (-3900, -3906, -3900, 'unknown', 'cancelled');
 insert into federated.person (federation, external_id) values ('csts', 1999999999);
 insert into federated.competitor (federation, external_id, competitor_type) values ('csts', 'activity-test', 'solo');
@@ -70,7 +70,7 @@ reset role;
 update users set last_active_at = null where id = -3901;
 insert into user_proxy (user_id, person_id) values (-3901, -3901);
 insert into access_credential (person_id, label, code) values (-3901, 'Undated', 'undated-activity-card');
-insert into event_instance_registration (instance_id, person_id, status) values (-3905, -3901, 'unknown');
+insert into event_registration (event_id, person_id, status) values (-3905, -3901, 'unknown');
 insert into federated.person (federation, external_id) values ('csts', 1999999998);
 update person set csts_id = 1999999998 where id = -3901;
 set local role trainer;

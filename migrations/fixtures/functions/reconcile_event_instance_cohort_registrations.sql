@@ -14,7 +14,7 @@ as $$
   -- Direct registrations (including cancellations) take precedence. Couples
   -- already supply their person rows; cohorts supply only the remaining people.
   with desired as materialized (
-    select instance.id as instance_id, instance.tenant_id, membership.person_id,
+    select instance.id as event_id, instance.tenant_id, membership.person_id,
       min(target.cohort_id) as target_cohort_id
     from event_instance instance
     join event_target_cohort target on target.event_id = instance.id
@@ -24,8 +24,8 @@ as $$
       and membership.status = 'active' and membership.active_range @> now()
       and (p_person_ids is null or membership.person_id = any(p_person_ids))
       and not exists (
-        select 1 from event_instance_registration registration
-        where registration.instance_id = instance.id
+        select 1 from event_registration registration
+        where registration.event_id = instance.id
           and registration.person_id = membership.person_id
           and (
             (registration.parent_registration_id is null and registration.source is distinct from 'cohort')
@@ -34,26 +34,26 @@ as $$
       )
     group by instance.id, instance.tenant_id, membership.person_id
   ), cancelled as (
-    update event_instance_registration registration
+    update event_registration registration
     set registration_status = 'cancelled'
     from event_instance instance
-    where registration.instance_id = any(p_instance_ids)
-      and instance.id = registration.instance_id and instance.since >= now()
+    where registration.event_id = any(p_instance_ids)
+      and instance.id = registration.event_id and instance.since >= now()
       and registration.source = 'cohort'
       and registration.registration_status = 'active'
       and (p_person_ids is null or registration.person_id = any(p_person_ids))
       and not exists (
         select 1 from desired
-        where desired.instance_id = registration.instance_id
+        where desired.event_id = registration.event_id
           and desired.person_id = registration.person_id
       )
   )
-  insert into event_instance_registration as registration (
-    tenant_id, instance_id, person_id, target_cohort_id, source, status
+  insert into event_registration as registration (
+    tenant_id, event_id, person_id, target_cohort_id, source, status
   )
-  select tenant_id, instance_id, person_id, target_cohort_id, 'cohort', 'unknown'
+  select tenant_id, event_id, person_id, target_cohort_id, 'cohort', 'unknown'
   from desired
-  on conflict (instance_id, couple_id, person_id) where parent_registration_id is null
+  on conflict (event_id, couple_id, person_id) where parent_registration_id is null
   do update set registration_status = 'active', target_cohort_id = excluded.target_cohort_id
   where registration.source = 'cohort'
     and (registration.registration_status, registration.target_cohort_id)

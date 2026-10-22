@@ -43,8 +43,8 @@ as $$
       ei.until,
       ei.range,
       ei.name as event_name
-    from event_instance_registration ea
-    join event_instance ei on ei.id = ea.instance_id
+    from event_registration ea
+    join event_instance ei on ei.id = ea.event_id
     join person p on p.id = ea.person_id
     where not ei.is_cancelled
       and ea.person_id is not null

@@ -14,8 +14,8 @@ as $$
       'ATTENDED', count(*) filter (where status = 'attended')::int,
       'NOT_EXCUSED', count(*) filter (where status = 'not-excused')::int
     ) as stats
-    from event_instance_registration
-    where instance_id = p_instance_id
+    from event_registration
+    where event_id = p_instance_id
       and person_id is not null
       and registration_status = 'active'
   ) actual
@@ -30,32 +30,32 @@ as $$
 -- @plpgsql_check_options: oldtable = deleted_rows, newtable = changed_rows
 begin
   if tg_op = 'INSERT' then
-    perform app_private.refresh_event_instance_stats(affected.instance_id)
+    perform app_private.refresh_event_instance_stats(affected.event_id)
     from (
-      select distinct instance_id from changed_rows
-      where person_id is not null order by instance_id
+      select distinct event_id from changed_rows
+      where person_id is not null order by event_id
     ) affected;
   elsif tg_op = 'DELETE' then
-    perform app_private.refresh_event_instance_stats(affected.instance_id)
+    perform app_private.refresh_event_instance_stats(affected.event_id)
     from (
-      select distinct instance_id from deleted_rows
-      where person_id is not null order by instance_id
+      select distinct event_id from deleted_rows
+      where person_id is not null order by event_id
     ) affected;
   else
-    perform app_private.refresh_event_instance_stats(affected.instance_id)
+    perform app_private.refresh_event_instance_stats(affected.event_id)
     from (
-      select distinct affected.instance_id
+      select distinct affected.event_id
       from deleted_rows old_row
       join changed_rows new_row using (id)
       cross join lateral (values
-        (old_row.instance_id, old_row.person_id),
-        (new_row.instance_id, new_row.person_id)
-      ) affected(instance_id, person_id)
-      where row(old_row.instance_id, old_row.person_id, old_row.status, old_row.registration_status)
+        (old_row.event_id, old_row.person_id),
+        (new_row.event_id, new_row.person_id)
+      ) affected(event_id, person_id)
+      where row(old_row.event_id, old_row.person_id, old_row.status, old_row.registration_status)
         is distinct from
-        row(new_row.instance_id, new_row.person_id, new_row.status, new_row.registration_status)
+        row(new_row.event_id, new_row.person_id, new_row.status, new_row.registration_status)
         and affected.person_id is not null
-      order by affected.instance_id
+      order by affected.event_id
     ) affected;
   end if;
   return null;

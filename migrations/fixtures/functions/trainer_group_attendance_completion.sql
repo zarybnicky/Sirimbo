@@ -30,8 +30,8 @@ create or replace function trainer_group_attendance_completion(
       select
         count(*) as attendance_count,
         count(*) filter (where eir.status = 'unknown') as unknown_count
-      from event_instance_registration eir
-      where eir.instance_id = ti.instance_id
+      from event_registration eir
+      where eir.event_id = ti.instance_id
         and eir.person_id is not null
         and eir.registration_status = 'active'
     ) stats on true

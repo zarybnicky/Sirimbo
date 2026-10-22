@@ -19,7 +19,7 @@ create or replace function event_instances_for_range(
   only_types event_type[] = null
 ) returns setof event_instance as $$
   with mine as (
-    select instance_id from event_instance_registration
+    select event_id from event_registration
     where person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active'
     union all
     select event_id from event_trainer
@@ -32,20 +32,20 @@ create or replace function event_instances_for_range(
     and (only_types is null or i.type = any(only_types))
     and case
       when $6 is not null then i.parent_id = $6
-        and (scope <> 'mine' or i.id in (select instance_id from mine))
+        and (scope <> 'mine' or i.id in (select event_id from mine))
       when scope = 'all' then true
       when scope = 'top_level' then i.parent_id is null
-      when scope = 'mine' then i.id in (select instance_id from mine)
+      when scope = 'mine' then i.id in (select event_id from mine)
       when scope = 'relevant' then i.parent_id is null
-        or i.id in (select instance_id from mine)
-        or i.parent_id in (select instance_id from mine)
+        or i.id in (select event_id from mine)
+        or i.parent_id in (select event_id from mine)
     end
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
     and i.until > start_range
     and (trainer_ids is null
       or exists (select 1 from event_trainer where event_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
-      or exists (select 1 from event_instance_registration where instance_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
+      or exists (select 1 from event_registration where event_id = i.id and person_id = any (participant_ids) and registration_status = 'active'))
     and (location_ids is null or i.location_id = any (location_ids))
   order by i.since
   ;

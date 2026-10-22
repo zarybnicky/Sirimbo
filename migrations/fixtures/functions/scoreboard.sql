@@ -40,9 +40,9 @@ as $$
       case when inst.event_type = 'camp'  then 3 + 2 * ((extract(epoch from (inst.until - inst.since)) > 86400)::int) else 0 end as event_score,
       date_trunc('day', inst.since)::date as day
     from instances inst
-    join event_instance_registration ea
-      on ea.instance_id = inst.instance_id and ea.person_id is not null
-    left join event_instance_registration registration
+    join event_registration ea
+      on ea.event_id = inst.instance_id and ea.person_id is not null
+    left join event_registration registration
       on registration.id = ea.parent_registration_id
     left join cohort tc
       on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)

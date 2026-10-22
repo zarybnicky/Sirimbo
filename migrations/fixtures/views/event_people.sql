@@ -5,8 +5,8 @@ with recursive participants as (
     array_agg(distinct person_id order by person_id) filter (where is_attendee) as viewers,
     array_agg(distinct person_id order by person_id) as people
   from (
-    select tenant_id, instance_id, person_id, true as is_attendee
-    from event_instance_registration
+    select tenant_id, event_id as instance_id, person_id, true as is_attendee
+    from event_registration
     where registration_status = 'active' and person_id is not null
     union all
     select tenant_id, event_id, person_id, false

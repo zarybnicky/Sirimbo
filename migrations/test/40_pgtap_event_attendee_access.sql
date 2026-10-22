@@ -21,7 +21,7 @@ VALUES (-9000, -9000, null, now(), now()+interval '1 day', false, false),
        (-9002, -9000, -9001, now(), now()+interval '1 day', false, false),
        (-9003, -9000, null, now(), now()+interval '1 day', false, false),
        (-9004, -9001, null, now(), now()+interval '1 day', false, false);
-INSERT INTO event_instance_registration (id, tenant_id, instance_id, person_id, status, registration_status)
+INSERT INTO event_registration (id, tenant_id, event_id, person_id, status, registration_status)
 OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, -9000, -9000, 'unknown', 'active'),
        (-9001, -9000, -9000, -9001, 'unknown', 'active'),
@@ -32,9 +32,9 @@ VALUES (-9000, -9000, -9000, -9000, 'unknown', 'active'),
 INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, -9001, now() - interval '1 year'),
        (-9001, -9000, -9005, now() - interval '2 years');
-INSERT INTO event_instance_registration (id, instance_id, couple_id) OVERRIDING SYSTEM VALUE
+INSERT INTO event_registration (id, event_id, couple_id) OVERRIDING SYSTEM VALUE
 VALUES (-9006, -9000, -9000);
-UPDATE event_instance_registration SET parent_registration_id=-9006 WHERE id IN (-9000, -9001);
+UPDATE event_registration SET parent_registration_id=-9006 WHERE id IN (-9000, -9001);
 INSERT INTO event_trainer (id, tenant_id, event_id, person_id) OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, -9000, -9003), (-9001, -9000, -9002, -9003);
 INSERT INTO cohort (id, tenant_id, name, color_rgb, is_visible) OVERRIDING SYSTEM VALUE
@@ -48,7 +48,7 @@ OVERRIDING SYSTEM VALUE VALUES (-9000, -9000, -9000, -9001, 1);
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
   'callers cannot read the unscoped person-pair view');
 UPDATE event_instance SET share_token='test-camp-share' WHERE id=-9000;
-UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9001;
+UPDATE event_registration SET registration_status='cancelled' WHERE id=-9001;
 SELECT tap.is(
   (SELECT array_agg(id ORDER BY id) FROM app_private.event_share_claims(-9000, 'test-camp-share') s,
     unnest(s.instance_ids) id), ARRAY[-9002,-9001,-9000]::bigint[],
@@ -83,7 +83,7 @@ SET LOCAL ROLE administrator;
 SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint,
   'admins need neither a registration nor a share link to see participants');
 RESET ROLE;
-UPDATE event_instance_registration SET registration_status='active' WHERE id=-9001;
+UPDATE event_registration SET registration_status='active' WHERE id=-9001;
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 -- Run the installed query on test data only; ROLLBACK restores the original view.
 DO $$
@@ -93,8 +93,8 @@ BEGIN
   DROP MATERIALIZED VIEW app_private.event_people;
   EXECUTE format($query$
     CREATE MATERIALIZED VIEW app_private.event_people AS
-    WITH event_instance_registration AS (
-      SELECT * FROM public.event_instance_registration WHERE tenant_id IN (-9000, -9001)
+    WITH event_registration AS (
+      SELECT * FROM public.event_registration WHERE tenant_id IN (-9000, -9001)
     ), event_trainer AS (
       SELECT * FROM public.event_trainer WHERE tenant_id IN (-9000, -9001)
     ), event_instance AS (
@@ -108,7 +108,7 @@ $$;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
   ARRAY[-9002,-9001,-9000]::bigint[], 'a nonmember sees the registered event, child, and grandchild only');
-SELECT tap.is((SELECT count(*) FROM event_instance_registration), 5::bigint,
+SELECT tap.is((SELECT count(*) FROM event_registration), 5::bigint,
   'attendees see all registrations of accessible events, including cancellation history');
 SELECT tap.is((SELECT count(*) FROM event_trainer), 2::bigint, 'attendees see trainers throughout the schedule');
 SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint, 'attendees see target assignments');
@@ -142,10 +142,10 @@ UPDATE event_instance SET parent_id=null WHERE id=-9001;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id) FROM event_instance), ARRAY[-9000]::bigint[], 'reparenting changes schedule access immediately');
 RESET ROLE;
-UPDATE event_instance_registration SET registration_status='cancelled' WHERE id=-9000;
+UPDATE event_registration SET registration_status='cancelled' WHERE id=-9000;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'cancellation removes private-event access immediately');
-SELECT tap.is((SELECT count(*) FROM event_instance_registration), 0::bigint, 'cancellation removes registration reads immediately');
+SELECT tap.is((SELECT count(*) FROM event_registration), 0::bigint, 'cancellation removes registration reads immediately');
 SELECT tap.is((SELECT count(*) FROM event_lesson_request), 0::bigint, 'cancellation removes lesson-demand reads immediately');
 RESET ROLE;
 REFRESH MATERIALIZED VIEW app_private.event_people;
