@@ -572,7 +572,7 @@ function deduplicateStudents(courses: CleanedCourse[]) {
           problematic.push([`${normalName}: více přihlášek studenta sloučeno`, []]);
       } else {
         problematic.push([
-          'Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit',
+          `${normalName}: Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit`,
           candidates,
         ]);
       }
@@ -580,7 +580,7 @@ function deduplicateStudents(courses: CleanedCourse[]) {
       if (candidates.map((x) => x.year).some((x) => !x)) {
         // some birth year is falsy, bail
         problematic.push([
-          'Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit',
+          `${normalName}: Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit`,
           candidates,
         ]);
       } else {
