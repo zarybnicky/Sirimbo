@@ -6,7 +6,9 @@ CREATE TABLE federated.competition_official (
     judge_label text
 );
 
-COMMENT ON TABLE federated.competition_official IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.competition_official IS '@name competition_official
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON COLUMN federated.competition_official.role IS '@behavior +attribute:orderBy';
 
 GRANT SELECT ON TABLE federated.competition_official TO anonymous;
 

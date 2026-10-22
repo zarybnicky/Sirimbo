@@ -1,0 +1,45 @@
+CREATE TABLE public.event_trainer (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    event_id bigint NOT NULL,
+    person_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    lessons_offered integer DEFAULT 0
+);
+
+COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
+@behavior -query:resource:list -query:resource:connection -query:resource:single
+@simpleCollections only';
+
+GRANT ALL ON TABLE public.event_trainer TO anonymous;
+ALTER TABLE public.event_trainer ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_trainer_id_key UNIQUE (event_id, person_id);
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_tenant_id_event_id_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.event_trainer
+    ADD CONSTRAINT event_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+CREATE POLICY admin_all ON public.event_trainer TO administrator USING (true);
+CREATE POLICY current_tenant ON public.event_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY event_access_view ON public.event_trainer FOR SELECT TO anonymous USING ((event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY member_view ON public.event_trainer FOR SELECT TO member USING (true);
+CREATE POLICY public_view ON public.event_trainer FOR SELECT TO anonymous USING ((event_id IN ( SELECT event.id
+   FROM public.event
+  WHERE event.is_public)));
+CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_private.can_trainer_edit_event(event_id));
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF event_id, person_id ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_trainer__refresh_manager_person_ids();
+CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, event_id, person_id ON public.event_trainer FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+CREATE INDEX event_trainer_event_id_idx ON public.event_trainer USING btree (event_id);
+CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);
+CREATE INDEX event_trainer_tenant_id_idx ON public.event_trainer USING btree (tenant_id);
+CREATE INDEX event_trainer_tenant_person_event_idx ON public.event_trainer USING btree (tenant_id, person_id, event_id);

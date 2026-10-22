@@ -19,10 +19,11 @@ ALTER TABLE ONLY public.announcement_attachment
 
 CREATE POLICY admin_all ON public.announcement_attachment TO administrator USING (true);
 CREATE POLICY current_tenant ON public.announcement_attachment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY member_view ON public.announcement_attachment FOR SELECT USING ((announcement_id IN ( SELECT announcement.id
-   FROM public.announcement)));
-CREATE POLICY trainer_manage ON public.announcement_attachment TO trainer USING ((announcement_id IN ( SELECT announcement.id
-   FROM public.announcement
-  WHERE (announcement.author_id = ( SELECT public.current_user_id() AS current_user_id)))));
+CREATE POLICY member_view ON public.announcement_attachment FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.announcement a
+  WHERE (a.id = announcement_attachment.announcement_id))));
+CREATE POLICY trainer_manage ON public.announcement_attachment TO trainer USING ((EXISTS ( SELECT 1
+   FROM public.announcement a
+  WHERE ((a.id = announcement_attachment.announcement_id) AND (a.author_id = ( SELECT public.current_user_id() AS current_user_id))))));
 
 CREATE INDEX announcement_attachment_file_idx ON public.announcement_attachment USING btree (tenant_id, file_id);

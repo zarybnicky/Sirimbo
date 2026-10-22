@@ -18,14 +18,14 @@ ALTER TABLE ONLY public.event_series
 ALTER TABLE ONLY public.event_series
     ADD CONSTRAINT event_series_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.event_series TO administrator USING (true) WITH CHECK (true);
-CREATE POLICY current_tenant ON public.event_series AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY admin_all ON public.event_series TO administrator USING (true);
+CREATE POLICY current_tenant ON public.event_series AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY member_view ON public.event_series FOR SELECT TO member USING ((EXISTS ( SELECT 1
-   FROM public.event_instance instance
-  WHERE (instance.series_id = event_series.id))));
+   FROM public.event i
+  WHERE (i.series_id = event_series.id))));
 CREATE POLICY public_view ON public.event_series FOR SELECT TO anonymous USING ((EXISTS ( SELECT 1
-   FROM public.event_instance instance
-  WHERE (instance.series_id = event_series.id))));
-CREATE POLICY trainer_all ON public.event_series TO trainer USING (true) WITH CHECK (true);
+   FROM public.event i
+  WHERE (i.series_id = event_series.id))));
+CREATE POLICY trainer_all ON public.event_series TO trainer USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_series FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

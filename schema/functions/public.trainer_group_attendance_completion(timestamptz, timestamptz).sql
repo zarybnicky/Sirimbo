@@ -3,7 +3,7 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
     AS $_$
   with filtered_instances as (
     select ei.id
-    from event_instance ei
+    from event ei
     where ei.tenant_id = current_tenant_id()
       and not ei.is_cancelled
       and ei.type = 'group'
@@ -12,18 +12,15 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
       and ($2 is null or coalesce(ei.until, ei.since) < $2)
   ),
   trainer_instances as (
-    select effective_trainer.person_id, fi.id as instance_id
+    select effective_trainer.person_id, fi.id as event_id
     from filtered_instances fi
-    join event_instance instance on instance.id = fi.id
-    cross join lateral app_private.event_instance_trainers_at(
-      instance,
-      instance.since
-    ) effective_trainer
+    join event instance on instance.id = fi.id
+    cross join lateral app_private.event_trainers_at(instance, instance.since) effective_trainer
   ),
   attendance_stats as (
     select
       ti.person_id,
-      ti.instance_id,
+      ti.event_id,
       coalesce(stats.attendance_count, 0) as attendance_count,
       coalesce(stats.unknown_count, 0) as unknown_count
     from trainer_instances ti
@@ -31,8 +28,8 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
       select
         count(*) as attendance_count,
         count(*) filter (where eir.status = 'unknown') as unknown_count
-      from event_instance_registration eir
-      where eir.instance_id = ti.instance_id
+      from event_registration eir
+      where eir.event_id = ti.event_id
         and eir.person_id is not null
         and eir.registration_status = 'active'
     ) stats on true
@@ -40,14 +37,14 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
   per_trainer as (
     select
       person_id,
-      count(*) as total_instances,
-      count(*) filter (where attendance_count > 0 and unknown_count = 0) as filled_instances,
+      count(*) as total_events,
+      count(*) filter (where attendance_count > 0 and unknown_count = 0) as filled_events,
       count(*) filter (
         where attendance_count > 0
           and unknown_count > 0
           and unknown_count < attendance_count
-      ) as partially_filled_instances,
-      count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_instances,
+      ) as partially_filled_events,
+      count(*) filter (where attendance_count = 0 or unknown_count = attendance_count) as unfilled_events,
       coalesce(sum(attendance_count), 0) as total_attendances,
       coalesce(sum(unknown_count), 0) as pending_attendances
     from attendance_stats
@@ -55,12 +52,12 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
   )
   select
     person_id,
-    total_instances,
-    filled_instances,
-    partially_filled_instances,
-    unfilled_instances,
+    total_events,
+    filled_events,
+    partially_filled_events,
+    unfilled_events,
     case
-      when total_instances > 0 then (filled_instances + partially_filled_instances)::double precision / total_instances
+      when total_events > 0 then (filled_events + partially_filled_events)::double precision / total_events
       else null
     end as filled_ratio,
     total_attendances,

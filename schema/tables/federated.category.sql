@@ -11,7 +11,8 @@ CREATE TABLE federated.category (
     age_group_code text
 );
 
-COMMENT ON TABLE federated.category IS '@behavior -insert -update -delete +list -connection';
+COMMENT ON TABLE federated.category IS '@name category
+@behavior -insert -update -delete +list -connection';
 COMMENT ON COLUMN federated.category.age_group IS '@behavior -*';
 COMMENT ON COLUMN federated.category.age_group_code IS '@name ageGroup
 @behavior -insert -update';

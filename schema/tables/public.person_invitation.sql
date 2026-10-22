@@ -6,12 +6,14 @@ CREATE TABLE public.person_invitation (
     used_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    email public.citext NOT NULL
+    email public.citext NOT NULL,
+    event_id bigint
 );
 
 COMMENT ON TABLE public.person_invitation IS '@omit update
 @simpleCollections only
 @behavior -query:resource:list -query:resource:connection';
+COMMENT ON COLUMN public.person_invitation.event_id IS '@omit';
 
 GRANT ALL ON TABLE public.person_invitation TO anonymous;
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;
@@ -21,13 +23,13 @@ ALTER TABLE ONLY public.person_invitation
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.person_invitation
+    ADD CONSTRAINT person_invitation_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON DELETE SET NULL;
+ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
-CREATE POLICY admin_create ON public.person_invitation USING ((EXISTS ( SELECT 1
-   FROM public.tenant_administrator
-  WHERE ((tenant_administrator.person_id = ANY (public.current_person_ids())) AND (tenant_administrator.tenant_id = public.current_tenant_id())))));
+CREATE POLICY admin_all ON public.person_invitation TO administrator USING (true);
 CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person_invitation FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();

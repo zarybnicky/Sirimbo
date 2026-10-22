@@ -7,7 +7,8 @@ CREATE TABLE federated.dance_program (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE federated.dance_program IS '@behavior -insert -update -delete +list -connection';
+COMMENT ON TABLE federated.dance_program IS '@name dance_program
+@behavior -insert -update -delete +list -connection';
 
 GRANT SELECT ON TABLE federated.dance_program TO anonymous;
 

@@ -33,10 +33,10 @@ ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.couple TO administrator USING (true);
-CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.couple_ids'::text, true) AS current_setting))::bigint[])));
-CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT v.person_id
-   FROM app_private.visible_person_ids() v(person_id))) OR (woman_id IN ( SELECT v.person_id
-   FROM app_private.visible_person_ids() v(person_id)))));
+CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((id IN ( SELECT event_registration.couple_id
+   FROM public.event_registration
+  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.parent_registration_id IS NULL) AND (event_registration.couple_id IS NOT NULL) AND (event_registration.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[]))))));
+CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids)) OR (woman_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids))));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

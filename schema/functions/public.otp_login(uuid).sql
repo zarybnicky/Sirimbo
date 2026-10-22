@@ -7,7 +7,14 @@ declare
   usr users;
   jwt jwt_token;
 begin
-  select * into v_token from otp_token where access_token = token and used_at is null and expires_at > now();
+  update otp_token t set used_at = now()
+  where t.access_token = token and t.used_at is null and t.expires_at > now()
+    and t.user_id is not null
+    and (
+      t.intent = 'password_reset'
+      or (t.intent = 'event_handoff' and t.tenant_id = current_tenant_id())
+    )
+  returning t.* into v_token;
   if not found then
     raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
   end if;
@@ -21,7 +28,6 @@ begin
   perform set_config('jwt.claims.my_couple_ids', jwt.my_couple_ids::text, true);
 
   update users set last_login = now() where id = usr.id;
-  update otp_token set used_at = now() where id = v_token.id;
   insert into security_event (user_id, kind, method)
   values (usr.id, 'login_succeeded', 'otp');
   return (usr, jwt);

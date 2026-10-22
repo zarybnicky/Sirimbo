@@ -42,7 +42,7 @@ begin
         when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
         else 0::double precision
       end as session_count_per_trainer_last_30_days
-    from event_instance ei
+    from event ei
     where ei.tenant_id = t.id
       and coalesce(ei.is_cancelled, false) = false
       and ei.since >= now() - interval '30 days'

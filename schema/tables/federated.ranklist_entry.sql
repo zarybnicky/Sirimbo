@@ -7,7 +7,8 @@ CREATE TABLE federated.ranklist_entry (
     CONSTRAINT ranklist_entry_check CHECK (((ranking_to IS NULL) OR (ranking_to >= ranking)))
 );
 
-COMMENT ON TABLE federated.ranklist_entry IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.ranklist_entry IS '@name ranklist_entry
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 GRANT SELECT ON TABLE federated.ranklist_entry TO anonymous;
 

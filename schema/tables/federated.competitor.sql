@@ -7,7 +7,9 @@ CREATE TABLE federated.competitor (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     age_group_code text,
     search_name text GENERATED ALWAYS AS (app_private.normalize_name(name)) STORED,
-    external_id text CONSTRAINT competitor_external_id_text_not_null NOT NULL
+    external_id text CONSTRAINT competitor_external_id_text_not_null NOT NULL,
+    latest_result_at date,
+    latest_entry_at date
 );
 
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor

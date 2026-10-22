@@ -16,8 +16,8 @@ CREATE TABLE federated.competition (
     CONSTRAINT competition_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 
-COMMENT ON TABLE federated.competition IS '@behavior -insert -update -delete -list';
-COMMENT ON COLUMN federated.competition.competition_type IS 'Federation-provided competition type/grade, for example CSTS Cup, Ranking, League, Championship.';
+COMMENT ON TABLE federated.competition IS '@name competition
+@behavior -insert -update -delete -list';
 
 GRANT SELECT ON TABLE federated.competition TO anonymous;
 
@@ -39,6 +39,8 @@ ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_event_id_fkey FOREIGN KEY (federation, event_id) REFERENCES federated.event(federation, id);
 ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+
+CREATE TRIGGER _900_refresh_competitor_activity_dates AFTER UPDATE ON federated.competition REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_competition_dates__refresh_competitor_activity();
 
 CREATE INDEX competition_category_id_idx ON federated.competition USING btree (category_id);
 CREATE INDEX competition_event_id_idx ON federated.competition USING btree (event_id);

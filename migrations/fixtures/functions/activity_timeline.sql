@@ -1,3 +1,6 @@
+drop function if exists activity_timeline;
+drop view if exists activity_timeline_item;
+
 create or replace view activity_timeline_item as
 select
   null::text as id,
@@ -44,8 +47,6 @@ comment on view activity_timeline_item is $$
 @foreignKey (event_id) references event (id)|@fieldName event|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 $$;
-
-comment on column activity_timeline_item.event_id is null;
 
 grant select on activity_timeline_item to anonymous;
 

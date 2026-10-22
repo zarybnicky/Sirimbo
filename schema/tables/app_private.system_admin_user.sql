@@ -5,9 +5,6 @@ CREATE TABLE app_private.system_admin_user (
 );
 
 COMMENT ON TABLE app_private.system_admin_user IS '@omit all';
-COMMENT ON COLUMN app_private.system_admin_user.user_id IS 'Globally privileged user allowed to manage tenants.';
-COMMENT ON COLUMN app_private.system_admin_user.created_at IS 'Timestamp when the system administrator role was granted.';
-COMMENT ON COLUMN app_private.system_admin_user.created_by IS 'User that granted the system administrator role.';
 
 ALTER TABLE ONLY app_private.system_admin_user
     ADD CONSTRAINT system_admin_user_pkey PRIMARY KEY (user_id);

@@ -4,5 +4,6 @@ CREATE TYPE public.article_type_input AS (
 	preview text,
 	body text,
 	title_photo_url text,
-	is_visible boolean
+	is_visible boolean,
+	published_at timestamp with time zone
 );

@@ -3,7 +3,7 @@ CREATE TABLE public.payment (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     accounting_period_id bigint NOT NULL,
     cohort_subscription_id bigint,
-    event_instance_id bigint,
+    event_id bigint,
     status public.payment_status NOT NULL,
     variable_symbol text,
     specific_symbol text,
@@ -30,7 +30,7 @@ ALTER TABLE ONLY public.payment
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_cohort_subscription_id_fkey FOREIGN KEY (cohort_subscription_id) REFERENCES public.cohort_subscription(id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.payment
-    ADD CONSTRAINT payment_event_instance_id_fkey FOREIGN KEY (event_instance_id) REFERENCES public.event_instance(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT payment_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_tenant_id_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.payment
@@ -45,5 +45,5 @@ CREATE TRIGGER _200_fill_accounting_period BEFORE INSERT ON public.payment FOR E
 
 CREATE INDEX payment_accounting_period_id_idx ON public.payment USING btree (accounting_period_id);
 CREATE INDEX payment_cohort_subscription_id_idx ON public.payment USING btree (cohort_subscription_id);
-CREATE UNIQUE INDEX payment_event_instance_id_idx ON public.payment USING btree (event_instance_id) WHERE (event_instance_id IS NOT NULL);
+CREATE UNIQUE INDEX payment_event_instance_id_idx ON public.payment USING btree (event_id) WHERE (event_id IS NOT NULL);
 CREATE INDEX payment_tenant_id_idx ON public.payment USING btree (tenant_id);

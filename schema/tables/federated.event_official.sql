@@ -8,6 +8,7 @@ CREATE TABLE federated.event_official (
 
 COMMENT ON TABLE federated.event_official IS '@name federation_event_official
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON COLUMN federated.event_official.role IS '@behavior +attribute:orderBy';
 
 GRANT SELECT ON TABLE federated.event_official TO anonymous;
 

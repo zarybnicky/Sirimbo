@@ -4,7 +4,7 @@ CREATE FUNCTION public.set_event_sharing(id bigint, p_enabled boolean) RETURNS t
 declare
   v_share_token text;
 begin
-  update event_instance instance
+  update event instance
   set share_token = case
     when not coalesce(p_enabled, false) then null
     when instance.share_token is null

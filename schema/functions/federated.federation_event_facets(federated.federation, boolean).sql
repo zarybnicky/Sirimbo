@@ -17,5 +17,7 @@ CREATE FUNCTION federated.federation_event_facets(federation federated.federatio
   ))::federated.federation_event_facets;
 $$;
 
+COMMENT ON FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean) IS '@name federation_event_facets';
+
 REVOKE ALL ON FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean) FROM PUBLIC;
 GRANT ALL ON FUNCTION federated.federation_event_facets(federation federated.federation, include_cancelled boolean) TO anonymous;

@@ -10,7 +10,9 @@ CREATE TABLE public.aktuality (
     created_at timestamp with time zone DEFAULT now(),
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
     title_photo_url text,
-    is_visible boolean DEFAULT true NOT NULL
+    is_visible boolean DEFAULT true NOT NULL,
+    published_at timestamp with time zone DEFAULT now(),
+    CONSTRAINT aktuality_visible_requires_published_at CHECK (((NOT is_visible) OR (published_at IS NOT NULL)))
 );
 
 COMMENT ON TABLE public.aktuality IS '@omit create,update

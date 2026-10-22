@@ -5,7 +5,8 @@ CREATE TABLE federated.ranklist_snapshot (
     as_of_date date NOT NULL
 );
 
-COMMENT ON TABLE federated.ranklist_snapshot IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.ranklist_snapshot IS '@name ranklist_snapshot
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
 
 GRANT SELECT ON TABLE federated.ranklist_snapshot TO anonymous;
 

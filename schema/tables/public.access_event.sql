@@ -17,8 +17,7 @@ CREATE TABLE public.access_event (
 );
 
 COMMENT ON TABLE public.access_event IS '@omit create,update,delete
-@simpleCollections only
-@foreignKey (tenant_id,location_id) references tenant_location(tenant_id,id)|@fieldName tenantLocation|@foreignFieldName accessEvents';
+@simpleCollections only';
 
 GRANT ALL ON TABLE public.access_event TO anonymous;
 ALTER TABLE public.access_event ENABLE ROW LEVEL SECURITY;
@@ -36,7 +35,7 @@ ALTER TABLE ONLY public.access_event
 
 CREATE POLICY admin_view ON public.access_event FOR SELECT TO administrator USING (true);
 CREATE POLICY current_tenant ON public.access_event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));
-CREATE POLICY my_view ON public.access_event FOR SELECT USING ((person_id = ANY (public.current_person_ids())));
+CREATE POLICY my_view ON public.access_event FOR SELECT USING ((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));
 
 CREATE INDEX access_event_credential_idx ON public.access_event USING btree (tenant_id, kind, code, occurred_at DESC);
 CREATE INDEX access_event_location_idx ON public.access_event USING btree (tenant_id, location_id, occurred_at DESC);

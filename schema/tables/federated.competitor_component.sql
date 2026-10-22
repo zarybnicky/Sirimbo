@@ -6,6 +6,7 @@ CREATE TABLE federated.competitor_component (
 
 COMMENT ON TABLE federated.competitor_component IS '@name federation_competitor_component
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON COLUMN federated.competitor_component.role IS '@behavior +attribute:orderBy';
 
 GRANT SELECT ON TABLE federated.competitor_component TO anonymous;
 

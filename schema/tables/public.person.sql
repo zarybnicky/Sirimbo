@@ -47,10 +47,15 @@ ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
 
 CREATE POLICY admin_all ON public.person TO administrator USING (true);
-CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (public.current_person_ids())));
-CREATE POLICY event_share_view ON public.person FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.person_ids'::text, true) AS current_setting))::bigint[])));
-CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT v.person_id
-   FROM app_private.visible_person_ids() v(person_id))));
+CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));
+CREATE POLICY event_share_view ON public.person FOR SELECT TO anonymous USING ((id IN ( SELECT event_registration.person_id
+   FROM public.event_registration
+  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.person_id IS NOT NULL) AND (event_registration.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])))
+UNION ALL
+ SELECT event_trainer.person_id
+   FROM public.event_trainer
+  WHERE (event_trainer.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])))));
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 

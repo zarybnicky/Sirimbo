@@ -1,0 +1,59 @@
+CREATE FUNCTION app_private.reconcile_event_cohort_registrations(p_event_ids bigint[], p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS void
+    LANGUAGE sql
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select instance.id from event instance
+  where instance.id = any(p_event_ids) order by instance.id for update;
+
+  -- Direct registrations (including cancellations) take precedence. Couples
+  -- already supply their person rows; cohorts supply only the remaining people.
+  with desired as materialized (
+    select instance.id as event_id, instance.tenant_id, membership.person_id,
+      min(target.cohort_id) as target_cohort_id
+    from event instance
+    join event_target_cohort target on target.event_id = instance.id
+    join cohort_membership membership on membership.cohort_id = target.cohort_id
+    where instance.id = any(p_event_ids)
+      and instance.since >= now()
+      and membership.status = 'active' and membership.active_range @> now()
+      and (p_person_ids is null or membership.person_id = any(p_person_ids))
+      and not exists (
+        select 1 from event_registration registration
+        where registration.event_id = instance.id
+          and registration.person_id = membership.person_id
+          and (
+            (registration.parent_registration_id is null and registration.source is distinct from 'cohort')
+            or (registration.parent_registration_id is not null and registration.registration_status = 'active')
+          )
+      )
+    group by instance.id, instance.tenant_id, membership.person_id
+  ), cancelled as (
+    update event_registration registration
+    set registration_status = 'cancelled'
+    from event instance
+    where registration.event_id = any(p_event_ids)
+      and instance.id = registration.event_id and instance.since >= now()
+      and registration.source = 'cohort'
+      and registration.registration_status = 'active'
+      and (p_person_ids is null or registration.person_id = any(p_person_ids))
+      and not exists (
+        select 1 from desired
+        where desired.event_id = registration.event_id
+          and desired.person_id = registration.person_id
+      )
+  )
+  insert into event_registration as registration (
+    tenant_id, event_id, person_id, target_cohort_id, source, status
+  )
+  select tenant_id, event_id, person_id, target_cohort_id, 'cohort', 'unknown'
+  from desired
+  on conflict (event_id, couple_id, person_id) where parent_registration_id is null
+  do update set registration_status = 'active', target_cohort_id = excluded.target_cohort_id
+  where registration.source = 'cohort'
+    and (registration.registration_status, registration.target_cohort_id)
+      is distinct from ('active'::event_registration_status, excluded.target_cohort_id);
+$$;
+
+REVOKE ALL ON FUNCTION app_private.reconcile_event_cohort_registrations(p_event_ids bigint[], p_person_ids bigint[]) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_private.reconcile_event_cohort_registrations(p_event_ids bigint[], p_person_ids bigint[]) TO trainer;
+GRANT ALL ON FUNCTION app_private.reconcile_event_cohort_registrations(p_event_ids bigint[], p_person_ids bigint[]) TO administrator;

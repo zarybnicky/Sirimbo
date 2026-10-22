@@ -1,9 +1,9 @@
-CREATE FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[] DEFAULT '{}'::public.event_trainer_input[], cohort_ids bigint[] DEFAULT '{}'::bigint[], series public.event_series_input DEFAULT NULL::public.event_series_input) RETURNS SETOF public.event_instance
+CREATE FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[] DEFAULT '{}'::public.event_trainer_input[], cohort_ids bigint[] DEFAULT '{}'::bigint[], series public.event_series_input DEFAULT NULL::public.event_series_input) RETURNS SETOF public.event
     LANGUAGE plpgsql
     AS $$
 declare
   event_to_save event_input;
-  v_saved_event event_instance;
+  v_saved_event event;
   v_saved_event_ids bigint[] := '{}'::bigint[];
   v_tenant_id bigint := current_tenant_id();
   v_series_id bigint;
@@ -83,7 +83,7 @@ begin
     select 1 from unnest(events) i where i.id is null
   ) and (details).parent_id is not null and not exists (
     select 1
-    from event_instance parent
+    from event parent
     where parent.id = (details).parent_id and parent.tenant_id = v_tenant_id
   ) then
     raise exception 'event parent % not found or not editable', (details).parent_id;
@@ -108,7 +108,7 @@ begin
   select count(*) into v_expected_existing_count from unnest(events) i where i.id is not null;
 
   perform e.id
-  from event_instance e
+  from event e
   join unnest(events) i on i.id = e.id
   where i.id is not null and e.tenant_id = v_tenant_id
   order by e.id
@@ -121,7 +121,7 @@ begin
 
   foreach event_to_save in array events loop
     if event_to_save.id is null then
-      insert into event_instance (
+      insert into event (
         parent_id,
         series_id,
         since,
@@ -164,7 +164,7 @@ begin
       )
       returning * into v_saved_event;
     else
-      update event_instance e
+      update event e
       set since = event_to_save.since,
           until = event_to_save.until,
           is_cancelled = coalesce(event_to_save.is_cancelled, false),
@@ -194,16 +194,16 @@ begin
     v_saved_event_ids := array_append(v_saved_event_ids, v_saved_event.id);
 
     perform registration.id
-    from event_instance_registration registration
-    where registration.instance_id = v_saved_event.id
+    from event_registration registration
+    where registration.event_id = v_saved_event.id
     order by registration.id
     for update;
 
     -- Release person slots before replacing couples with individuals or vice versa.
     with removed as (
       select registration.id
-      from event_instance_registration registration
-      where registration.instance_id = v_saved_event.id
+      from event_registration registration
+      where registration.event_id = v_saved_event.id
         and registration.parent_registration_id is null
         and not exists (
           select 1 from unnest(event_to_save.registrations) desired
@@ -212,7 +212,7 @@ begin
             and not coalesce(desired.is_cancelled, false)
         )
     )
-    update event_instance_registration registration
+    update event_registration registration
     set registration_status = 'cancelled',
         source = case when registration.parent_registration_id is null and registration.source is distinct from 'cohort'
           then 'manager'::event_registration_source else registration.source end
@@ -220,13 +220,28 @@ begin
     where registration.registration_status = 'active'
       and (registration.id = removed.id or registration.parent_registration_id = removed.id);
 
+    -- Detach person rows from cancelled registrations when submitted as individuals.
+    update event_registration registration
+    set parent_registration_id = null
+    where registration.id in (
+      select distinct on (r.person_id) r.id
+      from event_registration r
+      join event_registration parent on parent.id = r.parent_registration_id
+      where r.event_id = v_saved_event.id and parent.registration_status = 'cancelled'
+        and exists (select 1 from unnest(event_to_save.registrations) desired where desired.person_id = r.person_id)
+        and not exists (select 1 from event_registration standalone
+          where standalone.event_id = r.event_id and standalone.person_id = r.person_id
+            and standalone.parent_registration_id is null)
+      order by r.person_id, r.id desc
+    );
+
     -- Save the displayed list and explicit removals; reuse rows to preserve attendance.
-    insert into event_instance_registration as registration (
-      instance_id, person_id, couple_id, target_cohort_id, source, registration_status, status
+    insert into event_registration as registration (
+      event_id, person_id, couple_id, target_cohort_id, source, registration_status, status
     )
     select v_saved_event.id, choice.person_id, choice.couple_id, choice.target_cohort_id,
       case when choice.target_cohort_id is null then 'manager'::event_registration_source else 'cohort'::event_registration_source end,
-      case when choice.is_cancelled then 'cancelled'::event_instance_registration_status else 'active'::event_instance_registration_status end,
+      case when choice.is_cancelled then 'cancelled'::event_registration_status else 'active'::event_registration_status end,
       case when choice.person_id is not null then 'unknown'::attendance_type end
     from (
       select distinct on (choice.person_id, choice.couple_id) choice.*
@@ -234,40 +249,35 @@ begin
         choice(person_id, couple_id, target_cohort_id, is_cancelled, position)
       order by choice.person_id, choice.couple_id, choice.position
     ) choice
-    on conflict (instance_id, couple_id, person_id) where parent_registration_id is null
+    on conflict (event_id, couple_id, person_id) where parent_registration_id is null
     do update set registration_status = excluded.registration_status,
       source = excluded.source,
       target_cohort_id = excluded.target_cohort_id
     where (registration.registration_status, registration.target_cohort_id)
       is distinct from (excluded.registration_status, excluded.target_cohort_id);
 
-    -- Couple attendance follows the couple's registration state.
-    update event_instance_registration child
-    set registration_status = parent.registration_status
-    from event_instance_registration parent
-    where parent.instance_id = v_saved_event.id
+    -- Cancel children of cancelled registrations; reuse person rows for active couple registrations.
+    update event_registration child
+    set registration_status = parent.registration_status, source = parent.source
+    from event_registration parent
+    where parent.event_id = v_saved_event.id
       and child.parent_registration_id = parent.id
-      and child.registration_status is distinct from parent.registration_status;
+      and parent.registration_status = 'cancelled'
+      and (child.registration_status, child.source) is distinct from (parent.registration_status, parent.source);
 
-    insert into event_instance_registration (instance_id, parent_registration_id, person_id, status)
-    select v_saved_event.id, registration.id, person.person_id, 'unknown'
-    from event_instance_registration registration
-    join couple on couple.id = registration.couple_id
-    cross join lateral unnest(array[couple.man_id, couple.woman_id]) person(person_id)
-    where registration.instance_id = v_saved_event.id
-      and registration.registration_status = 'active'
-      and not exists (
-        select 1 from event_instance_registration child
-        where child.parent_registration_id = registration.id and child.person_id = person.person_id
-      );
-    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    perform app_private.ensure_couple_person_registrations(registration.id)
+    from event_registration registration
+    where registration.event_id = v_saved_event.id
+      and registration.couple_id is not null
+      and registration.registration_status = 'active';
+    insert into event_target_cohort (tenant_id, event_id, cohort_id)
     select v_tenant_id, v_saved_event.id, id
     from unnest(cohort_ids) cohort(id)
     where id is not null
-    on conflict (instance_id, cohort_id) do nothing;
+    on conflict (event_id, cohort_id) do nothing;
 
-    delete from event_instance_target_cohort target
-    where target.instance_id = v_saved_event.id
+    delete from event_target_cohort target
+    where target.event_id = v_saved_event.id
       and not exists (select 1 from unnest(cohort_ids) cohort(id) where id = target.cohort_id);
 
   end loop;
@@ -279,16 +289,16 @@ begin
       with ordinality trainer(person_id, lessons_offered, position)
     order by trainer.person_id, trainer.position
   )
-  insert into event_instance_trainer (tenant_id, instance_id, person_id, lessons_offered)
+  insert into event_trainer (tenant_id, event_id, person_id, lessons_offered)
   select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
-  from event_instance stored_event
+  from event stored_event
   join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
   cross join desired
-  on conflict (instance_id, person_id) do update
+  on conflict (event_id, person_id) do update
   set lessons_offered = excluded.lessons_offered;
 
-  delete from event_instance_trainer e
-  where e.instance_id = any(v_saved_event_ids)
+  delete from event_trainer e
+  where e.event_id = any(v_saved_event_ids)
     and not exists (
       select 1
       from unnest(coalesce(trainers, '{}'::event_trainer_input[])) trainer
@@ -298,11 +308,11 @@ begin
   return query
   select stored_event.*
   from unnest(v_saved_event_ids) with ordinality saved(event_id, position)
-  join event_instance stored_event on stored_event.id = saved.event_id
+  join event stored_event on stored_event.id = saved.event_id
   order by saved.position;
 end;
 $$;
 
-COMMENT ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) TO anonymous;

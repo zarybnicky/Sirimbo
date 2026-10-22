@@ -5,7 +5,8 @@ CREATE TABLE federated.ranklist (
     name text NOT NULL
 );
 
-COMMENT ON TABLE federated.ranklist IS '@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.ranklist IS '@name ranklist
+@behavior -insert -update -delete -list';
 
 GRANT SELECT ON TABLE federated.ranklist TO anonymous;
 

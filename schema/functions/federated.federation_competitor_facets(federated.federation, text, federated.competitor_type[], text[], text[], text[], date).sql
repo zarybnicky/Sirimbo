@@ -36,7 +36,8 @@ CREATE FUNCTION federated.federation_competitor_facets(federation federated.fede
   order by option.facet, option.value;
 $$;
 
-COMMENT ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) IS '@behavior +list -connection';
+COMMENT ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) IS '@name federation_competitor_facets
+@behavior +list -connection';
 
 REVOKE ALL ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) FROM PUBLIC;
 GRANT ALL ON FUNCTION federated.federation_competitor_facets(federation federated.federation, search text, competitor_types federated.competitor_type[], age_groups text[], classes text[], disciplines text[], competed_since date) TO anonymous;

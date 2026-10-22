@@ -8,3 +8,5 @@ CREATE FUNCTION app_private.announcement_status_next(ts timestamp with time zone
     else 'published'
   end::announcement_status;
 $$;
+
+GRANT ALL ON FUNCTION app_private.announcement_status_next(ts timestamp with time zone, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone, current_status public.announcement_status) TO anonymous;

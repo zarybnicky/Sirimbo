@@ -19,7 +19,8 @@ ALTER TABLE ONLY public.article_attachment
 
 CREATE POLICY admin_all ON public.article_attachment TO administrator USING (true);
 CREATE POLICY current_tenant ON public.article_attachment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY public_view ON public.article_attachment FOR SELECT USING ((aktuality_id IN ( SELECT aktuality.id
-   FROM public.aktuality)));
+CREATE POLICY public_view ON public.article_attachment FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM public.aktuality a
+  WHERE (a.id = article_attachment.aktuality_id))));
 
 CREATE INDEX article_attachment_file_idx ON public.article_attachment USING btree (tenant_id, file_id);

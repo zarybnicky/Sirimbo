@@ -11,6 +11,8 @@ CREATE TABLE federated.person_license (
 
 COMMENT ON TABLE federated.person_license IS '@name federation_person_license
 @behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON COLUMN federated.person_license.kind IS '@behavior +attribute:orderBy';
+COMMENT ON COLUMN federated.person_license.discipline IS '@behavior +attribute:orderBy';
 
 GRANT SELECT ON TABLE federated.person_license TO anonymous;
 

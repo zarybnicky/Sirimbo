@@ -9,7 +9,9 @@ CREATE TABLE federated.judge_score (
     raw_score text
 );
 
-COMMENT ON TABLE federated.judge_score IS '@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON TABLE federated.judge_score IS '@name judge_score
+@behavior -insert -update -delete -list -query:resource:connection -query:resource:list -query:resource:single';
+COMMENT ON COLUMN federated.judge_score.component IS '@behavior +attribute:orderBy';
 
 GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 

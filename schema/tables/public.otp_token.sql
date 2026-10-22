@@ -6,7 +6,10 @@ CREATE TABLE public.otp_token (
     expires_at timestamp with time zone DEFAULT (now() + '24:00:00'::interval) NOT NULL,
     used_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    intent text DEFAULT 'password_reset'::text NOT NULL,
+    event_id bigint,
+    CONSTRAINT otp_token_intent_check CHECK ((((intent = 'password_reset'::text) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
 );
 
 COMMENT ON TABLE public.otp_token IS '@omit';
@@ -17,6 +20,8 @@ ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_access_token_key UNIQUE (access_token);
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.otp_token
+    ADD CONSTRAINT otp_token_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.otp_token
     ADD CONSTRAINT otp_token_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.otp_token

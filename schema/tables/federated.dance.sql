@@ -4,7 +4,8 @@ CREATE TABLE federated.dance (
     discipline text NOT NULL
 );
 
-COMMENT ON TABLE federated.dance IS '@behavior -insert -update -delete +list -connection';
+COMMENT ON TABLE federated.dance IS '@name dance
+@behavior -insert -update -delete +list -connection';
 
 GRANT SELECT ON TABLE federated.dance TO anonymous;
 

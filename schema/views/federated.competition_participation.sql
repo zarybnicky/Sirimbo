@@ -10,7 +10,8 @@ UNION ALL
            FROM federated.competition_result r
           WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id))))));
 
-COMMENT ON VIEW federated.competition_participation IS '@primaryKey competition_id,competitor_id
+COMMENT ON VIEW federated.competition_participation IS '@name competition_participation
+@primaryKey competition_id,competitor_id
 @foreignKey (competition_id) references federated.competition (id)|@fieldName competition|@foreignFieldName participations
 @foreignKey (competitor_id) references federated.competitor (id)|@fieldName competitor|@foreignFieldName competitionParticipations
 @behavior -single -list -connection -insert -update -delete';

@@ -28,8 +28,9 @@ ALTER TABLE ONLY public.cohort
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY event_share_view ON public.cohort FOR SELECT TO anonymous USING ((id = ANY ((( SELECT current_setting('jwt.claims.shared.cohort_ids'::text, true) AS current_setting))::bigint[])));
-CREATE POLICY public_view ON public.cohort FOR SELECT USING (is_visible);
+CREATE POLICY public_view ON public.cohort FOR SELECT TO anonymous USING ((is_visible OR (id IN ( SELECT event_target_cohort.cohort_id
+   FROM public.event_target_cohort
+  WHERE (event_target_cohort.event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids))))));
 
 CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
 CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);

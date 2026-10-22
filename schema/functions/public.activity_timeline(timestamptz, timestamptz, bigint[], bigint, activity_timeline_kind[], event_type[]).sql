@@ -47,7 +47,7 @@ begin
         ea.person_id,
         sp.name as person_name,
         ea.id as event_attendance_id,
-        ei.id as event_instance_id,
+        ei.id as event_id,
         null::text as federation,
         null::text as federated_person_id,
         null::text as competitor_id,
@@ -69,8 +69,8 @@ begin
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
-      from event_instance_registration ea
-      join event_instance ei on ei.id = ea.instance_id
+      from event_registration ea
+      join event ei on ei.id = ea.event_id
       join scoped_people sp on sp.id = ea.person_id
       where ea.registration_status = 'active'
         and ei.since >= p_since
@@ -116,7 +116,7 @@ begin
         b.person_id,
         b.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         null::text as federation,
         null::text as federated_person_id,
         null::text as competitor_id,
@@ -161,7 +161,7 @@ begin
         cr.person_id,
         cr.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         cr.federation,
         cr.federated_person_id,
         cr.competitor_id,
@@ -218,7 +218,7 @@ begin
         cb.person_id,
         cb.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         cb.federation,
         cb.federated_person_id,
         cb.competitor_id,
@@ -288,7 +288,7 @@ begin
         fp.person_id,
         fp.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         e.federation,
         fp.federated_person_id,
         null::text as competitor_id,
@@ -326,7 +326,7 @@ begin
         fp.person_id,
         fp.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         c.federation,
         fp.federated_person_id,
         null::text as competitor_id,

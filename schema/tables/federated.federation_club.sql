@@ -8,7 +8,8 @@ CREATE TABLE federated.federation_club (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE federated.federation_club IS '@behavior -insert -update -delete -list';
+COMMENT ON TABLE federated.federation_club IS '@name federation_club
+@behavior -insert -update -delete -list';
 
 GRANT SELECT ON TABLE federated.federation_club TO anonymous;
 

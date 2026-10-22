@@ -30,7 +30,8 @@ CREATE FUNCTION federated.federation_people_facets(federation federated.federati
   order by option.facet, option.value;
 $$;
 
-COMMENT ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) IS '@behavior +list -connection';
+COMMENT ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) IS '@name federation_people_facets
+@behavior +list -connection';
 
 REVOKE ALL ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) FROM PUBLIC;
 GRANT ALL ON FUNCTION federated.federation_people_facets(federation federated.federation, search text, age_groups text[], genders text[], nationalities text[]) TO anonymous;
