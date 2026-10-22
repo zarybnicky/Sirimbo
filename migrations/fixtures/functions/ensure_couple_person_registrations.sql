@@ -36,7 +36,7 @@ begin
       set parent_registration_id = parent.id, registration_status = 'active',
           source = parent.source, target_cohort_id = null
       where id = child.id and (parent_registration_id, registration_status, source, target_cohort_id)
-        is distinct from (parent.id, 'active'::event_instance_registration_status, parent.source, null);
+        is distinct from (parent.id, 'active'::event_registration_status, parent.source, null);
     else
       insert into event_instance_registration (instance_id, tenant_id, parent_registration_id, person_id, status, source)
       values (parent.instance_id, parent.tenant_id, parent.id, partner_id, 'unknown', parent.source);

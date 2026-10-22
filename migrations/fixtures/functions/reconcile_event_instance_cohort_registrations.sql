@@ -17,7 +17,7 @@ as $$
     select instance.id as instance_id, instance.tenant_id, membership.person_id,
       min(target.cohort_id) as target_cohort_id
     from event_instance instance
-    join event_instance_target_cohort target on target.instance_id = instance.id
+    join event_target_cohort target on target.event_id = instance.id
     join cohort_membership membership on membership.cohort_id = target.cohort_id
     where instance.id = any(p_instance_ids)
       and instance.since >= now()
@@ -57,11 +57,11 @@ as $$
   do update set registration_status = 'active', target_cohort_id = excluded.target_cohort_id
   where registration.source = 'cohort'
     and (registration.registration_status, registration.target_cohort_id)
-      is distinct from ('active'::event_instance_registration_status, excluded.target_cohort_id);
+      is distinct from ('active'::event_registration_status, excluded.target_cohort_id);
 $$;
 
 revoke all on function app_private.reconcile_event_instance_cohort_registrations from public;
 grant execute on function app_private.reconcile_event_instance_cohort_registrations to trainer, administrator;
 
-drop trigger if exists _500_reconcile_registrations on event_instance_target_cohort;
+drop trigger if exists _500_reconcile_registrations on event_target_cohort;
 drop function if exists app_private.tg_event_instance_target_cohort__reconcile();

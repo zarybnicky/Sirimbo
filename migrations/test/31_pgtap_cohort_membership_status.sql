@@ -49,9 +49,9 @@ INSERT INTO event_instance (
       'Test Event', 'lesson', '', false, false, 0, '', '', false, false, '')
   ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO event_instance_target_cohort (id, tenant_id, instance_id, cohort_id) OVERRIDING SYSTEM VALUE
+INSERT INTO event_target_cohort (id, tenant_id, event_id, cohort_id) OVERRIDING SYSTEM VALUE
   VALUES (850101, 1000, 900001, 800001)
-  ON CONFLICT (instance_id, cohort_id) DO NOTHING;
+  ON CONFLICT (event_id, cohort_id) DO NOTHING;
 
 INSERT INTO event_instance_registration (
   tenant_id, instance_id, person_id,
@@ -106,8 +106,8 @@ SELECT tap.ok(
       AND target_cohort_id = 800001
   ) AND 1 = (
     SELECT count(*)
-    FROM event_instance_target_cohort
-    WHERE instance_id = 900002
+    FROM event_target_cohort
+    WHERE event_id = 900002
       AND cohort_id = 800001
   ) AND NOT EXISTS (
     SELECT 1
@@ -552,8 +552,8 @@ SELECT tap.ok(
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance_target_cohort target
-    WHERE target.instance_id = (SELECT id FROM _scheduled_lesson)
+    FROM event_target_cohort target
+    WHERE target.event_id = (SELECT id FROM _scheduled_lesson)
       AND target.cohort_id = 800002
   ),
   'event save preserves the scheduled lesson cohort target'
@@ -733,8 +733,8 @@ SELECT tap.ok(
       AND copy.files_legacy = original.files_legacy
       AND EXISTS (
         SELECT 1
-        FROM event_instance_target_cohort target
-        WHERE target.instance_id = copy.id
+        FROM event_target_cohort target
+        WHERE target.event_id = copy.id
           AND target.cohort_id = 800002
       )
       AND EXISTS (

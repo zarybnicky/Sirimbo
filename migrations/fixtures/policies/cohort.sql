@@ -7,5 +7,5 @@ create policy admin_all on cohort to administrator
 create policy public_view on cohort for select to anonymous
   using (is_visible
      or id in (
-       select cohort_id from event_instance_target_cohort
-       where instance_id in (select app_private.accessible_event_ids())));
+       select cohort_id from event_target_cohort
+       where event_id in (select app_private.accessible_event_ids())));

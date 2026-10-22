@@ -40,7 +40,7 @@ VALUES (-9000, -9000, -9000, -9003), (-9001, -9000, -9002, -9003);
 INSERT INTO cohort (id, tenant_id, name, color_rgb, is_visible) OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, 'Hidden target', '000000', false),
        (-9001, -9000, 'Unrelated hidden cohort', '000000', false);
-INSERT INTO event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+INSERT INTO event_target_cohort (tenant_id, event_id, cohort_id)
 VALUES (-9000, -9002, -9000);
 INSERT INTO event_lesson_demand (id, tenant_id, trainer_id, registration_id, lesson_count)
 OVERRIDING SYSTEM VALUE VALUES (-9000, -9000, -9000, -9001, 1);
@@ -69,7 +69,7 @@ SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[],
   'share-only access derives the grandchild cohort without a cohort claim');
 SELECT tap.is((SELECT count(*) FROM event_instance_trainer), 2::bigint,
   'share-only access includes trainer assignments');
-SELECT tap.is((SELECT count(*) FROM event_instance_target_cohort), 1::bigint,
+SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint,
   'share-only access includes target assignments');
 SELECT set_config('jwt.claims.tenant_id', '-9001', true);
 SELECT tap.is((SELECT count(*) FROM app_private.accessible_event_ids()), 0::bigint,
@@ -111,7 +111,7 @@ SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
 SELECT tap.is((SELECT count(*) FROM event_instance_registration), 5::bigint,
   'attendees see all registrations of accessible events, including cancellation history');
 SELECT tap.is((SELECT count(*) FROM event_instance_trainer), 2::bigint, 'attendees see trainers throughout the schedule');
-SELECT tap.is((SELECT count(*) FROM event_instance_target_cohort), 1::bigint, 'attendees see target assignments');
+SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint, 'attendees see target assignments');
 SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[], 'attendees see the referenced hidden cohort only');
 SELECT tap.is((SELECT count(*) FROM event_lesson_demand), 1::bigint, 'attendees see another participant lesson request');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],

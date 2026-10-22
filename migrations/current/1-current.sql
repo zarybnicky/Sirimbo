@@ -1,4 +1,6 @@
 do $$
+declare
+  target_constraint text;
 begin
   if not exists (
     select 1 from pg_catalog.pg_attribute
@@ -13,6 +15,29 @@ begin
     update aktuality set published_at = coalesce(updated_at, created_at) where published_at is null;
     alter table aktuality enable trigger _100_timestamps;
     alter table aktuality enable trigger _200_author;
+  end if;
+
+  if to_regtype('public.event_instance_registration_status') is not null then
+    alter type public.event_instance_registration_status rename to event_registration_status;
+  end if;
+
+  if to_regclass('public.event_instance_target_cohort') is not null then
+    alter table event_instance_target_cohort rename to event_target_cohort;
+    alter table event_target_cohort rename column instance_id to event_id;
+
+    for target_constraint in
+      select conname from pg_catalog.pg_constraint
+      where conrelid = 'public.event_target_cohort'::regclass
+        and starts_with(conname::text, 'event_instance_target_cohort_')
+    loop
+      execute format('alter table event_target_cohort rename constraint %I to %I',
+        target_constraint, replace(replace(target_constraint,
+          'event_instance_target_cohort_', 'event_target_cohort_'), 'instance_id', 'event_id'));
+    end loop;
+
+    alter index event_instance_target_cohort_cohort_id_idx rename to event_target_cohort_cohort_id_idx;
+    alter index event_instance_target_cohort_tenant_id_idx rename to event_target_cohort_tenant_id_idx;
+    alter sequence event_instance_target_cohort_id_seq rename to event_target_cohort_id_seq;
   end if;
 end;
 $$;
@@ -40,6 +65,8 @@ alter table person_invitation add column if not exists instance_id bigint refere
 comment on column person_invitation.instance_id is '@omit';
 comment on constraint person_invitation_instance_id_fkey on person_invitation is '@omit';
 
+--!include functions/reconcile_event_instance_cohort_registrations.sql
+--!include functions/tg_cohort_membership__on_status.sql
 --!include functions/ensure_couple_person_registrations.sql
 --!include functions/save_events.sql
 --!include functions/set_lesson_request.sql
@@ -54,7 +81,7 @@ comment on constraint person_invitation_instance_id_fkey on person_invitation is
 
 --!include policies/event_instance.sql
 --!include policies/event_instance_trainer.sql
---!include policies/event_instance_target_cohort.sql
+--!include policies/event_target_cohort.sql
 --!include policies/cohort.sql
 --!include policies/event_instance_registration.sql
 --!include policies/event_lesson_demand.sql
@@ -95,8 +122,8 @@ alter table otp_token add constraint otp_token_intent_check check (
 do $$
 begin
   if to_regclass('public.event_external_registration') is not null then
-    lock table public.event_external_registration in access exclusive mode;
-    if exists (select 1 from public.event_external_registration) then
+    lock table event_external_registration in access exclusive mode;
+    if exists (select 1 from event_external_registration) then
       raise exception 'Convert external registrations with the manual script before removing the table';
     end if;
   end if;
@@ -105,7 +132,7 @@ $$;
 
 --!include functions/event_instance_registration_info.sql
 
-drop table if exists public.event_external_registration;
+drop table if exists event_external_registration;
 
 alter table federated.person
   add column if not exists birth_year integer,
@@ -232,6 +259,7 @@ comment on type federated.competitor_type is '@name competitor_type';
 comment on type federated.official_role is '@name official_role';
 comment on type federated.score_component is '@name score_component';
 comment on type federated.scoring_method is '@name scoring_method';
+comment on type event_registration_status is null;
 comment on function set_event_sharing is null;
 comment on function update_tenant_settings_key is null;
 comment on function confirm_membership_application is null;
@@ -258,15 +286,14 @@ comment on column app_private.system_admin_user.created_at is '';
 comment on column app_private.system_admin_user.created_by is '';
 comment on column federated.competition.competition_type is '';
 
-comment on table event_instance_target_cohort is '@name event_target_cohort
-@omit create,update,delete
+comment on table event_target_cohort is '@omit create,update,delete
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 @simpleCollections only';
 
-comment on constraint event_instance_target_cohort_instance_id_fkey on event_instance_target_cohort is '@fieldName event
+comment on constraint event_target_cohort_event_id_fkey on event_target_cohort is '@fieldName event
 @foreignFieldName targetCohorts';
 
-comment on column event_instance_target_cohort.instance_id is '@name eventId';
+comment on column event_target_cohort.event_id is null;
 
 comment on table event_instance_trainer is '@name event_trainer
 @omit create,update,delete
@@ -281,20 +308,20 @@ comment on column event_instance_trainer.instance_id is '@name eventId';
 --!include functions/event_instance_trainer_tenant_trainer.sql
 --!include functions/event_instance_trainers.sql
 
-drop view if exists public.tenant_location_image;
-drop view if exists public.tenant_location;
+drop view if exists tenant_location_image;
+drop view if exists tenant_location;
 
-comment on table public.access_event is '@omit create,update,delete
+comment on table access_event is '@omit create,update,delete
 @simpleCollections only';
 
-comment on table public.event_instance is '@name event
+comment on table event_instance is '@name event
 @omit create
 @simpleCollections only';
 
-comment on constraint access_event_location_fkey on public.access_event is '@fieldName location
+comment on constraint access_event_location_fkey on access_event is '@fieldName location
 @foreignFieldName accessEvents';
 
-comment on constraint event_instance_location_fkey on public.event_instance is '@fieldName location
+comment on constraint event_instance_location_fkey on event_instance is '@fieldName location
 @foreignFieldName events';
 
 comment on table event_lesson_demand is '@name event_lesson_request
@@ -325,8 +352,6 @@ comment on constraint payment_event_instance_id_fkey on payment is '@fieldName e
 @foreignFieldName payments';
 
 comment on column payment.event_instance_id is '@name eventId';
-
-comment on type event_instance_registration_status is '@name event_registration_status';
 
 --!include functions/activity_timeline.sql
 --!include functions/event_overlaps_reports.sql

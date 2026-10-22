@@ -282,7 +282,7 @@ begin
     )
     select v_saved_event.id, choice.person_id, choice.couple_id, choice.target_cohort_id,
       case when choice.target_cohort_id is null then 'manager'::event_registration_source else 'cohort'::event_registration_source end,
-      case when choice.is_cancelled then 'cancelled'::event_instance_registration_status else 'active'::event_instance_registration_status end,
+      case when choice.is_cancelled then 'cancelled'::event_registration_status else 'active'::event_registration_status end,
       case when choice.person_id is not null then 'unknown'::attendance_type end
     from (
       select distinct on (choice.person_id, choice.couple_id) choice.*
@@ -311,14 +311,14 @@ begin
     where registration.instance_id = v_saved_event.id
       and registration.couple_id is not null
       and registration.registration_status = 'active';
-    insert into event_instance_target_cohort (tenant_id, instance_id, cohort_id)
+    insert into event_target_cohort (tenant_id, event_id, cohort_id)
     select v_tenant_id, v_saved_event.id, id
     from unnest(cohort_ids) cohort(id)
     where id is not null
-    on conflict (instance_id, cohort_id) do nothing;
+    on conflict (event_id, cohort_id) do nothing;
 
-    delete from event_instance_target_cohort target
-    where target.instance_id = v_saved_event.id
+    delete from event_target_cohort target
+    where target.event_id = v_saved_event.id
       and not exists (select 1 from unnest(cohort_ids) cohort(id) where id = target.cohort_id);
 
   end loop;
