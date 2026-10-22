@@ -1,9 +1,11 @@
 drop function if exists set_lesson_demand;
+drop function if exists set_lesson_request;
 drop function if exists app_private.set_lesson_demand;
+drop function if exists app_private.set_lesson_request;
 
-create or replace function app_private.set_lesson_request(
+create function app_private.set_lesson_request(
   registration event_instance_registration,
-  instance_trainer_id bigint,
+  trainer_id bigint,
   lesson_count integer
 ) returns event_lesson_demand
 language plpgsql strict
@@ -55,9 +57,9 @@ begin
 end;
 $$;
 
-create or replace function set_lesson_request(
-  instance_registration_id bigint,
-  instance_trainer_id bigint,
+create function set_lesson_request(
+  registration_id bigint,
+  trainer_id bigint,
   lesson_count integer
 ) returns event_lesson_demand
 language plpgsql strict security definer
@@ -108,3 +110,16 @@ end;
 $$;
 
 grant all on function set_lesson_request to anonymous;
+
+create function set_lesson_demand(
+  instance_registration_id bigint,
+  instance_trainer_id bigint,
+  lesson_count integer
+) returns event_lesson_demand
+language sql strict
+as $$
+  select public.set_lesson_request($1, $2, $3);
+$$;
+
+comment on function set_lesson_demand is E'@deprecated Use setLessonRequest.\n@resultFieldName eventLessonDemand';
+grant execute on function set_lesson_demand to anonymous;

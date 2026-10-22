@@ -193,10 +193,10 @@ function RegistrationsDialogContent({
     }
     const result = await setRegistration({
       input: {
-        pInstanceId: instance.id,
-        pPersonId: candidate.personId,
-        pCoupleId: candidate.coupleId,
-        pIsRegistered: true,
+        eventId: instance.id,
+        personId: candidate.personId,
+        coupleId: candidate.coupleId,
+        isRegistered: true,
       },
     });
     if (result.error) return;

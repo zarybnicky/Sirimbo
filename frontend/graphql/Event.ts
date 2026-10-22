@@ -201,14 +201,14 @@ export type SetEventRegistrationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: string | null | undefined;
-  pCoupleId?: string | null | undefined;
-  pInstanceId?: string | null | undefined;
-  pIsRegistered?: boolean | null | undefined;
-  pLessonCounts?: Array<number | null | undefined> | null | undefined;
-  pLessonTrainerIds?: Array<string | null | undefined> | null | undefined;
-  pNote?: string | null | undefined;
-  pPerson?: EventRegistrationPersonInputRecordInput | null | undefined;
-  pPersonId?: string | null | undefined;
+  coupleId?: string | null | undefined;
+  eventId?: string | null | undefined;
+  isRegistered?: boolean | null | undefined;
+  lessonCounts?: Array<number | null | undefined> | null | undefined;
+  lessonTrainerIds?: Array<string | null | undefined> | null | undefined;
+  note?: string | null | undefined;
+  person?: EventRegistrationPersonInputRecordInput | null | undefined;
+  personId?: string | null | undefined;
 };
 
 /** All input for the `setEventSharing` mutation. */
@@ -229,9 +229,9 @@ export type SetLessonRequestInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: string | null | undefined;
-  instanceRegistrationId: string;
-  instanceTrainerId: string;
   lessonCount: number;
+  registrationId: string;
+  trainerId: string;
 };
 
 /** All input for the `updateAttendance` mutation. */

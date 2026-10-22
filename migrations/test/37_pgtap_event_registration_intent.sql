@@ -288,9 +288,9 @@ CREATE FUNCTION pg_temp.signup(
   first_name text DEFAULT 'Camp', note text DEFAULT 'Food note', lessons integer DEFAULT 1
 ) RETURNS event_instance_registration LANGUAGE sql AS $$
   SELECT set_event_registration(-8650, null, null, true,
-    p_person => ROW(first_name, 'Guest', 'unspecified', '203', lower(first_name) || '@example.invalid',
+    person => ROW(first_name, 'Guest', 'unspecified', '203', lower(first_name) || '@example.invalid',
       '+420123456789', null, null, null)::event_registration_person_input,
-    p_note => note, p_lesson_trainer_ids => ARRAY[-8650]::bigint[], p_lesson_counts => ARRAY[lessons]);
+    note => note, lesson_trainer_ids => ARRAY[-8650]::bigint[], lesson_counts => ARRAY[lessons]);
 $$;
 
 CREATE TEMP TABLE submitted (id bigint, person_id bigint);

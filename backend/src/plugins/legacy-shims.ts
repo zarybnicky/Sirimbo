@@ -31,8 +31,6 @@ const legacyFields: Record<string, Record<string, string>> = {
   Mutation: {
     updateEventInstance: 'updateEvent',
     deleteEventInstance: 'deleteEvent',
-    setEventInstanceRegistration: 'setEventRegistration',
-    setLessonDemand: 'setLessonRequest',
   },
   Event: {
     childEventInstancesList: 'childEventsList',
@@ -44,8 +42,6 @@ const legacyFields: Record<string, Record<string, string>> = {
     eventLessonDemandsByRegistrationIdList: 'lessonRequestsList',
   },
   Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
-  SetEventRegistrationPayload: { eventInstanceRegistration: 'eventRegistration' },
-  SetLessonRequestPayload: { eventLessonDemand: 'eventLessonRequest' },
   SaveEventsPayload: { eventInstances: 'events' },
   UpdateEventPayload: { eventInstance: 'event' },
   DeleteEventPayload: { eventInstance: 'event' },

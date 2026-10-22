@@ -72,13 +72,13 @@ export function EventRegistrationForm({
   const save = async (values: FormValues) => {
     const result = await setRegistration({
       input: {
-        pInstanceId: instance.id,
-        pPersonId: personId,
-        pCoupleId: coupleId,
-        pIsRegistered: true,
-        pNote: showNotes ? values.note : null,
-        pLessonTrainerIds: lessonTrainers.map((trainer) => trainer.id),
-        pLessonCounts: lessonTrainers.map((_, index) => values.lessonCounts[index] ?? 0),
+        eventId: instance.id,
+        personId,
+        coupleId,
+        isRegistered: true,
+        note: showNotes ? values.note : null,
+        lessonTrainerIds: lessonTrainers.map((trainer) => trainer.id),
+        lessonCounts: lessonTrainers.map((_, index) => values.lessonCounts[index] ?? 0),
       },
     });
     if (!result.error) {
@@ -97,10 +97,10 @@ export function EventRegistrationForm({
     }
     const result = await setRegistration({
       input: {
-        pInstanceId: instance.id,
-        pPersonId: personId,
-        pCoupleId: coupleId,
-        pIsRegistered: false,
+        eventId: instance.id,
+        personId,
+        coupleId,
+        isRegistered: false,
       },
     });
     if (!result.error) {

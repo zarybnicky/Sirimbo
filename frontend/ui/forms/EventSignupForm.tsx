@@ -71,14 +71,14 @@ export function EventSignupForm({
 
   const save = async (values: z.infer<typeof Form>) => {
     const input = {
-      pInstanceId: instance.id,
-      pIsRegistered: true,
-      pPersonId: null,
-      pCoupleId: null,
-      pPerson: values.person,
-      pNote: showNotes ? values.note : null,
-      pLessonTrainerIds: trainers.map((t) => t.id),
-      pLessonCounts: values.lessonCounts,
+      eventId: instance.id,
+      isRegistered: true,
+      personId: null,
+      coupleId: null,
+      person: values.person,
+      note: showNotes ? values.note : null,
+      lessonTrainerIds: trainers.map((t) => t.id),
+      lessonCounts: values.lessonCounts,
     };
     const response = await register({ input });
     if (!response.error && response.data?.setEventRegistration) {
