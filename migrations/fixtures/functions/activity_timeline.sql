@@ -7,7 +7,7 @@ select
   null::bigint as person_id,
   null::text as person_name,
   null::bigint as event_attendance_id,
-  null::bigint as event_instance_id,
+  null::bigint as event_id,
   null::text as federation,
   null::text as federated_person_id,
   null::text as competitor_id,
@@ -34,18 +34,18 @@ where false;
 comment on view activity_timeline_item is $$
 @primaryKey id
 @interface mode:single type:kind
-@type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_instance_id
+@type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_id
 @type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type,competition_event_external_id,competition_external_id
 @type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type,competition_event_external_id,competition_external_id
 @type JUDGING name:ActivityJudging attributes:federation,federated_person_id,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,competition_type,competition_event_external_id,competition_external_id
 @type BIRTHDAY name:ActivityBirthday
 @foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @foreignKey (event_attendance_id) references event_registration (id)|@fieldName eventAttendance|@behavior -manyRelation:resource:list -manyRelation:resource:connection
-@foreignKey (event_instance_id) references event_instance (id)|@fieldName event|@behavior -manyRelation:resource:list -manyRelation:resource:connection
+@foreignKey (event_id) references event (id)|@fieldName event|@behavior -manyRelation:resource:list -manyRelation:resource:connection
 @behavior -query:resource:list -query:resource:connection -query:resource:single
 $$;
 
-comment on column activity_timeline_item.event_instance_id is '@name eventId';
+comment on column activity_timeline_item.event_id is null;
 
 grant select on activity_timeline_item to anonymous;
 
@@ -100,7 +100,7 @@ begin
         ea.person_id,
         sp.name as person_name,
         ea.id as event_attendance_id,
-        ei.id as event_instance_id,
+        ei.id as event_id,
         null::text as federation,
         null::text as federated_person_id,
         null::text as competitor_id,
@@ -123,7 +123,7 @@ begin
         null::text as competition_event_external_id,
         null::text as competition_external_id
       from event_registration ea
-      join event_instance ei on ei.id = ea.event_id
+      join event ei on ei.id = ea.event_id
       join scoped_people sp on sp.id = ea.person_id
       where ea.registration_status = 'active'
         and ei.since >= p_since
@@ -169,7 +169,7 @@ begin
         b.person_id,
         b.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         null::text as federation,
         null::text as federated_person_id,
         null::text as competitor_id,
@@ -214,7 +214,7 @@ begin
         cr.person_id,
         cr.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         cr.federation,
         cr.federated_person_id,
         cr.competitor_id,
@@ -271,7 +271,7 @@ begin
         cb.person_id,
         cb.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         cb.federation,
         cb.federated_person_id,
         cb.competitor_id,
@@ -341,7 +341,7 @@ begin
         fp.person_id,
         fp.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         e.federation,
         fp.federated_person_id,
         null::text as competitor_id,
@@ -379,7 +379,7 @@ begin
         fp.person_id,
         fp.person_name,
         null::bigint as event_attendance_id,
-        null::bigint as event_instance_id,
+        null::bigint as event_id,
         c.federation,
         fp.federated_person_id,
         null::text as competitor_id,

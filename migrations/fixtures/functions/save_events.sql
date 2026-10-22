@@ -39,12 +39,12 @@ create or replace function save_events(
   trainers event_trainer_input[] default '{}'::event_trainer_input[],
   cohort_ids bigint[] default '{}'::bigint[],
   series event_series_input default null
-) returns setof event_instance
+) returns setof event
   language plpgsql
 as $$
 declare
   event_to_save event_input;
-  v_saved_event event_instance;
+  v_saved_event event;
   v_saved_event_ids bigint[] := '{}'::bigint[];
   v_tenant_id bigint := current_tenant_id();
   v_series_id bigint;
@@ -124,7 +124,7 @@ begin
     select 1 from unnest(events) i where i.id is null
   ) and (details).parent_id is not null and not exists (
     select 1
-    from event_instance parent
+    from event parent
     where parent.id = (details).parent_id and parent.tenant_id = v_tenant_id
   ) then
     raise exception 'event parent % not found or not editable', (details).parent_id;
@@ -149,7 +149,7 @@ begin
   select count(*) into v_expected_existing_count from unnest(events) i where i.id is not null;
 
   perform e.id
-  from event_instance e
+  from event e
   join unnest(events) i on i.id = e.id
   where i.id is not null and e.tenant_id = v_tenant_id
   order by e.id
@@ -162,7 +162,7 @@ begin
 
   foreach event_to_save in array events loop
     if event_to_save.id is null then
-      insert into event_instance (
+      insert into event (
         parent_id,
         series_id,
         since,
@@ -205,7 +205,7 @@ begin
       )
       returning * into v_saved_event;
     else
-      update event_instance e
+      update event e
       set since = event_to_save.since,
           until = event_to_save.until,
           is_cancelled = coalesce(event_to_save.is_cancelled, false),
@@ -332,7 +332,7 @@ begin
   )
   insert into event_trainer (tenant_id, event_id, person_id, lessons_offered)
   select stored_event.tenant_id, stored_event.id, desired.person_id, desired.lessons_offered
-  from event_instance stored_event
+  from event stored_event
   join unnest(v_saved_event_ids) saved(id) on saved.id = stored_event.id
   cross join desired
   on conflict (event_id, person_id) do update
@@ -349,7 +349,7 @@ begin
   return query
   select stored_event.*
   from unnest(v_saved_event_ids) with ordinality saved(event_id, position)
-  join event_instance stored_event on stored_event.id = saved.event_id
+  join event stored_event on stored_event.id = saved.event_id
   order by saved.position;
 end;
 $$;

@@ -7,6 +7,6 @@ create policy admin_all on event_series to administrator
 create policy trainer_all on event_series to trainer
   using (true);
 create policy member_view on event_series for select to member
-  using (exists (select 1 from event_instance i where i.series_id = event_series.id));
+  using (exists (select 1 from event i where i.series_id = event_series.id));
 create policy public_view on event_series for select to anonymous
-  using (exists (select 1 from event_instance i where i.series_id = event_series.id));
+  using (exists (select 1 from event i where i.series_id = event_series.id));

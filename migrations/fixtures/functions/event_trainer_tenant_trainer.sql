@@ -5,7 +5,7 @@ create or replace function event_trainer_tenant_trainer(trainer event_trainer)
   language sql stable
 as $$
   select tt.*
-  from event_instance e
+  from event e
   join tenant_trainer tt on tt.tenant_id = e.tenant_id
     and tt.person_id = trainer.person_id
     and tt.active_range @> e.since

@@ -28,7 +28,7 @@ CREATE FUNCTION pg_temp.save_group(
   starts_at timestamptz DEFAULT now() + interval '1 day'
 ) RETURNS bigint LANGUAGE sql AS $$
   SELECT saved.id FROM (VALUES (1)) seed(n)
-  LEFT JOIN event_instance old ON old.id = event_id
+  LEFT JOIN event old ON old.id = event_id
   CROSS JOIN LATERAL save_events(
     details => ROW(null, 'Registration intent', 'group', null, '', 0, 'people',
       true, false, false, false, false)::event_details_input,
@@ -174,7 +174,7 @@ SELECT tap.ok((SELECT count(*) = 2 FROM event_registration
   'repeated couple/individual changes preserve the original person rows and requests');
 
 INSERT INTO cases VALUES ('self couple', pg_temp.save_group(null, '{}'));
-UPDATE event_instance SET is_public=true, capacity=2 WHERE id=(SELECT id FROM cases WHERE name='self couple');
+UPDATE event SET is_public=true, capacity=2 WHERE id=(SELECT id FROM cases WHERE name='self couple');
 UPDATE event_trainer SET lessons_offered=10 WHERE event_id=(SELECT id FROM cases WHERE name='self couple');
 SELECT set_config('jwt.claims.my_person_ids', '{-8601,-8602}', true);
 SELECT set_config('jwt.claims.my_couple_ids', '{-8601}', true);
@@ -207,7 +207,7 @@ SELECT tap.throws_ok(format('select set_lesson_request(%s, %s, 1)', id, trainer_
   '28000', 'INSTANCE_NOT_FOUND', 'lesson requests cannot be written through another tenant') FROM self_person;
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
 RESET ROLE;
-UPDATE event_instance SET capacity_unit='registrations', capacity=1 WHERE id=(SELECT id FROM cases WHERE name='self couple');
+UPDATE event SET capacity_unit='registrations', capacity=1 WHERE id=(SELECT id FROM cases WHERE name='self couple');
 SET LOCAL ROLE anonymous;
 SELECT set_event_registration(id, -8601, null, false) FROM cases WHERE name='self couple';
 SELECT tap.lives_ok(format('select set_event_registration(%s, -8601, null, true)',
@@ -280,7 +280,7 @@ SELECT tap.throws_ok('select app_private.reconcile_event_instance_cohort_registr
 RESET ROLE;
 
 SELECT set_config('jwt.claims.tenant_id', '-8600', true);
-INSERT INTO event_instance (id, tenant_id, since, until, is_public, capacity)
+INSERT INTO event (id, tenant_id, since, until, is_public, capacity)
 OVERRIDING SYSTEM VALUE VALUES (-8650, -8600, now()+interval '1 day', now()+interval '2 days', true, 1);
 INSERT INTO event_trainer (id, event_id, person_id, lessons_offered)
 OVERRIDING SYSTEM VALUE VALUES (-8650, -8650, -8604, 2);
@@ -330,11 +330,11 @@ SELECT tap.is((SELECT count(*) FROM person WHERE email IN ('camp@example.invalid
 SELECT tap.ok(EXISTS (SELECT 1 FROM event_registration r JOIN submitted s ON s.id=r.id
   JOIN event_lesson_request d ON d.registration_id=r.id WHERE r.note='Food note' AND d.lesson_count=1),
   'signup saves the note and lesson request together');
-SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT person_id FROM submitted) AND instance_id=-8650),
+SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT person_id FROM submitted) AND event_id=-8650),
   1::bigint, 'signup creates one event invitation across retries');
 SELECT tap.is((SELECT count(*) FROM tenant_membership WHERE person_id=(SELECT person_id FROM submitted)),
   0::bigint, 'camp registration does not create club membership');
-UPDATE event_instance SET is_locked=true, capacity=null WHERE id=-8650;
+UPDATE event SET is_locked=true, capacity=null WHERE id=-8650;
 DELETE FROM event_trainer WHERE id=-8650;
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,

@@ -8,7 +8,7 @@ create function app_private.event_share_claims(p_tenant_id bigint, p_share text)
 as $$
   with recursive root as (
     select id
-    from event_instance
+    from event
     where tenant_id = p_tenant_id
       and (
         share_token = p_share
@@ -25,7 +25,7 @@ as $$
     select id from root
     union
     select child.id
-    from event_instance child
+    from event child
     join events parent on child.parent_id = parent.id
     where child.tenant_id = p_tenant_id
   )

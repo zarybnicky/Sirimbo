@@ -19,12 +19,12 @@ export interface IEventSeriesEventsQuery {
   result: IEventSeriesEventsResult;
 }
 
-const eventSeriesEventsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":89,"b":91}]}],"statement":"select i.id from event_series s join event_instance i on s.id = i.series_id where s.id = :id"};
+const eventSeriesEventsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":80,"b":82}]}],"statement":"select i.id from event_series s join event i on s.id = i.series_id where s.id = :id"};
 
 /**
  * Query generated from SQL:
  * ```
- * select i.id from event_series s join event_instance i on s.id = i.series_id where s.id = :id
+ * select i.id from event_series s join event i on s.id = i.series_id where s.id = :id
  * ```
  */
 export const eventSeriesEvents = new PreparedQuery<IEventSeriesEventsParams,IEventSeriesEventsResult>(eventSeriesEventsIR);

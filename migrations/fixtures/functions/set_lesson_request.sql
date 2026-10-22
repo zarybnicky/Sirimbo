@@ -67,7 +67,7 @@ set search_path = pg_catalog, public, pg_temp
 as $$
 declare
   registration event_registration;
-  instance event_instance;
+  instance event;
   is_manager boolean;
   is_self boolean;
 begin
@@ -80,7 +80,7 @@ begin
   end if;
 
   select * into instance
-  from event_instance
+  from event
   where id = registration.event_id and tenant_id = current_tenant_id();
 
   if not found then

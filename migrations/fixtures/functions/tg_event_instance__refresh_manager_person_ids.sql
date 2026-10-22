@@ -2,10 +2,10 @@ create or replace function app_private.event_instance_manager_person_ids(p_insta
   returns bigint[] language sql stable parallel safe as $$
   with recursive chain as (
     select id, parent_id
-    from event_instance where id = p_instance_id
+    from event where id = p_instance_id
     union all
     select parent.id, parent.parent_id
-    from event_instance parent
+    from event parent
     join chain child on child.parent_id = parent.id
   ), managers as (
     select distinct person_id from event_trainer
@@ -21,16 +21,16 @@ create function app_private.refresh_event_instance_manager_person_ids(p_instance
   returns void language sql security definer
   set search_path = pg_catalog, public, pg_temp as $$
   with recursive affected as (
-    select id from event_instance where id = p_instance_id
+    select id from event where id = p_instance_id
     union all
     select child.id
-    from event_instance child
+    from event child
     join affected parent on child.parent_id = parent.id
   ), desired as (
     select id, app_private.event_instance_manager_person_ids(id) as person_ids
     from affected
   )
-  update event_instance instance
+  update event instance
   set manager_person_ids = desired.person_ids
   from desired
   where instance.id = desired.id
@@ -47,9 +47,9 @@ begin
 end;
 $$;
 
-drop trigger if exists _500_refresh_manager_person_ids_from_parent on event_instance;
+drop trigger if exists _500_refresh_manager_person_ids_from_parent on event;
 create trigger _500_refresh_manager_person_ids_from_parent
-  after insert or update of parent_id on event_instance
+  after insert or update of parent_id on event
   for each row execute function app_private.tg_event_instance__refresh_manager_person_ids();
 
 drop trigger if exists _500_refresh_manager_person_ids on event_trainer;

@@ -1,3 +1,4 @@
+drop function if exists event_instance_remaining_person_spots;
 
 drop function if exists event_instance_trainer_lessons_remaining;
 
@@ -15,7 +16,7 @@ CREATE or replace FUNCTION event_trainer_lessons_remaining(e event_trainer) RETU
   end;
 $$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
 
-CREATE or replace FUNCTION event_instance_remaining_person_spots(inst event_instance) RETURNS integer AS $$
+CREATE or replace FUNCTION event_remaining_person_spots(inst event) RETURNS integer AS $$
   select case
     when inst.capacity is null or inst.capacity <= 0 then null
     else inst.capacity - case inst.capacity_unit
@@ -38,4 +39,4 @@ CREATE or replace FUNCTION event_instance_remaining_person_spots(inst event_inst
 $$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
 
 GRANT ALL ON FUNCTION event_trainer_lessons_remaining(e event_trainer) TO anonymous;
-GRANT ALL ON FUNCTION event_instance_remaining_person_spots(inst event_instance) TO anonymous;
+GRANT ALL ON FUNCTION event_remaining_person_spots(inst event) TO anonymous;

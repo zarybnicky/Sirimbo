@@ -7,17 +7,17 @@ as $$
 declare
   payment_id bigint;
 begin
-  delete from payment where event_instance_id = OLD.id;
+  delete from payment where event_id = OLD.id;
 
   if not new.is_cancelled then
     select (create_event_instance_payment(i)).id into payment_id
-    from event_instance i
+    from event i
     where i.type='lesson'
       and i.id = NEW.id
       and i.since < now()
       and not i.is_cancelled
       and not exists (
-        select * from payment where event_instance_id = i.id
+        select * from payment where event_id = i.id
       );
 
     update payment set status ='unpaid' where id = payment_id;
@@ -28,10 +28,10 @@ begin
 end;
 $$;
 
-drop trigger if exists _500_delete_on_cancellation on event_instance;
+drop trigger if exists _500_delete_on_cancellation on event;
 
 create trigger _500_delete_on_cancellation
-  after update of is_cancelled on event_instance
+  after update of is_cancelled on event
   for each row
   when (old.is_cancelled is distinct from new.is_cancelled)
   execute function app_private.tg_event_instance__delete_payment_on_cancellation();

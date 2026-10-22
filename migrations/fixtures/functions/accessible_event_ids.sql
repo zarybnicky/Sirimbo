@@ -8,14 +8,14 @@ as $$
       and person_id = any((select public.current_person_ids())::bigint[])
       and registration_status = 'active'
     union
-    select child.id from public.event_instance child
+    select child.id from public.event child
     join attended parent on child.parent_id = parent.id
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
   select id from attended
   union
-  select id from public.event_instance
+  select id from public.event
   where tenant_id = (select public.current_tenant_id())
     and id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]);
 $$;

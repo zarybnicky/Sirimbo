@@ -4,7 +4,7 @@ SET LOCAL search_path = public, tap;
 
 SELECT tap.plan(2);
 
--- Fixtures for testing event_instance_trainers(event_instance).
+-- Fixtures for testing event_trainers(event).
 --
 -- People:
 --   -3001 = Alice, active tenant_trainer
@@ -29,7 +29,7 @@ INSERT INTO tenant_trainer (tenant_id, person_id, since, until)
 INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
   VALUES (-3000, -3000);
 
-INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
+INSERT INTO event (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
   VALUES (-3001, -3000, -3000, now(), now() + interval '1 hour'),
          (-3002, -3000, -3000, now(), now() + interval '1 hour');
 
@@ -39,16 +39,16 @@ INSERT INTO event_trainer (tenant_id, event_id, person_id)
          (-3000, -3002, -3002);
 
 SELECT tap.is(
-  (SELECT person_id FROM public.event_instance_trainers(
-    (SELECT i FROM event_instance i WHERE i.id = -3001)
+  (SELECT person_id FROM public.event_trainers(
+    (SELECT i FROM event i WHERE i.id = -3001)
   )),
   -3001::bigint,
   'expired trainers do not participate in occurrence lookups'
 );
 
 SELECT tap.is(
-  (SELECT person_id FROM public.event_instance_trainers(
-    (SELECT i FROM event_instance i WHERE i.id = -3002)
+  (SELECT person_id FROM public.event_trainers(
+    (SELECT i FROM event i WHERE i.id = -3002)
   )),
   -3002::bigint,
   'occurrence trainer lists are independent'

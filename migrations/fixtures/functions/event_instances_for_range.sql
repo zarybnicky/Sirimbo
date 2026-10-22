@@ -17,7 +17,7 @@ create or replace function event_instances_for_range(
   scope event_instance_range_scope = 'all',
   location_ids bigint[] = null,
   only_types event_type[] = null
-) returns setof event_instance as $$
+) returns setof event as $$
   with mine as (
     select event_id from event_registration
     where person_id = any ((select current_person_ids())::bigint[]) and registration_status = 'active'
@@ -26,7 +26,7 @@ create or replace function event_instances_for_range(
     where person_id = any ((select current_person_ids())::bigint[])
   )
   select i.*
-  from event_instance i
+  from event i
   where i.tenant_id = current_tenant_id()
     and (only_type is null or i.type = only_type)
     and (only_types is null or i.type = any(only_types))

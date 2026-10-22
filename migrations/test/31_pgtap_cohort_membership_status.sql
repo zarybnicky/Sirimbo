@@ -37,7 +37,7 @@ INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
   VALUES (700001, 1000)
   ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO event_instance (
+INSERT INTO event (
   id, tenant_id, series_id, since, until, name, type,
   location_text, is_visible, is_public, capacity, description, summary,
   is_locked, enable_notes, files_legacy
@@ -58,7 +58,7 @@ INSERT INTO event_registration (
   target_cohort_id, source, status
 )
 SELECT 1000, instance.id, person.id, 800001, 'cohort', 'unknown'
-FROM event_instance instance
+FROM event instance
 CROSS JOIN unnest(ARRAY[200001, 200002, 200003, 200004]::bigint[]) person(id)
 WHERE instance.id IN (900001, 900002)
 ON CONFLICT DO NOTHING;
@@ -90,11 +90,11 @@ SELECT public.save_events(
   ],
   cohort_ids => ARRAY[800001, 800001]
 )
-FROM event_instance instance
+FROM event instance
 WHERE instance.id = 900002;
 
 SELECT tap.ok(
-  (SELECT enable_notes FROM event_instance WHERE id = 900002)
+  (SELECT enable_notes FROM event WHERE id = 900002)
   AND EXISTS (
     SELECT 1
     FROM event_registration
@@ -159,7 +159,7 @@ SELECT app_private.reconcile_event_instance_cohort_registrations(
   ARRAY[900002], ARRAY[200001]
 );
 
-UPDATE event_instance SET is_public = true WHERE id = 900002;
+UPDATE event SET is_public = true WHERE id = 900002;
 UPDATE cohort_membership
 SET until = now() - interval '1 second', status = 'expired'
 WHERE id = 860003;
@@ -200,7 +200,7 @@ VALUES (2900001, 'Stats', 'Test', 'unspecified', '');
 INSERT INTO event_series (id, tenant_id) OVERRIDING SYSTEM VALUE
 VALUES (9900001, 1000);
 
-INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
+INSERT INTO event (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES
   (9900001, 1000, 9900001, now(), now() + interval '1 hour'),
   (9900002, 1000, 9900001, now() + interval '2 hours', now() + interval '3 hours'),
@@ -219,18 +219,18 @@ INSERT INTO event_registration (
 VALUES (1000, 9900099, 2900001, 'manager', 'attended');
 
 SELECT tap.ok(
-  (SELECT stats->>'TOTAL' = '0' FROM event_instance WHERE id = 9900001)
-    AND (SELECT stats->>'TOTAL' = '1' FROM event_instance WHERE id = 9900002)
+  (SELECT stats->>'TOTAL' = '0' FROM event WHERE id = 9900001)
+    AND (SELECT stats->>'TOTAL' = '1' FROM event WHERE id = 9900002)
     AND (
       SELECT event_registration_last_attended(registration)
       FROM event_registration registration
       WHERE registration.event_id = 9900002
         AND registration.person_id = 2900001
-    ) = (SELECT since FROM event_instance WHERE id = 9900099),
+    ) = (SELECT since FROM event WHERE id = 9900099),
   'moving attendance refreshes summaries and series history uses exact registrations'
 );
 
-UPDATE event_instance SET parent_id = 9900001 WHERE id = 9900002;
+UPDATE event SET parent_id = 9900001 WHERE id = 9900002;
 
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES
@@ -242,12 +242,12 @@ VALUES
 INSERT INTO tenant_trainer (tenant_id, person_id, since)
 VALUES (1000, 2900002, now() - interval '1 day');
 
-INSERT INTO event_instance (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
+INSERT INTO event (id, tenant_id, series_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES
   (9900003, 1000, null, now() + interval '4 hours', now() + interval '5 hours'),
   (9900004, 1000, 700001, now() + interval '5 hours', now() + interval '6 hours');
 
-INSERT INTO event_instance (id, tenant_id, parent_id, since, until) OVERRIDING SYSTEM VALUE
+INSERT INTO event (id, tenant_id, parent_id, since, until) OVERRIDING SYSTEM VALUE
 VALUES (9900005, 1000, 9900003, now() + interval '4 hours', now() + interval '5 hours');
 
 INSERT INTO event_trainer (tenant_id, event_id, person_id, lessons_offered)
@@ -257,7 +257,7 @@ VALUES
   (1000, 9900004, 2900002, 0),
   (1000, 9900003, 2900004, 0);
 
-UPDATE event_instance SET is_public = true WHERE id = 9900003;
+UPDATE event SET is_public = true WHERE id = 9900003;
 
 INSERT INTO event_registration (tenant_id, event_id, person_id, source, status)
 VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
@@ -306,10 +306,10 @@ SELECT tap.lives_ok(
       set name = 'Trainer-renamed series'
       where id = v_series_id;
 
-      update event_instance set series_id = v_series_id where id = 9900001;
+      update event set series_id = v_series_id where id = 9900001;
       delete from event_series where id = v_series_id;
 
-      if (select series_id is not null from event_instance where id = 9900001) then
+      if (select series_id is not null from event where id = 9900001) then
         raise exception 'Deleting a series did not ungroup its event';
       end if;
     end;
@@ -379,14 +379,14 @@ SELECT tap.throws_ok(
   'a trainer cannot insert attendance for an instance they do not manage'
 );
 
-DELETE FROM event_instance WHERE id = 9900004;
+DELETE FROM event WHERE id = 9900004;
 
 RESET ROLE;
 
 SELECT tap.ok(
-  NOT EXISTS (SELECT 1 FROM event_instance WHERE id = 9900004)
-    AND EXISTS (SELECT 1 FROM event_instance WHERE id = 900001)
-    AND EXISTS (SELECT 1 FROM event_instance WHERE id = 900002),
+  NOT EXISTS (SELECT 1 FROM event WHERE id = 9900004)
+    AND EXISTS (SELECT 1 FROM event WHERE id = 900001)
+    AND EXISTS (SELECT 1 FROM event WHERE id = 900002),
   'deleting an exact instance leaves sibling instances intact'
 );
 
@@ -511,7 +511,7 @@ WHERE registration.event_id = (SELECT id FROM _scheduled_lesson)
 SELECT tap.ok(
   EXISTS (
     SELECT 1
-    FROM event_instance child
+    FROM event child
     WHERE child.id = (SELECT id FROM _scheduled_lesson)
       AND child.series_id is null
       AND child.parent_id = 9900001
@@ -539,7 +539,7 @@ SELECT tap.ok(
       AND series.name = 'Created series'
       AND NOT EXISTS (
         SELECT 1
-        FROM event_instance instance
+        FROM event instance
         WHERE instance.series_id = created.series_id
           AND (instance.is_visible, instance.is_public,
             instance.has_public_details, instance.is_locked, instance.enable_notes)
@@ -593,14 +593,14 @@ SELECT tap.ok(
 
 SELECT tap.lives_ok(
   format(
-    'insert into event_instance (tenant_id, parent_id, since, until) values (1000, %s, now() + interval ''8 hours'', now() + interval ''9 hours'')',
+    'insert into event (tenant_id, parent_id, since, until) values (1000, %s, now() + interval ''8 hours'', now() + interval ''9 hours'')',
     (SELECT id FROM _scheduled_lesson)
   ),
   'event instance schedules may be nested'
 );
 
 SELECT tap.throws_ok(
-  'delete from event_instance where id = 9900001',
+  'delete from event where id = 9900001',
   '23503'::char(5),
   null,
   'a schedule parent cannot be deleted while it has lessons'
@@ -627,8 +627,8 @@ SELECT set_event_registration(
   ARRAY[1]
 );
 CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
-SELECT event_instance_remaining_person_spots(instance) = 0 AS at_capacity
-FROM event_instance instance
+SELECT event_remaining_person_spots(instance) = 0 AS at_capacity
+FROM event instance
 WHERE id = (SELECT id FROM _scheduled_lesson);
 SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson), 2900005, null, false
@@ -682,7 +682,7 @@ SELECT public.save_events(
   cohort_ids => ARRAY[800002]::bigint[],
   series => ROW(null::bigint, 'Scheduled lesson renamed')::public.event_series_input
 )
-FROM event_instance instance
+FROM event instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
 
 SELECT tap.ok(
@@ -709,7 +709,7 @@ SELECT tap.ok(
       AND source = 'manager'
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance
+    FROM event
     WHERE id = (SELECT id FROM _scheduled_lesson)
       AND name = 'Scheduled lesson renamed'
       AND capacity = 4
@@ -720,8 +720,8 @@ SELECT tap.ok(
       AND series_id is not null
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance copy
-    JOIN event_instance original
+    FROM event copy
+    JOIN event original
       ON original.id = (SELECT id FROM _scheduled_lesson)
       AND copy.series_id = original.series_id
     WHERE copy.id <> original.id
@@ -789,20 +789,20 @@ SELECT public.save_events(
   cohort_ids => ARRAY[800002]::bigint[],
   series => ROW(instance.series_id, null::text)::public.event_series_input
 )
-FROM event_instance instance
+FROM event instance
 WHERE instance.id = (SELECT id FROM _scheduled_lesson);
 
 SELECT tap.ok(
   (
     SELECT count(*) = 3
-    FROM event_instance member
-    JOIN event_instance original
+    FROM event member
+    JOIN event original
       ON original.id = (SELECT id FROM _scheduled_lesson)
       AND member.series_id = original.series_id
   ) AND EXISTS (
     SELECT 1
-    FROM event_instance copy
-    JOIN event_instance original
+    FROM event copy
+    JOIN event original
       ON original.id = (SELECT id FROM _scheduled_lesson)
       AND copy.series_id = original.series_id
     WHERE copy.id <> original.id
@@ -821,8 +821,8 @@ SELECT tap.ok(
       AND info.length = 3
       AND info.since = instance.since
       AND info.until = instance.until + interval '2 weeks'
-    FROM event_instance instance
-    CROSS JOIN LATERAL event_instance_series_info(instance) info
+    FROM event instance
+    CROSS JOIN LATERAL event_series_info(instance) info
     WHERE instance.id = (SELECT id FROM _scheduled_lesson)
   ),
   'series info reports identity, range, position and length without loading sibling events'
@@ -832,14 +832,14 @@ SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
 SET LOCAL ROLE trainer;
 
-UPDATE event_instance
+UPDATE event
 SET series_id = null
 WHERE id = 900001;
 
 RESET ROLE;
 
 SELECT tap.ok(
-  (SELECT series_id is null FROM event_instance WHERE id = 900001),
+  (SELECT series_id is null FROM event WHERE id = 900001),
   'an assigned trainer can detach an instance through the normal update policy'
 );
 

@@ -24,5 +24,5 @@ for each statement execute function app_private.tg_event_people__refresh();
 
 create or replace trigger _900_refresh_event_people
 after insert or delete or update of tenant_id, parent_id
-on event_instance
+on event
 for each statement execute function app_private.tg_event_people__refresh();

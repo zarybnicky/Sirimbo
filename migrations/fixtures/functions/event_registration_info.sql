@@ -1,4 +1,5 @@
 drop function if exists event_instance_registration_info;
+drop function if exists event_registration_info;
 drop type if exists event_instance_registration_info;
 drop type if exists event_registration_info;
 
@@ -9,7 +10,7 @@ create type event_registration_info as (
   my boolean
 );
 
-create or replace function event_instance_registration_info(inst event_instance)
+create or replace function event_registration_info(inst event)
   returns event_registration_info
   language sql stable security definer
   set search_path = public, pg_catalog, pg_temp
@@ -31,4 +32,4 @@ as $$
   where event_id = inst.id and registration_status = 'active';
 $$;
 
-grant all on function event_instance_registration_info to anonymous;
+grant all on function event_registration_info to anonymous;

@@ -30,7 +30,7 @@ language plpgsql security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
 declare
-  target_instance event_instance;
+  target_instance event;
   registration event_registration;
   registration_found boolean;
   is_self boolean;
@@ -61,7 +61,7 @@ begin
   end if;
 
   select * into target_instance
-  from event_instance
+  from event
   where id = event_id
     and tenant_id = current_tenant_id()
   for update;
@@ -197,7 +197,7 @@ begin
     end if;
 
     if not is_manager then
-      remaining_capacity := event_instance_remaining_person_spots(target_instance);
+      remaining_capacity := event_remaining_person_spots(target_instance);
       required_capacity := case
         when target_instance.capacity_unit = 'people' and couple_id is not null then 2
         when target_instance.capacity_unit = 'registrations' and exists (
@@ -266,7 +266,7 @@ begin
   end if;
 
   if person is distinct from null then
-    insert into person_invitation (person_id, email, instance_id)
+    insert into person_invitation (person_id, email, event_id)
     values (registration.person_id, btrim((set_event_registration.person).email), event_id);
   end if;
 

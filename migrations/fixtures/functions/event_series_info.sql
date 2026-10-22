@@ -1,4 +1,6 @@
-create or replace function event_instance_series_info(instance event_instance)
+drop function if exists event_instance_series_info;
+
+create or replace function event_series_info(instance event)
   returns series_info
   language sql
   stable
@@ -20,11 +22,11 @@ as $$
       count(*) over ()::integer as length,
       min(member.since) over () as since,
       max(member.until) over () as until
-    from event_instance member
+    from event member
     join event_series series on series.tenant_id = member.tenant_id and series.id = member.series_id
     where member.series_id = instance.series_id
   ) ranked
   where ranked.member_id = instance.id;
 $$;
 
-grant execute on function event_instance_series_info to anonymous;
+grant execute on function event_series_info to anonymous;

@@ -17,11 +17,11 @@ as $$
   ),
   instances as (
     select
-      i.id as instance_id,
+      i.id as event_id,
       i.since,
       i.until,
       i.type as event_type
-    from event_instance i
+    from event i
     where not i.is_cancelled
       and i.since >= scoreboard_entries.since::timestamptz
       and i.until  < scoreboard_entries.until::timestamptz
@@ -41,7 +41,7 @@ as $$
       date_trunc('day', inst.since)::date as day
     from instances inst
     join event_registration ea
-      on ea.event_id = inst.instance_id and ea.person_id is not null
+      on ea.event_id = inst.event_id and ea.person_id is not null
     left join event_registration registration
       on registration.id = ea.parent_registration_id
     left join cohort tc

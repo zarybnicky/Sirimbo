@@ -19,12 +19,12 @@ export interface IHandoffEventQuery {
   result: IHandoffEventResult;
 }
 
-const handoffEventIR: any = {"usedParamSet":{"eventId":true},"params":[{"name":"eventId","required":true,"transform":{"type":"scalar"},"locs":[{"a":48,"b":56}]}],"statement":"select tenant_id from event_instance where id = :eventId! and is_public"};
+const handoffEventIR: any = {"usedParamSet":{"eventId":true},"params":[{"name":"eventId","required":true,"transform":{"type":"scalar"},"locs":[{"a":39,"b":47}]}],"statement":"select tenant_id from event where id = :eventId! and is_public"};
 
 /**
  * Query generated from SQL:
  * ```
- * select tenant_id from event_instance where id = :eventId! and is_public
+ * select tenant_id from event where id = :eventId! and is_public
  * ```
  */
 export const handoffEvent = new PreparedQuery<IHandoffEventParams,IHandoffEventResult>(handoffEventIR);

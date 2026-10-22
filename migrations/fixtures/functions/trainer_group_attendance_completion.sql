@@ -5,7 +5,7 @@ create or replace function trainer_group_attendance_completion(
   language sql stable as $_$
   with filtered_instances as (
     select ei.id
-    from event_instance ei
+    from event ei
     where ei.tenant_id = current_tenant_id()
       and not ei.is_cancelled
       and ei.type = 'group'
@@ -14,15 +14,15 @@ create or replace function trainer_group_attendance_completion(
       and ($2 is null or coalesce(ei.until, ei.since) < $2)
   ),
   trainer_instances as (
-    select effective_trainer.person_id, fi.id as instance_id
+    select effective_trainer.person_id, fi.id as event_id
     from filtered_instances fi
-    join event_instance instance on instance.id = fi.id
-    cross join lateral app_private.event_instance_trainers_at(instance, instance.since) effective_trainer
+    join event instance on instance.id = fi.id
+    cross join lateral app_private.event_trainers_at(instance, instance.since) effective_trainer
   ),
   attendance_stats as (
     select
       ti.person_id,
-      ti.instance_id,
+      ti.event_id,
       coalesce(stats.attendance_count, 0) as attendance_count,
       coalesce(stats.unknown_count, 0) as unknown_count
     from trainer_instances ti
@@ -31,7 +31,7 @@ create or replace function trainer_group_attendance_completion(
         count(*) as attendance_count,
         count(*) filter (where eir.status = 'unknown') as unknown_count
       from event_registration eir
-      where eir.event_id = ti.instance_id
+      where eir.event_id = ti.event_id
         and eir.person_id is not null
         and eir.registration_status = 'active'
     ) stats on true

@@ -7,15 +7,15 @@ as $$
 begin
   if new.parent_id is null then return new; end if;
 
-  perform 1 from event_instance parent where parent.id = new.parent_id for no key update;
+  perform 1 from event parent where parent.id = new.parent_id for no key update;
 
   if not found or exists (
     with recursive ancestors as (
       select id, parent_id
-      from event_instance where id = new.parent_id
+      from event where id = new.parent_id
       union
       select parent.id, parent.parent_id
-      from event_instance parent
+      from event parent
       join ancestors child on parent.id = child.parent_id
     )
     select 1 from ancestors where id = new.id
@@ -28,7 +28,7 @@ begin
 end;
 $$;
 
-drop trigger if exists _200_validate_parent on event_instance;
+drop trigger if exists _200_validate_parent on event;
 create trigger _200_validate_parent
-  before insert or update of tenant_id, parent_id on event_instance
+  before insert or update of tenant_id, parent_id on event
   for each row execute function app_private.tg_event_instance__validate_parent();

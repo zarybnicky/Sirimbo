@@ -5,25 +5,25 @@ create or replace function move_event(
   trainer_person_id bigint default null,
   location_id bigint default null,
   location_text text default null
-) returns event_instance
+) returns event
   language plpgsql
 as $$
 declare
-  inst event_instance;
+  inst event;
 begin
-  update event_instance
+  update event
   set since = move_event.since,
       until = move_event.until,
       location_id = case
         when move_event.location_id is not null then move_event.location_id
         when move_event.location_text is not null then null
-        else event_instance.location_id
+        else event.location_id
       end,
       location_text = case
         when move_event.location_id is not null then ''
-        else coalesce(move_event.location_text, event_instance.location_text)
+        else coalesce(move_event.location_text, event.location_text)
       end
-  where event_instance.id = move_event.id
+  where event.id = move_event.id
   returning * into inst;
 
   if not found then
@@ -43,7 +43,7 @@ begin
     end if;
   end if;
 
-  return (select instance from event_instance instance where instance.id = inst.id);
+  return (select instance from event instance where instance.id = inst.id);
 end;
 $$;
 

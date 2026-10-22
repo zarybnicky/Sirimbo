@@ -7,7 +7,7 @@ declare
   child event_registration;
   partner_id bigint;
 begin
-  perform e.id from event_instance e
+  perform e.id from event e
   join event_registration r on r.event_id = e.id
   where r.id = p_registration_id for update of e;
 

@@ -10,7 +10,7 @@ VALUES (-9400, 'OTP', 'Person', 'unspecified', '');
 INSERT INTO user_proxy (user_id, person_id) VALUES (-9400, -9400);
 INSERT INTO tenant_administrator (tenant_id, person_id, since)
 VALUES (-9400, -9400, now() - interval '1 day');
-INSERT INTO event_instance (id, tenant_id, since, until, is_public) OVERRIDING SYSTEM VALUE
+INSERT INTO event (id, tenant_id, since, until, is_public) OVERRIDING SYSTEM VALUE
 VALUES (-9400, -9401, now(), now() + interval '1 day', true);
 
 INSERT INTO otp_token (access_token, user_id, tenant_id, intent, event_id)

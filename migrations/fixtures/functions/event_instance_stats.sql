@@ -3,9 +3,9 @@ create or replace function app_private.refresh_event_instance_stats(p_instance_i
   language sql volatile security definer
   set search_path = pg_catalog, public, pg_temp
 as $$
-  select 1 from event_instance where id = p_instance_id for no key update;
+  select 1 from event where id = p_instance_id for no key update;
 
-  update event_instance instance
+  update event instance
   set stats = actual.stats
   from (
     select jsonb_build_object(

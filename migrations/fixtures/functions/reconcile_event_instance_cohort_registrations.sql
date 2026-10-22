@@ -8,7 +8,7 @@ create or replace function app_private.reconcile_event_instance_cohort_registrat
   security invoker
   set search_path = pg_catalog, public, pg_temp
 as $$
-  select instance.id from event_instance instance
+  select instance.id from event instance
   where instance.id = any(p_instance_ids) order by instance.id for update;
 
   -- Direct registrations (including cancellations) take precedence. Couples
@@ -16,7 +16,7 @@ as $$
   with desired as materialized (
     select instance.id as event_id, instance.tenant_id, membership.person_id,
       min(target.cohort_id) as target_cohort_id
-    from event_instance instance
+    from event instance
     join event_target_cohort target on target.event_id = instance.id
     join cohort_membership membership on membership.cohort_id = target.cohort_id
     where instance.id = any(p_instance_ids)
@@ -36,7 +36,7 @@ as $$
   ), cancelled as (
     update event_registration registration
     set registration_status = 'cancelled'
-    from event_instance instance
+    from event instance
     where registration.event_id = any(p_instance_ids)
       and instance.id = registration.event_id and instance.since >= now()
       and registration.source = 'cohort'

@@ -9,6 +9,6 @@ create policy trainer_same_tenant on event_trainer to trainer
 create policy member_view on event_trainer for select to member
   using (true);
 create policy public_view on event_trainer for select to anonymous
-  using (event_id in (select id from event_instance where is_public));
+  using (event_id in (select id from event where is_public));
 create policy event_access_view on event_trainer for select to anonymous
   using (event_id in (select app_private.accessible_event_ids()));

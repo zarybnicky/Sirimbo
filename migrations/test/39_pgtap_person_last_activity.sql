@@ -25,7 +25,7 @@ insert into access_event (tenant_id, external_id, device, kind, code, person_id,
   (-3900, 'denied', 'test', 'MIFARE', 'activity', -3900, now() - interval '1 day', false),
   (-3900, 'future', 'test', 'MIFARE', 'activity', -3900, now() + interval '1 day', true),
   (-3901, 'other', 'test', 'MIFARE', 'activity', -3900, now(), true);
-insert into event_instance (id, tenant_id, since, until, type, is_cancelled)
+insert into event (id, tenant_id, since, until, type, is_cancelled)
   overriding system value values
   (-3900, -3900, now() - interval '5 days', now() - interval '5 days' + interval '1 hour', 'group', false),
   (-3901, -3900, now() - interval '1 day', now() - interval '1 day' + interval '1 hour', 'lesson', true),

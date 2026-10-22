@@ -10,7 +10,7 @@ begin
   select array_agg(distinct target.event_id)
   into event_ids
   from event_target_cohort target
-  join event_instance instance on instance.id = target.event_id
+  join event instance on instance.id = target.event_id
   where target.cohort_id = any (
     case when tg_op = 'INSERT' then array[new.cohort_id]
       when tg_op = 'DELETE' then array[old.cohort_id]

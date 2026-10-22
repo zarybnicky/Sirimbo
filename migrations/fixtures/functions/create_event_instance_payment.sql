@@ -1,4 +1,4 @@
-create or replace function create_event_instance_payment(i event_instance)
+create or replace function create_event_instance_payment(i event)
   returns payment
   language plpgsql
 as $$
@@ -11,11 +11,11 @@ begin
   end if;
 
   -- Serialize initial charging with registration changes and their deferred sync.
-  select * into i from event_instance
+  select * into i from event
   where id = i.id and tenant_id = current_tenant_id() for no key update;
   if not found or i.is_cancelled then return null; end if;
 
-  select p.* into created_payment from payment p where p.event_instance_id = i.id;
+  select p.* into created_payment from payment p where p.event_id = i.id;
 
   if found then
     return created_payment;
@@ -33,16 +33,16 @@ begin
 
   duration := extract(epoch from (i.until - i.since)) / 60;
 
-  insert into payment (accounting_period_id, status, event_instance_id, due_at)
+  insert into payment (accounting_period_id, status, event_id, due_at)
   values (
     (select id from accounting_period where tenant_id = current_tenant_id() and range @> now()),
     'tentative', i.id, now() + interval '2 weeks'
   )
-  on conflict (event_instance_id) where event_instance_id is not null do nothing
+  on conflict (event_id) where event_id is not null do nothing
   returning * into created_payment;
 
   if not found then
-    return (select p from payment p where p.event_instance_id = i.id);
+    return (select p from payment p where p.event_id = i.id);
   end if;
 
   insert into payment_recipient (payment_id, account_id, amount)
@@ -50,7 +50,7 @@ begin
     created_payment.id,
     account.id,
     trainer.member_price_45min_amount / 45 * duration
-  from event_instance_trainers(i) trainer
+  from event_trainers(i) trainer
   cross join lateral person_account(trainer.person_id, trainer.currency) account
   where trainer.tenant_id = current_tenant_id()
     and trainer.member_price_45min_amount is not null;

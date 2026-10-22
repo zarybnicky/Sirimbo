@@ -15,6 +15,6 @@ create policy delete_my on event_registration for delete
   using (person_id = any((select current_person_ids())::bigint[])
     or couple_id = any((select current_couple_ids())::bigint[]));
 create policy view_visible_instance on event_registration for select
-  using (exists (select 1 from event_instance e where e.id = event_registration.event_id));
+  using (exists (select 1 from event e where e.id = event_registration.event_id));
 
 grant all on event_registration to anonymous;

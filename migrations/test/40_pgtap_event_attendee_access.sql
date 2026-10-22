@@ -14,7 +14,7 @@ VALUES (-9000, 'Visitor', 'Camp', 'unspecified', ''),
        (-9003, 'Trainer', 'Camp', 'unspecified', ''),
        (-9004, 'Cancelled', 'Camp', 'unspecified', ''),
        (-9005, 'Foreign', 'Camp', 'unspecified', '');
-INSERT INTO event_instance (id, tenant_id, parent_id, since, until, is_visible, is_public)
+INSERT INTO event (id, tenant_id, parent_id, since, until, is_visible, is_public)
 OVERRIDING SYSTEM VALUE
 VALUES (-9000, -9000, null, now(), now()+interval '1 day', false, false),
        (-9001, -9000, -9000, now(), now()+interval '1 day', false, false),
@@ -47,7 +47,7 @@ OVERRIDING SYSTEM VALUE VALUES (-9000, -9000, -9000, -9001, 1);
 
 SELECT tap.ok(NOT has_table_privilege('anonymous', 'app_private.event_people', 'SELECT'),
   'callers cannot read the unscoped person-pair view');
-UPDATE event_instance SET share_token='test-camp-share' WHERE id=-9000;
+UPDATE event SET share_token='test-camp-share' WHERE id=-9000;
 UPDATE event_registration SET registration_status='cancelled' WHERE id=-9001;
 SELECT tap.is(
   (SELECT array_agg(id ORDER BY id) FROM app_private.event_share_claims(-9000, 'test-camp-share') s,
@@ -63,7 +63,7 @@ SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,
   'sharing includes active person registrations and trainers, not cancelled partners');
 SELECT tap.is((SELECT array_agg(id) FROM couple), ARRAY[-9000]::bigint[],
   'sharing exposes the registered couple, not other partnerships of its attendees');
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event),
   ARRAY[-9002,-9001,-9000]::bigint[], 'share-only access includes the full event tree');
 SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[],
   'share-only access derives the grandchild cohort without a cohort claim');
@@ -97,8 +97,8 @@ BEGIN
       SELECT * FROM public.event_registration WHERE tenant_id IN (-9000, -9001)
     ), event_trainer AS (
       SELECT * FROM public.event_trainer WHERE tenant_id IN (-9000, -9001)
-    ), event_instance AS (
-      SELECT * FROM public.event_instance WHERE tenant_id IN (-9000, -9001)
+    ), event AS (
+      SELECT * FROM public.event WHERE tenant_id IN (-9000, -9001)
     )
     SELECT * FROM (%s) people
   $query$, definition);
@@ -106,7 +106,7 @@ END;
 $$;
 
 SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance),
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event),
   ARRAY[-9002,-9001,-9000]::bigint[], 'a nonmember sees the registered event, child, and grandchild only');
 SELECT tap.is((SELECT count(*) FROM event_registration), 5::bigint,
   'attendees see all registrations of accessible events, including cancellation history');
@@ -116,7 +116,7 @@ SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[], 'atten
 SELECT tap.is((SELECT count(*) FROM event_lesson_request), 1::bigint, 'attendees see another participant lesson request');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
   'people include other attendees, child attendees, and trainers, not cancelled or foreign attendees');
-WITH changed AS (UPDATE event_instance SET name='Forbidden' WHERE id=-9000 RETURNING id)
+WITH changed AS (UPDATE event SET name='Forbidden' WHERE id=-9000 RETURNING id)
 SELECT tap.is(count(*), 0::bigint, 'attendee access does not grant event updates') FROM changed;
 WITH changed AS (UPDATE person SET first_name='Forbidden' WHERE id=-9001 RETURNING id)
 SELECT tap.is(count(*), 0::bigint, 'attendee access does not grant peer updates') FROM changed;
@@ -124,27 +124,27 @@ SELECT tap.is(count(*), 0::bigint, 'attendee access does not grant peer updates'
 SELECT set_config('jwt.claims.my_person_ids', '{-9001}', true);
 SELECT tap.is((SELECT count(*) FROM person WHERE id=-9000), 1::bigint, 'co-attendee person visibility works in both directions');
 SELECT set_config('jwt.claims.my_person_ids', '{-9002}', true);
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event_instance), ARRAY[-9002,-9001]::bigint[],
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event), ARRAY[-9002,-9001]::bigint[],
   'registration on a child grants descendants, not its parent or siblings');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002]::bigint[],
   'a child attendee sees descendant trainers, not parent attendees');
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
-SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'no person claims give no private-event access');
+SELECT tap.is((SELECT count(*) FROM event), 0::bigint, 'no person claims give no private-event access');
 SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0::bigint, 'no person claims give no cached attendee access');
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 SELECT set_config('jwt.claims.tenant_id', '-9001', true);
-SELECT tap.is((SELECT array_agg(id) FROM event_instance), ARRAY[-9004]::bigint[], 'event access remains scoped to the request tenant');
+SELECT tap.is((SELECT array_agg(id) FROM event), ARRAY[-9004]::bigint[], 'event access remains scoped to the request tenant');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9005,-9000]::bigint[], 'person-pair access remains scoped to the request tenant');
 
 RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
-UPDATE event_instance SET parent_id=null WHERE id=-9001;
+UPDATE event SET parent_id=null WHERE id=-9001;
 SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT array_agg(id) FROM event_instance), ARRAY[-9000]::bigint[], 'reparenting changes schedule access immediately');
+SELECT tap.is((SELECT array_agg(id) FROM event), ARRAY[-9000]::bigint[], 'reparenting changes schedule access immediately');
 RESET ROLE;
 UPDATE event_registration SET registration_status='cancelled' WHERE id=-9000;
 SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT count(*) FROM event_instance), 0::bigint, 'cancellation removes private-event access immediately');
+SELECT tap.is((SELECT count(*) FROM event), 0::bigint, 'cancellation removes private-event access immediately');
 SELECT tap.is((SELECT count(*) FROM event_registration), 0::bigint, 'cancellation removes registration reads immediately');
 SELECT tap.is((SELECT count(*) FROM event_lesson_request), 0::bigint, 'cancellation removes lesson-demand reads immediately');
 RESET ROLE;

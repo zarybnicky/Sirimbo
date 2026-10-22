@@ -4,9 +4,9 @@ create or replace function app_private.can_trainer_edit_instance(iid bigint)
   set search_path = pg_catalog, public, pg_temp
 as $$
   with recursive chain as (
-    select i.id, i.parent_id from event_instance i where i.id = iid
+    select i.id, i.parent_id from event i where i.id = iid
     union all
-    select p.id, p.parent_id from event_instance p join chain c on p.id = c.parent_id
+    select p.id, p.parent_id from event p join chain c on p.id = c.parent_id
   ),
   trainers as (
     select person_id from event_trainer where event_id in (select id from chain)

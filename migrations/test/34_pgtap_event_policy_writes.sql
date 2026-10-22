@@ -12,7 +12,7 @@ VALUES (-8200, 'Trainer', 'Owner', 'unspecified', ''),
        (-8202, 'Trainer', 'New', 'unspecified', '');
 INSERT INTO cohort (id, tenant_id, name, color_rgb, is_visible) OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, 'Target cohort', '000000', true);
-INSERT INTO event_instance (id, tenant_id, since, until, is_visible, is_public, is_locked)
+INSERT INTO event (id, tenant_id, since, until, is_visible, is_public, is_locked)
 OVERRIDING SYSTEM VALUE
 VALUES (-8200, -8200, now(), now()+interval '1 hour', true, false, false),
        (-8201, -8200, now(), now()+interval '1 hour', true, false, false),
