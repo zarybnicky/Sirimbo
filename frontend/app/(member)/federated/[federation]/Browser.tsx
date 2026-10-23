@@ -22,7 +22,15 @@ import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { buttonCls } from '@/ui/style';
-import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
+import {
+  compareAgeGroups,
+  compareAgeRanges,
+  compareCategories,
+  compareClasses,
+  compareDisciplines,
+  formatAgeGroup,
+  formatClass,
+} from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly } from '@/ui/format';
@@ -49,22 +57,6 @@ const competitorTypes = [
   'GROUP',
   'FORMATION',
 ] as const satisfies readonly CompetitorType[];
-const classOrder = [
-  'Entry',
-  'Novice',
-  'Bronze',
-  'Silver',
-  'Gold',
-  'E',
-  'D',
-  'C',
-  'B',
-  'A',
-  'S',
-  'M',
-  'Open',
-].toReversed();
-
 const facets = [
   { key: 'type', label: 'Typ' },
   { key: 'class', label: 'Třída' },
@@ -625,11 +617,8 @@ function Competitors(props: BrowserProps) {
     setFacetOptions(fetchedFacets ?? []);
   }
 
-  const ageRanges = new Map(
-    (facetResult.data?.ageGroupsList ?? []).map((group) => [
-      group.code,
-      group.coupleRules[0]?.olderAge ?? group.age,
-    ]),
+  const ageGroupsByCode = new Map(
+    (facetResult.data?.ageGroupsList ?? []).map((group) => [group.code, group]),
   );
   const result = usePaginatedQuery({
     query: FederationCompetitorsDocument,
@@ -703,21 +692,16 @@ function Competitors(props: BrowserProps) {
                 (a, b) => {
                   if (key === 'ageGroup') {
                     return (
-                      compareAgeRanges(ageRanges.get(a), ageRanges.get(b)) || compareNaturalText(a, b)
+                      compareAgeGroups(ageGroupsByCode.get(a), ageGroupsByCode.get(b)) ||
+                      compareNaturalText(a, b)
                     );
                   }
                   if (key === 'class') {
-                    const aRank = classOrder.indexOf(a);
-                    const bRank = classOrder.indexOf(b);
-                    return (
-                      (aRank === -1 ? classOrder.length : aRank) -
-                        (bRank === -1 ? classOrder.length : bRank) || compareNaturalText(a, b)
-                    );
+                    return compareClasses(a, b) || compareNaturalText(a, b);
                   }
                   if (key === 'discipline') {
-                    const aRank = a === 'Standard' ? 0 : a === 'Latin' ? 1 : 2;
-                    const bRank = b === 'Standard' ? 0 : b === 'Latin' ? 1 : 2;
-                    if (aRank !== bRank) return aRank - bRank;
+                    const discipline = compareDisciplines(a, b);
+                    if (discipline) return discipline;
                   }
                   return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareNaturalText(a, b);
                 },
@@ -847,18 +831,13 @@ function Competitors(props: BrowserProps) {
             {competitors.map((row) => {
               const progressByAge = Object.groupBy(
                 row.categoryProgressesList
-                  .toSorted((a, b) =>
-                    (a.category?.class ?? '').localeCompare(b.category?.class ?? ''),
-                  ),
+                  .toSorted((a, b) => compareCategories(a.category, b.category)),
                 (p) => p.category?.ageGroup ?? '',
               );
               const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
                 const left = progressByAge[a]?.[0]?.category?.ageGroupDetails;
                 const right = progressByAge[b]?.[0]?.category?.ageGroupDetails;
-                return compareAgeRanges(
-                  left?.coupleRules[0]?.olderAge ?? left?.age ?? null,
-                  right?.coupleRules[0]?.olderAge ?? right?.age ?? null,
-                );
+                return compareAgeGroups(left, right) || compareNaturalText(a, b);
               });
               if (ageGroups.length === 0) ageGroups.push('');
               return (

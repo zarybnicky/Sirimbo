@@ -4,6 +4,7 @@ import type {
   CompetitionCategoryFragment,
   FederationCategoryProgressFragment,
 } from '@/graphql/Federation';
+import { compareByOrder, compareNaturalText } from '@/lib/compare';
 
 export const ageGroupNames: Record<string, string> = {
   Under_8: 'Do 8 let',
@@ -37,12 +38,36 @@ export type AgeRange = {
   end: { value: number } | null;
 };
 
-export function compareAgeRanges(a: AgeRange | null | undefined, b: AgeRange | null | undefined) {
+type AgeGroup = {
+  age: AgeRange | null;
+  coupleRules: readonly { olderAge: AgeRange }[];
+};
+
+type Category = {
+  ageGroupDetails: AgeGroup | null;
+  class: string;
+  discipline: string;
+};
+
+export function compareAgeRanges(
+  a: AgeRange | null | undefined,
+  b: AgeRange | null | undefined,
+) {
   if (!a || !b) return Number(!a) - Number(!b);
   return (
     (a.start?.value ?? -Infinity) - (b.start?.value ?? -Infinity) ||
     (a.end?.value ?? Infinity) - (b.end?.value ?? Infinity) ||
     0
+  );
+}
+
+export function compareAgeGroups(
+  a: AgeGroup | null | undefined,
+  b: AgeGroup | null | undefined,
+) {
+  return compareAgeRanges(
+    a?.coupleRules[0]?.olderAge ?? a?.age,
+    b?.coupleRules[0]?.olderAge ?? b?.age,
   );
 }
 
@@ -71,8 +96,26 @@ export function getCoupleAgeGroups(
   );
 }
 
-const hiddenCategoryClasses = new Set(['Novice', 'Bronze', 'Silver', 'Gold', 'Entry']);
-const classOrder = ['E', 'D', 'C', 'B', 'A', 'M'];
+const hiddenClasses = ['Entry', 'Novice', 'Bronze', 'Silver', 'Gold'];
+const hiddenCategoryClasses = new Set(hiddenClasses);
+const classOrder = ['E', 'D', 'C', 'B', 'A', 'S', 'M'];
+
+export const compareClasses = compareByOrder(
+  [...hiddenClasses, ...classOrder, 'Open'].toReversed(),
+);
+
+export const compareDisciplines = compareByOrder(['Standard', 'Latin', 'TenDance']);
+
+export function compareCategories(a: Category | null, b: Category | null) {
+  if (!a || !b) return Number(!a) - Number(!b);
+  return (
+    compareAgeGroups(a.ageGroupDetails, b.ageGroupDetails) ||
+    compareClasses(a.class, b.class) ||
+    compareNaturalText(a.class, b.class) ||
+    compareDisciplines(a.discipline, b.discipline) ||
+    compareNaturalText(a.discipline, b.discipline)
+  );
+}
 
 export function formatClass(value: string | null | undefined) {
   return !value || value === 'Open' ? null : value === 'S' ? 'M' : value;

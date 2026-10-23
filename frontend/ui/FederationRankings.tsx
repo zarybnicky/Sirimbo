@@ -1,5 +1,11 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { compareAgeRanges, formatAgeGroup, formatClass } from '@/ui/csts';
+import { compareNaturalText } from '@/lib/compare';
+import {
+  compareCategories,
+  compareDisciplines,
+  formatAgeGroup,
+  formatClass,
+} from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 import { Table } from '@/ui/Table';
 
@@ -8,7 +14,6 @@ const disciplineNames: Record<string, string> = {
   Latin: 'LAT',
   TenDance: '10T',
 };
-const disciplineOrder = Object.keys(disciplineNames);
 
 function ranklistRows(entries: FederationRankingFragment[]) {
   return entries
@@ -30,10 +35,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           ageGroup: category.ageGroup,
           competitorType: category.competitorType,
           series: category.series,
-          ageRange:
-            category.ageGroupDetails?.coupleRules[0]?.olderAge ??
-            category.ageGroupDetails?.age ??
-            null,
+          categoryDetails: category,
           category: [
             formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
             category.competitorType !== 'COUPLE' && category.competitorType.toLowerCase(),
@@ -58,8 +60,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
     })
     .toSorted(
       (a, b) =>
-        compareAgeRanges(a.ageRange, b.ageRange) ||
-        disciplineOrder.indexOf(a.discipline) - disciplineOrder.indexOf(b.discipline),
+        compareCategories(a.categoryDetails, b.categoryDetails),
     );
 }
 
@@ -132,7 +133,7 @@ export function FederationRankings({
   const rows = ranklistRows(entries);
   if (rows.length === 0) return null;
   const columns = [...new Set(rows.map((row) => row.discipline))].toSorted(
-    (a, b) => disciplineOrder.indexOf(a) - disciplineOrder.indexOf(b),
+    (a, b) => compareDisciplines(a, b) || compareNaturalText(a, b),
   );
   const groups = Object.groupBy(rows, (row) =>
     [

@@ -1,5 +1,6 @@
 import type { FederationCompetitorQuery } from '@/graphql/Federation';
-import { formatCategoryName } from '@/ui/csts';
+import { compareNaturalText, compareText } from '@/lib/compare';
+import { compareCategories, formatCategoryName } from '@/ui/csts';
 import { Table } from '@/ui/Table';
 
 export function FederationCategoryProgress({
@@ -29,8 +30,10 @@ export function FederationCategoryProgress({
       {entries
         .toSorted(
           (a, b) =>
-            a.federation.localeCompare(b.federation) ||
-            (formatCategoryName(a.federation, a.category) || a.categoryId).localeCompare(
+            compareText(a.federation, b.federation) ||
+            compareCategories(a.category, b.category) ||
+            compareNaturalText(
+              formatCategoryName(a.federation, a.category) || a.categoryId,
               formatCategoryName(b.federation, b.category) || b.categoryId,
             ) ||
             a.competitorId.localeCompare(b.competitorId),
