@@ -59,7 +59,14 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
     ),
   );
 
-  const people = isManager ? (query.data?.people?.nodes ?? []) : auth.persons;
+  const people = (isManager ? (query.data?.people?.nodes ?? []) : auth.persons)
+    .map((person) => ({
+      ...person,
+      isExternal: !person.isMember && !person.isTrainer && !person.isAdmin,
+    }));
+  const internalPersonIds = new Set(people
+    .filter((person) => !person.isExternal)
+    .map((person) => person.id));
   const couples = isManager
     ? (query.data?.tenant?.couplesList ?? [])
     : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
@@ -68,13 +75,14 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
 
   const capacityLeft =
     event.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
-  const candidates: Registrant[] = [
+  const candidates = [
     ...people
       .filter((x) => !registeredPeople.has(x.id))
-      .map(({ id, name }) => ({
-        id: `person:${id}`,
-        label: name,
-        personId: id,
+      .map((person) => ({
+        id: `person:${person.id}`,
+        label: person.name + (person.isExternal ? ' (Externí)' : ''),
+        isExternal: person.isExternal,
+        personId: person.id,
         coupleId: null,
       })),
     ...couples
@@ -87,6 +95,7 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
       .map((couple) => ({
         id: `couple:${couple.id}`,
         label: formatCoupleName(couple),
+        isExternal: ![couple.man?.id, couple.woman?.id].some((id) => !!id && internalPersonIds.has(id)),
         personId: null,
         coupleId: couple.id,
       })),
@@ -95,7 +104,8 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);
-      return Number(bMine) - Number(aMine) || compareText(a.label, b.label);
+      return Number(a.isExternal) - Number(b.isExternal) ||
+        Number(bMine) - Number(aMine) || compareText(a.label, b.label);
     });
 
   return {

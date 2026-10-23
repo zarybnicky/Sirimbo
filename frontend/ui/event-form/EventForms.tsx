@@ -7,11 +7,12 @@ import {
   EventEditorRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
-  type EventRegistrationFragment,
+  type EventEditorRegistrationsQuery,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -39,7 +40,9 @@ const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-function useEventFormOptions(savedRegistrations?: EventRegistrationFragment[]) {
+function useEventFormOptions(
+  savedRegistrations?: NonNullable<EventEditorRegistrationsQuery['event']>['registrationsList'],
+) {
   const auth = useAuth();
   const [query] = useQuery({ query: EventFormOptionsDocument });
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
@@ -53,6 +56,7 @@ function useEventFormOptions(savedRegistrations?: EventRegistrationFragment[]) {
   const participants = React.useMemo(() => {
     const tenant = query.data?.tenant;
     const participants = new Map<string, EventParticipantOption>();
+    const internalPersonIds = new Set<string>();
 
     for (const { person } of [
       ...(savedRegistrations ?? []),
@@ -60,9 +64,11 @@ function useEventFormOptions(savedRegistrations?: EventRegistrationFragment[]) {
       ...(tenant?.tenantMembershipsList ?? []),
     ]) {
       if (!person) continue;
+      const isExternal = !person.isMember && !person.isTrainer && !person.isAdmin;
+      if (!isExternal) internalPersonIds.add(person.id);
       participants.set(`person:${person.id}`, {
         id: `person:${person.id}`,
-        label: person.name,
+        label: person.name + (isExternal ? ' (Externí)' : ''),
         personId: person.id,
         coupleId: null,
         personIds: [person.id],
@@ -82,7 +88,11 @@ function useEventFormOptions(savedRegistrations?: EventRegistrationFragment[]) {
       });
     }
 
-    return participants;
+    return new Map([...participants].toSorted(([, a], [, b]) =>
+      Number(b.personIds.some((id) => internalPersonIds.has(id))) -
+      Number(a.personIds.some((id) => internalPersonIds.has(id))) ||
+      compareText(a.label, b.label),
+    ));
   }, [query.data?.tenant, savedRegistrations]);
   return { ...query, trainers, participants };
 }

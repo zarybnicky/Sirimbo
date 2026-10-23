@@ -318,6 +318,11 @@ query EventEditorRegistrations($id: BigInt!) {
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       ...EventRegistration
+      person {
+        isMember
+        isTrainer
+        isAdmin
+      }
     }
   }
 }
@@ -401,6 +406,9 @@ query EventRegistrationCandidates {
     nodes {
       id
       name
+      isMember
+      isTrainer
+      isAdmin
     }
   }
   tenant: getCurrentTenant {
@@ -426,6 +434,9 @@ query EventFormOptions {
         person {
           id
           name
+          isMember
+          isTrainer
+          isAdmin
         }
       }
     }
@@ -445,6 +456,9 @@ query EventFormOptions {
       person {
         id
         name
+        isMember
+        isTrainer
+        isAdmin
       }
     }
     couplesList {
