@@ -174,9 +174,7 @@ const plugins: GraphileConfig.Plugin[] = [
       if (value == null) return null;
       const competitorId = sqlValueWithCodec(value, TYPES.text);
       return sql`${row}.id in (
-        select competition_id from federated.competition_entry where competitor_id = ${competitorId}
-        union all
-        select competition_id from federated.competition_result where competitor_id = ${competitorId}
+        select competition_id from federated.competition_participation where competitor_id = ${competitorId}
       )`;
     },
   ),

@@ -100,6 +100,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
             formatCategoryName(federation, row.category, row.competitionType) ||
             row.externalId;
           const result = row.results.nodes[0];
+          const cancelled = row.entries.nodes[0]?.cancelled;
           const status = formatResultStatus(result?.completionStatus);
           return (
             <tr key={row.id} className="border-t border-neutral-4">
@@ -120,15 +121,18 @@ export function History({ federation, id }: { federation: string; id: string }) 
                   <Link
                     className={cn(
                       'text-accent-11',
-                      row.status === 'CANCELLED' ? 'line-through' : 'underline',
+                      cancelled || row.status === 'CANCELLED' ? 'line-through' : 'underline',
                     )}
+                    title={cancelled ? 'Odhlášená registrace' : undefined}
                     href={`/federated/${federation}/${row.event.externalId}/${row.externalId}`}
                     prefetch={false}
                   >
                     {categoryName}
                   </Link>
                 ) : (
-                  categoryName
+                  <span className={cancelled ? 'line-through' : undefined}>
+                    {categoryName}
+                  </span>
                 )}
                 {status && <div className="text-xs text-neutral-11">{status}</div>}
               </th>

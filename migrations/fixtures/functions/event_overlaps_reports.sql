@@ -47,7 +47,7 @@ as $$
     where not ei.is_cancelled
       and ea.person_id is not null
       and ea.registration_status = 'active'
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     i1.person_id,
@@ -66,7 +66,7 @@ as $$
     and i1.event_id < i2.event_id
     and i1.parent_id is distinct from i2.event_id
     and i2.parent_id is distinct from i1.event_id
-    and i1.range && i2.range
+    and app_private.tstzrange_overlaps(i1.range, i2.range)
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
 
@@ -91,7 +91,7 @@ as $$
     join event_trainer eit on ei.id = eit.event_id
     join person p on p.id = eit.person_id
     where not ei.is_cancelled
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     ti1.person_id,
@@ -110,7 +110,7 @@ as $$
     and ti1.event_id < ti2.event_id
     and ti1.parent_id is distinct from ti2.event_id
     and ti2.parent_id is distinct from ti1.event_id
-    and ti1.range && ti2.range
+    and app_private.tstzrange_overlaps(ti1.range, ti2.range)
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
 

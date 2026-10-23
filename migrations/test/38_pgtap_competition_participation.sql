@@ -29,9 +29,10 @@ set local role anonymous;
 select tap.results_eq(
   $$select competitor_id from federated.competition_participation
     where competition_id = -380001 order by competitor_id$$,
-  $$values ('participation-test:both'::text), ('participation-test:cancelled-result'),
+  $$values ('participation-test:both'::text), ('participation-test:cancelled'),
+           ('participation-test:cancelled-result'),
            ('participation-test:entry'), ('participation-test:result')$$,
-  'public participation excludes cancelled entries and emits results exactly once'
+  'public participation includes cancelled entries and emits results exactly once'
 );
 select tap.is(
   (select count(*) from federated.competition_participation p

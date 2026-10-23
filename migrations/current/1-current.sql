@@ -1,12 +1,10 @@
 comment on table person is '@behavior -insert
 @ref federationPeople via:public.person_federation_link;federated.person
 @ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
-@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry
-@ref federationCompetitions via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competition_participation;federated.competition';
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
 comment on table couple is '@behavior +list -connection -query:resource:list -query:resource:connection
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor
-@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry
-@ref federationCompetitions via:public.couple_federation_link;federated.competitor;federated.competition_participation;federated.competition behavior:"+connection -list"';
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 
 comment on table users is '@behavior -insert -update -delete';
 comment on table payment is '@behavior +list -connection -insert -query:resource:list -query:resource:connection';
@@ -78,13 +76,16 @@ comment on materialized view account_balances is '@behavior -*';
 comment on constraint event_registration_created_by_fkey on event_registration is '@behavior -*';
 comment on constraint person_invitation_event_id_fkey on person_invitation is '@behavior -*';
 
+--!include views/competition_participation.sql
 --!include functions/competition_reports.sql
 --!include functions/create_event_payment.sql
 --!include functions/current_account_ids.sql
 --!include functions/current_person_ids.sql
 --!include functions/event_approx_price.sql
+--!include functions/tstzrange_overlaps.sql
 --!include functions/event_instances_for_range.sql
 --!include functions/event_overlaps_reports.sql
+--!include functions/event_series_info.sql
 --!include functions/event_trainers.sql
 --!include functions/get_current_user.sql
 --!include functions/payment_debtor_price.sql
@@ -104,3 +105,6 @@ comment on constraint person_invitation_event_id_fkey on person_invitation is '@
 --!include functions/tg_cohort_membership__on_status.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_remaining_x.sql
+
+create index if not exists event_registration_event_id_id_idx on event_registration (event_id, id);
+drop index if exists event_registration_event_id_idx;

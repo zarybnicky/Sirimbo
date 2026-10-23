@@ -40,8 +40,10 @@ create or replace function event_instances_for_range(
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine)
     end
+    and start_range is not null
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
-    and i.until > start_range
+    and app_private.tstzrange_overlaps(i.range, tstzrange(
+      start_range, greatest(start_range, coalesce(end_range, 'infinity'::timestamptz)), '[]'))
     and (trainer_ids is null
       or exists (select 1 from event_trainer where event_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null

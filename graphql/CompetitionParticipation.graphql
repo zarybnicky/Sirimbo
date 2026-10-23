@@ -35,11 +35,12 @@ query CompetitionParticipations(
     nodes {
       ...ParticipationCompetition
       entries: entriesList(
-        condition: { participant: $participant, cancelled: false, hasResult: false }
+        condition: { participant: $participant }
         orderBy: COMPETITOR_ID_ASC
       ) {
         competitionId
         competitorId
+        cancelled
         competitor { id name }
       }
       results: resultsList(condition: { participant: $participant }, orderBy: COMPETITOR_ID_ASC) {

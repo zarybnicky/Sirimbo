@@ -51,6 +51,7 @@ export type CompetitionEntry = {
   finalGain?: string | null;
   isFinal?: boolean | null;
   completionStatus?: string | null;
+  cancelled?: boolean;
 };
 
 type CompetitionScope = {
@@ -187,20 +188,31 @@ export function CompetitionEventContent({
 function CompetitionLabel({
   entry,
   competition,
+  cancelled = entry.cancelled,
 }: {
   entry: CompetitionEntry;
   competition: boolean;
+  cancelled?: boolean;
 }) {
   return competition ? (
     <CompetitionLink
       entry={entry}
       competitionId={entry.competitionExternalId}
-      className={cn('text-accent-11', entry.status === 'CANCELLED' && 'line-through')}
+      className={cn(
+        'text-accent-11',
+        (cancelled || entry.status === 'CANCELLED') && 'line-through',
+      )}
+      title={cancelled ? 'Odhlášená registrace' : undefined}
     >
       {entryLabel(entry, true)}
     </CompetitionLink>
   ) : (
-    <>{entry.competitorName}</>
+    <span
+      className={cancelled ? 'line-through' : undefined}
+      title={cancelled ? 'Odhlášená registrace' : undefined}
+    >
+      {entry.competitorName}
+    </span>
   );
 }
 
@@ -230,7 +242,11 @@ function CompetitionGroupContent({
           </span>
         )}
         <span className="min-w-0">
-          <CompetitionLabel entry={entries[0]!} competition={byCompetition} />
+          <CompetitionLabel
+            entry={entries[0]!}
+            competition={byCompetition}
+            cancelled={entries.every((entry) => entry.cancelled)}
+          />
         </span>
       </h5>
       {entries
@@ -294,11 +310,13 @@ export function CompetitionLink({
   competitionId,
   children,
   className,
+  title,
 }: {
   entry?: Pick<CompetitionEntry, 'federation' | 'competitionEventExternalId'>;
   competitionId?: string | null;
   children: React.ReactNode;
   className?: string;
+  title?: string;
 }) {
   if (!entry?.federation || !entry.competitionEventExternalId) return <>{children}</>;
 
@@ -307,6 +325,7 @@ export function CompetitionLink({
       href={`/federated/${entry.federation}/${entry.competitionEventExternalId}${competitionId ? `/${competitionId}` : ''}`}
       prefetch={false}
       className={cn('underline hover:text-accent-11', className)}
+      title={title}
     >
       {children}
     </Link>
@@ -333,12 +352,17 @@ function competitionEntries(
       checkInEnd: competition.checkInEnd,
       status: competition.status,
     };
-    return [...competition.results, ...competition.entries].map((entry) => ({
-      ...common,
-      ...entry,
-      id: `${competition.id}:${entry.competitorId}`,
-      competitorName: entry.competitor?.name ?? entry.competitorId,
-    }));
+    const entries = new Map<string, CompetitionEntry>();
+    for (const entry of [...competition.entries, ...competition.results]) {
+      entries.set(entry.competitorId, {
+        ...entries.get(entry.competitorId),
+        ...common,
+        ...entry,
+        id: `${competition.id}:${entry.competitorId}`,
+        competitorName: entry.competitor?.name ?? entry.competitorId,
+      });
+    }
+    return [...entries.values()];
   });
 }
 
