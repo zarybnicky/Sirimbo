@@ -15,7 +15,7 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     join event_trainer eit on ei.id = eit.event_id
     join person p on p.id = eit.person_id
     where not ei.is_cancelled
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     ti1.person_id,
@@ -34,10 +34,10 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     and ti1.event_id < ti2.event_id
     and ti1.parent_id is distinct from ti2.event_id
     and ti2.parent_id is distinct from ti1.event_id
-    and ti1.range && ti2.range
+    and app_private.tstzrange_overlaps(ti1.range, ti2.range)
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
 
-COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;

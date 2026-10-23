@@ -24,9 +24,8 @@ CASE
 END)
 );
 
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@simpleCollections both';
-COMMENT ON COLUMN public.event_registration.created_by IS '@omit';
+COMMENT ON TABLE public.event_registration IS '@behavior +list +connection -insert -update -delete';
+COMMENT ON COLUMN public.event_registration.created_by IS '@behavior -*';
 
 GRANT ALL ON TABLE public.event_registration TO anonymous;
 ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
@@ -68,7 +67,7 @@ CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF ten
 
 CREATE INDEX event_registration_active_person_idx ON public.event_registration USING btree (tenant_id, person_id) INCLUDE (event_id, status) WHERE (registration_status = 'active'::public.event_registration_status);
 CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
-CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
+CREATE INDEX event_registration_event_id_id_idx ON public.event_registration USING btree (event_id, id);
 CREATE INDEX event_registration_parent_id_idx ON public.event_registration USING btree (parent_registration_id);
 CREATE INDEX event_registration_person_id_idx ON public.event_registration USING btree (person_id);
 CREATE UNIQUE INDEX event_registration_person_key ON public.event_registration USING btree (event_id, person_id) WHERE ((person_id IS NOT NULL) AND (registration_status = 'active'::public.event_registration_status));

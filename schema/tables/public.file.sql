@@ -13,7 +13,7 @@ CREATE TABLE public.file (
     url text GENERATED ALWAYS AS (((('/f/'::text || id) || '/'::text) || name)) STORED NOT NULL
 );
 
-COMMENT ON TABLE public.file IS '@omit create,update,delete';
+COMMENT ON TABLE public.file IS '@behavior -insert -update -delete';
 
 GRANT ALL ON TABLE public.file TO anonymous;
 ALTER TABLE public.file ENABLE ROW LEVEL SECURITY;

@@ -10,10 +10,8 @@ CREATE TABLE public.person_invitation (
     event_id bigint
 );
 
-COMMENT ON TABLE public.person_invitation IS '@omit update
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-COMMENT ON COLUMN public.person_invitation.event_id IS '@omit';
+COMMENT ON TABLE public.person_invitation IS '@behavior +list -connection -update -query:resource:list -query:resource:connection';
+COMMENT ON COLUMN public.person_invitation.event_id IS '@behavior -*';
 
 GRANT ALL ON TABLE public.person_invitation TO anonymous;
 ALTER TABLE public.person_invitation ENABLE ROW LEVEL SECURITY;

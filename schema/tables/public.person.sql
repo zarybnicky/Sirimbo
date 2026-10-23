@@ -32,13 +32,12 @@ END])) STORED NOT NULL,
     website_url text
 );
 
-COMMENT ON TABLE public.person IS '@omit create
+COMMENT ON TABLE public.person IS '@behavior -insert
 @ref federationPeople via:public.person_federation_link;federated.person
 @ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
-@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry
-@ref federationCompetitions via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competition_participation;federated.competition';
-COMMENT ON COLUMN public.person.legacy_user_id IS '@omit';
-COMMENT ON COLUMN public.person.search_name IS '@omit';
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
+COMMENT ON COLUMN public.person.legacy_user_id IS '@behavior -*';
+COMMENT ON COLUMN public.person.search_name IS '@behavior -*';
 
 GRANT ALL ON TABLE public.person TO anonymous;
 ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;

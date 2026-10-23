@@ -12,7 +12,7 @@ CREATE TABLE public.otp_token (
     CONSTRAINT otp_token_intent_check CHECK ((((intent = 'password_reset'::text) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
 );
 
-COMMENT ON TABLE public.otp_token IS '@omit';
+COMMENT ON TABLE public.otp_token IS '@behavior -*';
 
 ALTER TABLE public.otp_token ENABLE ROW LEVEL SECURITY;
 

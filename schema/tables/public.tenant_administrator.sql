@@ -13,9 +13,8 @@ CREATE TABLE public.tenant_administrator (
     CONSTRAINT tenant_administrator_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections both
-@behavior -query:resource:list -query:resource:connection';
-COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
+COMMENT ON TABLE public.tenant_administrator IS '@behavior +list +connection -query:resource:list -query:resource:connection';
+COMMENT ON COLUMN public.tenant_administrator.active_range IS '@behavior -*';
 
 GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
 ALTER TABLE public.tenant_administrator ENABLE ROW LEVEL SECURITY;

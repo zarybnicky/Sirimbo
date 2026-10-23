@@ -6,9 +6,7 @@ CREATE TABLE public.payment_recipient (
     amount numeric(19,4) NOT NULL
 );
 
-COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.payment_recipient IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.payment_recipient TO anonymous;
 ALTER TABLE public.payment_recipient ENABLE ROW LEVEL SECURITY;

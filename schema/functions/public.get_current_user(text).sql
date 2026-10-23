@@ -7,17 +7,17 @@ CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETU
     set
       last_active_at = now(),
       last_version = version_id
-    where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    where id = current_user_id()
     returning *
   )
   select * from updated_user
   union all
   select *
   from users
-  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+  where id = current_user_id()
     and not exists (select 1 from updated_user);
 $$;
 
-COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@omit';
+COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.get_current_user(version_id text) TO anonymous;

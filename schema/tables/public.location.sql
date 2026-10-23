@@ -15,8 +15,7 @@ CREATE TABLE public.location (
     ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL
 );
 
-COMMENT ON TABLE public.location IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection -queryField:resource:connection';
+COMMENT ON TABLE public.location IS '@behavior +list -connection -query:resource:list -query:resource:connection -queryField:resource:connection';
 
 GRANT ALL ON TABLE public.location TO anonymous;
 ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;

@@ -8,9 +8,7 @@ CREATE TABLE public.account (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.account IS '@omit create,update,delete
-@behavior -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.account IS '@behavior +list -connection -insert -update -delete -query:resource:single';
 
 GRANT ALL ON TABLE public.account TO anonymous;
 ALTER TABLE public.account ENABLE ROW LEVEL SECURITY;

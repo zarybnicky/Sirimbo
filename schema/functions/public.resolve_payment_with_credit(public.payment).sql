@@ -50,6 +50,6 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@omit';
+COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO anonymous;

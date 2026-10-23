@@ -12,7 +12,7 @@ CREATE TABLE public.cohort (
     is_archived boolean DEFAULT false NOT NULL
 );
 
-COMMENT ON TABLE public.cohort IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
 
 GRANT ALL ON TABLE public.cohort TO anonymous;
 ALTER TABLE public.cohort ENABLE ROW LEVEL SECURITY;

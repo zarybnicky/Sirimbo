@@ -36,6 +36,6 @@ begin
 end;
 $$;
 
-COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit';
+COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@behavior -*';
 
 REVOKE ALL ON FUNCTION public.verify_function(f regproc, relid regclass) FROM PUBLIC;

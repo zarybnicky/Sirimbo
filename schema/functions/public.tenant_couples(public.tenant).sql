@@ -8,6 +8,6 @@ CREATE FUNCTION public.tenant_couples(t public.tenant) RETURNS SETOF public.coup
       or exists (select 1 from current_tenant_membership where person_id = woman_id));
 $$;
 
-COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.tenant_couples(t public.tenant) TO anonymous;

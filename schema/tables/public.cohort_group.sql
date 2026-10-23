@@ -7,7 +7,7 @@ CREATE TABLE public.cohort_group (
     tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
 );
 
-COMMENT ON TABLE public.cohort_group IS '@omit create,update,delete';
+COMMENT ON TABLE public.cohort_group IS '@behavior -insert -update -delete';
 
 GRANT ALL ON TABLE public.cohort_group TO anonymous;
 ALTER TABLE public.cohort_group ENABLE ROW LEVEL SECURITY;

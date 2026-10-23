@@ -7,8 +7,7 @@ CREATE TABLE public.announcement_audience (
     CONSTRAINT announcement_audience_audience_check CHECK (((cohort_id IS NULL) <> (audience_role IS NULL)))
 );
 
-COMMENT ON TABLE public.announcement_audience IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.announcement_audience IS '@behavior -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 GRANT ALL ON TABLE public.announcement_audience TO anonymous;
 ALTER TABLE public.announcement_audience ENABLE ROW LEVEL SECURITY;

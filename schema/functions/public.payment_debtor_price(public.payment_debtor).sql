@@ -27,6 +27,6 @@ where payment_recipient.payment_id = p.payment_id
   );
 $$;
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) TO anonymous;

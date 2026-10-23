@@ -1,6 +1,6 @@
 CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'app_private'
+    SET search_path TO 'pg_catalog', 'public', 'app_private', 'pg_temp'
     AS $$
 declare
   event_ids bigint[];

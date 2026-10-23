@@ -11,6 +11,6 @@ CREATE VIEW public.current_tenant_membership AS
    FROM public.tenant_membership
   WHERE ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (status = 'active'::public.relationship_status));
 
-COMMENT ON VIEW public.current_tenant_membership IS '@omit';
+COMMENT ON VIEW public.current_tenant_membership IS '@behavior -*';
 
 GRANT SELECT ON TABLE public.current_tenant_membership TO anonymous;

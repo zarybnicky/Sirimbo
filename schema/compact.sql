@@ -1528,4 +1528,4 @@ CREATE TYPE public.scoreboard_record AS (person_id bigint, cohort_id bigint, les
 
 CREATE TYPE public.series_info AS (id bigint, name text, "position" int, length int, since timestamp with time zone, until timestamp with time zone);
 
-CREATE TYPE public.trainer_group_attendance_completion AS (person_id int, total_events int, filled_events int, partially_filled_events int, unfilled_events int, filled_ratio double precision, total_attendances int, pending_attendances int);
+CREATE TYPE public.trainer_group_attendance_completion AS (person_id bigint, total_events int, filled_events int, partially_filled_events int, unfilled_events int, filled_ratio double precision, total_attendances int, pending_attendances int);

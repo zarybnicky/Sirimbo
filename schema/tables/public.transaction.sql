@@ -10,7 +10,7 @@ CREATE TABLE public.transaction (
     effective_date timestamp with time zone NOT NULL
 );
 
-COMMENT ON TABLE public.transaction IS '@omit create,update';
+COMMENT ON TABLE public.transaction IS '@behavior -insert -update';
 
 GRANT ALL ON TABLE public.transaction TO anonymous;
 ALTER TABLE public.transaction ENABLE ROW LEVEL SECURITY;

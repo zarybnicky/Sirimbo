@@ -9,9 +9,7 @@ CREATE TABLE public.event_lesson_request (
     CONSTRAINT event_lesson_request_lesson_count_check CHECK ((lesson_count > 0))
 );
 
-COMMENT ON TABLE public.event_lesson_request IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_lesson_request IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 COMMENT ON COLUMN public.event_lesson_request.registration_id IS '@hasDefault';
 
 GRANT ALL ON TABLE public.event_lesson_request TO anonymous;

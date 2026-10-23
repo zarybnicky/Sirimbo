@@ -5,8 +5,7 @@ CREATE TABLE public.payment_debtor (
     person_id bigint NOT NULL
 );
 
-COMMENT ON TABLE public.payment_debtor IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.payment_debtor IS '@behavior +list -connection -insert -update -delete';
 
 GRANT ALL ON TABLE public.payment_debtor TO anonymous;
 ALTER TABLE public.payment_debtor ENABLE ROW LEVEL SECURITY;

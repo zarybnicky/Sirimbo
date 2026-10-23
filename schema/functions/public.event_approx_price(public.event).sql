@@ -25,6 +25,6 @@ CREATE FUNCTION public.event_approx_price(v_instance public.event) RETURNS TABLE
   group by tt.currency;
 $$;
 
-COMMENT ON FUNCTION public.event_approx_price(v_instance public.event) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_approx_price(v_instance public.event) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.event_approx_price(v_instance public.event) TO anonymous;

@@ -1,5 +1,5 @@
 CREATE TYPE public.trainer_group_attendance_completion AS (
-	person_id integer,
+	person_id bigint,
 	total_events integer,
 	filled_events integer,
 	partially_filled_events integer,

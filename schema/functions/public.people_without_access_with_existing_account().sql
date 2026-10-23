@@ -10,6 +10,6 @@ where not exists (select 1 from user_proxy where person_id = person.id)
   or exists (select 1 from current_tenant_administrator where person_id = person.id));
 $$;
 
-COMMENT ON FUNCTION public.people_without_access_with_existing_account() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.people_without_access_with_existing_account() IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.people_without_access_with_existing_account() TO anonymous;

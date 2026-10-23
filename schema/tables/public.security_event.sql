@@ -10,9 +10,7 @@ CREATE TABLE public.security_event (
     effective_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.security_event IS '@omit create,update,delete
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.security_event IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 GRANT SELECT ON TABLE public.security_event TO member;
 ALTER TABLE public.security_event ENABLE ROW LEVEL SECURITY;

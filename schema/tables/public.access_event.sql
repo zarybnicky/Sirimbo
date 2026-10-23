@@ -16,8 +16,7 @@ CREATE TABLE public.access_event (
     CONSTRAINT access_event_external_id_check CHECK (((external_id <> ''::text) AND (external_id = btrim(external_id))))
 );
 
-COMMENT ON TABLE public.access_event IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.access_event IS '@behavior +list -connection -insert -update -delete';
 
 GRANT ALL ON TABLE public.access_event TO anonymous;
 ALTER TABLE public.access_event ENABLE ROW LEVEL SECURITY;

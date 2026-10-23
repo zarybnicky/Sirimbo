@@ -23,8 +23,10 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine)
     end
+    and start_range is not null
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
-    and i.until > start_range
+    and app_private.tstzrange_overlaps(i.range, tstzrange(
+      start_range, greatest(start_range, coalesce(end_range, 'infinity'::timestamptz)), '[]'))
     and (trainer_ids is null
       or exists (select 1 from event_trainer where event_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
@@ -34,6 +36,6 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
   ;
 $_$;
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) TO anonymous;

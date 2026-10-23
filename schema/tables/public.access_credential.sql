@@ -17,9 +17,8 @@ CREATE TABLE public.access_credential (
     CONSTRAINT access_credential_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.access_credential IS '@omit delete
-@simpleCollections only';
-COMMENT ON COLUMN public.access_credential.valid_range IS '@omit';
+COMMENT ON TABLE public.access_credential IS '@behavior +list -connection -delete';
+COMMENT ON COLUMN public.access_credential.valid_range IS '@behavior -*';
 
 GRANT ALL ON TABLE public.access_credential TO anonymous;
 ALTER TABLE public.access_credential ENABLE ROW LEVEL SECURITY;

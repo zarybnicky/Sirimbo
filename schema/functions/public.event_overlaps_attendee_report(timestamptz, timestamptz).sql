@@ -17,7 +17,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     where not ei.is_cancelled
       and ea.person_id is not null
       and ea.registration_status = 'active'
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     i1.person_id,
@@ -36,10 +36,10 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     and i1.event_id < i2.event_id
     and i1.parent_id is distinct from i2.event_id
     and i2.parent_id is distinct from i1.event_id
-    and i1.range && i2.range
+    and app_private.tstzrange_overlaps(i1.range, i2.range)
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
 
-COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;

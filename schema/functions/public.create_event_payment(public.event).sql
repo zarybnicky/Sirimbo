@@ -65,6 +65,6 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION public.create_event_payment(target_event public.event) IS '@omit';
+COMMENT ON FUNCTION public.create_event_payment(target_event public.event) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.create_event_payment(target_event public.event) TO anonymous;

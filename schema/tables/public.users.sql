@@ -13,8 +13,8 @@ CREATE TABLE public.users (
     last_version text
 );
 
-COMMENT ON TABLE public.users IS '@omit create,update,delete';
-COMMENT ON COLUMN public.users.u_pass IS '@omit';
+COMMENT ON TABLE public.users IS '@behavior -insert -update -delete';
+COMMENT ON COLUMN public.users.u_pass IS '@behavior -*';
 
 GRANT ALL ON TABLE public.users TO anonymous;
 GRANT INSERT(id) ON TABLE public.users TO anonymous;

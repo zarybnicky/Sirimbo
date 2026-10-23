@@ -15,4 +15,5 @@ begin
 end;
 $_$;
 
+REVOKE ALL ON FUNCTION public.log_in_as(id bigint) FROM PUBLIC;
 GRANT ALL ON FUNCTION public.log_in_as(id bigint) TO administrator;

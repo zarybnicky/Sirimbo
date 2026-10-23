@@ -7,9 +7,7 @@ CREATE TABLE public.event_target_cohort (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_target_cohort IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 GRANT ALL ON TABLE public.event_target_cohort TO anonymous;
 ALTER TABLE public.event_target_cohort ENABLE ROW LEVEL SECURITY;

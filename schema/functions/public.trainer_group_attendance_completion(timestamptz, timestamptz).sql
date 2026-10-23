@@ -66,6 +66,6 @@ CREATE FUNCTION public.trainer_group_attendance_completion(since timestamp with 
   order by filled_ratio asc nulls last, person_id;
 $_$;
 
-COMMENT ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) TO anonymous;

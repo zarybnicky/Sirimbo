@@ -15,6 +15,6 @@ CREATE FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc pub
   LIMIT 1;
 $$;
 
-COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc public.account) IS '@omit';
+COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc public.account) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc public.account) TO anonymous;

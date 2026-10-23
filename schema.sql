@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict CfI4KPPcTUl9hlVB2xNWOrbfuAqNMGIomti4QBlsB6dYFkgekm521ATRqV1fazt
+\restrict dPw6rSMFAbPKOKG2hJpmPSLotUC0sNgqdP3IcaLUusvmuGjF9HyUpaPeXXFHb5D
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -975,7 +975,7 @@ $$;
 -- Name: FUNCTION current_tenant_id(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
+COMMENT ON FUNCTION public.current_tenant_id() IS '@behavior -*';
 
 
 --
@@ -1002,14 +1002,14 @@ CREATE TABLE public.users (
 -- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.users IS '@omit create,update,delete';
+COMMENT ON TABLE public.users IS '@behavior -insert -update -delete';
 
 
 --
 -- Name: COLUMN users.u_pass; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.users.u_pass IS '@omit';
+COMMENT ON COLUMN public.users.u_pass IS '@behavior -*';
 
 
 --
@@ -1186,7 +1186,7 @@ CREATE TYPE public.series_info AS (
 --
 
 CREATE TYPE public.trainer_group_attendance_completion AS (
-	person_id integer,
+	person_id bigint,
 	total_events integer,
 	filled_events integer,
 	partially_filled_events integer,
@@ -1373,9 +1373,7 @@ CREATE TABLE public.payment (
 -- Name: TABLE payment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment IS '@omit create
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.payment IS '@behavior +list -connection -insert -query:resource:list -query:resource:connection';
 
 
 --
@@ -1630,15 +1628,14 @@ CREATE TABLE public.event (
 -- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event IS '@omit create
-@simpleCollections only';
+COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
 
 
 --
 -- Name: COLUMN event.share_token; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.event.share_token IS '@omit';
+COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
 
 
 --
@@ -1676,15 +1673,14 @@ CREATE TABLE public.tenant_trainer (
 -- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_trainer IS '@simpleCollections both
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.tenant_trainer IS '@behavior +list +connection -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.tenant_trainer.active_range IS '@omit';
+COMMENT ON COLUMN public.tenant_trainer.active_range IS '@behavior -*';
 
 
 --
@@ -2050,7 +2046,7 @@ $$;
 -- Name: FUNCTION current_user_id(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_user_id() IS '@omit';
+COMMENT ON FUNCTION public.current_user_id() IS '@behavior -*';
 
 
 --
@@ -2073,9 +2069,7 @@ CREATE TABLE public.event_lesson_request (
 -- Name: TABLE event_lesson_request; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_lesson_request IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_lesson_request IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -2120,15 +2114,14 @@ END)
 -- Name: TABLE event_registration; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_registration IS '@omit create,update,delete
-@simpleCollections both';
+COMMENT ON TABLE public.event_registration IS '@behavior +list +connection -insert -update -delete';
 
 
 --
 -- Name: COLUMN event_registration.created_by; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.event_registration.created_by IS '@omit';
+COMMENT ON COLUMN public.event_registration.created_by IS '@behavior -*';
 
 
 --
@@ -2438,7 +2431,7 @@ $$;
 
 CREATE FUNCTION app_private.tg_cohort_membership__on_status() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'app_private'
+    SET search_path TO 'pg_catalog', 'public', 'app_private', 'pg_temp'
     AS $$
 declare
   event_ids bigint[];
@@ -3089,6 +3082,37 @@ $$;
 
 
 --
+-- Name: tstzrange_overlaps_internal(tstzrange, anyrange); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tstzrange_overlaps_internal(tstzrange, anyrange) RETURNS boolean
+    LANGUAGE internal IMMUTABLE STRICT LEAKPROOF PARALLEL SAFE
+    AS $$range_overlaps$$;
+
+
+--
+-- Name: &&; Type: OPERATOR; Schema: app_private; Owner: -
+--
+
+CREATE OPERATOR app_private.&& (
+    FUNCTION = app_private.tstzrange_overlaps_internal,
+    LEFTARG = tstzrange,
+    RIGHTARG = anyrange,
+    RESTRICT = matchingsel,
+    JOIN = matchingjoinsel
+);
+
+
+--
+-- Name: tstzrange_overlaps(tstzrange, tstzrange); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tstzrange_overlaps(tstzrange, tstzrange) RETURNS boolean
+    LANGUAGE sql IMMUTABLE STRICT LEAKPROOF PARALLEL SAFE
+    RETURN ($1 OPERATOR(app_private.&&) $2);
+
+
+--
 -- Name: visible_announcement_ids(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -3583,15 +3607,14 @@ CREATE TABLE public.access_credential (
 -- Name: TABLE access_credential; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.access_credential IS '@omit delete
-@simpleCollections only';
+COMMENT ON TABLE public.access_credential IS '@behavior +list -connection -delete';
 
 
 --
 -- Name: COLUMN access_credential.valid_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.access_credential.valid_range IS '@omit';
+COMMENT ON COLUMN public.access_credential.valid_range IS '@behavior -*';
 
 
 --
@@ -3645,9 +3668,7 @@ CREATE TABLE public.account (
 -- Name: TABLE account; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.account IS '@omit create,update,delete
-@behavior -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.account IS '@behavior +list -connection -insert -update -delete -query:resource:single';
 
 
 --
@@ -3670,9 +3691,7 @@ CREATE TABLE public.posting (
 -- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.posting IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.posting IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -3696,7 +3715,7 @@ CREATE TABLE public.transaction (
 -- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.transaction IS '@omit create,update';
+COMMENT ON TABLE public.transaction IS '@behavior -insert -update';
 
 
 --
@@ -4201,7 +4220,7 @@ CREATE TABLE public.announcement (
 -- Name: TABLE announcement; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.announcement IS '@omit create';
+COMMENT ON TABLE public.announcement IS '@behavior -insert';
 
 
 --
@@ -4242,7 +4261,7 @@ CREATE TABLE public.cohort (
 -- Name: TABLE cohort; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort IS '@simpleCollections only';
+COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
 
 
 --
@@ -4356,7 +4375,7 @@ $$;
 -- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
+COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@behavior -*';
 
 
 --
@@ -4447,7 +4466,7 @@ $$;
 -- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
+COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@behavior -*';
 
 
 --
@@ -4502,25 +4521,24 @@ END])) STORED NOT NULL,
 -- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person IS '@omit create
+COMMENT ON TABLE public.person IS '@behavior -insert
 @ref federationPeople via:public.person_federation_link;federated.person
 @ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
-@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry
-@ref federationCompetitions via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competition_participation;federated.competition';
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
 
 
 --
 -- Name: COLUMN person.legacy_user_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.person.legacy_user_id IS '@omit';
+COMMENT ON COLUMN public.person.legacy_user_id IS '@behavior -*';
 
 
 --
 -- Name: COLUMN person.search_name; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.person.search_name IS '@omit';
+COMMENT ON COLUMN public.person.search_name IS '@behavior -*';
 
 
 --
@@ -4598,25 +4616,23 @@ CREATE TABLE public.couple (
 -- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.couple IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection
+COMMENT ON TABLE public.couple IS '@behavior +list -connection -query:resource:list -query:resource:connection
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor
-@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry
-@ref federationCompetitions via:public.couple_federation_link;federated.competitor;federated.competition_participation;federated.competition behavior:"+connection -list"';
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 
 
 --
 -- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.couple.legacy_pary_id IS '@omit';
+COMMENT ON COLUMN public.couple.legacy_pary_id IS '@behavior -*';
 
 
 --
 -- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.couple.active_range IS '@omit';
+COMMENT ON COLUMN public.couple.active_range IS '@behavior -*';
 
 
 --
@@ -4740,7 +4756,7 @@ $$;
 -- Name: FUNCTION create_event_payment(target_event public.event); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.create_event_payment(target_event public.event) IS '@omit';
+COMMENT ON FUNCTION public.create_event_payment(target_event public.event) IS '@behavior -*';
 
 
 --
@@ -4767,9 +4783,7 @@ CREATE TABLE public.cohort_subscription (
 -- Name: TABLE cohort_subscription; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_subscription IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.cohort_subscription IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -4836,7 +4850,7 @@ $$;
 -- Name: FUNCTION create_missing_cohort_subscription_payments(c public.cohort_subscription); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) IS '@omit';
+COMMENT ON FUNCTION public.create_missing_cohort_subscription_payments(c public.cohort_subscription) IS '@behavior -*';
 
 
 --
@@ -4894,7 +4908,7 @@ $$;
 -- Name: FUNCTION create_next_cohort_subscription_payment(c public.cohort_subscription); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) IS '@omit';
+COMMENT ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) IS '@behavior -*';
 
 
 --
@@ -4982,7 +4996,7 @@ $$;
 -- Name: FUNCTION current_account_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_account_ids() IS '@omit';
+COMMENT ON FUNCTION public.current_account_ids() IS '@behavior -*';
 
 
 --
@@ -4991,6 +5005,7 @@ COMMENT ON FUNCTION public.current_account_ids() IS '@omit';
 
 CREATE FUNCTION public.current_claims() RETURNS jsonb
     LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select to_jsonb(app_private.create_jwt_token(users)) - 'exp'
   from users
@@ -5005,7 +5020,7 @@ $$;
 CREATE FUNCTION public.current_couple_ids() RETURNS bigint[]
     LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '[]', '{}')::bigint[];
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_couple_ids', true), ''), '{}'), '[]', '{}')::bigint[];
 $$;
 
 
@@ -5013,7 +5028,7 @@ $$;
 -- Name: FUNCTION current_couple_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
+COMMENT ON FUNCTION public.current_couple_ids() IS '@behavior -*';
 
 
 --
@@ -5023,7 +5038,7 @@ COMMENT ON FUNCTION public.current_couple_ids() IS '@omit';
 CREATE FUNCTION public.current_person_ids() RETURNS bigint[]
     LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_person_ids', true), '[]'), '[]', '{}')::bigint[] || array[]::bigint[];
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_person_ids', true), ''), '{}'), '[]', '{}')::bigint[];
 $$;
 
 
@@ -5031,7 +5046,7 @@ $$;
 -- Name: FUNCTION current_person_ids(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.current_person_ids() IS '@omit';
+COMMENT ON FUNCTION public.current_person_ids() IS '@behavior -*';
 
 
 --
@@ -5070,7 +5085,7 @@ $$;
 -- Name: FUNCTION event_approx_price(v_instance public.event); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_approx_price(v_instance public.event) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_approx_price(v_instance public.event) IS '@behavior +list -connection';
 
 
 --
@@ -5151,8 +5166,10 @@ CREATE FUNCTION public.event_instances_for_range(only_type public.event_type, st
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine)
     end
+    and start_range is not null
     and i.since < coalesce(end_range, 'infinity'::timestamptz)
-    and i.until > start_range
+    and app_private.tstzrange_overlaps(i.range, tstzrange(
+      start_range, greatest(start_range, coalesce(end_range, 'infinity'::timestamptz)), '[]'))
     and (trainer_ids is null
       or exists (select 1 from event_trainer where event_id = i.id and person_id = any (trainer_ids)))
     and (participant_ids is null
@@ -5167,7 +5184,7 @@ $_$;
 -- Name: FUNCTION event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_instances_for_range(only_type public.event_type, start_range timestamp with time zone, end_range timestamp with time zone, trainer_ids bigint[], participant_ids bigint[], parent_id bigint, scope public.event_instance_range_scope, location_ids bigint[], only_types public.event_type[]) IS '@behavior +list -connection';
 
 
 --
@@ -5193,7 +5210,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     where not ei.is_cancelled
       and ea.person_id is not null
       and ea.registration_status = 'active'
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     i1.person_id,
@@ -5212,7 +5229,7 @@ CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with tim
     and i1.event_id < i2.event_id
     and i1.parent_id is distinct from i2.event_id
     and i2.parent_id is distinct from i1.event_id
-    and i1.range && i2.range
+    and app_private.tstzrange_overlaps(i1.range, i2.range)
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
 
@@ -5221,7 +5238,7 @@ $$;
 -- Name: FUNCTION event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
 
 
 --
@@ -5245,7 +5262,7 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     join event_trainer eit on ei.id = eit.event_id
     join person p on p.id = eit.person_id
     where not ei.is_cancelled
-      and ei.range && tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]')
+      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
   )
   select
     ti1.person_id,
@@ -5264,7 +5281,7 @@ CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time
     and ti1.event_id < ti2.event_id
     and ti1.parent_id is distinct from ti2.event_id
     and ti2.parent_id is distinct from ti1.event_id
-    and ti1.range && ti2.range
+    and app_private.tstzrange_overlaps(ti1.range, ti2.range)
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
 
@@ -5273,7 +5290,7 @@ $$;
 -- Name: FUNCTION event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
 
 
 --
@@ -5282,7 +5299,7 @@ COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with 
 
 CREATE FUNCTION public.event_registration_info(inst public.event) RETURNS public.event_registration_info
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select row(
     count(*) filter (where parent_registration_id is null)::integer,
@@ -5326,7 +5343,7 @@ $$;
 
 CREATE FUNCTION public.event_remaining_person_spots(inst public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select case
     when inst.capacity is null or inst.capacity <= 0 then null
@@ -5359,7 +5376,7 @@ CREATE FUNCTION public.event_series_info(instance public.event) RETURNS public.s
     AS $$
   select row(
     ranked.series_id,
-    ranked.name,
+    series.name,
     ranked.position,
     ranked.length,
     ranked.since,
@@ -5368,16 +5385,16 @@ CREATE FUNCTION public.event_series_info(instance public.event) RETURNS public.s
   from (
     select
       member.id as member_id,
-      series.id as series_id,
-      series.name,
+      member.series_id,
+      member.tenant_id,
       row_number() over (order by member.since, member.id)::integer as position,
       count(*) over ()::integer as length,
       min(member.since) over () as since,
       max(member.until) over () as until
     from event member
-    join event_series series on series.tenant_id = member.tenant_id and series.id = member.series_id
     where member.series_id = instance.series_id
   ) ranked
+  join event_series series on series.tenant_id = ranked.tenant_id and series.id = ranked.series_id
   where ranked.member_id = instance.id;
 $$;
 
@@ -5417,9 +5434,7 @@ CREATE TABLE public.event_trainer (
 -- Name: TABLE event_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_trainer IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -5428,7 +5443,7 @@ COMMENT ON TABLE public.event_trainer IS '@omit create,update,delete
 
 CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select case
     when e.lessons_offered is null then null
@@ -5499,7 +5514,7 @@ $$;
 -- Name: FUNCTION event_trainers(v_instance public.event); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_trainers(v_instance public.event) IS '@simpleCollections only
+COMMENT ON FUNCTION public.event_trainers(v_instance public.event) IS '@behavior +list -connection
 @deprecated Use eventTrainersList.';
 
 
@@ -5591,7 +5606,7 @@ $_$;
 -- Name: FUNCTION federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real) IS '@simpleCollections only
+COMMENT ON FUNCTION public.federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real) IS '@behavior +list -connection
 @notNull';
 
 
@@ -5615,9 +5630,7 @@ CREATE TABLE public.tenant (
 -- Name: TABLE tenant; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single -query:resource:connection
-@simpleCollections only';
+COMMENT ON TABLE public.tenant IS '@behavior +list -connection -insert -delete -singularRelation:resource:single -query:resource:connection';
 
 
 --
@@ -5645,14 +5658,14 @@ CREATE FUNCTION public.get_current_user(version_id text DEFAULT NULL::text) RETU
     set
       last_active_at = now(),
       last_version = version_id
-    where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+    where id = current_user_id()
     returning *
   )
   select * from updated_user
   union all
   select *
   from users
-  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer
+  where id = current_user_id()
     and not exists (select 1 from updated_user);
 $$;
 
@@ -5661,7 +5674,7 @@ $$;
 -- Name: FUNCTION get_current_user(version_id text); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@omit';
+COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@behavior -*';
 
 
 --
@@ -5804,7 +5817,7 @@ $$;
 CREATE FUNCTION public.my_tenants_array() RETURNS bigint[]
     LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
     AS $$
-  SELECT translate(nullif(current_setting('jwt.claims.my_tenant_ids', true), '[]'), '[]', '{}')::bigint[] || array[]::bigint[];
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_tenant_ids', true), ''), '{}'), '[]', '{}')::bigint[];
 $$;
 
 
@@ -5812,7 +5825,7 @@ $$;
 -- Name: FUNCTION my_tenants_array(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.my_tenants_array() IS '@omit';
+COMMENT ON FUNCTION public.my_tenants_array() IS '@behavior -*';
 
 
 --
@@ -5872,8 +5885,7 @@ CREATE TABLE public.payment_debtor (
 -- Name: TABLE payment_debtor; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment_debtor IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.payment_debtor IS '@behavior +list -connection -insert -update -delete';
 
 
 --
@@ -5891,7 +5903,7 @@ $$;
 -- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS '@filterable';
+COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS '@behavior +filter +filterProc +filterBy';
 
 
 --
@@ -5932,7 +5944,7 @@ $$;
 -- Name: FUNCTION payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text) IS '@behavior +list -connection';
 
 
 --
@@ -5957,7 +5969,7 @@ $$;
 -- Name: FUNCTION people_without_access_or_invitation(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.people_without_access_or_invitation() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.people_without_access_or_invitation() IS '@behavior +list -connection';
 
 
 --
@@ -5981,7 +5993,7 @@ $$;
 -- Name: FUNCTION people_without_access_with_existing_account(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.people_without_access_with_existing_account() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.people_without_access_with_existing_account() IS '@behavior +list -connection';
 
 
 --
@@ -6004,7 +6016,7 @@ $$;
 -- Name: FUNCTION people_without_access_with_invitation(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.people_without_access_with_invitation() IS '@simpleCollections only';
+COMMENT ON FUNCTION public.people_without_access_with_invitation() IS '@behavior +list -connection';
 
 
 --
@@ -6033,7 +6045,7 @@ $$;
 -- Name: FUNCTION person_account(p_id bigint, in_currency text, OUT acc public.account); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc public.account) IS '@omit';
+COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc public.account) IS '@behavior -*';
 
 
 --
@@ -6043,10 +6055,9 @@ COMMENT ON FUNCTION public.person_account(p_id bigint, in_currency text, OUT acc
 CREATE FUNCTION public.person_active_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select *
-  from couple
-  where (man_id = p.id or woman_id = p.id) and status = 'active'
-  order by active_range;
+  (select * from couple where man_id = p.id and status = 'active')
+  union all
+  (select * from couple where woman_id = p.id and status = 'active')
 $$;
 
 
@@ -6054,7 +6065,7 @@ $$;
 -- Name: FUNCTION person_active_couples(p public.person); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.person_active_couples(p public.person) IS '@behavior +list -connection';
 
 
 --
@@ -6083,10 +6094,9 @@ COMMENT ON FUNCTION public.person_age_group(p public.person) IS '@behavior -quer
 CREATE FUNCTION public.person_all_couples(p public.person) RETURNS SETOF public.couple
     LANGUAGE sql STABLE
     AS $$
-  select *
-  from couple
-  where (man_id = p.id or woman_id = p.id)
-  order by active_range;
+  (select * from couple where man_id = p.id)
+  union all
+  (select * from couple where woman_id = p.id)
 $$;
 
 
@@ -6094,7 +6104,7 @@ $$;
 -- Name: FUNCTION person_all_couples(p public.person); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_all_couples(p public.person) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.person_all_couples(p public.person) IS '@behavior +list -connection';
 
 
 --
@@ -6170,7 +6180,7 @@ $_$;
 -- Name: FUNCTION person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@simpleCollections only
+COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@behavior +list -connection
 @notNull';
 
 
@@ -6226,7 +6236,9 @@ CREATE FUNCTION public.refresh_jwt() RETURNS public.jwt_token
     LANGUAGE sql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
-  SELECT app_private.create_jwt_token(users) FROM users WHERE id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+  select app_private.create_jwt_token(users)
+  from users
+  where id = current_user_id();
 $$;
 
 
@@ -6352,7 +6364,7 @@ CREATE TABLE public.membership_application (
 -- Name: TABLE membership_application; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.membership_application IS '@simpleCollections only';
+COMMENT ON TABLE public.membership_application IS '@behavior +list -connection';
 
 
 --
@@ -6473,7 +6485,7 @@ $$;
 -- Name: FUNCTION resolve_payment_with_credit(p public.payment); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@omit';
+COMMENT ON FUNCTION public.resolve_payment_with_credit(p public.payment) IS '@behavior -*';
 
 
 --
@@ -6935,7 +6947,7 @@ $$;
 -- Name: FUNCTION scoreboard_entries(since date, until date, cohort_id bigint); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) IS '@behavior +list -connection';
 
 
 --
@@ -7490,7 +7502,7 @@ $$;
 -- Name: FUNCTION tenant_account(in_currency text, OUT acc public.account); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) IS '@omit';
+COMMENT ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) IS '@behavior -*';
 
 
 --
@@ -7517,15 +7529,14 @@ CREATE TABLE public.tenant_administrator (
 -- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_administrator IS '@simpleCollections both
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.tenant_administrator IS '@behavior +list +connection -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN tenant_administrator.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.tenant_administrator.active_range IS '@omit';
+COMMENT ON COLUMN public.tenant_administrator.active_range IS '@behavior -*';
 
 
 --
@@ -7558,7 +7569,7 @@ $$;
 -- Name: FUNCTION tenant_couples(t public.tenant); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.tenant_couples(t public.tenant) IS '@behavior +list -connection';
 
 
 --
@@ -7583,15 +7594,14 @@ CREATE TABLE public.tenant_membership (
 -- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_membership IS '@simpleCollections both
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.tenant_membership IS '@behavior +list +connection -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN tenant_membership.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.tenant_membership.active_range IS '@omit';
+COMMENT ON COLUMN public.tenant_membership.active_range IS '@behavior -*';
 
 
 --
@@ -7693,7 +7703,7 @@ $_$;
 -- Name: FUNCTION trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.trainer_group_attendance_completion(since timestamp with time zone, until timestamp with time zone) IS '@behavior +list -connection';
 
 
 --
@@ -7721,8 +7731,7 @@ CREATE TABLE public.tenant_settings (
 -- Name: TABLE tenant_settings; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.tenant_settings IS '@omit create,delete
-@behavior -query:resource:list -query:resource:connection -singularRelation:resource:list';
+COMMENT ON TABLE public.tenant_settings IS '@behavior -insert -delete -query:resource:list -query:resource:connection -singularRelation:resource:list';
 
 
 --
@@ -7884,8 +7893,7 @@ CREATE TABLE public.aktuality (
 -- Name: TABLE aktuality; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.aktuality IS '@omit create,update
-@behavior -query:resource:list';
+COMMENT ON TABLE public.aktuality IS '@behavior -insert -update -query:resource:list';
 
 
 --
@@ -7992,8 +8000,7 @@ CREATE TABLE public.location (
 -- Name: TABLE location; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.location IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection -queryField:resource:connection';
+COMMENT ON TABLE public.location IS '@behavior +list -connection -query:resource:list -query:resource:connection -queryField:resource:connection';
 
 
 --
@@ -8121,7 +8128,7 @@ $$;
 -- Name: FUNCTION verify_function(f regproc, relid regclass); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@omit';
+COMMENT ON FUNCTION public.verify_function(f regproc, relid regclass) IS '@behavior -*';
 
 
 --
@@ -9042,9 +9049,9 @@ UNION ALL
  SELECT e.competition_id,
     e.competitor_id
    FROM federated.competition_entry e
-  WHERE ((NOT e.cancelled) AND (NOT (EXISTS ( SELECT 1
+  WHERE (NOT (EXISTS ( SELECT 1
            FROM federated.competition_result r
-          WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id))))));
+          WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id)))));
 
 
 --
@@ -9789,8 +9796,7 @@ CREATE TABLE public.access_event (
 -- Name: TABLE access_event; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.access_event IS '@omit create,update,delete
-@simpleCollections only';
+COMMENT ON TABLE public.access_event IS '@behavior +list -connection -insert -update -delete';
 
 
 --
@@ -9841,7 +9847,7 @@ CREATE TABLE public.accounting_period (
 -- Name: TABLE accounting_period; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.accounting_period IS '@omit';
+COMMENT ON TABLE public.accounting_period IS '@behavior -*';
 
 
 --
@@ -9914,8 +9920,7 @@ CREATE TABLE public.announcement_audience (
 -- Name: TABLE announcement_audience; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.announcement_audience IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.announcement_audience IS '@behavior -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -9983,7 +9988,7 @@ CREATE TABLE public.cohort_group (
 -- Name: TABLE cohort_group; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_group IS '@omit create,update,delete';
+COMMENT ON TABLE public.cohort_group IS '@behavior -insert -update -delete';
 
 
 --
@@ -10037,15 +10042,14 @@ CREATE TABLE public.cohort_membership (
 -- Name: TABLE cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.cohort_membership IS '@behavior +list -connection -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN cohort_membership.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@behavior -*';
 
 
 --
@@ -10168,7 +10172,7 @@ CREATE VIEW public.current_cohort_membership AS
 -- Name: VIEW current_cohort_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON VIEW public.current_cohort_membership IS '@omit';
+COMMENT ON VIEW public.current_cohort_membership IS '@behavior -*';
 
 
 --
@@ -10195,7 +10199,7 @@ CREATE VIEW public.current_tenant_administrator AS
 -- Name: VIEW current_tenant_administrator; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON VIEW public.current_tenant_administrator IS '@omit';
+COMMENT ON VIEW public.current_tenant_administrator IS '@behavior -*';
 
 
 --
@@ -10220,7 +10224,7 @@ CREATE VIEW public.current_tenant_membership AS
 -- Name: VIEW current_tenant_membership; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON VIEW public.current_tenant_membership IS '@omit';
+COMMENT ON VIEW public.current_tenant_membership IS '@behavior -*';
 
 
 --
@@ -10252,7 +10256,7 @@ CREATE VIEW public.current_tenant_trainer AS
 -- Name: VIEW current_tenant_trainer; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON VIEW public.current_tenant_trainer IS '@omit';
+COMMENT ON VIEW public.current_tenant_trainer IS '@behavior -*';
 
 
 --
@@ -10277,7 +10281,7 @@ CREATE TABLE public.dokumenty (
 -- Name: TABLE dokumenty; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.dokumenty IS '@omit';
+COMMENT ON TABLE public.dokumenty IS '@behavior -*';
 
 
 --
@@ -10393,9 +10397,7 @@ CREATE TABLE public.event_target_cohort (
 -- Name: TABLE event_target_cohort; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.event_target_cohort IS '@omit create,update,delete
-@behavior -query:resource:list -query:resource:connection -query:resource:single
-@simpleCollections only';
+COMMENT ON TABLE public.event_target_cohort IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -10450,7 +10452,7 @@ CREATE TABLE public.file (
 -- Name: TABLE file; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.file IS '@omit create,update,delete';
+COMMENT ON TABLE public.file IS '@behavior -insert -update -delete';
 
 
 --
@@ -10486,7 +10488,7 @@ CREATE TABLE public.form_responses (
 -- Name: TABLE form_responses; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.form_responses IS '@omit create,update,delete';
+COMMENT ON TABLE public.form_responses IS '@behavior -insert -update -delete';
 
 
 --
@@ -10518,8 +10520,7 @@ CREATE TABLE public.location_image (
 -- Name: TABLE location_image; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.location_image IS '@simpleCollections only
-@behavior -insert -update -delete -query:resource:connection -query:resource:list';
+COMMENT ON TABLE public.location_image IS '@behavior +list -connection -insert -update -delete -query:resource:connection -query:resource:list';
 
 
 --
@@ -10559,7 +10560,7 @@ CREATE TABLE public.otp_token (
 -- Name: TABLE otp_token; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.otp_token IS '@omit';
+COMMENT ON TABLE public.otp_token IS '@behavior -*';
 
 
 --
@@ -10621,9 +10622,7 @@ CREATE TABLE public.payment_recipient (
 -- Name: TABLE payment_recipient; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment_recipient IS '@omit create,update,delete
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.payment_recipient IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection';
 
 
 --
@@ -10675,16 +10674,14 @@ CREATE TABLE public.person_invitation (
 -- Name: TABLE person_invitation; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.person_invitation IS '@omit update
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.person_invitation IS '@behavior +list -connection -update -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN person_invitation.event_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.person_invitation.event_id IS '@omit';
+COMMENT ON COLUMN public.person_invitation.event_id IS '@behavior -*';
 
 
 --
@@ -10723,15 +10720,14 @@ CREATE TABLE public.user_proxy (
 -- Name: TABLE user_proxy; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.user_proxy IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.user_proxy IS '@behavior +list -connection -query:resource:list -query:resource:connection';
 
 
 --
 -- Name: COLUMN user_proxy.active_range; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.user_proxy.active_range IS '@omit';
+COMMENT ON COLUMN public.user_proxy.active_range IS '@behavior -*';
 
 
 --
@@ -10848,8 +10844,7 @@ CREATE TABLE public.scoreboard_manual_adjustment (
 -- Name: TABLE scoreboard_manual_adjustment; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@behavior +list -connection -query:resource:list -query:resource:connection';
 
 
 --
@@ -10892,9 +10887,7 @@ CREATE TABLE public.security_event (
 -- Name: TABLE security_event; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.security_event IS '@omit create,update,delete
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.security_event IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 
 --
@@ -11137,7 +11130,7 @@ CREATE MATERIALIZED VIEW public.account_balances AS
 -- Name: MATERIALIZED VIEW account_balances; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON MATERIALIZED VIEW public.account_balances IS '@omit';
+COMMENT ON MATERIALIZED VIEW public.account_balances IS '@behavior -*';
 
 
 --
@@ -13150,10 +13143,10 @@ CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING
 
 
 --
--- Name: event_registration_event_id_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: event_registration_event_id_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX event_registration_event_id_idx ON public.event_registration USING btree (event_id);
+CREATE INDEX event_registration_event_id_id_idx ON public.event_registration USING btree (event_id, id);
 
 
 --
@@ -15678,7 +15671,7 @@ ALTER TABLE ONLY public.event_registration
 -- Name: CONSTRAINT event_registration_created_by_fkey ON event_registration; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT event_registration_created_by_fkey ON public.event_registration IS '@omit';
+COMMENT ON CONSTRAINT event_registration_created_by_fkey ON public.event_registration IS '@behavior -*';
 
 
 --
@@ -16013,7 +16006,7 @@ ALTER TABLE ONLY public.person_invitation
 -- Name: CONSTRAINT person_invitation_event_id_fkey ON person_invitation; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON CONSTRAINT person_invitation_event_id_fkey ON public.person_invitation IS '@omit';
+COMMENT ON CONSTRAINT person_invitation_event_id_fkey ON public.person_invitation IS '@behavior -*';
 
 
 --
@@ -18163,6 +18156,20 @@ REVOKE ALL ON FUNCTION app_private.tg_resolve_age_group() FROM PUBLIC;
 
 
 --
+-- Name: FUNCTION tstzrange_overlaps_internal(tstzrange, anyrange); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.tstzrange_overlaps_internal(tstzrange, anyrange) TO anonymous;
+
+
+--
+-- Name: FUNCTION tstzrange_overlaps(tstzrange, tstzrange); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.tstzrange_overlaps(tstzrange, tstzrange) TO anonymous;
+
+
+--
 -- Name: FUNCTION visible_announcement_ids(); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -18690,6 +18697,7 @@ GRANT ALL ON FUNCTION public.invitation_name(token uuid) TO anonymous;
 -- Name: FUNCTION log_in_as(id bigint); Type: ACL; Schema: public; Owner: -
 --
 
+REVOKE ALL ON FUNCTION public.log_in_as(id bigint) FROM PUBLIC;
 GRANT ALL ON FUNCTION public.log_in_as(id bigint) TO administrator;
 
 
@@ -19988,5 +19996,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict CfI4KPPcTUl9hlVB2xNWOrbfuAqNMGIomti4QBlsB6dYFkgekm521ATRqV1fazt
+\unrestrict dPw6rSMFAbPKOKG2hJpmPSLotUC0sNgqdP3IcaLUusvmuGjF9HyUpaPeXXFHb5D
 

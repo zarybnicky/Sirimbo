@@ -3,8 +3,7 @@ CREATE TABLE public.tenant_settings (
     settings jsonb NOT NULL
 );
 
-COMMENT ON TABLE public.tenant_settings IS '@omit create,delete
-@behavior -query:resource:list -query:resource:connection -singularRelation:resource:list';
+COMMENT ON TABLE public.tenant_settings IS '@behavior -insert -delete -query:resource:list -query:resource:connection -singularRelation:resource:list';
 
 GRANT ALL ON TABLE public.tenant_settings TO anonymous;
 ALTER TABLE public.tenant_settings ENABLE ROW LEVEL SECURITY;

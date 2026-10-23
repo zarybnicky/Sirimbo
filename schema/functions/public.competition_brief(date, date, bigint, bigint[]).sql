@@ -71,6 +71,6 @@ CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week
     c.name;
 $$;
 
-COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@omit';
+COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;

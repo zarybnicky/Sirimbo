@@ -13,6 +13,6 @@ CREATE VIEW public.current_tenant_administrator AS
    FROM public.tenant_administrator
   WHERE ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (status = 'active'::public.relationship_status));
 
-COMMENT ON VIEW public.current_tenant_administrator IS '@omit';
+COMMENT ON VIEW public.current_tenant_administrator IS '@behavior -*';
 
 GRANT SELECT ON TABLE public.current_tenant_administrator TO anonymous;

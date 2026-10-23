@@ -3,7 +3,7 @@ CREATE FUNCTION public.event_series_info(instance public.event) RETURNS public.s
     AS $$
   select row(
     ranked.series_id,
-    ranked.name,
+    series.name,
     ranked.position,
     ranked.length,
     ranked.since,
@@ -12,16 +12,16 @@ CREATE FUNCTION public.event_series_info(instance public.event) RETURNS public.s
   from (
     select
       member.id as member_id,
-      series.id as series_id,
-      series.name,
+      member.series_id,
+      member.tenant_id,
       row_number() over (order by member.since, member.id)::integer as position,
       count(*) over ()::integer as length,
       min(member.since) over () as since,
       max(member.until) over () as until
     from event member
-    join event_series series on series.tenant_id = member.tenant_id and series.id = member.series_id
     where member.series_id = instance.series_id
   ) ranked
+  join event_series series on series.tenant_id = ranked.tenant_id and series.id = ranked.series_id
   where ranked.member_id = instance.id;
 $$;
 

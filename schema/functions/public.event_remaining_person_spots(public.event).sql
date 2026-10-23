@@ -1,6 +1,6 @@
 CREATE FUNCTION public.event_remaining_person_spots(inst public.event) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select case
     when inst.capacity is null or inst.capacity <= 0 then null

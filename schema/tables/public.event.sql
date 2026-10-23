@@ -30,9 +30,8 @@ CREATE TABLE public.event (
     CONSTRAINT event_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.event IS '@omit create
-@simpleCollections only';
-COMMENT ON COLUMN public.event.share_token IS '@omit';
+COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
+COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
 
 GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;

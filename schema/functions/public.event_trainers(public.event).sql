@@ -4,7 +4,7 @@ CREATE FUNCTION public.event_trainers(v_instance public.event) RETURNS SETOF pub
 select * from app_private.event_trainers_at(v_instance, v_instance.since);
 $$;
 
-COMMENT ON FUNCTION public.event_trainers(v_instance public.event) IS '@simpleCollections only
+COMMENT ON FUNCTION public.event_trainers(v_instance public.event) IS '@behavior +list -connection
 @deprecated Use eventTrainersList.';
 
 GRANT ALL ON FUNCTION public.event_trainers(v_instance public.event) TO anonymous;

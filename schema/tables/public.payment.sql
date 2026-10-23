@@ -14,9 +14,7 @@ CREATE TABLE public.payment (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.payment IS '@omit create
-@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.payment IS '@behavior +list -connection -insert -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.payment TO anonymous;
 ALTER TABLE public.payment ENABLE ROW LEVEL SECURITY;

@@ -13,7 +13,7 @@ CREATE TABLE public.announcement (
     CONSTRAINT announcement_schedule_check CHECK (((scheduled_since IS NULL) OR (scheduled_until IS NULL) OR (scheduled_since < scheduled_until)))
 );
 
-COMMENT ON TABLE public.announcement IS '@omit create';
+COMMENT ON TABLE public.announcement IS '@behavior -insert';
 
 GRANT ALL ON TABLE public.announcement TO anonymous;
 ALTER TABLE public.announcement ENABLE ROW LEVEL SECURITY;

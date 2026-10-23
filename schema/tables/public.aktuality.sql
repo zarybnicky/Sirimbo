@@ -15,8 +15,7 @@ CREATE TABLE public.aktuality (
     CONSTRAINT aktuality_visible_requires_published_at CHECK (((NOT is_visible) OR (published_at IS NOT NULL)))
 );
 
-COMMENT ON TABLE public.aktuality IS '@omit create,update
-@behavior -query:resource:list';
+COMMENT ON TABLE public.aktuality IS '@behavior -insert -update -query:resource:list';
 COMMENT ON COLUMN public.aktuality.at_kat IS '@deprecated';
 
 GRANT ALL ON TABLE public.aktuality TO anonymous;

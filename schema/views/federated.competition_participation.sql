@@ -6,9 +6,9 @@ UNION ALL
  SELECT e.competition_id,
     e.competitor_id
    FROM federated.competition_entry e
-  WHERE ((NOT e.cancelled) AND (NOT (EXISTS ( SELECT 1
+  WHERE (NOT (EXISTS ( SELECT 1
            FROM federated.competition_result r
-          WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id))))));
+          WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id)))));
 
 COMMENT ON VIEW federated.competition_participation IS '@name competition_participation
 @primaryKey competition_id,competitor_id

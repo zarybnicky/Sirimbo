@@ -77,7 +77,7 @@ CREATE FUNCTION public.federation_person_candidates(first_name text, last_name t
     fp.name_score desc, fp.canonical_name, fp.external_id;
 $_$;
 
-COMMENT ON FUNCTION public.federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real) IS '@simpleCollections only
+COMMENT ON FUNCTION public.federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real) IS '@behavior +list -connection
 @notNull';
 
 GRANT ALL ON FUNCTION public.federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real) TO anonymous;

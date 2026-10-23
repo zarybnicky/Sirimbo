@@ -10,8 +10,7 @@ CREATE TABLE public.scoreboard_manual_adjustment (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.scoreboard_manual_adjustment IS '@behavior +list -connection -query:resource:list -query:resource:connection';
 
 GRANT ALL ON TABLE public.scoreboard_manual_adjustment TO anonymous;
 ALTER TABLE public.scoreboard_manual_adjustment ENABLE ROW LEVEL SECURITY;

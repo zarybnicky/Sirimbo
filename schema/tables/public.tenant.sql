@@ -9,9 +9,7 @@ CREATE TABLE public.tenant (
     bank_account text DEFAULT ''::text NOT NULL
 );
 
-COMMENT ON TABLE public.tenant IS '@omit create,delete
-@behavior -singularRelation:resource:single -query:resource:connection
-@simpleCollections only';
+COMMENT ON TABLE public.tenant IS '@behavior +list -connection -insert -delete -singularRelation:resource:single -query:resource:connection';
 
 GRANT SELECT ON TABLE public.tenant TO anonymous;
 GRANT ALL ON TABLE public.tenant TO system_admin;

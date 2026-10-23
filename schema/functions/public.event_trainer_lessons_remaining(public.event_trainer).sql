@@ -1,6 +1,6 @@
 CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) RETURNS integer
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select case
     when e.lessons_offered is null then null

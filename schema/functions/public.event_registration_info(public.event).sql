@@ -1,6 +1,6 @@
 CREATE FUNCTION public.event_registration_info(inst public.event) RETURNS public.event_registration_info
     LANGUAGE sql STABLE SECURITY DEFINER
-    SET search_path TO 'public', 'pg_catalog', 'pg_temp'
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
   select row(
     count(*) filter (where parent_registration_id is null)::integer,

@@ -44,6 +44,6 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) IS '@omit';
+COMMENT ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.create_next_cohort_subscription_payment(c public.cohort_subscription) TO anonymous;

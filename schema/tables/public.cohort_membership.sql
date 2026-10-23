@@ -12,9 +12,8 @@ CREATE TABLE public.cohort_membership (
     CONSTRAINT cohort_membership_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.cohort_membership IS '@simpleCollections only
-@behavior -query:resource:list -query:resource:connection';
-COMMENT ON COLUMN public.cohort_membership.active_range IS '@omit';
+COMMENT ON TABLE public.cohort_membership IS '@behavior +list -connection -query:resource:list -query:resource:connection';
+COMMENT ON COLUMN public.cohort_membership.active_range IS '@behavior -*';
 
 GRANT ALL ON TABLE public.cohort_membership TO anonymous;
 ALTER TABLE public.cohort_membership ENABLE ROW LEVEL SECURITY;

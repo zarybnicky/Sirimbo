@@ -4,6 +4,6 @@ CREATE FUNCTION public.current_tenant_id() RETURNS bigint
   select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
 $$;
 
-COMMENT ON FUNCTION public.current_tenant_id() IS '@omit';
+COMMENT ON FUNCTION public.current_tenant_id() IS '@behavior -*';
 
 GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;

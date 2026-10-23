@@ -121,6 +121,6 @@ CREATE FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigi
   order by total_score desc, person_id;
 $$;
 
-COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) IS '@simpleCollections only';
+COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) IS '@behavior +list -connection';
 
 GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id bigint) TO anonymous;

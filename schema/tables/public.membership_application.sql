@@ -23,7 +23,7 @@ CREATE TABLE public.membership_application (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.membership_application IS '@simpleCollections only';
+COMMENT ON TABLE public.membership_application IS '@behavior +list -connection';
 
 GRANT ALL ON TABLE public.membership_application TO anonymous;
 GRANT ALL ON TABLE public.membership_application TO administrator;

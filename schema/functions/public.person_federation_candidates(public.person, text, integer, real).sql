@@ -6,7 +6,7 @@ CREATE FUNCTION public.person_federation_candidates(in_person public.person, fed
   );
 $_$;
 
-COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@simpleCollections only
+COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@behavior +list -connection
 @notNull';
 
 GRANT ALL ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) TO anonymous;
