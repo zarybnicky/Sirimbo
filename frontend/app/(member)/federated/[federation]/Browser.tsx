@@ -33,7 +33,7 @@ import {
 } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
-import { formatDateOnly } from '@/ui/format';
+import { formatDateOnly, formatPointsAndFinals } from '@/ui/format';
 import EventMap, { defaultMapViews, mapViews } from '../EventMap';
 import { PeriodPicker } from '../PeriodPicker';
 import {
@@ -896,8 +896,10 @@ function Competitors(props: BrowserProps) {
                                       {formatClass(p.category?.class) ??
                                         p.category?.class}
                                     </span>{' '}
-                                    {Number(p.points)}F
-                                    {p.domesticFinals + p.foreignFinals}
+                                    {formatPointsAndFinals(
+                                      p.points,
+                                      p.domesticFinals + p.foreignFinals,
+                                    )}
                                   </div>
                                 ))
                               : '–'}

@@ -58,7 +58,7 @@ fragment ActivityTimelineItem on ActivityTimelineItem {
     ranking
     rankingTo
     pointGain
-    isFinal
+    finalGain
   }
   ... on ActivityJudging {
     federation

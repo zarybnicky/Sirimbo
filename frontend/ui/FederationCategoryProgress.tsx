@@ -1,6 +1,7 @@
 import type { FederationCompetitorQuery } from '@/graphql/Federation';
 import { compareNaturalText, compareText } from '@/lib/compare';
 import { compareCategories, formatCategoryName } from '@/ui/csts';
+import { formatPointsAndFinals } from '@/ui/format';
 import { Table } from '@/ui/Table';
 
 export function FederationCategoryProgress({
@@ -26,7 +27,7 @@ export function FederationCategoryProgress({
   if (entries.length === 0) return null;
 
   return (
-    <Table columns={['Kategorie', { label: 'Body', colSpan: 2 }]}>
+    <Table columns={['Kategorie', 'Body']}>
       {entries
         .toSorted(
           (a, b) =>
@@ -54,10 +55,12 @@ export function FederationCategoryProgress({
               )}
               {formatCategoryName(progress.federation, progress.category)}
             </th>
-            <td width="36" className="text-right">
-              {Number(progress.points)}b
+            <td className="whitespace-nowrap text-right">
+              {formatPointsAndFinals(
+                progress.points,
+                progress.domesticFinals + progress.foreignFinals,
+              )}
             </td>
-            <td width="24">{progress.domesticFinals + progress.foreignFinals}F</td>
           </tr>
         ))}
     </Table>

@@ -5,7 +5,7 @@ import { Table } from '@/ui/Table';
 import { useMemo, useState } from 'react';
 import type { CompetitionRoundQuery } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
-import { formatJudgeScore } from '@/ui/format';
+import { formatJudgeScore, numberFormatter } from '@/ui/format';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 
 export function Results({
@@ -237,7 +237,9 @@ export function Results({
                   ))}
                 {showDanceResults && (
                   <td rowSpan={showMarks ? 2 : 1} className="px-2 py-1">
-                    {result.overallScore == null ? '–' : Number(result.overallScore)}
+                    {result.overallScore == null
+                      ? '–'
+                      : numberFormatter.format(Number(result.overallScore))}
                   </td>
                 )}
                 {hasNextRound && (

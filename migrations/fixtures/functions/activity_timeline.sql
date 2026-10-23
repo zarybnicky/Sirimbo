@@ -29,6 +29,7 @@ select
   null::integer as ranking_to,
   null::numeric(10, 3) as point_gain,
   null::boolean as is_final,
+  null::numeric(10, 3) as final_gain,
   null::federated.competition_type as competition_type,
   null::text as competition_event_external_id,
   null::text as competition_external_id
@@ -39,7 +40,7 @@ comment on view activity_timeline_item is $$
 @interface mode:single type:kind
 @type EVENT_ATTENDANCE name:ActivityEventAttendance attributes:event_attendance_id,event_id
 @type COMPETITION_BRIEF name:ActivityCompetitionBrief attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,check_in_end,category,dances,participants,competition_type,competition_event_external_id,competition_external_id
-@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,competition_type,competition_event_external_id,competition_external_id
+@type COMPETITION_RESULT name:ActivityCompetitionResult attributes:federation,federated_person_id,competitor_id,competitor_name,competitor_type,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,dances,participants,ranking,ranking_to,point_gain,is_final,final_gain,competition_type,competition_event_external_id,competition_external_id
 @type JUDGING name:ActivityJudging attributes:federation,federated_person_id,competition_event_id,competition_event_name,competition_event_location,competition_id,competition_date,category,competition_type,competition_event_external_id,competition_external_id
 @type BIRTHDAY name:ActivityBirthday
 @foreignKey (person_id) references person (id)|@fieldName person|@behavior -manyRelation:resource:list -manyRelation:resource:connection
@@ -120,6 +121,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
@@ -189,6 +191,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
@@ -234,6 +237,7 @@ begin
         cr.ranking_to,
         cr.point_gain,
         cr.is_final,
+        cr.final_gain,
         cr.competition_type,
         cr.event_external_id as competition_event_external_id,
         cr.competition_external_id
@@ -291,6 +295,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         cb.competition_type,
         cb.event_external_id as competition_event_external_id,
         cb.competition_external_id
@@ -361,6 +366,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         e.external_id as competition_event_external_id,
         null::text as competition_external_id
@@ -399,6 +405,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         c.competition_type,
         e.external_id as competition_event_external_id,
         c.external_id as competition_external_id

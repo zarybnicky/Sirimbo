@@ -17,7 +17,7 @@ import { format } from 'date-fns';
 import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
-import { formatDateOnly, formatResultStatus } from '@/ui/format';
+import { formatDateOnly, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
@@ -49,7 +49,6 @@ export type CompetitionEntry = {
   rankingTo?: number | null;
   pointGain?: string | null;
   finalGain?: string | null;
-  isFinal?: boolean | null;
   completionStatus?: string | null;
   cancelled?: boolean;
 };
@@ -254,7 +253,7 @@ function CompetitionGroupContent({
           (a, b) =>
             Number(a.ranking === undefined) - Number(b.ranking === undefined) ||
             (a.ranking ?? Infinity) - (b.ranking ?? Infinity) ||
-            Number(b.isFinal ?? false) - Number(a.isFinal ?? false) ||
+            Number(b.finalGain ?? 0) - Number(a.finalGain ?? 0) ||
             Number(b.pointGain ?? 0) - Number(a.pointGain ?? 0) ||
             (a.ranking === undefined
               ? (a.checkInEnd ?? '24:00').localeCompare(b.checkInEnd ?? '24:00')
@@ -292,9 +291,7 @@ function CompetitionGroupContent({
               </div>
               {result && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
-                  {Number(result.pointGain) > 0 && `+${Number(result.pointGain)}b`}
-                  {/* TODO: Use finalGain once existing ČSTS results have been reimported. */}
-                  {entry.federation === 'csts' && result.isFinal && ' F'}
+                  {formatPointsAndFinals(result.pointGain, result.finalGain, 'gain')}
                 </div>
               )}
               {status && <div className="col-span-full text-neutral-11">{status}</div>}

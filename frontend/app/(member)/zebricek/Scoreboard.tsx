@@ -8,7 +8,7 @@ import { PageHeader } from '@/ui/PageHeader';
 import { computeRange, type PeriodPreset, PeriodSelector } from '@/ui/PeriodSelector';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
-import { fullDateFormatter } from '@/ui/format';
+import { fullDateFormatter, numberFormatter } from '@/ui/format';
 
 export function Scoreboard() {
   const [cohortId, setCohortId] = React.useState<string | null | undefined>(null);
@@ -140,7 +140,9 @@ export function Scoreboard() {
                   return (
                     <tr key={key} className={highlightClass}>
                       <td className="py-1 pr-2 font-bold">
-                        {entry.ranking ? `${entry.ranking}.` : '–'}
+                        {entry.ranking
+                          ? `${numberFormatter.format(BigInt(entry.ranking))}.`
+                          : '–'}
                       </td>
                       <td className="py-1 pr-4">
                         {entry.person ? (
@@ -155,16 +157,16 @@ export function Scoreboard() {
                         )}
                       </td>
                       <td className="py-1 px-2 text-center">
-                        {entry.lessonTotalScore ?? '0'}
+                        {numberFormatter.format(BigInt(entry.lessonTotalScore ?? '0'))}
                       </td>
                       <td className="py-1 px-2 text-center">
-                        {entry.groupTotalScore ?? '0'}
+                        {numberFormatter.format(BigInt(entry.groupTotalScore ?? '0'))}
                       </td>
                       <td className="py-1 px-2 text-center">
-                        {entry.eventTotalScore ?? '0'}
+                        {numberFormatter.format(BigInt(entry.eventTotalScore ?? '0'))}
                       </td>
                       <td className="py-1 pl-2 text-center font-bold">
-                        {entry.totalScore ?? '0'}
+                        {numberFormatter.format(BigInt(entry.totalScore ?? '0'))}
                       </td>
                     </tr>
                   );

@@ -34,6 +34,26 @@ export const scoringMethodLabels: Record<ScoringMethod, string> = {
   AJS_3_0: 'AJS 3.0',
 };
 
+export const numberFormatter = new Intl.NumberFormat('cs-CZ', {
+  maximumFractionDigits: 3,
+});
+
+export function formatPointsAndFinals(
+  points: string | number | null | undefined,
+  finals: string | number | null | undefined,
+  variant: 'total' | 'gain' = 'total',
+) {
+  const prefix = variant === 'gain' ? '+' : '';
+  return [
+    points == null ? '' : `${prefix}${numberFormatter.format(Number(points))}b`,
+    finals == null || (variant === 'gain' && Number(finals) === 0)
+      ? ''
+      : `${numberFormatter.format(Number(finals))}F`,
+  ]
+    .filter(isTruthy)
+    .join('\u202F');
+}
+
 export function formatJudgeScore(
   value:
     | {
@@ -49,7 +69,7 @@ export function formatJudgeScore(
     ? Number(value.score)
       ? '×'
       : '–'
-    : Number(value.score);
+    : numberFormatter.format(Number(value.score));
 }
 
 export function formatResultStatus(value: string | null | undefined) {

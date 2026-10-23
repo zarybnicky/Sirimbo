@@ -51,7 +51,8 @@ as $$
     false as has_result,
     comp.competition_type,
     e.external_id as event_external_id,
-    comp.external_id as competition_external_id
+    comp.external_id as competition_external_id,
+    null::numeric(10,3) as final_gain
   from federated_people fp
   join federated.competitor_component cc on cc.person_id = fp.federated_person_id
   join federated.competitor c on c.id = cc.competitor_id
@@ -129,7 +130,8 @@ as $$
     true as has_result,
     comp.competition_type,
     e.external_id as event_external_id,
-    comp.external_id as competition_external_id
+    comp.external_id as competition_external_id,
+    cr.final_gain
   from federated_people fp
   join federated.competitor_component cc on cc.person_id = fp.federated_person_id
   join federated.competitor c on c.id = cc.competitor_id

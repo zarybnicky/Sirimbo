@@ -1,7 +1,7 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
-import { formatCoupleName, formatResultStatus } from '@/ui/format';
+import { formatCoupleName, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
 import type {
   CompetitionParticipantFragment,
   FederationCompetitionQuery,
@@ -59,15 +59,12 @@ export function Results({
                 {status && <div className="text-xs text-neutral-11">{status}</div>}
               </th>
               {showPoints && (
-                <td>
-                  {result.pointGain == null ? null : Number(result.pointGain)}
-                  {federation === 'csts'
-                    ? result.isFinal
-                      ? ' F'
-                      : ''
-                    : result.finalGain == null
-                      ? null
-                      : Number(result.finalGain)}
+                <td className="whitespace-nowrap">
+                  {formatPointsAndFinals(
+                    result.pointGain,
+                    result.finalGain,
+                    'gain',
+                  )}
                 </td>
               )}
               {showLocalMatches && (

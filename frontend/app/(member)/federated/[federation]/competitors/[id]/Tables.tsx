@@ -13,7 +13,7 @@ import {
   FederationCompetitorMembersDocument,
   FederationCompetitorHistoryDocument,
 } from '@/graphql/Federation';
-import { formatDateOnly, formatResultStatus } from '@/ui/format';
+import { formatDateOnly, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
 
 export function Members({ federation, id }: { federation: string; id: string }) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
@@ -143,15 +143,12 @@ export function History({ federation, id }: { federation: string; id: string }) 
                   : ''}
               </td>
               {showPoints && (
-                <td>
-                  {result?.pointGain == null ? null : Number(result.pointGain)}
-                  {federation !== 'wdsf'
-                    ? result?.isFinal
-                      ? 'F'
-                      : ''
-                    : result?.finalGain == null
-                      ? null
-                      : Number(result.finalGain)}
+                <td className="whitespace-nowrap">
+                  {formatPointsAndFinals(
+                    result?.pointGain,
+                    result?.finalGain,
+                    'gain',
+                  )}
                 </td>
               )}
             </tr>

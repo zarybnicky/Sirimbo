@@ -24,7 +24,7 @@ import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
-import { formatCount } from '@/ui/format';
+import { formatCount, formatPointsAndFinals } from '@/ui/format';
 
 export function TrainingGroup({
   initialCohort,
@@ -122,9 +122,11 @@ function CategoryList({
           .filter(Boolean)
           .join(' ')}
       </div>
-      <div className="text-sm text-neutral-11">
-        {Number.parseFloat(item.points ?? '0')} /{' '}
-        {item.domesticFinals + item.foreignFinals}F
+      <div className="whitespace-nowrap text-sm text-neutral-11">
+        {formatPointsAndFinals(
+          item.points ?? '0',
+          item.domesticFinals + item.foreignFinals,
+        )}
       </div>
     </div>
   );

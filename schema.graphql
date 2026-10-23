@@ -411,6 +411,7 @@ type ActivityCompetitionResult implements ActivityTimelineItem {
   dances: [String]
   federatedPersonId: String
   federation: String
+  finalGain: BigFloat
   id: String!
   isFinal: Boolean
   kind: ActivityTimelineKind

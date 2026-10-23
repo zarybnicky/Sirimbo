@@ -400,6 +400,7 @@ export type ActivityCompetitionResult = ActivityTimelineItem & {
   dances: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   federatedPersonId: Maybe<Scalars['String']['output']>;
   federation: Maybe<Scalars['String']['output']>;
+  finalGain: Maybe<Scalars['BigFloat']['output']>;
   id: Scalars['String']['output'];
   isFinal: Maybe<Scalars['Boolean']['output']>;
   kind: Maybe<ActivityTimelineKind>;
@@ -13707,6 +13708,7 @@ export type GraphCacheResolvers = {
     dances?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     federatedPersonId?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String']['output'] | string>,
+    finalGain?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['String']['output'] | string>,
     isFinal?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     kind?: GraphCacheResolver<WithTypename<ActivityCompetitionResult>, Record<string, never>, ActivityTimelineKind | string>,
@@ -16269,6 +16271,7 @@ export type GraphCacheUpdaters = {
     dances?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     federatedPersonId?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
+    finalGain?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     isFinal?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
     kind?: GraphCacheUpdateResolver<Maybe<WithTypename<ActivityCompetitionResult>>, Record<string, never>>,
