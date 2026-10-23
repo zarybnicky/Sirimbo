@@ -3,7 +3,13 @@ import {
   EventRangeDocument,
   type EventRangeQuery,
 } from '@/graphql/Event';
-import { capitalize, dateTimeFormatter, formatEventName } from '@/ui/format';
+import {
+  capitalize,
+  dateTimeFormatter,
+  formatDuration,
+  formatEventName,
+  monthFormatter,
+} from '@/ui/format';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
@@ -18,24 +24,10 @@ type ReportRow = {
   total: number;
 };
 
-const hoursFormatter = new Intl.NumberFormat('cs-CZ', {
-  maximumFractionDigits: 1,
-  minimumFractionDigits: 0,
-});
-const monthFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  month: 'long',
-  year: 'numeric',
-});
-
 const reportTypes: Record<'groupRows' | 'privateRows', EventType> = {
   groupRows: 'GROUP',
   privateRows: 'LESSON',
 };
-
-function formatDuration(minutes: number) {
-  if (minutes < 60) return `${minutes} min`;
-  return `${hoursFormatter.format(minutes / 60)} h`;
-}
 
 const toMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;

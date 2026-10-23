@@ -3,7 +3,7 @@ import {
   type CampTrainerOverviewQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
-import { dayFormatter, moneyFormatter } from '@/ui/format';
+import { dayFormatter, formatCount, moneyFormatter } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
@@ -160,14 +160,16 @@ function EventCounts({ events }: { events: ScheduledEvent[] }) {
     <div className="flex h-full flex-col justify-center tabular-nums">
       {lessons > 0 && (
         <div>
-          {lessons}{' '}
-          {lessons <= 4 ? 'lekce' : 'lekcí'}
+          {formatCount(lessons, { one: 'lekce', few: 'lekce', other: 'lekcí' })}
         </div>
       )}
       {groups > 0 && (
         <div>
-          {groups}{' '}
-          {groups === 1 ? 'společná' : groups >= 2 && groups <= 4 ? 'společné' : 'společných'}
+          {formatCount(groups, {
+            one: 'společná',
+            few: 'společné',
+            other: 'společných',
+          })}
         </div>
       )}
     </div>

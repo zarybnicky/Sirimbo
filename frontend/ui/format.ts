@@ -1,10 +1,25 @@
 import { AddressDomain, EventType, ScoreComponent, ScoringMethod } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
+import { isTruthy } from '@/lib/truthyFilter';
 
 type MaybePerson =
   { name?: string | null; firstName?: string; lastName?: string } | null | undefined;
 type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
 type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined };
+
+const pluralRules = new Intl.PluralRules('cs-CZ');
+
+export function formatCount(
+  count: number,
+  forms: Partial<Record<Intl.LDMLPluralRule, string>> & { other: string },
+) {
+  return `${count} ${forms[pluralRules.select(count)] ?? forms.other}`;
+}
+
+export const listFormatter = new Intl.ListFormat('cs-CZ', {
+  type: 'conjunction',
+  style: 'long',
+});
 
 export const formatCoupleName = (couple: MaybeCouple) =>
   !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
@@ -81,7 +96,7 @@ export const formatEventName = (
 
   const registrations = event.registrations?.nodes;
   if (event.type === 'LESSON' && registrations?.length)
-    return registrations.map(formatRegistrant).join(', ');
+    return listFormatter.format(registrations.map(formatRegistrant).filter(isTruthy));
 
   let name = formatEventType(event.type);
   if (
@@ -89,10 +104,9 @@ export const formatEventName = (
     event?.trainersList &&
     event.trainersList.length > 0
   )
-    name += `: ${event.trainersList
-      .map((x) => x?.person?.name)
-      .filter(Boolean)
-      .join(', ')}`;
+    name += `: ${listFormatter.format(
+      event.trainersList.map((x) => x?.person?.name).filter(isTruthy),
+    )}`;
   return name;
 };
 
@@ -164,6 +178,56 @@ function createNumericDateTimeFormatter() {
 
 export const numericFullFormatter = createNumericDateTimeFormatter();
 
+const hoursFormatter = new Intl.NumberFormat('cs-CZ', {
+  style: 'unit',
+  unit: 'hour',
+  maximumFractionDigits: 1,
+  minimumFractionDigits: 0,
+});
+
+const minutesFormatter = new Intl.NumberFormat('cs-CZ', {
+  style: 'unit',
+  unit: 'minute',
+});
+
+export function formatDuration(minutes: number) {
+  if (minutes < 60) return minutesFormatter.format(minutes);
+  return hoursFormatter.format(minutes / 60);
+}
+
+const countdownFormatter = new Intl.DurationFormat('cs-CZ', {
+  style: 'short',
+});
+
+export function formatStartsIn(now: Date, start: Date) {
+  const diffMs = start.getTime() - now.getTime();
+  const diffMinutes = Math.max(0, Math.round(diffMs / 60_000));
+  if (diffMinutes <= 0) return 'právě probíhá';
+  return `za ${countdownFormatter.format({
+    hours: Math.floor(diffMinutes / 60),
+    minutes: diffMinutes % 60,
+  })}`;
+}
+
+const kilobytesFormatter = new Intl.NumberFormat('cs-CZ', {
+  style: 'unit',
+  unit: 'kilobyte',
+  maximumFractionDigits: 0,
+  roundingMode: 'ceil',
+});
+
+const megabytesFormatter = new Intl.NumberFormat('cs-CZ', {
+  style: 'unit',
+  unit: 'megabyte',
+  maximumFractionDigits: 1,
+});
+
+export function formatFileSize(value: string) {
+  const bytes = Number(value);
+  if (bytes < 1_000_000) return kilobytesFormatter.format(bytes / 1000);
+  return megabytesFormatter.format(bytes / 1_000_000);
+}
+
 export const moneyFormatter = {
   format(
     price: {
@@ -210,8 +274,8 @@ export function describePosting(
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers = instance?.trainersList?.map((x) => x.person?.name) ?? [];
-    return `${formatEventType(type)}: ${trainers.join(', ')}`;
+    const trainers = instance?.trainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
+    return `${formatEventType(type)}: ${listFormatter.format(trainers)}`;
   }
   return formatEventName(instance);
 }

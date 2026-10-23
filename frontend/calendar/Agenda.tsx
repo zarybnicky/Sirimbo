@@ -11,7 +11,12 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import { capitalize, fullDateFormatter, longDayFormatter } from '@/ui/format';
+import {
+  capitalize,
+  fullDateFormatter,
+  listFormatter,
+  longDayFormatter,
+} from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
@@ -228,7 +233,9 @@ function LessonGroup({
       )}
 
       <div className="ml-2 text-xl mb-1">
-        {items[0]?.trainersList?.map((x) => x.person?.name).join(', ') ?? ''}
+        {listFormatter.format(
+          (items[0]?.trainersList ?? []).map((x) => x.person?.name).filter(isTruthy),
+        )}
       </div>
 
       {items.map((instance, i) => {

@@ -4,6 +4,7 @@ import {
   formatEventName,
   formatEventType,
   formatRegistrant,
+  listFormatter,
   moneyFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
@@ -93,10 +94,9 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
       {!!instance.trainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-4 text-accent-11 shrink-0" />
-          {instance.trainersList
-            .map((x) => x.person?.name)
-            .filter(Boolean)
-            .join(', ')}
+          {listFormatter.format(
+            instance.trainersList.map((x) => x.person?.name).filter(isTruthy),
+          )}
         </div>
       )}
 
@@ -111,7 +111,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
         <Users className="size-4 text-accent-11 shrink-0" />
         <div>
           {cohorts.length > 0 ? (
-            cohorts.map((x) => x.name).join(', ')
+            listFormatter.format(cohorts.map((x) => x.name))
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : registrationCount < 6 ? (

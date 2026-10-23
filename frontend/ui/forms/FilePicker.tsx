@@ -23,6 +23,7 @@ import {
 } from 'react-hook-form';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter.ts';
+import { formatFileSize, numericFullFormatter } from '@/ui/format';
 
 type Props = {
   value: string[];
@@ -36,19 +37,6 @@ type UploadedFile = {
   name: string;
   url: string;
 };
-
-const uploadedAtFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  dateStyle: 'short',
-  timeStyle: 'short',
-});
-
-function formatFileSize(value: string) {
-  const bytes = Number(value);
-  if (bytes < 1_000_000) return `${Math.ceil(bytes / 1000)} kB`;
-  return `${(bytes / 1_000_000).toLocaleString('cs-CZ', {
-    maximumFractionDigits: 1,
-  })} MB`;
-}
 
 async function uploadFile(source: File): Promise<UploadedFile> {
   const response = await fetch('/f', {
@@ -442,7 +430,7 @@ function FileLibrary({
                         <span className="mt-0.5 flex flex-wrap gap-x-1 text-[11px] leading-tight text-neutral-9">
                           {file.uploadedAt && (
                             <time dateTime={file.uploadedAt}>
-                              {uploadedAtFormatter.format(new Date(file.uploadedAt))}
+                              {numericFullFormatter.format(new Date(file.uploadedAt))}
                             </time>
                           )}
                           {file.byteSize && (

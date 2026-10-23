@@ -35,8 +35,7 @@ const onError = async ({ detail: combined }: CustomEvent<CombinedError>) => {
         })
         .finally(() => { deploymentRecovery = undefined; });
       if (await deploymentRecovery) return;
-    } catch {
-    }
+    } catch {}
   }
 
   for (const ex of combined.graphQLErrors) {

@@ -8,7 +8,7 @@ import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FederationPersonOfficialAssignmentsDocument } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
 import { FormError } from '@/ui/form';
-import { formatDateOnly } from '@/ui/format';
+import { formatCount, formatDateOnly } from '@/ui/format';
 import { Pagination } from '@/ui/Pagination';
 import { Spinner } from '@/ui/Spinner';
 
@@ -81,8 +81,11 @@ export function OfficialAssignments({
                       {competitions.length > 0 && (
                         <details>
                           <summary className="cursor-pointer text-neutral-11">
-                            {competitions.length}{' '}
-                            {competitions.length === 1 ? 'soutěž' : 'soutěží'}
+                            {formatCount(competitions.length, {
+                              one: 'soutěž',
+                              few: 'soutěže',
+                              other: 'soutěží',
+                            })}
                           </summary>
                           <ul className="space-y-1 mt-1">
                             {competitions.map((comp) => (

@@ -2,14 +2,18 @@
 
 import { EventRangeDocument, type EventRangeQuery } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
+import {
+  formatEventName,
+  formatEventType,
+  formatStartsIn,
+  shortTimeFormatter,
+} from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
 import React from 'react';
 import { useQuery } from 'urql';
 
 const REFRESH_INTERVAL = 30_000;
-const MILLISECONDS_IN_MINUTE = 60_000;
 
 type Instance = NonNullable<EventRangeQuery['list']>[number];
 
@@ -27,17 +31,6 @@ type GroupingBucket = {
 };
 
 type GroupingMode = 'location' | 'trainer';
-
-function formatStartsIn(now: Date, start: Date) {
-  const diffMs = start.getTime() - now.getTime();
-  const diffMinutes = Math.max(0, Math.round(diffMs / MILLISECONDS_IN_MINUTE));
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-  if (diffMinutes <= 0) return 'právě začíná';
-  if (hours === 0) return `za ${minutes} min`;
-  if (minutes === 0) return `za ${hours} h`;
-  return `za ${hours} h ${minutes} min`;
-}
 
 function trainerGroups(instance: Instance) {
   const groups = (instance.trainersList ?? []).map((x) => ({

@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
+import { formatCount } from '@/ui/format';
 import { eventMonths, eventMonthColors } from './EventMap';
 
 export function PeriodPicker({
@@ -63,7 +64,13 @@ export function PeriodPicker({
                   )}
                 >
                   <span className="font-bold tabular-nums">{y.year}</span>
-                  <span className="text-xs">{y.eventCount} událostí</span>
+                  <span className="text-xs">
+                    {formatCount(y.eventCount, {
+                      one: 'událost',
+                      few: 'události',
+                      other: 'událostí',
+                    })}
+                  </span>
                 </span>
               </label>
             ))}

@@ -11,6 +11,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { slugify } from '@/lib/slugify';
+import { formatCount } from '@/ui/format';
 
 export function CohortList() {
   const currentId = useParams<{ id?: string }>()?.id;
@@ -30,7 +31,7 @@ export function CohortList() {
           title: x.name,
           subtitle: [
             x.location,
-            `${count} ${count === 1 ? 'člen' : count >= 2 && count <= 4 ? 'členové' : 'členů'}`,
+            formatCount(count, { one: 'člen', few: 'členové', other: 'členů' }),
             !x.isVisible && 'Skrytá',
             x.isArchived && 'Archivovaná',
           ]

@@ -24,6 +24,7 @@ import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
+import { formatCount } from '@/ui/format';
 
 export function TrainingGroup({
   initialCohort,
@@ -59,13 +60,7 @@ export function TrainingGroup({
         breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
         subtitle={[
           cohort.location,
-          members.length +
-            ' ' +
-            (members.length > 4 || members.length === 0
-              ? 'členů'
-              : members.length > 1
-                ? 'členové'
-                : 'člen'),
+          formatCount(members.length, { one: 'člen', few: 'členové', other: 'členů' }),
         ]
           .filter(Boolean)
           .join(' · ')}

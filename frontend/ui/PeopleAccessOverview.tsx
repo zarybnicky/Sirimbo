@@ -20,7 +20,7 @@ import { cn } from '@/lib/cn';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { TextField } from '@/ui/fields/text';
-import { numericFullFormatter } from '@/ui/format';
+import { formatCount, numericFullFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { Clock3, CreditCard, KeyRound } from 'lucide-react';
@@ -59,7 +59,7 @@ function activityClassName(status: AccessStatus) {
 const normalizeEmail = (email?: string | null) => email?.trim().toLowerCase() ?? '';
 
 function peopleCount(count: number) {
-  return count === 1 ? '1 osoba' : count < 5 ? `${count} osoby` : `${count} osob`;
+  return formatCount(count, { one: 'osobu', few: 'osoby', other: 'osob' });
 }
 
 type AccessPerson = PersonBasicFragment & {
@@ -314,7 +314,7 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
               ? 'Načítám…'
               : error
                 ? null
-                : `Zobrazeno ${filteredRows.length} z ${people.length} osob`}
+                : `Zobrazeno ${filteredRows.length} z ${formatCount(people.length, { one: 'osoby', other: 'osob' })}`}
           </p>
           <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
             {(search || webFacet !== 'all' || cardFacet !== 'all') && (

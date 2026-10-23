@@ -20,7 +20,7 @@ import { geoRobinson } from 'd3-geo-projection';
 import type { FederationMapEventFragment } from '@/graphql/Federation';
 import { FormError } from '@/ui/form';
 import { SelectField } from '@/ui/fields/select';
-import { formatDateOnly } from '@/ui/format';
+import { formatCount, formatDateOnly } from '@/ui/format';
 import { Popover, PopoverContent, PopoverAnchor } from '@/ui/popover';
 import { cn } from '@/lib/cn';
 
@@ -190,7 +190,11 @@ export default function EventMap({
                 <button
                   key={location.key}
                   type="button"
-                  aria-label={`${location.label} · ${location.events.length} událostí`}
+                  aria-label={`${location.label} · ${formatCount(location.events.length, {
+                    one: 'událost',
+                    few: 'události',
+                    other: 'událostí',
+                  })}`}
                   aria-haspopup="dialog"
                   aria-expanded={selected?.key === location.key}
                   onPointerEnter={(event) => {
