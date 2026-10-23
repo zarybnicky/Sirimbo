@@ -55,7 +55,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
             href={`/terminy/${seriesInfo.id}`}
             className="text-xs hover:text-accent-11 underline"
           >
-            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
+            {seriesInfo.position}. z {seriesInfo.length} v sérii
           </Link>
         )}
       </div>

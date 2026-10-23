@@ -232,6 +232,8 @@ export function formatFileSize(value: string) {
   return megabytesFormatter.format(bytes / 1_000_000);
 }
 
+const currencyFormatters = new Map<string, Intl.NumberFormat>();
+
 export const moneyFormatter = {
   format(
     price: {
@@ -240,12 +242,17 @@ export const moneyFormatter = {
     } | null,
   ) {
     if (!price || price.amount === null) return null;
-    const formatter = new Intl.NumberFormat('cs-CZ', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-      currency: price.currency ?? 'CZK',
-      style: 'currency',
-    });
+    const currency = price.currency ?? 'CZK';
+    let formatter = currencyFormatters.get(currency);
+    if (!formatter) {
+      formatter = new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+        currency,
+        style: 'currency',
+      });
+      currencyFormatters.set(currency, formatter);
+    }
     const amount =
       typeof price.amount === 'string' ? Number.parseFloat(price.amount) : price.amount;
     return formatter.format(amount);
