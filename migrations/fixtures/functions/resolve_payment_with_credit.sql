@@ -50,6 +50,6 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION resolve_payment_with_credit IS '@omit';
+COMMENT ON FUNCTION resolve_payment_with_credit IS '@behavior -*';
 
 GRANT ALL ON FUNCTION resolve_payment_with_credit TO anonymous;

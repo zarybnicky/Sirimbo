@@ -13,7 +13,7 @@ create type event_registration_info as (
 create or replace function event_registration_info(inst event)
   returns event_registration_info
   language sql stable security definer
-  set search_path = public, pg_catalog, pg_temp
+  set search_path = pg_catalog, public, pg_temp
 as $$
   select row(
     count(*) filter (where parent_registration_id is null)::integer,

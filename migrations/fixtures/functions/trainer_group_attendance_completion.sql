@@ -2,7 +2,7 @@ drop function if exists trainer_group_attendance_completion;
 drop type if exists trainer_group_attendance_completion;
 
 create type trainer_group_attendance_completion as (
-  person_id integer,
+  person_id bigint,
   total_events integer,
   filled_events integer,
   partially_filled_events integer,
@@ -84,5 +84,5 @@ create or replace function trainer_group_attendance_completion(
   order by filled_ratio asc nulls last, person_id;
 $_$;
 
-comment on function trainer_group_attendance_completion is '@simpleCollections only';
+comment on function trainer_group_attendance_completion is '@behavior +list -connection';
 grant all on function trainer_group_attendance_completion to anonymous;

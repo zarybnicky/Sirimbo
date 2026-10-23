@@ -99,7 +99,7 @@ language sql stable as $$
     fp.name_score desc, fp.canonical_name, fp.external_id;
 $$;
 
-comment on function federation_person_candidates is '@simpleCollections only
+comment on function federation_person_candidates is '@behavior +list -connection
 @notNull';
 grant execute on function federation_person_candidates to anonymous;
 
@@ -112,6 +112,6 @@ language sql stable as $$
   );
 $$;
 
-comment on function person_federation_candidates is '@simpleCollections only
+comment on function person_federation_candidates is '@behavior +list -connection
 @notNull';
 grant execute on function person_federation_candidates to anonymous;

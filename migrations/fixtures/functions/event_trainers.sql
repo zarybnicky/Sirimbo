@@ -25,5 +25,5 @@ select * from app_private.event_trainers_at(v_instance, v_instance.since);
 $$;
 
 grant all on function event_trainers to anonymous;
-comment on function event_trainers is '@simpleCollections only
+comment on function event_trainers is '@behavior +list -connection
 @deprecated Use eventTrainersList.';

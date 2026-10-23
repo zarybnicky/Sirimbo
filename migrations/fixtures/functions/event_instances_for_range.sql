@@ -51,5 +51,5 @@ create or replace function event_instances_for_range(
   ;
 $$ stable language sql;
 
-comment on function event_instances_for_range is '@simpleCollections only';
+comment on function event_instances_for_range is '@behavior +list -connection';
 grant all on function event_instances_for_range to anonymous;

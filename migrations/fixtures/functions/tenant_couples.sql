@@ -6,4 +6,4 @@ create or replace function tenant_couples(t tenant) returns setof couple as $$
       or exists (select 1 from current_tenant_membership where person_id = woman_id));
 $$ language sql stable;
 grant all on function tenant_couples to anonymous;
-comment on function tenant_couples is '@simpleCollections only';
+comment on function tenant_couples is '@behavior +list -connection';

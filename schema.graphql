@@ -15127,7 +15127,7 @@ type TrainerGroupAttendanceCompletion {
   Reads a single `Person` that is related to this `TrainerGroupAttendanceCompletion`.
   """
   person: Person
-  personId: Int
+  personId: BigInt
   totalAttendances: Int
   totalEvents: Int
   unfilledEvents: Int

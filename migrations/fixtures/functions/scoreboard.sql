@@ -130,6 +130,6 @@ as $$
   order by total_score desc, person_id;
 $$;
 
-comment on function scoreboard_entries is '@simpleCollections only';
+comment on function scoreboard_entries is '@behavior +list -connection';
 
 grant all on function scoreboard_entries to anonymous;

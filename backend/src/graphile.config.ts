@@ -4,7 +4,6 @@ import 'postgraphile/grafserv/express/v4';
 import 'graphile-config';
 import path from 'path';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
-import { PgV4SmartTagsPlugin } from 'postgraphile/presets/v4';
 import { QueryControlsPlugin } from './plugins/query-controls.ts';
 import { JWT_SECRET } from './auth.ts';
 import { pool } from './db.ts';
@@ -30,7 +29,6 @@ const preset: GraphileConfig.Preset = {
     'PgIndexBehaviorsPlugin',
   ],
   plugins: [
-    PgV4SmartTagsPlugin,
     ApiInflectionPlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,

@@ -18,5 +18,5 @@ begin
 end;
 $$;
 
-revoke all on FUNCTION log_in_as from anonymous;
+revoke all on FUNCTION log_in_as from public, anonymous;
 GRANT ALL ON FUNCTION log_in_as TO administrator;

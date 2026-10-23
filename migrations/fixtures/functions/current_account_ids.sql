@@ -5,5 +5,5 @@ as $$
   where person_id = any ((select current_person_ids())::bigint[]);
 $$;
 
-comment on function current_account_ids() is '@omit';
+comment on function current_account_ids() is '@behavior -*';
 grant execute on function current_account_ids() to anonymous;

@@ -12197,7 +12197,7 @@ export type TrainerGroupAttendanceCompletion = {
   pendingAttendances: Maybe<Scalars['Int']['output']>;
   /** Reads a single `Person` that is related to this `TrainerGroupAttendanceCompletion`. */
   person: Maybe<Person>;
-  personId: Maybe<Scalars['Int']['output']>;
+  personId: Maybe<Scalars['BigInt']['output']>;
   totalAttendances: Maybe<Scalars['Int']['output']>;
   totalEvents: Maybe<Scalars['Int']['output']>;
   unfilledEvents: Maybe<Scalars['Int']['output']>;
@@ -15728,7 +15728,7 @@ export type GraphCacheResolvers = {
     partiallyFilledEvents?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
     pendingAttendances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, WithTypename<Person> | string>,
-    personId?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
+    personId?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     totalAttendances?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
     totalEvents?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>,
     unfilledEvents?: GraphCacheResolver<WithTypename<TrainerGroupAttendanceCompletion>, Record<string, never>, Scalars['Int']['output'] | string>

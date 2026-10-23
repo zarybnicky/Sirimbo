@@ -29,5 +29,5 @@ where payment_recipient.payment_id = p.payment_id
   );
 $$;
 
-comment on function payment_debtor_price is '@simpleCollections only';
+comment on function payment_debtor_price is '@behavior +list -connection';
 grant all on function payment_debtor_price to anonymous;

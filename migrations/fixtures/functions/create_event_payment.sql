@@ -68,5 +68,5 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION create_event_payment IS '@omit';
+COMMENT ON FUNCTION create_event_payment IS '@behavior -*';
 GRANT ALL ON FUNCTION create_event_payment TO anonymous;

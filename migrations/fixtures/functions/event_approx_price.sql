@@ -29,4 +29,4 @@ as $$
 $$;
 
 grant all on function event_approx_price to anonymous;
-comment on function event_approx_price is '@simpleCollections only';
+comment on function event_approx_price is '@behavior +list -connection';

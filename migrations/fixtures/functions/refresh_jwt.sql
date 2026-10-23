@@ -6,7 +6,7 @@ create or replace function refresh_jwt() returns jwt_token
 as $$
   select app_private.create_jwt_token(users)
   from users
-  where id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+  where id = current_user_id();
 $$;
 
 grant all on function refresh_jwt to anonymous;

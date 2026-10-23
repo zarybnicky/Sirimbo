@@ -160,8 +160,8 @@ as $$
     c.name;
 $$;
 
-comment on function competition_brief is '@omit';
+comment on function competition_brief is '@behavior -*';
 grant all on function competition_brief to anonymous;
 
-comment on function competition_report is '@omit';
+comment on function competition_report is '@behavior -*';
 grant all on function competition_report to anonymous;

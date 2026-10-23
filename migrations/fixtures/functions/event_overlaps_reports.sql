@@ -70,7 +70,7 @@ as $$
     and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
 
-comment on function event_overlaps_attendee_report is '@simpleCollections only';
+comment on function event_overlaps_attendee_report is '@behavior +list -connection';
 grant all on function event_overlaps_attendee_report to anonymous;
 
 create or replace function event_overlaps_trainer_report(p_since timestamptz, p_until timestamptz)
@@ -114,5 +114,5 @@ as $$
     and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
 $$;
 
-comment on function event_overlaps_trainer_report is '@simpleCollections only';
+comment on function event_overlaps_trainer_report is '@behavior +list -connection';
 grant all on function event_overlaps_trainer_report to anonymous;

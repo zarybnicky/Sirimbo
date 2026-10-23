@@ -10,7 +10,7 @@ where not exists (select 1 from user_proxy where person_id = person.id)
 $$;
 grant all on function people_without_access_with_existing_account to anonymous;
 
-COMMENT ON function people_without_access_with_existing_account IS '@simpleCollections only';
+COMMENT ON function people_without_access_with_existing_account IS '@behavior +list -connection';
 
 create or replace function people_without_access_or_invitation() returns setof person stable language sql as $$
 select * from person
@@ -24,7 +24,7 @@ where not exists (select 1 from user_proxy where person_id = person.id)
 $$;
 grant all on function people_without_access_or_invitation to anonymous;
 
-COMMENT ON function people_without_access_or_invitation IS '@simpleCollections only';
+COMMENT ON function people_without_access_or_invitation IS '@behavior +list -connection';
 
 create or replace function people_without_access_with_invitation() returns setof person stable language sql as $$
 select * from person
@@ -36,4 +36,4 @@ where not exists (select 1 from user_proxy where person_id = person.id)
 $$;
 grant all on function people_without_access_with_invitation to anonymous;
 
-COMMENT ON function people_without_access_with_invitation IS '@simpleCollections only';
+COMMENT ON function people_without_access_with_invitation IS '@behavior +list -connection';

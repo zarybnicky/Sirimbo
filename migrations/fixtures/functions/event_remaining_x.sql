@@ -14,7 +14,7 @@ CREATE or replace FUNCTION event_trainer_lessons_remaining(e event_trainer) RETU
       where demand.trainer_id = e.id
     )
   end;
-$$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
+$$ LANGUAGE sql STABLE security definer set search_path = pg_catalog, public, pg_temp;
 
 CREATE or replace FUNCTION event_remaining_person_spots(inst event) RETURNS integer AS $$
   select case
@@ -36,7 +36,7 @@ CREATE or replace FUNCTION event_remaining_person_spots(inst event) RETURNS inte
         )
       end
   end;
-$$ LANGUAGE sql STABLE security definer set search_path = public, pg_catalog, pg_temp;
+$$ LANGUAGE sql STABLE security definer set search_path = pg_catalog, public, pg_temp;
 
 GRANT ALL ON FUNCTION event_trainer_lessons_remaining(e event_trainer) TO anonymous;
 GRANT ALL ON FUNCTION event_remaining_person_spots(inst event) TO anonymous;

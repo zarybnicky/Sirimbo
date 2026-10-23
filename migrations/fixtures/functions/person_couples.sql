@@ -12,3 +12,7 @@ $$ language sql stable;
 
 grant all on function person_active_couples to anonymous;
 grant all on function person_all_couples to anonymous;
+
+comment on function person_active_couples is '@behavior +list -connection';
+
+comment on function person_all_couples is '@behavior +list -connection';

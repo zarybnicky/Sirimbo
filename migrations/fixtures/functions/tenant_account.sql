@@ -16,3 +16,5 @@ CREATE or replace FUNCTION tenant_account(in_currency text, OUT acc account) RET
 $$;
 
 grant all on function tenant_account to anonymous;
+
+comment on function tenant_account is '@behavior -*';

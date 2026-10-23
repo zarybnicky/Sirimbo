@@ -13,3 +13,5 @@ CREATE or replace FUNCTION person_account(p_id bigint, in_currency text, OUT acc
 $$ language sql security definer set search_path = pg_catalog, public, pg_temp;
 
 grant all on function person_account to anonymous;
+
+comment on function person_account is '@behavior -*';
