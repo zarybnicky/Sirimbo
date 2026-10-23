@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
+import { compareNaturalText, compareText } from '@/lib/compare';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -489,9 +490,9 @@ function People(props: BrowserProps) {
                     compareAgeRanges(
                       ageRanges.get(a) ?? null,
                       ageRanges.get(b) ?? null,
-                    ) || a.localeCompare(b, 'cs', { numeric: true })
+                    ) || compareNaturalText(a, b)
                   );
-                return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b);
+                return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareText(a, b);
               },
             );
             return (
@@ -700,13 +701,9 @@ function Competitors(props: BrowserProps) {
               );
               const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
                 (a, b) => {
-                  const alphabetical = a.localeCompare(b, 'en', { numeric: true });
                   if (key === 'ageGroup') {
                     return (
-                      compareAgeRanges(
-                        ageRanges.get(a) ?? null,
-                        ageRanges.get(b) ?? null,
-                      ) || alphabetical
+                      compareAgeRanges(ageRanges.get(a), ageRanges.get(b)) || compareNaturalText(a, b)
                     );
                   }
                   if (key === 'class') {
@@ -714,7 +711,7 @@ function Competitors(props: BrowserProps) {
                     const bRank = classOrder.indexOf(b);
                     return (
                       (aRank === -1 ? classOrder.length : aRank) -
-                        (bRank === -1 ? classOrder.length : bRank) || alphabetical
+                        (bRank === -1 ? classOrder.length : bRank) || compareNaturalText(a, b)
                     );
                   }
                   if (key === 'discipline') {
@@ -722,7 +719,7 @@ function Competitors(props: BrowserProps) {
                     const bRank = b === 'Standard' ? 0 : b === 'Latin' ? 1 : 2;
                     if (aRank !== bRank) return aRank - bRank;
                   }
-                  return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || alphabetical;
+                  return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareNaturalText(a, b);
                 },
               );
               if (values.length === 0) return null;

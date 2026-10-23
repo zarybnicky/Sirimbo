@@ -1,4 +1,5 @@
 import { PersonListDocument } from '@/graphql/Person';
+import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
@@ -28,7 +29,7 @@ export async function exportCohort(client: Client, ids: string[], name?: string)
   }
 
   const people = (data.people?.nodes || []).toSorted((a, b) =>
-    `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+    compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
   );
   for (const x of people) {
     worksheet.addRow({

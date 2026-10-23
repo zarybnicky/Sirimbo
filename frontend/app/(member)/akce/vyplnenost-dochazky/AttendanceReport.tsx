@@ -5,6 +5,7 @@ import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
 import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceReport';
 import { isTruthy } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
 import { computeRange } from '@/ui/PeriodSelector';
 
@@ -50,7 +51,7 @@ export function AttendanceReport() {
       if (b.unfilled !== a.unfilled) return b.unfilled - a.unfilled;
       const ratioDiff = (a.ratio ?? -1) - (b.ratio ?? -1);
       if (ratioDiff !== 0) return ratioDiff;
-      return a.name.localeCompare(b.name);
+      return compareText(a.name, b.name);
     });
 
     const totals = rows.reduce(

@@ -1,4 +1,5 @@
 import { PersonWithLinksListDocument } from '@/graphql/Person';
+import { compareText } from '@/lib/compare';
 import { saveAs } from 'file-saver';
 import { stringify } from 'csv-stringify/sync';
 import type { Client } from 'urql';
@@ -10,9 +11,9 @@ export async function exportNsa(client: Client) {
 
   const inputs = (data.people?.nodes || []).filter((x) => x.isMember || x.isTrainer);
   inputs.sort((x, y) =>
-    `${x.isTrainer} ${x.lastName} ${x.firstName}`.localeCompare(
-      `${y.isTrainer} ${y.lastName} ${y.firstName}`,
-    ),
+    compareText(String(x.isTrainer), String(y.isTrainer)) ||
+    compareText(x.lastName, y.lastName) ||
+    compareText(x.firstName, y.firstName),
   );
 
   const initDate = Date.now();

@@ -1,4 +1,5 @@
 import { BalanceSheetDocument } from '@/graphql/Payment';
+import { compareText } from '@/lib/compare';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
@@ -29,9 +30,8 @@ export async function exportBalanceSheet(client: Client) {
   const accounts = (data?.accountsList || [])
     .filter((x) => x.person?.name)
     .toSorted((a, b) =>
-      `${a.person?.lastName}${a.person?.firstName}`.localeCompare(
-        `${b.person?.lastName}${b.person?.firstName}`,
-      ),
+      compareText(a.person?.lastName ?? '', b.person?.lastName ?? '') ||
+      compareText(a.person?.firstName ?? '', b.person?.firstName ?? ''),
     );
 
   for (const x of accounts) {

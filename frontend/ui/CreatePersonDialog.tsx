@@ -21,6 +21,7 @@ import { FederationIdFieldElement } from '@/ui/fields/FederationIdFieldElement';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { countryOptions } from '@/lib/countries';
+import { compareText } from '@/lib/compare';
 import { parseCzechBirthNumber } from '@/lib/czechBirthNumber';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FieldLabel, FormError } from '@/ui/form';
@@ -110,7 +111,7 @@ export function CreatePersonDialog() {
           id: x.id,
           label: x.name || '?',
         }))
-        .toSorted((x, y) => x.label.localeCompare(y.label)),
+        .toSorted((x, y) => compareText(x.label, y.label)),
     [people],
   );
 

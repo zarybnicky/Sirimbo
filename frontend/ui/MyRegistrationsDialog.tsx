@@ -15,6 +15,7 @@ import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
+import { compareText } from '@/lib/compare';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
 import { toast } from 'react-toastify';
@@ -94,7 +95,7 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);
-      return Number(bMine) - Number(aMine) || a.label.localeCompare(b.label);
+      return Number(bMine) - Number(aMine) || compareText(a.label, b.label);
     });
 
   return {

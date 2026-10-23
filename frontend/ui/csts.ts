@@ -37,7 +37,7 @@ export type AgeRange = {
   end: { value: number } | null;
 };
 
-export function compareAgeRanges(a: AgeRange | null, b: AgeRange | null) {
+export function compareAgeRanges(a: AgeRange | null | undefined, b: AgeRange | null | undefined) {
   if (!a || !b) return Number(!a) - Number(!b);
   return (
     (a.start?.value ?? -Infinity) - (b.start?.value ?? -Infinity) ||

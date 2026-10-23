@@ -17,6 +17,7 @@ import {
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { useTenantConfig } from '@/lib/auth';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { TextField } from '@/ui/fields/text';
@@ -145,7 +146,7 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
     [data?.accessCredentialsList],
   );
   const people = React.useMemo(
-    () => (data?.people?.nodes ?? []).toSorted((a, b) => a.name.localeCompare(b.name)),
+    () => (data?.people?.nodes ?? []).toSorted((a, b) => compareText(a.name, b.name)),
     [data?.people?.nodes],
   );
   const credentialsByPerson = React.useMemo(

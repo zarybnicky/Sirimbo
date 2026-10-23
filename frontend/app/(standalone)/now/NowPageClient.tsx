@@ -2,6 +2,7 @@
 
 import { EventRangeDocument, type EventRangeQuery } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import {
   formatEventName,
   formatEventType,
@@ -108,7 +109,7 @@ function gatherBuckets(
       upcoming: bucket.upcoming.toSorted((a, b) => a.since.getTime() - b.since.getTime()),
     }))
     .filter((bucket) => bucket.current.length > 0 || bucket.upcoming.length > 0)
-    .toSorted((a, b) => a.label.localeCompare(b.label));
+    .toSorted((a, b) => compareText(a.label, b.label));
 }
 
 function formatTrainers(instance: Instance) {

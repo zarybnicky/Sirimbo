@@ -1,3 +1,5 @@
+import { compareText } from '@/lib/compare';
+
 const countries: { code: number; region: string }[] = [
   { code: 203, region: 'CZ' },
   { code: 4, region: 'AF' },
@@ -252,7 +254,6 @@ const countries: { code: number; region: string }[] = [
 ];
 
 const countryNames = new Intl.DisplayNames('cs-CZ', { type: 'region' });
-const countryCollator = new Intl.Collator('cs-CZ');
 
 export const countryOptions = countries
   .map(({ code, region }) => ({
@@ -262,5 +263,5 @@ export const countryOptions = countries
   .toSorted(
     (a, b) =>
       Number(b.id === '203') - Number(a.id === '203') ||
-      countryCollator.compare(a.label, b.label),
+      compareText(a.label, b.label),
   );

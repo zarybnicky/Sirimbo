@@ -10,6 +10,7 @@ import {
 import { buttonCls } from '@/ui/style';
 import { CheckIcon, Filter } from 'lucide-react';
 import { isTruthy } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 import { PersonListDocument } from '@/graphql/Person';
 
 export function ParticipantFilter({ counts }: { counts?: Record<string, number> }) {
@@ -26,7 +27,7 @@ export function ParticipantFilter({ counts }: { counts?: Record<string, number> 
   const available = (data?.people?.nodes || [])
     .filter(isTruthy)
     .toSorted((a, b) =>
-      `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+      compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
     );
   const selected = available.filter((x) => ids.includes(x.id));
   const other = available.filter((x) => !ids.includes(x.id));

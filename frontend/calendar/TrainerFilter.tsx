@@ -11,6 +11,7 @@ import {
 import { buttonCls } from '@/ui/style';
 import { CheckCircle2, Circle, Filter } from 'lucide-react';
 import { isTruthy } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 
 export type TrainerFilterOption = {
   id: string;
@@ -37,12 +38,12 @@ export function TrainerFilter({
     pause: availableTrainers !== undefined,
   });
   const trainers =
-    availableTrainers?.toSorted((a, b) => a.name.localeCompare(b.name)) ??
+    availableTrainers?.toSorted((a, b) => compareText(a.name, b.name)) ??
     (tenant?.tenant?.tenantTrainersList || [])
       .map((x) => x.person)
       .filter(isTruthy)
       .toSorted((a, b) =>
-        `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+        compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
       );
 
   return (

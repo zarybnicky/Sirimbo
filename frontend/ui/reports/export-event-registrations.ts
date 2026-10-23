@@ -1,4 +1,5 @@
 import { EventExportDocument } from '@/graphql/Event';
+import { compareText } from '@/lib/compare';
 import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
@@ -60,7 +61,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
     }
     rows.push(row);
   }
-  rows.sort((a, b) => (a.man as string).localeCompare(b.man as string));
+  rows.sort((a, b) => compareText(a.man as string, b.man as string));
   worksheet.addRows(rows);
 
   const buf = await workbook.xlsx.writeBuffer();

@@ -3,6 +3,7 @@ import {
   type CampTrainerOverviewQuery,
 } from '@/graphql/Event';
 import { FormError } from '@/ui/form';
+import { compareText } from '@/lib/compare';
 import { dayFormatter, formatCount, moneyFormatter } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { add, startOf } from 'date-arithmetic';
@@ -80,7 +81,7 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
     }
 
     return {
-      rows: [...rows.values()].toSorted((a, b) => a.trainer.localeCompare(b.trainer, 'cs')),
+      rows: [...rows.values()].toSorted((a, b) => compareText(a.trainer, b.trainer)),
       days: [...days].toSorted(([, a], [, b]) => a.getTime() - b.getTime()),
     };
   }, [query.data]);

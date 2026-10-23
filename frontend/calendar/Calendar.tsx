@@ -19,6 +19,7 @@ import {
 import { useCalendarData } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
+import { compareText } from '@/lib/compare';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
@@ -177,7 +178,7 @@ export function Calendar({
         : null;
     return [...resourceMap.values()]
       .filter((x) => !selectedResources || (x.type === 'person' && selectedResources.has(x.id)))
-      .toSorted((a, b) => a.resourceTitle.localeCompare(b.resourceTitle));
+      .toSorted((a, b) => compareText(a.resourceTitle, b.resourceTitle));
   }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
   const handleShowAllResourcesChange = React.useCallback(
     (showAllResources: boolean) => {

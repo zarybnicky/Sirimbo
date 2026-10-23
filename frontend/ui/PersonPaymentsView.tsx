@@ -2,6 +2,7 @@ import { DefinitionList } from '@/ui/DefinitionList';
 import { PostingFragment } from '@/graphql/Payment';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
 import { useActionMap } from '@/lib/actions';
+import { compareText } from '@/lib/compare';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
 import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
@@ -142,7 +143,7 @@ function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[]) {
           rb.transaction.description ??
           describePosting(rb.transaction.payment ?? undefined, rb) ??
           '';
-        cmp = da.localeCompare(db);
+        cmp = compareText(da, db);
         break;
       case 'amount':
         const aa = Number(ra.amount ?? 0);

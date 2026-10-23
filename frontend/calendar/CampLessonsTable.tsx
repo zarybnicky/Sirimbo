@@ -9,6 +9,7 @@ import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 
 type Lesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
 type Cell = { requested: number; lessons: Lesson[] };
@@ -139,11 +140,11 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
     const result: Row[] = [];
     for (const row of [...rows.values()]
       .filter((row) => !nestedIds.has(row.id))
-      .toSorted((a, b) => a.registrant.localeCompare(b.registrant))) {
+      .toSorted((a, b) => compareText(a.registrant, b.registrant))) {
       result.push(
         row,
         ...(nestedRows.get(row.id) ?? [])
-          .toSorted((a, b) => a.registrant.localeCompare(b.registrant))
+          .toSorted((a, b) => compareText(a.registrant, b.registrant))
           .map((child) => ({ ...child, nested: true })),
       );
     }

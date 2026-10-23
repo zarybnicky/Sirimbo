@@ -6,6 +6,7 @@ import {
 } from '@/graphql/ActivityTimeline';
 import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import {
   CompetitionEventContent,
   CompetitionLink,
@@ -423,7 +424,7 @@ function AttendanceSummary({
   return (
     <div className="inline-flex items-center justify-end gap-3 text-sm">
       {items
-        .toSorted((a, b) => (a.person?.name ?? '').localeCompare(b.person?.name ?? ''))
+        .toSorted((a, b) => compareText(a.person?.name ?? '', b.person?.name ?? ''))
         .map((item) => {
           const status = item.eventAttendance?.status;
           const Icon = status ? attendanceIcons[status] : null;

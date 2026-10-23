@@ -7,6 +7,7 @@ import { EventAttendance } from '@/ui/EventAttendance';
 import { dateTimeFormatter, formatCoupleName, numericDateFormatter } from '@/ui/format';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
+import { compareText } from '@/lib/compare';
 
 export const EventRegistrations = memo(function EventRegistrations({
   instance,
@@ -17,8 +18,10 @@ export const EventRegistrations = memo(function EventRegistrations({
   const registrations = instance.attendanceRegistrations.nodes;
   const sortedRegistrations = registrations
     .toSorted((a, b) =>
-      (a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple))
-        .localeCompare(b.person ? b.person.lastName + b.person.firstName : formatCoupleName(b.couple)),
+      compareText(
+        a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple),
+        b.person ? b.person.lastName + b.person.firstName : formatCoupleName(b.couple),
+      ),
     );
   const rows = sortedRegistrations
     .filter((r) => !r.parentRegistrationId)

@@ -6,6 +6,7 @@ import type {
 } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { isTruthy } from '@/lib/truthyFilter';
+import { compareText } from '@/lib/compare';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
@@ -78,8 +79,8 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
           {
             birthdays: itemMap.birthdays.toSorted(
               (x, y) =>
-                x.person.lastName.localeCompare(y.person.lastName) ||
-                x.person.firstName.localeCompare(y.person.firstName),
+                compareText(x.person.lastName, y.person.lastName) ||
+                compareText(x.person.firstName, y.person.firstName),
             ),
             competitions: itemMap.competitions,
             groups: itemMap.groups.toSorted((x, y) => x.since.localeCompare(y.since)),

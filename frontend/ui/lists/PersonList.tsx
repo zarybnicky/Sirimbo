@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/auth';
 import { buttonCls } from '@/ui/style';
 import { useSessionStorage } from '@/lib/useSessionStorage';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import { useParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { exportNsa } from '../reports/export-nsa';
@@ -57,7 +58,7 @@ export function PersonList() {
   const nodes = React.useMemo(() => {
     return (data?.people?.nodes || [])
       .toSorted((a, b) =>
-        `${a.lastName} ${a.firstName}`.localeCompare(`${b.lastName} ${b.firstName}`),
+        compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
       )
       .map((item) => {
         const cohort = cohorts?.cohortsList?.find((x) =>

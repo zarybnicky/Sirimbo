@@ -20,6 +20,7 @@ import {
 } from './types';
 import { CalendarView } from '@/calendar/CalendarViews';
 import { eventTypes as allEventTypes } from '@/calendar/state';
+import { compareText } from '@/lib/compare';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
 export type CalendarFilters = {
@@ -109,7 +110,7 @@ function mapEventsToCalendar(
   return {
     events,
     resources: [...resourceMap.values()].toSorted((a, b) =>
-      a.resourceTitle.localeCompare(b.resourceTitle),
+      compareText(a.resourceTitle, b.resourceTitle),
     ),
   };
 }

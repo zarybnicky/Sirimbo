@@ -16,6 +16,7 @@ import { FormError } from '@/ui/form';
 import { format } from 'date-fns';
 import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import { formatDateOnly, formatResultStatus } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
@@ -76,10 +77,12 @@ export function groupCompetitionEvents(entries: readonly CompetitionEntry[]) {
       }))
       .toSorted(
         (a, b) =>
-          (a.entries[0]!.competitionEventName ?? '').localeCompare(
+          compareText(
+            a.entries[0]!.competitionEventName ?? '',
             b.entries[0]!.competitionEventName ?? '',
           ) ||
-          (a.entries[0]!.competitionEventLocation ?? '').localeCompare(
+          compareText(
+            a.entries[0]!.competitionEventLocation ?? '',
             b.entries[0]!.competitionEventLocation ?? '',
           ),
       ),
@@ -119,7 +122,7 @@ export function CompetitionEventContent({
       (byCompetition
         ? (checkInTime(a) ?? '24:00').localeCompare(checkInTime(b) ?? '24:00')
         : 0) ||
-      entryLabel(a[0]!, byCompetition).localeCompare(entryLabel(b[0]!, byCompetition)),
+      compareText(entryLabel(a[0]!, byCompetition), entryLabel(b[0]!, byCompetition)),
   );
 
   return (
@@ -240,7 +243,7 @@ function CompetitionGroupContent({
             (a.ranking === undefined
               ? (a.checkInEnd ?? '24:00').localeCompare(b.checkInEnd ?? '24:00')
               : 0) ||
-            entryLabel(a, !byCompetition).localeCompare(entryLabel(b, !byCompetition)),
+            compareText(entryLabel(a, !byCompetition), entryLabel(b, !byCompetition)),
         )
         .map((entry) => {
           const result = entry.ranking !== undefined ? entry : null;
