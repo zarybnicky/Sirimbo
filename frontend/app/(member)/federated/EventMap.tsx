@@ -20,24 +20,13 @@ import { geoRobinson } from 'd3-geo-projection';
 import type { FederationMapEventFragment } from '@/graphql/Federation';
 import { FormError } from '@/ui/form';
 import { SelectField } from '@/ui/fields/select';
-import { formatCount, formatDateOnly } from '@/ui/format';
+import { formatCount, formatDateOnly, monthNameFormatter } from '@/ui/format';
 import { Popover, PopoverContent, PopoverAnchor } from '@/ui/popover';
 import { cn } from '@/lib/cn';
 
-export const eventMonths = [
-  'leden',
-  'únor',
-  'březen',
-  'duben',
-  'květen',
-  'červen',
-  'červenec',
-  'srpen',
-  'září',
-  'říjen',
-  'listopad',
-  'prosinec',
-];
+export const eventMonths = Array.from({ length: 12 }, (_, month) =>
+  monthNameFormatter.format(new Date(2000, month, 1)),
+);
 
 export const eventMonthColors = eventMonths.map((_, i) =>
   interpolateSinebow(i / eventMonths.length),

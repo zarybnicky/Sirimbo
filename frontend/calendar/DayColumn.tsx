@@ -492,8 +492,10 @@ function DayColumn({
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
           <span>
-            {shortTimeFormatter.format(backgroundState.startDate)} –{' '}
-            {shortTimeFormatter.format(backgroundState.endDate)}
+            {shortTimeFormatter.formatRange(
+              backgroundState.startDate,
+              backgroundState.endDate,
+            )}
           </span>
         </div>
       )}

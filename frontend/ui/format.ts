@@ -115,6 +115,10 @@ export const monthFormatter = new Intl.DateTimeFormat('cs-CZ', {
   year: 'numeric',
 });
 
+export const monthNameFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  month: 'long',
+});
+
 export const weekdayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   weekday: 'long',
 });
