@@ -2,9 +2,9 @@ import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/lib/cn';
 import {
-  dateTimeFormatter,
   formatEventType,
   formatRegistrant,
+  numericFullFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
@@ -79,7 +79,7 @@ export function EventButton({
             )}
           >
             <div className="text-neutral-11">
-              {(showDate ? dateTimeFormatter : shortTimeFormatter).format(start)}
+              {(showDate ? numericFullFormatter : shortTimeFormatter).format(start)}
             </div>
             <div
               className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}
@@ -117,34 +117,33 @@ export function EventButton({
 
 type AttendanceStats = Record<'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED', number>;
 
-function InlineAttendanceStats({ stats: input }: { stats: any; }) {
+function InlineAttendanceStats({ stats: input }: { stats: any }) {
   const parsed = typeof input === 'string' ? JSON.parse(input) : input;
-  const stats = parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
+  const stats =
+    parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
 
   return (
-    <div
-      className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
-    >
-        <span
-          title="zůčastnilo se"
-          className={cn(
-            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-            'bg-green-3 text-green-11',
-          )}
-        >
-          <Check className="size-3 shrink-0" aria-hidden="true" />
-          <span>{stats.ATTENDED ?? 0}</span>
-        </span>
-        <span
-          title="nezúčastnilo se"
-          className={cn(
-            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-            'bg-danger-3 text-danger-11',
-          )}
-        >
-          <X className="size-3 shrink-0" aria-hidden="true" />
-          <span>{stats.NOT_EXCUSED ?? 0}</span>
-        </span>
+    <div className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums">
+      <span
+        title="zůčastnilo se"
+        className={cn(
+          'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
+          'bg-green-3 text-green-11',
+        )}
+      >
+        <Check className="size-3 shrink-0" aria-hidden="true" />
+        <span>{stats.ATTENDED ?? 0}</span>
+      </span>
+      <span
+        title="nezúčastnilo se"
+        className={cn(
+          'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
+          'bg-danger-3 text-danger-11',
+        )}
+      >
+        <X className="size-3 shrink-0" aria-hidden="true" />
+        <span>{stats.NOT_EXCUSED ?? 0}</span>
+      </span>
       {typeof stats.UNKNOWN === 'number' && stats.UNKNOWN > 0 && (
         <span
           title="nezadáno"

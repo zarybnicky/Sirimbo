@@ -1,7 +1,7 @@
 import { PublicLocationsDocument } from '@/graphql/Location';
 import { executeGraphql } from '@/lib/server/graphql';
-import { LocationMap } from '@/ui/LocationMap';
-import { LocationAddress } from '@/ui/LocationAddress';
+import { LocationMap } from '@/app/(member)/lokality/[id]/LocationMap.tsx';
+import { LocationAddress } from '@/app/(member)/lokality/[id]/LocationAddress.tsx';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/PageHeader';
 import type { Metadata } from 'next';
@@ -39,7 +39,9 @@ export default async function LocationsPage() {
 
               <div className="grid items-center gap-6 md:grid-cols-[auto_1fr]">
                 {loc.latitude != null && loc.longitude != null && (
-                  <LocationMap map={{ lat: loc.latitude, lng: loc.longitude, zoom: 14 }} />
+                  <LocationMap
+                    map={{ lat: loc.latitude, lng: loc.longitude, zoom: 14 }}
+                  />
                 )}
                 <div className="text-neutral-12">
                   <LocationAddress
