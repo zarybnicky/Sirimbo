@@ -63,6 +63,7 @@ export default async function EventPage({ params }: Props) {
         ]}
       />
       <DefinitionList
+        className="text-sm"
         items={{
           Zdroj: federation === 'csts' && (
             <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>

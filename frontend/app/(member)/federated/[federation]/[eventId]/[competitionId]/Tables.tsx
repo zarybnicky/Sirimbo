@@ -105,30 +105,28 @@ export function Registrations({
         ]}
         empty="Žádné přihlášky"
       >
-        {entries.map(({ competitor, competitorId, cancelled }) => {
-          return (
-            <tr key={competitorId} className="border-t border-neutral-4 align-top">
-              <th scope="row">
-                {competitor ? (
-                  <Link
-                    className={cn("text-accent-11 underline", cancelled ? 'line-through' : '')}
-                    href={`/federated/${federation}/competitors/${competitor?.externalId}`}
-                    prefetch={false}
-                  >
-                    {competitor.name || competitor.id}
-                  </Link>
-                ) : (
-                  competitorId
-                )}
-              </th>
-              {showLocalMatches && (
-                <td>
-                  <LocalMatches participant={competitor} />
-                </td>
+        {entries.map(({ competitor, competitorId, cancelled }) => (
+          <tr key={competitorId} className="border-t border-neutral-4 align-top">
+            <th scope="row">
+              {competitor ? (
+                <Link
+                  className={cn("text-accent-11 underline", cancelled ? 'line-through' : '')}
+                  href={`/federated/${federation}/competitors/${competitor?.externalId}`}
+                  prefetch={false}
+                >
+                  {competitor.name || competitor.id}
+                </Link>
+              ) : (
+                competitorId
               )}
-            </tr>
-          );
-        })}
+            </th>
+            {showLocalMatches && (
+              <td>
+                <LocalMatches participant={competitor} />
+              </td>
+            )}
+          </tr>
+        ))}
       </Table>
     </>
   );

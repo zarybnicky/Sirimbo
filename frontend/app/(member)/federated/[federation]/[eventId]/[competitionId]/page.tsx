@@ -84,6 +84,7 @@ export default async function CompetitionPage({ params }: Props) {
       />
 
       <DefinitionList
+        className="text-sm"
         items={{
           Zdroj: federation === 'csts' && (
             <CstsResultsLink

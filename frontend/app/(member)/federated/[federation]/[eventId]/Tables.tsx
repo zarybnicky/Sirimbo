@@ -35,8 +35,6 @@ export function Competitions({
   if (error) return <FormError error={error} />;
   if (!competitions) return <Spinner />;
 
-  const showResults = competitions.nodes.some(x => !!x.results.totalCount);
-
   return (
     <>
       {fetching && (
@@ -52,8 +50,7 @@ export function Competitions({
           'Stav',
           'Datum',
           'Konec prezence',
-          'Přihlášky',
-          showResults && 'Výsledky',
+          'Účastníci',
         ]}
         empty="No competitions"
       >
@@ -81,10 +78,7 @@ export function Competitions({
             </td>
             <td className="whitespace-nowrap">{formatDateOnly(competition.startDate)}</td>
             <td>{competition.checkInEnd?.slice(0, 5)}</td>
-            <td>{competition.entries.totalCount}</td>
-            {showResults && (
-              <td>{competition.results.totalCount}</td>
-            )}
+            <td>{competition.results.totalCount || competition.entries.totalCount}</td>
           </tr>
         ))}
       </Table>
