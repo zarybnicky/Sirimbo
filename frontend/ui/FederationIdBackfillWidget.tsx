@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import {
   MissingFederationIdCandidatesDocument,
   UpdatePersonFederationIdDocument,
@@ -34,10 +35,13 @@ export function FederationIdBackfillWidget({
     UpdatePersonFederationIdDocument,
   );
   const [selectedByPerson, setSelectedByPerson] = React.useState<
-    Record<string, {
-      candidate: Candidate;
-      undo: { cstsId?: null; wdsfId?: null };
-    } | null>
+    Record<
+      string,
+      {
+        candidate: Candidate;
+        undo: { cstsId?: null; wdsfId?: null };
+      } | null
+    >
   >({});
 
   const people = (data?.people?.nodes ?? [])
@@ -57,10 +61,10 @@ export function FederationIdBackfillWidget({
   async function selectCandidate(person: Person, candidate: Candidate | null) {
     const patch = candidate
       ? {
-          cstsId: person.cstsId == null ? candidate.cstsId ?? undefined : undefined,
-          wdsfId: person.wdsfId == null ? candidate.wdsfId ?? undefined : undefined,
+          cstsId: person.cstsId == null ? (candidate.cstsId ?? undefined) : undefined,
+          wdsfId: person.wdsfId == null ? (candidate.wdsfId ?? undefined) : undefined,
         }
-      : selectedByPerson[person.id]?.undo ?? {};
+      : (selectedByPerson[person.id]?.undo ?? {});
     const result = await updatePerson({
       input: { id: person.id, patch },
     });
@@ -104,14 +108,12 @@ export function FederationIdBackfillWidget({
             >
               {person.name}
             </Link>
-            <div className="text-neutral-11">
+            <DotSeparated className="text-neutral-11">
               {[
                 formatAgeGroup(person.ageGroup),
                 person.birthDate ? new Date(person.birthDate).getFullYear() : null,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-            </div>
+              ]}
+            </DotSeparated>
           </div>
 
           <div className="grid gap-1">

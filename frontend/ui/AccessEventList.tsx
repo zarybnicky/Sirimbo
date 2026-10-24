@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import { AccessEventOverviewDocument } from '@/graphql/AccessCredential';
 import { mifareCodeToLabel } from '@/lib/access-credentials';
 import { useAuth } from '@/lib/auth';
@@ -59,17 +61,14 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
               <PowerIcon className="inline size-3 -mt-0.75 text-accent-11" />
             )}
           </span>
-          <span className="ml-auto text-neutral-11 tabular-nums">
+          <DotSeparated className="ml-auto text-neutral-11 tabular-nums">
             {event.allowed ? 'Povoleno' : 'Zamítnuto'}
             {event.location && (
-              <>
-                {' · '}
-                <Link className="underline" href={`/lokality/${event.location.id}`}>
-                  {event.location.name}
-                </Link>
-              </>
+              <Link className="underline" href={`/lokality/${event.location.id}`}>
+                {event.location.name}
+              </Link>
             )}
-          </span>
+          </DotSeparated>
           {auth.isAdmin &&
             !event.allowed &&
             !allowedCodes.has(`${event.kind}:${event.code}`) && (

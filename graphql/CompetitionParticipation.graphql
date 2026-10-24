@@ -11,6 +11,8 @@ fragment ParticipationCompetition on Competition {
     id
     externalId
     name
+    startDate
+    endDate
     location
     city
   }
@@ -73,6 +75,48 @@ query ClubCompetitionLocations(
     }
     pageInfo {
       hasNextPage
+    }
+  }
+}
+
+query CompetitionSuggestionEvents(
+  $participant: CompetitionParticipantCondition!
+  $since: Date!
+  $offset: Int! = 0
+) {
+  federationEvents(
+    first: 10
+    offset: $offset
+    condition: { suggestedFor: { participant: $participant, date: { since: $since } } }
+    orderBy: [START_DATE_ASC, ID_ASC]
+  ) {
+    totalCount
+    nodes {
+      ...FederationMapEvent
+    }
+  }
+}
+
+query CompetitionSuggestions(
+  $personIds: [BigInt!]
+  $coupleId: BigInt
+  $cohortId: BigInt
+  $since: Date!
+  $eventIds: [BigInt!]!
+) {
+  competitionSuggestionsList(
+    personIds: $personIds
+    coupleId: $coupleId
+    cohortId: $cohortId
+    since: $since
+    eventIds: $eventIds
+  ) {
+    competition { ...ParticipationCompetition }
+    person { id name }
+    couple {
+      id
+      man { id name }
+      woman { id name }
     }
   }
 }

@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
 import { formatCount } from '@/ui/format';
-import { eventMonths, eventMonthColors } from './EventMap';
+import { eventMonths, eventMonthColors } from '@/ui/EventMap';
 
 export function PeriodPicker({
   years,

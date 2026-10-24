@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import {
   DeleteEventDocument,
   type EventRegistrationFragment,
@@ -346,11 +347,12 @@ function LessonRequests({
       <div className="border-b border-neutral-6 bg-neutral-1 py-2 pl-3 pr-10">
         <div className="font-semibold text-neutral-12">Požadavky na lekce</div>
         {(requests.length > 0 || scheduledCount > 0) && (
-          <div className="text-sm text-neutral-11">
+          <DotSeparated className="text-sm text-neutral-11">
+            {lessonCount > 0 && `${requests.length} požadavků`}
             {lessonCount > 0
-              ? `${requests.length} požadavků · ${scheduledCount} / ${lessonCount} lekcí`
+              ? `${scheduledCount} / ${lessonCount} lekcí`
               : `${scheduledCount} lekcí navíc`}
-          </div>
+          </DotSeparated>
         )}
       </div>
 
@@ -401,9 +403,10 @@ function LessonRequests({
                         const subject: ExternalDragSubject = {
                           id: request.id,
                           durationMinutes: 45,
-                          resource: lockTrainers && trainerPersonId
-                            ? { type: 'person', id: trainerPersonId }
-                            : undefined,
+                          resource:
+                            lockTrainers && trainerPersonId
+                              ? { type: 'person', id: trainerPersonId }
+                              : undefined,
                         };
                         event.dataTransfer.effectAllowed = 'copy';
                         event.dataTransfer.setData(

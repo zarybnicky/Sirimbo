@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import { PageHeader } from '@/ui/PageHeader';
 import React from 'react';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -285,11 +287,10 @@ const TenantTurnover = React.memo(function TenantTurnover() {
                     <div className="flex min-w-48 flex-1 flex-col gap-1">
                       <span>{description}</span>
                       {(variableSymbol || specificSymbol) && (
-                        <span className="text-xs text-neutral-10">
+                        <DotSeparated className="text-xs text-neutral-10">
                           {variableSymbol && <>VS: {variableSymbol}</>}
-                          {variableSymbol && specificSymbol && ' • '}
                           {specificSymbol && <>SS: {specificSymbol}</>}
-                        </span>
+                        </DotSeparated>
                       )}
                       {auth.isAdmin && payment?.id && (
                         <Link
@@ -440,11 +441,10 @@ function DepositRow({ transaction }: { transaction: ManualCreditTransaction }) {
           {transaction.description || 'Dobití kreditu'}
         </span>
         {(variableSymbol || specificSymbol) && (
-          <span className="text-xs text-neutral-10">
+          <DotSeparated className="text-xs text-neutral-10">
             {variableSymbol && <>VS: {variableSymbol}</>}
-            {variableSymbol && specificSymbol && ' • '}
             {specificSymbol && <>SS: {specificSymbol}</>}
-          </span>
+          </DotSeparated>
         )}
         {transaction.payment?.id && (
           <Link

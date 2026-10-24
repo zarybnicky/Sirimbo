@@ -319,6 +319,7 @@ query EventEditorRegistrations($id: BigInt!) {
     ) {
       ...EventRegistration
       person {
+        id
         isMember
         isTrainer
         isAdmin

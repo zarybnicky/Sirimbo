@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import { DefinitionList } from '@/ui/DefinitionList';
 import React from 'react';
 import Link from 'next/link';
@@ -90,13 +92,18 @@ export function Scoreboard() {
           </div>
 
           {period.displaySince && period.displayUntil && (
-            <p className="text-sm text-neutral-10">
-              {'Zobrazené období: '}
-              <span className="font-medium text-neutral-12">
-                {fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
+            <DotSeparated className="text-sm text-neutral-10">
+              <span>
+                Zobrazené období:{' '}
+                <span className="font-medium text-neutral-12">
+                  {fullDateFormatter.formatRange(
+                    period.displaySince,
+                    period.displayUntil,
+                  )}
+                </span>
               </span>
-              {activeCohort ? ` · Skupina ${activeCohort.name}` : ' · Všechny skupiny'}
-            </p>
+              {activeCohort ? `Skupina ${activeCohort.name}` : 'Všechny skupiny'}
+            </DotSeparated>
           )}
         </section>
 

@@ -35,6 +35,8 @@ export function Competitions({
   if (error) return <FormError error={error} />;
   if (!competitions) return <Spinner />;
 
+  const showResults = competitions.nodes.some(x => !!x.results.totalCount);
+
   return (
     <>
       {fetching && (
@@ -42,16 +44,16 @@ export function Competitions({
           Loading…
         </p>
       )}
-      <h2 className="mt-4 mb-2 text-lg font-bold">Competitions</h2>
+      <h2 className="mt-4 mb-2 text-lg font-bold">Soutěže</h2>
       <Table
         columns={[
-          'category',
-          'type',
-          'status',
-          'date',
-          'check-in end',
-          'registrations',
-          'results',
+          'Kategorie',
+          'Typ',
+          'Stav',
+          'Datum',
+          'Konec prezence',
+          'Přihlášky',
+          showResults && 'Výsledky',
         ]}
         empty="No competitions"
       >
@@ -80,7 +82,9 @@ export function Competitions({
             <td className="whitespace-nowrap">{formatDateOnly(competition.startDate)}</td>
             <td>{competition.checkInEnd?.slice(0, 5)}</td>
             <td>{competition.entries.totalCount}</td>
-            <td>{competition.results.totalCount}</td>
+            {showResults && (
+              <td>{competition.results.totalCount}</td>
+            )}
           </tr>
         ))}
       </Table>

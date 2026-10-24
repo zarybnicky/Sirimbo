@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import {
   CohortWithMembersDocument,
   type CohortWithMembersQuery,
@@ -18,6 +20,7 @@ import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
+import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
 import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
@@ -58,12 +61,12 @@ export function TrainingGroup({
         title={cohort.name}
         breadcrumbLabel="Skupina"
         breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
-        subtitle={[
-          cohort.location,
-          formatCount(members.length, { one: 'člen', few: 'členové', other: 'členů' }),
-        ]
-          .filter(Boolean)
-          .join(' · ')}
+        subtitle={
+          <DotSeparated>
+            {cohort.location}
+            {formatCount(members.length, { one: 'člen', few: 'členové', other: 'členů' })}
+          </DotSeparated>
+        }
         actions={actions}
       />
 
@@ -73,6 +76,12 @@ export function TrainingGroup({
         <TabMenu selected={tab} onSelect={setTab}>
           <Tab id="members" title={`Členové (${members.length})`}>
             <TrainingGroupMembers members={members} showActivity={auth.isTrainer} />
+          </Tab>
+          <Tab id="fed" title="Výsledky">
+            <CompetitionHistory participant={{ cohortId: cohort.id }} />
+          </Tab>
+          <Tab id="eligible" title="Možné soutěže">
+            <CompetitionSuggestions participant={{ cohortId: cohort.id }} />
           </Tab>
           <Tab id="access" title="Přístupy" requireAdmin>
             <PeopleAccessOverview cohortId={cohort.id} />

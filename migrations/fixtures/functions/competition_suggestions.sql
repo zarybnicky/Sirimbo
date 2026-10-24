@@ -1,10 +1,14 @@
+drop function if exists competition_suggestions;
+drop function if exists suggested_competition_matches;
+
 create or replace function suggested_competition_matches(
   since date,
-  until date,
+  until date default null,
   person_ids bigint[] default null,
   couple_id bigint default null,
-  cohort_id bigint default null
-) returns table (competition_id bigint, competitor_id text)
+  cohort_id bigint default null,
+  event_ids bigint[] default null
+) returns table (competition_id bigint, competitor_id text, local_person_id bigint, local_couple_id bigint)
 language sql stable as $$
   with scoped_people as materialized (
     select p.id
@@ -43,27 +47,21 @@ language sql stable as $$
       from federated.person_license license
       where license.person_id = fp.id and license.federation = 'wdsf'
         and license.kind = 'athlete' and license.discipline <> 'unknown'
-    ) as divisions, fp.age_group_code
-    from federated.competitor fc
-    join federated.competitor_component member on member.competitor_id = fc.id
-    join federated.person fp on fp.id = member.person_id
+    ) as divisions, fp.age_group_code, link.person_id as local_person_id, null::bigint as local_couple_id
+    from person_federation_link link
+    join federated.person fp on (fp.federation, fp.external_id) = (link.federation, link.external_id)
+    join federated.competitor_component member on member.person_id = fp.id
+    join federated.competitor fc on fc.id = member.competitor_id
     where couple_id is null and fc.competitor_type = 'solo'
-      and fc.id = any(array(
-        select cc.competitor_id
-        from person_federation_link link
-        join federated.person fp on (fp.federation, fp.external_id) = (link.federation, link.external_id)
-        join federated.competitor_component cc on cc.person_id = fp.id
-        where link.person_id = any(array(select id from scoped_people))
-      ))
+      and link.person_id = any(array(select id from scoped_people))
     union
-    select fc.id, fc.federation, fc.competitor_type, fc.divisions, fc.age_group_code
-    from federated.competitor fc
-    where fc.id = any(array(
-      select link.competitor_id from couple_federation_link link
-      where link.couple_id = any(array(select id from scoped_couples))
-    ))
+    select fc.id, fc.federation, fc.competitor_type, fc.divisions, fc.age_group_code,
+      null::bigint, link.couple_id
+    from couple_federation_link link
+    join federated.competitor fc on fc.id = link.competitor_id
+    where link.couple_id = any(array(select id from scoped_couples))
   ), profiles as materialized (
-    select sc.id, sc.federation, sc.competitor_type, sc.divisions, sc.age_group_code,
+    select sc.local_person_id, sc.local_couple_id, sc.id, sc.federation, sc.competitor_type, sc.divisions, sc.age_group_code,
       count(*) = count(coalesce(extract(year from p.birth_date)::int, extract(year from fp.dob)::int, fp.birth_year)) as known_birth_years,
       min(coalesce(extract(year from p.birth_date)::int, extract(year from fp.dob)::int, fp.birth_year)) as older_birth_year,
       max(coalesce(extract(year from p.birth_date)::int, extract(year from fp.dob)::int, fp.birth_year)) as younger_birth_year,
@@ -74,16 +72,17 @@ language sql stable as $$
     join federated.person fp on fp.id = cc.person_id
     left join person_federation_link link on (link.federation, link.external_id) = (fp.federation, fp.external_id)
     left join person p on p.id = link.person_id
-    group by sc.id, sc.federation, sc.competitor_type, sc.divisions, sc.age_group_code
+    group by sc.local_person_id, sc.local_couple_id, sc.id, sc.federation, sc.competitor_type, sc.divisions, sc.age_group_code
   ), upcoming as materialized (
-    select array_agg(c.id) as competition_ids, c.federation, extract(year from c.start_date)::int as year,
+    select array_agg(c.id) as competition_ids, c.federation, c.competition_type, extract(year from c.start_date)::int as year,
       cat.series, cat.discipline, cat.class, cat.gender_group, cat.competitor_type, cat.age_group_code
     from federated.competition c
     join federated.event e on e.id = c.event_id
     join federated.category cat on cat.id = c.category_id
-    where c.federation in ('csts', 'wdsf') and c.start_date >= since and c.start_date < until
+    where c.federation in ('csts', 'wdsf') and c.start_date >= since and (until is null or c.start_date < until)
+      and (event_ids is null or c.event_id = any(event_ids))
       and c.status <> 'cancelled' and e.status <> 'cancelled'
-    group by c.federation, extract(year from c.start_date)::int, cat.id
+    group by c.federation, c.competition_type, extract(year from c.start_date)::int, cat.id
   ), source_profiles as materialized (
     select p.*, source.series, source.discipline, source.class, source.age_group_code as reported_age
     from profiles p
@@ -117,7 +116,7 @@ language sql stable as $$
       when y.year = extract(year from current_date)::int then p.reported_age
     end
   )
-  select distinct competition_id, p.id
+  select distinct competition_id, p.id, p.local_person_id, p.local_couple_id
   from upcoming target
   join category_profiles p on p.year = target.year and p.federation = target.federation
     and (p.series = target.series or (p.federation = 'wdsf' and target.series = 'Any'))
@@ -127,6 +126,9 @@ language sql stable as $$
   where (target.gender_group in ('', 'mixed', 'SOLO')
       or (target.gender_group in ('female', 'F', '1 F') and p.all_female)
       or (target.gender_group in ('male', 'M', '1 M') and p.all_male))
+    -- ČSTS leagues require B or higher, even though their categories say Open.
+    and (p.federation <> 'csts' or target.competition_type not in ('league', 'super_league')
+      or p.class in ('B', 'A', 'M', 'S'))
     and (p.federation = 'wdsf' or
       target.class in ('', 'Open') or target.class = p.class
       or (federated.class_rank(p.class) > 0
@@ -150,3 +152,36 @@ $$;
 
 comment on function suggested_competition_matches is '@behavior -*';
 grant execute on function suggested_competition_matches to anonymous;
+
+-- Return the local competitors as rows so callers can summarize or inspect them.
+create or replace function competition_suggestions(
+  event_ids bigint[],
+  since date default current_date,
+  until date default null,
+  person_ids bigint[] default null,
+  couple_id bigint default null,
+  cohort_id bigint default null
+) returns table (
+  competition federated.competition,
+  person public.person,
+  couple public.couple
+)
+language plpgsql stable as $$
+begin
+  if event_ids is null then
+    raise exception 'event_ids is required' using errcode = '22004';
+  end if;
+  return query
+  select c, p, partnership
+  from (
+    select distinct competition_id, local_person_id, local_couple_id
+    from suggested_competition_matches(since, until, person_ids, couple_id, cohort_id, event_ids)
+  ) m
+  join federated.competition c on c.id = m.competition_id
+  left join public.person p on p.id = m.local_person_id
+  left join public.couple partnership on partnership.id = m.local_couple_id;
+end;
+$$;
+
+comment on function competition_suggestions is '@behavior +list -connection';
+grant execute on function competition_suggestions to anonymous;

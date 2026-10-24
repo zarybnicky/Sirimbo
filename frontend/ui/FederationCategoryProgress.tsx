@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import type { FederationCompetitorQuery } from '@/graphql/Federation';
 import { compareNaturalText, compareText } from '@/lib/compare';
 import { compareCategories, formatCategoryName } from '@/ui/csts';
@@ -27,7 +28,7 @@ export function FederationCategoryProgress({
   if (entries.length === 0) return null;
 
   return (
-    <Table columns={['Kategorie', 'Body']}>
+    <Table columns={['Kategorie', <span key="points" className="block text-right">Body</span>]}>
       {entries
         .toSorted(
           (a, b) =>
@@ -45,15 +46,13 @@ export function FederationCategoryProgress({
             className="border-t border-neutral-4"
           >
             <th scope="row">
-              {!singleFederation && (
-                <>
-                  {progress.federation === 'csts'
+              <DotSeparated>
+                {!singleFederation &&
+                  (progress.federation === 'csts'
                     ? 'ČSTS'
-                    : progress.federation.toUpperCase()}
-                  {' · '}
-                </>
-              )}
-              {formatCategoryName(progress.federation, progress.category)}
+                    : progress.federation.toUpperCase())}
+                {formatCategoryName(progress.federation, progress.category)}
+              </DotSeparated>
             </th>
             <td className="whitespace-nowrap text-right">
               {formatPointsAndFinals(

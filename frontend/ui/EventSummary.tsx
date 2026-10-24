@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import { EventWithTrainerFragment } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import {
@@ -40,7 +41,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
 
   return (
     <div className="flex flex-col gap-2 text-sm">
-      <div className="-mb-2 text-sm text-accent-11 flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] *:after:mx-1.5 *:after:text-accent-9">
+      <DotSeparated className="-mb-2 text-sm text-accent-11">
         <span>{formatEventType(instance.type)}</span>
         {instance.parent && (
           <Link
@@ -58,7 +59,7 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
             {seriesInfo.position}. z {seriesInfo.length} v sérii
           </Link>
         )}
-      </div>
+      </DotSeparated>
 
       <Link
         href={`/termin/${instance.id}`}

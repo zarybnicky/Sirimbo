@@ -16,6 +16,8 @@ grant execute on function federated.class_rank to anonymous;
 --!include functions/competition_reports.sql
 --!include functions/activity_timeline.sql
 
+--!include policies/person.sql
+
 alter table federated.competitor add column if not exists divisions text[] not null default '{}';
 comment on column federated.competitor.divisions is '@behavior -filterBy -orderBy';
 

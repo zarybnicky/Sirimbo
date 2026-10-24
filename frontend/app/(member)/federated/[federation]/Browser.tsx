@@ -34,7 +34,7 @@ import {
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly, formatPointsAndFinals } from '@/ui/format';
-import EventMap, { defaultMapViews, mapViews } from '../EventMap';
+import EventMap, { defaultMapViews, mapViews } from '@/ui/EventMap';
 import { PeriodPicker } from '../PeriodPicker';
 import {
   FederationCompetitorFacetsDocument,
@@ -248,8 +248,12 @@ function Events(props: BrowserProps) {
       hasResults: filters.hasResults,
       hasCoordinates: filters.missing ? false : null,
       date: {
-        since: new Date(Date.UTC(filters.year, (filters.month || 1) - 1, 1)).toISOString().slice(0, 10),
-        until: new Date(Date.UTC(filters.year, filters.month || 12, 1)).toISOString().slice(0, 10),
+        since: new Date(Date.UTC(filters.year, (filters.month || 1) - 1, 1))
+          .toISOString()
+          .slice(0, 10),
+        until: new Date(Date.UTC(filters.year, filters.month || 12, 1))
+          .toISOString()
+          .slice(0, 10),
       },
     }),
     limit: 300,
@@ -370,7 +374,6 @@ function Events(props: BrowserProps) {
               events={events}
               view={filters.shape}
               onViewChange={(shape) => setFilters({ shape }, { history: 'push' })}
-              federation={federation}
             />
           )}
 
@@ -703,7 +706,10 @@ function Competitors(props: BrowserProps) {
                     const discipline = compareDisciplines(a, b);
                     if (discipline) return discipline;
                   }
-                  return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareNaturalText(a, b);
+                  return (
+                    (counts.get(b) ?? 0) - (counts.get(a) ?? 0) ||
+                    compareNaturalText(a, b)
+                  );
                 },
               );
               if (values.length === 0) return null;
@@ -830,8 +836,9 @@ function Competitors(props: BrowserProps) {
             </thead>
             {competitors.map((row) => {
               const progressByAge = Object.groupBy(
-                row.categoryProgressesList
-                  .toSorted((a, b) => compareCategories(a.category, b.category)),
+                row.categoryProgressesList.toSorted((a, b) =>
+                  compareCategories(a.category, b.category),
+                ),
                 (p) => p.category?.ageGroup ?? '',
               );
               const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
@@ -876,9 +883,7 @@ function Competitors(props: BrowserProps) {
                         >
                           {row.latestResultAt ? formatDateOnly(row.latestResultAt) : ''}
                           {row.latestEntryAt && row.latestEntryAt > today && (
-                            <div className="text-xs text-neutral-11">
-                              (+ budoucí)
-                            </div>
+                            <div className="text-xs text-neutral-11">(+ budoucí)</div>
                           )}
                         </td>
                       )}

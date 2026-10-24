@@ -1,15 +1,11 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 /* eslint-disable react-hooks/refs -- Keep lookup history and automatic-selection metadata alongside the RHF value. */
 import { FederationPersonLookupDocument } from '@/graphql/Federation';
 import { formatAgeGroup } from '@/ui/csts';
 import { FederationLink } from '@/ui/federation-links';
 import { TextField, type TextFieldElementProps } from '@/ui/fields/text';
 import React from 'react';
-import {
-  type FieldValues,
-  type Path,
-  useController,
-  useWatch,
-} from 'react-hook-form';
+import { type FieldValues, type Path, useController, useWatch } from 'react-hook-form';
 import { useQuery } from 'urql';
 
 export function FederationIdFieldElement<T extends FieldValues>({
@@ -26,20 +22,32 @@ export function FederationIdFieldElement<T extends FieldValues>({
   const [first, last, sex, dob] = useWatch({
     control,
     name: [
-      `${prefix}firstName`, `${prefix}lastName`, `${prefix}gender`, `${prefix}birthDate`,
+      `${prefix}firstName`,
+      `${prefix}lastName`,
+      `${prefix}gender`,
+      `${prefix}birthDate`,
     ] as Path<T>[],
   });
   const firstName = typeof first === 'string' ? first.trim() : '';
   const lastName = typeof last === 'string' ? last.trim() : '';
   const gender = sex === 'MAN' || sex === 'WOMAN' ? sex : null;
-  const birthDate = typeof dob === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dob) ? dob : null;
+  const birthDate =
+    typeof dob === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dob) ? dob : null;
   const id = Number(field.value);
   const externalId = Number.isSafeInteger(id) && id > 0 ? String(id) : '';
   const selection = React.useRef({ automaticId: null as number | null, manual: false });
   const byId = !!externalId && id !== selection.current.automaticId;
   const variables = byId
     ? { federation, externalId, byId: true }
-    : { federation, externalId: '0', byId: false, firstName, lastName, gender, birthDate };
+    : {
+        federation,
+        externalId: '0',
+        byId: false,
+        firstName,
+        lastName,
+        gender,
+        birthDate,
+      };
   const input = JSON.stringify(variables);
   const [settledInput, setSettledInput] = React.useState(input);
 
@@ -65,8 +73,10 @@ export function FederationIdFieldElement<T extends FieldValues>({
   const person = data?.person;
   React.useEffect(() => {
     if (selection.current.manual || byId || !resolved) return;
-    const nextId = firstName && lastName && candidate?.isStrongMatch ? candidate.id : undefined;
-    const mayUpdate = field.value == null || Number(field.value) === selection.current.automaticId;
+    const nextId =
+      firstName && lastName && candidate?.isStrongMatch ? candidate.id : undefined;
+    const mayUpdate =
+      field.value == null || Number(field.value) === selection.current.automaticId;
     if (mayUpdate && field.value !== nextId) {
       selection.current.automaticId = nextId ?? null;
       field.onChange(nextId);
@@ -103,13 +113,13 @@ export function FederationIdFieldElement<T extends FieldValues>({
         }}
       >
         <span className="text-neutral-12">Je to {candidate.name}?</span>
-        <span className="text-xs text-neutral-11">
+        <DotSeparated className="text-xs text-neutral-11">
           {[
             candidate.birthYear,
             formatAgeGroup(candidate.ageGroup),
             `${federation === 'csts' ? 'IDT' : 'MIN'} ${candidate.id}`,
-          ].filter(Boolean).join(' · ')}
-        </span>
+          ]}
+        </DotSeparated>
       </button>
     );
   }

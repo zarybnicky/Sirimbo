@@ -5,6 +5,13 @@ create policy admin_myself on person for update
   using (id = any ((select current_person_ids())::bigint[]));
 create policy view_tenant_or_trainer on person for select
   using (id in (select app_private.visible_person_ids()));
+create policy view_active_couple_partner on person for select
+  using (id in (
+    select unnest(array[c.man_id, c.woman_id])
+    from couple c
+    where c.status = 'active'
+  ));
+
 create policy event_share_view on person for select to anonymous
   using (id in (
     select person_id from event_registration

@@ -8,13 +8,14 @@ import { useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { CompetitionHistory } from '@/ui/Competitions';
+import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
+import { DefinitionList } from '@/ui/DefinitionList';
 
 export function Couple({ id }: { id: string }) {
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
@@ -59,48 +60,45 @@ export function Couple({ id }: { id: string }) {
         }
       />
 
-      <div className="mb-2">
-        <div>
-          Partner:{' '}
-          {!item.man ? (
+      <DefinitionList
+        className="mb-2 text-sm tabular"
+        items={{
+          Partner: !item.man ? (
             '?'
           ) : (
             <Link className="underline font-medium" href={`/clenove/${item.man.id}`}>
               {item.man?.name}
             </Link>
-          )}
-        </div>
-        <div>
-          Partnerka:{' '}
-          {!item.woman ? (
+          ),
+          Partnerka: !item.woman ? (
             '?'
           ) : (
             <Link className="underline font-medium" href={`/clenove/${item.woman.id}`}>
               {item.woman?.name}
             </Link>
-          )}
-        </div>
-        <div>{formatOpenDateRange(item)}</div>
-        <div>{item.status === 'ACTIVE' ? 'Aktivní pár' : 'Ukončené partnerství'}</div>
-      </div>
+          ),
+          Aktivní: formatOpenDateRange(item)
+        }}
+      />
 
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="activity" title="Aktivita">
           <ActivityTimeline personIds={personIds} includeJudging />
         </Tab>
 
-        <Tab id="fed" title="Soutěžní">
+        <Tab id="fed" title="Výsledky">
           {item.federationCompetitors.nodes.some(
-            (competitor) => competitor.categoryProgressesList.length > 0,
+            (x) => x.categoryProgressesList.length > 0,
           ) && (
-            <div className="my-4">
-              <FederationCategoryProgress
-                competitors={item.federationCompetitors.nodes}
-              />
-            </div>
+            <FederationCategoryProgress
+              competitors={item.federationCompetitors.nodes}
+            />
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory coupleId={id} />
+          <CompetitionHistory participant={{ coupleId: id }} />
+        </Tab>
+        <Tab id="eligible" title="Možné soutěže">
+          <CompetitionSuggestions participant={{ coupleId: id }} />
         </Tab>
       </TabMenu>
     </>

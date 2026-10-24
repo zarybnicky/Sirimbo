@@ -1,5 +1,11 @@
+import dynamic from 'next/dynamic';
+import type { MapView } from '@/ui/EventMap';
+import { DotSeparated } from '@/ui/DotSeparated';
 import {
   CompetitionParticipationsDocument,
+  CompetitionSuggestionsDocument,
+  CompetitionSuggestionEventsDocument,
+  type ParticipationCompetitionFragment,
   ClubCompetitionLocationsDocument,
   type CompetitionParticipationsQuery,
   type CompetitionParticipationsQueryVariables,
@@ -11,13 +17,19 @@ import type {
 } from '@/graphql';
 import type { CompetitionCategoryFragment } from '@/graphql/Federation';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { format } from 'date-fns';
 import { formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
-import { formatDateOnly, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
+import {
+  formatCount,
+  formatDateOnly,
+  formatPointsAndFinals,
+  formatResultStatus,
+} from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
@@ -27,6 +39,8 @@ import { ArrowLeftRight } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
+
+const EventMap = dynamic(() => import('@/ui/EventMap'));
 
 export type CompetitionEntry = {
   id: string;
@@ -58,7 +72,12 @@ type CompetitionScope = {
   cohortId?: string;
 };
 
-function entryLabel(entry: CompetitionEntry, competition: boolean) {
+function entryLabel(
+  entry: Pick<CompetitionEntry, 'federation' | 'category' | 'competitionType'> & {
+    competitorName?: string | null;
+  },
+  competition: boolean,
+) {
   return competition
     ? formatCategoryName(entry.federation, entry.category, entry.competitionType) || ''
     : (entry.competitorName ?? '');
@@ -329,26 +348,30 @@ export function CompetitionLink({
   );
 }
 
+function competitionDetails(competition: ParticipationCompetitionFragment) {
+  return {
+    federation: competition.federation,
+    competitionId: competition.id,
+    competitionExternalId: competition.externalId,
+    competitionEventId: competition.event?.id ?? null,
+    competitionEventExternalId: competition.event?.externalId ?? null,
+    competitionEventName: competition.event?.name ?? null,
+    competitionEventLocation:
+      competition.event?.location || competition.event?.city || null,
+    competitionDate: competition.startDate,
+    competitionType: competition.competitionType,
+    category: competition.category,
+    participants: competition.participantsTotal,
+    checkInEnd: competition.checkInEnd,
+    status: competition.status,
+  };
+}
+
 function competitionEntries(
   competitions: NonNullable<CompetitionParticipationsQuery['competitions']>['nodes'],
 ): CompetitionEntry[] {
   return competitions.flatMap((competition) => {
-    const common = {
-      federation: competition.federation,
-      competitionId: competition.id,
-      competitionExternalId: competition.externalId,
-      competitionEventId: competition.event?.id ?? null,
-      competitionEventExternalId: competition.event?.externalId ?? null,
-      competitionEventName: competition.event?.name ?? null,
-      competitionEventLocation:
-        competition.event?.location || competition.event?.city || null,
-      competitionDate: competition.startDate,
-      competitionType: competition.competitionType,
-      category: competition.category,
-      participants: competition.participantsTotal,
-      checkInEnd: competition.checkInEnd,
-      status: competition.status,
-    };
+    const common = competitionDetails(competition);
     const entries = new Map<string, CompetitionEntry>();
     for (const entry of [...competition.entries, ...competition.results]) {
       entries.set(entry.competitorId, {
@@ -364,13 +387,14 @@ function competitionEntries(
 }
 
 export function CompetitionHistory({
-  personId,
-  coupleId,
-}: { personId: string; coupleId?: never } | { coupleId: string; personId?: never }) {
+  participant,
+}: {
+  participant: CompetitionParticipantCondition;
+}) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionParticipationsDocument,
     variables: (offset): CompetitionParticipationsQueryVariables => ({
-      participant: personId != null ? { personIds: [personId] } : { coupleId },
+      participant,
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
       offset,
     }),
@@ -395,6 +419,227 @@ export function CompetitionHistory({
       )}
       <Pagination {...pagination} />
     </section>
+  );
+}
+
+export function CompetitionSuggestions({
+  participant = {},
+}: {
+  participant?: CompetitionParticipantCondition;
+}) {
+  const [since] = React.useState(() => format(new Date(), 'yyyy-MM-dd'));
+  const [mapView, setMapView] = React.useState<MapView>();
+  const [showMap, setShowMap] = React.useState(true);
+  const { data, fetching, error, pagination } = usePaginatedQuery({
+    query: CompetitionSuggestionEventsDocument,
+    variables: (offset) => ({ participant, since, offset }),
+    limit: 10,
+    pageKey: 'suggestionPage',
+    getTotal: (data) => data?.federationEvents?.totalCount,
+  });
+  const events = data?.federationEvents?.nodes ?? [];
+  const [{ data: matchData, fetching: matchFetching, error: matchError }] = useQuery({
+    query: CompetitionSuggestionsDocument,
+    variables: { ...participant, since, eventIds: events.map((event) => event.id) },
+    pause: fetching || !!error || events.length === 0,
+  });
+
+  const matches = (matchData?.competitionSuggestionsList ?? []).flatMap((row) => {
+    if (!row.competition || (!row.couple && !row.person)) return [];
+    const competitor = row.couple
+      ? {
+          key: `couple:${row.couple.id}`,
+          name: [row.couple.man?.name, row.couple.woman?.name]
+            .filter(Boolean)
+            .join(' – '),
+          href: `/pary/${row.couple.id}`,
+        }
+      : {
+          key: `person:${row.person!.id}`,
+          name: row.person!.name,
+          href: `/clenove/${row.person!.id}`,
+        };
+    return [
+      { ...competitionDetails(row.competition), id: row.competition.id, competitor },
+    ];
+  });
+  const byEvent = Map.groupBy(matches, (match) => match.competitionEventId);
+  const queryError = error ?? (events.length > 0 ? matchError : undefined);
+  const hasCoordinates = events.some((x) => x.venueLat !== null && x.venueLng !== null);
+
+  return (
+    <div>
+      {hasCoordinates && (
+        <Checkbox
+          name="suggestions-map"
+          label="Mapa"
+          checked={showMap}
+          onChange={(event) => setShowMap(event.currentTarget.checked)}
+          className="mb-2"
+        />
+      )}
+      {queryError ? (
+        <FormError error={queryError} />
+      ) : fetching || (events.length > 0 && matchFetching) ? (
+        <p role="status" className="text-sm text-neutral-11">
+          Načítám...
+        </p>
+      ) : events.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          {showMap && hasCoordinates && (
+            <EventMap
+              events={events}
+              view={mapView}
+              onViewChange={setMapView}
+              getEventWeight={(x) => byEvent.get(x.id)?.length ?? 0}
+              renderEventDetails={(event) => {
+                const matches = byEvent.get(event.id) ?? [];
+                return (
+                  <DotSeparated className="text-xs text-neutral-11">
+                    {formatCount(
+                      new Set(matches.map((match) => match.competitor.key)).size,
+                      { one: 'soutěžící', few: 'soutěžící', other: 'soutěžících' },
+                    )}
+                    {formatCount(new Set(matches.map((match) => match.id)).size, {
+                      one: 'soutěž',
+                      few: 'soutěže',
+                      other: 'soutěží',
+                    })}
+                    {formatCount(matches.length, {
+                      one: 'možný start',
+                      few: 'možné starty',
+                      other: 'možných startů',
+                    })}
+                  </DotSeparated>
+                );
+              }}
+            />
+          )}
+          {events.map((event) => {
+            const eventMatches = byEvent.get(event.id) ?? [];
+            const competitors = [
+              ...new Map(
+                eventMatches.map((match) => [match.competitor.key, match.competitor]),
+              ).values(),
+            ];
+            const competitions = [
+              ...Map.groupBy(eventMatches, (match) => match.id).values(),
+            ].toSorted(
+              (a, b) =>
+                compareText(a[0]!.competitionDate ?? '', b[0]!.competitionDate ?? '') ||
+                compareText(a[0]!.checkInEnd ?? '24:00', b[0]!.checkInEnd ?? '24:00') ||
+                compareText(entryLabel(a[0]!, true), entryLabel(b[0]!, true)),
+            );
+            return (
+              <article
+                key={event.id}
+                className={cardCls({ className: 'rounded-lg p-3' })}
+              >
+                <h3 className="font-semibold">
+                  <CompetitionLink
+                    entry={{
+                      federation: event.federation,
+                      competitionEventExternalId: event.externalId,
+                    }}
+                  >
+                    {event.name}
+                  </CompetitionLink>
+                </h3>
+
+                <DotSeparated className="mb-2 flex text-sm text-neutral-11">
+                  {[
+                    event.startDate &&
+                      [
+                        formatDateOnly(event.startDate),
+                        event.endDate &&
+                          event.endDate !== event.startDate &&
+                          formatDateOnly(event.endDate),
+                      ]
+                        .filter(Boolean)
+                        .join(' – '),
+                  ]}
+                  {event.location || event.city}
+                  <span className="font-medium text-accent-11">
+                    {formatCount(competitions.length, {
+                      one: 'soutěž',
+                      few: 'soutěže',
+                      other: 'soutěží',
+                    })}
+                  </span>
+                  <EligibleCompetitors competitors={competitors} />
+                </DotSeparated>
+
+                <ul className="space-y-1 text-sm">
+                  {competitions.map((competitionMatches) => {
+                    const entry = competitionMatches[0]!;
+                    return (
+                      <li
+                        key={entry.id}
+                        className="flex items-baseline justify-between gap-3"
+                      >
+                        <CompetitionLink
+                          entry={entry}
+                          competitionId={entry.competitionExternalId}
+                        >
+                          {entryLabel(entry, true)}
+                        </CompetitionLink>
+                        <EligibleCompetitors
+                          competitors={competitionMatches.map((x) => x.competitor)}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-sm text-neutral-11">Nebyly nalezeny žádné možné soutěže.</p>
+      )}
+      <Pagination {...pagination} />
+    </div>
+  );
+}
+
+function EligibleCompetitors({
+  competitors,
+}: {
+  competitors: { key: string; name: string; href: string }[];
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="shrink-0 font-medium text-accent-11 underline decoration-dotted underline-offset-2"
+        >
+          {formatCount(competitors.length, {
+            one: 'soutěžící',
+            few: 'soutěžící',
+            other: 'soutěžících',
+          })}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="max-h-80 overflow-y-auto text-sm">
+        <h4 className="mb-2 pr-6 font-semibold">Možní soutěžící</h4>
+        <ul className="space-y-1">
+          {competitors
+            .toSorted((a, b) => compareText(a.name, b.name))
+            .map((competitor) => (
+              <li key={competitor.key}>
+                <Link
+                  href={competitor.href}
+                  prefetch={false}
+                  className="text-accent-11 underline"
+                >
+                  {competitor.name}
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 }
 

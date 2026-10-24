@@ -8,7 +8,7 @@ type SuggestionCondition = {
     coupleId?: string | null;
     cohortId?: string | null;
   } | null;
-  date: { since: string; until: string };
+  date: { since: string; until?: string | null };
 };
 
 const plugins: GraphileConfig.Plugin[] = [
@@ -18,7 +18,7 @@ const plugins: GraphileConfig.Plugin[] = [
         """Inclusive competition start date."""
         since: Date!
         """Exclusive competition start date."""
-        until: Date!
+        until: Date
       }
       input CompetitionSuggestionCondition {
         """Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators."""
@@ -27,24 +27,28 @@ const plugins: GraphileConfig.Plugin[] = [
       }
     `,
   }),
-  addPgTableCondition(
-    { schemaName: 'federated', tableName: 'competition' },
-    'suggestedFor',
-    (build) => ({ type: build.getInputTypeByName('CompetitionSuggestionCondition') }),
-    (value, { sqlTableAlias: row }) => {
-      if (value == null) return null;
-      const { participant: scope, date } = value as SuggestionCondition;
-      const participant = scope ?? {};
-      return sql`${row}.id in (
-        select competition_id from public.suggested_competition_matches(
+  ...(['event', 'competition'] as const).map((tableName) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName },
+      'suggestedFor',
+      (build) => ({ type: build.getInputTypeByName('CompetitionSuggestionCondition') }),
+      (value, { sqlTableAlias: row }) => {
+        if (value == null) return null;
+        const { participant: scope, date } = value as SuggestionCondition;
+        const participant = scope ?? {};
+        return sql`${row}.id in (
+        select ${tableName === 'event' ? sql`c.event_id` : sql`m.competition_id`}
+        from public.suggested_competition_matches(
           ${sqlValueWithCodec(date.since, TYPES.date)},
-          ${sqlValueWithCodec(date.until, TYPES.date)},
+          ${sqlValueWithCodec(date.until ?? null, TYPES.date)},
           ${sqlValueWithCodec(participant.personIds ?? null, listOfCodec(TYPES.bigint))},
           ${sqlValueWithCodec(participant.coupleId ?? null, TYPES.bigint)},
           ${sqlValueWithCodec(participant.cohortId ?? null, TYPES.bigint)}
-        )
+        ) m
+        ${tableName === 'event' ? sql`join federated.competition c on c.id = m.competition_id` : sql``}
       )`;
-    },
+      },
+    ),
   ),
 ];
 

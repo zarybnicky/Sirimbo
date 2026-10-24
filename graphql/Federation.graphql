@@ -342,6 +342,7 @@ query FederationEventFacets($federation: String!, $includeCancelled: Boolean!) {
 
 fragment FederationMapEvent on FederationEvent {
   id
+  federation
   externalId
   name
   startDate

@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import { type FileFragment, FileListDocument } from '@/graphql/File';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
@@ -427,31 +428,23 @@ function FileLibrary({
                             {file.name}
                           </span>
                         )}
-                        <span className="mt-0.5 flex flex-wrap gap-x-1 text-[11px] leading-tight text-neutral-9">
+                        <DotSeparated className="mt-0.5 flex text-[11px] leading-tight text-neutral-9">
                           {file.uploadedAt && (
                             <time dateTime={file.uploadedAt}>
                               {numericFullFormatter.format(new Date(file.uploadedAt))}
                             </time>
                           )}
-                          {file.byteSize && (
-                            <>
-                              <span aria-hidden="true">·</span>
-                              <span>{formatFileSize(file.byteSize)}</span>
-                            </>
-                          )}
+                          {file.byteSize && <span>{formatFileSize(file.byteSize)}</span>}
                           {file.isPublic && (
-                            <>
-                              <span aria-hidden="true">·</span>
-                              <span
-                                className="inline-flex items-center"
-                                title="Veřejný soubor"
-                              >
-                                <LockOpen className="size-3" aria-hidden="true" />
-                                <span className="sr-only">Veřejný soubor</span>
-                              </span>
-                            </>
+                            <span
+                              className="inline-flex items-center"
+                              title="Veřejný soubor"
+                            >
+                              <LockOpen className="size-3" aria-hidden="true" />
+                              <span className="sr-only">Veřejný soubor</span>
+                            </span>
                           )}
-                        </span>
+                        </DotSeparated>
                       </span>
                       {selected && (
                         <span className="absolute right-2 top-2 rounded-full bg-accent-9 p-1 text-accent-0 shadow-sm">

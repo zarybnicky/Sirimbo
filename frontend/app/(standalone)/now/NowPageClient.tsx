@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import { EventRangeDocument, type EventRangeQuery } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
@@ -36,7 +38,7 @@ type GroupingMode = 'location' | 'trainer';
 function trainerGroups(instance: Instance) {
   const groups = (instance.trainersList ?? []).map((x) => ({
     key: x.personId,
-    label: x.person?.name.trim() ?? 'Neznámý trenér'
+    label: x.person?.name.trim() ?? 'Neznámý trenér',
   }));
 
   if (groups.length === 0) {
@@ -186,9 +188,7 @@ export default function NowPage() {
         ) : buckets.length === 0 ? (
           <div className="flex min-h-[50vh] items-center justify-center text-center text-accent-11">
             <div>
-              <p className="text-2xl font-semibold text-accent-12">
-                Právě nic neprobíhá
-              </p>
+              <p className="text-2xl font-semibold text-accent-12">Právě nic neprobíhá</p>
             </div>
           </div>
         ) : (
@@ -248,11 +248,10 @@ export default function NowPage() {
                         <p className="text-sm font-medium text-accent-12">
                           {formatEventName(instance)}
                         </p>
-                        <p className="text-sm text-neutral-9">
+                        <DotSeparated className="text-sm text-neutral-9">
                           {shortTimeFormatter.formatRange(since, until)}
-                          {' · '}
                           {formatStartsIn(reference, since)}
-                        </p>
+                        </DotSeparated>
                         {grouping === 'location' && (
                           <p className="text-xs text-neutral-9">
                             {`Trenéři: ${formatTrainers(instance) || '-'}`}

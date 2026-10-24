@@ -2408,7 +2408,14 @@ export type CompetitionSuggestionDateCondition = {
   /** Inclusive competition start date. */
   since: Scalars['Date']['input'];
   /** Exclusive competition start date. */
-  until: Scalars['Date']['input'];
+  until?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type CompetitionSuggestionsRecord = {
+  __typename?: 'CompetitionSuggestionsRecord';
+  competition: Maybe<Competition>;
+  couple: Maybe<Couple>;
+  person: Maybe<Person>;
 };
 
 export type CompetitionType =
@@ -6220,6 +6227,7 @@ export type FederationEventCondition = {
   status?: InputMaybe<FederationEventStatus>;
   /** Checks for equality with the object’s `streetAddress` field. */
   streetAddress?: InputMaybe<Scalars['String']['input']>;
+  suggestedFor?: InputMaybe<CompetitionSuggestionCondition>;
   /** Checks for equality with the object’s `venueLat` field. */
   venueLat?: InputMaybe<Scalars['Float']['input']>;
   /** Checks for equality with the object’s `venueLng` field. */
@@ -9277,6 +9285,7 @@ export type Query = {
   competitionRound: Maybe<CompetitionRound>;
   /** Get a single `CompetitionRound`. */
   competitionRoundByCompetitionIdAndRoundKey: Maybe<CompetitionRound>;
+  competitionSuggestionsList: Maybe<Array<CompetitionSuggestionsRecord>>;
   /** Reads and enables pagination through a set of `Competition`. */
   competitions: Maybe<CompetitionConnection>;
   /** Get a single `Couple`. */
@@ -9656,6 +9665,19 @@ export type QueryCompetitionRoundArgs = {
 export type QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs = {
   competitionId: Scalars['BigInt']['input'];
   roundKey: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCompetitionSuggestionsListArgs = {
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  eventIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  personIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  since?: InputMaybe<Scalars['Date']['input']>;
+  until?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
@@ -13265,6 +13287,7 @@ export type GraphCacheKeysConfig = {
   CompetitionRoundResult?: (data: WithTypename<CompetitionRoundResult>) => null | string,
   CompetitionRoundResultConnection?: (data: WithTypename<CompetitionRoundResultConnection>) => null | string,
   CompetitionRoundResultEdge?: (data: WithTypename<CompetitionRoundResultEdge>) => null | string,
+  CompetitionSuggestionsRecord?: (data: WithTypename<CompetitionSuggestionsRecord>) => null | string,
   ConfirmMembershipApplicationPayload?: (data: WithTypename<ConfirmMembershipApplicationPayload>) => null | string,
   Couple?: (data: WithTypename<Couple>) => null | string,
   CrawlerFetchJob?: (data: WithTypename<CrawlerFetchJob>) => null | string,
@@ -13521,6 +13544,7 @@ export type GraphCacheResolvers = {
     competitionByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionByFederationAndExternalIdArgs, WithTypename<Competition> | string>,
     competitionRound?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionRoundArgs, WithTypename<CompetitionRound> | string>,
     competitionRoundByCompetitionIdAndRoundKey?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs, WithTypename<CompetitionRound> | string>,
+    competitionSuggestionsList?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionSuggestionsListArgs, Array<WithTypename<CompetitionSuggestionsRecord> | string>>,
     competitions?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
     crawlerFetchJobs?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerFetchJobsArgs, WithTypename<CrawlerFetchJobConnection> | string>,
@@ -14179,6 +14203,11 @@ export type GraphCacheResolvers = {
   CompetitionRoundResultEdge?: {
     cursor?: GraphCacheResolver<WithTypename<CompetitionRoundResultEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<CompetitionRoundResultEdge>, Record<string, never>, WithTypename<CompetitionRoundResult> | string>
+  },
+  CompetitionSuggestionsRecord?: {
+    competition?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Competition> | string>,
+    couple?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Couple> | string>,
+    person?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Person> | string>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16003,6 +16032,7 @@ export type GraphCacheUpdaters = {
     competitionByFederationAndExternalId?: GraphCacheUpdateResolver<{ competitionByFederationAndExternalId: Maybe<WithTypename<Competition>> }, QueryCompetitionByFederationAndExternalIdArgs>,
     competitionRound?: GraphCacheUpdateResolver<{ competitionRound: Maybe<WithTypename<CompetitionRound>> }, QueryCompetitionRoundArgs>,
     competitionRoundByCompetitionIdAndRoundKey?: GraphCacheUpdateResolver<{ competitionRoundByCompetitionIdAndRoundKey: Maybe<WithTypename<CompetitionRound>> }, QueryCompetitionRoundByCompetitionIdAndRoundKeyArgs>,
+    competitionSuggestionsList?: GraphCacheUpdateResolver<{ competitionSuggestionsList: Maybe<Array<WithTypename<CompetitionSuggestionsRecord>>> }, QueryCompetitionSuggestionsListArgs>,
     competitions?: GraphCacheUpdateResolver<{ competitions: Maybe<WithTypename<CompetitionConnection>> }, QueryCompetitionsArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
     crawlerFetchJobs?: GraphCacheUpdateResolver<{ crawlerFetchJobs: Maybe<WithTypename<CrawlerFetchJobConnection>> }, QueryCrawlerFetchJobsArgs>,
@@ -16743,6 +16773,11 @@ export type GraphCacheUpdaters = {
   CompetitionRoundResultEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionRoundResultEdge>>, Record<string, never>>
+  },
+  CompetitionSuggestionsRecord?: {
+    competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,

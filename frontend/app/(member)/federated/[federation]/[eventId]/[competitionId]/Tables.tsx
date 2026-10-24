@@ -96,7 +96,7 @@ export function Registrations({
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">
-        {hasResults ? 'No-show' : 'Přihlášení'}
+        {hasResults ? 'No-show' : 'Přihlášky'}
       </h2>
       <Table
         columns={[

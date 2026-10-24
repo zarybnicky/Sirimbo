@@ -22,7 +22,6 @@ import { FormError } from '@/ui/form';
 import { SelectField } from '@/ui/fields/select';
 import { formatCount, formatDateOnly, monthNameFormatter } from '@/ui/format';
 import { Popover, PopoverContent, PopoverAnchor } from '@/ui/popover';
-import { cn } from '@/lib/cn';
 
 export const eventMonths = Array.from({ length: 12 }, (_, month) =>
   monthNameFormatter.format(new Date(2000, month, 1)),
@@ -37,7 +36,7 @@ export const mapViews = [
   { value: 'europe', label: 'Evropa' },
   { value: 'world', label: 'Svět' },
 ] as const;
-type MapView = (typeof mapViews)[number]['value'];
+export type MapView = (typeof mapViews)[number]['value'];
 export const defaultMapViews: Record<string, MapView> = {
   csts: 'czechia',
   szts: 'europe',
@@ -57,16 +56,36 @@ const europe = {
 
 export default function EventMap({
   events,
-  view,
+  view: selectedView,
   onViewChange,
-  federation,
+  renderEventDetails,
+  getEventWeight,
 }: {
   events: FederationMapEventFragment[];
-  view: MapView;
+  view?: MapView;
   onViewChange: (view: MapView) => void;
-  federation: string;
+  renderEventDetails?: (event: FederationMapEventFragment) => React.ReactNode;
+  getEventWeight?: (event: FederationMapEventFragment) => number;
 }) {
   const locations = React.useMemo(() => eventLocations(events), [events]);
+  const view =
+    selectedView ??
+    (locations.every((location) =>
+      location.events.every((event) => event.country === 'Czechia'),
+    )
+      ? 'czechia'
+      : locations.every(
+            ({ coordinates: [lng, lat] }) =>
+              lng >= -25 && lng <= 45 && lat >= 34 && lat <= 72,
+          )
+        ? 'europe'
+        : 'world');
+  const weights = locations.map((location) =>
+    getEventWeight
+      ? location.events.reduce((sum, event) => sum + getEventWeight(event), 0)
+      : location.events.length,
+  );
+  const maxWeight = Math.max(1, ...weights);
   const [selected, setSelected] = React.useState<{
     key: string;
     anchor: HTMLButtonElement;
@@ -172,9 +191,14 @@ export default function EventMap({
                 />
               </g>
             </svg>
-            {locations.map((location) => {
+            {locations.map((location, index) => {
               const [x, y] = transform.apply(map.projection(location.coordinates)!);
               if (x < 0 || x > map.width || y < 0 || y > map.height) return null;
+              const size = getEventWeight
+                ? Math.max(8, 28 * Math.sqrt(weights[index]! / maxWeight))
+                : location.events.length > 1
+                  ? 12
+                  : 8;
               return (
                 <button
                   key={location.key}
@@ -192,15 +216,17 @@ export default function EventMap({
                   }}
                   onPointerLeave={closePreview}
                   onClick={(event) => open(location.key, event.currentTarget, true)}
-                  style={{ left: x, top: y }}
-                  className="absolute grid size-5 -translate-1/2 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-accent-8"
+                  style={{
+                    left: x,
+                    top: y,
+                    width: Math.max(20, size),
+                    height: Math.max(20, size),
+                  }}
+                  className="absolute grid -translate-1/2 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-accent-8"
                 >
                   <span
-                    className={cn(
-                      'rounded-full border border-neutral-1',
-                      location.events.length > 1 ? 'size-3' : 'size-2',
-                    )}
-                    style={{ background: location.background }}
+                    className="rounded-full border border-neutral-1"
+                    style={{ background: location.background, width: size, height: size }}
                   />
                 </button>
               );
@@ -208,6 +234,7 @@ export default function EventMap({
           </>
         )}
       </div>
+
       {map && (
         <div className="absolute right-2 top-2 flex items-center gap-1">
           <SelectField
@@ -276,7 +303,7 @@ export default function EventMap({
                   />
                   <Link
                     className="text-accent-11 underline"
-                    href={`/federated/${federation}/${event.externalId}`}
+                    href={`/federated/${event.federation}/${event.externalId}`}
                     prefetch={false}
                   >
                     {formatDateOnly(event.startDate)}
@@ -287,9 +314,13 @@ export default function EventMap({
                       <span className="block">{event.name}</span>
                     )}
                   </Link>
-                  <div className="text-xs text-neutral-11">
-                    Soutěže: {event.competitions.totalCount}
-                  </div>
+                  {renderEventDetails ? (
+                    renderEventDetails(event)
+                  ) : (
+                    <div className="text-xs text-neutral-11">
+                      Soutěže: {event.competitions.totalCount}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

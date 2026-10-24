@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { formatCategoryName } from '@/ui/csts';
 import type { Metadata } from 'next';
@@ -67,12 +68,12 @@ export default async function RoundPage({ params }: Props) {
       <PageHeader
         title={title}
         subtitle={
-          <span className="flex gap-2">
-            <span className="shrink-0">{formatDateOnly(competition.startDate)} ·</span>
+          <DotSeparated className="flex">
+            <span className="shrink-0">{formatDateOnly(competition.startDate)}</span>
             <span className="truncate" title={competition.event.name || eventId}>
               {competition.event.name || eventId}
             </span>
-          </span>
+          </DotSeparated>
         }
         breadcrumbLabel="Soutěž"
         breadcrumbs={[

@@ -1,3 +1,4 @@
+import { DotSeparated } from '@/ui/DotSeparated';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import { memo } from 'react';
 import type { PersonMembershipsQuery } from '@/graphql/Person';
@@ -115,7 +116,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
         <ActionGroup
           actions={actions.filter((action) =>
-            ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(action.id),
+            ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
+              action.id,
+            ),
           )}
         />
       </div>
@@ -130,7 +133,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           }
         >
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>Správce{showClubs && ` · ${item.tenantName}`}</b>
+            <DotSeparated className="font-bold">
+              Správce{showClubs && item.tenantName}
+            </DotSeparated>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -146,7 +151,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           }
         >
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>Trenér{showClubs && ` · ${item.tenantName}`}</b>
+            <DotSeparated className="font-bold">
+              Trenér{showClubs && item.tenantName}
+            </DotSeparated>
             {auth.isAdmin && (
               <>
                 <div>
@@ -177,7 +184,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           }
         >
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <b>Člen{showClubs && ` · ${item.tenantName}`}</b>
+            <DotSeparated className="font-bold">
+              Člen{showClubs && item.tenantName}
+            </DotSeparated>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -266,22 +275,18 @@ export const PersonMembershipView = memo(function PersonMembershipView({
                     className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
                   >
                     <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
-                    <span className="text-neutral-11">
+                    <DotSeparated className="text-neutral-11">
                       {dateTimeFormatter.format(new Date(event.occurredAt))}
                       {event.location && (
-                        <>
-                          {' · '}
-                          <Link
-                            className="underline"
-                            href={`/lokality/${event.location.id}`}
-                          >
-                            {event.location.name}
-                          </Link>
-                        </>
+                        <Link
+                          className="underline"
+                          href={`/lokality/${event.location.id}`}
+                        >
+                          {event.location.name}
+                        </Link>
                       )}
-                      {' · '}
                       {event.device}
-                    </span>
+                    </DotSeparated>
                   </div>
                 ))}
               </div>

@@ -3039,7 +3039,13 @@ input CompetitionSuggestionDateCondition {
   since: Date!
 
   """Exclusive competition start date."""
-  until: Date!
+  until: Date
+}
+
+type CompetitionSuggestionsRecord {
+  competition: Competition
+  couple: Couple
+  person: Person
 }
 
 enum CompetitionType {
@@ -7838,6 +7844,7 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `streetAddress` field."""
   streetAddress: String
+  suggestedFor: CompetitionSuggestionCondition
 
   """Checks for equality with the object’s `venueLat` field."""
   venueLat: Float
@@ -11785,6 +11792,20 @@ type Query {
 
   """Get a single `CompetitionRound`."""
   competitionRoundByCompetitionIdAndRoundKey(competitionId: BigInt!, roundKey: String!): CompetitionRound
+  competitionSuggestionsList(
+    cohortId: BigInt
+    coupleId: BigInt
+    eventIds: [BigInt]
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    personIds: [BigInt]
+    since: Date
+    until: Date
+  ): [CompetitionSuggestionsRecord!]
 
   """Reads and enables pagination through a set of `Competition`."""
   competitions(

@@ -1,6 +1,6 @@
 select app_private.drop_policies('public.couple');
 
-CREATE POLICY admin_all ON couple TO administrator USING (true);
+create policy admin_all on couple to administrator using (true);
 create policy view_visible_person on couple for select
 using (man_id in (select app_private.visible_person_ids())
   or woman_id in (select app_private.visible_person_ids()));

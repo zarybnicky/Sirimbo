@@ -1,11 +1,13 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import { PersonMembershipsDocument } from '@/graphql/Person';
 import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
-import { CompetitionHistory } from '@/ui/Competitions';
+import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
@@ -151,11 +153,7 @@ export const PersonView = React.memo(function PersonView({
         breadcrumbs={parent ? [parent] : undefined}
         subtitle={
           subtitleParts.length > 0 ? (
-            <span className="inline-flex flex-wrap items-center gap-y-1 [&>*:not(:last-child)]:after:content-['•'] *:after:mx-1.5 *:after:text-neutral-9">
-              {subtitleParts.map((part, index) => (
-                <span key={index}>{part}</span>
-              ))}
-            </span>
+            <DotSeparated>{subtitleParts}</DotSeparated>
           ) : undefined
         }
         actions={actions}
@@ -189,14 +187,17 @@ export const PersonView = React.memo(function PersonView({
         <Tab id="info" title="Členství">
           <PersonMembershipView item={item} />
         </Tab>
-        <Tab id="fed" title="Soutěžní">
+        <Tab id="fed" title="Výsledky">
           {competitors.length > 0 && (
             <div className="my-4">
               <FederationCategoryProgress competitors={competitors} />
             </div>
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory personId={id} />
+          <CompetitionHistory participant={{ personIds: [id] }} />
+        </Tab>
+        <Tab id="eligible" title="Možné soutěže">
+          <CompetitionSuggestions participant={{ personIds: [id] }} />
         </Tab>
         {isAdminOrCurrentPerson && (
           <>

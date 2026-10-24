@@ -24,6 +24,7 @@ import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
 import { FederationIdWidget } from '@/ui/FederationIdWidget';
 import { badgeCls } from '@/ui/style';
+import { CompetitionSuggestions } from '@/ui/Competitions';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
@@ -88,6 +89,9 @@ export function Club() {
             <ClubApplications applications={pendingApplications} />
           </Tab>
         )}
+        <Tab id="eligible" title="Možné soutěže">
+          <CompetitionSuggestions />
+        </Tab>
         <Tab id="csts" title="ČSTS IDT" requireAdmin>
           <FederationIdWidget federation="csts" />
         </Tab>

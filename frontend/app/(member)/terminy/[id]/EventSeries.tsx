@@ -1,5 +1,7 @@
 'use client';
 
+import { DotSeparated } from '@/ui/DotSeparated';
+
 import type { AttendanceType } from '@/graphql';
 import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
@@ -118,9 +120,7 @@ export function EventSeries({
       <PageHeader
         title={series.name || 'Termíny'}
         breadcrumbLabel="Termíny"
-        breadcrumbs={[
-          { label: 'Akce', href: '/akce' },
-        ]}
+        breadcrumbs={[{ label: 'Akce', href: '/akce' }]}
         actions={actions}
       />
       <dl className="mb-4 text-sm tabular">
@@ -183,15 +183,15 @@ function EventRow({
     if (detail?.key === common[i]?.key) return [];
     if (detail) return [detail];
     const missing = common[i]?.missing;
-    return missing ? [{ name: common[i]!.name, key: `missing:${i}`, label: missing }] : [];
+    return missing
+      ? [{ name: common[i]!.name, key: `missing:${i}`, label: missing }]
+      : [];
   });
   const stats =
     typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
 
   return (
-    <div
-      className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4"
-    >
+    <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4">
       <ActionGroup className="col-start-1 row-start-1" variant="row" actions={actions} />
       <Link
         href={`/termin/${instance.id}?tab=registrations`}
@@ -203,7 +203,7 @@ function EventRow({
         {numericDateWithYearFormatter.formatRange(start, end)}
       </Link>
       {(displayName || inlineDetails.length > 0) && (
-        <div
+        <DotSeparated
           className={cn(
             'col-start-3 row-start-1 min-w-0 text-neutral-11',
             instance.isCancelled && 'line-through text-neutral-10',
@@ -212,15 +212,18 @@ function EventRow({
           {displayName && (
             <span className="font-medium text-neutral-12">{displayName}</span>
           )}
-          {inlineDetails.map((detail, index) => (
+          {inlineDetails.map((detail) => (
             <span key={detail.key}>
-              {displayName || index > 0 ? ' · ' : null}
               {detail.href ? (
-                <Link className="underline" href={detail.href}>{detail.label}</Link>
-              ) : detail.label}
+                <Link className="underline" href={detail.href}>
+                  {detail.label}
+                </Link>
+              ) : (
+                detail.label
+              )}
             </span>
           ))}
-        </div>
+        </DotSeparated>
       )}
 
       {showAttendance &&

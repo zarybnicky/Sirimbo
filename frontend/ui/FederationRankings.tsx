@@ -55,6 +55,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
             (entry.rankingTo && entry.rankingTo !== entry.ranking
               ? `–${entry.rankingTo}.`
               : '.'),
+          total: snapshot.ranklistEntriesBySnapshotId.totalCount,
         },
       ];
     })
@@ -152,9 +153,8 @@ export function FederationRankings({
   return (
     <Table
       className="my-2"
-      caption="Ranklist"
       columns={[
-        'Kategorie',
+        'Ranklist',
         ...columns.map((discipline) => (
           <span key={discipline} className="block text-right">
             {disciplineNames[discipline] ?? discipline}
@@ -168,9 +168,9 @@ export function FederationRankings({
           {columns.map((discipline) => (
             <td key={discipline} className="text-right">
               {entries
-                ?.filter((entry) => entry.discipline === discipline)
-                .map((entry) => (
-                  <div key={entry.id}>{entry.placement}</div>
+                ?.filter((x) => x.discipline === discipline)
+                .map((x) => (
+                  <div key={x.id}>{x.placement}/{x.total}</div>
                 ))}
             </td>
           ))}
