@@ -671,7 +671,7 @@ function EligibleCompetitors({
           type="button"
           className="shrink-0 font-medium text-accent-11 underline decoration-dotted underline-offset-2"
         >
-          {formatCount(competitors.length - registered, {
+          {(competitors.length - registered) > 0 && formatCount(competitors.length - registered, {
             one: 'potenciální',
             few: 'potenciální',
             other: 'potenciálních',
