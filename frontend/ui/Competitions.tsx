@@ -571,12 +571,15 @@ export function CompetitionSuggestions({
           {events.map((event) => {
             const eventMatches = byEvent.get(event.id) ?? [];
             const competitors = [
-              ...new Map(
-                eventMatches.map((match) => [match.competitor.key, match.competitor]),
-              ).values(),
-            ];
+              ...Map.groupBy(eventMatches, (x) => x.competitor.key).values(),
+            ].map((matches) => ({
+              ...matches[0]!.competitor,
+              status: matches.some((x) => x.matchStatus === 'registered')
+                ? 'registered'
+                : matches[0]!.matchStatus,
+            }));
             const competitions = [
-              ...Map.groupBy(eventMatches, (match) => match.id).values(),
+              ...Map.groupBy(eventMatches, (x) => x.id).values(),
             ].toSorted(
               (a, b) =>
                 compareText(a[0]!.competitionDate ?? '', b[0]!.competitionDate ?? '') ||
@@ -663,6 +666,7 @@ function EligibleCompetitors({
 }: {
   competitors: { key: string; name: string; href: string; status?: string | null }[];
 }) {
+  if (competitors.length === 0) return null;
   const registered = competitors.filter((x) => x.status === 'registered').length;
   return (
     <Popover>
@@ -678,7 +682,7 @@ function EligibleCompetitors({
           })}
           {registered > 0 && (
             <>
-              {' · '}
+              {registered < competitors.length && ' · '}
               {formatCount(registered, {
                 one: 'přihlášený',
                 few: 'přihlášení',
