@@ -85,7 +85,7 @@ query CompetitionSuggestionEvents(
   $offset: Int! = 0
 ) {
   federationEvents(
-    first: 10
+    first: 50
     offset: $offset
     condition: { suggestedFor: { participant: $participant, date: { since: $since } } }
     orderBy: [START_DATE_ASC, ID_ASC]

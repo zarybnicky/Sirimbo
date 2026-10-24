@@ -22,8 +22,8 @@ export const UpdateNotifier = React.memo(function UpdateNotifier() {
 
           toastRef.current = toast.warn(
             <div className="flex flex-col gap-0.5">
-              <div><b>Je k dispozici nová verze aplikace.</b></div>
-              <div>Kliknutím zde ji aktualizujete.</div>
+              <div><b>Je k dispozici nová verze</b></div>
+              <div>Kliknutím zde ji aktualizujete</div>
             </div>,
             {
               autoClose: false,
