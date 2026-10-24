@@ -671,10 +671,10 @@ function EligibleCompetitors({
           type="button"
           className="shrink-0 font-medium text-accent-11 underline decoration-dotted underline-offset-2"
         >
-          {formatCount(competitors.length, {
-            one: 'soutěžící',
-            few: 'soutěžící',
-            other: 'soutěžících',
+          {formatCount(competitors.length - registered, {
+            one: 'potenciální',
+            few: 'potenciální',
+            other: 'potenciálních',
           })}
           {registered > 0 && (
             <>
@@ -689,7 +689,7 @@ function EligibleCompetitors({
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="max-h-80 overflow-y-auto text-sm">
-        <h4 className="mb-2 pr-6 font-semibold">Soutěžící</h4>
+        <h4 className="mb-2 pr-6 font-semibold">Potenciální soutěžící</h4>
         <ul className="space-y-1">
           {competitors
             .toSorted((a, b) => compareText(a.name, b.name))
