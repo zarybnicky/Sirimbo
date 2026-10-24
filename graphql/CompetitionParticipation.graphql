@@ -36,13 +36,11 @@ query Competitions(
     condition: $condition
     orderBy: $orderBy
   ) {
+    totalCount @include(if: $withDetails)
     nodes {
       id
       event { id location city }
-    }
-    ... @include(if: $withDetails) {
-      totalCount
-      nodes {
+      ... @include(if: $withDetails) {
         ...Competition
         entries: entriesList(condition: $entryCondition, orderBy: COMPETITOR_ID_ASC) {
           competitionId
