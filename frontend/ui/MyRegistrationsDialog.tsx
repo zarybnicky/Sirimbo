@@ -1,6 +1,6 @@
 import {
   type EventRegistrationFragment,
-  EventRegistrationCandidatesDocument,
+  EventFormOptionsDocument,
   EventRegistrationDialogDocument,
   type EventRegistrationDialogQuery,
   SetEventRegistrationDocument,
@@ -48,7 +48,8 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
   const isManager = auth.canManageInstance(event);
 
   const [query] = useQuery({
-    query: EventRegistrationCandidatesDocument,
+    query: EventFormOptionsDocument,
+    variables: { forRegistration: true },
     pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(

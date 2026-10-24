@@ -40,7 +40,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
     const hasRequests = event.registrationsList.some((x) => x.requests.length > 0);
 
     const trainers = new Map<string, string>();
-    for (const trainer of event.trainersList) {
+    for (const trainer of event.trainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
     }
 

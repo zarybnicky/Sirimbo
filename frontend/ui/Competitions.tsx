@@ -2,13 +2,11 @@ import dynamic from 'next/dynamic';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
-  CompetitionParticipationsDocument,
+  CompetitionsDocument,
   CompetitionSuggestionsDocument,
   CompetitionSuggestionEventsDocument,
-  type ParticipationCompetitionFragment,
-  ClubCompetitionLocationsDocument,
-  type CompetitionParticipationsQuery,
-  type CompetitionParticipationsQueryVariables,
+  type CompetitionsQuery,
+  type CompetitionsQueryVariables,
 } from '@/graphql/CompetitionParticipation';
 import type {
   CompetitionType,
@@ -344,32 +342,34 @@ export function CompetitionLink({
   );
 }
 
-function competitionDetails(competition: ParticipationCompetitionFragment) {
+function competitionDetails(
+  competition: NonNullable<CompetitionsQuery['competitions']>['nodes'][number],
+) {
   return {
-    federation: competition.federation,
+    federation: competition.federation ?? null,
     competitionId: competition.id,
-    competitionExternalId: competition.externalId,
+    competitionExternalId: competition.externalId ?? null,
     competitionEventId: competition.event?.id ?? null,
     competitionEventExternalId: competition.event?.externalId ?? null,
     competitionEventName: competition.event?.name ?? null,
     competitionEventLocation:
       competition.event?.location || competition.event?.city || null,
-    competitionDate: competition.startDate,
-    competitionType: competition.competitionType,
-    category: competition.category,
-    participants: competition.participantsTotal,
+    competitionDate: competition.startDate ?? null,
+    competitionType: competition.competitionType ?? null,
+    category: competition.category ?? null,
+    participants: competition.participantsTotal ?? null,
     checkInEnd: competition.checkInEnd,
     status: competition.status,
   };
 }
 
 function competitionEntries(
-  competitions: NonNullable<CompetitionParticipationsQuery['competitions']>['nodes'],
+  competitions: NonNullable<CompetitionsQuery['competitions']>['nodes'],
 ): CompetitionEntry[] {
   return competitions.flatMap((competition) => {
     const common = competitionDetails(competition);
     const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [...competition.entries, ...competition.results]) {
+    for (const entry of [...(competition.entries ?? []), ...(competition.results ?? [])]) {
       entries.set(entry.competitorId, {
         ...entries.get(entry.competitorId),
         ...common,
@@ -388,9 +388,11 @@ export function CompetitionHistory({
   participant: CompetitionParticipantCondition;
 }) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CompetitionParticipationsDocument,
-    variables: (offset): CompetitionParticipationsQueryVariables => ({
-      participant,
+    query: CompetitionsDocument,
+    variables: (offset): CompetitionsQueryVariables => ({
+      condition: { participation: { participant } },
+      entryCondition: { participant },
+      resultCondition: { participant },
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
       offset,
     }),
@@ -729,22 +731,27 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     since: format(startDate, 'yyyy-MM-dd'),
     until: format(add(startDate, 1, 'week'), 'yyyy-MM-dd'),
   };
+  const participant = { personIds: onlyMine ? auth.personIds : undefined };
   const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CompetitionParticipationsDocument,
+    query: CompetitionsDocument,
     variables: (offset) => ({
-      date,
       offset,
-      participant: {
-        personIds: onlyMine ? auth.personIds : undefined,
-      },
+      condition: { participation: { participant, date } },
+      entryCondition: { participant },
+      resultCondition: { participant },
     }),
     limit: 50,
     pageKey: 'competitionPage',
     getTotal: (data) => data?.competitions?.totalCount,
   });
   const [{ data: clubData, fetching: clubFetching }] = useQuery({
-    query: ClubCompetitionLocationsDocument,
-    variables: { date, participant: {} },
+    query: CompetitionsDocument,
+    variables: {
+      condition: { participation: { participant: {}, date } },
+      first: 100,
+      orderBy: ['START_DATE_ASC', 'ID_ASC'],
+      withDetails: false,
+    },
     pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
   });
   const visible = competitionEntries(data?.competitions?.nodes ?? []);
@@ -801,7 +808,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
               >
                 Další soutěže s klubovou účastí
                 {locations.length > 0 ? `: ${locations.join(', ')}` : ''}
-                {clubData?.competitions?.pageInfo.hasNextPage ? '…' : '.'}
+                {clubData?.competitions?.pageInfo?.hasNextPage ? '…' : '.'}
               </button>
             )}
           </div>

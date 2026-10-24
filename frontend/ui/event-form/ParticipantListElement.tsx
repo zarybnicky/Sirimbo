@@ -12,7 +12,7 @@ export function ParticipantListElement({
   cohorts,
 }: {
   options: Map<string, EventParticipantOption>;
-  cohorts: NonNullable<EventFormOptionsQuery['tenant']>['cohortsList'];
+  cohorts: NonNullable<NonNullable<EventFormOptionsQuery['tenant']>['cohortsList']>;
 }) {
   const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
   const registrations = useWatch({ control, name: 'registrations' }) ?? [];

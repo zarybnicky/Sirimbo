@@ -1,4 +1,4 @@
-fragment ParticipationCompetition on Competition {
+fragment Competition on Competition {
   id
   federation
   externalId
@@ -21,60 +21,50 @@ fragment ParticipationCompetition on Competition {
   }
 }
 
-query CompetitionParticipations(
-  $participant: CompetitionParticipantCondition!
-  $date: CompetitionDateCondition
+query Competitions(
+  $condition: CompetitionCondition!
+  $entryCondition: CompetitionEntryCondition
+  $resultCondition: CompetitionResultCondition
+  $first: Int! = 50
   $offset: Int! = 0
   $orderBy: [CompetitionsOrderBy!] = [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+  $withDetails: Boolean! = true
 ) {
   competitions(
-    first: 50
+    first: $first
     offset: $offset
-    condition: { participation: { participant: $participant, date: $date } }
+    condition: $condition
     orderBy: $orderBy
-  ) {
-    totalCount
-    nodes {
-      ...ParticipationCompetition
-      entries: entriesList(
-        condition: { participant: $participant }
-        orderBy: COMPETITOR_ID_ASC
-      ) {
-        competitionId
-        competitorId
-        cancelled
-        competitor { id name }
-      }
-      results: resultsList(condition: { participant: $participant }, orderBy: COMPETITOR_ID_ASC) {
-        competitionId
-        competitorId
-        competitor { id name }
-        ranking
-        rankingTo
-        pointGain
-        finalGain
-        isFinal
-        completionStatus
-      }
-    }
-  }
-}
-
-query ClubCompetitionLocations(
-  $participant: CompetitionParticipantCondition!
-  $date: CompetitionDateCondition!
-) {
-  competitions(
-    first: 100
-    condition: { participation: { participant: $participant, date: $date } }
-    orderBy: [START_DATE_ASC, ID_ASC]
   ) {
     nodes {
       id
       event { id location city }
     }
-    pageInfo {
-      hasNextPage
+    ... @include(if: $withDetails) {
+      totalCount
+      nodes {
+        ...Competition
+        entries: entriesList(condition: $entryCondition, orderBy: COMPETITOR_ID_ASC) {
+          competitionId
+          competitorId
+          cancelled
+          competitor { id name }
+        }
+        results: resultsList(condition: $resultCondition, orderBy: COMPETITOR_ID_ASC) {
+          competitionId
+          competitorId
+          competitor { id name }
+          ranking
+          rankingTo
+          pointGain
+          finalGain
+          isFinal
+          completionStatus
+        }
+      }
+    }
+    ... @skip(if: $withDetails) {
+      pageInfo { hasNextPage }
     }
   }
 }

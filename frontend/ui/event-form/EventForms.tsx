@@ -4,10 +4,10 @@ import {
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
 import {
-  EventEditorRegistrationsDocument,
+  EventRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
-  type EventEditorRegistrationsQuery,
+  type EventRegistrationsQuery,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
@@ -41,7 +41,7 @@ const eventTypeOptions = (
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
 function useEventFormOptions(
-  savedRegistrations?: NonNullable<EventEditorRegistrationsQuery['event']>['registrationsList'],
+  savedRegistrations?: NonNullable<EventRegistrationsQuery['event']>['registrationsList'],
 ) {
   const auth = useAuth();
   const [query] = useQuery({ query: EventFormOptionsDocument });
@@ -340,8 +340,8 @@ export function CreateEventForm({
 export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
   const [now] = React.useState(() => Date.now());
   const [query] = useQuery({
-    query: EventEditorRegistrationsDocument,
-    variables: { id: event.id },
+    query: EventRegistrationsDocument,
+    variables: { id: event.id, withSchedule: false },
     requestPolicy: 'network-only',
   });
 
@@ -399,7 +399,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
           isCancelled: false,
           cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
             .filter(({ cohortId }) => cohortId === r.targetCohortId ||
-              options.data?.tenant?.cohortsList.find((x) => x.id === cohortId)?.cohortMembershipsList
+              options.data?.tenant?.cohortsList?.find((x) => x.id === cohortId)?.cohortMembershipsList
                 .some((m) => m.person?.id === r.personId &&
                   (at < now || m.status === 'ACTIVE') && Date.parse(m.since) <= at &&
                   (!m.until || Date.parse(m.until) > at)))

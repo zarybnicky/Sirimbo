@@ -311,23 +311,6 @@ query EventDescription($id: BigInt!) {
   }
 }
 
-query EventEditorRegistrations($id: BigInt!) {
-  event(id: $id) {
-    id
-    registrationsList(
-      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
-    ) {
-      ...EventRegistration
-      person {
-        id
-        isMember
-        isTrainer
-        isAdmin
-      }
-    }
-  }
-}
-
 query EventRegistrationDialog($id: BigInt!) {
   instance: event(id: $id) {
     id
@@ -350,60 +333,73 @@ query EventRegistrationDialog($id: BigInt!) {
   }
 }
 
-query EventRegistrations($id: BigInt!) {
+query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = true) {
   event(id: $id) {
     id
-    trainersList: eventTrainersList {
-      ...EventTrainer
-    }
     registrationsList(
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       ...EventRegistration
+      person {
+        id
+        ... @skip(if: $withSchedule) {
+          isMember
+          isTrainer
+          isAdmin
+        }
+      }
     }
   }
-  scheduledLessons: eventsList(condition: { parentId: $id, type: LESSON }) {
-    id
-    since
-    until
-    locationText
-    location {
+  ... @include(if: $withSchedule) {
+    event(id: $id) {
       id
-      name
+      trainersList: eventTrainersList {
+        ...EventTrainer
+      }
     }
-    trainersList: eventTrainersList {
+    scheduledLessons: eventsList(condition: { parentId: $id, type: LESSON }) {
       id
-      personId
-      person {
+      since
+      until
+      locationText
+      location {
         id
         name
       }
-      tenantTrainer {
+      trainersList: eventTrainersList {
         id
-        memberPrice45MinAmount
-        currency
+        personId
+        person {
+          id
+          name
+        }
+        tenantTrainer {
+          id
+          memberPrice45MinAmount
+          currency
+        }
       }
-    }
-    registrationsList(
-      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
-    ) {
-      id
-      note
-      personId
-      person {
+      registrationsList(
+        condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+      ) {
         id
-        name
-      }
-      coupleId
-      couple {
-        ...Couple
+        note
+        personId
+        person {
+          id
+          name
+        }
+        coupleId
+        couple {
+          ...Couple
+        }
       }
     }
   }
 }
 
-query EventRegistrationCandidates {
-  people(condition: { membership: { state: CURRENT } }) {
+query EventFormOptions($forRegistration: Boolean! = false) {
+  people(condition: { membership: { state: CURRENT } }) @include(if: $forRegistration) {
     nodes {
       id
       name
@@ -414,24 +410,38 @@ query EventRegistrationCandidates {
   }
   tenant: getCurrentTenant {
     id
-    couplesList {
-      ...Couple
-    }
-  }
-}
-
-query EventFormOptions {
-  tenant: getCurrentTenant {
-    id
-    cohortsList(orderBy: ORDERING_ASC) {
-      id
-      name
-      isArchived
-      cohortMembershipsList {
+    ... @skip(if: $forRegistration) {
+      cohortsList(orderBy: ORDERING_ASC) {
         id
-        since
-        until
-        status
+        name
+        isArchived
+        cohortMembershipsList {
+          id
+          since
+          until
+          status
+          person {
+            id
+            name
+            isMember
+            isTrainer
+            isAdmin
+          }
+        }
+      }
+      locationsList {
+        id
+        name
+      }
+      tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+        id
+        person {
+          id
+          name
+        }
+      }
+      tenantMembershipsList(condition: { status: ACTIVE }) {
+        id
         person {
           id
           name
@@ -439,27 +449,6 @@ query EventFormOptions {
           isTrainer
           isAdmin
         }
-      }
-    }
-    locationsList {
-      id
-      name
-    }
-    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-      id
-      person {
-        id
-        name
-      }
-    }
-    tenantMembershipsList(condition: { status: ACTIVE }) {
-      id
-      person {
-        id
-        name
-        isMember
-        isTrainer
-        isAdmin
       }
     }
     couplesList {

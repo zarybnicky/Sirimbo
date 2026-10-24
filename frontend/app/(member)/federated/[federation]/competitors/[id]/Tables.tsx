@@ -9,10 +9,11 @@ import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FormError } from '@/ui/form';
 import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
+import { FederationCompetitorMembersDocument } from '@/graphql/Federation';
 import {
-  FederationCompetitorMembersDocument,
-  FederationCompetitorHistoryDocument,
-} from '@/graphql/Federation';
+  CompetitionsDocument,
+  type CompetitionsQueryVariables,
+} from '@/graphql/CompetitionParticipation';
 import { formatDateOnly, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
 
 export function Members({ federation, id }: { federation: string; id: string }) {
@@ -61,10 +62,13 @@ export function Members({ federation, id }: { federation: string; id: string }) 
 
 export function History({ federation, id }: { federation: string; id: string }) {
   const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: FederationCompetitorHistoryDocument,
-    variables: (offset) => ({
-      id,
-      historyOffset: offset,
+    query: CompetitionsDocument,
+    variables: (offset): CompetitionsQueryVariables => ({
+      condition: { competitorId: id },
+      entryCondition: { competitorId: id },
+      resultCondition: { competitorId: id },
+      offset,
+      orderBy: ['START_DATE_DESC', 'ID_DESC'],
     }),
     limit: 50,
     getTotal: (data) => data?.competitions?.totalCount,
@@ -74,7 +78,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
   const history = data.competitions?.nodes || [];
 
   const showPoints = history.some((row) =>
-    row.results.nodes.some((x) => x.pointGain != null),
+    row.results?.some((x) => x.pointGain != null),
   );
 
   return (
@@ -99,12 +103,14 @@ export function History({ federation, id }: { federation: string; id: string }) 
           const categoryName =
             formatCategoryName(federation, row.category, row.competitionType) ||
             row.externalId;
-          const result = row.results.nodes[0];
-          const cancelled = row.entries.nodes[0]?.cancelled;
+          const result = row.results?.[0];
+          const cancelled = row.entries?.[0]?.cancelled;
           const status = formatResultStatus(result?.completionStatus);
           return (
             <tr key={row.id} className="border-t border-neutral-4">
-              <td className="whitespace-nowrap">{formatDateOnly(row.startDate)}</td>
+              <td className="whitespace-nowrap">
+                {row.startDate && formatDateOnly(row.startDate)}
+              </td>
               <td>
                 {row.event && (
                   <Link
