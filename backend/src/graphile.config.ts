@@ -12,6 +12,7 @@ import { FailedLoginPlugin } from './plugins/failed-login.ts';
 import { LegacyRelationAliasesPlugin, LegacyShimsPlugin } from './plugins/legacy-shims.ts';
 import federationConditionPlugins from './plugins/federation-condition.ts';
 import competitionParticipantConditionPlugins from './plugins/competition-participant-condition.ts';
+import competitionSuggestionConditionPlugins from './plugins/competition-suggestion-condition.ts';
 import federationOrderPlugin from './plugins/federation-order.ts';
 import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
@@ -34,6 +35,7 @@ const preset: GraphileConfig.Preset = {
     ...personMembershipConditionPlugin,
     ...federationConditionPlugins,
     ...competitionParticipantConditionPlugins,
+    ...competitionSuggestionConditionPlugins,
     federationOrderPlugin,
     FailedLoginPlugin,
     LegacyShimsPlugin,

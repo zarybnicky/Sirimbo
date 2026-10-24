@@ -2238,6 +2238,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `status` field."""
   status: FederationEventStatus
+  suggestedFor: CompetitionSuggestionCondition
 }
 
 """A connection to a list of `Competition` values."""
@@ -2437,16 +2438,15 @@ enum CompetitionOfficialsOrderBy {
   ROLE_DESC
 }
 
-"""Intersect the supplied scopes to select federation competitors."""
+"""
+Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators.
+"""
 input CompetitionParticipantCondition {
   """Require a current member of this local cohort."""
   cohortId: BigInt
 
   """An exact local partnership, across federations."""
   coupleId: BigInt
-
-  """When true, require a current member of the request tenant."""
-  currentTenant: Boolean
 
   """Local person IDs. An empty list matches nobody."""
   personIds: [BigInt!]
@@ -3023,6 +3023,23 @@ enum CompetitionRoundsOrderBy {
   ROUND_KEY_DESC
   ROUND_LABEL_ASC
   ROUND_LABEL_DESC
+}
+
+input CompetitionSuggestionCondition {
+  date: CompetitionSuggestionDateCondition!
+
+  """
+  Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators.
+  """
+  participant: CompetitionParticipantCondition
+}
+
+input CompetitionSuggestionDateCondition {
+  """Inclusive competition start date."""
+  since: Date!
+
+  """Exclusive competition start date."""
+  until: Date!
 }
 
 enum CompetitionType {
@@ -7174,6 +7191,7 @@ type FederationCompetitor {
     orderBy: [CouplesOrderBy!]
   ): [Couple!]!
   createdAt: Datetime!
+  divisions: [String]!
   externalId: String!
   federation: String!
 

@@ -29,6 +29,8 @@ export type DateOrStringArray = (DateOrString)[];
 
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
+export type JsonArray = (Json)[];
+
 export type NumberOrString = number | string;
 
 export type NumberOrStringArray = (NumberOrString)[];
@@ -619,6 +621,8 @@ export const ensureCompetitorsWithComponents = new PreparedQuery<IEnsureCompetit
 
 /** 'UpsertCompetitorsDetailed' parameters type */
 export interface IUpsertCompetitorsDetailedParams {
+  ageGroup?: stringArray | null | void;
+  divisions?: JsonArray | null | void;
   externalId?: stringArray | null | void;
   federation?: stringArray | null | void;
   label?: stringArray | null | void;
@@ -634,24 +638,29 @@ export interface IUpsertCompetitorsDetailedQuery {
   result: IUpsertCompetitorsDetailedResult;
 }
 
-const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":175,"b":185}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":198,"b":208}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":221,"b":225}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":264}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name)\nSELECT input.federation, input.external_id, input.competitor_type, input.name\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[]\n) AS input(federation, external_id, competitor_type, name)\nWHERE NOT EXISTS (\n  SELECT 1 FROM federated.competitor c\n  WHERE c.id = input.federation || ':' || input.external_id\n    AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type\n    AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)\n)\nORDER BY federation, external_id\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END\n  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
+const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"type":true,"label":true,"ageGroup":true,"divisions":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":286,"b":296}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":309,"b":319}]},{"name":"type","required":false,"transform":{"type":"scalar"},"locs":[{"a":332,"b":336}]},{"name":"label","required":false,"transform":{"type":"scalar"},"locs":[{"a":370,"b":375}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":388,"b":396}]},{"name":"divisions","required":false,"transform":{"type":"scalar"},"locs":[{"a":409,"b":418}]}],"statement":"INSERT INTO federated.competitor (federation, external_id, competitor_type, name, age_group, divisions)\nSELECT input.federation, input.external_id, input.competitor_type, input.name,\n  nullif(input.age_group, ''), array(select jsonb_array_elements_text(input.divisions))\nFROM unnest(\n  :federation::text[],\n  :externalId::text[],\n  :type::federated.competitor_type[],\n  :label::text[],\n  :ageGroup::text[],\n  :divisions::jsonb[]\n) AS input(federation, external_id, competitor_type, name, age_group, divisions)\nWHERE NOT EXISTS (\n  SELECT 1 FROM federated.competitor c\n  WHERE c.id = input.federation || ':' || input.external_id\n    AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type\n    AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)\n    AND (nullif(input.age_group, '') IS NULL OR c.age_group IS NOT DISTINCT FROM input.age_group)\n    AND c.divisions IS NOT DISTINCT FROM array(select jsonb_array_elements_text(input.divisions))\n)\nORDER BY federation, external_id\nON CONFLICT (id) DO UPDATE\n  SET competitor_type = EXCLUDED.competitor_type,\n      name = CASE\n        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name\n        ELSE federated.competitor.name\n      END,\n      age_group = coalesce(EXCLUDED.age_group, federated.competitor.age_group),\n      divisions = EXCLUDED.divisions\n  WHERE federated.competitor.divisions IS DISTINCT FROM EXCLUDED.divisions\n     OR federated.competitor.age_group IS DISTINCT FROM coalesce(EXCLUDED.age_group, federated.competitor.age_group)\n     OR federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type\n     OR (\n       EXCLUDED.name <> ''\n       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name\n     )"};
 
 /**
  * Query generated from SQL:
  * ```
- * INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
- * SELECT input.federation, input.external_id, input.competitor_type, input.name
+ * INSERT INTO federated.competitor (federation, external_id, competitor_type, name, age_group, divisions)
+ * SELECT input.federation, input.external_id, input.competitor_type, input.name,
+ *   nullif(input.age_group, ''), array(select jsonb_array_elements_text(input.divisions))
  * FROM unnest(
  *   :federation::text[],
  *   :externalId::text[],
  *   :type::federated.competitor_type[],
- *   :label::text[]
- * ) AS input(federation, external_id, competitor_type, name)
+ *   :label::text[],
+ *   :ageGroup::text[],
+ *   :divisions::jsonb[]
+ * ) AS input(federation, external_id, competitor_type, name, age_group, divisions)
  * WHERE NOT EXISTS (
  *   SELECT 1 FROM federated.competitor c
  *   WHERE c.id = input.federation || ':' || input.external_id
  *     AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type
  *     AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)
+ *     AND (nullif(input.age_group, '') IS NULL OR c.age_group IS NOT DISTINCT FROM input.age_group)
+ *     AND c.divisions IS NOT DISTINCT FROM array(select jsonb_array_elements_text(input.divisions))
  * )
  * ORDER BY federation, external_id
  * ON CONFLICT (id) DO UPDATE
@@ -659,8 +668,12 @@ const upsertCompetitorsDetailedIR: any = {"usedParamSet":{"federation":true,"ext
  *       name = CASE
  *         WHEN EXCLUDED.name <> '' THEN EXCLUDED.name
  *         ELSE federated.competitor.name
- *       END
- *   WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
+ *       END,
+ *       age_group = coalesce(EXCLUDED.age_group, federated.competitor.age_group),
+ *       divisions = EXCLUDED.divisions
+ *   WHERE federated.competitor.divisions IS DISTINCT FROM EXCLUDED.divisions
+ *      OR federated.competitor.age_group IS DISTINCT FROM coalesce(EXCLUDED.age_group, federated.competitor.age_group)
+ *      OR federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
  *      OR (
  *        EXCLUDED.name <> ''
  *        AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name

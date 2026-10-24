@@ -14534,6 +14534,20 @@
             "args": []
           },
           {
+            "name": "divisions",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            },
+            "args": []
+          },
+          {
             "name": "externalId",
             "type": {
               "kind": "NON_NULL",

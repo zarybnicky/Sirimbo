@@ -57,6 +57,8 @@ export const wdsfCouple: JsonLoader<z.output<typeof schema>> = {
       externalId: [couple.id],
       type: ['couple'],
       label: [couple.name],
+      ageGroup: [couple.age ?? ''],
+      divisions: [JSON.stringify([couple.division])],
     }, client);
     if (members.length) {
       await ensurePeople.run({

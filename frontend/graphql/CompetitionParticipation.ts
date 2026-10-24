@@ -13,14 +13,12 @@ export type CompetitionDateCondition = {
   until?: string | null | undefined;
 };
 
-/** Intersect the supplied scopes to select federation competitors. */
+/** Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators. */
 export type CompetitionParticipantCondition = {
   /** Require a current member of this local cohort. */
   cohortId?: string | null | undefined;
   /** An exact local partnership, across federations. */
   coupleId?: string | null | undefined;
-  /** When true, require a current member of the request tenant. */
-  currentTenant?: boolean | null | undefined;
   /** Local person IDs. An empty list matches nobody. */
   personIds?: Array<string> | null | undefined;
 };

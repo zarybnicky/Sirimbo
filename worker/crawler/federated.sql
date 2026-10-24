@@ -313,19 +313,24 @@ FROM target_component
 ON CONFLICT (competitor_id, person_id) DO NOTHING;
 
 /* @name UpsertCompetitorsDetailed */
-INSERT INTO federated.competitor (federation, external_id, competitor_type, name)
-SELECT input.federation, input.external_id, input.competitor_type, input.name
+INSERT INTO federated.competitor (federation, external_id, competitor_type, name, age_group, divisions)
+SELECT input.federation, input.external_id, input.competitor_type, input.name,
+  nullif(input.age_group, ''), array(select jsonb_array_elements_text(input.divisions))
 FROM unnest(
   :federation::text[],
   :externalId::text[],
   :type::federated.competitor_type[],
-  :label::text[]
-) AS input(federation, external_id, competitor_type, name)
+  :label::text[],
+  :ageGroup::text[],
+  :divisions::jsonb[]
+) AS input(federation, external_id, competitor_type, name, age_group, divisions)
 WHERE NOT EXISTS (
   SELECT 1 FROM federated.competitor c
   WHERE c.id = input.federation || ':' || input.external_id
     AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type
     AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)
+    AND (nullif(input.age_group, '') IS NULL OR c.age_group IS NOT DISTINCT FROM input.age_group)
+    AND c.divisions IS NOT DISTINCT FROM array(select jsonb_array_elements_text(input.divisions))
 )
 ORDER BY federation, external_id
 ON CONFLICT (id) DO UPDATE
@@ -333,8 +338,12 @@ ON CONFLICT (id) DO UPDATE
       name = CASE
         WHEN EXCLUDED.name <> '' THEN EXCLUDED.name
         ELSE federated.competitor.name
-      END
-  WHERE federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
+      END,
+      age_group = coalesce(EXCLUDED.age_group, federated.competitor.age_group),
+      divisions = EXCLUDED.divisions
+  WHERE federated.competitor.divisions IS DISTINCT FROM EXCLUDED.divisions
+     OR federated.competitor.age_group IS DISTINCT FROM coalesce(EXCLUDED.age_group, federated.competitor.age_group)
+     OR federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
      OR (
        EXCLUDED.name <> ''
        AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name

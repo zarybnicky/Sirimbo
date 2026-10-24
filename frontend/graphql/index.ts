@@ -1783,6 +1783,7 @@ export type CompetitionCondition = {
   startDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<FederationEventStatus>;
+  suggestedFor?: InputMaybe<CompetitionSuggestionCondition>;
 };
 
 /** A connection to a list of `Competition` values. */
@@ -1947,14 +1948,12 @@ export type CompetitionOfficialsOrderBy =
   | 'ROLE_ASC'
   | 'ROLE_DESC';
 
-/** Intersect the supplied scopes to select federation competitors. */
+/** Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators. */
 export type CompetitionParticipantCondition = {
   /** Require a current member of this local cohort. */
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** An exact local partnership, across federations. */
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
-  /** When true, require a current member of the request tenant. */
-  currentTenant?: InputMaybe<Scalars['Boolean']['input']>;
   /** Local person IDs. An empty list matches nobody. */
   personIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
@@ -2398,6 +2397,19 @@ export type CompetitionRoundsOrderBy =
   | 'ROUND_KEY_DESC'
   | 'ROUND_LABEL_ASC'
   | 'ROUND_LABEL_DESC';
+
+export type CompetitionSuggestionCondition = {
+  date: CompetitionSuggestionDateCondition;
+  /** Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators. */
+  participant?: InputMaybe<CompetitionParticipantCondition>;
+};
+
+export type CompetitionSuggestionDateCondition = {
+  /** Inclusive competition start date. */
+  since: Scalars['Date']['input'];
+  /** Exclusive competition start date. */
+  until: Scalars['Date']['input'];
+};
 
 export type CompetitionType =
   | 'CHAMPIONSHIP'
@@ -5661,6 +5673,7 @@ export type FederationCompetitor = {
   /** Reads and enables pagination through a set of `Couple`. */
   couplesList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
+  divisions: Array<Maybe<Scalars['String']['output']>>;
   externalId: Scalars['String']['output'];
   federation: Scalars['String']['output'];
   /** Reads a single `Federation` that is related to this `FederationCompetitor`. */
@@ -14795,6 +14808,7 @@ export type GraphCacheResolvers = {
     components?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentConnection> | string>,
     couplesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCouplesListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    divisions?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     externalId?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<Federation> | string>,
@@ -17358,6 +17372,7 @@ export type GraphCacheUpdaters = {
     components?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorComponentsArgs>,
     couplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCouplesListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    divisions?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     externalId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     federationByFederation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,

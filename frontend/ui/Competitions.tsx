@@ -413,7 +413,6 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     until: format(add(startDate, 1, 'week'), 'yyyy-MM-dd'),
   };
   const clubScope: CompetitionParticipantCondition = {
-    currentTenant: personIds == null,
     personIds,
     cohortId,
   };

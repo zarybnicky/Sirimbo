@@ -172,7 +172,9 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
     externalId: string;
     label: string;
     type: competitor_type;
-  }>(['federation', 'externalId', 'label', 'type'], ['federation', 'externalId']);
+    ageGroup: string;
+    divisions: string;
+  }>(['federation', 'externalId', 'label', 'type', 'ageGroup', 'divisions'], ['federation', 'externalId']);
 
   const components = makePgtypedCollection<{
     competitorId: string;
@@ -232,6 +234,8 @@ async function loadCstsAthlete(client: PoolClient, data: Athlete) {
       externalId: rp.competitorId.toString(),
       label: buildLabel(data, rp, competitorType),
       type: competitorType,
+      ageGroup: '',
+      divisions: '[]',
     });
     components.add(...buildComponents(data, rp, competitorType, mainPersonId));
 

@@ -6,12 +6,16 @@ create or replace function competition_brief(
 ) returns setof competition_participation_record
   language sql stable
 as $$
-  with scoped_people as (
+  with scoped_people as materialized (
     select p.id, p.name
     from person p
     where (p.id = any(p_person_ids)
-       or (p_person_ids is null and exists (
-         select 1 from current_tenant_membership where person_id = p.id
+       or (p_person_ids is null and p.id in (
+         select person_id from current_tenant_membership
+         union all
+         select person_id from current_tenant_trainer
+         union all
+         select person_id from current_tenant_administrator
        )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
@@ -85,12 +89,14 @@ create or replace function competition_report(
 ) returns setof competition_participation_record
   language sql stable
 as $$
-  with scoped_people as (
+  with scoped_people as materialized (
     select p.id, p.name
     from person p
     where (p.id = any(p_person_ids)
-       or (p_person_ids is null and exists (
-         select 1 from current_tenant_membership where person_id = p.id
+       or (p_person_ids is null and p.id in (
+         select person_id from current_tenant_membership
+         union all select person_id from current_tenant_trainer
+         union all select person_id from current_tenant_administrator
        )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))

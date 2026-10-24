@@ -5,7 +5,6 @@ import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 type ParticipantCondition = {
   personIds?: string[] | null;
   coupleId?: string | null;
-  currentTenant?: boolean | null;
   cohortId?: string | null;
 };
 
@@ -18,7 +17,7 @@ function participantPredicate(
   column: SQL,
   scope?: ParticipantCondition | null,
 ): SQL | null {
-  const { personIds, coupleId, currentTenant, cohortId } = scope ?? {};
+  const { personIds, coupleId, cohortId } = scope ?? {};
   if (personIds?.length === 0) return sql`false`;
 
   const people = [];
@@ -29,9 +28,15 @@ function participantPredicate(
         ', ',
       )})`,
     );
-  if (currentTenant)
+  if (personIds == null && coupleId == null)
     people.push(
-      sql`link.person_id in (select person_id from public.current_tenant_membership)`,
+      sql`link.person_id in (
+        select person_id from public.current_tenant_membership
+        union all
+        select person_id from public.current_tenant_trainer
+        union all
+        select person_id from public.current_tenant_administrator
+      )`,
     );
   if (cohortId != null)
     people.push(sql`link.person_id in (
@@ -70,14 +75,12 @@ function datePredicate(column: SQL, date?: DateCondition | null): SQL | null {
 const plugins: GraphileConfig.Plugin[] = [
   extendSchema({
     typeDefs: `
-      """Intersect the supplied scopes to select federation competitors."""
+      """Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators."""
       input CompetitionParticipantCondition {
         """Local person IDs. An empty list matches nobody."""
         personIds: [BigInt!]
         """An exact local partnership, across federations."""
         coupleId: BigInt
-        """When true, require a current member of the request tenant."""
-        currentTenant: Boolean
         """Require a current member of this local cohort."""
         cohortId: BigInt
       }
