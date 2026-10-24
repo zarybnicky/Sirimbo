@@ -2402,6 +2402,8 @@ export type CompetitionSuggestionCondition = {
   date: CompetitionSuggestionDateCondition;
   /** Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators. */
   participant?: InputMaybe<CompetitionParticipantCondition>;
+  /** Only matches with an existing, non-cancelled participation. */
+  registeredOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CompetitionSuggestionDateCondition = {
@@ -2416,6 +2418,7 @@ export type CompetitionSuggestionsRecord = {
   competition: Maybe<Competition>;
   couple: Maybe<Couple>;
   person: Maybe<Person>;
+  status: Maybe<Scalars['String']['output']>;
 };
 
 export type CompetitionType =
@@ -9676,6 +9679,7 @@ export type QueryCompetitionSuggestionsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   personIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  registeredOnly?: InputMaybe<Scalars['Boolean']['input']>;
   since?: InputMaybe<Scalars['Date']['input']>;
   until?: InputMaybe<Scalars['Date']['input']>;
 };
@@ -14207,7 +14211,8 @@ export type GraphCacheResolvers = {
   CompetitionSuggestionsRecord?: {
     competition?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Competition> | string>,
     couple?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Couple> | string>,
-    person?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Person> | string>
+    person?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, WithTypename<Person> | string>,
+    status?: GraphCacheResolver<WithTypename<CompetitionSuggestionsRecord>, Record<string, never>, Scalars['String']['output'] | string>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ConfirmMembershipApplicationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16777,7 +16782,8 @@ export type GraphCacheUpdaters = {
   CompetitionSuggestionsRecord?: {
     competition?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>,
     couple?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>,
-    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>,
+    status?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionSuggestionsRecord>>, Record<string, never>>
   },
   ConfirmMembershipApplicationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ConfirmMembershipApplicationPayload>>, Record<string, never>>,

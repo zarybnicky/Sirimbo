@@ -6707,6 +6707,14 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -24516,6 +24524,13 @@
                     "kind": "SCALAR",
                     "name": "Any"
                   }
+                }
+              },
+              {
+                "name": "registeredOnly",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               },
               {

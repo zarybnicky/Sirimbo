@@ -17,7 +17,7 @@ fragment ParticipationCompetition on Competition {
     city
   }
   category {
-    ...CompetitionCategory
+    ...CompetitionCategoryLabel
   }
 }
 
@@ -82,12 +82,15 @@ query ClubCompetitionLocations(
 query CompetitionSuggestionEvents(
   $participant: CompetitionParticipantCondition!
   $since: Date!
+  $registeredOnly: Boolean! = false
   $offset: Int! = 0
 ) {
   federationEvents(
     first: 50
     offset: $offset
-    condition: { suggestedFor: { participant: $participant, date: { since: $since } } }
+    condition: { suggestedFor: {
+      participant: $participant, date: { since: $since }, registeredOnly: $registeredOnly
+    } }
     orderBy: [START_DATE_ASC, ID_ASC]
   ) {
     totalCount
@@ -103,6 +106,7 @@ query CompetitionSuggestions(
   $cohortId: BigInt
   $since: Date!
   $eventIds: [BigInt!]!
+  $registeredOnly: Boolean! = false
 ) {
   competitionSuggestionsList(
     personIds: $personIds
@@ -110,8 +114,19 @@ query CompetitionSuggestions(
     cohortId: $cohortId
     since: $since
     eventIds: $eventIds
+    registeredOnly: $registeredOnly
   ) {
-    competition { ...ParticipationCompetition }
+    competition {
+      id
+      federation
+      externalId
+      eventId
+      startDate
+      checkInEnd
+      competitionType
+      category { ...CompetitionCategoryLabel }
+    }
+    status
     person { id name }
     couple {
       id

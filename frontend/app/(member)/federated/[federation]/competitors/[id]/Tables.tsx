@@ -123,7 +123,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
                       'text-accent-11',
                       cancelled || row.status === 'CANCELLED' ? 'line-through' : 'underline',
                     )}
-                    title={cancelled ? 'Odhlášená registrace' : undefined}
+                    title={cancelled ? 'Zrušená přihláška' : undefined}
                     href={`/federated/${federation}/${row.event.externalId}/${row.externalId}`}
                     prefetch={false}
                   >

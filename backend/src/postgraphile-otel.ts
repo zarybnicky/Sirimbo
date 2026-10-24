@@ -1,5 +1,6 @@
 import { type Span, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Result } from 'postgraphile/grafserv';
+import { isPromiseLike } from 'postgraphile/grafast';
 import { print } from 'postgraphile/graphql';
 
 declare module 'postgraphile/grafast' {
@@ -18,11 +19,6 @@ export const OTELPlugin: GraphileConfig.Plugin = {
   grafserv: {
     middleware: {
       processRequest(next, { requestDigest }) {
-        // we'll need "preferJSON" to be set to true, so that grafserv
-        // doesn't serialise the response to a string, preventing us
-        // from correctly identifying errors in the response
-        requestDigest.preferJSON = true;
-
         const parentSpan = trace.getActiveSpan();
         // @ts-expect-error Bad parent types
         const isHttpRequest = parentSpan?.attributes?.['http.method'];
@@ -33,6 +29,16 @@ export const OTELPlugin: GraphileConfig.Plugin = {
         return getTracer().startActiveSpan('GraphQL Request', executeWithSpan);
 
         function executeWithSpan(span: Span, owned: boolean = true) {
+          if (!span.isRecording()) {
+            try {
+              return next();
+            } finally {
+              if (owned) span.end();
+            }
+          }
+
+          // Recording request spans need the JSON result to inspect GraphQL errors.
+          requestDigest.preferJSON = true;
           let rslt: ReturnType<typeof next>;
           try {
             rslt = next();
@@ -82,7 +88,7 @@ export const OTELPlugin: GraphileConfig.Plugin = {
     middleware: {
       execute(next, { args: { operationName, contextValue, requestContext, document } }) {
         const span = trace.getActiveSpan();
-        if (!span) {
+        if (!span?.isRecording()) {
           return next();
         }
 
@@ -128,6 +134,14 @@ export const OTELPlugin: GraphileConfig.Plugin = {
       executeStep(next, event) {
         const stepname = Object.getPrototypeOf(event.step).constructor.name;
         return getTracer().startActiveSpan('ExecuteStep: ' + stepname, (span) => {
+          if (!span.isRecording()) {
+            try {
+              return next();
+            } finally {
+              span.end();
+            }
+          }
+
           span.setAttribute('step.count', event.executeDetails.count);
           let rslt: ReturnType<typeof next>;
           try {
@@ -137,24 +151,49 @@ export const OTELPlugin: GraphileConfig.Plugin = {
           }
 
           if (Array.isArray(rslt)) {
-            return Promise.all(rslt)
-              .catch((err) => onSpanError(span, err))
-              .finally(() => span.end());
+            return traceStepResults(span, rslt);
           }
 
-          if (rslt instanceof Promise) {
-            return rslt
-              .then((items) => Promise.all(items))
-              .catch((err) => onSpanError(span, err))
-              .finally(() => span.end());
+          if (isPromiseLike(rslt)) {
+            return Promise.resolve(rslt).then(
+              (items) => traceStepResults(span, items),
+              (err) => onSpanError(span, err, true),
+            );
           }
 
+          span.end();
           return rslt;
         });
       },
     },
   },
 };
+
+function traceStepResults(span: Span, items: readonly unknown[]): readonly unknown[] {
+  if (!items.some(isPromiseLike)) {
+    span.end();
+    return items;
+  }
+
+  let pending = 0;
+  return items.map((item) => {
+    if (!isPromiseLike(item)) return item;
+    pending++;
+    return Promise.resolve(item).then(
+      (value) => {
+        if (--pending === 0) span.end();
+        return value;
+      },
+      (err) => {
+        try {
+          return onSpanError(span, err);
+        } finally {
+          if (--pending === 0) span.end();
+        }
+      },
+    );
+  });
+}
 
 function onSpanError(span: Span, err: any, end = false): never {
   span.recordException(err);

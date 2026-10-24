@@ -1,7 +1,7 @@
 import type { CompetitionType } from '@/graphql';
 import type { AgeGroupRulesQuery } from '@/graphql/AgeGroups';
 import type {
-  CompetitionCategoryFragment,
+  CompetitionCategoryLabelFragment,
   FederationCategoryProgressFragment,
 } from '@/graphql/Federation';
 import { compareByOrder, compareNaturalText } from '@/lib/compare';
@@ -135,7 +135,7 @@ const typeSuffix: Partial<Record<CompetitionType, string>> = {
 
 export function formatCategoryName(
   federation: string | null | undefined,
-  category: CompetitionCategoryFragment | null | undefined,
+  category: CompetitionCategoryLabelFragment | null | undefined,
   competitionType?: CompetitionType | null,
 ) {
   if (!category) return '';
@@ -145,7 +145,7 @@ export function formatCategoryName(
 }
 
 function formatCstsCategoryName(
-  category: CompetitionCategoryFragment,
+  category: CompetitionCategoryLabelFragment,
   competitionType: CompetitionType | null | undefined,
 ) {
   const { discipline, series, competitorType } = category;

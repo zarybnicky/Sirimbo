@@ -15,7 +15,7 @@ import type {
   FederationEventStatus,
   CompetitionParticipantCondition,
 } from '@/graphql';
-import type { CompetitionCategoryFragment } from '@/graphql/Federation';
+import type { CompetitionCategoryLabelFragment } from '@/graphql/Federation';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
@@ -31,7 +31,7 @@ import {
   formatResultStatus,
 } from '@/ui/format';
 import { Checkbox } from '@/ui/fields/checkbox';
-import { cardCls } from '@/ui/style';
+import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
@@ -39,6 +39,7 @@ import { ArrowLeftRight } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
+import { parseAsBoolean, parseAsInteger, useQueryStates } from 'nuqs';
 
 const EventMap = dynamic(() => import('@/ui/EventMap'));
 
@@ -55,7 +56,7 @@ export type CompetitionEntry = {
   competitionEventLocation: string | null;
   competitionDate: string | null;
   competitionType: CompetitionType | null;
-  category: CompetitionCategoryFragment | null;
+  category: CompetitionCategoryLabelFragment | null;
   participants: number | null;
   checkInEnd?: string | null;
   status?: FederationEventStatus;
@@ -65,11 +66,6 @@ export type CompetitionEntry = {
   finalGain?: string | null;
   completionStatus?: string | null;
   cancelled?: boolean;
-};
-
-type CompetitionScope = {
-  personIds?: string[];
-  cohortId?: string;
 };
 
 function entryLabel(
@@ -220,14 +216,14 @@ function CompetitionLabel({
         'text-accent-11',
         (cancelled || entry.status === 'CANCELLED') && 'line-through',
       )}
-      title={cancelled ? 'Odhlášená registrace' : undefined}
+      title={cancelled ? 'Zrušená přihláška' : undefined}
     >
       {entryLabel(entry, true)}
     </CompetitionLink>
   ) : (
     <span
       className={cancelled ? 'line-through' : undefined}
-      title={cancelled ? 'Odhlášená registrace' : undefined}
+      title={cancelled ? 'Zrušená přihláška' : undefined}
     >
       {entry.competitorName}
     </span>
@@ -263,7 +259,7 @@ function CompetitionGroupContent({
           <CompetitionLabel
             entry={entries[0]!}
             competition={byCompetition}
-            cancelled={entries.every((entry) => entry.cancelled)}
+            cancelled={entries.every((x) => x.cancelled)}
           />
         </span>
       </h5>
@@ -404,8 +400,7 @@ export function CompetitionHistory({
   });
 
   return (
-    <section className="my-4">
-      <h2 className="mb-2 text-lg font-bold">Soutěže a výsledky</h2>
+    <>
       {error ? (
         <FormError error={error} />
       ) : fetching ? (
@@ -415,10 +410,10 @@ export function CompetitionHistory({
       ) : data?.competitions?.nodes.length ? (
         <CompetitionPanelFrame entries={competitionEntries(data.competitions.nodes)} />
       ) : (
-        <p className="text-sm text-neutral-11">Žádné registrace ani výsledky soutěží.</p>
+        <p className="text-sm text-neutral-11">Žádné přihlášky ani výsledky soutěží.</p>
       )}
       <Pagination {...pagination} />
-    </section>
+    </>
   );
 }
 
@@ -430,57 +425,118 @@ export function CompetitionSuggestions({
   const [since] = React.useState(() => format(new Date(), 'yyyy-MM-dd'));
   const [mapView, setMapView] = React.useState<MapView>();
   const [showMap, setShowMap] = React.useState(true);
+  const [filters, setFilters] = useQueryStates(
+    {
+      registered: parseAsBoolean.withDefault(false),
+      suggestionPage: parseAsInteger,
+    },
+    { shallow: true, scroll: false },
+  );
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionSuggestionEventsDocument,
-    variables: (offset) => ({ participant, since, offset }),
-    limit: 10,
+    variables: (offset) => ({
+      participant,
+      since,
+      offset,
+      registeredOnly: filters.registered,
+    }),
+    limit: 50,
     pageKey: 'suggestionPage',
     getTotal: (data) => data?.federationEvents?.totalCount,
   });
   const events = data?.federationEvents?.nodes ?? [];
+  const eventsById = new Map(events.map((event) => [event.id, event]));
   const [{ data: matchData, fetching: matchFetching, error: matchError }] = useQuery({
     query: CompetitionSuggestionsDocument,
-    variables: { ...participant, since, eventIds: events.map((event) => event.id) },
+    variables: {
+      ...participant,
+      since,
+      eventIds: events.map((event) => event.id),
+      registeredOnly: filters.registered,
+    },
     pause: fetching || !!error || events.length === 0,
   });
 
   const matches = (matchData?.competitionSuggestionsList ?? []).flatMap((row) => {
     if (!row.competition || (!row.couple && !row.person)) return [];
-    const competitor = row.couple
-      ? {
-          key: `couple:${row.couple.id}`,
-          name: [row.couple.man?.name, row.couple.woman?.name]
-            .filter(Boolean)
-            .join(' – '),
-          href: `/pary/${row.couple.id}`,
-        }
-      : {
-          key: `person:${row.person!.id}`,
-          name: row.person!.name,
-          href: `/clenove/${row.person!.id}`,
-        };
+    const competition = row.competition;
     return [
-      { ...competitionDetails(row.competition), id: row.competition.id, competitor },
+      {
+        id: competition.id,
+        federation: competition.federation,
+        competitionExternalId: competition.externalId,
+        competitionEventId: competition.eventId,
+        competitionEventExternalId:
+          eventsById.get(competition.eventId)?.externalId ?? null,
+        competitionDate: competition.startDate,
+        checkInEnd: competition.checkInEnd,
+        competitionType: competition.competitionType,
+        category: competition.category,
+        matchStatus: row.status,
+        competitor: row.couple
+          ? {
+              key: `couple:${row.couple.id}`,
+              name: [row.couple.man?.name, row.couple.woman?.name]
+                .filter(Boolean)
+                .join(' – '),
+              href: `/pary/${row.couple.id}`,
+            }
+          : {
+              key: `person:${row.person!.id}`,
+              name: row.person!.name,
+              href: `/clenove/${row.person!.id}`,
+            },
+      },
     ];
   });
   const byEvent = Map.groupBy(matches, (match) => match.competitionEventId);
   const queryError = error ?? (events.length > 0 ? matchError : undefined);
   const hasCoordinates = events.some((x) => x.venueLat !== null && x.venueLng !== null);
+  const isPending = fetching || (events.length > 0 && matchFetching);
+  const { total, page, limit } = pagination;
 
   return (
     <div>
-      {hasCoordinates && (
-        <Checkbox
-          name="suggestions-map"
-          label="Mapa"
-          checked={showMap}
-          onChange={(event) => setShowMap(event.currentTarget.checked)}
-          className="mb-2"
-        />
-      )}
+      <div className="flex flex-wrap items-center gap-2 py-2">
+        <p
+          role="status"
+          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
+        >
+          {isPending
+            ? 'Načítám…'
+            : queryError
+              ? null
+              : total === 0
+                ? '0 / 0'
+                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
+        </p>
+        <button
+          type="button"
+          aria-pressed={filters.registered}
+          className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+          onClick={() =>
+            setFilters(
+              { registered: !filters.registered, suggestionPage: null },
+              { history: 'push' },
+            )
+          }
+        >
+          Již přihlášení
+        </button>
+        {hasCoordinates && (
+          <button
+            type="button"
+            aria-pressed={showMap}
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setShowMap((visible) => !visible)}
+          >
+            Mapa
+          </button>
+        )}
+      </div>
       {queryError ? (
         <FormError error={queryError} />
-      ) : fetching || (events.length > 0 && matchFetching) ? (
+      ) : isPending ? (
         <p role="status" className="text-sm text-neutral-11">
           Načítám...
         </p>
@@ -504,11 +560,6 @@ export function CompetitionSuggestions({
                       one: 'soutěž',
                       few: 'soutěže',
                       other: 'soutěží',
-                    })}
-                    {formatCount(matches.length, {
-                      one: 'možný start',
-                      few: 'možné starty',
-                      other: 'možných startů',
                     })}
                   </DotSeparated>
                 );
@@ -584,7 +635,10 @@ export function CompetitionSuggestions({
                           {entryLabel(entry, true)}
                         </CompetitionLink>
                         <EligibleCompetitors
-                          competitors={competitionMatches.map((x) => x.competitor)}
+                          competitors={competitionMatches.map((x) => ({
+                            ...x.competitor,
+                            status: x.matchStatus,
+                          }))}
                         />
                       </li>
                     );
@@ -605,8 +659,9 @@ export function CompetitionSuggestions({
 function EligibleCompetitors({
   competitors,
 }: {
-  competitors: { key: string; name: string; href: string }[];
+  competitors: { key: string; name: string; href: string; status?: string | null }[];
 }) {
+  const registered = competitors.filter((x) => x.status === 'registered').length;
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -619,15 +674,28 @@ function EligibleCompetitors({
             few: 'soutěžící',
             other: 'soutěžících',
           })}
+          {registered > 0 && (
+            <>
+              {' · '}
+              {formatCount(registered, {
+                one: 'přihlášený',
+                few: 'přihlášení',
+                other: 'přihlášených',
+              })}
+            </>
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="max-h-80 overflow-y-auto text-sm">
-        <h4 className="mb-2 pr-6 font-semibold">Možní soutěžící</h4>
+        <h4 className="mb-2 pr-6 font-semibold">Soutěžící</h4>
         <ul className="space-y-1">
           {competitors
             .toSorted((a, b) => compareText(a.name, b.name))
             .map((competitor) => (
-              <li key={competitor.key}>
+              <li
+                key={competitor.key}
+                className="flex items-baseline justify-between gap-3"
+              >
                 <Link
                   href={competitor.href}
                   prefetch={false}
@@ -635,6 +703,12 @@ function EligibleCompetitors({
                 >
                   {competitor.name}
                 </Link>
+                {(competitor.status === 'registered' ||
+                  competitor.status === 'cancelled') && (
+                  <span className="shrink-0 text-xs text-neutral-11">
+                    {competitor.status === 'registered' ? 'Přihlášeno' : 'Odhlášeno'}
+                  </span>
+                )}
               </li>
             ))}
         </ul>
@@ -644,12 +718,10 @@ function EligibleCompetitors({
 }
 
 export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
-  personIds,
-  cohortId,
   allowOnlyMine = false,
 }: {
   allowOnlyMine?: boolean;
-} & CompetitionScope) {
+}) {
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
   const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
@@ -657,26 +729,22 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     since: format(startDate, 'yyyy-MM-dd'),
     until: format(add(startDate, 1, 'week'), 'yyyy-MM-dd'),
   };
-  const clubScope: CompetitionParticipantCondition = {
-    personIds,
-    cohortId,
-  };
-  const participant: CompetitionParticipantCondition = {
-    ...clubScope,
-    personIds: onlyMine
-      ? (personIds?.filter((id) => auth.personIds.includes(id)) ?? auth.personIds)
-      : personIds,
-  };
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionParticipationsDocument,
-    variables: (offset) => ({ participant, date, offset }),
+    variables: (offset) => ({
+      date,
+      offset,
+      participant: {
+        personIds: onlyMine ? auth.personIds : undefined,
+      },
+    }),
     limit: 50,
     pageKey: 'competitionPage',
     getTotal: (data) => data?.competitions?.totalCount,
   });
   const [{ data: clubData, fetching: clubFetching }] = useQuery({
     query: ClubCompetitionLocationsDocument,
-    variables: { participant: clubScope, date },
+    variables: { date, participant: {} },
     pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
   });
   const visible = competitionEntries(data?.competitions?.nodes ?? []);

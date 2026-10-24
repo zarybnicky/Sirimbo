@@ -1,4 +1,4 @@
-fragment CompetitionCategory on Category {
+fragment CompetitionCategoryLabel on Category {
   id
   name
   class
@@ -6,6 +6,14 @@ fragment CompetitionCategory on Category {
   ageGroup
   ageGroupDetails {
     name
+  }
+  discipline
+  competitorType
+}
+
+fragment CompetitionCategory on Category {
+  ...CompetitionCategoryLabel
+  ageGroupDetails {
     age {
       start { value }
       end { value }
@@ -17,8 +25,6 @@ fragment CompetitionCategory on Category {
       }
     }
   }
-  discipline
-  competitorType
 }
 
 fragment FederationCategoryProgress on FederationCompetitorCategoryProgress {

@@ -177,6 +177,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
     CompetitionEntry: (x) => `${x.competitionId}:${x.competitorId}`,
     CompetitionOfficial: (x) => `${x.competitionId}:${x.personId}:${x.role}`,
     CompetitionResult: (x) => `${x.competitionId}:${x.competitorId}`,
+    CompetitionSuggestionsRecord: () => null,
     CrawlerTargetSummary: () => null,
     CrawlerTargetFailureGroup: () => null,
     DatetimeRange: () => null,

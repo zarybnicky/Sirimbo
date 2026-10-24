@@ -3032,6 +3032,9 @@ input CompetitionSuggestionCondition {
   Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators.
   """
   participant: CompetitionParticipantCondition
+
+  """Only matches with an existing, non-cancelled participation."""
+  registeredOnly: Boolean
 }
 
 input CompetitionSuggestionDateCondition {
@@ -3046,6 +3049,7 @@ type CompetitionSuggestionsRecord {
   competition: Competition
   couple: Couple
   person: Person
+  status: String
 }
 
 enum CompetitionType {
@@ -11803,6 +11807,7 @@ type Query {
     """Skip the first `n` values."""
     offset: Int
     personIds: [BigInt]
+    registeredOnly: Boolean
     since: Date
     until: Date
   ): [CompetitionSuggestionsRecord!]

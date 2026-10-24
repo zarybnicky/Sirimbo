@@ -9,6 +9,7 @@ type SuggestionCondition = {
     cohortId?: string | null;
   } | null;
   date: { since: string; until?: string | null };
+  registeredOnly?: boolean | null;
 };
 
 const plugins: GraphileConfig.Plugin[] = [
@@ -24,6 +25,8 @@ const plugins: GraphileConfig.Plugin[] = [
         """Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators."""
         participant: CompetitionParticipantCondition
         date: CompetitionSuggestionDateCondition!
+        """Only matches with an existing, non-cancelled participation."""
+        registeredOnly: Boolean
       }
     `,
   }),
@@ -34,7 +37,7 @@ const plugins: GraphileConfig.Plugin[] = [
       (build) => ({ type: build.getInputTypeByName('CompetitionSuggestionCondition') }),
       (value, { sqlTableAlias: row }) => {
         if (value == null) return null;
-        const { participant: scope, date } = value as SuggestionCondition;
+        const { participant: scope, date, registeredOnly } = value as SuggestionCondition;
         const participant = scope ?? {};
         return sql`${row}.id in (
         select ${tableName === 'event' ? sql`c.event_id` : sql`m.competition_id`}
@@ -43,7 +46,9 @@ const plugins: GraphileConfig.Plugin[] = [
           ${sqlValueWithCodec(date.until ?? null, TYPES.date)},
           ${sqlValueWithCodec(participant.personIds ?? null, listOfCodec(TYPES.bigint))},
           ${sqlValueWithCodec(participant.coupleId ?? null, TYPES.bigint)},
-          ${sqlValueWithCodec(participant.cohortId ?? null, TYPES.bigint)}
+          ${sqlValueWithCodec(participant.cohortId ?? null, TYPES.bigint)},
+          null,
+          ${registeredOnly ? sql`true` : sql`false`}
         ) m
         ${tableName === 'event' ? sql`join federated.competition c on c.id = m.competition_id` : sql``}
       )`;

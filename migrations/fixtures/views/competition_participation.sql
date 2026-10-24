@@ -1,8 +1,10 @@
 create or replace view federated.competition_participation
 with (security_invoker = true) as
-select competition_id, competitor_id from federated.competition_result
+select r.competition_id, r.competitor_id, coalesce(e.cancelled, false) as cancelled
+from federated.competition_result r
+left join federated.competition_entry e using (competition_id, competitor_id)
 union all
-select e.competition_id, e.competitor_id
+select e.competition_id, e.competitor_id, e.cancelled
 from federated.competition_entry e
 where not exists (
   select 1 from federated.competition_result r

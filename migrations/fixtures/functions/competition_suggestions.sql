@@ -7,8 +7,9 @@ create or replace function suggested_competition_matches(
   person_ids bigint[] default null,
   couple_id bigint default null,
   cohort_id bigint default null,
-  event_ids bigint[] default null
-) returns table (competition_id bigint, competitor_id text, local_person_id bigint, local_couple_id bigint)
+  event_ids bigint[] default null,
+  registered_only boolean default false
+) returns table (competition_id bigint, competitor_id text, local_person_id bigint, local_couple_id bigint, status text)
 language sql stable as $$
   with scoped_people as materialized (
     select p.id
@@ -83,6 +84,11 @@ language sql stable as $$
       and (event_ids is null or c.event_id = any(event_ids))
       and c.status <> 'cancelled' and e.status <> 'cancelled'
     group by c.federation, c.competition_type, extract(year from c.start_date)::int, cat.id
+  ), participations as materialized (
+    select p.*
+    from federated.competition_participation p
+    where p.competition_id = any(array(select unnest(competition_ids) from upcoming))
+      and p.competitor_id = any(array(select id from scoped_competitors))
   ), source_profiles as materialized (
     select p.*, source.series, source.discipline, source.class, source.age_group_code as reported_age
     from profiles p
@@ -115,7 +121,7 @@ language sql stable as $$
       when p.known_birth_years then coalesce(couple_age.code, person_age.code)
       when y.year = extract(year from current_date)::int then p.reported_age
     end
-  )
+  ), eligible as (
   select distinct competition_id, p.id, p.local_person_id, p.local_couple_id
   from upcoming target
   join category_profiles p on p.year = target.year and p.federation = target.federation
@@ -147,7 +153,23 @@ language sql stable as $$
     -- Adult's allowances include U21; that is only valid below its upper age limit.
     and (target.age_group_code <> 'Under_21' or
       (p.known_birth_years and target.year - p.older_birth_year < 21) or
-      (not p.known_birth_years and p.age_group in ('Youth', 'Under_21')));
+      (not p.known_birth_years and p.age_group in ('Youth', 'Under_21')))
+  )
+  select eligible.*, case
+    when participation.cancelled then 'cancelled'
+    when participation.competition_id is not null then 'registered'
+    else 'suggested'
+  end
+  from eligible
+  left join participations participation
+    on (participation.competition_id, participation.competitor_id) = (eligible.competition_id, eligible.id)
+  where not registered_only
+  union
+  select participation.competition_id, sc.id, sc.local_person_id, sc.local_couple_id,
+    case when participation.cancelled then 'cancelled' else 'registered' end
+  from scoped_competitors sc
+  join participations participation on participation.competitor_id = sc.id
+  where not registered_only or not participation.cancelled;
 $$;
 
 comment on function suggested_competition_matches is '@behavior -*';
@@ -160,11 +182,13 @@ create or replace function competition_suggestions(
   until date default null,
   person_ids bigint[] default null,
   couple_id bigint default null,
-  cohort_id bigint default null
+  cohort_id bigint default null,
+  registered_only boolean default false
 ) returns table (
   competition federated.competition,
   person public.person,
-  couple public.couple
+  couple public.couple,
+  status text
 )
 language plpgsql stable as $$
 begin
@@ -172,10 +196,16 @@ begin
     raise exception 'event_ids is required' using errcode = '22004';
   end if;
   return query
-  select c, p, partnership
+  select c, p, partnership, m.status
   from (
-    select distinct competition_id, local_person_id, local_couple_id
-    from suggested_competition_matches(since, until, person_ids, couple_id, cohort_id, event_ids)
+    select competition_id, local_person_id, local_couple_id, case
+      when bool_or(matches.status = 'registered') then 'registered'
+      when bool_or(matches.status = 'cancelled') then 'cancelled'
+      else 'suggested'
+    end as status
+    from suggested_competition_matches(since, until, person_ids, couple_id, cohort_id, event_ids, registered_only)
+      matches
+    group by competition_id, local_person_id, local_couple_id
   ) m
   join federated.competition c on c.id = m.competition_id
   left join public.person p on p.id = m.local_person_id

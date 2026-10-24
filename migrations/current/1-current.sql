@@ -29,4 +29,6 @@ where f.federation = 'wdsf' and f.kind = 'couple' and c.id = 'wdsf:' || (cache.c
   and cache.content->>'division' is not null
   and (c.divisions, c.age_group) is distinct from (array[cache.content->>'division'], cache.content->>'age');
 
+--!include views/competition_participation.sql
+--!include views/couple_federation_link.sql
 --!include functions/competition_suggestions.sql
