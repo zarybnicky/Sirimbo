@@ -5,7 +5,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
-import { FederationDocument } from '@/graphql/Federation';
+import { FederationListDocument } from '@/graphql/Federation';
 import { Browser } from './Browser';
 
 type Props = {
@@ -13,7 +13,11 @@ type Props = {
 };
 
 const getFederation = cache(async (federation: string) => {
-  const { federation: item } = await executeGraphql(FederationDocument, { federation });
+  const { federationsList } = await executeGraphql(FederationListDocument, {
+    condition: { code: federation },
+    withCounts: false,
+  });
+  const item = federationsList?.[0];
   if (!item) notFound();
   return item;
 });

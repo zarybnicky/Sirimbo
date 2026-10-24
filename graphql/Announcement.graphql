@@ -34,42 +34,19 @@ fragment Announcement on Announcement {
   }
 }
 
-query StickyAnnouncements($orderBy: AnnouncementsOrderBy = UPDATED_AT_DESC) {
-  stickyAnnouncements: announcements(
-    condition: {isSticky: true, status: PUBLISHED}
-    orderBy: [$orderBy, CREATED_AT_DESC]
-  ) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-
-query MyAnnouncements(
-  $status: AnnouncementStatus = PUBLISHED
+query Announcements(
+  $condition: AnnouncementCondition
   $first: Int
   $offset: Int
-  $orderBy: AnnouncementsOrderBy = UPDATED_AT_DESC
+  $cursor: Cursor
+  $orderBy: [AnnouncementsOrderBy!] = [CREATED_AT_DESC]
 ) {
-  myAnnouncements: announcements(
-    condition: {isSticky: false, status: $status}
+  announcements(
+    condition: $condition
     first: $first
     offset: $offset
-    orderBy: [$orderBy, CREATED_AT_DESC]
-  ) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-
-query AnnouncementList($first: Int, $cursor: Cursor, $orderBy: AnnouncementsOrderBy = CREATED_AT_DESC) {
-  announcements(
-    first: $first,
-    after: $cursor,
-    orderBy: [$orderBy],
+    after: $cursor
+    orderBy: $orderBy
   ) {
     totalCount
     nodes {

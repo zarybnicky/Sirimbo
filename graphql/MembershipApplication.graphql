@@ -17,14 +17,8 @@ fragment MembershipApplication on MembershipApplication {
   lastName
 }
 
-query MyMembershipApplications($createdBy: BigInt!) {
-  membershipApplicationsList(condition: { status: SENT, createdBy: $createdBy }) {
-    ...MembershipApplication
-  }
-}
-
-query PendingMembershipApplications {
-  membershipApplicationsList(condition: { status: SENT }) {
+query MembershipApplications($condition: MembershipApplicationCondition!) {
+  membershipApplicationsList(condition: $condition) {
     ...MembershipApplication
   }
 }

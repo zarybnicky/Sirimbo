@@ -326,13 +326,6 @@ query FederationCompetitor($id: String!) {
   }
 }
 
-query Federation($federation: String!) {
-  federation(code: $federation) {
-    code
-    name
-  }
-}
-
 query FederationEventFacets($federation: String!, $includeCancelled: Boolean!) {
   federation(code: $federation) {
     code

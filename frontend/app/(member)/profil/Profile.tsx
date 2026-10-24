@@ -1,6 +1,6 @@
 'use client';
 
-import { MyMembershipApplicationsDocument } from '@/graphql/MembershipApplication';
+import { MembershipApplicationsDocument } from '@/graphql/MembershipApplication';
 import { useActions } from '@/lib/actions';
 import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
@@ -18,8 +18,8 @@ export function Profile() {
   const authLoading = useAuthLoading();
   const { enableRegistration } = useTenantConfig();
   const [{ data }] = useQuery({
-    query: MyMembershipApplicationsDocument,
-    variables: { createdBy: auth.userId ?? '' },
+    query: MembershipApplicationsDocument,
+    variables: { condition: { status: 'SENT', createdBy: auth.userId ?? '' } },
     pause: authLoading || !auth.isLoggedIn || !enableRegistration,
   });
   const [variant, setVariant] = useQueryState(

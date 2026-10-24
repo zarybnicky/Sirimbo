@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  PendingMembershipApplicationsDocument,
+  MembershipApplicationsDocument,
   type MembershipApplicationFragment,
 } from '@/graphql/MembershipApplication';
 import { RichTextView } from '@/ui/RichTextView';
@@ -42,7 +42,8 @@ export function Club() {
     variables: { showInLists: auth.isAdmin ? undefined : true },
   });
   const [{ data: applications }] = useQuery({
-    query: PendingMembershipApplicationsDocument,
+    query: MembershipApplicationsDocument,
+    variables: { condition: { status: 'SENT' } },
     pause: !auth.isAdmin,
   });
   const tenantActions = useActions(

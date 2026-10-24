@@ -1,10 +1,7 @@
 import { AnnouncementCard } from '@/ui/AnnouncementCard';
 import { Pagination } from '@/ui/Pagination';
 import { cn } from '@/lib/cn';
-import {
-  MyAnnouncementsDocument,
-  StickyAnnouncementsDocument,
-} from '@/graphql/Announcement';
+import { AnnouncementsDocument } from '@/graphql/Announcement';
 import { buttonCls, typographyCls } from '@/ui/style';
 import {
   DropdownMenu,
@@ -75,12 +72,12 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
   const [sort, setSort] = React.useState<SortOption>('updated');
 
   const [{ data }] = useQuery({
-    query: MyAnnouncementsDocument,
+    query: AnnouncementsDocument,
     variables: {
       first: 5,
       offset: (page - 1) * 5,
-      status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED',
-      orderBy: sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
+      condition: { isSticky: false, status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED' },
+      orderBy: [sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC', 'CREATED_AT_DESC'],
     },
   });
 
@@ -133,14 +130,14 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
       </div>
 
       <div className="space-y-2 rounded-lg">
-        {(data?.myAnnouncements?.nodes || []).map((a) => (
+        {(data?.announcements?.nodes || []).map((a) => (
           <AnnouncementCard key={a.id} item={a} />
         ))}
       </div>
 
-      {!!data?.myAnnouncements?.totalCount && (
+      {!!data?.announcements?.totalCount && (
         <Pagination
-          total={data.myAnnouncements.totalCount}
+          total={data.announcements.totalCount}
           limit={5}
           page={page}
           onPageChange={setPage}
@@ -154,13 +151,14 @@ export const StickyAnnouncements = React.memo(function StickyAnnouncements() {
   const [sort, setSort] = React.useState<SortOption>('updated');
 
   const [{ data }] = useQuery({
-    query: StickyAnnouncementsDocument,
+    query: AnnouncementsDocument,
     variables: {
-      orderBy: sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
+      condition: { isSticky: true, status: 'PUBLISHED' },
+      orderBy: [sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC', 'CREATED_AT_DESC'],
     },
   });
 
-  if (!data?.stickyAnnouncements) {
+  if (!data?.announcements) {
     return null;
   }
 
@@ -171,7 +169,7 @@ export const StickyAnnouncements = React.memo(function StickyAnnouncements() {
         <AnnouncementSortControls sort={sort} onChange={setSort} />
       </div>
       <div className="space-y-2 rounded-lg">
-        {data.stickyAnnouncements.nodes.map((a) => (
+        {data.announcements.nodes.map((a) => (
           <AnnouncementCard key={a.id} item={a} mode="titleOnly" />
         ))}
       </div>

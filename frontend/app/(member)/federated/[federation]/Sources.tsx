@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import type { CrawlerTargetCondition } from '@/graphql';
-import { CrawlerSourcesDocument } from '@/graphql/Crawler';
+import { CrawlerTargetsDocument, type CrawlerTargetsQueryVariables } from '@/graphql/Crawler';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FormError } from '@/ui/form';
 import { Pagination } from '@/ui/Pagination';
@@ -19,8 +19,13 @@ export function Sources({
   const auth = useAuth();
 
   const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CrawlerSourcesDocument,
-    variables: (offset) => ({ condition, offset }),
+    query: CrawlerTargetsDocument,
+    variables: (offset): CrawlerTargetsQueryVariables => ({
+      condition,
+      first: 100,
+      offset,
+      orderBy: ['KIND_ASC', 'KEY_ASC', 'ID_ASC'],
+    }),
     limit: 100,
     pageKey: 'sourcesPage',
     getTotal: (data) => data?.crawlerTargets?.totalCount,

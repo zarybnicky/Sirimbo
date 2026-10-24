@@ -68,32 +68,17 @@ query CrawlerResponse($id: BigInt!) {
   }
 }
 
-query CrawlerTargets($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
+query CrawlerTargets(
+  $condition: CrawlerTargetCondition!
+  $first: Int! = 50
+  $offset: Int! = 0
+  $orderBy: [CrawlerTargetsOrderBy!] = [KEY_ASC, ID_ASC]
+) {
   crawlerTargets(
-    first: 50
+    first: $first
     offset: $offset
     condition: $condition
-    orderBy: [KEY_ASC, ID_ASC]
-  ) {
-    totalCount
-    nodes {
-      id
-      key
-      fetchStatus
-      processStatus
-      errorCount
-      lastFetchedAt
-      nextFetchAt
-    }
-  }
-}
-
-query CrawlerSources($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
-  crawlerTargets(
-    first: 100
-    offset: $offset
-    condition: $condition
-    orderBy: [KIND_ASC, KEY_ASC, ID_ASC]
+    orderBy: $orderBy
   ) {
     totalCount
     nodes {
@@ -102,6 +87,9 @@ query CrawlerSources($condition: CrawlerTargetCondition!, $offset: Int! = 0) {
       key
       fetchStatus
       processStatus
+      errorCount
+      lastFetchedAt
+      nextFetchAt
     }
   }
 }

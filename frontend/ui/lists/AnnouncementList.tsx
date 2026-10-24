@@ -1,8 +1,8 @@
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/lib/auth';
 import {
-  AnnouncementListDocument,
-  AnnouncementListQueryVariables,
+  AnnouncementsDocument,
+  type AnnouncementsQueryVariables,
 } from '@/graphql/Announcement';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
@@ -25,8 +25,8 @@ export function AnnouncementList() {
   const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
   const [sort, setSort] = React.useState<SortOption>('created');
 
-  const orderBy = React.useMemo<AnnouncementListQueryVariables['orderBy']>(() => {
-    return sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC';
+  const orderBy = React.useMemo<AnnouncementsQueryVariables['orderBy']>(() => {
+    return [sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC'];
   }, [sort]);
 
   const handleLoadMore = React.useCallback((endCursor: number) => {
@@ -86,7 +86,7 @@ interface AnnouncementListPageProps {
   cursor?: number;
   search: string;
   currentId?: string;
-  orderBy: AnnouncementListQueryVariables['orderBy'];
+  orderBy: AnnouncementsQueryVariables['orderBy'];
   onLoadMore?: (endCursor: number) => void;
 }
 
@@ -98,7 +98,7 @@ function AnnouncementListPage({
   onLoadMore,
 }: AnnouncementListPageProps) {
   const [{ data, fetching }] = useQuery({
-    query: AnnouncementListDocument,
+    query: AnnouncementsDocument,
     variables: { first: 50, cursor, orderBy },
   });
 
