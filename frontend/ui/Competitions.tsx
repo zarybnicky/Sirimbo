@@ -19,9 +19,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { format } from 'date-fns';
-import { formatCategoryName } from '@/ui/csts';
+import { compareCategories, formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
-import { compareText } from '@/lib/compare';
+import { compareNaturalText, compareText } from '@/lib/compare';
 import {
   formatCount,
   formatDateOnly,
@@ -33,7 +33,8 @@ import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { add, startOf } from 'date-arithmetic';
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown } from 'lucide-react';
+import * as Collapsible from '@radix-ui/react-collapsible';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
@@ -582,74 +583,91 @@ export function CompetitionSuggestions({
               ...Map.groupBy(eventMatches, (x) => x.id).values(),
             ].toSorted(
               (a, b) =>
-                compareText(a[0]!.competitionDate ?? '', b[0]!.competitionDate ?? '') ||
-                compareText(a[0]!.checkInEnd ?? '24:00', b[0]!.checkInEnd ?? '24:00') ||
-                compareText(entryLabel(a[0]!, true), entryLabel(b[0]!, true)),
+                compareCategories(a[0]!.category, b[0]!.category) ||
+                compareNaturalText(entryLabel(a[0]!, true), entryLabel(b[0]!, true)) ||
+                compareText(a[0]!.competitionDate ?? '', b[0]!.competitionDate ?? ''),
             );
             return (
-              <article
-                key={event.id}
-                className={cardCls({ className: 'rounded-lg p-3' })}
-              >
-                <h3 className="font-semibold">
-                  <CompetitionLink
-                    entry={{
-                      federation: event.federation,
-                      competitionEventExternalId: event.externalId,
-                    }}
-                  >
-                    {event.name}
-                  </CompetitionLink>
-                </h3>
-
-                <DotSeparated className="mb-2 flex text-sm text-neutral-11">
-                  {[
-                    event.startDate &&
-                      [
-                        formatDateOnly(event.startDate),
-                        event.endDate &&
-                          event.endDate !== event.startDate &&
-                          formatDateOnly(event.endDate),
-                      ]
-                        .filter(Boolean)
-                        .join(' – '),
-                  ]}
-                  {event.location || event.city}
-                  <span className="font-medium text-accent-11">
-                    {formatCount(competitions.length, {
-                      one: 'soutěž',
-                      few: 'soutěže',
-                      other: 'soutěží',
-                    })}
-                  </span>
-                  <EligibleCompetitors competitors={competitors} />
-                </DotSeparated>
-
-                <ul className="space-y-1 text-sm">
-                  {competitions.map((competitionMatches) => {
-                    const entry = competitionMatches[0]!;
-                    return (
-                      <li
-                        key={entry.id}
-                        className="flex items-baseline justify-between gap-3"
-                      >
+              <Collapsible.Root key={event.id} asChild>
+                <article className={cardCls({ className: 'rounded-lg p-3' })}>
+                  <div className="relative">
+                    <div className="pointer-events-none relative z-10 min-w-0 pr-11 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
+                      <h3 className="font-semibold">
                         <CompetitionLink
-                          entry={entry}
-                          competitionId={entry.competitionExternalId}
+                          entry={{
+                            federation: event.federation,
+                            competitionEventExternalId: event.externalId,
+                          }}
                         >
-                          {entryLabel(entry, true)}
+                          {event.name}
                         </CompetitionLink>
-                        <EligibleCompetitors
-                          competitors={competitionMatches.map((x) => ({
-                            ...x.competitor,
-                            status: x.matchStatus,
-                          }))}
+                      </h3>
+
+                      <DotSeparated className="flex text-sm text-neutral-11">
+                        {[
+                          event.startDate &&
+                            [
+                              formatDateOnly(event.startDate),
+                              event.endDate &&
+                                event.endDate !== event.startDate &&
+                                formatDateOnly(event.endDate),
+                            ]
+                              .filter(Boolean)
+                              .join(' – '),
+                        ]}
+                        {event.location || event.city}
+                        <span className="font-medium text-accent-11">
+                          {formatCount(competitions.length, {
+                            one: 'soutěž',
+                            few: 'soutěže',
+                            other: 'soutěží',
+                          })}
+                        </span>
+                        <EligibleCompetitors competitors={competitors} />
+                      </DotSeparated>
+                    </div>
+                    <Collapsible.Trigger asChild>
+                      <button
+                        type="button"
+                        aria-label={`Soutěže: ${event.name}`}
+                        className="absolute inset-0 flex w-full cursor-pointer items-center justify-end rounded px-2 text-neutral-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8 [&[data-state=open]>svg]:rotate-180"
+                      >
+                        <ChevronDown
+                          className="size-5 transition-transform"
+                          aria-hidden
                         />
-                      </li>
-                    );
-                  })}
-                </ul>
-              </article>
+                      </button>
+                    </Collapsible.Trigger>
+                  </div>
+
+                  <Collapsible.Content>
+                    <ul className="mt-2 space-y-1 text-sm">
+                      {competitions.map((competitionMatches) => {
+                        const entry = competitionMatches[0]!;
+                        return (
+                          <li
+                            key={entry.id}
+                            className="flex items-baseline justify-between gap-3"
+                          >
+                            <CompetitionLink
+                              entry={entry}
+                              competitionId={entry.competitionExternalId}
+                            >
+                              {entryLabel(entry, true)}
+                            </CompetitionLink>
+                            <EligibleCompetitors
+                              competitors={competitionMatches.map((x) => ({
+                                ...x.competitor,
+                                status: x.matchStatus,
+                              }))}
+                            />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Collapsible.Content>
+                </article>
+              </Collapsible.Root>
             );
           })}
         </div>

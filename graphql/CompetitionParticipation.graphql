@@ -112,7 +112,7 @@ query CompetitionSuggestions(
       startDate
       checkInEnd
       competitionType
-      category { ...CompetitionCategoryLabel }
+      category { ...CompetitionCategory }
     }
     status
     person { id name }

@@ -104,7 +104,14 @@ export const compareClasses = compareByOrder(
   [...hiddenClasses, ...classOrder, 'Open'].toReversed(),
 );
 
-export const compareDisciplines = compareByOrder(['Standard', 'Latin', 'TenDance']);
+const compareDisciplineOrder = compareByOrder(['STANDARD', 'LATIN', 'TENDANCE']);
+
+export function compareDisciplines(a: string, b: string) {
+  return compareDisciplineOrder(
+    a.toUpperCase().replaceAll(' ', ''),
+    b.toUpperCase().replaceAll(' ', ''),
+  );
+}
 
 export function compareCategories(a: Category | null, b: Category | null) {
   if (!a || !b) return Number(!a) - Number(!b);
