@@ -89,7 +89,7 @@ export function PersonList() {
           {auth.isAdmin && (
             <button
               type="button"
-              className={buttonCls({ size: 'sm' })}
+              className={buttonCls({ size: 'xs' })}
               onClick={() => exportNsa(client)}
             >
               NSA export
@@ -119,7 +119,7 @@ export function PersonList() {
             type="button"
             aria-pressed={!!includeFormer}
             className={buttonCls({
-              size: 'sm',
+              size: 'xs',
               variant: includeFormer ? 'primary' : 'outline',
             })}
             onClick={() => setIncludeFormer((x) => (x ? null : '1'))}
@@ -130,7 +130,7 @@ export function PersonList() {
           <button
             type="button"
             className={buttonCls({
-              size: 'sm',
+              size: 'xs',
               variant: isTrainer ? 'primary' : 'outline',
             })}
             onClick={() => setIsTrainer((x) => (x ? null : '1'))}
@@ -141,7 +141,7 @@ export function PersonList() {
           <button
             type="button"
             className={buttonCls({
-              size: 'sm',
+              size: 'xs',
               variant: isAdmin ? 'primary' : 'outline',
             })}
             onClick={() => setIsAdmin((x) => (x ? null : '1'))}
