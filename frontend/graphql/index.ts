@@ -4551,6 +4551,9 @@ export type Event = {
   childEventInstancesList: Array<Event>;
   /** Reads and enables pagination through a set of `Event`. */
   childEventsList: Array<Event>;
+  /** Reads a single `File` that is related to this `Event`. */
+  coverImage: Maybe<File>;
+  coverImageId: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['Datetime']['output'];
   description: Maybe<Scalars['String']['output']>;
   enableNotes: Maybe<Scalars['Boolean']['output']>;
@@ -4714,6 +4717,8 @@ export type EventCondition = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `capacityUnit` field. */
   capacityUnit?: InputMaybe<EventCapacityUnit>;
+  /** Checks for equality with the object’s `coverImageId` field. */
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
@@ -4904,6 +4909,7 @@ export type EventLessonRequestsOrderBy =
 export type EventPatch = {
   capacity?: InputMaybe<Scalars['Int']['input']>;
   capacityUnit?: InputMaybe<EventCapacityUnit>;
+  coverImageId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
@@ -5375,6 +5381,8 @@ export type EventType =
 export type EventsOrderBy =
   | 'CAPACITY_ASC'
   | 'CAPACITY_DESC'
+  | 'COVER_IMAGE_ID_ASC'
+  | 'COVER_IMAGE_ID_DESC'
   | 'CREATED_AT_ASC'
   | 'CREATED_AT_DESC'
   | 'DESCRIPTION_ASC'
@@ -6784,6 +6792,8 @@ export type File = {
   contentType: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
   displayName: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Event`. */
+  eventsByTenantIdAndCoverImageIdList: Array<Event>;
   id: Scalars['BigInt']['output'];
   isPublic: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `LocationImage`. */
@@ -6818,6 +6828,14 @@ export type FileArticleAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ArticleAttachmentsOrderBy>>;
+};
+
+
+export type FileEventsByTenantIdAndCoverImageIdListArgs = {
+  condition?: InputMaybe<EventCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 
@@ -14613,6 +14631,8 @@ export type GraphCacheResolvers = {
     capacityUnit?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, EventCapacityUnit | string>,
     childEventInstancesList?: GraphCacheResolver<WithTypename<Event>, EventChildEventInstancesListArgs, Array<WithTypename<Event> | string>>,
     childEventsList?: GraphCacheResolver<WithTypename<Event>, EventChildEventsListArgs, Array<WithTypename<Event> | string>>,
+    coverImage?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<File> | string>,
+    coverImageId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String']['output'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -15087,6 +15107,7 @@ export type GraphCacheResolvers = {
     contentType?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     displayName?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    eventsByTenantIdAndCoverImageIdList?: GraphCacheResolver<WithTypename<File>, FileEventsByTenantIdAndCoverImageIdListArgs, Array<WithTypename<Event> | string>>,
     id?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     locationImageRecordsList?: GraphCacheResolver<WithTypename<File>, FileLocationImageRecordsListArgs, Array<WithTypename<LocationImage> | string>>,
@@ -17184,6 +17205,8 @@ export type GraphCacheUpdaters = {
     capacityUnit?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     childEventInstancesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventChildEventInstancesListArgs>,
     childEventsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventChildEventsListArgs>,
+    coverImage?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    coverImageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     enableNotes?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -17658,6 +17681,7 @@ export type GraphCacheUpdaters = {
     contentType?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     displayName?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    eventsByTenantIdAndCoverImageIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileEventsByTenantIdAndCoverImageIdListArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     isPublic?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     locationImageRecordsList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileLocationImageRecordsListArgs>,

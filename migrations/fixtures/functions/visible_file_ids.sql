@@ -9,14 +9,14 @@ as $$
   where tenant_id = (select current_tenant_id())
     and is_public
 
-  union
+  union all
 
   select f.file_id
   from announcement_attachment f
   join app_private.visible_announcement_ids() a(id) on a.id = f.announcement_id
   where f.tenant_id = (select current_tenant_id())
 
-  union
+  union all
 
   select f.file_id
   from article_attachment f
@@ -24,7 +24,7 @@ as $$
   where a.tenant_id = (select current_tenant_id())
     and a.is_visible
 
-  union
+  union all
 
   select image.file_id
   from location_image image
@@ -33,12 +33,20 @@ as $$
     and location.id = image.location_id
   where image.tenant_id = (select current_tenant_id())
 
-  union
+  union all
 
   select cover_image_id
   from location
   where tenant_id = (select current_tenant_id())
-    and cover_image_id is not null;
+    and cover_image_id is not null
+
+  union all
+
+  select cover_image_id
+  from event
+  where tenant_id = (select current_tenant_id())
+    and cover_image_id is not null
+    and id in (select app_private.accessible_event_ids());
 $$;
 
 grant execute on function app_private.visible_file_ids() to anonymous;

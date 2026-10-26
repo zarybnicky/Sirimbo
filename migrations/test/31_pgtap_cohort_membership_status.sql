@@ -153,7 +153,9 @@ WHERE event_id = 900002 AND person_id = 200001;
 SELECT set_config('jwt.claims.tenant_id', '1000', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200001]', true);
 
+SET LOCAL ROLE anonymous;
 SELECT set_event_registration(900002, 200001, null, false);
+RESET ROLE;
 
 SELECT app_private.reconcile_event_cohort_registrations(
   ARRAY[900002], ARRAY[200001]
@@ -165,7 +167,9 @@ SET until = now() - interval '1 second', status = 'expired'
 WHERE id = 860003;
 SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[200003]', true);
+SET LOCAL ROLE member;
 SELECT set_event_registration(900002, 200003, null, true);
+RESET ROLE;
 
 SELECT app_private.reconcile_event_cohort_registrations(
   ARRAY[900002], ARRAY[200003]
@@ -281,6 +285,7 @@ SELECT tap.ok(NOT EXISTS (
   )
 ), 'event range scopes and parent filtering select the expected events');
 
+SET LOCAL ROLE trainer;
 SELECT set_lesson_request(eir.id, trainer.id, 1)
 FROM event_registration eir
 JOIN event_trainer trainer
@@ -288,6 +293,7 @@ JOIN event_trainer trainer
 WHERE eir.event_id = 900001
   AND eir.person_id = 200002
   AND eir.parent_registration_id IS NULL;
+RESET ROLE;
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 SET LOCAL ROLE trainer;
@@ -613,6 +619,8 @@ VALUES (2950001, 2900003, 2900005, now());
 
 SELECT set_config('jwt.claims.my_tenant_ids', '[1000]', true);
 SELECT set_config('jwt.claims.my_person_ids', '[2900005]', true);
+GRANT SELECT ON _scheduled_lesson TO member;
+SET LOCAL ROLE member;
 SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson),
   2900005,
@@ -626,13 +634,16 @@ SELECT set_event_registration(
   ],
   ARRAY[1]
 );
+RESET ROLE;
 CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
 SELECT event_remaining_person_spots(instance) = 0 AS at_capacity
 FROM event instance
 WHERE id = (SELECT id FROM _scheduled_lesson);
+SET LOCAL ROLE member;
 SELECT set_event_registration(
   (SELECT id FROM _scheduled_lesson), 2900005, null, false
 );
+RESET ROLE;
 
 SELECT tap.ok(
   (SELECT at_capacity FROM _self_registration_created)

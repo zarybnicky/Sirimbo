@@ -6,7 +6,7 @@ create policy admin_all on file to administrator
 create policy uploader_manage on file to trainer
   using (uploaded_by = (select current_user_id()));
 create policy visible on file for select
-  using (id in (select id from app_private.visible_file_ids()));
+  using (id in (select app_private.visible_file_ids()));
 
 select app_private.drop_policies('public.announcement_attachment');
 create policy current_tenant on announcement_attachment as restrictive

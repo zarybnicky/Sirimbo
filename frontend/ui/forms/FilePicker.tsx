@@ -30,6 +30,7 @@ type Props = {
   value: string[];
   onChange: (value: string[]) => void;
   imagesOnly?: boolean;
+  multiple?: boolean;
   title?: string;
 };
 
@@ -52,7 +53,13 @@ async function uploadFile(source: File): Promise<UploadedFile> {
   return response.json();
 }
 
-export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }: Props) {
+export function FilePicker({
+  value,
+  onChange,
+  imagesOnly,
+  multiple = true,
+  title = 'Přílohy',
+}: Props) {
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [error, setError] = React.useState<string>();
@@ -65,7 +72,7 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
   const selectedFiles = value.map((id) => filesById.get(id)).filter(isTruthy);
 
   const upload = async (input: FileList | null) => {
-    const sources = [...(input ?? [])];
+    const sources = [...(input ?? [])].slice(0, multiple ? undefined : 1);
     if (sources.length === 0) return;
 
     setUploading(true);
@@ -76,7 +83,7 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
       x.status === 'fulfilled' ? [x.value.id] : [],
     );
     if (uploadedIds.length > 0) {
-      onChange([...new Set([...value, ...uploadedIds])]);
+      onChange(multiple ? [...new Set([...value, ...uploadedIds])] : uploadedIds);
       refresh({ requestPolicy: 'network-only' });
     }
     if (uploadedIds.length !== sources.length) {
@@ -127,7 +134,7 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
           <input
             className="sr-only"
             type="file"
-            multiple
+            multiple={multiple}
             accept={imagesOnly ? 'image/*' : undefined}
             disabled={uploading}
             onChange={(event) => {
@@ -146,7 +153,9 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
             onChange(
               selected.has(file.id)
                 ? value.filter((id) => id !== file.id)
-                : [...value, file.id],
+                : multiple
+                  ? [...value, file.id]
+                  : [file.id],
             )
           }
         >

@@ -2,6 +2,7 @@ import type { EventPageFragment } from '@/graphql/Event';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
+import Image from '@/ui/Image';
 
 export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
   const location = instance.location?.name || instance.locationText;
@@ -10,6 +11,17 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
 
   return (
     <div className="flex flex-col gap-3">
+      {instance.coverImage && (
+        <div className="relative aspect-video overflow-hidden rounded-md">
+          <Image
+            src={instance.coverImage.url}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 960px"
+            className="object-cover"
+          />
+        </div>
+      )}
       {seriesInfo?.id && (seriesInfo.length ?? 0) > 1 && (
         <div>
           <Link

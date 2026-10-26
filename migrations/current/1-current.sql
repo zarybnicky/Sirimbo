@@ -32,3 +32,18 @@ where f.federation = 'wdsf' and f.kind = 'couple' and c.id = 'wdsf:' || (cache.c
 --!include views/competition_participation.sql
 --!include views/couple_federation_link.sql
 --!include functions/competition_suggestions.sql
+
+alter table public.event add column if not exists cover_image_id bigint;
+alter table public.event drop constraint if exists event_cover_image_fk;
+alter table public.event add constraint event_cover_image_fk
+  foreign key (tenant_id, cover_image_id) references public.file (tenant_id, id)
+  on delete set null (cover_image_id);
+comment on constraint event_cover_image_fk on public.event is '@fieldName coverImage';
+create index if not exists event_cover_image_idx on public.event (tenant_id, cover_image_id)
+  where cover_image_id is not null;
+
+--!include functions/accessible_event_ids.sql
+--!include functions/visible_file_ids.sql
+--!include policies/file.sql
+--!include functions/set_lesson_request.sql
+--!include functions/set_event_registration.sql

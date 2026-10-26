@@ -6,29 +6,34 @@ import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { FilePicker } from '@/ui/forms/FilePicker';
+import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
+  coverImageId: z.string().nullable(),
   summary: z.string(),
   description: z.string(),
 });
 
 export function EditEventDescriptionForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
-  const { reset, control, handleSubmit, getValues } = useForm({
+  const { reset, control, handleSubmit } = useForm({
     shouldUnregister: false,
+    defaultValues: { summary: '', description: '', coverImageId: null },
     resolver: zodResolver(Form),
   });
   const [result, update] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
   const instance = data?.event;
+  const coverImage = useController({ control, name: 'coverImageId' }).field;
 
   React.useEffect(() => {
-    if (!instance || getValues('summary') || getValues('description')) return;
+    if (!instance) return;
     reset(
       {
+        coverImageId: instance.coverImageId,
         summary: instance.summary ?? '',
         description: instance.description ?? '',
       },
@@ -38,7 +43,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
         keepErrors: true,
       },
     );
-  }, [reset, getValues, instance]);
+  }, [reset, instance]);
 
   const onSubmit = async (patch: z.infer<typeof Form>) => {
     const result = await update({ id, patch });
@@ -48,6 +53,16 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
+
+      {instance && (
+        <FilePicker
+          title="Úvodní obrázek"
+          imagesOnly
+          multiple={false}
+          value={coverImage.value ? [coverImage.value] : []}
+          onChange={(ids) => coverImage.onChange(ids[0] ?? null)}
+        />
+      )}
 
       <div className="max-w-full">
         <TabMenu selected={tab} onSelect={setTab}>

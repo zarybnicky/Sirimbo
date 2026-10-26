@@ -273,6 +273,9 @@ query EventPayments($id: BigInt!) {
 fragment EventPage on Event {
   ...EventWithTrainer
   description
+  coverImage {
+    ...File
+  }
 }
 
 query EventWithAttendance($id: BigInt!) {
@@ -308,6 +311,7 @@ query EventDescription($id: BigInt!) {
     id
     summary
     description
+    coverImageId
   }
 }
 

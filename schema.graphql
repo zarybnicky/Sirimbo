@@ -5551,6 +5551,10 @@ type Event {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]
   ): [Event!]!
+
+  """Reads a single `File` that is related to this `Event`."""
+  coverImage: File
+  coverImageId: BigInt
   createdAt: Datetime!
   description: String
   enableNotes: Boolean
@@ -5748,6 +5752,9 @@ input EventCondition {
 
   """Checks for equality with the object’s `capacityUnit` field."""
   capacityUnit: EventCapacityUnit
+
+  """Checks for equality with the object’s `coverImageId` field."""
+  coverImageId: BigInt
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
@@ -5973,6 +5980,7 @@ Represents an update to a `Event`. Fields that are set will be updated.
 input EventPatch {
   capacity: Int
   capacityUnit: EventCapacityUnit
+  coverImageId: BigInt
   createdAt: Datetime
   description: String
   enableNotes: Boolean
@@ -6545,6 +6553,8 @@ enum EventType {
 enum EventsOrderBy {
   CAPACITY_ASC
   CAPACITY_DESC
+  COVER_IMAGE_ID_ASC
+  COVER_IMAGE_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   DESCRIPTION_ASC
@@ -8653,6 +8663,23 @@ type File {
   contentType: String
   createdAt: Datetime!
   displayName: String
+
+  """Reads and enables pagination through a set of `Event`."""
+  eventsByTenantIdAndCoverImageIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!]
+  ): [Event!]!
   id: BigInt!
   isPublic: Boolean!
 
