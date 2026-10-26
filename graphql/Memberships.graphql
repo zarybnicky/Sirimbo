@@ -125,24 +125,21 @@ query CoupleFormPeople($personId: BigInt!, $withPerson: Boolean!) {
 }
 
 query CoupleList {
-  getCurrentTenant {
-    id
-    couplesList {
-      ...Couple
-      ageGroup
-      man {
+  couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) {
+    ...Couple
+    ageGroup
+    man {
+      id
+      cohortMembershipsList(condition: { status: ACTIVE }) {
         id
-        cohortMembershipsList(condition: { status: ACTIVE }) {
-          id
-          cohort { ...CohortBasic }
-        }
+        cohort { ...CohortBasic }
       }
-      woman {
+    }
+    woman {
+      id
+      cohortMembershipsList(condition: { status: ACTIVE }) {
         id
-        cohortMembershipsList(condition: { status: ACTIVE }) {
-          id
-          cohort { ...CohortBasic }
-        }
+        cohort { ...CohortBasic }
       }
     }
   }

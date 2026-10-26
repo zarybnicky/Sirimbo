@@ -1,4 +1,4 @@
-import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
+import { LIST_TYPES, TYPES, sql, sqlValueWithCodec } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition } from 'postgraphile/utils';
 import type { GraphQLInputType } from 'postgraphile/graphql';
 
@@ -47,6 +47,35 @@ function expectCohorts(value: unknown): readonly string[] | null {
     throw new Error('Invalid person membership cohort filter');
   }
   return value;
+}
+
+export function membershipCandidateIds(rawValue: unknown): SQL | null {
+  const condition = expectMembershipCondition(rawValue);
+  if (condition == null) return null;
+
+  const states = condition.states == null
+    ? [expectState(condition.state)]
+    : condition.states.length ? condition.states.map(expectState) : ['current', 'former'];
+  const cohorts = expectCohorts(condition.inCohorts);
+  const predicates: SQL[] = [];
+  if (condition.states != null || condition.state != null) predicates.push(sql`m.in_state`);
+  if (cohorts) {
+    predicates.push(cohorts.length === 0
+      ? sql`cardinality(m.cohort_ids) = 0`
+      : sql`m.cohort_ids && ${sqlValueWithCodec(cohorts, LIST_TYPES.bigint)}`);
+  }
+  for (const [column, value] of [
+    ['is_trainer', condition.isTrainer],
+    ['is_admin', condition.isAdmin],
+  ] as const) {
+    if (value != null) predicates.push(sql`m.${sql.identifier(column)} = ${sqlValueWithCodec(value, TYPES.boolean)}`);
+  }
+  return predicates.length ? sql`
+    select m.person_id
+    from unnest(${sqlValueWithCodec(states, LIST_TYPES.text)}) s(state)
+    cross join lateral app_private.person_membership_candidates(s.state) m
+    where ${sql.join(predicates, ' and ')}
+  ` : null;
 }
 
 const PersonMembershipConditionTypesPlugin: GraphileConfig.Plugin = {
@@ -126,33 +155,9 @@ const PersonMembershipConditionPlugin = addPgTableCondition(
       type: expectInputType(build, 'PersonMembershipCondition'),
     };
   },
-  (rawValue, { sql, sqlTableAlias: personAlias, sqlValueWithCodec }) => {
-    const condition = expectMembershipCondition(rawValue);
-    if (condition == null) return null;
-
-    const states = condition.states == null
-      ? [expectState(condition.state)]
-      : condition.states.length ? condition.states.map(expectState) : ['current', 'former'];
-    const cohorts = expectCohorts(condition.inCohorts);
-    const predicates: SQL[] = [];
-    if (condition.states != null || condition.state != null) predicates.push(sql`m.in_state`);
-    if (cohorts) {
-      predicates.push(cohorts.length === 0
-        ? sql`cardinality(m.cohort_ids) = 0`
-        : sql`m.cohort_ids && ${sqlValueWithCodec(cohorts, LIST_TYPES.bigint)}`);
-    }
-    for (const [column, value] of [
-      ['is_trainer', condition.isTrainer],
-      ['is_admin', condition.isAdmin],
-    ] as const) {
-      if (value != null) predicates.push(sql`m.${sql.identifier(column)} = ${sqlValueWithCodec(value, TYPES.boolean)}`);
-    }
-    return predicates.length ? sql`${personAlias}.id in (
-      select m.person_id
-      from unnest(${sqlValueWithCodec(states, LIST_TYPES.text)}) s(state)
-      cross join lateral app_private.person_membership_candidates(s.state) m
-      where ${sql.join(predicates, ' and ')}
-    )` : null;
+  (rawValue, { sqlTableAlias: personAlias }) => {
+    const candidates = membershipCandidateIds(rawValue);
+    return candidates ? sql`${personAlias}.id in (${candidates})` : null;
   },
 );
 

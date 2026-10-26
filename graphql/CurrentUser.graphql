@@ -6,7 +6,7 @@ fragment UserAuth on User {
     id
     person {
       ...Person
-      allCouplesList {
+      couplesList {
         ...Couple
       }
     }

@@ -9,13 +9,32 @@ create or replace function event_facets(
   location_ids bigint[] default null
 ) returns table(facet text, value text, count integer)
 language sql stable as $$
-  with candidates as (
+  with mine as (
+    select event_id from event_registration
+    where person_id = any((select current_person_ids())::bigint[])
+      and registration_status = 'active'
+    union all
+    select event_id from event_trainer
+    where person_id = any((select current_person_ids())::bigint[])
+  ), candidates as (
     select i.id, i.type, i.location_id,
       array(select distinct person_id from event_trainer where event_id = i.id) as trainers,
       array(select distinct person_id from event_registration
         where event_id = i.id and registration_status = 'active') as participants
-    from event_instances_for_range(null, start_range, end_range,
-      parent_id => $6, scope => $7) i
+    from event i
+    where i.tenant_id = current_tenant_id()
+      and start_range is not null
+      and app_private.tstzrange_overlaps(i.range, tstzrange(start_range, end_range, '[)'))
+      and case
+        when $6 is not null then i.parent_id = $6
+          and (scope <> 'mine' or i.id in (select event_id from mine))
+        when scope = 'all' then true
+        when scope = 'top_level' then i.parent_id is null
+        when scope = 'mine' then i.id in (select event_id from mine)
+        when scope = 'relevant' then i.parent_id is null
+          or i.id in (select event_id from mine)
+          or i.parent_id in (select event_id from mine)
+      end
   ), matches as (
     select *,
       only_types is null or type = any(only_types) as type_matches,

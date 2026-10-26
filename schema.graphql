@@ -3303,6 +3303,14 @@ input CoupleCondition {
   """Checks for equality with the object’s `manId` field."""
   manId: BigInt
 
+  """
+  Require at least one partner to match the current-tenant person membership condition.
+  """
+  membership: PersonMembershipCondition
+
+  """Match either partner of the couple."""
+  personId: BigInt
+
   """Checks for equality with the object’s `since` field."""
   since: Datetime
 
@@ -10737,22 +10745,42 @@ type Person {
     """The method to use when ordering `Account`."""
     orderBy: [AccountsOrderBy!]
   ): [Account!]!
+
+  """Partnerships involving this person."""
   activeCouplesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
-  ): [Couple!]
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]! @deprecated(reason: "Use couplesList with condition.status: ACTIVE.")
   address: AddressDomain
   ageGroup: String
+
+  """Partnerships involving this person."""
   allCouplesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
     """Only read the first `n` values of the set."""
     first: Int
 
     """Skip the first `n` values."""
     offset: Int
-  ): [Couple!]
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]! @deprecated(reason: "Use couplesList.")
   bio: String!
   birthDate: Date
   cohortIds: [BigInt]
@@ -10793,6 +10821,23 @@ type Person {
 
   """Reads and enables pagination through a set of `Couple`."""
   couplesByWomanIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]!
+
+  """Partnerships involving this person."""
+  couplesList(
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -12009,6 +12054,23 @@ type Query {
 
   """Get a single `Couple`."""
   couple(id: BigInt!): Couple
+
+  """Reads a set of `Couple`."""
+  couplesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]
 
   """Reads and enables pagination through a set of `CrawlerFetchJob`."""
   crawlerFetchJobs(
@@ -14147,13 +14209,6 @@ type Tenant {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]!
-  couplesList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Couple!]
   czDic: String!
   czIco: String!
   description: String!

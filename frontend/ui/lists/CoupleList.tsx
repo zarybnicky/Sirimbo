@@ -19,7 +19,7 @@ export function CoupleList() {
   const [{ data }] = useQuery({ query: CoupleListDocument });
 
   const nodes = React.useMemo(() => {
-    return (data?.getCurrentTenant?.couplesList || []).map((item) => {
+    return (data?.couplesList || []).map((item) => {
       const cohorts = [...new Map(
         [item.man, item.woman]
           .flatMap((person) => person?.cohortMembershipsList ?? [])

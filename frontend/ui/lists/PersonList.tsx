@@ -170,7 +170,7 @@ export function PersonList() {
               item.isAdmin ? 'Správce' : '',
               item.isTrainer ? 'Trenér' : '',
               item.isMember ? 'Člen' : '',
-              ...(item.activeCouplesList ?? []).flatMap((x) =>
+              ...(item.couplesList ?? []).flatMap((x) =>
                 [x.man, x.woman]
                   .filter((x) => x?.id !== item.id)
                   .map((x) => `tančí s ${x?.name}`),

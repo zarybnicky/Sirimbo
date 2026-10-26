@@ -2605,6 +2605,10 @@ export type CoupleCondition = {
   imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `manId` field. */
   manId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Require at least one partner to match the current-tenant person membership condition. */
+  membership?: InputMaybe<PersonMembershipCondition>;
+  /** Match either partner of the couple. */
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -8635,10 +8639,18 @@ export type Person = {
   accessEventsList: Array<AccessEvent>;
   /** Reads and enables pagination through a set of `Account`. */
   accountsList: Array<Account>;
-  activeCouplesList: Maybe<Array<Couple>>;
+  /**
+   * Partnerships involving this person.
+   * @deprecated Use couplesList with condition.status: ACTIVE.
+   */
+  activeCouplesList: Array<Couple>;
   address: Maybe<AddressDomain>;
   ageGroup: Maybe<Scalars['String']['output']>;
-  allCouplesList: Maybe<Array<Couple>>;
+  /**
+   * Partnerships involving this person.
+   * @deprecated Use couplesList.
+   */
+  allCouplesList: Array<Couple>;
   bio: Scalars['String']['output'];
   birthDate: Maybe<Scalars['Date']['output']>;
   cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
@@ -8648,6 +8660,8 @@ export type Person = {
   couplesByManIdList: Array<Couple>;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesByWomanIdList: Array<Couple>;
+  /** Partnerships involving this person. */
+  couplesList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
   cstsId: Maybe<Scalars['Int']['output']>;
   email: Maybe<Scalars['String']['output']>;
@@ -8752,14 +8766,18 @@ export type PersonAccountsListArgs = {
 
 
 export type PersonActiveCouplesListArgs = {
+  condition?: InputMaybe<CoupleCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
 export type PersonAllCouplesListArgs = {
+  condition?: InputMaybe<CoupleCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
@@ -8780,6 +8798,14 @@ export type PersonCouplesByManIdListArgs = {
 
 
 export type PersonCouplesByWomanIdListArgs = {
+  condition?: InputMaybe<CoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
+export type PersonCouplesListArgs = {
   condition?: InputMaybe<CoupleCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -9400,6 +9426,8 @@ export type Query = {
   competitions: Maybe<CompetitionConnection>;
   /** Get a single `Couple`. */
   couple: Maybe<Couple>;
+  /** Reads a set of `Couple`. */
+  couplesList: Maybe<Array<Couple>>;
   /** Reads and enables pagination through a set of `CrawlerFetchJob`. */
   crawlerFetchJobs: Maybe<CrawlerFetchJobConnection>;
   /** Get a single `CrawlerIncrementalRange`. */
@@ -9808,6 +9836,15 @@ export type QueryCompetitionsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCoupleArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCouplesListArgs = {
+  condition?: InputMaybe<CoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
@@ -11433,7 +11470,6 @@ export type Tenant = {
   cohortSubscriptionsList: Array<CohortSubscription>;
   /** Reads and enables pagination through a set of `Cohort`. */
   cohortsList: Array<Cohort>;
-  couplesList: Maybe<Array<Couple>>;
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
   description: Scalars['String']['output'];
@@ -11589,12 +11625,6 @@ export type TenantCohortsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortsOrderBy>>;
-};
-
-
-export type TenantCouplesListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -13659,6 +13689,7 @@ export type GraphCacheResolvers = {
     competitionSuggestionsList?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionSuggestionsListArgs, Array<WithTypename<CompetitionSuggestionsRecord> | string>>,
     competitions?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     couple?: GraphCacheResolver<WithTypename<Query>, QueryCoupleArgs, WithTypename<Couple> | string>,
+    couplesList?: GraphCacheResolver<WithTypename<Query>, QueryCouplesListArgs, Array<WithTypename<Couple> | string>>,
     crawlerFetchJobs?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerFetchJobsArgs, WithTypename<CrawlerFetchJobConnection> | string>,
     crawlerIncrementalRange?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerIncrementalRangeArgs, WithTypename<CrawlerIncrementalRange> | string>,
     crawlerIncrementalRanges?: GraphCacheResolver<WithTypename<Query>, QueryCrawlerIncrementalRangesArgs, WithTypename<CrawlerIncrementalRangeConnection> | string>,
@@ -15423,6 +15454,7 @@ export type GraphCacheResolvers = {
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     couplesByManIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByManIdListArgs, Array<WithTypename<Couple> | string>>,
     couplesByWomanIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByWomanIdListArgs, Array<WithTypename<Couple> | string>>,
+    couplesList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     cstsId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Int']['output'] | string>,
     email?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -15737,7 +15769,6 @@ export type GraphCacheResolvers = {
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     cohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortsListArgs, Array<WithTypename<Cohort> | string>>,
-    couplesList?: GraphCacheResolver<WithTypename<Tenant>, TenantCouplesListArgs, Array<WithTypename<Couple> | string>>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     description?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16161,6 +16192,7 @@ export type GraphCacheUpdaters = {
     competitionSuggestionsList?: GraphCacheUpdateResolver<{ competitionSuggestionsList: Maybe<Array<WithTypename<CompetitionSuggestionsRecord>>> }, QueryCompetitionSuggestionsListArgs>,
     competitions?: GraphCacheUpdateResolver<{ competitions: Maybe<WithTypename<CompetitionConnection>> }, QueryCompetitionsArgs>,
     couple?: GraphCacheUpdateResolver<{ couple: Maybe<WithTypename<Couple>> }, QueryCoupleArgs>,
+    couplesList?: GraphCacheUpdateResolver<{ couplesList: Maybe<Array<WithTypename<Couple>>> }, QueryCouplesListArgs>,
     crawlerFetchJobs?: GraphCacheUpdateResolver<{ crawlerFetchJobs: Maybe<WithTypename<CrawlerFetchJobConnection>> }, QueryCrawlerFetchJobsArgs>,
     crawlerIncrementalRange?: GraphCacheUpdateResolver<{ crawlerIncrementalRange: Maybe<WithTypename<CrawlerIncrementalRange>> }, QueryCrawlerIncrementalRangeArgs>,
     crawlerIncrementalRanges?: GraphCacheUpdateResolver<{ crawlerIncrementalRanges: Maybe<WithTypename<CrawlerIncrementalRangeConnection>> }, QueryCrawlerIncrementalRangesArgs>,
@@ -18007,6 +18039,7 @@ export type GraphCacheUpdaters = {
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCohortMembershipsListArgs>,
     couplesByManIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByManIdListArgs>,
     couplesByWomanIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByWomanIdListArgs>,
+    couplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
@@ -18321,7 +18354,6 @@ export type GraphCacheUpdaters = {
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortMembershipsListArgs>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortSubscriptionsListArgs>,
     cohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortsListArgs>,
-    couplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCouplesListArgs>,
     czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     description?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,

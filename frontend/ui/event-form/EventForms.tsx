@@ -76,7 +76,7 @@ function useEventFormOptions(
     }
     for (const couple of [
       ...(savedRegistrations ?? []).map((x) => x.couple),
-      ...(tenant?.couplesList ?? []).filter((x) => x.status === 'ACTIVE'),
+      ...(query.data?.couplesList ?? []),
     ]) {
       if (!couple) continue;
       participants.set(`couple:${couple.id}`, {

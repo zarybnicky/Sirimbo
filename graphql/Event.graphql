@@ -454,17 +454,17 @@ query EventFormOptions($forRegistration: Boolean! = false) {
         }
       }
     }
-    couplesList {
+  }
+  couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) {
+    id
+    status
+    man {
       id
-      status
-      man {
-        id
-        name
-      }
-      woman {
-        id
-        name
-      }
+      name
+    }
+    woman {
+      id
+      name
     }
   }
 }

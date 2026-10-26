@@ -26,7 +26,8 @@ function participantPredicate(
   column: SQL,
   scope?: ParticipantCondition | null,
 ): SQL | null {
-  const { personIds, coupleId, cohortId } = scope ?? {};
+  if (scope == null) return null;
+  const { personIds, coupleId, cohortId } = scope;
   if (personIds?.length === 0) return sql`false`;
 
   const people = [];

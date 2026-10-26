@@ -42,7 +42,10 @@ const legacyFields: Record<string, Record<string, string>> = {
     instanceId: 'eventId',
     eventLessonDemandsByRegistrationIdList: 'lessonRequestsList',
   },
-  Person: { eventInstanceRegistrationsList: 'eventRegistrationsList' },
+  Person: {
+    eventInstanceRegistrationsList: 'eventRegistrationsList',
+    allCouplesList: 'couplesList',
+  },
   SaveEventsPayload: { eventInstances: 'result' },
   UpsertAnnouncementPayload: { announcement: 'result' },
   UpdateEventPayload: { eventInstance: 'event' },
@@ -54,7 +57,7 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
   schema: {
     hooks: {
       GraphQLObjectType_fields: {
-        after: ['PgRelationsPlugin', 'PgMutationUpdateDeletePlugin', 'PgCustomTypeFieldPlugin'],
+        after: ['PgRelationsPlugin', 'PgMutationUpdateDeletePlugin', 'PgCustomTypeFieldPlugin', 'PersonCouplesPlugin'],
         callback(fields, build, { Self }) {
           const { GraphQLInputObjectType, GraphQLNonNull, getNamedType, isInputObjectType } =
             build.graphql;
@@ -91,6 +94,26 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
             };
           }
           if (Self.name === 'Person') {
+            const couples = fields.couplesList;
+            const couplesPlan = couples.extensions?.grafast?.plan;
+            if (!couplesPlan) throw new Error('Expected person couplesList plan.');
+            fields = build.extend(fields, {
+              activeCouplesList: {
+                ...couples,
+                deprecationReason: 'Use couplesList with condition.status: ACTIVE.',
+                extensions: {
+                  ...couples.extensions,
+                  grafast: {
+                    ...couples.extensions?.grafast,
+                    plan($person, args, info) {
+                      const $couples = couplesPlan($person, args, info) as PgSelectStep;
+                      $couples.where(sql`${$couples.alias}.status = 'active'`);
+                      return $couples;
+                    },
+                  },
+                },
+              },
+            }, 'Legacy person partnerships.');
             const query = build.getTypeByName('Query');
             if (!build.graphql.isObjectType(query)) throw new Error('Expected Query object type.');
             const canonical = query.toConfig().fields.competitions;

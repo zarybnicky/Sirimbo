@@ -69,7 +69,7 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
     .filter((person) => !person.isExternal)
     .map((person) => person.id));
   const couples = isManager
-    ? (query.data?.tenant?.couplesList ?? [])
+    ? (query.data?.couplesList ?? [])
     : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
         (c) => c.status === 'ACTIVE',
       );

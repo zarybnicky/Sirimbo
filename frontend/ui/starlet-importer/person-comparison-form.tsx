@@ -90,7 +90,7 @@ type Person = {
   isMember: boolean | null;
   isTrainer: boolean | null;
   isAdmin: boolean | null;
-  activeCouplesList:
+  couplesList:
     | {
         id: string;
         man: {

@@ -338,6 +338,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       createCouple(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.couple.manId });
         cache.invalidate({ __typename: 'Person', id: args.input.couple.womanId });
+        invalidateQueryFields(cache, ['couplesList']);
+      },
+      updateCouple(_result, _args, cache) {
+        invalidateQueryFields(cache, ['couplesList']);
       },
       createCohortMembership(_result, args, cache, _info) {
         cache.invalidate({
@@ -392,6 +396,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deleteCouple(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Couple', id: args.input.id });
+        invalidateQueryFields(cache, ['couplesList']);
       },
       deleteCohortMembership(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'CohortMembership', id: args.input.id });

@@ -123,7 +123,7 @@ const authHelpersAtom = atom<AuthState>((get) => {
     isMember: auth.isMember || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin,
     user,
     persons,
-    couples: persons.flatMap((x) => x.allCouplesList || []),
+    couples: persons.flatMap((x) => x.couplesList || []),
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
     isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
     canManageInstance: (instance) =>

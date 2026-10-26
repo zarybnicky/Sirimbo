@@ -80,7 +80,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         />
       </div>
 
-      {item.allCouplesList
+      {item.couplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
         ?.map((couple) => (
           <CoupleRow key={couple.id} item={couple} />
