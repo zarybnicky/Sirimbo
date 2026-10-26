@@ -1,7 +1,8 @@
-import { Coins, Link2, MailPlus, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
+import { Coins, Link2, LockKeyhole, MailPlus, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
+import { ChangePasswordForm } from '@/ui/forms/ChangePasswordForm';
 import { defineActions } from '@/lib/actions';
 import { CreateCreditTransactionForm } from '@/ui/forms/CreateCreditTransactionForm';
 import {
@@ -41,6 +42,14 @@ export const personActions = defineActions<PersonActionItem>()([
       className: 'sm:max-w-2xl',
       onPointerDownOutside: (e) => e.preventDefault(),
     },
+  },
+  {
+    id: 'person.changePassword',
+    group: 'primary',
+    label: 'Změnit heslo',
+    icon: LockKeyhole,
+    visible: ({ auth, item }) => auth.isMyPerson(item.id),
+    render: () => <ChangePasswordForm />,
   },
   {
     id: 'person.createCreditTransaction',

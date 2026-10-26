@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '@/lib/cn';
 import { EditableImage } from '@/ui/EditableImage';
 import { typographyCls } from '@/ui/style';
 import Link, { LinkProps } from 'next/link';
@@ -13,7 +14,7 @@ type PageHeaderProps<Id extends string = string> = {
   primaryVariant?: 'primary' | 'outline';
   groups?: Record<'add', Id[]>;
   breadcrumbs?: { label: string; href: LinkProps['href'] }[];
-  title: string;
+  title: React.ReactNode;
   breadcrumbLabel?: string;
   subtitle?: React.ReactNode;
   imageUrl?: string | null;
@@ -23,7 +24,7 @@ type PageHeaderProps<Id extends string = string> = {
 export function PageHeader<Id extends string = string>({
   breadcrumbs,
   title,
-  breadcrumbLabel = title,
+  breadcrumbLabel = typeof title === 'string' ? title : undefined,
   subtitle,
   imageUrl,
   onEditImage,
@@ -34,6 +35,7 @@ export function PageHeader<Id extends string = string>({
   variant = 'heading',
 }: PageHeaderProps<Id>) {
   const parent = breadcrumbs?.at(-1);
+  const hasImage = !!(imageUrl || onEditImage);
 
   return (
     <div className="my-4 min-w-0">
@@ -86,28 +88,33 @@ export function PageHeader<Id extends string = string>({
 
         <div
           data-page-title
-          className="order-first flex min-w-0 max-w-full items-center gap-4"
+          className={cn(
+            'order-first min-w-0 max-w-full',
+            hasImage && 'grid basis-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1',
+          )}
         >
-          <div className="min-w-0 flex-1">
-            <h1
-              className={typographyCls({
-                variant,
-                spacing: 'default',
-                className: 'min-w-0 max-w-full wrap-anywhere',
-              })}
-            >
-              {title}
-            </h1>
-            {(imageUrl || onEditImage) && subtitle && (
-              <div className="mt-1 text-sm text-accent-12">{subtitle}</div>
-            )}
-          </div>
-          <EditableImage
-            src={imageUrl}
-            onEdit={onEditImage}
-            className="max-h-28 max-w-28 sm:max-h-32 sm:max-w-40"
-            sizes="160px"
-          />
+          <h1
+            className={typographyCls({
+              variant,
+              spacing: 'default',
+              className: 'col-span-full min-w-0 max-w-full wrap-anywhere sm:col-span-1',
+            })}
+          >
+            {title}
+          </h1>
+          {hasImage && subtitle && (
+            <div className="col-start-1 row-start-2 min-w-0 text-sm text-accent-12">{subtitle}</div>
+          )}
+          {hasImage && (
+            <div className="col-start-2 row-start-2 sm:row-span-2 sm:row-start-1">
+              <EditableImage
+                src={imageUrl}
+                onEdit={onEditImage}
+                className="max-h-28 max-w-28 sm:max-h-32 sm:max-w-40"
+                sizes="160px"
+              />
+            </div>
+          )}
         </div>
 
         {!!actions?.length && (
@@ -121,7 +128,7 @@ export function PageHeader<Id extends string = string>({
         )}
       </div>
 
-      {!imageUrl && !onEditImage && subtitle && (
+      {!hasImage && subtitle && (
         <div className="mt-1 text-sm text-accent-12">{subtitle}</div>
       )}
     </div>

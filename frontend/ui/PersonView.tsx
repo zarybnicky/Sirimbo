@@ -29,9 +29,11 @@ import { useMutation, useQuery } from 'urql';
 export const PersonView = React.memo(function PersonView({
   id,
   parent,
+  renderTitle,
 }: {
   id: string;
   parent?: { label: string; href: string };
+  renderTitle?: (title: string) => React.ReactNode;
 }) {
   const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
@@ -164,7 +166,7 @@ export const PersonView = React.memo(function PersonView({
       <PageHeader
         imageUrl={item.image?.url}
         onEditImage={isAdminOrCurrentPerson ? () => setEditingImage(true) : undefined}
-        title={item.name}
+        title={renderTitle ? renderTitle(item.name) : item.name}
         breadcrumbLabel="Člen"
         breadcrumbs={parent ? [parent] : undefined}
         subtitle={
