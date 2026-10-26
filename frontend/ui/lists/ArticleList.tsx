@@ -1,8 +1,8 @@
+import { ListItem } from '@/ui/ListItem';
 import { ArticlesDocument } from '@/graphql/Articles';
 import { TextField } from '@/ui/fields/text';
 import { fullDateFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/lib/cn';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import Link from 'next/link';
@@ -49,28 +49,20 @@ export function ArticleList() {
 
       <div className="grow h-full overflow-y-auto scrollbar">
         {fuzzy.map((item) => (
-          <Link
+          <ListItem
             key={item.id}
             href={`/aktuality/${item.id}`}
-            className={buttonCls({
-              variant: currentId === item.id ? 'primary' : 'outline',
-              display: 'none',
-              className: 'pl-5 m-1 mt-0 grid',
-            })}
-          >
-            <div>{item.atJmeno}</div>
-            <div
-              className={cn(
-                'text-sm',
-                currentId === item.id ? 'text-white' : 'text-neutral-11',
-              )}
-            >
-              {item.publishedAt
-                ? fullDateFormatter.format(new Date(item.publishedAt))
-                : 'Koncept'}
-              {!item.isVisible && item.publishedAt ? ', skrytý' : ''}
-            </div>
-          </Link>
+            title={item.atJmeno}
+            selected={currentId === item.id}
+            subtitle={
+              <>
+                {item.publishedAt
+                  ? fullDateFormatter.format(new Date(item.publishedAt))
+                  : 'Koncept'}
+                {!item.isVisible && item.publishedAt ? ', skrytý' : ''}
+              </>
+            }
+          />
         ))}
       </div>
     </div>

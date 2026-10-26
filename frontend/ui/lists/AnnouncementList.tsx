@@ -1,3 +1,4 @@
+import { ListItem } from '@/ui/ListItem';
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/lib/auth';
 import {
@@ -7,7 +8,6 @@ import {
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
 import { buttonCls } from '@/ui/style';
-import { cn } from '@/lib/cn';
 import { SubmitButton } from '@/ui/submit';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -156,35 +156,22 @@ function AnnouncementListPage({
   return (
     <>
       {fuzzy.map((item) => (
-        <Link
+        <ListItem
           key={item.id}
           href={item.href}
-          className={buttonCls({
-            variant: currentId === item.id ? 'primary' : 'outline',
-            display: 'none',
-            className: 'pl-5 m-1 mt-0 grid',
-          })}
-        >
-          <div className="flex items-center gap-2">
-            <span>{item.title}</span>
-            <AnnouncementStatusBadge
-              status={item.status}
-              className={
-                currentId === item.id
-                  ? 'border-white/50 bg-white/15 text-white'
-                  : undefined
-              }
-            />
-          </div>
-          <div
-            className={cn(
-              'text-sm',
-              currentId === item.id ? 'text-white' : 'text-neutral-11',
-            )}
-          >
-            {item.subtitle}
-          </div>
-        </Link>
+          selected={currentId === item.id}
+          wrap
+          title={
+            <div className="flex flex-wrap items-center gap-2">
+              <span>{item.title}</span>
+              <AnnouncementStatusBadge
+                status={item.status}
+                className={currentId === item.id ? 'border-white/50 bg-white/15 text-white' : undefined}
+              />
+            </div>
+          }
+          subtitle={item.subtitle}
+        />
       ))}
       {hasMore && onLoadMore && (
         <div className="p-2 flex justify-center">

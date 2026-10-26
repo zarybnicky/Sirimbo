@@ -130,6 +130,20 @@ query CoupleList {
     couplesList {
       ...Couple
       ageGroup
+      man {
+        id
+        cohortMembershipsList(condition: { status: ACTIVE }) {
+          id
+          cohort { ...CohortBasic }
+        }
+      }
+      woman {
+        id
+        cohortMembershipsList(condition: { status: ACTIVE }) {
+          id
+          cohort { ...CohortBasic }
+        }
+      }
     }
   }
 }

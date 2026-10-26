@@ -207,9 +207,11 @@ query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, 
       cohortIds
       cohortMembershipsList {
         id
+        status
         cohort {
           id
           name
+          colorRgb
         }
       }
       activeCouplesList {

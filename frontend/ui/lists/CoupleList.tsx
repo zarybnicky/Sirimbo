@@ -1,4 +1,4 @@
-import Image from '@/ui/Image';
+import { ListItem } from '@/ui/ListItem';
 import { Users } from 'lucide-react';
 import { CoupleListDocument } from '@/graphql/Memberships';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -11,8 +11,6 @@ import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import Link from 'next/link';
-import { buttonCls } from '@/ui/style';
 
 export function CoupleList() {
   const currentId = useParams<{ id?: string }>()?.id;
@@ -21,17 +19,28 @@ export function CoupleList() {
   const [{ data }] = useQuery({ query: CoupleListDocument });
 
   const nodes = React.useMemo(() => {
-    return (data?.getCurrentTenant?.couplesList || []).map((item) => ({
-      id: item.id,
-      image: item.image,
-      title: formatCoupleName(item),
-      ageGroup: formatAgeGroup(item.ageGroup),
-      href: `/pary/${item.id}`,
-    }));
+    return (data?.getCurrentTenant?.couplesList || []).map((item) => {
+      const cohorts = [...new Map(
+        [item.man, item.woman]
+          .flatMap((person) => person?.cohortMembershipsList ?? [])
+          .flatMap((membership) => membership.cohort
+            ? [[membership.cohort.id, membership.cohort] as const]
+            : []),
+      ).values()];
+      return {
+        id: item.id,
+        image: item.image,
+        title: formatCoupleName(item),
+        ageGroup: formatAgeGroup(item.ageGroup),
+        href: `/pary/${item.id}`,
+        cohortNames: cohorts.map((cohort) => cohort.name).join(', '),
+        cohortColors: cohorts.map((cohort) => cohort.colorRgb),
+      };
+    });
   }, [data]);
 
   const [search, setSearch] = React.useState('');
-  const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
+  const fuzzy = useFuzzySearch(nodes, ['id', 'title', 'cohortNames'], search);
 
   return (
     <div className="flex flex-col h-full">
@@ -58,34 +67,16 @@ export function CoupleList() {
 
       <div className="grow h-full overflow-y-auto scrollbar">
         {fuzzy.map((item) => (
-          <Link
+          <ListItem
             key={item.id}
             href={item.href}
-            className={buttonCls({
-              variant: currentId === item.id ? 'primary' : 'outline',
-              display: 'none',
-              size: 'none',
-              className: 'm-1 mt-0 flex items-center gap-2 rounded-xl p-1.5 px-2 text-sm',
-            })}
-          >
-            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
-              {item.image ? (
-                <Image
-                  src={item.image.url}
-                  alt=""
-                  width={40}
-                  height={40}
-                  className="size-10 object-cover"
-                />
-              ) : (
-                <Users className="size-5" aria-hidden="true" />
-              )}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate">{item.title}</div>
-              {item.ageGroup && <div className="truncate text-xs">{item.ageGroup}</div>}
-            </div>
-          </Link>
+            title={item.title}
+            subtitle={item.ageGroup}
+            selected={currentId === item.id}
+            imageUrl={item.image?.url}
+            icon={<Users className="size-5" />}
+            colors={item.cohortColors}
+          />
         ))}
       </div>
     </div>

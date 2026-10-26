@@ -1,4 +1,4 @@
-import Image from '@/ui/Image';
+import { ListItem } from '@/ui/ListItem';
 import { UserRound } from 'lucide-react';
 import { TextField } from '@/ui/fields/text';
 import React from 'react';
@@ -6,12 +6,10 @@ import { PersonFacetsDocument, PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useClient, useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
-import Link from 'next/link';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/lib/auth';
 import { buttonCls } from '@/ui/style';
 import { useSessionStorage } from '@/lib/useSessionStorage';
-import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import { useParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
@@ -63,23 +61,23 @@ export function PersonList() {
         compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
       )
       .map((item) => {
-        const cohort = cohorts?.cohortsList?.find((x) =>
-          (item.cohortIds || []).includes(x.id),
+        const activeCohorts = item.cohortMembershipsList.flatMap((x) =>
+          x.status === 'ACTIVE' && x.cohort ? [x.cohort] : [],
         );
         return {
           yearOfBirth: item.birthDate
             ? new Date(item.birthDate).getFullYear()
             : undefined,
-          cohort: cohort?.name,
-          cohortColor: cohort?.colorRgb,
+          cohortNames: activeCohorts.map((x) => x.name).join(', '),
+          cohortColors: activeCohorts.map((x) => x.colorRgb),
           ...item,
         };
       });
-  }, [data, cohorts]);
+  }, [data]);
 
   const fuzzy = useFuzzySearch(
     nodes,
-    ['id', 'name', 'cohort', 'phone', 'email', 'yearOfBirth'],
+    ['id', 'name', 'cohortNames', 'phone', 'email', 'yearOfBirth'],
     search || '',
   );
 
@@ -163,56 +161,26 @@ export function PersonList() {
 
       <div className="grow h-full overflow-y-auto scrollbar">
         {fuzzy.map((item) => (
-          <Link
+          <ListItem
             key={item.id}
             href={tab ? `/clenove/${item.id}?tab=${tab}` : `/clenove/${item.id}`}
-            className={cn(
-              'relative p-1.5 pl-6 mb-1 mr-1 rounded-lg flex items-center gap-2',
-              id === item.id
-                ? 'font-semibold bg-accent-9 text-white shadow-md'
-                : 'bg-accent-2 border border-accent-5 hover:bg-accent-4',
-            )}
-          >
-            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
-              {item.image ? (
-                <Image
-                  src={item.image.url}
-                  alt=""
-                  width={40}
-                  height={40}
-                  className="size-10 object-cover"
-                />
-              ) : (
-                <UserRound className="size-5" aria-hidden="true" />
-              )}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate">{item.name}</div>
-            <div
-              className={cn('truncate text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}
-            >
-              {[
-                item.yearOfBirth,
-                item.isAdmin ? 'Správce' : '',
-                item.isTrainer ? 'Trenér' : '',
-                item.isMember ? 'Člen' : '',
-                ...(item.activeCouplesList ?? []).flatMap((x) =>
-                  [x.man, x.woman]
-                    .filter((x) => x?.id !== item.id)
-                    .map((x) => `tančí s ${x?.name}`),
-                ),
-              ]
-                .filter(Boolean)
-                .join(', ')}
-              </div>
-            </div>
-            <div
-              className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-xs inset-y-0 left-0"
-              style={{
-                backgroundColor: item.cohortColor || '#fff',
-              }}
-            />
-          </Link>
+            title={item.name}
+            subtitle={[
+              item.yearOfBirth,
+              item.isAdmin ? 'Správce' : '',
+              item.isTrainer ? 'Trenér' : '',
+              item.isMember ? 'Člen' : '',
+              ...(item.activeCouplesList ?? []).flatMap((x) =>
+                [x.man, x.woman]
+                  .filter((x) => x?.id !== item.id)
+                  .map((x) => `tančí s ${x?.name}`),
+              ),
+            ].filter(Boolean).join(', ')}
+            selected={id === item.id}
+            imageUrl={item.image?.url}
+            icon={<UserRound className="size-5" />}
+            colors={item.cohortColors.length > 0 ? item.cohortColors : ['#fff']}
+          />
         ))}
       </div>
     </div>
