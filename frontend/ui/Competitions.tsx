@@ -391,7 +391,7 @@ export function CompetitionHistory({
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionsDocument,
     variables: (offset): CompetitionsQueryVariables => ({
-      condition: { participation: { participant } },
+      condition: { participant },
       entryCondition: { participant },
       resultCondition: { participant },
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
@@ -758,7 +758,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     query: CompetitionsDocument,
     variables: (offset) => ({
       offset,
-      condition: { participation: { participant, date } },
+      condition: { participant, date },
       entryCondition: { participant },
       resultCondition: { participant },
     }),
@@ -769,7 +769,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   const [{ data: clubData, fetching: clubFetching }] = useQuery({
     query: CompetitionsDocument,
     variables: {
-      condition: { participation: { participant: {}, date } },
+      condition: { participant: {}, date },
       first: 100,
       orderBy: ['START_DATE_ASC', 'ID_ASC'],
       withDetails: false,

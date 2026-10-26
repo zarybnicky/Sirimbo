@@ -1,4 +1,5 @@
-import { constant } from 'postgraphile/grafast';
+import { sql, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
+import { constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
 export const LegacyShimsPlugin = extendSchema({
@@ -88,6 +89,51 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
                 deprecationReason: `Use ${canonical}.`,
               },
             };
+          }
+          if (Self.name === 'Person') {
+            const query = build.getTypeByName('Query');
+            if (!build.graphql.isObjectType(query)) throw new Error('Expected Query object type.');
+            const canonical = query.toConfig().fields.competitions;
+            const plan = canonical.extensions?.grafast?.plan;
+            if (!plan) throw new Error('Expected competitions plan.');
+
+            const field: GrafastFieldConfig<PgSelectSingleStep> = {
+              ...canonical,
+              type: new build.graphql.GraphQLNonNull(build.graphql.getNullableType(canonical.type)),
+              description: 'Competitions entered by this person, across federations.',
+              deprecationReason: 'Use competitions with condition.participant.personIds.',
+              args: {
+                ...canonical.args,
+                first: {
+                  ...canonical.args!.first,
+                  defaultValue: 30,
+                  // The field plan applies first so last can override its default.
+                  applyPlan: () => undefined,
+                },
+              },
+              extensions: { ...canonical.extensions, boundedPagination: true },
+              plan($person, args, info) {
+                const $connection = plan($person, args, info) as ConnectionStep<unknown>;
+                $connection.setFirst(lambda([args.$first, args.$last], ([first, last]) =>
+                  last == null ? first ?? 30 : null));
+                const $competitions = $connection.getSubplan() as PgSelectStep;
+                const personId = $competitions.placeholder($person.get('id'));
+                $competitions.where(sql`${$competitions.alias}.id = any(array(
+                  select participation.competition_id
+                  from federated.competition_participation participation
+                  where participation.competitor_id = any(array(
+                    select component.competitor_id
+                    from public.person_federation_link link
+                    join federated.person person
+                      on (person.federation, person.external_id) = (link.federation, link.external_id)
+                    join federated.competitor_component component on component.person_id = person.id
+                    where link.person_id = ${personId}
+                  ))
+                ))`);
+                return $connection;
+              },
+            };
+            fields = build.extend(fields, { federationCompetitions: field }, 'Legacy person competitions.');
           }
           return fields;
         },

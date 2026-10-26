@@ -36,9 +36,12 @@ function checkQueryLimits(
       const field = typeInfo.getFieldDef();
       if (!field?.extensions.boundedPagination) return;
       const args = getArgumentValues(field, node, values.coerced);
+      const first = args.first ?? (args.last == null
+        ? field.args.find((arg) => arg.name === 'first')?.defaultValue
+        : null);
       if (
-        (args.first == null && args.last == null) ||
-        [args.first, args.last].some(
+        (first == null && args.last == null) ||
+        [first, args.last].some(
           (value) => value != null && (typeof value !== 'number' || value < 0 || value > 300),
         )
       ) {

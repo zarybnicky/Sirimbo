@@ -34,9 +34,9 @@ export type CompetitionCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: string | null | undefined;
   officialPersonId?: string | null | undefined;
+  participant?: CompetitionParticipantCondition | null | undefined;
   /** Checks for equality with the object’s `participantsTotal` field. */
   participantsTotal?: number | null | undefined;
-  participation?: CompetitionParticipationFilter | null | undefined;
   /** Checks for equality with the object’s `registrationFee` field. */
   registrationFee?: string | null | undefined;
   /** Checks for equality with the object’s `startDate` field. */
@@ -78,11 +78,6 @@ export type CompetitionParticipantCondition = {
   coupleId?: string | null | undefined;
   /** Local person IDs. An empty list matches nobody. */
   personIds?: Array<string> | null | undefined;
-};
-
-export type CompetitionParticipationFilter = {
-  date?: CompetitionDateCondition | null | undefined;
-  participant?: CompetitionParticipantCondition | null | undefined;
 };
 
 /**

@@ -1,4 +1,4 @@
-import { sqlValueWithCodec, TYPES } from 'postgraphile/@dataplan/pg';
+import { sqlValueWithCodec, TYPES, type PgCondition } from 'postgraphile/@dataplan/pg';
 import { sql, type SQL } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
@@ -12,6 +12,15 @@ type DateCondition = {
   since?: string | null;
   until?: string | null;
 };
+
+declare global {
+  namespace DataplanPg {
+    interface PgConditionExtensions {
+      competitionDate?: DateCondition | null;
+      competitionParticipant?: boolean;
+    }
+  }
+}
 
 function participantPredicate(
   column: SQL,
@@ -84,10 +93,6 @@ const plugins: GraphileConfig.Plugin[] = [
         """Require a current member of this local cohort."""
         cohortId: BigInt
       }
-      input CompetitionParticipationFilter {
-        participant: CompetitionParticipantCondition
-        date: CompetitionDateCondition
-      }
       input CompetitionDateCondition {
         """Inclusive event or competition start date."""
         since: Date
@@ -98,29 +103,31 @@ const plugins: GraphileConfig.Plugin[] = [
   }),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition' },
-    'participation',
-    (build) => ({ type: build.getInputTypeByName('CompetitionParticipationFilter') }),
-    (value, { sqlTableAlias: row }) => {
-      if (value == null) return null;
-      const { participant, date } = value as {
-        participant?: ParticipantCondition | null;
-        date?: DateCondition | null;
-      };
-      const dates = datePredicate(sql`c.start_date`, date);
-      const predicates = [
-        participantPredicate(sql`p.competitor_id`, participant),
-        // Resolve the window before scanning participation, using its composite indexes.
-        dates
-          ? sql`p.competition_id = any(array(
-          select c.id from federated.competition c where ${dates}
-        ))`
-          : null,
-      ].filter((predicate) => predicate !== null);
-      return sql`${row}.id = any(array(
-        select p.competition_id from federated.competition_participation p
-        ${predicates.length ? sql`where ${sql.join(predicates, ' and ')}` : sql``}
-      ))`;
-    },
+    'participant',
+    (build) => ({
+      type: build.getInputTypeByName('CompetitionParticipantCondition'),
+      apply(condition: PgCondition, value: ParticipantCondition | null) {
+        if (value == null) return;
+        const row = condition.alias;
+        condition.extensions.competitionParticipant = true;
+        // Compile after sibling conditions have been applied, so the flat date
+        // filter can still restrict participation before scanning its history.
+        condition.where(() => {
+          const predicates = [
+            participantPredicate(sql`p.competitor_id`, value as ParticipantCondition),
+          ];
+          const dates = datePredicate(sql`c.start_date`, condition.extensions.competitionDate);
+          if (dates) predicates.push(sql`p.competition_id = any(array(
+            select c.id from federated.competition c where ${dates}
+          ))`);
+          const filters = predicates.filter((predicate) => predicate !== null);
+          return sql`${row}.id = any(array(
+            select p.competition_id from federated.competition_participation p
+            ${filters.length ? sql`where ${sql.join(filters, ' and ')}` : sql``}
+          ))`;
+        });
+      },
+    }),
   ),
   ...(['competition_entry', 'competition_result'] as const).map((tableName) =>
     addPgTableCondition(
@@ -138,9 +145,17 @@ const plugins: GraphileConfig.Plugin[] = [
     addPgTableCondition(
       { schemaName: 'federated', tableName },
       'date',
-      (build) => ({ type: build.getInputTypeByName('CompetitionDateCondition') }),
-      (value, { sqlTableAlias: row }) =>
-        datePredicate(sql`${row}.start_date`, value as DateCondition | null),
+      (build) => ({
+        type: build.getInputTypeByName('CompetitionDateCondition'),
+        apply(condition: PgCondition, value: DateCondition | null) {
+          const predicate = datePredicate(sql`${condition.alias}.start_date`, value);
+          if (tableName === 'competition') {
+            condition.extensions.competitionDate = value;
+            if (predicate) condition.where(() => condition.extensions.competitionParticipant
+              ? sql`true` : predicate);
+          } else if (predicate) condition.where(predicate);
+        },
+      }),
     ),
   ),
 ];
