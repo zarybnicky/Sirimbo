@@ -1,4 +1,4 @@
-import { TYPES } from 'postgraphile/@dataplan/pg';
+import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type CategoryProgressCondition = {
@@ -76,32 +76,16 @@ const plugins: GraphileConfig.Plugin[] = [
     (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
       if (value == null) return null;
       const { ageGroups, classes, disciplines } = value as CategoryProgressCondition;
-      const predicates = (
-        [
-          ['age_group_code', ageGroups],
-          ['class', classes],
-          ['discipline', disciplines],
-        ] as const
-      ).flatMap(([column, values]) =>
-        values?.length
-          ? [
-              sql`cat.${sql.identifier(column)} in (${sql.join(
-                values.map((v) =>
-                  column === 'age_group_code'
-                    ? sql`federated.resolve_age_group(${sqlValueWithCodec(v, TYPES.text)})`
-                    : sqlValueWithCodec(v, TYPES.text),
-                ),
-                ', ',
-              )})`,
-            ]
-          : [],
-      );
-      if (!predicates.length) return null;
+      if (!ageGroups?.length && !classes?.length && !disciplines?.length) return null;
       return sql`exists (
-          select 1 from federated.competitor_category_progress p
-          join federated.category cat on cat.id = p.category_id
-          where p.competitor_id = ${row}.id and ${sql.join(predicates, ' and ')}
-        )`;
+        select 1 from app_private.competitor_category_candidates(
+          ${sqlValueWithCodec(ageGroups ?? null, LIST_TYPES.text)},
+          ${sqlValueWithCodec(classes ?? null, LIST_TYPES.text)},
+          ${sqlValueWithCodec(disciplines ?? null, LIST_TYPES.text)}
+        ) p
+        where p.competitor_id = ${row}.id
+          and p.age_matches and p.class_matches and p.discipline_matches
+      )`;
     },
   ),
   addPgTableCondition(
@@ -129,12 +113,13 @@ const plugins: GraphileConfig.Plugin[] = [
     (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
       value == null
         ? null
-        : sql`exists (
-      select 1 from federated.competition_result r
-      join federated.competition c on c.id = r.competition_id
-      where r.competitor_id = ${row}.id
-        and c.start_date >= ${sqlValueWithCodec(value, TYPES.date)} and c.start_date <= current_date
-    )`,
+        : sql`${row}.latest_result_at >= ${sqlValueWithCodec(value, TYPES.date)}
+          and (${row}.latest_result_at <= current_date or exists (
+            select 1 from federated.competition_result r
+            join federated.competition c on c.id = r.competition_id
+            where r.competitor_id = ${row}.id
+              and c.start_date >= ${sqlValueWithCodec(value, TYPES.date)} and c.start_date <= current_date
+          ))`,
   ),
   ...(['event', 'person', 'competitor'] as const).map((tableName) =>
     addPgTableCondition(

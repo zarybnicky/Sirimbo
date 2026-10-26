@@ -70,3 +70,6 @@ comment on constraint cohort_image_fk on public.cohort is '@fieldName image';
 create index if not exists cohort_image_idx on public.cohort (tenant_id, image_id) where image_id is not null;
 
 --!include policies/file.sql
+
+--!include functions/competitor_candidates.sql
+--!include functions/federation_competitor_facets.sql
