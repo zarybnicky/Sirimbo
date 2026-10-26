@@ -15,6 +15,8 @@ import competitionParticipantConditionPlugins from './plugins/competition-partic
 import competitionSuggestionConditionPlugins from './plugins/competition-suggestion-condition.ts';
 import federationOrderPlugin from './plugins/federation-order.ts';
 import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
+import eventConditionPlugins from './plugins/event-condition.ts';
+import { EventDetailsPlugin } from './plugins/event-details.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
 import { ApiInflectionPlugin } from './plugins/api-inflection.ts';
 
@@ -33,6 +35,8 @@ const preset: GraphileConfig.Preset = {
     ApiInflectionPlugin,
     currentUserPlugin,
     ...personMembershipConditionPlugin,
+    ...eventConditionPlugins,
+    EventDetailsPlugin,
     ...federationConditionPlugins,
     ...competitionParticipantConditionPlugins,
     ...competitionSuggestionConditionPlugins,

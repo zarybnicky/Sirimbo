@@ -4,6 +4,12 @@ create or replace function app_private.visible_file_ids()
   security definer
   set search_path = pg_catalog, public, pg_temp
 as $$
+  -- Start with cover candidates rather than probing every accessible event.
+  with event_covers as materialized (
+    select id, cover_image_id from event
+    where tenant_id = (select current_tenant_id())
+      and cover_image_id is not null
+  )
   select id
   from file
   where tenant_id = (select current_tenant_id())
@@ -42,11 +48,8 @@ as $$
 
   union all
 
-  select cover_image_id
-  from event
-  where tenant_id = (select current_tenant_id())
-    and cover_image_id is not null
-    and id in (select app_private.accessible_event_ids());
+  select cover_image_id from event_covers
+  where id = any (array(select app_private.accessible_event_ids()));
 $$;
 
 grant execute on function app_private.visible_file_ids() to anonymous;

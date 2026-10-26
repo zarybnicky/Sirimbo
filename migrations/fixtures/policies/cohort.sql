@@ -5,7 +5,4 @@ create policy current_tenant on cohort as restrictive
 create policy admin_all on cohort to administrator
   using (true);
 create policy public_view on cohort for select to anonymous
-  using (is_visible
-     or id in (
-       select cohort_id from event_target_cohort
-       where event_id in (select app_private.accessible_event_ids())));
+  using (is_visible or app_private.cohort_has_accessible_event(id));

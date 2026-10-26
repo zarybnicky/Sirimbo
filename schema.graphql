@@ -5810,15 +5810,19 @@ input EventCondition {
 
   """Checks for equality with the object’s `locationId` field."""
   locationId: BigInt
+  locationIds: [BigInt]
 
   """Checks for equality with the object’s `locationText` field."""
   locationText: String
 
   """Checks for equality with the object’s `name` field."""
   name: String
+  overlaps: EventRangeCondition
 
   """Checks for equality with the object’s `parentId` field."""
   parentId: BigInt
+  participantIds: [BigInt]
+  scope: EventScopeCondition
 
   """Checks for equality with the object’s `seriesId` field."""
   seriesId: BigInt
@@ -5831,9 +5835,11 @@ input EventCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
+  trainerIds: [BigInt]
 
   """Checks for equality with the object’s `type` field."""
   type: EventType
+  types: [EventType!]
 
   """Checks for equality with the object’s `until` field."""
   until: Datetime
@@ -6027,6 +6033,14 @@ input EventPatch {
   type: EventType
   until: Datetime
   updatedAt: Datetime
+}
+
+input EventRangeCondition {
+  """Exclusive end of the time window. Omit for an unbounded end."""
+  end: Datetime
+
+  """Inclusive start of the time window."""
+  start: Datetime!
 }
 
 type EventRegistration {
@@ -6299,6 +6313,11 @@ enum EventRegistrationsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+input EventScopeCondition {
+  mode: EventInstanceRangeScope = ALL
+  parentId: BigInt
 }
 
 type EventSeries {

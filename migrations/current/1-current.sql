@@ -73,3 +73,23 @@ create index if not exists cohort_image_idx on public.cohort (tenant_id, image_i
 
 --!include functions/competitor_candidates.sql
 --!include functions/federation_competitor_facets.sql
+
+--!include functions/cohort_has_accessible_event.sql
+--!include policies/cohort.sql
+
+alter table public.event add column if not exists series_info public.series_info;
+comment on column public.event.series_info is
+  '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+
+drop function if exists public.event_instance_series_info;
+drop function if exists public.event_series_info(public.event);
+
+create or replace trigger _100_timestamps
+  before insert or update on public.event for each row
+  execute function app_private.tg__timestamps('manager_person_ids', 'stats', 'series_info');
+
+--!include functions/event_series_info.sql
+
+select app_private.refresh_event_series_info(array(select id from public.event_series));
+update public.event set series_info = null
+where series_id is null and series_info is distinct from null;

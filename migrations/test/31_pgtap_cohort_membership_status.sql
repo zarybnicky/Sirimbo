@@ -833,7 +833,7 @@ SELECT tap.ok(
       AND info.since = instance.since
       AND info.until = instance.until + interval '2 weeks'
     FROM event instance
-    CROSS JOIN LATERAL event_series_info(instance) info
+    CROSS JOIN LATERAL (SELECT (instance.series_info).*) info
     WHERE instance.id = (SELECT id FROM _scheduled_lesson)
   ),
   'series info reports identity, range, position and length without loading sibling events'
