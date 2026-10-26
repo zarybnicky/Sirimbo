@@ -85,4 +85,15 @@ const preset: GraphileConfig.Preset = {
   ],
 };
 
+export const standalonePreset: GraphileConfig.Preset = {
+  extends: [preset],
+  grafserv: { watch: false, graphiql: false },
+  gather: { installWatchFixtures: false },
+  schema: {
+    exportSchemaSDLPath: undefined,
+    exportSchemaIntrospectionResultPath: undefined,
+    retryOnInitFail: false,
+  },
+};
+
 export default preset;

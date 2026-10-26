@@ -9,19 +9,14 @@ import { postgraphile, type PostGraphileInstance } from 'postgraphile';
 import { grafserv } from 'postgraphile/grafserv/express/v4';
 import { authContext, JWT_SECRET } from '../auth.ts';
 import { pool } from '../db.ts';
-import preset from '../graphile.config.ts';
+import { standalonePreset } from '../graphile.config.ts';
 
 let instance: PostGraphileInstance;
 let server: Server;
 let url: string;
 
 before(async () => {
-  instance = postgraphile({
-    ...preset,
-    grafserv: { ...preset.grafserv, watch: false, graphiql: false },
-    gather: { ...preset.gather, installWatchFixtures: false },
-    schema: { ...preset.schema, exportSchemaSDLPath: undefined, retryOnInitFail: false },
-  });
+  instance = postgraphile(standalonePreset);
   await instance.getSchema();
   const app = express();
   app.use(express.json(), cookieParser(), authContext());
