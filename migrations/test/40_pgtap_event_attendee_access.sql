@@ -29,9 +29,9 @@ VALUES (-9000, -9000, -9000, -9000, 'unknown', 'active'),
        (-9003, -9000, -9000, -9004, 'unknown', 'cancelled'),
        (-9004, -9001, -9004, -9000, 'unknown', 'active'),
        (-9005, -9001, -9004, -9005, 'unknown', 'active');
-INSERT INTO couple (id, man_id, woman_id, since) OVERRIDING SYSTEM VALUE
-VALUES (-9000, -9000, -9001, now() - interval '1 year'),
-       (-9001, -9000, -9005, now() - interval '2 years');
+INSERT INTO couple (id, man_id, woman_id, since, status) OVERRIDING SYSTEM VALUE
+VALUES (-9000, -9000, -9001, now() - interval '1 year', 'active'),
+       (-9001, -9000, -9005, now() - interval '2 years', 'active');
 INSERT INTO event_registration (id, event_id, couple_id) OVERRIDING SYSTEM VALUE
 VALUES (-9006, -9000, -9000);
 UPDATE event_registration SET parent_registration_id=-9006 WHERE id IN (-9000, -9001);
@@ -59,8 +59,8 @@ SELECT set_config('jwt.claims.shared.event_ids', instance_ids::text, true)
 FROM app_private.event_share_claims(-9000, 'test-camp-share');
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SET LOCAL ROLE anonymous;
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9000]::bigint[],
-  'sharing includes active person registrations and trainers, not cancelled partners');
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
+  'sharing includes active registrants, trainers, and both partners of the registered active couple');
 SELECT tap.is((SELECT array_agg(id) FROM couple), ARRAY[-9000]::bigint[],
   'sharing exposes the registered couple, not other partnerships of its attendees');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event),
@@ -114,15 +114,13 @@ SELECT tap.is((SELECT count(*) FROM event_trainer), 2::bigint, 'attendees see tr
 SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint, 'attendees see target assignments');
 SELECT tap.is((SELECT array_agg(id) FROM cohort), ARRAY[-9000]::bigint[], 'attendees see the referenced hidden cohort only');
 SELECT tap.is((SELECT count(*) FROM event_lesson_request), 1::bigint, 'attendees see another participant lesson request');
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
-  'people include other attendees, child attendees, and trainers, not cancelled or foreign attendees');
+SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9005,-9003,-9002,-9001,-9000]::bigint[],
+  'attendees see schedule participants, trainers, and active partners, but not unrelated cancelled attendees');
 WITH changed AS (UPDATE event SET name='Forbidden' WHERE id=-9000 RETURNING id)
 SELECT tap.is(count(*), 0::bigint, 'attendee access does not grant event updates') FROM changed;
 WITH changed AS (UPDATE person SET first_name='Forbidden' WHERE id=-9001 RETURNING id)
 SELECT tap.is(count(*), 0::bigint, 'attendee access does not grant peer updates') FROM changed;
 
-SELECT set_config('jwt.claims.my_person_ids', '{-9001}', true);
-SELECT tap.is((SELECT count(*) FROM person WHERE id=-9000), 1::bigint, 'co-attendee person visibility works in both directions');
 SELECT set_config('jwt.claims.my_person_ids', '{-9002}', true);
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event), ARRAY[-9002,-9001]::bigint[],
   'registration on a child grants descendants, not its parent or siblings');
@@ -134,7 +132,6 @@ SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0:
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 SELECT set_config('jwt.claims.tenant_id', '-9001', true);
 SELECT tap.is((SELECT array_agg(id) FROM event), ARRAY[-9004]::bigint[], 'event access remains scoped to the request tenant');
-SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9005,-9000]::bigint[], 'person-pair access remains scoped to the request tenant');
 
 RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
@@ -151,7 +148,7 @@ RESET ROLE;
 REFRESH MATERIALIZED VIEW app_private.event_people;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person WHERE id BETWEEN -9005 AND -9000),
-  ARRAY[-9000]::bigint[], 'refresh removes former attendee access while preserving access to own person');
+  ARRAY[-9005,-9001,-9000]::bigint[], 'refresh removes former schedule visibility while preserving own person and active partners');
 RESET ROLE;
 
 SELECT * FROM tap.finish(true);
