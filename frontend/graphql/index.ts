@@ -4759,12 +4759,16 @@ export type EventCondition = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `locationId` field. */
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   /** Checks for equality with the object’s `locationText` field. */
   locationText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  overlaps?: InputMaybe<EventRangeCondition>;
   /** Checks for equality with the object’s `parentId` field. */
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
+  participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  scope?: InputMaybe<EventScopeCondition>;
   /** Checks for equality with the object’s `seriesId` field. */
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -4773,8 +4777,10 @@ export type EventCondition = {
   summary?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<EventType>;
+  types?: InputMaybe<Array<EventType>>;
   /** Checks for equality with the object’s `until` field. */
   until?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -4952,6 +4958,13 @@ export type EventPatch = {
   type?: InputMaybe<EventType>;
   until?: InputMaybe<Scalars['Datetime']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventRangeCondition = {
+  /** Exclusive end of the time window. Omit for an unbounded end. */
+  end?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Inclusive start of the time window. */
+  start: Scalars['Datetime']['input'];
 };
 
 export type EventRegistration = {
@@ -5163,6 +5176,11 @@ export type EventRegistrationsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
+
+export type EventScopeCondition = {
+  mode?: InputMaybe<EventInstanceRangeScope>;
+  parentId?: InputMaybe<Scalars['BigInt']['input']>;
+};
 
 export type EventSeries = {
   __typename?: 'EventSeries';

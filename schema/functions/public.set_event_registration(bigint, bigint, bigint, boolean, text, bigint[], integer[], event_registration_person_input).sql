@@ -43,13 +43,8 @@ begin
     raise exception 'INSTANCE_NOT_FOUND' using errcode = '22023';
   end if;
 
-  is_manager := pg_has_role(
-    coalesce(nullif(current_setting('role'), 'none'), session_user), 'administrator', 'member'
-  ) or (
-    pg_has_role(
-      coalesce(nullif(current_setting('role'), 'none'), session_user), 'trainer', 'member'
-    ) and app_private.can_trainer_edit_event(event_id)
-  );
+  is_manager := pg_has_role(current_setting('role'), 'administrator', 'member')
+    or (pg_has_role(current_setting('role'), 'trainer', 'member') and app_private.can_trainer_edit_event(event_id));
 
   if person is distinct from null then
     if nullif(btrim(person.first_name), '') is null

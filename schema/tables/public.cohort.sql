@@ -9,7 +9,8 @@ CREATE TABLE public.cohort (
     is_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     external_ids text[],
-    is_archived boolean DEFAULT false NOT NULL
+    is_archived boolean DEFAULT false NOT NULL,
+    image_id bigint
 );
 
 COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
@@ -24,13 +25,14 @@ ALTER TABLE ONLY public.cohort
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_cohort_group_fkey FOREIGN KEY (tenant_id, cohort_group_id) REFERENCES public.cohort_group(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL;
 ALTER TABLE ONLY public.cohort
+    ADD CONSTRAINT cohort_image_fk FOREIGN KEY (tenant_id, image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (image_id);
+ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY public_view ON public.cohort FOR SELECT TO anonymous USING ((is_visible OR (id IN ( SELECT event_target_cohort.cohort_id
-   FROM public.event_target_cohort
-  WHERE (event_target_cohort.event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids))))));
+CREATE POLICY public_view ON public.cohort FOR SELECT TO anonymous USING ((is_visible OR app_private.cohort_has_accessible_event(id)));
 
 CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
+CREATE INDEX cohort_image_idx ON public.cohort USING btree (tenant_id, image_id) WHERE (image_id IS NOT NULL);
 CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);

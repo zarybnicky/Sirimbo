@@ -13,11 +13,16 @@ CREATE FUNCTION app_private.accessible_event_ids() RETURNS SETOF bigint
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
-  select id from attended
-  union
+  -- Scan events once; their primary key already makes the result unique.
   select id from public.event
   where tenant_id = (select public.current_tenant_id())
-    and id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[]);
+    and (
+      is_public
+      or (is_visible and (select pg_has_role(current_setting('role'), 'member', 'member')))
+      or (manager_person_ids && (select current_person_ids()))
+      or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
+      or id in (select id from attended)
+    );
 $$;
 
 GRANT ALL ON FUNCTION app_private.accessible_event_ids() TO anonymous;

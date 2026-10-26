@@ -22,5 +22,6 @@ CREATE TYPE public.competition_participation_record AS (
 	has_result boolean,
 	competition_type federated.competition_type,
 	event_external_id text,
-	competition_external_id text
+	competition_external_id text,
+	final_gain numeric(10,3)
 );

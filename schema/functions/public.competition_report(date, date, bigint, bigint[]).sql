@@ -1,12 +1,14 @@
 CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('week'::text, now()))::date - 2), p_until date DEFAULT (date_trunc('week'::text, now()))::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
     LANGUAGE sql STABLE
     AS $$
-  with scoped_people as (
+  with scoped_people as materialized (
     select p.id, p.name
     from person p
     where (p.id = any(p_person_ids)
-       or (p_person_ids is null and exists (
-         select 1 from current_tenant_membership where person_id = p.id
+       or (p_person_ids is null and p.id in (
+         select person_id from current_tenant_membership
+         union all select person_id from current_tenant_trainer
+         union all select person_id from current_tenant_administrator
        )))
       and (p_cohort_id is null
        or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
@@ -46,7 +48,8 @@ CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('wee
     true as has_result,
     comp.competition_type,
     e.external_id as event_external_id,
-    comp.external_id as competition_external_id
+    comp.external_id as competition_external_id,
+    cr.final_gain
   from federated_people fp
   join federated.competitor_component cc on cc.person_id = fp.federated_person_id
   join federated.competitor c on c.id = cc.competitor_id

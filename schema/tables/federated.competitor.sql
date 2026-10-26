@@ -9,7 +9,8 @@ CREATE TABLE federated.competitor (
     search_name text GENERATED ALWAYS AS (app_private.normalize_name(name)) STORED,
     external_id text CONSTRAINT competitor_external_id_text_not_null NOT NULL,
     latest_result_at date,
-    latest_entry_at date
+    latest_entry_at date,
+    divisions text[] DEFAULT '{}'::text[] NOT NULL
 );
 
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
@@ -21,6 +22,7 @@ COMMENT ON COLUMN federated.competitor.age_group IS '@behavior -*';
 COMMENT ON COLUMN federated.competitor.age_group_code IS '@name ageGroup
 @behavior -insert -update';
 COMMENT ON COLUMN federated.competitor.search_name IS '@behavior -*';
+COMMENT ON COLUMN federated.competitor.divisions IS '@behavior -filterBy -orderBy';
 
 GRANT SELECT ON TABLE federated.competitor TO anonymous;
 

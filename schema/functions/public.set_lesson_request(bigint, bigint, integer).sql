@@ -26,13 +26,8 @@ begin
 
   is_self := registration.person_id = any(current_person_ids())
     or registration.couple_id = any(current_couple_ids());
-  is_manager := pg_has_role(
-    coalesce(nullif(current_setting('role'), 'none'), session_user), 'administrator', 'member'
-  ) or (
-    pg_has_role(
-      coalesce(nullif(current_setting('role'), 'none'), session_user), 'trainer', 'member'
-    ) and app_private.can_trainer_edit_event(instance.id)
-  );
+  is_manager := pg_has_role(current_setting('role'), 'administrator', 'member')
+    or (pg_has_role(current_setting('role'), 'trainer', 'member') and app_private.can_trainer_edit_event(instance.id));
 
   if not coalesce(is_self, false) and not coalesce(is_manager, false) then
     raise exception 'ACCESS_DENIED' using errcode = '42501';

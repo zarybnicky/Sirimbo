@@ -29,11 +29,19 @@ ALTER TABLE ONLY public.file
 ALTER TABLE ONLY public.file
     ADD CONSTRAINT file_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(id) ON DELETE SET NULL;
 
-CREATE POLICY admin_all ON public.file TO administrator USING (true);
-CREATE POLICY current_tenant ON public.file AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY uploader_manage ON public.file TO trainer USING ((uploaded_by = ( SELECT public.current_user_id() AS current_user_id)));
-CREATE POLICY visible ON public.file FOR SELECT USING ((id IN ( SELECT file.id
-   FROM app_private.visible_file_ids() visible_file_ids(visible_file_ids))));
+CREATE POLICY admin_all ON public.file TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY uploader_manage ON public.file USING (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (uploaded_by = ( SELECT public.current_user_id() AS current_user_id))));
+CREATE POLICY visible ON public.file FOR SELECT USING ((((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (id IN ( SELECT app_private.visible_file_ids() AS visible_file_ids))) OR (id IN ( SELECT person.image_id
+   FROM public.person
+  WHERE (person.image_id IS NOT NULL)
+UNION ALL
+ SELECT couple.image_id
+   FROM public.couple
+  WHERE (couple.image_id IS NOT NULL)
+UNION ALL
+ SELECT cohort.image_id
+   FROM public.cohort
+  WHERE (cohort.image_id IS NOT NULL)))));
 
 CREATE TRIGGER _900_delete_object AFTER DELETE ON public.file FOR EACH ROW EXECUTE FUNCTION app_private.tg_file__delete();
 

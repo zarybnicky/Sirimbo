@@ -1,10 +1,13 @@
 CREATE VIEW federated.competition_participation WITH (security_invoker='true') AS
- SELECT competition_result.competition_id,
-    competition_result.competitor_id
-   FROM federated.competition_result
+ SELECT r.competition_id,
+    r.competitor_id,
+    COALESCE(e.cancelled, false) AS cancelled
+   FROM (federated.competition_result r
+     LEFT JOIN federated.competition_entry e USING (competition_id, competitor_id))
 UNION ALL
  SELECT e.competition_id,
-    e.competitor_id
+    e.competitor_id,
+    e.cancelled
    FROM federated.competition_entry e
   WHERE (NOT (EXISTS ( SELECT 1
            FROM federated.competition_result r

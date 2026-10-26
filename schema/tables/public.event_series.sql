@@ -29,3 +29,4 @@ CREATE POLICY public_view ON public.event_series FOR SELECT TO anonymous USING (
 CREATE POLICY trainer_all ON public.event_series TO trainer USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_series FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _600_refresh_series_info_name AFTER UPDATE ON public.event_series REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_series__refresh_info();

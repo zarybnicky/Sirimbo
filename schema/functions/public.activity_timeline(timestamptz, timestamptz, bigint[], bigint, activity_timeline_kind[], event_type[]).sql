@@ -66,6 +66,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
@@ -135,6 +136,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         null::text as competition_event_external_id,
         null::text as competition_external_id
@@ -180,6 +182,7 @@ begin
         cr.ranking_to,
         cr.point_gain,
         cr.is_final,
+        cr.final_gain,
         cr.competition_type,
         cr.event_external_id as competition_event_external_id,
         cr.competition_external_id
@@ -237,6 +240,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         cb.competition_type,
         cb.event_external_id as competition_event_external_id,
         cb.competition_external_id
@@ -307,6 +311,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         null::federated.competition_type as competition_type,
         e.external_id as competition_event_external_id,
         null::text as competition_external_id
@@ -345,6 +350,7 @@ begin
         null::integer as ranking_to,
         null::numeric(10, 3) as point_gain,
         null::boolean as is_final,
+        null::numeric(10, 3) as final_gain,
         c.competition_type,
         e.external_id as competition_event_external_id,
         c.external_id as competition_external_id

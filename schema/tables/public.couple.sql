@@ -9,6 +9,7 @@ CREATE TABLE public.couple (
     legacy_pary_id bigint,
     active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
     status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    image_id bigint,
     CONSTRAINT couple_until_gt_since CHECK ((until > since))
 );
 
@@ -26,6 +27,8 @@ ALTER TABLE ONLY public.couple
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.couple
+    ADD CONSTRAINT couple_image_fk FOREIGN KEY (image_id) REFERENCES public.file(id) ON DELETE SET NULL;
+ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_man_id_fkey FOREIGN KEY (man_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
@@ -38,6 +41,7 @@ CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX couple_image_idx ON public.couple USING btree (image_id) WHERE (image_id IS NOT NULL);
 CREATE INDEX couple_man_active_idx ON public.couple USING btree (man_id) INCLUDE (id) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX couple_man_active_lookup ON public.couple USING btree (man_id, since, until, id) INCLUDE (woman_id, status) WHERE (status = 'active'::public.relationship_status);
 CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);

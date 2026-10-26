@@ -18,3 +18,5 @@ CREATE FUNCTION federated.class_rank(class text) RETURNS integer
 $$;
 
 COMMENT ON FUNCTION federated.class_rank(class text) IS '@behavior -*';
+
+GRANT ALL ON FUNCTION federated.class_rank(class text) TO anonymous;
