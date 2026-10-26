@@ -1,6 +1,7 @@
 import { Paperclip } from 'lucide-react';
 import type { AnnouncementFragment, AnnouncementStatus } from '@/graphql/Announcement';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
+import { DotSeparated } from '@/ui/DotSeparated';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { badgeCls } from '@/ui/style';
 
@@ -26,7 +27,7 @@ export function AnnouncementStatusBadge({
 export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
   return (
     <>
-      <div className="flex items-center gap-1 text-sm text-neutral-11">
+      <DotSeparated className="flex text-sm text-neutral-11">
         <time
           dateTime={item.createdAt}
           title={numericFullFormatter.format(new Date(item.createdAt))}
@@ -34,31 +35,24 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
           {numericDateWithYearFormatter.format(new Date(item.createdAt))}
         </time>
         {item.updatedAt !== null && (
-          <>
-            <span>-</span>
-            <time
-              dateTime={item.updatedAt}
-              title={numericFullFormatter.format(new Date(item.updatedAt))}
-            >
-              Upraveno
-            </time>
-          </>
+          <time
+            dateTime={item.updatedAt}
+            title={numericFullFormatter.format(new Date(item.updatedAt))}
+          >
+            Upraveno
+          </time>
         )}
-        {item.authorName && (
-          <>
-            <span>-</span>
-            <span>{item.authorName}</span>
-          </>
+        {item.authorName && <span>{item.authorName}</span>}
+        {STATUS_LABEL[item.status] && (
+          <AnnouncementStatusBadge status={item.status} />
         )}
-        <AnnouncementStatusBadge status={item.status} />
         {item.explicitAttachments.nodes.length > 0 && (
-          <>
-            <span>-</span>
+          <span className="inline-flex items-center gap-1">
             <Paperclip aria-hidden className="size-3.5" />
             <span>{item.explicitAttachments.nodes.length}</span>
-          </>
+          </span>
         )}
-      </div>
+      </DotSeparated>
 
       {item.announcementAudiences.nodes.length > 0 && (
         <div className="flex flex-wrap items-baseline gap-4 my-2 text-sm text-neutral-12">

@@ -147,6 +147,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
                 {result?.rankingTo && result?.rankingTo !== result?.ranking
                   ? `–${result?.rankingTo}`
                   : ''}
+                {!!row.participantsTotal && `/${row.participantsTotal}`}
               </td>
               {showPoints && (
                 <td className="whitespace-nowrap">
