@@ -34,7 +34,7 @@ export function ListItem({
         className: cn(
           'm-1 mt-0 flex items-center gap-2 rounded-lg border p-1.5 px-2 text-sm',
           selected && 'border-transparent',
-          colors.length > 0 && 'pl-6',
+          colors.length > 0 && 'pl-5',
         ),
       })}
     >

@@ -1,15 +1,28 @@
 'use client';
 
-import NextImage from 'next/image';
+import NextImage, { type ImageLoaderProps } from 'next/image';
 import type { ComponentProps } from 'react';
 
-export default function Image({ src, unoptimized, ...props }: ComponentProps<typeof NextImage>) {
+function fileImageLoader({ src, width }: ImageLoaderProps) {
+  const url = new URL(src, 'http://localhost');
+  url.searchParams.set('w', String(width));
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+export default function Image({
+  src,
+  loader,
+  ...props
+}: ComponentProps<typeof NextImage>) {
   return (
     <NextImage
       {...props}
       src={src}
       // File requests need the browser's session and tenant cookies.
-      unoptimized={(typeof src === 'string' && src.startsWith('/f/')) || unoptimized}
+      loader={
+        loader ??
+        (typeof src === 'string' && src.startsWith('/f/') ? fileImageLoader : undefined)
+      }
     />
   );
 }

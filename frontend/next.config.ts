@@ -1,6 +1,7 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import path from "node:path";
+import { imageWidths } from './lib/image-presets.ts';
 
 type NextConfig = import('next').NextConfig;
 type NextPlugin = (config: NextConfig) => NextConfig;
@@ -53,6 +54,8 @@ export default compose(
   },
 
   images: {
+    imageSizes: imageWidths.filter((width) => width < 512),
+    deviceSizes: imageWidths.filter((width) => width >= 512),
     contentDispositionType: 'inline',
     remotePatterns: [
       { protocol: 'https', hostname: 'api.rozpisovnik.cz' },
