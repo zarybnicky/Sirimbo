@@ -5,6 +5,10 @@ fragment CohortBasic on Cohort {
 }
 
 fragment Cohort on Cohort {
+  imageId
+  image {
+    ...File
+  }
   id
   name
   location

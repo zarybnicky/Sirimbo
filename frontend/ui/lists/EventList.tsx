@@ -14,6 +14,8 @@ import { CreateEventForm } from '@/ui/event-form/EventForms';
 import Link from 'next/link';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
+import Image from '@/ui/Image';
+import { CalendarDays } from 'lucide-react';
 
 interface EventNode {
   id: string;
@@ -21,6 +23,7 @@ interface EventNode {
   date: string;
   subtitle: string;
   href: string;
+  imageUrl: string | null;
 }
 
 interface EventListPageProps {
@@ -51,6 +54,7 @@ function EventListPage({ search, currentId }: EventListPageProps) {
           .filter(Boolean)
           .join(', '),
         href: `/termin/${instance.id}`,
+        imageUrl: instance.coverImage?.url ?? null,
       };
     });
   }, [data]);
@@ -66,17 +70,27 @@ function EventListPage({ search, currentId }: EventListPageProps) {
           className={buttonCls({
             variant: currentId === item.id ? 'primary' : 'outline',
             display: 'none',
-            className: 'pl-5 m-1 mt-0 grid',
+            size: 'none',
+            className: 'm-1 mt-0 flex items-center gap-2 rounded-xl p-1.5 px-2 text-sm',
           })}
         >
-          <div>{item.title}</div>
-          <div
-            className={cn(
-              'text-sm',
-              currentId === item.id ? 'text-white' : 'text-neutral-11',
+          <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
+            {item.imageUrl ? (
+              <Image src={item.imageUrl} alt="" width={40} height={40} className="size-10 object-cover" />
+            ) : (
+              <CalendarDays className="size-5" aria-hidden="true" />
             )}
-          >
-            {item.subtitle}
+          </span>
+          <div className="min-w-0 flex-1">
+            <div>{item.title}</div>
+            <div
+              className={cn(
+                'text-sm',
+                currentId === item.id ? 'text-white' : 'text-neutral-11',
+              )}
+            >
+              {item.subtitle}
+            </div>
           </div>
         </Link>
       ))}

@@ -30,7 +30,6 @@ type Props = {
   value: string[];
   onChange: (value: string[]) => void;
   imagesOnly?: boolean;
-  multiple?: boolean;
   title?: string;
 };
 
@@ -40,7 +39,7 @@ type UploadedFile = {
   url: string;
 };
 
-async function uploadFile(source: File): Promise<UploadedFile> {
+export async function uploadFile(source: File): Promise<UploadedFile> {
   const response = await fetch('/f', {
     method: 'POST',
     headers: {
@@ -57,7 +56,6 @@ export function FilePicker({
   value,
   onChange,
   imagesOnly,
-  multiple = true,
   title = 'Přílohy',
 }: Props) {
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
@@ -72,7 +70,7 @@ export function FilePicker({
   const selectedFiles = value.map((id) => filesById.get(id)).filter(isTruthy);
 
   const upload = async (input: FileList | null) => {
-    const sources = [...(input ?? [])].slice(0, multiple ? undefined : 1);
+    const sources = [...(input ?? [])];
     if (sources.length === 0) return;
 
     setUploading(true);
@@ -83,7 +81,7 @@ export function FilePicker({
       x.status === 'fulfilled' ? [x.value.id] : [],
     );
     if (uploadedIds.length > 0) {
-      onChange(multiple ? [...new Set([...value, ...uploadedIds])] : uploadedIds);
+      onChange([...new Set([...value, ...uploadedIds])]);
       refresh({ requestPolicy: 'network-only' });
     }
     if (uploadedIds.length !== sources.length) {
@@ -134,7 +132,7 @@ export function FilePicker({
           <input
             className="sr-only"
             type="file"
-            multiple={multiple}
+            multiple
             accept={imagesOnly ? 'image/*' : undefined}
             disabled={uploading}
             onChange={(event) => {
@@ -153,9 +151,7 @@ export function FilePicker({
             onChange(
               selected.has(file.id)
                 ? value.filter((id) => id !== file.id)
-                : multiple
-                  ? [...value, file.id]
-                  : [file.id],
+                : [...value, file.id],
             )
           }
         >

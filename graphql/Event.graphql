@@ -311,7 +311,6 @@ query EventDescription($id: BigInt!) {
     id
     summary
     description
-    coverImageId
   }
 }
 
@@ -513,6 +512,9 @@ query EventList {
     condition: { type: CAMP, parentId: null }
     orderBy: SINCE_DESC
   ) {
+    coverImage {
+      ...File
+    }
     ...EventWithTrainer
   }
 }
@@ -580,6 +582,9 @@ mutation SetEventSharing($input: SetEventSharingInput!) {
 mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
   updateEvent(input: { id: $id, patch: $patch }) {
     event {
+      coverImage {
+        ...File
+      }
       ...Event
     }
   }

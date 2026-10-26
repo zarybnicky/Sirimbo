@@ -1,10 +1,14 @@
 'use client';
 
-import { CoupleDocument } from '@/graphql/Memberships';
+import React from 'react';
+
+
+import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { PageHeader } from '@/ui/PageHeader';
+import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityTimeline } from '@/ui/ActivityTimeline';
@@ -18,6 +22,8 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { DefinitionList } from '@/ui/DefinitionList';
 
 export function Couple({ id }: { id: string }) {
+  const [editingImage, setEditingImage] = React.useState(false);
+  const [, updateImage] = useMutation(UpdateCoupleDocument);
   const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const item = data?.couple;
   const actions = useActions(coupleActions, item);
@@ -34,7 +40,19 @@ export function Couple({ id }: { id: string }) {
 
   return (
     <>
+      {editingImage && (
+        <ImageEditorDialog
+          file={item.image}
+          onClose={() => setEditingImage(false)}
+          onSave={async (imageId) => {
+            const result = await updateImage({ input: { id, patch: { imageId } } });
+            if (result.error) throw result.error;
+          }}
+        />
+      )}
       <PageHeader
+        imageUrl={item.image?.url}
+        onEditImage={actions.some((action) => action.id === 'couple.edit') ? () => setEditingImage(true) : undefined}
         title={title}
         breadcrumbLabel="Pár"
         breadcrumbs={[{ label: 'Páry', href: '/pary' }]}
@@ -59,6 +77,7 @@ export function Couple({ id }: { id: string }) {
           </span>
         }
       />
+
 
       <DefinitionList
         className="mb-2 text-sm tabular"

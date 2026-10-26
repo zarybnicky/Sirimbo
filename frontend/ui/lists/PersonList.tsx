@@ -1,3 +1,5 @@
+import Image from '@/ui/Image';
+import { UserRound } from 'lucide-react';
 import { TextField } from '@/ui/fields/text';
 import React from 'react';
 import { PersonFacetsDocument, PersonListDocument } from '@/graphql/Person';
@@ -165,15 +167,29 @@ export function PersonList() {
             key={item.id}
             href={tab ? `/clenove/${item.id}?tab=${tab}` : `/clenove/${item.id}`}
             className={cn(
-              'relative p-1.5 pl-5 mb-1 mr-1 rounded-lg grid',
+              'relative p-1.5 pl-6 mb-1 mr-1 rounded-lg flex items-center gap-2',
               id === item.id
                 ? 'font-semibold bg-accent-9 text-white shadow-md'
                 : 'bg-accent-2 border border-accent-5 hover:bg-accent-4',
             )}
           >
-            <div>{item.name}</div>
+            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
+              {item.image ? (
+                <Image
+                  src={item.image.url}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="size-10 object-cover"
+                />
+              ) : (
+                <UserRound className="size-5" aria-hidden="true" />
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate">{item.name}</div>
             <div
-              className={cn('text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}
+              className={cn('truncate text-sm', id === item.id ? 'text-white' : 'text-neutral-11')}
             >
               {[
                 item.yearOfBirth,
@@ -188,6 +204,7 @@ export function PersonList() {
               ]
                 .filter(Boolean)
                 .join(', ')}
+              </div>
             </div>
             <div
               className="absolute rounded-l-lg border border-neutral-6 w-4 shadow-xs inset-y-0 left-0"

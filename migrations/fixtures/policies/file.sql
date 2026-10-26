@@ -1,12 +1,22 @@
 select app_private.drop_policies('public.file');
-create policy current_tenant on file as restrictive
-  using (tenant_id = (select current_tenant_id()));
 create policy admin_all on file to administrator
-  using (true);
-create policy uploader_manage on file to trainer
-  using (uploaded_by = (select current_user_id()));
+  using (tenant_id = (select current_tenant_id()));
+create policy uploader_manage on file
+  using (tenant_id = (select current_tenant_id())
+    and uploaded_by = (select current_user_id()));
 create policy visible on file for select
-  using (id in (select app_private.visible_file_ids()));
+  using (
+    (tenant_id = (select current_tenant_id())
+      and id in (select app_private.visible_file_ids()))
+    -- These uncorrelated subqueries use entity RLS, including share and partner access.
+    or id in (
+      select image_id from person where image_id is not null
+      union all
+      select image_id from couple where image_id is not null
+      union all
+      select image_id from cohort where image_id is not null
+    )
+  );
 
 select app_private.drop_policies('public.announcement_attachment');
 create policy current_tenant on announcement_attachment as restrictive

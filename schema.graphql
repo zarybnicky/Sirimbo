@@ -1597,6 +1597,10 @@ type Cohort {
   ): [EventTargetCohort!]!
   externalIds: [String]
   id: BigInt!
+
+  """Reads a single `File` that is related to this `Cohort`."""
+  image: File
+  imageId: BigInt
   isArchived: Boolean!
   isVisible: Boolean!
   location: String!
@@ -1639,6 +1643,9 @@ input CohortCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: BigInt
 
   """Checks for equality with the object’s `isArchived` field."""
   isArchived: Boolean
@@ -1768,6 +1775,7 @@ input CohortInput {
   colorRgb: String!
   description: String
   externalIds: [String]
+  imageId: BigInt
   isArchived: Boolean
   isVisible: Boolean
   location: String
@@ -1883,6 +1891,7 @@ input CohortPatch {
   colorRgb: String
   description: String
   externalIds: [String]
+  imageId: BigInt
   isArchived: Boolean
   isVisible: Boolean
   location: String
@@ -2006,6 +2015,8 @@ enum CohortsOrderBy {
   DESCRIPTION_DESC
   ID_ASC
   ID_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
   IS_ARCHIVED_ASC
   IS_ARCHIVED_DESC
   IS_VISIBLE_ASC
@@ -3264,6 +3275,10 @@ type Couple {
   ): RanklistEntryConnection!
   id: BigInt!
 
+  """Reads a single `File` that is related to this `Couple`."""
+  image: File
+  imageId: BigInt
+
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
   manId: BigInt!
@@ -3287,6 +3302,9 @@ input CoupleCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: BigInt
+
   """Checks for equality with the object’s `manId` field."""
   manId: BigInt
 
@@ -3309,6 +3327,7 @@ input CoupleCondition {
 """An input for mutations affecting `Couple`"""
 input CoupleInput {
   createdAt: Datetime
+  imageId: BigInt
   manId: BigInt!
   since: Datetime
   status: RelationshipStatus
@@ -3322,6 +3341,7 @@ Represents an update to a `Couple`. Fields that are set will be updated.
 """
 input CouplePatch {
   createdAt: Datetime
+  imageId: BigInt
   manId: BigInt
   since: Datetime
   status: RelationshipStatus
@@ -3336,6 +3356,8 @@ enum CouplesOrderBy {
   CREATED_AT_DESC
   ID_ASC
   ID_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
   MAN_ID_ASC
   MAN_ID_DESC
   NATURAL
@@ -8660,7 +8682,41 @@ type File {
     orderBy: [ArticleAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): ArticleAttachmentConnection!
   byteSize: BigInt
+
+  """Reads and enables pagination through a set of `Cohort`."""
+  cohortsByTenantIdAndImageIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Cohort`."""
+    orderBy: [CohortsOrderBy!]
+  ): [Cohort!]!
   contentType: String
+
+  """Reads and enables pagination through a set of `Couple`."""
+  couplesByImageIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CoupleCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Couple`."""
+    orderBy: [CouplesOrderBy!]
+  ): [Couple!]!
   createdAt: Datetime!
   displayName: String
 
@@ -8701,6 +8757,35 @@ type File {
   ): [LocationImage!]!
   name: String!
   objectKey: String!
+
+  """Reads and enables pagination through a set of `Person`."""
+  peopleByImageId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PersonConnection!
   tenantId: BigInt!
   uploadedAt: Datetime
   uploadedBy: BigInt
@@ -10552,6 +10637,8 @@ enum PeopleOrderBy {
   FIRST_NAME_DESC
   ID_ASC
   ID_DESC
+  IMAGE_ID_ASC
+  IMAGE_ID_DESC
   INSTAGRAM_USERNAME_ASC
   INSTAGRAM_USERNAME_DESC
   LAST_NAME_ASC
@@ -10897,6 +10984,10 @@ type Person {
   gender: GenderType!
   hasAccess: Boolean
   id: BigInt!
+
+  """Reads a single `File` that is related to this `Person`."""
+  image: File
+  imageId: BigInt
   instagramUsername: String
   isAdmin: Boolean
   isMember: Boolean
@@ -11175,6 +11266,9 @@ input PersonCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `imageId` field."""
+  imageId: BigInt
+
   """Checks for equality with the object’s `instagramUsername` field."""
   instagramUsername: String
 
@@ -11278,6 +11372,7 @@ input PersonInput {
   facebookUrl: String
   firstName: String!
   gender: GenderType!
+  imageId: BigInt
   instagramUsername: String
   lastName: String!
   name: String
@@ -11477,6 +11572,7 @@ input PersonPatch {
   facebookUrl: String
   firstName: String
   gender: GenderType
+  imageId: BigInt
   instagramUsername: String
   lastName: String
   name: String

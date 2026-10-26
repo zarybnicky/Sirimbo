@@ -44,6 +44,29 @@ create index if not exists event_cover_image_idx on public.event (tenant_id, cov
 
 --!include functions/accessible_event_ids.sql
 --!include functions/visible_file_ids.sql
---!include policies/file.sql
 --!include functions/set_lesson_request.sql
 --!include functions/set_event_registration.sql
+
+alter table public.person add column if not exists image_id bigint;
+alter table public.person drop constraint if exists person_image_fk;
+alter table public.person add constraint person_image_fk
+  foreign key (image_id) references public.file (id) on delete set null;
+comment on constraint person_image_fk on public.person is '@fieldName image';
+create index if not exists person_image_idx on public.person (image_id) where image_id is not null;
+
+alter table public.couple add column if not exists image_id bigint;
+alter table public.couple drop constraint if exists couple_image_fk;
+alter table public.couple add constraint couple_image_fk
+  foreign key (image_id) references public.file (id) on delete set null;
+comment on constraint couple_image_fk on public.couple is '@fieldName image';
+create index if not exists couple_image_idx on public.couple (image_id) where image_id is not null;
+
+alter table public.cohort add column if not exists image_id bigint;
+alter table public.cohort drop constraint if exists cohort_image_fk;
+alter table public.cohort add constraint cohort_image_fk
+  foreign key (tenant_id, image_id) references public.file (tenant_id, id)
+  on delete set null (image_id);
+comment on constraint cohort_image_fk on public.cohort is '@fieldName image';
+create index if not exists cohort_image_idx on public.cohort (tenant_id, image_id) where image_id is not null;
+
+--!include policies/file.sql

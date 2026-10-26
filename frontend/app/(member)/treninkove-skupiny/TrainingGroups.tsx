@@ -1,5 +1,7 @@
 'use client';
 
+import Image from '@/ui/Image';
+
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { cohortActions } from '@/lib/actions/cohort';
 import { useActionMap } from '@/lib/actions';
@@ -58,6 +60,18 @@ export function TrainingGroups() {
               <ActionGroup actions={cohortActionMap.get(item.id)!} />
             </div>
             <h6 className="font-bold mb-2">{item.location}</h6>
+            {item.image && (
+              <div className="relative mb-3 aspect-video overflow-hidden rounded-md">
+                <Image
+                  src={item.image.url}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
+
             <RichTextView
               value={item.description.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
             />

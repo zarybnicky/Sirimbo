@@ -1,3 +1,5 @@
+import Image from '@/ui/Image';
+import { Users } from 'lucide-react';
 import { CoupleListDocument } from '@/graphql/Memberships';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
@@ -21,6 +23,7 @@ export function CoupleList() {
   const nodes = React.useMemo(() => {
     return (data?.getCurrentTenant?.couplesList || []).map((item) => ({
       id: item.id,
+      image: item.image,
       title: formatCoupleName(item),
       ageGroup: formatAgeGroup(item.ageGroup),
       href: `/pary/${item.id}`,
@@ -61,11 +64,27 @@ export function CoupleList() {
             className={buttonCls({
               variant: currentId === item.id ? 'primary' : 'outline',
               display: 'none',
-              className: 'pl-5 m-1 mt-0 grid',
+              size: 'none',
+              className: 'm-1 mt-0 flex items-center gap-2 rounded-xl p-1.5 px-2 text-sm',
             })}
           >
-            <div>{item.title}</div>
-            {item.ageGroup && <div className="text-xs">{item.ageGroup}</div>}
+            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
+              {item.image ? (
+                <Image
+                  src={item.image.url}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="size-10 object-cover"
+                />
+              ) : (
+                <Users className="size-5" aria-hidden="true" />
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate">{item.title}</div>
+              {item.ageGroup && <div className="truncate text-xs">{item.ageGroup}</div>}
+            </div>
           </Link>
         ))}
       </div>

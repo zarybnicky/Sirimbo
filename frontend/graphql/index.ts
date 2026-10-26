@@ -1240,6 +1240,9 @@ export type Cohort = {
   eventTargetCohortsList: Array<EventTargetCohort>;
   externalIds: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   id: Scalars['BigInt']['output'];
+  /** Reads a single `File` that is related to this `Cohort`. */
+  image: Maybe<File>;
+  imageId: Maybe<Scalars['BigInt']['output']>;
   isArchived: Scalars['Boolean']['output'];
   isVisible: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
@@ -1322,6 +1325,8 @@ export type CohortCondition = {
   description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `imageId` field. */
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isArchived` field. */
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
@@ -1430,6 +1435,7 @@ export type CohortInput = {
   colorRgb: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -1532,6 +1538,7 @@ export type CohortPatch = {
   colorRgb?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   externalIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -1637,6 +1644,8 @@ export type CohortsOrderBy =
   | 'DESCRIPTION_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IMAGE_ID_ASC'
+  | 'IMAGE_ID_DESC'
   | 'IS_ARCHIVED_ASC'
   | 'IS_ARCHIVED_DESC'
   | 'IS_VISIBLE_ASC'
@@ -2534,6 +2543,9 @@ export type Couple = {
   /** Reads and enables pagination through a set of `RanklistEntry`. */
   federationRanklistEntries: RanklistEntryConnection;
   id: Scalars['BigInt']['output'];
+  /** Reads a single `File` that is related to this `Couple`. */
+  image: Maybe<File>;
+  imageId: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Person` that is related to this `Couple`. */
   man: Maybe<Person>;
   manId: Scalars['BigInt']['output'];
@@ -2594,6 +2606,8 @@ export type CoupleCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `imageId` field. */
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `manId` field. */
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -2611,6 +2625,7 @@ export type CoupleCondition = {
 /** An input for mutations affecting `Couple` */
 export type CoupleInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   manId: Scalars['BigInt']['input'];
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
@@ -2622,6 +2637,7 @@ export type CoupleInput = {
 /** Represents an update to a `Couple`. Fields that are set will be updated. */
 export type CouplePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<RelationshipStatus>;
@@ -2636,6 +2652,8 @@ export type CouplesOrderBy =
   | 'CREATED_AT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IMAGE_ID_ASC'
+  | 'IMAGE_ID_DESC'
   | 'MAN_ID_ASC'
   | 'MAN_ID_DESC'
   | 'NATURAL'
@@ -6789,7 +6807,11 @@ export type File = {
   /** Reads and enables pagination through a set of `ArticleAttachment`. */
   articleAttachments: ArticleAttachmentConnection;
   byteSize: Maybe<Scalars['BigInt']['output']>;
+  /** Reads and enables pagination through a set of `Cohort`. */
+  cohortsByTenantIdAndImageIdList: Array<Cohort>;
   contentType: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `Couple`. */
+  couplesByImageIdList: Array<Couple>;
   createdAt: Scalars['Datetime']['output'];
   displayName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Event`. */
@@ -6800,6 +6822,8 @@ export type File = {
   locationImageRecordsList: Array<LocationImage>;
   name: Scalars['String']['output'];
   objectKey: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Person`. */
+  peopleByImageId: PersonConnection;
   tenantId: Scalars['BigInt']['output'];
   uploadedAt: Maybe<Scalars['Datetime']['output']>;
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
@@ -6831,6 +6855,22 @@ export type FileArticleAttachmentsArgs = {
 };
 
 
+export type FileCohortsByTenantIdAndImageIdListArgs = {
+  condition?: InputMaybe<CohortCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortsOrderBy>>;
+};
+
+
+export type FileCouplesByImageIdListArgs = {
+  condition?: InputMaybe<CoupleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
 export type FileEventsByTenantIdAndCoverImageIdListArgs = {
   condition?: InputMaybe<EventCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -6844,6 +6884,17 @@ export type FileLocationImageRecordsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationImagesOrderBy>>;
+};
+
+
+export type FilePeopleByImageIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PersonCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PeopleOrderBy>>;
 };
 
 /** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -8529,6 +8580,8 @@ export type PeopleOrderBy =
   | 'FIRST_NAME_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'IMAGE_ID_ASC'
+  | 'IMAGE_ID_DESC'
   | 'INSTAGRAM_USERNAME_ASC'
   | 'INSTAGRAM_USERNAME_DESC'
   | 'LAST_NAME_ASC'
@@ -8609,6 +8662,9 @@ export type Person = {
   gender: GenderType;
   hasAccess: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
+  /** Reads a single `File` that is related to this `Person`. */
+  image: Maybe<File>;
+  imageId: Maybe<Scalars['BigInt']['output']>;
   instagramUsername: Maybe<Scalars['String']['output']>;
   isAdmin: Maybe<Scalars['Boolean']['output']>;
   isMember: Maybe<Scalars['Boolean']['output']>;
@@ -8906,6 +8962,8 @@ export type PersonCondition = {
   gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `imageId` field. */
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instagramUsername` field. */
   instagramUsername?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `lastName` field. */
@@ -8991,6 +9049,7 @@ export type PersonInput = {
   facebookUrl?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   gender: GenderType;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   instagramUsername?: InputMaybe<Scalars['String']['input']>;
   lastName: Scalars['String']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
@@ -9166,6 +9225,7 @@ export type PersonPatch = {
   facebookUrl?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<GenderType>;
+  imageId?: InputMaybe<Scalars['BigInt']['input']>;
   instagramUsername?: InputMaybe<Scalars['String']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -13983,6 +14043,8 @@ export type GraphCacheResolvers = {
     eventTargetCohortsList?: GraphCacheResolver<WithTypename<Cohort>, CohortEventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     externalIds?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     id?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    image?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, WithTypename<File> | string>,
+    imageId?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isArchived?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<Cohort>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14245,6 +14307,8 @@ export type GraphCacheResolvers = {
     federationCompetitors?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationCompetitorsArgs, WithTypename<FederationCompetitorConnection> | string>,
     federationRanklistEntries?: GraphCacheResolver<WithTypename<Couple>, CoupleFederationRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    image?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<File> | string>,
+    imageId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     man?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     manId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     since?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -15104,7 +15168,9 @@ export type GraphCacheResolvers = {
     announcementAttachments?: GraphCacheResolver<WithTypename<File>, FileAnnouncementAttachmentsArgs, WithTypename<AnnouncementAttachmentConnection> | string>,
     articleAttachments?: GraphCacheResolver<WithTypename<File>, FileArticleAttachmentsArgs, WithTypename<ArticleAttachmentConnection> | string>,
     byteSize?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    cohortsByTenantIdAndImageIdList?: GraphCacheResolver<WithTypename<File>, FileCohortsByTenantIdAndImageIdListArgs, Array<WithTypename<Cohort> | string>>,
     contentType?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    couplesByImageIdList?: GraphCacheResolver<WithTypename<File>, FileCouplesByImageIdListArgs, Array<WithTypename<Couple> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     displayName?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     eventsByTenantIdAndCoverImageIdList?: GraphCacheResolver<WithTypename<File>, FileEventsByTenantIdAndCoverImageIdListArgs, Array<WithTypename<Event> | string>>,
@@ -15113,6 +15179,7 @@ export type GraphCacheResolvers = {
     locationImageRecordsList?: GraphCacheResolver<WithTypename<File>, FileLocationImageRecordsListArgs, Array<WithTypename<LocationImage> | string>>,
     name?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
     objectKey?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['String']['output'] | string>,
+    peopleByImageId?: GraphCacheResolver<WithTypename<File>, FilePeopleByImageIdArgs, WithTypename<PersonConnection> | string>,
     tenantId?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<File>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -15343,6 +15410,8 @@ export type GraphCacheResolvers = {
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
     hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    image?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<File> | string>,
+    imageId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instagramUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
@@ -16557,6 +16626,8 @@ export type GraphCacheUpdaters = {
     eventTargetCohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, CohortEventTargetCohortsListArgs>,
     externalIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    image?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
+    imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     isArchived?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     isVisible?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
     location?: GraphCacheUpdateResolver<Maybe<WithTypename<Cohort>>, Record<string, never>>,
@@ -16819,6 +16890,8 @@ export type GraphCacheUpdaters = {
     federationCompetitors?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleFederationCompetitorsArgs>,
     federationRanklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, CoupleFederationRanklistEntriesArgs>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    image?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     manId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
@@ -17678,7 +17751,9 @@ export type GraphCacheUpdaters = {
     announcementAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileAnnouncementAttachmentsArgs>,
     articleAttachments?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileArticleAttachmentsArgs>,
     byteSize?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    cohortsByTenantIdAndImageIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileCohortsByTenantIdAndImageIdListArgs>,
     contentType?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    couplesByImageIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileCouplesByImageIdListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     displayName?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     eventsByTenantIdAndCoverImageIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileEventsByTenantIdAndCoverImageIdListArgs>,
@@ -17687,6 +17762,7 @@ export type GraphCacheUpdaters = {
     locationImageRecordsList?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FileLocationImageRecordsListArgs>,
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     objectKey?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
+    peopleByImageId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, FilePeopleByImageIdArgs>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     uploadedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
     uploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<File>>, Record<string, never>>,
@@ -17917,6 +17993,8 @@ export type GraphCacheUpdaters = {
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    image?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     instagramUsername?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

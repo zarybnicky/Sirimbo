@@ -5,6 +5,7 @@ import { CampLessonsTable } from '@/calendar/CampLessonsTable';
 import { CampTrainersTable } from '@/calendar/CampTrainersTable';
 import {
   EventWithAttendanceDocument,
+  UpdateEventDocument,
   type EventWithAttendanceQuery,
 } from '@/graphql/Event';
 import { eventInstanceActions } from '@/lib/actions/eventInstance';
@@ -20,7 +21,9 @@ import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
+import React from 'react';
+import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 
 export function EventPageClient({
   id,
@@ -32,6 +35,8 @@ export function EventPageClient({
   hasShareToken: boolean;
 }) {
   const auth = useAuth();
+  const [editingImage, setEditingImage] = React.useState(false);
+  const [, updateImage] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({
     query: EventWithAttendanceDocument,
     variables: { id },
@@ -55,6 +60,16 @@ export function EventPageClient({
 
   return (
     <Layout hideTopMenuIfLoggedIn>
+      {editingImage && (
+        <ImageEditorDialog
+          file={event.coverImage}
+          onClose={() => setEditingImage(false)}
+          onSave={async (coverImageId) => {
+            const result = await updateImage({ id, patch: { coverImageId } });
+            if (result.error) throw result.error;
+          }}
+        />
+      )}
       {signup === '1' && (
         <Dialog open onOpenChange={() => setSignup(null)}>
           <DialogContent>
@@ -65,6 +80,8 @@ export function EventPageClient({
 
       <div className="col-feature">
         <PageHeader
+          imageUrl={event.coverImage?.url}
+          onEditImage={auth.canManageInstance(event) ? () => setEditingImage(true) : undefined}
           title={formatEventName(event) || ''}
           breadcrumbLabel="Termín"
           breadcrumbs={[

@@ -97,7 +97,7 @@ const memberMenu: MenuStructItem[] = [
         requireMember: true,
       },
       { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Seznam akcí', href: '/akce' },
+      { type: 'link', title: 'Sosutředění', href: '/akce' },
     ],
   },
   {

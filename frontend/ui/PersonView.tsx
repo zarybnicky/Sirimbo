@@ -1,8 +1,9 @@
 'use client';
 
+
 import { DotSeparated } from '@/ui/DotSeparated';
 
-import { PersonMembershipsDocument } from '@/graphql/Person';
+import { PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Person';
 import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
@@ -13,6 +14,7 @@ import { FederationLink } from '@/ui/federation-links';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { FederationRankings } from '@/ui/FederationRankings';
 import { PageHeader } from '@/ui/PageHeader';
+import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PersonMembershipView } from '@/ui/PersonMembershipView';
 import { PersonPaymentsView } from '@/ui/PersonPaymentsView';
@@ -22,7 +24,7 @@ import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 import { Globe, Music2 } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 
 export const PersonView = React.memo(function PersonView({
   id,
@@ -32,6 +34,8 @@ export const PersonView = React.memo(function PersonView({
   parent?: { label: string; href: string };
 }) {
   const auth = useAuth();
+  const [editingImage, setEditingImage] = React.useState(false);
+  const [, updateImage] = useMutation(UpdatePersonDocument);
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id, includeActivity: auth.isTrainer || auth.isMyPerson(id) },
@@ -147,7 +151,19 @@ export const PersonView = React.memo(function PersonView({
 
   return (
     <>
+      {editingImage && (
+        <ImageEditorDialog
+          file={item.image}
+          onClose={() => setEditingImage(false)}
+          onSave={async (imageId) => {
+            const result = await updateImage({ input: { id, patch: { imageId } } });
+            if (result.error) throw result.error;
+          }}
+        />
+      )}
       <PageHeader
+        imageUrl={item.image?.url}
+        onEditImage={isAdminOrCurrentPerson ? () => setEditingImage(true) : undefined}
         title={item.name}
         breadcrumbLabel="Člen"
         breadcrumbs={parent ? [parent] : undefined}
@@ -158,6 +174,7 @@ export const PersonView = React.memo(function PersonView({
         }
         actions={actions}
       />
+
 
       {item.lastActivity && (
         <div className="-mt-2 mb-4">

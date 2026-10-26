@@ -42,6 +42,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
     defaultValues: { colorRgb: '#ff0000' },
     resolver: zodResolver(Form),
   });
+
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data), {
       keepDirtyValues: true,
@@ -74,6 +75,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={createResult.error || updateResult.error} />
+
       <ColorPicker label="Barva skupiny" name="colorRgb" control={control} />
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextFieldElement control={control} name="location" label="Město/místo" />

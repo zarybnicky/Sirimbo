@@ -1,4 +1,5 @@
 import React from 'react';
+import { EditableImage } from '@/ui/EditableImage';
 import { typographyCls } from '@/ui/style';
 import Link, { LinkProps } from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
@@ -15,6 +16,8 @@ type PageHeaderProps<Id extends string = string> = {
   title: string;
   breadcrumbLabel?: string;
   subtitle?: React.ReactNode;
+  imageUrl?: string | null;
+  onEditImage?: () => void;
 };
 
 export function PageHeader<Id extends string = string>({
@@ -22,6 +25,8 @@ export function PageHeader<Id extends string = string>({
   title,
   breadcrumbLabel = title,
   subtitle,
+  imageUrl,
+  onEditImage,
   actions,
   primary,
   primaryVariant,
@@ -32,7 +37,7 @@ export function PageHeader<Id extends string = string>({
 
   return (
     <div className="my-4 min-w-0">
-      <div className="flex flex-wrap-reverse items-center justify-between gap-x-3 gap-y-2 [&:has(>nav)>h1]:basis-full">
+      <div className="flex flex-wrap-reverse items-center justify-between gap-x-3 gap-y-2 [&:has(>nav)>[data-page-title]]:basis-full">
         {breadcrumbs && parent?.href && (
           <nav className="min-w-0 flex-1 text-sm text-neutral-11">
             <Link
@@ -79,15 +84,31 @@ export function PageHeader<Id extends string = string>({
           </nav>
         )}
 
-        <h1
-          className={typographyCls({
-            variant,
-            spacing: 'default',
-            className: 'order-first min-w-0 max-w-full wrap-anywhere',
-          })}
+        <div
+          data-page-title
+          className="order-first flex min-w-0 max-w-full items-center gap-4"
         >
-          {title}
-        </h1>
+          <div className="min-w-0 flex-1">
+            <h1
+              className={typographyCls({
+                variant,
+                spacing: 'default',
+                className: 'min-w-0 max-w-full wrap-anywhere',
+              })}
+            >
+              {title}
+            </h1>
+            {(imageUrl || onEditImage) && subtitle && (
+              <div className="mt-1 text-sm text-accent-12">{subtitle}</div>
+            )}
+          </div>
+          <EditableImage
+            src={imageUrl}
+            onEdit={onEditImage}
+            className="max-h-28 max-w-28 sm:max-h-32 sm:max-w-40"
+            sizes="160px"
+          />
+        </div>
 
         {!!actions?.length && (
           <ActionGroup
@@ -100,7 +121,9 @@ export function PageHeader<Id extends string = string>({
         )}
       </div>
 
-      {subtitle && <div className="mt-1 text-sm text-accent-12">{subtitle}</div>}
+      {!imageUrl && !onEditImage && subtitle && (
+        <div className="mt-1 text-sm text-accent-12">{subtitle}</div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,8 @@
 fragment Couple on Couple {
+  imageId
+  image {
+    ...File
+  }
   id
   status
   since

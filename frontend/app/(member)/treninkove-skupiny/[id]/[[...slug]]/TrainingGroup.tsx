@@ -1,18 +1,21 @@
 'use client';
 
+
 import { DotSeparated } from '@/ui/DotSeparated';
 
 import {
   CohortWithMembersDocument,
+  UpdateCohortDocument,
   type CohortWithMembersQuery,
 } from '@/graphql/Cohorts';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { PageHeader } from '@/ui/PageHeader';
+import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PeopleAccessOverview } from '@/ui/PeopleAccessOverview';
 import Link from 'next/link';
@@ -35,6 +38,8 @@ export function TrainingGroup({
   initialCohort: NonNullable<CohortWithMembersQuery['entity']>;
 }) {
   const auth = useAuth();
+  const [editingImage, setEditingImage] = React.useState(false);
+  const [, updateImage] = useMutation(UpdateCohortDocument);
   const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -57,7 +62,19 @@ export function TrainingGroup({
 
   return (
     <>
+      {editingImage && (
+        <ImageEditorDialog
+          file={cohort.image}
+          onClose={() => setEditingImage(false)}
+          onSave={async (imageId) => {
+            const result = await updateImage({ id: cohort.id, patch: { imageId } });
+            if (result.error) throw result.error;
+          }}
+        />
+      )}
       <PageHeader
+        imageUrl={cohort.image?.url}
+        onEditImage={actions.some((action) => action.id === 'cohort.edit') ? () => setEditingImage(true) : undefined}
         title={cohort.name}
         breadcrumbLabel="Skupina"
         breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
@@ -69,6 +86,7 @@ export function TrainingGroup({
         }
         actions={actions}
       />
+
 
       <RichTextView value={description} />
 

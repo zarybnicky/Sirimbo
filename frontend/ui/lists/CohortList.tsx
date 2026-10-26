@@ -1,3 +1,5 @@
+import Image from '@/ui/Image';
+import { Users } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
@@ -28,6 +30,7 @@ export function CohortList() {
         const count = x.cohortMembershipsList.length;
         return {
           id: x.id,
+          image: x.image,
           title: x.name,
           subtitle: [
             x.location,
@@ -102,17 +105,33 @@ export function CohortList() {
             className={buttonCls({
               variant: currentId === item.id ? 'primary' : 'outline',
               display: 'none',
-              className: 'pl-5 m-1 mt-0 grid',
+              size: 'none',
+              className: 'm-1 mt-0 flex items-center gap-2 rounded-xl p-1.5 pl-6 text-sm',
             })}
           >
-            <div>{item.title}</div>
+            <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10">
+              {item.image ? (
+                <Image
+                  src={item.image.url}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="size-10 object-cover"
+                />
+              ) : (
+                <Users className="size-5" aria-hidden="true" />
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate">{item.title}</div>
             <div
               className={cn(
-                'text-sm',
+                'truncate text-sm',
                 currentId === item.id ? 'text-white' : 'text-neutral-11',
               )}
             >
-              {item.subtitle}
+                {item.subtitle}
+              </div>
             </div>
             <div
               className="absolute rounded-l-xl w-4 shadow-xs inset-y-0 left-0"
