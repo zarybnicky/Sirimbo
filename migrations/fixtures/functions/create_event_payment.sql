@@ -1,5 +1,3 @@
-drop function if exists create_event_instance_payment;
-
 create or replace function create_event_payment(target_event event)
   returns payment
   language plpgsql
@@ -35,9 +33,8 @@ begin
 
   duration := extract(epoch from (target_event.until - target_event.since)) / 60;
 
-  insert into payment (accounting_period_id, status, event_id, due_at)
+  insert into payment (status, event_id, due_at)
   values (
-    (select id from accounting_period where tenant_id = current_tenant_id() and range @> now()),
     'tentative', target_event.id, now() + interval '2 weeks'
   )
   on conflict (event_id) where event_id is not null do nothing

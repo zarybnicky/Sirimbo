@@ -5342,6 +5342,7 @@ export type EventTrainer = {
   lessonRequestsList: Array<EventLessonRequest>;
   lessonsOffered: Maybe<Scalars['Int']['output']>;
   lessonsRemaining: Maybe<Scalars['Int']['output']>;
+  /** @deprecated Use person { name }. */
   name: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `EventTrainer`. */
   person: Maybe<Person>;
@@ -8693,7 +8694,6 @@ export type Person = {
   federationRanklistEntries: RanklistEntryConnection;
   firstName: Scalars['String']['output'];
   gender: GenderType;
-  hasAccess: Maybe<Scalars['Boolean']['output']>;
   id: Scalars['BigInt']['output'];
   /** Reads a single `File` that is related to this `Person`. */
   image: Maybe<File>;
@@ -15445,7 +15445,6 @@ export type GraphCacheResolvers = {
     federationRanklistEntries?: GraphCacheResolver<WithTypename<Person>, PersonFederationRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
     firstName?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     gender?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, GenderType | string>,
-    hasAccess?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     image?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<File> | string>,
     imageId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -18027,7 +18026,6 @@ export type GraphCacheUpdaters = {
     federationRanklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonFederationRanklistEntriesArgs>,
     firstName?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     gender?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
-    hasAccess?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     image?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,

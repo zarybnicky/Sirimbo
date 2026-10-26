@@ -34,51 +34,44 @@ as $$
   attendance as materialized (
     select
       ea.person_id,
-      scoreboard_entries.cohort_id as cohort_id,
       case when inst.event_type = 'lesson' then 1 else 0 end as lesson_score,
       case when inst.event_type = 'group' then floor((extract(epoch from (inst.until - inst.since)) / 60)::numeric / 45::numeric) else 0 end as group_score,
       case when inst.event_type = 'camp'  then 3 + 2 * ((extract(epoch from (inst.until - inst.since)) > 86400)::int) else 0 end as event_score,
       date_trunc('day', inst.since)::date as day
     from instances inst
-    join event_registration ea
-      on ea.event_id = inst.event_id and ea.person_id is not null
-    left join event_registration registration
-      on registration.id = ea.parent_registration_id
-    left join cohort tc
-      on tc.id = coalesce(ea.target_cohort_id, registration.target_cohort_id)
-    where
-      ea.registration_status = 'active'
-      and (ea.status = 'attended' or inst.event_type = 'lesson')
-      and ea.person_id = any (select person_id from member_people)
-      and (scoreboard_entries.cohort_id is null or tc.id = scoreboard_entries.cohort_id)
+    cross join lateral (
+      select registration.person_id
+      from event_registration registration
+      where registration.event_id = inst.event_id
+        and registration.person_id is not null
+        and registration.registration_status = 'active'
+        and (registration.status = 'attended' or inst.event_type = 'lesson')
+      -- Keep date-filtered events first, avoiding RLS checks on registration history.
+      offset 0
+    ) ea
+    where ea.person_id = any (select person_id from member_people)
   ),
   per_day as (
     select
       person_id,
-      cohort_id,
       least(sum(lesson_score), 4) as lesson_score,
       sum(group_score) as group_score,
       sum(event_score) as event_score
     from attendance
-    group by person_id, cohort_id, day
+    group by person_id, day
   ),
   aggregated as (
     select
       person_id,
-      cohort_id,
       coalesce(sum(lesson_score), 0)::bigint as lesson_total_score,
       coalesce(sum(group_score), 0)::bigint as group_total_score,
       coalesce(sum(event_score), 0)::bigint as event_total_score
     from per_day
-    group by person_id, cohort_id
+    group by person_id
   ),
   manual as (
     select
       sma.person_id,
-      case
-        when scoreboard_entries.cohort_id is null then null
-        else coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
-      end as cohort_id,
       sum(sma.points)::bigint as manual_total_score
     from scoreboard_manual_adjustment sma
     where sma.tenant_id = current_tenant_id()
@@ -98,12 +91,11 @@ as $$
             or mem.cohort_id is not distinct from coalesce(sma.cohort_id, scoreboard_entries.cohort_id)
           )
       )
-    group by 1, 2
+    group by sma.person_id
   ),
   totals as (
     select
-      coalesce(a.person_id, m.person_id) as person_id,
-      coalesce(a.cohort_id, m.cohort_id) as cohort_id,
+      person_id,
       coalesce(a.lesson_total_score, 0)::bigint as lesson_total_score,
       coalesce(a.group_total_score, 0)::bigint as group_total_score,
       coalesce(a.event_total_score, 0)::bigint as event_total_score,
@@ -115,11 +107,11 @@ as $$
         coalesce(m.manual_total_score, 0)::bigint
       ) as total_score
     from aggregated a
-    full join manual m using (person_id, cohort_id)
+    full join manual m using (person_id)
   )
   select
     person_id,
-    cohort_id,
+    scoreboard_entries.cohort_id as cohort_id,
     lesson_total_score,
     group_total_score,
     event_total_score,

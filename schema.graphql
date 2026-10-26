@@ -6521,7 +6521,7 @@ type EventTrainer {
   ): [EventLessonRequest!]!
   lessonsOffered: Int
   lessonsRemaining: Int
-  name: String
+  name: String @deprecated(reason: "Use person { name }.")
 
   """Reads a single `Person` that is related to this `EventTrainer`."""
   person: Person
@@ -11070,7 +11070,6 @@ type Person {
   ): RanklistEntryConnection!
   firstName: String!
   gender: GenderType!
-  hasAccess: Boolean
   id: BigInt!
 
   """Reads a single `File` that is related to this `Person`."""

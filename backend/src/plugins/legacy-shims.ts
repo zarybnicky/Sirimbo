@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { sql, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
 import { access, constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
@@ -18,15 +19,30 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
       eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]!
         @deprecated(reason: "Use registrationsList.")
     }
+
+    extend type EventTrainer {
+      name: String @deprecated(reason: "Use person { name }.")
+    }
   `,
   objects: {
+    EventTrainer: {
+      plans: {
+        name($trainer, args, info) {
+          const trainer = build.getTypeByName('EventTrainer');
+          assert(build.graphql.isObjectType(trainer));
+          const plan = trainer.getFields().person.extensions?.grafast?.plan;
+          assert(plan);
+          return (plan($trainer, args, info) as PgSelectSingleStep).get('name');
+        },
+      },
+    },
     Event: {
       plans: {
         remainingPersonSpots($event, args, info) {
           const event = build.getTypeByName('Event');
-          if (!build.graphql.isObjectType(event)) throw new Error('Expected Event object type.');
+          assert(build.graphql.isObjectType(event));
           const plan = event.getFields().registrationInfo.extensions?.grafast?.plan;
-          if (!plan) throw new Error('Expected registrationInfo plan.');
+          assert(plan);
           return access(plan($event, args, info), 'remaining_capacity');
         },
         eventExternalRegistrationsByInstanceIdList: () => constant([]),
@@ -76,9 +92,7 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
             let args = field.args;
             if (Self.name === 'Mutation') {
               const input = getNamedType(args!.input.type);
-              if (!isInputObjectType(input)) {
-                throw new Error(`Expected an input object for ${canonical}.`);
-              }
+              assert(isInputObjectType(input));
               // Keep variable declarations using the old input name, including input-field plans.
               args = {
                 ...args,

@@ -123,6 +123,12 @@ create or replace trigger _050_relationship_status
   before insert or update of since, until on user_proxy
   for each row execute function app_private.tg_relationship__status();
 create or replace trigger _050_relationship_status
+  before insert or update of since, until on couple
+  for each row execute function app_private.tg_relationship__status();
+create or replace trigger _050_relationship_status
+  before insert or update of since, until on cohort_membership
+  for each row execute function app_private.tg_relationship__status();
+create or replace trigger _050_relationship_status
   before insert or update of since, until on tenant_membership
   for each row execute function app_private.tg_relationship__status();
 create or replace trigger _050_relationship_status
