@@ -613,7 +613,9 @@ mutation SetEventRegistration($input: SetEventRegistrationInput!) {
       registrationStatus
       event {
         id
-        remainingPersonSpots
+        registrationInfo {
+          remainingCapacity
+        }
       }
     }
   }

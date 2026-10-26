@@ -4612,6 +4612,7 @@ export type Event = {
   registrations: EventRegistrationConnection;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   registrationsList: Array<EventRegistration>;
+  /** @deprecated Use registrationInfo.remainingCapacity. */
   remainingPersonSpots: Maybe<Scalars['Int']['output']>;
   /** Reads a single `EventSeries` that is related to this `Event`. */
   series: Maybe<EventSeries>;
@@ -9558,9 +9559,6 @@ export type Query = {
   paymentRecipient: Maybe<PaymentRecipient>;
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PersonConnection>;
-  peopleWithoutAccessOrInvitationList: Maybe<Array<Person>>;
-  peopleWithoutAccessWithExistingAccountList: Maybe<Array<Person>>;
-  peopleWithoutAccessWithInvitationList: Maybe<Array<Person>>;
   /** Get a single `Person`. */
   person: Maybe<Person>;
   personFacetsList: Maybe<Array<PersonFacetsRecord>>;
@@ -10406,27 +10404,6 @@ export type QueryPeopleArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPeopleWithoutAccessOrInvitationListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPeopleWithoutAccessWithExistingAccountListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPeopleWithoutAccessWithInvitationListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -13758,9 +13735,6 @@ export type GraphCacheResolvers = {
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     paymentRecipient?: GraphCacheResolver<WithTypename<Query>, QueryPaymentRecipientArgs, WithTypename<PaymentRecipient> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PersonConnection> | string>,
-    peopleWithoutAccessOrInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessOrInvitationListArgs, Array<WithTypename<Person> | string>>,
-    peopleWithoutAccessWithExistingAccountList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithExistingAccountListArgs, Array<WithTypename<Person> | string>>,
-    peopleWithoutAccessWithInvitationList?: GraphCacheResolver<WithTypename<Query>, QueryPeopleWithoutAccessWithInvitationListArgs, Array<WithTypename<Person> | string>>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
     personFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryPersonFacetsListArgs, Array<WithTypename<PersonFacetsRecord> | string>>,
     personInvitation?: GraphCacheResolver<WithTypename<Query>, QueryPersonInvitationArgs, WithTypename<PersonInvitation> | string>,
@@ -16261,9 +16235,6 @@ export type GraphCacheUpdaters = {
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
     paymentRecipient?: GraphCacheUpdateResolver<{ paymentRecipient: Maybe<WithTypename<PaymentRecipient>> }, QueryPaymentRecipientArgs>,
     people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PersonConnection>> }, QueryPeopleArgs>,
-    peopleWithoutAccessOrInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessOrInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessOrInvitationListArgs>,
-    peopleWithoutAccessWithExistingAccountList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithExistingAccountList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithExistingAccountListArgs>,
-    peopleWithoutAccessWithInvitationList?: GraphCacheUpdateResolver<{ peopleWithoutAccessWithInvitationList: Maybe<Array<WithTypename<Person>>> }, QueryPeopleWithoutAccessWithInvitationListArgs>,
     person?: GraphCacheUpdateResolver<{ person: Maybe<WithTypename<Person>> }, QueryPersonArgs>,
     personFacetsList?: GraphCacheUpdateResolver<{ personFacetsList: Maybe<Array<WithTypename<PersonFacetsRecord>>> }, QueryPersonFacetsListArgs>,
     personInvitation?: GraphCacheUpdateResolver<{ personInvitation: Maybe<WithTypename<PersonInvitation>> }, QueryPersonInvitationArgs>,

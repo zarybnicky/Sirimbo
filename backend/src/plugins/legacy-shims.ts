@@ -1,8 +1,8 @@
 import { sql, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
-import { constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
+import { access, constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
-export const LegacyShimsPlugin = extendSchema({
+export const LegacyShimsPlugin = extendSchema((build) => ({
   typeDefs: `
     type EventExternalRegistration {
       id: BigInt!
@@ -13,6 +13,8 @@ export const LegacyShimsPlugin = extendSchema({
     }
 
     extend type Event {
+      remainingPersonSpots: Int
+        @deprecated(reason: "Use registrationInfo.remainingCapacity.")
       eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]!
         @deprecated(reason: "Use registrationsList.")
     }
@@ -20,11 +22,18 @@ export const LegacyShimsPlugin = extendSchema({
   objects: {
     Event: {
       plans: {
+        remainingPersonSpots($event, args, info) {
+          const event = build.getTypeByName('Event');
+          if (!build.graphql.isObjectType(event)) throw new Error('Expected Event object type.');
+          const plan = event.getFields().registrationInfo.extensions?.grafast?.plan;
+          if (!plan) throw new Error('Expected registrationInfo plan.');
+          return access(plan($event, args, info), 'remaining_capacity');
+        },
         eventExternalRegistrationsByInstanceIdList: () => constant([]),
       },
     },
   },
-});
+}));
 
 const legacyFields: Record<string, Record<string, string>> = {
   Tenant: { tenantLocationsList: 'locationsList' },

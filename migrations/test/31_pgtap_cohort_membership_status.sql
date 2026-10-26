@@ -636,7 +636,7 @@ SELECT set_event_registration(
 );
 RESET ROLE;
 CREATE TEMP TABLE _self_registration_created ON COMMIT DROP AS
-SELECT event_remaining_person_spots(instance) = 0 AS at_capacity
+SELECT (event_registration_info(instance)).remaining_capacity = 0 AS at_capacity
 FROM event instance
 WHERE id = (SELECT id FROM _scheduled_lesson);
 SET LOCAL ROLE member;

@@ -192,7 +192,7 @@ begin
     end if;
 
     if not is_manager then
-      remaining_capacity := event_remaining_person_spots(target_instance);
+      remaining_capacity := (event_registration_info(target_instance)).remaining_capacity;
       required_capacity := case
         when target_instance.capacity_unit = 'people' and couple_id is not null then 2
         when target_instance.capacity_unit = 'registrations' and exists (

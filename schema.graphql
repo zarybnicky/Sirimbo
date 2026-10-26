@@ -5718,7 +5718,7 @@ type Event {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]!
-  remainingPersonSpots: Int
+  remainingPersonSpots: Int @deprecated(reason: "Use registrationInfo.remainingCapacity.")
 
   """Reads a single `EventSeries` that is related to this `Event`."""
   series: EventSeries
@@ -12849,27 +12849,6 @@ type Query {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): PersonConnection
-  peopleWithoutAccessOrInvitationList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Person!]
-  peopleWithoutAccessWithExistingAccountList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Person!]
-  peopleWithoutAccessWithInvitationList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [Person!]
 
   """Get a single `Person`."""
   person(id: BigInt!): Person
