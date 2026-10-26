@@ -77,7 +77,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                           Externí
                         </span>
                       )}
-                      {canEditAttendance && instance.seriesId && x.person && (
+                      {canEditAttendance && instance.seriesId && (instance.seriesInfo?.length ?? 0) > 1 && (
                         <div className="text-xs text-neutral-9">
                           Poslední účast: {x.lastAttended ? dateTimeFormatter.format(new Date(x.lastAttended)) : '-'}
                         </div>
