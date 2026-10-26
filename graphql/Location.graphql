@@ -59,10 +59,10 @@ query LocationPage($id: BigInt!, $start: Datetime!) {
   location(id: $id) {
     ...Location
   }
-  events: eventInstancesForRangeList(
+  events: eventsList(
     first: 10
-    startRange: $start
-    locationIds: [$id]
+    condition: { overlaps: { start: $start }, locationId: $id }
+    orderBy: SINCE_ASC
   ) {
     ...EventWithTrainer
   }

@@ -12347,7 +12347,7 @@ type Query {
     scope: EventInstanceRangeScope
     startRange: Datetime
     trainerIds: [BigInt]
-  ): [Event!]
+  ): [Event!] @deprecated(reason: "Use events or eventsList with filters.")
   eventOverlapsAttendeeReportList(
     """Only read the first `n` values of the set."""
     first: Int

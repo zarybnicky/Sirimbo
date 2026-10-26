@@ -529,16 +529,16 @@ query EventRange(
   $parentId: BigInt
   $locationIds: [BigInt]
 ) {
-  list: eventInstancesForRangeList(
-    startRange: $start
-    endRange: $end
-    onlyType: null
-    onlyTypes: $types
-    trainerIds: $trainerIds,
-    participantIds: $participantIds,
-    scope: $scope,
-    parentId: $parentId
-    locationIds: $locationIds
+  list: eventsList(
+    condition: {
+      overlaps: { start: $start, end: $end }
+      scope: { mode: $scope, parentId: $parentId }
+      types: $types
+      trainerIds: $trainerIds
+      participantIds: $participantIds
+      locationIds: $locationIds
+    }
+    orderBy: SINCE_ASC
   ) {
     ...EventWithTrainer
   }

@@ -53,5 +53,6 @@ create or replace function event_instances_for_range(
   ;
 $$ stable language sql;
 
-comment on function event_instances_for_range is '@behavior +list -connection';
+comment on function event_instances_for_range is '@behavior +list -connection
+@deprecated Use events or eventsList with filters.';
 grant all on function event_instances_for_range to anonymous;

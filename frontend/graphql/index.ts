@@ -9444,6 +9444,7 @@ export type Query = {
    * @deprecated Use event.
    */
   eventInstance: Maybe<Event>;
+  /** @deprecated Use events or eventsList with filters. */
   eventInstancesForRangeList: Maybe<Array<Event>>;
   eventOverlapsAttendeeReportList: Maybe<Array<EventConflict>>;
   eventOverlapsTrainerReportList: Maybe<Array<EventConflict>>;
