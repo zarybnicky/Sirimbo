@@ -105,7 +105,7 @@ function InstanceTimeGridEvent({
         : startsAfterDay
           ? `${shortTimeFormatter.format(event.start)} – `
           : shortTimeFormatter.format(event.start);
-  for (const trainer of event.instance.trainersList ?? []) {
+  for (const trainer of event.instance.eventTrainersList ?? []) {
     const trainerLabel = formatTrainerLabel(trainer.person?.name, useTrainerInitials);
     if (trainerLabel) label += `, ${trainerLabel}`;
   }

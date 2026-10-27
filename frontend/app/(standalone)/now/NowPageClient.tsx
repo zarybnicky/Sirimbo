@@ -36,7 +36,7 @@ type GroupingBucket = {
 type GroupingMode = 'location' | 'trainer';
 
 function trainerGroups(event: Event) {
-  const groups = (event.trainersList ?? []).map((x) => ({
+  const groups = (event.eventTrainersList ?? []).map((x) => ({
     key: x.personId,
     label: x.person?.name.trim() ?? 'Neznámý trenér',
   }));
@@ -115,7 +115,7 @@ function gatherBuckets(
 }
 
 function formatTrainers(event: Event) {
-  return (event.trainersList ?? [])
+  return (event.eventTrainersList ?? [])
     .map((x) => x.person?.name)
     .filter(isTruthy)
     .join(', ');

@@ -97,7 +97,7 @@ function mapEventsToCalendar(
     const resourceKeys: string[] = [];
 
     if (groupBy === 'trainer') {
-      for (const { person, personId } of instance.trainersList) {
+      for (const { person, personId } of instance.eventTrainersList) {
         assignResource(resourceKeys, { type: 'person', id: personId, resourceTitle: person?.name || '' });
       }
     } else if (groupBy === 'room') {

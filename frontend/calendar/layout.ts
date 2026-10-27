@@ -19,7 +19,7 @@ function overlaps(a: Item, b: Item, epsMs: number) {
 
 function trainerKeyOf(it: Item): string {
   if (it.event.kind !== 'event') return '';
-  const trainers = it.event.instance.trainersList;
+  const trainers = it.event.instance.eventTrainersList;
   if (!trainers || trainers.length === 0) return '';
   return trainers
     .map((t) => t.personId)

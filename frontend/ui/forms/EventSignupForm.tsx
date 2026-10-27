@@ -51,7 +51,7 @@ export function EventSignupForm({
   const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
   const showNotes = enableDetails && event.enableNotes;
   const trainers = enableDetails
-    ? event.trainersList.filter((t) => t.lessonsOffered !== 0)
+    ? event.eventTrainersList.filter((t) => t.lessonsOffered !== 0)
     : [];
 
   const { control, handleSubmit } = useForm({

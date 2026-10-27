@@ -59,7 +59,7 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
         const { instance } = calendarEvent;
         if (instance.type === 'LESSON') {
           const key =
-            instance.trainersList
+            instance.eventTrainersList
               ?.map((x) => x.personId)
               .toSorted()
               .join(',') ?? '';
@@ -235,7 +235,7 @@ function LessonGroup({
 
       <div className="ml-2 text-xl mb-1">
         {listFormatter.format(
-          (items[0]?.trainersList ?? []).map((x) => x.person?.name).filter(isTruthy),
+          (items[0]?.eventTrainersList ?? []).map((x) => x.person?.name).filter(isTruthy),
         )}
       </div>
 

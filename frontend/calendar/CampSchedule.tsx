@@ -52,7 +52,7 @@ export const CampSchedule = React.memo(function CampSchedule({
     pause: !auth.isTrainer,
   });
   const registrations = query.data?.event?.registrationsList ?? emptyRegistrations;
-  const requestCount = registrations.reduce((n, x) => n + x.requests.length, 0);
+  const requestCount = registrations.reduce((n, x) => n + x.lessonRequestsList.length, 0);
   const [requestsOpen, setRequestsOpen] = React.useState<boolean>();
   const saveEvents = useMutation(SaveEventsDocument)[1];
   const deleteInstance = useMutation(DeleteEventDocument)[1];
@@ -68,22 +68,22 @@ export const CampSchedule = React.memo(function CampSchedule({
 
   const availableTrainers = React.useMemo(() => {
     const trainers = new Map<string, string>();
-    for (const trainer of query.data?.event?.trainersList ?? []) {
+    for (const trainer of query.data?.event?.eventTrainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name ?? '');
     }
     for (const registration of registrations) {
-      for (const request of registration.requests) {
+      for (const request of registration.lessonRequestsList) {
         const person = request.trainer?.person;
         if (person) trainers.set(person.id, person.name);
       }
     }
-    for (const lesson of query.data?.scheduledLessons ?? []) {
-      for (const trainer of lesson.trainersList ?? []) {
+    for (const lesson of query.data?.eventsList ?? []) {
+      for (const trainer of lesson.eventTrainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name ?? '');
       }
     }
     return [...trainers].map(([id, name]) => ({ id, name }));
-  }, [registrations, query.data?.event?.trainersList, query.data?.scheduledLessons]);
+  }, [registrations, query.data?.event?.eventTrainersList, query.data?.eventsList]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -98,9 +98,9 @@ export const CampSchedule = React.memo(function CampSchedule({
   const scheduleRequest = useAsyncCallback(
     async (subject: ExternalDragSubject, info: InteractionInfo) => {
       const registration = registrations.find((r) =>
-        r.requests.some((x) => x.id === subject.id),
+        r.lessonRequestsList.some((x) => x.id === subject.id),
       );
-      const request = registration?.requests.find((x) => x.id === subject.id);
+      const request = registration?.lessonRequestsList.find((x) => x.id === subject.id);
       const trainerPersonId = request?.trainer?.personId;
       if (!registration || !trainerPersonId) throw new Error('Požadavek už neexistuje');
 
@@ -234,7 +234,7 @@ export const CampSchedule = React.memo(function CampSchedule({
             <div id="lesson-requests-pane">
               <LessonRequests
                 registrations={registrations}
-                scheduledLessons={query.data?.scheduledLessons ?? []}
+                scheduledLessons={query.data?.eventsList ?? []}
                 fetching={query.fetching}
                 error={requestError}
                 lockTrainers={groupBy === 'trainer'}
@@ -255,7 +255,7 @@ export const CampSchedule = React.memo(function CampSchedule({
   );
 });
 
-type ScheduledLesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
+type ScheduledLesson = NonNullable<EventRegistrationsQuery['eventsList']>[number];
 
 function scheduledTrainers(
   registration: EventRegistrationFragment,
@@ -271,7 +271,7 @@ function scheduledTrainers(
     );
     if (!hasRegistration) continue;
 
-    for (const trainer of lesson.trainersList ?? []) {
+    for (const trainer of lesson.eventTrainersList ?? []) {
       const current = counts.get(trainer.personId);
       counts.set(trainer.personId, {
         count: (current?.count ?? 0) + 1,
@@ -320,7 +320,7 @@ function LessonRequests({
     .map((registration) => {
       const scheduledByTrainer = scheduledTrainers(registration, scheduledLessons);
       const requestTrainerIds = new Set(
-        registration.requests.flatMap(({ trainer }) =>
+        registration.lessonRequestsList.flatMap(({ trainer }) =>
           trainer?.personId ? [trainer.personId] : [],
         ),
       );
@@ -331,9 +331,9 @@ function LessonRequests({
     })
     .filter(
       ({ registration, scheduledByTrainer }) =>
-        registration.requests.length > 0 || scheduledByTrainer.size > 0,
+        registration.lessonRequestsList.length > 0 || scheduledByTrainer.size > 0,
     );
-  const requests = registrationRows.flatMap(({ registration }) => registration.requests);
+  const requests = registrationRows.flatMap(({ registration }) => registration.lessonRequestsList);
   const lessonCount = requests.reduce((sum, x) => sum + x.lessonCount, 0);
   const scheduledCount = registrationRows.reduce(
     (sum, { scheduledByTrainer }) =>
@@ -361,7 +361,7 @@ function LessonRequests({
 
       <div className="grid gap-2 p-2">
         {registrationRows.map(({ registration, scheduledByTrainer, extras }) => {
-          const requested = registration.requests.reduce(
+          const requested = registration.lessonRequestsList.reduce(
             (sum, x) => sum + x.lessonCount,
             0,
           );
@@ -388,7 +388,7 @@ function LessonRequests({
                 </span>
               </summary>
               <div className="grid gap-1 p-1">
-                {registration.requests.map((request) => {
+                {registration.lessonRequestsList.map((request) => {
                   const trainerPersonId = request.trainer?.person?.id;
                   const scheduled = trainerPersonId
                     ? (scheduledByTrainer.get(trainerPersonId)?.count ?? 0)

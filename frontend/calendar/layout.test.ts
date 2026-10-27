@@ -40,7 +40,7 @@ function ev(
     instance: {
       id: `inst-${id}`,
       type: opts.type ?? 'LESSON',
-      trainersList: (opts.trainers ?? []).map((personId) => ({ personId }) as any),
+      eventTrainersList: (opts.trainers ?? []).map((personId) => ({ personId }) as any),
     } as any,
   };
 }
@@ -278,7 +278,7 @@ describe('rank and type priority', () => {
       const r = result.find(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some((t: any) => t.personId === trainerId) &&
+          r.event.instance.eventTrainersList?.some((t: any) => t.personId === trainerId) &&
           r.event.start.getHours() === hour,
       );
       return r!.style.xOffset;
@@ -312,7 +312,7 @@ describe('rank and type priority', () => {
       const r = result.find(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some((t: any) => t.personId === trainerId) &&
+          r.event.instance.eventTrainersList?.some((t: any) => t.personId === trainerId) &&
           r.event.start.getHours() === hour,
       );
       return r!.style.xOffset;
@@ -662,7 +662,7 @@ describe('degenerate cases', () => {
       .filter(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some((t: any) => t.personId === 'A'),
+          r.event.instance.eventTrainersList?.some((t: any) => t.personId === 'A'),
       )
       .map((r) => r.style.xOffset);
     assert.equal(new Set(aOffsets).size, 1);
@@ -671,7 +671,7 @@ describe('degenerate cases', () => {
       .filter(
         (r) =>
           r.event.kind === 'event' &&
-          r.event.instance.trainersList?.some((t: any) => t.personId === 'B'),
+          r.event.instance.eventTrainersList?.some((t: any) => t.personId === 'B'),
       )
       .map((r) => r.style.xOffset);
     assert.equal(new Set(bOffsets).size, 1);

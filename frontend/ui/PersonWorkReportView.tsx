@@ -90,7 +90,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
     for (const event of data?.eventsList ?? []) {
       if (event.isCancelled) continue;
       if (new Date(event.until).getTime() > now.getTime()) continue;
-      if (!event.trainersList?.some((trainer) => trainer.personId === id)) continue;
+      if (!event.eventTrainersList?.some((x) => x.personId === id)) continue;
 
       if (event.type !== 'GROUP' && event.type !== 'LESSON') continue;
 

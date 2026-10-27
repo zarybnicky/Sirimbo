@@ -92,11 +92,11 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         </div>
       )}
 
-      {!!event.trainersList?.length && (
+      {!!event.eventTrainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-4 text-accent-11 shrink-0" />
           {listFormatter.format(
-            event.trainersList.map((x) => x.person?.name).filter(isTruthy),
+            event.eventTrainersList.map((x) => x.person?.name).filter(isTruthy),
           )}
         </div>
       )}

@@ -47,15 +47,15 @@ export function EventRegistrationForm({
   const auth = useAuth();
   const confirm = useConfirm();
   const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
-  const registration = 'requests' in registrant ? registrant : undefined;
+  const registration = 'lessonRequestsList' in registrant ? registrant : undefined;
   const { personId, coupleId } = registrant;
   const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
   const readOnly = !!event.isLocked && !auth.canManageEvent(event);
   const requestCounts = Object.fromEntries(
-    registration?.requests.map((x) => [x.trainerId, x.lessonCount]) ?? [],
+    registration?.lessonRequestsList.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
   const lessonTrainers = enableDetails
-    ? event.trainersList.filter(
+    ? event.eventTrainersList.filter(
         (x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0,
       )
     : [];

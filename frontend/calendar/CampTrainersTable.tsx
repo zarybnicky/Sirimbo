@@ -11,7 +11,7 @@ import * as React from 'react';
 import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
 
-type ScheduledEvent = NonNullable<CampTrainerOverviewQuery['scheduledEvents']>[number];
+type ScheduledEvent = NonNullable<CampTrainerOverviewQuery['eventsList']>[number];
 type Row = {
   id: string;
   trainer: string;
@@ -38,7 +38,7 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
     ) {
       days.set(dayKeyFormatter.format(day), day);
     }
-    for (const trainer of event.trainersList) {
+    for (const trainer of event.eventTrainersList) {
       rows.set(trainer.personId, {
         id: trainer.personId,
         trainer: trainer.person?.name || '-',
@@ -48,12 +48,12 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
       });
     }
 
-    for (const event of query.data.scheduledEvents ?? []) {
+    for (const event of query.data.eventsList ?? []) {
       if (event.type !== 'LESSON' && event.type !== 'GROUP') continue;
       const day = new Date(event.since);
       const dayKey = dayKeyFormatter.format(day);
       days.set(dayKey, day);
-      for (const trainer of event.trainersList) {
+      for (const trainer of event.eventTrainersList) {
         const row = rows.get(trainer.personId) ?? {
           id: trainer.personId,
           trainer: trainer.person?.name || '-',

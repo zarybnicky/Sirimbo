@@ -44,11 +44,11 @@ function eventDetails(event: SeriesEvent): Detail[] {
     new Date(event.since),
     new Date(event.until),
   );
-  const trainers = event.trainersList
+  const trainers = event.eventTrainersList
     .map((x) => x.person?.name)
     .filter(Boolean)
     .join(', ');
-  const trainerKey = event.trainersList
+  const trainerKey = event.eventTrainersList
     .map((x) => x.personId)
     .toSorted()
     .join(',');

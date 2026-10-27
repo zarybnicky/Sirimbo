@@ -11,7 +11,7 @@ import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 
-type Lesson = NonNullable<EventRegistrationsQuery['scheduledLessons']>[number];
+type Lesson = NonNullable<EventRegistrationsQuery['eventsList']>[number];
 type Cell = { requested: number; lessons: Lesson[] };
 type Row = {
   id: string;
@@ -32,15 +32,15 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
 
   const { rows, trainers, hasRequests } = React.useMemo(() => {
     const event = query.data?.event;
-    const lessons = query.data?.scheduledLessons;
+    const lessons = query.data?.eventsList;
 
     if (!event || !lessons) return { rows: [], trainers: [], hasRequests: false };
 
     const rows = new Map<string, Row>();
-    const hasRequests = event.registrationsList.some((x) => x.requests.length > 0);
+    const hasRequests = event.registrationsList.some((x) => x.lessonRequestsList.length > 0);
 
     const trainers = new Map<string, string>();
-    for (const trainer of event.trainersList ?? []) {
+    for (const trainer of event.eventTrainersList ?? []) {
       trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
     }
 
@@ -59,7 +59,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
         prices: new Map(),
         priceIncomplete: false,
       };
-      for (const request of registration.requests) {
+      for (const request of registration.lessonRequestsList) {
         const trainerId = request.trainer?.personId ?? '';
         trainers.set(trainerId, request.trainer?.person?.name || 'Bez trenéra');
         row.cells.set(trainerId, { requested: request.lessonCount, lessons: [] });
@@ -67,14 +67,14 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
       rows.set(id, row);
     }
 
-    for (const lesson of query.data?.scheduledLessons ?? []) {
+    for (const lesson of query.data?.eventsList ?? []) {
       const duration =
         new Date(lesson.until).getTime() - new Date(lesson.since).getTime();
       const participantCount = lesson.registrationsList.reduce(
         (sum, x) => sum + (x.couple ? 2 : 1),
         0,
       );
-      for (const trainer of lesson.trainersList ?? []) {
+      for (const trainer of lesson.eventTrainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
       for (const registration of lesson.registrationsList) {
@@ -91,7 +91,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
           priceIncomplete: false,
         };
         const participantShare = (registration.couple ? 2 : 1) / participantCount;
-        for (const trainer of lesson.trainersList ?? []) {
+        for (const trainer of lesson.eventTrainersList ?? []) {
           const trainerId = trainer.personId;
           const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
           cell.lessons.push(lesson);

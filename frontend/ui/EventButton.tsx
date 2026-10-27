@@ -35,8 +35,8 @@ export function EventButton({
   const end = new Date(event.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = event.trainersList?.map((x) => x.personId) ?? [];
-  const trainers = event.trainersList?.map((x) => x.person?.name).join(', ') ?? '';
+  const trainerIds = event.eventTrainersList?.map((x) => x.personId) ?? [];
+  const trainers = event.eventTrainersList?.map((x) => x.person?.name).join(', ') ?? '';
   const showTrainer =
     viewer === 'couple'
       ? true

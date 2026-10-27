@@ -388,7 +388,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
             isCancelled: event.isCancelled,
           },
         ],
-        trainers: event.trainersList.map((trainer) => ({
+        trainers: event.eventTrainersList.map((trainer) => ({
           personId: trainer.personId,
           lessonsOffered: trainer.lessonsOffered,
         })),

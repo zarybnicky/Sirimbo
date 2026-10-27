@@ -73,7 +73,7 @@ fragment EventWithTrainer on Event {
     amount
     currency
   }
-  trainersList: eventTrainersList {
+  eventTrainersList {
     id
     personId
     lessonsOffered
@@ -179,7 +179,7 @@ fragment EventRegistration on EventRegistration {
   couple {
     ...Couple
   }
-  requests: lessonRequestsList {
+  lessonRequestsList {
     ...EventLessonRequest
   }
 }
@@ -205,7 +205,7 @@ query EventParticipantsExport($id: BigInt!) {
     id
     name
     type
-    trainersList: eventTrainersList {
+    eventTrainersList {
       id
       person {
         id
@@ -241,7 +241,7 @@ query EventExport($id: BigInt!) {
     id
     name
     type
-    trainersList: eventTrainersList {
+    eventTrainersList {
       ...EventTrainer
     }
     registrations(
@@ -325,7 +325,7 @@ query EventRegistrationDialog($id: BigInt!) {
     registrationInfo {
       remainingCapacity
     }
-    trainersList: eventTrainersList {
+    eventTrainersList {
       ...EventTrainer
     }
     registrationsList(
@@ -356,11 +356,11 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = true) {
   ... @include(if: $withSchedule) {
     event(id: $id) {
       id
-      trainersList: eventTrainersList {
+      eventTrainersList {
         ...EventTrainer
       }
     }
-    scheduledLessons: eventsList(condition: { parentId: $id, type: LESSON }) {
+    eventsList(condition: { parentId: $id, type: LESSON }) {
       id
       since
       until
@@ -369,7 +369,7 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = true) {
         id
         name
       }
-      trainersList: eventTrainersList {
+      eventTrainersList {
         id
         personId
         person {
@@ -474,7 +474,7 @@ query CampTrainerOverview($id: BigInt!) {
     id
     since
     until
-    trainersList: eventTrainersList {
+    eventTrainersList {
       id
       personId
       person {
@@ -483,7 +483,7 @@ query CampTrainerOverview($id: BigInt!) {
       }
     }
   }
-  scheduledEvents: eventsList(
+  eventsList(
     condition: { parentId: $id, isCancelled: false }
     orderBy: SINCE_ASC
   ) {
@@ -491,7 +491,7 @@ query CampTrainerOverview($id: BigInt!) {
     type
     since
     until
-    trainersList: eventTrainersList {
+    eventTrainersList {
       id
       personId
       person {
@@ -598,7 +598,7 @@ mutation MoveEvent($input: MoveEventInput!) {
         id
         name
       }
-      trainersList: eventTrainersList {
+      eventTrainersList {
         id
         personId
         person {

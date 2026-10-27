@@ -22,13 +22,13 @@ export async function exportEventRegistrations(client: Client, id: string) {
     { header: 'Poznámka', key: 'note' },
   ];
   const lessonTrainers = new Map<string, string>();
-  for (const trainer of event.trainersList ?? []) {
+  for (const trainer of event.eventTrainersList ?? []) {
     if (trainer.lessonsOffered !== 0) {
       lessonTrainers.set(trainer.personId, trainer.person?.name ?? '?');
     }
   }
   for (const registration of event.registrations.nodes) {
-    for (const request of registration.requests) {
+    for (const request of registration.lessonRequestsList) {
       if (request.trainer?.personId) {
         lessonTrainers.set(request.trainer.personId, request.trainer.person?.name ?? '?');
       }
@@ -53,7 +53,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
       registered: fullDateFormatter.format(new Date(x.createdAt)),
       note: x.note || '',
     };
-    for (const request of x.requests) {
+    for (const request of x.lessonRequestsList) {
       const trainerId = request.trainer?.personId;
       if (trainerId) {
         row[trainerId] = String(Number(row[trainerId] ?? 0) + request.lessonCount);

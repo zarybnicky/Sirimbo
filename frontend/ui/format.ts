@@ -100,7 +100,7 @@ export const formatEventName = (
         registrations: {
           nodes: MaybeRegistration[] | null;
         } | null;
-        trainersList:
+        eventTrainersList:
           | {
               person: {
                 name?: string | null;
@@ -121,11 +121,11 @@ export const formatEventName = (
   let name = formatEventType(event.type);
   if (
     event.type === 'RESERVATION' &&
-    event?.trainersList &&
-    event.trainersList.length > 0
+    event?.eventTrainersList &&
+    event.eventTrainersList.length > 0
   )
     name += `: ${listFormatter.format(
-      event.trainersList.map((x) => x?.person?.name).filter(isTruthy),
+      event.eventTrainersList.map((x) => x?.person?.name).filter(isTruthy),
     )}`;
   return name;
 };
@@ -305,7 +305,7 @@ export function describePosting(
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers = event?.trainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
+    const trainers = event?.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
     return `${formatEventType(type)}: ${listFormatter.format(trainers)}`;
   }
   return formatEventName(event);

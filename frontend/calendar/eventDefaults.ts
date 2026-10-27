@@ -55,7 +55,7 @@ export function createEventDefaults(
   if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
   const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
   const trainerPersonIds = input.trainerPersonIds ??
-    after?.trainersList.map((x) => x.personId) ?? fallback.trainerPersonIds;
+    after?.eventTrainersList.map((x) => x.personId) ?? fallback.trainerPersonIds;
 
   let previous = after;
   if (!previous) {
@@ -64,7 +64,7 @@ export function createEventDefaults(
         !event.isCancelled &&
         eq(new Date(event.since), since, 'day') &&
         new Date(event.until) <= since &&
-        event.trainersList.some((x) => trainerPersonIds.includes(x.personId)) &&
+        event.eventTrainersList.some((x) => trainerPersonIds.includes(x.personId)) &&
         (!previous || new Date(event.since) > new Date(previous.since))
       ) {
         previous = event;

@@ -5,7 +5,7 @@ import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
 
 export function BasicEventInfo({ event }: { event: EventPageFragment }) {
-  const trainers = event.trainersList.map((t) => t.person).filter(isTruthy);
+  const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
   const { seriesInfo } = event;
 
   return (

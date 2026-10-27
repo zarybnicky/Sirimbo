@@ -84,7 +84,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                       )}
                       {auth.isTrainer && (
                         <div className="text-sm text-neutral-11">
-                          {x.requests.map((request) => (
+                          {x.lessonRequestsList.map((request) => (
                             <div key={request.id}>
                               {request.lessonCount}× {request.trainer?.person?.name}
                             </div>
