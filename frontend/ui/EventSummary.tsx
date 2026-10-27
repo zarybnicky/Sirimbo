@@ -10,7 +10,7 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { useActions } from '@/lib/actions';
-import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import { eventActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { Clock, Coins, MapPin, User, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -18,13 +18,13 @@ import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
 import { startOf } from 'date-arithmetic';
 
-export function EventSummary({ instance }: { instance: EventWithTrainerFragment }) {
-  const actions = useActions(eventInstanceActions, instance);
-  const { seriesInfo, registrations } = instance;
-  const registrationCount = instance.registrationInfo?.registrations ?? 0;
-  const locationLabel = instance.location?.name || instance.locationText;
-  const cohorts = instance.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
-  const priceString = (instance.approxPriceList ?? [])
+export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
+  const actions = useActions(eventActions, event);
+  const { seriesInfo, registrations } = event;
+  const registrationCount = event.registrationInfo?.registrations ?? 0;
+  const locationLabel = event.location?.name || event.locationText;
+  const cohorts = event.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
+  const priceString = (event.approxPriceList ?? [])
     .filter(isTruthy)
     .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
     .map((price) => moneyFormatter.format(price))
@@ -32,23 +32,23 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
 
   const primaryActions = React.useMemo(() => {
     return [
-      startOf(new Date(instance.since), 'day') > startOf(new Date(), 'day')
-        ? 'eventInstance.registrations'
-        : 'eventInstance.attendance',
-      'eventInstance.edit',
+      startOf(new Date(event.since), 'day') > startOf(new Date(), 'day')
+        ? 'event.registrations'
+        : 'event.attendance',
+      'event.edit',
     ];
-  }, [instance.since]);
+  }, [event.since]);
 
   return (
     <div className="flex flex-col gap-2 text-sm">
       <DotSeparated className="-mb-2 text-sm text-accent-11">
-        <span>{formatEventType(instance.type)}</span>
-        {instance.parent && (
+        <span>{formatEventType(event.type)}</span>
+        {event.parent && (
           <Link
-            href={`/termin/${instance.parent.id}`}
+            href={`/termin/${event.parent.id}`}
             className="text-xs hover:text-accent-11 underline"
           >
-            {instance.parent.name}
+            {event.parent.name}
           </Link>
         )}
         {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
@@ -62,29 +62,29 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
       </DotSeparated>
 
       <Link
-        href={`/termin/${instance.id}`}
+        href={`/termin/${event.id}`}
         className={cn(
           'block text-xl',
-          instance.isCancelled ? 'line-through' : 'underline decoration-accent-12/50',
+          event.isCancelled ? 'line-through' : 'underline decoration-accent-12/50',
         )}
       >
-        {formatEventName(instance)}
+        {formatEventName(event)}
       </Link>
 
       <div className="flex items-center gap-2">
         <Clock className="size-4 text-accent-11 shrink-0" />
         {shortTimeFormatter.formatRange(
-          new Date(instance.since),
-          new Date(instance.until),
+          new Date(event.since),
+          new Date(event.until),
         )}
       </div>
 
       {locationLabel && (
         <div className="flex items-center gap-2">
           <MapPin className="size-4 text-accent-11 shrink-0" />
-          {instance.location ? (
-            <Link className="underline" href={`/lokality/${instance.location.id}`}>
-              {instance.location.name}
+          {event.location ? (
+            <Link className="underline" href={`/lokality/${event.location.id}`}>
+              {event.location.name}
             </Link>
           ) : (
             locationLabel
@@ -92,11 +92,11 @@ export function EventSummary({ instance }: { instance: EventWithTrainerFragment 
         </div>
       )}
 
-      {!!instance.trainersList?.length && (
+      {!!event.trainersList?.length && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-4 text-accent-11 shrink-0" />
           {listFormatter.format(
-            instance.trainersList.map((x) => x.person?.name).filter(isTruthy),
+            event.trainersList.map((x) => x.person?.name).filter(isTruthy),
           )}
         </div>
       )}

@@ -15,7 +15,7 @@ import { AlertTriangle } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
 import { useSetAtom } from 'jotai';
-import { calendarConflictsAtom, type CalendarInstanceConflict } from './state';
+import { calendarConflictsAtom, type CalendarEventConflict } from './state';
 import { DateRange } from './types';
 
 type Props = {
@@ -27,7 +27,7 @@ export function CalendarConflictsIndicator({ range }: Props) {
     query: EventConflictsReportDocument,
     variables: { since: range.since.toISOString(), until: range.until.toISOString() },
   });
-  const setInstanceConflicts = useSetAtom(calendarConflictsAtom);
+  const setEventConflicts = useSetAtom(calendarConflictsAtom);
 
   const conflicts = React.useMemo(() => {
     return [
@@ -36,8 +36,8 @@ export function CalendarConflictsIndicator({ range }: Props) {
     ].toSorted((a, b) => (a.first?.since ?? '').localeCompare(b.first?.since ?? ''));
   }, [data?.attendeeConflicts, data?.trainerConflicts]);
 
-  const conflictsByInstance = React.useMemo(() => {
-    const map: Record<string, CalendarInstanceConflict[]> = {};
+  const conflictsByEvent = React.useMemo(() => {
+    const map: Record<string, CalendarEventConflict[]> = {};
 
     for (const conflict of conflicts) {
       const { person, first, second } = conflict;
@@ -62,9 +62,9 @@ export function CalendarConflictsIndicator({ range }: Props) {
   }, [conflicts]);
 
   React.useEffect(() => {
-    setInstanceConflicts(conflictsByInstance);
-  }, [conflictsByInstance, setInstanceConflicts]);
-  React.useEffect(() => () => setInstanceConflicts({}), [setInstanceConflicts]);
+    setEventConflicts(conflictsByEvent);
+  }, [conflictsByEvent, setEventConflicts]);
+  React.useEffect(() => () => setEventConflicts({}), [setEventConflicts]);
 
   if (!data || conflicts.length === 0) {
     return null;

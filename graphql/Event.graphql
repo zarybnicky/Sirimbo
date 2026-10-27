@@ -315,7 +315,7 @@ query EventDescription($id: BigInt!) {
 }
 
 query EventRegistrationDialog($id: BigInt!) {
-  instance: event(id: $id) {
+  event(id: $id) {
     id
     type
     isLocked

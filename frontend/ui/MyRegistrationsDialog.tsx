@@ -34,7 +34,7 @@ type Selection =
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
-type RegistrationEvent = NonNullable<EventRegistrationDialogQuery['instance']>;
+type RegistrationEvent = NonNullable<EventRegistrationDialogQuery['event']>;
 
 const registrant = (registration: EventRegistrationFragment): Registrant => ({
   id: registration.id,
@@ -45,7 +45,7 @@ const registrant = (registration: EventRegistrationFragment): Registrant => ({
 
 function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
   const auth = useAuth();
-  const isManager = auth.canManageInstance(event);
+  const isManager = auth.canManageEvent(event);
 
   const [query] = useQuery({
     query: EventFormOptionsDocument,
@@ -117,25 +117,25 @@ function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
 }
 
 export function MyRegistrationsDialog({
-  instanceId,
+  eventId,
   initialRegistrationId,
   initialPage,
 }: {
-  instanceId: string;
+  eventId: string;
   initialRegistrationId?: string;
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const [query] = useQuery({
     query: EventRegistrationDialogDocument,
-    variables: { id: instanceId },
+    variables: { id: eventId },
   });
 
   if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
-  if (!query.data.instance) return <FormError error="Termín není dostupný." />;
+  if (!query.data.event) return <FormError error="Termín není dostupný." />;
 
   return (
     <RegistrationsDialogContent
-      instance={query.data.instance}
+      event={query.data.event}
       initialRegistrationId={initialRegistrationId}
       initialPage={initialPage}
     />
@@ -143,20 +143,20 @@ export function MyRegistrationsDialog({
 }
 
 function RegistrationsDialogContent({
-  instance,
+  event,
   initialRegistrationId,
   initialPage,
 }: {
-  instance: RegistrationEvent;
+  event: RegistrationEvent;
   initialRegistrationId?: string;
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const auth = useAuth();
-  const isManager = auth.canManageInstance(instance);
+  const isManager = auth.canManageEvent(event);
   const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
-    ? instance.registrationsList
-    : instance.registrationsList.filter(
+    ? event.registrationsList
+    : event.registrationsList.filter(
         (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
       );
   const [selection, setSelection] = React.useState<Selection>(() => {
@@ -181,7 +181,7 @@ function RegistrationsDialogContent({
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(instance, selection.kind === 'candidates');
+  } = useRegistrationCandidates(event, selection.kind === 'candidates');
   const page = selected
     ? 'editor'
     : selection.kind === 'candidates'
@@ -196,7 +196,7 @@ function RegistrationsDialogContent({
   );
   const i = registration ? registrations.indexOf(registration) : -1;
   const canCycle = !!registration && registrations.length > 1;
-  const simpleRegistration = instance.type === 'LESSON' || instance.type === 'GROUP';
+  const simpleRegistration = event.type === 'LESSON' || event.type === 'GROUP';
 
   const selectCandidate = async (candidate: Registrant) => {
     if (!simpleRegistration) {
@@ -205,7 +205,7 @@ function RegistrationsDialogContent({
     }
     const result = await setRegistration({
       input: {
-        eventId: instance.id,
+        eventId: event.id,
         personId: candidate.personId,
         coupleId: candidate.coupleId,
         isRegistered: true,
@@ -316,14 +316,14 @@ function RegistrationsDialogContent({
         </>
       ) : page === 'new-person' ? (
         <>
-          <EventLoginPrompt instanceId={instance.id} />
-          <EventSignupForm instance={instance} />
+          <EventLoginPrompt eventId={event.id} />
+          <EventSignupForm event={event} />
         </>
       ) : (
         selected && (
           <EventRegistrationForm
             key={`${selected.id}:${registration?.id ?? 'new'}`}
-            instance={instance}
+            event={event}
             registrant={registration ?? selected}
             onSaved={() => {
               if (!registration) onClose();

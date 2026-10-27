@@ -32,12 +32,12 @@ const Form = z.object({
 type FormValues = z.infer<typeof Form>;
 
 export function EventRegistrationForm({
-  instance,
+  event,
   registrant,
   onSaved,
   onCancelled,
 }: {
-  instance: NonNullable<EventRegistrationDialogQuery['instance']>;
+  event: NonNullable<EventRegistrationDialogQuery['event']>;
   registrant:
     | EventRegistrationFragment
     | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;
@@ -49,30 +49,30 @@ export function EventRegistrationForm({
   const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
   const registration = 'requests' in registrant ? registrant : undefined;
   const { personId, coupleId } = registrant;
-  const enableDetails = instance.type !== 'LESSON' && instance.type !== 'GROUP';
-  const readOnly = !!instance.isLocked && !auth.canManageInstance(instance);
+  const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
+  const readOnly = !!event.isLocked && !auth.canManageEvent(event);
   const requestCounts = Object.fromEntries(
     registration?.requests.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );
   const lessonTrainers = enableDetails
-    ? instance.trainersList.filter(
+    ? event.trainersList.filter(
         (x) => x.lessonsOffered !== 0 || (requestCounts[x.id] ?? 0) > 0,
       )
     : [];
-  const showNotes = enableDetails && (instance.enableNotes || !!registration?.note);
+  const showNotes = enableDetails && (event.enableNotes || !!registration?.note);
   const hasFields = showNotes || lessonTrainers.length > 0;
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(Form),
     defaultValues: {
       note: registration?.note ?? '',
-      lessonCounts: lessonTrainers.map((trainer) => requestCounts[trainer.id] ?? 0),
+      lessonCounts: lessonTrainers.map((x) => requestCounts[x.id] ?? 0),
     },
   });
 
   const save = async (values: FormValues) => {
     const result = await setRegistration({
       input: {
-        eventId: instance.id,
+        eventId: event.id,
         personId,
         coupleId,
         isRegistered: true,
@@ -97,7 +97,7 @@ export function EventRegistrationForm({
     }
     const result = await setRegistration({
       input: {
-        eventId: instance.id,
+        eventId: event.id,
         personId,
         coupleId,
         isRegistered: false,

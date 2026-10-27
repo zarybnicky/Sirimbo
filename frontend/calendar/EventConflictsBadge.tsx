@@ -5,14 +5,14 @@ import { cn } from '@/lib/cn';
 import { calendarConflictsFor } from './state';
 import { shortTimeFormatter } from '@/ui/format';
 
-export function ConflictsInstanceBadge({
-  instanceId,
+export function EventConflictsBadge({
+  eventId,
   className,
 }: {
-  instanceId: string;
+  eventId: string;
   className?: string;
 }) {
-  const conflictsAtom = useMemo(() => calendarConflictsFor(instanceId), [instanceId]);
+  const conflictsAtom = useMemo(() => calendarConflictsFor(eventId), [eventId]);
   const conflicts = useAtomValue(conflictsAtom);
 
   if (conflicts.length === 0) return null;

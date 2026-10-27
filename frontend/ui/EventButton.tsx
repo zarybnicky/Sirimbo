@@ -10,18 +10,18 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { useAuth } from '@/lib/auth';
 import { diff } from 'date-arithmetic';
-import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import * as React from 'react';
 import { Check, HelpCircle, X } from 'lucide-react';
 
 export function EventButton({
-  instance,
+  event,
   viewer,
   showDate,
   attendance,
   suffix,
 }: {
-  instance: EventWithTrainerFragment;
+  event: EventWithTrainerFragment;
   showDate?: boolean;
   viewer: 'auto' | 'trainer' | 'couple';
   attendance?: 'inline';
@@ -29,15 +29,14 @@ export function EventButton({
 }) {
   const auth = useAuth();
 
-  const registrations = instance.registrations.nodes || [];
+  const registrations = event.registrations.nodes || [];
 
-  const start = new Date(instance.since);
-  const end = new Date(instance.until);
+  const start = new Date(event.since);
+  const end = new Date(event.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = instance.trainersList?.map((x) => x.personId) ?? [];
-  const instanceTrainers =
-    instance.trainersList?.map((x) => x.person?.name).join(', ') ?? '';
+  const trainerIds = event.trainersList?.map((x) => x.personId) ?? [];
+  const trainers = event.trainersList?.map((x) => x.person?.name).join(', ') ?? '';
   const showTrainer =
     viewer === 'couple'
       ? true
@@ -47,8 +46,8 @@ export function EventButton({
 
   const showInlineAttendance =
     attendance === 'inline' &&
-    instance.type === 'GROUP' &&
-    auth.canManageInstance(instance);
+    event.type === 'GROUP' &&
+    auth.canManageEvent(event);
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
@@ -71,9 +70,9 @@ export function EventButton({
             className={cn(
               'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              instance?.type === 'LESSON' &&
-                !instance.isLocked &&
-                (instance.registrationInfo?.remainingCapacity ?? 0) > 0
+              event?.type === 'LESSON' &&
+                !event.isLocked &&
+                (event.registrationInfo?.remainingCapacity ?? 0) > 0
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
@@ -82,11 +81,11 @@ export function EventButton({
               {(showDate ? numericFullFormatter : shortTimeFormatter).format(start)}
             </div>
             <div
-              className={cn('min-w-0 grow', instance.isCancelled ? 'line-through' : '')}
+              className={cn('min-w-0 grow', event.isCancelled ? 'line-through' : '')}
             >
-              {instance.name ||
+              {event.name ||
                 (showTrainer ? (
-                  `${formatEventType(instance.type)}: ${instanceTrainers}`
+                  `${formatEventType(event.type)}: ${trainers}`
                 ) : registrations.length > 0 ? (
                   <>
                     {registrations.slice(0, 2).map((x, i) => (
@@ -101,14 +100,14 @@ export function EventButton({
                 ))}
             </div>
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
-            <ConflictsInstanceBadge instanceId={instance.id} className="text-accent-11" />
-            {showInlineAttendance && <InlineAttendanceStats stats={instance.stats} />}
+            <EventConflictsBadge eventId={event.id} className="text-accent-11" />
+            {showInlineAttendance && <InlineAttendanceStats stats={event.stats} />}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>
         </PopoverTrigger>
 
         <PopoverContent align="start" className="flex flex-col gap-2">
-          <EventSummary instance={instance} />
+          <EventSummary event={event} />
         </PopoverContent>
       </Popover>
     </div>

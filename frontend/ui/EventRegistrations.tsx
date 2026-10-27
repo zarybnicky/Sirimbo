@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { EventWithAttendanceQuery } from '@/graphql/Event';
 import { useActionMap } from '@/lib/actions';
-import { eventRegistrationActions } from '@/lib/actions/eventInstance';
+import { eventRegistrationActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { dateTimeFormatter, formatCoupleName, numericDateFormatter } from '@/ui/format';
@@ -10,12 +10,12 @@ import { useAuth } from '@/lib/auth';
 import { compareText } from '@/lib/compare';
 
 export const EventRegistrations = memo(function EventRegistrations({
-  instance,
+  event,
 }: {
-  instance: NonNullable<EventWithAttendanceQuery['event']>;
+  event: NonNullable<EventWithAttendanceQuery['event']>;
 }) {
   const auth = useAuth();
-  const registrations = instance.attendanceRegistrations.nodes;
+  const registrations = event.attendanceRegistrations.nodes;
   const sortedRegistrations = registrations
     .toSorted((a, b) =>
       compareText(
@@ -27,10 +27,10 @@ export const EventRegistrations = memo(function EventRegistrations({
     .filter((r) => !r.parentRegistrationId)
     .flatMap((r) => [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)]);
   const attendees = rows.filter((r) => r.person && r.status);
-  const canEditAttendance = auth.canManageInstance(instance);
+  const canEditAttendance = auth.canManageEvent(event);
   const registrationActionMap = useActionMap(
     eventRegistrationActions,
-    registrations.filter((r) => !r.parentRegistrationId).map((r) => ({ ...r, instance })),
+    registrations.filter((r) => !r.parentRegistrationId).map((r) => ({ ...r, event })),
   );
 
   return (
@@ -39,7 +39,7 @@ export const EventRegistrations = memo(function EventRegistrations({
         <thead>
           <tr>
             <th>
-              {numericDateFormatter.formatRange(new Date(instance.since), new Date(instance.until))}
+              {numericDateFormatter.formatRange(new Date(event.since), new Date(event.until))}
             </th>
             {auth.isTrainer && (
               <th>
@@ -77,7 +77,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                           Externí
                         </span>
                       )}
-                      {canEditAttendance && instance.seriesId && (instance.seriesInfo?.length ?? 0) > 1 && (
+                      {canEditAttendance && event.seriesId && (event.seriesInfo?.length ?? 0) > 1 && (
                         <div className="text-xs text-neutral-9">
                           Poslední účast: {x.lastAttended ? dateTimeFormatter.format(new Date(x.lastAttended)) : '-'}
                         </div>

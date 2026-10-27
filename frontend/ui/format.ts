@@ -299,16 +299,16 @@ export function describePosting(
   if (payment.cohortSubscription) {
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
-  const instance = payment.event;
-  const type = instance?.type;
+  const event = payment.event;
+  const type = event?.type;
   if (!type) {
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers = instance?.trainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
+    const trainers = event?.trainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
     return `${formatEventType(type)}: ${listFormatter.format(trainers)}`;
   }
-  return formatEventName(instance);
+  return formatEventName(event);
 }
 
 export function capitalize(x: string | undefined | null) {

@@ -10,7 +10,7 @@ import { selectAtom } from 'jotai/utils';
 import { formatEventName, shortTimeFormatter } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useTenantConfig } from '@/lib/auth';
-import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
@@ -141,8 +141,8 @@ function InstanceTimeGridEvent({
           },
         )}
       >
-        <ConflictsInstanceBadge
-          instanceId={event.id}
+        <EventConflictsBadge
+          eventId={event.id}
           className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
         />
         {event.instance.targetCohortsList &&
@@ -188,7 +188,7 @@ function InstanceTimeGridEvent({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary instance={event.instance} />
+        <EventSummary event={event.instance} />
       </PopoverContent>
     </Popover>
   );

@@ -16,7 +16,7 @@ const clubs = [
   { id: 3, logo: StarletLogo },
 ];
 
-export function EventLoginPrompt({ instanceId }: { instanceId: string }) {
+export function EventLoginPrompt({ eventId }: { eventId: string }) {
   const auth = useAuth();
   const search = useSearchParams();
   const [dismissed, setDismissed] = useState(false);
@@ -29,7 +29,7 @@ export function EventLoginPrompt({ instanceId }: { instanceId: string }) {
         <FormError error="Přihlášení vypršelo nebo se nezdařilo. Vyberte klub a zkuste to znovu." />
       )}
       <form method="get" className="grid grid-cols-3 gap-2">
-        <input type="hidden" name="event" value={instanceId} />
+        <input type="hidden" name="event" value={eventId} />
         {clubs.map(({ id, logo }) => (
           <button
             key={id}

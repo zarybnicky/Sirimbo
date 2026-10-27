@@ -87,13 +87,12 @@ export function TrainingGroup({
         actions={actions}
       />
 
-
       <RichTextView value={description} />
 
       {auth.isLoggedIn && (
         <TabMenu selected={tab} onSelect={setTab}>
           <Tab id="members" title={`Členové (${members.length})`}>
-            <TrainingGroupMembers members={members} showActivity={auth.isTrainer} />
+            <TrainingGroupMembers members={members} />
           </Tab>
           <Tab id="fed" title="Výsledky">
             <CompetitionHistory participant={{ cohortId: cohort.id }} />
@@ -161,11 +160,11 @@ function CategoryList({
 
 const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   members,
-  showActivity,
 }: {
-  showActivity: boolean;
   members: NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList'];
 }) {
+  const auth = useAuth();
+  const showActivity = auth.isTrainer;
   const [view, setView] = React.useState<'activity' | 'competitive'>(
     showActivity ? 'activity' : 'competitive',
   );

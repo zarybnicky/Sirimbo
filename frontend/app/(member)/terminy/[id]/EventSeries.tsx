@@ -7,7 +7,7 @@ import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { useActions } from '@/lib/actions';
 import { eventSeriesActions } from '@/lib/actions/eventSeries';
-import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import { eventActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { cn } from '@/lib/cn';
 import { isTruthy } from '@/lib/truthyFilter';
@@ -30,7 +30,7 @@ const attendanceLabels: Record<AttendanceType, { icon: LucideIcon; className: st
     NOT_EXCUSED: { icon: X, className: 'bg-danger-3 text-danger-11' },
   };
 
-type SeriesInstance = NonNullable<EventSeriesQuery['eventSeries']>['eventsList'][number];
+type SeriesEvent = NonNullable<EventSeriesQuery['eventSeries']>['eventsList'][number];
 type Detail = {
   name: string;
   key: string;
@@ -39,7 +39,7 @@ type Detail = {
   missing?: string;
 } | null;
 
-function eventDetails(event: SeriesInstance): Detail[] {
+function eventDetails(event: SeriesEvent): Detail[] {
   const time = shortTimeFormatter.formatRange(
     new Date(event.since),
     new Date(event.until),
@@ -145,10 +145,10 @@ export function EventSeries({
         <p>Série nemá žádné termíny.</p>
       ) : (
         <div className="grid grid-cols-[auto_max-content_minmax(0,1fr)_auto] divide-y divide-neutral-4 overflow-hidden rounded-lg border border-neutral-4 bg-neutral-1">
-          {series.eventsList.map((instance, i) => (
+          {series.eventsList.map((event, i) => (
             <EventRow
-              key={instance.id}
-              instance={instance}
+              key={event.id}
+              event={event}
               details={rows[i]!}
               seriesName={series.name}
               showAttendance={auth.isTrainer}
@@ -162,22 +162,22 @@ export function EventSeries({
 }
 
 function EventRow({
-  instance,
+  event,
   details,
   seriesName,
   showAttendance,
   common,
 }: Readonly<{
-  instance: SeriesInstance;
+  event: SeriesEvent;
   details: Detail[];
   seriesName: string | null;
   showAttendance: boolean;
   common: Detail[];
 }>) {
-  const actions = useActions(eventInstanceActions, instance);
-  const start = new Date(instance.since);
-  const end = new Date(instance.until);
-  const name = instance.name?.trim();
+  const actions = useActions(eventActions, event);
+  const start = new Date(event.since);
+  const end = new Date(event.until);
+  const name = event.name?.trim();
   const displayName = name === seriesName?.trim() ? null : name;
   const inlineDetails = details.flatMap((detail, i) => {
     if (detail?.key === common[i]?.key) return [];
@@ -188,16 +188,16 @@ function EventRow({
       : [];
   });
   const stats =
-    typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
+    typeof event.stats === 'string' ? JSON.parse(event.stats) : event.stats;
 
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4">
       <ActionGroup className="col-start-1 row-start-1" variant="row" actions={actions} />
       <Link
-        href={`/termin/${instance.id}?tab=registrations`}
+        href={`/termin/${event.id}?tab=registrations`}
         className={cn(
           'col-start-2 row-start-1 text-right font-medium leading-5 tabular-nums text-neutral-12 underline',
-          instance.isCancelled && 'line-through text-neutral-10',
+          event.isCancelled && 'line-through text-neutral-10',
         )}
       >
         {numericDateWithYearFormatter.formatRange(start, end)}
@@ -206,7 +206,7 @@ function EventRow({
         <DotSeparated
           className={cn(
             'col-start-3 row-start-1 min-w-0 text-neutral-11',
-            instance.isCancelled && 'line-through text-neutral-10',
+            event.isCancelled && 'line-through text-neutral-10',
           )}
         >
           {displayName && (
@@ -227,11 +227,11 @@ function EventRow({
       )}
 
       {showAttendance &&
-      (!instance.isCancelled ||
+      (!event.isCancelled ||
         (stats?.ATTENDED ?? 0) > 0 ||
         (stats?.NOT_EXCUSED ?? 0) > 0) ? (
         <Link
-          href={`/termin/${instance.id}?tab=registrations`}
+          href={`/termin/${event.id}?tab=registrations`}
           aria-label="Docházka"
           className="col-start-4 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
         >

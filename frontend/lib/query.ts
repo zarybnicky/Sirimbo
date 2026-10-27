@@ -416,17 +416,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deleteEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.id });
-        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
       },
       updateEvent(result, _args, cache, _info) {
-        const instanceId = result.updateEvent?.event?.id;
-        if (instanceId) {
-          cache.invalidate({ __typename: 'Event', id: instanceId });
-        }
-        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
+        const id = result.updateEvent?.event?.id;
+        if (id) cache.invalidate({ __typename: 'Event', id });
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
       },
       moveEvent(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
       },
 
       createPerson(_result, _args, cache, _info) {
@@ -448,7 +446,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         for (const event of result.saveEvents?.result ?? []) {
           cache.invalidate({ __typename: 'Event', id: event.id });
         }
-        invalidateQueryFields(cache, ['eventsList', 'eventInstances', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
       },
 
       createPersonInvitation(_result, args, cache, _info) {

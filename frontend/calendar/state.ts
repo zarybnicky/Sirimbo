@@ -11,7 +11,7 @@ import type {
   SlotInfo,
 } from './types';
 
-export type CalendarInstanceConflict = {
+export type CalendarEventConflict = {
   id: string;
   personName: string | null;
   otherEventName: string | undefined;
@@ -67,9 +67,9 @@ export const dragListenersAtom = atom<{
   onDrillDown?: (date: Date) => void;
 }>({});
 
-export const calendarConflictsAtom = atom<Record<string, CalendarInstanceConflict[]>>({});
+export const calendarConflictsAtom = atom<Record<string, CalendarEventConflict[]>>({});
 
-const emptyConflicts: CalendarInstanceConflict[] = [];
+const emptyConflicts: CalendarEventConflict[] = [];
 
 export const calendarConflictsFor = (instanceId: string | null | undefined) =>
   selectAtom(calendarConflictsAtom, (conflicts) => {

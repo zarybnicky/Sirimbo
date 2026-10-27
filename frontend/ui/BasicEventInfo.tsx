@@ -1,12 +1,12 @@
 import type { EventPageFragment } from '@/graphql/Event';
+import { isTruthy } from '@/lib/truthyFilter';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
 
-export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
-  const location = instance.location?.name || instance.locationText;
-  const trainers = instance.trainersList.map((t) => t.person?.name).filter(Boolean);
-  const { seriesInfo } = instance;
+export function BasicEventInfo({ event }: { event: EventPageFragment }) {
+  const trainers = event.trainersList.map((t) => t.person).filter(isTruthy);
+  const { seriesInfo } = event;
 
   return (
     <div className="flex flex-col gap-3">
@@ -16,19 +16,18 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
             href={`/terminy/${seriesInfo.id}`}
             className="text-xs hover:text-accent-11 underline"
           >
-            {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
-            {seriesInfo.name?.trim()}
+            {seriesInfo.position}. z {seriesInfo.length} v sérii {seriesInfo.name?.trim()}
           </Link>
         </div>
       )}
 
-      {instance.parent && (
+      {event.parent && (
         <div>
           <Link
-            href={`/termin/${instance.parent.id}`}
+            href={`/termin/${event.parent.id}`}
             className="text-xs hover:text-accent-11 underline"
           >
-            {instance.parent.name}
+            {event.parent.name}
           </Link>
         </div>
       )}
@@ -36,22 +35,19 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
       <dl className="not-prose tabular">
         <dt>Termín</dt>
         <dd>
-          {dateTimeFormatter.formatRange(
-            new Date(instance.since),
-            new Date(instance.until),
-          )}
+          {dateTimeFormatter.formatRange(new Date(event.since), new Date(event.until))}
         </dd>
 
-        {location && (
+        {(event.location?.name || event.locationText) && (
           <>
             <dt>Místo konání</dt>
             <dd>
-              {instance.location ? (
-                <Link className="underline" href={`/lokality/${instance.location.id}`}>
-                  {instance.location.name}
+              {event.location ? (
+                <Link className="underline" href={`/lokality/${event.location.id}`}>
+                  {event.location.name}
                 </Link>
               ) : (
-                location
+                event.locationText
               )}
             </dd>
           </>
@@ -60,25 +56,24 @@ export function BasicEventInfo({ instance }: { instance: EventPageFragment }) {
         {trainers.length > 0 && (
           <>
             <dt>Trenéři</dt>
-            {trainers.map((trainer, index) => (
-              <dd key={`${trainer}:${index}`}>{trainer}</dd>
+            {trainers.map((x) => (
+              <dd key={x.id}>{x.name}</dd>
             ))}
           </>
         )}
 
-        {!!instance.capacity && (
+        {!!event.capacity && (
           <>
             <dt>Kapacita</dt>
             <dd>
-              Zbývá {instance.registrationInfo?.remainingCapacity} míst z{' '}
-              {instance.capacity}
+              Zbývá {event.registrationInfo?.remainingCapacity} míst z {event.capacity}
             </dd>
           </>
         )}
       </dl>
 
-      {instance.summary?.trim() && <RichTextView value={instance.summary} />}
-      {instance.description && <RichTextView value={instance.description} />}
+      <RichTextView value={event.summary} />
+      <RichTextView value={event.description} />
     </div>
   );
 }

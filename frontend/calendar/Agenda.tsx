@@ -1,4 +1,4 @@
-import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import type {
     CalendarBirthdayEvent,
     CalendarCompetitionEvent,
@@ -184,8 +184,8 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
             : ' pl-3'),
       })}
     >
-      <ConflictsInstanceBadge
-        instanceId={instance.id}
+      <EventConflictsBadge
+        eventId={instance.id}
         className="absolute right-8 top-3 text-accent-11"
       />
       {instance.targetCohortsList && instance.targetCohortsList.length > 0 && (
@@ -198,7 +198,7 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
             ))}
         </div>
       )}
-      <EventSummary instance={instance} />
+      <EventSummary event={instance} />
     </div>
   );
 }
@@ -249,7 +249,7 @@ function LessonGroup({
             {loc !== prevLoc && !!loc && (
               <div className="ml-2.5 not-first:mt-1 text-sm text-accent-11">{loc}</div>
             )}
-            <EventButton instance={instance} viewer="trainer" />
+            <EventButton event={instance} viewer="trainer" />
           </React.Fragment>
         );
       })}

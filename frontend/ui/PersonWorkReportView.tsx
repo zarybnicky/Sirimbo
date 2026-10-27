@@ -16,7 +16,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 
 type ReportRow = {
-  instance: NonNullable<EventRangeQuery['list']>[number];
+  event: NonNullable<EventRangeQuery['list']>[number];
   title: string;
   location: string;
   durationMinutes: number;
@@ -82,24 +82,24 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
       ]),
     );
 
-    for (const instance of data?.list ?? []) {
-      if (instance.isCancelled) continue;
-      if (new Date(instance.until).getTime() > now.getTime()) continue;
-      if (!instance.trainersList?.some((trainer) => trainer.personId === id)) continue;
+    for (const event of data?.list ?? []) {
+      if (event.isCancelled) continue;
+      if (new Date(event.until).getTime() > now.getTime()) continue;
+      if (!event.trainersList?.some((trainer) => trainer.personId === id)) continue;
 
-      if (instance.type !== 'GROUP' && instance.type !== 'LESSON') continue;
+      if (event.type !== 'GROUP' && event.type !== 'LESSON') continue;
 
-      const since = new Date(instance.since);
-      const until = new Date(instance.until);
+      const since = new Date(event.since);
+      const until = new Date(event.until);
       const month = byKey.get(toMonthKey(since));
       if (!month) continue;
 
       const stats =
-        typeof instance.stats === 'string' ? JSON.parse(instance.stats) : instance.stats;
+        typeof event.stats === 'string' ? JSON.parse(event.stats) : event.stats;
       const row: ReportRow = {
-        instance,
-        title: formatEventName(instance) || '-',
-        location: instance.location?.name || instance.locationText || '—',
+        event: event,
+        title: formatEventName(event) || '-',
+        location: event.location?.name || event.locationText || '—',
         durationMinutes: Math.max(
           0,
           Math.round((until.getTime() - since.getTime()) / 60_000),
@@ -114,12 +114,12 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
             : 0,
       };
 
-      month[instance.type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);
+      month[event.type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);
     }
 
     for (const month of byKey.values()) {
-      month.groupRows.sort((a, b) => a.instance.since.localeCompare(b.instance.since));
-      month.privateRows.sort((a, b) => a.instance.since.localeCompare(b.instance.since));
+      month.groupRows.sort((a, b) => a.event.since.localeCompare(b.event.since));
+      month.privateRows.sort((a, b) => a.event.since.localeCompare(b.event.since));
     }
 
     return [...byKey.values()];
@@ -234,12 +234,12 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
                   </thead>
                   <tbody>
                     {rows.map((row) => (
-                      <tr key={row.instance.id}>
+                      <tr key={row.event.id}>
                         <td className="whitespace-nowrap">
-                          {dateTimeFormatter.format(new Date(row.instance.since))}
+                          {dateTimeFormatter.format(new Date(row.event.since))}
                         </td>
                         <td>
-                          <Link href={`/termin/${row.instance.id}`}>
+                          <Link href={`/termin/${row.event.id}`}>
                             {row.title}
                           </Link>
                         </td>

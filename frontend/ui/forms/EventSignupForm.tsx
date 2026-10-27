@@ -40,18 +40,18 @@ const Form = z.object({
 });
 
 export function EventSignupForm({
-  instance,
+  event,
 }: {
-  instance: NonNullable<EventRegistrationDialogQuery['instance']>;
+  event: NonNullable<EventRegistrationDialogQuery['event']>;
 }) {
   const auth = useAuth();
   const { onSuccess } = useFormResult();
   const [result, register] = useMutation(SetEventRegistrationDocument);
 
-  const enableDetails = instance.type !== 'LESSON' && instance.type !== 'GROUP';
-  const showNotes = enableDetails && instance.enableNotes;
+  const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
+  const showNotes = enableDetails && event.enableNotes;
   const trainers = enableDetails
-    ? instance.trainersList.filter((t) => t.lessonsOffered !== 0)
+    ? event.trainersList.filter((t) => t.lessonsOffered !== 0)
     : [];
 
   const { control, handleSubmit } = useForm({
@@ -71,7 +71,7 @@ export function EventSignupForm({
 
   const save = async (values: z.infer<typeof Form>) => {
     const input = {
-      eventId: instance.id,
+      eventId: event.id,
       isRegistered: true,
       personId: null,
       coupleId: null,
@@ -193,8 +193,8 @@ export function EventSignupForm({
         control={control}
         disabled={
           result.fetching ||
-          (!auth.canManageInstance(instance) &&
-            (!!instance.isLocked || instance.registrationInfo?.remainingCapacity === 0))
+          (!auth.canManageEvent(event) &&
+            (!!event.isLocked || event.registrationInfo?.remainingCapacity === 0))
         }
       >
         Přihlásit

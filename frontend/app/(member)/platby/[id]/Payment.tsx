@@ -66,7 +66,7 @@ export function Payment({ id }: { id: string }) {
           {payment.event && (
             <div>
               <h3 className="text-lg font-semibold">Za událost</h3>
-              <EventButton instance={payment.event} viewer="auto" />
+              <EventButton event={payment.event} viewer="auto" />
             </div>
           )}
 

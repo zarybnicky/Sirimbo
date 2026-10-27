@@ -1,9 +1,5 @@
 import { atom, createStore, type PrimitiveAtom, useAtomValue } from 'jotai';
-import {
-  resolveAuth,
-  type JwtClaims,
-  type ResolvedAuth,
-} from '@/lib/auth-claims';
+import { resolveAuth, type JwtClaims, type ResolvedAuth } from '@/lib/auth-claims';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
@@ -29,7 +25,7 @@ export interface AuthState extends ResolvedAuth {
   couples: CoupleFragment[];
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;
-  canManageInstance: (instance: { managerPersonIds: readonly (string | null)[] }) => boolean;
+  canManageEvent: (event: { managerPersonIds: readonly (string | null)[] }) => boolean;
 }
 
 const defaultAuthState: AuthState = {
@@ -39,7 +35,7 @@ const defaultAuthState: AuthState = {
   couples: [],
   isMyPerson: () => false,
   isMyCouple: () => false,
-  canManageInstance: () => false,
+  canManageEvent: () => false,
 };
 
 export const storeRef = {
@@ -126,10 +122,10 @@ const authHelpersAtom = atom<AuthState>((get) => {
     couples: persons.flatMap((x) => x.couplesList || []),
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
     isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
-    canManageInstance: (instance) =>
+    canManageEvent: (event) =>
       auth.isAdmin ||
       (auth.isTrainer &&
-        auth.personIds.some((id) => instance.managerPersonIds.includes(id))),
+        auth.personIds.some((id) => event.managerPersonIds.includes(id))),
   };
 });
 

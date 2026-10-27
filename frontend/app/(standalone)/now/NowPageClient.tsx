@@ -18,10 +18,10 @@ import { useQuery } from 'urql';
 
 const REFRESH_INTERVAL = 30_000;
 
-type Instance = NonNullable<EventRangeQuery['list']>[number];
+type Event = NonNullable<EventRangeQuery['list']>[number];
 
-type EnrichedInstance = {
-  instance: Instance;
+type EnrichedEvent = {
+  event: Event;
   since: Date;
   until: Date;
 };
@@ -29,14 +29,14 @@ type EnrichedInstance = {
 type GroupingBucket = {
   key: string;
   label: string;
-  current: EnrichedInstance[];
-  upcoming: EnrichedInstance[];
+  current: EnrichedEvent[];
+  upcoming: EnrichedEvent[];
 };
 
 type GroupingMode = 'location' | 'trainer';
 
-function trainerGroups(instance: Instance) {
-  const groups = (instance.trainersList ?? []).map((x) => ({
+function trainerGroups(event: Event) {
+  const groups = (event.trainersList ?? []).map((x) => ({
     key: x.personId,
     label: x.person?.name.trim() ?? 'Neznámý trenér',
   }));
@@ -65,25 +65,25 @@ function gatherBuckets(
 ): GroupingBucket[] {
   const buckets = new Map<string, GroupingBucket>();
 
-  for (const instance of data?.list ?? []) {
-    if (!instance || instance.isCancelled || !instance.isVisible) continue;
+  for (const event of data?.list ?? []) {
+    if (!event || event.isCancelled || !event.isVisible) continue;
 
-    const since = new Date(instance.since);
-    const until = new Date(instance.until);
+    const since = new Date(event.since);
+    const until = new Date(event.until);
 
-    const locationName = instance.location?.name || instance.locationText || 'Neurčeno';
-    const locationKey = instance.location?.id
-      ? `id:${instance.location.id}`
-      : instance.locationText
-        ? `txt:${instance.locationText}`
+    const locationName = event.location?.name || event.locationText || 'Neurčeno';
+    const locationKey = event.location?.id
+      ? `id:${event.location.id}`
+      : event.locationText
+        ? `txt:${event.locationText}`
         : 'none';
 
     const groups =
       mode === 'trainer'
-        ? trainerGroups(instance)
+        ? trainerGroups(event)
         : [{ key: locationKey, label: locationName }];
 
-    const enriched: EnrichedInstance = { instance, since, until };
+    const enriched: EnrichedEvent = { event, since, until };
 
     for (const group of groups) {
       if (!buckets.has(group.key)) {
@@ -114,8 +114,8 @@ function gatherBuckets(
     .toSorted((a, b) => compareText(a.label, b.label));
 }
 
-function formatTrainers(instance: Instance) {
-  return (instance.trainersList ?? [])
+function formatTrainers(event: Event) {
+  return (event.trainersList ?? [])
     .map((x) => x.person?.name)
     .filter(isTruthy)
     .join(', ');
@@ -211,23 +211,23 @@ export default function NowPage() {
 
                 {bucket.current.length > 0 && (
                   <div className="flex flex-col gap-3">
-                    {bucket.current.map(({ since, until, instance }) => (
+                    {bucket.current.map(({ since, until, event }) => (
                       <article
-                        key={instance.id}
+                        key={event.id}
                         className="rounded-2xl border border-accent-7 bg-accent-3/40 p-4 shadow-inner"
                       >
                         <p className="text-sm uppercase tracking-wide text-accent-11">
-                          {formatEventType(instance.type)}
+                          {formatEventType(event.type)}
                         </p>
                         <h3 className="mt-1 text-2xl font-semibold text-accent-12">
-                          {formatEventName(instance)}
+                          {formatEventName(event)}
                         </h3>
                         <p className="mt-2 text-lg text-accent-10">
                           {shortTimeFormatter.formatRange(since, until)}
                         </p>
                         {grouping === 'location' && (
                           <p className="mt-2 text-sm text-accent-9">
-                            {`Trenéři: ${formatTrainers(instance) || '-'}`}
+                            {`Trenéři: ${formatTrainers(event) || '-'}`}
                           </p>
                         )}
                       </article>
@@ -240,13 +240,13 @@ export default function NowPage() {
                     <h4 className="text-sm font-medium uppercase tracking-wide text-neutral-9">
                       Nadcházející
                     </h4>
-                    {bucket.upcoming.map(({ since, until, instance }) => (
+                    {bucket.upcoming.map(({ since, until, event }) => (
                       <article
-                        key={`${instance.id}:${since.toISOString()}`}
+                        key={`${event.id}:${since.toISOString()}`}
                         className="rounded-xl border border-accent-6 bg-accent-2/60 p-3"
                       >
                         <p className="text-sm font-medium text-accent-12">
-                          {formatEventName(instance)}
+                          {formatEventName(event)}
                         </p>
                         <DotSeparated className="text-sm text-neutral-9">
                           {shortTimeFormatter.formatRange(since, until)}
@@ -254,7 +254,7 @@ export default function NowPage() {
                         </DotSeparated>
                         {grouping === 'location' && (
                           <p className="text-xs text-neutral-9">
-                            {`Trenéři: ${formatTrainers(instance) || '-'}`}
+                            {`Trenéři: ${formatTrainers(event) || '-'}`}
                           </p>
                         )}
                       </article>

@@ -24,14 +24,14 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
   const [result, update] = useMutation(UpdateEventDocument);
   const [{ data }] = useQuery({ query: EventDescriptionDocument, variables: { id } });
   const [tab, setTab] = React.useState('summary');
-  const instance = data?.event;
+  const event = data?.event;
 
   React.useEffect(() => {
-    if (!instance) return;
+    if (!event) return;
     reset(
       {
-        summary: instance.summary ?? '',
-        description: instance.description ?? '',
+        summary: event.summary ?? '',
+        description: event.description ?? '',
       },
       {
         keepDirtyValues: true,
@@ -39,7 +39,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
         keepErrors: true,
       },
     );
-  }, [reset, instance]);
+  }, [reset, event]);
 
   const onSubmit = async (patch: z.infer<typeof Form>) => {
     const result = await update({ id, patch });
@@ -52,7 +52,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
 
       <div className="max-w-full">
         <TabMenu selected={tab} onSelect={setTab}>
-          {instance && (
+          {event && (
             <>
               <Tab id="summary" title="Shrnutí">
                 <RichTextEditor

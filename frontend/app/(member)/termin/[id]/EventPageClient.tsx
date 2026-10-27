@@ -8,7 +8,7 @@ import {
   UpdateEventDocument,
   type EventWithAttendanceQuery,
 } from '@/graphql/Event';
-import { eventInstanceActions } from '@/lib/actions/eventInstance';
+import { eventActions } from '@/lib/actions/event';
 import { useActions } from '@/lib/actions';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { EventPayments } from '@/ui/EventPayments';
@@ -43,10 +43,10 @@ export function EventPageClient({
     pause: !/^\d{1,18}$/.test(id),
   });
   const event = data?.event ?? initialEvent;
-  const actions = useActions(eventInstanceActions, event);
-  const primaryAction = actions.some((action) => action.id === 'eventInstance.edit')
-    ? 'eventInstance.edit'
-    : 'eventInstance.registrations';
+  const actions = useActions(eventActions, event);
+  const primaryAction = actions.some((x) => x.id === 'event.edit')
+    ? 'event.edit'
+    : 'event.registrations';
   const [tab, setTab] = useQueryState(
     'tab',
     parseAsString.withOptions({ history: 'push' }),
@@ -73,7 +73,7 @@ export function EventPageClient({
       {signup === '1' && (
         <Dialog open onOpenChange={() => setSignup(null)}>
           <DialogContent>
-            <MyRegistrationsDialog instanceId={event.id} initialPage="candidates" />
+            <MyRegistrationsDialog eventId={event.id} initialPage="candidates" />
           </DialogContent>
         </Dialog>
       )}
@@ -81,7 +81,7 @@ export function EventPageClient({
       <div className="col-feature">
         <PageHeader
           imageUrl={event.coverImage?.url}
-          onEditImage={auth.canManageInstance(event) ? () => setEditingImage(true) : undefined}
+          onEditImage={auth.canManageEvent(event) ? () => setEditingImage(true) : undefined}
           title={formatEventName(event) || ''}
           breadcrumbLabel="Termín"
           breadcrumbs={[
@@ -94,7 +94,7 @@ export function EventPageClient({
           actions={actions}
           primary={primaryAction}
           primaryVariant={
-            primaryAction === 'eventInstance.registrations' ? 'primary' : 'outline'
+            primaryAction === 'event.registrations' ? 'primary' : 'outline'
           }
         />
       </div>
@@ -111,12 +111,12 @@ export function EventPageClient({
             </Tab>
           )}
         <Tab id="info" title="Info">
-          <BasicEventInfo instance={event} />
+          <BasicEventInfo event={event} />
         </Tab>
         {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
           <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
             <div className="col-popout">
-              <EventRegistrations instance={event} />
+              <EventRegistrations event={event} />
             </div>
           </Tab>
         )}

@@ -363,7 +363,7 @@ function TimelineDay({
             {eventRows.map((items) => (
               <EventButton
                 key={items[0].id}
-                instance={items[0].event!}
+                event={items[0].event!}
                 viewer="auto"
                 suffix={
                   ((mode === 'past' && items[0].event?.type !== 'LESSON') ||

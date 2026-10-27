@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName } from '@/ui/format';
 import { isTruthy } from '@/lib/truthyFilter';
-import { ConflictsInstanceBadge } from '@/calendar/ConflictsInstanceBadge';
+import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import { Cake } from 'lucide-react';
 
 type EventCellProps = {
@@ -137,8 +137,8 @@ function InstanceEventCell({
             relative: true,
           })}
         >
-          <ConflictsInstanceBadge
-            instanceId={event.instance.id}
+          <EventConflictsBadge
+            eventId={event.instance.id}
             className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
           />
           {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
@@ -179,7 +179,7 @@ function InstanceEventCell({
       </PopoverTrigger>
 
       <PopoverContent>
-        <EventSummary instance={instance} />
+        <EventSummary event={instance} />
       </PopoverContent>
     </Popover>
   );

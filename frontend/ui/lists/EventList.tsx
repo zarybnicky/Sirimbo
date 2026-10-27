@@ -33,26 +33,23 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const [{ data }] = useQuery({ query: EventListDocument });
 
   const nodes: EventNode[] = React.useMemo(() => {
-    return (data?.eventsList ?? []).map((instance) => {
+    return (data?.eventsList ?? []).map((event) => {
       return {
-        id: instance.id,
-        title: instance.name || formatEventType(instance.type),
-        date: instance.since,
+        id: event.id,
+        title: event.name || formatEventType(event.type),
+        date: event.since,
         subtitle: [
-          fullDateFormatter.formatRange(
-            new Date(instance.since),
-            new Date(instance.until),
-          ),
-          instance.location?.name,
-          instance.locationText,
-          (instance.capacity ?? 0) > 0
-            ? `Zbývá ${instance.registrationInfo?.remainingCapacity} míst z ${instance.capacity}`
+          fullDateFormatter.formatRange(new Date(event.since), new Date(event.until)),
+          event.location?.name,
+          event.locationText,
+          (event.capacity ?? 0) > 0
+            ? `Zbývá ${event.registrationInfo?.remainingCapacity} míst z ${event.capacity}`
             : '',
         ]
           .filter(Boolean)
           .join(', '),
-        href: `/termin/${instance.id}`,
-        imageUrl: instance.coverImage?.url ?? null,
+        href: `/termin/${event.id}`,
+        imageUrl: event.coverImage?.url ?? null,
       };
     });
   }, [data]);

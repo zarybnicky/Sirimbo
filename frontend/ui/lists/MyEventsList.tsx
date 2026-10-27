@@ -27,11 +27,11 @@ export const MyEventsList = React.memo(function MyEventsList() {
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map<string, EventWithTrainerFragment[]>();
-    for (const instance of data?.list ?? []) {
-      const date = startOf(new Date(instance.since), 'day').toISOString();
+    for (const event of data?.list ?? []) {
+      const date = startOf(new Date(event.since), 'day').toISOString();
       const items = map.get(date);
-      if (items) items.push(instance);
-      else map.set(date, [instance]);
+      if (items) items.push(event);
+      else map.set(date, [event]);
     }
 
     return [...map.entries()]
@@ -52,7 +52,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
       </div>
 
       <div className="flex flex-wrap flex-col gap-x-2">
-        {eventsByDay.map(([date, eventInstances]) => (
+        {eventsByDay.map(([date, events]) => (
           <div
             key={date}
             className={cardCls({
@@ -71,30 +71,26 @@ export const MyEventsList = React.memo(function MyEventsList() {
                     <Plus />
                   </DialogTrigger.Plain>
                   <DialogContent className="sm:max-w-xl">
-                    <CreateEventForm date={new Date(date)} events={eventInstances} />
+                    <CreateEventForm date={new Date(date)} events={events} />
                   </DialogContent>
                 </Dialog>
               )}
             </div>
-            {eventInstances.map((instance, i) => {
-              const location = instance.location?.name || instance.locationText || '';
-              const previous = i === 0 ? null : eventInstances.at(i - 1);
+            {events.map((event, i) => {
+              const location = event.location?.name || event.locationText || '';
+              const previous = i === 0 ? null : events.at(i - 1);
               const previousLocation = previous
                 ? previous.location?.name || previous.locationText || ''
                 : null;
 
               return (
-                <React.Fragment key={instance.id}>
+                <React.Fragment key={event.id}>
                   {!!location && location !== previousLocation && (
                     <div className="ml-2.5 mt-1 text-sm text-accent-11">
                       {location}
                     </div>
                   )}
-                  <EventButton
-                    instance={instance}
-                    viewer="auto"
-                    attendance="inline"
-                  />
+                  <EventButton event={event} viewer="auto" attendance="inline" />
                 </React.Fragment>
               );
             })}

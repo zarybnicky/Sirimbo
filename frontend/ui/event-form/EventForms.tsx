@@ -93,7 +93,7 @@ function useEventFormOptions(
       Number(a.personIds.some((id) => internalPersonIds.has(id))) ||
       compareText(a.label, b.label),
     ));
-  }, [query.data?.tenant, savedRegistrations]);
+  }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);
   return { ...query, trainers, participants };
 }
 
