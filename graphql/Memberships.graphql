@@ -105,25 +105,6 @@ fragment UserProxy on UserProxy {
   }
 }
 
-query CoupleFormPeople($personId: BigInt!, $withPerson: Boolean!) {
-  people(condition: { membership: { state: CURRENT } }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
-    nodes {
-      id
-      name
-      gender
-      birthDate
-      ageGroup
-    }
-  }
-  person(id: $personId) @include(if: $withPerson) {
-    id
-    name
-    gender
-    birthDate
-    ageGroup
-  }
-}
-
 query CoupleList {
   couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) {
     ...Couple
@@ -196,14 +177,6 @@ mutation DeleteCouple($id: BigInt!) {
 query CohortMembership($id: BigInt!) {
   cohortMembership(id: $id) {
     ...CohortMembership
-  }
-}
-
-mutation CreateCohortMembership($input: CreateCohortMembershipInput!) {
-  createCohortMembership(input: $input) {
-    cohortMembership {
-      ...CohortMembership
-    }
   }
 }
 

@@ -318,16 +318,6 @@ mutation UpdatePerson($input: UpdatePersonInput!) {
   }
 }
 
-mutation UpdatePersonFederationId($input: UpdatePersonInput!) {
-  updatePerson(input: $input) {
-    person {
-      id
-      cstsId
-      wdsfId
-    }
-  }
-}
-
 mutation DeletePerson($id: BigInt!) {
   deletePerson(input: { id: $id }) {
     __typename

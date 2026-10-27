@@ -1,6 +1,6 @@
 import { Pencil, Unplug } from 'lucide-react';
 import {
-  EndAccessCredentialDocument,
+  UpdateAccessCredentialDocument,
   type AccessCredentialFragment,
 } from '@/graphql/AccessCredential';
 import { defineActions } from '@/lib/actions';
@@ -30,9 +30,9 @@ export const accessCredentialActions = defineActions<AccessCredentialFragment>()
     visible: ({ item }) => !item.until || new Date(item.until) > new Date(),
     confirm: 'Opravdu chcete zneplatnit tuto kartu?',
     execute: async ({ item, mutate }) => {
-      await mutate(EndAccessCredentialDocument, {
+      await mutate(UpdateAccessCredentialDocument, {
         id: item.id,
-        until: new Date().toISOString(),
+        patch: { until: new Date().toISOString() },
       });
     },
   },

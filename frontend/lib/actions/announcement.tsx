@@ -3,8 +3,7 @@ import { type ActionContext, defineActions } from '@/lib/actions';
 import {
   type AnnouncementFragment,
   DeleteAnnouncementDocument,
-  SetAnnouncementStatusDocument,
-  ToggleAnnouncementStickyDocument,
+  UpdateAnnouncementDocument,
 } from '@/graphql/Announcement';
 
 export function canManageAnnouncement({
@@ -29,9 +28,9 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
       item.isSticky ? PinOff : Pin,
     visible: canManageAnnouncement,
     execute: async ({ item, mutate }) => {
-      await mutate(ToggleAnnouncementStickyDocument, {
+      await mutate(UpdateAnnouncementDocument, {
         id: item.id,
-        sticky: !item.isSticky,
+        patch: { isSticky: !item.isSticky },
       });
     },
   },
@@ -42,9 +41,9 @@ export const announcementActions = defineActions<AnnouncementFragment>()([
       item.status === 'PUBLISHED' ? Archive : Send,
     visible: canManageAnnouncement,
     execute: async ({ item, mutate }) => {
-      await mutate(SetAnnouncementStatusDocument, {
+      await mutate(UpdateAnnouncementDocument, {
         id: item.id,
-        status: item.status === 'PUBLISHED' ? 'ARCHIVED' : 'PUBLISHED',
+        patch: { status: item.status === 'PUBLISHED' ? 'ARCHIVED' : 'PUBLISHED' },
       });
     },
   },

@@ -1,7 +1,7 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
   MissingFederationIdCandidatesDocument,
-  UpdatePersonFederationIdDocument,
+  UpdatePersonDocument,
   type MissingFederationIdCandidatesQuery,
 } from '@/graphql/Person';
 import { FederationLink } from '@/ui/federation-links';
@@ -32,7 +32,7 @@ export function FederationIdBackfillWidget({
     },
   });
   const [{ error: mutationError, fetching: saving }, updatePerson] = useMutation(
-    UpdatePersonFederationIdDocument,
+    UpdatePersonDocument,
   );
   const [selectedByPerson, setSelectedByPerson] = React.useState<
     Record<

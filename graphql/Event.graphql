@@ -596,16 +596,6 @@ mutation DeleteEvent($id: BigInt!) {
   }
 }
 
-mutation SetLessonRequest($input: SetLessonRequestInput!) {
-  setLessonRequest(input: $input) {
-    result {
-      id
-      lessonCount
-      trainerId
-    }
-  }
-}
-
 mutation SetEventRegistration($input: SetEventRegistrationInput!) {
   setEventRegistration(input: $input) {
     result {

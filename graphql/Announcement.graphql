@@ -60,16 +60,8 @@ query Announcements(
   }
 }
 
-mutation SetAnnouncementStatus($id: BigInt!, $status: AnnouncementStatus!) {
-  updateAnnouncement(input: {id: $id, patch: {status: $status}}) {
-    announcement {
-      ...Announcement
-    }
-  }
-}
-
-mutation ToggleAnnouncementSticky($id: BigInt!, $sticky: Boolean!) {
-  updateAnnouncement(input: {id: $id, patch: {isSticky: $sticky}}) {
+mutation UpdateAnnouncement($id: BigInt!, $patch: AnnouncementPatch!) {
+  updateAnnouncement(input: {id: $id, patch: $patch}) {
     announcement {
       ...Announcement
     }
