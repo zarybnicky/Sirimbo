@@ -1,8 +1,12 @@
-fragment PersonLastActivity on PersonLastActivity {
-  webAt
-  cardEntryAt
-  trainingAt
-  competitionOn
+
+fragment PersonOption on Person {
+  id
+  name
+  firstName
+  lastName
+  gender
+  birthDate
+  ageGroup
 }
 
 fragment PersonBasic on Person {
@@ -118,11 +122,14 @@ query PersonPayments($id: BigInt!) {
   }
 }
 
-query PersonMemberships($id: BigInt!, $includeActivity: Boolean! = false) {
+query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
-    lastActivity @include(if: $includeActivity) {
-      ...PersonLastActivity
+    lastActivity {
+      webAt
+      cardEntryAt
+      trainingAt
+      competitionOn
     }
     ageGroup
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
@@ -142,11 +149,18 @@ query PersonMemberships($id: BigInt!, $includeActivity: Boolean! = false) {
   }
 }
 
-query FullPersonList {
-  people {
+query PersonOptions(
+  $condition: PersonCondition
+  $personId: BigInt! = "0"
+  $withPerson: Boolean! = false
+) {
+  people(condition: $condition, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) {
     nodes {
-      ...Person
+      ...PersonOption
     }
+  }
+  person(id: $personId) @include(if: $withPerson) {
+    ...PersonOption
   }
 }
 
@@ -177,34 +191,10 @@ query UnpaidPayments {
   }
 }
 
-query PersonList($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipState: PersonMembershipState = CURRENT, $membershipStates: [PersonMembershipState!]) {
-  people(
-    condition: {
-      membership: {
-        inCohorts: $inCohorts
-        isTrainer: $isTrainer
-        isAdmin: $isAdmin
-        state: $membershipState
-        states: $membershipStates
-      }
-    }
-  ) {
+query PersonList($condition: PersonCondition) {
+  people(condition: $condition) {
     nodes {
-      ...PersonBasic
-      phone
-      email
-      birthDate
-      taxIdentificationNumber
-      address {
-        city
-        conscriptionNumber
-        district
-        orientationNumber
-        postalCode
-        region
-        street
-      }
-      cohortIds
+      ...Person
       cohortMembershipsList {
         id
         status

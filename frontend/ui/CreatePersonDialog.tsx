@@ -1,6 +1,6 @@
 'use client';
 
-import { CreatePersonDocument, FullPersonListDocument } from '@/graphql/Person';
+import { CreatePersonDocument, PersonListDocument } from '@/graphql/Person';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
 import {
   RadioButtonGroupElement,
@@ -100,7 +100,8 @@ export function CreatePersonDialog() {
   const [syncResult, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
 
   const [personQuery] = useQuery({
-    query: FullPersonListDocument,
+    query: PersonListDocument,
+    variables: { condition: null },
     pause: open !== 'existing',
   });
   const people = personQuery.data?.people?.nodes;

@@ -46,7 +46,7 @@ export function TrainingGroup({
   );
   const [{ data }] = useQuery({
     query: CohortWithMembersDocument,
-    variables: { id: initialCohort.id, includeActivity: auth.isTrainer },
+    variables: { id: initialCohort.id },
   });
   const cohort = data?.entity ?? initialCohort;
 

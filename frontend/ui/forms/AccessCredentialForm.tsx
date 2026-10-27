@@ -1,9 +1,9 @@
 import {
   type AccessCredentialFragment,
-  AccessCredentialPeopleDocument,
   CreateAccessCredentialDocument,
   UpdateAccessCredentialDocument,
 } from '@/graphql/AccessCredential';
+import { PersonOptionsDocument } from '@/graphql/Person';
 import { TextFieldElement } from '@/ui/fields/text';
 import { DatePickerElement } from '@/ui/fields/date';
 import { ComboboxElement } from '@/ui/fields/Combobox';
@@ -55,7 +55,8 @@ export function AccessCredentialForm({
 }>) {
   const { onSuccess } = useFormResult();
   const [{ data }] = useQuery({
-    query: AccessCredentialPeopleDocument,
+    query: PersonOptionsDocument,
+    variables: { condition: { membership: { state: 'CURRENT' } } },
     pause: !!credential,
   });
   const { control, handleSubmit, setValue } = useForm({

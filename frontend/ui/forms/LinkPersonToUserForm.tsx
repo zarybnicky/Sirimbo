@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { UserDetailDocument } from '@/graphql/CurrentUser';
-import { FullPersonListDocument } from '@/graphql/Person';
+import { PersonOptionsDocument } from '@/graphql/Person';
 import { DialogTitle } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
@@ -21,7 +21,10 @@ export function LinkPersonToUserForm({ userId }: { userId: string }) {
     resolver: zodResolver(Form),
     defaultValues: { personId: '' },
   });
-  const [list] = useQuery({ query: FullPersonListDocument });
+  const [list] = useQuery({
+    query: PersonOptionsDocument,
+    variables: { condition: null },
+  });
   const [query] = useQuery({
     query: UserDetailDocument,
     variables: { id: userId },

@@ -1,5 +1,6 @@
 import { DialogTitle } from '@/ui/dialog';
-import { CoupleFormPeopleDocument, CreateCoupleDocument } from '@/graphql/Memberships';
+import { CreateCoupleDocument } from '@/graphql/Memberships';
+import { PersonOptionsDocument } from '@/graphql/Person';
 import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { formatAgeGroup, getCoupleAgeGroups } from '@/ui/csts';
@@ -30,8 +31,12 @@ export function CreateCoupleForm({
   const [showEveryone, setShowEveryone] = React.useState(false);
   const [result, doCreate] = useMutation(CreateCoupleDocument);
   const [peopleResult] = useQuery({
-    query: CoupleFormPeopleDocument,
-    variables: { personId: initialPerson?.id ?? '0', withPerson: !!initialPerson },
+    query: PersonOptionsDocument,
+    variables: {
+      condition: { membership: { state: 'CURRENT' } },
+      personId: initialPerson?.id,
+      withPerson: !!initialPerson,
+    },
   });
   const [rulesResult] = useQuery({ query: AgeGroupRulesDocument });
   const people = [

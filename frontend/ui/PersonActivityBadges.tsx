@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import type { PersonLastActivityFragment } from '@/graphql/Person';
 import { useTenantConfig } from '@/lib/auth';
 import { cn } from '@/lib/cn';
 import { dateTimeFormatter, formatDateOnly } from '@/ui/format';
@@ -37,7 +36,12 @@ const signals = [
 export function PersonActivityBadges({
   activity,
 }: {
-  activity: PersonLastActivityFragment;
+  activity: {
+    webAt: string | null;
+    cardEntryAt: string | null;
+    trainingAt: string | null;
+    competitionOn: string | null;
+  };
 }) {
   const { enableStarletImport } = useTenantConfig();
   const [now] = useState(Date.now);

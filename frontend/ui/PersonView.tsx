@@ -40,7 +40,7 @@ export const PersonView = React.memo(function PersonView({
   const [, updateImage] = useMutation(UpdatePersonDocument);
   const [{ data }] = useQuery({
     query: PersonMembershipsDocument,
-    variables: { id, includeActivity: auth.isTrainer || auth.isMyPerson(id) },
+    variables: { id },
     pause: !id,
   });
   const [tab, setTab] = useQueryState(

@@ -108,10 +108,13 @@ export function PersonComparisonForm() {
   const tenantId = useTenantId();
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
-  const [{ data: personQuery }] = useQuery({ query: PersonListDocument });
+  const [{ data: personQuery }] = useQuery({
+    query: PersonListDocument,
+    variables: { condition: { membership: { state: 'CURRENT' } } },
+  });
   const [{ data: formerPersonQuery }] = useQuery({
     query: PersonListDocument,
-    variables: { membershipState: 'FORMER' },
+    variables: { condition: { membership: { state: 'FORMER' } } },
   });
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const persons = useMemo(() => {

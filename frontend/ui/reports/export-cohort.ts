@@ -6,7 +6,11 @@ import type { Client } from 'urql';
 
 export async function exportCohort(client: Client, ids: string[], name?: string) {
   const { Workbook } = await import('exceljs');
-  const result = await client.query(PersonListDocument, { inCohorts: ids }).toPromise();
+  const result = await client
+    .query(PersonListDocument, {
+      condition: { membership: { state: 'CURRENT', inCohorts: ids } },
+    })
+    .toPromise();
   if (result.error) throw result.error;
   const data = result.data!;
   const workbook = new Workbook();

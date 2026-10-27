@@ -11,18 +11,13 @@ import { buttonCls } from '@/ui/style';
 import { CheckIcon, Filter } from 'lucide-react';
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
-import { PersonListDocument } from '@/graphql/Person';
+import { PersonOptionsDocument } from '@/graphql/Person';
 
 export function ParticipantFilter({ counts }: { counts?: Record<string, number> }) {
   const [ids, setIds] = useQueryState('participants', calendarFilterParsers.participants);
   const [{ data }] = useQuery({
-    query: PersonListDocument,
-    variables: {
-      inCohorts: null,
-      isAdmin: null,
-      isTrainer: null,
-      membershipState: 'CURRENT',
-    },
+    query: PersonOptionsDocument,
+    variables: { condition: { membership: { state: 'CURRENT' } } },
   });
   const available = (data?.people?.nodes || [])
     .filter(isTruthy)

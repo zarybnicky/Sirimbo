@@ -31,18 +31,23 @@ export function PersonList() {
   const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
 
   const [tab] = useQueryState('tab');
-  const variables = {
+  const membership = {
     inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
     isAdmin: !!isAdmin || null,
     isTrainer: !!isTrainer || null,
-    membershipStates: [includeFormer ? 'FORMER' as const : 'CURRENT' as const],
+    state: includeFormer ? 'FORMER' as const : 'CURRENT' as const,
   };
-  const [{ data }] = useQuery({ query: PersonListDocument, variables });
+  const [{ data }] = useQuery({
+    query: PersonListDocument,
+    variables: { condition: { membership } },
+  });
   const [facetResult] = useQuery({
     query: PersonFacetsDocument,
     variables: {
-      ...variables,
-      membershipStates: variables.membershipStates.map((state) => state.toLowerCase()),
+      inCohorts: membership.inCohorts,
+      isAdmin: membership.isAdmin,
+      isTrainer: membership.isTrainer,
+      membershipStates: [membership.state.toLowerCase()],
     },
   });
   const [facetData, setFacetData] = React.useState(facetResult.data);

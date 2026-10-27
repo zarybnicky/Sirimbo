@@ -38,7 +38,9 @@ export const cohortActions = defineActions<CohortActionItem>()([
     visible: ({ item }) => !!item.id,
     execute: async ({ item, client }) => {
       const result = await client
-        .query(PersonListDocument, { inCohorts: [item.id] })
+        .query(PersonListDocument, {
+          condition: { membership: { state: 'CURRENT', inCohorts: [item.id] } },
+        })
         .toPromise();
       if (result.error) throw result.error;
 
