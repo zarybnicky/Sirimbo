@@ -1,4 +1,4 @@
-import { EventRangeDocument } from '@/graphql/Event';
+import { EventListDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventButton } from '@/ui/EventButton';
@@ -17,17 +17,22 @@ export const MyEventsList = React.memo(function MyEventsList() {
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
   const [{ data, fetching }] = useQuery({
-    query: EventRangeDocument,
+    query: EventListDocument,
     variables: {
-      start: startDate.toISOString(),
-      end: add(startDate, 1, 'week').toISOString(),
-      scope: 'MINE',
+      condition: {
+        overlaps: {
+          start: startDate.toISOString(),
+          end: add(startDate, 1, 'week').toISOString(),
+        },
+        scope: { mode: 'MINE' },
+      },
+      orderBy: ['SINCE_ASC'],
     },
   });
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map<string, EventWithTrainerFragment[]>();
-    for (const event of data?.list ?? []) {
+    for (const event of data?.eventsList ?? []) {
       const date = startOf(new Date(event.since), 'day').toISOString();
       const items = map.get(date);
       if (items) items.push(event);
@@ -48,7 +53,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
 
       <div className="text-sm text-neutral-9">
         {fetching ? 'Načítám...' : ''}
-        {!fetching && !data?.list?.length ? 'Žádné nadcházející akce' : ''}
+        {!fetching && !data?.eventsList?.length ? 'Žádné nadcházející akce' : ''}
       </div>
 
       <div className="flex flex-wrap flex-col gap-x-2">

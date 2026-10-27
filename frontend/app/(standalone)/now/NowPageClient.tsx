@@ -2,7 +2,7 @@
 
 import { DotSeparated } from '@/ui/DotSeparated';
 
-import { EventRangeDocument, type EventRangeQuery } from '@/graphql/Event';
+import { EventListDocument, type EventListQuery } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import {
@@ -18,7 +18,7 @@ import { useQuery } from 'urql';
 
 const REFRESH_INTERVAL = 30_000;
 
-type Event = NonNullable<EventRangeQuery['list']>[number];
+type Event = NonNullable<EventListQuery['eventsList']>[number];
 
 type EnrichedEvent = {
   event: Event;
@@ -59,13 +59,13 @@ function trainerGroups(event: Event) {
 }
 
 function gatherBuckets(
-  data: EventRangeQuery | undefined,
+  data: EventListQuery | undefined,
   now: Date,
   mode: GroupingMode,
 ): GroupingBucket[] {
   const buckets = new Map<string, GroupingBucket>();
 
-  for (const event of data?.list ?? []) {
+  for (const event of data?.eventsList ?? []) {
     if (!event || event.isCancelled || !event.isVisible) continue;
 
     const since = new Date(event.since);
@@ -131,10 +131,15 @@ export default function NowPage() {
   const [grouping, setGrouping] = React.useState<GroupingMode>('location');
 
   const [{ data, fetching, error }] = useQuery({
-    query: EventRangeDocument,
+    query: EventListDocument,
     variables: {
-      start: reference.toISOString(),
-      end: add(reference, 24, 'hours').toISOString(),
+      condition: {
+        overlaps: {
+          start: reference.toISOString(),
+          end: add(reference, 24, 'hours').toISOString(),
+        },
+      },
+      orderBy: ['SINCE_ASC'],
     },
   });
   const buckets = React.useMemo(

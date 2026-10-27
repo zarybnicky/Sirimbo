@@ -3,9 +3,9 @@ import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
 import type { EventType } from '@/graphql';
 import {
   CalendarFacetsDocument,
-  EventRangeDocument,
-  type EventRangeQuery,
-  type EventRangeQueryVariables,
+  EventListDocument,
+  type EventListQuery,
+  type EventListQueryVariables,
 } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
@@ -55,21 +55,28 @@ function prepareVariables(
     parentId,
     locationId,
   }: CalendarFilters,
-): EventRangeQueryVariables {
+) {
   return {
-    start: startOf(range.since, 'day').toISOString(),
-    end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
-    trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-    participantIds: participantIds.length > 0 ? participantIds : undefined,
-    locationIds: locationId ? [locationId] : undefined,
-    types: eventTypes,
-    scope: onlyMine ? 'MINE' : parentId || locationId ? 'ALL' : 'RELEVANT',
-    parentId,
-  };
+    condition: {
+      overlaps: {
+        start: startOf(range.since, 'day').toISOString(),
+        end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
+      },
+      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+      participantIds: participantIds.length > 0 ? participantIds : undefined,
+      locationIds: locationId ? [locationId] : undefined,
+      types: eventTypes,
+      scope: {
+        mode: onlyMine ? 'MINE' : parentId || locationId ? 'ALL' : 'RELEVANT',
+        parentId,
+      },
+    },
+    orderBy: ['SINCE_ASC'],
+  } satisfies EventListQueryVariables;
 }
 
 function mapEventsToCalendar(
-  list: EventRangeQuery['list'] | undefined,
+  list: EventListQuery['eventsList'] | undefined,
   groupBy: CalendarGroupBy,
 ): { events: CalendarInstanceEvent[]; resources: Resource[] } {
   const events: CalendarInstanceEvent[] = [];
@@ -126,9 +133,19 @@ export function useCalendarData(
     return view.range(date);
   }, [view, date]);
   const variables = prepareVariables(range, filters);
+  const { overlaps, scope, ...condition } = variables.condition;
 
-  const [{ data, fetching }, refresh] = useQuery({ query: EventRangeDocument, variables });
-  const [facetResult, refreshFacets] = useQuery({ query: CalendarFacetsDocument, variables });
+  const [{ data, fetching }, refresh] = useQuery({ query: EventListDocument, variables });
+  const [facetResult, refreshFacets] = useQuery({
+    query: CalendarFacetsDocument,
+    variables: {
+      ...condition,
+      start: overlaps.start,
+      end: overlaps.end,
+      scope: scope.mode,
+      parentId: scope.parentId,
+    },
+  });
   const [facetData, setFacetData] = React.useState(facetResult.data);
   if (facetResult.data !== undefined && facetResult.data !== facetData) {
     setFacetData(facetResult.data);
@@ -153,8 +170,8 @@ export function useCalendarData(
   const [{ data: activityData, fetching: activityFetching }] = useQuery({
     query: ActivityTimelineDocument,
     variables: {
-      since: variables.start,
-      until: variables.end,
+      since: overlaps.start,
+      until: overlaps.end,
       personIds:
         filters.participantIds.length > 0
           ? filters.participantIds
@@ -172,17 +189,17 @@ export function useCalendarData(
     const next = prepareVariables(view.range(view.nav(date, 1)), filters);
     const timeout = setTimeout(() => {
       void client
-        .query(EventRangeDocument, prev, { requestPolicy: 'cache-first' })
+        .query(EventListDocument, prev, { requestPolicy: 'cache-first' })
         .toPromise();
       void client
-        .query(EventRangeDocument, next, { requestPolicy: 'cache-first' })
+        .query(EventListDocument, next, { requestPolicy: 'cache-first' })
         .toPromise();
     }, 100);
     return () => clearTimeout(timeout);
   }, [client, date, filters, view]);
 
   const { events, resources } = React.useMemo(() => {
-    const schedule = mapEventsToCalendar(data?.list, effectiveGroupBy);
+    const schedule = mapEventsToCalendar(data?.eventsList, effectiveGroupBy);
     const competitionItems: CompetitionEntry[] = [];
     const birthdays: CalendarEvent[] = [];
 
@@ -228,12 +245,12 @@ export function useCalendarData(
       events: [...schedule.events, ...competitions, ...birthdays],
       resources: schedule.resources,
     };
-  }, [activityData?.activityTimelineList, data?.list, effectiveGroupBy, showActivities]);
+  }, [activityData?.activityTimelineList, data?.eventsList, effectiveGroupBy, showActivities]);
 
   return {
     range,
     events,
-    instances: data?.list ?? [],
+    instances: data?.eventsList ?? [],
     resources,
     fetching: fetching || (showActivities && activityFetching),
     facets,

@@ -1,7 +1,7 @@
 import type { EventType } from '@/graphql';
 import {
-  EventRangeDocument,
-  type EventRangeQuery,
+  EventListDocument,
+  type EventListQuery,
 } from '@/graphql/Event';
 import {
   capitalize,
@@ -16,7 +16,7 @@ import React from 'react';
 import { useQuery } from 'urql';
 
 type ReportRow = {
-  event: NonNullable<EventRangeQuery['list']>[number];
+  event: NonNullable<EventListQuery['eventsList']>[number];
   title: string;
   location: string;
   durationMinutes: number;
@@ -61,11 +61,16 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
   }, [month]);
 
   const [{ data, fetching, error }] = useQuery({
-    query: EventRangeDocument,
+    query: EventListDocument,
     variables: {
-      start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
-      end: now.toISOString(),
-      trainerIds: [id],
+      condition: {
+        overlaps: {
+          start: months.at(-1)?.since.toISOString() ?? month.toISOString(),
+          end: now.toISOString(),
+        },
+        trainerIds: [id],
+      },
+      orderBy: ['SINCE_ASC'],
     },
     pause: !id,
   });
@@ -82,7 +87,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
       ]),
     );
 
-    for (const event of data?.list ?? []) {
+    for (const event of data?.eventsList ?? []) {
       if (event.isCancelled) continue;
       if (new Date(event.until).getTime() > now.getTime()) continue;
       if (!event.trainersList?.some((trainer) => trainer.personId === id)) continue;
@@ -123,7 +128,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
     }
 
     return [...byKey.values()];
-  }, [data?.list, id, months, now]);
+  }, [data?.eventsList, id, months, now]);
 
   const selectedMonth = reports.find((month) => month.key === monthKey) ?? reports[0];
 

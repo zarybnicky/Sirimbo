@@ -24,7 +24,13 @@ export function AddToEventScheduleForm({
     resolver: zodResolver(Form),
   });
   const [updateResult, update] = useMutation(UpdateEventDocument);
-  const [{ data, error, fetching }] = useQuery({ query: EventListDocument });
+  const [{ data, error, fetching }] = useQuery({
+    query: EventListDocument,
+    variables: {
+      condition: { type: 'CAMP', parentId: null },
+      orderBy: ['SINCE_DESC'],
+    },
+  });
   const options = React.useMemo(
     () =>
       (data?.eventsList ?? [])

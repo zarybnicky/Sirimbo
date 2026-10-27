@@ -507,39 +507,15 @@ query CampTrainerOverview($id: BigInt!) {
   }
 }
 
-query EventList {
-  eventsList(
-    condition: { type: CAMP, parentId: null }
-    orderBy: SINCE_DESC
-  ) {
-    coverImage {
+query EventList(
+  $condition: EventCondition
+  $orderBy: [EventsOrderBy!]
+  $includeCoverImage: Boolean! = false
+) {
+  eventsList(condition: $condition, orderBy: $orderBy) {
+    coverImage @include(if: $includeCoverImage) {
       ...File
     }
-    ...EventWithTrainer
-  }
-}
-
-query EventRange(
-  $start: Datetime!
-  $end: Datetime!
-  $types: [EventType!]
-  $trainerIds: [BigInt]
-  $participantIds: [BigInt]
-  $scope: EventInstanceRangeScope,
-  $parentId: BigInt
-  $locationIds: [BigInt]
-) {
-  list: eventsList(
-    condition: {
-      overlaps: { start: $start, end: $end }
-      scope: { mode: $scope, parentId: $parentId }
-      types: $types
-      trainerIds: $trainerIds
-      participantIds: $participantIds
-      locationIds: $locationIds
-    }
-    orderBy: SINCE_ASC
-  ) {
     ...EventWithTrainer
   }
 }

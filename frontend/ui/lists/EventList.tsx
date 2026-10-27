@@ -30,7 +30,14 @@ interface EventListPageProps {
 }
 
 function EventListPage({ search, currentId }: EventListPageProps) {
-  const [{ data }] = useQuery({ query: EventListDocument });
+  const [{ data }] = useQuery({
+    query: EventListDocument,
+    variables: {
+      condition: { type: 'CAMP', parentId: null },
+      orderBy: ['SINCE_DESC'],
+      includeCoverImage: true,
+    },
+  });
 
   const nodes: EventNode[] = React.useMemo(() => {
     return (data?.eventsList ?? []).map((event) => {
