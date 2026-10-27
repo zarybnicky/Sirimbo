@@ -4,9 +4,10 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 
 import {
-  CohortWithMembersDocument,
+  CohortDocument,
   UpdateCohortDocument,
-  type CohortWithMembersQuery,
+  type CohortFragment,
+  type CohortMemberFragment,
 } from '@/graphql/Cohorts';
 import { useMutation, useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
@@ -34,8 +35,10 @@ import { formatCount, formatPointsAndFinals } from '@/ui/format';
 
 export function TrainingGroup({
   initialCohort,
+  initialMembers,
 }: {
-  initialCohort: NonNullable<CohortWithMembersQuery['entity']>;
+  initialCohort: CohortFragment;
+  initialMembers: readonly CohortMemberFragment[];
 }) {
   const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
@@ -45,15 +48,14 @@ export function TrainingGroup({
     parseAsString.withOptions({ history: 'push' }),
   );
   const [{ data }] = useQuery({
-    query: CohortWithMembersDocument,
-    variables: { id: initialCohort.id },
+    query: CohortDocument,
+    variables: {
+      id: initialCohort.id,
+      withMembers: true,
+    },
   });
-  const cohort = data?.entity ?? initialCohort;
-
-  const members = React.useMemo(
-    () => cohort.cohortMembershipsList ?? [],
-    [cohort.cohortMembershipsList],
-  );
+  const cohort = data?.cohort ?? initialCohort;
+  const members = data?.cohort?.cohortMembershipsList ?? initialMembers;
   const description = React.useMemo(
     () => cohort.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort.description],
@@ -116,9 +118,7 @@ function CategoryList({
   person,
   discipline,
 }: {
-  person: NonNullable<
-    CohortWithMembersQuery['entity']
-  >['cohortMembershipsList'][number]['person'];
+  person: CohortMemberFragment['person'];
   discipline: string;
 }) {
   if (!person?.cstsId)
@@ -161,7 +161,7 @@ function CategoryList({
 const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   members,
 }: {
-  members: NonNullable<CohortWithMembersQuery['entity']>['cohortMembershipsList'];
+  members: readonly CohortMemberFragment[];
 }) {
   const auth = useAuth();
   const showActivity = auth.isTrainer;

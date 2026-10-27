@@ -21,6 +21,24 @@ fragment Cohort on Cohort {
   externalIds
 }
 
+fragment CohortMember on CohortMembership {
+  ...CohortMembership
+  person {
+    ...PersonBasic
+    lastActivity {
+      webAt
+      cardEntryAt
+      trainingAt
+      competitionOn
+    }
+    ageGroup
+    cstsId
+    federationCategoryProgresses(first: 100) {
+      nodes { ...FederationCategoryProgress }
+    }
+  }
+}
+
 query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolean) {
   cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible, isArchived: $archived}, orderBy: [ORDERING_ASC]) {
     ...Cohort
@@ -30,33 +48,12 @@ query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolea
   }
 }
 
-query CohortWithMembers($id: BigInt!) {
-  entity: cohort(id: $id) {
+query Cohort($id: BigInt!, $withMembers: Boolean! = false) {
+  cohort(id: $id) {
     ...Cohort
-    cohortMembershipsList(condition: {status: ACTIVE}) {
-      ...CohortMembership
-      person {
-        ...PersonBasic
-        id
-        lastActivity {
-          webAt
-          cardEntryAt
-          trainingAt
-          competitionOn
-        }
-        ageGroup
-        cstsId
-        federationCategoryProgresses(first: 100) {
-          nodes { ...FederationCategoryProgress }
-        }
-      }
+    cohortMembershipsList(condition: { status: ACTIVE }) @include(if: $withMembers) {
+      ...CohortMember
     }
-  }
-}
-
-query Cohort($id: BigInt!) {
-  entity: cohort(id: $id) {
-    ...Cohort
   }
 }
 

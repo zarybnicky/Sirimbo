@@ -1,8 +1,8 @@
 import {
   type EventRegistrationFragment,
   EventFormOptionsDocument,
-  EventRegistrationDialogDocument,
-  type EventRegistrationDialogQuery,
+  EventRegistrationsDocument,
+  type EventWithRegistrationsFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
@@ -34,8 +34,6 @@ type Selection =
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
-type RegistrationEvent = NonNullable<EventRegistrationDialogQuery['event']>;
-
 const registrant = (registration: EventRegistrationFragment): Registrant => ({
   id: registration.id,
   label: formatRegistrant(registration),
@@ -43,7 +41,7 @@ const registrant = (registration: EventRegistrationFragment): Registrant => ({
   coupleId: registration.coupleId,
 });
 
-function useRegistrationCandidates(event: RegistrationEvent, enabled: boolean) {
+function useRegistrationCandidates(event: EventWithRegistrationsFragment, enabled: boolean) {
   const auth = useAuth();
   const isManager = auth.canManageEvent(event);
 
@@ -126,7 +124,7 @@ export function MyRegistrationsDialog({
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {
   const [query] = useQuery({
-    query: EventRegistrationDialogDocument,
+    query: EventRegistrationsDocument,
     variables: { id: eventId },
   });
 
@@ -147,7 +145,7 @@ function RegistrationsDialogContent({
   initialRegistrationId,
   initialPage,
 }: {
-  event: RegistrationEvent;
+  event: EventWithRegistrationsFragment;
   initialRegistrationId?: string;
   initialPage?: 'overview' | 'candidates' | 'new-person';
 }) {

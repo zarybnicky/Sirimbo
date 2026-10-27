@@ -1,4 +1,4 @@
-import { CohortWithMembersDocument } from '@/graphql/Cohorts';
+import { CohortDocument } from '@/graphql/Cohorts';
 import { executeGraphql } from '@/lib/server/graphql';
 import { slugify } from '@/lib/slugify';
 import { stripHtml } from '@/lib/stripHtml';
@@ -13,7 +13,10 @@ type Props = {
 
 const getTrainingGroup = cache(async (id: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
-  return executeGraphql(CohortWithMembersDocument, { id }).then((x) => x.entity);
+  return executeGraphql(CohortDocument, {
+    id,
+    withMembers: true,
+  }).then((x) => x.cohort);
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -44,5 +47,10 @@ export default async function TrainingGroupPage({ params }: Props) {
     redirect(`/treninkove-skupiny/${cohort.id}/${expectedSlug}`);
   }
 
-  return <TrainingGroup initialCohort={cohort} />;
+  return (
+    <TrainingGroup
+      initialCohort={cohort}
+      initialMembers={cohort.cohortMembershipsList ?? []}
+    />
+  );
 }

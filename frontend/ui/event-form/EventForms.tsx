@@ -7,7 +7,7 @@ import {
   EventRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
-  type EventRegistrationsQuery,
+  type EventRegistrationFragment,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
@@ -41,7 +41,7 @@ const eventTypeOptions = (
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
 function useEventFormOptions(
-  savedRegistrations?: NonNullable<EventRegistrationsQuery['event']>['registrationsList'],
+  savedRegistrations?: readonly EventRegistrationFragment[],
 ) {
   const auth = useAuth();
   const [query] = useQuery({ query: EventFormOptionsDocument });

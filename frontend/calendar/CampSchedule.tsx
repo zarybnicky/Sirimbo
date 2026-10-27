@@ -48,7 +48,7 @@ export const CampSchedule = React.memo(function CampSchedule({
   const auth = useAuth();
   const [query] = useQuery({
     query: EventRegistrationsDocument,
-    variables: { id },
+    variables: { id, withSchedule: true },
     pause: !auth.isTrainer,
   });
   const registrations = query.data?.event?.registrationsList ?? emptyRegistrations;

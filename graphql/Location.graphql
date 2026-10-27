@@ -49,21 +49,19 @@ query PublicLocations {
   }
 }
 
-query Location($id: BigInt!) {
+query Location(
+  $id: BigInt!
+  $eventsCondition: EventCondition
+  $withEvents: Boolean! = false
+) {
   location(id: $id) {
     ...Location
   }
-}
-
-query LocationPage($id: BigInt!, $start: Datetime!) {
-  location(id: $id) {
-    ...Location
-  }
-  events: eventsList(
+  eventsList(
     first: 10
-    condition: { overlaps: { start: $start }, locationId: $id }
+    condition: $eventsCondition
     orderBy: SINCE_ASC
-  ) {
+  ) @include(if: $withEvents) {
     ...EventWithTrainer
   }
 }

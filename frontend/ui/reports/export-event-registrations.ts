@@ -1,18 +1,21 @@
-import { EventExportDocument } from '@/graphql/Event';
+import { EventRegistrationsDocument } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
 import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventRegistrations(client: Client, id: string) {
-  const result = await client.query(EventExportDocument, { id }).toPromise();
+  const result = await client.query(EventRegistrationsDocument, { id }).toPromise();
   if (result.error) throw result.error;
   const { event } = result.data ?? {};
   if (!event) throw new Error("Událost nenalezena");
 
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const name = event.name || formatEventName(event) || 'Sheet 1';
+  const name = event.name || formatEventName({
+    ...event,
+    registrations: { nodes: event.registrationsList },
+  }) || 'Sheet 1';
   const worksheet = workbook.addWorksheet(name.replaceAll(/[^a-zA-Z0-9\s]/g, ''));
 
   const columns = [
@@ -27,7 +30,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
       lessonTrainers.set(trainer.personId, trainer.person?.name ?? '?');
     }
   }
-  for (const registration of event.registrations.nodes) {
+  for (const registration of event.registrationsList) {
     for (const request of registration.lessonRequestsList) {
       if (request.trainer?.personId) {
         lessonTrainers.set(request.trainer.personId, request.trainer.person?.name ?? '?');
@@ -46,7 +49,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
   }
 
   const rows: { [k: string]: string }[] = [];
-  for (const x of event.registrations.nodes) {
+  for (const x of event.registrationsList) {
     const row: { [key: string]: string } = {
       man: x.person?.name || x.couple?.man?.name || '',
       woman: x.couple?.woman?.name || '',

@@ -1,7 +1,7 @@
 import {
   type EventRegistrationFragment,
   type EventTrainerFragment,
-  type EventRegistrationDialogQuery,
+  type EventWithRegistrationsFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
@@ -37,7 +37,7 @@ export function EventRegistrationForm({
   onSaved,
   onCancelled,
 }: {
-  event: NonNullable<EventRegistrationDialogQuery['event']>;
+  event: EventWithRegistrationsFragment;
   registrant:
     | EventRegistrationFragment
     | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;

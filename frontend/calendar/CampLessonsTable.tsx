@@ -27,7 +27,7 @@ type Row = {
 export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { id: string }) {
   const [query] = useQuery({
     query: EventRegistrationsDocument,
-    variables: { id },
+    variables: { id, withSchedule: true },
   });
 
   const { rows, trainers, hasRequests } = React.useMemo(() => {

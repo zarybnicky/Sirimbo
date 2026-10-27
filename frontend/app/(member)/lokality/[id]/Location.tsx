@@ -1,6 +1,7 @@
 'use client';
 
-import { LocationPageDocument, type LocationPageQuery } from '@/graphql/Location';
+import { LocationDocument, type LocationFragment } from '@/graphql/Location';
+import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { useActions } from '@/lib/actions';
 import { locationActions } from '@/lib/actions/location';
 import { AccessEventList } from '@/ui/AccessEventList';
@@ -23,8 +24,8 @@ export function Location({
   initialEvents,
   start,
 }: {
-  initialLocation: NonNullable<LocationPageQuery['location']>;
-  initialEvents: NonNullable<LocationPageQuery['events']>;
+  initialLocation: LocationFragment;
+  initialEvents: readonly EventWithTrainerFragment[];
   start: string;
 }) {
   const auth = useAuth();
@@ -41,14 +42,18 @@ export function Location({
   }, []);
 
   const [{ data }] = useQuery({
-    query: LocationPageDocument,
+    query: LocationDocument,
     variables: {
       id: initialLocation.id,
-      start: new Date(now).toISOString(),
+      eventsCondition: {
+        overlaps: { start: new Date(now).toISOString() },
+        locationId: initialLocation.id,
+      },
+      withEvents: true,
     },
   });
   const location = data?.location ?? initialLocation;
-  const events = data?.events ?? initialEvents;
+  const events = data?.eventsList ?? initialEvents;
   const actions = useActions(locationActions, location);
   const ongoingEvents = events.filter(
     (x) => new Date(x.since).getTime() <= now && new Date(x.until).getTime() > now,

@@ -1,4 +1,4 @@
-import { LocationPageDocument } from '@/graphql/Location';
+import { LocationDocument } from '@/graphql/Location';
 import { executeGraphql } from '@/lib/server/graphql';
 import { Layout } from '@/ui/Layout';
 import type { Metadata } from 'next';
@@ -13,9 +13,10 @@ type Props = {
 const getLocation = cache(async (id: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
   const start = new Date().toISOString();
-  const result = await executeGraphql(LocationPageDocument, {
+  const result = await executeGraphql(LocationDocument, {
     id,
-    start,
+    eventsCondition: { overlaps: { start }, locationId: id },
+    withEvents: true,
   });
   return result.location && { data: result, start };
 });
@@ -40,7 +41,7 @@ export default async function LocationPage({ params }: Props) {
     <Layout>
       <Location
         initialLocation={result.data.location}
-        initialEvents={result.data.events ?? []}
+        initialEvents={result.data.eventsList ?? []}
         start={result.start}
       />
     </Layout>

@@ -32,7 +32,7 @@ const Form = z.object({
 export function CohortForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !id });
-  const data = query.data?.entity;
+  const data = query.data?.cohort;
 
   const [{ data: cohortGroups }] = useQuery({ query: CohortGroupListDocument });
   const [createResult, create] = useMutation(CreateCohortDocument);

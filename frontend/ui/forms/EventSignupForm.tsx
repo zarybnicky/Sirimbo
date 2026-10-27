@@ -1,5 +1,5 @@
 import {
-  type EventRegistrationDialogQuery,
+  type EventWithRegistrationsFragment,
   SetEventRegistrationDocument,
 } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
@@ -42,7 +42,7 @@ const Form = z.object({
 export function EventSignupForm({
   event,
 }: {
-  event: NonNullable<EventRegistrationDialogQuery['event']>;
+  event: EventWithRegistrationsFragment;
 }) {
   const auth = useAuth();
   const { onSuccess } = useFormResult();
