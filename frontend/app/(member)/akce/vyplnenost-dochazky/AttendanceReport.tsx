@@ -8,6 +8,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
 import { computeRange } from '@/ui/PeriodSelector';
+import { Table } from '@/ui/Table';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');
 const percentFormatter = new Intl.NumberFormat('cs-CZ', {
@@ -134,60 +135,36 @@ export function AttendanceReport() {
 
       {fetching && <p className="text-sm text-neutral-10">Načítáme přehled…</p>}
 
-      {!fetching &&
-        !error &&
-        (rows.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-neutral-6 text-sm">
-              <thead>
-                <tr className="bg-neutral-3 text-left text-xs uppercase tracking-wide text-neutral-10">
-                  <th className="px-3 py-2 font-medium">Trenér</th>
-                  <th className="px-3 py-2 font-medium text-right">Vedených celkem</th>
-                  <th className="px-3 py-2 font-medium text-right">Plně vyplněno</th>
-                  <th className="px-3 py-2 font-medium text-right">Částečně vyplněno</th>
-                  <th className="px-3 py-2 font-medium text-right">Nevyplněno</th>
-                  <th className="px-3 py-2 font-medium text-right">
-                    Docházka alespoň částečně
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-6">
-                {rows.map((row) => {
-                  const needsAttention = row.pending > 0 || row.unfilled > 0;
-                  return (
-                    <tr
-                      key={row.name}
-                      className={needsAttention ? 'bg-accent-3/30' : undefined}
-                    >
-                      <td className="px-3 py-2 font-medium text-neutral-12">
-                        {row.name}
-                      </td>
-                      <td className="px-3 py-2 text-right text-neutral-12">
-                        {numberFormatter.format(row.total)}
-                      </td>
-                      <td className="px-3 py-2 text-right text-neutral-12">
-                        {numberFormatter.format(row.filled)}
-                      </td>
-                      <td className="px-3 py-2 text-right text-neutral-12">
-                        {numberFormatter.format(row.partial)}
-                      </td>
-                      <td className="px-3 py-2 text-right text-neutral-12">
-                        {numberFormatter.format(row.unfilled)}
-                      </td>
-                      <td className="px-3 py-2 text-right text-neutral-12">
-                        {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-sm text-neutral-10">
-            Momentálně není k dispozici žádný záznam.
-          </p>
-        ))}
+      {!fetching && !error && (
+        <Table
+          className="text-neutral-12"
+          columns={[
+            'Trenér',
+            <span key="total" className="block text-right">Vedených celkem</span>,
+            <span key="filled" className="block text-right">Plně vyplněno</span>,
+            <span key="partial" className="block text-right">Částečně vyplněno</span>,
+            <span key="unfilled" className="block text-right">Nevyplněno</span>,
+            <span key="ratio" className="block text-right">Docházka alespoň částečně</span>,
+          ]}
+          empty="Momentálně není k dispozici žádný záznam."
+        >
+          {rows.map((row) => (
+            <tr
+              key={row.name}
+              className={row.pending > 0 || row.unfilled > 0 ? 'bg-accent-3/30' : undefined}
+            >
+              <td className="font-medium">{row.name}</td>
+              <td className="text-right">{numberFormatter.format(row.total)}</td>
+              <td className="text-right">{numberFormatter.format(row.filled)}</td>
+              <td className="text-right">{numberFormatter.format(row.partial)}</td>
+              <td className="text-right">{numberFormatter.format(row.unfilled)}</td>
+              <td className="text-right">
+                {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
     </div>
   );
 }

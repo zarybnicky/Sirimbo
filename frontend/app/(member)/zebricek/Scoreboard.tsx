@@ -11,6 +11,7 @@ import { computeRange, type PeriodPreset, PeriodSelector } from '@/ui/PeriodSele
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { Combobox } from '@/ui/fields/Combobox';
 import { fullDateFormatter, numberFormatter } from '@/ui/format';
+import { Table } from '@/ui/Table';
 
 export function Scoreboard() {
   const [cohortId, setCohortId] = React.useState<string | null | undefined>(null);
@@ -93,14 +94,11 @@ export function Scoreboard() {
 
           {period.displaySince && period.displayUntil && (
             <DotSeparated className="text-sm text-neutral-10">
-              <span>
-                Zobrazené období:{' '}
-                <span className="font-medium text-neutral-12">
-                  {fullDateFormatter.formatRange(
-                    period.displaySince,
-                    period.displayUntil,
-                  )}
-                </span>
+              <span className="font-medium text-neutral-12">
+                {fullDateFormatter.formatRange(
+                  period.displaySince,
+                  period.displayUntil,
+                )}
               </span>
               {activeCohort ? `Skupina ${activeCohort.name}` : 'Všechny skupiny'}
             </DotSeparated>
@@ -114,73 +112,68 @@ export function Scoreboard() {
             </p>
           ) : fetching ? (
             <p>Načítám výsledky…</p>
-          ) : scoreboard.length === 0 ? (
-            <p>Pro vybrané období nejsou žádné body.</p>
           ) : null}
 
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="border-b border-neutral-6 text-left">
-                  <th className="py-2 pr-2" />
-                  <th className="py-2 pr-4">Člen</th>
-                  <th className="p-2 text-center">Lekce</th>
-                  <th className="p-2 text-center">Společné</th>
-                  <th className="p-2 text-center">Akce</th>
-                  <th className="py-2 pl-2 text-center">Celkem</th>
+          <Table
+            busy={fetching}
+            columns={[
+              <span key="rank" className="sr-only">Pořadí</span>,
+              'Člen',
+              <span key="lessons" className="block text-center">Lekce</span>,
+              <span key="groups" className="block text-center">Společné</span>,
+              <span key="events" className="block text-center">Akce</span>,
+              <span key="total" className="block text-center">Celkem</span>,
+            ]}
+            empty={!fetching && !error ? 'Pro vybrané období nejsou žádné body.' : undefined}
+          >
+            {scoreboard.map((entry) => {
+              const key = `${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`;
+              const rank = entry.ranking ? Number(entry.ranking) : undefined;
+
+              const highlightClass =
+                rank === 1
+                  ? 'bg-[rgb(254,240,138)] text-black'
+                  : rank === 2
+                    ? 'bg-[rgb(186,230,253)] text-black'
+                    : rank === 3
+                      ? 'bg-[rgb(254,215,170)] text-black'
+                      : '';
+
+              return (
+                <tr key={key} className={highlightClass}>
+                  <td className="font-bold">
+                    {entry.ranking
+                      ? `${numberFormatter.format(BigInt(entry.ranking))}.`
+                      : '–'}
+                  </td>
+                  <td>
+                    {entry.person ? (
+                      <Link
+                        href={`/clenove/${entry.person.id}`}
+                        className="hover:underline text-inherit"
+                      >
+                        {entry.person.name}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  <td className="text-center">
+                    {numberFormatter.format(BigInt(entry.lessonTotalScore ?? '0'))}
+                  </td>
+                  <td className="text-center">
+                    {numberFormatter.format(BigInt(entry.groupTotalScore ?? '0'))}
+                  </td>
+                  <td className="text-center">
+                    {numberFormatter.format(BigInt(entry.eventTotalScore ?? '0'))}
+                  </td>
+                  <td className="text-center font-bold">
+                    {numberFormatter.format(BigInt(entry.totalScore ?? '0'))}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {scoreboard.map((entry) => {
-                  const key = `${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`;
-                  const rank = entry.ranking ? Number(entry.ranking) : undefined;
-
-                  const highlightClass =
-                    rank === 1
-                      ? 'bg-[rgb(254,240,138)] text-black'
-                      : rank === 2
-                        ? 'bg-[rgb(186,230,253)] text-black'
-                        : rank === 3
-                          ? 'bg-[rgb(254,215,170)] text-black'
-                          : '';
-
-                  return (
-                    <tr key={key} className={highlightClass}>
-                      <td className="py-1 pr-2 font-bold">
-                        {entry.ranking
-                          ? `${numberFormatter.format(BigInt(entry.ranking))}.`
-                          : '–'}
-                      </td>
-                      <td className="py-1 pr-4">
-                        {entry.person ? (
-                          <Link
-                            href={`/clenove/${entry.person.id}`}
-                            className="hover:underline text-inherit"
-                          >
-                            {entry.person.name}
-                          </Link>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                      <td className="py-1 px-2 text-center">
-                        {numberFormatter.format(BigInt(entry.lessonTotalScore ?? '0'))}
-                      </td>
-                      <td className="py-1 px-2 text-center">
-                        {numberFormatter.format(BigInt(entry.groupTotalScore ?? '0'))}
-                      </td>
-                      <td className="py-1 px-2 text-center">
-                        {numberFormatter.format(BigInt(entry.eventTotalScore ?? '0'))}
-                      </td>
-                      <td className="py-1 pl-2 text-center font-bold">
-                        {numberFormatter.format(BigInt(entry.totalScore ?? '0'))}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+              );
+            })}
+          </Table>
         </section>
       </div>
     </>

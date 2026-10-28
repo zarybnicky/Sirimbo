@@ -97,12 +97,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
           label="Pořadí v seznamech skupin (1 = první)"
         />
       </div>
-      <CheckboxElement
-        control={control}
-        name="isVisible"
-        value="1"
-        label="Veřejně viditelná"
-      />
+      <CheckboxElement control={control} name="isVisible" value="1" label="Veřejná" />
       <CheckboxElement
         control={control}
         name="isArchived"
@@ -110,11 +105,7 @@ export function CohortForm({ id = '' }: { id?: string }) {
         label="Archivovaná"
       />
 
-      <RichTextEditor
-        control={control}
-        name="description"
-        label="Popis"
-      />
+      <RichTextEditor control={control} name="description" label="Popis" />
       <SubmitButton control={control} />
     </form>
   );

@@ -1,7 +1,7 @@
 import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
 import { fetchStarlet } from '@/starlet/query';
 import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
-import { CheckboxElement } from '@/ui/fields/checkbox';
+import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { useEffect, useState } from 'react';
@@ -14,8 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
-  folders: z.record(z.string(), z.boolean().prefault(false)),
-  seasons: z.record(z.string(), z.boolean().prefault(false)),
+  folders: z.array(z.string()),
+  seasons: z.array(z.string()),
 });
 
 type FolderOrSeason = {
@@ -26,25 +26,17 @@ type FolderOrSeason = {
 
 export function ChangeFoldersForm() {
   const { onSuccess } = useFormResult();
-  const { control, handleSubmit, reset } = useForm({
+  const { folders: prevFolders, seasons: prevSeasons } =
+    useAtomValue(starletSettingsAtom);
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
+    defaultValues: {
+      folders: prevFolders.map(([id]) => id),
+      seasons: prevSeasons.map(([id]) => id),
+    },
   });
   const [result, updateSettings] = useMutation(UpdateTenantSettingsDocument);
   const token = useAtomValue(starletTokenAtom);
-
-  const { folders: prevFolders, seasons: prevSeasons } =
-    useAtomValue(starletSettingsAtom);
-  useEffect(() => {
-    reset({
-      folders: Object.fromEntries(prevFolders.map((x) => [x[0], true] as const)),
-      seasons: Object.fromEntries(prevSeasons.map((x) => [x[0], true] as const)),
-    }, {
-      keepDirtyValues: true,
-      keepTouched: true,
-      keepErrors: true,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [folders, setFolders] = useState<FolderOrSeason[]>([]);
   const [seasons, setSeasons] = useState<FolderOrSeason[]>([]);
@@ -68,9 +60,10 @@ export function ChangeFoldersForm() {
   }, [token?.auth_ok]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    const selectedFolders = Object.entries(values.folders)
-      .filter((x) => x[1])
-      .map((x) => [x[0], folders.find((y) => y.key === x[0])?.name ?? '?']);
+    const selectedFolders = values.folders.map((id) => [
+      id,
+      folders.find((x) => x.key === id)?.name ?? '?',
+    ]);
     const foldersResult = await updateSettings({
       input: {
         path: ['evidenceFolders'],
@@ -79,9 +72,10 @@ export function ChangeFoldersForm() {
     });
     if (foldersResult.error) return;
 
-    const selectedSeasons = Object.entries(values.seasons)
-      .filter((x) => x[1])
-      .map((x) => [x[0], seasons.find((y) => y.key === x[0])?.name ?? '?']);
+    const selectedSeasons = values.seasons.map((id) => [
+      id,
+      seasons.find((x) => x.key === id)?.name ?? '?',
+    ]);
     const seasonsResult = await updateSettings({
       input: {
         path: ['evidenceSeasons'],
@@ -94,29 +88,17 @@ export function ChangeFoldersForm() {
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
-      <div className="grid grid-cols-2">
-        <ul>
-          {folders.map((x) => (
-            <li key={x.key}>
-              <CheckboxElement
-                control={control}
-                name={`folders.${x.key}`}
-                label={x.name}
-              />
-            </li>
-          ))}
-        </ul>
-        <ul>
-          {seasons.map((x) => (
-            <li key={x.key}>
-              <CheckboxElement
-                control={control}
-                name={`seasons.${x.key}`}
-                label={x.name}
-              />
-            </li>
-          ))}
-        </ul>
+      <div className="grid grid-cols-2 gap-2">
+        <VerticalCheckboxButtonGroupElement
+          control={control}
+          name="folders"
+          options={folders.map((folder) => ({ id: folder.key, label: folder.name }))}
+        />
+        <VerticalCheckboxButtonGroupElement
+          control={control}
+          name="seasons"
+          options={seasons.map((season) => ({ id: season.key, label: season.name }))}
+        />
       </div>
       <SubmitButton control={control} />
     </form>

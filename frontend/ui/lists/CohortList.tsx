@@ -3,7 +3,7 @@ import { Users } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
 import { CohortForm } from '@/ui/forms/CohortForm';
-import { buttonCls } from '@/ui/style';
+import { FacetFilter } from '@/ui/FacetFilter';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useParams } from 'next/navigation';
@@ -16,11 +16,10 @@ import { formatCount } from '@/ui/format';
 export function CohortList() {
   const currentId = useParams<{ id?: string }>()?.id;
   const auth = useAuth();
-  const [isArchive, setIsArchive] = React.useState(false);
-  const [isHidden, setIsHidden] = React.useState(false);
+  const [showAll, setShowAll] = React.useState(false);
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: !isHidden, archived: isArchive },
+    variables: showAll ? {} : { visible: true, archived: false },
   });
   const nodes = React.useMemo(
     () =>
@@ -33,7 +32,7 @@ export function CohortList() {
           subtitle: [
             x.location,
             formatCount(count, { one: 'člen', few: 'členové', other: 'členů' }),
-            !x.isVisible && 'Skrytá',
+            !x.isVisible && 'Neveřejná',
             x.isArchived && 'Archivovaná',
           ]
             .filter(Boolean)
@@ -52,39 +51,25 @@ export function CohortList() {
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Skupiny</div>
 
-        {auth.isAdmin && (
-          <Dialog>
-            <DialogTrigger.Add size="sm" />
-            <DialogContent>
-              <CohortForm />
-            </DialogContent>
-          </Dialog>
-        )}
-
-        {auth.isTrainer && (
-          <div className="mt-2 w-full flex gap-2 justify-end">
-            <button
-              type="button"
-              className={buttonCls({
-                size: 'sm',
-                variant: isArchive ? 'primary' : 'outline',
-              })}
-              onClick={() => setIsArchive((x) => !x)}
-            >
-              Archivované
-            </button>
-            <button
-              type="button"
-              className={buttonCls({
-                size: 'sm',
-                variant: isHidden ? 'primary' : 'outline',
-              })}
-              onClick={() => setIsHidden((x) => !x)}
-            >
-              Skryté
-            </button>
-          </div>
-        )}
+        <div className="flex gap-2">
+          {auth.isTrainer && (
+            <FacetFilter
+              inline
+              label=""
+              value={showAll ? ['all'] : []}
+              options={[{ value: 'all', label: 'Zobrazit vše' }]}
+              onChange={(x) => setShowAll(x.includes('all'))}
+            />
+          )}
+          {auth.isAdmin && (
+            <Dialog>
+              <DialogTrigger.Add size="sm" />
+              <DialogContent>
+                <CohortForm />
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
 
         <TextField
           type="search"
