@@ -102,7 +102,7 @@ export function Couple({ id }: { id: string }) {
 
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="activity" title="Aktivita">
-          <ActivityTimeline personIds={personIds} includeJudging />
+          <ActivityTimeline personIds={personIds} />
         </Tab>
 
         <Tab id="fed" title="Výsledky">

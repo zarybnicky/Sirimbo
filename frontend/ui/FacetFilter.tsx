@@ -92,10 +92,12 @@ export function FacetFilter<Value extends string>({
   if (inline) {
     return (
       <fieldset className="min-w-0 w-full">
-        <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">
-          {label}
-        </legend>
-        <div className="flex flex-wrap gap-1 sm:ml-20">
+        {label && (
+          <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">
+            {label}
+          </legend>
+        )}
+        <div className={cn('flex flex-wrap gap-1', label && 'sm:ml-20')}>
           {visibleOptions.map((option) => (
             <button
               key={option.value}

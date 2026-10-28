@@ -50,6 +50,7 @@ export function LocationField({ control, locations }: {
       {editing && (
         <>
           <RadioButtonGroup
+            layout="wrap"
             name={field.name}
             value={locationId ?? 'none'}
             options={locationOptions}

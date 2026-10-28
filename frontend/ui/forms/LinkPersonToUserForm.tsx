@@ -65,11 +65,13 @@ export function LinkPersonToUserForm({ userId }: { userId: string }) {
       <DialogTitle>Přiřadit osobu</DialogTitle>
       <FormError error={result.error || queryError} />
       <ComboboxElement
+        inline
         control={control}
         name="personId"
-        options={options}
         label="Osoba"
         placeholder="Vyberte osobu"
+        options={options}
+        disabled={result.fetching}
       />
       <SubmitButton
         control={control}

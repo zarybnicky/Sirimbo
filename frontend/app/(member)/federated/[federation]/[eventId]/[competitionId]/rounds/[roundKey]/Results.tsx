@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import type { CompetitionRoundQuery } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
 import { formatJudgeScore, numberFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 
 export function Results({
   federation,
@@ -115,37 +115,24 @@ export function Results({
   return (
     <>
       <div className="mt-4 mb-2 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-bold">Results</h2>
+        <h2 className="text-lg font-bold">Výsledky</h2>
         {canGroupMarks && (
-          <div role="group" aria-label="Results view" className={buttonGroupCls()}>
-            {(
-              [
-                ['dance', 'By dance'],
-                ['judge', 'By judge'],
-                ['detailed', 'Detailed'],
-              ] as const
-            ).map(([group, label]) => (
-              <button
-                key={group}
-                type="button"
-                aria-pressed={view === group}
-                className={buttonCls({
-                  variant: view === group ? 'primary' : 'outline',
-                  size: 'sm',
-                })}
-                onClick={() => setView(group)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <RadioButtonGroup
+            value={view}
+            options={[
+              { id: 'dance', label: 'Podle tance' },
+              { id: 'judge', label: 'Podle porotce' },
+              { id: 'detailed', label: 'Deatilní' },
+            ]}
+            onValueChange={(x) => setView(x as typeof view)}
+          />
         )}
       </div>
       <div className="col-feature overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['rank', 'start number', 'competitor'].map((label) => (
+              {['Umístění', 'Startovní č.', 'Soutěžící'].map((label) => (
                 <th
                   key={label}
                   scope="col"

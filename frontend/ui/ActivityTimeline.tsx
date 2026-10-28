@@ -4,8 +4,7 @@ import {
   type ActivityTimelineItem_ActivityJudging_Fragment,
   type ActivityTimelineItemFragment,
 } from '@/graphql/ActivityTimeline';
-import type { ActivityTimelineKind, AttendanceType, EventType } from '@/graphql';
-import { cn } from '@/lib/cn';
+import type { ActivityTimelineKind, AttendanceType } from '@/graphql';
 import { compareText } from '@/lib/compare';
 import {
   CompetitionEventContent,
@@ -15,8 +14,10 @@ import {
 import { formatCategoryName } from '@/ui/csts';
 import { EventButton } from '@/ui/EventButton';
 import { attendanceIcons } from '@/ui/EventAttendance';
+import { FacetFilter } from '@/ui/FacetFilter';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { capitalize, longDayFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls, cardCls } from '@/ui/style';
+import { buttonCls, cardCls } from '@/ui/style';
 import { add, subtract } from 'date-arithmetic';
 import { Cake } from 'lucide-react';
 import * as React from 'react';
@@ -24,84 +25,41 @@ import { useQuery } from 'urql';
 import { LocalPersonLinks } from './federation-links';
 
 type TimelineMode = 'future' | 'past';
-type TimelineFilter = EventType | 'COMPETITION' | 'JUDGING' | 'BIRTHDAY';
 type EventAttendanceItem = ActivityTimelineItem_ActivityEventAttendance_Fragment;
 type JudgingItem = ActivityTimelineItem_ActivityJudging_Fragment;
 
-const BASE_FILTERS = [
-  ['GROUP', 'Společná'],
-  ['LESSON', 'Lekce'],
-  ['CAMP', 'Soustředění'],
-  ['RESERVATION', 'Nabídka'],
-  ['HOLIDAY', 'Prázdniny'],
-  ['COMPETITION', 'Soutěže'],
-  ['BIRTHDAY', 'Narozeniny'],
+const FILTER_OPTIONS = [
+  { value: 'GROUP', label: 'Společná' },
+  { value: 'LESSON', label: 'Lekce' },
+  { value: 'CAMP', label: 'Soustředění' },
+  { value: 'RESERVATION', label: 'Nabídka' },
+  { value: 'HOLIDAY', label: 'Prázdniny' },
+  { value: 'COMPETITION', label: 'Soutěže' },
+  { value: 'BIRTHDAY', label: 'Narozeniny' },
+  { value: 'JUDGING', label: 'Porota' },
 ] as const;
-const JUDGING_FILTER = ['JUDGING', 'Porota'] as const;
-
-function rangeFor(mode: TimelineMode, pages: number) {
-  const now = new Date();
-  return mode === 'future'
-    ? { since: now, until: add(now, 8 * pages, 'week') }
-    : { since: subtract(now, 8 * pages, 'week'), until: now };
-}
-
-type ActivityTimelineProps = {
-  defaultMode?: TimelineMode;
-  personIds?: string[];
-  cohortId?: string;
-  includeJudging?: boolean;
-};
+type TimelineFilter = (typeof FILTER_OPTIONS)[number]['value'];
 
 export const ActivityTimeline = React.memo(function ActivityTimeline({
-  defaultMode = 'past',
   personIds,
   cohortId,
-  includeJudging = false,
-}: ActivityTimelineProps) {
-  const [mode, setMode] = React.useState<TimelineMode>(defaultMode);
-  const scopeKey = `${cohortId ?? ''}:${personIds?.join(',') ?? ''}`;
-
-  return (
-    <ActivityTimelineScope
-      key={scopeKey}
-      mode={mode}
-      setMode={setMode}
-      personIds={personIds}
-      cohortId={cohortId}
-      includeJudging={includeJudging}
-    />
-  );
-});
-
-function ActivityTimelineScope({
-  mode,
-  setMode,
-  personIds,
-  cohortId,
-  includeJudging,
-}: Omit<ActivityTimelineProps, 'defaultMode'> & {
-  mode: TimelineMode;
-  setMode: React.Dispatch<React.SetStateAction<TimelineMode>>;
+}: {
+  personIds?: string[];
+  cohortId?: string;
 }) {
+  const [mode, setMode] = React.useState<TimelineMode>('past');
   const [pages, setPages] = React.useState(1);
-  const availableFilters = React.useMemo(
-    () => (includeJudging ? [...BASE_FILTERS, JUDGING_FILTER] : BASE_FILTERS),
-    [includeJudging],
-  );
-  const [selectedFilters, setSelectedFilters] = React.useState<TimelineFilter[]>(() =>
-    availableFilters
-      .map(([value]) => value)
-      .filter((x) => (cohortId ? x !== 'LESSON' : true)),
-  );
-  const filters = selectedFilters.filter(
-    (filter) =>
-      availableFilters.some(([value]) => value === filter) &&
-      (!cohortId || filter !== 'LESSON'),
-  );
-  const range = React.useMemo(() => rangeFor(mode, pages), [mode, pages]);
+  const defaultFilters = FILTER_OPTIONS.map(({ value }) => value)
+    .filter((x) => !cohortId || (x !== 'JUDGING' && x !== 'LESSON'));
+  const [filters, setFilters] = React.useState<TimelineFilter[]>(defaultFilters);
+  const range = React.useMemo(() => {
+    const now = new Date();
+    return mode === 'future'
+      ? { since: now, until: add(now, 8 * pages, 'week') }
+      : { since: subtract(now, 8 * pages, 'week'), until: now };
+  }, [mode, pages]);
   const eventTypes = filters.filter(
-    (x): x is EventType => x !== 'COMPETITION' && x !== 'JUDGING' && x !== 'BIRTHDAY',
+    (x) => x !== 'COMPETITION' && x !== 'JUDGING' && x !== 'BIRTHDAY',
   );
   const kinds: ActivityTimelineKind[] = eventTypes.length > 0 ? ['EVENT_ATTENDANCE'] : [];
   if (filters.includes('COMPETITION')) {
@@ -113,20 +71,6 @@ function ActivityTimelineScope({
   if (filters.includes('BIRTHDAY')) {
     kinds.push('BIRTHDAY');
   }
-
-  const toggleFilter = (filter: TimelineFilter) => {
-    setPages(1);
-    setSelectedFilters((value) => {
-      const available = value.filter(
-        (item) =>
-          availableFilters.some(([option]) => option === item) &&
-          (!cohortId || item !== 'LESSON'),
-      );
-      return available.includes(filter)
-        ? available.filter((item) => item !== filter)
-        : [...available, filter];
-    });
-  };
 
   const [{ data, fetching, error }] = useQuery({
     query: ActivityTimelineDocument,
@@ -158,54 +102,33 @@ function ActivityTimelineScope({
   }, [data?.activityTimelineList, mode]);
 
   return (
-    <section className="flex flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className={buttonGroupCls()}>
-          {[
-            ['future', 'Budoucí'],
-            ['past', 'Minulé'],
-          ].map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              aria-pressed={mode === key}
-              className={buttonCls({
-                variant: mode === key ? 'primary' : 'outline',
-                size: 'sm',
-              })}
-              onClick={() => {
-                setMode(key as TimelineMode);
-                setPages(1);
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+    <>
+      <div className="flex flex-wrap items-center gap-3">
+        <RadioButtonGroup
+          value={mode}
+          options={[
+            { id: 'future', label: 'Budoucí' },
+            { id: 'past', label: 'Minulé' },
+          ]}
+          onValueChange={(value) => {
+            setMode(value as TimelineMode);
+            setPages(1);
+          }}
+        />
 
-        <div className="mb-2 mt-1 flex flex-wrap gap-1">
-          {availableFilters.map(([filter, label]) => (
-            <button
-              key={filter}
-              type="button"
-              aria-pressed={filters.includes(filter)}
-              className={buttonCls({
-                variant: filters.includes(filter) ? 'outline' : 'none',
-                size: 'xs',
-                className: cn(
-                  !filters.includes(filter) &&
-                    'border border-neutral-6 bg-neutral-1 text-neutral-11 hover:bg-neutral-3',
-                ),
-              })}
-              onClick={() => toggleFilter(filter)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <FacetFilter
+          label="Typy"
+          value={filters}
+          defaultValue={defaultFilters}
+          options={FILTER_OPTIONS}
+          onChange={(value) => {
+            setPages(1);
+            setFilters(value);
+          }}
+        />
       </div>
 
-      <div className="text-sm text-neutral-9">
+      <div className="text-sm text-neutral-9 my-3">
         {fetching ? 'Načítám...' : ''}
         {!fetching && error ? `Nepodařilo se načíst aktivitu: ${error.message}` : null}
         {!fetching && !error && days.length === 0
@@ -231,14 +154,14 @@ function ActivityTimelineScope({
         <button
           type="button"
           className={buttonCls({ variant: 'outline', size: 'sm' })}
-          onClick={() => setPages((value) => value + 1)}
+          onClick={() => setPages((x) => x + 1)}
         >
           {mode === 'future' ? 'Načíst další...' : 'Načíst starší...'}
         </button>
       </div>
-    </section>
+    </>
   );
-}
+});
 
 function TimelineDay({
   date,

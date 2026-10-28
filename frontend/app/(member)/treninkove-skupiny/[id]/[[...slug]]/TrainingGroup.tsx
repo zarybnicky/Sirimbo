@@ -30,7 +30,7 @@ import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
 
 export function TrainingGroup({
@@ -188,27 +188,16 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
         <div
           role="group"
           aria-label="Zobrazení členů"
-          className={buttonGroupCls({ className: 'col-span-full justify-self-end' })}
+          className="col-span-full justify-self-end"
         >
-          {(
-            [
-              ['activity', 'Aktivita'],
-              ['competitive', 'Soutěžní info'],
-            ] as const
-          ).map(([mode, label]) => (
-            <button
-              key={mode}
-              type="button"
-              aria-pressed={view === mode}
-              className={buttonCls({
-                variant: view === mode ? 'primary' : 'outline',
-                size: 'sm',
-              })}
-              onClick={() => setView(mode)}
-            >
-              {label}
-            </button>
-          ))}
+          <RadioButtonGroup
+            value={view}
+            options={[
+              { id: 'activity', label: 'Aktivita' },
+              { id: 'competitive', label: 'Soutěžní info' },
+            ]}
+            onValueChange={(value) => setView(value as typeof view)}
+          />
         </div>
       )}
       {members.map((membership) => (

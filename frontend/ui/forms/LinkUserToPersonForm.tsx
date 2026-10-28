@@ -20,34 +20,28 @@ export function LinkUserToPersonForm({ personId }: { personId: string }) {
   const { onSuccess } = useFormResult();
   const { control, handleSubmit, setError } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { userId: '' },
   });
+
   const [list] = useQuery({ query: UserListDocument });
   const [query] = useQuery({
     query: PersonMembershipsDocument,
     variables: { id: personId },
   });
   const [result, create] = useMutation(CreateUserProxyDocument);
-  const owner = query.data?.person;
+
   const options = React.useMemo(() => {
-    if (!owner) return [];
+    if (!query.data?.person) return [];
     const linkedIds = new Set(
-      (owner.userProxiesList ?? [])
+      (query.data?.person.userProxiesList ?? [])
         .filter((x) => x.status !== 'EXPIRED')
         .map((x) => x.user?.id),
     );
     return (list.data?.users?.nodes ?? [])
       .filter((item) => !linkedIds.has(item.id))
       .map((item) => ({ id: item.id, label: [item.uEmail, item.uLogin].filter(isTruthy).join(', ') }));
-  }, [owner, list.data]);
-  const fetching = query.fetching || list.fetching;
-  const queryError = query.error || list.error;
+  }, [query.data?.person, list.data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    if (fetching || queryError || !options.some((x) => x.id === values.userId)) {
-      setError('userId', { message: 'Vyberte dostupnou položku ze seznamu.' });
-      return;
-    }
     const response = await create({
       input: { userProxy: { personId, ...values } },
     });
@@ -61,18 +55,17 @@ export function LinkUserToPersonForm({ personId }: { personId: string }) {
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <DialogTitle>Přiřadit existující účet</DialogTitle>
-      <FormError error={result.error || queryError} />
+      <FormError error={result.error || query.error || list.error} />
       <ComboboxElement
+        inline
         control={control}
         name="userId"
-        options={options}
         label="Uživatelský účet"
         placeholder="Vyberte účet"
+        options={options}
+        disabled={result.fetching}
       />
-      <SubmitButton
-        control={control}
-        disabled={fetching || !!queryError || options.length === 0}
-      >
+      <SubmitButton control={control}>
         Přiřadit účet
       </SubmitButton>
     </form>

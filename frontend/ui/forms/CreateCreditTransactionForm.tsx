@@ -1,10 +1,10 @@
 import { PersonPaymentsDocument } from '@/graphql/Person';
 import { CreateCreditTransactionDocument } from '@/graphql/Payment';
 import { DatePickerElement } from '@/ui/fields/date';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { moneyFormatter } from '@/ui/format';
-import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -69,22 +69,15 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
       <TextFieldElement control={control} name="description" label="Popis transakce" />
 
       <div className="flex flex-wrap gap-2 justify-between">
-        <div className={buttonGroupCls({ className: 'self-center' })}>
-          <button
-            type="button"
-            className={buttonCls({ variant: isDeposit ? 'primary' : 'outline' })}
-            onClick={() => setIsDeposit(true)}
-          >
-            Vklad
-          </button>
-          <button
-            type="button"
-            className={buttonCls({ variant: !isDeposit ? 'primary' : 'outline' })}
-            onClick={() => setIsDeposit(false)}
-          >
-            Výběr
-          </button>
-        </div>
+        <RadioButtonGroup
+          className="self-center"
+          value={isDeposit ? 'deposit' : 'withdrawal'}
+          options={[
+            { id: 'deposit', label: 'Vklad' },
+            { id: 'withdrawal', label: 'Výběr' },
+          ]}
+          onValueChange={(x) => setIsDeposit(x === 'deposit')}
+        />
 
         <TextFieldElement
           control={control}

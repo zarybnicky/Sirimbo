@@ -48,7 +48,6 @@ export function BoundedDayPicker({
       className="scrollbar min-w-0 max-w-full grow overflow-x-auto overscroll-x-contain"
     >
       <RadioButtonGroup
-        name="camp-calendar-range"
         value={view === 'day' ? dayId(date) : 'range'}
         options={options}
         className="w-max flex-nowrap"

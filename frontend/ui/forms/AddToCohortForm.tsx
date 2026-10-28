@@ -85,16 +85,15 @@ export function AddToCohortForm({ personId }: { personId: string }) {
                       className={status === 'NEW' ? 'text-accent-11' : 'text-neutral-11'}
                     >
                       {status === 'NEW'
-                        ? 'Bude přidáno'
+                        ? 'Nová'
                         : status === 'PENDING'
-                          ? 'Naplánováno'
-                          : 'Stávající'}
+                          ? 'Plánováná'
+                          : ''}
                     </span>
                     {status === 'NEW' && (
                       <button
                         type="button"
                         className={buttonCls({ variant: 'outline', size: 'xs' })}
-                        aria-label={`Odebrat z výběru: ${cohort?.name}`}
                         onClick={() =>
                           field.onChange(selectedIds.filter((id) => id !== cohortId))
                         }

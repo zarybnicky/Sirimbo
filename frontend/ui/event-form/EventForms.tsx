@@ -219,7 +219,7 @@ function EventEditor({
           <Checkbox
             name="splitLessons"
             checked={splitLessons}
-            onChange={() => setSplitLessons((value) => !value)}
+            onChange={() => setSplitLessons((x) => !x)}
             label={`Rozdělit na samostatné lekce? (${lessonRanges.length} x 45 min)`}
           />
         )}

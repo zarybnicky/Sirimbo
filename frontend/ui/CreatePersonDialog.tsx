@@ -137,8 +137,12 @@ export function CreatePersonDialog() {
   const personId = useWatch({ control, name: 'personId' });
   const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
+  const initializedPersonId = React.useRef<typeof personId>(undefined);
   React.useEffect(() => {
+    if (initializedPersonId.current === personId) return;
     const person = people?.find((x) => x.id === personId);
+    if (personId && !person) return;
+    initializedPersonId.current = personId;
     if (person) {
       setValue('prefixTitle', person.prefixTitle);
       setValue('suffixTitle', person.suffixTitle);
@@ -158,11 +162,11 @@ export function CreatePersonDialog() {
       setValue('websiteUrl', person.websiteUrl || null);
       setValue('sendInvitation', false);
       setValue('cohortIds', person.cohortIds?.filter(isTruthy) ?? []);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- Keep it aligned with the asynchronously selected person.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCohortPickerOpen((person.cohortIds?.filter(isTruthy) ?? []).length > 0);
       void trigger();
     }
-  }, [setValue, trigger, personId, setCohortPickerOpen, people]);
+  }, [personId, people, setValue, trigger]);
 
   const email = useWatch({ control, name: 'email' });
   React.useEffect(() => {
@@ -263,6 +267,7 @@ export function CreatePersonDialog() {
 
           {open === 'existing' && (
             <ComboboxElement
+              inline
               control={control}
               className="col-full"
               name="personId"
@@ -271,176 +276,180 @@ export function CreatePersonDialog() {
               options={personOptions}
             />
           )}
-          <fieldset disabled={open === 'existing'} className="grid lg:grid-cols-2 gap-2">
-            <TextFieldElement
-              control={control}
-              name="prefixTitle"
-              label="Titul před jménem"
-            />
-            <TextFieldElement
-              control={control}
-              name="suffixTitle"
-              label="Titul za jménem"
-            />
-            <TextFieldElement
-              control={control}
-              name="firstName"
-              label="Jméno"
-              required
-              autoFocus
-            />
-            <TextFieldElement
-              control={control}
-              name="lastName"
-              label="Příjmení"
-              required
-            />
-
-            <DatePickerElement
-              control={control}
-              label="Datum narození"
-              name="birthDate"
-              valueMode="date"
-            />
-            <TextFieldElement
-              control={control}
-              name="taxIdentificationNumber"
-              label="Rodné číslo"
-              placeholder="1111119999"
-              inputMode="numeric"
-              onBlur={fillBirthDate}
-            />
-
-            <FederationIdFieldElement
-              control={control}
-              name="cstsId"
-              federation="csts"
-              label="ČSTS IDT"
-            />
-
-            <FederationIdFieldElement
-              control={control}
-              name="wdsfId"
-              federation="wdsf"
-              label="WDSF MIN"
-              placeholder="10000000"
-            />
-
-            <ComboboxElement
-              control={control}
-              label="Národnost"
-              name="nationality"
-              placeholder="vyberte národnost"
-              options={countryOptions}
-            />
-            <RadioButtonGroupElement
-              control={control}
-              name="gender"
-              label="Pohlaví"
-              options={[
-                { id: 'MAN', label: 'Muž' },
-                { id: 'WOMAN', label: 'Žena' },
-              ]}
-            />
-
-            <TextFieldElement control={control} name="phone" label="Telefon" type="tel" />
-            <TextFieldElement
-              control={control}
-              name="email"
-              label="E-mail"
-              type="email"
-            />
-            <TextFieldElement
-              control={control}
-              name="instagramUsername"
-              label="Instagram"
-              placeholder="uzivatel"
-            />
-            <TextFieldElement
-              control={control}
-              name="tiktokUsername"
-              label="TikTok"
-              placeholder="uzivatel"
-            />
-            <TextFieldElement
-              control={control}
-              name="facebookUrl"
-              type="url"
-              label="Facebook"
-              placeholder="https://www.facebook.com/..."
-            />
-            <TextFieldElement
-              control={control}
-              name="websiteUrl"
-              type="url"
-              label="Web"
-              placeholder="https://..."
-            />
-          </fieldset>
-
-          <div className="grid lg:grid-cols-2 gap-2">
-            <div>
-              <CheckboxElement control={control} name="isMember" label="Člen klubu" />
-              <CheckboxElement control={control} name="isTrainer" label="Trenér" />
-              <CheckboxElement control={control} name="isAdmin" label="Správce" />
-              <CheckboxElement
-                control={control}
-                name="sendInvitation"
-                label="Poslat pozvánku na e-mail"
-              />
-            </div>
-
-            <DatePickerElement
-              control={control}
-              name="joinDate"
-              label="Datum vstupu do klubu"
-            />
-            <Collapsible.Root open={cohortPickerOpen} onOpenChange={setCohortPickerOpen}>
-              <div className="flex items-center justify-between gap-2">
-                <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
-                <Collapsible.Trigger asChild>
-                  <button
-                    type="button"
-                    className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
-                    aria-expanded={cohortPickerOpen}
-                    aria-controls="cohortIds-collapsible"
-                  >
-                    <span>
-                      {cohortPickerOpen
-                        ? 'Skrýt'
-                        : selectedCohortCount > 0
-                          ? `Vybráno ${selectedCohortCount}`
-                          : 'Zobrazit'}
-                    </span>
-                    <ChevronDown
-                      className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`}
-                    />
-                  </button>
-                </Collapsible.Trigger>
-              </div>
-              <Collapsible.Content
-                forceMount
-                className="[&[data-state=closed]>div]:hidden"
-              >
-                <VerticalCheckboxButtonGroupElement
+          {(open !== 'existing' || !!personId) && (
+            <>
+              <fieldset disabled={open === 'existing'} className="grid lg:grid-cols-2 gap-2">
+                <TextFieldElement
                   control={control}
-                  name="cohortIds"
-                  options={cohortOptions}
-                  className="mt-2"
+                  name="prefixTitle"
+                  label="Titul před jménem"
                 />
-              </Collapsible.Content>
-            </Collapsible.Root>
-          </div>
+                <TextFieldElement
+                  control={control}
+                  name="suffixTitle"
+                  label="Titul za jménem"
+                />
+                <TextFieldElement
+                  control={control}
+                  name="firstName"
+                  label="Jméno"
+                  required
+                  autoFocus
+                />
+                <TextFieldElement
+                  control={control}
+                  name="lastName"
+                  label="Příjmení"
+                  required
+                />
 
-          <div className="col-span-2">
-            <SubmitButton
-              className="w-full"
-              control={control}
-              disabled={open === 'existing' && !personId}
-            >
-              Vytvořit
-            </SubmitButton>
-          </div>
+                <DatePickerElement
+                  control={control}
+                  label="Datum narození"
+                  name="birthDate"
+                  valueMode="date"
+                />
+                <TextFieldElement
+                  control={control}
+                  name="taxIdentificationNumber"
+                  label="Rodné číslo"
+                  placeholder="1111119999"
+                  inputMode="numeric"
+                  onBlur={fillBirthDate}
+                />
+
+                <FederationIdFieldElement
+                  control={control}
+                  name="cstsId"
+                  federation="csts"
+                  label="ČSTS IDT"
+                />
+
+                <FederationIdFieldElement
+                  control={control}
+                  name="wdsfId"
+                  federation="wdsf"
+                  label="WDSF MIN"
+                  placeholder="10000000"
+                />
+
+                <ComboboxElement
+                  control={control}
+                  label="Národnost"
+                  name="nationality"
+                  placeholder="vyberte národnost"
+                  options={countryOptions}
+                />
+                <RadioButtonGroupElement
+                  control={control}
+                  name="gender"
+                  label="Pohlaví"
+                  options={[
+                    { id: 'MAN', label: 'Muž' },
+                    { id: 'WOMAN', label: 'Žena' },
+                  ]}
+                />
+
+                <TextFieldElement control={control} name="phone" label="Telefon" type="tel" />
+                <TextFieldElement
+                  control={control}
+                  name="email"
+                  label="E-mail"
+                  type="email"
+                />
+                <TextFieldElement
+                  control={control}
+                  name="instagramUsername"
+                  label="Instagram"
+                  placeholder="uzivatel"
+                />
+                <TextFieldElement
+                  control={control}
+                  name="tiktokUsername"
+                  label="TikTok"
+                  placeholder="uzivatel"
+                />
+                <TextFieldElement
+                  control={control}
+                  name="facebookUrl"
+                  type="url"
+                  label="Facebook"
+                  placeholder="https://www.facebook.com/..."
+                />
+                <TextFieldElement
+                  control={control}
+                  name="websiteUrl"
+                  type="url"
+                  label="Web"
+                  placeholder="https://..."
+                />
+              </fieldset>
+
+              <div className="grid lg:grid-cols-2 gap-2">
+                <div>
+                  <CheckboxElement control={control} name="isMember" label="Člen klubu" />
+                  <CheckboxElement control={control} name="isTrainer" label="Trenér" />
+                  <CheckboxElement control={control} name="isAdmin" label="Správce" />
+                  <CheckboxElement
+                    control={control}
+                    name="sendInvitation"
+                    label="Poslat pozvánku na e-mail"
+                  />
+                </div>
+
+                <DatePickerElement
+                  control={control}
+                  name="joinDate"
+                  label="Datum vstupu do klubu"
+                />
+                <Collapsible.Root open={cohortPickerOpen} onOpenChange={setCohortPickerOpen}>
+                  <div className="flex items-center justify-between gap-2">
+                    <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
+                    <Collapsible.Trigger asChild>
+                      <button
+                        type="button"
+                        className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
+                        aria-expanded={cohortPickerOpen}
+                        aria-controls="cohortIds-collapsible"
+                      >
+                        <span>
+                          {cohortPickerOpen
+                            ? 'Skrýt'
+                            : selectedCohortCount > 0
+                              ? `Vybráno ${selectedCohortCount}`
+                              : 'Zobrazit'}
+                        </span>
+                        <ChevronDown
+                          className={`transition-transform ${cohortPickerOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                    </Collapsible.Trigger>
+                  </div>
+                  <Collapsible.Content
+                    forceMount
+                    className="[&[data-state=closed]>div]:hidden"
+                  >
+                    <VerticalCheckboxButtonGroupElement
+                      control={control}
+                      name="cohortIds"
+                      options={cohortOptions}
+                      className="mt-2"
+                    />
+                  </Collapsible.Content>
+                </Collapsible.Root>
+              </div>
+
+              <div className="col-span-2">
+                <SubmitButton
+                  className="w-full"
+                  control={control}
+                  disabled={open === 'existing' && !personId}
+                >
+                  Vytvořit
+                </SubmitButton>
+              </div>
+            </>
+          )}
         </form>
       </DialogContent>
     </Dialog>

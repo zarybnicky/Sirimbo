@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const buttonCls = tv({
-  base: 'relative appearance-none focus:outline-hidden focus-visible:ring-3 focus-visible:ring-accent-10',
+  base: 'relative appearance-none focus:outline-hidden focus-visible:ring-3 focus-visible:ring-accent-10 has-focus-visible:z-10 has-focus-visible:ring-3 has-focus-visible:ring-accent-10 has-disabled:cursor-not-allowed',
   variants: {
     display: {
       none: ' ',
@@ -15,10 +15,10 @@ export const buttonCls = tv({
     variant: {
       none: ' ',
       primary:
-        'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11',
+        'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11 has-disabled:bg-neutral-3 has-disabled:text-neutral-11',
       outline:
         'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 ' +
-        'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5',
+        'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
       facet:
         'border border-accent-5 bg-accent-2/50 text-accent-12 hover:bg-accent-3 disabled:opacity-50 ' +
@@ -63,7 +63,14 @@ export const cardCls = tv({
 });
 
 export const buttonGroupCls = tv({
-  base: 'inline-flex rounded-xl shadow-md [&_button]:rounded-none [&_button]:shadow-none [&_button:first-child]:rounded-l-xl [&_button:last-child]:rounded-r-xl',
+  base: 'inline-flex',
+  variants: {
+    layout: {
+      joined: 'rounded-xl shadow-md *:rounded-none *:shadow-none *:first:rounded-l-xl *:last:rounded-r-xl',
+      wrap: 'flex-wrap gap-1',
+    },
+  },
+  defaultVariants: { layout: 'joined' },
 });
 
 export const badgeCls = tv({

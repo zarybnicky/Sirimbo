@@ -5,12 +5,13 @@ import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useClient, useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
+import { Table } from '@/ui/Table';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export function Crm() {
   const client = useClient();
-  const [{ data }] = useQuery({ query: FormResponsesDocument });
+  const [{ data, fetching }] = useQuery({ query: FormResponsesDocument });
 
   const dataset = React.useMemo(() => {
     return (data?.formResponses?.nodes || []).map((x) => ({
@@ -59,42 +60,38 @@ export function Crm() {
 
       <RadioButtonGroup
         className="grow"
-        name="crm-form-response-type"
         value={state || types[0] || ''}
         options={types.map((type) => ({ id: type, label: type }))}
         onValueChange={setState}
       />
 
-      <table className="w-full text-sm text-left text-neutral-12 mt-3">
-        <thead>
-          <tr>
+      <Table
+        className="mt-3 text-neutral-12"
+        busy={fetching}
+        columns={[
+          ...columns,
+          <span key="createdAt" className="block text-right">Vytvořeno</span>,
+        ]}
+      >
+        {currentData.map((row, i) => (
+          <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
             {columns.map((x) => (
-              <th key={x}>{x}</th>
-            ))}
-            <th className="text-right">Vytvořeno</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.map((row, i) => (
-            <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
-              {columns.map((x) => (
-                <td key={x}>
-                  {x === 'date'
-                    ? fullDateFormatter.format(new Date(row.data[x] as string))
-                    : x === 'email' && row.data[x]
-                      ? <a className="underline" href={`mailto:${row.data[x]}`}>{row.data[x]}</a>
-                      : x === 'phone' && row.data[x]
-                        ? <a className="underline" href={`tel:${String(row.data[x]).replaceAll(' ', '')}`}>{row.data[x]}</a>
-                        : row.data[x]}
-                </td>
-              ))}
-              <td className="text-right">
-                {row.createdAt ? fullDateFormatter.format(new Date(row.createdAt)) : ''}
+              <td key={x}>
+                {x === 'date'
+                  ? fullDateFormatter.format(new Date(row.data[x] as string))
+                  : x === 'email' && row.data[x]
+                    ? <a className="underline" href={`mailto:${row.data[x]}`}>{row.data[x]}</a>
+                    : x === 'phone' && row.data[x]
+                      ? <a className="underline" href={`tel:${String(row.data[x]).replaceAll(' ', '')}`}>{row.data[x]}</a>
+                      : row.data[x]}
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            ))}
+            <td className="text-right">
+              {row.createdAt ? fullDateFormatter.format(new Date(row.createdAt)) : ''}
+            </td>
+          </tr>
+        ))}
+      </Table>
     </div>
   );
 }

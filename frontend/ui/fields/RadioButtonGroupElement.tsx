@@ -8,6 +8,7 @@ import {
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { CheckCircle, Circle } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { buttonCls, buttonGroupCls } from '@/ui/style';
 
 type Extras = {
   className?: string;
@@ -28,39 +29,39 @@ export function RadioButtonGroup({
   onValueChange,
   onBlur,
   className,
+  layout = 'joined',
 }: {
-  name: string;
+  name?: string;
   value: string;
   options: RadioButtonGroupItem[];
   onValueChange: (value: string) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   className?: string;
+  layout?: 'joined' | 'wrap';
 }) {
+  const inputName = React.useId();
   return (
-    <div className={cn('flex flex-wrap gap-1 rounded-xl', className)}>
+    <div className={buttonGroupCls({ layout, className })}>
       {options.map(({ label, id, disabled }) => (
-        <label key={id} className="relative">
+        <label
+          key={id}
+          className={buttonCls({
+            variant: value === id ? 'primary' : 'outline',
+            size: 'sm',
+            className: 'cursor-pointer',
+          })}
+        >
           <input
-            className="peer sr-only"
+            className="sr-only"
             type="radio"
-            name={name}
+            name={name ?? inputName}
             value={id}
             checked={value === id}
             disabled={disabled}
             onBlur={onBlur}
             onChange={() => onValueChange(id)}
           />
-          <span
-            className={cn(
-              'block cursor-pointer rounded-xl border border-accent-7 bg-neutral-1 px-2 py-1.5 text-sm text-accent-11',
-              'peer-checked:border-accent-10 peer-checked:bg-accent-9 peer-checked:text-white',
-              'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-accent-10',
-              'peer-disabled:cursor-not-allowed peer-disabled:border-neutral-6 peer-disabled:text-neutral-11',
-              'peer-disabled:peer-checked:border-neutral-10 peer-disabled:peer-checked:bg-neutral-9 peer-disabled:peer-checked:text-white',
-            )}
-          >
-            {label}
-          </span>
+          {label}
         </label>
       ))}
     </div>
@@ -115,7 +116,7 @@ export function VerticalCheckboxButtonGroupElement<T extends FieldValues>({
       field.onChange([...new Set([...currentValues, id])]);
       return;
     }
-    field.onChange(currentValues.filter((value) => value !== id));
+    field.onChange(currentValues.filter((x) => x !== id));
   };
 
   return (

@@ -22,6 +22,8 @@ type ComboboxProps = {
   placeholder: string;
   className?: string;
   label?: React.ReactNode;
+  inline?: boolean;
+  disabled?: boolean;
 } & Omit<Popover.PopoverContentProps, 'onChange' | 'onBlur'>;
 
 type ComboboxElementProps<T extends FieldValues> = {
@@ -64,6 +66,8 @@ export function Combobox({
   label,
   placeholder,
   className,
+  inline = false,
+  disabled = false,
   ...props
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
@@ -83,12 +87,28 @@ export function Combobox({
     [onBlur],
   );
 
+  if (inline) {
+    return (
+      <div className={className}>
+        <FieldLabel>{label}</FieldLabel>
+        <ComboboxSearchArea
+          inline
+          value={value}
+          onChange={onChange}
+          options={options}
+          disabled={disabled}
+        />
+      </div>
+    );
+  }
+
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <div className="grow">
         <FieldLabel>{label}</FieldLabel>
         <Popover.Trigger
           type="button"
+          disabled={disabled}
           onBlur={() => {
             if (!open) onBlur?.();
           }}
@@ -111,7 +131,7 @@ export function Combobox({
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} disabled={disabled} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -126,8 +146,9 @@ export function ComboboxButton({
   className,
   buttonClassName,
   trigger,
+  disabled,
   ...props
-}: Omit<ComboboxProps, 'label' | 'onBlur' | 'value' | 'placeholder'> & {
+}: Omit<ComboboxProps, 'label' | 'onBlur' | 'value' | 'placeholder' | 'inline'> & {
   value?: string | null;
   placeholder?: string;
   buttonClassName?: string;
@@ -144,7 +165,7 @@ export function ComboboxButton({
 
   return (
     <Popover.Root modal open={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
+      <Popover.Trigger asChild disabled={disabled}>
         {trigger ?? (
           <button
             type="button"
@@ -167,7 +188,7 @@ export function ComboboxButton({
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} disabled={disabled} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

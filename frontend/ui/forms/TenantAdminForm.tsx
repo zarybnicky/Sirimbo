@@ -5,7 +5,6 @@ import { FormError, useFormResult } from '@/ui/form.tsx';
 import { TextFieldElement } from '@/ui/fields/text.tsx';
 import { TextAreaElement } from '@/ui/fields/textarea.tsx';
 import { SubmitButton } from '@/ui/submit.tsx';
-import React from 'react';
 import z from 'zod';
 import {
   ReplaceTenantSettingsDocument,
@@ -20,9 +19,9 @@ const TenantFormSchema = z.object({
   origins: z.string().optional(),
   czIco: z.string().optional(),
   czDic: z.string().optional(),
-  settings: z.string().refine((value) => {
+  settings: z.string().refine((x) => {
     try {
-      const parsed = JSON.parse(value);
+      const parsed = JSON.parse(x);
       return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed);
     } catch {
       return false;
@@ -58,10 +57,7 @@ export function TenantAdminEdit({ tenant }: Readonly<{ tenant: TenantFullFragmen
           name: values.name,
           description: values.description ?? '',
           bankAccount: values.bankAccount ?? '',
-          origins: (values.origins ?? '')
-            .split(',')
-            .map((value) => value.trim())
-            .filter(Boolean),
+          origins: (values.origins ?? '').split(',').map((x) => x.trim()).filter(Boolean),
           czIco: values.czIco ?? '',
           czDic: values.czDic ?? '',
         },

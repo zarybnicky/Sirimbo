@@ -221,7 +221,7 @@ export const PersonView = React.memo(function PersonView({
         {isAdminOrCurrentPerson && (
           <>
             <Tab id="activity" title="Aktivita">
-              <ActivityTimeline personIds={personIds} includeJudging />
+              <ActivityTimeline personIds={personIds} />
             </Tab>
             <Tab id="payment" title="Platby">
               <PersonPaymentsView id={id} />

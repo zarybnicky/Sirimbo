@@ -92,7 +92,6 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
         </h1>
 
         <RadioButtonGroup
-          name="announcement-state"
           value={state}
           options={options}
           onValueChange={(value) => {

@@ -10,6 +10,7 @@ import {
   formatEventName,
   monthFormatter,
 } from '@/ui/format';
+import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
@@ -142,63 +143,61 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
 
       <section className="prose prose-accent max-w-none">
         <h3>Měsíce</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Měsíc</th>
-              <th className="text-right">Vedené</th>
-              <th className="text-right">Individuálky</th>
-              <th className="text-right">Celkem</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((month) => {
-              const groupMinutes = month.groupRows.reduce(
-                (total, row) => total + row.durationMinutes,
-                0,
-              );
-              const privateMinutes = month.privateRows.reduce(
-                (total, row) => total + row.durationMinutes,
-                0,
-              );
-              const rowCount = month.groupRows.length + month.privateRows.length;
+        <Table
+          busy={fetching}
+          columns={[
+            'Měsíc',
+            <span key="group" className="block text-right">Vedené</span>,
+            <span key="private" className="block text-right">Individuálky</span>,
+            <span key="total" className="block text-right">Celkem</span>,
+          ]}
+        >
+          {reports.map((month) => {
+            const groupMinutes = month.groupRows.reduce(
+              (total, row) => total + row.durationMinutes,
+              0,
+            );
+            const privateMinutes = month.privateRows.reduce(
+              (total, row) => total + row.durationMinutes,
+              0,
+            );
+            const rowCount = month.groupRows.length + month.privateRows.length;
 
-              return (
-                <tr
-                  key={month.key}
-                  className={month.key === selectedMonth?.key ? 'bg-accent-3/50' : ''}
-                >
-                  <td>
-                    <button
-                      type="button"
-                      className="text-left text-accent-11 hover:underline"
-                      onClick={() => {
-                        void setWorkReportQuery({
-                          tab: 'workReport',
-                          month: month.key,
-                        });
-                      }}
-                    >
-                      {month.label}
-                    </button>
-                  </td>
-                  <td className="whitespace-nowrap text-right tabular-nums">
-                    {month.groupRows.length} /{' '}
-                    {formatDuration(groupMinutes)}
-                  </td>
-                  <td className="whitespace-nowrap text-right tabular-nums">
-                    {month.privateRows.length} /{' '}
-                    {formatDuration(privateMinutes)}
-                  </td>
-                  <td className="whitespace-nowrap text-right tabular-nums">
-                    {rowCount} /{' '}
-                    {formatDuration(groupMinutes + privateMinutes)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            return (
+              <tr
+                key={month.key}
+                className={month.key === selectedMonth?.key ? 'bg-accent-3/50' : ''}
+              >
+                <td>
+                  <button
+                    type="button"
+                    className="text-left text-accent-11 hover:underline"
+                    onClick={() => {
+                      void setWorkReportQuery({
+                        tab: 'workReport',
+                        month: month.key,
+                      });
+                    }}
+                  >
+                    {month.label}
+                  </button>
+                </td>
+                <td className="whitespace-nowrap text-right tabular-nums">
+                  {month.groupRows.length} /{' '}
+                  {formatDuration(groupMinutes)}
+                </td>
+                <td className="whitespace-nowrap text-right tabular-nums">
+                  {month.privateRows.length} /{' '}
+                  {formatDuration(privateMinutes)}
+                </td>
+                <td className="whitespace-nowrap text-right tabular-nums">
+                  {rowCount} /{' '}
+                  {formatDuration(groupMinutes + privateMinutes)}
+                </td>
+              </tr>
+            );
+          })}
+        </Table>
       </section>
 
       {fetching && !data && (
@@ -225,42 +224,40 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
             return (
               <React.Fragment key={rowsKey}>
                 <h4>{title}</h4>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Termín</th>
-                      <th>Událost</th>
-                      <th>Místo</th>
+                <Table
+                  busy={fetching}
+                  columns={[
+                    'Termín',
+                    'Událost',
+                    'Místo',
+                    reportTypes[rowsKey] === 'GROUP' && (
+                      <span key="attendance" className="block text-right">Účast</span>
+                    ),
+                    <span key="duration" className="block text-right">Délka</span>,
+                  ]}
+                >
+                  {rows.map((row) => (
+                    <tr key={row.event.id}>
+                      <td className="whitespace-nowrap">
+                        {dateTimeFormatter.format(new Date(row.event.since))}
+                      </td>
+                      <td>
+                        <Link href={`/termin/${row.event.id}`}>
+                          {row.title}
+                        </Link>
+                      </td>
+                      <td>{row.location}</td>
                       {reportTypes[rowsKey] === 'GROUP' && (
-                        <th className="text-right">Účast</th>
-                      )}
-                      <th className="text-right">Délka</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row) => (
-                      <tr key={row.event.id}>
-                        <td className="whitespace-nowrap">
-                          {dateTimeFormatter.format(new Date(row.event.since))}
-                        </td>
-                        <td>
-                          <Link href={`/termin/${row.event.id}`}>
-                            {row.title}
-                          </Link>
-                        </td>
-                        <td>{row.location}</td>
-                        {reportTypes[rowsKey] === 'GROUP' && (
-                          <td className="whitespace-nowrap text-right tabular-nums">
-                            {row.attended} / {row.total}
-                          </td>
-                        )}
                         <td className="whitespace-nowrap text-right tabular-nums">
-                          {formatDuration(row.durationMinutes)}
+                          {row.attended} / {row.total}
                         </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      )}
+                      <td className="whitespace-nowrap text-right tabular-nums">
+                        {formatDuration(row.durationMinutes)}
+                      </td>
+                    </tr>
+                  ))}
+                </Table>
               </React.Fragment>
             );
           })}
