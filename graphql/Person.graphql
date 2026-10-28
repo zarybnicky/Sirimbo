@@ -284,10 +284,25 @@ query FederationIdIssues($federation: String!) {
   }
 }
 
-query PersonWithLinksList {
+query NsaExport {
   people(condition: { membership: { state: CURRENT } }) {
     nodes {
-      ...PersonWithLinks
+      ...Person
+      cohortMembershipsList(orderBy: SINCE_ASC) {
+        id
+        cohort {
+          id
+          isVisible
+        }
+      }
+      tenantMembershipsList(orderBy: SINCE_ASC) {
+        id
+        since
+      }
+      tenantTrainersList(condition: { isExternal: false }, orderBy: SINCE_ASC) {
+        id
+        since
+      }
     }
   }
 }

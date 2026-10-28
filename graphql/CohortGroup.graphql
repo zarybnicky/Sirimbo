@@ -13,7 +13,8 @@ fragment CohortGroup on CohortGroup {
 query CohortGroupList($first: Int, $offset: Int, $isPublic: Boolean) {
   cohortGroups(first: $first, offset: $offset, condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
     nodes {
-      ...CohortGroup
+      id
+      name
     }
   }
 }
