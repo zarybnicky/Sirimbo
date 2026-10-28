@@ -13,7 +13,7 @@ import { cn } from '@/lib/cn';
 import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { rankItem } from '@tanstack/match-sorter-utils';
 
-type Item = { id: string | null; label: string };
+type Item = { id: string | null; label: string; count?: number };
 type ComboboxProps = {
   value: string | null | undefined;
   onChange: (value: string | null | undefined) => void;
@@ -155,6 +155,7 @@ export function ComboboxButton({
   trigger?: React.ReactElement;
 }) {
   const [open, setOpen] = React.useState(false);
+  const selected = options.find((item) => item.id === value);
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {
       onChange(x);
@@ -174,7 +175,10 @@ export function ComboboxButton({
               buttonClassName,
             )}
           >
-            {value ? options.find((item) => item.id === value)?.label : placeholder}
+            {value ? selected?.label : placeholder}
+            {value && selected?.count != null && (
+              <span className="tabular-nums opacity-75">{selected.count}</span>
+            )}
             <ChevronDown />
           </button>
         )}
@@ -287,6 +291,9 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
               )}
             />
             {item.label}
+            {item.count != null && (
+              <span className="ml-auto pl-3 tabular-nums opacity-75">{item.count}</span>
+            )}
           </Command.Item>
         ))}
       </Command.List>

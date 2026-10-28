@@ -6,6 +6,7 @@ import { PersonFacetsDocument, PersonListDocument } from '@/graphql/Person';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { useClient, useQuery } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
+import { FacetFilter } from '@/ui/FacetFilter';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/lib/auth';
 import { buttonCls } from '@/ui/style';
@@ -85,6 +86,11 @@ export function PersonList() {
     ['id', 'name', 'cohortNames', 'phone', 'email', 'yearOfBirth'],
     search || '',
   );
+  const filters = [
+    ...(includeFormer ? ['former'] : []),
+    ...(isTrainer ? ['trainer'] : []),
+    ...(isAdmin ? ['admin'] : []),
+  ];
 
   return (
     <div className="flex flex-col h-full">
@@ -111,48 +117,44 @@ export function PersonList() {
             options={[
               {
                 id: 'none',
-                label: `Bez skupiny (${counts ? (counts.cohort?.none ?? 0) : '…'})`,
+                label: 'Bez skupiny',
+                count: counts ? (counts.cohort?.none ?? 0) : undefined,
               },
               ...(cohorts?.cohortsList ?? []).map((x) => ({
                 id: x.id,
-                label: `${x.name} (${counts ? (counts.cohort?.[x.id] ?? 0) : '…'})`,
+                label: x.name,
+                count: counts ? (counts.cohort?.[x.id] ?? 0) : undefined,
               })),
             ]}
           />
 
-          <button
-            type="button"
-            aria-pressed={!!includeFormer}
-            className={buttonCls({
-              size: 'xs',
-              variant: includeFormer ? 'primary' : 'outline',
-            })}
-            onClick={() => setIncludeFormer((x) => (x ? null : '1'))}
-          >
-            Bývalí ({counts ? (counts.state?.former ?? 0) : '…'})
-          </button>
-
-          <button
-            type="button"
-            className={buttonCls({
-              size: 'xs',
-              variant: isTrainer ? 'primary' : 'outline',
-            })}
-            onClick={() => setIsTrainer((x) => (x ? null : '1'))}
-          >
-            Trenéři ({counts ? (counts.trainer?.true ?? 0) : '…'})
-          </button>
-
-          <button
-            type="button"
-            className={buttonCls({
-              size: 'xs',
-              variant: isAdmin ? 'primary' : 'outline',
-            })}
-            onClick={() => setIsAdmin((x) => (x ? null : '1'))}
-          >
-            Správci ({counts ? (counts.admin?.true ?? 0) : '…'})
-          </button>
+          <FacetFilter
+            inline
+            label=""
+            value={filters}
+            options={[
+              {
+                value: 'former',
+                label: 'Bývalí',
+                count: counts ? (counts.state?.former ?? 0) : undefined,
+              },
+              {
+                value: 'trainer',
+                label: 'Trenéři',
+                count: counts ? (counts.trainer?.true ?? 0) : undefined,
+              },
+              {
+                value: 'admin',
+                label: 'Správci',
+                count: counts ? (counts.admin?.true ?? 0) : undefined,
+              },
+            ]}
+            onChange={(values) => {
+              setIncludeFormer(values.includes('former') ? '1' : null);
+              setIsTrainer(values.includes('trainer') ? '1' : null);
+              setIsAdmin(values.includes('admin') ? '1' : null);
+            }}
+          />
         </div>
 
         <TextField

@@ -91,7 +91,7 @@ export function FacetFilter<Value extends string>({
   );
   if (inline) {
     return (
-      <fieldset className="min-w-0 w-full">
+      <fieldset className={cn('min-w-0', label && 'w-full')}>
         {label && (
           <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">
             {label}

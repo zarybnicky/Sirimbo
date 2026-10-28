@@ -4,11 +4,14 @@ import {
   type AnnouncementFragment,
   UpsertAnnouncementDocument,
 } from '@/graphql/Announcement';
-import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
+import { CheckboxElement } from '@/ui/fields/checkbox';
 import { DatePickerElement } from '@/ui/fields/date';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
-import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
+import {
+  RadioButtonGroupElement,
+  VerticalCheckboxButtonGroupElement,
+} from '@/ui/fields/RadioButtonGroupElement';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
@@ -24,19 +27,19 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 import { FilePicker } from '@/ui/forms/FilePicker';
 
 const ROLE_OPTIONS: {
-  value: AnnouncementAudienceRole;
+  id: AnnouncementAudienceRole;
   label: string;
 }[] = [
   {
-    value: 'MEMBER',
+    id: 'MEMBER',
     label: 'Členové',
   },
   {
-    value: 'TRAINER',
+    id: 'TRAINER',
     label: 'Trenéři',
   },
   {
-    value: 'ADMINISTRATOR',
+    id: 'ADMINISTRATOR',
     label: 'Administrátoři',
   },
 ];
@@ -221,7 +224,10 @@ function AnnouncementAudienceEditor({
 }: {
   control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
 }) {
-  const { audienceRoles = [], cohortIds = [] } = useWatch({ control });
+  const [audienceRoles = [], cohortIds = []] = useWatch({
+    control,
+    name: ['audienceRoles', 'cohortIds'],
+  });
 
   const [{ data: cohortQuery, fetching: cohortsLoading }] = useQuery({
     query: CohortListDocument,
@@ -259,116 +265,35 @@ function AnnouncementAudienceEditor({
           <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
             Role
           </h4>
-          <AudienceRoleCheckboxes control={control} />
+          <VerticalCheckboxButtonGroupElement
+            control={control}
+            name="audienceRoles"
+            options={ROLE_OPTIONS}
+          />
         </section>
 
         <section className="space-y-2">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-neutral-10">
             Skupiny
           </h4>
-          <AudienceCohortCheckboxes
-            control={control}
-            cohorts={cohortQuery?.cohortsList}
-            loading={cohortsLoading}
-          />
+          {cohortsLoading ? (
+            <div className="text-xs text-neutral-11">Načítám skupiny…</div>
+          ) : !cohortQuery?.cohortsList?.length ? (
+            <div className="text-xs text-neutral-11">
+              Žádné skupiny nejsou k dispozici.
+            </div>
+          ) : (
+            <VerticalCheckboxButtonGroupElement
+              control={control}
+              name="cohortIds"
+              options={cohortQuery.cohortsList.map((cohort) => ({
+                id: cohort.id,
+                label: cohort.name ?? 'Bez názvu',
+              }))}
+            />
+          )}
         </section>
       </div>
-    </div>
-  );
-}
-
-function AudienceRoleCheckboxes({
-  control,
-}: {
-  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
-}) {
-  const { field } = useController({ control, name: 'audienceRoles' });
-
-  const toggle = React.useCallback(
-    (role: AnnouncementAudienceRole) => {
-      const next = new Set(field.value);
-      if (next.has(role)) {
-        next.delete(role);
-      } else {
-        next.add(role);
-      }
-      field.onChange([...next]);
-    },
-    [field],
-  );
-
-  return (
-    <div className="space-y-1">
-      {ROLE_OPTIONS.map((role) => (
-        <Checkbox
-          key={role.value}
-          name={`announcement-role-${role.value}`}
-          checked={field.value?.includes(role.value)}
-          value={role.value}
-          label={role.label}
-          onChange={(event) => {
-            event.stopPropagation();
-            toggle(role.value);
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function AudienceCohortCheckboxes({
-  control,
-  cohorts,
-  loading,
-}: {
-  control: Control<z.input<typeof Form>, unknown, z.infer<typeof Form>>;
-  cohorts:
-    { id: string; name?: string | null; colorRgb?: string | null }[] | null | undefined;
-  loading?: boolean;
-}) {
-  const { field } = useController({ control, name: 'cohortIds' });
-
-  const toggle = React.useCallback(
-    (cohortId: string) => {
-      const next = new Set(field.value);
-      if (next.has(cohortId)) {
-        next.delete(cohortId);
-      } else {
-        next.add(cohortId);
-      }
-      field.onChange([...next]);
-    },
-    [field],
-  );
-
-  if (loading) {
-    return <div className="text-xs text-neutral-11">Načítám skupiny…</div>;
-  }
-
-  if (!cohorts || cohorts.length === 0) {
-    return (
-      <div className="text-xs text-neutral-11">Žádné skupiny nejsou k dispozici.</div>
-    );
-  }
-
-  return (
-    <div className="space-y-1">
-      {cohorts.map((cohort) => {
-        const checked = field.value?.includes(cohort.id);
-        return (
-          <Checkbox
-            key={cohort.id}
-            name={`announcement-cohort-${cohort.id}`}
-            checked={checked}
-            value={cohort.id}
-            label={cohort.name ?? 'Bez názvu'}
-            onChange={(event) => {
-              event.stopPropagation();
-              toggle(cohort.id);
-            }}
-          />
-        );
-      })}
     </div>
   );
 }
