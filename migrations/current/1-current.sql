@@ -33,5 +33,9 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/tg_tenant_membership__on_status.sql
 --!include functions/security_events.sql
 --!include functions/scoreboard.sql
+--!include functions/refresh_wdsf_round_dances.sql
 
 select app_private.refresh_event_stats(id) from event where type = 'group' order by id;
+
+alter table federated.judge_score
+  alter constraint judge_score_round_id_dance_order_dance_code_fkey deferrable initially immediate;

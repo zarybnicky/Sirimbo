@@ -2508,6 +2508,33 @@ const upsertJudgeScoresIR: any = {"usedParamSet":{"roundId":true,"danceOrder":tr
 export const upsertJudgeScores = new PreparedQuery<IUpsertJudgeScoresParams,IUpsertJudgeScoresResult>(upsertJudgeScoresIR);
 
 
+/** 'RefreshWdsfRoundDances' parameters type */
+export interface IRefreshWdsfRoundDancesParams {
+  competitionId?: NumberOrString | null | void;
+}
+
+/** 'RefreshWdsfRoundDances' return type */
+export interface IRefreshWdsfRoundDancesResult {
+  changedRounds: number;
+}
+
+/** 'RefreshWdsfRoundDances' query type */
+export interface IRefreshWdsfRoundDancesQuery {
+  params: IRefreshWdsfRoundDancesParams;
+  result: IRefreshWdsfRoundDancesResult;
+}
+
+const refreshWdsfRoundDancesIR: any = {"usedParamSet":{"competitionId":true},"params":[{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":45,"b":58}]}],"statement":"SELECT app_private.refresh_wdsf_round_dances(:competitionId::bigint) AS \"changedRounds!\""};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT app_private.refresh_wdsf_round_dances(:competitionId::bigint) AS "changedRounds!"
+ * ```
+ */
+export const refreshWdsfRoundDances = new PreparedQuery<IRefreshWdsfRoundDancesParams,IRefreshWdsfRoundDancesResult>(refreshWdsfRoundDancesIR);
+
+
 /** 'RefreshCompetitionRoundResults' parameters type */
 export interface IRefreshCompetitionRoundResultsParams {
   competitionId?: NumberOrString | null | void;

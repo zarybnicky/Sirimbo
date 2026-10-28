@@ -2,6 +2,7 @@ import { getAllDancePrograms, upsertDancePrograms } from './federated.queries.ts
 import { z } from 'zod';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 import { pool } from '../pool.ts';
+import type { PoolClient } from 'pg';
 
 const danceCodes = {
   SW: 'SW',
@@ -90,18 +91,24 @@ function uniqueDanceCodes(danceCodes: readonly DanceCode[]) {
 
 async function refreshCache() {
   const rows = await getAllDancePrograms.run(undefined, pool);
-  cache = new Map(rows.flatMap((row) => (row.code ? [[row.code, row.id]] : [])));
+  cache = new Map(rows.flatMap((row) => (row.code === null ? [] : [[row.code, row.id]])));
   cacheTime = Date.now();
 }
 
 export async function getDanceProgramIds(
   inputCodeLists: readonly (readonly DanceCode[])[],
+  client?: PoolClient,
 ): Promise<string[]> {
   if (inputCodeLists.length === 0) return [];
+  const codeLists = inputCodeLists.map(uniqueDanceCodes);
 
-  if (Date.now() - cacheTime > CACHE_TTL_MS) {
+  if (!client && Date.now() - cacheTime > CACHE_TTL_MS) {
     await refreshCache();
   }
+  const programIds = client
+    ? new Map((await getAllDancePrograms.run(undefined, client))
+      .flatMap((row) => (row.code === null ? [] : [[row.code, row.id]])))
+    : cache;
 
   const programs = makePgtypedCollection<{
     code: string;
@@ -115,9 +122,9 @@ export async function getDanceProgramIds(
     danceOrder: number;
   }>(['programCode', 'danceCode', 'danceOrder'], ['programCode', 'danceCode']);
 
-  for (const danceCodes of inputCodeLists.map(uniqueDanceCodes)) {
+  for (const danceCodes of codeLists) {
     const programCode = danceCodes.join('-');
-    if (cache.has(programCode)) continue;
+    if (programIds.has(programCode)) continue;
     programs.add({ code: programCode, name: danceCodes.join(' '), discipline: '' });
     danceCodes.forEach((danceCode, index) => {
       programDances.add({ programCode, danceCode, danceOrder: index + 1 });
@@ -130,16 +137,16 @@ export async function getDanceProgramIds(
         ...programs.params,
         ...programDances.params,
       },
-      pool,
+      client ?? pool,
     );
     for (const row of rows) {
-      if (row.code) cache.set(row.code, row.id);
+      programIds.set(row.code, row.id);
     }
   }
 
   const result: string[] = [];
-  for (const danceCodes of inputCodeLists.map(uniqueDanceCodes)) {
-    const programCode = cache.get(danceCodes.join('-'));
+  for (const danceCodes of codeLists) {
+    const programCode = programIds.get(danceCodes.join('-'));
     if (!programCode) throw new Error('Failed to insert program');
     result.push(programCode);
   }

@@ -1,6 +1,6 @@
 import type { PoolClient } from 'pg';
 import { upsertFrontiers } from './crawler.queries.ts';
-import { refreshCompetitionRoundResults } from './federated.queries.ts';
+import { refreshCompetitionRoundResults, refreshWdsfRoundDances } from './federated.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 type FrontierUpsert = {
@@ -47,6 +47,7 @@ export async function flushLoaderEffects(
   }
 
   for (const competitionId of roundResultRefreshes) {
+    await refreshWdsfRoundDances.run({ competitionId }, client);
     await refreshCompetitionRoundResults.run({ competitionId }, client);
   }
 }

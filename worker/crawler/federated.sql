@@ -1357,6 +1357,9 @@ ON CONFLICT (round_id, dance_order, judge_person_id, competitor_id, component) D
      OR federated.judge_score.score IS DISTINCT FROM EXCLUDED.score
      OR federated.judge_score.raw_score IS DISTINCT FROM EXCLUDED.raw_score;
 
+/* @name RefreshWdsfRoundDances */
+SELECT app_private.refresh_wdsf_round_dances(:competitionId::bigint) AS "changedRounds!";
+
 /* @name RefreshCompetitionRoundResults */
 WITH scoped_rounds AS (
   SELECT id, round_key, round_index, scoring_method

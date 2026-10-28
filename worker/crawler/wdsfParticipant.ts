@@ -432,7 +432,7 @@ async function loadWdsfRoundDetails(
     for (const dance of round.dances) dance.order = codes.indexOf(dance.code) + 1;
     return codes;
   });
-  const danceProgramIds = await getDanceProgramIds(programs);
+  const danceProgramIds = await getDanceProgramIds(programs, client);
   const roundRows = await upsertCompetitionRoundsNonDestructive.run(
     {
       competitionId,
@@ -601,7 +601,7 @@ function supportedRounds(rounds: Round[]): SupportedRound[] {
         key: round.name,
         label: round.name,
         index: roundIndex + 1,
-        dances,
+        dances: dances.filter((dance) => dance.scores.length > 0),
         scoringMethod: roundScoringMethod(round),
       }];
     });
