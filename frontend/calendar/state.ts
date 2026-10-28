@@ -100,6 +100,7 @@ export const eventTypes = [
   'HOLIDAY',
 ] as const satisfies readonly EventType[];
 export const calendarFilterParsers = {
+  location: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
   trainers: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
   participants: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
   types: parseAsArrayOf(parseAsStringLiteral(eventTypes))

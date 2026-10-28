@@ -473,8 +473,8 @@ function People(props: BrowserProps) {
           {peopleFacets.map(({ key, label }) => {
             const counts = new Map(
               facetOptions
-                .filter((option) => option.facet === key)
-                .map((option) => [option.value!, option.count ?? 0]),
+                .filter((x) => x.facet === key)
+                .map((x) => [x.value!, x.count ?? undefined]),
             );
             const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
               (a, b) => {
@@ -497,7 +497,6 @@ function People(props: BrowserProps) {
                 inline
                 maxVisibleOptions={key === 'nationality' ? 5 : undefined}
                 moreLabel="Další"
-                clearLabel="Zrušit výběr"
                 value={filters[key]}
                 options={values.map((value) => ({
                   value,
@@ -509,7 +508,7 @@ function People(props: BrowserProps) {
                         : key === 'gender'
                           ? genderLabels[value]!
                           : value,
-                  count: counts.get(value) ?? 0,
+                  count: counts.get(value),
                 }))}
                 onChange={(value) => setFilters({ [key]: value, page: null })}
               />
@@ -610,19 +609,13 @@ function Competitors(props: BrowserProps) {
     requestPolicy: 'cache-first',
   });
 
-  const fetchedFacets = facetResult.data?.federation?.competitorFacetsList;
-  const [facetOptions, setFacetOptions] = useState(fetchedFacets ?? []);
-  if (
-    facetResult.data !== undefined &&
-    fetchedFacets !== facetOptions &&
-    !!fetchedFacets?.length
-  ) {
-    setFacetOptions(fetchedFacets ?? []);
+  const [facetData, setFacetData] = useState(facetResult.data);
+  if (facetResult.data !== undefined && facetResult.data !== facetData) {
+    setFacetData(facetResult.data);
   }
+  const facetOptions = facetData?.federation?.competitorFacetsList ?? [];
 
-  const ageGroupsByCode = new Map(
-    (facetResult.data?.ageGroupsList ?? []).map((group) => [group.code, group]),
-  );
+  const ageGroupsByCode = new Map(facetData?.ageGroupsList?.map((x) => [x.code, x]));
   const result = usePaginatedQuery({
     query: FederationCompetitorsDocument,
     pause: searchPending,
@@ -646,9 +639,9 @@ function Competitors(props: BrowserProps) {
   });
   const item = result.data?.federation;
   const isPending = result.fetching || searchPending;
-  const competitors = (item?.competitors.nodes ?? []).map((competitor) => ({
-    ...competitor,
-    categoryProgressesList: competitor.categoryProgressesList.filter(
+  const competitors = (item?.competitors.nodes ?? []).map((x) => ({
+    ...x,
+    categoryProgressesList: x.categoryProgressesList.filter(
       (p) =>
         p.category?.class !== 'Entry' ||
         Number(p.points) !== 0 ||
@@ -656,8 +649,8 @@ function Competitors(props: BrowserProps) {
     ),
   }));
   const availableDisciplines = new Set(
-    competitors.flatMap((competitor) =>
-      competitor.categoryProgressesList.flatMap((p) =>
+    competitors.flatMap((x) =>
+      x.categoryProgressesList.flatMap((p) =>
         p.category ? [p.category.discipline] : [],
       ),
     ),
@@ -685,10 +678,10 @@ function Competitors(props: BrowserProps) {
             {facets.map(({ key, label }) => {
               const counts = new Map(
                 facetOptions
-                  .filter((option) => option.facet === key)
-                  .map((option) => [
-                    key === 'type' ? option.value!.toUpperCase() : option.value!,
-                    option.count ?? 0,
+                  .filter((x) => x.facet === key)
+                  .map((x) => [
+                    key === 'type' ? x.value!.toUpperCase() : x.value!,
+                    x.count ?? undefined,
                   ]),
               );
               const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
@@ -729,7 +722,7 @@ function Competitors(props: BrowserProps) {
                           : key === 'class'
                             ? (formatClass(value) ?? value)
                             : value,
-                    count: counts.get(value) ?? 0,
+                    count: counts.get(value),
                   }))}
                   onChange={(value) => setFilters({ [key]: value, page: null })}
                 />

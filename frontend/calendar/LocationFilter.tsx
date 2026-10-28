@@ -1,52 +1,28 @@
 import { LocationOptionsDocument } from '@/graphql/Location';
 import { useAuth } from '@/lib/auth';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
-import { buttonCls } from '@/ui/style';
-import { CheckCircle2, Circle, MapPin } from 'lucide-react';
+import { FacetFilter } from '@/ui/FacetFilter';
+import { calendarFilterParsers } from '@/calendar/state';
+import { useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
 
-export function LocationFilter({
-  counts,
-  value,
-  onChange,
-}: {
-  counts?: Record<string, number>;
-  value: string | null;
-  onChange: (id: string | null) => void;
-}) {
+export function LocationFilter({ counts }: { counts?: Record<string, number> }) {
+  const [ids, setIds] = useQueryState('location', calendarFilterParsers.location);
   const auth = useAuth();
   const [{ data }] = useQuery({ query: LocationOptionsDocument });
   const locations = (data?.tenant?.locationsList ?? []).filter(
-    (x) => auth.isAdmin || x.showInLists || x.id === value,
+    (x) => auth.isAdmin || x.showInLists || ids.includes(x.id),
   );
-  const selected = locations.find((x) => x.id === value);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
-        <MapPin />
-        {selected ? selected.name : 'Místa'}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuButton onSelect={() => onChange(null)}>
-          {value ? <Circle /> : <CheckCircle2 />}
-          Všechna místa
-        </DropdownMenuButton>
-        {locations.map((location) => (
-          <DropdownMenuButton key={location.id} onSelect={() => onChange(location.id)}>
-            {value === location.id ? <CheckCircle2 /> : <Circle />}
-            {location.name}
-            <span className="ml-auto tabular-nums text-neutral-11">
-              {counts ? (counts[location.id] ?? 0) : '…'}
-            </span>
-          </DropdownMenuButton>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <FacetFilter
+      label="Místa"
+      value={ids}
+      onChange={setIds}
+      options={locations.map((location) => ({
+        value: location.id,
+        label: location.name,
+        count: counts ? (counts[location.id] ?? 0) : undefined,
+      }))}
+    />
   );
 }

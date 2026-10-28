@@ -239,6 +239,7 @@ function RegistrationsDialogContent({
             <List />
           </IconButton>
         )}
+
         {canCycle && (
           <IconButton label="Předchozí přihláška" onClick={() => changeRegistration(-1)}>
             <ChevronLeft />
@@ -260,6 +261,7 @@ function RegistrationsDialogContent({
             <ChevronRight />
           </IconButton>
         )}
+
         {page === 'candidates' && (
           <button
             type="button"
@@ -329,13 +331,9 @@ function RegistrationsDialogContent({
               if (!registration) onClose();
             }}
             onCancelled={() => {
-              const remaining = registrations.filter((r) => r.id !== registration?.id);
+              const next = registrations.find((r) => r.id !== registration?.id);
               setSelection(
-                remaining.length > 1
-                  ? { kind: 'overview' }
-                  : remaining[0]
-                    ? { kind: 'registration', id: remaining[0].id }
-                    : { kind: 'candidates' },
+                next ? { kind: 'registration', id: next.id } : { kind: 'candidates' },
               );
             }}
           />

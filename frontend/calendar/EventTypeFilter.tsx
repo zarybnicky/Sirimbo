@@ -1,60 +1,21 @@
 import { eventTypes, calendarFilterParsers } from '@/calendar/state';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
+import { FacetFilter } from '@/ui/FacetFilter';
 import { formatEventType } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
 import { useQueryState } from 'nuqs';
-import { CheckCircle2, Circle, Filter } from 'lucide-react';
 
 export function EventTypeFilter({ counts }: { counts?: Record<string, number> }) {
   const [selected, setSelected] = useQueryState('types', calendarFilterParsers.types);
-  const label =
-    selected.length === eventTypes.length
-      ? 'Typy'
-      : selected.length === 1
-        ? formatEventType(selected[0])
-        : `Typy (${selected.length})`;
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
-        <Filter />
-        {label}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuButton
-          onSelect={(event) => {
-            event.preventDefault();
-            setSelected([...eventTypes]);
-          }}
-        >
-          {selected.length === eventTypes.length ? <CheckCircle2 /> : <Circle />}
-          Všechny typy
-        </DropdownMenuButton>
-        {eventTypes.map((type) => (
-          <DropdownMenuButton
-            key={type}
-            onSelect={(event) => {
-              event.preventDefault();
-              setSelected((current) =>
-                current.includes(type)
-                  ? current.filter((candidate) => candidate !== type)
-                  : [...current, type],
-              );
-            }}
-          >
-            {selected.includes(type) ? <CheckCircle2 /> : <Circle />}
-            {formatEventType(type)}
-            <span className="ml-auto tabular-nums text-neutral-11">
-              {counts ? (counts[type] ?? 0) : '...'}
-            </span>
-          </DropdownMenuButton>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <FacetFilter
+      label="Typy"
+      value={selected}
+      defaultValue={eventTypes}
+      options={eventTypes.map((type) => ({
+        value: type,
+        label: formatEventType(type),
+        count: counts ? (counts[type] ?? 0) : undefined,
+      }))}
+      onChange={setSelected}
+    />
   );
 }

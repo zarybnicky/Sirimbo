@@ -108,8 +108,8 @@ begin
           and js.dance_order in (select old_order from unnest(old_orders) with ordinality as d(old_order, position)
                                 where old_order <> position)
           and not exists (select 1 from moved m where
-            (m.round_id, m.dance_order, m.judge_person_id, m.competitor_id, m.component)
-            = (js.round_id, js.dance_order, js.judge_person_id, js.competitor_id, js.component))
+            (m.dance_order, m.judge_person_id, m.competitor_id, m.component)
+            = (js.dance_order, js.judge_person_id, js.competitor_id, js.component))
       )
       insert into federated.judge_score as target (
         round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score, raw_score

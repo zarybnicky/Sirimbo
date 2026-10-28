@@ -7,59 +7,62 @@ import {
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
 import { cn } from '@/lib/cn';
+import type { ReactNode } from 'react';
 
 export function FacetFilter<Value extends string>({
   label,
   value,
+  defaultValue = [],
   options,
   onChange,
-  clearLabel = 'Clear',
   inline = false,
   maxVisibleOptions = Infinity,
-  moreLabel = 'More',
+  moreLabel = 'Více',
+  children,
 }: {
   label: string;
   value: readonly Value[];
+  defaultValue?: readonly Value[];
   options: readonly { value: Value; label: string; count?: number }[];
   onChange: (value: Value[]) => void;
-  clearLabel?: string;
   inline?: boolean;
   maxVisibleOptions?: number;
   moreLabel?: string;
+  children?: ReactNode;
 }) {
+  const isFiltered =
+    value.length !== defaultValue.length || value.some((x) => !defaultValue.includes(x));
   const visibleOptions = options.filter(
-    (option, index) => index < maxVisibleOptions || value.includes(option.value),
+    (x, i) => i < maxVisibleOptions || value.includes(x.value),
   );
   const overflowOptions = inline
-    ? options.filter(
-        (option, index) => index >= maxVisibleOptions && !value.includes(option.value),
-      )
+    ? options.filter((x, i) => i >= maxVisibleOptions && !value.includes(x.value))
     : options;
   const selected = value.map((v) => options.find((o) => o.value === v)?.label ?? v);
   const dropdown = (
     <DropdownMenu>
       <DropdownMenuTrigger
-        disabled={options.length === 0 && value.length === 0}
+        disabled={options.length === 0 && value.length === 0 && !children}
         className={buttonCls({
           display: inline ? 'compact' : 'button',
-          variant: inline ? 'facet' : value.length > 0 ? 'primary' : 'outline',
+          variant: inline ? 'facet' : isFiltered ? 'primary' : 'outline',
           size: 'sm',
         })}
       >
         {inline ? `${moreLabel} (${overflowOptions.length})` : label}
         {!inline &&
-          selected.length > 0 &&
-          `: ${selected.length > 2 ? selected.length : selected.join(', ')}`}
+          isFiltered &&
+          `: ${selected.length === 0 ? 0 : selected.length > 2 ? selected.length : selected.join(', ')}`}
         <ChevronDown />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
+        {children}
         {overflowOptions.map((option) => (
           <DropdownMenuButton
             key={option.value}
             role="menuitemcheckbox"
             aria-checked={value.includes(option.value)}
-            disabled={option.count === 0 && !value.includes(option.value)}
             onSelect={(event) => {
               if (!inline) event.preventDefault();
               onChange(
@@ -78,9 +81,9 @@ export function FacetFilter<Value extends string>({
             )}
           </DropdownMenuButton>
         ))}
-        {!inline && value.length > 0 && (
-          <DropdownMenuButton onSelect={() => onChange([])}>
-            {clearLabel}
+        {!inline && isFiltered && (
+          <DropdownMenuButton onSelect={() => onChange([...defaultValue])}>
+            Zrušit výběr
           </DropdownMenuButton>
         )}
       </DropdownMenuContent>
@@ -98,7 +101,6 @@ export function FacetFilter<Value extends string>({
               key={option.value}
               type="button"
               aria-pressed={value.includes(option.value)}
-              disabled={option.count === 0 && !value.includes(option.value)}
               onClick={() =>
                 onChange(
                   value.includes(option.value)

@@ -29,7 +29,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import {
   createParser,
   parseAsBoolean,
-  parseAsString,
   parseAsStringLiteral,
   useQueryState,
   useQueryStates,
@@ -101,10 +100,6 @@ export function Calendar({
     parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
   );
   const onlyMine = auth.isLoggedIn && onlyMineInput;
-  const [locationId, setLocationId] = useQueryState(
-    'location',
-    parseAsString.withOptions({ history: 'push' }),
-  );
   const [viewInput, setView] = useQueryState(
     'v',
     parseAsStringLiteral(availableViews)
@@ -135,7 +130,7 @@ export function Calendar({
 
   const setDragListeners = useSetAtom(dragListenersAtom);
   const groupBy = useAtomValue(groupByAtom);
-  const [{ trainers: trainerIds, participants: participantIds, types: eventTypes }] =
+  const [{ trainers: trainerIds, participants: participantIds, types: eventTypes, location: locationIds }] =
     useQueryStates(calendarFilterParsers);
   const effectiveTrainerIds = React.useMemo(() => {
     if (!availableTrainers) return trainerIds;
@@ -150,9 +145,9 @@ export function Calendar({
       eventTypes,
       myPersonIds: auth.personIds,
       parentId,
-      locationId,
+      locationIds,
     }),
-    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationId],
+    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationIds],
   );
 
   const { fetching, range, events, instances, resources, facets, refresh } =
@@ -230,13 +225,14 @@ export function Calendar({
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
       const defaults = defaultsFromSlot(slot);
-      if (locationId) {
+      const [locationId] = locationIds;
+      if (locationIds.length === 1 && locationId) {
         defaults.locationId = locationId;
         defaults.locationText = '';
       }
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
-    [locationId],
+    [locationIds],
   );
 
   const onDrillDown = React.useCallback(
@@ -318,7 +314,7 @@ export function Calendar({
           />
           {auth.isLoggedIn && <ParticipantFilter counts={facets?.participant} />}
           <EventTypeFilter counts={facets?.type} />
-          <LocationFilter counts={facets?.location} value={locationId} onChange={setLocationId} />
+          <LocationFilter counts={facets?.location} />
           {fetching && <Spinner />}
         </div>
 

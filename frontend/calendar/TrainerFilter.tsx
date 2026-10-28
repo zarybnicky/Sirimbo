@@ -2,14 +2,9 @@ import { useQueryState } from 'nuqs';
 import { calendarFilterParsers } from '@/calendar/state';
 import { useQuery } from 'urql';
 import { TrainerOptionsDocument } from '@/graphql/Tenant';
-import {
-  DropdownMenu,
-  DropdownMenuButton,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/ui/dropdown';
-import { buttonCls } from '@/ui/style';
-import { CheckCircle2, Circle, Filter } from 'lucide-react';
+import { DropdownMenuButton } from '@/ui/dropdown';
+import { FacetFilter } from '@/ui/FacetFilter';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 
@@ -42,46 +37,33 @@ export function TrainerFilter({
     (tenant?.tenant?.tenantTrainersList || [])
       .map((x) => x.person)
       .filter(isTruthy)
-      .toSorted((a, b) =>
-        compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
+      .toSorted(
+        (a, b) =>
+          compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
       );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
-        <Filter />
-        Trenéři
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {onShowAllResourcesChange && (
-          <DropdownMenuButton
-            onSelect={(e) => {
-              e.preventDefault();
-              onShowAllResourcesChange(!showAllResources);
-            }}
-          >
-            {showAllResources ? <CheckCircle2 /> : <Circle />}
-            Zobrazit všechny trenéry
-          </DropdownMenuButton>
-        )}
-        {trainers.map((x) => (
-          <DropdownMenuButton
-            key={x.id}
-            onSelect={(e) => {
-              e.preventDefault();
-              setTrainerIds((xs) =>
-                xs.includes(x.id) ? xs.filter((y) => y !== x.id) : [...xs, x.id],
-              );
-            }}
-          >
-            {trainerIds.includes(x.id) ? <CheckCircle2 /> : <Circle />}
-            {x.name}
-            <span className="ml-auto tabular-nums text-neutral-11">
-              {counts ? (counts[x.id] ?? 0) : '…'}
-            </span>
-          </DropdownMenuButton>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <FacetFilter
+      label="Trenéři"
+      value={trainerIds}
+      options={trainers
+        .filter(({ id }) => showAllResources || !!counts?.[id] || trainerIds.includes(id))
+        .map(({ id, name }) => ({ value: id, label: name, count: counts?.[id] }))}
+      onChange={setTrainerIds}
+    >
+      {onShowAllResourcesChange && (
+        <DropdownMenuButton
+          role="menuitemcheckbox"
+          aria-checked={!!showAllResources}
+          onSelect={(e) => {
+            e.preventDefault();
+            onShowAllResourcesChange(!showAllResources);
+          }}
+        >
+          {showAllResources ? <CheckCircle2 /> : <Circle />}
+          Zobrazit všechny trenéry
+        </DropdownMenuButton>
+      )}
+    </FacetFilter>
   );
 }
