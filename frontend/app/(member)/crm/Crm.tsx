@@ -5,7 +5,7 @@ import { fullDateFormatter } from '@/ui/format';
 import { FormResponsesDocument } from '@/graphql/Crm';
 import { useClient, useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
-import { cn } from '@/lib/cn';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export function Crm() {
@@ -57,32 +57,13 @@ export function Crm() {
         ]}
       />
 
-      <div className="grow">
-        {types.map((type, index) => (
-          <label key={`group-item-${type}`} className="relative inline-block">
-            <input
-              className="peer sr-only"
-              type="radio"
-              name="crm-form-response-type"
-              value={type}
-              checked={(state || types[0]) === type}
-              onChange={() => setState(type)}
-            />
-            <span
-              className={cn(
-                'block cursor-pointer bg-accent-3 px-2 py-1 text-sm text-accent-11',
-                'border-y border-l border-accent-5',
-                'peer-checked:border-accent-8 peer-checked:bg-accent-5',
-                'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-accent-8',
-                index === 0 && 'rounded-l-xl',
-                index === types.length - 1 && 'rounded-r-xl border-r',
-              )}
-            >
-              {type}
-            </span>
-          </label>
-        ))}
-      </div>
+      <RadioButtonGroup
+        className="grow"
+        name="crm-form-response-type"
+        value={state || types[0] || ''}
+        options={types.map((type) => ({ id: type, label: type }))}
+        onValueChange={setState}
+      />
 
       <table className="w-full text-sm text-left text-neutral-12 mt-3">
         <thead>

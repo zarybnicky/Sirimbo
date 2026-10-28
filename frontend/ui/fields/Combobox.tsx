@@ -179,51 +179,62 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   onChange,
   options,
   inline = false,
+  disabled = false,
+  searchable = true,
 }: {
   value?: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
   options: Item[];
   inline?: boolean;
+  disabled?: boolean;
+  searchable?: boolean;
 }) {
   return (
     <Command
-      className="rounded-md border border-accent-7 bg-neutral-1 h-full max-h-full relative"
+      tabIndex={searchable ? -1 : 0}
+      className={cn(
+        'rounded-md border border-accent-7 bg-neutral-1 h-full max-h-full relative',
+        !searchable && 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9',
+      )}
       filter={(_value, search, keywords) =>
         rankItem(keywords?.[0] ?? '', search.trim()).rank
       }
     >
-      <div
-        className={inputGroupCls({
-          className: '-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none',
-        })}
-        cmdk-input-wrapper=""
-      >
-        <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
-          <Search className="size-4" aria-hidden="true" />
-        </span>
-        <Command.Input
-          autoFocus={!inline}
-          placeholder="Vyhledat.."
-          className={inputCls({
-            className:
-              'h-10 min-w-0 grow disabled:cursor-not-allowed disabled:opacity-50',
+      {searchable && (
+        <div
+          className={inputGroupCls({
+            className: '-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none',
           })}
-        />
-        {value && (
-          <button
-            type="button"
-            className={buttonCls({
-              variant: 'outline',
-              size: 'none',
-              className: 'w-10 shrink-0 [&_svg]:size-4',
+          cmdk-input-wrapper=""
+        >
+          <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
+            <Search className="size-4" aria-hidden="true" />
+          </span>
+          <Command.Input
+            autoFocus={!inline}
+            placeholder="Vyhledat.."
+            className={inputCls({
+              className:
+                'h-10 min-w-0 grow disabled:cursor-not-allowed disabled:opacity-50',
             })}
-            onClick={() => onChange(null)}
-          >
-            <XCircle />
-            <span className="sr-only">Vymazat výběr</span>
-          </button>
-        )}
-      </div>
+          />
+          {value && (
+            <button
+              type="button"
+              disabled={disabled}
+              className={buttonCls({
+                variant: 'outline',
+                size: 'none',
+                className: 'w-10 shrink-0 [&_svg]:size-4',
+              })}
+              onClick={() => onChange(null)}
+            >
+              <XCircle />
+              <span className="sr-only">Vymazat výběr</span>
+            </button>
+          )}
+        </div>
+      )}
 
       <Command.Empty>Nic jsme nenašli.</Command.Empty>
       <Command.List
@@ -240,6 +251,7 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
             value={`${item.id}: ${item.label}`}
             keywords={[item.label]}
             key={item.id}
+            disabled={disabled}
             onSelect={() => onChange(item.id)}
             className={cn(
               'relative flex p-2 cursor-default select-none items-center rounded-xs',

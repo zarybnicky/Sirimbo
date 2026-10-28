@@ -7,14 +7,13 @@ import {
 } from '@/graphql/Event';
 import { DialogTitle } from '@/ui/dialog';
 import { EventLoginPrompt } from '@/ui/EventLoginPrompt';
-import { TextField } from '@/ui/fields/text';
+import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
 import { formatCoupleName, formatRegistrant } from '@/ui/format';
 import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { compareText } from '@/lib/compare';
 import { ChevronLeft, ChevronRight, List, Plus } from 'lucide-react';
 import React from 'react';
@@ -196,7 +195,8 @@ function RegistrationsDialogContent({
   const canCycle = !!registration && registrations.length > 1;
   const simpleRegistration = event.type === 'LESSON' || event.type === 'GROUP';
 
-  const selectCandidate = async (candidate: Registrant) => {
+  const selectCandidate = async (candidate?: Registrant) => {
+    if (!candidate) return;
     if (!simpleRegistration) {
       setSelection({ kind: 'candidate', registrant: candidate });
       return;
@@ -290,10 +290,12 @@ function RegistrationsDialogContent({
       </div>
 
       {page === 'overview' ? (
-        <RegistrantList
+        <ComboboxSearchArea
+          inline
           options={registrations.map(registrant)}
-          searchable={registrations.length > 8}
-          onSelect={(option) => setSelection({ kind: 'registration', id: option.id })}
+          onChange={(id) => {
+            if (id) setSelection({ kind: 'registration', id });
+          }}
         />
       ) : page === 'candidates' ? (
         <>
@@ -301,12 +303,12 @@ function RegistrationsDialogContent({
           {candidatesLoading ? (
             <Spinner />
           ) : candidates.length > 0 ? (
-            <RegistrantList
-              autoFocus
+            <ComboboxSearchArea
+              inline
               options={candidates}
               searchable={isManager}
               disabled={setRegistrationResult.fetching}
-              onSelect={selectCandidate}
+              onChange={(id) => selectCandidate(candidates.find((x) => x.id === id))}
             />
           ) : (
             <div className="text-neutral-11">Není koho dalšího přihlásit.</div>
@@ -359,59 +361,5 @@ function IconButton({
     >
       {children}
     </button>
-  );
-}
-
-const registrantSearchFields: 'label'[] = ['label'];
-
-function RegistrantList({
-  autoFocus,
-  disabled,
-  options,
-  searchable,
-  onSelect,
-}: {
-  autoFocus?: boolean;
-  disabled?: boolean;
-  options: Registrant[];
-  searchable: boolean;
-  onSelect: (registrant: Registrant) => void;
-}) {
-  const [search, setSearch] = React.useState('');
-  const filtered = useFuzzySearch(options, registrantSearchFields, search);
-
-  return (
-    <div className="scrollbar max-h-[60dvh] overflow-y-auto overscroll-contain">
-      {searchable && (
-        <TextField
-          autoFocus={autoFocus}
-          type="search"
-          className="sticky top-0 z-10 bg-neutral-1"
-          inputClassName="bg-neutral-1"
-          placeholder="Vyhledat..."
-          value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
-        />
-      )}
-      <ul className="overflow-hidden rounded-md border border-neutral-6 divide-y divide-neutral-5">
-        {filtered.map((option) => (
-          <li key={option.id}>
-            <button
-              type="button"
-              disabled={disabled}
-              className={buttonCls({
-                display: 'listItem',
-                variant: 'none',
-                size: 'none',
-              })}
-              onClick={() => onSelect(option)}
-            >
-              {option.label}
-            </button>
-          </li>
-        ))}
-        {filtered.length === 0 && <li>Nic jsme nenašli.</li>}
-      </ul>
-    </div>
   );
 }

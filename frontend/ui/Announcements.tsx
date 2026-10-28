@@ -1,5 +1,6 @@
 import { AnnouncementCard } from '@/ui/AnnouncementCard';
 import { Pagination } from '@/ui/Pagination';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { cn } from '@/lib/cn';
 import { AnnouncementsDocument } from '@/graphql/Announcement';
 import { buttonCls, typographyCls } from '@/ui/style';
@@ -90,35 +91,15 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
           Aktuality
         </h1>
 
-        <div className="inline-flex">
-          {options.map(({ label, id }, index) => (
-            <label key={id} className="relative">
-              <input
-                className="peer sr-only"
-                type="radio"
-                name="announcement-state"
-                value={id}
-                checked={state === id}
-                onChange={() => {
-                  setState(id);
-                  setPage(1);
-                }}
-              />
-              <span
-                className={cn(
-                  'block cursor-pointer bg-neutral-3 px-2 py-1 text-sm text-neutral-11',
-                  'border-y border-l border-neutral-5',
-                  'peer-checked:border-neutral-8 peer-checked:bg-neutral-5',
-                  'peer-focus-visible:relative peer-focus-visible:z-30 peer-focus-visible:ring-3 peer-focus-visible:ring-neutral-8',
-                  index === 0 && 'rounded-l-xl',
-                  index === options.length - 1 && 'rounded-r-xl border-r',
-                )}
-              >
-                {label}
-              </span>
-            </label>
-          ))}
-        </div>
+        <RadioButtonGroup
+          name="announcement-state"
+          value={state}
+          options={options}
+          onValueChange={(value) => {
+            setState(value);
+            setPage(1);
+          }}
+        />
         <AnnouncementSortControls
           sort={sort}
           onChange={(value) => {
