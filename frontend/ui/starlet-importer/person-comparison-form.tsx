@@ -200,7 +200,9 @@ export function PersonComparisonForm() {
               nationality: '203',
               email: student.email,
               phone: student.phone,
-              birthDate: student.year ? `${student.year}-01-01` : null,
+              ...(!person!.birthDate && student.year
+                ? { birthDate: `${student.year}-01-01` }
+                : {}),
               externalIds: student.ref_keys,
               address: {
                 street: student.street ?? '',
@@ -416,7 +418,7 @@ function compare(
       person.email !== student.email ||
       person.phone !== student.phone ||
       person.gender !== student.gender ||
-      birthYear !== student.year ||
+      (!person.birthDate && !!student.year) ||
       cohortList.symmetricDifference(courseList).size > 0
     ) {
       willUpdate = true;
