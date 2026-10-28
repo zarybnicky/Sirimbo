@@ -21,7 +21,7 @@ export function TrainingGroups() {
   const client = useClient();
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true, archived: false },
+    variables: { visible: true, archived: false, withDetails: true },
   });
   const cohortActionMap = useActionMap(cohortActions, cohorts?.cohortsList ?? []);
 
@@ -73,7 +73,7 @@ export function TrainingGroups() {
             )}
 
             <RichTextView
-              value={item.description.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
+              value={item.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
             />
             <div
               className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-xs inset-y-0 left-0"

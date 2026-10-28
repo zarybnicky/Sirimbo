@@ -1,15 +1,19 @@
-fragment Article on Aktuality {
+fragment ArticleSummary on Aktuality {
   __typename
   id
   atPreview
   atKdo
   atJmeno
-  atText
   createdAt
   updatedAt
   publishedAt
   titlePhotoUrl
   isVisible
+}
+
+fragment Article on Aktuality {
+  ...ArticleSummary
+  atText
   explicitAttachments: attachments(condition: {inline: false}) {
     nodes {
       file {
@@ -31,7 +35,7 @@ query Articles($first: Int, $offset: Int, $visibleOnly: Boolean) {
   }) {
     totalCount
     nodes {
-      ...Article
+      ...ArticleSummary
     }
   }
 }

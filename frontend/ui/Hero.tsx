@@ -1,6 +1,6 @@
 'use client';
 
-import type { ArticleFragment } from '@/graphql/Articles';
+import type { ArticleSummaryFragment } from '@/graphql/Articles';
 import { cn } from '@/lib/cn';
 import { slugify } from '@/lib/slugify';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -21,7 +21,7 @@ export function Hero({
   data,
   fallbackImage,
 }: {
-  data: ArticleFragment[];
+  data: ArticleSummaryFragment[];
   fallbackImage: string;
 }) {
   const articles = React.useMemo<HeroArticle[]>(() => {

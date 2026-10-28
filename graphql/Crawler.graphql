@@ -29,7 +29,7 @@ query CrawlerOverview($federation: String, $kind: String) {
   }
 }
 
-query CrawlerTarget($id: BigInt!) {
+query CrawlerTarget($id: BigInt!, $offset: Int! = 0) {
   crawlerTarget(id: $id) {
     id
     federation
@@ -45,6 +45,27 @@ query CrawlerTarget($id: BigInt!) {
     lastProcessErrorAt
     lastResponseId
     lastSuccessfulResponseId
+    responses(first: 50, offset: $offset, orderBy: [FETCHED_AT_DESC, ID_DESC]) {
+      totalCount
+      nodes {
+        id
+        url
+        httpStatus
+        error
+        fetchedAt
+        sysPeriod {
+          start {
+            value
+          }
+          end {
+            value
+          }
+        }
+        lastObservedAt
+        observationCount
+        contentHash
+      }
+    }
   }
 }
 
@@ -90,35 +111,6 @@ query CrawlerTargets(
       errorCount
       lastFetchedAt
       nextFetchAt
-    }
-  }
-}
-
-query CrawlerResponses($id: BigInt!, $offset: Int! = 0) {
-  crawlerTarget(id: $id) {
-    id
-    lastResponseId
-    lastSuccessfulResponseId
-    responses(first: 50, offset: $offset, orderBy: [FETCHED_AT_DESC, ID_DESC]) {
-      totalCount
-      nodes {
-        id
-        url
-        httpStatus
-        error
-        fetchedAt
-        sysPeriod {
-          start {
-            value
-          }
-          end {
-            value
-          }
-        }
-        lastObservedAt
-        observationCount
-        contentHash
-      }
     }
   }
 }

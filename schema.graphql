@@ -266,6 +266,64 @@ type Account {
   personId: BigInt
 
   """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postingsByOriginalAccountId(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
   postingsByOriginalAccountIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -11724,6 +11782,32 @@ input PostingCondition {
   updatedAt: Datetime
 }
 
+"""A connection to a list of `Posting` values."""
+type PostingConnection {
+  """
+  A list of edges which contains the `Posting` and cursor to aid in pagination.
+  """
+  edges: [PostingEdge!]!
+
+  """A list of `Posting` objects."""
+  nodes: [Posting!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Posting` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Posting` edge in the connection."""
+type PostingEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Posting` at the end of the edge."""
+  node: Posting!
+}
+
 """Methods to use when ordering `Posting`."""
 enum PostingsOrderBy {
   ACCOUNT_ID_ASC
@@ -14498,6 +14582,35 @@ type Tenant {
   ): [PersonInvitation!]!
 
   """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingConnection!
+
+  """Reads and enables pagination through a set of `Posting`."""
   postingsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -15329,6 +15442,35 @@ type Transaction {
   """Reads a single `Payment` that is related to this `Transaction`."""
   payment: Payment
   paymentId: BigInt
+
+  """Reads and enables pagination through a set of `Posting`."""
+  postings(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PostingCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Posting`."""
+    orderBy: [PostingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PostingConnection!
 
   """Reads and enables pagination through a set of `Posting`."""
   postingsList(

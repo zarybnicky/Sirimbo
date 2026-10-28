@@ -39,3 +39,5 @@ select app_private.refresh_event_stats(id) from event where type = 'group' order
 
 alter table federated.judge_score
   alter constraint judge_score_round_id_dance_order_dance_code_fkey deferrable initially immediate;
+
+comment on table public.posting is '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';

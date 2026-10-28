@@ -39,10 +39,19 @@ fragment CohortMember on CohortMembership {
   }
 }
 
-query CohortList($first: Int, $offset: Int, $visible: Boolean, $archived: Boolean) {
+query CohortList(
+  $first: Int
+  $offset: Int
+  $visible: Boolean
+  $archived: Boolean
+  $withDetails: Boolean! = false
+) {
   cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible, isArchived: $archived}, orderBy: [ORDERING_ASC]) {
-    ...Cohort
-    cohortMembershipsList(condition: {status: ACTIVE}) {
+    ...CohortBasic
+    isVisible
+    externalIds
+    ...Cohort @include(if: $withDetails)
+    cohortMembershipsList(condition: {status: ACTIVE}) @include(if: $withDetails) {
       id
     }
   }

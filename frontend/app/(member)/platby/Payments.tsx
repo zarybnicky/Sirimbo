@@ -9,31 +9,21 @@ import { Tab, TabMenu } from '@/ui/TabMenu';
 import { useClient, useQuery } from 'urql';
 import {
   TenantManualCreditTransactionsDocument,
-  type TenantManualCreditTransactionsQuery,
   TenantTurnoverPageDocument,
-  type TenantTurnoverPageQuery,
 } from '@/graphql/Payment';
 import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
 import { describePosting, moneyFormatter, numericDateFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
-import { Spinner } from '@/ui/Spinner';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
-import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 import { useActionMap } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
-import { ActionRow } from '@/ui/ActionRow';
-
-type TenantAccountPage = NonNullable<TenantTurnoverPageQuery['accountsList']>[number];
-type TenantPosting = TenantAccountPage['postingsList'][number];
-type TenantAccount = Omit<TenantAccountPage, 'postingsList'> & {
-  postings: TenantPosting[];
-};
-type TenantTransaction = NonNullable<TenantPosting['transaction']>;
-type ManualCreditTransaction = NonNullable<
-  NonNullable<NonNullable<TenantManualCreditTransactionsQuery>['transactions']>['nodes']
->[number];
+import { ActionGroup } from '@/ui/ActionGroup';
+import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
+import { Pagination } from '@/ui/Pagination';
+import { Table } from '@/ui/Table';
 
 const TURNOVER_PAGE_SIZE = 50;
 const DEPOSIT_PAGE_SIZE = 50;
@@ -67,189 +57,125 @@ export function Payments() {
 
 const AccountOverview = React.memo(function AccountOverview() {
   const client = useClient();
-  const [{ data }] = useQuery({ query: PersonAccountsDocument });
+  const [{ data, fetching, error }] = useQuery({ query: PersonAccountsDocument });
 
   return (
     <>
       <button
         type="button"
-        className={buttonCls()}
+        className={buttonCls({ className: 'mb-3' })}
         onClick={() => exportBalanceSheet(client)}
       >
         Přehled plateb 2023
       </button>
-      {(data?.people?.nodes || []).map((x) => (
-        <div
-          key={x.id}
-          className="flex flex-wrap gap-2 justify-between even:bg-neutral-2 odd:bg-neutral-1 border-b"
-        >
-          <span>{x.name}</span>
-          <span>
-            {x.accountsList.map((account) =>
-              moneyFormatter.format({
-                amount: account.balance ?? '0',
-                currency: account.currency,
-              }),
-            )}
-          </span>
-        </div>
-      ))}
+      <Table
+        columns={[
+          'Osoba',
+          <span key="balance" className="block text-right">
+            Zůstatek
+          </span>,
+        ]}
+        busy={fetching}
+        error={error}
+      >
+        {(data?.people?.nodes ?? []).map((person) => (
+          <tr key={person.id} className="border-t border-neutral-4 align-top">
+            <th scope="row">{person.name}</th>
+            <td className="whitespace-nowrap text-right">
+              {person.accountsList.map((account) => (
+                <div key={account.id}>
+                  {moneyFormatter.format({
+                    amount: account.balance ?? '0',
+                    currency: account.currency,
+                  })}
+                </div>
+              ))}
+            </td>
+          </tr>
+        ))}
+      </Table>
     </>
   );
 });
 
 const UnpaidPayments = React.memo(function UnpaidPayments() {
-  const [{ data }] = useQuery({ query: UnpaidPaymentsDocument });
+  const [{ data, fetching, error }] = useQuery({ query: UnpaidPaymentsDocument });
   const unpaid = data?.unpaidPayments?.filter(keyIsNonNull('payment')) ?? [];
   const actionMap = useActionMap(
     paymentActions,
     unpaid.map((x) => x.payment),
   );
 
-  return unpaid.map((x) => (
-    <ActionRow
-      key={x.id}
-      actions={actionMap.get(x.payment.id)!}
-      className="mb-0 flex-wrap justify-between gap-4 even:bg-neutral-2 odd:bg-neutral-1 border-b p-1.5"
+  return (
+    <Table
+      columns={[
+        <span key="actions" className="sr-only">
+          Akce
+        </span>,
+        'Osoba',
+        'Popis',
+        <span key="amount" className="block text-right">
+          Částka
+        </span>,
+      ]}
+      busy={fetching}
+      error={error}
+      empty="Žádné nezaplacené platby."
     >
-      <span className="grow">{x.person?.name}</span>
-      <span>{describePosting(x.payment)}</span>
-      <span>{moneyFormatter.format(x.price)}</span>
-    </ActionRow>
-  ));
+      {unpaid.map((debtor) => (
+        <tr key={debtor.id} className="border-t border-neutral-4 align-top">
+          <td className="w-0">
+            <ActionGroup variant="row" actions={actionMap.get(debtor.payment.id)!} />
+          </td>
+          <th scope="row">{debtor.person?.name}</th>
+          <td>{describePosting(debtor.payment)}</td>
+          <td className="whitespace-nowrap text-right">
+            {moneyFormatter.format(debtor.price)}
+          </td>
+        </tr>
+      ))}
+    </Table>
+  );
 });
 
 const TenantTurnover = React.memo(function TenantTurnover() {
-  const client = useClient();
   const auth = useAuth();
-  const [accounts, setAccounts] = React.useState<Map<string, TenantAccount>>(new Map());
-  const [accountOrder, setAccountOrder] = React.useState<string[]>([]);
-  const [nextOffset, setNextOffset] = React.useState(0);
-  const [hasMore, setHasMore] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
-  const [initialized, setInitialized] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const { data, fetching, error, pagination } = usePaginatedQuery({
+    query: TenantTurnoverPageDocument,
+    variables: (offset) => ({ offset, postingsLimit: TURNOVER_PAGE_SIZE }),
+    getTotal: (data) =>
+      Math.max(
+        0,
+        ...(data.accountsList ?? []).map((account) => account.postings.totalCount),
+      ),
+    limit: TURNOVER_PAGE_SIZE,
+    pageKey: 'turnoverPage',
+  });
+  const accounts = data?.accountsList ?? [];
+  const columns = [
+    'Datum',
+    'Popis',
+    <span key="amount" className="block text-right">
+      Částka
+    </span>,
+  ];
 
-  const fetchPage = React.useCallback(
-    async (offset: number) => {
-      const result = await client
-        .query(TenantTurnoverPageDocument, {
-          offset,
-          postingsLimit: TURNOVER_PAGE_SIZE + 1,
-        })
-        .toPromise();
-
-      if (result.error) {
-        setError(result.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const pageAccounts = result.data?.accountsList ?? [];
-
-      setAccounts((prev) => {
-        const map = new Map(prev);
-        for (const account of pageAccounts) {
-          const { postingsList, ...accountInfo } = account;
-          const existing = map.get(accountInfo.id);
-          const mergedPostings = existing ? [...existing.postings] : [];
-          const nextPostings = postingsList.slice(0, TURNOVER_PAGE_SIZE);
-
-          for (const posting of nextPostings) {
-            if (!mergedPostings.some((item) => item.id === posting.id)) {
-              mergedPostings.push(posting);
-            }
-          }
-
-          map.set(accountInfo.id, {
-            ...accountInfo,
-            postings: mergedPostings,
-          });
-        }
-
-        return map;
-      });
-
-      setAccountOrder((prev) => {
-        const order = [...prev];
-        const seen = new Set(order);
-        for (const account of pageAccounts) {
-          if (!seen.has(account.id)) {
-            order.push(account.id);
-            seen.add(account.id);
-          }
-        }
-        return order;
-      });
-
-      const more = pageAccounts.some(
-        (account) => account.postingsList.length > TURNOVER_PAGE_SIZE,
-      );
-      setHasMore(more);
-      setNextOffset(offset + TURNOVER_PAGE_SIZE);
-      setInitialized(true);
-      setError(null);
-      setLoading(false);
-    },
-    [client],
-  );
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    void fetchPage(0);
-  }, [fetchPage]);
-
-  const orderedAccounts = React.useMemo(
-    () => accountOrder.map((id) => accounts.get(id)).filter(isTruthy),
-    [accountOrder, accounts],
-  );
-  const isEmpty = orderedAccounts.every((account) => account.postings.length === 0);
-
-  if (!initialized && loading) {
+  if (accounts.length === 0) {
     return (
-      <div className="flex justify-center py-6">
-        <Spinner />
-      </div>
+      <Table columns={columns} busy={fetching} error={error} empty="Žádné pohyby.">
+        {null}
+      </Table>
     );
-  }
-
-  if (error) {
-    return <p className="text-sm text-accent-11">Nepodařilo se načíst obrat: {error}</p>;
-  }
-
-  if (initialized && isEmpty) {
-    return <p>Žádné pohyby.</p>;
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {orderedAccounts.map((account) => {
-        const postings = [...account.postings]
-          .filter(
-            (posting): posting is TenantPosting & { transaction: TenantTransaction } =>
-              !!posting.transaction,
-          )
+      {accounts.map((account) => {
+        const postings = account.postings.nodes
+          .filter(keyIsNonNull('transaction'))
           .toSorted((a, b) =>
             b.transaction.effectiveDate.localeCompare(a.transaction.effectiveDate),
           );
-
-        if (postings.length === 0) {
-          return (
-            <section key={account.id} className="space-y-2">
-              <header className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-lg font-semibold">Účet {account.currency}</h3>
-                <span className="text-sm text-neutral-10">
-                  Zůstatek:{' '}
-                  {moneyFormatter.format({
-                    amount: account.balance ?? '0',
-                    currency: account.currency,
-                  })}
-                </span>
-              </header>
-              <p className="text-sm text-neutral-10">Žádné zaúčtované pohyby.</p>
-            </section>
-          );
-        }
 
         return (
           <section key={account.id} className="space-y-2">
@@ -264,198 +190,139 @@ const TenantTurnover = React.memo(function TenantTurnover() {
               </span>
             </header>
 
-            <div className="overflow-hidden rounded-md border divide-y">
+            <Table
+              columns={columns}
+              busy={fetching}
+              error={error}
+              empty="Žádné zaúčtované pohyby."
+            >
               {postings.map((posting) => {
                 const transaction = posting.transaction;
                 const payment = transaction.payment;
-                const displayDate = transaction.effectiveDate
-                  ? numericDateFormatter.format(new Date(transaction.effectiveDate))
-                  : '';
-                const description =
-                  transaction.description || describePosting(payment, posting);
                 const variableSymbol = payment?.variableSymbol;
                 const specificSymbol = payment?.specificSymbol;
 
                 return (
-                  <div
-                    key={posting.id}
-                    className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2"
-                  >
-                    <span className="text-sm text-neutral-11 min-w-20">
-                      {displayDate}
-                    </span>
-                    <div className="flex min-w-48 flex-1 flex-col gap-1">
-                      <span>{description}</span>
-                      {(variableSymbol || specificSymbol) && (
-                        <DotSeparated className="text-xs text-neutral-10">
-                          {variableSymbol && <>VS: {variableSymbol}</>}
-                          {specificSymbol && <>SS: {specificSymbol}</>}
-                        </DotSeparated>
-                      )}
-                      {auth.isAdmin && payment?.id && (
-                        <Link
-                          href={`/platby/${payment.id}`}
-                          className="text-xs font-medium text-accent-11 hover:underline"
-                        >
-                          Detail platby
-                        </Link>
-                      )}
-                    </div>
-                    <span className="font-medium">
+                  <tr key={posting.id} className="border-t border-neutral-4 align-top">
+                    <td className="whitespace-nowrap text-neutral-11">
+                      {transaction.effectiveDate
+                        ? numericDateFormatter.format(new Date(transaction.effectiveDate))
+                        : ''}
+                    </td>
+                    <td>
+                      <div className="flex min-w-48 flex-col gap-1">
+                        <span>
+                          {transaction.description || describePosting(payment, posting)}
+                        </span>
+                        {(variableSymbol || specificSymbol) && (
+                          <DotSeparated className="text-xs text-neutral-10">
+                            {variableSymbol && <>VS: {variableSymbol}</>}
+                            {specificSymbol && <>SS: {specificSymbol}</>}
+                          </DotSeparated>
+                        )}
+                        {auth.isAdmin && payment?.id && (
+                          <Link
+                            href={`/platby/${payment.id}`}
+                            className="text-xs font-medium text-accent-11 hover:underline"
+                          >
+                            Detail platby
+                          </Link>
+                        )}
+                      </div>
+                    </td>
+                    <td className="whitespace-nowrap text-right font-medium">
                       {moneyFormatter.format({
                         amount: posting.amount ?? '0',
                         currency: account.currency,
                       })}
-                    </span>
-                  </div>
+                    </td>
+                  </tr>
                 );
               })}
-            </div>
+            </Table>
           </section>
         );
       })}
-
-      {hasMore && (
-        <div className="flex justify-center">
-          <button
-            type="button"
-            className={buttonCls({ variant: 'outline' })}
-            onClick={() => {
-              if (!loading) {
-                setLoading(true);
-                void fetchPage(nextOffset);
-              }
-            }}
-            disabled={loading}
-          >
-            {loading ? 'Načítání…' : 'Načíst starší...'}
-          </button>
-        </div>
-      )}
+      <Pagination {...pagination} />
     </div>
   );
 });
-
-interface TenantDepositsPageProps {
-  cursor?: string | null;
-  onLoadMore?: (cursor: string) => void;
-}
 
 const TenantDeposits = React.memo(function TenantDeposits() {
-  const [cursors, setCursors] = React.useState<Array<string | null>>([null]);
-
-  const handleLoadMore = React.useCallback((cursor: string) => {
-    setCursors((prev) => [...prev, cursor]);
-  }, []);
-
-  return (
-    <div className="space-y-4">
-      <div className="overflow-hidden rounded-md border divide-y">
-        {cursors.map((cursor, index) => (
-          <TenantDepositsPage
-            key={`${cursor ?? 'start'}-${index}`}
-            cursor={cursor}
-            onLoadMore={index === cursors.length - 1 ? handleLoadMore : undefined}
-          />
-        ))}
-      </div>
-    </div>
-  );
-});
-
-function TenantDepositsPage({ cursor, onLoadMore }: TenantDepositsPageProps) {
-  const [{ data, fetching, error }] = useQuery({
+  const { data, fetching, error, pagination } = usePaginatedQuery({
     query: TenantManualCreditTransactionsDocument,
-    variables: { first: DEPOSIT_PAGE_SIZE, cursor: cursor ?? undefined },
+    variables: (offset) => ({ first: DEPOSIT_PAGE_SIZE, offset }),
+    getTotal: (data) => data.transactions?.totalCount,
+    limit: DEPOSIT_PAGE_SIZE,
+    pageKey: 'depositsPage',
   });
-
-  const transactions = data?.transactions;
-  const nodes = transactions?.nodes ?? [];
-  const hasMore = transactions?.pageInfo.hasNextPage ?? false;
-  const endCursor = transactions?.pageInfo.endCursor ?? undefined;
-
-  if (!data && fetching) {
-    return (
-      <div className="flex justify-center py-6">
-        <Spinner />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="px-3 py-2 text-sm text-accent-11">
-        {cursor
-          ? 'Nepodařilo se načíst další vklady.'
-          : `Nepodařilo se načíst vklady: ${error.message}`}
-      </div>
-    );
-  }
-
-  if (!fetching && nodes.length === 0 && !cursor) {
-    return <div className="px-3 py-2 text-sm text-neutral-10">Žádná ruční dobití.</div>;
-  }
 
   return (
     <>
-      {nodes.map((transaction) => (
-        <DepositRow key={transaction.id} transaction={transaction} />
-      ))}
-      {hasMore && onLoadMore && endCursor && (
-        <div className="flex justify-center py-3">
-          <button
-            type="button"
-            className={buttonCls({ variant: 'outline' })}
-            onClick={() => onLoadMore(endCursor)}
-            disabled={fetching}
-          >
-            {fetching ? 'Načítání…' : 'Načíst starší...'}
-          </button>
-        </div>
-      )}
+      <Table
+        columns={[
+          'Datum',
+          'Osoba',
+          'Popis',
+          <span key="amount" className="block text-right">
+            Částka
+          </span>,
+        ]}
+        busy={fetching}
+        error={error}
+        empty="Žádná ruční dobití."
+      >
+        {(data?.transactions?.nodes ?? []).map((transaction) => {
+          const personPosting = transaction.postingsList.find(
+            (posting) => posting.account?.person,
+          );
+          const accountPosting = personPosting ?? transaction.postingsList[0];
+          const amount = accountPosting?.amount ?? '0';
+          const currency = accountPosting?.account?.currency ?? 'CZK';
+          const variableSymbol = transaction.payment?.variableSymbol;
+          const specificSymbol = transaction.payment?.specificSymbol;
+
+          return (
+            <tr key={transaction.id} className="border-t border-neutral-4 align-top">
+              <td className="whitespace-nowrap text-neutral-11">
+                {transaction.effectiveDate
+                  ? numericDateFormatter.format(new Date(transaction.effectiveDate))
+                  : ''}
+              </td>
+              <th scope="row">
+                <span className="font-medium">
+                  {personPosting?.account?.person?.name ?? '—'}
+                </span>
+              </th>
+              <td>
+                <div className="flex min-w-48 flex-col gap-1">
+                  <span className="text-neutral-11">
+                    {transaction.description || 'Dobití kreditu'}
+                  </span>
+                  {(variableSymbol || specificSymbol) && (
+                    <DotSeparated className="text-xs text-neutral-10">
+                      {variableSymbol && <>VS: {variableSymbol}</>}
+                      {specificSymbol && <>SS: {specificSymbol}</>}
+                    </DotSeparated>
+                  )}
+                  {transaction.payment?.id && (
+                    <Link
+                      href={`/platby/${transaction.payment.id}`}
+                      className="text-xs font-medium text-accent-11 hover:underline"
+                    >
+                      Detail platby
+                    </Link>
+                  )}
+                </div>
+              </td>
+              <td className="whitespace-nowrap text-right font-medium">
+                {moneyFormatter.format({ amount, currency })}
+              </td>
+            </tr>
+          );
+        })}
+      </Table>
+      <Pagination {...pagination} />
     </>
   );
-}
-
-function DepositRow({ transaction }: { transaction: ManualCreditTransaction }) {
-  const personPosting = transaction.postingsList.find(
-    (posting) => posting.account?.person,
-  );
-  const accountPosting = personPosting ?? transaction.postingsList[0];
-  const personName = personPosting?.account?.person?.name ?? '—';
-  const amount = accountPosting?.amount ?? '0';
-  const currency = accountPosting?.account?.currency ?? 'CZK';
-  const variableSymbol = transaction.payment?.variableSymbol;
-  const specificSymbol = transaction.payment?.specificSymbol;
-
-  return (
-    <div className="flex flex-wrap items-start justify-between gap-3 bg-neutral-1 px-3 py-2 odd:bg-neutral-1 even:bg-neutral-2">
-      <span className="text-sm text-neutral-11 min-w-20">
-        {transaction.effectiveDate
-          ? numericDateFormatter.format(new Date(transaction.effectiveDate))
-          : ''}
-      </span>
-      <div className="flex min-w-48 flex-1 flex-col gap-1">
-        <span className="font-medium">{personName}</span>
-        <span className="text-sm text-neutral-11">
-          {transaction.description || 'Dobití kreditu'}
-        </span>
-        {(variableSymbol || specificSymbol) && (
-          <DotSeparated className="text-xs text-neutral-10">
-            {variableSymbol && <>VS: {variableSymbol}</>}
-            {specificSymbol && <>SS: {specificSymbol}</>}
-          </DotSeparated>
-        )}
-        {transaction.payment?.id && (
-          <Link
-            href={`/platby/${transaction.payment.id}`}
-            className="text-xs font-medium text-accent-11 hover:underline"
-          >
-            Detail platby
-          </Link>
-        )}
-      </div>
-      <span className="font-medium">{moneyFormatter.format({ amount, currency })}</span>
-    </div>
-  );
-}
+});

@@ -1,9 +1,9 @@
 'use client';
 
 import { DotSeparated } from '@/ui/DotSeparated';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 
 import { EventListDocument, type EventListQuery } from '@/graphql/Event';
-import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import {
   formatEventName,
@@ -150,36 +150,22 @@ export default function NowPage() {
   return (
     <div className="min-h-screen bg-accent-1 text-accent-12">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 lg:px-10">
-        <header className="flex flex-col gap-1 border-b border-accent-6 pb-6">
+        <header className="flex flex-col items-start gap-1 border-b border-accent-6 pb-6">
           <p className="text-lg text-accent-11">
             {`Aktualizováno v ${shortTimeFormatter.format(reference)}`}
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-accent-12">
             Právě probíhá
           </h1>
-          <div className="mt-3 flex gap-2">
-            {(
-              [
-                { key: 'location', label: 'Podle míst' },
-                { key: 'trainer', label: 'Podle trenérů' },
-              ] as const
-            ).map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setGrouping(key)}
-                className={cn(
-                  'rounded-full border px-4 py-2 text-sm font-medium transition',
-                  grouping === key
-                    ? 'border-accent-8 bg-accent-4 text-accent-12 shadow-inner'
-                    : 'border-accent-6 bg-accent-2 text-accent-10 hover:bg-accent-3',
-                )}
-                aria-pressed={grouping === key}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <RadioButtonGroup
+            name="now-grouping"
+            value={grouping}
+            options={[
+              { id: 'location', label: 'Podle míst' },
+              { id: 'trainer', label: 'Podle trenérů' },
+            ]}
+            onValueChange={(x) => setGrouping(x as GroupingMode)}
+          />
         </header>
 
         {error ? (

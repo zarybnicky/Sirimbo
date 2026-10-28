@@ -19,12 +19,16 @@ export function CohortList() {
   const [showAll, setShowAll] = React.useState(false);
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: showAll ? {} : { visible: true, archived: false },
+    variables: {
+      visible: showAll ? undefined : true,
+      archived: showAll ? undefined : false,
+      withDetails: true,
+    },
   });
   const nodes = React.useMemo(
     () =>
       cohorts?.cohortsList?.map((x) => {
-        const count = x.cohortMembershipsList.length;
+        const count = x.cohortMembershipsList?.length ?? 0;
         return {
           id: x.id,
           image: x.image,
