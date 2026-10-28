@@ -81,7 +81,11 @@ export function EventPageClient({
       <div className="col-feature">
         <PageHeader
           imageUrl={event.coverImage?.url}
-          onEditImage={auth.canManageEvent(event) ? () => setEditingImage(true) : undefined}
+          onEditImage={
+            auth.canManageEvent(event) || event.coverImage?.url || event.type === 'CAMP'
+              ? () => setEditingImage(true)
+              : undefined
+          }
           title={formatEventName(event) || ''}
           breadcrumbLabel="Termín"
           breadcrumbs={[
@@ -93,9 +97,6 @@ export function EventPageClient({
           subtitle={formatEventType(event.type)}
           actions={actions}
           primary={primaryAction}
-          primaryVariant={
-            primaryAction === 'event.registrations' ? 'primary' : 'outline'
-          }
         />
       </div>
 

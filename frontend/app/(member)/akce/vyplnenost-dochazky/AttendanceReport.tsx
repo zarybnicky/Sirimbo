@@ -7,7 +7,7 @@ import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceRepo
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
-import { computeRange } from '@/ui/PeriodSelector';
+import { getPeriodRange } from '@/lib/periods';
 import { Table } from '@/ui/Table';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');
@@ -18,21 +18,13 @@ const percentFormatter = new Intl.NumberFormat('cs-CZ', {
 
 export function AttendanceReport() {
   const now = React.useMemo(() => new Date(), []);
-  const period = React.useMemo(() => {
-    const period = computeRange('schoolyear', now, null, null);
-    if (period.until)
-      period.until =
-        new Date(period.until).getTime() > now.getTime()
-          ? now.toISOString()
-          : period.until;
-    return period;
-  }, [now]);
+  const period = React.useMemo(() => getPeriodRange('schoolyear', now), [now]);
 
   const [{ data, fetching, error }] = useQuery({
     query: TrainerAttendanceReportDocument,
     variables: {
-      since: period.since,
-      until: period.until,
+      since: period.since.toISOString().slice(0, 10),
+      until: now.toISOString(),
     },
   });
 
@@ -82,14 +74,9 @@ export function AttendanceReport() {
         breadcrumbs={[{ label: 'Akce', href: '/akce' }]}
       />
 
-      <section className="text-sm text-neutral-10">
-        {period.displaySince &&
-          period.displayUntil &&
-          fullDateFormatter.formatRange(period.displaySince, period.displayUntil)}
-      </section>
+      <section className="text-sm">
+        {fullDateFormatter.formatRange(period.since, now)}
 
-      <section className="rounded-lg border border-neutral-6 bg-neutral-1 p-4 text-sm shadow-xs">
-        <p className="font-medium text-neutral-12">Shrnutí</p>
         {summary.total > 0 ? (
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>
@@ -127,44 +114,36 @@ export function AttendanceReport() {
         )}
       </section>
 
-      {error && (
-        <p className="rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
-          Nepodařilo se načíst přehled. Zkuste stránku prosím načíst znovu.
-        </p>
-      )}
-
-      {fetching && <p className="text-sm text-neutral-10">Načítáme přehled…</p>}
-
-      {!fetching && !error && (
-        <Table
-          className="text-neutral-12"
-          columns={[
-            'Trenér',
-            <span key="total" className="block text-right">Vedených celkem</span>,
-            <span key="filled" className="block text-right">Plně vyplněno</span>,
-            <span key="partial" className="block text-right">Částečně vyplněno</span>,
-            <span key="unfilled" className="block text-right">Nevyplněno</span>,
-            <span key="ratio" className="block text-right">Docházka alespoň částečně</span>,
-          ]}
-          empty="Momentálně není k dispozici žádný záznam."
-        >
-          {rows.map((row) => (
-            <tr
-              key={row.name}
-              className={row.pending > 0 || row.unfilled > 0 ? 'bg-accent-3/30' : undefined}
-            >
-              <td className="font-medium">{row.name}</td>
-              <td className="text-right">{numberFormatter.format(row.total)}</td>
-              <td className="text-right">{numberFormatter.format(row.filled)}</td>
-              <td className="text-right">{numberFormatter.format(row.partial)}</td>
-              <td className="text-right">{numberFormatter.format(row.unfilled)}</td>
-              <td className="text-right">
-                {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
-              </td>
-            </tr>
-          ))}
-        </Table>
-      )}
+      <Table
+        busy={fetching}
+        error={error}
+        className="text-neutral-12"
+        columns={[
+          'Trenér',
+          <span key="total" className="block text-right">Vedených</span>,
+          <span key="filled" className="block text-right">Vyplněno</span>,
+          <span key="partial" className="block text-right">Částečně</span>,
+          <span key="unfilled" className="block text-right">Nevyplněno</span>,
+          <span key="ratio" className="block text-right">Alespoň částečně</span>,
+        ]}
+        empty="Momentálně není k dispozici žádný záznam."
+      >
+        {rows.map((row) => (
+          <tr
+            key={row.name}
+            className={row.pending > 0 || row.unfilled > 0 ? 'bg-accent-3/30' : undefined}
+          >
+            <td className="font-medium">{row.name}</td>
+            <td className="text-right">{numberFormatter.format(row.total)}</td>
+            <td className="text-right">{numberFormatter.format(row.filled)}</td>
+            <td className="text-right">{numberFormatter.format(row.partial)}</td>
+            <td className="text-right">{numberFormatter.format(row.unfilled)}</td>
+            <td className="text-right">
+              {row.ratio !== null ? percentFormatter.format(row.ratio) : '–'}
+            </td>
+          </tr>
+        ))}
+      </Table>
     </div>
   );
 }

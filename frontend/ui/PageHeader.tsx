@@ -11,7 +11,6 @@ type PageHeaderProps<Id extends string = string> = {
   variant?: NonNullable<Parameters<typeof typographyCls>[0]>['variant'];
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
-  primaryVariant?: 'primary' | 'outline';
   groups?: Record<'add', Id[]>;
   breadcrumbs?: { label: string; href: LinkProps['href'] }[];
   title: React.ReactNode;
@@ -19,6 +18,7 @@ type PageHeaderProps<Id extends string = string> = {
   subtitle?: React.ReactNode;
   imageUrl?: string | null;
   onEditImage?: () => void;
+  children?: React.ReactNode;
 };
 
 export function PageHeader<Id extends string = string>({
@@ -30,8 +30,8 @@ export function PageHeader<Id extends string = string>({
   onEditImage,
   actions,
   primary,
-  primaryVariant,
   groups,
+  children,
   variant = 'heading',
 }: PageHeaderProps<Id>) {
   const parent = breadcrumbs?.at(-1);
@@ -117,14 +117,18 @@ export function PageHeader<Id extends string = string>({
           )}
         </div>
 
-        {!!actions?.length && (
-          <ActionGroup
-            className="ml-auto max-w-full flex-wrap justify-end"
-            primary={primary}
-            primaryVariant={primaryVariant}
-            groups={groups}
-            actions={actions}
-          />
+        {(!!actions?.length || children) && (
+          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
+            {!!actions?.length && (
+              <ActionGroup
+                className="max-w-full flex-wrap justify-end"
+                primary={primary}
+                groups={groups}
+                actions={actions}
+              />
+            )}
+            {children}
+          </div>
         )}
       </div>
 

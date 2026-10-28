@@ -6,7 +6,7 @@ import { compareNaturalText, compareText } from '@/lib/compare';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { Table } from '@/ui/Table';
+import { Table, TableStatus } from '@/ui/Table';
 import { ArrowDown, ArrowUpDown, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import {
   parseAsArrayOf,
@@ -18,7 +18,6 @@ import {
   useQueryStates,
 } from 'nuqs';
 import { TextField } from '@/ui/fields/text';
-import { FormError } from '@/ui/form';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { buttonCls } from '@/ui/style';
@@ -127,6 +126,12 @@ function useBrowserState(federation: string) {
 
 type BrowserProps = { federation: string } & ReturnType<typeof useBrowserState>;
 
+function useLastDefined<T>(value: T | null | undefined) {
+  const [previous, setPrevious] = useState(value);
+  if (value != null && value !== previous) setPrevious(value);
+  return value ?? previous;
+}
+
 export function Browser({ federation }: { federation: string }) {
   const state = useBrowserState(federation);
   const props = { federation, ...state };
@@ -184,18 +189,17 @@ function Results({
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 py-2">
-        <p
-          role="status"
-          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
-        >
-          {isPending
-            ? 'Načítám…'
-            : !children || error
-              ? null
-              : total === 0
-                ? '0 / 0'
-                : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
-        </p>
+        {!error && (
+          <p
+            role="status"
+            aria-busy={isPending}
+            className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
+          >
+            {total === 0
+              ? '0 / 0'
+              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
+          </p>
+        )}
         {actions}
         <TextField
           name="search"
@@ -209,13 +213,8 @@ function Results({
         />
       </div>
       {controls}
-      <FormError error={error} />
-      {!error && children && (
-        <>
-          {children}
-          <Pagination {...pagination} />
-        </>
-      )}
+      {children}
+      {!error && <Pagination {...pagination} />}
     </>
   );
 }
@@ -232,10 +231,7 @@ function Events(props: BrowserProps) {
     query: FederationEventFacetsDocument,
     variables: { federation, includeCancelled: filters.cancelled },
   });
-  const [facetData, setFacetData] = useState(facets.data);
-  if (facets.data !== undefined && facets.data !== facetData) {
-    setFacetData(facets.data);
-  }
+  const years = useLastDefined(facets.data?.federation?.eventFacets?.years) ?? [];
 
   const result = usePaginatedQuery({
     query: FederationEventsDocument,
@@ -259,19 +255,14 @@ function Events(props: BrowserProps) {
     limit: 300,
     getTotal: (data) => data.federation?.events.totalCount,
   });
-  const [counts, setCounts] = useState(result.data?.federation);
-  if (result.data !== undefined && result.data.federation !== counts) {
-    setCounts(result.data.federation);
-  }
+  const counts = useLastDefined(result.data?.federation);
   const events = result.data?.federation?.events.nodes ?? [];
   const isPending = result.fetching || facets.fetching || searchPending;
 
   return (
     <div className="min-w-0">
       <PeriodPicker
-        years={(facetData?.federation?.eventFacets?.years ?? [])
-          .filter((y) => y !== null)
-          .toReversed()}
+        years={years.filter((y) => y !== null).toReversed()}
         year={filters.year}
         month={filters.month}
         onChange={(period) => setFilters({ ...period, page: null }, { history: 'push' })}
@@ -380,6 +371,7 @@ function Events(props: BrowserProps) {
         <Table
           columns={['Datum', 'Soutěž', 'Místo', 'Země', 'Soutěží']}
           busy={isPending}
+          error={result.error ?? facets.error}
           empty="Žádné události"
         >
           {events.map((event) => (
@@ -436,14 +428,12 @@ function People(props: BrowserProps) {
     variables,
     pause: searchPending,
   });
-  const [facetData, setFacetData] = useState(facetResult.data);
-  if (facetResult.data !== undefined && facetResult.data !== facetData) {
-    setFacetData(facetResult.data);
-  }
-  const facetOptions = facetData?.federation?.peopleFacetsList ?? [];
+  const facetOptions =
+    useLastDefined(facetResult.data?.federation?.peopleFacetsList) ?? [];
+  const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
 
   const ageRanges = new Map(
-    (facetData?.ageGroupsList ?? []).map((group) => [group.code, group.personAge]),
+    ageGroups.map((group) => [group.code, group.personAge]),
   );
   const result = usePaginatedQuery({
     query: FederationPeopleDocument,
@@ -552,36 +542,35 @@ function People(props: BrowserProps) {
         </>
       }
     >
-      {item && (
-        <Table
-          columns={['Jméno', 'Věk', 'Pohlaví', 'Národnost']}
-          busy={isPending}
-          empty="Źádní lidé nenalezení"
-        >
-          {item.people.nodes.map((row) => (
-            <tr key={row.id} className="border-t border-neutral-4">
-              <th scope="row">
-                <Link
-                  className="text-accent-11 underline"
-                  href={`/federated/${federation}/people/${row.externalId}`}
-                  prefetch={false}
-                >
-                  {row.name ||
-                    [row.firstName, row.lastName].filter(Boolean).join(' ') ||
-                    row.id}
-                </Link>
-              </th>
-              <td>
-                {formatAgeGroup(row.ageGroupDetails?.code, row.ageGroupDetails?.name) ||
-                  row.ageGroup ||
-                  '–'}
-              </td>
-              <td>{genderLabels[row.gender?.toLowerCase() ?? 'unknown']}</td>
-              <td>{row.nationality || '–'}</td>
-            </tr>
-          ))}
-        </Table>
-      )}
+      <Table
+        columns={['Jméno', 'Věk', 'Pohlaví', 'Národnost']}
+        busy={isPending || facetResult.fetching}
+        error={result.error ?? facetResult.error}
+        empty="Źádní lidé nenalezení"
+      >
+        {item?.people.nodes.map((row) => (
+          <tr key={row.id} className="border-t border-neutral-4">
+            <th scope="row">
+              <Link
+                className="text-accent-11 underline"
+                href={`/federated/${federation}/people/${row.externalId}`}
+                prefetch={false}
+              >
+                {row.name ||
+                  [row.firstName, row.lastName].filter(Boolean).join(' ') ||
+                  row.id}
+              </Link>
+            </th>
+            <td>
+              {formatAgeGroup(row.ageGroupDetails?.code, row.ageGroupDetails?.name) ||
+                row.ageGroup ||
+                '–'}
+            </td>
+            <td>{genderLabels[row.gender?.toLowerCase() ?? 'unknown']}</td>
+            <td>{row.nationality || '–'}</td>
+          </tr>
+        ))}
+      </Table>
     </Results>
   );
 }
@@ -609,13 +598,11 @@ function Competitors(props: BrowserProps) {
     requestPolicy: 'cache-first',
   });
 
-  const [facetData, setFacetData] = useState(facetResult.data);
-  if (facetResult.data !== undefined && facetResult.data !== facetData) {
-    setFacetData(facetResult.data);
-  }
-  const facetOptions = facetData?.federation?.competitorFacetsList ?? [];
+  const facetOptions =
+    useLastDefined(facetResult.data?.federation?.competitorFacetsList) ?? [];
+  const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
 
-  const ageGroupsByCode = new Map(facetData?.ageGroupsList?.map((x) => [x.code, x]));
+  const ageGroupsByCode = new Map(ageGroups.map((x) => [x.code, x]));
   const result = usePaginatedQuery({
     query: FederationCompetitorsDocument,
     pause: searchPending,
@@ -772,155 +759,146 @@ function Competitors(props: BrowserProps) {
         </>
       }
     >
-      {item && (
-        <div className="overflow-x-auto" aria-busy={isPending}>
-          <table className="w-full text-left text-sm tabular-nums">
-            <thead>
-              <tr>
-                {['Jméno', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map(
-                  (label) => (
-                    <th
-                      key={label}
-                      scope="col"
-                      className="px-2 py-1"
-                      aria-sort={
-                        filters.sort !== label
-                          ? undefined
-                          : filters.descending
-                            ? 'descending'
-                            : 'ascending'
+      <div className="overflow-x-auto" aria-busy={isPending}>
+        <table className="w-full text-left text-sm tabular-nums">
+          <thead>
+            <tr>
+              {['Jméno', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map((label) => (
+                <th
+                  key={label}
+                  scope="col"
+                  className="px-2 py-1"
+                  aria-sort={
+                    filters.sort !== label
+                      ? undefined
+                      : filters.descending
+                        ? 'descending'
+                        : 'ascending'
+                  }
+                >
+                  {['Typ', 'Věk', 'Poslední soutěž'].includes(label) ? (
+                    label
+                  ) : (
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 text-accent-11"
+                      onClick={() =>
+                        setFilters({
+                          sort: label,
+                          descending:
+                            filters.sort === label
+                              ? !filters.descending
+                              : label !== 'competitor',
+                          page: null,
+                        })
                       }
                     >
-                      {['Typ', 'Věk', 'Poslední soutěž'].includes(label) ? (
-                        label
+                      {label}
+                      {filters.sort === label ? (
+                        <ArrowDown
+                          className={cn('size-4', !filters.descending && 'rotate-180')}
+                          aria-hidden
+                        />
                       ) : (
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-1 text-accent-11"
-                          onClick={() =>
-                            setFilters({
-                              sort: label,
-                              descending:
-                                filters.sort === label
-                                  ? !filters.descending
-                                  : label !== 'competitor',
-                              page: null,
-                            })
-                          }
-                        >
-                          {label}
-                          {filters.sort === label ? (
-                            <ArrowDown
-                              className={cn(
-                                'size-4',
-                                !filters.descending && 'rotate-180',
-                              )}
-                              aria-hidden
-                            />
-                          ) : (
-                            <ArrowUpDown className="size-4" aria-hidden />
-                          )}
-                        </button>
+                        <ArrowUpDown className="size-4" aria-hidden />
                       )}
-                    </th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            {competitors.map((row) => {
-              const progressByAge = Object.groupBy(
-                row.categoryProgressesList.toSorted((a, b) =>
-                  compareCategories(a.category, b.category),
-                ),
-                (p) => p.category?.ageGroup ?? '',
-              );
-              const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
-                const left = progressByAge[a]?.[0]?.category?.ageGroupDetails;
-                const right = progressByAge[b]?.[0]?.category?.ageGroupDetails;
-                return compareAgeGroups(left, right) || compareNaturalText(a, b);
-              });
-              if (ageGroups.length === 0) ageGroups.push('');
-              return (
-                <tbody key={row.id} className="border-t border-neutral-4">
-                  {ageGroups.map((ageGroup, index) => (
-                    <tr key={ageGroup}>
-                      {index === 0 && (
-                        <>
-                          <th
-                            scope="rowgroup"
-                            rowSpan={ageGroups.length}
-                            className="px-2 py-1 font-normal align-top"
-                          >
-                            <Link
-                              className="text-accent-11 underline"
-                              href={`/federated/${federation}/competitors/${row.externalId}`}
-                              prefetch={false}
-                            >
-                              {row.name || row.id}
-                            </Link>
-                          </th>
-
-                          <td rowSpan={ageGroups.length} className="px-2 py-1 align-top">
-                            {row.competitorType.toLowerCase()}
-                          </td>
-                        </>
-                      )}
-                      <td className="px-2 py-1 whitespace-nowrap align-top">
-                        {formatAgeGroup(ageGroup) || '–'}
-                      </td>
-
-                      {index === 0 && (
-                        <td
+                    </button>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <TableStatus
+              colSpan={4 + disciplines.length}
+              busy={isPending || facetResult.fetching}
+              error={result.error ?? facetResult.error}
+              empty={competitors.length === 0 ? 'No competitors found' : undefined}
+            />
+          </tbody>
+          {competitors.map((row) => {
+            const progressByAge = Object.groupBy(
+              row.categoryProgressesList.toSorted((a, b) =>
+                compareCategories(a.category, b.category),
+              ),
+              (p) => p.category?.ageGroup ?? '',
+            );
+            const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
+              const left = progressByAge[a]?.[0]?.category?.ageGroupDetails;
+              const right = progressByAge[b]?.[0]?.category?.ageGroupDetails;
+              return compareAgeGroups(left, right) || compareNaturalText(a, b);
+            });
+            if (ageGroups.length === 0) ageGroups.push('');
+            return (
+              <tbody key={row.id} className="border-t border-neutral-4">
+                {ageGroups.map((ageGroup, index) => (
+                  <tr key={ageGroup}>
+                    {index === 0 && (
+                      <>
+                        <th
+                          scope="rowgroup"
                           rowSpan={ageGroups.length}
-                          className="px-2 py-1 whitespace-nowrap align-top"
+                          className="px-2 py-1 font-normal align-top"
                         >
-                          {row.latestResultAt ? formatDateOnly(row.latestResultAt) : ''}
-                          {row.latestEntryAt && row.latestEntryAt > today && (
-                            <div className="text-xs text-neutral-11">(+ budoucí)</div>
-                          )}
-                        </td>
-                      )}
+                          <Link
+                            className="text-accent-11 underline"
+                            href={`/federated/${federation}/competitors/${row.externalId}`}
+                            prefetch={false}
+                          >
+                            {row.name || row.id}
+                          </Link>
+                        </th>
 
-                      {disciplines.map((x) => {
-                        const entries = (progressByAge[ageGroup] ?? []).filter(
-                          (p) => p.category?.discipline === x,
-                        );
-                        return (
-                          <td key={x} className="px-2 py-1 align-top whitespace-nowrap">
-                            {entries.length > 0
-                              ? entries.map((p) => (
-                                  <div key={p.categoryId}>
-                                    <span className="font-medium">
-                                      {formatClass(p.category?.class) ??
-                                        p.category?.class}
-                                    </span>{' '}
-                                    {formatPointsAndFinals(
-                                      p.points,
-                                      p.domesticFinals + p.foreignFinals,
-                                    )}
-                                  </div>
-                                ))
-                              : '–'}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              );
-            })}
-            {competitors.length === 0 && (
-              <tbody>
-                <tr>
-                  <td colSpan={4 + disciplines.length} className="px-2 py-1">
-                    No competitors found
-                  </td>
-                </tr>
+                        <td rowSpan={ageGroups.length} className="px-2 py-1 align-top">
+                          {row.competitorType.toLowerCase()}
+                        </td>
+                      </>
+                    )}
+                    <td className="px-2 py-1 whitespace-nowrap align-top">
+                      {formatAgeGroup(ageGroup) || '–'}
+                    </td>
+
+                    {index === 0 && (
+                      <td
+                        rowSpan={ageGroups.length}
+                        className="px-2 py-1 whitespace-nowrap align-top"
+                      >
+                        {row.latestResultAt ? formatDateOnly(row.latestResultAt) : ''}
+                        {row.latestEntryAt && row.latestEntryAt > today && (
+                          <div className="text-xs text-neutral-11">(+ budoucí)</div>
+                        )}
+                      </td>
+                    )}
+
+                    {disciplines.map((x) => {
+                      const entries = (progressByAge[ageGroup] ?? []).filter(
+                        (p) => p.category?.discipline === x,
+                      );
+                      return (
+                        <td key={x} className="px-2 py-1 align-top whitespace-nowrap">
+                          {entries.length > 0
+                            ? entries.map((p) => (
+                                <div key={p.categoryId}>
+                                  <span className="font-medium">
+                                    {formatClass(p.category?.class) ?? p.category?.class}
+                                  </span>{' '}
+                                  {formatPointsAndFinals(
+                                    p.points,
+                                    p.domesticFinals + p.foreignFinals,
+                                  )}
+                                </div>
+                              ))
+                            : '–'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tbody>
-            )}
-          </table>
-        </div>
-      )}
+            );
+          })}
+        </table>
+      </div>
     </Results>
   );
 }

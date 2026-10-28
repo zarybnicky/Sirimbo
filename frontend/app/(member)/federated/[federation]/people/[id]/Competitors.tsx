@@ -3,8 +3,6 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
 import { FederationPersonCompetitorsDocument } from '@/graphql/Federation';
 
@@ -22,16 +20,18 @@ export function Competitors({
     getTotal: (data) =>
       data?.federationPersonByFederationAndExternalId?.competitorComponents?.totalCount,
   });
-  if (error) return <FormError error={error} />;
-  if (!data || fetching) return <Spinner />;
-
   const competitors =
-    data.federationPersonByFederationAndExternalId?.competitorComponents.nodes || [];
+    data?.federationPersonByFederationAndExternalId?.competitorComponents.nodes || [];
 
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Soutěžící</h2>
-      <Table columns={['Soutěžící', 'Typ', 'Role']} empty="Žádní soutěžící">
+      <Table
+        columns={['Soutěžící', 'Typ', 'Role']}
+        busy={fetching}
+        error={error}
+        empty="Žádní soutěžící"
+      >
         {competitors.map(({ competitorId, competitor, role }) => (
           <tr key={competitorId} className="border-t border-neutral-4">
             <th scope="row">

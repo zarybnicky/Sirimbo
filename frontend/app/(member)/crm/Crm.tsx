@@ -11,7 +11,7 @@ import { exportFormResponses } from '@/ui/reports/export-form-responses';
 
 export function Crm() {
   const client = useClient();
-  const [{ data, fetching }] = useQuery({ query: FormResponsesDocument });
+  const [{ data, fetching, error }] = useQuery({ query: FormResponsesDocument });
 
   const dataset = React.useMemo(() => {
     return (data?.formResponses?.nodes || []).map((x) => ({
@@ -68,6 +68,7 @@ export function Crm() {
       <Table
         className="mt-3 text-neutral-12"
         busy={fetching}
+        error={error}
         columns={[
           ...columns,
           <span key="createdAt" className="block text-right">Vytvořeno</span>,

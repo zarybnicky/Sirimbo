@@ -6,8 +6,6 @@ import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
 import { FederationCompetitorMembersDocument } from '@/graphql/Federation';
 import {
@@ -25,15 +23,18 @@ export function Members({ federation, id }: { federation: string; id: string }) 
     getTotal: (data) => data?.federationCompetitor?.components?.totalCount,
   });
 
-  if (error) return <FormError error={error} />;
-  if (fetching) return <Spinner />;
   const members = data?.federationCompetitor?.components.nodes || [];
 
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Osoby</h2>
 
-      <Table columns={['person', 'role']} empty="Žádné osoby">
+      <Table
+        columns={['person', 'role']}
+        busy={fetching}
+        error={error}
+        empty="Žádné osoby"
+      >
         {members.map(({ personId, person, role }) => (
           <tr key={personId} className="border-t border-neutral-4">
             <th scope="row">
@@ -73,9 +74,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
     limit: 50,
     getTotal: (data) => data?.competitions?.totalCount,
   });
-  if (error) return <FormError error={error} />;
-  if (fetching || !data) return <Spinner />;
-  const history = data.competitions?.nodes || [];
+  const history = data?.competitions?.nodes || [];
 
   const showPoints = history.some((row) =>
     row.results?.some((x) => x.pointGain != null),
@@ -83,13 +82,10 @@ export function History({ federation, id }: { federation: string; id: string }) 
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Soutěže</h2>
       <Table
+        busy={fetching}
+        error={error}
         columns={[
           'Datum',
           'Soutěž',

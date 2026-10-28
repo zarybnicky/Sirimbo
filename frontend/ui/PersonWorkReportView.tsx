@@ -135,16 +135,11 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
 
   return (
     <div className="grid gap-6">
-      {error && (
-        <p className="rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
-          Nepodařilo se načíst výkaz práce. Zkuste stránku prosím načíst znovu.
-        </p>
-      )}
-
       <section className="prose prose-accent max-w-none">
         <h3>Měsíce</h3>
         <Table
           busy={fetching}
+          error={error}
           columns={[
             'Měsíc',
             <span key="group" className="block text-right">Vedené</span>,
@@ -200,10 +195,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
         </Table>
       </section>
 
-      {fetching && !data && (
-        <p className="text-sm text-neutral-10">Načítáme výkaz…</p>
-      )}
-
       {selectedMonth && (
         <section className="prose prose-accent max-w-none">
           <h3>{selectedMonth.label}</h3>
@@ -225,7 +216,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
               <React.Fragment key={rowsKey}>
                 <h4>{title}</h4>
                 <Table
-                  busy={fetching}
                   columns={[
                     'Termín',
                     'Událost',

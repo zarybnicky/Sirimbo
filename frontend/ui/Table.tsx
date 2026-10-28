@@ -1,21 +1,25 @@
 import { Children, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { getErrorMessage } from '@/lib/errors';
+import { Spinner } from '@/ui/Spinner';
+import { AlertCircle } from 'lucide-react';
+
+type TableStateProps = { busy?: boolean; error?: Error | null; empty?: string };
 
 export function Table({
   columns,
   caption,
   children,
-  empty,
+  empty = 'Žádná data',
   className,
   busy,
+  error,
 }: {
   columns: (ReactNode | { label: ReactNode; colSpan: number })[];
   caption?: ReactNode;
   children: ReactNode;
-  empty?: string;
   className?: string;
-  busy?: boolean;
-}) {
+} & TableStateProps) {
   const headers = columns
     .filter((c) => !!c)
     .map((c) =>
@@ -36,17 +40,48 @@ export function Table({
           </tr>
         </thead>
         <tbody>
-          {rows.length > 0
-            ? rows
-            : empty && (
-                <tr>
-                  <td colSpan={headers.reduce((sum, header) => sum + header.colSpan, 0)}>
-                    {empty}
-                  </td>
-                </tr>
-              )}
+          <TableStatus
+            colSpan={headers.reduce((sum, header) => sum + header.colSpan, 0)}
+            busy={busy}
+            error={error}
+            empty={rows.length === 0 ? empty : undefined}
+          />
+          {rows}
         </tbody>
       </table>
     </div>
+  );
+}
+
+export function TableStatus({
+  colSpan,
+  busy,
+  error,
+  empty,
+}: TableStateProps & { colSpan: number }) {
+  const status = busy ? (
+    <div role="status" className="not-prose flex items-center gap-2 py-2 text-neutral-11">
+      <Spinner />
+      Načítám…
+    </div>
+  ) : error ? (
+    <div role="alert" className="not-prose flex items-start gap-2 py-2 text-danger-11">
+      <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
+      <div>
+        <p>Nepodařilo se načíst data.</p>
+        <p className="text-xs wrap-anywhere">
+          {getErrorMessage(error.message) ?? error.message}
+        </p>
+      </div>
+    </div>
+  ) : empty ? (
+    <p className="not-prose py-2 text-neutral-11">{empty}</p>
+  ) : null;
+
+  if (!status) return null;
+  return (
+    <tr>
+      <td colSpan={Math.max(1, colSpan)}>{status}</td>
+    </tr>
   );
 }

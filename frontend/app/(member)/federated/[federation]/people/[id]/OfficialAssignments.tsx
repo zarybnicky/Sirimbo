@@ -7,10 +7,8 @@ import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FederationPersonOfficialAssignmentsDocument } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
-import { FormError } from '@/ui/form';
 import { formatCount, formatDateOnly } from '@/ui/format';
 import { Pagination } from '@/ui/Pagination';
-import { Spinner } from '@/ui/Spinner';
 
 export function OfficialAssignments({
   federation,
@@ -27,15 +25,13 @@ export function OfficialAssignments({
     getTotal: (data) => data?.federationEvents?.totalCount,
   });
 
-  if (error) return <FormError error={error} />;
-  if (!data || fetching) return <Spinner />;
-  const events = data.federationEvents?.nodes || [];
+  const events = data?.federationEvents?.nodes || [];
 
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Official assignments</h2>
 
-      <Table columns={['Datum', 'Soutěž', 'Role']}>
+      <Table columns={['Datum', 'Soutěž', 'Role']} busy={fetching} error={error}>
         {events.map((event) => {
           const roles = [
             ...new Set([

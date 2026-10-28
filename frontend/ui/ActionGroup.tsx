@@ -84,7 +84,6 @@ export function ActionGroup<Id extends string = string>({
   primary,
   groups,
   variant = 'toolbar',
-  primaryVariant = 'outline',
   align,
   iconOnly = false,
 }: {
@@ -93,7 +92,6 @@ export function ActionGroup<Id extends string = string>({
   primary?: Id | readonly Id[];
   groups?: Partial<Record<'add', readonly Id[]>>;
   variant?: 'toolbar' | 'row';
-  primaryVariant?: 'primary' | 'outline';
   align?: 'start' | 'end';
   iconOnly?: boolean;
 }) {
@@ -153,7 +151,7 @@ export function ActionGroup<Id extends string = string>({
             key={a.key}
             href={a.href}
             title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: primaryVariant, size: 'sm' })}
+            className={buttonCls({ variant: a.variant ?? 'outline', size: 'sm' })}
           >
             {a.icon && <a.icon className="size-4" />}
             <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
@@ -164,7 +162,7 @@ export function ActionGroup<Id extends string = string>({
             type="button"
             disabled={pending === a.key}
             title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: primaryVariant, size: 'sm' })}
+            className={buttonCls({ variant: a.variant ?? 'outline', size: 'sm' })}
             onClick={() => fire(a)}
           >
             {a.icon && <a.icon className="size-4" />}
@@ -202,7 +200,7 @@ export function ActionGroup<Id extends string = string>({
                 <DropdownMenuLink
                   key={a.key}
                   href={a.href}
-                  className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
+                  className={a.variant === 'danger' ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9' : undefined}
                 >
                   {a.icon && <a.icon className="size-4" />}
                   {a.label}
@@ -212,7 +210,7 @@ export function ActionGroup<Id extends string = string>({
                   key={a.key}
                   disabled={pending === a.key}
                   onSelect={() => fire(a, { fromDropdown: true })}
-                  className={a.variant === 'danger' ? 'bg-accent-3/70' : undefined}
+                  className={a.variant === 'danger' ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9' : undefined}
                 >
                   {a.icon && <a.icon className="size-4" />}
                   {a.label}

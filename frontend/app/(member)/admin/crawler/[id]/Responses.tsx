@@ -3,8 +3,6 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
 import { CrawlerResponsesDocument } from '@/graphql/Crawler';
 import { numericFullFormatter } from '@/ui/format';
@@ -17,19 +15,14 @@ export function Responses({ id }: { id: string }) {
     getTotal: (data) => data?.crawlerTarget?.responses.totalCount,
   });
   const frontier = data?.crawlerTarget;
-  if (error) return <FormError error={error} />;
-  if (!frontier) return <Spinner />;
-  const responses = frontier.responses.nodes;
+  const responses = frontier?.responses.nodes ?? [];
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Responses</h2>
       <Table
+        busy={fetching}
+        error={error}
         columns={[
           'response',
           'http',
@@ -55,8 +48,8 @@ export function Responses({ id }: { id: string }) {
               ) : (
                 response.id
               )}
-              {response.id === frontier.lastResponseId && <div>latest</div>}
-              {response.id === frontier.lastSuccessfulResponseId && (
+              {response.id === frontier?.lastResponseId && <div>latest</div>}
+              {response.id === frontier?.lastSuccessfulResponseId && (
                 <div>last successful</div>
               )}
             </td>

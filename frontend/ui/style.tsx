@@ -19,10 +19,14 @@ export const buttonCls = tv({
       outline:
         'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 ' +
         'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
+      danger:
+        'bg-danger-2 hover:bg-danger-3 active:bg-danger-5 text-danger-12 border border-danger-6 hover:border-danger-7 focus-visible:ring-danger-10 has-focus-visible:ring-danger-10 ' +
+        'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
       facet:
         'border border-accent-5 bg-accent-2/50 text-accent-12 hover:bg-accent-3 disabled:opacity-50 ' +
-        'aria-pressed:border-accent-8 aria-pressed:bg-accent-5 aria-pressed:text-accent-12 aria-pressed:font-medium aria-pressed:hover:bg-accent-5',
+        'aria-pressed:border-accent-8 aria-pressed:bg-accent-5 aria-pressed:text-accent-12 aria-pressed:font-medium aria-pressed:hover:bg-accent-5 ' +
+        'has-checked:border-accent-8 has-checked:bg-accent-5 has-checked:text-accent-12 has-checked:font-medium has-checked:hover:bg-accent-5',
     },
     size: {
       none: ' ',

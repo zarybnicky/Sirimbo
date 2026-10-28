@@ -7,6 +7,8 @@ import type { ConfirmOptions } from '@/ui/Confirm';
 import { DialogContent } from '@/ui/dialog';
 import type { TenantConfig } from '@/tenant/types';
 import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
+import type { VariantProps } from 'tailwind-variants';
+import type { buttonCls } from '@/ui/style';
 
 export type ActionContext<T> = {
   auth: AuthState;
@@ -28,6 +30,7 @@ type Resolvable<T, V> = V | ((ctx: ActionContext<T>) => V);
 type Icon = ComponentType<{ className?: string }>;
 type DialogBody<T> = ComponentType<ActionContext<T>>;
 type Href = string;
+type ActionVariant = NonNullable<VariantProps<typeof buttonCls>['variant']>;
 
 const resolve = <T, V>(v: Resolvable<T, V>, ctx: ActionContext<T>): V =>
   typeof v === 'function' ? (v as (c: ActionContext<T>) => V)(ctx) : v;
@@ -37,7 +40,7 @@ export type Action<T, Id extends string = string> = AccessRequirements & {
   label: Resolvable<T, string>;
   icon?: Resolvable<T, Icon>;
   visible?: Resolvable<T, boolean>;
-  variant?: 'default' | 'danger';
+  variant?: Resolvable<T, ActionVariant>;
   group?: 'primary' | 'add';
 } & (
   | {
@@ -64,7 +67,7 @@ export type ResolvedAction<Id extends string = string> = {
   key: string;
   label: string;
   icon?: Icon;
-  variant?: 'default' | 'danger';
+  variant?: ActionVariant;
   group?: 'primary' | 'add';
 } & (
   | {
@@ -100,7 +103,7 @@ function resolveOne<T, Id extends string>(
     key,
     label: resolve(a.label, ctx),
     icon: a.icon ? resolve(a.icon, ctx) : undefined,
-    variant: a.variant,
+    variant: a.variant ? resolve(a.variant, ctx) : undefined,
     group: a.group,
   };
 

@@ -96,7 +96,7 @@ export function PersonList() {
     <div className="flex flex-col h-full">
       <div className="px-1 py-4 flex items-center justify-between flex-wrap">
         <div className="font-bold first-letter:uppercase">Členové</div>
-        <div className="mt-2 flex gap-2 justify-end">
+        <div className="flex gap-2 justify-end">
           {auth.isAdmin && (
             <button
               type="button"

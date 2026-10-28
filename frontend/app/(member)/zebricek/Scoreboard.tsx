@@ -1,130 +1,181 @@
 'use client';
 
-import { DotSeparated } from '@/ui/DotSeparated';
-
 import { DefinitionList } from '@/ui/DefinitionList';
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
-import { computeRange, type PeriodPreset, PeriodSelector } from '@/ui/PeriodSelector';
+import { getPeriodRange, type PeriodUnit } from '@/lib/periods';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
-import { Combobox } from '@/ui/fields/Combobox';
-import { fullDateFormatter, numberFormatter } from '@/ui/format';
+import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
+import {
+  capitalize,
+  fullDateFormatter,
+  monthFormatter,
+  numberFormatter,
+} from '@/ui/format';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import { buttonCls } from '@/ui/style';
 import { Table } from '@/ui/Table';
+import { ChevronLeft, ChevronRight, InfoIcon } from 'lucide-react';
+
+const periodOptions: { value: PeriodUnit; label: string }[] = [
+  { value: 'schoolyear', label: 'Školní rok' },
+  { value: 'semester', label: 'Pololetí' },
+  { value: 'quarter', label: 'Čtvrtletí' },
+  { value: 'month', label: 'Měsíc' },
+];
 
 export function Scoreboard() {
-  const [cohortId, setCohortId] = React.useState<string | null | undefined>(null);
-  const [preset, setPreset] = React.useState<PeriodPreset>('schoolyear');
+  const [cohortId, setCohortId] = React.useState('');
+  const [unit, setUnit] = React.useState<PeriodUnit>('schoolyear');
   const [date, setDate] = React.useState(() => new Date());
-  const [range, setRange] = React.useState<{
-    since: Date | null;
-    until: Date | null;
-  }>({ since: null, until: null });
-
-  const period = React.useMemo(
-    () => computeRange(preset, date, range.since, range.until),
-    [preset, date, range],
-  );
+  const period = getPeriodRange(unit, date);
 
   const [{ data, fetching, error }] = useQuery({
     query: ScoreboardDocument,
     variables: {
-      cohortId: cohortId,
-      since: period.since,
-      until: period.until,
+      cohortId: cohortId || null,
+      since: period.since.toISOString().slice(0, 10),
+      until: period.until.toISOString().slice(0, 10),
     },
-    pause: !period.since || !period.until,
   });
 
-  const cohorts = data?.cohortsList ?? [];
+  const [cohorts, setCohorts] = React.useState(data?.cohortsList ?? []);
+  if (data?.cohortsList && data.cohortsList !== cohorts) setCohorts(data.cohortsList);
   const scoreboard = data?.scoreboardEntriesList ?? [];
-  const activeCohort = cohortId
-    ? (cohorts.find((item) => item.id === cohortId) ?? null)
-    : null;
 
   return (
     <>
-      <PageHeader title="Žebříček aktivity" />
+      <PageHeader title="Žebříček aktivity">
+        <Popover>
+          <PopoverTrigger
+            aria-label="Jak se počítá skóre"
+            title="Jak se počítá skóre"
+            className={buttonCls({ variant: 'outline', size: 'icon' })}
+          >
+            <InfoIcon aria-hidden />
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            side="bottom"
+            sideOffset={6}
+            className="max-w-[calc(100vw-2rem)]"
+          >
+            <p className="mb-2 pr-6 text-sm font-semibold">Skóre se skládá z:</p>
+            <DefinitionList
+              items={{
+                'Individuální lekce': '1b, max. 4b/týden',
+                'Pohybovka, performance': '1b',
+                'Vedená hodina': '1b',
+                Practice: '2b',
+                'Jednodenní klubová akce': '3b',
+                'Vícedenní klubová akce': '5b',
+                'Účast na soutěži': <s>2b</s>,
+                'Sportovní aktivita': <s>1b</s>,
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+      </PageHeader>
 
-      <div className="space-y-4">
-        <section>
-          <p>Skóre se skládá z:</p>
-          <DefinitionList
-            items={{
-              'Individuální lekce': '1b, max. 4b/týden',
-              'Pohybovka, performance': '1b',
-              'Vedená hodina': '1b',
-              Practice: '2b',
-              'Jednodenní klubová akce': '3b',
-              'Vícedenní klubová akce': '5b',
-              'Účast na soutěži': <s>2b</s>,
-              'Sportovní aktivita': <s>1b</s>,
-            }}
+      <div className="min-w-0">
+        <div className="mb-3 grid w-full justify-items-start gap-2">
+          <FacetRadioGroup
+            inline
+            name="scoreboard-cohort"
+            label="Skupina"
+            value={cohortId}
+            defaultValue=""
+            onChange={setCohortId}
+            options={[
+              { value: '', label: 'Všechny skupiny' },
+              ...cohorts.map((cohort) => ({ value: cohort.id, label: cohort.name })),
+            ]}
           />
-        </section>
+          <FacetRadioGroup
+            inline
+            name="scoreboard-period"
+            label="Období"
+            value={unit}
+            options={periodOptions}
+            onChange={setUnit}
+          />
 
-        <section className="not-prose rounded-lg border border-neutral-6 p-4 space-y-4">
-          <div className="flex gap-4 flex-wrap">
-            <Combobox
-              label="Skupina"
-              value={cohortId}
-              onChange={setCohortId}
-              options={[
-                { id: '', label: 'Všechny skupiny' },
-                ...cohorts.map((cohort) => ({
-                  id: cohort.id,
-                  label: cohort.name,
-                })),
-              ]}
-              placeholder="Všechny skupiny"
-            />
+          <div className="flex w-full flex-wrap items-center gap-2 sm:pl-20">
+            <button
+              type="button"
+              aria-label="Předchozí období"
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+              onClick={() => setDate(new Date(period.since.getTime() - 86_400_000))}
+            >
+              <ChevronLeft aria-hidden />
+            </button>
+            <span className="text-xs font-medium tabular-nums text-neutral-12">
+              {unit === 'schoolyear'
+                ? `${period.since.getUTCFullYear()}/${period.until.getUTCFullYear()}`
+                : unit === 'month'
+                  ? capitalize(monthFormatter.format(period.since))
+                  : fullDateFormatter.formatRange(
+                      period.since,
+                      new Date(period.until.getTime() - 86_400_000),
+                    )}
+            </span>
+            <button
+              type="button"
+              aria-label="Další období"
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+              onClick={() => setDate(period.until)}
+            >
+              <ChevronRight aria-hidden />
+            </button>
+            <button
+              type="button"
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+              onClick={() => setDate(new Date())}
+            >
+              Dnes
+            </button>
 
-            <PeriodSelector
-              preset={preset}
-              onPresetChange={setPreset}
-              date={date}
-              onDateChange={setDate}
-              since={range.since}
-              onSinceChange={(since) => setRange((x) => ({ ...x, since }))}
-              until={range.until}
-              onUntilChange={(until) => setRange((x) => ({ ...x, until }))}
-            />
+            {(cohortId || unit !== 'schoolyear') && (
+              <button
+                type="button"
+                className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
+                onClick={() => {
+                  setCohortId('');
+                  setUnit('schoolyear');
+                  setDate(new Date());
+                }}
+              >
+                Zrušit filtry
+              </button>
+            )}
           </div>
-
-          {period.displaySince && period.displayUntil && (
-            <DotSeparated className="text-sm text-neutral-10">
-              <span className="font-medium text-neutral-12">
-                {fullDateFormatter.formatRange(
-                  period.displaySince,
-                  period.displayUntil,
-                )}
-              </span>
-              {activeCohort ? `Skupina ${activeCohort.name}` : 'Všechny skupiny'}
-            </DotSeparated>
-          )}
-        </section>
+        </div>
 
         <section>
-          {error ? (
-            <p className="not-prose rounded-md border border-accent-7 bg-accent-3 p-3 text-sm text-accent-11">
-              Nepodařilo se načíst žebříček. Zkuste to prosím znovu.
-            </p>
-          ) : fetching ? (
-            <p>Načítám výsledky…</p>
-          ) : null}
-
           <Table
             busy={fetching}
+            error={error}
             columns={[
-              <span key="rank" className="sr-only">Pořadí</span>,
+              <span key="rank" className="sr-only">
+                Pořadí
+              </span>,
               'Člen',
-              <span key="lessons" className="block text-center">Lekce</span>,
-              <span key="groups" className="block text-center">Společné</span>,
-              <span key="events" className="block text-center">Akce</span>,
-              <span key="total" className="block text-center">Celkem</span>,
+              <span key="lessons" className="block text-center">
+                Lekce
+              </span>,
+              <span key="groups" className="block text-center">
+                Společné
+              </span>,
+              <span key="events" className="block text-center">
+                Akce
+              </span>,
+              <span key="total" className="block text-center">
+                Celkem
+              </span>,
             ]}
-            empty={!fetching && !error ? 'Pro vybrané období nejsou žádné body.' : undefined}
+            empty="Pro vybrané období nejsou žádné body."
           >
             {scoreboard.map((entry) => {
               const key = `${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`;

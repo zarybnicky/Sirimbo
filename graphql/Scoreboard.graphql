@@ -1,5 +1,8 @@
 query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
-  cohortsList(condition: { isVisible: true }, orderBy: [NAME_ASC]) {
+  cohortsList(
+    condition: { isVisible: true, isArchived: false }
+    orderBy: [ORDERING_ASC, NAME_ASC]
+  ) {
     id
     name
   }

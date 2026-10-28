@@ -72,6 +72,7 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     id: 'event.registrations',
     group: 'primary',
     label: registrationActionLabel,
+    variant: ({ auth }) => (auth.isMember || auth.isTrainer) ? 'outline' : 'primary',
     icon: UserPlus,
     visible: canOpenRegistrations,
     render: ({ item }) => <MyRegistrationsDialog eventId={item.id} />,

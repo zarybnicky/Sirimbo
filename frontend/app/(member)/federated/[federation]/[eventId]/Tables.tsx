@@ -6,8 +6,6 @@ import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { Pagination } from '@/ui/Pagination';
 import { FederationEventCompetitionsDocument } from '@/graphql/Federation';
 import { formatDateOnly } from '@/ui/format';
@@ -32,18 +30,13 @@ export function Competitions({
   });
   const competitions = data?.federationEventByFederationAndExternalId?.competitions;
   const path = `/federated/${federation}/${eventId}`;
-  if (error) return <FormError error={error} />;
-  if (!competitions) return <Spinner />;
 
   return (
     <>
-      {fetching && (
-        <p role="status" className="my-2 text-sm text-neutral-11">
-          Loading…
-        </p>
-      )}
       <h2 className="mt-4 mb-2 text-lg font-bold">Soutěže</h2>
       <Table
+        busy={fetching}
+        error={error}
         columns={[
           'Kategorie',
           'Typ',
@@ -54,7 +47,7 @@ export function Competitions({
         ]}
         empty="No competitions"
       >
-        {competitions.nodes.map((competition) => (
+        {competitions?.nodes.map((competition) => (
           <tr key={competition.id} className="border-t border-neutral-4">
             <th scope="row">
               <Link
