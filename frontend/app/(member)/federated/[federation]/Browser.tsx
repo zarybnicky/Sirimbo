@@ -456,7 +456,7 @@ function People(props: BrowserProps) {
         <div
           id="people-facets"
           className={cn(
-            'mb-3 w-full justify-items-start gap-2',
+            'mb-3 w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]',
             showFilters ? 'grid' : 'hidden',
           )}
         >
@@ -658,7 +658,7 @@ function Competitors(props: BrowserProps) {
           <div
             id="competitor-facets"
             className={cn(
-              'mb-3 w-full justify-items-start gap-2',
+              'mb-3 w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]',
               showFilters ? 'grid' : 'hidden',
             )}
           >

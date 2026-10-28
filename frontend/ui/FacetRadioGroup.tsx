@@ -18,17 +18,17 @@ export function FacetRadioGroup<Value extends string>({
   onChange: (value: Value) => void;
   inline?: boolean;
 }) {
-  return (
-    <fieldset className={cn('min-w-0', inline && 'w-full')}>
+  const fieldset = (
+    <fieldset className="min-w-0">
       <legend
         className={cn(
-          'mb-1 text-xs font-medium text-neutral-11',
-          inline && 'sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5',
+          'text-xs font-medium text-neutral-11',
+          inline ? 'sr-only' : 'mb-1',
         )}
       >
         {label}
       </legend>
-      <div className={cn('flex flex-wrap gap-1', inline && 'sm:ml-20')}>
+      <div className="flex min-w-0 flex-wrap gap-1">
         {options.map((option) => (
           <label
             key={option.value}
@@ -73,4 +73,12 @@ export function FacetRadioGroup<Value extends string>({
       </div>
     </fieldset>
   );
+  return inline ? (
+    <div className="col-span-full grid w-full min-w-0 grid-cols-subgrid gap-y-1">
+      <span aria-hidden className="text-xs font-medium text-neutral-11 sm:pt-1.5">
+        {label}
+      </span>
+      {fieldset}
+    </div>
+  ) : fieldset;
 }

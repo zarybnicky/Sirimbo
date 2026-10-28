@@ -90,14 +90,10 @@ export function FacetFilter<Value extends string>({
     </DropdownMenu>
   );
   if (inline) {
-    return (
-      <fieldset className={cn('min-w-0', label && 'w-full')}>
-        {label && (
-          <legend className="mb-1 text-xs font-medium text-neutral-11 sm:float-left sm:mb-0 sm:w-20 sm:pt-1.5">
-            {label}
-          </legend>
-        )}
-        <div className={cn('flex flex-wrap gap-1', label && 'sm:ml-20')}>
+    const fieldset = (
+      <fieldset className="min-w-0">
+        {label && <legend className="sr-only">{label}</legend>}
+        <div className="flex min-w-0 flex-wrap gap-1">
           {visibleOptions.map((option) => (
             <button
               key={option.value}
@@ -122,6 +118,14 @@ export function FacetFilter<Value extends string>({
         </div>
       </fieldset>
     );
+    return label ? (
+      <div className="col-span-full grid w-full min-w-0 grid-cols-subgrid gap-y-1">
+        <span aria-hidden className="text-xs font-medium text-neutral-11 sm:pt-1.5">
+          {label}
+        </span>
+        {fieldset}
+      </div>
+    ) : fieldset;
   }
 
   return dropdown;

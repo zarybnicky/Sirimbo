@@ -80,7 +80,7 @@ export function Scoreboard() {
       </PageHeader>
 
       <div className="min-w-0">
-        <div className="mb-3 grid w-full justify-items-start gap-2">
+        <div className="mb-3 grid w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]">
           <FacetRadioGroup
             inline
             name="scoreboard-cohort"
@@ -102,7 +102,7 @@ export function Scoreboard() {
             onChange={setUnit}
           />
 
-          <div className="flex w-full flex-wrap items-center gap-2 sm:pl-20">
+          <div className="flex min-w-0 flex-wrap items-center gap-2 sm:col-start-2">
             <button
               type="button"
               aria-label="Předchozí období"
