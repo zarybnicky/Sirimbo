@@ -60,7 +60,7 @@ FROM app_private.event_share_claims(-9000, 'test-camp-share');
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
-  'sharing includes active registrants, trainers, and both partners of the registered active couple');
+  'sharing includes active participants, trainers, and both partners of the registered active couple');
 SELECT tap.is((SELECT array_agg(id) FROM couple), ARRAY[-9000]::bigint[],
   'sharing exposes the registered couple, not other partnerships of its attendees');
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM event),

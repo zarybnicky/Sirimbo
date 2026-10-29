@@ -196,7 +196,7 @@ fragment EventWithRegistrations on Event {
   }
 }
 
-fragment EventRegistrant on Person {
+fragment EventParticipant on Person {
   id
   firstName
   lastName
@@ -229,7 +229,7 @@ query EventParticipantsExport($id: BigInt!) {
         id
         parentRegistrationId
         person {
-          ...EventRegistrant
+          ...EventParticipant
           name
         }
         couple {

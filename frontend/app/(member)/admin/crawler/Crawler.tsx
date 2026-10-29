@@ -177,7 +177,6 @@ function Targets({
           'next fetch',
         ]}
         className="col-full-width whitespace-nowrap"
-        empty="No frontiers found"
       >
         {rows.map((row) => (
           <tr key={row.id} className="border-t border-neutral-4">

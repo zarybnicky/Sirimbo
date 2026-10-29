@@ -33,12 +33,12 @@ type FormValues = z.infer<typeof Form>;
 
 export function EventRegistrationForm({
   event,
-  registrant,
+  participant,
   onSaved,
   onCancelled,
 }: {
   event: EventWithRegistrationsFragment;
-  registrant:
+  participant:
     | EventRegistrationFragment
     | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;
   onSaved: () => void;
@@ -47,8 +47,8 @@ export function EventRegistrationForm({
   const auth = useAuth();
   const confirm = useConfirm();
   const [result, setRegistration] = useMutation(SetEventRegistrationDocument);
-  const registration = 'lessonRequestsList' in registrant ? registrant : undefined;
-  const { personId, coupleId } = registrant;
+  const registration = 'lessonRequestsList' in participant ? participant : undefined;
+  const { personId, coupleId } = participant;
   const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
   const readOnly = !!event.isLocked && !auth.canManageEvent(event);
   const requestCounts = Object.fromEntries(

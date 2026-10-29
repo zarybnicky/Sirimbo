@@ -24,7 +24,7 @@ export const listFormatter = new Intl.ListFormat('cs-CZ', {
 export const formatCoupleName = (couple: MaybeCouple) =>
   !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
 
-export const formatRegistrant = ({ person, couple }: MaybeRegistration) =>
+export const formatParticipant = ({ person, couple }: MaybeRegistration) =>
   person?.name ||
   (!couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`);
 
@@ -118,32 +118,31 @@ export const formatEventName = (
   if (event.name) return event.name;
 
   const registrations = event.registrations?.nodes;
-  if (viewer !== 'trainer') {
-    const details = [
-      listFormatter.format(
-        event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
-      ),
-      viewer === 'neutral' && event.type === 'LESSON'
-        ? listFormatter.format(registrations?.map(formatRegistrant).filter(isTruthy) ?? [])
-        : '',
-    ].filter(isTruthy).join(' — ');
-    return details
-      ? `${formatEventType(event.type)}: ${details}`
+  const trainers =
+    listFormatter.format(
+      event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
+    );
+  if (viewer === 'participant' && event.type === 'LESSON') {
+    return trainers || formatEventType(event.type);
+  }
+  if (viewer === 'neutral') {
+    const participants = event.type === 'LESSON'
+        ? listFormatter.format(registrations?.map(formatParticipant).filter(isTruthy) ?? [])
+        : '';
+    return event.type === 'LESSON'
+      ? `${trainers} / ${participants}`
       : formatEventType(event.type);
   }
   if (event.type === 'LESSON' && registrations?.length)
-    return listFormatter.format(registrations.map(formatRegistrant).filter(isTruthy));
+    return listFormatter.format(registrations.map(formatParticipant).filter(isTruthy));
 
-  let name = formatEventType(event.type);
   if (
     event.type === 'RESERVATION' &&
     event?.eventTrainersList &&
     event.eventTrainersList.length > 0
   )
-    name += `: ${listFormatter.format(
-      event.eventTrainersList.map((x) => x?.person?.name).filter(isTruthy),
-    )}`;
-  return name;
+    return `${formatEventType(event.type)}: ${trainers}`;
+  return formatEventType(event.type);
 };
 
 export const monthFormatter = new Intl.DateTimeFormat('cs-CZ', {

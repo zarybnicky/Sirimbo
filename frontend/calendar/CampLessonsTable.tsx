@@ -15,7 +15,7 @@ type Lesson = NonNullable<EventRegistrationsQuery['eventsList']>[number];
 type Cell = { requested: number; lessons: Lesson[] };
 type Row = {
   id: string;
-  registrant: string;
+  participant: string;
   note: string | null;
   coupleMemberIds: string[];
   cells: Map<string, Cell>;
@@ -50,7 +50,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
         : `couple:${registration.coupleId}`;
       const row: Row = {
         id,
-        registrant: registration.person?.name || formatCoupleName(registration.couple),
+        participant: registration.person?.name || formatCoupleName(registration.couple),
         note: registration.note,
         coupleMemberIds: registration.couple
           ? [registration.couple.man?.id, registration.couple.woman?.id].filter(isTruthy)
@@ -78,12 +78,12 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
       for (const registration of lesson.registrationsList) {
-        const registrantId = registration.personId
+        const participantId = registration.personId
           ? `person:${registration.personId}`
           : `couple:${registration.coupleId}`;
-        const row = rows.get(registrantId) ?? {
-          id: registrantId,
-          registrant: registration.person?.name || formatCoupleName(registration.couple),
+        const row = rows.get(participantId) ?? {
+          id: participantId,
+          participant: registration.person?.name || formatCoupleName(registration.couple),
           note: registration.note,
           coupleMemberIds: [],
           cells: new Map(),
@@ -112,7 +112,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
             row.priceIncomplete = true;
           }
         }
-        rows.set(registrantId, row);
+        rows.set(participantId, row);
       }
     }
 
@@ -140,11 +140,11 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
     const result: Row[] = [];
     for (const row of [...rows.values()]
       .filter((row) => !nestedIds.has(row.id))
-      .toSorted((a, b) => compareText(a.registrant, b.registrant))) {
+      .toSorted((a, b) => compareText(a.participant, b.participant))) {
       result.push(
         row,
         ...(nestedRows.get(row.id) ?? [])
-          .toSorted((a, b) => compareText(a.registrant, b.registrant))
+          .toSorted((a, b) => compareText(a.participant, b.participant))
           .map((child) => ({ ...child, nested: true })),
       );
     }
@@ -155,7 +155,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
   const columns = React.useMemo<Column<Row>[]>(
     () => [
       {
-        key: 'registrant',
+        key: 'participant',
         name: 'Přihláška',
         frozen: true,
         width: 240,
@@ -168,7 +168,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
               {row.nested && <span className="shrink-0 text-neutral-9">↳</span>}
               <div className="min-w-0">
                 <div className="truncate font-medium text-neutral-12">
-                  {row.registrant}
+                  {row.participant}
                 </div>
                 <div className="truncate text-xs text-neutral-10" title={detail}>
                   {detail}

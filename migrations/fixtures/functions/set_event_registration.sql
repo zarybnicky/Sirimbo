@@ -42,7 +42,7 @@ declare
 begin
   if is_registered is null or num_nonnulls(person_id, couple_id, person) <> 1
     or (person is distinct from null and not is_registered) then
-    raise exception 'INVALID_REGISTRANT' using errcode = '22023';
+    raise exception 'INVALID_PARTICIPANT' using errcode = '22023';
   end if;
 
   if num_nonnulls(lesson_trainer_ids, lesson_counts) = 1

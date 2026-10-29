@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 import {
   formatEventName,
   formatEventType,
-  formatRegistrant,
+  formatParticipant,
   listFormatter,
   moneyFormatter,
   shortTimeFormatter,
@@ -116,7 +116,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : registrationCount < 6 ? (
-            registrations.nodes.map((x) => <div key={x.id}>{formatRegistrant(x)}</div>)
+            registrations.nodes.map((x) => <div key={x.id}>{formatParticipant(x)}</div>)
           ) : (
             `${registrationCount} účastníků`
           )}

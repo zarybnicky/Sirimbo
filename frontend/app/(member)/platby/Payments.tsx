@@ -164,7 +164,8 @@ const UnpaidPayments = React.memo(function UnpaidPayments() {
   );
 });
 
-function accountLabel(account: AccountFragment) {
+function accountLabel(account: AccountFragment | null | undefined) {
+  if (!account) return '—';
   return `${account.personId === null ? 'Klub' : (account.person?.name ?? '—')} (${account.currency})`;
 }
 
@@ -217,8 +218,6 @@ function Transactions() {
     pause: searchPending,
   });
   const { total, page, limit } = pagination;
-  const isPending = fetching || searchPending;
-  const queryError = error ?? accounts.error;
   const change = (value: Partial<typeof filters>) => {
     void setFilters(value);
     void pagination.onPageChange(1);
@@ -247,22 +246,20 @@ function Transactions() {
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 py-2">
-        {!queryError && (
-          <p
-            role="status"
-            aria-busy={isPending}
-            className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
-          >
-            {total === 0
-              ? '0 / 0'
-              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
-          </p>
-        )}
+        <p
+          role="status"
+          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
+        >
+          {total === 0
+            ? '0 / 0'
+            : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
+        </p>
+
         <button
           type="button"
           aria-expanded={showFilters}
           className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-          onClick={() => setShowFilters((visible) => !visible)}
+          onClick={() => setShowFilters((x) => !x)}
         >
           <SlidersHorizontal className="size-3" aria-hidden />
           Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
@@ -361,7 +358,7 @@ function Transactions() {
             (view) => view.value !== 'turnover' || view.accountIds.length > 0,
           )}
           onChange={(value) => {
-            const view = views.find((view) => view.value === value)!;
+            const view = views.find((x) => x.value === value)!;
             change({ accountIds: view.accountIds, sources: view.sources });
           }}
         />
@@ -393,8 +390,8 @@ function Transactions() {
       <Table
         columns={[
           'Datum',
-          'Účet',
           'Popis',
+          'Účet',
           <span key="amount" className="block text-right">
             Částka
           </span>,
@@ -403,76 +400,75 @@ function Transactions() {
           filters.accountIds.length > 0 && (
             <DefinitionList
               className="text-sm tabular font-normal"
-              items={(accounts.data?.accountsList ?? [])
-                .filter(({ id }) => filters.accountIds.includes(id))
-                .map(
-                  (x) =>
-                    [
-                      accountLabel(x),
-                      moneyFormatter.format({
-                        amount: x.balance ?? '0',
-                        currency: x.currency,
-                      }),
-                    ] as const,
-                )}
+              items={(accounts.data?.accountsList || []).flatMap((x) =>
+                filters.accountIds.includes(x.id)
+                  ? ([
+                      [
+                        accountLabel(x),
+                        moneyFormatter.format({
+                          amount: x.balance ?? '0',
+                          currency: x.currency,
+                        }),
+                      ],
+                    ] as const)
+                  : [],
+              )}
             />
           )
         }
-        busy={isPending}
-        error={queryError}
-        empty="Žádné pohyby."
+        busy={fetching || searchPending}
+        error={error ?? accounts.error}
       >
-        {(data?.transactions?.nodes ?? []).flatMap((transaction) =>
-          transaction.postingsList.map((posting) => {
-            const description =
-              transaction.description || describePosting(transaction.payment, 'neutral');
-            return (
-              <tr key={posting.id} className="border-t border-neutral-4 align-top">
-                <td className="whitespace-nowrap text-neutral-11">
-                  {numericDateWithYearFormatter.format(
-                    new Date(transaction.effectiveDate),
-                  )}
-                </td>
-                <th scope="row">
-                  {posting.account ? accountLabel(posting.account) : '—'}
-                </th>
-                <td>
-                  {transaction.payment ? (
-                    <Link
-                      href={`/platby/${transaction.payment.id}`}
-                      className="text-accent-11 underline"
-                    >
-                      {description}
-                    </Link>
-                  ) : (
-                    description
-                  )}
-                  {(transaction.payment?.variableSymbol ||
-                    transaction.payment?.specificSymbol) && (
-                    <div className="inline-flex gap-1 pl-1 text-xs text-neutral-11">
-                      {transaction.payment.variableSymbol && (
-                        <div>VS: {transaction.payment.variableSymbol}</div>
+        {(data?.transactions?.nodes ?? []).flatMap((transaction) => {
+          const description =
+            transaction.description || describePosting(transaction.payment, 'neutral');
+
+          return transaction.postingsList.map(({ id, amount, account }, i) => (
+            <tr key={id} className="border-t border-neutral-4 align-top">
+              {i === 0 && (
+                <>
+                  <td
+                    className="whitespace-nowrap text-neutral-11"
+                    rowSpan={transaction.postingsList.length}
+                  >
+                    {numericDateWithYearFormatter.format(new Date(transaction.effectiveDate))}
+                  </td>
+                  <td rowSpan={transaction.postingsList.length}>
+                    {transaction.payment ? (
+                      <Link
+                        href={`/platby/${transaction.payment.id}`}
+                        className="text-accent-11 underline"
+                      >
+                        {description}
+                      </Link>
+                    ) : (
+                      description
+                    )}
+                    {(transaction.payment?.variableSymbol ||
+                      transaction.payment?.specificSymbol) && (
+                        <div className="inline-flex gap-1 pl-1 text-xs text-neutral-11">
+                          {transaction.payment.variableSymbol && (
+                            <div>VS: {transaction.payment.variableSymbol}</div>
+                          )}
+                          {transaction.payment.specificSymbol && (
+                            <div>SS: {transaction.payment.specificSymbol}</div>
+                          )}
+                        </div>
                       )}
-                      {transaction.payment.specificSymbol && (
-                        <div>SS: {transaction.payment.specificSymbol}</div>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td className="whitespace-nowrap text-right">
-                  {posting.account
-                    ? moneyFormatter.format({
-                        amount: posting.amount,
-                        currency: posting.account.currency,
-                      })
-                    : posting.amount}
-                </td>
-              </tr>
-            );
-          }),
-        )}
+                  </td>
+                </>
+              )}
+              <th scope="row" className="pl-0!">{accountLabel(account)}</th>
+              <td className="whitespace-nowrap text-right">
+                {account
+                  ? moneyFormatter.format({ amount, currency: account.currency })
+                  : amount}
+              </td>
+            </tr>
+          ));
+        })}
       </Table>
-      {!queryError && <Pagination {...pagination} />}
+      <Pagination {...pagination} />
     </>
   );
 }

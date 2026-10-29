@@ -3,7 +3,7 @@ import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/lib/cn';
 import {
   formatEventType,
-  formatRegistrant,
+  formatParticipant,
   numericFullFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
@@ -90,7 +90,7 @@ export function EventButton({
                   <>
                     {registrations.slice(0, 2).map((x, i) => (
                       <div key={x.id}>
-                        {formatRegistrant(x)}
+                        {formatParticipant(x)}
                         {registrations.length > 2 && i === 1 ? ', ...' : ''}
                       </div>
                     ))}

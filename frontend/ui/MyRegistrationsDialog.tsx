@@ -9,7 +9,7 @@ import { DialogTitle } from '@/ui/dialog';
 import { EventLoginPrompt } from '@/ui/EventLoginPrompt';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatCoupleName, formatRegistrant } from '@/ui/format';
+import { formatCoupleName, formatParticipant } from '@/ui/format';
 import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
@@ -35,7 +35,7 @@ type Selection =
 
 const registrant = (registration: EventRegistrationFragment): Registrant => ({
   id: registration.id,
-  label: formatRegistrant(registration),
+  label: formatParticipant(registration),
   personId: registration.personId,
   coupleId: registration.coupleId,
 });
@@ -326,7 +326,7 @@ function RegistrationsDialogContent({
           <EventRegistrationForm
             key={`${selected.id}:${registration?.id ?? 'new'}`}
             event={event}
-            registrant={registration ?? selected}
+            participant={registration ?? selected}
             onSaved={() => {
               if (!registration) onClose();
             }}
