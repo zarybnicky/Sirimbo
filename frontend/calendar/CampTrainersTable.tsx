@@ -2,13 +2,12 @@ import {
   CampTrainerOverviewDocument,
   type CampTrainerOverviewQuery,
 } from '@/graphql/Event';
-import { FormError } from '@/ui/form';
+import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import { dayFormatter, formatCount, moneyFormatter } from '@/ui/format';
-import { Spinner } from '@/ui/Spinner';
+import { Table } from '@/ui/Table';
 import { add, startOf } from 'date-arithmetic';
 import * as React from 'react';
-import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
 
 type ScheduledEvent = NonNullable<CampTrainerOverviewQuery['eventsList']>[number];
@@ -22,7 +21,11 @@ type Row = {
 
 const dayKeyFormatter = new Intl.DateTimeFormat('sv-SE');
 
-export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: { id: string }) {
+export const CampTrainersTable = React.memo(function CampTrainersTable({
+  id,
+}: {
+  id: string;
+}) {
   const [query] = useQuery({ query: CampTrainerOverviewDocument, variables: { id } });
   const { rows, days } = React.useMemo(() => {
     const rows = new Map<string, Row>();
@@ -86,83 +89,63 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({ id }: {
     };
   }, [query.data]);
 
-  const columns = React.useMemo<Column<Row>[]>(
-    () => [
-      { key: 'trainer', name: 'Trenér', frozen: true, width: 220 },
-      ...days.map<Column<Row>>(([dayKey, day]) => ({
-        key: dayKey,
-        name: dayFormatter.format(day),
-        width: 120,
-        renderCell: ({ row }) => (
-          <EventCounts events={row.eventsByDay.get(dayKey) ?? []} />
-        ),
-      })),
-      {
-        key: 'total',
-        name: 'Celkem',
-        width: 120,
-        renderCell: ({ row }) => (
-          <EventCounts events={[...row.eventsByDay.values()].flat()} />
-        ),
-      },
-      {
-        key: 'payout',
-        name: 'K vyplacení',
-        width: 140,
-        renderHeaderCell: () => (
-          <span title="Podle výchozí sazby trenéra">K vyplacení</span>
-        ),
-        renderCell: ({ row }) => (
-          <div className="flex h-full flex-col justify-center text-right tabular-nums">
+  return (
+    <Table
+      className={cn(
+        'max-h-180 overflow-auto',
+        '[&_thead]:sticky [&_thead]:top-0 [&_thead]:z-20 [&_thead]:bg-neutral-1',
+        '[&_tr>:first-child]:sticky [&_tr>:first-child]:left-0 [&_tr>:first-child]:z-10 [&_tr>:first-child]:bg-neutral-1',
+      )}
+      columns={[
+        'Trenér',
+        ...days.map(([dayKey, day]) => (
+          <span key={dayKey} className="whitespace-nowrap">
+            {dayFormatter.format(day)}
+          </span>
+        )),
+        'Celkem',
+        <span key="payout" className="block text-right">
+          K vyplacení
+        </span>,
+      ]}
+      busy={query.fetching}
+      error={query.error}
+    >
+      {rows.map((row) => (
+        <tr key={row.id} className="border-t border-neutral-4 align-middle">
+          <th scope="row">{row.trainer}</th>
+          {days.map(([dayKey]) => (
+            <td key={dayKey}>
+              <EventCounts events={row.eventsByDay.get(dayKey) ?? []} />
+            </td>
+          ))}
+          <td>
+            <EventCounts events={[...row.eventsByDay.values()].flat()} />
+          </td>
+          <td className="text-right">
             {[...row.payouts].map(([currency, amount]) => (
-              <div key={currency}>
+              <div key={currency} className="whitespace-nowrap">
                 {moneyFormatter.format({ amount, currency })}
               </div>
             ))}
-            {row.payouts.size === 0 && '-'}
             {row.payoutIncomplete && row.payouts.size > 0 && (
               <div className="text-xs text-neutral-10">+ trenér bez hodinovky</div>
             )}
-          </div>
-        ),
-      },
-    ],
-    [days],
-  );
-
-  return (
-    <div className="max-w-full overflow-hidden">
-      <FormError error={query.error} />
-      {query.fetching && !query.data && <Spinner />}
-      {!query.fetching && rows.length === 0 && (
-        <div className="py-6 text-sm text-neutral-11">
-          Soustředění nemá žádné trenéry.
-        </div>
-      )}
-      {rows.length > 0 && (
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          rowKeyGetter={(row) => row.id}
-          rowHeight={44}
-          headerRowHeight={44}
-          style={{ height: Math.min(720, 44 + rows.length * 52) }}
-        />
-      )}
-    </div>
+          </td>
+        </tr>
+      ))}
+    </Table>
   );
 });
 
 function EventCounts({ events }: { events: ScheduledEvent[] }) {
   const lessons = events.filter((event) => event.type === 'LESSON').length;
   const groups = events.length - lessons;
-  if (events.length === 0) return <span className="text-neutral-9">-</span>;
+  if (events.length === 0) return null;
   return (
-    <div className="flex h-full flex-col justify-center tabular-nums">
+    <div className="flex flex-col tabular-nums">
       {lessons > 0 && (
-        <div>
-          {formatCount(lessons, { one: 'lekce', few: 'lekce', other: 'lekcí' })}
-        </div>
+        <div>{formatCount(lessons, { one: 'lekce', few: 'lekce', other: 'lekcí' })}</div>
       )}
       {groups > 0 && (
         <div>

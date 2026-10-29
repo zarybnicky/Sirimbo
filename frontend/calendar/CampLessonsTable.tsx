@@ -2,11 +2,10 @@ import {
   EventRegistrationsDocument,
   type EventRegistrationsQuery,
 } from '@/graphql/Event';
-import { FormError } from '@/ui/form';
+import { cn } from '@/lib/cn';
 import { dateTimeFormatter, formatCoupleName, moneyFormatter } from '@/ui/format';
-import { Spinner } from '@/ui/Spinner';
+import { Table } from '@/ui/Table';
 import * as React from 'react';
-import { type Column, DataGrid } from 'react-data-grid';
 import { useQuery } from 'urql';
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
@@ -24,7 +23,11 @@ type Row = {
   nested?: boolean;
 };
 
-export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { id: string }) {
+export const CampLessonsTable = React.memo(function CampLessonsTable({
+  id,
+}: {
+  id: string;
+}) {
   const [query] = useQuery({
     query: EventRegistrationsDocument,
     variables: { id, withSchedule: true },
@@ -37,7 +40,9 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
     if (!event || !lessons) return { rows: [], trainers: [], hasRequests: false };
 
     const rows = new Map<string, Row>();
-    const hasRequests = event.registrationsList.some((x) => x.lessonRequestsList.length > 0);
+    const hasRequests = event.registrationsList.some(
+      (x) => x.lessonRequestsList.length > 0,
+    );
 
     const trainers = new Map<string, string>();
     for (const trainer of event.eventTrainersList ?? []) {
@@ -152,156 +157,125 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({ id }: { i
     return { rows: result, trainers: [...trainers], hasRequests };
   }, [query.data]);
 
-  const columns = React.useMemo<Column<Row>[]>(
-    () => [
-      {
-        key: 'participant',
-        name: 'Přihláška',
-        frozen: true,
-        width: 240,
-        renderCell: ({ row }) => {
-          const detail = row.nested
-            ? ['samostatně', row.note].filter(Boolean).join(' · ')
-            : (row.note ?? '');
-          return (
-            <div className="flex h-full min-w-0 items-center gap-2 bg-neutral-1/50">
-              {row.nested && <span className="shrink-0 text-neutral-9">↳</span>}
-              <div className="min-w-0">
-                <div className="truncate font-medium text-neutral-12">
-                  {row.participant}
-                </div>
-                <div className="truncate text-xs text-neutral-10" title={detail}>
-                  {detail}
-                </div>
-              </div>
-            </div>
-          );
-        },
-      },
-      ...trainers.map<Column<Row>>(([trainerId, trainer]) => ({
-        key: trainerId,
-        name: trainer,
-        width: 120,
-        cellClass: 'p-0!',
-        renderHeaderCell: () => (
-          <div className="min-w-0 grow text-center font-medium truncate" title={trainer}>
-            {trainer}
-          </div>
-        ),
-        renderCell: ({ row }) => {
-          const { requested, lessons } = row.cells.get(trainerId) ?? {
-            requested: 0,
-            lessons: [],
-          };
-          const assigned = lessons.length;
-          const title = lessons
-            .map((x) =>
-              dateTimeFormatter.formatRange(new Date(x.since), new Date(x.until)),
-            )
-            .join('\n');
-          return (
-            <div
-              title={title}
-              className="flex h-full flex-col justify-center text-center tabular-nums"
-              style={
-                !hasRequests
-                  ? undefined
-                  : assigned > requested
-                    ? {
-                        backgroundColor: 'hsl(40 90% 88%)',
-                        color: 'hsl(35 80% 22%)',
-                      }
-                    : assigned < requested
-                      ? {
-                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
-                          color: 'hsl(0 65% 25%)',
-                        }
-                      : undefined
-              }
-            >
-              {assigned}
-              {hasRequests && ` (${requested})`}
-            </div>
-          );
-        },
-      })),
-      {
-        key: 'total',
-        name: 'Celkem',
-        width: 120,
-        cellClass: 'p-0!',
-        renderCell: ({ row }) => {
-          const cells = [...row.cells.values()];
-          const assigned = cells.reduce((sum, cell) => sum + cell.lessons.length, 0);
-          const requested = cells.reduce((sum, cell) => sum + cell.requested, 0);
-          return (
-            <div
-              className="flex h-full flex-col justify-center tabular-nums"
-              style={
-                !hasRequests
-                  ? undefined
-                  : assigned > requested
-                    ? {
-                        backgroundColor: 'hsl(40 90% 88%)',
-                        color: 'hsl(35 80% 22%)',
-                      }
-                    : assigned < requested
-                      ? {
-                          backgroundColor: `hsl(0 75% ${62 + (assigned / requested) * 38}%)`,
-                          color: 'hsl(0 65% 25%)',
-                        }
-                      : undefined
-              }
-            >
-              {assigned}
-              {hasRequests && ` (${requested})`}
-            </div>
-          );
-        },
-      },
-      {
-        key: 'price',
-        name: 'Cena',
-        width: 140,
-        renderCell: ({ row }) => (
-          <div className="flex h-full flex-col justify-center text-right tabular-nums">
-            {[...row.prices].map(([currency, amount]) => (
-              <div key={currency}>
-                {moneyFormatter.format({ amount, currency })}
-              </div>
-            ))}
-            {row.prices.size === 0 && '—'}
-            {row.priceIncomplete && row.prices.size > 0 && (
-              <div className="text-xs text-neutral-10">+ bez sazby</div>
-            )}
-          </div>
-        ),
-      },
-    ],
-    [hasRequests, trainers],
-  );
-
   return (
-    <div className="max-w-full overflow-hidden">
-      <FormError error={query.error} />
-      {query.fetching && !query.data && <Spinner />}
-      {!query.fetching && rows.length === 0 && (
-        <div className="py-6 text-sm text-neutral-11">
-          Zatím nejsou žádné přihlášky ani lekce.
-        </div>
+    <Table
+      className={cn(
+        'max-h-180 overflow-auto',
+        '[&_thead]:sticky [&_thead]:top-0 [&_thead]:z-20 [&_thead]:bg-neutral-1',
+        '[&_tr>:first-child]:sticky [&_tr>:first-child]:left-0 [&_tr>:first-child]:z-10 [&_tr>:first-child]:bg-neutral-1',
       )}
-      {rows.length > 0 && (
-        <DataGrid
-          aria-label="Lekce podle přihlášek a trenérů"
-          columns={columns}
-          rows={rows}
-          rowKeyGetter={(row) => row.id}
-          rowHeight={44}
-          headerRowHeight={44}
-          headerRowClass="bg-neutral-1/50"
-          style={{ height: Math.min(720, 52 + rows.length * 52) }}
-        />
-      )}
-    </div>
+      columns={[
+        'Přihláška',
+        ...trainers.map(([trainerId, trainer]) => (
+          <span key={trainerId} className="block text-center">
+            {trainer}
+          </span>
+        )),
+        <span key="total" className="block text-center">
+          Celkem
+        </span>,
+        <span key="price" className="block text-right">
+          Cena
+        </span>,
+      ]}
+      busy={query.fetching}
+      error={query.error}
+    >
+      {rows.map((row) => {
+        const detail = row.nested
+          ? ['samostatně', row.note].filter(Boolean).join(' · ')
+          : row.note;
+        const cells = [...row.cells.values()];
+
+        return (
+          <tr key={row.id} className="border-t border-neutral-4 align-middle">
+            <th scope="row">
+              <div className="flex items-center gap-2">
+                {row.nested && <span className="text-neutral-9">↳</span>}
+                <div>
+                  <div className="font-medium text-neutral-12">{row.participant}</div>
+                  {detail && (
+                    <div className="whitespace-pre-wrap text-xs text-neutral-10">
+                      {detail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </th>
+            {trainers.map(([trainerId]) => {
+              const { requested, lessons } = row.cells.get(trainerId) ?? {
+                requested: 0,
+                lessons: [],
+              };
+              return (
+                <AllocationCell
+                  key={trainerId}
+                  assigned={lessons.length}
+                  requested={hasRequests ? requested : undefined}
+                  title={lessons
+                    .map((x) =>
+                      dateTimeFormatter.formatRange(new Date(x.since), new Date(x.until)),
+                    )
+                    .join('\n')}
+                />
+              );
+            })}
+            <AllocationCell
+              assigned={cells.reduce((sum, cell) => sum + cell.lessons.length, 0)}
+              requested={
+                hasRequests
+                  ? cells.reduce((sum, cell) => sum + cell.requested, 0)
+                  : undefined
+              }
+            />
+            <td className="text-right">
+              {[...row.prices].map(([currency, amount]) => (
+                <div key={currency} className="whitespace-nowrap">
+                  {moneyFormatter.format({ amount, currency })}
+                </div>
+              ))}
+              {row.priceIncomplete && row.prices.size > 0 && (
+                <div className="text-xs text-neutral-10">+ bez sazby</div>
+              )}
+            </td>
+          </tr>
+        );
+      })}
+    </Table>
   );
 });
+
+function AllocationCell({
+  assigned,
+  requested,
+  title,
+}: {
+  assigned: number;
+  requested?: number;
+  title?: string;
+}) {
+  if (assigned === 0 && (requested ?? 0) === 0) return <td />;
+
+  return (
+    <td
+      title={title}
+      className={cn(
+        'text-center tabular-nums',
+        requested !== undefined &&
+          assigned > requested &&
+          'bg-warning-11/15 text-warning-11',
+        requested !== undefined && assigned < requested && 'text-danger-11',
+      )}
+      style={
+        requested !== undefined && assigned < requested
+          ? {
+              backgroundColor: `color-mix(in srgb, var(--color-danger-3) ${(1 - assigned / requested) * 100}%, var(--color-neutral-1))`,
+            }
+          : undefined
+      }
+    >
+      {assigned}
+      {requested !== undefined && ` (${requested})`}
+    </td>
+  );
+}
