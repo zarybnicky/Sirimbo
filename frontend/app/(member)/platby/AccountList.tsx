@@ -127,7 +127,7 @@ async function exportBalanceSheet(
     header: label,
     key: id,
     width: Math.max(label.length + 4, id === 'name' ? 32 : 20),
-    ...(id === 'name' ? {} : { numFmt: `#,##0.00 "${id}"` }),
+    ...(id === 'name' ? {} : { style: { numFmt: `#,##0.00 "${id}"` } }),
   }));
   worksheet.getRow(1).font = { bold: true };
   worksheet.addRows(

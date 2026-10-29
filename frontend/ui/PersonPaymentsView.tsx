@@ -1,5 +1,6 @@
 import { DefinitionList } from '@/ui/DefinitionList';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
+import type { PostingFragment } from '@/graphql/Payment';
 import { useActionMap } from '@/lib/actions';
 import { compareText } from '@/lib/compare';
 import { cn } from '@/lib/cn';
@@ -14,23 +15,28 @@ import {
   numericDateWithYearFormatter,
 } from '@/ui/format';
 import { QRPayment } from '@/ui/QRPayment';
-import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
 import { Table } from '@/ui/Table';
 import { useAuth } from '@/lib/auth';
-import { ArrowDown, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUpDown, Download } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
+import { useAsyncCallback } from 'react-async-hook';
+import { saveAs } from 'file-saver';
+import { Spinner } from '@/ui/Spinner';
 
-export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }: { id: string }) {
+export const PersonPaymentsView = React.memo(function PersonPaymentsView({
+  id,
+}: {
+  id: string;
+}) {
   const [query] = useQuery({
     query: PersonPaymentsDocument,
     variables: { id },
     pause: !id,
   });
   const person = query.data?.person;
-
   if (!person) {
     return null;
   }
@@ -80,37 +86,16 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
       {person.accountsList.length === 0 && <p>Žádné evidované platby</p>}
       {person.accountsList?.map((account) => (
         <div key={account.id}>
-          <div className="flex flex-wrap justify-between">
-            <div>
-              Stav kreditu:{' '}
-              {moneyFormatter.format({
-                amount: account.balance,
-                currency: account.currency,
-              })}
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className={buttonCls({ size: 'sm', variant: 'outline' })}
-                onClick={() =>
-                  exportPostings(
-                    `${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`,
-                    account.postingsList || [],
-                    person.id,
-                  )
-                }
-              >
-                Export XLSX
-              </button>
-            </div>
+          <div>
+            Stav kreditu:{' '}
+            {moneyFormatter.format({
+              amount: account.balance,
+              currency: account.currency,
+            })}
           </div>
 
           {account.postingsList.length > 0 && (
-            <div>
-              <h3>Minulé</h3>
-              <AccountPaymentsTable account={account} />
-            </div>
+            <AccountPaymentsTable account={account} />
           )}
         </div>
       ))}
@@ -121,6 +106,10 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
 type Account = NonNullable<
   NonNullable<PersonPaymentsQuery['person']>['accountsList']
 >[number];
+type PostingRow = PostingFragment & {
+  description: string;
+  transaction: NonNullable<PostingFragment['transaction']>;
+};
 
 function AccountPaymentsTable({ account }: { account: Account }) {
   const auth = useAuth();
@@ -151,10 +140,22 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     transactionActions,
     baseRows.filter((row) => !row.transaction.payment).map((row) => row.transaction),
   );
+  const exportCurrentState = useAsyncCallback(() => exportPostings(account, rows));
 
   return (
     <Table
       className="not-prose"
+      actions={
+        <button
+          type="button"
+          className={buttonCls({ display: 'compact', variant: 'outline', size: 'sm' })}
+          disabled={rows.length === 0 || exportCurrentState.loading}
+          onClick={() => exportCurrentState.execute()}
+        >
+          {exportCurrentState.loading ? <Spinner /> : <Download aria-hidden />}
+          Export
+        </button>
+      }
       columns={[
         auth.isAdmin && (
           <span key="actions" className="sr-only">
@@ -223,13 +224,12 @@ function AccountPaymentsTable({ account }: { account: Account }) {
             </td>
             <td className="text-neutral-12">
               {payment ? (
-                <Link
-                  href={`/platby/${payment.id}`}
-                  className="text-accent-11 underline"
-                >
-                  {description || `Platba ${payment.id}`}
+                <Link href={`/platby/${payment.id}`} className="text-accent-11 underline">
+                  {description}
                 </Link>
-              ) : description}
+              ) : (
+                description
+              )}
             </td>
             <td className="whitespace-nowrap text-right font-semibold text-neutral-12">
               {moneyFormatter.format({ amount, currency: account.currency })}
@@ -238,5 +238,46 @@ function AccountPaymentsTable({ account }: { account: Account }) {
         );
       })}
     </Table>
+  );
+}
+
+async function exportPostings(account: Account, rows: readonly PostingRow[]) {
+  const { Workbook } = await import('exceljs');
+  const workbook = new Workbook();
+  const worksheet = workbook.addWorksheet('Historie účtu');
+  worksheet.columns = [
+    { header: 'Datum', key: 'date', width: 14, style: { numFmt: 'dd.mm.yyyy' } },
+    { header: 'Popis', key: 'description', width: 50 },
+    {
+      header: 'Částka',
+      key: 'amount',
+      width: 20,
+      style: { numFmt: `#,##0.00 "${account.currency}"` },
+    },
+  ];
+  worksheet.getRow(1).font = { bold: true };
+  worksheet.addRows(
+    rows.map(({ transaction, description, amount }) => {
+      const date = new Date(transaction.effectiveDate);
+      return {
+        date: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())),
+        description,
+        amount: Number(amount),
+      };
+    }),
+  );
+  worksheet.addRow({});
+  worksheet.addRow({
+    description: 'Celkem',
+    amount: {
+      formula: `SUM(C2:C${rows.length + 1})`,
+      result: rows.reduce((sum, row) => sum + Number(row.amount), 0),
+    },
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  saveAs(
+    new Blob([buffer]),
+    `Historie účtu ${account.person?.name ?? account.id} (${account.currency}).xlsx`,
   );
 }
