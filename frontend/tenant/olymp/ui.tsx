@@ -12,6 +12,7 @@ import LogoKraj from './logo-kraj.png';
 import { config } from './config';
 import LogoOnDark from './logo.webp';
 import Image from '@/ui/Image';
+import type { TenantLogoProps } from '@/tenant/ui';
 
 function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -47,19 +48,19 @@ function OlympLogoVertical(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function MobileLogo() {
+export function MobileLogo({ href }: TenantLogoProps) {
   return (
-    <Link href="/" aria-label="Domů" className="block p-0 m-0 size-full relative">
+    <Link href={href} aria-label="Domů" className="block p-0 m-0 size-full relative">
       <Image alt="" src={LogoOnDark} height="50" />
     </Link>
   );
 }
 
-export function DesktopLogo() {
+export function DesktopLogo({ href }: TenantLogoProps) {
   return (
     <div className="relative overflow-visible min-w-26">
       <div className="w-26 h-32.5 text-white bg-accent-9 z-30 shadow-accent-9/60 shadow-lg absolute top-0 inset-x-0">
-        <Link href="/" aria-label="Domů" className="block p-0 m-0 size-full relative">
+        <Link href={href} aria-label="Domů" className="block p-0 m-0 size-full relative">
           <OlympLogoVertical
             style={{
               filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
@@ -78,10 +79,10 @@ export function DesktopLogo() {
   );
 }
 
-export function SidebarLogo() {
+export function SidebarLogo({ href }: TenantLogoProps) {
   return (
     <div className="hidden lg:flex">
-      <Link href="/" aria-label="Domů" className="h-20 mt-3 mx-auto">
+      <Link href={href} aria-label="Domů" className="h-20 mt-3 mx-auto">
         <OlympLogoVertical className="size-full text-white fill-white!" />
       </Link>
     </div>

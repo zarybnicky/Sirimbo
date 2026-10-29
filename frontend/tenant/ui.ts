@@ -16,10 +16,14 @@ import {
   SidebarLogo as StarletSidebarLogo,
 } from './starlet/ui';
 
+export type TenantLogoProps = {
+  href: string;
+};
+
 type TenantUi = {
-  DesktopLogo: ComponentType;
-  MobileLogo: ComponentType;
-  SidebarLogo: ComponentType;
+  DesktopLogo: ComponentType<TenantLogoProps>;
+  MobileLogo: ComponentType<TenantLogoProps>;
+  SidebarLogo: ComponentType<TenantLogoProps>;
   SocialIcons: ComponentType;
   Footer: ComponentType;
 };

@@ -16,12 +16,13 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 
 type Props = {
+  homeHref: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
 };
 
-export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
+export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const tenantId = useTenantId();
@@ -32,7 +33,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
       <div className="lg:container lg:max-w-6xl relative">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-12 md:min-h-16">
-            <DesktopLogo />
+            <DesktopLogo href={homeHref} />
             {topMenu.map((x) => (
               <DesktopMenuItem key={x.title} item={x} pathname={pathname} />
             ))}
@@ -53,7 +54,7 @@ export function Header({ isOpen, setIsOpen, showTopMenu }: Props) {
           </button>
 
           <div className="grow flex items-center">
-            <MobileLogo />
+            <MobileLogo href={homeHref} />
           </div>
 
           <Link

@@ -32,6 +32,9 @@ export const Layout = React.memo(function Layout({
   const tenantId = useTenantId();
   const tenant = useTenantConfig();
   const { Footer } = getTenantUi(tenantId);
+  const homeHref = tenant.publicSite && (!auth.isMember || !auth.isTrainer)
+    ? '/'
+    : '/dashboard';
 
   const router = useRouter();
   const search = useSearchParams()?.toString();
@@ -60,10 +63,10 @@ export const Layout = React.memo(function Layout({
 
   return (
     <>
-      <Header isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
+      <Header homeHref={homeHref} isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
 
       <div className="flex min-h-[calc(100dvh-52px)] md:min-h-[calc(100dvh-68px)]">
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
+        <Sidebar homeHref={homeHref} isOpen={isOpen} setIsOpen={setIsOpen} showTopMenu={showTopMenu} />
 
         <div className="flex min-w-0 grow flex-col">
           <main className={className || 'grow content relative content-start'}>

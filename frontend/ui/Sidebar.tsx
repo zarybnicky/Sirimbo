@@ -16,12 +16,13 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 type SidebarProps = {
+  homeHref: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
 };
 
-export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
+export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarProps) {
   const pathname = usePathname();
   const search = useSearchParams()?.toString();
   const auth = useAuth();
@@ -71,7 +72,7 @@ export function Sidebar({ isOpen, setIsOpen, showTopMenu }: SidebarProps) {
           aria-label="Hlavní navigace"
           className="h-screen overflow-y-auto scrollbar"
         >
-          {!showTopMenu && <SidebarLogo />}
+          {!showTopMenu && <SidebarLogo href={homeHref} />}
           <div className="space-y-1 pt-3 mr-1 relative">
             {auth.user ? (
               <>
