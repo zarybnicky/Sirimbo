@@ -42,11 +42,12 @@ export async function exportNsa(client: Client) {
       '[OBCANSTVI]':
         {
           203: 'CZE',
+          348: 'HUN',
+          428: 'LVA',
+          440: 'LTU',
+          703: 'SVK',
           705: 'SVN',
           804: 'UKR',
-          428: 'LTU',
-          703: 'SVK',
-          348: 'HUN',
         }[x.nationality] || '',
       '[DATUM_NAROZENI]':
         isCzech || !x.birthDate ? '' : formatNsaDate(Date.parse(x.birthDate)),
