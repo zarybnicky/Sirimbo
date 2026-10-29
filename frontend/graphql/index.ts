@@ -9346,6 +9346,7 @@ export type Posting = {
 export type PostingCondition = {
   /** Checks for equality with the object’s `accountId` field. */
   accountId?: InputMaybe<Scalars['BigInt']['input']>;
+  accountIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   /** Checks for equality with the object’s `amount` field. */
   amount?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -12436,10 +12437,12 @@ export type TransactionPostingsListArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type TransactionCondition = {
+  accountIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   /** Checks for equality with the object’s `accountingPeriodId` field. */
   accountingPeriodId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  date?: InputMaybe<TransactionDateCondition>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `effectiveDate` field. */
@@ -12448,8 +12451,10 @@ export type TransactionCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `source` field. */
   source?: InputMaybe<TransactionSource>;
+  sources?: InputMaybe<Array<TransactionSource>>;
   /** Checks for equality with the object’s `tenantId` field. */
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -12467,6 +12472,13 @@ export type TransactionConnection = {
   pageInfo: PageInfo;
   /** The count of *all* `Transaction` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
+};
+
+export type TransactionDateCondition = {
+  /** Inclusive effective date. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Exclusive effective date. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A `Transaction` edge in the connection. */

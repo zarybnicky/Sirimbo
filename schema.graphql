@@ -11759,6 +11759,7 @@ A condition to be used against `Posting` object types. All fields are tested for
 input PostingCondition {
   """Checks for equality with the object’s `accountId` field."""
   accountId: BigInt
+  accountIds: [BigInt!]
 
   """Checks for equality with the object’s `amount` field."""
   amount: BigFloat
@@ -15498,11 +15499,14 @@ A condition to be used against `Transaction` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input TransactionCondition {
+  accountIds: [BigInt!]
+
   """Checks for equality with the object’s `accountingPeriodId` field."""
   accountingPeriodId: BigInt
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
+  date: TransactionDateCondition
 
   """Checks for equality with the object’s `description` field."""
   description: String
@@ -15515,9 +15519,11 @@ input TransactionCondition {
 
   """Checks for equality with the object’s `paymentId` field."""
   paymentId: BigInt
+  search: String
 
   """Checks for equality with the object’s `source` field."""
   source: TransactionSource
+  sources: [TransactionSource!]
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
@@ -15541,6 +15547,14 @@ type TransactionConnection {
 
   """The count of *all* `Transaction` you could get from the connection."""
   totalCount: Int!
+}
+
+input TransactionDateCondition {
+  """Inclusive effective date."""
+  since: Datetime
+
+  """Exclusive effective date."""
+  until: Datetime
 }
 
 """A `Transaction` edge in the connection."""

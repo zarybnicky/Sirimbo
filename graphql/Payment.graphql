@@ -166,37 +166,34 @@ mutation MarkAsPaid($id: BigInt!) {
   }
 }
 
-query TenantTurnoverPage($offset: Int!, $postingsLimit: Int!) {
-  accountsList(condition: { personId: null }) {
+query TransactionAccounts {
+  accountsList {
     ...Account
-    postings(first: $postingsLimit, offset: $offset, orderBy: [CREATED_AT_DESC, ID_DESC]) {
-      totalCount
-      nodes {
-        ...Posting
-      }
-    }
   }
 }
 
-query TenantManualCreditTransactions($first: Int, $offset: Int) {
+query Transactions(
+  $first: Int!
+  $offset: Int!
+  $condition: TransactionCondition!
+  $accountIds: [BigInt!]
+) {
   transactions(
     first: $first
     offset: $offset
     orderBy: [EFFECTIVE_DATE_DESC, ID_DESC]
-    condition: { source: MANUAL_CREDIT }
+    condition: $condition
   ) {
     totalCount
     nodes {
       id
       description
       effectiveDate
-      createdAt
+      source
       payment {
-        id
-        variableSymbol
-        specificSymbol
+        ...Payment
       }
-      postingsList {
+      postingsList(condition: { accountIds: $accountIds }) {
         id
         amount
         account {

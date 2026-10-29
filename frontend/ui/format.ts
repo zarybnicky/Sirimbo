@@ -300,13 +300,12 @@ export function describePosting(
     return `Příspěvky ${payment.cohortSubscription.cohort?.name}`;
   }
   const event = payment.event;
-  const type = event?.type;
-  if (!type) {
+  if (!event?.type) {
     return '';
   }
   if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
     const trainers = event?.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
-    return `${formatEventType(type)}: ${listFormatter.format(trainers)}`;
+    return `${formatEventType(event?.type)}: ${listFormatter.format(trainers)}`;
   }
   return formatEventName(event);
 }
