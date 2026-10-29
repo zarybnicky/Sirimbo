@@ -7,7 +7,7 @@ import { TrainerAttendanceReportDocument } from '@/graphql/TrainerAttendanceRepo
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { fullDateFormatter } from '@/ui/format';
-import { getPeriodRange } from '@/lib/periods';
+import { getPeriodRange } from '@/ui/PeriodPicker';
 import { Table } from '@/ui/Table';
 
 const numberFormatter = new Intl.NumberFormat('cs-CZ');

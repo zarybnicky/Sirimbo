@@ -9,10 +9,11 @@ import { PageHeader } from '@/ui/PageHeader';
 import { Table } from '@/ui/Table';
 import { Pagination } from '@/ui/Pagination';
 import { numericFullFormatter } from '@/ui/format';
+import { Metadata } from 'next';
 
 const pageSize = 50;
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Crawler frontier',
   robots: { index: false, follow: false },
 };

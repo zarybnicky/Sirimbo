@@ -5,39 +5,29 @@ import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
-import { getPeriodRange, type PeriodUnit } from '@/lib/periods';
+import { getPeriodRange, PeriodPicker, type PeriodValue } from '@/ui/PeriodPicker';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
-import {
-  capitalize,
-  fullDateFormatter,
-  monthFormatter,
-  numberFormatter,
-} from '@/ui/format';
+import { numberFormatter } from '@/ui/format';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import { Table } from '@/ui/Table';
-import { ChevronLeft, ChevronRight, InfoIcon } from 'lucide-react';
-
-const periodOptions: { value: PeriodUnit; label: string }[] = [
-  { value: 'schoolyear', label: 'Školní rok' },
-  { value: 'semester', label: 'Pololetí' },
-  { value: 'quarter', label: 'Čtvrtletí' },
-  { value: 'month', label: 'Měsíc' },
-];
+import { InfoIcon } from 'lucide-react';
 
 export function Scoreboard() {
   const [cohortId, setCohortId] = React.useState('');
-  const [unit, setUnit] = React.useState<PeriodUnit>('schoolyear');
-  const [date, setDate] = React.useState(() => new Date());
-  const period = getPeriodRange(unit, date);
+  const [period, setPeriod] = React.useState<PeriodValue>(() => ({
+    unit: 'schoolyear',
+    date: new Date(),
+  }));
+  const range = getPeriodRange(period.unit, period.date);
 
   const [{ data, fetching, error }] = useQuery({
     query: ScoreboardDocument,
     variables: {
       cohortId: cohortId || null,
-      since: period.since.toISOString().slice(0, 10),
-      until: period.until.toISOString().slice(0, 10),
+      since: range.since.toISOString().slice(0, 10),
+      until: range.until.toISOString().slice(0, 10),
     },
   });
 
@@ -93,64 +83,7 @@ export function Scoreboard() {
               ...cohorts.map((cohort) => ({ value: cohort.id, label: cohort.name })),
             ]}
           />
-          <FacetRadioGroup
-            inline
-            name="scoreboard-period"
-            label="Období"
-            value={unit}
-            options={periodOptions}
-            onChange={setUnit}
-          />
-
-          <div className="flex min-w-0 flex-wrap items-center gap-2 sm:col-start-2">
-            <button
-              type="button"
-              aria-label="Předchozí období"
-              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-              onClick={() => setDate(new Date(period.since.getTime() - 86_400_000))}
-            >
-              <ChevronLeft aria-hidden />
-            </button>
-            <span className="text-xs font-medium tabular-nums text-neutral-12">
-              {unit === 'schoolyear'
-                ? `${period.since.getUTCFullYear()}/${period.until.getUTCFullYear()}`
-                : unit === 'month'
-                  ? capitalize(monthFormatter.format(period.since))
-                  : fullDateFormatter.formatRange(
-                      period.since,
-                      new Date(period.until.getTime() - 86_400_000),
-                    )}
-            </span>
-            <button
-              type="button"
-              aria-label="Další období"
-              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-              onClick={() => setDate(period.until)}
-            >
-              <ChevronRight aria-hidden />
-            </button>
-            <button
-              type="button"
-              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-              onClick={() => setDate(new Date())}
-            >
-              Dnes
-            </button>
-
-            {(cohortId || unit !== 'schoolyear') && (
-              <button
-                type="button"
-                className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
-                onClick={() => {
-                  setCohortId('');
-                  setUnit('schoolyear');
-                  setDate(new Date());
-                }}
-              >
-                Zrušit filtry
-              </button>
-            )}
-          </div>
+          <PeriodPicker name="scoreboard-period" value={period} onChange={setPeriod} />
         </div>
 
         <section>

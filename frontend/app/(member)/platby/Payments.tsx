@@ -3,8 +3,8 @@
 import { PageHeader } from '@/ui/PageHeader';
 import React from 'react';
 import {
-  createParser,
   parseAsArrayOf,
+  parseAsIsoDateTime,
   parseAsString,
   parseAsStringEnum,
   useQueryState,
@@ -35,12 +35,15 @@ import { FacetFilter } from '@/ui/FacetFilter';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { TextField } from '@/ui/fields/text';
-import { parseDatePickerValue } from '@/ui/fields/date-utils';
 import { compareText } from '@/lib/compare';
 import { cn } from '@/lib/cn';
-import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
+import {
+  getPeriodRange,
+  periodOptions,
+  PeriodPicker,
+  type PeriodUnit,
+} from '@/ui/PeriodPicker';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
-import { add } from 'date-arithmetic';
 
 const TRANSACTIONS_PAGE_SIZE = 50;
 const sourceOptions: { value: TransactionSource; label: string }[] = [
@@ -48,14 +51,6 @@ const sourceOptions: { value: TransactionSource; label: string }[] = [
   { value: 'MANUAL_CREDIT', label: 'Ruční změny kreditu' },
 ];
 const defaultSources = sourceOptions.map((option) => option.value);
-
-const transactionDateParser = createParser({
-  parse: (value) => {
-    const date = parseDatePickerValue(value, 'date');
-    return typeof date === 'string' ? date : null;
-  },
-  serialize: (value) => value,
-});
 
 export function Payments() {
   const [tab, setTab] = useQueryState(
@@ -176,8 +171,10 @@ function Transactions() {
       sources: parseAsArrayOf(
         parseAsStringEnum<TransactionSource>(defaultSources),
       ).withDefault(defaultSources),
-      since: transactionDateParser,
-      until: transactionDateParser,
+      unit: parseAsStringEnum<PeriodUnit>(
+        periodOptions.map((option) => option.value),
+      ).withDefault('schoolyear'),
+      date: parseAsIsoDateTime,
       search: parseAsString.withDefault(''),
     },
     { shallow: true, scroll: false },
@@ -187,10 +184,12 @@ function Transactions() {
   const activeFacetCount =
     Number(filters.accountIds.length > 0) +
     Number(filters.sources.length !== defaultSources.length) +
-    Number(!!(filters.since || filters.until));
+    Number(filters.unit !== 'schoolyear');
   const [showFilters, setShowFilters] = React.useState(true);
   const [accounts] = useQuery({ query: TransactionAccountsDocument });
   const accountIds = filters.accountIds.length > 0 ? filters.accountIds : null;
+  const period = { unit: filters.unit, date: filters.date ?? new Date() };
+  const range = getPeriodRange(period.unit, period.date);
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: TransactionsDocument,
     variables: (offset) => ({
@@ -202,12 +201,8 @@ function Transactions() {
         sources:
           filters.sources.length === defaultSources.length ? null : filters.sources,
         date: {
-          since: filters.since
-            ? new Date(`${filters.since}T00:00:00`).toISOString()
-            : null,
-          until: filters.until
-            ? add(new Date(`${filters.until}T00:00:00`), 1, 'day').toISOString()
-            : null,
+          since: range.since.toISOString(),
+          until: range.until.toISOString(),
         },
         search,
       },
@@ -269,43 +264,6 @@ function Transactions() {
           />
         </button>
 
-        <Popover>
-          <PopoverTrigger
-            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-            aria-pressed={!!(filters.since || filters.until)}
-          >
-            Období <ChevronDown />
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="grid gap-2 pr-6 sm:grid-cols-2">
-              <TextField
-                name="since"
-                type="date"
-                label="Datum od"
-                value={filters.since ?? ''}
-                max={filters.until ?? undefined}
-                onChange={(event) =>
-                  change({
-                    since: transactionDateParser.parse(event.currentTarget.value),
-                  })
-                }
-              />
-              <TextField
-                name="until"
-                type="date"
-                label="Datum do"
-                value={filters.until ?? ''}
-                min={filters.since ?? undefined}
-                onChange={(event) =>
-                  change({
-                    until: transactionDateParser.parse(event.currentTarget.value),
-                  })
-                }
-              />
-            </div>
-          </PopoverContent>
-        </Popover>
-
         {(activeFacetCount > 0 || filters.search) && (
           <button
             type="button"
@@ -314,8 +272,8 @@ function Transactions() {
               change({
                 accountIds: [],
                 sources: defaultSources,
-                since: null,
-                until: null,
+                unit: 'schoolyear',
+                date: null,
                 search: '',
               })
             }
@@ -385,6 +343,11 @@ function Transactions() {
             .map((x) => ({ value: x.id, label: accountLabel(x) }))}
           onChange={(accountIds) => change({ accountIds })}
         />
+        <PeriodPicker
+          name="transactions-period"
+          value={period}
+          onChange={({ unit, date }) => change({ unit, date })}
+        />
       </div>
 
       <Table
@@ -431,7 +394,9 @@ function Transactions() {
                     className="whitespace-nowrap text-neutral-11"
                     rowSpan={transaction.postingsList.length}
                   >
-                    {numericDateWithYearFormatter.format(new Date(transaction.effectiveDate))}
+                    {numericDateWithYearFormatter.format(
+                      new Date(transaction.effectiveDate),
+                    )}
                   </td>
                   <td rowSpan={transaction.postingsList.length}>
                     {transaction.payment ? (
@@ -446,19 +411,21 @@ function Transactions() {
                     )}
                     {(transaction.payment?.variableSymbol ||
                       transaction.payment?.specificSymbol) && (
-                        <div className="inline-flex gap-1 pl-1 text-xs text-neutral-11">
-                          {transaction.payment.variableSymbol && (
-                            <div>VS: {transaction.payment.variableSymbol}</div>
-                          )}
-                          {transaction.payment.specificSymbol && (
-                            <div>SS: {transaction.payment.specificSymbol}</div>
-                          )}
-                        </div>
-                      )}
+                      <div className="inline-flex gap-1 pl-1 text-xs text-neutral-11">
+                        {transaction.payment.variableSymbol && (
+                          <div>VS: {transaction.payment.variableSymbol}</div>
+                        )}
+                        {transaction.payment.specificSymbol && (
+                          <div>SS: {transaction.payment.specificSymbol}</div>
+                        )}
+                      </div>
+                    )}
                   </td>
                 </>
               )}
-              <th scope="row" className="pl-0!">{accountLabel(account)}</th>
+              <th scope="row" className="pl-0!">
+                {accountLabel(account)}
+              </th>
               <td className="whitespace-nowrap text-right">
                 {account
                   ? moneyFormatter.format({ amount, currency: account.currency })
