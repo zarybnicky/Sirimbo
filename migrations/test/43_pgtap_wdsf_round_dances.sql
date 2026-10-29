@@ -1,6 +1,6 @@
 begin;
 set local search_path to public, tap;
-select tap.plan(13);
+select tap.plan(23);
 
 insert into federated.federation (code, name) values ('wdsf', 'WDSF'), ('csts', 'ČSTS')
 on conflict (code) do nothing;
@@ -95,6 +95,65 @@ select tap.is((select p.code from federated.competition_round r join federated.d
   where r.id = -430002), 'SA-CH-RU-PD-JI', 'expands the observed set without assuming a fixed program');
 select tap.is((select score from federated.judge_score where round_id = -430002 and dance_code = 'CH'),
   8.125::numeric, 'preserves earlier participant scores after expansion');
+
+insert into federated.category (id, name, series, discipline, age_group, class)
+overriding system value values
+  (-430002, 'Test Smooth', 'round-dances-test', 'SMOOTH', '', ''),
+  (-430003, 'Test Rhythm', 'round-dances-test', 'RHYTHM', '', ''),
+  (-430004, 'Test Standard', 'round-dances-test', 'STANDARD', '', ''),
+  (-430005, 'Test PD Smooth', 'round-dances-test', 'PD SMOOTH', '', '');
+insert into federated.competition (id, federation, external_id, event_id, category_id, start_date)
+overriding system value values
+  (-430003, 'wdsf', 'round-dances-smooth', -430001, -430002, '2026-01-01'),
+  (-430004, 'wdsf', 'round-dances-rhythm', -430001, -430003, '2026-01-01'),
+  (-430005, 'wdsf', 'round-dances-standard', -430001, -430004, '2026-01-01'),
+  (-430006, 'wdsf', 'round-dances-pd-smooth', -430001, -430005, '2026-01-01');
+insert into federated.dance_program (code, name)
+values ('SW-TG-VW-SF', 'SW TG VW SF'), ('BO-CH-MA-RU-SG', 'BO CH MA RU SG') on conflict do nothing;
+insert into federated.dance_program_dance (program_id, dance_code, dance_order)
+select p.id, d.code, d.position::integer from federated.dance_program p
+cross join lateral unnest(string_to_array(p.code, '-')) with ordinality as d(code, position)
+where p.code in ('SW-TG-VW-SF', 'BO-CH-MA-RU-SG') on conflict do nothing;
+insert into federated.competition_round (id, competition_id, round_key, round_index, dance_program_id, scoring_method)
+overriding system value
+select r.id, r.competition_id, 'F', 1, p.id, 'ajs-3.0'::federated.scoring_method
+from (values (-430005, -430003, 'SW-TG-VW-SF'), (-430006, -430004, 'BO-CH-MA-RU-SG'),
+  (-430007, -430005, 'SW-TG-VW-SF'), (-430008, -430006, 'SW-TG-VW-SF')) r(id, competition_id, program)
+join federated.dance_program p on p.code = r.program;
+insert into federated.round_dance (round_id, dance_program_id, dance_code, dance_order)
+select r.id, r.dance_program_id, d.dance_code, d.dance_order
+from federated.competition_round r
+join federated.dance_program_dance d on d.program_id = r.dance_program_id
+where r.id in (-430005, -430006, -430007, -430008);
+insert into federated.judge_score (round_id, dance_order, dance_code, judge_person_id, competitor_id, component, score)
+select round_id, dance_order, dance_code, 1, 'dancer', 'ajs_tq', dance_order::numeric / 10
+from federated.round_dance where round_id in (-430005, -430006, -430007, -430008);
+create temporary table genre_scores as
+select round_id, dance_code, judge_person_id, competitor_id, component, score, raw_score
+from federated.judge_score where round_id in (-430005, -430006, -430007, -430008);
+
+select tap.is(app_private.refresh_wdsf_round_dances(-430003), 1, 'updates Smooth ordering');
+select tap.is((select p.code from federated.competition_round r join federated.dance_program p on p.id = r.dance_program_id
+  where r.id = -430005), 'SW-TG-SF-VW', 'Smooth puts Foxtrot before Viennese Waltz');
+select tap.is(app_private.refresh_wdsf_round_dances(-430004), 1, 'updates Rhythm ordering');
+select tap.is((select p.code from federated.competition_round r join federated.dance_program p on p.id = r.dance_program_id
+  where r.id = -430006), 'CH-RU-SG-BO-MA', 'Rhythm orders Cha Cha, Rumba, Swing, Bolero, Mambo');
+select tap.is(app_private.refresh_wdsf_round_dances(-430005), 0, 'preserves an already ordered Standard subset');
+select tap.is((select p.code from federated.competition_round r join federated.dance_program p on p.id = r.dance_program_id
+  where r.id = -430007), 'SW-TG-VW-SF', 'Standard keeps Viennese Waltz before Slow Foxtrot');
+select tap.is(app_private.refresh_wdsf_round_dances(-430006), 1, 'updates PD Smooth ordering');
+select tap.is((select p.code from federated.competition_round r join federated.dance_program p on p.id = r.dance_program_id
+  where r.id = -430008), 'SW-TG-SF-VW', 'PD Smooth uses Smooth ordering');
+select tap.results_eq(
+  $$select round_id, dance_code, judge_person_id, competitor_id, component, score, raw_score
+    from federated.judge_score where round_id in (-430005, -430006, -430007, -430008)
+    order by round_id, dance_code$$,
+  $$select * from genre_scores order by round_id, dance_code$$,
+  'preserves every score through discipline-specific reordering');
+select tap.is(app_private.refresh_wdsf_round_dances(-430003)
+  + app_private.refresh_wdsf_round_dances(-430004)
+  + app_private.refresh_wdsf_round_dances(-430005)
+  + app_private.refresh_wdsf_round_dances(-430006), 0, 'discipline-specific ordering is unchanged on repeat');
 
 select tap.finish(true);
 rollback;

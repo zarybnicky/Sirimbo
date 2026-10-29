@@ -3,7 +3,7 @@ returns integer
 language plpgsql
 as $$
 declare
-  ballroom_order constant text[] := array['SW', 'TG', 'VW', 'SF', 'QS', 'SA', 'CH', 'RU', 'PD', 'JI'];
+  preferred_order text[];
   r record;
   dance_codes text[];
   old_orders integer[];
@@ -12,9 +12,14 @@ declare
   target_program_id bigint;
   changed_rounds integer := 0;
 begin
-  perform 1 from federated.competition
-  where id = p_competition_id and federation = 'wdsf'
-  for no key update;
+  select case
+    when cat.discipline in ('SMOOTH', 'PD SMOOTH') then array['SW', 'TG', 'SF', 'VW']
+    when cat.discipline = 'RHYTHM' then array['CH', 'RU', 'SG', 'BO', 'MA']
+    else array['SW', 'TG', 'VW', 'SF', 'QS', 'SA', 'CH', 'RU', 'PD', 'JI']
+  end into preferred_order
+  from federated.competition c join federated.category cat on cat.id = c.category_id
+  where c.id = p_competition_id and c.federation = 'wdsf'
+  for no key update of c;
   if not found then return 0; end if;
 
   for r in
@@ -45,9 +50,9 @@ begin
   loop
     dance_codes := r.scored_codes;
     old_orders := r.scored_orders;
-    if dance_codes <@ ballroom_order then
-      select coalesce(array_agg(code order by array_position(ballroom_order, code), old_order), '{}'),
-        coalesce(array_agg(old_order order by array_position(ballroom_order, code), old_order), '{}')
+    if dance_codes <@ preferred_order then
+      select coalesce(array_agg(code order by array_position(preferred_order, code), old_order), '{}'),
+        coalesce(array_agg(old_order order by array_position(preferred_order, code), old_order), '{}')
       into dance_codes, old_orders
       from unnest(dance_codes, old_orders) as d(code, old_order);
     end if;

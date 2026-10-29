@@ -94,6 +94,7 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
     ['federation', 'externalId'],
   );
   for (const official of officials) {
+    if (official.personExternalId === '0') continue;
     people.add({
       federation: 'wdsf',
       externalId: official.personExternalId,
@@ -114,7 +115,7 @@ async function loadWdsfOfficialIndex(client: PoolClient, parsed: z.infer<typeof 
     ['competitionExternalId', 'personId', 'role'],
   );
   for (const official of officials) {
-    if (!official.role) continue;
+    if (!official.role || official.personExternalId === '0') continue;
     competitionOfficials.add({
       competitionExternalId,
       externalId: official.officialExternalId,

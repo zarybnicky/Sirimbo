@@ -34,6 +34,7 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/security_events.sql
 --!include functions/scoreboard.sql
 --!include functions/refresh_wdsf_round_dances.sql
+--!include functions/refresh_competition_round_results.sql
 
 select app_private.refresh_event_stats(id) from event where type = 'group' order by id;
 

@@ -524,13 +524,17 @@ async function loadWdsfRoundDetails(
 
   if (roundDances.length) await upsertRoundDances.run(roundDances.params, client);
   if (roundJudges.length) await upsertCompetitionRoundJudges.run(roundJudges.params, client);
-  if (judgeScores.length) {
-    await upsertJudgeScores.run(judgeScores.params, client);
-  }
+  await upsertJudgeScores.run({
+    ...judgeScores.params,
+    previousOtherRoundId: rounds
+      .filter(({ key }) => existingPrograms.get(key)?.includes('OT'))
+      .map(({ key }) => roundIdByKey.get(key)!),
+    participantCompetitorId: competitor.externalId,
+  }, client);
   return { refreshRoundResult: [competitionId] };
 }
 
-export function resolveCompetitor(p: Pick<Participant, 'link'> &
+export function resolveCompetitor(p: Pick<Participant, 'id' | 'link'> &
   Partial<Pick<Participant, 'name' | 'Team' | 'PerformanceName'>>): ResolvedCompetitor | null {
   const couple = p.link.find((x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple');
   if (couple) {
@@ -557,10 +561,10 @@ export function resolveCompetitor(p: Pick<Participant, 'link'> &
   if (athlete) {
     const externalId = athlete.href.replace('https://services.worlddancesport.org/api/1/person/', '');
     return {
-      externalId: `person-${externalId}`,
+      externalId: externalId === '0' ? `participant-${p.id}` : `person-${externalId}`,
       type: 'solo',
-      label: (p.PerformanceName ?? p.name)?.trim() ?? '',
-      personExternalId: externalId,
+      label: p.PerformanceName?.trim() || p.name?.trim() || '',
+      personExternalId: externalId === '0' ? undefined : externalId,
     };
   }
 
