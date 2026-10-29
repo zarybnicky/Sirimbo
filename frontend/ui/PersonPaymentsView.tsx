@@ -1,8 +1,8 @@
 import { DefinitionList } from '@/ui/DefinitionList';
-import { PostingFragment } from '@/graphql/Payment';
 import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
 import { useActionMap } from '@/lib/actions';
 import { compareText } from '@/lib/compare';
+import { cn } from '@/lib/cn';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
 import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
@@ -16,9 +16,11 @@ import {
 import { QRPayment } from '@/ui/QRPayment';
 import { exportPostings } from '@/ui/reports/export-postings';
 import { buttonCls } from '@/ui/style';
+import { Table } from '@/ui/Table';
 import { useAuth } from '@/lib/auth';
+import { ArrowDown, ArrowUpDown } from 'lucide-react';
 import React from 'react';
-import { Column, DataGrid, SortColumn } from 'react-data-grid';
+import Link from 'next/link';
 import { useQuery } from 'urql';
 
 export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }: { id: string }) {
@@ -119,62 +121,28 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
 type Account = NonNullable<
   NonNullable<PersonPaymentsQuery['person']>['accountsList']
 >[number];
-type PostingRow = PostingFragment & { transaction: NonNullable<PostingFragment['transaction']> };
-
-function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[], personId: string | null) {
-  if (sortColumns.length === 0) return rows;
-
-  const { columnKey, direction } = sortColumns[0]!;
-  const dir = direction === 'ASC' ? 1 : -1;
-
-  const copy = [...rows];
-  copy.sort((ra, rb) => {
-    let cmp = 0;
-
-    switch (columnKey) {
-      case 'effectiveDate':
-        cmp = ra.transaction.effectiveDate.localeCompare(rb.transaction.effectiveDate);
-        break;
-      case 'description':
-        const da =
-          ra.transaction.description ||
-          describePosting(ra.transaction.payment, { personId }) ||
-          '';
-        const db =
-          rb.transaction.description ||
-          describePosting(rb.transaction.payment, { personId }) ||
-          '';
-        cmp = compareText(da, db);
-        break;
-      case 'amount':
-        const aa = Number(ra.amount ?? 0);
-        const bb = Number(rb.amount ?? 0);
-        cmp = aa === bb ? 0 : aa < bb ? -1 : 1;
-        break;
-    }
-
-    return cmp * dir;
-  });
-
-  return copy;
-}
 
 function AccountPaymentsTable({ account }: { account: Account }) {
   const auth = useAuth();
-  const currency = account.currency ?? 'CZK';
-
-  const baseRows = React.useMemo(() => {
-    return (account.postingsList ?? []).filter(keyIsNonNull('transaction'));
-  }, [account.postingsList]);
-
-  const [sortColumns, setSortColumns] = React.useState<SortColumn[]>([
-    { columnKey: 'effectiveDate', direction: 'DESC' },
-  ]);
-
-  const rows = React.useMemo(
-    () => sortRows(baseRows, sortColumns, account.personId),
-    [baseRows, sortColumns, account.personId],
-  );
+  const [sort, setSort] = React.useState({ column: 'effectiveDate', descending: true });
+  const baseRows = account.postingsList
+    .filter(keyIsNonNull('transaction'))
+    .map((row) => ({
+      ...row,
+      description:
+        row.transaction.description ||
+        describePosting(row.transaction.payment, { personId: account.personId }) ||
+        '',
+    }));
+  const rows = baseRows.toSorted((a, b) => {
+    const order =
+      sort.column === 'amount'
+        ? Number(a.amount) - Number(b.amount)
+        : sort.column === 'description'
+          ? compareText(a.description, b.description)
+          : a.transaction.effectiveDate.localeCompare(b.transaction.effectiveDate);
+    return sort.descending ? -order : order;
+  });
   const paymentActionMap = useActionMap(
     paymentActions,
     baseRows.map((row) => row.transaction.payment).filter(isTruthy),
@@ -184,82 +152,91 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     baseRows.filter((row) => !row.transaction.payment).map((row) => row.transaction),
   );
 
-  const columns = React.useMemo(() => {
-    const cols: Column<PostingRow>[] = [];
-
-    if (auth.isAdmin) {
-      cols.push({
-        key: 'actions',
-        name: '',
-        width: 44,
-        resizable: false,
-        sortable: false,
-        renderCell: ({ row }) => {
-          if (row.transaction.payment) {
-            const actions = paymentActionMap.get(row.transaction.payment.id);
-            return actions ? <ActionGroup variant="row" actions={actions} /> : null;
-          }
-
-          const actions = transactionActionMap.get(row.transaction.id);
-          return actions ? <ActionGroup variant="row" actions={actions} /> : null;
-        },
-      });
-    }
-
-    cols.push(
-      {
-        key: 'effectiveDate',
-        name: 'Datum',
-        sortable: true,
-        renderCell: ({ row }) => (
-          <time
-            dateTime={row.transaction.effectiveDate}
-            className="text-sm font-medium text-neutral-12"
-          >
-            {numericDateWithYearFormatter.format(new Date(row.transaction.effectiveDate))}
-          </time>
-        ),
-      },
-      {
-        key: 'description',
-        name: 'Popis',
-        sortable: true,
-        renderCell: ({ row }) => (
-          <span className="text-sm text-neutral-12">
-            {row.transaction.description ||
-              describePosting(row.transaction.payment, { personId: account.personId })}
+  return (
+    <Table
+      className="not-prose"
+      columns={[
+        auth.isAdmin && (
+          <span key="actions" className="sr-only">
+            Akce
           </span>
         ),
-      },
-      {
-        key: 'amount',
-        name: 'Částka',
-        sortable: true,
-        renderCell: ({ row }) => (
-          <div className="text-right text-sm font-semibold text-neutral-12">
-            {moneyFormatter.format({ amount: row.amount, currency })}
+        ...[
+          { id: 'effectiveDate', label: 'Datum' },
+          { id: 'description', label: 'Popis' },
+          { id: 'amount', label: 'Částka' },
+        ].map(({ id, label }) => (
+          <div key={id} className={id === 'amount' ? 'text-right' : undefined}>
+            <button
+              type="button"
+              aria-pressed={sort.column === id}
+              className={buttonCls({
+                display: 'none',
+                variant: 'none',
+                size: 'none',
+                className:
+                  'inline-flex items-center gap-1 whitespace-nowrap text-accent-11',
+              })}
+              onClick={() =>
+                setSort((x) => ({
+                  column: id,
+                  descending: x.column === id ? !x.descending : false,
+                }))
+              }
+            >
+              {label}
+              {sort.column === id ? (
+                <>
+                  <ArrowDown
+                    className={cn('size-4', !sort.descending && 'rotate-180')}
+                    aria-hidden
+                  />
+                  <span className="sr-only">
+                    {sort.descending ? ', sestupně' : ', vzestupně'}
+                  </span>
+                </>
+              ) : (
+                <ArrowUpDown className="size-4" aria-hidden />
+              )}
+            </button>
           </div>
-        ),
-        headerCellClass: 'justify-end',
-        cellClass: 'justify-end',
-      },
-    );
+        )),
+      ]}
+    >
+      {rows.map(({ id, amount, description, transaction }) => {
+        const { payment } = transaction;
+        const actions = payment
+          ? paymentActionMap.get(payment.id)
+          : transactionActionMap.get(transaction.id);
 
-    return cols;
-  }, [auth.isAdmin, currency, paymentActionMap, transactionActionMap, account.personId]);
-
-  return (
-    <div className="not-prose">
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        rowKeyGetter={(r) => r.id}
-        sortColumns={sortColumns}
-        onSortColumnsChange={setSortColumns}
-        headerRowHeight={36}
-        rowHeight={48}
-        style={{ height: `${Math.min(rows.length * 6 + 10, 60)}vh` }}
-      />
-    </div>
+        return (
+          <tr key={id} className="border-t border-neutral-4 align-top">
+            {auth.isAdmin && (
+              <td className="w-0">
+                {actions && <ActionGroup variant="row" actions={actions} />}
+              </td>
+            )}
+            <td className="whitespace-nowrap font-medium text-neutral-12">
+              <time dateTime={transaction.effectiveDate}>
+                {numericDateWithYearFormatter.format(new Date(transaction.effectiveDate))}
+              </time>
+            </td>
+            <td className="text-neutral-12">
+              {payment ? (
+                <Link
+                  href={`/platby/${payment.id}`}
+                  className="text-accent-11 underline"
+                >
+                  {description || `Platba ${payment.id}`}
+                </Link>
+              ) : description}
+            </td>
+            <td className="whitespace-nowrap text-right font-semibold text-neutral-12">
+              {moneyFormatter.format({ amount, currency: account.currency })}
+            </td>
+          </tr>
+        );
+      })}
+    </Table>
   );
 }

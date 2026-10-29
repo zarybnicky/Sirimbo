@@ -20,15 +20,16 @@ import {
   describePosting,
   moneyFormatter,
   numericDateWithYearFormatter,
+  paymentStatusLabels,
 } from '@/ui/format';
 import { Pagination } from '@/ui/Pagination';
 import { Table } from '@/ui/Table';
 
 const statusOptions: { value: PaymentStatus | ''; label: string }[] = [
   { value: '', label: 'Všechny' },
-  { value: 'UNPAID', label: 'Nezaplaceno' },
-  { value: 'PAID', label: 'Zaplaceno' },
-  { value: 'TENTATIVE', label: 'Předběžná platba' },
+  { value: 'UNPAID', label: paymentStatusLabels.UNPAID },
+  { value: 'PAID', label: paymentStatusLabels.PAID },
+  { value: 'TENTATIVE', label: paymentStatusLabels.TENTATIVE },
 ];
 const kindOptions: { value: PaymentKind | ''; label: string }[] = [
   { value: '', label: 'Všechny' },
@@ -206,14 +207,14 @@ export function PaymentList() {
                   )}
                 </th>
                 <td rowSpan={rowSpan} className="text-neutral-11">
-                  {statusOptions.find((x) => x.value === payment.status)!.label}
+                  {paymentStatusLabels[payment.status]}
                 </td>
                 <td rowSpan={rowSpan} className="whitespace-nowrap text-neutral-11">
                   {payment.dueAt
                     ? numericDateWithYearFormatter.format(new Date(payment.dueAt))
                     : '—'}
                 </td>
-                <td>{debtor?.person?.name ?? '—'}</td>
+                <td className="pl-2!">{debtor?.person?.name ?? '—'}</td>
                 <td className="whitespace-nowrap text-right">
                   {moneyFormatter.format(debtor?.price ?? null) || '—'}
                 </td>

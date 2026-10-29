@@ -75,7 +75,7 @@ export function TableStatus({
       </div>
     </div>
   ) : empty ? (
-    <p className="not-prose py-2 text-neutral-11">{empty}</p>
+    <p className="not-prose text-neutral-11">{empty}</p>
   ) : null;
 
   if (!status) return null;

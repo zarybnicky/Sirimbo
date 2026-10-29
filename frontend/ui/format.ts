@@ -1,4 +1,10 @@
-import { AddressDomain, EventType, ScoreComponent, ScoringMethod } from '@/graphql';
+import {
+  AddressDomain,
+  EventType,
+  PaymentStatus,
+  ScoreComponent,
+  ScoringMethod,
+} from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
 import { isTruthy } from '@/lib/truthyFilter';
 
@@ -118,12 +124,13 @@ export const formatEventName = (
   if (event.name) return event.name;
 
   const registrations = event.registrations?.nodes;
+  const type = formatEventType(event.type);
   const trainers =
     listFormatter.format(
       event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
     );
   if (viewer === 'participant' && event.type === 'LESSON') {
-    return trainers || formatEventType(event.type);
+    return [type, trainers].filter(isTruthy).join(': ');
   }
   if (viewer === 'neutral') {
     const participants = event.type === 'LESSON'
@@ -131,18 +138,14 @@ export const formatEventName = (
         : '';
     return event.type === 'LESSON'
       ? `${trainers} / ${participants}`
-      : formatEventType(event.type);
+      : [type, trainers].filter(isTruthy).join(': ');
   }
   if (event.type === 'LESSON' && registrations?.length)
     return listFormatter.format(registrations.map(formatParticipant).filter(isTruthy));
 
-  if (
-    event.type === 'RESERVATION' &&
-    event?.eventTrainersList &&
-    event.eventTrainersList.length > 0
-  )
-    return `${formatEventType(event.type)}: ${trainers}`;
-  return formatEventType(event.type);
+  if (event.type === 'RESERVATION')
+    return [type, trainers].filter(isTruthy).join(': ');
+  return type;
 };
 
 export const monthFormatter = new Intl.DateTimeFormat('cs-CZ', {
@@ -268,6 +271,12 @@ export function formatFileSize(value: string) {
 }
 
 const currencyFormatters = new Map<string, Intl.NumberFormat>();
+
+export const paymentStatusLabels: Record<PaymentStatus, string> = {
+  PAID: 'Zaplaceno',
+  UNPAID: 'Nezaplaceno',
+  TENTATIVE: 'Předběžná',
+};
 
 export const moneyFormatter = {
   format(

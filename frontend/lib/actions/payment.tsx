@@ -1,16 +1,9 @@
-import { HandCoins, Info, Trash2 } from 'lucide-react';
+import { HandCoins, Trash2 } from 'lucide-react';
 import { defineActions } from '@/lib/actions';
 import { DeletePaymentDocument, MarkAsPaidDocument } from '@/graphql/Payment';
 import { PaymentStatus } from '@/graphql';
 
 export const paymentActions = defineActions<{ id: string; status: PaymentStatus }>()([
-  {
-    id: 'payment.detail',
-    label: 'Detail',
-    icon: Info,
-    requireAdmin: true,
-    href: ({ item }) => `/platby/${item.id}`,
-  },
   {
     id: 'payment.markAsPaid',
     label: 'Označit jako zaplacenou',
