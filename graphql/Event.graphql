@@ -252,12 +252,12 @@ query EventPayments($id: BigInt!) {
   event(id: $id) {
     id
     paymentsList {
-      ...PaymentDetail
+      ...PaymentWithDebtors
     }
     childEventsList(orderBy: SINCE_ASC) {
       id
       paymentsList {
-        ...PaymentDetail
+        ...PaymentWithDebtors
       }
     }
   }

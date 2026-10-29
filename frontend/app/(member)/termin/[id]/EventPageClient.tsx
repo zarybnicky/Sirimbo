@@ -5,13 +5,13 @@ import { CampLessonsTable } from '@/calendar/CampLessonsTable';
 import { CampTrainersTable } from '@/calendar/CampTrainersTable';
 import {
   EventWithAttendanceDocument,
+  EventPaymentsDocument,
   UpdateEventDocument,
   type EventWithAttendanceQuery,
 } from '@/graphql/Event';
 import { eventActions } from '@/lib/actions/event';
 import { useActions } from '@/lib/actions';
 import { BasicEventInfo } from '@/ui/BasicEventInfo';
-import { EventPayments } from '@/ui/EventPayments';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { Tab, TabMenu } from '@/ui/TabMenu';
@@ -24,6 +24,7 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { useMutation, useQuery } from 'urql';
 import React from 'react';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
+import { PaymentTable } from '@/app/(member)/platby/PaymentTable';
 
 export function EventPageClient({
   id,
@@ -146,3 +147,17 @@ export function EventPageClient({
     </Layout>
   );
 }
+
+const EventPayments = React.memo(function EventPayments({ id }: { id: string }) {
+  const [{ data, fetching, error }] = useQuery({
+    query: EventPaymentsDocument,
+    variables: { id },
+  });
+
+  const event = data?.event;
+  const payments = event
+    ? [event, ...event.childEventsList].flatMap((e) => e.paymentsList)
+    : [];
+
+  return <PaymentTable payments={payments} busy={fetching} error={error} />;
+});

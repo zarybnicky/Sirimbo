@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAtomValue } from 'jotai';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/cn';

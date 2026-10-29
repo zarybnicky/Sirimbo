@@ -36,6 +36,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
   const [isDeposit, setIsDeposit] = React.useState(true);
   const [result, create] = useMutation(CreateCreditTransactionDocument);
   const person = data?.person;
+  const currency = 'CZK';
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
     if (!person) return;
@@ -44,7 +45,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
       input: {
         vDate: values.date.toISOString(),
         vPersonId: person.id,
-        vCurrency: 'CZK',
+        vCurrency: currency,
         vAmount: (isDeposit ? values.amount : -values.amount).toString(),
         vDescription:
           values.description || (isDeposit ? 'Vklad kreditu' : 'Vyplacení kreditu'),
@@ -56,7 +57,9 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
 
   if (!person) return null;
 
-  const balance = Number.parseFloat(person.accountsList.find(Boolean)?.balance ?? '0');
+  const balance = Number.parseFloat(
+    person.accountsList.find((x) => x.currency === currency)?.balance ?? '0',
+  );
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
@@ -93,16 +96,16 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
 
         <div className="text-right m-3">
           <div>
-            {moneyFormatter.format({ amount: balance, currency: 'CZK' })}
+            {moneyFormatter.format({ amount: balance, currency })}
           </div>
           <div>
             {isDeposit ? '+ ' : '- '}
-            {moneyFormatter.format({ amount, currency: 'CZK' })}
+            {moneyFormatter.format({ amount, currency })}
           </div>
           <div className="border-t">
             {moneyFormatter.format({
               amount: balance + (isDeposit ? +amount : -amount),
-              currency: 'CZK',
+              currency,
             })}
           </div>
         </div>
