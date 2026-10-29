@@ -2,7 +2,7 @@ import { describePosting } from '@/ui/format';
 import type { PostingFragment } from '@/graphql/Payment';
 import { saveAs } from 'file-saver';
 
-export async function exportPostings(name: string, postings: PostingFragment[]) {
+export async function exportPostings(name: string, postings: PostingFragment[], personId: string) {
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet(name);
@@ -22,7 +22,7 @@ export async function exportPostings(name: string, postings: PostingFragment[]) 
       const payment = x.transaction?.payment;
 
       let date = x?.transaction?.effectiveDate;
-      let desc = describePosting(payment, x);
+      let desc = x.transaction?.description || describePosting(payment, { personId });
 
       if (payment?.event) {
         date = payment.event.since;

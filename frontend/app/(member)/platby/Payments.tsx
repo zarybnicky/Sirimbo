@@ -1,7 +1,5 @@
 'use client';
 
-import { DotSeparated } from '@/ui/DotSeparated';
-
 import { PageHeader } from '@/ui/PageHeader';
 import React from 'react';
 import {
@@ -427,7 +425,7 @@ function Transactions() {
         {(data?.transactions?.nodes ?? []).flatMap((transaction) =>
           transaction.postingsList.map((posting) => {
             const description =
-              transaction.description || describePosting(transaction.payment, posting);
+              transaction.description || describePosting(transaction.payment, 'neutral');
             return (
               <tr key={posting.id} className="border-t border-neutral-4 align-top">
                 <td className="whitespace-nowrap text-neutral-11">

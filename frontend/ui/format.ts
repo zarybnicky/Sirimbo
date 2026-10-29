@@ -92,6 +92,8 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
+type EventViewer = 'neutral' | 'trainer' | 'participant';
+
 export const formatEventName = (
   event:
     | {
@@ -110,11 +112,25 @@ export const formatEventName = (
       }
     | null
     | undefined,
+  viewer: EventViewer = 'trainer',
 ) => {
   if (!event) return;
   if (event.name) return event.name;
 
   const registrations = event.registrations?.nodes;
+  if (viewer !== 'trainer') {
+    const details = [
+      listFormatter.format(
+        event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
+      ),
+      viewer === 'neutral' && event.type === 'LESSON'
+        ? listFormatter.format(registrations?.map(formatRegistrant).filter(isTruthy) ?? [])
+        : '',
+    ].filter(isTruthy).join(' — ');
+    return details
+      ? `${formatEventType(event.type)}: ${details}`
+      : formatEventType(event.type);
+  }
   if (event.type === 'LESSON' && registrations?.length)
     return listFormatter.format(registrations.map(formatRegistrant).filter(isTruthy));
 
@@ -293,7 +309,7 @@ export const formatOpenDateRange = (item: {
 
 export function describePosting(
   payment?: PaymentFragment | null | undefined,
-  posting?: { amount: string | null },
+  viewer: EventViewer | { personId: string | null } = 'neutral',
 ) {
   if (!payment) return '';
   if (payment.cohortSubscription) {
@@ -303,11 +319,15 @@ export function describePosting(
   if (!event?.type) {
     return '';
   }
-  if (posting?.amount && Number.parseFloat(posting.amount) < 0) {
-    const trainers = event?.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [];
-    return `${formatEventType(event?.type)}: ${listFormatter.format(trainers)}`;
+  if (typeof viewer !== 'string') {
+    const personId = viewer.personId;
+    viewer = personId == null
+      ? 'neutral'
+      : event.eventTrainersList.some((trainer) => trainer.personId === personId)
+        ? 'trainer'
+        : 'participant';
   }
-  return formatEventName(event);
+  return formatEventName(event, viewer);
 }
 
 export function capitalize(x: string | undefined | null) {

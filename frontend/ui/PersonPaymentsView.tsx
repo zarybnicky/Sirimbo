@@ -52,7 +52,7 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
                 <>
                   {person.firstName} {person.lastName},{' '}
                   {x.payment?.cohortSubscription?.cohort?.name ??
-                    describePosting(x.payment)}
+                    describePosting(x.payment, { personId: person.id })}
                 </>
               ),
               Splatnost:
@@ -68,7 +68,7 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
                 cc={x.price.currency || 'CZK'}
                 ss={x.payment?.specificSymbol}
                 vs={x.payment?.variableSymbol}
-                msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name ?? describePosting(x.payment)}`}
+                msg={`${person.firstName} ${person.lastName}, ${x.payment?.cohortSubscription?.cohort?.name ?? describePosting(x.payment, { personId: person.id })}`}
               />
             </div>
           )}
@@ -95,6 +95,7 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({ id }:
                   exportPostings(
                     `${new Date().getFullYear()}-${new Date().getMonth()} ${person?.name}`,
                     account.postingsList || [],
+                    person.id,
                   )
                 }
               >
@@ -120,7 +121,7 @@ type Account = NonNullable<
 >[number];
 type PostingRow = PostingFragment & { transaction: NonNullable<PostingFragment['transaction']> };
 
-function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[]) {
+function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[], personId: string | null) {
   if (sortColumns.length === 0) return rows;
 
   const { columnKey, direction } = sortColumns[0]!;
@@ -136,12 +137,12 @@ function sortRows(rows: PostingRow[], sortColumns: readonly SortColumn[]) {
         break;
       case 'description':
         const da =
-          ra.transaction.description ??
-          describePosting(ra.transaction.payment ?? undefined, ra) ??
+          ra.transaction.description ||
+          describePosting(ra.transaction.payment, { personId }) ||
           '';
         const db =
-          rb.transaction.description ??
-          describePosting(rb.transaction.payment ?? undefined, rb) ??
+          rb.transaction.description ||
+          describePosting(rb.transaction.payment, { personId }) ||
           '';
         cmp = compareText(da, db);
         break;
@@ -171,8 +172,8 @@ function AccountPaymentsTable({ account }: { account: Account }) {
   ]);
 
   const rows = React.useMemo(
-    () => sortRows(baseRows, sortColumns),
-    [baseRows, sortColumns],
+    () => sortRows(baseRows, sortColumns, account.personId),
+    [baseRows, sortColumns, account.personId],
   );
   const paymentActionMap = useActionMap(
     paymentActions,
@@ -226,7 +227,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
         renderCell: ({ row }) => (
           <span className="text-sm text-neutral-12">
             {row.transaction.description ||
-              describePosting(row.transaction.payment ?? undefined, row)}
+              describePosting(row.transaction.payment, { personId: account.personId })}
           </span>
         ),
       },
@@ -245,7 +246,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
     );
 
     return cols;
-  }, [auth.isAdmin, currency, paymentActionMap, transactionActionMap]);
+  }, [auth.isAdmin, currency, paymentActionMap, transactionActionMap, account.personId]);
 
   return (
     <div className="not-prose">
