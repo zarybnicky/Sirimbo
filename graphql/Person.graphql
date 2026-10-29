@@ -175,22 +175,6 @@ query PersonAccounts {
   }
 }
 
-query UnpaidPayments {
-  unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
-    id
-    person {
-      ...PersonBasic
-    }
-    price {
-      amount
-      currency
-    }
-    payment {
-      ...Payment
-    }
-  }
-}
-
 query PersonList($condition: PersonCondition) {
   people(condition: $condition) {
     nodes {

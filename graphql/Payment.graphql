@@ -172,6 +172,40 @@ query TransactionAccounts {
   }
 }
 
+query PaymentListOptions {
+  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC, ID_ASC]) {
+    nodes {
+      id
+      name
+    }
+  }
+}
+
+query PaymentList($first: Int!, $offset: Int!, $condition: PaymentCondition!) {
+  payments(
+    first: $first
+    offset: $offset
+    orderBy: [CREATED_AT_DESC, ID_DESC]
+    condition: $condition
+  ) {
+    totalCount
+    nodes {
+      ...Payment
+      paymentDebtorsList(orderBy: PRIMARY_KEY_ASC) {
+        id
+        person {
+          id
+          name
+        }
+        price {
+          amount
+          currency
+        }
+      }
+    }
+  }
+}
+
 query Transactions(
   $first: Int!
   $offset: Int!

@@ -42,3 +42,21 @@ alter table federated.judge_score
   alter constraint judge_score_round_id_dance_order_dance_code_fkey deferrable initially immediate;
 
 comment on table public.posting is '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+
+comment on table public.payment is '@behavior +list +connection -insert -query:resource:list +query:resource:connection';
+
+do $$
+begin
+  create type public.payment_kind as enum ('event', 'cohort-subscription', 'other');
+exception when duplicate_object then null;
+end
+$$;
+
+alter table public.payment add column if not exists kind public.payment_kind
+  generated always as (
+    case
+      when event_id is not null then 'event'::public.payment_kind
+      when cohort_subscription_id is not null then 'cohort-subscription'::public.payment_kind
+      else 'other'::public.payment_kind
+    end
+  ) stored;

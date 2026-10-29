@@ -1974,6 +1974,35 @@ type CohortSubscription {
   interval: Interval!
 
   """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -5371,6 +5400,12 @@ type DeletePaymentPayload {
 
   """The `Payment` that was deleted by this mutation."""
   payment: Payment
+
+  """An edge for our `Payment`. May be used by Relay 1."""
+  paymentEdge(
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PaymentEdge
 }
 
 """All input for the `deletePerson` mutation."""
@@ -5711,6 +5746,35 @@ type Event {
   """Reads a single `Event` that is related to this `Event`."""
   parent: Event
   parentId: BigInt
+
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentConnection!
 
   """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
@@ -10421,6 +10485,7 @@ type Payment {
   eventId: BigInt
   id: BigInt!
   isAutoCreditAllowed: Boolean!
+  kind: PaymentKind
   paidAt: Datetime
 
   """Reads and enables pagination through a set of `PaymentDebtor`."""
@@ -10517,8 +10582,13 @@ input PaymentCondition {
   """Checks for equality with the object’s `isAutoCreditAllowed` field."""
   isAutoCreditAllowed: Boolean
 
+  """Checks for equality with the object’s `kind` field."""
+  kind: PaymentKind
+
   """Checks for equality with the object’s `paidAt` field."""
   paidAt: Datetime
+  personIds: [BigInt!]
+  search: String
 
   """Checks for equality with the object’s `specificSymbol` field."""
   specificSymbol: String
@@ -10534,6 +10604,23 @@ input PaymentCondition {
 
   """Checks for equality with the object’s `variableSymbol` field."""
   variableSymbol: String
+}
+
+"""A connection to a list of `Payment` values."""
+type PaymentConnection {
+  """
+  A list of edges which contains the `Payment` and cursor to aid in pagination.
+  """
+  edges: [PaymentEdge!]!
+
+  """A list of `Payment` objects."""
+  nodes: [Payment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Payment` you could get from the connection."""
+  totalCount: Int!
 }
 
 type PaymentDebtor {
@@ -10592,6 +10679,21 @@ enum PaymentDebtorsOrderBy {
   TENANT_ID_DESC
 }
 
+"""A `Payment` edge in the connection."""
+type PaymentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Payment` at the end of the edge."""
+  node: Payment!
+}
+
+enum PaymentKind {
+  COHORT_SUBSCRIPTION
+  EVENT
+  OTHER
+}
+
 """
 Represents an update to a `Payment`. Fields that are set will be updated.
 """
@@ -10603,6 +10705,7 @@ input PaymentPatch {
   eventId: BigInt
   id: BigInt
   isAutoCreditAllowed: Boolean
+  kind: PaymentKind
   paidAt: Datetime
   specificSymbol: String
   status: PaymentStatus
@@ -12905,6 +13008,35 @@ type Query {
   """Get a single `PaymentRecipient`."""
   paymentRecipient(id: BigInt!): PaymentRecipient
 
+  """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentConnection
+
   """Reads and enables pagination through a set of `Person`."""
   people(
     """Read all values in the set after (below) this cursor."""
@@ -14549,6 +14681,35 @@ type Tenant {
   ): [PaymentRecipient!]!
 
   """Reads and enables pagination through a set of `Payment`."""
+  payments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PaymentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PaymentConnection!
+
+  """Reads and enables pagination through a set of `Payment`."""
   paymentsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -15928,6 +16089,12 @@ type UpdatePaymentPayload {
 
   """The `Payment` that was updated by this mutation."""
   payment: Payment
+
+  """An edge for our `Payment`. May be used by Relay 1."""
+  paymentEdge(
+    """The method to use when ordering `Payment`."""
+    orderBy: [PaymentsOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PaymentEdge
 }
 
 """All input for the `updatePerson` mutation."""

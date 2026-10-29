@@ -272,6 +272,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deletePayment(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Payment', id: args.input.id });
+        invalidateQueryFields(cache, ['payments']);
       },
 
       updateCohort(_result, args, cache, _info) {
@@ -473,7 +474,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
       updatePayment(_result, _args, cache) {
-        invalidateQueryFields(cache, ['paymentDebtorsList']);
+        invalidateQueryFields(cache, ['paymentDebtorsList', 'payments']);
       },
     },
   },

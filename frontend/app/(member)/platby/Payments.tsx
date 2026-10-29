@@ -15,7 +15,7 @@ import { useClient, useQuery } from 'urql';
 import { TransactionAccountsDocument, TransactionsDocument } from '@/graphql/Payment';
 import type { TransactionSource } from '@/graphql';
 import type { AccountFragment } from '@/graphql/Payment';
-import { PersonAccountsDocument, UnpaidPaymentsDocument } from '@/graphql/Person';
+import { PersonAccountsDocument } from '@/graphql/Person';
 import {
   describePosting,
   moneyFormatter,
@@ -24,10 +24,6 @@ import {
 import { buttonCls } from '@/ui/style';
 import { exportBalanceSheet } from '@/ui/reports/export-balance-sheet';
 import Link from 'next/link';
-import { keyIsNonNull } from '@/lib/truthyFilter';
-import { useActionMap } from '@/lib/actions';
-import { paymentActions } from '@/lib/actions/payment';
-import { ActionGroup } from '@/ui/ActionGroup';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Pagination } from '@/ui/Pagination';
 import { Table } from '@/ui/Table';
@@ -44,6 +40,7 @@ import {
   type PeriodUnit,
 } from '@/ui/PeriodPicker';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { PaymentList } from './PaymentList';
 
 const TRANSACTIONS_PAGE_SIZE = 50;
 const sourceOptions: { value: TransactionSource; label: string }[] = [
@@ -61,12 +58,12 @@ export function Payments() {
   return (
     <>
       <PageHeader title="Platby" />
-      <TabMenu selected={tab} onSelect={setTab}>
+      <TabMenu selected={tab === 'unpaid' ? 'payments' : tab} onSelect={setTab}>
         <Tab id="info" title="Stav kreditu">
           <AccountOverview />
         </Tab>
-        <Tab id="unpaid" title="Nezaplacené">
-          <UnpaidPayments />
+        <Tab id="payments" title="Platby">
+          <PaymentList />
         </Tab>
         <Tab id="transactions" title="Transakce">
           <Transactions />
@@ -116,46 +113,6 @@ const AccountOverview = React.memo(function AccountOverview() {
         ))}
       </Table>
     </>
-  );
-});
-
-const UnpaidPayments = React.memo(function UnpaidPayments() {
-  const [{ data, fetching, error }] = useQuery({ query: UnpaidPaymentsDocument });
-  const unpaid = data?.unpaidPayments?.filter(keyIsNonNull('payment')) ?? [];
-  const actionMap = useActionMap(
-    paymentActions,
-    unpaid.map((x) => x.payment),
-  );
-
-  return (
-    <Table
-      columns={[
-        <span key="actions" className="sr-only">
-          Akce
-        </span>,
-        'Osoba',
-        'Popis',
-        <span key="amount" className="block text-right">
-          Částka
-        </span>,
-      ]}
-      busy={fetching}
-      error={error}
-      empty="Žádné nezaplacené platby."
-    >
-      {unpaid.map((debtor) => (
-        <tr key={debtor.id} className="border-t border-neutral-4 align-top">
-          <td className="w-0">
-            <ActionGroup variant="row" actions={actionMap.get(debtor.payment.id)!} />
-          </td>
-          <th scope="row">{debtor.person?.name}</th>
-          <td>{describePosting(debtor.payment)}</td>
-          <td className="whitespace-nowrap text-right">
-            {moneyFormatter.format(debtor.price)}
-          </td>
-        </tr>
-      ))}
-    </Table>
   );
 });
 

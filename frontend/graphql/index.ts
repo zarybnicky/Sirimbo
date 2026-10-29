@@ -1588,11 +1588,24 @@ export type CohortSubscription = {
   id: Scalars['BigInt']['output'];
   interval: Interval;
   /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentConnection;
+  /** Reads and enables pagination through a set of `Payment`. */
   paymentsList: Array<Payment>;
   price: Price;
   renewsOn: Maybe<Scalars['Datetime']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
+};
+
+
+export type CohortSubscriptionPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
 
@@ -4354,6 +4367,14 @@ export type DeletePaymentPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Payment` that was deleted by this mutation. */
   payment: Maybe<Payment>;
+  /** An edge for our `Payment`. May be used by Relay 1. */
+  paymentEdge: Maybe<PaymentEdge>;
+};
+
+
+/** The output of our delete `Payment` mutation. */
+export type DeletePaymentPayloadPaymentEdgeArgs = {
+  orderBy?: Array<PaymentsOrderBy>;
 };
 
 /** All input for the `deletePerson` mutation. */
@@ -4631,6 +4652,8 @@ export type Event = {
   parent: Maybe<Event>;
   parentId: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentConnection;
+  /** Reads and enables pagination through a set of `Payment`. */
   paymentsList: Array<Payment>;
   range: DatetimeRange;
   registrationInfo: Maybe<EventRegistrationInfo>;
@@ -4702,6 +4725,17 @@ export type EventEventTrainersListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventTrainersOrderBy>>;
+};
+
+
+export type EventPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
 
@@ -8387,6 +8421,7 @@ export type Payment = {
   eventId: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['BigInt']['output'];
   isAutoCreditAllowed: Scalars['Boolean']['output'];
+  kind: Maybe<PaymentKind>;
   paidAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `PaymentDebtor`. */
   paymentDebtorsList: Array<PaymentDebtor>;
@@ -8444,8 +8479,12 @@ export type PaymentCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isAutoCreditAllowed` field. */
   isAutoCreditAllowed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<PaymentKind>;
   /** Checks for equality with the object’s `paidAt` field. */
   paidAt?: InputMaybe<Scalars['Datetime']['input']>;
+  personIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `specificSymbol` field. */
   specificSymbol?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -8456,6 +8495,19 @@ export type PaymentCondition = {
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `variableSymbol` field. */
   variableSymbol?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Payment` values. */
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection';
+  /** A list of edges which contains the `Payment` and cursor to aid in pagination. */
+  edges: Array<PaymentEdge>;
+  /** A list of `Payment` objects. */
+  nodes: Array<Payment>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Payment` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PaymentDebtor = {
@@ -8509,6 +8561,20 @@ export type PaymentDebtorsOrderBy =
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
+/** A `Payment` edge in the connection. */
+export type PaymentEdge = {
+  __typename?: 'PaymentEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Payment` at the end of the edge. */
+  node: Payment;
+};
+
+export type PaymentKind =
+  | 'COHORT_SUBSCRIPTION'
+  | 'EVENT'
+  | 'OTHER';
+
 /** Represents an update to a `Payment`. Fields that are set will be updated. */
 export type PaymentPatch = {
   accountingPeriodId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -8518,6 +8584,7 @@ export type PaymentPatch = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isAutoCreditAllowed?: InputMaybe<Scalars['Boolean']['input']>;
+  kind?: InputMaybe<PaymentKind>;
   paidAt?: InputMaybe<Scalars['Datetime']['input']>;
   specificSymbol?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<PaymentStatus>;
@@ -9606,6 +9673,8 @@ export type Query = {
   paymentDebtorsList: Maybe<Array<PaymentDebtor>>;
   /** Get a single `PaymentRecipient`. */
   paymentRecipient: Maybe<PaymentRecipient>;
+  /** Reads and enables pagination through a set of `Payment`. */
+  payments: Maybe<PaymentConnection>;
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PersonConnection>;
   /** Get a single `Person`. */
@@ -10441,6 +10510,18 @@ export type QueryPaymentDebtorsListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPaymentRecipientArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
 
@@ -11529,6 +11610,8 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `PaymentRecipient`. */
   paymentRecipientsList: Array<PaymentRecipient>;
   /** Reads and enables pagination through a set of `Payment`. */
+  payments: PaymentConnection;
+  /** Reads and enables pagination through a set of `Payment`. */
   paymentsList: Array<Payment>;
   /** Reads and enables pagination through a set of `PersonInvitation`. */
   personInvitationsList: Array<PersonInvitation>;
@@ -11769,6 +11852,17 @@ export type TenantPaymentRecipientsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PaymentRecipientsOrderBy>>;
+};
+
+
+export type TenantPaymentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PaymentCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PaymentsOrderBy>>;
 };
 
 
@@ -12821,6 +12915,14 @@ export type UpdatePaymentPayload = {
   clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Payment` that was updated by this mutation. */
   payment: Maybe<Payment>;
+  /** An edge for our `Payment`. May be used by Relay 1. */
+  paymentEdge: Maybe<PaymentEdge>;
+};
+
+
+/** The output of our update `Payment` mutation. */
+export type UpdatePaymentPayloadPaymentEdgeArgs = {
+  orderBy?: Array<PaymentsOrderBy>;
 };
 
 /** All input for the `updatePerson` mutation. */
@@ -13634,8 +13736,10 @@ export type GraphCacheKeysConfig = {
   OtpLoginPayload?: (data: WithTypename<OtpLoginPayload>) => null | string,
   PageInfo?: (data: WithTypename<PageInfo>) => null | string,
   Payment?: (data: WithTypename<Payment>) => null | string,
+  PaymentConnection?: (data: WithTypename<PaymentConnection>) => null | string,
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
   PaymentDebtorPriceRecord?: (data: WithTypename<PaymentDebtorPriceRecord>) => null | string,
+  PaymentEdge?: (data: WithTypename<PaymentEdge>) => null | string,
   PaymentRecipient?: (data: WithTypename<PaymentRecipient>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
   PersonConnection?: (data: WithTypename<PersonConnection>) => null | string,
@@ -13822,6 +13926,7 @@ export type GraphCacheResolvers = {
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     paymentRecipient?: GraphCacheResolver<WithTypename<Query>, QueryPaymentRecipientArgs, WithTypename<PaymentRecipient> | string>,
+    payments?: GraphCacheResolver<WithTypename<Query>, QueryPaymentsArgs, WithTypename<PaymentConnection> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PersonConnection> | string>,
     person?: GraphCacheResolver<WithTypename<Query>, QueryPersonArgs, WithTypename<Person> | string>,
     personFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryPersonFacetsListArgs, Array<WithTypename<PersonFacetsRecord> | string>>,
@@ -14225,6 +14330,7 @@ export type GraphCacheResolvers = {
     currency?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     interval?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Interval> | string>,
+    payments?: GraphCacheResolver<WithTypename<CohortSubscription>, CohortSubscriptionPaymentsArgs, WithTypename<PaymentConnection> | string>,
     paymentsList?: GraphCacheResolver<WithTypename<CohortSubscription>, CohortSubscriptionPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     price?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, WithTypename<Price> | string>,
     renewsOn?: GraphCacheResolver<WithTypename<CohortSubscription>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -14775,7 +14881,8 @@ export type GraphCacheResolvers = {
   },
   DeletePaymentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    payment?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>
+    payment?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    paymentEdge?: GraphCacheResolver<WithTypename<DeletePaymentPayload>, DeletePaymentPayloadPaymentEdgeArgs, WithTypename<PaymentEdge> | string>
   },
   DeletePersonInvitationPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<DeletePersonInvitationPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -14843,6 +14950,7 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String']['output'] | string>,
     parent?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<Event> | string>,
     parentId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    payments?: GraphCacheResolver<WithTypename<Event>, EventPaymentsArgs, WithTypename<PaymentConnection> | string>,
     paymentsList?: GraphCacheResolver<WithTypename<Event>, EventPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     range?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     registrationInfo?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<EventRegistrationInfo> | string>,
@@ -15471,6 +15579,7 @@ export type GraphCacheResolvers = {
     eventId?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     isAutoCreditAllowed?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    kind?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, PaymentKind | string>,
     paidAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Payment>, PaymentPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Payment>, PaymentPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
@@ -15480,6 +15589,12 @@ export type GraphCacheResolvers = {
     transactions?: GraphCacheResolver<WithTypename<Payment>, PaymentTransactionsArgs, WithTypename<TransactionConnection> | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     variableSymbol?: GraphCacheResolver<WithTypename<Payment>, Record<string, never>, Scalars['String']['output'] | string>
+  },
+  PaymentConnection?: {
+    edges?: GraphCacheResolver<WithTypename<PaymentConnection>, Record<string, never>, Array<WithTypename<PaymentEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<PaymentConnection>, Record<string, never>, Array<WithTypename<Payment> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<PaymentConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<PaymentConnection>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   PaymentDebtor?: {
     id?: GraphCacheResolver<WithTypename<PaymentDebtor>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -15494,6 +15609,10 @@ export type GraphCacheResolvers = {
   PaymentDebtorPriceRecord?: {
     amount?: GraphCacheResolver<WithTypename<PaymentDebtorPriceRecord>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<PaymentDebtorPriceRecord>, Record<string, never>, Scalars['String']['output'] | string>
+  },
+  PaymentEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<PaymentEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
+    node?: GraphCacheResolver<WithTypename<PaymentEdge>, Record<string, never>, WithTypename<Payment> | string>
   },
   PaymentRecipient?: {
     account?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, WithTypename<Account> | string>,
@@ -15861,6 +15980,7 @@ export type GraphCacheResolvers = {
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String']['output'] | string>>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
+    payments?: GraphCacheResolver<WithTypename<Tenant>, TenantPaymentsArgs, WithTypename<PaymentConnection> | string>,
     paymentsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     personInvitationsList?: GraphCacheResolver<WithTypename<Tenant>, TenantPersonInvitationsListArgs, Array<WithTypename<PersonInvitation> | string>>,
     postings?: GraphCacheResolver<WithTypename<Tenant>, TenantPostingsArgs, WithTypename<PostingConnection> | string>,
@@ -16051,7 +16171,8 @@ export type GraphCacheResolvers = {
   },
   UpdatePaymentPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, Scalars['String']['output'] | string>,
-    payment?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>
+    payment?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, Record<string, never>, WithTypename<Payment> | string>,
+    paymentEdge?: GraphCacheResolver<WithTypename<UpdatePaymentPayload>, UpdatePaymentPayloadPaymentEdgeArgs, WithTypename<PaymentEdge> | string>
   },
   UpdatePersonPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<UpdatePersonPayload>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -16335,6 +16456,7 @@ export type GraphCacheUpdaters = {
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
     paymentRecipient?: GraphCacheUpdateResolver<{ paymentRecipient: Maybe<WithTypename<PaymentRecipient>> }, QueryPaymentRecipientArgs>,
+    payments?: GraphCacheUpdateResolver<{ payments: Maybe<WithTypename<PaymentConnection>> }, QueryPaymentsArgs>,
     people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PersonConnection>> }, QueryPeopleArgs>,
     person?: GraphCacheUpdateResolver<{ person: Maybe<WithTypename<Person>> }, QueryPersonArgs>,
     personFacetsList?: GraphCacheUpdateResolver<{ personFacetsList: Maybe<Array<WithTypename<PersonFacetsRecord>>> }, QueryPersonFacetsListArgs>,
@@ -16820,6 +16942,7 @@ export type GraphCacheUpdaters = {
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     interval?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsArgs>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, CohortSubscriptionPaymentsListArgs>,
     price?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
     renewsOn?: GraphCacheUpdateResolver<Maybe<WithTypename<CohortSubscription>>, Record<string, never>>,
@@ -17370,7 +17493,8 @@ export type GraphCacheUpdaters = {
   },
   DeletePaymentPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
-    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, Record<string, never>>,
+    paymentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePaymentPayload>>, DeletePaymentPayloadPaymentEdgeArgs>
   },
   DeletePersonInvitationPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<DeletePersonInvitationPayload>>, Record<string, never>>,
@@ -17438,6 +17562,7 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     parent?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     parentId?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventPaymentsArgs>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventPaymentsListArgs>,
     range?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     registrationInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
@@ -18066,6 +18191,7 @@ export type GraphCacheUpdaters = {
     eventId?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     isAutoCreditAllowed?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
+    kind?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     paidAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentPaymentDebtorsListArgs>,
     paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentPaymentRecipientsListArgs>,
@@ -18075,6 +18201,12 @@ export type GraphCacheUpdaters = {
     transactions?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, PaymentTransactionsArgs>,
     updatedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>,
     variableSymbol?: GraphCacheUpdateResolver<Maybe<WithTypename<Payment>>, Record<string, never>>
+  },
+  PaymentConnection?: {
+    edges?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentConnection>>, Record<string, never>>,
+    nodes?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentConnection>>, Record<string, never>>,
+    pageInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentConnection>>, Record<string, never>>,
+    totalCount?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentConnection>>, Record<string, never>>
   },
   PaymentDebtor?: {
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtor>>, Record<string, never>>,
@@ -18089,6 +18221,10 @@ export type GraphCacheUpdaters = {
   PaymentDebtorPriceRecord?: {
     amount?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtorPriceRecord>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentDebtorPriceRecord>>, Record<string, never>>
+  },
+  PaymentEdge?: {
+    cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentEdge>>, Record<string, never>>,
+    node?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentEdge>>, Record<string, never>>
   },
   PaymentRecipient?: {
     account?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
@@ -18456,6 +18592,7 @@ export type GraphCacheUpdaters = {
     origins?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     paymentDebtorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentDebtorsListArgs>,
     paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentRecipientsListArgs>,
+    payments?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentsArgs>,
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPaymentsListArgs>,
     personInvitationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPersonInvitationsListArgs>,
     postings?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantPostingsArgs>,
@@ -18646,7 +18783,8 @@ export type GraphCacheUpdaters = {
   },
   UpdatePaymentPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
-    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>
+    payment?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, Record<string, never>>,
+    paymentEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePaymentPayload>>, UpdatePaymentPayloadPaymentEdgeArgs>
   },
   UpdatePersonPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdatePersonPayload>>, Record<string, never>>,
