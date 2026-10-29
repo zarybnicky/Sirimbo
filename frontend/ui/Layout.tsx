@@ -32,7 +32,7 @@ export const Layout = React.memo(function Layout({
   const tenantId = useTenantId();
   const tenant = useTenantConfig();
   const { Footer } = getTenantUi(tenantId);
-  const homeHref = tenant.publicSite && (!auth.isMember || !auth.isTrainer)
+  const homeHref = tenant.publicSite && (!auth.isLoggedIn || !auth.isMember)
     ? '/'
     : '/dashboard';
 
