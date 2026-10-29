@@ -9,6 +9,7 @@ type TableStateProps = { busy?: boolean; error?: Error | null; empty?: string };
 export function Table({
   columns,
   caption,
+  actions,
   children,
   empty = 'Žádná data',
   className,
@@ -17,6 +18,7 @@ export function Table({
 }: {
   columns: (ReactNode | { label: ReactNode; colSpan: number })[];
   caption?: ReactNode;
+  actions?: ReactNode;
   children: ReactNode;
   className?: string;
 } & TableStateProps) {
@@ -28,6 +30,11 @@ export function Table({
   const rows = Children.toArray(children);
   return (
     <div className={cn('overflow-x-auto', className)} aria-busy={busy}>
+      {actions && (
+        <div className="mb-2 flex flex-wrap items-center justify-end gap-2">
+          {actions}
+        </div>
+      )}
       <table className="w-full text-left text-sm tabular-nums [&>*>tr>*]:px-2 [&>*>tr>*]:py-1 [&>*>tr>:first-child]:pl-0 [&>*>tr>:last-child]:pr-0 [&>tbody>tr>th]:font-normal">
         {caption && <caption className="text-left font-bold mb-2">{caption}</caption>}
         <thead>
