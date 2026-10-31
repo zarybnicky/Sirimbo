@@ -3,7 +3,7 @@ import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type EventRangeCondition = { start: string; end?: string | null };
 type EventScopeCondition = {
-  mode?: 'all' | 'top_level' | 'mine' | 'relevant' | null;
+  mode?: 'all' | 'mine' | 'relevant' | null;
   parentId?: string | null;
 };
 
@@ -69,7 +69,6 @@ const plugins: GraphileConfig.Plugin[] = [
       }
       switch (mode) {
         case 'all': return null;
-        case 'top_level': return sql`${row}.parent_id is null`;
         case 'mine': return sql`${row}.id in (${mine})`;
         case 'relevant': return sql`(${row}.parent_id is null
           or ${row}.id in (${mine}) or ${row}.parent_id in (${mine}))`;

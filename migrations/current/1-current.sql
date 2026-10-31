@@ -17,7 +17,6 @@ drop function if exists event_instance_trainers;
 drop function if exists app_private.event_instance_trainers_at;
 drop function if exists app_private.event_trainers_at(event, timestamptz);
 
---!include functions/event_instances_for_range.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_facets.sql
 --!include functions/set_event_registration.sql
@@ -37,27 +36,31 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/refresh_wdsf_round_dances.sql
 --!include functions/refresh_competition_round_results.sql
 
-select app_private.refresh_event_stats(id) from event where type = 'group' order by id;
+do $$
+begin
+  perform app_private.refresh_event_stats(id) from event where type = 'group' order by id;
+end
+$$;
 
 alter table federated.judge_score
   alter constraint judge_score_round_id_dance_order_dance_code_fkey deferrable initially immediate;
 
-comment on table public.posting is '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+comment on table posting is '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
-comment on table public.payment is '@behavior +list +connection -insert -query:resource:list +query:resource:connection';
+comment on table payment is '@behavior +list +connection -insert -query:resource:list +query:resource:connection';
 
 do $$
 begin
-  create type public.payment_kind as enum ('event', 'cohort-subscription', 'other');
+  create type payment_kind as enum ('event', 'cohort-subscription', 'other');
 exception when duplicate_object then null;
 end
 $$;
 
-alter table public.payment add column if not exists kind public.payment_kind
+alter table payment add column if not exists kind payment_kind
   generated always as (
     case
-      when event_id is not null then 'event'::public.payment_kind
-      when cohort_subscription_id is not null then 'cohort-subscription'::public.payment_kind
-      else 'other'::public.payment_kind
+      when event_id is not null then 'event'::payment_kind
+      when cohort_subscription_id is not null then 'cohort-subscription'::payment_kind
+      else 'other'::payment_kind
     end
   ) stored;

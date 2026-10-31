@@ -270,7 +270,6 @@ SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
 WITH expected(scope, parent_id, ids) AS (VALUES
   ('all'::event_instance_range_scope, null::bigint, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
-  ('top_level', null, ARRAY[9900001,9900003,9900004]),
   ('mine', null, ARRAY[9900001,9900004]),
   ('relevant', null, ARRAY[9900001,9900002,9900003,9900004]),
   ('all', 9900001, ARRAY[9900002])
