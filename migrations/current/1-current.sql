@@ -72,3 +72,9 @@ where cat.id = c.category_id
   and c.federation = 'wdsf'
   and cat.class = 'GRAND SLAM'
   and c.competition_type is distinct from 'ranking'::federated.competition_type;
+
+insert into crawler.frontier (federation, kind, key)
+  select federation, 'competitionEventIndex' as kind, key
+  from crawler.frontier
+  where federation = 'csts' and kind = 'eventIndex'
+  on conflict (federation, kind, key) do nothing;

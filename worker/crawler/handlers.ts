@@ -5,6 +5,7 @@ import { cstsRanklist } from './cstsRanklist.ts';
 import { wdsfMember } from './wdsfMember.ts';
 import { wdsfMemberIndex } from './wdsfMemberIndex.ts';
 import { cstsEventIndex } from './cstsEventIndex.ts';
+import { cstsCompetitionEventIndex } from './cstsCompetitionEventIndex.ts';
 import { cstsEventCompetitors } from './cstsEventCompetitors.ts';
 import { cstsEvent } from './cstsEvent.ts';
 import { cstsCompetitionResults } from './cstsCompetitionResults.ts';
@@ -97,8 +98,7 @@ export const LOADERS = {
 
     // Výsledky
     // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30
-    // https://www.csts.cz/api/1/competition_events/1262
-    // TODO: ^^ (propozice!)
+    competitionEventIndex: cstsCompetitionEventIndex,
     // https://www.csts.cz/api/1/competitions/32329/result
     competitionResults: cstsCompetitionResults,
 

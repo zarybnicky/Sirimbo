@@ -1,17 +1,21 @@
 import type { JobHelpers, Task } from 'graphile-worker';
 import { upsertFrontierKeys } from '../crawler/crawler.queries.ts';
 import { cstsEventIndex } from '../crawler/cstsEventIndex.ts';
+import { cstsCompetitionEventIndex } from '../crawler/cstsCompetitionEventIndex.ts';
 import { wdsfCompetitionIndex } from '../crawler/wdsfCompetitionIndex.ts';
 
-async function checkCstsEvents(month: Date): Promise<string | null> {
+async function checkCstsEvents(
+  month: Date,
+  loader: typeof cstsEventIndex | typeof cstsCompetitionEventIndex,
+): Promise<string | null> {
   const key = month.toISOString().slice(0, 7);
-  const { url, init } = cstsEventIndex.buildRequest(key);
+  const { url, init } = loader.buildRequest(key);
   try {
     const response = await fetch(url, init);
     if (!response.ok) return null;
 
     const raw = await response.json();
-    const parsed = cstsEventIndex.schema.safeParse(raw, { reportInput: true });
+    const parsed = loader.schema.safeParse(raw, { reportInput: true });
     if (!parsed.success || parsed.data.collection.length === 0) return null;
   } catch (e) {
     console.error(e);
@@ -37,11 +41,19 @@ async function checkWdsfCompetitions(month: Date): Promise<string | null> {
   return key;
 }
 
-export const discover_events: Task<'discover_events'> = async (
-  _payload,
-  helpers,
-) => {
-  await discoverMonths('csts', 'eventIndex', checkCstsEvents, helpers);
+export const discover_events: Task<'discover_events'> = async (_payload, helpers) => {
+  await discoverMonths(
+    'csts',
+    'eventIndex',
+    (month) => checkCstsEvents(month, cstsEventIndex),
+    helpers,
+  );
+  await discoverMonths(
+    'csts',
+    'competitionEventIndex',
+    (month) => checkCstsEvents(month, cstsCompetitionEventIndex),
+    helpers,
+  );
   await discoverMonths('wdsf', 'competitionIndex', checkWdsfCompetitions, helpers);
 };
 

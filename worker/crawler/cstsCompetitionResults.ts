@@ -18,12 +18,12 @@ import {
 } from './federated.queries.ts';
 import type { PoolClient } from 'pg';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
-import { danceCode, type DanceCode, getDanceProgramIds } from './danceProgram.ts';
-import { mapOfficialRole } from './cstsEnums.ts';
+import { type DanceCode, getDanceProgramIds } from './danceProgram.ts';
+import { cstsAjsComponents, cstsDanceCode, mapOfficialRole } from './cstsEnums.ts';
 
 const roundSchema = z.object({
   round: z.string(),
-  dances: z.array(danceCode),
+  dances: z.array(cstsDanceCode),
   judges: z
     .array(
       z.object({
@@ -278,9 +278,12 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     client,
   );
 
-  const roundProgramIds = await getDanceProgramIds(
-    result.rounds.map((round) => round.dances),
+  const dancePrograms = result.rounds.map((round): DanceCode[] =>
+    round.dances.some((dance) => cstsAjsComponents[dance])
+      ? ['OT']
+      : round.dances as DanceCode[],
   );
+  const roundProgramIds = await getDanceProgramIds(dancePrograms);
   if (roundProgramIds.some((id) => !id)) {
     throw new Error(`Unable to upsert dance programs for csts:${result.competitionId}`);
   }
@@ -359,7 +362,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     const round = result.rounds[i];
     const id = roundIdByKey.get(roundKey(round.round));
     if (!id) continue;
-    round.dances.forEach((dance, danceIndex) => {
+    dancePrograms[i].forEach((dance, danceIndex) => {
       roundDances.add({ danceRoundId: id, danceCode: dance, danceOrder: danceIndex + 1 });
     });
 
@@ -387,7 +390,11 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
           (other) => result.rounds.findIndex((round) => round.round === other.round) > i,
         ),
         overallScore: detail.sum,
-        danceResults: detail.danceResults.join(','),
+        danceResults: round.dances.some((dance) => cstsAjsComponents[dance])
+          ? round.dances.flatMap((dance, index) =>
+              cstsAjsComponents[dance] === 'total' ? [detail.danceResults[index]] : [],
+            ).join(',')
+          : detail.danceResults.join(','),
       });
       judgeScores.add(
         ...scoresForRound({
@@ -428,7 +435,7 @@ function parseCstsMarks(marks: string) {
 function parseCstsScoreToken(raw: string):
   | { component: score_component; score: number }
   | undefined {
-  const match = /^([x-]|\d+(?:\.\d+)?)(?:\([wd]\))?$/.exec(raw);
+  const match = /^([x-]|\d+(?:\.\d+)?)(?:\([wdx]\))?$/.exec(raw);
   if (!match) return undefined;
 
   const base = match[1];
@@ -473,6 +480,7 @@ function panelForRound(result: Result, round: Round) {
 }
 
 function scoringMethod(result: Result, round: Round): scoring_method {
+  if (round.dances.some((dance) => cstsAjsComponents[dance])) return 'ajs-3.0';
   const marks = result.competitors
     .find((competitor) =>
       competitor.rounds.some((detail) => detail.round === round.round),
@@ -505,21 +513,25 @@ function scoresForRound(args: {
   }> = [];
   const marks = parseCstsMarks(detail.marks);
   for (let danceIndex = 0; danceIndex < round.dances.length; danceIndex++) {
+    const dance = round.dances[danceIndex];
+    const ajsComponent = cstsAjsComponents[dance];
+    if (ajsComponent === 'total') continue;
     for (let judgeIndex = 0; judgeIndex < panel.length; judgeIndex++) {
       const judge = panel[judgeIndex];
       if (!judge.id) continue;
       const raw = marks[danceIndex * panel.length + judgeIndex];
       const parsed = parseCstsScoreToken(raw);
       if (!parsed) continue;
+      if (ajsComponent && parsed.component === 'mark') continue;
       rows.push({
         scoreRoundId: roundId,
-        scoreDanceOrder: danceIndex + 1,
-        scoreDanceCode: round.dances[danceIndex],
+        scoreDanceOrder: ajsComponent ? 1 : danceIndex + 1,
+        scoreDanceCode: ajsComponent ? 'OT' : dance as DanceCode,
         scoreJudgePersonId: judge.id,
         scoreCompetitorId: competitorId.toString(),
-        scoreComponent: parsed.component,
+        scoreComponent: ajsComponent ?? parsed.component,
         score: parsed.score,
-        rawScore: /\([wd]\)$/.test(raw) ? raw : '',
+        rawScore: /\([wdx]\)$/.test(raw) ? raw : '',
       });
     }
   }

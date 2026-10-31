@@ -7,6 +7,7 @@ import {
   competitionType,
   competitorType,
   cstsCompetitionClass,
+  cstsDanceCode,
   disciplineType,
   type DisciplineType,
   mapCompetitorType,
@@ -28,7 +29,6 @@ import {
 } from './federated.queries.ts';
 import { type CategoryParams, getFederatedCategoryIds } from './federatedCategory.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
-import { danceCode } from './danceProgram.ts';
 
 const competitionSchema = z.object({
   competitionId: z.number(),
@@ -44,7 +44,7 @@ const competitionSchema = z.object({
   toClass: cstsCompetitionClass.optional(),
   competitors: numberAsEnum(competitorType),
   danceDisciplines: z.array(z.string()),
-  dances: z.array(danceCode),
+  dances: z.array(cstsDanceCode),
   date: z.iso.date(),
   discipline: z
     .string()
@@ -55,7 +55,7 @@ const competitionSchema = z.object({
   grade: numberAsEnum(competitionType),
   excused: z.number(),
   registered: z.number(),
-  registrationFee: z.number(),
+  registrationFee: z.number().optional(),
   series: numberAsEnum(seriesType),
 });
 
@@ -188,7 +188,7 @@ export const cstsEvent: JsonLoader<Response> = {
         checkInEnd: competition.checkInEnd ?? '',
         completedAt: competition.completedAt ?? '',
         status: competition.completedAt ? 'completed' : 'planned',
-        registrationFee: competition.registrationFee.toString(),
+        registrationFee: competition.registrationFee?.toString() ?? '',
         excusedTotal: competition.excused,
         competitionType: mapCompetitionType(competition.grade),
       });

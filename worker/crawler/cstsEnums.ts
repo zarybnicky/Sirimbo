@@ -1,5 +1,26 @@
 import { z } from 'zod';
-import type { competitor_type, official_role } from './federated.queries.ts';
+import type { competitor_type, official_role, score_component } from './federated.queries.ts';
+import { danceCode } from './danceProgram.ts';
+
+const ajsFields = {
+  'ShowSTT: TQ': 'ajs_tq',
+  'ShowSTT: MM': 'ajs_mm',
+  'ShowSTT: PS': 'ajs_ps',
+  'ShowSTT: CP': 'ajs_cp',
+  ShowSTT: 'total',
+  'ShowLAT: TQ': 'ajs_tq',
+  'ShowLAT: MM': 'ajs_mm',
+  'ShowLAT: PS': 'ajs_ps',
+  'ShowLAT: CP': 'ajs_cp',
+  ShowLAT: 'total',
+} as const;
+
+export const cstsDanceCode = z.union([
+  danceCode,
+  z.enum(Object.keys(ajsFields) as [keyof typeof ajsFields, ...(keyof typeof ajsFields)[]]),
+]);
+
+export const cstsAjsComponents: Partial<Record<z.infer<typeof cstsDanceCode>, score_component | 'total'>> = ajsFields;
 
 export const numberAsEnum = <T extends string>(enumDict: { [key in T]: number }) =>
   z.union([
@@ -154,7 +175,9 @@ export type DisciplineType =
   | 'ShowdanceBachata'
   | 'ShowdanceMerengue'
   | 'ShowdanceSalsa'
-  | 'Caribbean';
+  | 'Caribbean'
+  | 'ChoreographicStandard'
+  | 'ChoreographicLatin';
 
 export const disciplineType: { [key in DisciplineType]: number } = {
   Unknown: 0,
@@ -175,6 +198,8 @@ export const disciplineType: { [key in DisciplineType]: number } = {
   ShowdanceMerengue: 15,
   ShowdanceSalsa: 16,
   Caribbean: 17,
+  ChoreographicStandard: 18,
+  ChoreographicLatin: 19,
 };
 
 type SeriesType = 'Unknown' | 'DanceForAll' | 'Professional' | 'DanceSport' | 'Caribbean';
