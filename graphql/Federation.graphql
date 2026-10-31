@@ -253,6 +253,10 @@ fragment ResultHighlight on CompetitionResult {
   competitorId
   ranking
   rankingTo
+  competitor {
+    id
+    name
+  }
   competition {
     ...Competition
   }
@@ -282,7 +286,7 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
       code
       name
     }
-    resultHighlightsList {
+    highlights: competitionResultsList(condition: { highlight: true }) {
       ...ResultHighlight
     }
     licenses(first: 100, orderBy: [KIND_ASC, DISCIPLINE_ASC]) {
@@ -337,7 +341,7 @@ query FederationCompetitor($id: String!) {
     couplesList(orderBy: [SINCE_DESC, ID_ASC]) {
       ...Couple
     }
-    resultHighlightsList {
+    highlights: competitionResultsList(condition: { highlight: true }) {
       ...ResultHighlight
     }
   }

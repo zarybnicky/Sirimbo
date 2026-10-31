@@ -95,7 +95,7 @@ export default async function CompetitorPage({ params }: Props) {
       )}
 
       <Members federation={federation} id={competitor.id} />
-      <ResultHighlights results={competitor.resultHighlightsList} />
+      <ResultHighlights results={competitor.highlights} />
       <History federation={federation} id={competitor.id} />
     </Layout>
   );

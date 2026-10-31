@@ -2590,6 +2590,11 @@ input CompetitionResultCondition {
   """Checks for equality with the object’s `finalGain` field."""
   finalGain: BigFloat
 
+  """
+  Completed championship results and podiums in leagues, super leagues, cups, and ranking events.
+  """
+  highlight: Boolean
+
   """Checks for equality with the object’s `isFinal` field."""
   isFinal: Boolean
 
@@ -6773,17 +6778,6 @@ enum EventsOrderBy {
   UPDATED_AT_DESC
 }
 
-type FederatedResultHighlight {
-  category: Category
-  competitionType: CompetitionType
-  competitor: FederationCompetitor
-  federation: String
-  ranking: Int
-  rankingTo: Int
-  resultCount: Int
-  results: [CompetitionResult]
-}
-
 type Federation {
   """Reads and enables pagination through a set of `FederationClub`."""
   clubs(
@@ -7289,7 +7283,7 @@ type FederationCompetitor {
   ): CompetitionEntryConnection!
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
-  competitionResults(
+  competitionResultsByCompetitorId(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
@@ -7316,6 +7310,23 @@ type FederationCompetitor {
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionResultConnection!
+
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResultsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!]
+  ): [CompetitionResult!]!
 
   """Reads and enables pagination through a set of `Competition`."""
   competitions(
@@ -7453,13 +7464,6 @@ type FederationCompetitor {
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): RanklistEntryConnection!
-  resultHighlightsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [FederatedResultHighlight!]!
 
   """
   Reads and enables pagination through a set of `CompetitionRoundResult`.
@@ -8360,6 +8364,23 @@ type FederationPerson {
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionOfficialConnection!
 
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResultsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!]
+  ): [CompetitionResult!]!
+
   """
   Reads and enables pagination through a set of `FederationCompetitorComponent`.
   """
@@ -8485,14 +8506,6 @@ type FederationPerson {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]
   ): [Person!]!
-  resultHighlightsList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    perCompetitor: Boolean
-  ): [FederatedResultHighlight!]!
 
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   roundJudgeAssignments(
@@ -12727,25 +12740,6 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]
   ): [Event!]
-
-  """
-  Placement groups with supporting results. Since is inclusive; until is exclusive. Per competitor defaults to true; false combines the selected competitors.
-  """
-  federatedResultHighlightsList(
-    categoryIds: [BigInt]
-    competitionTypes: [CompetitionType]
-    competitorIds: [String]
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    perCompetitor: Boolean
-    placements: [Int]
-    since: Date
-    until: Date
-  ): [FederatedResultHighlight!]!
 
   """Get a single `Federation`."""
   federation(code: String!): Federation

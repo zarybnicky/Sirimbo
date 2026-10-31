@@ -93,6 +93,8 @@ export type CompetitionResultCondition = {
   completionStatus?: string | null | undefined;
   /** Checks for equality with the object’s `finalGain` field. */
   finalGain?: string | null | undefined;
+  /** Completed championship results and podiums in leagues, super leagues, cups, and ranking events. */
+  highlight?: boolean | null | undefined;
   /** Checks for equality with the object’s `isFinal` field. */
   isFinal?: boolean | null | undefined;
   /** Checks for equality with the object’s `lastDance` field. */

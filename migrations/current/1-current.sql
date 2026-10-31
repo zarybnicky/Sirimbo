@@ -35,7 +35,27 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/scoreboard.sql
 --!include functions/refresh_wdsf_round_dances.sql
 --!include functions/refresh_competition_round_results.sql
---!include functions/result_highlights.sql
+
+drop function if exists federated.competitor_result_highlights;
+drop function if exists federated.person_result_highlights;
+drop function if exists federated.person_result_highlights;
+drop function if exists app_private.result_highlights;
+drop function if exists federated.result_highlights;
+drop type if exists federated.result_highlight;
+
+comment on table federated.person is '@name federation_person
+@behavior -insert -update -delete -list
+@ref people via:public.person_federation_link;public.person behavior:"+list -connection"
+@ref competitionResults via:federated.competitor_component;federated.competitor;federated.competition_result behavior:"+list -connection"';
+
+comment on constraint competition_result_competitor_id_fkey on federated.competition_result is null;
+
+comment on table federated.competitor is '@name federation_competitor
+@behavior -insert -update -delete -list
+@ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
+@ref couples via:public.couple_federation_link;public.couple
+@ref competitions via:federated.competition_participation;federated.competition
+@ref competitionResults via:federated.competition_result behavior:"+list -connection"';
 
 do $$
 begin

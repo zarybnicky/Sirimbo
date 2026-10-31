@@ -151,7 +151,7 @@ export default async function FederatedPersonPage({ params }: Props) {
         </>
       )}
 
-      <ResultHighlights results={person.resultHighlightsList} />
+      <ResultHighlights results={person.highlights} />
 
       {(person.eventOfficialAssignments.totalCount > 0 ||
         person.competitionOfficialAssignments.totalCount > 0) && (

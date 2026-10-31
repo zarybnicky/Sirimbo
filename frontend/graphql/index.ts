@@ -2038,6 +2038,8 @@ export type CompetitionResultCondition = {
   completionStatus?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `finalGain` field. */
   finalGain?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Completed championship results and podiums in leagues, super leagues, cups, and ranking events. */
+  highlight?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isFinal` field. */
   isFinal?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastDance` field. */
@@ -5779,7 +5781,9 @@ export type FederationCompetitor = {
   /** Reads and enables pagination through a set of `CompetitionEntry`. */
   competitionEntries: CompetitionEntryConnection;
   /** Reads and enables pagination through a set of `CompetitionResult`. */
-  competitionResults: CompetitionResultConnection;
+  competitionResultsByCompetitorId: CompetitionResultConnection;
+  /** Reads and enables pagination through a set of `CompetitionResult`. */
+  competitionResultsList: Array<CompetitionResult>;
   /** Reads and enables pagination through a set of `Competition`. */
   competitions: CompetitionConnection;
   competitorType: CompetitorType;
@@ -5801,7 +5805,6 @@ export type FederationCompetitor = {
   peopleList: Array<Person>;
   /** Reads and enables pagination through a set of `RanklistEntry`. */
   ranklistEntries: RanklistEntryConnection;
-  resultHighlightsList: Array<CompetitionResult>;
   /** Reads and enables pagination through a set of `CompetitionRoundResult`. */
   roundResults: CompetitionRoundResultConnection;
 };
@@ -5837,12 +5840,20 @@ export type FederationCompetitorCompetitionEntriesArgs = {
 };
 
 
-export type FederationCompetitorCompetitionResultsArgs = {
+export type FederationCompetitorCompetitionResultsByCompetitorIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CompetitionResultCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionResultsOrderBy>>;
+};
+
+
+export type FederationCompetitorCompetitionResultsListArgs = {
+  condition?: InputMaybe<CompetitionResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompetitionResultsOrderBy>>;
 };
@@ -5894,12 +5905,6 @@ export type FederationCompetitorRanklistEntriesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RanklistEntriesOrderBy>>;
-};
-
-
-export type FederationCompetitorResultHighlightsListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6569,6 +6574,8 @@ export type FederationPerson = {
   clubMemberships: FederationPersonClubMembershipConnection;
   /** Reads and enables pagination through a set of `CompetitionOfficial`. */
   competitionOfficialAssignments: CompetitionOfficialConnection;
+  /** Reads and enables pagination through a set of `CompetitionResult`. */
+  competitionResultsList: Array<CompetitionResult>;
   /** Reads and enables pagination through a set of `FederationCompetitorComponent`. */
   competitorComponents: FederationCompetitorComponentConnection;
   createdAt: Scalars['Datetime']['output'];
@@ -6590,7 +6597,6 @@ export type FederationPerson = {
   nationality: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Person`. */
   peopleList: Array<Person>;
-  resultHighlightsList: Array<CompetitionResult>;
   /** Reads and enables pagination through a set of `CompetitionRoundJudge`. */
   roundJudgeAssignments: CompetitionRoundJudgeConnection;
   searchName: Maybe<Scalars['String']['output']>;
@@ -6616,6 +6622,14 @@ export type FederationPersonCompetitionOfficialAssignmentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CompetitionOfficialsOrderBy>>;
+};
+
+
+export type FederationPersonCompetitionResultsListArgs = {
+  condition?: InputMaybe<CompetitionResultCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CompetitionResultsOrderBy>>;
 };
 
 
@@ -6657,12 +6671,6 @@ export type FederationPersonPeopleListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
-};
-
-
-export type FederationPersonResultHighlightsListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -15170,7 +15178,8 @@ export type GraphCacheResolvers = {
     categoryProgressesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCategoryProgressesListArgs, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
     clubAffiliations?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorClubAffiliationsArgs, WithTypename<FederationCompetitorClubAffiliationConnection> | string>,
     competitionEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionEntriesArgs, WithTypename<CompetitionEntryConnection> | string>,
-    competitionResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionResultsArgs, WithTypename<CompetitionResultConnection> | string>,
+    competitionResultsByCompetitorId?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionResultsByCompetitorIdArgs, WithTypename<CompetitionResultConnection> | string>,
+    competitionResultsList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionResultsListArgs, Array<WithTypename<CompetitionResult> | string>>,
     competitions?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCompetitionsArgs, WithTypename<CompetitionConnection> | string>,
     competitorType?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, CompetitorType | string>,
     components?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentConnection> | string>,
@@ -15186,7 +15195,6 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorPeopleListArgs, Array<WithTypename<Person> | string>>,
     ranklistEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
-    resultHighlightsList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorResultHighlightsListArgs, Array<WithTypename<CompetitionResult> | string>>,
     roundResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRoundResultsArgs, WithTypename<CompetitionRoundResultConnection> | string>
   },
   FederationCompetitorCategoryProgress?: {
@@ -15346,6 +15354,7 @@ export type GraphCacheResolvers = {
     canonicalName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     clubMemberships?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonClubMembershipsArgs, WithTypename<FederationPersonClubMembershipConnection> | string>,
     competitionOfficialAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionOfficialAssignmentsArgs, WithTypename<CompetitionOfficialConnection> | string>,
+    competitionResultsList?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitionResultsListArgs, Array<WithTypename<CompetitionResult> | string>>,
     competitorComponents?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonCompetitorComponentsArgs, WithTypename<FederationCompetitorComponentConnection> | string>,
     createdAt?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     dob?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['Date']['output'] | string>,
@@ -15362,7 +15371,6 @@ export type GraphCacheResolvers = {
     medicalCheckupType?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     nationality?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonPeopleListArgs, Array<WithTypename<Person> | string>>,
-    resultHighlightsList?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonResultHighlightsListArgs, Array<WithTypename<CompetitionResult> | string>>,
     roundJudgeAssignments?: GraphCacheResolver<WithTypename<FederationPerson>, FederationPersonRoundJudgeAssignmentsArgs, WithTypename<CompetitionRoundJudgeConnection> | string>,
     searchName?: GraphCacheResolver<WithTypename<FederationPerson>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -17785,7 +17793,8 @@ export type GraphCacheUpdaters = {
     categoryProgressesList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCategoryProgressesListArgs>,
     clubAffiliations?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorClubAffiliationsArgs>,
     competitionEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionEntriesArgs>,
-    competitionResults?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionResultsArgs>,
+    competitionResultsByCompetitorId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionResultsByCompetitorIdArgs>,
+    competitionResultsList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionResultsListArgs>,
     competitions?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCompetitionsArgs>,
     competitorType?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     components?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorComponentsArgs>,
@@ -17801,7 +17810,6 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     peopleList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorPeopleListArgs>,
     ranklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRanklistEntriesArgs>,
-    resultHighlightsList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorResultHighlightsListArgs>,
     roundResults?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRoundResultsArgs>
   },
   FederationCompetitorCategoryProgress?: {
@@ -17961,6 +17969,7 @@ export type GraphCacheUpdaters = {
     canonicalName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     clubMemberships?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonClubMembershipsArgs>,
     competitionOfficialAssignments?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonCompetitionOfficialAssignmentsArgs>,
+    competitionResultsList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonCompetitionResultsListArgs>,
     competitorComponents?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonCompetitorComponentsArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     dob?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
@@ -17977,7 +17986,6 @@ export type GraphCacheUpdaters = {
     medicalCheckupType?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     nationality?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>,
     peopleList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonPeopleListArgs>,
-    resultHighlightsList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonResultHighlightsListArgs>,
     roundJudgeAssignments?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, FederationPersonRoundJudgeAssignmentsArgs>,
     searchName?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationPerson>>, Record<string, never>>
   },

@@ -8,25 +8,35 @@ type CategoryProgressCondition = {
 };
 
 const plugins: GraphileConfig.Plugin[] = [
-  ...([
-    ['ageGroups', 'age_group_code'],
-    ['genders', 'gender'],
-    ['nationalities', 'nationality'],
-  ] as const).map(([field, column]) => addPgTableCondition(
-    { schemaName: 'federated', tableName: 'person' },
-    field,
-    (build) => ({
-      type: new build.graphql.GraphQLList(new build.graphql.GraphQLNonNull(build.graphql.GraphQLString)),
-    }),
-    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
-      const values = value as string[] | null;
-      if (!values?.length) return null;
-      const expression = column === 'age_group_code'
-        ? sql`coalesce(${row}.age_group_code, nullif(${row}.age_group, ''), 'unknown')`
-        : sql`coalesce(nullif(${row}.${sql.identifier(column)}::text, ''), 'unknown')`;
-      return sql`${expression} in (${sql.join(values.map((v) => sqlValueWithCodec(v, TYPES.text)), ', ')})`;
-    },
-  )),
+  ...(
+    [
+      ['ageGroups', 'age_group_code'],
+      ['genders', 'gender'],
+      ['nationalities', 'nationality'],
+    ] as const
+  ).map(([field, column]) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName: 'person' },
+      field,
+      (build) => ({
+        type: new build.graphql.GraphQLList(
+          new build.graphql.GraphQLNonNull(build.graphql.GraphQLString),
+        ),
+      }),
+      (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+        const values = value as string[] | null;
+        if (!values?.length) return null;
+        const expression =
+          column === 'age_group_code'
+            ? sql`coalesce(${row}.age_group_code, nullif(${row}.age_group, ''), 'unknown')`
+            : sql`coalesce(nullif(${row}.${sql.identifier(column)}::text, ''), 'unknown')`;
+        return sql`${expression} in (${sql.join(
+          values.map((v) => sqlValueWithCodec(v, TYPES.text)),
+          ', ',
+        )})`;
+      },
+    ),
+  ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
     'includeCancelled',
@@ -137,6 +147,36 @@ const plugins: GraphileConfig.Plugin[] = [
             app_private.normalize_name(${search}), '!', '!!'), '%', '!%'), '_', '!_') || '%' escape '!')`;
       },
     ),
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_result' },
+    'highlight',
+    (build) => ({
+      type: build.graphql.GraphQLBoolean,
+      description:
+        'Completed championship results and podiums in leagues, super leagues, cups, and ranking events.',
+    }),
+    (value, { sql, sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const highlight = sql`(
+        ${row}.ranking > 0
+        and coalesce(${row}.completion_status, '') not in ('Disqualified', 'Excused', 'Noshow', 'Withdrawn')
+        and exists (
+          select 1 from federated.competition c
+          join federated.event e on e.id = c.event_id
+          where c.id = ${row}.competition_id
+            and c.status = 'completed' and e.status <> 'cancelled'
+            and (
+              c.competition_type = 'championship'
+              or (
+                coalesce(${row}.ranking_to, ${row}.ranking) <= 3
+                and c.competition_type in ('league', 'super_league', 'cup', 'ranking')
+              )
+            )
+        )
+      )`;
+      return value ? highlight : sql`not ${highlight}`;
+    },
   ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition_entry' },
