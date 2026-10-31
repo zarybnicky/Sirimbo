@@ -115,10 +115,6 @@ export const cstsEvent: JsonLoader<Response> = {
       },
     };
   },
-  mapResponseToStatus({ httpStatus }) {
-    if (httpStatus === 404 || httpStatus === 410) return 'transient';
-    return undefined;
-  },
   async load(client, { entity: event }) {
     await upsertEvents.run(
       {

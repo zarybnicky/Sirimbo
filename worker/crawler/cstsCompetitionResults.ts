@@ -129,10 +129,6 @@ export const cstsCompetitionResults: JsonLoader<Response> = {
       },
     };
   },
-  mapResponseToStatus({ httpStatus }) {
-    if (httpStatus === 404 || httpStatus === 410) return 'gone';
-    return undefined;
-  },
   async load(client, parsed) {
     return loadCstsCompetitionResults(client, parsed.entity);
   },

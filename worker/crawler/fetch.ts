@@ -92,7 +92,10 @@ export async function fetchResponse<T>(
     const result = await parseResponse<T>(resp, handler, opts);
     parsed = result.parsed;
     raw = result.raw;
-    if (result.error) {
+    if (httpStatus === 404 && url.hostname === 'www.csts.cz' && url.pathname.startsWith('/api/')) {
+      fetchStatus = raw === '' ? 'gone' : 'transient';
+      error = fetchStatus === 'gone' ? null : result.error;
+    } else if (result.error) {
       error = result.error;
       if (fetchStatus === 'ok' || fetchStatus === 'gone') {
         // Schema/parse failure on non-transient responses = permanent (API changed or error page)
