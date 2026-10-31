@@ -96,14 +96,14 @@ query Person($id: BigInt!) {
   }
 }
 
-query PersonPayments($id: BigInt!) {
-  tenant: getCurrentTenant {
+query PersonPayments($id: BigInt!, $withDetails: Boolean! = false) {
+  tenant: getCurrentTenant @include(if: $withDetails) {
     id
     bankAccount
   }
   person(id: $id) {
     ...PersonBasic
-    unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
+    unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) @include(if: $withDetails) {
       id
       price {
         amount
@@ -115,7 +115,7 @@ query PersonPayments($id: BigInt!) {
     }
     accountsList {
       ...Account
-      postingsList {
+      postingsList @include(if: $withDetails) {
         ...Posting
       }
     }

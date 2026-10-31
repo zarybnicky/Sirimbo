@@ -1,6 +1,6 @@
 import { DefinitionList } from '@/ui/DefinitionList';
-import { PersonPaymentsDocument, PersonPaymentsQuery } from '@/graphql/Person';
-import type { PostingFragment } from '@/graphql/Payment';
+import { PersonPaymentsDocument } from '@/graphql/Person';
+import type { AccountFragment, PostingFragment } from '@/graphql/Payment';
 import { useActionMap } from '@/lib/actions';
 import { compareText } from '@/lib/compare';
 import { cn } from '@/lib/cn';
@@ -33,18 +33,19 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({
 }) {
   const [query] = useQuery({
     query: PersonPaymentsDocument,
-    variables: { id },
+    variables: { id, withDetails: true },
     pause: !id,
   });
   const person = query.data?.person;
   if (!person) {
     return null;
   }
+  const unpaidPayments = person.unpaidPayments ?? [];
 
   return (
     <div className="prose prose-accent mb-2">
-      {person.unpaidPayments.length > 0 && <h3>K zaplacení</h3>}
-      {person.unpaidPayments.map((x) => (
+      {unpaidPayments.length > 0 && <h3>K zaplacení</h3>}
+      {unpaidPayments.map((x) => (
         <div key={x.id}>
           {x.payment?.cohortSubscription && (
             <h4>Členské příspěvky {x.payment.cohortSubscription.cohort?.name}</h4>
@@ -94,27 +95,30 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({
             })}
           </div>
 
-          {account.postingsList.length > 0 && (
-            <AccountPaymentsTable account={account} />
-          )}
+          {account.postingsList?.length ? (
+            <AccountPaymentsTable account={account} postings={account.postingsList} />
+          ) : null}
         </div>
       ))}
     </div>
   );
 });
 
-type Account = NonNullable<
-  NonNullable<PersonPaymentsQuery['person']>['accountsList']
->[number];
 type PostingRow = PostingFragment & {
   description: string;
   transaction: NonNullable<PostingFragment['transaction']>;
 };
 
-function AccountPaymentsTable({ account }: { account: Account }) {
+function AccountPaymentsTable({
+  account,
+  postings,
+}: {
+  account: AccountFragment;
+  postings: readonly PostingFragment[];
+}) {
   const auth = useAuth();
   const [sort, setSort] = React.useState({ column: 'effectiveDate', descending: true });
-  const baseRows = account.postingsList
+  const baseRows = postings
     .filter(keyIsNonNull('transaction'))
     .map((row) => ({
       ...row,
@@ -241,7 +245,7 @@ function AccountPaymentsTable({ account }: { account: Account }) {
   );
 }
 
-async function exportPostings(account: Account, rows: readonly PostingRow[]) {
+async function exportPostings(account: AccountFragment, rows: readonly PostingRow[]) {
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('Historie účtu');
