@@ -74,6 +74,7 @@ const officialSchema = z.object({
         .optional(),
       type: z.enum(['Adj', 'Inv', 'ChP', 'Scr', 'LScr']),
       role: z.number(),
+      prolongation: z.boolean().optional(),
     }),
   ),
 });
