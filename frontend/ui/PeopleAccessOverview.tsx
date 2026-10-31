@@ -20,6 +20,7 @@ import { cn } from '@/lib/cn';
 import { compareText } from '@/lib/compare';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
+import { Table } from '@/ui/Table';
 import { TextField } from '@/ui/fields/text';
 import { formatCount, numericFullFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
@@ -263,7 +264,6 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
 
   return (
     <>
-      {error && <p className="text-danger-11">{error.message}</p>}
       {hasWarnings && (
         <div className="mb-3 grid gap-2">
           <AccessWarning
@@ -290,8 +290,9 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
           />
         </div>
       )}
-      <div className="mb-3 grid gap-3">
+      <div className="mb-3 grid gap-x-3 gap-y-1 sm:grid-cols-[max-content_1fr]">
         <FacetRadioGroup
+          inline
           name="web-access"
           label="Poslední přihlášení"
           value={webFacet}
@@ -301,6 +302,7 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
         />
         {enableStarletImport && (
           <FacetRadioGroup
+            inline
             name="card-access"
             label="Poslední vstup kartou"
             value={cardFacet}
@@ -309,13 +311,9 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
             options={cardFacetOptions}
           />
         )}
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="col-span-full mt-2 flex flex-wrap items-center justify-between gap-2">
           <p role="status" className="text-sm text-neutral-11">
-            {fetching
-              ? 'Načítám…'
-              : error
-                ? null
-                : `Zobrazeno ${filteredRows.length} z ${formatCount(people.length, { one: 'osoby', other: 'osob' })}`}
+            {data && `Zobrazeno ${filteredRows.length} z ${formatCount(people.length, { one: 'osoby', other: 'osob' })}`}
           </p>
           <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
             {(search || webFacet !== 'all' || cardFacet !== 'all') && (
@@ -341,27 +339,24 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
           </div>
         </div>
       </div>
-      <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
-        <div
-          className={cn(
-            'hidden gap-4 bg-neutral-2 px-3 py-2 text-xs font-medium text-neutral-11 sm:grid',
-            enableStarletImport
-              ? 'grid-cols-[minmax(10rem,1fr)_10rem_10rem_1.75rem]'
-              : 'grid-cols-[minmax(10rem,1fr)_10rem_1.75rem]',
-          )}
-        >
-          <span>Osoba</span>
-          <span className="flex items-center gap-1.5">
+      <Table
+        columns={[
+          'Osoba',
+          <span key="web" className="flex items-center gap-1.5">
             <KeyRound className="size-3.5" aria-hidden="true" /> Web
-          </span>
-          {enableStarletImport && (
-            <span className="flex items-center gap-1.5">
+          </span>,
+          enableStarletImport && (
+            <span key="card" className="flex items-center gap-1.5">
               <CreditCard className="size-3.5" aria-hidden="true" /> Karta
             </span>
-          )}
-          <span className="sr-only">Akce</span>
-        </div>
-
+          ),
+          <span key="actions" className="sr-only">Akce</span>,
+        ]}
+        busy={fetching}
+        error={error}
+        empty={people.length === 0 ? 'Žádné osoby.' : 'Žádné osoby pro vybrané filtry.'}
+        className="max-sm:[&_table]:block max-sm:[&_thead]:hidden max-sm:[&_tbody]:block max-sm:[&_tbody>tr>*]:px-0"
+      >
         {filteredRows.map((row) => (
           <PersonAccessRow
             key={row.person.id}
@@ -372,12 +367,7 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
             credentialActionMap={credentialActionMap}
           />
         ))}
-        {!fetching && !error && filteredRows.length === 0 && (
-          <p className="px-3 py-2 text-sm text-neutral-11">
-            {people.length === 0 ? 'Žádné osoby.' : 'Žádné osoby pro vybrané filtry.'}
-          </p>
-        )}
-      </div>
+      </Table>
     </>
   );
 });
@@ -445,39 +435,24 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
   const invitations = person.personInvitationsList;
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 px-3 py-2 hover:bg-neutral-2 sm:items-center',
-        showCredentials
-          ? 'sm:grid-cols-[minmax(10rem,1fr)_10rem_10rem_1.75rem]'
-          : 'sm:grid-cols-[minmax(10rem,1fr)_10rem_1.75rem]',
-      )}
-    >
-      <Link className="truncate font-semibold underline" href={`/clenove/${person.id}`}>
-        {person.name}
-      </Link>
-      <AccessMenu
-        person={{
-          ...person,
-          canInvite: accountCount === 0 && invitations.length === 0,
-        }}
-        credentials={credentials}
-        showCredentials={showCredentials}
-        userActionMap={userActionMap}
-        invitationActionMap={invitationActionMap}
-        credentialActionMap={credentialActionMap}
-      />
-      <div className="col-start-1 row-start-2 flex min-w-0 items-center gap-1 text-xs text-neutral-11 sm:col-start-2 sm:row-start-1">
+    <tr className="border-b border-neutral-5 hover:bg-neutral-2 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 max-sm:py-2">
+      <th scope="row" className="max-sm:min-w-0">
+        <Link className="font-semibold underline max-sm:block max-sm:truncate" href={`/clenove/${person.id}`}>
+          {person.name}
+        </Link>
+      </th>
+      <td className="text-xs text-neutral-11 max-sm:col-start-1 max-sm:row-start-2 max-sm:min-w-0">
         <div className="flex min-w-0 items-center gap-1.5" title={`${accountCount} účtů`}>
           <KeyRound className="size-3.5 shrink-0 text-accent-11" aria-hidden="true" />
-          <b
+          <span
             className={cn(
               'tabular-nums',
               accountCount === 0 ? 'text-danger-10' : 'text-neutral-12',
+              accountCount !== 1 ? 'font-bold' : '',
             )}
           >
             {accountCount}
-          </b>
+          </span>
           {accountCount > 0 ? (
             <span
               className={cn(
@@ -512,55 +487,67 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             </span>
           )}
         </div>
-      </div>
+      </td>
       {showCredentials && (
-        <div className="col-start-2 row-start-2 flex min-w-0 items-center gap-1 text-xs text-neutral-11 sm:col-start-3 sm:row-start-1">
+        <td className="text-xs text-neutral-11 max-sm:col-start-2 max-sm:row-start-2">
           <div
             className="flex min-w-0 items-center gap-1.5"
             title={`${cardCount} aktivních karet`}
           >
             <CreditCard className="size-3.5 shrink-0 text-accent-11" aria-hidden="true" />
-            <b
+            <span
               className={cn(
                 'tabular-nums',
-                cardCount === 0 ? 'text-danger-10' : 'text-neutral-12',
+                cardCount > 1 ? 'text-danger-10' : 'text-neutral-12',
               )}
             >
               {cardCount}
-            </b>
-            <span
-              className={cn(
-                'ml-1 flex min-w-0 items-center gap-1',
-                activityClassName(cardStatus),
-              )}
-            >
-              <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
-              {lastCardActivity ? (
-                <time className="truncate tabular-nums leading-tight" dateTime={lastCardActivity}>
-                  {numericFullFormatter.format(new Date(lastCardActivity))}
-                </time>
-              ) : (
-                '-'
-              )}
             </span>
+            {cardCount > 0 && (
+              <span
+                className={cn(
+                  'ml-1 flex min-w-0 items-center gap-1',
+                  activityClassName(cardStatus),
+                )}
+              >
+                <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
+                {lastCardActivity ? (
+                  <time className="truncate tabular-nums leading-tight" dateTime={lastCardActivity}>
+                    {numericFullFormatter.format(new Date(lastCardActivity))}
+                  </time>
+                ) : (
+                  '-'
+                )}
+            </span>
+            )}
           </div>
-        </div>
+        </td>
       )}
-    </div>
+      <td className="text-right max-sm:col-start-2 max-sm:row-start-1">
+        <AccessMenu
+          person={{
+            ...person,
+            canInvite: accountCount === 0 && invitations.length === 0,
+          }}
+          credentials={credentials}
+          userActionMap={userActionMap}
+          invitationActionMap={invitationActionMap}
+          credentialActionMap={credentialActionMap}
+        />
+      </td>
+    </tr>
   );
 });
 
 function AccessMenu({
   person,
   credentials,
-  showCredentials,
   userActionMap,
   invitationActionMap,
   credentialActionMap,
 }: Readonly<{
   person: AccessPerson & { canInvite: boolean };
   credentials: readonly AccessCredentialFragment[];
-  showCredentials: boolean;
   userActionMap: ActionMap;
   invitationActionMap: ActionMap;
   credentialActionMap: ActionMap;
@@ -582,10 +569,6 @@ function AccessMenu({
 
   return (
     <ActionGroup
-      className={cn(
-        'col-start-2 row-start-1 ml-auto',
-        showCredentials ? 'sm:col-start-4' : 'sm:col-start-3',
-      )}
       actions={actions}
       variant="row"
       align="end"

@@ -10,6 +10,7 @@ export function Table({
   columns,
   caption,
   actions,
+  footer,
   children,
   empty = 'Žádná data',
   className,
@@ -19,6 +20,7 @@ export function Table({
   columns: (ReactNode | { label: ReactNode; colSpan: number })[];
   caption?: ReactNode;
   actions?: ReactNode;
+  footer?: ReactNode;
   children: ReactNode;
   className?: string;
 } & TableStateProps) {
@@ -55,6 +57,7 @@ export function Table({
           />
           {rows}
         </tbody>
+        {footer && <tfoot>{footer}</tfoot>}
       </table>
     </div>
   );

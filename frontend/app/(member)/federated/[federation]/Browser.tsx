@@ -838,7 +838,7 @@ function Competitors(props: BrowserProps) {
                         <th
                           scope="rowgroup"
                           rowSpan={ageGroups.length}
-                          className="px-2 py-1 font-normal align-top"
+                          className="px-2 py-1 align-top"
                         >
                           <Link
                             className="text-accent-11 underline"

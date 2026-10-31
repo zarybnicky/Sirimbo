@@ -244,7 +244,7 @@ export function TransactionList() {
         caption={
           filters.accountIds.length > 0 && (
             <DefinitionList
-              className="text-sm tabular font-normal"
+              className="text-sm tabular"
               items={(accounts.data?.accountsList || []).flatMap((x) =>
                 filters.accountIds.includes(x.id)
                   ? ([

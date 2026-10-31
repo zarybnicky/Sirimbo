@@ -253,118 +253,99 @@ function Overview({
 
   return (
     <>
-      <div className="col-full-width overflow-x-auto">
-        <table className="w-full whitespace-nowrap text-left text-sm tabular-nums">
-          <thead>
-            <tr>
-              {[
-                'target',
-                'done',
-                'due',
-                'fetch errors',
-                'process errors',
-                'process',
-                'last fetched',
-              ].map((label) => (
-                <th key={label} scope="col" className="px-2 py-1">
-                  {label}
+      <Table
+        columns={[
+          'target',
+          'done',
+          'due',
+          'fetch errors',
+          'process errors',
+          'process',
+          'last fetched',
+        ]}
+        className="col-full-width whitespace-nowrap"
+        empty=""
+        footer={
+          <tr className="border-t border-neutral-4">
+            <th scope="row">{frontiers.length} total</th>
+            <td>
+              {frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}
+            </td>
+            <td>
+              {frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}
+            </td>
+            <td colSpan={4} />
+          </tr>
+        }
+      >
+        {frontiers
+          .filter((row) => all === '1' || !row.stable)
+          .map((row) => (
+            <Fragment key={row.target}>
+              <tr className="border-t border-neutral-4">
+                <th scope="row" className="font-mono">
+                  <Link
+                    className="text-accent-11 underline"
+                    href={{
+                      pathname: '/admin/crawler',
+                      query: { federation: row.federation, kind: row.kind },
+                    }}
+                    prefetch={false}
+                  >
+                    {row.target}
+                  </Link>
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {frontiers
-              .filter((row) => all === '1' || !row.stable)
-              .map((row) => (
-                <Fragment key={row.target}>
-                  <tr className="border-t border-neutral-4">
-                    <th scope="row" className="px-2 py-1 font-mono font-normal">
-                      <Link
-                        className="text-accent-11 underline"
-                        href={{
-                          pathname: '/admin/crawler',
-                          query: { federation: row.federation, kind: row.kind },
-                        }}
-                        prefetch={false}
+                <td>{row.done || ''}</td>
+                <td>{row.fetchDue || ''}</td>
+                <td>
+                  {row.fetchError || ''}
+                  {!!row.fetchTransient &&
+                    (row.fetchError
+                      ? ` (+${row.fetchTransient} temp)`
+                      : `${row.fetchTransient} temp`)}
+                </td>
+                <td>{row.processError || ''}</td>
+                <td>{row.processReady || ''}</td>
+                <td>
+                  {row.latest
+                    ? numericFullFormatter.format(new Date(row.latest))
+                    : '-'}
+                </td>
+              </tr>
+              {row.failures.length > 0 && (
+                <tr>
+                  <td colSpan={7}>
+                    <details>
+                      <summary className="cursor-pointer">Failures</summary>
+                      <Table
+                        columns={['count', 'failure', 'http', 'details']}
+                        className="whitespace-normal"
                       >
-                        {row.target}
-                      </Link>
-                    </th>
-                    <td className="px-2 py-1">{row.done || ''}</td>
-                    <td className="px-2 py-1">{row.fetchDue || ''}</td>
-                    <td className="px-2 py-1">
-                      {row.fetchError || ''}
-                      {!!row.fetchTransient &&
-                        (row.fetchError
-                          ? ` (+${row.fetchTransient} temp)`
-                          : `${row.fetchTransient} temp`)}
-                    </td>
-                    <td className="px-2 py-1">{row.processError || ''}</td>
-                    <td className="px-2 py-1">{row.processReady || ''}</td>
-                    <td className="px-2 py-1">
-                      {row.latest
-                        ? numericFullFormatter.format(new Date(row.latest))
-                        : '-'}
-                    </td>
-                  </tr>
-                  {row.failures.length > 0 && (
-                    <tr>
-                      <td colSpan={7} className="px-2 pb-1">
-                        <details>
-                          <summary className="cursor-pointer">Failures</summary>
-                          <table className="w-full whitespace-normal text-left">
-                            <thead>
-                              <tr>
-                                {['count', 'failure', 'http', 'details'].map((label) => (
-                                  <th key={label} scope="col" className="px-2 py-1">
-                                    {label}
-                                  </th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {row.failures.map((failure) => (
-                                <tr
-                                  key={JSON.stringify([
-                                    failure.failure,
-                                    failure.httpStatus,
-                                    failure.errorFingerprint,
-                                  ])}
-                                  className="border-t border-neutral-4 align-top"
-                                >
-                                  <td className="px-2 py-1">{failure.count}</td>
-                                  <td className="px-2 py-1">{failure.failure}</td>
-                                  <td className="px-2 py-1">{failure.httpStatus}</td>
-                                  <td className="px-2 py-1 break-all">
-                                    {failure.errorFingerprint}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </details>
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              ))}
-          </tbody>
-          <tfoot>
-            <tr className="border-t border-neutral-4">
-              <th scope="row" className="px-2 py-1 font-normal">
-                {frontiers.length} total
-              </th>
-              <td className="px-2 py-1">
-                {frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}
-              </td>
-              <td className="px-2 py-1">
-                {frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}
-              </td>
-              <td colSpan={4} />
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+                        {row.failures.map((failure) => (
+                          <tr
+                            key={JSON.stringify([
+                              failure.failure,
+                              failure.httpStatus,
+                              failure.errorFingerprint,
+                            ])}
+                            className="border-t border-neutral-4 align-top"
+                          >
+                            <td>{failure.count}</td>
+                            <td>{failure.failure}</td>
+                            <td>{failure.httpStatus}</td>
+                            <td className="break-all">
+                              {failure.errorFingerprint}
+                            </td>
+                          </tr>
+                        ))}
+                      </Table>
+                    </details>
+                  </td>
+                </tr>
+              )}
+            </Fragment>
+          ))}
+      </Table>
       {all !== '1' && (
         <section>
           <h2 className="mt-4 mb-2 text-lg font-bold">Done</h2>

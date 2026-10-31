@@ -36,7 +36,7 @@ export function AuthButton() {
           style={{ lineHeight: 1.3 }}
         >
           <span className="text-xs uppercase tracking-wider">Přihlášen</span>
-          <span className="text-sm font-normal">{auth.user?.uEmail}</span>
+          <span className="text-sm">{auth.user?.uEmail}</span>
         </div>
       </DropdownMenuTrigger>
 
