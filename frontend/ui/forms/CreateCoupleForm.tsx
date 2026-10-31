@@ -66,15 +66,15 @@ export function CreateCoupleForm({
     },
   });
   const [manId, womanId] = useWatch({ control, name: ['man', 'woman'] });
-  const man = people.find((person) => person.id === manId);
-  const woman = people.find((person) => person.id === womanId);
+  const man = people.find((x) => x.id === manId);
+  const woman = people.find((x) => x.id === womanId);
   const anchor = manId && !womanId ? man : womanId && !manId ? woman : undefined;
   const options = people
     .filter(
-      (person) =>
-        (person.gender === 'MAN' || person.gender === 'WOMAN') &&
-        (!manId || person.gender === 'WOMAN') &&
-        (!womanId || person.gender === 'MAN'),
+      (x) =>
+        (x.gender === 'MAN' || x.gender === 'WOMAN') &&
+        (!manId || x.gender === 'WOMAN') &&
+        (!womanId || x.gender === 'MAN'),
     )
     .flatMap((person) => {
       const groups = getCoupleAgeGroups(
@@ -82,7 +82,7 @@ export function CreateCoupleForm({
         person.birthDate,
         rulesResult.data?.ageGroupsList,
       );
-      if (anchor && !showEveryone && groups.length === 0) return [];
+      if (anchor && anchor.birthDate && !showEveryone && groups.length === 0) return [];
       return [
         {
           ...person,
@@ -148,9 +148,7 @@ export function CreateCoupleForm({
       {selectedGroups.length > 0 && (
         <div className="text-neutral-11">
           Věková kategorie:{' '}
-          {selectedGroups
-            .map((group) => formatAgeGroup(group.code, group.name))
-            .join(' / ')}
+          {selectedGroups.map((x) => formatAgeGroup(x.code, x.name)).join(' / ')}
         </div>
       )}
 
@@ -160,13 +158,13 @@ export function CreateCoupleForm({
             <FieldLabel>
               {manId ? 'Partnerka' : womanId ? 'Partner' : 'První osoba'}
             </FieldLabel>
-            {anchor && (
+            {anchor?.birthDate && (
               <button
                 type="button"
                 role="switch"
                 aria-label="Zobrazit všechny"
                 aria-checked={showEveryone}
-                onClick={() => setShowEveryone(!showEveryone)}
+                onClick={() => setShowEveryone(x => !x)}
                 className="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9"
               >
                 <span>Návrhy</span>
@@ -182,29 +180,23 @@ export function CreateCoupleForm({
               </button>
             )}
           </div>
+
           {loading ? (
             <p className="text-sm text-neutral-11">Načítám…</p>
           ) : (
-            <>
-              {anchor && !showEveryone && !anchor.birthDate && (
-                <p className="text-sm text-neutral-11">
-                  Chybí datum narození. Přepněte na Všichni.
-                </p>
-              )}
-              <ComboboxSearchArea
-                key={anchor?.id ?? 'first'}
-                inline
-                options={options}
-                onChange={(id) => {
-                  const person = people.find((person) => person.id === id);
-                  if (!person) return;
-                  setValue(person.gender === 'MAN' ? 'man' : 'woman', person.id, {
-                    shouldDirty: true,
-                    shouldValidate: true,
-                  });
-                }}
-              />
-            </>
+            <ComboboxSearchArea
+              key={anchor?.id ?? 'first'}
+              inline
+              options={options}
+              onChange={(id) => {
+                const person = people.find((x) => x.id === id);
+                if (!person) return;
+                setValue(person.gender === 'MAN' ? 'man' : 'woman', person.id, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }}
+            />
           )}
         </div>
       )}
