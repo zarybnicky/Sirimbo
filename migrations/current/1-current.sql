@@ -64,3 +64,11 @@ alter table payment add column if not exists kind payment_kind
       else 'other'::payment_kind
     end
   ) stored;
+
+update federated.competition c
+set competition_type = 'ranking'
+from federated.category cat
+where cat.id = c.category_id
+  and c.federation = 'wdsf'
+  and cat.class = 'GRAND SLAM'
+  and c.competition_type is distinct from 'ranking'::federated.competition_type;

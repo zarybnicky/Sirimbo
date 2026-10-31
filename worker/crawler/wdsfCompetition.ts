@@ -100,6 +100,7 @@ const mapCompetitionType = (type: (typeof competitionType)[number]): competition
     case 'INTERNATIONAL OPEN':
     case 'WORLD OPEN':
     case 'WORLD OPEN NS':
+    case 'GRAND SLAM':
       return 'ranking';
     default:
       if (type.includes('CUP')) return 'cup';
