@@ -21,8 +21,18 @@ fragment Couple on Couple {
   }
 }
 
-fragment TenantTrainer on TenantTrainer {
+fragment TenantTrainerOption on TenantTrainer {
   id
+  person {
+    id
+    name
+    firstName
+    lastName
+  }
+}
+
+fragment TenantTrainer on TenantTrainer {
+  ...TenantTrainerOption
   since
   until
   status
@@ -36,12 +46,6 @@ fragment TenantTrainer on TenantTrainer {
   isVisible
   tenantId
   tenantName
-  person {
-    id
-    name
-    firstName
-    lastName
-  }
 }
 
 fragment TenantMembership on TenantMembership {

@@ -1,10 +1,14 @@
-fragment Location on Location {
+fragment LocationOption on Location {
   id
-  tenantId
   name
+  showInLists
+}
+
+fragment Location on Location {
+  ...LocationOption
+  tenantId
   longName
   description
-  showInLists
   ordering
   latitude
   longitude
@@ -29,14 +33,20 @@ fragment Location on Location {
   }
 }
 
-query LocationOptions {
-  tenant: getCurrentTenant {
+fragment LocationSummary on Location {
+  ...LocationOption
+  coverImage {
     id
-    locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
-      id
-      name
-      showInLists
-    }
+    url
+  }
+  address {
+    city
+    conscriptionNumber
+    district
+    orientationNumber
+    postalCode
+    region
+    street
   }
 }
 

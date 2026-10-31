@@ -4923,8 +4923,7 @@ export type EventInputRecordInput = {
 export type EventInstanceRangeScope =
   | 'ALL'
   | 'MINE'
-  | 'RELEVANT'
-  | 'TOP_LEVEL';
+  | 'RELEVANT';
 
 export type EventLessonRequest = {
   __typename?: 'EventLessonRequest';

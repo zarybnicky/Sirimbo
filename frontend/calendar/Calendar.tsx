@@ -5,49 +5,43 @@ import {
   type CalendarViewKey,
 } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
-import { EventTypeFilter } from '@/calendar/EventTypeFilter';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
-import { LocationFilter } from '@/calendar/LocationFilter';
-import { ParticipantFilter } from '@/calendar/ParticipantFilter';
 import TimeGrid from '@/calendar/TimeGrid';
-import { TrainerFilter, type TrainerFilterOption } from '@/calendar/TrainerFilter';
 import { ViewPicker } from '@/calendar/ViewPicker';
-import {
-  defaultsFromSlot,
-  type CreateEventDefaults,
-} from '@/calendar/eventDefaults';
+import { defaultsFromSlot, type CreateEventDefaults } from '@/calendar/eventDefaults';
 import { useCalendarData } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
-import { compareText } from '@/lib/compare';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
+import { FacetFilter } from '@/ui/FacetFilter';
+import { DropdownMenuButton } from '@/ui/dropdown';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import {
   createParser,
+  parseAsArrayOf,
   parseAsBoolean,
+  parseAsString,
   parseAsStringLiteral,
-  useQueryState,
   useQueryStates,
 } from 'nuqs';
 import React from 'react';
 import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import {
-  calendarFilterParsers,
   dragListenersAtom,
-  groupByAtom,
+  eventTypes as allEventTypes,
   type ExternalDragSubject,
 } from './state';
 import {
-  resourceKey,
+  type CalendarTrainer,
   type CalendarInstanceEvent,
   type DateRange,
   type InteractionInfo,
-  type Resource,
   type SlotInfo,
   type ViewProps,
 } from './types';
@@ -85,35 +79,39 @@ export function Calendar({
     info: InteractionInfo,
   ) => void | Promise<void>;
   onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
-  availableTrainers?: readonly TrainerFilterOption[];
+  availableTrainers?: readonly CalendarTrainer[];
   primary?: ViewProps['primary'];
   scrollView?: boolean;
 }) {
   const auth = useAuth();
 
-  const defaultView = !dateRange ? 'agenda' : auth.isMember? 'range' : 'day';
+  const defaultView = !dateRange ? 'agenda' : auth.isMember ? 'range' : 'day';
   const defaultOnlyMine = !!dateRange && auth.isMember;
-  const availableViews: readonly CalendarViewKey[] = dateRange ? boundedViewKeys : standardViewKeys;
+  const availableViews: readonly CalendarViewKey[] = dateRange
+    ? boundedViewKeys
+    : standardViewKeys;
 
-  const [onlyMineInput, setOnlyMine] = useQueryState(
-    'my',
-    parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
+  const [defaultDate] = React.useState(() => initialDate ?? new Date());
+  const [filters, setFilters] = useQueryStates(
+    {
+      my: parseAsBoolean.withDefault(defaultOnlyMine),
+      free: parseAsBoolean.withDefault(false),
+      v: parseAsStringLiteral(availableViews).withDefault(defaultView),
+      columns: parseAsStringLiteral(columnModes),
+      date: calendarDateParser
+        .withDefault(defaultDate)
+        .withOptions({ clearOnDefault: false }),
+      location: parseAsArrayOf(parseAsString).withDefault([]),
+      trainers: parseAsArrayOf(parseAsString).withDefault([]),
+      participants: parseAsArrayOf(parseAsString).withDefault([]),
+      types: parseAsArrayOf(parseAsStringLiteral(allEventTypes)).withDefault([
+        ...allEventTypes,
+      ]),
+    },
+    { history: 'push' },
   );
-  const onlyMine = auth.isLoggedIn && onlyMineInput;
-  const [onlyFree, setOnlyFree] = useQueryState(
-    'free',
-    parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
-  );
-  const [viewInput, setView] = useQueryState(
-    'v',
-    parseAsStringLiteral(availableViews)
-      .withDefault(defaultView)
-      .withOptions({ history: 'push' }),
-  );
-  const [columnMode, setColumnMode] = useQueryState(
-    'columns',
-    parseAsStringLiteral(columnModes).withOptions({ history: 'push' }),
-  );
+  const { date, v: viewInput } = filters;
+  const onlyMine = auth.isLoggedIn && filters.my;
 
   const rangeView = React.useMemo<CalendarView | undefined>(
     () =>
@@ -125,67 +123,18 @@ export function Calendar({
       },
     [dateRange],
   );
-  const view: CalendarView = viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
-  const [defaultDate] = React.useState(() => initialDate ?? new Date());
-  const [date, setDate] = useQueryState(
-    'date',
-    calendarDateParser.withDefault(defaultDate).withOptions({ history: 'push', clearOnDefault: false }),
-  );
-
+  const view: CalendarView =
+    viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
   const setDragListeners = useSetAtom(dragListenersAtom);
-  const groupBy = useAtomValue(groupByAtom);
-  const [{ trainers: trainerIds, participants: participantIds, types: eventTypes, location: locationIds }] =
-    useQueryStates(calendarFilterParsers);
-  const effectiveTrainerIds = React.useMemo(() => {
-    if (!availableTrainers) return trainerIds;
-    const availableIds = new Set(availableTrainers.map((trainer) => trainer.id));
-    return trainerIds.filter((trainerId) => availableIds.has(trainerId));
-  }, [availableTrainers, trainerIds]);
-  const filters = React.useMemo(
-    () => ({
-      onlyMine,
-      onlyFree,
-      trainerIds: effectiveTrainerIds,
-      participantIds: auth.isLoggedIn ? participantIds : [],
-      eventTypes,
-      myPersonIds: auth.personIds,
+
+  const { fetching, range, events, calendarEvents, resources, filterOptions, refresh } =
+    useCalendarData({
+      view,
+      date,
+      filters,
       parentId,
-      locationIds,
-    }),
-    [auth.isLoggedIn, auth.personIds, onlyMine, onlyFree, effectiveTrainerIds, participantIds, eventTypes, parentId, locationIds],
-  );
-
-  const { fetching, range, events, instances, resources, facets, refresh } =
-    useCalendarData(view, date, filters, groupBy);
-  const displayedResources = React.useMemo(() => {
-    const resourceMap = new Map(
-      resources.map((resource) => [resourceKey(resource), resource]),
-    );
-    if (!onlyMine && groupBy === 'trainer') {
-      for (const trainer of availableTrainers ?? []) {
-        const resource: Resource = {
-          type: 'person',
-          id: trainer.id,
-          resourceTitle: trainer.name,
-        };
-        resourceMap.set(resourceKey(resource), resource);
-      }
-    }
-
-    const selectedResources =
-      !onlyMine && groupBy === 'trainer' && effectiveTrainerIds.length > 0
-        ? new Set(effectiveTrainerIds)
-        : null;
-    return [...resourceMap.values()]
-      .filter((x) => !selectedResources || (x.type === 'person' && selectedResources.has(x.id)))
-      .toSorted((a, b) => compareText(a.resourceTitle, b.resourceTitle));
-  }, [availableTrainers, effectiveTrainerIds, groupBy, onlyMine, resources]);
-  const handleShowAllResourcesChange = React.useCallback(
-    (showAllResources: boolean) => {
-      void setColumnMode(showAllResources ? 'all' : null);
-    },
-    [setColumnMode],
-  );
+      availableTrainers,
+    });
   const [, moveEvent] = useMutation(MoveEventDocument);
   const onMove = React.useCallback(
     async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
@@ -230,23 +179,22 @@ export function Calendar({
   const onSelectSlot = React.useCallback(
     (slot: SlotInfo) => {
       const defaults = defaultsFromSlot(slot);
-      const [locationId] = locationIds;
-      if (locationIds.length === 1 && locationId) {
+      const [locationId] = filters.location;
+      if (filters.location.length === 1 && locationId) {
         defaults.locationId = locationId;
         defaults.locationText = '';
       }
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
-    [locationIds],
+    [filters.location],
   );
 
   const onDrillDown = React.useCallback(
     (date: Date) => {
       if (!availableViews.includes('day')) return;
-      setDate(date);
-      setView('day');
+      void setFilters({ date, v: 'day' });
     },
-    [availableViews, setDate, setView],
+    [availableViews, setFilters],
   );
 
   React.useEffect(() => {
@@ -273,11 +221,11 @@ export function Calendar({
     <view.component
       parentId={parentId}
       range={range}
-      events={events}
+      events={calendarEvents}
       backgroundEvents={emptyArray}
-      resources={displayedResources}
+      resources={resources}
       primary={primary}
-      showAllResources={columnMode === 'all'}
+      showAllResources={filters.columns === 'all'}
     />
   );
 
@@ -290,14 +238,23 @@ export function Calendar({
               range={dateRange}
               date={date}
               view={viewInput}
-              setDate={setDate}
-              setView={setView}
+              setDate={(date) => void setFilters({ date })}
+              setView={(v) => void setFilters({ v })}
             />
           )}
           {!dateRange && view.nav && (
-            <DateNavigator date={date} setDate={setDate} view={view} bounds={dateRange} />
+            <DateNavigator
+              date={date}
+              setDate={(date) => void setFilters({ date })}
+              view={view}
+              bounds={dateRange}
+            />
           )}
-          <ViewPicker view={viewInput} setView={setView} views={availableViews} />
+          <ViewPicker
+            view={viewInput}
+            setView={(v) => void setFilters({ v })}
+            views={availableViews}
+          />
           {!onlyMine && view.supportsGrouping && <GroupByPicker />}
           {auth.isLoggedIn && (
             <button
@@ -306,37 +263,67 @@ export function Calendar({
                 variant: onlyMine ? 'primary' : 'outline',
                 size: 'sm',
               })}
-              onClick={() => setOnlyMine((x) => !x)}
+              onClick={() => void setFilters((previous) => ({ my: !previous.my }))}
             >
               Pouze moje
             </button>
           )}
           <button
             type="button"
-            aria-pressed={onlyFree}
+            aria-pressed={filters.free}
             className={buttonCls({
-              variant: onlyFree ? 'primary' : 'outline',
+              variant: filters.free ? 'primary' : 'outline',
               size: 'sm',
             })}
-            onClick={() => setOnlyFree((x) => !x)}
+            onClick={() => void setFilters((previous) => ({ free: !previous.free }))}
           >
             Pouze volné
           </button>
-          <TrainerFilter
-            counts={facets?.trainer}
-            availableTrainers={availableTrainers}
-            showAllResources={columnMode === 'all'}
-            onShowAllResourcesChange={handleShowAllResourcesChange}
+          <FacetFilter
+            label="Trenéři"
+            value={filters.trainers}
+            options={filterOptions.trainers}
+            onChange={(trainers) => void setFilters({ trainers })}
+          >
+            <DropdownMenuButton
+              role="menuitemcheckbox"
+              aria-checked={filters.columns === 'all'}
+              onSelect={(event) => {
+                event.preventDefault();
+                void setFilters((previous) => ({
+                  columns: previous.columns === 'all' ? null : 'all',
+                }));
+              }}
+            >
+              {filters.columns === 'all' ? <CheckCircle2 /> : <Circle />}
+              Zobrazit všechny trenéry
+            </DropdownMenuButton>
+          </FacetFilter>
+          {auth.isLoggedIn && (
+            <FacetFilter
+              label="Účastníci"
+              value={filters.participants}
+              options={filterOptions.participants}
+              onChange={(participants) => void setFilters({ participants })}
+            />
+          )}
+          <FacetFilter
+            label="Typy"
+            value={filters.types}
+            defaultValue={allEventTypes}
+            options={filterOptions.types}
+            onChange={(types) => void setFilters({ types })}
           />
-          {auth.isLoggedIn && <ParticipantFilter counts={facets?.participant} />}
-          <EventTypeFilter counts={facets?.type} />
-          <LocationFilter counts={facets?.location} />
+          <FacetFilter
+            label="Místa"
+            value={filters.location}
+            options={filterOptions.locations}
+            onChange={(location) => void setFilters({ location })}
+          />
           {fetching && <Spinner />}
         </div>
 
-        {!dateRange && (
-          <span className="px-3 text-right">{view.label(range)}</span>
-        )}
+        {!dateRange && <span className="px-3 text-right">{view.label(range)}</span>}
       </div>
 
       {scrollView ? (
@@ -359,7 +346,7 @@ export function Calendar({
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             {creating && (
-              <CreateEventForm {...creating} events={instances} parentId={parentId} />
+              <CreateEventForm {...creating} events={events} parentId={parentId} />
             )}
           </DialogContent>
         </Dialog>

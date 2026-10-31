@@ -1,6 +1,6 @@
 import { groupCompetitionEvents, type CompetitionEntry } from '@/ui/Competitions';
 import { ActivityTimelineDocument } from '@/graphql/ActivityTimeline';
-import type { EventType } from '@/graphql';
+import type { EventCondition, EventType } from '@/graphql';
 import {
   CalendarFacetsDocument,
   EventListDocument,
@@ -9,29 +9,32 @@ import {
 } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
+import { useAtomValue } from 'jotai';
 import { useClient, useQuery, type OperationContext } from 'urql';
 import {
   resourceKey,
   type CalendarCompetitionEvent,
   type CalendarEvent,
   type CalendarInstanceEvent,
+  type CalendarTrainer,
   type DateRange,
   type Resource,
 } from './types';
-import { CalendarView } from '@/calendar/CalendarViews';
-import { eventTypes as allEventTypes } from '@/calendar/state';
+import type { CalendarView } from '@/calendar/CalendarViews';
+import { eventTypes as allEventTypes, groupByAtom } from '@/calendar/state';
 import { compareText } from '@/lib/compare';
+import { useAuth } from '@/lib/auth';
+import { formatEventType } from '@/ui/format';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
 export type CalendarFilters = {
-  participantIds: string[];
-  trainerIds: string[];
-  eventTypes: EventType[];
-  onlyMine: boolean;
-  onlyFree: boolean;
-  myPersonIds: string[];
-  parentId?: string;
-  locationIds: string[];
+  participants: string[];
+  trainers: string[];
+  types: EventType[];
+  my: boolean;
+  free: boolean;
+  location: string[];
+  columns: 'all' | null;
 };
 
 const competitionResource: Resource = {
@@ -46,32 +49,13 @@ const calendarDay = (date: string) => ({
   isResizable: false,
 });
 
-function prepareVariables(
-  range: DateRange,
-  {
-    onlyMine,
-    onlyFree,
-    trainerIds,
-    participantIds,
-    eventTypes,
-    parentId,
-    locationIds,
-  }: CalendarFilters,
-) {
+function prepareVariables(range: DateRange, condition: EventCondition) {
   return {
     condition: {
+      ...condition,
       overlaps: {
         start: startOf(range.since, 'day').toISOString(),
         end: add(startOf(range.until, 'day'), 1, 'day').toISOString(),
-      },
-      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-      participantIds: participantIds.length > 0 ? participantIds : undefined,
-      locationIds: locationIds.length > 0 ? locationIds : undefined,
-      types: onlyFree ? eventTypes.filter(x => x !== 'GROUP') : eventTypes,
-      canRegister: onlyFree ? true : undefined,
-      scope: {
-        mode: onlyMine ? 'MINE' : parentId || locationIds.length > 0 ? 'ALL' : 'RELEVANT',
-        parentId,
       },
     },
     orderBy: ['SINCE_ASC'],
@@ -81,14 +65,11 @@ function prepareVariables(
 function mapEventsToCalendar(
   list: EventListQuery['eventsList'] | undefined,
   groupBy: CalendarGroupBy,
-): { events: CalendarInstanceEvent[]; resources: Resource[] } {
+): { events: CalendarInstanceEvent[]; resources: Map<string, Resource> } {
   const events: CalendarInstanceEvent[] = [];
   const resourceMap = new Map<string, Resource>();
 
-  const assignResource = (
-    resourceKeys: string[],
-    resource: Resource,
-  ) => {
+  const assignResource = (resourceKeys: string[], resource: Resource) => {
     const key = resourceKey(resource);
     resourceKeys.push(key);
     resourceMap.set(key, resource);
@@ -101,14 +82,26 @@ function mapEventsToCalendar(
 
     if (groupBy === 'trainer') {
       for (const { person, personId } of instance.eventTrainersList) {
-        assignResource(resourceKeys, { type: 'person', id: personId, resourceTitle: person?.name || '' });
+        assignResource(resourceKeys, {
+          type: 'person',
+          id: personId,
+          resourceTitle: person?.name || '',
+        });
       }
     } else if (groupBy === 'room') {
       const { location, locationText } = instance;
       if (location?.id) {
-        assignResource(resourceKeys, { type: 'location', id: location.id, resourceTitle: location.name });
+        assignResource(resourceKeys, {
+          type: 'location',
+          id: location.id,
+          resourceTitle: location.name,
+        });
       } else if (locationText) {
-        assignResource(resourceKeys, { type: 'locationText', id: locationText, resourceTitle: locationText });
+        assignResource(resourceKeys, {
+          type: 'locationText',
+          id: locationText,
+          resourceTitle: locationText,
+        });
       }
     }
     if (groupBy !== 'none' && resourceKeys.length === 0) {
@@ -119,24 +112,66 @@ function mapEventsToCalendar(
 
   return {
     events,
-    resources: [...resourceMap.values()].toSorted((a, b) =>
-      compareText(a.resourceTitle, b.resourceTitle),
-    ),
+    resources: resourceMap,
   };
 }
 
-export function useCalendarData(
-  view: CalendarView,
-  date: Date,
-  filters: CalendarFilters,
-  groupBy: CalendarGroupBy,
-) {
+export function useCalendarData({
+  view,
+  date,
+  filters,
+  parentId,
+  availableTrainers,
+}: {
+  view: CalendarView;
+  date: Date;
+  filters: CalendarFilters;
+  parentId?: string;
+  availableTrainers?: readonly CalendarTrainer[];
+}) {
+  const auth = useAuth();
+  const groupBy = useAtomValue(groupByAtom);
+  const onlyMine = auth.isLoggedIn && filters.my;
+  const showAllResources = filters.columns === 'all';
   const client = useClient();
-  const range = React.useMemo(() => {
-    return view.range(date);
-  }, [view, date]);
-  const variables = prepareVariables(range, filters);
-  const { overlaps, scope, ...condition } = variables.condition;
+  const range = React.useMemo(() => view.range(date), [view, date]);
+  const condition = React.useMemo(() => {
+    const trainerIds = availableTrainers
+      ? filters.trainers.filter((id) => availableTrainers.some((t) => t.id === id))
+      : filters.trainers;
+    return {
+      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+      participantIds:
+        auth.isLoggedIn && filters.participants.length > 0
+          ? filters.participants
+          : undefined,
+      locationIds: filters.location.length > 0 ? filters.location : undefined,
+      types: filters.free
+        ? filters.types.filter((type) => type !== 'GROUP')
+        : filters.types,
+      canRegister: filters.free ? true : undefined,
+      scope: {
+        mode: onlyMine
+          ? 'MINE'
+          : parentId || filters.location.length > 0
+            ? 'ALL'
+            : 'RELEVANT',
+        parentId,
+      },
+    } satisfies EventCondition;
+  }, [
+    availableTrainers,
+    auth.isLoggedIn,
+    onlyMine,
+    filters.free,
+    filters.trainers,
+    filters.participants,
+    filters.location,
+    filters.types,
+    parentId,
+  ]);
+  const variables = prepareVariables(range, condition);
+  const { overlaps } = variables.condition;
 
   const [{ data, fetching }, refresh] = useQuery({ query: EventListDocument, variables });
   const [facetResult, refreshFacets] = useQuery({
@@ -145,52 +180,120 @@ export function useCalendarData(
       ...condition,
       start: overlaps.start,
       end: overlaps.end,
-      scope: scope.mode,
-      parentId: scope.parentId,
+      scope: condition.scope.mode,
+      parentId,
+      withParticipantOptions: auth.isLoggedIn,
     },
   });
-  const [facetData, setFacetData] = React.useState(facetResult.data);
-  if (facetResult.data !== undefined && facetResult.data !== facetData) {
-    setFacetData(facetResult.data);
-  }
-  const facets: Record<string, Record<string, number>> | undefined = facetData
-    ? { type: {}, trainer: {}, participant: {}, location: {} }
-    : undefined;
-  for (const { facet, value, count } of facetData?.eventFacetsList ?? []) {
-    (facets![facet!] ??= {})[value!] = count ?? 0;
-  }
+  const facetData = facetResult.data;
+  const trainers = React.useMemo(
+    () =>
+      availableTrainers?.toSorted((a, b) => compareText(a.name, b.name)) ??
+      (facetData?.tenant?.tenantTrainersList ?? [])
+        .flatMap(({ person }) => (person ? [person] : []))
+        .toSorted(
+          (a, b) =>
+            compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
+        ),
+    [availableTrainers, facetData?.tenant?.tenantTrainersList],
+  );
+  const filterOptions = React.useMemo(() => {
+    const counts: Record<string, Record<string, number>> = {};
+    for (const { facet, value, count } of facetData?.eventFacetsList ?? []) {
+      if (facet && value) (counts[facet] ??= {})[value] = count ?? 0;
+    }
+    const count = (facet: string, x: string) =>
+      facetData ? (counts[facet]?.[x] ?? 0) : undefined;
+    const participantIds = condition.participantIds ?? [];
+    const trainerIds = condition.trainerIds ?? [];
+    return {
+      types: allEventTypes.map((type) => ({
+        value: type,
+        label: formatEventType(type),
+        count: count('type', type),
+      })),
+      trainers: trainers
+        .filter(
+          ({ id }) =>
+            showAllResources ||
+            !facetData ||
+            !!counts.trainer?.[id] ||
+            trainerIds.includes(id),
+        )
+        .map(({ id, name }) => ({ value: id, label: name, count: count('trainer', id) })),
+      participants: auth.isLoggedIn
+        ? (facetData?.people?.nodes ?? [])
+            .flatMap((person) => (person ? [person] : []))
+            .filter(({ id }) => !!counts.participant?.[id] || participantIds.includes(id))
+            .toSorted(
+              (a, b) =>
+                Number(participantIds.includes(b.id)) -
+                Number(participantIds.includes(a.id)),
+            )
+            .map(({ id, name }) => ({
+              value: id,
+              label: name,
+              count: count('participant', id),
+            }))
+        : [],
+      locations: (facetData?.tenant?.locationsList ?? [])
+        .filter(
+          ({ id, showInLists }) =>
+            auth.isAdmin || showInLists || filters.location.includes(id),
+        )
+        .map(({ id, name }) => ({
+          value: id,
+          label: name,
+          count: count('location', id),
+        })),
+    };
+  }, [
+    facetData,
+    trainers,
+    condition.participantIds,
+    condition.trainerIds,
+    filters.location,
+    showAllResources,
+    auth.isLoggedIn,
+    auth.isAdmin,
+  ]);
 
-  const refreshCalendar = React.useCallback((context?: Partial<OperationContext>) => {
-    refresh(context);
-    refreshFacets(context);
-  }, [refresh, refreshFacets]);
-
-  const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
+  const effectiveGroupBy = onlyMine ? 'none' : groupBy;
   const showActivities =
-    !filters.onlyFree &&
-    !filters.parentId &&
-    filters.locationIds.length === 0 &&
-    filters.eventTypes.length === allEventTypes.length;
-  const [{ data: activityData, fetching: activityFetching }] = useQuery({
-    query: ActivityTimelineDocument,
-    variables: {
-      since: overlaps.start,
-      until: overlaps.end,
-      personIds:
-        filters.participantIds.length > 0
-          ? filters.participantIds
-          : filters.onlyMine
-            ? filters.myPersonIds
-            : undefined,
-      kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
+    !filters.free &&
+    !parentId &&
+    !condition.locationIds &&
+    !condition.trainerIds &&
+    allEventTypes.every((type) => filters.types.includes(type));
+  const [{ data: activityData, fetching: activityFetching }, refreshActivities] =
+    useQuery({
+      query: ActivityTimelineDocument,
+      variables: {
+        since: overlaps.start,
+        until: overlaps.end,
+        personIds: onlyMine
+          ? auth.personIds.filter(
+              (id) => !condition.participantIds || condition.participantIds.includes(id),
+            )
+          : condition.participantIds,
+        kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
+      },
+      pause: !showActivities,
+    });
+
+  const refreshCalendar = React.useCallback(
+    (context?: Partial<OperationContext>) => {
+      refresh(context);
+      refreshFacets(context);
+      if (showActivities) refreshActivities(context);
     },
-    pause: !showActivities,
-  });
+    [refresh, refreshFacets, refreshActivities, showActivities],
+  );
 
   React.useEffect(() => {
     if (!view.nav) return;
-    const prev = prepareVariables(view.range(view.nav(date, -1)), filters);
-    const next = prepareVariables(view.range(view.nav(date, 1)), filters);
+    const prev = prepareVariables(view.range(view.nav(date, -1)), condition);
+    const next = prepareVariables(view.range(view.nav(date, 1)), condition);
     const timeout = setTimeout(() => {
       void client
         .query(EventListDocument, prev, { requestPolicy: 'cache-first' })
@@ -200,9 +303,9 @@ export function useCalendarData(
         .toPromise();
     }, 100);
     return () => clearTimeout(timeout);
-  }, [client, date, filters, view]);
+  }, [client, date, condition, view]);
 
-  const { events, resources } = React.useMemo(() => {
+  const { events: calendarEvents, resources } = React.useMemo(() => {
     const schedule = mapEventsToCalendar(data?.eventsList, effectiveGroupBy);
     const competitionItems: CompetitionEntry[] = [];
     const birthdays: CalendarEvent[] = [];
@@ -242,22 +345,46 @@ export function useCalendarData(
       items: entries,
     }));
 
+    if (effectiveGroupBy === 'trainer') {
+      for (const trainer of trainers) {
+        const resource: Resource = {
+          type: 'person',
+          id: trainer.id,
+          resourceTitle: trainer.name,
+        };
+        schedule.resources.set(resourceKey(resource), resource);
+      }
+    }
     if (effectiveGroupBy !== 'none' && competitions.length > 0) {
-      schedule.resources.push(competitionResource);
+      schedule.resources.set(resourceKey(competitionResource), competitionResource);
     }
     return {
       events: [...schedule.events, ...competitions, ...birthdays],
-      resources: schedule.resources,
+      resources: [...schedule.resources.values()]
+        .filter(
+          (resource) =>
+            effectiveGroupBy !== 'trainer' ||
+            !condition.trainerIds ||
+            (resource.type === 'person' && condition.trainerIds.includes(resource.id)),
+        )
+        .toSorted((a, b) => compareText(a.resourceTitle, b.resourceTitle)),
     };
-  }, [activityData?.activityTimelineList, data?.eventsList, effectiveGroupBy, showActivities]);
+  }, [
+    activityData?.activityTimelineList,
+    data?.eventsList,
+    effectiveGroupBy,
+    showActivities,
+    trainers,
+    condition.trainerIds,
+  ]);
 
   return {
     range,
-    events,
-    instances: data?.eventsList ?? [],
+    events: data?.eventsList ?? [],
+    calendarEvents,
     resources,
-    fetching: fetching || (showActivities && activityFetching),
-    facets,
+    fetching: fetching || facetResult.fetching || (showActivities && activityFetching),
+    filterOptions,
     refresh: refreshCalendar,
   };
 }

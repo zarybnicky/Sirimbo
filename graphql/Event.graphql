@@ -360,11 +360,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
         name
       }
       tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-        id
-        person {
-          id
-          name
-        }
+        ...TenantTrainerOption
       }
       tenantMembershipsList(condition: { status: ACTIVE }) {
         id
@@ -453,6 +449,7 @@ query CalendarFacets(
   $parentId: BigInt
   $locationIds: [BigInt]
   $canRegister: Boolean
+  $withParticipantOptions: Boolean! = false
 ) {
   eventFacetsList(
     startRange: $start, endRange: $end, onlyTypes: $types,
@@ -463,6 +460,23 @@ query CalendarFacets(
     facet
     value
     count
+  }
+  tenant: getCurrentTenant {
+    id
+    locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+      ...LocationOption
+    }
+    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+      ...TenantTrainerOption
+    }
+  }
+  people(
+    condition: { membership: { state: CURRENT } }
+    orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
+  ) @include(if: $withParticipantOptions) {
+    nodes {
+      ...PersonOption
+    }
   }
 }
 

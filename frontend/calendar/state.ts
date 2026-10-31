@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
-import { parseAsArrayOf, parseAsString, parseAsStringLiteral } from 'nuqs';
 import type { EventType } from '@/graphql';
 import type {
   CalendarInstanceEvent,
@@ -99,14 +98,6 @@ export const eventTypes = [
   'CAMP',
   'HOLIDAY',
 ] as const satisfies readonly EventType[];
-export const calendarFilterParsers = {
-  location: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
-  trainers: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
-  participants: parseAsArrayOf(parseAsString).withDefault([]).withOptions({ history: 'push' }),
-  types: parseAsArrayOf(parseAsStringLiteral(eventTypes))
-    .withDefault([...eventTypes]).withOptions({ history: 'push' }),
-};
-
 const baseGroupByAtom = atom(
   ((storage.getItem('groupBy') as any) || 'trainer') as 'none' | 'trainer' | 'room',
 );

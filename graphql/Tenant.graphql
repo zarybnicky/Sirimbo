@@ -1,22 +1,3 @@
-fragment LocationSummary on Location {
-  id
-  name
-  showInLists
-  coverImage {
-    id
-    url
-  }
-  address {
-    city
-    conscriptionNumber
-    district
-    orientationNumber
-    postalCode
-    region
-    street
-  }
-}
-
 fragment TenantFull on Tenant {
   id
   name
@@ -86,21 +67,6 @@ query TenantForm {
     name
     bankAccount
     description
-  }
-}
-
-query TrainerOptions {
-  tenant: getCurrentTenant {
-    id
-    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-      id
-      person {
-        id
-        name
-        firstName
-        lastName
-      }
-    }
   }
 }
 

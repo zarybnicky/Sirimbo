@@ -6,6 +6,11 @@ export type DateRange = {
   until: Date;
 };
 
+export type CalendarTrainer = {
+  id: string;
+  name: string;
+};
+
 type CalendarItemBase = {
   start: Date;
   end: Date;
@@ -41,9 +46,7 @@ export type CalendarBirthdayEvent = CalendarItemBase & {
 };
 
 export type CalendarEvent =
-  | CalendarInstanceEvent
-  | CalendarCompetitionEvent
-  | CalendarBirthdayEvent;
+  CalendarInstanceEvent | CalendarCompetitionEvent | CalendarBirthdayEvent;
 
 export type ResourceRef =
   | { type: 'person' | 'location' | 'locationText'; id: string }

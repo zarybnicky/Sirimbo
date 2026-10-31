@@ -324,6 +324,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
             id: args.input.eventId,
           });
         }
+        invalidateQueryFields(cache, ['eventsList', 'eventFacetsList']);
       },
       setEventSharing(_result, args, cache, _info) {
         if (args.input.id) {
@@ -334,6 +335,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         for (const event of result.updateEventSeries?.eventSeries?.eventsList ?? []) {
           cache.invalidate({ __typename: 'Event', id: event.id });
         }
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
       },
 
       createCouple(_result, args, cache, _info) {
@@ -417,15 +419,15 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deleteEvent(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.id });
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
       },
       updateEvent(result, _args, cache, _info) {
         const id = result.updateEvent?.event?.id;
         if (id) cache.invalidate({ __typename: 'Event', id });
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
       },
       moveEvent(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
       },
 
       createPerson(_result, _args, cache, _info) {
@@ -447,7 +449,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         for (const event of result.saveEvents?.result ?? []) {
           cache.invalidate({ __typename: 'Event', id: event.id });
         }
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps']);
+        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
       },
 
       createPersonInvitation(_result, args, cache, _info) {
