@@ -8,6 +8,7 @@ import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { Members, History } from './Tables';
+import { ResultHighlights } from '../../ResultHighlights';
 import { formatCoupleName, formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
@@ -92,7 +93,9 @@ export default async function CompetitorPage({ params }: Props) {
           </Table>
         </>
       )}
+
       <Members federation={federation} id={competitor.id} />
+      <ResultHighlights results={competitor.resultHighlightsList} />
       <History federation={federation} id={competitor.id} />
     </Layout>
   );

@@ -14,6 +14,7 @@ import { formatAgeGroup } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
+import { ResultHighlights } from '../../ResultHighlights';
 import { Sources } from '../../Sources';
 
 type Props = {
@@ -145,6 +146,8 @@ export default async function FederatedPersonPage({ params }: Props) {
           </tr>
         ))}
       </Table>
+
+      <ResultHighlights results={person.resultHighlightsList} />
 
       {(person.eventOfficialAssignments.totalCount > 0 ||
         person.competitionOfficialAssignments.totalCount > 0) && (

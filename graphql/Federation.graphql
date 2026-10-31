@@ -248,6 +248,16 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
   }
 }
 
+fragment ResultHighlight on CompetitionResult {
+  competitionId
+  competitorId
+  ranking
+  rankingTo
+  competition {
+    ...Competition
+  }
+}
+
 query FederationPerson($federation: String!, $externalId: BigInt!) {
   federationPersonByFederationAndExternalId(
     federation: $federation
@@ -271,6 +281,9 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     federationByFederation {
       code
       name
+    }
+    resultHighlightsList {
+      ...ResultHighlight
     }
     licenses(first: 100, orderBy: [KIND_ASC, DISCIPLINE_ASC]) {
       nodes {
@@ -323,6 +336,9 @@ query FederationCompetitor($id: String!) {
     }
     couplesList(orderBy: [SINCE_DESC, ID_ASC]) {
       ...Couple
+    }
+    resultHighlightsList {
+      ...ResultHighlight
     }
   }
 }

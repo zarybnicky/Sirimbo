@@ -35,6 +35,7 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/scoreboard.sql
 --!include functions/refresh_wdsf_round_dances.sql
 --!include functions/refresh_competition_round_results.sql
+--!include functions/result_highlights.sql
 
 do $$
 begin

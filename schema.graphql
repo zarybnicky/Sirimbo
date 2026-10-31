@@ -7438,6 +7438,13 @@ type FederationCompetitor {
     """The method to use when ordering `RanklistEntry`."""
     orderBy: [RanklistEntriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): RanklistEntryConnection!
+  resultHighlightsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [CompetitionResult!]!
 
   """
   Reads and enables pagination through a set of `CompetitionRoundResult`.
@@ -8463,6 +8470,13 @@ type FederationPerson {
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!]
   ): [Person!]!
+  resultHighlightsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [CompetitionResult!]!
 
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   roundJudgeAssignments(
