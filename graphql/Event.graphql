@@ -445,7 +445,8 @@ query CalendarFacets(
   $types: [EventType!]
   $trainerIds: [BigInt]
   $participantIds: [BigInt]
-  $scope: EventInstanceRangeScope
+  $onlyMine: Boolean
+  $relevantOnly: Boolean
   $parentId: BigInt
   $locationIds: [BigInt]
   $canRegister: Boolean
@@ -454,7 +455,8 @@ query CalendarFacets(
   eventFacetsList(
     startRange: $start, endRange: $end, onlyTypes: $types,
     trainerIds: $trainerIds, participantIds: $participantIds,
-    scope: $scope, parentId: $parentId, locationIds: $locationIds,
+    onlyMine: $onlyMine, relevantOnly: $relevantOnly,
+    parentId: $parentId, locationIds: $locationIds,
     canRegister: $canRegister
   ) {
     facet

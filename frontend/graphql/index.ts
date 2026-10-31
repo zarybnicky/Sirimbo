@@ -4826,11 +4826,14 @@ export type EventCondition = {
   locationText?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Only events where the viewer has an active registration or trainer assignment. */
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   overlaps?: InputMaybe<EventRangeCondition>;
   /** Checks for equality with the object’s `parentId` field. */
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  scope?: InputMaybe<EventScopeCondition>;
+  /** Only top-level events, the viewer’s events, and children of the viewer’s events. */
+  relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `seriesId` field. */
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -5238,11 +5241,6 @@ export type EventRegistrationsOrderBy =
   | 'TENANT_ID_DESC'
   | 'UPDATED_AT_ASC'
   | 'UPDATED_AT_DESC';
-
-export type EventScopeCondition = {
-  mode?: InputMaybe<EventInstanceRangeScope>;
-  parentId?: InputMaybe<Scalars['BigInt']['input']>;
-};
 
 export type EventSeries = {
   __typename?: 'EventSeries';
@@ -9616,7 +9614,7 @@ export type Query = {
    * @deprecated Use event.
    */
   eventInstance: Maybe<Event>;
-  /** @deprecated Use events or eventsList with filters. */
+  /** @deprecated Use eventsList with filters. */
   eventInstancesForRangeList: Maybe<Array<Event>>;
   eventOverlapsAttendeeReportList: Maybe<Array<EventConflict>>;
   eventOverlapsTrainerReportList: Maybe<Array<EventConflict>>;
@@ -10193,10 +10191,11 @@ export type QueryEventFacetsListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   onlyTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  scope?: InputMaybe<EventInstanceRangeScope>;
+  relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
   trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };

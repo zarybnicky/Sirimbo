@@ -268,21 +268,25 @@ VALUES (1000, 9900003, 2900005, 'manager', 'unknown');
 
 SELECT set_config('jwt.claims.my_person_ids', '[2900002]', true);
 
-WITH expected(scope, parent_id, ids) AS (VALUES
-  ('all'::event_instance_range_scope, null::bigint, ARRAY[9900001,9900002,9900003,9900004,9900005]::bigint[]),
-  ('mine', null, ARRAY[9900001,9900004]),
-  ('relevant', null, ARRAY[9900001,9900002,9900003,9900004]),
-  ('all', 9900001, ARRAY[9900002])
+WITH expected(only_mine, relevant_only, parent_id, event_count) AS (VALUES
+  (false, false, null::bigint, 5),
+  (true, false, null, 2),
+  (false, true, null, 4),
+  (true, true, null, 2),
+  (false, false, 9900001, 1),
+  (false, true, 9900001, 1),
+  (true, false, 9900001, 0)
 )
 SELECT tap.ok(NOT EXISTS (
   SELECT FROM expected
-  WHERE ids IS DISTINCT FROM (
-    SELECT array_agg(id ORDER BY id)
-    FROM event_instances_for_range(null, now(), now() + interval '1 day',
-      parent_id => expected.parent_id, scope => expected.scope)
-    WHERE id BETWEEN 9900001 AND 9900005
+  WHERE event_count IS DISTINCT FROM (
+    SELECT coalesce(sum(count), 0)::integer
+    FROM event_facets(now(), now() + interval '1 day',
+      parent_id => expected.parent_id, only_mine => expected.only_mine,
+      relevant_only => expected.relevant_only)
+    WHERE facet = 'type'
   )
-), 'event range scopes and parent filtering select the expected events');
+), 'event facets combine mine, relevant and parent restrictions');
 
 SET LOCAL ROLE trainer;
 SELECT set_lesson_request(eir.id, trainer.id, 1)

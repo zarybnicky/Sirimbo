@@ -24,7 +24,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
           start: startDate.toISOString(),
           end: add(startDate, 1, 'week').toISOString(),
         },
-        scope: { mode: 'MINE' },
+        onlyMine: true,
       },
       orderBy: ['SINCE_ASC'],
     },

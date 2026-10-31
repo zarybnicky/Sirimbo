@@ -5945,12 +5945,21 @@ input EventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+
+  """
+  Only events where the viewer has an active registration or trainer assignment.
+  """
+  onlyMine: Boolean
   overlaps: EventRangeCondition
 
   """Checks for equality with the object’s `parentId` field."""
   parentId: BigInt
   participantIds: [BigInt]
-  scope: EventScopeCondition
+
+  """
+  Only top-level events, the viewer’s events, and children of the viewer’s events.
+  """
+  relevantOnly: Boolean
 
   """Checks for equality with the object’s `seriesId` field."""
   seriesId: BigInt
@@ -6443,11 +6452,6 @@ enum EventRegistrationsOrderBy {
   UPDATED_AT_DESC
 }
 
-input EventScopeCondition {
-  mode: EventInstanceRangeScope = ALL
-  parentId: BigInt
-}
-
 type EventSeries {
   createdAt: Datetime!
 
@@ -6767,6 +6771,17 @@ enum EventsOrderBy {
   UNTIL_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+type FederatedResultHighlight {
+  category: Category
+  competitionType: CompetitionType
+  competitor: FederationCompetitor
+  federation: String
+  ranking: Int
+  rankingTo: Int
+  resultCount: Int
+  results: [CompetitionResult]
 }
 
 type Federation {
@@ -7444,7 +7459,7 @@ type FederationCompetitor {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [CompetitionResult!]!
+  ): [FederatedResultHighlight!]!
 
   """
   Reads and enables pagination through a set of `CompetitionRoundResult`.
@@ -8476,7 +8491,8 @@ type FederationPerson {
 
     """Skip the first `n` values."""
     offset: Int
-  ): [CompetitionResult!]!
+    perCompetitor: Boolean
+  ): [FederatedResultHighlight!]!
 
   """Reads and enables pagination through a set of `CompetitionRoundJudge`."""
   roundJudgeAssignments(
@@ -12612,33 +12628,18 @@ type Query {
 
     """Skip the first `n` values."""
     offset: Int
+    onlyMine: Boolean
     onlyTypes: [EventType]
     parentId: BigInt
     participantIds: [BigInt]
-    scope: EventInstanceRangeScope
+    relevantOnly: Boolean
     startRange: Datetime
     trainerIds: [BigInt]
   ): [EventFacetsRecord!]
 
   """Get a single `Event`."""
   eventInstance(id: BigInt!): Event @deprecated(reason: "Use event.")
-  eventInstancesForRangeList(
-    endRange: Datetime
-
-    """Only read the first `n` values of the set."""
-    first: Int
-    locationIds: [BigInt]
-
-    """Skip the first `n` values."""
-    offset: Int
-    onlyType: EventType
-    onlyTypes: [EventType]
-    parentId: BigInt
-    participantIds: [BigInt]
-    scope: EventInstanceRangeScope
-    startRange: Datetime
-    trainerIds: [BigInt]
-  ): [Event!] @deprecated(reason: "Use events or eventsList with filters.")
+  eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
   eventOverlapsAttendeeReportList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -12726,6 +12727,25 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]
   ): [Event!]
+
+  """
+  Placement groups with supporting results. Since is inclusive; until is exclusive. Per competitor defaults to true; false combines the selected competitors.
+  """
+  federatedResultHighlightsList(
+    categoryIds: [BigInt]
+    competitionTypes: [CompetitionType]
+    competitorIds: [String]
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    perCompetitor: Boolean
+    placements: [Int]
+    since: Date
+    until: Date
+  ): [FederatedResultHighlight!]!
 
   """Get a single `Federation`."""
   federation(code: String!): Federation

@@ -1,10 +1,32 @@
 import assert from 'node:assert';
-import { sql, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
-import { access, constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
+import { sql, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
+import { access, applyInput, constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
 export const LegacyShimsPlugin = extendSchema((build) => ({
   typeDefs: `
+    enum EventInstanceRangeScope {
+      ALL
+      MINE
+      RELEVANT
+    }
+
+    extend type Query {
+      eventInstancesForRangeList(
+        onlyType: EventType
+        startRange: Datetime
+        endRange: Datetime
+        trainerIds: [BigInt]
+        participantIds: [BigInt]
+        parentId: BigInt
+        scope: EventInstanceRangeScope = ALL
+        locationIds: [BigInt]
+        onlyTypes: [EventType]
+        first: Int
+        offset: Int
+      ): [Event!] @deprecated(reason: "Use eventsList with filters.")
+    }
+
     type EventExternalRegistration {
       id: BigInt!
       note: String
@@ -25,6 +47,52 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
     }
   `,
   objects: {
+    Query: {
+      plans: {
+        eventInstancesForRangeList($root, args, info) {
+          const query = build.getTypeByName('Query');
+          assert(build.graphql.isObjectType(query));
+          const plan = query.getFields().eventsList.extensions?.grafast?.plan;
+          assert(plan);
+          const $events = plan($root, args, info) as PgSelectStep;
+          const $condition = lambda(args.getRaw(), (input) => ({
+            type: input.onlyType ?? undefined,
+            types: input.onlyTypes,
+            trainerIds: input.trainerIds,
+            participantIds: input.participantIds,
+            locationIds: input.locationIds,
+            parentId: input.parentId ?? undefined,
+            onlyMine: input.scope === 'MINE' ||
+              (input.scope === null && input.parentId != null),
+            relevantOnly: input.scope === 'RELEVANT' && input.parentId == null,
+          }));
+          // Grafast accepts computed input steps; its input type excludes LambdaStep.
+          $events.apply(applyInput(
+            build.getInputTypeByName('EventCondition'),
+            $condition as unknown as Parameters<typeof applyInput>[1],
+            (qb) => qb.whereBuilder(),
+          ));
+
+          // Preserve the old function's tenant restriction and range semantics,
+          // including omitted/null bounds and zero-length or reversed windows.
+          const row = $events.alias;
+          const start = $events.placeholder(args.$startRange, TYPES.timestamptz);
+          const end = $events.placeholder(args.$endRange, TYPES.timestamptz);
+          const scope = $events.placeholder(args.$scope, TYPES.text);
+          const parent = $events.placeholder(args.$parentId, TYPES.bigint);
+          $events.where(sql`${row}.tenant_id = public.current_tenant_id()`);
+          $events.where(sql`(${scope} is not null or ${parent} is not null)`);
+          $events.where(sql`${start} is not null
+            and ${row}.since < coalesce(${end}, 'infinity'::timestamptz)
+            and app_private.tstzrange_overlaps(${row}.range, tstzrange(
+              ${start}, greatest(${start}, coalesce(${end}, 'infinity'::timestamptz)), '[]'))`);
+          $events.orderBy({ attribute: 'since', direction: 'ASC' });
+          $events.setFirst(args.$first);
+          $events.setOffset(args.$offset);
+          return $events;
+        },
+      },
+    },
     EventTrainer: {
       plans: {
         name($trainer, args, info) {

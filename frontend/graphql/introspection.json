@@ -26760,6 +26760,13 @@
                 }
               },
               {
+                "name": "onlyMine",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "onlyTypes",
                 "type": {
                   "kind": "LIST",
@@ -26787,7 +26794,7 @@
                 }
               },
               {
-                "name": "scope",
+                "name": "relevantOnly",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"

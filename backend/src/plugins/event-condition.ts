@@ -2,10 +2,6 @@ import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type EventRangeCondition = { start: string; end?: string | null };
-type EventScopeCondition = {
-  mode?: 'all' | 'mine' | 'relevant' | null;
-  parentId?: string | null;
-};
 
 const plugins: GraphileConfig.Plugin[] = [
   extendSchema({
@@ -15,10 +11,6 @@ const plugins: GraphileConfig.Plugin[] = [
         start: Datetime!
         """Exclusive end of the time window. Omit for an unbounded end."""
         end: Datetime
-      }
-      input EventScopeCondition {
-        mode: EventInstanceRangeScope = ALL
-        parentId: BigInt
       }
     `,
   }),
@@ -46,35 +38,32 @@ const plugins: GraphileConfig.Plugin[] = [
       return sql`app_private.tstzrange_overlaps(${row}.range, tstzrange(${since}, ${until}, '[)'))`;
     },
   ),
-  addPgTableCondition(
-    { schemaName: 'public', tableName: 'event' },
-    'scope',
-    (build) => ({ type: build.getInputTypeByName('EventScopeCondition') }),
-    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
-      if (value == null) return null;
-      const { mode = 'all', parentId } = value as EventScopeCondition;
-      const mine = sql`
-        select event_id from public.event_registration
-        where person_id = any((select public.current_person_ids())::bigint[])
-          and registration_status = 'active'
-        union all
-        select event_id from public.event_trainer
-        where person_id = any((select public.current_person_ids())::bigint[])
-      `;
-      if (parentId != null) {
-        const parent = sql`${row}.parent_id = ${sqlValueWithCodec(parentId, TYPES.bigint)}`;
-        return mode === 'mine' || mode === null
-          ? sql`${parent} and ${row}.id in (${mine})`
-          : parent;
-      }
-      switch (mode) {
-        case 'all': return null;
-        case 'mine': return sql`${row}.id in (${mine})`;
-        case 'relevant': return sql`(${row}.parent_id is null
-          or ${row}.id in (${mine}) or ${row}.parent_id in (${mine}))`;
-        default: return sql`false`;
-      }
-    },
+  ...(['onlyMine', 'relevantOnly'] as const).map((field) =>
+    addPgTableCondition(
+      { schemaName: 'public', tableName: 'event' },
+      field,
+      (build) => ({
+        type: build.graphql.GraphQLBoolean,
+        description: field === 'onlyMine'
+          ? 'Only events where the viewer has an active registration or trainer assignment.'
+          : 'Only top-level events, the viewer’s events, and children of the viewer’s events.',
+      }),
+      (value, { sql, sqlTableAlias: row }) => {
+        if (!value) return null;
+        const mine = sql`
+          select event_id from public.event_registration
+          where person_id = any((select public.current_person_ids())::bigint[])
+            and registration_status = 'active'
+          union all
+          select event_id from public.event_trainer
+          where person_id = any((select public.current_person_ids())::bigint[])
+        `;
+        return field === 'onlyMine'
+          ? sql`${row}.id in (${mine})`
+          : sql`(${row}.parent_id is null
+              or ${row}.id in (${mine}) or ${row}.parent_id in (${mine}))`;
+      },
+    ),
   ),
   ...(['types', 'trainerIds', 'participantIds', 'locationIds'] as const).map((field) =>
     addPgTableCondition(

@@ -58,11 +58,14 @@ export type EventCondition = {
   locationText?: string | null | undefined;
   /** Checks for equality with the object’s `name` field. */
   name?: string | null | undefined;
+  /** Only events where the viewer has an active registration or trainer assignment. */
+  onlyMine?: boolean | null | undefined;
   overlaps?: EventRangeCondition | null | undefined;
   /** Checks for equality with the object’s `parentId` field. */
   parentId?: string | null | undefined;
   participantIds?: Array<string | null | undefined> | null | undefined;
-  scope?: EventScopeCondition | null | undefined;
+  /** Only top-level events, the viewer’s events, and children of the viewer’s events. */
+  relevantOnly?: boolean | null | undefined;
   /** Checks for equality with the object’s `seriesId` field. */
   seriesId?: string | null | undefined;
   /** Checks for equality with the object’s `since` field. */
@@ -81,21 +84,11 @@ export type EventCondition = {
   updatedAt?: string | null | undefined;
 };
 
-export type EventInstanceRangeScope =
-  | 'ALL'
-  | 'MINE'
-  | 'RELEVANT';
-
 export type EventRangeCondition = {
   /** Exclusive end of the time window. Omit for an unbounded end. */
   end?: string | null | undefined;
   /** Inclusive start of the time window. */
   start: string;
-};
-
-export type EventScopeCondition = {
-  mode?: EventInstanceRangeScope | null | undefined;
-  parentId?: string | null | undefined;
 };
 
 export type EventType =

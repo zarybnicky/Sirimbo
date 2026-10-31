@@ -150,14 +150,9 @@ export function useCalendarData({
         ? filters.types.filter((type) => type !== 'GROUP')
         : filters.types,
       canRegister: filters.free ? true : undefined,
-      scope: {
-        mode: onlyMine
-          ? 'MINE'
-          : parentId || filters.location.length > 0
-            ? 'ALL'
-            : 'RELEVANT',
-        parentId,
-      },
+      onlyMine,
+      relevantOnly: !parentId && filters.location.length === 0,
+      parentId,
     } satisfies EventCondition;
   }, [
     availableTrainers,
@@ -180,7 +175,6 @@ export function useCalendarData({
       ...condition,
       start: overlaps.start,
       end: overlaps.end,
-      scope: condition.scope.mode,
       parentId,
       withParticipantOptions: auth.isLoggedIn,
     },
