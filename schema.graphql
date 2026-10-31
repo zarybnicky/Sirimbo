@@ -5894,6 +5894,9 @@ enum EventCapacityUnit {
 A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input EventCondition {
+  """Whether a self-service registration is available."""
+  canRegister: Boolean
+
   """Checks for equality with the object’s `capacity` field."""
   capacity: Int
 
@@ -6369,6 +6372,7 @@ type EventRegistrationEdge {
 }
 
 type EventRegistrationInfo {
+  canRegister: Boolean
   my: Boolean
   people: Int
   registrations: Int
@@ -12586,6 +12590,7 @@ type Query {
   """Get a single `Event`."""
   event(id: BigInt!): Event
   eventFacetsList(
+    canRegister: Boolean
     endRange: Datetime
 
     """Only read the first `n` values of the set."""

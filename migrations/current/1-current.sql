@@ -18,6 +18,7 @@ drop function if exists app_private.event_instance_trainers_at;
 drop function if exists app_private.event_trainers_at(event, timestamptz);
 
 --!include functions/event_instances_for_range.sql
+--!include functions/event_registration_info.sql
 --!include functions/event_facets.sql
 --!include functions/set_event_registration.sql
 --!include functions/event_trainer_lessons_remaining.sql

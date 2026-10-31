@@ -24,6 +24,18 @@ const plugins: GraphileConfig.Plugin[] = [
   }),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'event' },
+    'canRegister',
+    (build) => ({
+      type: build.graphql.GraphQLBoolean,
+      description: 'Whether a self-service registration is available.',
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
+      value == null
+        ? null
+        : sql`(public.event_registration_info(${row})).can_register = ${sqlValueWithCodec(value, TYPES.boolean)}`,
+  ),
+  addPgTableCondition(
+    { schemaName: 'public', tableName: 'event' },
     'overlaps',
     (build) => ({ type: build.getInputTypeByName('EventRangeCondition') }),
     (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
@@ -82,7 +94,7 @@ const plugins: GraphileConfig.Plugin[] = [
         if (values == null) return null;
         if (values.length === 0) return sql`false`;
         if (field === 'types')
-          return sql`${row}.type::text = any(${sqlValueWithCodec(values, LIST_TYPES.text)})`;
+          return sql`${row}.type = any(${sqlValueWithCodec(values, LIST_TYPES.text)}::public.event_type[])`;
         const ids = sqlValueWithCodec(values, LIST_TYPES.bigint);
         if (field === 'locationIds') return sql`${row}.location_id = any(${ids})`;
         return sql`exists (

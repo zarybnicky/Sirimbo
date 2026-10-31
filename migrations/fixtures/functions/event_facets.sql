@@ -1,3 +1,5 @@
+drop function if exists event_facets(timestamptz, timestamptz, event_type[], bigint[], bigint[], bigint, event_instance_range_scope, bigint[]);
+
 create or replace function event_facets(
   start_range timestamptz,
   end_range timestamptz,
@@ -6,7 +8,8 @@ create or replace function event_facets(
   participant_ids bigint[] default null,
   parent_id bigint default null,
   scope event_instance_range_scope default 'all',
-  location_ids bigint[] default null
+  location_ids bigint[] default null,
+  can_register boolean default null
 ) returns table(facet text, value text, count integer)
 language sql stable as $$
   with mine as (
@@ -25,6 +28,7 @@ language sql stable as $$
     where i.tenant_id = current_tenant_id()
       and start_range is not null
       and app_private.tstzrange_overlaps(i.range, tstzrange(start_range, end_range, '[)'))
+      and (can_register is null or (event_registration_info(i)).can_register = can_register)
       and case
         when $6 is not null then i.parent_id = $6
           and (scope <> 'mine' or i.id in (select event_id from mine))
