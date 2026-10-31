@@ -60,7 +60,6 @@ export function resourceKey(resource?: ResourceRef): string {
 }
 
 export type ViewProps = {
-  parentId?: string;
   range: DateRange;
   events: readonly CalendarEvent[];
   backgroundEvents: readonly CalendarEvent[];

@@ -1,6 +1,7 @@
 import { atom } from 'jotai';
 import { selectAtom } from 'jotai/utils';
 import type { EventType } from '@/graphql';
+import type { CreateEventDefaults } from './eventDefaults';
 import type {
   CalendarInstanceEvent,
   DragAction,
@@ -62,6 +63,7 @@ export const dragListenersAtom = atom<{
     subject: ExternalDragSubject,
     info: InteractionInfo,
   ) => void | Promise<void>;
+  onCreate?: (defaults: CreateEventDefaults) => void;
   onSelectSlot?: (slot: SlotInfo) => void;
   onDrillDown?: (date: Date) => void;
 }>({});

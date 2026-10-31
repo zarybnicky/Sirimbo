@@ -1,5 +1,4 @@
-import { CalendarView } from '@/calendar/CalendarViews';
-import type { DateRange } from '@/calendar/types';
+import type { CalendarView } from '@/calendar/CalendarViews';
 import { buttonCls, buttonGroupCls } from '@/ui/style';
 import { MoveLeft, MoveRight } from 'lucide-react';
 
@@ -7,29 +6,21 @@ export function DateNavigator({
   date,
   setDate,
   view,
-  bounds,
 }: {
   setDate: (x: Date) => void;
   view: CalendarView;
   date: Date;
-  bounds?: DateRange;
 }) {
   const previous = view.nav?.(date, -1);
   const next = view.nav?.(date, 1);
   const today = new Date();
-  const canShow = (candidate: Date | undefined) => {
-    if (!candidate) return false;
-    if (!bounds) return true;
-    const range = view.range(candidate);
-    return range.until >= bounds.since && range.since <= bounds.until;
-  };
 
   return (
     <div className={buttonGroupCls()}>
       <button
         type="button"
         className={buttonCls({ size: 'sm', variant: 'outline', className: 'py-0' })}
-        disabled={!canShow(previous)}
+        disabled={!previous}
         onClick={() => previous && setDate(previous)}
       >
         <MoveLeft className="size-6! mx-1" />
@@ -37,7 +28,6 @@ export function DateNavigator({
       <button
         type="button"
         className={buttonCls({ size: 'sm', variant: 'outline' })}
-        disabled={!canShow(today)}
         onClick={() => setDate(today)}
       >
         Dnes
@@ -45,7 +35,7 @@ export function DateNavigator({
       <button
         type="button"
         className={buttonCls({ size: 'sm', variant: 'outline', className: 'py-0' })}
-        disabled={!canShow(next)}
+        disabled={!next}
         onClick={() => next && setDate(next)}
       >
         <MoveRight className="size-6! mx-1" />

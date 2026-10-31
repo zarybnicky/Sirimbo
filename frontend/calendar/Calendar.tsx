@@ -42,7 +42,6 @@ import {
   type CalendarInstanceEvent,
   type DateRange,
   type InteractionInfo,
-  type SlotInfo,
   type ViewProps,
 } from './types';
 
@@ -168,13 +167,11 @@ export function Calendar({
   );
   const [creating, setCreating] = React.useState<CreateEventDefaults>();
 
-  const onSelectSlot = React.useCallback(
-    (slot: SlotInfo) => {
-      const defaults = defaultsFromSlot(slot);
+  const onCreate = React.useCallback(
+    (defaults: CreateEventDefaults) => {
       const [locationId] = filters.location;
-      if (filters.location.length === 1 && locationId) {
-        defaults.locationId = locationId;
-        defaults.locationText = '';
+      if (!defaults.after && filters.location.length === 1 && locationId) {
+        defaults = { ...defaults, locationId, locationText: '' };
       }
       setTimeout(() => setCreating((prev) => prev || defaults));
     },
@@ -195,7 +192,8 @@ export function Calendar({
       onResize,
       onRemove,
       onDropFromOutside,
-      onSelectSlot,
+      onCreate,
+      onSelectSlot: (slot) => onCreate(defaultsFromSlot(slot)),
       onDrillDown,
     });
     return () => setDragListeners({});
@@ -204,14 +202,13 @@ export function Calendar({
     onResize,
     onRemove,
     onDropFromOutside,
-    onSelectSlot,
+    onCreate,
     onDrillDown,
     setDragListeners,
   ]);
 
   const viewElement = (
     <view.component
-      parentId={parentId}
       range={range}
       events={calendarEvents}
       backgroundEvents={emptyArray}
@@ -239,7 +236,6 @@ export function Calendar({
               date={date}
               setDate={(date) => void setFilters({ date })}
               view={view}
-              bounds={dateRange}
             />
           )}
           <ViewPicker

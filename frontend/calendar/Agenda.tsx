@@ -1,15 +1,9 @@
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
-import type {
-    CalendarBirthdayEvent,
-    CalendarCompetitionEvent,
-    ViewProps,
-} from '@/calendar/types';
+import type { CalendarBirthdayEvent, ViewProps } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { CompetitionEventContent } from '@/ui/Competitions';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import {
@@ -24,67 +18,37 @@ import { startOf } from 'date-arithmetic';
 import { Cake, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useAtomValue } from 'jotai';
-import { dragListenersAtom } from './state';
+import { useAtomValue } from 'jotai'; import { dragListenersAtom } from './state';
 
-type MapItem = {
-  birthdays: CalendarBirthdayEvent[];
-  competitions: CalendarCompetitionEvent[];
-  lessons: Map<string, EventWithTrainerFragment[]>;
-  groups: EventWithTrainerFragment[];
-};
-
-const preventDefault = (e: Event) => e.preventDefault();
-
-function Agenda({ events, parentId }: ViewProps): React.ReactNode {
+function Agenda({ events }: ViewProps): React.ReactNode {
   const auth = useAuth();
-  const { onSelectSlot } = useAtomValue(dragListenersAtom);
+  const { onCreate } = useAtomValue(dragListenersAtom);
 
   const dataByDay = React.useMemo(() => {
-    const map = new Map<number, MapItem>();
-    for (const calendarEvent of events) {
-      const date = startOf(calendarEvent.start, 'day').valueOf();
-      const mapItem: MapItem = map.get(date) ?? {
-        birthdays: [],
-        competitions: [],
-        groups: [],
-        lessons: new Map(),
-      };
-
-      if (calendarEvent.kind === 'birthday') {
-        mapItem.birthdays.push(calendarEvent);
-      } else if (calendarEvent.kind === 'competition') {
-        mapItem.competitions.push(calendarEvent);
-      } else {
-        const { instance } = calendarEvent;
-        if (instance.type === 'LESSON') {
-          const key =
-            instance.eventTrainersList
-              ?.map((x) => x.personId)
-              .toSorted()
-              .join(',') ?? '';
-          const arr = mapItem.lessons.get(key);
-          if (arr) arr.push(calendarEvent.instance);
-          else mapItem.lessons.set(key, [calendarEvent.instance]);
-        } else {
-          mapItem.groups.push(calendarEvent.instance);
-        }
-      }
-      map.set(date, mapItem);
-    }
-    const list = [...map.entries()].map(
-      ([date, itemMap]) =>
-        [
+    return [...Map.groupBy(events, (e) => +startOf(e.start, 'day'))]
+      .toSorted(([x], [y]) => x - y)
+      .map(([date, items]) => {
+        const events = items.filter((e) => e.kind === 'event').map((e) => e.instance);
+        return [
           date,
           {
-            birthdays: itemMap.birthdays.toSorted(
-              (x, y) =>
-                compareText(x.person.lastName, y.person.lastName) ||
-                compareText(x.person.firstName, y.person.firstName),
-            ),
-            competitions: itemMap.competitions,
-            groups: itemMap.groups.toSorted((x, y) => x.since.localeCompare(y.since)),
-            lessons: [...itemMap.lessons.entries()]
+            birthdays: items
+              .filter((e) => e.kind === 'birthday')
+              .toSorted(
+                (x, y) =>
+                  compareText(x.person.lastName, y.person.lastName) ||
+                  compareText(x.person.firstName, y.person.firstName),
+              ),
+            competitions: items.filter((e) => e.kind === 'competition'),
+            groups: events
+              .filter((e) => e.type !== 'LESSON')
+              .toSorted((x, y) => x.since.localeCompare(y.since)),
+            lessons: [
+              ...Map.groupBy(
+                events.filter((e) => e.type === 'LESSON'),
+                (e) => e.eventTrainersList.map((x) => x.personId).toSorted().join(','),
+              ),
+            ]
               .map(
                 ([trainers, items]) =>
                   [
@@ -94,9 +58,8 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
               )
               .toSorted((x, y) => x[0].localeCompare(y[0])),
           },
-        ] as const,
-    );
-    return list.toSorted((x, y) => x[0] - y[0]);
+        ] as const;
+      });
   }, [events]);
 
   return (
@@ -117,14 +80,7 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
                   type="button"
                   aria-label={`Přidat událost na ${fullDateFormatter.format(new Date(date))}`}
                   className={buttonCls({ display: 'none', variant: 'none' })}
-                  onClick={() => {
-                    const start = new Date(date);
-                    onSelectSlot?.({
-                      start,
-                      end: start,
-                      action: 'day',
-                    });
-                  }}
+                  onClick={() => onCreate?.({ date: new Date(date) })}
                 >
                   <Plus />
                 </button>
@@ -151,7 +107,7 @@ function Agenda({ events, parentId }: ViewProps): React.ReactNode {
               <GroupLesson key={instance.id} instance={instance} />
             ))}
             {dateEntry.lessons.map(([ids, items]) => (
-              <LessonGroup key={ids} items={items} parentId={parentId} />
+              <LessonGroup key={ids} items={items} />
             ))}
           </div>
         </React.Fragment>
@@ -203,14 +159,9 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
   );
 }
 
-function LessonGroup({
-  items,
-  parentId,
-}: {
-  items: EventWithTrainerFragment[];
-  parentId?: string;
-}) {
+function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
   const auth = useAuth();
+  const { onCreate } = useAtomValue(dragListenersAtom);
 
   return (
     <div
@@ -220,17 +171,18 @@ function LessonGroup({
       })}
     >
       {auth.isTrainer && (
-        <Dialog modal={false}>
-          <DialogTrigger.Add
-            display="none"
-            variant="none"
-            text=""
-            className="absolute top-1 right-0"
-          />
-          <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            <CreateEventForm after={items.at(-1)} parentId={parentId} />
-          </DialogContent>
-        </Dialog>
+        <button
+          type="button"
+          aria-label="Přidat lekci"
+          className={buttonCls({
+            display: 'none',
+            variant: 'none',
+            className: 'absolute top-1 right-0',
+          })}
+          onClick={() => onCreate?.({ after: items.at(-1) })}
+        >
+          <Plus />
+        </button>
       )}
 
       <div className="ml-2 text-xl mb-1">
