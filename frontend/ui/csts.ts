@@ -96,6 +96,33 @@ export function getCoupleAgeGroups(
   );
 }
 
+export const formatAgeRange = ({ start, end }: AgeRange): string => {
+  const minAge = start?.value;
+  const maxAge = end?.value;
+  if (minAge && maxAge) return `${minAge}–${maxAge - 1}`;
+  if (maxAge) return `<${maxAge}`;
+  if (minAge) return `${minAge}+`;
+  return '—';
+};
+
+export const formatAgeRangeForYear = (year: number, { start, end }: AgeRange): string => {
+  const from = end ? year - end.value + 1 : undefined;
+  const to = start ? year - start.value : undefined;
+
+  if (from && to) {
+    if (from > to) return '—';
+    const count = to - from + 1;
+    if (count === 1) return `${from}`;
+    if (count <= 5) {
+      return Array.from({ length: count }, (_, i) => from + i).join(', ');
+    }
+    return `${from}–${to}`;
+  }
+  if (from) return `${from} a mladší`;
+  if (to) return `${to} a starší`;
+  return '—';
+};
+
 const hiddenClasses = ['Entry', 'Novice', 'Bronze', 'Silver', 'Gold'];
 const hiddenCategoryClasses = new Set(hiddenClasses);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'S', 'M'];

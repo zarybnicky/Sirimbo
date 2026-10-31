@@ -1,4 +1,7 @@
-import { AgeCategoryTable } from './AgeCategoryTable';
+import { compareAgeRanges, formatAgeGroup, formatAgeRange, formatAgeRangeForYear } from '@/ui/csts';
+import { AgeGroupRulesDocument } from '@/graphql/AgeGroups';
+import { executeGraphql } from '@/lib/server/graphql';
+import { Table } from '@/ui/Table';
 
 const standardTempo = [
   ['Waltz', '28–30'],
@@ -27,80 +30,77 @@ const classDances = [
   ['', 'C, B, A, M, P', 'Wa, Ta, Va, Qs, Sf, Qs', 'Sa, Ch, Ru, Pd, Ji', '10T'],
 ] as const;
 
-export default function ToolsPage() {
+export default async function ToolsPage() {
+  const year = new Date().getFullYear();
+  const { ageGroupsList } = await executeGraphql(AgeGroupRulesDocument);
+  const categories = (ageGroupsList ?? [])
+    .flatMap(({ coupleRules, code, name }) =>
+      coupleRules.map((rule) => ({ code, name, ...rule })),
+    )
+    .toSorted((a, b) => compareAgeRanges(a.olderAge, b.olderAge));
+
   return (
     <main className="min-h-screen bg-neutral-1 text-neutral-12">
       <article className="prose prose-accent mx-auto max-w-5xl px-6 py-10">
         <h1>Tempo tanců</h1>
 
         <div className="flex w-full flex-wrap justify-stretch gap-2">
-          <div className="flex-1">
-            <table>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Taktů/min</th>
+          {[
+            { name: 'STT', tempos: standardTempo },
+            { name: 'LAT', tempos: latinTempo },
+          ].map(({ name, tempos }) => (
+            <Table key={name} columns={[name, 'Taktů/min']} className="flex-1">
+              {tempos.map(([dance, tempo]) => (
+                <tr key={dance}>
+                  <td>{dance}</td>
+                  <td>{tempo}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {standardTempo.map(([dance, tempo]) => (
-                  <tr key={dance}>
-                    <td>{dance}</td>
-                    <td>{tempo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex-1">
-            <table>
-              <thead>
-                <tr>
-                  <th>LAT</th>
-                  <th>Taktů/min</th>
-                </tr>
-              </thead>
-              <tbody>
-                {latinTempo.map(([dance, tempo]) => (
-                  <tr key={dance}>
-                    <td>{dance}</td>
-                    <td>{tempo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </Table>
+          ))}
         </div>
 
         <h1>Tance v třídách</h1>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Kategorie</th>
-              <th>Třída</th>
-              <th>STT</th>
-              <th>LAT</th>
-              <th>Kombi</th>
+        <Table columns={['Kategorie', 'Třída', 'STT', 'LAT', 'Kombi']}>
+          {classDances.map(([category, danceClass, standard, latin, combined], i) => (
+            <tr key={`${category || 'same'}-${danceClass}-${i}`}>
+              <td>{category}</td>
+              <td>{danceClass}</td>
+              <td>{standard}</td>
+              <td>{latin}</td>
+              <td>{combined}</td>
             </tr>
-          </thead>
-          <tbody>
-            {classDances.map(([category, danceClass, standard, latin, combined], i) => (
-              <tr key={`${category || 'same'}-${danceClass}-${i}`}>
-                <td>{category}</td>
-                <td>{danceClass}</td>
-                <td>{standard}</td>
-                <td>{latin}</td>
-                <td>{combined}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </Table>
 
         <h1>Věkové kategorie</h1>
 
-        <AgeCategoryTable />
+        <Table
+          columns={[
+            'Kategorie',
+            { label: 'Starší partner', colSpan: 2 },
+            { label: 'Mladší partner', colSpan: 2 },
+          ]}
+        >
+          {categories.map((c) => (
+            <tr key={c.code}>
+              <td>{formatAgeGroup(c.code, c.name)}</td>
+              <td>
+                <span className="inline-block bg-accent-3 m-1 py-1 px-2 rounded-md whitespace-nowrap">
+                  {formatAgeRange(c.olderAge)}
+                </span>
+              </td>
+              <td>{formatAgeRangeForYear(year, c.olderAge)}</td>
+              <td>
+                <span className="inline-block bg-accent-3 m-1 py-1 px-2 rounded-md whitespace-nowrap">
+                  {formatAgeRange(c.youngerAge)}
+                </span>
+              </td>
+              <td>{formatAgeRangeForYear(year, c.youngerAge)}</td>
+            </tr>
+          ))}
+        </Table>
       </article>
     </main>
   );
