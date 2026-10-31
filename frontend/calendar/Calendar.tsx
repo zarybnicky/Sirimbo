@@ -127,7 +127,7 @@ export function Calendar({
     viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
   const setDragListeners = useSetAtom(dragListenersAtom);
 
-  const { fetching, range, events, calendarEvents, resources, filterOptions, refresh } =
+  const { fetching, range, events, calendarEvents, resources, filterOptions } =
     useCalendarData({
       view,
       date,
@@ -166,14 +166,6 @@ export function Calendar({
     },
     [moveEvent],
   );
-  const handleDropFromOutside = React.useCallback(
-    async (subject: ExternalDragSubject, info: InteractionInfo) => {
-      await onDropFromOutside?.(subject, info);
-      refresh({ requestPolicy: 'network-only' });
-    },
-    [onDropFromOutside, refresh],
-  );
-
   const [creating, setCreating] = React.useState<CreateEventDefaults>();
 
   const onSelectSlot = React.useCallback(
@@ -202,7 +194,7 @@ export function Calendar({
       onMove,
       onResize,
       onRemove,
-      onDropFromOutside: handleDropFromOutside,
+      onDropFromOutside,
       onSelectSlot,
       onDrillDown,
     });
@@ -211,7 +203,7 @@ export function Calendar({
     onMove,
     onResize,
     onRemove,
-    handleDropFromOutside,
+    onDropFromOutside,
     onSelectSlot,
     onDrillDown,
     setDragListeners,

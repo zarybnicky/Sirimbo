@@ -10,7 +10,7 @@ import {
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useAtomValue } from 'jotai';
-import { useClient, useQuery, type OperationContext } from 'urql';
+import { useClient, useQuery } from 'urql';
 import {
   resourceKey,
   type CalendarCompetitionEvent,
@@ -173,8 +173,8 @@ export function useCalendarData({
   const variables = prepareVariables(range, condition);
   const { overlaps } = variables.condition;
 
-  const [{ data, fetching }, refresh] = useQuery({ query: EventListDocument, variables });
-  const [facetResult, refreshFacets] = useQuery({
+  const [{ data, fetching }] = useQuery({ query: EventListDocument, variables });
+  const [facetResult] = useQuery({
     query: CalendarFacetsDocument,
     variables: {
       ...condition,
@@ -265,30 +265,20 @@ export function useCalendarData({
     !condition.locationIds &&
     !condition.trainerIds &&
     allEventTypes.every((type) => filters.types.includes(type));
-  const [{ data: activityData, fetching: activityFetching }, refreshActivities] =
-    useQuery({
-      query: ActivityTimelineDocument,
-      variables: {
-        since: overlaps.start,
-        until: overlaps.end,
-        personIds: onlyMine
-          ? auth.personIds.filter(
-              (id) => !condition.participantIds || condition.participantIds.includes(id),
-            )
-          : condition.participantIds,
-        kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
-      },
-      pause: !showActivities,
-    });
-
-  const refreshCalendar = React.useCallback(
-    (context?: Partial<OperationContext>) => {
-      refresh(context);
-      refreshFacets(context);
-      if (showActivities) refreshActivities(context);
+  const [{ data: activityData, fetching: activityFetching }] = useQuery({
+    query: ActivityTimelineDocument,
+    variables: {
+      since: overlaps.start,
+      until: overlaps.end,
+      personIds: onlyMine
+        ? auth.personIds.filter(
+            (id) => !condition.participantIds || condition.participantIds.includes(id),
+          )
+        : condition.participantIds,
+      kinds: ['COMPETITION_BRIEF', 'COMPETITION_RESULT', 'BIRTHDAY'],
     },
-    [refresh, refreshFacets, refreshActivities, showActivities],
-  );
+    pause: !showActivities,
+  });
 
   React.useEffect(() => {
     if (!view.nav) return;
@@ -385,6 +375,5 @@ export function useCalendarData({
     resources,
     fetching: fetching || facetResult.fetching || (showActivities && activityFetching),
     filterOptions,
-    refresh: refreshCalendar,
   };
 }
