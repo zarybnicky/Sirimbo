@@ -36,7 +36,8 @@ const eventSchema = z.object({
         id: z.number(),
         city: text,
         name: text,
-        date: z.iso.datetime({ local: true }),
+        date: z.union([z.iso.date(), z.iso.datetime({ local: true })])
+          .transform((x) => x.slice(0, 10)),
         state: numberAsEnum(eventState),
         // TODO: Unused yet
         dayOfEvent: z.number(),
