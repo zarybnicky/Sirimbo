@@ -23,15 +23,12 @@ export function Competitors({
   const competitors =
     data?.federationPersonByFederationAndExternalId?.competitorComponents.nodes || [];
 
+  if (competitors.length === 0) return null;
+
   return (
     <>
-      <h2 className="mt-4 mb-2 text-lg font-bold">Soutěžící</h2>
-      <Table
-        columns={['Soutěžící', 'Typ', 'Role']}
-        busy={fetching}
-        error={error}
-        empty="Žádní soutěžící"
-      >
+      <h2 className="mt-4 mb-2 text-lg font-bold">Soutěží jako</h2>
+      <Table columns={['Soutěžící', 'Typ', 'Role']} busy={fetching} error={error}>
         {competitors.map(({ competitorId, competitor, role }) => (
           <tr key={competitorId} className="border-t border-neutral-4">
             <th scope="row">

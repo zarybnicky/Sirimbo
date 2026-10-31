@@ -126,26 +126,30 @@ export default async function FederatedPersonPage({ params }: Props) {
 
       <Competitors federation={federation} externalId={externalId} />
 
-      <h2 className="mt-4 mb-2 text-lg font-bold">Licence</h2>
-      <Table
-        columns={['Druh', 'Disciplína', 'Třída', 'Stav', 'Platná do']}
-        empty="Žádné licence"
-      >
-        {person.licenses.nodes.map((license) => (
-          <tr
-            key={`${license.kind}:${license.discipline}`}
-            className="border-t border-neutral-4"
+      {person.licenses.nodes.length > 0 && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Licence</h2>
+          <Table
+            columns={['Druh', 'Disciplína', 'Třída', 'Stav', 'Platná do']}
+            empty="Žádné licence"
           >
-            <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
-            <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
-            <td>{license.grade || '-'}</td>
-            <td>{license.status.toLowerCase()}</td>
-            <td className="whitespace-nowrap tabular-nums">
-              {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
-            </td>
-          </tr>
-        ))}
-      </Table>
+            {person.licenses.nodes.map((license) => (
+              <tr
+                key={`${license.kind}:${license.discipline}`}
+                className="border-t border-neutral-4"
+              >
+                <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
+                <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
+                <td>{license.grade || '-'}</td>
+                <td>{license.status.toLowerCase()}</td>
+                <td className="whitespace-nowrap tabular-nums">
+                  {license.validUntil ? formatDateOnly(license.validUntil) : '-'}
+                </td>
+              </tr>
+            ))}
+          </Table>
+        </>
+      )}
 
       <ResultHighlights results={person.resultHighlightsList} />
 
