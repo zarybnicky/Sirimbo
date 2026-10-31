@@ -67,7 +67,7 @@ function prepareVariables(
       trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
       participantIds: participantIds.length > 0 ? participantIds : undefined,
       locationIds: locationIds.length > 0 ? locationIds : undefined,
-      types: eventTypes,
+      types: onlyFree ? eventTypes.filter(x => x !== 'GROUP') : eventTypes,
       canRegister: onlyFree ? true : undefined,
       scope: {
         mode: onlyMine ? 'MINE' : parentId || locationIds.length > 0 ? 'ALL' : 'RELEVANT',
