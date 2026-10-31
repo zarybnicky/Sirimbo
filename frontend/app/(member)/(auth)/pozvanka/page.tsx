@@ -1,7 +1,7 @@
 import { InvitationInfoDocument } from '@/graphql/CurrentUser';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
-import { ErrorPage } from '@/ui/ErrorPage';
+import { StatusPage } from '@/ui/StatusPage';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { z } from 'zod';
@@ -45,8 +45,9 @@ export default async function InvitationPage({
   }
 
   return (
-    <ErrorPage
-      error="Neplatná pozvánka"
+    <StatusPage
+      status="error"
+      title="Neplatná pozvánka"
       details={
         <>
           Vaše pozvánka je neplatná nebo již použitá. Pokud jste se již registrovali,{' '}

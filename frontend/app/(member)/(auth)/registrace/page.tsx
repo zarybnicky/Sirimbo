@@ -1,5 +1,5 @@
 import { getRequestContext } from '@/lib/server/tenant';
-import { ErrorPage } from '@/ui/ErrorPage';
+import { StatusPage } from '@/ui/StatusPage';
 import type { Metadata } from 'next';
 import { RegistrationForm } from './RegistrationForm';
 import { redirect } from 'next/navigation';
@@ -15,8 +15,9 @@ export default async function RegisterPage() {
   return tenant.config.enableRegistration ? (
     <RegistrationForm />
   ) : (
-    <ErrorPage
-      error="Registrace je uzavřena"
+    <StatusPage
+      status="error"
+      title="Registrace je uzavřena"
       details="Nové registrace aktuálně nepřijímáme."
     />
   );

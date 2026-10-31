@@ -2,7 +2,7 @@
 
 import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import { getTenantUi } from '@/tenant/ui';
-import { ErrorPage } from '@/ui/ErrorPage';
+import { StatusPage } from '@/ui/StatusPage';
 import { useAuth, useAuthLoading, useTenantConfig, useTenantId } from '@/lib/auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
@@ -54,8 +54,9 @@ export const Layout = React.memo(function Layout({
   }
   if (missingPermission) {
     children = authLoading ? null : auth.isLoggedIn ? (
-      <ErrorPage
-        error="Přístup zamítnut"
+      <StatusPage
+        status="error"
+        title="Přístup zamítnut"
         details="Nemáte dostatečná práva pro zobrazení této stránky"
       />
     ) : null;

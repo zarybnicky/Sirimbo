@@ -2,11 +2,14 @@
 
 import { FileQuestion, RefreshCw, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { buttonCls, typographyCls } from '@/ui/style';
 
 type StatusPageProps = Readonly<{
   reset?: () => void;
   status: 'error' | 'not-found';
+  title?: string;
+  details?: ReactNode;
 }>;
 
 const content = {
@@ -23,8 +26,13 @@ const content = {
   },
 };
 
-export function StatusPage({ reset, status }: StatusPageProps) {
-  const { details, Icon, title } = content[status];
+export function StatusPage({
+  reset,
+  status,
+  title = content[status].title,
+  details = content[status].details,
+}: StatusPageProps) {
+  const { Icon } = content[status];
 
   return (
     <section className="col-feature grid min-h-[60vh] place-items-center py-16">
@@ -33,12 +41,14 @@ export function StatusPage({ reset, status }: StatusPageProps) {
           <Icon aria-hidden="true" className="size-12" strokeWidth={1.75} />
         </div>
         <h1 className={typographyCls({ className: 'mt-6' })}>{title}</h1>
-        <p
-          className="mt-4 text-neutral-11"
-          role={status === 'error' ? 'alert' : undefined}
-        >
-          {details}
-        </p>
+        {details != null && (
+          <p
+            className="mt-4 text-neutral-11"
+            role={status === 'error' ? 'alert' : undefined}
+          >
+            {details}
+          </p>
+        )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           {reset && status === 'error' && (
             <button

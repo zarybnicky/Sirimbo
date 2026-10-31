@@ -1,4 +1,4 @@
-import { ErrorPage } from '@/ui/ErrorPage';
+import { StatusPage } from '@/ui/StatusPage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function InvalidOtpPage() {
-  return <ErrorPage error="Použitý odkaz již vypršel nebo je neplatný." />;
+  return <StatusPage status="error" title="Použitý odkaz již vypršel nebo je neplatný." details={null} />;
 }

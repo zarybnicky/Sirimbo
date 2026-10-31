@@ -6,7 +6,7 @@ import {
   UpsertArticleDocument,
 } from '@/graphql/Articles';
 import { useActions } from '@/lib/actions';
-import { ErrorPage } from '@/ui/ErrorPage';
+import { StatusPage } from '@/ui/StatusPage';
 import { PageHeader } from '@/ui/PageHeader';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { TextFieldElement } from '@/ui/fields/text';
@@ -121,7 +121,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
   );
 
   if (query.data && query.data.aktuality === null) {
-    return <ErrorPage error="Nenalezeno" />;
+    return <StatusPage status="not-found" />;
   }
 
   return (

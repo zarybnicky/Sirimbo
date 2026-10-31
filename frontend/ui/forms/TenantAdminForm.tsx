@@ -4,6 +4,7 @@ import { useMutation } from 'urql';
 import { FormError, useFormResult } from '@/ui/form.tsx';
 import { TextFieldElement } from '@/ui/fields/text.tsx';
 import { TextAreaElement } from '@/ui/fields/textarea.tsx';
+import { RichTextEditor } from '@/ui/fields/richtext';
 import { SubmitButton } from '@/ui/submit.tsx';
 import z from 'zod';
 import {
@@ -78,11 +79,10 @@ export function TenantAdminEdit({ tenant }: Readonly<{ tenant: TenantFullFragmen
       <FormError error={result.error ?? settingsResult.error} />
 
       <TextFieldElement control={control} name="name" label="Název" required />
-      <TextAreaElement
+      <RichTextEditor
         control={control}
         name="description"
         label="Popis"
-        className="min-h-24"
       />
       <TextFieldElement control={control} name="bankAccount" label="Bankovní účet" />
       <TextFieldElement

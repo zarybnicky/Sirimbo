@@ -1,6 +1,7 @@
 'use client';
 
 import { DefinitionList } from '@/ui/DefinitionList';
+import { RichTextView } from '@/ui/RichTextView';
 import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { FormError } from '@/ui/form';
@@ -162,7 +163,7 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
       <div className="flex items-center justify-between">
         <div className="text-base font-semibold">{tenant.name}</div>
       </div>
-      <p className="whitespace-pre-wrap text-sm text-neutral-12">{tenant.description}</p>
+      <RichTextView className="text-sm text-neutral-12" value={tenant.description} />
 
       <DefinitionList
         className="text-sm text-neutral-12"
