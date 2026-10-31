@@ -79,3 +79,7 @@ insert into crawler.frontier (federation, kind, key)
   from crawler.frontier
   where federation = 'csts' and kind = 'eventIndex'
   on conflict (federation, kind, key) do nothing;
+
+insert into crawler.rate_limit_rule (host, max_requests, per_interval)
+values ('szts.ksis.eu', 1, interval '5 seconds')
+on conflict (host) do nothing;

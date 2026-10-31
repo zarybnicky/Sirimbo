@@ -87,6 +87,14 @@ export async function fetchResponse<T>(
     });
 
     httpStatus = resp.status;
+    if (resp.headers.get('cf-mitigated') === 'challenge') {
+      return {
+        httpStatus,
+        error: 'Cloudflare challenge',
+        content: await resp.text() as T,
+        fetchStatus: 'transient' as const,
+      };
+    }
     fetchStatus = classifyHttpStatus(httpStatus);
 
     const result = await parseResponse<T>(resp, handler, opts);
