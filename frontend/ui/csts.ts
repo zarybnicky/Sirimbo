@@ -1,4 +1,4 @@
-import type { CompetitionType } from '@/graphql';
+import type { CompetitionType, CompetitorType } from '@/graphql';
 import type { AgeGroupRulesQuery } from '@/graphql/AgeGroups';
 import type {
   CompetitionCategoryLabelFragment,
@@ -167,6 +167,16 @@ const typeSuffix: Partial<Record<CompetitionType, string>> = {
   TOP_LEVEL: 'TopLevel',
 };
 
+const cstsCompetitorTypeNames: Record<CompetitorType, string> = {
+  COUPLE: '',
+  SOLO: 'sólo',
+  DUO: 'duo',
+  TRIO: 'trio',
+  TEAM: 'družstev',
+  FORMATION: 'formací',
+  GROUP: 'skupin',
+};
+
 export function formatCategoryName(
   federation: string | null | undefined,
   category: CompetitionCategoryLabelFragment | null | undefined,
@@ -235,9 +245,9 @@ const wdsfClassNames: Record<string, string> = {
   'URBAN WUG': 'World Urban Games',
   'URBAN OQS': 'Olympic Qualifier Series',
   'IWGA WG': 'IWGA The World Games',
-  'OLYMP': 'Olympic Games',
+  OLYMP: 'Olympic Games',
   'GAMES QUALIFIER': 'Sport Series Games Qualifier',
-  'WDSG': 'World DanceSport Games',
+  WDSG: 'World DanceSport Games',
 };
 
 const wdsfDisciplineNames: Record<string, string> = {
@@ -249,13 +259,13 @@ const wdsfDisciplineNames: Record<string, string> = {
   '3D STANDARD': '3 Dance',
   'SALSA ONE': 'Salsa On One',
   'SALSA TWO': 'Salsa On Two',
-  'BREAK': 'Breaking',
-  'HIPHOP': 'Hip-Hop Freestyle',
+  BREAK: 'Breaking',
+  HIPHOP: 'Hip-Hop Freestyle',
   'HH CHOREO': 'Hip-Hop Choreography',
-  'DISCO': 'Disco Dance',
+  DISCO: 'Disco Dance',
   'ACRO DISCO': 'Acrobatic Disco Dance',
   'MODERN PERFOMING DANCE': 'Modern & Contemporary Dance',
-  'JAZZ': 'Jazz Dance',
+  JAZZ: 'Jazz Dance',
   'ROCK N ROLL': "Rock 'n Roll",
 };
 
@@ -271,9 +281,9 @@ const wdsfAgeGroupNames: Record<string, string> = {
 
 const wdsfDanceFormNames: Record<string, string> = {
   '': '',
-  'mixed': '',
-  'M': 'Male',
-  'F': 'Female',
+  mixed: '',
+  M: 'Male',
+  F: 'Female',
   '1 M': 'Male',
   '1 F': 'Female',
   'DUO M': 'Duo Male',
@@ -291,12 +301,16 @@ const wdsfDanceFormNames: Record<string, string> = {
 };
 
 function titleCaseWdsfLabel(value: string) {
-  return value.trim().split(/[\s_]+/).map((word) => {
-    const upper = word.toUpperCase();
-    return wdsfAcronyms.has(upper) || /^[IVX]+$/.test(upper)
-      ? upper
-      : upper.charAt(0) + word.slice(1).toLowerCase();
-  }).join(' ');
+  return value
+    .trim()
+    .split(/[\s_]+/)
+    .map((word) => {
+      const upper = word.toUpperCase();
+      return wdsfAcronyms.has(upper) || /^[IVX]+$/.test(upper)
+        ? upper
+        : upper.charAt(0) + word.slice(1).toLowerCase();
+    })
+    .join(' ');
 }
 
 function formatWdsfCategoryName(category: CompetitionCategoryLabelFragment) {
@@ -313,16 +327,27 @@ function formatWdsfCategoryName(category: CompetitionCategoryLabelFragment) {
 
   const className = wdsfClassNames[category.class] ?? titleCaseWdsfLabel(category.class);
   const disciplineCode = category.discipline.trim().replace(/^PD\s+/i, '');
-  const discipline = wdsfDisciplineNames[disciplineCode] ?? titleCaseWdsfLabel(disciplineCode);
+  const discipline =
+    wdsfDisciplineNames[disciplineCode] ?? titleCaseWdsfLabel(disciplineCode);
   const danceForm = wdsfDanceFormNames[genderGroup] ?? titleCaseWdsfLabel(genderGroup);
+  const competitorType =
+    category.competitorType === 'COUPLE'
+      ? ''
+      : titleCaseWdsfLabel(category.competitorType);
+  const label = `${className} ${discipline} ${danceForm}`.toLowerCase();
 
   return [
-    className.startsWith('DSE ') || category.class === 'WORLD CUP OTHER' ? undefined : 'WDSF',
+    className.startsWith('DSE ') || category.class === 'WORLD CUP OTHER'
+      ? undefined
+      : 'WDSF',
     className,
+    label.includes(competitorType.toLowerCase()) ? undefined : competitorType,
     discipline,
     discipline.toLowerCase().includes(danceForm.toLowerCase()) ? undefined : danceForm,
     wdsfAgeGroupNames[ageGroup] ?? titleCaseWdsfLabel(ageGroup),
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 function formatCstsCategoryName(
@@ -331,14 +356,19 @@ function formatCstsCategoryName(
 ) {
   const { discipline, series, competitorType } = category;
   const disciplinePrefix =
-    competitorType === 'SOLO'
-      ? 'So'
-      : competitorType === 'DUO' || competitorType === 'TRIO'
-        ? 'Sy'
-        : '';
+    competitionType === 'CHAMPIONSHIP'
+      ? ''
+      : competitorType === 'SOLO'
+        ? 'So'
+        : competitorType === 'DUO' || competitorType === 'TRIO'
+          ? 'Sy'
+          : '';
+  const prefixedDiscipline =
+    disciplinePrefix && ['standard', 'latin'].includes(discipline.toLowerCase());
 
   return [
     competitionType && typePrefix[competitionType],
+    prefixedDiscipline ? undefined : cstsCompetitorTypeNames[competitorType],
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
     formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
     formatClass(category.class),

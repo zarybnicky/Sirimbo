@@ -150,15 +150,43 @@ const plugins: GraphileConfig.Plugin[] = [
   ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition_result' },
+    'competitionTypes',
+    (build) => ({
+      type: new build.graphql.GraphQLList(
+        new build.graphql.GraphQLNonNull(build.getInputTypeByName('CompetitionType')),
+      ),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      if (value == null) return null;
+      return sql`${row}.competition_id in (
+        select id from federated.competition
+        where competition_type = any(${sqlValueWithCodec(value as string[], LIST_TYPES.text)}::federated.competition_type[])
+      )`;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_result' },
+    'maxRanking',
+    (build) => ({
+      type: build.graphql.GraphQLInt,
+      description: 'Maximum placement, including the upper end of a shared placement.',
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) =>
+      value == null
+        ? null
+        : sql`coalesce(${row}.ranking_to, ${row}.ranking) <= ${sqlValueWithCodec(value, TYPES.int)}`,
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_result' },
     'highlight',
     (build) => ({
       type: build.graphql.GraphQLBoolean,
       description:
-        'Completed championship results and podiums in leagues, super leagues, cups, and ranking events.',
+        'When true, select completed championship results and podiums in leagues, super leagues, cups, and ranking events.',
     }),
     (value, { sql, sqlTableAlias: row }) => {
-      if (value == null) return null;
-      const highlight = sql`(
+      if (value !== true) return null;
+      return sql`(
         ${row}.ranking > 0
         and coalesce(${row}.completion_status, '') not in ('Disqualified', 'Excused', 'Noshow', 'Withdrawn')
         and exists (
@@ -175,7 +203,6 @@ const plugins: GraphileConfig.Plugin[] = [
             )
         )
       )`;
-      return value ? highlight : sql`not ${highlight}`;
     },
   ),
   addPgTableCondition(

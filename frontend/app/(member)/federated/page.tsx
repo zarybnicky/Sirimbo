@@ -5,6 +5,7 @@ import { PageHeader } from '@/ui/PageHeader';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationListDocument } from '@/graphql/Federation';
+import { ClubResults } from './ClubResults';
 
 export const metadata = { title: 'Soutěžní data', robots: { index: false, follow: false } };
 
@@ -39,6 +40,7 @@ export default async function FederationsPage() {
           </tr>
         ))}
       </Table>
+      <ClubResults />
     </Layout>
   );
 }

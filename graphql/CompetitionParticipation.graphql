@@ -67,6 +67,24 @@ query Competitions(
   }
 }
 
+query CompetitionResults(
+  $condition: CompetitionResultCondition!
+  $first: Int! = 50
+  $offset: Int! = 0
+) {
+  competitionResults(
+    condition: $condition
+    first: $first
+    offset: $offset
+    orderBy: [COMPETITION_DATE_DESC, COMPETITION_ID_DESC, COMPETITOR_ID_ASC]
+  ) {
+    totalCount
+    nodes {
+      ...ResultHighlight
+    }
+  }
+}
+
 query CompetitionSuggestionEvents(
   $participant: CompetitionParticipantCondition!
   $since: Date!

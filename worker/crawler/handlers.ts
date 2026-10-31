@@ -1,4 +1,5 @@
 import { cstsMember } from './cstsMember.ts';
+import { cstsPartnershipRegistrations } from './cstsPartnershipRegistrations.ts';
 import type { HtmlLoader, Loader } from './types.ts';
 import { cstsRanklistIndex } from './cstsRanklistIndex.ts';
 import { cstsRanklist } from './cstsRanklist.ts';
@@ -75,8 +76,8 @@ export const LOADERS = {
     // Osobní údaje, žlutý JS
     // https://www.csts.cz/api/evidence/clenove/detail-clena/osobni-udaje/18038132
 
-    // Partneři, modrý web
-    // https://www.csts.cz/api/1/competitors/couple_or_duo_registrations?filter=idt=18038132
+    // https://www.csts.cz/api/1/competitors/partnership_registrations?filter=idt=18038132
+    partnershipRegistrations: cstsPartnershipRegistrations,
 
     // Dlouhodobé hostování
     // https://www.csts.cz/api/1/loans?filter=memberIdt=18038132

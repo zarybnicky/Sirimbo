@@ -14,6 +14,20 @@ const plugin: GraphileConfig.Plugin = {
       GraphQLEnumType_values(values, { sql }, { scope }) {
         const table = scope.pgCodec?.extensions?.pg;
         if (
+          scope.isPgRowSortEnum &&
+          table?.schemaName === 'federated' &&
+          table.name === 'competition_result'
+        ) {
+          return {
+            ...values,
+            ...orderByAscDesc('COMPETITION_DATE', (query) => {
+              const competition = query.singleRelation('competitionByMyCompetitionId');
+              if (query.mode !== 'aggregate') query.where(sql`${competition}.id is not null`);
+              return { fragment: sql`${competition}.start_date`, codec: TYPES.date };
+            }),
+          };
+        }
+        if (
           !scope.isPgRowSortEnum ||
           table?.schemaName !== 'federated' ||
           table.name !== 'competitor'

@@ -2,6 +2,9 @@ comment on table couple is '@behavior +list -connection +query:resource:list -qu
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor
 @ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 
+comment on table federated.competition_result is '@name competition_result
+@behavior -insert -update -delete -list +query:resource:connection -query:resource:list -query:resource:single';
+
 drop function if exists person_active_couples(person);
 drop function if exists person_all_couples(person);
 drop function if exists tenant_couples(tenant);

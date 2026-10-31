@@ -2580,18 +2580,20 @@ tested for equality and combined with a logical ‘and.’
 input CompetitionResultCondition {
   """Checks for equality with the object’s `competitionId` field."""
   competitionId: BigInt
+  competitionTypes: [CompetitionType!]
 
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
 
   """Checks for equality with the object’s `completionStatus` field."""
   completionStatus: String
+  date: CompetitionDateCondition
 
   """Checks for equality with the object’s `finalGain` field."""
   finalGain: BigFloat
 
   """
-  Completed championship results and podiums in leagues, super leagues, cups, and ranking events.
+  When true, select completed championship results and podiums in leagues, super leagues, cups, and ranking events.
   """
   highlight: Boolean
 
@@ -2603,6 +2605,9 @@ input CompetitionResultCondition {
 
   """Checks for equality with the object’s `lastRound` field."""
   lastRound: String
+
+  """Maximum placement, including the upper end of a shared placement."""
+  maxRanking: Int
   participant: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `pointGain` field."""
@@ -2648,6 +2653,8 @@ type CompetitionResultEdge {
 
 """Methods to use when ordering `CompetitionResult`."""
 enum CompetitionResultsOrderBy {
+  COMPETITION_DATE_ASC
+  COMPETITION_DATE_DESC
   COMPETITION_ID_ASC
   COMPETITION_ID_DESC
   COMPETITOR_ID_ASC
@@ -12234,6 +12241,35 @@ type Query {
 
   """Get a single `Competition`."""
   competitionByFederationAndExternalId(externalId: String!, federation: String!): Competition
+
+  """Reads and enables pagination through a set of `CompetitionResult`."""
+  competitionResults(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionResultCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `CompetitionResult`."""
+    orderBy: [CompetitionResultsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CompetitionResultConnection
 
   """Get a single `CompetitionRound`."""
   competitionRound(id: BigInt!): CompetitionRound

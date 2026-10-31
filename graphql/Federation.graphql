@@ -255,10 +255,14 @@ fragment ResultHighlight on CompetitionResult {
   rankingTo
   competitor {
     id
+    externalId
     name
   }
   competition {
     ...Competition
+    category {
+      ...CompetitionCategory
+    }
   }
 }
 

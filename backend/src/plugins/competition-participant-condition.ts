@@ -117,8 +117,12 @@ const plugins: GraphileConfig.Plugin[] = [
           const predicates = [
             participantPredicate(sql`p.competitor_id`, value as ParticipantCondition),
           ];
-          const dates = datePredicate(sql`c.start_date`, condition.extensions.competitionDate);
-          if (dates) predicates.push(sql`p.competition_id = any(array(
+          const dates = datePredicate(
+            sql`c.start_date`,
+            condition.extensions.competitionDate,
+          );
+          if (dates)
+            predicates.push(sql`p.competition_id = any(array(
             select c.id from federated.competition c where ${dates}
           ))`);
           const filters = predicates.filter((predicate) => predicate !== null);
@@ -142,22 +146,28 @@ const plugins: GraphileConfig.Plugin[] = [
         ),
     ),
   ),
-  ...(['event', 'competition'] as const).map((tableName) =>
-    addPgTableCondition(
-      { schemaName: 'federated', tableName },
-      'date',
-      (build) => ({
-        type: build.getInputTypeByName('CompetitionDateCondition'),
-        apply(condition: PgCondition, value: DateCondition | null) {
-          const predicate = datePredicate(sql`${condition.alias}.start_date`, value);
-          if (tableName === 'competition') {
-            condition.extensions.competitionDate = value;
-            if (predicate) condition.where(() => condition.extensions.competitionParticipant
-              ? sql`true` : predicate);
-          } else if (predicate) condition.where(predicate);
-        },
-      }),
-    ),
+  ...(['event', 'competition', 'competition_result'] as const).map((tableName) =>
+    addPgTableCondition({ schemaName: 'federated', tableName }, 'date', (build) => ({
+      type: build.getInputTypeByName('CompetitionDateCondition'),
+      apply(condition: PgCondition, value: DateCondition | null) {
+        if (tableName === 'competition_result') {
+          const predicate = datePredicate(sql`c.start_date`, value);
+          if (predicate)
+            condition.where(sql`${condition.alias}.competition_id = any(array(
+              select c.id from federated.competition c where ${predicate}
+            ))`);
+          return;
+        }
+        const predicate = datePredicate(sql`${condition.alias}.start_date`, value);
+        if (tableName === 'competition') {
+          condition.extensions.competitionDate = value;
+          if (predicate)
+            condition.where(() =>
+              condition.extensions.competitionParticipant ? sql`true` : predicate,
+            );
+        } else if (predicate) condition.where(predicate);
+      },
+    })),
   ),
 ];
 
