@@ -4,7 +4,7 @@ import type { fetch_status } from './crawler.queries.ts';
 import Impit from 'impit';
 
 const impit = new Impit.Impit({
-  browser: 'chrome',
+  browser: 'firefox',
   ignoreTlsErrors: true,
 });
 

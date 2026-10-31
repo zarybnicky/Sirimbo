@@ -28,7 +28,8 @@
     "prettier": "~3.9.9",
     "prop-types": "~15.8.1",
     "typescript": "~6.0.3",
-    "typescript-language-server": "~6.0.1"
+    "typescript-language-server": "~6.0.1",
+    "yargs": "17.7.2"
   },
   "scripts": {
     "check-consumers": "bash check-consumers.sh",
