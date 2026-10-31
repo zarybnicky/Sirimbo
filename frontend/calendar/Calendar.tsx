@@ -100,6 +100,10 @@ export function Calendar({
     parseAsBoolean.withDefault(defaultOnlyMine).withOptions({ history: 'push' }),
   );
   const onlyMine = auth.isLoggedIn && onlyMineInput;
+  const [onlyFree, setOnlyFree] = useQueryState(
+    'free',
+    parseAsBoolean.withDefault(false).withOptions({ history: 'push' }),
+  );
   const [viewInput, setView] = useQueryState(
     'v',
     parseAsStringLiteral(availableViews)
@@ -140,6 +144,7 @@ export function Calendar({
   const filters = React.useMemo(
     () => ({
       onlyMine,
+      onlyFree,
       trainerIds: effectiveTrainerIds,
       participantIds: auth.isLoggedIn ? participantIds : [],
       eventTypes,
@@ -147,7 +152,7 @@ export function Calendar({
       parentId,
       locationIds,
     }),
-    [auth.isLoggedIn, auth.personIds, onlyMine, effectiveTrainerIds, participantIds, eventTypes, parentId, locationIds],
+    [auth.isLoggedIn, auth.personIds, onlyMine, onlyFree, effectiveTrainerIds, participantIds, eventTypes, parentId, locationIds],
   );
 
   const { fetching, range, events, instances, resources, facets, refresh } =
@@ -306,6 +311,17 @@ export function Calendar({
               Pouze moje
             </button>
           )}
+          <button
+            type="button"
+            aria-pressed={onlyFree}
+            className={buttonCls({
+              variant: onlyFree ? 'primary' : 'outline',
+              size: 'sm',
+            })}
+            onClick={() => setOnlyFree((x) => !x)}
+          >
+            Pouze volné
+          </button>
           <TrainerFilter
             counts={facets?.trainer}
             availableTrainers={availableTrainers}

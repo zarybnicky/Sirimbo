@@ -12864,6 +12864,14 @@
         "name": "EventRegistrationInfo",
         "fields": [
           {
+            "name": "canRegister",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "my",
             "type": {
               "kind": "SCALAR",
@@ -26647,6 +26655,13 @@
               }
             },
             "args": [
+              {
+                "name": "canRegister",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
               {
                 "name": "endRange",
                 "type": {

@@ -71,8 +71,7 @@ export function EventButton({
               'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
               event?.type === 'LESSON' &&
-                !event.isLocked &&
-                (event.registrationInfo?.remainingCapacity ?? 0) > 0
+                event.registrationInfo?.canRegister
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}

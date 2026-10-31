@@ -193,8 +193,7 @@ export function EventSignupForm({
         control={control}
         disabled={
           result.fetching ||
-          (!auth.canManageEvent(event) &&
-            (!!event.isLocked || event.registrationInfo?.remainingCapacity === 0))
+          (!auth.canManageEvent(event) && !event.registrationInfo?.canRegister)
         }
       >
         Přihlásit

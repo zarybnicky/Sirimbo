@@ -28,6 +28,7 @@ export type CalendarFilters = {
   trainerIds: string[];
   eventTypes: EventType[];
   onlyMine: boolean;
+  onlyFree: boolean;
   myPersonIds: string[];
   parentId?: string;
   locationIds: string[];
@@ -49,6 +50,7 @@ function prepareVariables(
   range: DateRange,
   {
     onlyMine,
+    onlyFree,
     trainerIds,
     participantIds,
     eventTypes,
@@ -66,6 +68,7 @@ function prepareVariables(
       participantIds: participantIds.length > 0 ? participantIds : undefined,
       locationIds: locationIds.length > 0 ? locationIds : undefined,
       types: eventTypes,
+      canRegister: onlyFree ? true : undefined,
       scope: {
         mode: onlyMine ? 'MINE' : parentId || locationIds.length > 0 ? 'ALL' : 'RELEVANT',
         parentId,
@@ -164,6 +167,7 @@ export function useCalendarData(
 
   const effectiveGroupBy = filters.onlyMine ? 'none' : groupBy;
   const showActivities =
+    !filters.onlyFree &&
     !filters.parentId &&
     filters.locationIds.length === 0 &&
     filters.eventTypes.length === allEventTypes.length;

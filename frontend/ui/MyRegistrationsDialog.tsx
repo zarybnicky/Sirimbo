@@ -98,7 +98,7 @@ function useRegistrationCandidates(event: EventWithRegistrationsFragment, enable
         coupleId: couple.id,
       })),
   ]
-    .filter(() => isManager || (!event.isLocked && capacityLeft >= 1))
+    .filter(() => isManager || event.registrationInfo?.canRegister)
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);

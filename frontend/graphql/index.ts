@@ -4791,6 +4791,8 @@ export type EventCapacityUnit =
 
 /** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EventCondition = {
+  /** Whether a self-service registration is available. */
+  canRegister?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `capacity` field. */
   capacity?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `capacityUnit` field. */
@@ -5169,6 +5171,7 @@ export type EventRegistrationEdge = {
 
 export type EventRegistrationInfo = {
   __typename?: 'EventRegistrationInfo';
+  canRegister: Maybe<Scalars['Boolean']['output']>;
   my: Maybe<Scalars['Boolean']['output']>;
   people: Maybe<Scalars['Int']['output']>;
   registrations: Maybe<Scalars['Int']['output']>;
@@ -10172,6 +10175,7 @@ export type QueryEventArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventFacetsListArgs = {
+  canRegister?: InputMaybe<Scalars['Boolean']['input']>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
@@ -15062,6 +15066,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<EventRegistrationEdge>, Record<string, never>, WithTypename<EventRegistration> | string>
   },
   EventRegistrationInfo?: {
+    canRegister?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     my?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     people?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
     registrations?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
@@ -17674,6 +17679,7 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationEdge>>, Record<string, never>>
   },
   EventRegistrationInfo?: {
+    canRegister?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     my?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     people?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     registrations?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,

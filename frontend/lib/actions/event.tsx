@@ -48,11 +48,7 @@ function canOpenRegistrations({
   return (
     auth.canManageEvent(item) ||
     !!item.registrationInfo?.my ||
-    (!!(item.isPublic || item.isVisible) &&
-      !item.isLocked &&
-      (auth.personIds.length > 0 ||
-        !item.capacity ||
-        (item.registrationInfo?.remainingCapacity ?? 0) > 0))
+    !!item.registrationInfo?.canRegister
   );
 }
 

@@ -65,6 +65,7 @@ fragment EventWithTrainer on Event {
     people
     remainingCapacity
     my
+    canRegister
   }
   approxPriceList {
     amount
@@ -451,11 +452,13 @@ query CalendarFacets(
   $scope: EventInstanceRangeScope
   $parentId: BigInt
   $locationIds: [BigInt]
+  $canRegister: Boolean
 ) {
   eventFacetsList(
     startRange: $start, endRange: $end, onlyTypes: $types,
     trainerIds: $trainerIds, participantIds: $participantIds,
-    scope: $scope, parentId: $parentId, locationIds: $locationIds
+    scope: $scope, parentId: $parentId, locationIds: $locationIds,
+    canRegister: $canRegister
   ) {
     facet
     value
