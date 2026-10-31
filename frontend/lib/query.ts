@@ -286,10 +286,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deletePerson(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
       deleteCohort(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Cohort', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
       archiveCohort(_result, args, cache, _info) {
@@ -351,21 +353,37 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           __typename: 'Person',
           id: args.input.cohortMembership.personId,
         });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
+      },
+      updateCohortMembership(_result, _args, cache) {
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       createTenantMembership(_result, args, cache, _info) {
         cache.invalidate({
           __typename: 'Person',
           id: args.input.tenantMembership.personId,
         });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
+      },
+      updateTenantMembership(_result, _args, cache) {
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       createTenantTrainer(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.tenantTrainer.personId });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
+      },
+      updateTenantTrainer(_result, _args, cache) {
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       createTenantAdministrator(_result, args, cache, _info) {
         cache.invalidate({
           __typename: 'Person',
           id: args.input.tenantAdministrator.personId,
         });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
+      },
+      updateTenantAdministrator(_result, _args, cache) {
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       createUserProxy(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.userProxy.personId });
@@ -403,15 +421,19 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       deleteCohortMembership(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'CohortMembership', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       deleteTenantMembership(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'TenantMembership', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       deleteTenantTrainer(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'TenantTrainer', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       deleteTenantAdministrator(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'TenantAdministrator', id: args.input.id });
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       deleteUserProxy(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'UserProxy', id: args.input.id });
@@ -431,10 +453,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createPerson(_result, _args, cache, _info) {
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName === 'people'))
-          cache.invalidate('Query', field.fieldKey);
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
       createCohort(_result, _args, cache, _info) {
@@ -443,6 +462,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       syncCohortMemberships(_result, args, cache, _info) {
         cache.invalidate('Person', args.input.personId!);
+        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
       saveEvents(result, _args, cache, _info) {
