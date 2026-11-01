@@ -56,7 +56,9 @@ comment on column event_stats.not_excused is '@notNull';
 --!include functions/event_stats.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_facets.sql
---!include functions/activity_timeline.sql
+drop function if exists public.activity_timeline;
+drop view if exists public.activity_timeline_item;
+drop type if exists public.activity_timeline_kind;
 --!include functions/person_birthday.sql
 --!include functions/set_event_registration.sql
 --!include functions/event_trainer_lessons_remaining.sql

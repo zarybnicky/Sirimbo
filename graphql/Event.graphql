@@ -475,7 +475,6 @@ query CalendarData(
       types: $types
       trainerIds: $trainerIds
       participant: $participant
-      onlyMine: $onlyMine
       relevantOnly: $relevantOnly
       parentId: $parentId
       locationIds: $locationIds

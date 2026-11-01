@@ -117,8 +117,8 @@ export const ActivityList = React.memo(function ActivityList({
       </div>
       <div ref={list} className="scroll-mt-20">
         {days.map(([day, items]) => {
-          const events = items.filter((item) => item.kind === 'event');
-          const birthdays = items.filter((item) => item.kind === 'birthday');
+          const events = items.filter((x) => x.kind === 'event');
+          const birthdays = items.filter((x) => x.kind === 'birthday');
           return (
             <section
               key={day}
@@ -139,7 +139,7 @@ export const ActivityList = React.memo(function ActivityList({
                       <LocalPersonLinks people={birthdays.map(({ person }) => person)} />
                     </div>
                   )}
-                  {items.filter((item) => item.kind === 'competition').map(({ id, items, officials }) => (
+                  {items.filter((x) => x.kind === 'competition').map(({ id, items, officials }) => (
                     <div
                       key={id}
                       className={cardCls({

@@ -131,20 +131,18 @@ export const cstsEvent: JsonLoader<Response> = {
       client,
     );
 
-    const categoryParams: CategoryParams[] = event.competitions.map((competition) => ({
+    const categoryParams: CategoryParams[] = event.competitions.map((comp) => ({
       class:
-        !competition.class || competition.class === 'Unknown'
+        !comp.class || comp.class === 'Unknown'
           ? ''
-          : competition.toClass &&
-              competition.toClass !== competition.class &&
-              competition.toClass !== 'Unknown'
-            ? `${competition.class}-${competition.toClass}`
-            : competition.class,
-      ageGroup: competition.age,
-      genderGroup: mapGenderGroup(competition.competitors),
-      discipline: competition.discipline,
-      series: competition.series,
-      competitorType: mapCompetitorType(competition.competitors),
+          : comp.toClass && comp.toClass !== comp.class && comp.toClass !== 'Unknown'
+            ? `${comp.class}-${comp.toClass}`
+            : comp.class,
+      ageGroup: comp.age,
+      genderGroup: mapGenderGroup(comp.competitors),
+      discipline: comp.discipline,
+      series: comp.series,
+      competitorType: mapCompetitorType(comp.competitors),
     }));
     const categoryIds = await getFederatedCategoryIds(categoryParams);
     const competitions = makePgtypedCollection<{
@@ -239,7 +237,11 @@ export const cstsEvent: JsonLoader<Response> = {
     }
     if (people.length) await ensurePeople.run(people.params, client);
     await mergeEventOfficials.run(
-      { federation: 'csts', eventExternalId: event.eventId.toString(), ...eventOfficials.params },
+      {
+        federation: 'csts',
+        eventExternalId: event.eventId.toString(),
+        ...eventOfficials.params,
+      },
       client,
     );
 
@@ -267,8 +269,14 @@ export const cstsEvent: JsonLoader<Response> = {
   },
 };
 
-function officialDisciplines(discipline?: 'Standard' | 'Latin' | ('Standard' | 'Latin')[]) {
-  return discipline == null ? [''] : Array.isArray(discipline) ? discipline : [discipline];
+function officialDisciplines(
+  discipline?: 'Standard' | 'Latin' | ('Standard' | 'Latin')[],
+) {
+  return discipline == null
+    ? ['']
+    : Array.isArray(discipline)
+      ? discipline
+      : [discipline];
 }
 
 function mapCompetitionType(type: CompetitionType): competition_type {

@@ -35,9 +35,9 @@ export function ViewPicker({
         <ChevronDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {views.map((item) => (
-          <DropdownMenuButton key={item} onSelect={() => setView(item)}>
-            {labels[item]}
+        {views.map((x) => (
+          <DropdownMenuButton key={x} onSelect={() => setView(x)}>
+            {labels[x]}
           </DropdownMenuButton>
         ))}
       </DropdownMenuContent>

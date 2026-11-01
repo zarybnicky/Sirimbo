@@ -1,5 +1,4 @@
 import {
-  competitionEntries,
   groupCompetitionEvents,
   type CompetitionOfficialAssignment,
 } from '@/ui/Competitions';
@@ -241,7 +240,6 @@ export function useCalendarData({
       });
     }
 
-    const competitionItems = competitionEntries(data?.competitions?.nodes ?? []);
     const officials: CompetitionOfficialAssignment[] = [
       ...(data?.officialEvents?.nodes ?? []).flatMap((event) =>
         event.officials.nodes.map((official) => ({
@@ -264,7 +262,7 @@ export function useCalendarData({
       }),
     ];
     const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
-      competitionItems,
+      data?.competitions?.nodes ?? [],
       officials,
     ).map(({ key, name, date, entries, officials }) => ({
       kind: 'competition',

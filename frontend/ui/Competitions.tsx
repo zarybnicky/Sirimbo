@@ -6,19 +6,13 @@ import {
   CompetitionSuggestionsDocument,
   CompetitionSuggestionEventsDocument,
   type CompetitionFragment,
+  type CompetitionEntryFragment,
+  type CompetitionResultFragment,
   type CompetitionsQuery,
   type CompetitionsQueryVariables,
 } from '@/graphql/CompetitionParticipation';
-import type {
-  CompetitionType,
-  FederationEventStatus,
-  CompetitionParticipantCondition,
-  OfficialRole,
-} from '@/graphql';
-import type {
-  CompetitionCategoryLabelFragment,
-  OfficialPersonFragment,
-} from '@/graphql/Federation';
+import type { CompetitionParticipantCondition, OfficialRole } from '@/graphql';
+import type { OfficialPersonFragment } from '@/graphql/Federation';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
@@ -49,30 +43,9 @@ import { FederationLink } from '@/ui/federation-links';
 
 const EventMap = dynamic(() => import('@/ui/EventMap'));
 
-export type CompetitionEntry = {
-  id: string;
-  federation: string | null;
-  competitorId: string | null;
-  competitorName: string | null;
-  competitionId: string | null;
-  competitionExternalId: string | null;
-  competitionEventId: string | null;
-  competitionEventExternalId: string | null;
-  competitionEventName: string | null;
-  competitionEventLocation: string | null;
-  competitionDate: string | null;
-  competitionType: CompetitionType | null;
-  category: CompetitionCategoryLabelFragment | null;
-  participants: number | null;
-  checkInEnd?: string | null;
-  status?: FederationEventStatus;
-  ranking?: number | null;
-  rankingTo?: number | null;
-  pointGain?: string | null;
-  finalGain?: string | null;
-  completionStatus?: string | null;
-  cancelled?: boolean;
-};
+type Competition = NonNullable<CompetitionsQuery['competitions']>['nodes'][number];
+export type CompetitionEntry = CompetitionEntryFragment &
+  Partial<CompetitionResultFragment> & { competition: Competition };
 
 export type CompetitionOfficialAssignment = {
   date: string;
@@ -82,29 +55,34 @@ export type CompetitionOfficialAssignment = {
   person: OfficialPersonFragment | null;
 };
 
-function entryLabel(
-  entry: Pick<CompetitionEntry, 'federation' | 'category' | 'competitionType'> & {
-    competitorName?: string | null;
-  },
-  competition: boolean,
-) {
-  return competition ? formatCategoryName(entry) : (entry.competitorName ?? '');
-}
-
-function checkInTime(entries: readonly CompetitionEntry[]) {
-  return entries.find((x) => x.checkInEnd)?.checkInEnd;
+function entryLabel(entry: CompetitionEntry, competition: boolean) {
+  return competition
+    ? formatCategoryName(entry.competition)
+    : (entry.competitor?.name ?? entry.competitorId);
 }
 
 export function groupCompetitionEvents(
-  entries: readonly CompetitionEntry[],
+  competitions: readonly Competition[],
   officials: readonly CompetitionOfficialAssignment[] = [],
 ) {
+  const entries = competitions.flatMap((comp) => {
+    const entries = new Map<string, CompetitionEntry>();
+    for (const entry of [...(comp.entries ?? []), ...(comp.results ?? [])]) {
+      entries.set(entry.competitorId, {
+        cancelled: false,
+        ...entries.get(entry.competitorId),
+        ...entry,
+        competition: comp,
+      });
+    }
+    return [...entries.values()];
+  });
   return [
     ...Map.groupBy([...entries, ...officials], (x) =>
-      'role' in x ? x.date : x.competitionDate,
+      'role' in x ? x.date : x.competition.startDate,
     ),
   ].flatMap(([date, day]) =>
-    [...Map.groupBy(day, (x) => ('role' in x ? x.event.id : x.competitionEventId))]
+    [...Map.groupBy(day, (x) => ('role' in x ? x.event.id : x.competition.event?.id))]
       .map(([eventId, items]) => {
         const entries = items.filter((x): x is CompetitionEntry => !('role' in x));
         const officials = [
@@ -117,9 +95,10 @@ export function groupCompetitionEvents(
         return {
           key: `${date ?? ''}:${eventId ?? ''}`,
           date,
-          name: entries[0]?.competitionEventName ?? officials[0]?.event.name ?? '',
+          name: entries[0]?.competition.event?.name ?? officials[0]?.event.name ?? '',
           location:
-            entries[0]?.competitionEventLocation ??
+            (entries[0]?.competition.event?.location ||
+              entries[0]?.competition.event?.city) ??
             (officials[0]?.event.location || officials[0]?.event.city || ''),
           entries,
           officials,
@@ -131,8 +110,12 @@ export function groupCompetitionEvents(
   );
 }
 
-function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry[] }) {
-  return groupCompetitionEvents(entries).map(({ key, entries }) => (
+function CompetitionPanelFrame({
+  competitions,
+}: {
+  competitions: readonly Competition[];
+}) {
+  return groupCompetitionEvents(competitions).map(({ key, entries }) => (
     <section key={key} className="pt-2">
       <CompetitionEventContent entries={entries} cards />
     </section>
@@ -149,24 +132,21 @@ export function CompetitionEventContent({
   cards?: boolean;
 }) {
   const [override, setOverride] = React.useState<boolean | null>(null);
-  const event = entries[0];
-  const officialEvent = officials[0]?.event;
-  const date = event?.competitionDate ?? officials[0]?.date;
-  if (!event && !officialEvent) return null;
-  const unique = new Map<string, CompetitionEntry>();
-  for (const entry of entries) {
-    const key = `${entry.competitionId}:${entry.competitorId}`;
-    if (!unique.has(key)) unique.set(key, entry);
-  }
-  const competitors = Map.groupBy(unique.values(), (entry) => entry.competitorId);
-  const competitions = Map.groupBy(unique.values(), (entry) => entry.competitionId);
+  const competition = entries[0]?.competition;
+  const event = competition?.event ?? officials[0]?.event;
+  const date = competition?.startDate ?? officials[0]?.date;
+  if (!competition && !event) return null;
+  const competitors = Map.groupBy(entries, (entry) => entry.competitorId);
+  const competitions = Map.groupBy(entries, (entry) => entry.competitionId);
   const canToggle = competitors.size > 1 && competitions.size > 1;
   const byCompetition =
     canToggle && override !== null ? override : competitions.size < competitors.size;
   const groups = [...(byCompetition ? competitions : competitors)].toSorted(
     ([, a], [, b]) =>
       (byCompetition
-        ? (checkInTime(a) ?? '24:00').localeCompare(checkInTime(b) ?? '24:00')
+        ? (a[0]?.competition.checkInEnd ?? '24:00').localeCompare(
+            b[0]?.competition.checkInEnd ?? '24:00',
+          )
         : 0) ||
       compareText(entryLabel(a[0]!, byCompetition), entryLabel(b[0]!, byCompetition)),
   );
@@ -180,15 +160,11 @@ export function CompetitionEventContent({
         )}
       >
         <CompetitionLink
-          entry={
-            event ?? {
-              federation: officials[0]?.federation ?? null,
-              competitionEventExternalId: officialEvent?.externalId ?? null,
-            }
-          }
+          federation={competition?.federation ?? officials[0]?.federation}
+          eventId={event?.externalId}
           className={cards ? undefined : 'text-green-11 hover:text-green-12'}
         >
-          {event?.competitionEventName ?? officialEvent?.name}
+          {event?.name}
         </CompetitionLink>
       </div>
       <div
@@ -198,11 +174,7 @@ export function CompetitionEventContent({
         )}
       >
         <span className="min-w-0 truncate">
-          {[
-            event?.competitionEventLocation ??
-              (officialEvent?.location || officialEvent?.city),
-            cards && date && formatDateOnly(date),
-          ]
+          {[event?.location || event?.city, cards && date && formatDateOnly(date)]
             .filter(Boolean)
             .join(', ')}
         </span>
@@ -276,11 +248,12 @@ function CompetitionLabel({
 }) {
   return competition ? (
     <CompetitionLink
-      entry={entry}
-      competitionId={entry.competitionExternalId}
+      federation={entry.competition.federation}
+      eventId={entry.competition.event?.externalId}
+      competitionId={entry.competition.externalId}
       className={cn(
         'text-accent-11',
-        (cancelled || entry.status === 'CANCELLED') && 'line-through',
+        (cancelled || entry.competition.status === 'CANCELLED') && 'line-through',
       )}
       title={cancelled ? 'Zrušená přihláška' : undefined}
     >
@@ -291,7 +264,7 @@ function CompetitionLabel({
       className={cancelled ? 'line-through' : undefined}
       title={cancelled ? 'Zrušená přihláška' : undefined}
     >
-      {entry.competitorName}
+      {entryLabel(entry, false)}
     </span>
   );
 }
@@ -303,7 +276,7 @@ function CompetitionGroupContent({
   entries: readonly CompetitionEntry[];
   byCompetition: boolean;
 }) {
-  const checkInEnd = byCompetition && checkInTime(entries);
+  const checkInEnd = byCompetition && entries[0]?.competition.checkInEnd;
   const showLeadingColumn =
     !byCompetition || entries.some((x) => x.ranking !== undefined);
   return (
@@ -337,7 +310,9 @@ function CompetitionGroupContent({
             Number(b.finalGain ?? 0) - Number(a.finalGain ?? 0) ||
             Number(b.pointGain ?? 0) - Number(a.pointGain ?? 0) ||
             (a.ranking === undefined
-              ? (a.checkInEnd ?? '24:00').localeCompare(b.checkInEnd ?? '24:00')
+              ? (a.competition.checkInEnd ?? '24:00').localeCompare(
+                  b.competition.checkInEnd ?? '24:00',
+                )
               : 0) ||
             compareText(entryLabel(a, !byCompetition), entryLabel(b, !byCompetition)),
         )
@@ -346,7 +321,7 @@ function CompetitionGroupContent({
           const status = formatResultStatus(entry.completionStatus);
           return (
             <div
-              key={entry.id}
+              key={`${entry.competitionId}:${entry.competitorId}`}
               className="col-span-full grid grid-cols-subgrid items-baseline py-1.5 text-xs"
             >
               {showLeadingColumn && (
@@ -361,10 +336,11 @@ function CompetitionGroupContent({
                               : ''}
                             .
                           </span>
-                          {result.participants != null && ` z ${result.participants}`}
+                          {result.competition.participantsTotal != null &&
+                            ` z ${result.competition.participantsTotal}`}
                         </>
                       )
-                    : !byCompetition && entry.checkInEnd?.slice(0, 5)}
+                    : !byCompetition && entry.competition.checkInEnd?.slice(0, 5)}
                 </div>
               )}
               <div className="min-w-0 font-semibold text-neutral-12">
@@ -383,24 +359,26 @@ function CompetitionGroupContent({
   );
 }
 
-export function CompetitionLink({
-  entry,
+function CompetitionLink({
+  federation,
+  eventId,
   competitionId,
   children,
   className,
   title,
 }: {
-  entry?: Pick<CompetitionEntry, 'federation' | 'competitionEventExternalId'>;
+  federation?: string | null;
+  eventId?: string | null;
   competitionId?: string | null;
   children: React.ReactNode;
   className?: string;
   title?: string;
 }) {
-  if (!entry?.federation || !entry.competitionEventExternalId) return <>{children}</>;
+  if (!federation || !eventId) return <>{children}</>;
 
   return (
     <Link
-      href={`/federated/${entry.federation}/${entry.competitionEventExternalId}${competitionId ? `/${competitionId}` : ''}`}
+      href={`/federated/${federation}/${eventId}${competitionId ? `/${competitionId}` : ''}`}
       prefetch={false}
       className={cn('underline hover:text-accent-11', className)}
       title={title}
@@ -408,49 +386,6 @@ export function CompetitionLink({
       {children}
     </Link>
   );
-}
-
-function competitionDetails(
-  competition: NonNullable<CompetitionsQuery['competitions']>['nodes'][number],
-) {
-  return {
-    federation: competition.federation ?? null,
-    competitionId: competition.id,
-    competitionExternalId: competition.externalId ?? null,
-    competitionEventId: competition.event?.id ?? null,
-    competitionEventExternalId: competition.event?.externalId ?? null,
-    competitionEventName: competition.event?.name ?? null,
-    competitionEventLocation:
-      competition.event?.location || competition.event?.city || null,
-    competitionDate: competition.startDate ?? null,
-    competitionType: competition.competitionType ?? null,
-    category: competition.category ?? null,
-    participants: competition.participantsTotal ?? null,
-    checkInEnd: competition.checkInEnd,
-    status: competition.status,
-  };
-}
-
-export function competitionEntries(
-  competitions: NonNullable<CompetitionsQuery['competitions']>['nodes'],
-): CompetitionEntry[] {
-  return competitions.flatMap((competition) => {
-    const common = competitionDetails(competition);
-    const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [
-      ...(competition.entries ?? []),
-      ...(competition.results ?? []),
-    ]) {
-      entries.set(entry.competitorId, {
-        ...entries.get(entry.competitorId),
-        ...common,
-        ...entry,
-        id: `${competition.id}:${entry.competitorId}`,
-        competitorName: entry.competitor?.name ?? entry.competitorId,
-      });
-    }
-    return [...entries.values()];
-  });
 }
 
 export function CompetitionHistory({
@@ -479,7 +414,7 @@ export function CompetitionHistory({
           Načítám...
         </p>
       ) : data?.competitions?.nodes.length ? (
-        <CompetitionPanelFrame entries={competitionEntries(data.competitions.nodes)} />
+        <CompetitionPanelFrame competitions={data.competitions.nodes} />
       ) : (
         <p className="text-sm text-neutral-11">Žádné přihlášky ani výsledky soutěží.</p>
       )}
@@ -516,7 +451,6 @@ export function CompetitionSuggestions({
     getTotal: (data) => data?.federationEvents?.totalCount,
   });
   const events = data?.federationEvents?.nodes ?? [];
-  const eventsById = new Map(events.map((event) => [event.id, event]));
   const [{ data: matchData, fetching: matchFetching, error: matchError }] = useQuery({
     query: CompetitionSuggestionsDocument,
     variables: {
@@ -530,19 +464,9 @@ export function CompetitionSuggestions({
 
   const matches = (matchData?.competitionSuggestionsList ?? []).flatMap((row) => {
     if (!row.competition || (!row.couple && !row.person)) return [];
-    const competition = row.competition;
     return [
       {
-        id: competition.id,
-        federation: competition.federation,
-        competitionExternalId: competition.externalId,
-        competitionEventId: competition.eventId,
-        competitionEventExternalId:
-          eventsById.get(competition.eventId)?.externalId ?? null,
-        competitionDate: competition.startDate,
-        checkInEnd: competition.checkInEnd,
-        competitionType: competition.competitionType,
-        category: competition.category,
+        competition: row.competition,
         matchStatus: row.status,
         competitor: row.couple
           ? {
@@ -560,7 +484,7 @@ export function CompetitionSuggestions({
       },
     ];
   });
-  const byEvent = Map.groupBy(matches, (match) => match.competitionEventId);
+  const byEvent = Map.groupBy(matches, (match) => match.competition.eventId);
   const queryError = error ?? (events.length > 0 ? matchError : undefined);
   const hasCoordinates = events.some((x) => x.venueLat !== null && x.venueLng !== null);
   const isPending = fetching || (events.length > 0 && matchFetching);
@@ -623,11 +547,12 @@ export function CompetitionSuggestions({
                 const matches = byEvent.get(event.id) ?? [];
                 return (
                   <DotSeparated className="text-xs text-neutral-11">
-                    {formatCount(
-                      new Set(matches.map((match) => match.competitor.key)).size,
-                      { one: 'soutěžící', few: 'soutěžící', other: 'soutěžících' },
-                    )}
-                    {formatCount(new Set(matches.map((match) => match.id)).size, {
+                    {formatCount(new Set(matches.map((x) => x.competitor.key)).size, {
+                      one: 'soutěžící',
+                      few: 'soutěžící',
+                      other: 'soutěžících',
+                    })}
+                    {formatCount(new Set(matches.map((x) => x.competition.id)).size, {
                       one: 'soutěž',
                       few: 'soutěže',
                       other: 'soutěží',
@@ -648,12 +573,18 @@ export function CompetitionSuggestions({
                 : matches[0]!.matchStatus,
             }));
             const competitions = [
-              ...Map.groupBy(eventMatches, (x) => x.id).values(),
+              ...Map.groupBy(eventMatches, (x) => x.competition.id).values(),
             ].toSorted(
               (a, b) =>
-                compareCategories(a[0]!.category, b[0]!.category) ||
-                compareNaturalText(entryLabel(a[0]!, true), entryLabel(b[0]!, true)) ||
-                compareText(a[0]!.competitionDate ?? '', b[0]!.competitionDate ?? ''),
+                compareCategories(
+                  a[0]!.competition.category,
+                  b[0]!.competition.category,
+                ) ||
+                compareNaturalText(
+                  formatCategoryName(a[0]!.competition),
+                  formatCategoryName(b[0]!.competition),
+                ) ||
+                compareText(a[0]!.competition.startDate, b[0]!.competition.startDate),
             );
             return (
               <Collapsible.Root key={event.id} asChild>
@@ -662,10 +593,8 @@ export function CompetitionSuggestions({
                     <div className="pointer-events-none relative z-10 min-w-0 pr-11 [&_a]:pointer-events-auto [&_button]:pointer-events-auto">
                       <h3 className="font-semibold">
                         <CompetitionLink
-                          entry={{
-                            federation: event.federation,
-                            competitionEventExternalId: event.externalId,
-                          }}
+                          federation={event.federation}
+                          eventId={event.externalId}
                         >
                           {event.name}
                         </CompetitionLink>
@@ -714,14 +643,15 @@ export function CompetitionSuggestions({
                         const entry = competitionMatches[0]!;
                         return (
                           <li
-                            key={entry.id}
+                            key={entry.competition.id}
                             className="flex items-baseline justify-between gap-3"
                           >
                             <CompetitionLink
-                              entry={entry}
-                              competitionId={entry.competitionExternalId}
+                              federation={entry.competition.federation}
+                              eventId={event.externalId}
+                              competitionId={entry.competition.externalId}
                             >
-                              {entryLabel(entry, true)}
+                              {formatCategoryName(entry.competition)}
                             </CompetitionLink>
                             <EligibleCompetitors
                               competitors={competitionMatches.map((x) => ({
@@ -845,11 +775,11 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     },
     pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
   });
-  const visible = competitionEntries(data?.competitions?.nodes ?? []);
+  const visible = data?.competitions?.nodes ?? [];
   const locations = [
     ...new Set(
       (clubData?.competitions?.nodes ?? []).flatMap(
-        (competition) => competition.event?.location || competition.event?.city || [],
+        (x) => x.event?.location || x.event?.city || [],
       ),
     ),
   ];
@@ -906,7 +836,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
         )
       )}
 
-      {!error && !fetching && <CompetitionPanelFrame entries={visible} />}
+      {!error && !fetching && <CompetitionPanelFrame competitions={visible} />}
       <Pagination {...pagination} />
     </section>
   );

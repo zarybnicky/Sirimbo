@@ -7,7 +7,7 @@ export function DotSeparated({
   ...props
 }: ComponentPropsWithoutRef<'span'>) {
   const items = Children.toArray(children).filter(
-    (item) => typeof item !== 'string' || item.trim() !== '',
+    (x) => typeof x !== 'string' || x.trim() !== '',
   );
   if (items.length === 0) return null;
 

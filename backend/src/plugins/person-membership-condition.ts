@@ -43,7 +43,7 @@ function expectState(value: unknown): MembershipState {
 
 function expectCohorts(value: unknown): readonly string[] | null {
   if (value == null) return null;
-  if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
+  if (!Array.isArray(value) || !value.every((x) => typeof x === 'string')) {
     throw new Error('Invalid person membership cohort filter');
   }
   return value;
