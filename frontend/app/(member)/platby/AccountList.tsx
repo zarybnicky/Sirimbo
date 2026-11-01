@@ -5,9 +5,9 @@ import { moneyFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import Link from 'next/link';
 import { Table } from '@/ui/Table';
+import { SortButton } from '@/ui/SortButton';
 import { compareText } from '@/lib/compare';
-import { cn } from '@/lib/cn';
-import { ArrowDown, ArrowUpDown, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { Spinner } from '@/ui/Spinner';
 import { saveAs } from 'file-saver';
@@ -54,38 +54,9 @@ export const AccountList = React.memo(function AccountList() {
       }
       columns={columns.map(({ id, label }) => (
         <div key={id} className={id === 'name' ? undefined : 'text-right'}>
-          <button
-            type="button"
-            aria-pressed={sort.column === id}
-            className={buttonCls({
-              display: 'none',
-              variant: 'none',
-              size: 'none',
-              className:
-                'inline-flex items-center gap-1 whitespace-nowrap text-accent-11',
-            })}
-            onClick={() =>
-              setSort((x) => ({
-                column: id,
-                descending: x.column === id ? !x.descending : false,
-              }))
-            }
-          >
+          <SortButton column={id} value={sort} onChange={setSort}>
             {label}
-            {sort.column === id ? (
-              <>
-                <ArrowDown
-                  className={cn('size-4', !sort.descending && 'rotate-180')}
-                  aria-hidden
-                />
-                <span className="sr-only">
-                  {sort.descending ? ', sestupně' : ', vzestupně'}
-                </span>
-              </>
-            ) : (
-              <ArrowUpDown className="size-4" aria-hidden />
-            )}
-          </button>
+          </SortButton>
         </div>
       ))}
       busy={fetching}

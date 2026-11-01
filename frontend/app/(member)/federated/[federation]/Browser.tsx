@@ -7,7 +7,8 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Table, TableStatus } from '@/ui/Table';
-import { ArrowDown, ArrowUpDown, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { SortButton } from '@/ui/SortButton';
+import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import {
   parseAsArrayOf,
   parseAsBoolean,
@@ -432,9 +433,7 @@ function People(props: BrowserProps) {
     useLastDefined(facetResult.data?.federation?.peopleFacetsList) ?? [];
   const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
 
-  const ageRanges = new Map(
-    ageGroups.map((group) => [group.code, group.personAge]),
-  );
+  const ageRanges = new Map(ageGroups.map((group) => [group.code, group.personAge]));
   const result = usePaginatedQuery({
     query: FederationPeopleDocument,
     pause: searchPending,
@@ -763,49 +762,37 @@ function Competitors(props: BrowserProps) {
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['Jméno', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map((label) => (
-                <th
-                  key={label}
-                  scope="col"
-                  className="px-2 py-1"
-                  aria-sort={
-                    filters.sort !== label
-                      ? undefined
-                      : filters.descending
-                        ? 'descending'
-                        : 'ascending'
-                  }
-                >
-                  {['Typ', 'Věk', 'Poslední soutěž'].includes(label) ? (
-                    label
-                  ) : (
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1 text-accent-11"
-                      onClick={() =>
-                        setFilters({
-                          sort: label,
-                          descending:
-                            filters.sort === label
-                              ? !filters.descending
-                              : label !== 'competitor',
-                          page: null,
-                        })
-                      }
-                    >
-                      {label}
-                      {filters.sort === label ? (
-                        <ArrowDown
-                          className={cn('size-4', !filters.descending && 'rotate-180')}
-                          aria-hidden
-                        />
-                      ) : (
-                        <ArrowUpDown className="size-4" aria-hidden />
-                      )}
-                    </button>
-                  )}
-                </th>
-              ))}
+              {['competitor', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map(
+                (column) => (
+                  <th
+                    key={column}
+                    scope="col"
+                    className="px-2 py-1"
+                    aria-sort={
+                      filters.sort !== column
+                        ? undefined
+                        : filters.descending
+                          ? 'descending'
+                          : 'ascending'
+                    }
+                  >
+                    {['Typ', 'Věk', 'Poslední soutěž'].includes(column) ? (
+                      column
+                    ) : (
+                      <SortButton
+                        column={column}
+                        value={{ column: filters.sort, descending: filters.descending }}
+                        defaultDescending={column !== 'competitor'}
+                        onChange={({ column, descending }) =>
+                          setFilters({ sort: column, descending, page: null })
+                        }
+                      >
+                        {column === 'competitor' ? 'Jméno' : column}
+                      </SortButton>
+                    )}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>

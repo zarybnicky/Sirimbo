@@ -3,7 +3,6 @@ import { PersonPaymentsDocument } from '@/graphql/Person';
 import type { AccountFragment, PostingFragment } from '@/graphql/Payment';
 import { useActionMap } from '@/lib/actions';
 import { compareText } from '@/lib/compare';
-import { cn } from '@/lib/cn';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
 import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
@@ -17,8 +16,9 @@ import {
 import { QRPayment } from '@/ui/QRPayment';
 import { buttonCls } from '@/ui/style';
 import { Table } from '@/ui/Table';
+import { SortButton } from '@/ui/SortButton';
 import { useAuth } from '@/lib/auth';
-import { ArrowDown, ArrowUpDown, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
@@ -118,15 +118,13 @@ function AccountPaymentsTable({
 }) {
   const auth = useAuth();
   const [sort, setSort] = React.useState({ column: 'effectiveDate', descending: true });
-  const baseRows = postings
-    .filter(keyIsNonNull('transaction'))
-    .map((row) => ({
-      ...row,
-      description:
-        row.transaction.description ||
-        describePosting(row.transaction.payment, { personId: account.personId }) ||
-        '',
-    }));
+  const baseRows = postings.filter(keyIsNonNull('transaction')).map((row) => ({
+    ...row,
+    description:
+      row.transaction.description ||
+      describePosting(row.transaction.payment, { personId: account.personId }) ||
+      '',
+  }));
   const rows = baseRows.toSorted((a, b) => {
     const order =
       sort.column === 'amount'
@@ -172,38 +170,9 @@ function AccountPaymentsTable({
           { id: 'amount', label: 'Částka' },
         ].map(({ id, label }) => (
           <div key={id} className={id === 'amount' ? 'text-right' : undefined}>
-            <button
-              type="button"
-              aria-pressed={sort.column === id}
-              className={buttonCls({
-                display: 'none',
-                variant: 'none',
-                size: 'none',
-                className:
-                  'inline-flex items-center gap-1 whitespace-nowrap text-accent-11',
-              })}
-              onClick={() =>
-                setSort((x) => ({
-                  column: id,
-                  descending: x.column === id ? !x.descending : false,
-                }))
-              }
-            >
+            <SortButton column={id} value={sort} onChange={setSort}>
               {label}
-              {sort.column === id ? (
-                <>
-                  <ArrowDown
-                    className={cn('size-4', !sort.descending && 'rotate-180')}
-                    aria-hidden
-                  />
-                  <span className="sr-only">
-                    {sort.descending ? ', sestupně' : ', vzestupně'}
-                  </span>
-                </>
-              ) : (
-                <ArrowUpDown className="size-4" aria-hidden />
-              )}
-            </button>
+            </SortButton>
           </div>
         )),
       ]}
