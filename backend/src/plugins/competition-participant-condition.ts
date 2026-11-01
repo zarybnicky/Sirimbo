@@ -144,8 +144,7 @@ const plugins: GraphileConfig.Plugin[] = [
         where ${registration}.event_id = ${row}.id
           and ${registration}.registration_status = 'active'
           and ${registrationPredicate(registration, scope)})`;
-      if (!onlyMine || coupleId != null) return registered;
-      // Mine also includes the viewer's trainer assignments.
+      if (coupleId != null) return registered;
       const trainer = sql.identifier(Symbol('trainer'));
       return sql`(${registered} or exists (
         select 1 from public.event_trainer ${trainer}
