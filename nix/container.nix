@@ -14,6 +14,7 @@
       hypopg
       pgsql-http
       pgtap
+      pg_repack
     ];
     ensureDatabases = [ "olymp" "olymp_shadow" ];
     ensureUsers = [{

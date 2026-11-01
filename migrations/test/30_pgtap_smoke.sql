@@ -2,13 +2,13 @@ BEGIN;
 
 SET LOCAL search_path = public, tap;
 
-SELECT tap.plan(2);
+SELECT tap.plan(5);
 
 -- Fixtures for testing event_trainers(event).
 --
 -- People:
 --   -3001 = Alice, active tenant_trainer
---   -3002 = Bob,   active tenant_trainer  (used as instance-level override)
+--   -3002 = Bob,   active tenant_trainer for a separate event
 --   -3003 = Carol, expired tenant_trainer (used to test active_range filtering)
 
 INSERT INTO tenant (id, name) VALUES (-3000, 'Trainer smoke test');
@@ -52,6 +52,41 @@ SELECT tap.is(
   )),
   -3002::bigint,
   'occurrence trainer lists are independent'
+);
+
+-- Adjacent periods must select the event-time rate, not the current/first row.
+UPDATE tenant_trainer SET until = now(),
+  member_price_45min = row(450, 'CZK')::price
+WHERE tenant_id = -3000 AND person_id = -3001;
+INSERT INTO tenant_trainer (tenant_id, person_id, since, member_price_45min)
+VALUES (-3000, -3001, now(), row(900, 'CZK')::price);
+
+SELECT tap.is(
+  (SELECT member_price_45min_amount FROM public.event_trainers(
+    (SELECT e FROM event e WHERE e.id = -3001)
+  )),
+  900::numeric,
+  'compatibility wrapper uses the rate starting at the event boundary'
+);
+
+UPDATE event SET since = now() - interval '1 day', until = now() - interval '23 hours',
+  type = 'lesson', stats = '{"TOTAL": 2}'::jsonb
+WHERE id = -3001;
+
+SELECT tap.is(
+  (SELECT member_price_45min_amount FROM public.event_trainers(
+    (SELECT e FROM event e WHERE e.id = -3001)
+  )),
+  450::numeric,
+  'compatibility wrapper follows the historical rate when an event moves'
+);
+
+SELECT tap.is(
+  (SELECT amount FROM public.event_approx_price(
+    (SELECT e FROM event e WHERE e.id = -3001)
+  )),
+  300::numeric,
+  'lesson estimate uses the historical rate and excludes expired trainers'
 );
 
 SELECT tap.finish(true);

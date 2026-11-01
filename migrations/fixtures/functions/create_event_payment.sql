@@ -49,9 +49,12 @@ begin
     created_payment.id,
     account.id,
     trainer.member_price_45min_amount / 45 * duration
-  from event_trainers(target_event) trainer
+  from event_trainer assignment
+  join tenant_trainer trainer on trainer.tenant_id = assignment.tenant_id
+    and trainer.person_id = assignment.person_id
+    and trainer.active_range @> target_event.since
   cross join lateral person_account(trainer.person_id, trainer.currency) account
-  where trainer.tenant_id = current_tenant_id()
+  where assignment.event_id = target_event.id
     and trainer.member_price_45min_amount is not null;
 
   insert into payment_debtor (payment_id, person_id)
@@ -65,5 +68,5 @@ begin
 end
 $$;
 
-COMMENT ON FUNCTION create_event_payment IS '@behavior -*';
-GRANT ALL ON FUNCTION create_event_payment TO anonymous;
+comment on function create_event_payment is '@behavior -*';
+grant all on function create_event_payment to anonymous;

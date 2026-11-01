@@ -14,7 +14,10 @@ as $$
     sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
     tt.currency as currency
   from stats s
-  join lateral event_trainers(v_instance) tt on true
+  join event_trainer assignment on assignment.event_id = v_instance.id
+  join tenant_trainer tt on tt.tenant_id = assignment.tenant_id
+    and tt.person_id = assignment.person_id
+    and tt.active_range @> v_instance.since
   where
     s.num_participants > 0
     and s.duration > 0
