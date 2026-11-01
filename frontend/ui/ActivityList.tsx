@@ -46,9 +46,8 @@ export const ActivityList = React.memo(function ActivityList({
 }) {
   const [date, setDate] = React.useState(() => new Date());
   const [filters, setFilters] = React.useState(calendarTypes);
-  const list = React.useRef<HTMLDivElement>(null);
   const todayMarker = React.useRef<HTMLElement>(null);
-  const scrollTo = React.useRef<'today' | 'top' | null>('today');
+  const scrollToToday = React.useRef(true);
   const today = format(new Date(), 'yyyy-MM-dd');
   const { range, calendarEvents, fetching, error } = useCalendarData({
     view: monthView,
@@ -77,10 +76,9 @@ export const ActivityList = React.memo(function ActivityList({
   }, [calendarEvents, range, today]);
 
   React.useEffect(() => {
-    if (fetching || error || !scrollTo.current || !list.current) return;
-    const target = scrollTo.current === 'today' ? todayMarker.current : list.current;
-    target?.scrollIntoView({ block: 'start', behavior: 'instant' });
-    scrollTo.current = null;
+    if (fetching || error || !scrollToToday.current) return;
+    todayMarker.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    scrollToToday.current = false;
   }, [date, fetching, error]);
 
   return (
@@ -91,11 +89,11 @@ export const ActivityList = React.memo(function ActivityList({
           date={date}
           view={monthView}
           setDate={(next) => {
-            scrollTo.current = 'top';
+            scrollToToday.current = false;
             setDate(next);
           }}
           onToday={() => {
-            scrollTo.current = 'today';
+            scrollToToday.current = true;
             setDate(new Date());
           }}
         />
@@ -115,7 +113,7 @@ export const ActivityList = React.memo(function ActivityList({
             ? 'Žádná aktivita v tomto měsíci.'
             : null}
       </div>
-      <div ref={list} className="scroll-mt-20">
+      <div className="scroll-mt-20">
         {days.map(([day, items]) => {
           const events = items.filter((x) => x.kind === 'event');
           const birthdays = items.filter((x) => x.kind === 'birthday');
