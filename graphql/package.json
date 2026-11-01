@@ -2,7 +2,8 @@
   "name": "@rozpisovnik/graphql",
   "type": "module",
   "scripts": {
-    "lint": "eslint . --cache"
+    "lint": "eslint . --cache",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@graphql-eslint/eslint-plugin": "^4.4.1",

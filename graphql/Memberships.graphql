@@ -144,6 +144,7 @@ query Couple($id: BigInt!) {
         externalId
         name
         categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
+          competitorId
           categoryId
           category { ...CompetitionCategory }
           points

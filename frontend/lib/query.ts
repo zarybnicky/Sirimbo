@@ -23,6 +23,7 @@ import { fetchExchange, mapExchange } from 'urql';
 import { pipe, tap } from 'wonka';
 import schema from '@/graphql/introspection.json';
 import { errorTarget } from '@/ui/ErrorNotifier';
+import { cacheKeys } from '@/lib/cache-keys';
 
 const origin =
   typeof window === 'undefined'
@@ -171,41 +172,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
 });
 
 const cacheConfig: Partial<GraphCacheConfig> = {
-  keys: {
-    AddressDomain: () => null,
-    AgeGroup: (x) => x.code || null,
-    CompetitionEntry: (x) => `${x.competitionId}:${x.competitorId}`,
-    CompetitionOfficial: (x) => `${x.competitionId}:${x.personId}:${x.role}`,
-    CompetitionResult: (x) => `${x.competitionId}:${x.competitorId}`,
-    CompetitionSuggestionsRecord: () => null,
-    CrawlerTargetSummary: () => null,
-    CrawlerTargetFailureGroup: () => null,
-    DatetimeRange: () => null,
-    DatetimeRangeBound: () => null,
-    EventApproxPriceRecord: () => null,
-    EventConflict: () => null,
-    EventFacetsRecord: () => null,
-    EventRegistrationInfo: () => null,
-    Federation: (x) => x.code || null,
-    FederationCoupleAgeRule: (x) => x.ageGroupCode || null,
-    FederationCompetitorFacetsRecord: () => null,
-    FederationEventFacet: () => null,
-    FederationEventYear: () => null,
-    FederationCompetitorComponent: (x) => `${x.competitorId}:${x.personId}`,
-    FederationCompetitorCategoryProgress: (x) => `${x.competitorId}:${x.categoryId}`,
-    FederationEventOfficial: (x) =>
-      `${x.eventId}:${x.personId}:${x.role}:${x.discipline}`,
-    IntRange: () => null,
-    IntRangeBound: () => null,
-    LocationImage: (x) => x.fileId || null,
-    PersonFederationCandidatesRecord: () => null,
-    PersonFacetsRecord: () => null,
-    PersonLastActivity: () => null,
-    Price: () => null,
-    RanklistEntry: (x) => `${x.snapshotId}:${x.competitorId}`,
-    ScoreboardRecord: (x) => x.personId || null,
-    TenantSetting: (x) => x.tenantId || null,
-  },
+  keys: cacheKeys,
   optimistic: {
     moveEvent({ input }, cache): Maybe<WithTypename<MoveEventPayload>> {
       if (!input.id) return null;

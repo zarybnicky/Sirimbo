@@ -3,6 +3,7 @@ query AgeGroupRules {
     code
     name
     coupleRules(condition: { division: "General" }) {
+      ageGroupCode
       olderAge {
         start { value }
         end { value }

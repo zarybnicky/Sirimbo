@@ -355,31 +355,21 @@ function formatCstsCategoryName(
   competitionType: CompetitionType | null | undefined,
 ) {
   const { discipline, series, competitorType } = category;
-  const disciplinePrefix =
-    competitionType === 'CHAMPIONSHIP'
-      ? ''
-      : competitorType === 'SOLO'
-        ? 'So'
-        : competitorType === 'DUO' || competitorType === 'TRIO'
-          ? 'Sy'
-          : '';
-  const prefixedDiscipline =
-    disciplinePrefix && ['standard', 'latin'].includes(discipline.toLowerCase());
-
   return [
     competitionType && typePrefix[competitionType],
-    prefixedDiscipline ? undefined : cstsCompetitorTypeNames[competitorType],
+    competitionType === 'CHAMPIONSHIP' ? cstsCompetitorTypeNames[competitorType] : undefined,
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
     formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
     formatClass(category.class),
+    competitionType !== 'CHAMPIONSHIP' ? cstsCompetitorTypeNames[competitorType] : undefined,
     discipline === 'Standard_Latin'
       ? 'STT+LAT'
       : discipline === 'TenDance'
         ? '10T'
         : discipline?.toLowerCase() === 'standard'
-          ? `${disciplinePrefix}STT`
+          ? 'STT'
           : discipline?.toLowerCase() === 'latin'
-            ? `${disciplinePrefix}LAT`
+            ? 'LAT'
             : discipline,
     competitionType && typeSuffix[competitionType],
   ]

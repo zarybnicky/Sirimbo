@@ -5,6 +5,7 @@ fragment CompetitionCategoryLabel on Category {
   series
   ageGroup
   ageGroupDetails {
+    code
     name
   }
   discipline
@@ -15,11 +16,13 @@ fragment CompetitionCategoryLabel on Category {
 fragment CompetitionCategory on Category {
   ...CompetitionCategoryLabel
   ageGroupDetails {
+    code
     age {
       start { value }
       end { value }
     }
     coupleRules(condition: { division: "General" }) {
+      ageGroupCode
       olderAge {
         start { value }
         end { value }
@@ -344,6 +347,7 @@ query FederationCompetitor($id: String!) {
       name
     }
     categoryProgressesList(orderBy: CATEGORY_ID_ASC) {
+      competitorId
       categoryId
       category {
         ...CompetitionCategory
@@ -532,11 +536,13 @@ query FederationCompetitors(
             id
             ageGroup
             ageGroupDetails {
+              code
               age {
                 start { value }
                 end { value }
               }
               coupleRules(condition: { division: "General" }) {
+                ageGroupCode
                 olderAge {
                   start { value }
                   end { value }
@@ -568,6 +574,7 @@ query FederationCompetitorFacets(
       end { value }
     }
     coupleRules(condition: { division: "General" }) {
+      ageGroupCode
       olderAge {
         start { value }
         end { value }
@@ -659,6 +666,7 @@ query CompetitionRound(
       roundLabel
     }
     resultsList {
+      competitionId
       competitorId
       startNumber
     }

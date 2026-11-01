@@ -83,7 +83,11 @@ export default async function EventPage({ params }: Props) {
       />
 
       <Competitions federation={federation} eventId={eventId} />
-      <Officials federation={federation} officials={event.officials.nodes} />
+      <Officials
+        federation={federation}
+        officials={event.officials.nodes}
+        showJudges={event.status === 'PLANNED' || event.status === 'IN_PROGRESS'}
+      />
       <Sources federation={federation} condition={{ eventId: event.id }} />
     </Layout>
   );

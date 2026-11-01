@@ -15,7 +15,10 @@ import type {
   CompetitionParticipantCondition,
   OfficialRole,
 } from '@/graphql';
-import type { CompetitionCategoryLabelFragment, OfficialPersonFragment } from '@/graphql/Federation';
+import type {
+  CompetitionCategoryLabelFragment,
+  OfficialPersonFragment,
+} from '@/graphql/Federation';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
@@ -79,7 +82,6 @@ export type CompetitionOfficialAssignment = {
   person: OfficialPersonFragment | null;
 };
 
-
 function entryLabel(
   entry: Pick<CompetitionEntry, 'federation' | 'category' | 'competitionType'> & {
     competitorName?: string | null;
@@ -100,21 +102,20 @@ export function groupCompetitionEvents(
   officials: readonly CompetitionOfficialAssignment[] = [],
 ) {
   return [
-    ...Map.groupBy([...entries, ...officials], (item) =>
-      'role' in item ? item.date : item.competitionDate,
+    ...Map.groupBy([...entries, ...officials], (x) =>
+      'role' in x ? x.date : x.competitionDate,
     ),
   ].flatMap(([date, day]) =>
-    [
-      ...Map.groupBy(day, (item) =>
-        'role' in item ? item.event.id : item.competitionEventId,
-      ),
-    ]
+    [...Map.groupBy(day, (x) => ('role' in x ? x.event.id : x.competitionEventId))]
       .map(([eventId, items]) => {
-        const entries = items.filter((item): item is CompetitionEntry => !('role' in item));
-        const officials = [...new Map(
-          items.filter((item) => 'role' in item)
-            .map((item) => [`${item.role}:${item.person?.id}`, item] as const),
-        ).values()];
+        const entries = items.filter((x): x is CompetitionEntry => !('role' in x));
+        const officials = [
+          ...new Map(
+            items
+              .filter((x) => 'role' in x)
+              .map((x) => [`${x.role}:${x.person?.id}`, x] as const),
+          ).values(),
+        ];
         return {
           key: `${date ?? ''}:${eventId ?? ''}`,
           date,
@@ -233,11 +234,14 @@ export function CompetitionEventContent({
           <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
         </article>
       ))}
-      {[...Map.groupBy(officials, (item) => item.role)]
+      {[...Map.groupBy(officials, (x) => x.role)]
         .toSorted(([a], [b]) => a.localeCompare(b))
         .map(([role, items]) => {
-          const people = items.flatMap(({ person }) => person ?? [])
-            .toSorted((a, b) => compareText(a.canonicalName ?? '', b.canonicalName ?? ''));
+          const people = items
+            .flatMap(({ person }) => person ?? [])
+            .toSorted((a, b) =>
+              compareText(a.canonicalName ?? '', b.canonicalName ?? ''),
+            );
           if (people.length === 0) return null;
           return (
             <div key={role} className="border-t border-green-6 pt-2 text-xs">
@@ -245,8 +249,14 @@ export function CompetitionEventContent({
               {people.map((person, index) => (
                 <React.Fragment key={person.id}>
                   {index > 0 && ', '}
-                  <FederationLink federation={items[0]!.federation} externalId={person.externalId} entity="people" className="text-xs">
-                    {person.canonicalName || [person.firstName, person.lastName].filter(Boolean).join(' ')}
+                  <FederationLink
+                    federation={items[0]!.federation}
+                    externalId={person.externalId}
+                    entity="people"
+                    className="text-xs"
+                  >
+                    {person.canonicalName ||
+                      [person.firstName, person.lastName].filter(Boolean).join(' ')}
                   </FederationLink>
                 </React.Fragment>
               ))}
@@ -429,7 +439,10 @@ export function competitionEntries(
   return competitions.flatMap((competition) => {
     const common = competitionDetails(competition);
     const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [...(competition.entries ?? []), ...(competition.results ?? [])]) {
+    for (const entry of [
+      ...(competition.entries ?? []),
+      ...(competition.results ?? []),
+    ]) {
       entries.set(entry.competitorId, {
         ...entries.get(entry.competitorId),
         ...common,
@@ -752,11 +765,12 @@ function EligibleCompetitors({
           type="button"
           className="shrink-0 font-medium text-accent-11 underline decoration-dotted underline-offset-2"
         >
-          {(competitors.length - registered) > 0 && formatCount(competitors.length - registered, {
-            one: 'potenciální',
-            few: 'potenciální',
-            other: 'potenciálních',
-          })}
+          {competitors.length - registered > 0 &&
+            formatCount(competitors.length - registered, {
+              one: 'potenciální',
+              few: 'potenciální',
+              other: 'potenciálních',
+            })}
           {registered > 0 && (
             <>
               {registered < competitors.length && ' · '}

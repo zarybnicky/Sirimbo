@@ -31,7 +31,7 @@
         postInstall = "cp -s $out/share/backend/src/index.ts $out/bin/rozpisovnik-api";
       };
 
-      rozpisovnik-migrations = final.runCommand "rozpisovnik-migrations" {} ''
+      rozpisovnik-migrations = final.runCommandLocal "rozpisovnik-migrations" {} ''
         mkdir -p $out
         cp -r ${./migrations} $out/migrations
         cp -r ${./.gmrc} $out/.gmrc
