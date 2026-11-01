@@ -15,11 +15,6 @@ export const attendanceIcons: Record<AttendanceType, LucideIcon> = {
   UNKNOWN: HelpCircle,
   NOT_EXCUSED: X,
 };
-const attendanceLabels: Record<AttendanceType, string> = {
-  ATTENDED: 'Přítomen',
-  UNKNOWN: 'Nezaznamenáno',
-  NOT_EXCUSED: 'Nepřítomen',
-};
 
 export function EventAttendance({
   attendance,

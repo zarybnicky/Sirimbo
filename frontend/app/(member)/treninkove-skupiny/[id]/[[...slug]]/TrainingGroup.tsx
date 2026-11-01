@@ -152,10 +152,7 @@ function CategoryList({
           .join(' ')}
       </div>
       <div className="whitespace-nowrap text-sm text-neutral-11">
-        {formatPointsAndFinals(
-          item.points ?? '0',
-          item.domesticFinals + item.foreignFinals,
-        )}
+        {formatPointsAndFinals(item)}
       </div>
     </div>
   );

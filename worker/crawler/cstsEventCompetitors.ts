@@ -81,7 +81,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
   },
   async load(client, parsed) {
     const eventId = parsed.collection[0]?.eventId;
-    if (eventId == null) return;
+    if (!eventId) return;
     if (parsed.collection.some((competitor) => competitor.eventId !== eventId)) {
       throw new Error('Expected one eventId in csts event competitors response');
     }
@@ -164,7 +164,10 @@ type PayloadCompetitorComponent = {
 };
 
 function fullName(...parts: Array<string | undefined>) {
-  return parts.map((x) => x?.trim()).filter(Boolean).join(' ');
+  return parts
+    .map((x) => x?.trim())
+    .filter(Boolean)
+    .join(' ');
 }
 
 function competitorLabel(competitor: EventCompetitor) {
@@ -187,7 +190,12 @@ function competitorComponents(competitor: EventCompetitor, type: competitor_type
   for (const couple of competitor.couplesOrDuos ?? []) {
     if (type === 'couple') {
       components.push(
-        component(competitorId, couple.idt1, fullName(couple.name1, couple.surname1), 'lead'),
+        component(
+          competitorId,
+          couple.idt1,
+          fullName(couple.name1, couple.surname1),
+          'lead',
+        ),
         component(
           competitorId,
           couple.idt2,

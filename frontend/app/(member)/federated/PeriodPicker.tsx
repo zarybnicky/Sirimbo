@@ -52,7 +52,6 @@ export function PeriodPicker({
                   className="peer sr-only"
                 />
                 <span
-                  title={`${y.mappedEventCount} na mapě`}
                   className={cn(
                     'flex flex-col items-center rounded-xl border border-neutral-4 py-2 hover:bg-neutral-3 peer-focus-visible:ring-2 peer-focus-visible:ring-accent-8',
                     y.year === year && 'border-accent-8 bg-accent-3 text-accent-11',

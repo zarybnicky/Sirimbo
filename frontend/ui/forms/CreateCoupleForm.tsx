@@ -147,8 +147,7 @@ export function CreateCoupleForm({
 
       {selectedGroups.length > 0 && (
         <div className="text-neutral-11">
-          Věková kategorie:{' '}
-          {selectedGroups.map((x) => formatAgeGroup(x.code, x.name)).join(' / ')}
+          Věková kategorie: {selectedGroups.map((x) => formatAgeGroup(x)).join(' / ')}
         </div>
       )}
 
@@ -161,6 +160,7 @@ export function CreateCoupleForm({
             {anchor?.birthDate && (
               <button
                 type="button"
+                role="switch"
                 aria-checked={showEveryone}
                 onClick={() => setShowEveryone((x) => !x)}
                 className="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9"

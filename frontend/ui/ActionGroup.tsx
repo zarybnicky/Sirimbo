@@ -88,7 +88,7 @@ export function ActionGroup<Id extends string = string>({
   iconOnly = false,
 }: {
   className?: string;
-  actions: readonly ResolvedAction<Id>[];
+  actions: readonly ResolvedAction<Id>[] | undefined;
   primary?: Id | readonly Id[];
   groups?: Partial<Record<'add', readonly Id[]>>;
   variant?: 'toolbar' | 'row';
@@ -103,7 +103,7 @@ export function ActionGroup<Id extends string = string>({
   const [pending, setPending] = useState<string | null>(null);
   const openingDialogFromDropdown = useRef(false);
 
-  if (actions.length === 0) return null;
+  if (!actions?.length) return null;
 
   const { primary: primaryActions, buckets } = partitionActions(actions, {
     primary,

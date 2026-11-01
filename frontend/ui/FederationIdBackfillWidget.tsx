@@ -60,8 +60,8 @@ export function FederationIdBackfillWidget({
   async function selectCandidate(person: Person, candidate: Candidate | null) {
     const patch = candidate
       ? {
-          cstsId: person.cstsId == null ? (candidate.cstsId ?? undefined) : undefined,
-          wdsfId: person.wdsfId == null ? (candidate.wdsfId ?? undefined) : undefined,
+          cstsId: !person.cstsId ? (candidate.cstsId ?? undefined) : undefined,
+          wdsfId: !person.wdsfId ? (candidate.wdsfId ?? undefined) : undefined,
         }
       : (selectedByPerson[person.id]?.undo ?? {});
     const result = await updatePerson({

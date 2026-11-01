@@ -76,7 +76,7 @@ export function FederationIdFieldElement<T extends FieldValues>({
     const nextId =
       firstName && lastName && candidate?.isStrongMatch ? candidate.id : undefined;
     const mayUpdate =
-      field.value == null || Number(field.value) === selection.current.automaticId;
+      !field.value || Number(field.value) === selection.current.automaticId;
     if (mayUpdate && field.value !== nextId) {
       selection.current.automaticId = nextId ?? null;
       field.onChange(nextId);

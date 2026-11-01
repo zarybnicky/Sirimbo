@@ -74,9 +74,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
   });
   const history = data?.competitions?.nodes || [];
 
-  const showPoints = history.some((row) =>
-    row.results?.some((x) => x.pointGain != null),
-  );
+  const showPoints = history.some((row) => row.results?.some((x) => x.pointGain != null));
 
   return (
     <>
@@ -84,20 +82,13 @@ export function History({ federation, id }: { federation: string; id: string }) 
       <Table
         busy={fetching}
         error={error}
-        columns={[
-          'Datum',
-          'Soutěž',
-          'Kategorie',
-          'Umístění',
-          showPoints && 'Body',
-        ]}
+        columns={['Datum', 'Soutěž', 'Kategorie', 'Umístění', showPoints && 'Body']}
         empty="No registrations or results"
       >
         {history.map((row) => {
           const categoryName = formatCategoryName(row) || row.externalId;
           const result = row.results?.[0];
           const cancelled = row.entries?.[0]?.cancelled;
-          const status = formatResultStatus(result?.completionStatus);
           return (
             <tr key={row.id} className="border-t border-neutral-4">
               <td className="whitespace-nowrap">
@@ -119,9 +110,10 @@ export function History({ federation, id }: { federation: string; id: string }) 
                   <Link
                     className={cn(
                       'text-accent-11',
-                      cancelled || row.status === 'CANCELLED' ? 'line-through' : 'underline',
+                      cancelled || row.status === 'CANCELLED'
+                        ? 'line-through'
+                        : 'underline',
                     )}
-                    title={cancelled ? 'Zrušená přihláška' : undefined}
                     href={`/federated/${federation}/${row.event.externalId}/${row.externalId}`}
                     prefetch={false}
                   >
@@ -132,7 +124,9 @@ export function History({ federation, id }: { federation: string; id: string }) 
                     {categoryName}
                   </span>
                 )}
-                {status && <div className="text-xs text-neutral-11">{status}</div>}
+                <div className="text-xs text-neutral-11">
+                  {formatResultStatus(result?.completionStatus)}
+                </div>
               </th>
               <td className="whitespace-nowrap">
                 {result?.ranking}
@@ -143,11 +137,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
               </td>
               {showPoints && (
                 <td className="whitespace-nowrap">
-                  {formatPointsAndFinals(
-                    result?.pointGain,
-                    result?.finalGain,
-                    'gain',
-                  )}
+                  {formatPointsAndFinals(result, 'gain')}
                 </td>
               )}
             </tr>

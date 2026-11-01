@@ -85,7 +85,7 @@ export default async function ToolsPage() {
         >
           {categories.map((c) => (
             <tr key={c.code}>
-              <td>{formatAgeGroup(c.code, c.name)}</td>
+              <td>{formatAgeGroup(c)}</td>
               <td>
                 <span className="inline-block bg-accent-3 m-1 py-1 px-2 rounded-md whitespace-nowrap">
                   {formatAgeRange(c.olderAge)}

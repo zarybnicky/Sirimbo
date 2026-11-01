@@ -1,8 +1,5 @@
 import type { EventType } from '@/graphql';
-import {
-  EventListDocument,
-  type EventListQuery,
-} from '@/graphql/Event';
+import { EventListDocument, type EventListQuery } from '@/graphql/Event';
 import {
   capitalize,
   dateTimeFormatter,
@@ -33,9 +30,16 @@ const reportTypes: Record<'groupRows' | 'privateRows', EventType> = {
 const toMonthKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
-export const PersonWorkReportView = React.memo(function PersonWorkReportView({ id }: { id: string }) {
+export const PersonWorkReportView = React.memo(function PersonWorkReportView({
+  id,
+}: {
+  id: string;
+}) {
   const now = React.useMemo(() => new Date(), []);
-  const month = React.useMemo(() => new Date(now.getFullYear(), now.getMonth(), 1), [now]);
+  const month = React.useMemo(
+    () => new Date(now.getFullYear(), now.getMonth(), 1),
+    [now],
+  );
   const workReportQueryParsers = React.useMemo(
     () => ({
       tab: parseAsString,
@@ -134,9 +138,15 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
           error={error}
           columns={[
             'Měsíc',
-            <span key="group" className="block text-right">Vedené</span>,
-            <span key="private" className="block text-right">Individuálky</span>,
-            <span key="total" className="block text-right">Celkem</span>,
+            <span key="group" className="block text-right">
+              Vedené
+            </span>,
+            <span key="private" className="block text-right">
+              Individuálky
+            </span>,
+            <span key="total" className="block text-right">
+              Celkem
+            </span>,
           ]}
         >
           {reports.map((month) => {
@@ -148,7 +158,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
               (total, row) => total + row.durationMinutes,
               0,
             );
-            const rowCount = month.groupRows.length + month.privateRows.length;
 
             return (
               <tr
@@ -170,15 +179,13 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
                   </button>
                 </td>
                 <td className="whitespace-nowrap text-right tabular-nums">
-                  {month.groupRows.length} /{' '}
-                  {formatDuration(groupMinutes)}
+                  {month.groupRows.length} / {formatDuration(groupMinutes)}
                 </td>
                 <td className="whitespace-nowrap text-right tabular-nums">
-                  {month.privateRows.length} /{' '}
-                  {formatDuration(privateMinutes)}
+                  {month.privateRows.length} / {formatDuration(privateMinutes)}
                 </td>
                 <td className="whitespace-nowrap text-right tabular-nums">
-                  {rowCount} /{' '}
+                  {month.groupRows.length + month.privateRows.length} /{' '}
                   {formatDuration(groupMinutes + privateMinutes)}
                 </td>
               </tr>
@@ -191,9 +198,10 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
         <section className="prose prose-accent max-w-none">
           <h3>{selectedMonth.label}</h3>
 
-          {!selectedMonth.groupRows?.length && !selectedMonth?.privateRows?.length && !fetching && !error && (
-            <p>V tomto měsíci nic neproběhlo</p>
-          )}
+          {!selectedMonth.groupRows?.length &&
+            !selectedMonth?.privateRows?.length &&
+            !fetching &&
+            !error && <p>V tomto měsíci nic neproběhlo</p>}
 
           {(
             [
@@ -213,9 +221,13 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
                     'Událost',
                     'Místo',
                     reportTypes[rowsKey] === 'GROUP' && (
-                      <span key="attendance" className="block text-right">Účast</span>
+                      <span key="attendance" className="block text-right">
+                        Účast
+                      </span>
                     ),
-                    <span key="duration" className="block text-right">Délka</span>,
+                    <span key="duration" className="block text-right">
+                      Délka
+                    </span>,
                   ]}
                 >
                   {rows.map((row) => (
@@ -224,9 +236,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
                         {dateTimeFormatter.format(new Date(row.event.since))}
                       </td>
                       <td>
-                        <Link href={`/termin/${row.event.id}`}>
-                          {row.title}
-                        </Link>
+                        <Link href={`/termin/${row.event.id}`}>{row.title}</Link>
                       </td>
                       <td>{row.location}</td>
                       {reportTypes[rowsKey] === 'GROUP' && (

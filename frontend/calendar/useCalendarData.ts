@@ -1,6 +1,6 @@
 import {
-  groupCompetitionEvents,
   type CompetitionOfficialAssignment,
+  groupCompetitionEvents,
 } from '@/ui/Competitions';
 import { format } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
@@ -10,12 +10,12 @@ import React from 'react';
 import { useAtomValue } from 'jotai';
 import { useClient, useQuery } from 'urql';
 import {
-  resourceKey,
-  type CalendarEvent,
   type CalendarCompetitionEvent,
+  type CalendarEvent,
   type CalendarTrainer,
   type DateRange,
   type Resource,
+  resourceKey,
 } from './types';
 import type { CalendarView } from '@/calendar/CalendarViews';
 import { eventTypes as allEventTypes, groupByAtom } from '@/calendar/state';
@@ -104,7 +104,7 @@ export function useCalendarData({
       participant: { ...filters.participants, onlyMine },
       participantIds: filters.participants.personIds,
       membership: {
-        state: filters.participants.personIds == null && !onlyMine ? 'CURRENT' : undefined,
+        state: !filters.participants.personIds && !onlyMine ? 'CURRENT' : undefined,
         inCohorts: filters.participants.cohortId
           ? [filters.participants.cohortId]
           : undefined,

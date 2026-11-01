@@ -7,6 +7,8 @@ import {
   ScoringMethod,
 } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
+import type { CompetitionResultFragment } from '@/graphql/CompetitionParticipation';
+import type { FederationCategoryProgressFragment } from '@/graphql/Federation';
 import { isTruthy } from '@/lib/truthyFilter';
 
 type MaybePerson =
@@ -46,14 +48,24 @@ export const numberFormatter = new Intl.NumberFormat('cs-CZ', {
 });
 
 export function formatPointsAndFinals(
-  points: string | number | null | undefined,
-  finals: string | number | null | undefined,
+  value:
+    | Partial<Pick<CompetitionResultFragment, 'pointGain' | 'finalGain'>>
+    | Pick<
+        FederationCategoryProgressFragment,
+        'points' | 'domesticFinals' | 'foreignFinals'
+      >
+    | null
+    | undefined,
   variant: 'total' | 'gain' = 'total',
 ) {
+  if (!value) return '';
+  const points = 'points' in value ? value.points : value.pointGain;
+  const finals =
+    'points' in value ? value.domesticFinals + value.foreignFinals : value.finalGain;
   const prefix = variant === 'gain' ? '+' : '';
   return [
-    points == null ? '' : `${prefix}${numberFormatter.format(Number(points))}b`,
-    finals == null || (variant === 'gain' && Number(finals) === 0)
+    !points ? '' : `${prefix}${numberFormatter.format(Number(points))}b`,
+    !finals || (variant === 'gain' && Number(finals) === 0)
       ? ''
       : `${numberFormatter.format(Number(finals))}F`,
   ]
@@ -135,16 +147,18 @@ export const formatEventName = (
 
   const registrations = event.registrations?.nodes;
   const type = formatEventType(event.type);
-  const trainers =
-    listFormatter.format(
-      event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
-    );
+  const trainers = listFormatter.format(
+    event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
+  );
   if (viewer === 'participant' && event.type === 'LESSON') {
     return [type, trainers].filter(isTruthy).join(': ');
   }
   if (viewer === 'neutral') {
-    const participants = event.type === 'LESSON'
-        ? listFormatter.format(registrations?.map(formatParticipant).filter(isTruthy) ?? [])
+    const participants =
+      event.type === 'LESSON'
+        ? listFormatter.format(
+            registrations?.map(formatParticipant).filter(isTruthy) ?? [],
+          )
         : '';
     return event.type === 'LESSON'
       ? `${trainers} / ${participants}`
@@ -153,8 +167,7 @@ export const formatEventName = (
   if (event.type === 'LESSON' && registrations?.length)
     return listFormatter.format(registrations.map(formatParticipant).filter(isTruthy));
 
-  if (event.type === 'RESERVATION')
-    return [type, trainers].filter(isTruthy).join(': ');
+  if (event.type === 'RESERVATION') return [type, trainers].filter(isTruthy).join(': ');
   return type;
 };
 
@@ -339,9 +352,9 @@ export function describePosting(
   }
   if (typeof viewer !== 'string') {
     const personId = viewer.personId;
-    viewer = personId == null
+    viewer = !personId
       ? 'neutral'
-      : event.eventTrainersList.some((trainer) => trainer.personId === personId)
+      : event.eventTrainersList.some((x) => x.personId === personId)
         ? 'trainer'
         : 'participant';
   }

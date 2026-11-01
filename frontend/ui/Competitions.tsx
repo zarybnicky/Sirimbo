@@ -350,7 +350,7 @@ function CompetitionGroupContent({
               </div>
               {result && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
-                  {formatPointsAndFinals(result.pointGain, result.finalGain, 'gain')}
+                  {formatPointsAndFinals(result, 'gain')}
                 </div>
               )}
               {status && <div className="col-span-full text-neutral-11">{status}</div>}

@@ -36,7 +36,7 @@ export function PersonList() {
     inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
     isAdmin: !!isAdmin || null,
     isTrainer: !!isTrainer || null,
-    state: includeFormer ? 'FORMER' as const : 'CURRENT' as const,
+    state: includeFormer ? ('FORMER' as const) : ('CURRENT' as const),
   };
   const [{ data }] = useQuery({
     query: PersonListDocument,
@@ -63,12 +63,13 @@ export function PersonList() {
   }
   const nodes = React.useMemo(() => {
     return (data?.people?.nodes || [])
-      .toSorted((a, b) =>
-        compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
+      .toSorted(
+        (a, b) =>
+          compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
       )
       .map((item) => {
-        const activeCohorts = item.cohortMembershipsList.flatMap((x) =>
-          x.status === 'ACTIVE' && x.cohort ? [x.cohort] : [],
+        const activeCohorts = item.cohortMembershipsList.flatMap(
+          (x) => (x.status === 'ACTIVE' && x.cohort) || [],
         );
         return {
           yearOfBirth: item.birthDate
@@ -182,7 +183,9 @@ export function PersonList() {
                   .filter((x) => x?.id !== item.id)
                   .map((x) => `tančí s ${x?.name}`),
               ),
-            ].filter(Boolean).join(', ')}
+            ]
+              .filter(Boolean)
+              .join(', ')}
             selected={id === item.id}
             imageUrl={item.image?.url}
             icon={<UserRound className="size-5" />}

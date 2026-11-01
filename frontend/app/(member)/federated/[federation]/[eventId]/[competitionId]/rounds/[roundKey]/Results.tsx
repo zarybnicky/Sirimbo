@@ -54,7 +54,6 @@ export function Results({
   const judges = round.judgesList.map((judge) => ({
     key: judge.personJudge?.externalId ?? judge.personJudgeId.split(':').at(-1)!,
     label: judge.judgeLabel || judge.judgeIndex,
-    title: judge.personJudge?.canonicalName ?? undefined,
     personId: judge.personJudgeId,
   }));
   const groups = showMarks ? (view === 'dance' ? dances : judges) : [];
@@ -88,7 +87,7 @@ export function Results({
     danceKey?: string,
   ) {
     return cells.map((column) => {
-      const key = danceKey == null ? column.key : `${danceKey}:${column.key}`;
+      const key = !danceKey ? column.key : `${danceKey}:${column.key}`;
       const marks = scores[`${competitorId}:${key}`];
       return (
         <td
@@ -148,7 +147,6 @@ export function Results({
                   scope="colgroup"
                   colSpan={view === 'dance' ? judges.length : dances.length}
                   className="border-l border-neutral-4 px-2 py-1 text-center"
-                  title={group.title}
                 >
                   {group.label}
                 </th>
@@ -156,12 +154,7 @@ export function Results({
               {!showMarks &&
                 showDanceResults &&
                 dances.map((dance) => (
-                  <th
-                    key={dance.key}
-                    scope="col"
-                    className="px-2 py-1"
-                    title={dance.title}
-                  >
+                  <th key={dance.key} scope="col" className="px-2 py-1">
                     {dance.label}
                   </th>
                 ))}
@@ -186,7 +179,6 @@ export function Results({
                       'px-0.5 py-1 text-center font-mono font-normal',
                       column.border && 'border-l border-neutral-4',
                     )}
-                    title={column.title}
                   >
                     {column.label}
                   </th>
@@ -224,18 +216,14 @@ export function Results({
                   ))}
                 {showDanceResults && (
                   <td rowSpan={showMarks ? 2 : 1} className="px-2 py-1">
-                    {result.overallScore == null
+                    {!result.overallScore
                       ? '–'
                       : numberFormatter.format(Number(result.overallScore))}
                   </td>
                 )}
                 {hasNextRound && (
                   <td rowSpan={resultRowSpan} className="px-2 py-1">
-                    {result.qualifiedNext == null
-                      ? '–'
-                      : result.qualifiedNext
-                        ? 'yes'
-                        : 'no'}
+                    {!result.qualifiedNext ? '–' : result.qualifiedNext ? 'yes' : 'no'}
                   </td>
                 )}
               </tr>
@@ -276,43 +264,37 @@ export function Results({
       </div>
       {rows.length === 0 && <p>No round results</p>}
       {view === 'detailed' &&
-        (round.judgeScoresList.length === 0 ? (
-          <p>No marks</p>
-        ) : (
-          dances.map((dance) => (
-            <Table
-              key={dance.key}
-              className="col-feature mb-4"
-              caption={dance.title || dance.label}
-              columns={[
-                'start number',
-                'competitor',
-                ...judges.map((judge) => (
-                  <span
-                    key={judge.personId}
-                    className="block text-center"
-                    title={judge.title || judge.personId}
+        (round.judgeScoresList.length === 0
+          ? null
+          : dances.map((dance) => (
+              <Table
+                key={dance.key}
+                className="col-feature mb-4"
+                caption={dance.title || dance.title}
+                columns={[
+                  'start number',
+                  'competitor',
+                  ...judges.map((judge) => (
+                    <span key={judge.personId} className="block text-center">
+                      {judge.label}
+                    </span>
+                  )),
+                ]}
+              >
+                {rows.map((result) => (
+                  <tr
+                    key={result.competitorId}
+                    className="border-t border-neutral-4 align-top"
                   >
-                    {judge.label}
-                  </span>
-                )),
-              ]}
-            >
-              {rows.map((result) => (
-                <tr
-                  key={result.competitorId}
-                  className="border-t border-neutral-4 align-top"
-                >
-                  <td>{result.startNumber}</td>
-                  <th scope="row" className="min-w-48">
-                    {result.competitorLink}
-                  </th>
-                  {scoreCells(result.competitor?.externalId, judges, dance.key)}
-                </tr>
-              ))}
-            </Table>
-          ))
-        ))}
+                    <td>{result.startNumber}</td>
+                    <th scope="row" className="min-w-48">
+                      {result.competitorLink}
+                    </th>
+                    {scoreCells(result.competitor?.externalId, judges, dance.key)}
+                  </tr>
+                ))}
+              </Table>
+            )))}
     </>
   );
 }

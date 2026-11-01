@@ -19,7 +19,9 @@ export function Results({
 }) {
   if (results.length === 0) return null;
   const showPoints = results.some((x) => !!x.pointGain);
-  const showLocalMatches = results.some(x => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length);
+  const showLocalMatches = results.some(
+    (x) => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length,
+  );
 
   return (
     <>
@@ -33,48 +35,43 @@ export function Results({
           showLocalMatches && 'V klubu',
         ]}
       >
-        {results.map((result) => {
-          const status = formatResultStatus(result.completionStatus);
-          return (
-            <tr key={result.competitorId} className="border-t border-neutral-4 align-top">
+        {results.map((result) => (
+          <tr key={result.competitorId} className="border-t border-neutral-4 align-top">
+            <td className="whitespace-nowrap">
+              {result.ranking}
+              {result.rankingTo && result.rankingTo !== result.ranking
+                ? `–${result.rankingTo}`
+                : ''}
+            </td>
+            <td>{result.startNumber}</td>
+            <th scope="row">
+              {result.competitor ? (
+                <Link
+                  className="text-accent-11 underline"
+                  href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
+                  prefetch={false}
+                >
+                  {result.competitor.name || result.competitorId}
+                </Link>
+              ) : (
+                result.competitorId
+              )}
+              <div className="text-xs text-neutral-11">
+                {formatResultStatus(result.completionStatus)}
+              </div>
+            </th>
+            {showPoints && (
               <td className="whitespace-nowrap">
-                {result.ranking}
-                {result.rankingTo && result.rankingTo !== result.ranking
-                  ? `–${result.rankingTo}`
-                  : ''}
+                {formatPointsAndFinals(result, 'gain')}
               </td>
-              <td>{result.startNumber}</td>
-              <th scope="row">
-                {result.competitor ? (
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/federated/${federation}/competitors/${result.competitor.externalId}`}
-                    prefetch={false}
-                  >
-                    {result.competitor.name || result.competitorId}
-                  </Link>
-                ) : (
-                  result.competitorId
-                )}
-                {status && <div className="text-xs text-neutral-11">{status}</div>}
-              </th>
-              {showPoints && (
-                <td className="whitespace-nowrap">
-                  {formatPointsAndFinals(
-                    result.pointGain,
-                    result.finalGain,
-                    'gain',
-                  )}
-                </td>
-              )}
-              {showLocalMatches && (
-                <td>
-                  <LocalMatches participant={result.competitor} />
-                </td>
-              )}
-            </tr>
-          );
-        })}
+            )}
+            {showLocalMatches && (
+              <td>
+                <LocalMatches participant={result.competitor} />
+              </td>
+            )}
+          </tr>
+        ))}
       </Table>
     </>
   );
@@ -91,26 +88,25 @@ export function Registrations({
 }) {
   if (hasResults && entries.length === 0) return null;
 
-  const showLocalMatches = entries.some(x => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length);
+  const showLocalMatches = entries.some(
+    (x) => !!x.competitor?.couplesList.length || !!x.competitor?.peopleList.length,
+  );
 
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">
         {hasResults ? 'No-show' : 'Přihlášky'}
       </h2>
-      <Table
-        columns={[
-          'Jméno',
-          showLocalMatches && 'V klubu',
-        ]}
-        empty="Žádné přihlášky"
-      >
+      <Table columns={['Jméno', showLocalMatches && 'V klubu']}>
         {entries.map(({ competitor, competitorId, cancelled }) => (
           <tr key={competitorId} className="border-t border-neutral-4 align-top">
             <th scope="row">
               {competitor ? (
                 <Link
-                  className={cn("text-accent-11 underline", cancelled ? 'line-through' : '')}
+                  className={cn(
+                    'text-accent-11 underline',
+                    cancelled ? 'line-through' : '',
+                  )}
                   href={`/federated/${federation}/competitors/${competitor?.externalId}`}
                   prefetch={false}
                 >

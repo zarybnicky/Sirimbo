@@ -390,70 +390,67 @@ function FileLibrary({
             </p>
           ) : (
             <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-              {visibleFiles.map((file) => {
-                const selected = isSelected(file);
-                return (
-                  <li key={file.id}>
-                    <button
-                      type="button"
-                      aria-pressed={selected}
-                      className={cn(
-                        'relative flex size-full flex-col overflow-hidden rounded-md border bg-neutral-2 text-left outline-hidden',
-                        selected
-                          ? 'border-accent-9 ring-2 ring-accent-7'
-                          : 'border-neutral-5 hover:border-neutral-7 focus-visible:border-accent-8 focus-visible:ring-2 focus-visible:ring-accent-7',
+              {visibleFiles.map((file) => (
+                <li key={file.id}>
+                  <button
+                    type="button"
+                    aria-pressed={isSelected(file)}
+                    className={cn(
+                      'relative flex size-full flex-col overflow-hidden rounded-md border bg-neutral-2 text-left outline-hidden',
+                      isSelected(file)
+                        ? 'border-accent-9 ring-2 ring-accent-7'
+                        : 'border-neutral-5 hover:border-neutral-7 focus-visible:border-accent-8 focus-visible:ring-2 focus-visible:ring-accent-7',
+                    )}
+                    onClick={() => onSelect(file)}
+                  >
+                    <span className="relative flex aspect-4/3 w-full shrink-0 items-center justify-center overflow-hidden bg-neutral-3">
+                      {file.contentType?.startsWith('image/') ? (
+                        <Image
+                          fill
+                          src={file.url}
+                          alt=""
+                          sizes="(min-width: 768px) 11rem, (min-width: 640px) 33vw, 50vw"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <FileText className="size-10 text-neutral-9" />
                       )}
-                      onClick={() => onSelect(file)}
-                    >
-                      <span className="relative flex aspect-4/3 w-full shrink-0 items-center justify-center overflow-hidden bg-neutral-3">
-                        {file.contentType?.startsWith('image/') ? (
-                          <Image
-                            fill
-                            src={file.url}
-                            alt=""
-                            sizes="(min-width: 768px) 11rem, (min-width: 640px) 33vw, 50vw"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <FileText className="size-10 text-neutral-9" />
-                        )}
+                    </span>
+                    <span className="w-full p-2">
+                      <span className="block truncate text-sm font-medium text-neutral-12">
+                        {file.displayName ?? file.name}
                       </span>
-                      <span className="w-full p-2">
-                        <span className="block truncate text-sm font-medium text-neutral-12">
-                          {file.displayName ?? file.name}
+                      {file.displayName && (
+                        <span className="block truncate text-xs text-neutral-10">
+                          {file.name}
                         </span>
-                        {file.displayName && (
-                          <span className="block truncate text-xs text-neutral-10">
-                            {file.name}
+                      )}
+                      <DotSeparated className="mt-0.5 flex text-[11px] leading-tight text-neutral-9">
+                        {file.uploadedAt && (
+                          <time dateTime={file.uploadedAt}>
+                            {numericFullFormatter.format(new Date(file.uploadedAt))}
+                          </time>
+                        )}
+                        {file.byteSize && <span>{formatFileSize(file.byteSize)}</span>}
+                        {file.isPublic && (
+                          <span
+                            className="inline-flex items-center"
+                            title="Veřejný soubor"
+                          >
+                            <LockOpen className="size-3" aria-hidden="true" />
+                            <span className="sr-only">Veřejný soubor</span>
                           </span>
                         )}
-                        <DotSeparated className="mt-0.5 flex text-[11px] leading-tight text-neutral-9">
-                          {file.uploadedAt && (
-                            <time dateTime={file.uploadedAt}>
-                              {numericFullFormatter.format(new Date(file.uploadedAt))}
-                            </time>
-                          )}
-                          {file.byteSize && <span>{formatFileSize(file.byteSize)}</span>}
-                          {file.isPublic && (
-                            <span
-                              className="inline-flex items-center"
-                              title="Veřejný soubor"
-                            >
-                              <LockOpen className="size-3" aria-hidden="true" />
-                              <span className="sr-only">Veřejný soubor</span>
-                            </span>
-                          )}
-                        </DotSeparated>
+                      </DotSeparated>
+                    </span>
+                    {isSelected(file) && (
+                      <span className="absolute right-2 top-2 rounded-full bg-accent-9 p-1 text-accent-0 shadow-sm">
+                        <Check className="size-3" />
                       </span>
-                      {selected && (
-                        <span className="absolute right-2 top-2 rounded-full bg-accent-9 p-1 text-accent-0 shadow-sm">
-                          <Check className="size-3" />
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
+                    )}
+                  </button>
+                </li>
+              ))}
             </ul>
           )}
         </div>

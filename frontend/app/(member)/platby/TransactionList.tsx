@@ -7,9 +7,9 @@ import {
   useQueryStates,
 } from 'nuqs';
 import { useQuery } from 'urql';
+import type { AccountFragment } from '@/graphql/Payment';
 import { TransactionAccountsDocument, TransactionsDocument } from '@/graphql/Payment';
 import type { TransactionSource } from '@/graphql';
-import type { AccountFragment } from '@/graphql/Payment';
 import {
   describePosting,
   moneyFormatter,
@@ -119,7 +119,6 @@ export function TransactionList() {
     <>
       <ListHeader
         pagination={pagination}
-        busy={fetching || searchPending}
         search={filters.search}
         onSearchChange={(search) => change({ search })}
         searchPlaceholder="Popis, VS nebo SS…"
@@ -220,11 +219,8 @@ export function TransactionList() {
         busy={fetching || searchPending}
         error={error ?? accounts.error}
       >
-        {(data?.transactions?.nodes ?? []).flatMap((transaction) => {
-          const description =
-            transaction.description || describePosting(transaction.payment, 'neutral');
-
-          return transaction.postingsList.map(({ id, amount, account }, i) => (
+        {(data?.transactions?.nodes ?? []).flatMap((transaction) =>
+          transaction.postingsList.map(({ id, amount, account }, i) => (
             <tr key={id} className="border-t border-neutral-4 align-top">
               {i === 0 && (
                 <>
@@ -242,10 +238,12 @@ export function TransactionList() {
                         href={`/platby/${transaction.payment.id}`}
                         className="text-accent-11 underline"
                       >
-                        {description}
+                        {transaction.description ||
+                          describePosting(transaction.payment, 'neutral')}
                       </Link>
                     ) : (
-                      description
+                      transaction.description ||
+                      describePosting(transaction.payment, 'neutral')
                     )}
                     {(transaction.payment?.variableSymbol ||
                       transaction.payment?.specificSymbol) && (
@@ -270,8 +268,8 @@ export function TransactionList() {
                   : amount}
               </td>
             </tr>
-          ));
-        })}
+          )),
+        )}
       </Table>
       <Pagination {...pagination} />
     </>

@@ -40,7 +40,13 @@ export function LocationForm({ id = '' }: { id?: string }) {
   const { onSuccess } = useFormResult();
   const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { name: '', longName: '', ordering: 1, imageIds: [], coverImageId: null },
+    defaultValues: {
+      name: '',
+      longName: '',
+      ordering: 1,
+      imageIds: [],
+      coverImageId: null,
+    },
   });
   const [query] = useQuery({
     query: LocationDocument,
@@ -56,13 +62,12 @@ export function LocationForm({ id = '' }: { id?: string }) {
   const filesById = new Map(
     [
       ...(fileData?.files?.nodes ?? []),
-      ...(item?.imagesList.flatMap((x) => (x.file ? [x.file] : [])) ?? []),
+      ...(item?.imagesList.flatMap((x) => x.file ?? []) ?? []),
     ].map((file) => [file.id, file]),
   );
-  const coverOptions = (imageIds.value ?? []).flatMap((id) => {
-    const file = filesById.get(id);
-    return file ? [{ id, label: file.displayName ?? file.name }] : [];
-  });
+  const coverOptions = (imageIds.value ?? [])
+    .flatMap((id) => filesById.get(id) ?? [])
+    .map((file) => ({ id, label: file.displayName ?? file.name }));
 
   React.useEffect(() => {
     if (!item) return;
@@ -137,11 +142,7 @@ export function LocationForm({ id = '' }: { id?: string }) {
           }
         }}
       />
-      <RichTextEditor
-        control={control}
-        name="description"
-        label="Popis"
-      />
+      <RichTextEditor control={control} name="description" label="Popis" />
 
       <div className="grid gap-2 md:grid-cols-[2fr_1fr_1fr]">
         <TextFieldElement control={control} name="address.street" label="Ulice" />

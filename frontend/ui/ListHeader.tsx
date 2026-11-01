@@ -8,7 +8,6 @@ import { buttonCls } from '@/ui/style';
 
 export function ListHeader({
   pagination,
-  busy,
   search = '',
   onSearchChange,
   searchPlaceholder = 'Hledat…',
@@ -19,7 +18,6 @@ export function ListHeader({
   children,
 }: {
   pagination?: { total: number; page: number; limit: number };
-  busy?: boolean;
   search?: string;
   onSearchChange?: (search: string) => void;
   searchPlaceholder?: string;

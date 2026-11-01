@@ -65,7 +65,6 @@ export function PaymentList() {
     <>
       <ListHeader
         pagination={!fetching && !error ? pagination : undefined}
-        busy={fetching}
         search={filters.search}
         onSearchChange={(search) => change({ search })}
         searchPlaceholder="Osoba, popis, VS nebo SS…"

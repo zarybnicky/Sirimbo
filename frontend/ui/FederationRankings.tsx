@@ -37,7 +37,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           series: category.series,
           categoryDetails: category,
           category: [
-            formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
+            formatAgeGroup(category.ageGroupDetails ?? category.ageGroup),
             category.competitorType !== 'COUPLE' && category.competitorType.toLowerCase(),
             formatClass(category.class),
           ]

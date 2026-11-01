@@ -3,7 +3,6 @@ import { useAtomValue } from 'jotai';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { calendarConflictsFor } from './state';
-import { shortTimeFormatter } from '@/ui/format';
 
 export function EventConflictsBadge({
   eventId,
@@ -14,17 +13,7 @@ export function EventConflictsBadge({
 }) {
   const conflictsAtom = useMemo(() => calendarConflictsFor(eventId), [eventId]);
   const conflicts = useAtomValue(conflictsAtom);
-
   if (conflicts.length === 0) return null;
-  const summary = conflicts
-    .map((conflict) => {
-      const range = shortTimeFormatter.formatRange(
-        new Date(conflict.otherSince),
-        new Date(conflict.otherUntil),
-      );
-      return `${conflict.personName}: ${range} ${conflict.otherEventName}`;
-    })
-    .join(' • ');
 
   return (
     <span className={cn('inline-flex items-center', className)}>

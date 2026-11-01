@@ -21,10 +21,9 @@ export default async function ResponsePage({
 
   const { id, responseId } = await params;
   if (!/^[0-9]{1,18}$/.test(id) || !/^[0-9]{1,18}$/.test(responseId)) notFound();
-  const { crawlerResponse: response } = await executeGraphql(
-    CrawlerResponseDocument,
-    { id: responseId },
-  );
+  const { crawlerResponse: response } = await executeGraphql(CrawlerResponseDocument, {
+    id: responseId,
+  });
   if (!response || response.frontierId !== id || !response.frontier) notFound();
   const { frontier } = response;
   const rawContent = response.crawlerResponseCache?.content;
@@ -64,7 +63,7 @@ export default async function ResponsePage({
         <pre className="whitespace-pre-wrap break-all">{response.error}</pre>
       )}
       <pre className="col-feature overflow-x-auto text-sm">
-        {rawContent == null
+        {!rawContent
           ? 'No cached content'
           : typeof content === 'string'
             ? content

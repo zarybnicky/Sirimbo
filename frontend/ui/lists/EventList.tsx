@@ -40,25 +40,23 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   });
 
   const nodes: EventNode[] = React.useMemo(() => {
-    return (data?.eventsList ?? []).map((event) => {
-      return {
-        id: event.id,
-        title: event.name || formatEventType(event.type),
-        date: event.since,
-        subtitle: [
-          fullDateFormatter.formatRange(new Date(event.since), new Date(event.until)),
-          event.location?.name,
-          event.locationText,
-          (event.capacity ?? 0) > 0
-            ? `Zbývá ${event.registrationInfo?.remainingCapacity} míst z ${event.capacity}`
-            : '',
-        ]
-          .filter(Boolean)
-          .join(', '),
-        href: `/termin/${event.id}`,
-        imageUrl: event.coverImage?.url ?? null,
-      };
-    });
+    return (data?.eventsList ?? []).map((event) => ({
+      id: event.id,
+      title: event.name || formatEventType(event.type),
+      date: event.since,
+      subtitle: [
+        fullDateFormatter.formatRange(new Date(event.since), new Date(event.until)),
+        event.location?.name,
+        event.locationText,
+        (event.capacity ?? 0) > 0
+          ? `Zbývá ${event.registrationInfo?.remainingCapacity} míst z ${event.capacity}`
+          : '',
+      ]
+        .filter(Boolean)
+        .join(', '),
+      href: `/termin/${event.id}`,
+      imageUrl: event.coverImage?.url ?? null,
+    }));
   }, [data]);
 
   const fuzzy: EventNode[] = useFuzzySearch(nodes, ['id', 'title'], search);

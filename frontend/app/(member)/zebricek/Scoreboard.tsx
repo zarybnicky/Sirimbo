@@ -110,24 +110,22 @@ export function Scoreboard() {
             empty="Pro vybrané období nejsou žádné body."
           >
             {scoreboard.map((entry) => {
-              const key = `${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`;
               const rank = entry.ranking ? Number(entry.ranking) : undefined;
-
-              const highlightClass =
-                rank === 1
-                  ? 'bg-[rgb(254,240,138)] text-black'
-                  : rank === 2
-                    ? 'bg-[rgb(186,230,253)] text-black'
-                    : rank === 3
-                      ? 'bg-[rgb(254,215,170)] text-black'
-                      : '';
-
               return (
-                <tr key={key} className={highlightClass}>
+                <tr
+                  key={`${entry.personId ?? 'unknown'}-${entry.cohortId ?? 'all'}`}
+                  className={
+                    rank === 1
+                      ? 'bg-[rgb(254,240,138)] text-black'
+                      : rank === 2
+                        ? 'bg-[rgb(186,230,253)] text-black'
+                        : rank === 3
+                          ? 'bg-[rgb(254,215,170)] text-black'
+                          : ''
+                  }
+                >
                   <td className="font-bold">
-                    {entry.ranking
-                      ? `${numberFormatter.format(BigInt(entry.ranking))}.`
-                      : '–'}
+                    {rank ? `${numberFormatter.format(rank)}.` : '–'}
                   </td>
                   <td>
                     {entry.person ? (
@@ -138,7 +136,7 @@ export function Scoreboard() {
                         {entry.person.name}
                       </Link>
                     ) : (
-                      '-'
+                      '?'
                     )}
                   </td>
                   <td className="text-center">

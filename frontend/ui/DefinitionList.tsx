@@ -10,7 +10,7 @@ export function DefinitionList({ items, className = 'text-sm tabular' }: Props) 
     <dl className={className}>
       {(Array.isArray(items) ? items : Object.entries(items)).map(
         ([label, value], index) =>
-          value == null || typeof value === 'boolean' || value === '' ? null : (
+          !value || typeof value === 'boolean' ? null : (
             <Fragment key={Array.isArray(items) ? index : label}>
               <dt>{label}</dt>
               <dd>{value}</dd>

@@ -1,5 +1,5 @@
 import type { CompetitionType, CompetitorType } from '@/graphql';
-import type { AgeGroupRulesQuery } from '@/graphql/AgeGroups';
+import type { AgeGroupDetailFragment, AgeGroupRulesQuery } from '@/graphql/AgeGroups';
 import type {
   CompetitionCategoryLabelFragment,
   FederationCategoryProgressFragment,
@@ -70,7 +70,11 @@ export function compareAgeGroups(
   );
 }
 
-export function formatAgeGroup(code: string | null | undefined, name?: string | null) {
+export function formatAgeGroup(
+  value: string | Pick<AgeGroupDetailFragment, 'code' | 'name'> | null | undefined,
+) {
+  const code = typeof value === 'string' ? value : value?.code;
+  const name = typeof value === 'string' ? undefined : value?.name;
   return code ? (ageGroupNames[code] ?? name ?? code) : undefined;
 }
 
@@ -369,7 +373,7 @@ function formatCstsCategoryName(
       ? cstsCompetitorTypeNames[competitorType]
       : undefined,
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
-    formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
+    formatAgeGroup(category.ageGroupDetails ?? category.ageGroup),
     formatClass(category.class),
     competitionType !== 'CHAMPIONSHIP'
       ? cstsCompetitorTypeNames[competitorType]

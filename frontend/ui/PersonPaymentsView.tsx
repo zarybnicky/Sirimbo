@@ -177,39 +177,42 @@ function AccountPaymentsTable({
         )),
       ]}
     >
-      {rows.map(({ id, amount, description, transaction }) => {
-        const { payment } = transaction;
-        const actions = payment
-          ? paymentActionMap.get(payment.id)
-          : transactionActionMap.get(transaction.id);
-
-        return (
-          <tr key={id} className="border-t border-neutral-4 align-top">
-            {auth.isAdmin && (
-              <td className="w-0">
-                {actions && <ActionGroup variant="row" actions={actions} />}
-              </td>
+      {rows.map(({ id, amount, description, transaction }) => (
+        <tr key={id} className="border-t border-neutral-4 align-top">
+          {auth.isAdmin && (
+            <td className="w-0">
+              <ActionGroup
+                variant="row"
+                actions={
+                  transaction.payment
+                    ? paymentActionMap.get(transaction.payment.id)
+                    : transactionActionMap.get(transaction.id)
+                }
+              />
+            </td>
+          )}
+          <td className="whitespace-nowrap font-medium text-neutral-12">
+            <time dateTime={transaction.effectiveDate}>
+              {numericDateWithYearFormatter.format(new Date(transaction.effectiveDate))}
+            </time>
+          </td>
+          <td className="text-neutral-12">
+            {transaction.payment ? (
+              <Link
+                href={`/platby/${transaction.payment.id}`}
+                className="text-accent-11 underline"
+              >
+                {description}
+              </Link>
+            ) : (
+              description
             )}
-            <td className="whitespace-nowrap font-medium text-neutral-12">
-              <time dateTime={transaction.effectiveDate}>
-                {numericDateWithYearFormatter.format(new Date(transaction.effectiveDate))}
-              </time>
-            </td>
-            <td className="text-neutral-12">
-              {payment ? (
-                <Link href={`/platby/${payment.id}`} className="text-accent-11 underline">
-                  {description}
-                </Link>
-              ) : (
-                description
-              )}
-            </td>
-            <td className="whitespace-nowrap text-right font-semibold text-neutral-12">
-              {moneyFormatter.format({ amount, currency: account.currency })}
-            </td>
-          </tr>
-        );
-      })}
+          </td>
+          <td className="whitespace-nowrap text-right font-semibold text-neutral-12">
+            {moneyFormatter.format({ amount, currency: account.currency })}
+          </td>
+        </tr>
+      ))}
     </Table>
   );
 }

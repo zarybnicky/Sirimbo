@@ -27,24 +27,25 @@ export function CohortList() {
   });
   const nodes = React.useMemo(
     () =>
-      cohorts?.cohortsList?.map((x) => {
-        const count = x.cohortMembershipsList?.length ?? 0;
-        return {
-          id: x.id,
-          image: x.image,
-          title: x.name,
-          subtitle: [
-            x.location,
-            formatCount(count, { one: 'člen', few: 'členové', other: 'členů' }),
-            !x.isVisible && 'Neveřejná',
-            x.isArchived && 'Archivovaná',
-          ]
-            .filter(Boolean)
-            .join(', '),
-          colorRgb: x.colorRgb,
-          href: `/treninkove-skupiny/${x.id}/${slugify(x.name)}`,
-        };
-      }) || [],
+      cohorts?.cohortsList?.map((x) => ({
+        id: x.id,
+        image: x.image,
+        title: x.name,
+        subtitle: [
+          x.location,
+          formatCount(x.cohortMembershipsList?.length ?? 0, {
+            one: 'člen',
+            few: 'členové',
+            other: 'členů',
+          }),
+          !x.isVisible && 'Neveřejná',
+          x.isArchived && 'Archivovaná',
+        ]
+          .filter(Boolean)
+          .join(', '),
+        colorRgb: x.colorRgb,
+        href: `/treninkove-skupiny/${x.id}/${slugify(x.name)}`,
+      })) || [],
     [cohorts?.cohortsList],
   );
   const [search, setSearch] = React.useState('');

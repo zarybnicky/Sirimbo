@@ -80,7 +80,7 @@ function buildGraph(
         class: cls,
         label: cls ?? 'Inactive',
         xIndex: yearIndex.get(year)!,
-        classIndex: cls == null ? 9999 : classRank.get(cls)!,
+        classIndex: !cls ? 9999 : classRank.get(cls)!,
       });
     }
     return id;

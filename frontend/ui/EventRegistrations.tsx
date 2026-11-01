@@ -17,16 +17,18 @@ export const EventRegistrations = memo(function EventRegistrations({
 }) {
   const auth = useAuth();
   const registrations = event.attendanceRegistrations.nodes;
-  const sortedRegistrations = registrations
-    .toSorted((a, b) =>
-      compareText(
-        a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple),
-        b.person ? b.person.lastName + b.person.firstName : formatCoupleName(b.couple),
-      ),
-    );
+  const sortedRegistrations = registrations.toSorted((a, b) =>
+    compareText(
+      a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple),
+      b.person ? b.person.lastName + b.person.firstName : formatCoupleName(b.couple),
+    ),
+  );
   const rows = sortedRegistrations
     .filter((r) => !r.parentRegistrationId)
-    .flatMap((r) => [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)]);
+    .flatMap((r) => [
+      r,
+      ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id),
+    ]);
   const attendees = rows.filter((r) => r.person && r.status);
   const canEditAttendance = auth.canManageEvent(event);
   const registrationActionMap = useActionMap(
@@ -51,55 +53,63 @@ export const EventRegistrations = memo(function EventRegistrations({
         ),
       ]}
     >
-      {rows.map((x) => {
-        return (
-          <tr key={x.id}>
-            <td className="align-middle">
-              <div className={`flex items-center gap-3 ${x.parentRegistrationId ? 'pl-8' : ''}`}>
-                <ActionGroup
-                  actions={registrationActionMap.get(x.id) ?? []}
-                  primary="eventRegistration.edit"
-                  iconOnly
-                />
-                <div>
-                  {x.person ? (
-                    <Link href={`/clenove/${x.person.id}`}>{x.person.name}</Link>
-                  ) : x.couple ? (
-                    <Link href={`/pary/${x.couple.id}`}>{formatCoupleName(x.couple)}</Link>
-                  ) : null}
-                  {x.person && !x.person.isMember && !x.person.isTrainer && !x.person.isAdmin && (
+      {rows.map((x) => (
+        <tr key={x.id}>
+          <td className="align-middle">
+            <div
+              className={`flex items-center gap-3 ${x.parentRegistrationId ? 'pl-8' : ''}`}
+            >
+              <ActionGroup
+                actions={registrationActionMap.get(x.id) ?? []}
+                primary="eventRegistration.edit"
+                iconOnly
+              />
+              <div>
+                {x.person ? (
+                  <Link href={`/clenove/${x.person.id}`}>{x.person.name}</Link>
+                ) : x.couple ? (
+                  <Link href={`/pary/${x.couple.id}`}>{formatCoupleName(x.couple)}</Link>
+                ) : null}
+                {x.person &&
+                  !x.person.isMember &&
+                  !x.person.isTrainer &&
+                  !x.person.isAdmin && (
                     <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
                       Externí
                     </span>
                   )}
-                  {canEditAttendance && event.seriesId && (event.seriesInfo?.length ?? 0) > 1 && (
+                {canEditAttendance &&
+                  event.seriesId &&
+                  (event.seriesInfo?.length ?? 0) > 1 && (
                     <div className="text-xs text-neutral-9">
-                      Poslední účast: {x.lastAttended ? dateTimeFormatter.format(new Date(x.lastAttended)) : '-'}
+                      Poslední účast:{' '}
+                      {x.lastAttended
+                        ? dateTimeFormatter.format(new Date(x.lastAttended))
+                        : '-'}
                     </div>
                   )}
-                  {auth.isTrainer && (
-                    <div className="text-sm text-neutral-11">
-                      {x.lessonRequestsList.map((request) => (
-                        <div key={request.id}>
-                          {request.lessonCount}× {request.trainer?.person?.name}
-                        </div>
-                      ))}
-                      {x.note && <div className="whitespace-pre-wrap">{x.note}</div>}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </td>
-            {auth.isTrainer && (
-              <td className="text-center align-middle">
-                {x.person && x.status && (
-                  <EventAttendance attendance={x} canEdit={canEditAttendance} />
+                {auth.isTrainer && (
+                  <div className="text-sm text-neutral-11">
+                    {x.lessonRequestsList.map((request) => (
+                      <div key={request.id}>
+                        {request.lessonCount}× {request.trainer?.person?.name}
+                      </div>
+                    ))}
+                    {x.note && <div className="whitespace-pre-wrap">{x.note}</div>}
+                  </div>
                 )}
-              </td>
-            )}
-          </tr>
-        );
-      })}
+              </div>
+            </div>
+          </td>
+          {auth.isTrainer && (
+            <td className="text-center align-middle">
+              {x.person && x.status && (
+                <EventAttendance attendance={x} canEdit={canEditAttendance} />
+              )}
+            </td>
+          )}
+        </tr>
+      ))}
     </Table>
   );
 });

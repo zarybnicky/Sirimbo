@@ -17,11 +17,11 @@ import {
   seriesType,
 } from './cstsEnums.ts';
 import {
-  ensurePeople,
-  mergeEventOfficials,
   type competition_type,
+  ensurePeople,
   type event_status,
   type gender,
+  mergeEventOfficials,
   type official_role,
   updateEventStatus,
   upsertCompetitions,
@@ -272,11 +272,7 @@ export const cstsEvent: JsonLoader<Response> = {
 function officialDisciplines(
   discipline?: 'Standard' | 'Latin' | ('Standard' | 'Latin')[],
 ) {
-  return discipline == null
-    ? ['']
-    : Array.isArray(discipline)
-      ? discipline
-      : [discipline];
+  return !discipline ? [''] : Array.isArray(discipline) ? discipline : [discipline];
 }
 
 function mapCompetitionType(type: CompetitionType): competition_type {

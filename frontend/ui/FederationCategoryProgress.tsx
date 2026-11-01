@@ -58,10 +58,7 @@ export function FederationCategoryProgress({
               </DotSeparated>
             </th>
             <td className="whitespace-nowrap text-right">
-              {formatPointsAndFinals(
-                progress.points,
-                progress.domesticFinals + progress.foreignFinals,
-              )}
+              {formatPointsAndFinals(progress)}
             </td>
           </tr>
         ))}

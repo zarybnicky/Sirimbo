@@ -39,8 +39,8 @@ export function range(start: Date, end: Date, unit: Unit = 'day') {
 }
 
 export function merge(date: Date | null, time: Date | null): Date {
-  if (time == null) time = new Date();
-  if (date == null) date = new Date();
+  if (!time) time = new Date();
+  if (!date) date = new Date();
 
   date = startOf(date, 'day');
   date = hours(date, hours(time));

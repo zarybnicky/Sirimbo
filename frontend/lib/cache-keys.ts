@@ -49,7 +49,7 @@ export const cacheKeys = Object.fromEntries(
         (data: Record<string, unknown>) => {
           if (!fields) return null;
           const values = fields.map((field) => data[field]);
-          if (values.some((value) => value == null)) return null;
+          if (values.some((x) => !x)) return null;
           return values.length === 1 && !values[0] ? null : values.join(':');
         },
       ] as const,

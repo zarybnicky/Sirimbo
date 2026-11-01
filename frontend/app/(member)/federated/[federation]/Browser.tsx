@@ -225,7 +225,6 @@ function Events(props: BrowserProps) {
 
       <ListHeader
         pagination={!(result.error ?? facets.error) ? result.pagination : undefined}
-        busy={isPending}
         search={filters.search}
         onSearchChange={(search) => setFilters({ search, page: null })}
         searchPlaceholder="Název, místo nebo ID…"
@@ -350,8 +349,8 @@ function People(props: BrowserProps) {
   const facetOptions =
     useLastDefined(facetResult.data?.federation?.peopleFacetsList) ?? [];
   const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
-
   const ageRanges = new Map(ageGroups.map((group) => [group.code, group.personAge]));
+
   const result = usePaginatedQuery({
     query: FederationPeopleDocument,
     pause: searchPending,
@@ -359,13 +358,11 @@ function People(props: BrowserProps) {
     limit: 50,
     getTotal: (data) => data.federation?.people.totalCount,
   });
-  const item = result.data?.federation;
-  const isPending = result.fetching || searchPending;
+  const isPending = result.fetching || searchPending || facetResult.fetching;
   return (
     <>
       <ListHeader
         pagination={!(result.error ?? facetResult.error) ? result.pagination : undefined}
-        busy={isPending || facetResult.fetching}
         search={filters.search}
         onSearchChange={(search) => setFilters({ search, page: null })}
         searchPlaceholder="Jméno nebo ID…"
@@ -422,11 +419,11 @@ function People(props: BrowserProps) {
       </ListHeader>
       <Table
         columns={['Jméno', 'Věk', 'Pohlaví', 'Národnost']}
-        busy={isPending || facetResult.fetching}
+        busy={isPending}
         error={result.error ?? facetResult.error}
         empty="Źádní lidé nenalezení"
       >
-        {item?.people.nodes.map((row) => (
+        {result.data?.federation?.people.nodes.map((row) => (
           <tr key={row.id} className="border-t border-neutral-4">
             <th scope="row">
               <Link
@@ -439,11 +436,7 @@ function People(props: BrowserProps) {
                   row.id}
               </Link>
             </th>
-            <td>
-              {formatAgeGroup(row.ageGroupDetails?.code, row.ageGroupDetails?.name) ||
-                row.ageGroup ||
-                '–'}
-            </td>
+            <td>{formatAgeGroup(row.ageGroupDetails ?? row.ageGroup) || '–'}</td>
             <td>{genderLabels[row.gender?.toLowerCase() ?? 'unknown']}</td>
             <td>{row.nationality || '–'}</td>
           </tr>
@@ -526,7 +519,6 @@ function Competitors(props: BrowserProps) {
     <>
       <ListHeader
         pagination={!(result.error ?? facetResult.error) ? result.pagination : undefined}
-        busy={isPending || facetResult.fetching}
         search={filters.search}
         onSearchChange={(search) => setFilters({ search, page: null })}
         searchPlaceholder="Jméno nebo ID…"
@@ -665,7 +657,10 @@ function Competitors(props: BrowserProps) {
                       </>
                     )}
                     <td className="whitespace-nowrap">
-                      {formatAgeGroup(ageGroup) || '–'}
+                      {formatAgeGroup(
+                        progressByAge[ageGroup]?.[0]?.category?.ageGroupDetails ??
+                          ageGroup,
+                      ) || '–'}
                     </td>
 
                     {index === 0 && (
@@ -677,28 +672,20 @@ function Competitors(props: BrowserProps) {
                       </td>
                     )}
 
-                    {disciplines.map((x) => {
-                      const entries = (progressByAge[ageGroup] ?? []).filter(
-                        (p) => p.category?.discipline === x,
-                      );
-                      return (
-                        <td key={x} className="whitespace-nowrap">
-                          {entries.length > 0
-                            ? entries.map((p) => (
-                                <div key={p.categoryId}>
-                                  <span className="font-medium">
-                                    {formatClass(p.category?.class) ?? p.category?.class}
-                                  </span>{' '}
-                                  {formatPointsAndFinals(
-                                    p.points,
-                                    p.domesticFinals + p.foreignFinals,
-                                  )}
-                                </div>
-                              ))
-                            : '–'}
-                        </td>
-                      );
-                    })}
+                    {disciplines.map((x) => (
+                      <td key={x} className="whitespace-nowrap">
+                        {(progressByAge[ageGroup] ?? [])
+                          .filter((p) => p.category?.discipline === x)
+                          .map((p) => (
+                            <div key={p.categoryId}>
+                              <span className="font-medium">
+                                {formatClass(p.category?.class) ?? p.category?.class}
+                              </span>{' '}
+                              {formatPointsAndFinals(p)}
+                            </div>
+                          ))}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>

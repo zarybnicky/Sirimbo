@@ -32,32 +32,32 @@ export function OfficialAssignments({
       <h2 className="mt-4 mb-2 text-lg font-bold">Official assignments</h2>
 
       <Table columns={['Datum', 'Soutěž', 'Role']} busy={fetching} error={error}>
-        {events.map((event) => {
-          const roles = [
-            ...new Set([
-              ...event.officials.nodes.map((x) => x.role),
-              ...event.competitionsList.flatMap((comp) =>
-                comp.officials.nodes.map((x) => x.role),
-              ),
-            ]),
-          ].toSorted();
-          return (
-            <tr key={event.id} className="border-t border-neutral-4 align-top">
-              <td className="whitespace-nowrap">{formatDateOnly(event.startDate)}</td>
-              <th scope="row">
-                <Link
-                  href={`/federated/${federation}/${event.externalId}`}
-                  prefetch={false}
-                  className={cn(
-                    'text-accent-11',
-                    event.status === 'CANCELLED' ? 'line-through' : 'underline',
-                  )}
-                >
-                  {event.name || event.externalId}
-                </Link>
-              </th>
-              <td className="space-y-2">
-                {roles.map((role) => {
+        {events.map((event) => (
+          <tr key={event.id} className="border-t border-neutral-4 align-top">
+            <td className="whitespace-nowrap">{formatDateOnly(event.startDate)}</td>
+            <th scope="row">
+              <Link
+                href={`/federated/${federation}/${event.externalId}`}
+                prefetch={false}
+                className={cn(
+                  'text-accent-11',
+                  event.status === 'CANCELLED' ? 'line-through' : 'underline',
+                )}
+              >
+                {event.name || event.externalId}
+              </Link>
+            </th>
+            <td className="space-y-2">
+              {[
+                ...new Set([
+                  ...event.officials.nodes.map((x) => x.role),
+                  ...event.competitionsList.flatMap((comp) =>
+                    comp.officials.nodes.map((x) => x.role),
+                  ),
+                ]),
+              ]
+                .toSorted()
+                .map((role) => {
                   const competitions = event.competitionsList.filter((comp) =>
                     comp.officials.nodes.some((x) => x.role === role),
                   );
@@ -99,10 +99,9 @@ export function OfficialAssignments({
                     </div>
                   );
                 })}
-              </td>
-            </tr>
-          );
-        })}
+            </td>
+          </tr>
+        ))}
       </Table>
       <Pagination {...pagination} />
     </>

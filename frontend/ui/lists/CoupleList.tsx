@@ -20,13 +20,13 @@ export function CoupleList() {
 
   const nodes = React.useMemo(() => {
     return (data?.couplesList || []).map((item) => {
-      const cohorts = [...new Map(
-        [item.man, item.woman]
-          .flatMap((person) => person?.cohortMembershipsList ?? [])
-          .flatMap((membership) => membership.cohort
-            ? [[membership.cohort.id, membership.cohort] as const]
-            : []),
-      ).values()];
+      const cohorts = [
+        ...new Map(
+          [item.man, item.woman]
+            .flatMap((x) => x?.cohortMembershipsList ?? [])
+            .flatMap(({ cohort }) => (cohort ? [[cohort.id, cohort] as const] : [])),
+        ).values(),
+      ];
       return {
         id: item.id,
         image: item.image,

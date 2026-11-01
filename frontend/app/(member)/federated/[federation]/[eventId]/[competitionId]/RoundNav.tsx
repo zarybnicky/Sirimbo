@@ -12,7 +12,7 @@ export function RoundNav({
 }) {
   if (rounds.length === 0) return null;
   const tabs = [
-    { href, label: 'Přehled', active: current == null },
+    { href, label: 'Přehled', active: !current },
     ...rounds.map((round) => {
       const label = round.roundLabel || round.roundKey;
       return {
