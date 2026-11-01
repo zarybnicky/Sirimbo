@@ -308,6 +308,10 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
   }
   eventsList(condition: { parentId: $id, type: LESSON }) @include(if: $withSchedule) {
     ...Event
+    approxPriceList {
+      amount
+      currency
+    }
     eventTrainersList {
       ...EventTrainer
       tenantTrainer {

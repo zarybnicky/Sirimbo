@@ -73,12 +73,6 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
     }
 
     for (const lesson of query.data?.eventsList ?? []) {
-      const duration =
-        new Date(lesson.until).getTime() - new Date(lesson.since).getTime();
-      const participantCount = lesson.registrationsList.reduce(
-        (sum, x) => sum + (x.couple ? 2 : 1),
-        0,
-      );
       for (const trainer of lesson.eventTrainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name || 'Bez trenéra');
       }
@@ -95,7 +89,6 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
           prices: new Map(),
           priceIncomplete: false,
         };
-        const participantShare = (registration.couple ? 2 : 1) / participantCount;
         for (const trainer of lesson.eventTrainersList ?? []) {
           const trainerId = trainer.personId;
           const cell = row.cells.get(trainerId) ?? { requested: 0, lessons: [] };
@@ -103,19 +96,17 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
           row.cells.set(trainerId, cell);
 
           const priceTrainer = trainer.tenantTrainer;
-          if (priceTrainer?.memberPrice45MinAmount && priceTrainer.currency) {
-            const amount =
-              (Number(priceTrainer.memberPrice45MinAmount) *
-                duration *
-                participantShare) /
-              (45 * 60_000);
-            row.prices.set(
-              priceTrainer.currency,
-              (row.prices.get(priceTrainer.currency) ?? 0) + amount,
-            );
-          } else {
+          if (!priceTrainer?.memberPrice45MinAmount || !priceTrainer.currency) {
             row.priceIncomplete = true;
           }
+        }
+        for (const price of lesson.approxPriceList ?? []) {
+          if (price.amount == null || !price.currency) continue;
+          row.prices.set(
+            price.currency,
+            (row.prices.get(price.currency) ?? 0) +
+              Number(price.amount) * (registration.couple ? 2 : 1),
+          );
         }
         rows.set(participantId, row);
       }
