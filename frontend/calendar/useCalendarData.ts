@@ -104,7 +104,7 @@ export function useCalendarData({
       participant: { ...filters.participants, onlyMine },
       participantIds: filters.participants.personIds,
       membership: {
-        state: 'CURRENT',
+        state: filters.participants.personIds == null && !onlyMine ? 'CURRENT' : undefined,
         inCohorts: filters.participants.cohortId
           ? [filters.participants.cohortId]
           : undefined,
