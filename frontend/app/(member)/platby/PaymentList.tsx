@@ -1,9 +1,5 @@
 'use client';
 
-import React from 'react';
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
-import { cn } from '@/lib/cn';
-import { buttonCls } from '@/ui/style';
 import { parseAsArrayOf, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs';
 import { useQuery } from 'urql';
 import type { PaymentKind, PaymentStatus } from '@/graphql';
@@ -11,9 +7,9 @@ import { PaymentListDocument, PaymentListOptionsDocument } from '@/graphql/Payme
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
-import { TextField } from '@/ui/fields/text';
 import { paymentStatusLabels } from '@/ui/format';
 import { Pagination } from '@/ui/Pagination';
+import { ListHeader } from '@/ui/ListHeader';
 import { PaymentTable } from './PaymentTable';
 
 const statusOptions: { value: PaymentStatus | ''; label: string }[] = [
@@ -39,7 +35,6 @@ export function PaymentList() {
     },
     { shallow: true, scroll: false },
   );
-  const [showFilters, setShowFilters] = React.useState(true);
   const activeFacetCount =
     Number(filters.status !== '') +
     Number(filters.kind !== '') +
@@ -61,7 +56,6 @@ export function PaymentList() {
     limit: 50,
   });
   const payments = data?.payments?.nodes ?? [];
-  const { total, page, limit } = pagination;
   const change = (value: Partial<typeof filters>) => {
     void setFilters(value);
     void pagination.onPageChange(1);
@@ -69,58 +63,18 @@ export function PaymentList() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2 py-2">
-        {!fetching && !error && (
-          <p
-            role="status"
-            className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
-          >
-            {total === 0
-              ? '0 / 0'
-              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
-          </p>
-        )}
-        <button
-          type="button"
-          aria-expanded={showFilters}
-          aria-controls="payment-filters"
-          className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-          onClick={() => setShowFilters((visible) => !visible)}
-        >
-          <SlidersHorizontal className="size-3" aria-hidden />
-          Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
-          <ChevronDown
-            className={cn('size-3', showFilters && 'rotate-180')}
-            aria-hidden
-          />
-        </button>
-        {(activeFacetCount > 0 || filters.search) && (
-          <button
-            type="button"
-            className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
-            onClick={() => change({ status: '', kind: '', personIds: [], search: '' })}
-          >
-            Zrušit filtry
-          </button>
-        )}
-        <TextField
-          name="search"
-          type="search"
-          aria-label="Vyhledat platby"
-          placeholder="Osoba, popis, VS nebo SS…"
-          className="min-w-40 flex-1 sm:max-w-64 ml-auto"
-          inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
-          value={filters.search}
-          onChange={(event) => change({ search: event.currentTarget.value })}
-        />
-      </div>
-
-      <div
-        id="payment-filters"
-        className={cn(
-          'mb-3 w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]',
-          showFilters ? 'grid' : 'hidden',
-        )}
+      <ListHeader
+        pagination={!fetching && !error ? pagination : undefined}
+        busy={fetching}
+        search={filters.search}
+        onSearchChange={(search) => change({ search })}
+        searchPlaceholder="Osoba, popis, VS nebo SS…"
+        activeFilterCount={activeFacetCount}
+        onReset={
+          activeFacetCount > 0 || filters.search
+            ? () => change({ status: '', kind: '', personIds: [], search: '' })
+            : undefined
+        }
       >
         <FacetRadioGroup
           inline
@@ -150,13 +104,9 @@ export function PaymentList() {
           }))}
           onChange={(personIds) => change({ personIds })}
         />
-      </div>
+      </ListHeader>
 
-      <PaymentTable
-        payments={payments}
-        busy={fetching}
-        error={error ?? options.error}
-      />
+      <PaymentTable payments={payments} busy={fetching} error={error ?? options.error} />
       <Pagination {...pagination} />
     </>
   );

@@ -15,24 +15,21 @@ import {
   moneyFormatter,
   numericDateWithYearFormatter,
 } from '@/ui/format';
-import { buttonCls } from '@/ui/style';
 import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Pagination } from '@/ui/Pagination';
+import { ListHeader } from '@/ui/ListHeader';
 import { Table } from '@/ui/Table';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { DefinitionList } from '@/ui/DefinitionList';
-import { TextField } from '@/ui/fields/text';
 import { compareText } from '@/lib/compare';
-import { cn } from '@/lib/cn';
 import {
   getPeriodRange,
   periodOptions,
   PeriodPicker,
   type PeriodUnit,
 } from '@/ui/PeriodPicker';
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 
 const TRANSACTIONS_PAGE_SIZE = 50;
 const sourceOptions: { value: TransactionSource; label: string }[] = [
@@ -67,7 +64,6 @@ export function TransactionList() {
     Number(filters.accountIds.length > 0) +
     Number(filters.sources.length !== defaultSources.length) +
     Number(filters.unit !== 'schoolyear');
-  const [showFilters, setShowFilters] = React.useState(true);
   const [accounts] = useQuery({ query: TransactionAccountsDocument });
   const accountIds = filters.accountIds.length > 0 ? filters.accountIds : null;
   const period = { unit: filters.unit, date: filters.date ?? new Date() };
@@ -94,7 +90,6 @@ export function TransactionList() {
     pageKey: 'page',
     pause: searchPending,
   });
-  const { total, page, limit } = pagination;
   const change = (value: Partial<typeof filters>) => {
     void setFilters(value);
     void pagination.onPageChange(1);
@@ -122,64 +117,25 @@ export function TransactionList() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2 py-2">
-        <p
-          role="status"
-          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
-        >
-          {total === 0
-            ? '0 / 0'
-            : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)} / ${total}`}
-        </p>
-
-        <button
-          type="button"
-          aria-expanded={showFilters}
-          className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-          onClick={() => setShowFilters((x) => !x)}
-        >
-          <SlidersHorizontal className="size-3" aria-hidden />
-          Filtry{activeFacetCount > 0 && ` (${activeFacetCount})`}
-          <ChevronDown
-            className={cn('size-3', showFilters && 'rotate-180')}
-            aria-hidden
-          />
-        </button>
-
-        {(activeFacetCount > 0 || filters.search) && (
-          <button
-            type="button"
-            className="px-2 py-1.5 text-xs text-accent-11 underline hover:text-accent-12"
-            onClick={() =>
-              change({
-                accountIds: [],
-                sources: defaultSources,
-                unit: 'schoolyear',
-                date: null,
-                search: '',
-              })
-            }
-          >
-            Zrušit filtry
-          </button>
-        )}
-        <TextField
-          name="search"
-          type="search"
-          aria-label="Vyhledat transakce"
-          placeholder="Popis, VS nebo SS…"
-          className="min-w-40 flex-1 sm:max-w-64 ml-auto"
-          inputClassName="border-accent-6 bg-accent-2 py-1.5 text-sm text-neutral-12 placeholder:text-neutral-10 focus:border-accent-8 focus:ring-accent-8"
-          value={filters.search}
-          onChange={(event) => change({ search: event.currentTarget.value })}
-        />
-      </div>
-
-      <div
-        className={cn(
-          'mb-3 w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]',
-          showFilters ? 'grid' : 'hidden',
-        )}
+      <ListHeader
+        pagination={pagination}
+        busy={fetching || searchPending}
+        search={filters.search}
+        onSearchChange={(search) => change({ search })}
+        searchPlaceholder="Popis, VS nebo SS…"
+        activeFilterCount={activeFacetCount}
+        onReset={
+          activeFacetCount > 0 || filters.search
+            ? () =>
+                change({
+                  accountIds: [],
+                  sources: defaultSources,
+                  unit: 'schoolyear',
+                  date: null,
+                  search: '',
+                })
+            : undefined
+        }
       >
         <FacetRadioGroup
           inline
@@ -230,7 +186,7 @@ export function TransactionList() {
           value={period}
           onChange={({ unit, date }) => change({ unit, date })}
         />
-      </div>
+      </ListHeader>
 
       <Table
         columns={[
