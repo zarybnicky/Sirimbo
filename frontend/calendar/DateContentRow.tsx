@@ -241,9 +241,8 @@ function DateContentRow({
 
   return (
     <div
-      className="flex relative flex-col flex-1 basis-0 overflow-hidden h-full divide-y divide-neutral-6"
-      role="rowgroup"
       ref={containerRef}
+      className="flex relative flex-col flex-1 basis-0 overflow-hidden h-full divide-y divide-neutral-6"
     >
       {!renderForMeasure && (
         <BackgroundCells
@@ -254,7 +253,7 @@ function DateContentRow({
         />
       )}
 
-      <div className="relative select-none z-4" role="row">
+      <div className="relative select-none z-4">
         <div className="rbc-row" ref={headingRowRef}>
           {range.map((date, index) => (
             <div

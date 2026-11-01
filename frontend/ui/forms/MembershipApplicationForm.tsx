@@ -311,8 +311,6 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
                     <button
                       type="button"
                       className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
-                      aria-expanded={cohortPickerOpen}
-                      aria-controls="membership-application-cohorts"
                     >
                       <span>
                         {cohortPickerOpen
@@ -329,7 +327,6 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
                 </div>
                 <Collapsible.Content
                   forceMount
-                  id="membership-application-cohorts"
                   className="[&[data-state=closed]>div]:hidden"
                 >
                   <VerticalCheckboxButtonGroupElement

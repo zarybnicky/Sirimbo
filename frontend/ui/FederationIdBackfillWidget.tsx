@@ -1,8 +1,8 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
   MissingFederationIdCandidatesDocument,
-  UpdatePersonDocument,
   type MissingFederationIdCandidatesQuery,
+  UpdatePersonDocument,
 } from '@/graphql/Person';
 import { FederationLink } from '@/ui/federation-links';
 import { formatAgeGroup } from '@/ui/csts';
@@ -31,9 +31,8 @@ export function FederationIdBackfillWidget({
       condition: { [idField]: null, membership: { state: 'CURRENT' } },
     },
   });
-  const [{ error: mutationError, fetching: saving }, updatePerson] = useMutation(
-    UpdatePersonDocument,
-  );
+  const [{ error: mutationError, fetching: saving }, updatePerson] =
+    useMutation(UpdatePersonDocument);
   const [selectedByPerson, setSelectedByPerson] = React.useState<
     Record<
       string,
@@ -87,7 +86,7 @@ export function FederationIdBackfillWidget({
   if (!data?.people) return error ? <FormError error={error} /> : <Spinner />;
 
   return (
-    <div className="grid gap-2" aria-busy={saving}>
+    <div className="grid gap-2">
       <FormError error={mutationError ?? error} />
       {saving && <Spinner />}
       {people.length === 0 && (

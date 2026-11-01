@@ -42,11 +42,7 @@ export function BoundedDayPicker({
   ];
 
   return (
-    <div
-      role="radiogroup"
-      aria-label="Výběr data"
-      className="scrollbar min-w-0 max-w-full grow overflow-x-auto overscroll-x-contain"
-    >
+    <div className="scrollbar min-w-0 max-w-full grow overflow-x-auto overscroll-x-contain">
       <RadioButtonGroup
         value={view === 'day' ? dayId(date) : 'range'}
         options={options}

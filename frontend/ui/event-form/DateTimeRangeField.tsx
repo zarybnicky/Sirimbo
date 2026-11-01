@@ -66,7 +66,6 @@ export function DateTimeRangeField({
     <input
       type="date"
       value={startDate}
-      aria-label={type === 'CAMP' ? 'Začátek (datum)' : 'Datum'}
       onChange={(event) => setSince(event.currentTarget.value, startTime)}
       className={inputCls({
         className: showEndDate ? 'min-w-0 grow basis-36' : 'w-40 shadow-xs',
@@ -79,7 +78,6 @@ export function DateTimeRangeField({
       step={60}
       value={startTime}
       required
-      aria-label="Začátek"
       onChange={(event) => setSince(startDate, event.currentTarget.value)}
       className={timeInputClassName}
     />
@@ -90,7 +88,6 @@ export function DateTimeRangeField({
       step={60}
       value={endTime}
       required
-      aria-label="Konec"
       aria-invalid={rangeError ? true : undefined}
       onChange={(event) => setUntil(endDate, event.currentTarget.value)}
       className={timeInputClassName}
@@ -121,7 +118,6 @@ export function DateTimeRangeField({
               type="date"
               value={endDate}
               required={type === 'CAMP'}
-              aria-label="Konec (datum)"
               aria-invalid={rangeError ? true : undefined}
               onChange={(event) => setUntil(event.currentTarget.value, endTime)}
               className={inputCls({ className: 'min-w-0 grow basis-36' })}

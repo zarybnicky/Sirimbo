@@ -27,12 +27,8 @@ export function EventConflictsBadge({
     .join(' • ');
 
   return (
-    <span
-      className={cn('inline-flex items-center', className)}
-      title={`Konflikt: ${summary}`}
-    >
-      <span className="sr-only">Konflikt: {summary}</span>
-      <AlertTriangle className="size-4" aria-hidden />
+    <span className={cn('inline-flex items-center', className)}>
+      <AlertTriangle className="size-4" />
     </span>
   );
 }

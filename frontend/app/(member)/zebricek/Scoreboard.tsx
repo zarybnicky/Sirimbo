@@ -40,7 +40,6 @@ export function Scoreboard() {
       <PageHeader title="Žebříček aktivity">
         <Popover>
           <PopoverTrigger
-            aria-label="Jak se počítá skóre"
             title="Jak se počítá skóre"
             className={buttonCls({ variant: 'outline', size: 'icon' })}
           >

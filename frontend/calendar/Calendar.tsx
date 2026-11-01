@@ -1,15 +1,15 @@
 import { BoundedDayPicker } from '@/calendar/BoundedDayPicker';
 import {
-  CalendarViews,
   type CalendarView,
   type CalendarViewKey,
+  CalendarViews,
 } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import { ViewPicker } from '@/calendar/ViewPicker';
-import { defaultsFromSlot, type CreateEventDefaults } from '@/calendar/eventDefaults';
-import { useCalendarData, calendarTypes } from '@/calendar/useCalendarData';
+import { type CreateEventDefaults, defaultsFromSlot } from '@/calendar/eventDefaults';
+import { calendarTypes, useCalendarData } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
@@ -34,8 +34,8 @@ import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import { dragListenersAtom, type ExternalDragSubject } from './state';
 import {
-  type CalendarTrainer,
   type CalendarInstanceEvent,
+  type CalendarTrainer,
   type DateRange,
   type InteractionInfo,
   type ViewProps,
@@ -274,16 +274,12 @@ export function Calendar({
             label="Trenéři"
             value={filters.trainers}
             options={filterOptions.trainers}
-            onChange={(trainers) => void setFilters({ trainers })}
+            onChange={(trainers) => setFilters({ trainers })}
           >
             <DropdownMenuButton
-              role="menuitemcheckbox"
-              aria-checked={filters.columns === 'all'}
               onSelect={(event) => {
                 event.preventDefault();
-                void setFilters((previous) => ({
-                  columns: previous.columns === 'all' ? null : 'all',
-                }));
+                setFilters((x) => ({ columns: x.columns === 'all' ? null : 'all' }));
               }}
             >
               {filters.columns === 'all' ? <CheckCircle2 /> : <Circle />}
@@ -295,7 +291,7 @@ export function Calendar({
               label="Účastníci"
               value={filters.participants}
               options={filterOptions.participants}
-              onChange={(participants) => void setFilters({ participants })}
+              onChange={(participants) => setFilters({ participants })}
             />
           )}
           <FacetFilter
@@ -303,13 +299,13 @@ export function Calendar({
             value={filters.types}
             defaultValue={calendarTypes}
             options={filterOptions.types}
-            onChange={(types) => void setFilters({ types })}
+            onChange={(types) => setFilters({ types })}
           />
           <FacetFilter
             label="Místa"
             value={filters.location}
             options={filterOptions.locations}
-            onChange={(location) => void setFilters({ location })}
+            onChange={(location) => setFilters({ location })}
           />
           {fetching && <Spinner />}
         </div>

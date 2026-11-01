@@ -1,6 +1,6 @@
 import {
-  type EventRegistrationFragment,
   EventFormOptionsDocument,
+  type EventRegistrationFragment,
   EventRegistrationsDocument,
   type EventWithRegistrationsFragment,
   SetEventRegistrationDocument,
@@ -33,14 +33,17 @@ type Selection =
   | { kind: 'registration'; id: string }
   | { kind: 'candidate'; registrant: Registrant };
 
-const registrant = (registration: EventRegistrationFragment): Registrant => ({
-  id: registration.id,
-  label: formatParticipant(registration),
-  personId: registration.personId,
-  coupleId: registration.coupleId,
+const registrant = (x: EventRegistrationFragment): Registrant => ({
+  id: x.id,
+  label: formatParticipant(x),
+  personId: x.personId,
+  coupleId: x.coupleId,
 });
 
-function useRegistrationCandidates(event: EventWithRegistrationsFragment, enabled: boolean) {
+function useRegistrationCandidates(
+  event: EventWithRegistrationsFragment,
+  enabled: boolean,
+) {
   const auth = useAuth();
   const isManager = auth.canManageEvent(event);
 
@@ -57,14 +60,13 @@ function useRegistrationCandidates(event: EventWithRegistrationsFragment, enable
     ),
   );
 
-  const people = (isManager ? (query.data?.people?.nodes ?? []) : auth.persons)
-    .map((person) => ({
+  const people = (isManager ? (query.data?.people?.nodes ?? []) : auth.persons).map(
+    (person) => ({
       ...person,
       isExternal: !person.isMember && !person.isTrainer && !person.isAdmin,
-    }));
-  const internalPersonIds = new Set(people
-    .filter((person) => !person.isExternal)
-    .map((person) => person.id));
+    }),
+  );
+  const internalPersonIds = new Set(people.filter((x) => !x.isExternal).map((x) => x.id));
   const couples = isManager
     ? (query.data?.couplesList ?? [])
     : [...new Map(auth.couples.map((c) => [c.id, c])).values()].filter(
@@ -93,7 +95,9 @@ function useRegistrationCandidates(event: EventWithRegistrationsFragment, enable
       .map((couple) => ({
         id: `couple:${couple.id}`,
         label: formatCoupleName(couple),
-        isExternal: ![couple.man?.id, couple.woman?.id].some((id) => !!id && internalPersonIds.has(id)),
+        isExternal: ![couple.man?.id, couple.woman?.id].some(
+          (id) => !!id && internalPersonIds.has(id),
+        ),
         personId: null,
         coupleId: couple.id,
       })),
@@ -102,8 +106,11 @@ function useRegistrationCandidates(event: EventWithRegistrationsFragment, enable
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);
-      return Number(a.isExternal) - Number(b.isExternal) ||
-        Number(bMine) - Number(aMine) || compareText(a.label, b.label);
+      return (
+        Number(a.isExternal) - Number(b.isExternal) ||
+        Number(bMine) - Number(aMine) ||
+        compareText(a.label, b.label)
+      );
     });
 
   return {
@@ -354,7 +361,6 @@ function IconButton({
     <button
       type="button"
       className={buttonCls({ size: 'icon', variant: 'outline' })}
-      aria-label={label}
       {...props}
     >
       {children}

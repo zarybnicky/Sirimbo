@@ -211,9 +211,6 @@ export const CampSchedule = React.memo(function CampSchedule({
               <button
                 type="button"
                 title={showRequests ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
-                aria-label={showRequests ? 'Skrýt požadavky' : 'Zobrazit požadavky'}
-                aria-expanded={showRequests}
-                aria-controls="lesson-requests-pane"
                 className="absolute right-1 top-1 z-30 rounded-sm p-1.5 text-neutral-11 hover:bg-neutral-4 hover:text-neutral-12"
                 onClick={() => setRequestsOpen(!showRequests)}
               >
@@ -231,15 +228,13 @@ export const CampSchedule = React.memo(function CampSchedule({
             </>
           )}
           {showRequests && (
-            <div id="lesson-requests-pane">
-              <LessonRequests
-                registrations={registrations}
-                scheduledLessons={query.data?.eventsList ?? []}
-                fetching={query.fetching}
-                error={requestError}
-                lockTrainers={groupBy === 'trainer'}
-              />
-            </div>
+            <LessonRequests
+              registrations={registrations}
+              scheduledLessons={query.data?.eventsList ?? []}
+              fetching={query.fetching}
+              error={requestError}
+              lockTrainers={groupBy === 'trainer'}
+            />
           )}
           {showRequests && draggedLesson && (
             <div className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center border-2 border-dashed border-neutral-8 bg-neutral-2/95 p-6 pt-24 text-center font-medium text-neutral-12">
@@ -333,7 +328,9 @@ function LessonRequests({
       ({ registration, scheduledByTrainer }) =>
         registration.lessonRequestsList.length > 0 || scheduledByTrainer.size > 0,
     );
-  const requests = registrationRows.flatMap(({ registration }) => registration.lessonRequestsList);
+  const requests = registrationRows.flatMap(
+    ({ registration }) => registration.lessonRequestsList,
+  );
   const lessonCount = requests.reduce((sum, x) => sum + x.lessonCount, 0);
   const scheduledCount = registrationRows.reduce(
     (sum, { scheduledByTrainer }) =>

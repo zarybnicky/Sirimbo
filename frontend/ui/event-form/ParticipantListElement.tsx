@@ -24,7 +24,9 @@ export function ParticipantListElement({
     ),
   );
   const couplePeople = new Set(
-    active.flatMap((r) => r.coupleId ? options.get(`couple:${r.coupleId}`)?.personIds ?? [] : []),
+    active.flatMap((r) =>
+      r.coupleId ? (options.get(`couple:${r.coupleId}`)?.personIds ?? []) : [],
+    ),
   );
 
   const addCohort = (cohortId: string) => {
@@ -34,16 +36,26 @@ export function ParticipantListElement({
     for (const membership of cohort?.cohortMembershipsList ?? []) {
       const personId = membership.person?.id;
       if (
-        !personId || couplePeople.has(personId) || membership.status !== 'ACTIVE' ||
+        !personId ||
+        couplePeople.has(personId) ||
+        membership.status !== 'ACTIVE' ||
         Date.parse(membership.since) > now ||
         (membership.until && Date.parse(membership.until) <= now)
-      ) continue;
+      )
+        continue;
       const index = next.findIndex((x) => x.personId === personId);
       const current = next[index];
       if (current && !current.isCancelled && !current.cohortIds?.length) continue;
       const row = {
-        personId, coupleId: null, isCancelled: false,
-        cohortIds: [...new Set([...(current?.isCancelled ? [] : current?.cohortIds ?? []), cohortId])],
+        personId,
+        coupleId: null,
+        isCancelled: false,
+        cohortIds: [
+          ...new Set([
+            ...(current?.isCancelled ? [] : (current?.cohortIds ?? [])),
+            cohortId,
+          ]),
+        ],
       };
       if (index === -1) next.push(row);
       else next[index] = row;
@@ -52,25 +64,34 @@ export function ParticipantListElement({
   };
 
   const removeCohort = (cohortId: string) => {
-    setValue('registrations', registrations.flatMap((r) => {
-      if (!r.cohortIds?.includes(cohortId)) return [r];
-      const cohortIds = r.cohortIds.filter((id) => id !== cohortId);
-      return cohortIds.length > 0 ? [{ ...r, cohortIds }] : [];
-    }), { shouldDirty: true });
+    setValue(
+      'registrations',
+      registrations.flatMap((r) => {
+        if (!r.cohortIds?.includes(cohortId)) return [r];
+        const cohortIds = r.cohortIds.filter((id) => id !== cohortId);
+        return cohortIds.length > 0 ? [{ ...r, cohortIds }] : [];
+      }),
+      { shouldDirty: true },
+    );
   };
 
   const change = (id: string, add: boolean) => {
     const participant = options.get(id);
     if (!participant) return;
     const { personId, coupleId, personIds } = participant;
-    const next = registrations.filter(
-      (x) => x.personId ? !personIds.includes(x.personId) : x.coupleId !== coupleId,
+    const next = registrations.filter((x) =>
+      x.personId ? !personIds.includes(x.personId) : x.coupleId !== coupleId,
     );
     next.push({ personId, coupleId, cohortIds: [], isCancelled: !add });
     if (!add && coupleId) {
-      next.push(...personIds.map((personId) => ({
-        personId, coupleId: null, cohortIds: [], isCancelled: true,
-      })));
+      next.push(
+        ...personIds.map((personId) => ({
+          personId,
+          coupleId: null,
+          cohortIds: [],
+          isCancelled: true,
+        })),
+      );
     }
     setValue('registrations', next, { shouldDirty: true });
   };
@@ -114,13 +135,16 @@ export function ParticipantListElement({
                 {options.get(id)?.label}
                 {!!cohortIds?.length && (
                   <span className="ml-1 text-xs text-neutral-11">
-                    ({cohortIds.map((id) => cohorts.find((x) => x.id === id)?.name).join(', ')})
+                    (
+                    {cohortIds
+                      .map((id) => cohorts.find((x) => x.id === id)?.name)
+                      .join(', ')}
+                    )
                   </span>
                 )}
               </div>
               <button
                 type="button"
-                aria-label={`Odebrat ${options.get(id)?.label ?? 'účastníka'}`}
                 className={buttonCls({ size: 'sm', variant: 'outline' })}
                 onClick={() => change(id, false)}
               >

@@ -1,6 +1,5 @@
 'use client';
 
-
 import { DotSeparated } from '@/ui/DotSeparated';
 
 import { PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Person';
@@ -112,7 +111,6 @@ export const PersonView = React.memo(function PersonView({
   const socialLinks = [
     {
       id: 'instagram',
-      label: 'Instagram',
       text: item.instagramUsername ? `@${item.instagramUsername}` : null,
       href: item.instagramUsername
         ? `https://www.instagram.com/${encodeURIComponent(item.instagramUsername)}`
@@ -121,7 +119,6 @@ export const PersonView = React.memo(function PersonView({
     },
     {
       id: 'tiktok',
-      label: 'TikTok',
       text: item.tiktokUsername ? `@${item.tiktokUsername}` : null,
       href: item.tiktokUsername
         ? `https://www.tiktok.com/@${encodeURIComponent(item.tiktokUsername)}`
@@ -130,7 +127,6 @@ export const PersonView = React.memo(function PersonView({
     },
     {
       id: 'facebook',
-      label: 'Facebook',
       text: 'Facebook',
       href:
         item.facebookUrl?.startsWith('https://') ||
@@ -141,7 +137,6 @@ export const PersonView = React.memo(function PersonView({
     },
     {
       id: 'website',
-      label: 'Web',
       text: 'Web',
       href:
         item.websiteUrl?.startsWith('https://') || item.websiteUrl?.startsWith('http://')
@@ -177,7 +172,6 @@ export const PersonView = React.memo(function PersonView({
         actions={actions}
       />
 
-
       {item.lastActivity && (
         <div className="-mt-2 mb-4">
           <PersonActivityBadges activity={item.lastActivity} />
@@ -186,13 +180,12 @@ export const PersonView = React.memo(function PersonView({
 
       {socialLinks.length > 0 && (
         <div className="-mt-2 mb-4 flex flex-wrap gap-2">
-          {socialLinks.map(({ id, label, text, href, Icon }) => (
+          {socialLinks.map(({ id, text, href, Icon }) => (
             <a
               key={id}
               href={href!}
               target="_blank"
               rel="noreferrer"
-              aria-label={`Otevřít ${label}`}
               className="inline-flex min-h-8 items-center gap-1.5 rounded-md border border-neutral-5 bg-neutral-2 px-2.5 py-1 text-sm text-neutral-12 hover:border-accent-7 hover:bg-accent-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
             >
               <Icon className="size-4 shrink-0" aria-hidden="true" />

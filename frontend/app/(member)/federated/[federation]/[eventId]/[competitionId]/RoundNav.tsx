@@ -30,16 +30,12 @@ export function RoundNav({
     }),
   ];
   return (
-    <nav
-      aria-label="Kola soutěže"
-      className="flex gap-4 overflow-x-auto border-b border-neutral-7 mb-2"
-    >
+    <nav className="flex gap-4 overflow-x-auto border-b border-neutral-7 mb-2">
       {tabs.map((tab) => (
         <Link
           key={tab.href}
           href={tab.href}
           prefetch={false}
-          aria-current={tab.active ? 'page' : undefined}
           className={cn(
             'whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm',
             tab.active

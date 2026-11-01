@@ -1,20 +1,15 @@
 import { CalendarViews } from '@/calendar/CalendarViews';
 import {
-  useCalendarData,
-  calendarTypes,
   type CalendarFilters,
+  calendarTypes,
+  useCalendarData,
 } from '@/calendar/useCalendarData';
 import type { CalendarCompetitionEvent } from '@/calendar/types';
-import { CompetitionEventContent, type CompetitionEntry } from '@/ui/Competitions';
+import { type CompetitionEntry, CompetitionEventContent } from '@/ui/Competitions';
 import { useAuth } from '@/lib/auth';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
-import {
-  capitalize,
-  formatCount,
-  fullDateFormatter,
-  longDayFormatter,
-} from '@/ui/format';
+import { capitalize, formatCount, longDayFormatter } from '@/ui/format';
 import { startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { buttonCls, cardCls } from '@/ui/style';
@@ -109,7 +104,6 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   <Dialog modal={false}>
                     <DialogTrigger.Plain
                       type="button"
-                      aria-label={`Přidat událost na ${fullDateFormatter.format(new Date(date))}`}
                       className={buttonCls({ display: 'none', variant: 'none' })}
                     >
                       <Plus />

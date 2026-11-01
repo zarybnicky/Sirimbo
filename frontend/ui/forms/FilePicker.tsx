@@ -52,12 +52,7 @@ export async function uploadFile(source: File): Promise<UploadedFile> {
   return response.json();
 }
 
-export function FilePicker({
-  value,
-  onChange,
-  imagesOnly,
-  title = 'Přílohy',
-}: Props) {
+export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }: Props) {
   const [{ data, fetching }, refresh] = useQuery({ query: FileListDocument });
   const [uploading, setUploading] = React.useState(false);
   const [error, setError] = React.useState<string>();
@@ -110,7 +105,6 @@ export function FilePicker({
               <button
                 type="button"
                 className="rounded-sm p-1 text-neutral-10 hover:bg-neutral-4 hover:text-neutral-12"
-                aria-label={`Odebrat ${file.displayName ?? file.name}`}
                 onClick={() => onChange(value.filter((id) => id !== file.id))}
               >
                 <X className="size-4" />

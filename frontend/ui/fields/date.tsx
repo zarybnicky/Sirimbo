@@ -1,9 +1,9 @@
 import { FieldHelper, FieldLabel } from '@/ui/form';
 import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import {
+  type DatePickerMode,
   formatDatePickerValue,
   parseDatePickerValue,
-  type DatePickerMode,
 } from '@/ui/fields/date-utils';
 import { X } from 'lucide-react';
 import * as React from 'react';
@@ -66,7 +66,6 @@ export function DatePickerElement<T extends FieldValues>({
               size: 'none',
               className: 'w-10 shrink-0 [&_svg]:size-4',
             })}
-            aria-label="Vymazat datum"
             title="Vymazat datum"
             onClick={() => {
               field.onChange(null);

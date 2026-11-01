@@ -67,11 +67,8 @@ export function PeriodPicker({
       <div className="flex min-w-0 flex-wrap items-center gap-2 sm:col-start-2">
         <button
           type="button"
-          aria-label="Předchozí období"
           className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-          onClick={() =>
-            onChange({ ...value, date: add(range.since, -1, 'day') })
-          }
+          onClick={() => onChange({ ...value, date: add(range.since, -1, 'day') })}
         >
           <ChevronLeft aria-hidden />
         </button>
@@ -80,14 +77,10 @@ export function PeriodPicker({
             ? `${range.since.getFullYear()}/${range.until.getFullYear()}`
             : value.unit === 'month'
               ? capitalize(monthFormatter.format(range.since))
-              : fullDateFormatter.formatRange(
-                  range.since,
-                  add(range.until, -1, 'day'),
-                )}
+              : fullDateFormatter.formatRange(range.since, add(range.until, -1, 'day'))}
         </span>
         <button
           type="button"
-          aria-label="Další období"
           className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
           onClick={() => onChange({ ...value, date: range.until })}
         >

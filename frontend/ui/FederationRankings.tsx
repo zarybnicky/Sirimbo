@@ -1,5 +1,5 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { compareNaturalText } from '@/lib/compare';
+import { compareText } from '@/lib/compare';
 import {
   compareCategories,
   compareDisciplines,
@@ -59,10 +59,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
         },
       ];
     })
-    .toSorted(
-      (a, b) =>
-        compareCategories(a.categoryDetails, b.categoryDetails),
-    );
+    .toSorted((a, b) => compareCategories(a.categoryDetails, b.categoryDetails));
 }
 
 export function FederationRankBadge({
@@ -134,7 +131,7 @@ export function FederationRankings({
   const rows = ranklistRows(entries);
   if (rows.length === 0) return null;
   const columns = [...new Set(rows.map((row) => row.discipline))].toSorted(
-    (a, b) => compareDisciplines(a, b) || compareNaturalText(a, b),
+    (a, b) => compareDisciplines(a, b) || compareText(a, b),
   );
   const groups = Object.groupBy(rows, (row) =>
     [
@@ -170,7 +167,9 @@ export function FederationRankings({
               {entries
                 ?.filter((x) => x.discipline === discipline)
                 .map((x) => (
-                  <div key={x.id}>{x.placement}/{x.total}</div>
+                  <div key={x.id}>
+                    {x.placement}/{x.total}
+                  </div>
                 ))}
             </td>
           ))}

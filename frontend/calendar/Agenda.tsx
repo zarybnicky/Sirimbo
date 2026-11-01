@@ -6,19 +6,15 @@ import { compareText } from '@/lib/compare';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
-import {
-  capitalize,
-  fullDateFormatter,
-  listFormatter,
-  longDayFormatter,
-} from '@/ui/format';
+import { capitalize, listFormatter, longDayFormatter } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
 import { Cake, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { useAtomValue } from 'jotai'; import { dragListenersAtom } from './state';
+import { useAtomValue } from 'jotai';
+import { dragListenersAtom } from './state';
 
 function Agenda({ events }: ViewProps): React.ReactNode {
   const auth = useAuth();
@@ -46,7 +42,11 @@ function Agenda({ events }: ViewProps): React.ReactNode {
             lessons: [
               ...Map.groupBy(
                 events.filter((e) => e.type === 'LESSON'),
-                (e) => e.eventTrainersList.map((x) => x.personId).toSorted().join(','),
+                (e) =>
+                  e.eventTrainersList
+                    .map((x) => x.personId)
+                    .toSorted()
+                    .join(','),
               ),
             ]
               .map(
@@ -78,7 +78,6 @@ function Agenda({ events }: ViewProps): React.ReactNode {
               {auth.isTrainer && (
                 <button
                   type="button"
-                  aria-label={`Přidat událost na ${fullDateFormatter.format(new Date(date))}`}
                   className={buttonCls({ display: 'none', variant: 'none' })}
                   onClick={() => onCreate?.({ date: new Date(date) })}
                 >
@@ -86,21 +85,21 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                 </button>
               )}
             </div>
-            {dateEntry.birthdays.map((calendarEvent) => (
-              <BirthdayChip key={calendarEvent.id} calendarEvent={calendarEvent} />
+            {dateEntry.birthdays.map((x) => (
+              <BirthdayChip key={x.id} person={x.person} />
             ))}
           </div>
 
           <div className="flex justify-start items-start flex-wrap gap-2 opacity-90">
-            {dateEntry.competitions.map((calendarEvent) => (
+            {dateEntry.competitions.map(({ id, items, officials }) => (
               <div
-                key={calendarEvent.id}
+                key={id}
                 className={cardCls({
                   className:
                     'min-w-[200px] w-full sm:w-72 rounded-lg border-green-7 bg-green-2 p-3',
                 })}
               >
-                <CompetitionEventContent entries={calendarEvent.items} officials={calendarEvent.officials} />
+                <CompetitionEventContent entries={items} officials={officials} />
               </div>
             ))}
             {dateEntry.groups.map((instance) => (
@@ -116,15 +115,15 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   );
 }
 
-function BirthdayChip({ calendarEvent }: { calendarEvent: CalendarBirthdayEvent }) {
+function BirthdayChip({ person }: { person: CalendarBirthdayEvent['person'] }) {
   return (
     <Link
-      href={`/clenove/${calendarEvent.person.id}`}
-      title={`Narozeniny: ${calendarEvent.person.name}`}
+      href={`/clenove/${person.id}`}
+      title={`Narozeniny: ${person.name}`}
       className="inline-flex max-w-full items-center gap-1 rounded-sm border border-neutral-6 bg-neutral-2 px-2 py-1 text-xs text-neutral-12 underline-offset-2 hover:bg-neutral-3 hover:underline"
     >
       <Cake className="size-3.5 shrink-0 text-accent-11" />
-      <span className="truncate">{calendarEvent.person.name}</span>
+      <span className="truncate">{person.name}</span>
     </Link>
   );
 }
@@ -173,7 +172,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
       {auth.isTrainer && (
         <button
           type="button"
-          aria-label="Přidat lekci"
+          title="Přidat lekci"
           className={buttonCls({
             display: 'none',
             variant: 'none',

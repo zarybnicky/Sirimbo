@@ -1,8 +1,7 @@
-
 import type { Metadata } from 'next';
 import { ascending, range, scaleOrdinal, schemeTableau10 } from 'd3';
+import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from 'd3-sankey';
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey';
-import type { SankeyNode as D3SankeyNode, SankeyLink as D3SankeyLink } from 'd3-sankey';
 import { runQuery } from '@/lib/server/postgresql';
 import {
   competitionSankeyLinks,
@@ -163,9 +162,7 @@ async function CompetitionSankey({
 
   const graph = sankey<SankeyNode, LinkExtra>()
     .nodeId((node) => node.id)
-    .nodeAlign((node, columnCount) =>
-      Math.max(0, Math.min(node.xIndex, columnCount - 1)),
-    )
+    .nodeAlign((node, columnCount) => Math.max(0, Math.min(node.xIndex, columnCount - 1)))
     .nodeSort(function (a, b) {
       return (
         ascending(a.classIndex, b.classIndex) ||
@@ -189,19 +186,13 @@ async function CompetitionSankey({
 
   const color = scaleOrdinal(graphData.disciplines, schemeTableau10);
   const path = sankeyLinkHorizontal();
-  const visibleNodes = graph.nodes.filter((node) => !node.hidden);
-  const visibleLinks = graph.links.filter((link) => !link.hidden);
 
   return (
     <figure>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        role="img"
-        aria-label="Competition class movement Sankey"
-      >
+      <svg viewBox={`0 0 ${width} ${height}`}>
         <g>
           {graphData.years.map((year) => {
-            const node = graph.nodes.find((candidate) => candidate.year === year);
+            const node = graph.nodes.find((x) => x.year === year);
             return (
               <text
                 key={year}
@@ -217,50 +208,54 @@ async function CompetitionSankey({
         </g>
 
         <g fill="none" strokeOpacity="0.48">
-          {visibleLinks.map((link) => (
-            <path
-              key={link.id}
-              d={path(link)!}
-              stroke={color(link.discipline)}
-              strokeWidth={Math.max(1, link.width!)}
-              strokeDasharray={
-                link.kind === 'flow'
-                  ? undefined
-                  : link.kind === 'inactive'
-                    ? '2 3'
-                    : '6 4'
-              }
-            >
-              <title>{`${link.source.label} ${link.source.year} -> ${link.target.label} ${link.target.year}\n${link.value} ${link.discipline}; ${KIND_LABEL[link.kind]}`}</title>
-            </path>
-          ))}
+          {graph.links
+            .filter((link) => !link.hidden)
+            .map((link) => (
+              <path
+                key={link.id}
+                d={path(link)!}
+                stroke={color(link.discipline)}
+                strokeWidth={Math.max(1, link.width!)}
+                strokeDasharray={
+                  link.kind === 'flow'
+                    ? undefined
+                    : link.kind === 'inactive'
+                      ? '2 3'
+                      : '6 4'
+                }
+              >
+                <title>{`${link.source.label} ${link.source.year} -> ${link.target.label} ${link.target.year}\n${link.value} ${link.discipline}; ${KIND_LABEL[link.kind]}`}</title>
+              </path>
+            ))}
         </g>
 
         <g>
-          {visibleNodes.map((node) => (
-            <g key={node.id}>
-              <rect
-                x={node.x0}
-                y={node.y0}
-                width={node.x1 - node.x0}
-                height={Math.max(1, node.y1 - node.y0)}
-                rx="2"
-                fill={node.state === 'inactive' ? '#d8d8d8' : '#666'}
-                stroke="white"
-              >
-                <title>{`${node.label}\n${node.year}; ${node.state}`}</title>
-              </rect>
-              <text
-                x={node.x0 - 7}
-                y={(node.y0 + node.y1) / 2}
-                dy="0.35em"
-                textAnchor="end"
-                fontSize="11"
-              >
-                {node.label}
-              </text>
-            </g>
-          ))}
+          {graph.nodes
+            .filter((node) => !node.hidden)
+            .map((node) => (
+              <g key={node.id}>
+                <rect
+                  x={node.x0}
+                  y={node.y0}
+                  width={node.x1 - node.x0}
+                  height={Math.max(1, node.y1 - node.y0)}
+                  rx="2"
+                  fill={node.state === 'inactive' ? '#d8d8d8' : '#666'}
+                  stroke="white"
+                >
+                  <title>{`${node.label}\n${node.year}; ${node.state}`}</title>
+                </rect>
+                <text
+                  x={node.x0 - 7}
+                  y={(node.y0 + node.y1) / 2}
+                  dy="0.35em"
+                  textAnchor="end"
+                  fontSize="11"
+                >
+                  {node.label}
+                </text>
+              </g>
+            ))}
         </g>
       </svg>
 
@@ -268,7 +263,6 @@ async function CompetitionSankey({
         {graphData.disciplines.map((discipline) => (
           <span key={discipline}>
             <span
-              aria-hidden="true"
               style={{
                 display: 'inline-block',
                 width: 10,

@@ -1,10 +1,10 @@
 import { CalendarViews } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
 import {
-  useCalendarData,
-  calendarTypes,
-  calendarTypeOptions,
   type CalendarFilters,
+  calendarTypeOptions,
+  calendarTypes,
+  useCalendarData,
 } from '@/calendar/useCalendarData';
 import type { EventRegistrationAttendanceFragment } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
@@ -106,7 +106,7 @@ export const ActivityList = React.memo(function ActivityList({
         />
       </div>
       <FormError error={error} />
-      <div className="text-sm text-neutral-9" role="status">
+      <div className="text-sm text-neutral-9">
         {fetching
           ? 'Načítám...'
           : !error && !days.some(([, items]) => items.length)
@@ -130,23 +130,22 @@ export const ActivityList = React.memo(function ActivityList({
                   </h4>
                   {birthdays.length > 0 && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Cake
-                        className="size-4 shrink-0 text-accent-11"
-                        aria-label="Narozeniny"
-                      />
+                      <Cake className="size-4 shrink-0 text-accent-11" />
                       <LocalPersonLinks people={birthdays.map(({ person }) => person)} />
                     </div>
                   )}
-                  {items.filter((x) => x.kind === 'competition').map(({ id, items, officials }) => (
-                    <div
-                      key={id}
-                      className={cardCls({
-                        className: 'rounded-lg border-green-7 bg-green-2 p-3',
-                      })}
-                    >
-                      <CompetitionEventContent entries={items} officials={officials} />
-                    </div>
-                  ))}
+                  {items
+                    .filter((x) => x.kind === 'competition')
+                    .map(({ id, items, officials }) => (
+                      <div
+                        key={id}
+                        className={cardCls({
+                          className: 'rounded-lg border-green-7 bg-green-2 p-3',
+                        })}
+                      >
+                        <CompetitionEventContent entries={items} officials={officials} />
+                      </div>
+                    ))}
                   {events.length > 0 && (
                     <div
                       className={cardCls({
@@ -191,9 +190,9 @@ function AttendanceSummary({
     const NotExcusedIcon = attendanceIcons.NOT_EXCUSED;
     return (
       <div className="inline-flex items-center gap-1 whitespace-nowrap text-neutral-11">
-        <AttendedIcon className="size-4 text-green-11" aria-label="Přítomni" />
+        <AttendedIcon className="size-4 text-green-11" />
         <span>{items.filter(({ status }) => status === 'ATTENDED').length}</span>
-        <NotExcusedIcon className="size-4 text-danger-11" aria-label="Nepřítomni" />
+        <NotExcusedIcon className="size-4 text-danger-11" />
         <span>{items.filter(({ status }) => status === 'NOT_EXCUSED').length}</span>
         <span>/ {items.length}</span>
       </div>

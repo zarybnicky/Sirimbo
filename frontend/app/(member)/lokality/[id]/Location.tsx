@@ -144,7 +144,6 @@ export function Location({
               href={coverImage.url}
               target="_blank"
               rel="noreferrer"
-              aria-label={`Otevřít fotografii místa ${location.name}`}
               className="relative mb-2 block aspect-2/1 max-h-128 overflow-hidden rounded-md bg-neutral-3"
             >
               <Image
@@ -165,7 +164,6 @@ export function Location({
                   href={image.url}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Otevřít fotografii místa ${location.name}`}
                   className="relative aspect-4/3 overflow-hidden rounded-md bg-neutral-3"
                 >
                   <Image

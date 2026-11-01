@@ -1,6 +1,6 @@
 'use client';
 
-import { SetEventSharingDocument, type EventWithTrainerFragment } from '@/graphql/Event';
+import { type EventWithTrainerFragment, SetEventSharingDocument } from '@/graphql/Event';
 import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { DialogDescription, DialogTitle } from '@/ui/dialog';
 import { Copy, Link2Off } from 'lucide-react';
@@ -41,7 +41,6 @@ export default function EventShareDialog({ item }: { item: EventWithTrainerFragm
             <input
               readOnly
               value={path}
-              aria-label="Odkaz ke sdílení"
               className={inputCls({ className: 'min-w-0 grow font-mono' })}
             />
             <button

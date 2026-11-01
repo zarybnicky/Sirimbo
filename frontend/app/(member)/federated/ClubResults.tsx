@@ -15,7 +15,7 @@ import { compareText } from '@/lib/compare';
 import { Pagination } from '@/ui/Pagination';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { WeekPicker } from '@/ui/WeekPicker';
-import { compareCategories, compareDisciplines, formatCategoryName } from '@/ui/csts';
+import { compareCategories, formatCategoryName } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 import { inputCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
@@ -28,11 +28,13 @@ export function ClubResults() {
     { shallow: true, scroll: false },
   );
   return (
-    <section className="mt-8 space-y-3" aria-label="Výsledky klubu">
+    <section className="mt-8 space-y-3">
       <h2 className="text-lg font-bold">Výsledky klubu</h2>
       <TabMenu
         selected={filters.view}
-        onSelect={(view) => void setFilters({ view: view as typeof filters.view, page: 1 })}
+        onSelect={(view) =>
+          void setFilters({ view: view as typeof filters.view, page: 1 })
+        }
       >
         <Tab id="year" title="Úspěchy roku">
           <ClubResultReport view="year" />
@@ -74,21 +76,17 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
   }
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionResultsDocument,
-    variables: (offset) => ({
-      condition,
-      first: 50,
-      offset,
-    }),
+    variables: (offset) => ({ condition, first: 50, offset }),
     limit: 50,
     getTotal: (data) => data.competitionResults?.totalCount,
   });
-  const results = (data?.competitionResults?.nodes ?? []).flatMap((result) =>
-    result.competition ? [{ ...result, competition: result.competition }] : [],
+  const results = (data?.competitionResults?.nodes ?? []).flatMap((x) =>
+    x.competition ? [{ ...x, competition: x.competition }] : [],
   );
-  const groups = Map.groupBy(results, (result) =>
+  const groups = Map.groupBy(results, (x) =>
     view === 'gallery'
-      ? result.competitorId
-      : `${result.competition.startDate}:${result.competition.event?.id ?? result.competition.id}`,
+      ? x.competitorId
+      : `${x.competition.startDate}:${x.competition.event?.id ?? x.competition.id}`,
   );
 
   for (const entries of groups.values()) {
@@ -96,13 +94,9 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
       (a, b) =>
         (view === 'gallery'
           ? b.competition.startDate.localeCompare(a.competition.startDate) ||
-            compareDisciplines(
-              a.competition.category?.discipline ?? '',
-              b.competition.category?.discipline ?? '',
-            )
+            compareCategories(a.competition.category, b.competition.category)
           : 0) ||
         compareCategories(a.competition.category, b.competition.category) ||
-        a.ranking - b.ranking ||
         (a.rankingTo ?? a.ranking) - (b.rankingTo ?? b.ranking) ||
         compareText(
           a.competitor?.name ?? a.competitorId,
@@ -147,17 +141,12 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
         </label>
       )}
 
-      {fetching && (
-        <p role="status" className="text-sm">
-          Načítám…
-        </p>
-      )}
+      {fetching && <p className="text-sm">Načítám…</p>}
       {error && <FormError error={error} />}
       {!fetching && !error && (
         <ul className="space-y-4 text-sm">
           {[...groups].map(([key, entries]) => {
-            const first = entries[0]!;
-            const { competition, competitor } = first;
+            const { competition, competitor, competitorId } = entries[0]!;
             const event = competition.event;
             return (
               <li key={key}>
@@ -173,7 +162,7 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
                       prefetch={false}
                     >
                       {view === 'gallery'
-                        ? competitor?.name || first.competitorId
+                        ? competitor?.name || competitorId
                         : `${formatDateOnly(competition.startDate)} · ${event?.name || event?.city || 'Soutěž'}`}
                     </Link>
                   </summary>

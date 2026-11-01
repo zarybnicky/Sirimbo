@@ -21,7 +21,6 @@ export function EditableImage({
           href={src}
           target="_blank"
           rel="noreferrer"
-          aria-label="Zobrazit fotografii"
           className="block overflow-hidden rounded-md"
         >
           <Image
@@ -35,18 +34,17 @@ export function EditableImage({
         </a>
       ) : (
         <div className="flex size-20 items-center justify-center rounded-md bg-neutral-3 text-neutral-9">
-          <ImageIcon className="size-7" aria-hidden="true" />
+          <ImageIcon className="size-7" />
         </div>
       )}
       {onEdit && (
         <button
           type="button"
-          aria-label="Změnit fotografii"
           title="Změnit fotografii"
           onClick={onEdit}
           className="absolute -right-1 -bottom-1 flex size-7 items-center justify-center rounded-full bg-neutral-1 text-neutral-12 shadow-md hover:bg-neutral-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
         >
-          <Pencil className="size-3.5" aria-hidden="true" />
+          <Pencil className="size-3.5" />
         </button>
       )}
     </div>

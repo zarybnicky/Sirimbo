@@ -78,8 +78,8 @@ export default async function FederatedPersonPage({ params }: Props) {
               rel="noreferrer"
               className="inline-flex items-center gap-1 text-accent-11 underline"
             >
-              ČSTS profile
-              <ExternalLink className="size-3.5" aria-hidden="true" />
+              ČSTS profil
+              <ExternalLink className="size-3.5" />
             </a>
           ),
           'Datum narození': person.dob && formatDateOnly(person.dob),
@@ -110,9 +110,7 @@ export default async function FederatedPersonPage({ params }: Props) {
                         ...match.tenantMembershipsList,
                         ...match.tenantTrainersList,
                         ...match.tenantAdministratorsList,
-                      ]
-                        .map((affiliation) => affiliation.tenantName)
-                        .filter((name) => name != null),
+                      ].flatMap((x) => x.tenantName || []),
                     ),
                   ]
                     .toSorted((a, b) => a.localeCompare(b))
@@ -152,11 +150,7 @@ export default async function FederatedPersonPage({ params }: Props) {
       )}
 
       <ResultHighlights results={person.highlights} />
-
-      {(person.eventOfficialAssignments.totalCount > 0 ||
-        person.competitionOfficialAssignments.totalCount > 0) && (
-        <OfficialAssignments federation={federation} id={person.id} />
-      )}
+      <OfficialAssignments federation={federation} id={person.id} />
       <Sources
         federation={federation}
         condition={{ federation, kind: 'member', key: person.externalId }}

@@ -116,7 +116,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="col-feature my-6" aria-label="Kontaktní osoby">
+      <section className="col-feature my-6">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {contacts.map((contact) => (
             <ContactCard key={contact.role} {...contact} />

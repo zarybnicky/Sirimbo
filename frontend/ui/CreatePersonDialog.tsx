@@ -51,16 +51,21 @@ function normalizeUsername(value: unknown, platform: 'instagram.com' | 'tiktok.c
   if (typeof value !== 'string') return null;
   const i = value.toLowerCase().indexOf(`${platform}/`);
   const text = i !== -1 ? value.slice(i + platform.length + 1) : value;
-  return sanitizeUnicode(text)
-    .trim()
-    .replace(/^@+/, '')
-    .split(/[/?#]/, 1)[0]?.trim() || null;
+  return (
+    sanitizeUnicode(text).trim().replace(/^@+/, '').split(/[/?#]/, 1)[0]?.trim() || null
+  );
 }
 
 const Form = z.object({
   prefixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
-  firstName: z.string({ error: 'Zadejte jméno' }).min(1, 'Zadejte jméno').overwrite(sanitizeUnicode),
-  lastName: z.string({ error: 'Zadejte příjmení' }).min(1, 'Zadejte příjmení').overwrite(sanitizeUnicode),
+  firstName: z
+    .string({ error: 'Zadejte jméno' })
+    .min(1, 'Zadejte jméno')
+    .overwrite(sanitizeUnicode),
+  lastName: z
+    .string({ error: 'Zadejte příjmení' })
+    .min(1, 'Zadejte příjmení')
+    .overwrite(sanitizeUnicode),
   suffixTitle: z.string().prefault('').overwrite(sanitizeUnicode),
   gender: z.enum(['MAN', 'WOMAN', 'UNSPECIFIED'], { error: 'Vyberte pohlaví' }),
   birthDate: z.string().nullish(),
@@ -278,7 +283,10 @@ export function CreatePersonDialog() {
           )}
           {(open !== 'existing' || !!personId) && (
             <>
-              <fieldset disabled={open === 'existing'} className="grid lg:grid-cols-2 gap-2">
+              <fieldset
+                disabled={open === 'existing'}
+                className="grid lg:grid-cols-2 gap-2"
+              >
                 <TextFieldElement
                   control={control}
                   name="prefixTitle"
@@ -350,7 +358,12 @@ export function CreatePersonDialog() {
                   ]}
                 />
 
-                <TextFieldElement control={control} name="phone" label="Telefon" type="tel" />
+                <TextFieldElement
+                  control={control}
+                  name="phone"
+                  label="Telefon"
+                  type="tel"
+                />
                 <TextFieldElement
                   control={control}
                   name="email"
@@ -402,15 +415,16 @@ export function CreatePersonDialog() {
                   name="joinDate"
                   label="Datum vstupu do klubu"
                 />
-                <Collapsible.Root open={cohortPickerOpen} onOpenChange={setCohortPickerOpen}>
+                <Collapsible.Root
+                  open={cohortPickerOpen}
+                  onOpenChange={setCohortPickerOpen}
+                >
                   <div className="flex items-center justify-between gap-2">
                     <FieldLabel htmlFor="cohortIds">Tréninkové skupiny</FieldLabel>
                     <Collapsible.Trigger asChild>
                       <button
                         type="button"
                         className={`${buttonCls({ size: 'xs', variant: 'outline' })} gap-1`}
-                        aria-expanded={cohortPickerOpen}
-                        aria-controls="cohortIds-collapsible"
                       >
                         <span>
                           {cohortPickerOpen

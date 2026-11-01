@@ -162,12 +162,17 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
     [credentialsByPerson, people],
   );
   const searchedRows = React.useMemo(() => {
-    const terms = search.trim().toLocaleLowerCase('cs').normalize('NFD')
+    const terms = search
+      .trim()
+      .toLocaleLowerCase('cs')
+      .normalize('NFD')
       .replaceAll(/\p{M}/gu, '')
       .split(/\s+/)
       .filter(Boolean);
     return accessRows.filter(({ person }) => {
-      const name = person.name.toLocaleLowerCase('cs').normalize('NFD')
+      const name = person.name
+        .toLocaleLowerCase('cs')
+        .normalize('NFD')
         .replaceAll(/\p{M}/gu, '');
       return terms.every((term) => name.includes(term));
     });
@@ -312,17 +317,18 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
           />
         )}
         <div className="col-span-full mt-2 flex flex-wrap items-center justify-between gap-2">
-          <p role="status" className="text-sm text-neutral-11">
-            {data && `Zobrazeno ${filteredRows.length} z ${formatCount(people.length, { one: 'osoby', other: 'osob' })}`}
+          <p className="text-sm text-neutral-11">
+            {data &&
+              `Zobrazeno ${filteredRows.length} z ${formatCount(people.length, { one: 'osoby', other: 'osob' })}`}
           </p>
           <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2">
             {(search || webFacet !== 'all' || cardFacet !== 'all') && (
               <button
                 type="button"
                 className={buttonCls({ variant: 'outline', size: 'sm' })}
-                onClick={() => setFilters(
-                  { search: null, web: null, card: null }, { history: 'push' },
-                )}
+                onClick={() =>
+                  setFilters({ search: null, web: null, card: null }, { history: 'push' })
+                }
               >
                 Zrušit filtry
               </button>
@@ -330,7 +336,6 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
             <TextField
               name="access-search"
               type="search"
-              aria-label="Hledat osobu"
               placeholder="Jméno nebo příjmení"
               className="w-56 max-w-full"
               value={search}
@@ -350,7 +355,9 @@ export const PeopleAccessOverview = React.memo(function PeopleAccessOverview({
               <CreditCard className="size-3.5" aria-hidden="true" /> Karta
             </span>
           ),
-          <span key="actions" className="sr-only">Akce</span>,
+          <span key="actions" className="sr-only">
+            Akce
+          </span>,
         ]}
         busy={fetching}
         error={error}
@@ -437,7 +444,10 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
   return (
     <tr className="border-b border-neutral-5 hover:bg-neutral-2 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 max-sm:py-2">
       <th scope="row" className="max-sm:min-w-0">
-        <Link className="font-semibold underline max-sm:block max-sm:truncate" href={`/clenove/${person.id}`}>
+        <Link
+          className="font-semibold underline max-sm:block max-sm:truncate"
+          href={`/clenove/${person.id}`}
+        >
           {person.name}
         </Link>
       </th>
@@ -462,7 +472,10 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
             >
               <Clock3 className="size-3 shrink-0" aria-hidden="true" />
               {lastWebActivity ? (
-                <time className="truncate tabular-nums leading-tight" dateTime={lastWebActivity}>
+                <time
+                  className="truncate tabular-nums leading-tight"
+                  dateTime={lastWebActivity}
+                >
                   {numericFullFormatter.format(new Date(lastWebActivity))}
                 </time>
               ) : (
@@ -512,13 +525,16 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
               >
                 <Clock3 className="ml-1 size-3 shrink-0" aria-hidden="true" />
                 {lastCardActivity ? (
-                  <time className="truncate tabular-nums leading-tight" dateTime={lastCardActivity}>
+                  <time
+                    className="truncate tabular-nums leading-tight"
+                    dateTime={lastCardActivity}
+                  >
                     {numericFullFormatter.format(new Date(lastCardActivity))}
                   </time>
                 ) : (
                   '-'
                 )}
-            </span>
+              </span>
             )}
           </div>
         </td>
@@ -567,11 +583,5 @@ function AccessMenu({
     ...credentials.flatMap((x) => credentialActionMap.get(x.id) ?? []),
   ];
 
-  return (
-    <ActionGroup
-      actions={actions}
-      variant="row"
-      align="end"
-    />
-  );
+  return <ActionGroup actions={actions} variant="row" align="end" />;
 }

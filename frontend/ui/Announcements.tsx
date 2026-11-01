@@ -38,10 +38,7 @@ export function AnnouncementSortControls({
   return (
     <DropdownMenu>
       <div className={cn('inline-flex', className)}>
-        <DropdownMenuTrigger
-          aria-label="Změnit řazení oznámení"
-          className={buttonCls({ variant: 'outline' })}
-        >
+        <DropdownMenuTrigger className={buttonCls({ variant: 'outline' })}>
           <ArrowUpDown className="size-4" />
         </DropdownMenuTrigger>
       </div>
@@ -57,7 +54,6 @@ export function AnnouncementSortControls({
                 'absolute left-2 size-4 text-accent-9 group-data-highlighted:text-accent-1 transition-opacity',
                 sort === value ? 'opacity-100' : 'opacity-0',
               )}
-              aria-hidden
             />
             {label}
           </DropdownMenuButton>
@@ -77,8 +73,14 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
     variables: {
       first: 5,
       offset: (page - 1) * 5,
-      condition: { isSticky: false, status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED' },
-      orderBy: [sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC', 'CREATED_AT_DESC'],
+      condition: {
+        isSticky: false,
+        status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED',
+      },
+      orderBy: [
+        sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
+        'CREATED_AT_DESC',
+      ],
     },
   });
 
@@ -134,7 +136,10 @@ export const StickyAnnouncements = React.memo(function StickyAnnouncements() {
     query: AnnouncementsDocument,
     variables: {
       condition: { isSticky: true, status: 'PUBLISHED' },
-      orderBy: [sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC', 'CREATED_AT_DESC'],
+      orderBy: [
+        sort === 'updated' ? 'UPDATED_AT_DESC' : 'CREATED_AT_DESC',
+        'CREATED_AT_DESC',
+      ],
     },
   });
 

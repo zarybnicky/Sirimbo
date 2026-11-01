@@ -72,10 +72,7 @@ export function CalendarConflictsIndicator({ range }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger.Plain
-        className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-hidden focus:ring-2 focus:ring-accent-3 focus:ring-offset-2"
-        aria-label={`Zobrazit ${conflicts.length} konfliktů v kalendáři`}
-      >
+      <DialogTrigger.Plain className="fixed bottom-6 right-6 z-30 flex h-12 min-w-12 items-center justify-center gap-1 rounded-full bg-accent-9 px-4 text-white shadow-lg transition-colors hover:bg-accent-10 focus:outline-hidden focus:ring-2 focus:ring-accent-3 focus:ring-offset-2">
         <AlertTriangle className="size-5" />
         <span className="font-semibold">{conflicts.length}</span>
       </DialogTrigger.Plain>
@@ -112,8 +109,12 @@ function ConflictEventsSummary({ conflict }: { conflict: EventConflictFragment }
   const { person, first, second } = conflict;
   if (!person || !first || !second) return null;
 
-  const start = conflict.overlapRange.start ? new Date(conflict.overlapRange.start?.value) : null;
-  const end = conflict.overlapRange.end ? new Date(conflict.overlapRange.end?.value) : null;
+  const start = conflict.overlapRange.start
+    ? new Date(conflict.overlapRange.start?.value)
+    : null;
+  const end = conflict.overlapRange.end
+    ? new Date(conflict.overlapRange.end?.value)
+    : null;
 
   return (
     <div className="space-y-3 text-sm text-neutral-11">
@@ -122,15 +123,11 @@ function ConflictEventsSummary({ conflict }: { conflict: EventConflictFragment }
         <p className="text-sm tracking-wide text-neutral-10">
           {dateTimeFormatter.formatRange(new Date(first.since), new Date(first.until))}
         </p>
-        <p className="font-medium text-neutral-12">
-          {formatEventName(first)}
-        </p>
+        <p className="font-medium text-neutral-12">{formatEventName(first)}</p>
         <p className="text-sm tracking-wide text-neutral-10">
           {dateTimeFormatter.formatRange(new Date(second.since), new Date(second.until))}
         </p>
-        <p className="font-medium text-neutral-12">
-          {formatEventName(second)}
-        </p>
+        <p className="font-medium text-neutral-12">{formatEventName(second)}</p>
       </div>
       {start && end && (
         <p className="text-xs text-accent-10">

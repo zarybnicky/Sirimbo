@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import type { ResultHighlightFragment } from '@/graphql/Federation';
 import { compareNaturalText } from '@/lib/compare';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -17,7 +17,6 @@ export function ResultHighlights({
 }: {
   results: readonly ResultHighlightFragment[];
 }) {
-  const toggleId = useId();
   const [groupByCompetitor, setGroupByCompetitor] = useState(false);
   const entries = results
     .filter((result): result is Entry => result.competition != null)
@@ -28,26 +27,21 @@ export function ResultHighlights({
         compareNaturalText(a.competitorId, b.competitorId),
     );
   if (entries.length === 0) return null;
-  const competitors = Map.groupBy(entries, (result) => result.competitorId);
-  const blocks = groupByCompetitor ? [...competitors.values()] : [entries];
+  const competitors = Map.groupBy(entries, (x) => x.competitorId);
   return (
     <>
       <h2 className="mt-4 mb-2 text-lg font-bold">Významné výsledky</h2>
       {competitors.size > 1 && (
         <Checkbox
-          name={toggleId}
           label="Rozdělit podle soutěžících"
           checked={groupByCompetitor}
-          onChange={(event) => setGroupByCompetitor(event.currentTarget.checked)}
+          onChange={() => setGroupByCompetitor((x) => !x)}
         />
       )}
-      {blocks.map((entries) => {
+      {(groupByCompetitor ? [...competitors.values()] : [entries]).map((entries) => {
         const { competitor, competitorId, competition } = entries[0]!;
         return (
-          <section
-            key={groupByCompetitor ? competitorId : 'combined'}
-            className="space-y-2 mb-4"
-          >
+          <section key={competitorId} className="space-y-2 mb-4">
             {groupByCompetitor && (
               <h3 className="font-semibold">
                 {competitor ? (
@@ -84,13 +78,8 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
     else if (finalIndex != null && reachedIndex != null && finalIndex >= reachedIndex)
       depth = finalIndex - reachedIndex;
     const label =
-      [
-        'finalista',
-        'semifinalista',
-        'čtvrtfinalista',
-        'osmifinalista',
-        'šestnáctifinalista',
-      ][depth] ?? `1/${2 ** depth} finále`;
+      ['finalista', 'semifinalista', 'čtvrtfinalista', 'osmifinalista'][depth] ??
+      `1/${2 ** depth} finále`;
     return { ...result, placement, label, order: 4 + depth };
   });
   const groups = Map.groupBy(entries, ({ competition, label }) =>
@@ -118,57 +107,52 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
 
   return (
     <ul className="space-y-2 text-sm">
-      {highlights.map((highlight) => {
-        const { competition, label, results } = highlight;
-        const category = formatCategoryName(competition) || 'Neznámá kategorie';
-        const years = [
-          ...new Set(results.map((result) => result.competition.startDate.slice(0, 4))),
-        ]
-          .toSorted()
-          .join(', ');
-        return (
-          <li key={highlight.key}>
-            <details>
-              <summary className="cursor-pointer">
-                <span className="font-medium tabular-nums">
-                  {results.length}× {label}
-                </span>
-                {' — '}
-                {category} ({years})
-              </summary>
+      {highlights.map(({ key, competition, label, results }) => (
+        <li key={key}>
+          <details>
+            <summary className="cursor-pointer">
+              <span className="font-medium tabular-nums">
+                {results.length}× {label}
+              </span>
+              {' — '}
+              {formatCategoryName(competition) || '?'}
+              {' ('}
+              {[...new Set(results.map((x) => x.competition.startDate.slice(0, 4)))]
+                .toSorted()
+                .join(', ')}
+              )
+            </summary>
 
-              <ul className="mt-1 ml-4 space-y-1 border-l border-neutral-4 pl-3">
-                {results.map((result) => {
-                  const { competition, competitionId, competitorId } = result;
-                  const event = competition.event;
-                  const text = [
-                    result.placement,
-                    formatDateOnly(competition.startDate),
-                    event?.name || event?.location || event?.city,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ');
-                  return (
-                    <li key={`${competitionId}:${competitorId}`}>
-                      {event ? (
-                        <Link
-                          href={`/federated/${competition.federation}/${event.externalId}/${competition.externalId}`}
-                          className="text-accent-11 underline underline-offset-2"
-                          prefetch={false}
-                        >
-                          {text}
-                        </Link>
-                      ) : (
-                        text
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          </li>
-        );
-      })}
+            <ul className="mt-1 ml-4 space-y-1 border-l border-neutral-4 pl-3">
+              {results.map(({ placement, competition, competitionId }) => {
+                const event = competition.event;
+                const text = [
+                  placement,
+                  formatDateOnly(competition.startDate),
+                  event?.name || event?.location,
+                ]
+                  .filter(Boolean)
+                  .join(' · ');
+                return (
+                  <li key={competitionId}>
+                    {event ? (
+                      <Link
+                        href={`/federated/${competition.federation}/${event.externalId}/${competition.externalId}`}
+                        className="text-accent-11 underline underline-offset-2"
+                        prefetch={false}
+                      >
+                        {text}
+                      </Link>
+                    ) : (
+                      text
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        </li>
+      ))}
     </ul>
   );
 }

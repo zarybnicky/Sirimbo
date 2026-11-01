@@ -16,7 +16,13 @@ import {
   maxTimeAtom,
   minTimeAtom,
 } from './state';
-import { resourceKey, type CalendarEvent, type DateRange, type Resource, type ViewProps } from './types';
+import {
+  type CalendarEvent,
+  type DateRange,
+  type Resource,
+  resourceKey,
+  type ViewProps,
+} from './types';
 import { useDragAutoScroll } from './useDragAutoScroll';
 import { dayFormatter } from '@/ui/format';
 
@@ -130,38 +136,35 @@ export default React.memo(function TimeGrid({
       }),
     [allDayEvents, grid, showAllResources],
   );
-  const dayResourceGroups = React.useMemo<readonly DayResourceGroup[]>(
-    () => {
-      if (primary !== 'day') return [];
+  const dayResourceGroups = React.useMemo<readonly DayResourceGroup[]>(() => {
+    if (primary !== 'day') return [];
 
-      return grid.days.map((date, dIdx) => {
-        const columns = grid.resources.flatMap((resource, rIdx) => {
-          const columnEvents = grid.events[rIdx]![dIdx]!;
-          if (!showAllResources && columnEvents.length === 0) return [];
-          return [
-            {
-              resource,
-              events: columnEvents,
-              backgroundEvents: grid.bg[rIdx]![dIdx]!,
-            },
-          ];
-        });
-
-        return {
-          date,
-          columns:
-            columns.length > 0
-              ? columns
-              : [{ resource: undefined, events: [], backgroundEvents: [] }],
-          allDayRange: [date],
-          allDayEvents: allDayEvents.filter((event) =>
-            inEventRange(event, { start: date, end: date }),
-          ),
-        };
+    return grid.days.map((date, dIdx) => {
+      const columns = grid.resources.flatMap((resource, rIdx) => {
+        const columnEvents = grid.events[rIdx]![dIdx]!;
+        if (!showAllResources && columnEvents.length === 0) return [];
+        return [
+          {
+            resource,
+            events: columnEvents,
+            backgroundEvents: grid.bg[rIdx]![dIdx]!,
+          },
+        ];
       });
-    },
-    [allDayEvents, grid, primary, showAllResources],
-  );
+
+      return {
+        date,
+        columns:
+          columns.length > 0
+            ? columns
+            : [{ resource: undefined, events: [], backgroundEvents: [] }],
+        allDayRange: [date],
+        allDayEvents: allDayEvents.filter((event) =>
+          inEventRange(event, { start: date, end: date }),
+        ),
+      };
+    });
+  }, [allDayEvents, grid, primary, showAllResources]);
 
   return (
     <div
@@ -206,10 +209,7 @@ export default React.memo(function TimeGrid({
                 </div>
                 <div className={cn('rbc-row', grid.resources.length <= 1 && 'hidden')}>
                   {columns.map(({ resource }) => (
-                    <div
-                      key={resourceKey(resource)}
-                      className="rbc-header"
-                    >
+                    <div key={resourceKey(resource)} className="rbc-header">
                       {resource?.resourceTitle ?? ''}
                     </div>
                   ))}
@@ -379,9 +379,7 @@ function DayButton({ today, date }: { today: Date; date: Date }) {
           onDrillDown?.(date);
         }}
       >
-        <span role="columnheader" aria-sort="none">
-          {dayFormatter.format(date)}
-        </span>
+        <span>{dayFormatter.format(date)}</span>
       </button>
     </div>
   );

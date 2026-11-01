@@ -7,7 +7,10 @@ import type { EventFormControl } from '@/ui/event-form/types';
 
 export type EventTrainerOption = { id: string; label: string; enabled: boolean };
 
-export function TrainerListElement({ control, trainers }: {
+export function TrainerListElement({
+  control,
+  trainers,
+}: {
   control: EventFormControl;
   trainers: EventTrainerOption[];
 }) {
@@ -35,7 +38,9 @@ export function TrainerListElement({ control, trainers }: {
               append({ personId: id, lessonsOffered: 0 });
             }
           }}
-          options={trainers.filter((x) => x.enabled && !fields.some((y) => y.personId === x.id))}
+          options={trainers.filter(
+            (x) => x.enabled && !fields.some((y) => y.personId === x.id),
+          )}
         />
       </div>
 
@@ -70,7 +75,6 @@ export function TrainerListElement({ control, trainers }: {
                     type="number"
                     name={`trainers.${trainerIndex}.lessonsOffered`}
                     placeholder="Bez omezení"
-                    aria-label="Limit lekcí"
                     className="w-28"
                     min={1}
                     size={1}

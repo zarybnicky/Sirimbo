@@ -131,7 +131,6 @@ export function Hero({
         ref={scrollerRef}
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-none [&::-webkit-scrollbar]:hidden"
-        aria-label="Aktuality"
       >
         {articles.map((x, i) => (
           <Link
@@ -144,7 +143,12 @@ export function Hero({
                 {x.name}
               </div>
             )}
-            <div className={cn('relative h-[60dvh] overflow-hidden', x.inset && 'isolate bg-neutral-12')}>
+            <div
+              className={cn(
+                'relative h-[60dvh] overflow-hidden',
+                x.inset && 'isolate bg-neutral-12',
+              )}
+            >
               {x.inset && (
                 <>
                   <Image
@@ -182,7 +186,6 @@ export function Hero({
 
       <button
         type="button"
-        aria-label="Předchozí snímek"
         disabled={!canNavigate}
         onClick={() => scrollToIndex(activeIndex - 1)}
         className="absolute left-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-hidden focus:ring-2 focus:ring-accent-10 disabled:hidden"
@@ -192,7 +195,6 @@ export function Hero({
 
       <button
         type="button"
-        aria-label="Další snímek"
         disabled={!canNavigate}
         onClick={() => scrollToIndex(activeIndex + 1)}
         className="absolute right-4 top-[calc(30vh-1rem)] z-20 rounded-full bg-black/45 p-2 text-white shadow-md transition hover:bg-black/65 focus:outline-hidden focus:ring-2 focus:ring-accent-10 disabled:hidden"
@@ -206,7 +208,6 @@ export function Hero({
             <button
               key={x.id}
               type="button"
-              aria-label={`Zobrazit snímek ${i + 1}`}
               aria-current={i === activeIndex ? 'true' : undefined}
               onClick={() => scrollToIndex(i)}
               className={cn(

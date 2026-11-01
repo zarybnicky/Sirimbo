@@ -4,7 +4,6 @@ import type {
   CompetitionCategoryLabelFragment,
   FederationCategoryProgressFragment,
 } from '@/graphql/Federation';
-import { compareByOrder, compareNaturalText } from '@/lib/compare';
 
 export const ageGroupNames: Record<string, string> = {
   Under_8: 'Do 8 let',
@@ -127,6 +126,12 @@ const hiddenClasses = ['Entry', 'Novice', 'Bronze', 'Silver', 'Gold'];
 const hiddenCategoryClasses = new Set(hiddenClasses);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'S', 'M'];
 
+function compareByOrder(order: readonly string[]) {
+  const ranks = new Map(order.map((value, index) => [value, index]));
+  return (a: string, b: string) =>
+    (ranks.get(a) ?? order.length) - (ranks.get(b) ?? order.length);
+}
+
 export const compareClasses = compareByOrder(
   [...hiddenClasses, ...classOrder, 'Open'].toReversed(),
 );
@@ -145,9 +150,7 @@ export function compareCategories(a: Category | null, b: Category | null) {
   return (
     compareAgeGroups(a.ageGroupDetails, b.ageGroupDetails) ||
     compareClasses(a.class, b.class) ||
-    compareNaturalText(a.class, b.class) ||
-    compareDisciplines(a.discipline, b.discipline) ||
-    compareNaturalText(a.discipline, b.discipline)
+    compareDisciplines(a.discipline, b.discipline)
   );
 }
 

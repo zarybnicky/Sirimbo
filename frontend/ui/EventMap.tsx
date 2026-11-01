@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
+  type ExtendedFeatureCollection,
   geoAzimuthalEquidistant,
   geoGraticule10,
   geoPath,
@@ -12,7 +13,6 @@ import {
   select,
   zoom,
   zoomIdentity,
-  type ExtendedFeatureCollection,
 } from 'd3';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
 import { buttonCls } from '@/ui/style';
@@ -20,8 +20,8 @@ import { geoRobinson } from 'd3-geo-projection';
 import type { FederationMapEventFragment } from '@/graphql/Federation';
 import { FormError } from '@/ui/form';
 import { SelectField } from '@/ui/fields/select';
-import { formatCount, formatDateOnly, monthNameFormatter } from '@/ui/format';
-import { Popover, PopoverContent, PopoverAnchor } from '@/ui/popover';
+import { formatDateOnly, monthNameFormatter } from '@/ui/format';
+import { Popover, PopoverAnchor, PopoverContent } from '@/ui/popover';
 
 export const eventMonths = Array.from({ length: 12 }, (_, month) =>
   monthNameFormatter.format(new Date(2000, month, 1)),
@@ -171,13 +171,7 @@ export default function EventMap({
       >
         {map && (
           <>
-            <svg
-              width={map.width}
-              height={map.height}
-              role="img"
-              aria-label="Mapa událostí"
-              className="pointer-events-none"
-            >
+            <svg width={map.width} height={map.height} className="pointer-events-none">
               <g transform={transform.toString()}>
                 <path
                   d={map.land}
@@ -203,13 +197,6 @@ export default function EventMap({
                 <button
                   key={location.key}
                   type="button"
-                  aria-label={`${location.label} · ${formatCount(location.events.length, {
-                    one: 'událost',
-                    few: 'události',
-                    other: 'událostí',
-                  })}`}
-                  aria-haspopup="dialog"
-                  aria-expanded={selected?.key === location.key}
                   onPointerEnter={(event) => {
                     if (event.pointerType === 'mouse')
                       open(location.key, event.currentTarget);
@@ -239,7 +226,6 @@ export default function EventMap({
         <div className="absolute right-2 top-2 flex items-center gap-1">
           <SelectField
             name="shape"
-            aria-label="Pohled"
             value={view}
             onChange={onViewChange}
             options={mapViews}
@@ -247,15 +233,14 @@ export default function EventMap({
           />
           {(
             [
-              ['Přiblížit', Plus, transform.k >= 8, 2],
-              ['Oddálit', Minus, transform.k <= 1, 0.5],
-              ['Obnovit mapu', RotateCcw, false, null],
+              [Plus, transform.k >= 8, 2],
+              [Minus, transform.k <= 1, 0.5],
+              [RotateCcw, false, null],
             ] as const
-          ).map(([label, Icon, disabled, factor]) => (
+          ).map(([Icon, disabled, factor]) => (
             <button
-              key={label}
+              key={factor}
               type="button"
-              aria-label={label}
               className={buttonCls({ variant: 'outline', size: 'icon' })}
               disabled={disabled}
               onClick={() => {
@@ -274,7 +259,6 @@ export default function EventMap({
           <PopoverAnchor virtualRef={{ current: selected.anchor }} />
           <PopoverContent
             style={{ animation: 'none' }}
-            aria-label={active.label}
             className="pointer-events-auto w-80 max-h-80 p-3 pr-9"
             sideOffset={4}
             portalClassName="pointer-events-none"

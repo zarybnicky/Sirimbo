@@ -48,7 +48,7 @@ export const AccountList = React.memo(function AccountList() {
           disabled={fetching || rows.length === 0 || exportCurrentState.loading}
           onClick={() => exportCurrentState.execute()}
         >
-          {exportCurrentState.loading ? <Spinner /> : <Download aria-hidden />}
+          {exportCurrentState.loading ? <Spinner /> : <Download />}
           Export
         </button>
       }

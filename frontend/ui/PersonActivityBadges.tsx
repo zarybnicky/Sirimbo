@@ -75,14 +75,12 @@ export function PersonActivityBadges({
             : value
               ? 'Žádný záznam'
               : 'Nedostupné';
-        const title = `${label}: ${formatted}${status ? ` (${status})` : ''}`;
+
         return (
           <Popover key={key}>
             <PopoverTrigger asChild>
               <button
                 type="button"
-                title={title}
-                aria-label={title}
                 className={cn(
                   'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs hover:bg-neutral-4 focus-visible:outline-2 focus-visible:outline-accent-9',
                   !value && 'opacity-80 line-through',
@@ -101,7 +99,9 @@ export function PersonActivityBadges({
             </PopoverTrigger>
             <PopoverContent className="max-w-80 text-sm" side="top" align="start">
               <p className="pr-6 font-semibold">{label}</p>
-              <p>{value && hasDate ? <time dateTime={value}>{formatted}</time> : formatted}</p>
+              <p>
+                {value && hasDate ? <time dateTime={value}>{formatted}</time> : formatted}
+              </p>
               {status && <p className="text-neutral-11">{status}</p>}
             </PopoverContent>
           </Popover>

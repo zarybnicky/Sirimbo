@@ -9,10 +9,14 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
   const today = new Date();
   const weeks = React.useMemo(() => {
     const days = range(since, until, 'day');
-    return Array.from({ length: Math.ceil(days.length / 7) }, (_, i) => days.slice(i * 7, i * 7 + 7));
+    return Array.from({ length: Math.ceil(days.length / 7) }, (_, i) =>
+      days.slice(i * 7, i * 7 + 7),
+    );
   }, [since, until]);
   const weekEvents = React.useMemo(() => {
-    const monthEvents = events.filter((e) => e.kind !== 'event' || e.instance.type !== 'LESSON');
+    const monthEvents = events.filter(
+      (e) => e.kind !== 'event' || e.instance.type !== 'LESSON',
+    );
     return weeks.map((week) => {
       const start = week[0];
       const end = week.at(-1);
@@ -27,15 +31,12 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
   return (
     <div
       className="relative flex flex-col flex-1 w-full select-none border border-neutral-6 overscroll-contain"
-      role="table"
       ref={containerRef}
     >
-      <div className="rbc-row flex" role="row">
+      <div className="rbc-row flex">
         {(weeks[0] ?? []).map((day, idx) => (
           <div key={`header_${idx}`} className="rbc-header">
-            <span role="columnheader" aria-sort="none">
-              {weekdayFormatter.format(day)}
-            </span>
+            <span>{weekdayFormatter.format(day)}</span>
           </div>
         ))}
       </div>

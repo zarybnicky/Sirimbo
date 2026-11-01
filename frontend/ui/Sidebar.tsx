@@ -67,11 +67,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
           'max-h-screen min-h-screen',
         )}
       >
-        <nav
-          id="app-navigation"
-          aria-label="Hlavní navigace"
-          className="h-screen overflow-y-auto scrollbar"
-        >
+        <nav id="app-navigation" className="h-screen overflow-y-auto scrollbar">
           {!showTopMenu && <SidebarLogo href={homeHref} />}
           <div className="space-y-1 pt-3 mr-1 relative">
             {auth.user ? (
@@ -210,7 +206,9 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
     : !searchParams?.has('tab');
   const inPath =
     !!href &&
-    (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)) &&
+    (href === '/'
+      ? pathname === '/'
+      : pathname === href || pathname.startsWith(`${href}/`)) &&
     queryMatches;
 
   return (

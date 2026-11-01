@@ -39,8 +39,7 @@ export function EventRegistrationForm({
 }: {
   event: EventWithRegistrationsFragment;
   participant:
-    | EventRegistrationFragment
-    | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;
+    EventRegistrationFragment | Pick<EventRegistrationFragment, 'personId' | 'coupleId'>;
   onSaved: () => void;
   onCancelled: () => void;
 }) {
@@ -180,7 +179,6 @@ export function LessonRequestField<T extends FieldValues>({
 }) {
   const { field } = useController({ control, name });
   const value = typeof field.value === 'number' ? field.value : 0;
-  const label = trainer.person?.name;
   const max =
     trainer.lessonsOffered === null
       ? null
@@ -188,7 +186,7 @@ export function LessonRequestField<T extends FieldValues>({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="grow">{label}</span>
+      <span className="grow">{trainer.person?.name}</span>
       <div className="ml-auto flex items-center gap-2">
         {max !== null && (
           <span className="text-sm text-neutral-10">zbývá {max - value}</span>
@@ -196,7 +194,6 @@ export function LessonRequestField<T extends FieldValues>({
         <button
           type="button"
           className={buttonCls({ size: 'icon', variant: 'outline' })}
-          aria-label={`Snížit počet lekcí s ${label}`}
           disabled={readOnly || value === 0}
           onClick={() => field.onChange(value - 1)}
         >
@@ -206,7 +203,6 @@ export function LessonRequestField<T extends FieldValues>({
         <button
           type="button"
           className={buttonCls({ size: 'icon', variant: 'outline' })}
-          aria-label={`Zvýšit počet lekcí s ${label}`}
           disabled={readOnly || (max !== null && value >= max)}
           onClick={() => field.onChange(value + 1)}
         >

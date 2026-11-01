@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
 import { formatCount } from '@/ui/format';
-import { eventMonths, eventMonthColors } from '@/ui/EventMap';
+import { eventMonthColors, eventMonths } from '@/ui/EventMap';
 
 export function PeriodPicker({
   years,
@@ -24,22 +24,17 @@ export function PeriodPicker({
   const index = options.findIndex((y) => y.year === year);
 
   return (
-    <section aria-label="Období" className="space-y-2 border-b border-neutral-4 pb-3">
+    <section className="space-y-2 border-b border-neutral-4 pb-3">
       <div className="flex items-center gap-2">
         <button
           type="button"
-          aria-label="Předchozí rok"
           disabled={index <= 0}
           onClick={() => onChange({ year: options[index - 1]!.year, month: 0 })}
           className="shrink-0 rounded-full p-2 hover:bg-neutral-3 disabled:opacity-30"
         >
           <ChevronLeft className="size-5" />
         </button>
-        <div
-          role="group"
-          aria-label="Rok"
-          className="min-w-0 flex-1 overflow-hidden py-1"
-        >
+        <div className="min-w-0 flex-1 overflow-hidden py-1">
           <div
             className="relative left-1/2 flex w-max gap-2 motion-safe:transition-transform"
             style={{
@@ -78,7 +73,6 @@ export function PeriodPicker({
         </div>
         <button
           type="button"
-          aria-label="Další rok"
           disabled={index >= options.length - 1}
           onClick={() => onChange({ year: options[index + 1]!.year, month: 0 })}
           className="shrink-0 rounded-full p-2 hover:bg-neutral-3 disabled:opacity-30"
@@ -87,11 +81,7 @@ export function PeriodPicker({
         </button>
       </div>
       {options[index]!.eventCount > 0 && (
-        <div
-          role="group"
-          aria-label="Měsíc"
-          className="flex flex-wrap justify-center gap-1"
-        >
+        <div className="flex flex-wrap justify-center gap-1">
           {['Celý rok', ...eventMonths].map((label, value) => (
             <button
               key={value}
@@ -102,7 +92,6 @@ export function PeriodPicker({
             >
               {value > 0 && (
                 <span
-                  aria-hidden="true"
                   className="size-2 rounded-full"
                   style={{ backgroundColor: eventMonthColors[value - 1] }}
                 />

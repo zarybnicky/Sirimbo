@@ -176,7 +176,6 @@ export function ActionGroup<Id extends string = string>({
             <DropdownMenuTrigger.RowDots className="relative top-0 right-0" />
           ) : key === 'add' ? (
             <DropdownMenuTrigger
-              aria-label="Přidat"
               className={buttonCls({ variant: 'outline', size: 'sm' })}
             >
               <Plus className="size-5" />
@@ -200,7 +199,11 @@ export function ActionGroup<Id extends string = string>({
                 <DropdownMenuLink
                   key={a.key}
                   href={a.href}
-                  className={a.variant === 'danger' ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9' : undefined}
+                  className={
+                    a.variant === 'danger'
+                      ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9'
+                      : undefined
+                  }
                 >
                   {a.icon && <a.icon className="size-4" />}
                   {a.label}
@@ -210,7 +213,11 @@ export function ActionGroup<Id extends string = string>({
                   key={a.key}
                   disabled={pending === a.key}
                   onSelect={() => fire(a, { fromDropdown: true })}
-                  className={a.variant === 'danger' ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9' : undefined}
+                  className={
+                    a.variant === 'danger'
+                      ? 'bg-danger-3/70 text-danger-11 data-highlighted:bg-danger-9'
+                      : undefined
+                  }
                 >
                   {a.icon && <a.icon className="size-4" />}
                   {a.label}

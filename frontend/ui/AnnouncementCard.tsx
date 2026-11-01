@@ -29,7 +29,6 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
       {isTitleOnly && (
         <Link
           href={`/nastenka/${item.id}`}
-          aria-label={`Zobrazit příspěvek ${item.title}`}
           className="absolute inset-0 z-10 rounded-lg focus-visible:ring-3 focus-visible:ring-accent-7"
         />
       )}
@@ -38,7 +37,11 @@ export function AnnouncementCard({ item, mode = 'preview' }: Props) {
           {isTitleOnly ? (
             item.title
           ) : expanded ? (
-            <button type="button" className="cursor-pointer" onClick={() => setExpanded(false)}>
+            <button
+              type="button"
+              className="cursor-pointer"
+              onClick={() => setExpanded(false)}
+            >
               {item.title}
             </button>
           ) : (

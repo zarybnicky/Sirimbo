@@ -43,12 +43,10 @@ export function AnnouncementMeta({ item }: { item: AnnouncementFragment }) {
           </time>
         )}
         {item.authorName && <span>{item.authorName}</span>}
-        {STATUS_LABEL[item.status] && (
-          <AnnouncementStatusBadge status={item.status} />
-        )}
+        {STATUS_LABEL[item.status] && <AnnouncementStatusBadge status={item.status} />}
         {item.explicitAttachments.nodes.length > 0 && (
           <span className="inline-flex items-center gap-1">
-            <Paperclip aria-hidden className="size-3.5" />
+            <Paperclip className="size-3.5" />
             <span>{item.explicitAttachments.nodes.length}</span>
           </span>
         )}

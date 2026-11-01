@@ -3,7 +3,6 @@ import React from 'react';
 export const Spinner = React.memo(function Spinner() {
   return (
     <svg
-      role="presentation"
       className="size-6 animate-spin"
       viewBox="0 0 24 24"
       fill="none"

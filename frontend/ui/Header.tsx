@@ -48,7 +48,6 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
             onClick={() => setIsOpen((x) => !x)}
             aria-controls="app-navigation"
             aria-expanded={isOpen}
-            aria-label={isOpen ? 'Zavřít navigaci' : 'Otevřít navigaci'}
           >
             <MenuIcon aria-hidden="true" />
           </button>
@@ -60,7 +59,6 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
           <Link
             className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
             href={auth.isLoggedIn ? '/profil' : '/login'}
-            aria-label={auth.isLoggedIn ? 'Otevřít profil' : 'Přihlásit se'}
           >
             <Account aria-hidden="true" />
           </Link>

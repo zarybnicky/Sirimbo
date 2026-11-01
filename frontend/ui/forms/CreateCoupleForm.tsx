@@ -161,17 +161,12 @@ export function CreateCoupleForm({
             {anchor?.birthDate && (
               <button
                 type="button"
-                role="switch"
-                aria-label="Zobrazit všechny"
                 aria-checked={showEveryone}
-                onClick={() => setShowEveryone(x => !x)}
+                onClick={() => setShowEveryone((x) => !x)}
                 className="flex items-center gap-2 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9"
               >
                 <span>Návrhy</span>
-                <span
-                  className="inline-flex h-5 w-9 items-center rounded-full bg-accent-7 p-0.5"
-                  aria-hidden="true"
-                >
+                <span className="inline-flex h-5 w-9 items-center rounded-full bg-accent-7 p-0.5">
                   <span
                     className={`size-4 rounded-full bg-neutral-1 motion-safe:transition-transform ${showEveryone ? 'translate-x-4' : 'translate-x-0'}`}
                   />

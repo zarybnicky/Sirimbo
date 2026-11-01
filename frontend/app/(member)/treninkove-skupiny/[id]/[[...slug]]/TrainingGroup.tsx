@@ -1,13 +1,12 @@
 'use client';
 
-
 import { DotSeparated } from '@/ui/DotSeparated';
 
 import {
   CohortDocument,
-  UpdateCohortDocument,
   type CohortFragment,
   type CohortMemberFragment,
+  UpdateCohortDocument,
 } from '@/graphql/Cohorts';
 import { useMutation, useQuery } from 'urql';
 import { cohortActions } from '@/lib/actions/cohort';
@@ -76,7 +75,11 @@ export function TrainingGroup({
       )}
       <PageHeader
         imageUrl={cohort.image?.url}
-        onEditImage={actions.some((action) => action.id === 'cohort.edit') ? () => setEditingImage(true) : undefined}
+        onEditImage={
+          actions.some((action) => action.id === 'cohort.edit')
+            ? () => setEditingImage(true)
+            : undefined
+        }
         title={cohort.name}
         breadcrumbLabel="Skupina"
         breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
@@ -185,11 +188,7 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
       )}
     >
       {showActivity && (
-        <div
-          role="group"
-          aria-label="Zobrazení členů"
-          className="col-span-full justify-self-end"
-        >
+        <div className="col-span-full justify-self-end">
           <RadioButtonGroup
             value={view}
             options={[
@@ -200,9 +199,9 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
           />
         </div>
       )}
-      {members.map((membership) => (
+      {members.map(({ id, person }) => (
         <div
-          key={membership.id}
+          key={id}
           className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm"
         >
           <ActionRow
@@ -211,37 +210,37 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
               activityView ? 'col-span-1' : 'col-span-full lg:col-span-1',
             )}
             actions={[
-              ...(membership.person ? memberActionMap.get(membership.person.id)! : []),
-              ...membershipActionMap.get(membership.id)!,
+              ...(person ? memberActionMap.get(person.id)! : []),
+              ...membershipActionMap.get(id)!,
             ]}
           >
-            {membership.person ? (
+            {person ? (
               <Link
                 className="min-w-0 font-bold underline"
-                href={`/clenove/${membership.person.id}`}
+                href={`/clenove/${person.id}`}
               >
-                {membership.person.name}
+                {person.name}
               </Link>
             ) : (
               '?'
             )}
           </ActionRow>
 
-          {activityView && membership.person?.lastActivity && (
+          {activityView && person?.lastActivity && (
             <div className="min-w-0 lg:justify-self-end">
-              <PersonActivityBadges activity={membership.person.lastActivity} />
+              <PersonActivityBadges activity={person.lastActivity} />
             </div>
           )}
           {!activityView && (
             <>
               <div className="font-medium text-right">
-                {formatAgeGroup(membership.person?.ageGroup)}
+                {formatAgeGroup(person?.ageGroup)}
               </div>
               <div>
-                <CategoryList person={membership.person} discipline="Standard" />
+                <CategoryList person={person} discipline="Standard" />
               </div>
               <div>
-                <CategoryList person={membership.person} discipline="Latin" />
+                <CategoryList person={person} discipline="Latin" />
               </div>
             </>
           )}

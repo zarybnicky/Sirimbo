@@ -2,14 +2,14 @@ import dynamic from 'next/dynamic';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
-  CompetitionsDocument,
-  CompetitionSuggestionsDocument,
-  CompetitionSuggestionEventsDocument,
-  type CompetitionFragment,
   type CompetitionEntryFragment,
+  type CompetitionFragment,
   type CompetitionResultFragment,
+  CompetitionsDocument,
   type CompetitionsQuery,
   type CompetitionsQueryVariables,
+  CompetitionSuggestionEventsDocument,
+  CompetitionSuggestionsDocument,
 } from '@/graphql/CompetitionParticipation';
 import type { CompetitionParticipantCondition, OfficialRole } from '@/graphql';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
@@ -19,7 +19,7 @@ import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { compareCategories, formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
-import { compareNaturalText, compareText } from '@/lib/compare';
+import { compareText } from '@/lib/compare';
 import {
   formatCount,
   formatDateOnly,
@@ -99,22 +99,8 @@ export function groupCompetitionEvents(
           officials,
         };
       })
-      .toSorted(
-        (a, b) => compareText(a.name, b.name) || compareText(a.location, b.location),
-      ),
+      .toSorted((a, b) => compareText(a.name, b.name)),
   );
-}
-
-function CompetitionPanelFrame({
-  competitions,
-}: {
-  competitions: readonly Competition[];
-}) {
-  return groupCompetitionEvents(competitions).map(({ key, entries }) => (
-    <section key={key} className="pt-2">
-      <CompetitionEventContent entries={entries} cards />
-    </section>
-  ));
 }
 
 export function CompetitionEventContent({
@@ -145,7 +131,9 @@ export function CompetitionEventContent({
   const groups = [...(byCompetition ? competitions : competitors)].toSorted(
     ([, a], [, b]) =>
       (byCompetition
-        ? (a[0]?.competition.checkInEnd ?? '').localeCompare(b[0]?.competition.checkInEnd ?? '')
+        ? (a[0]?.competition.checkInEnd ?? '').localeCompare(
+            b[0]?.competition.checkInEnd ?? '',
+          )
         : 0) ||
       compareText(entryLabel(a[0]!, byCompetition), entryLabel(b[0]!, byCompetition)),
   );
@@ -185,9 +173,6 @@ export function CompetitionEventContent({
           {canToggle && (
             <button
               type="button"
-              aria-label={
-                byCompetition ? 'Seskupit podle účastníků' : 'Seskupit podle soutěží'
-              }
               className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
               onClick={() => setOverride(!byCompetition)}
             >
@@ -427,11 +412,11 @@ export function CompetitionHistory({
       {error ? (
         <FormError error={error} />
       ) : fetching ? (
-        <p role="status" className="text-sm text-neutral-11">
-          Načítám...
-        </p>
+        <p className="text-sm text-neutral-11">Načítám...</p>
       ) : data?.competitions?.nodes.length ? (
-        <CompetitionPanelFrame competitions={data.competitions.nodes} />
+        groupCompetitionEvents(data.competitions.nodes).map(({ key, entries }) => (
+          <CompetitionEventContent key={key} entries={entries} cards />
+        ))
       ) : (
         <p className="text-sm text-neutral-11">Žádné přihlášky ani výsledky soutěží.</p>
       )}
@@ -510,10 +495,7 @@ export function CompetitionSuggestions({
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2 py-2">
-        <p
-          role="status"
-          className="whitespace-nowrap text-xs tabular-nums text-neutral-11"
-        >
+        <p className="whitespace-nowrap text-xs tabular-nums text-neutral-11">
           {isPending
             ? 'Načítám…'
             : queryError
@@ -540,7 +522,7 @@ export function CompetitionSuggestions({
             type="button"
             aria-pressed={showMap}
             className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
-            onClick={() => setShowMap((visible) => !visible)}
+            onClick={() => setShowMap((x) => !x)}
           >
             Mapa
           </button>
@@ -549,9 +531,7 @@ export function CompetitionSuggestions({
       {queryError ? (
         <FormError error={queryError} />
       ) : isPending ? (
-        <p role="status" className="text-sm text-neutral-11">
-          Načítám...
-        </p>
+        <p className="text-sm text-neutral-11">Načítám...</p>
       ) : events.length > 0 ? (
         <div className="flex flex-col gap-3">
           {showMap && hasCoordinates && (
@@ -591,17 +571,8 @@ export function CompetitionSuggestions({
             }));
             const competitions = [
               ...Map.groupBy(eventMatches, (x) => x.competition.id).values(),
-            ].toSorted(
-              (a, b) =>
-                compareCategories(
-                  a[0]!.competition.category,
-                  b[0]!.competition.category,
-                ) ||
-                compareNaturalText(
-                  formatCategoryName(a[0]!.competition),
-                  formatCategoryName(b[0]!.competition),
-                ) ||
-                compareText(a[0]!.competition.startDate, b[0]!.competition.startDate),
+            ].toSorted((a, b) =>
+              compareCategories(a[0]!.competition.category, b[0]!.competition.category),
             );
             return (
               <Collapsible.Root key={event.id} asChild>
@@ -619,16 +590,13 @@ export function CompetitionSuggestions({
 
                       <DotSeparated className="flex text-sm text-neutral-11">
                         {[
-                          event.startDate &&
-                            [
-                              formatDateOnly(event.startDate),
-                              event.endDate &&
-                                event.endDate !== event.startDate &&
-                                formatDateOnly(event.endDate),
-                            ]
-                              .filter(Boolean)
-                              .join(' – '),
-                        ]}
+                          event.startDate && formatDateOnly(event.startDate),
+                          event.endDate &&
+                            event.endDate !== event.startDate &&
+                            formatDateOnly(event.endDate),
+                        ]
+                          .filter(Boolean)
+                          .join(' – ')}
                         {event.location || event.city}
                         <span className="font-medium text-accent-11">
                           {formatCount(competitions.length, {
@@ -643,21 +611,17 @@ export function CompetitionSuggestions({
                     <Collapsible.Trigger asChild>
                       <button
                         type="button"
-                        aria-label={`Soutěže: ${event.name}`}
                         className="absolute inset-0 flex w-full cursor-pointer items-center justify-end rounded px-2 text-neutral-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8 [&[data-state=open]>svg]:rotate-180"
                       >
-                        <ChevronDown
-                          className="size-5 transition-transform"
-                          aria-hidden
-                        />
+                        <ChevronDown className="size-5 transition-transform" />
                       </button>
                     </Collapsible.Trigger>
                   </div>
 
                   <Collapsible.Content>
                     <ul className="mt-2 space-y-1 text-sm">
-                      {competitions.map((competitionMatches) => {
-                        const entry = competitionMatches[0]!;
+                      {competitions.map((matches) => {
+                        const entry = matches[0]!;
                         return (
                           <li
                             key={entry.competition.id}
@@ -671,7 +635,7 @@ export function CompetitionSuggestions({
                               {formatCategoryName(entry.competition)}
                             </CompetitionLink>
                             <EligibleCompetitors
-                              competitors={competitionMatches.map((x) => ({
+                              competitors={matches.map((x) => ({
                                 ...x.competitor,
                                 status: x.matchStatus,
                               }))}

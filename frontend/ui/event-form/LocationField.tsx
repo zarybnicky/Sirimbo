@@ -6,7 +6,10 @@ import React from 'react';
 import { useController } from 'react-hook-form';
 import type { EventFormControl } from './types';
 
-export function LocationField({ control, locations }: {
+export function LocationField({
+  control,
+  locations,
+}: {
   control: EventFormControl;
   locations: { id: string; name: string }[];
 }) {
@@ -39,7 +42,6 @@ export function LocationField({ control, locations }: {
             type="button"
             className={buttonCls({ variant: 'outline', size: 'xs' })}
             onClick={() => setEditing(true)}
-            aria-label="Změnit místo konání"
           >
             {locationId === 'other'
               ? locationTextValue

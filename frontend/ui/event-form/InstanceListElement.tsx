@@ -54,7 +54,6 @@ export function InstanceListElement({ control }: { control: EventFormControl }) 
             <button
               type="button"
               className={buttonCls({ size: 'sm', variant: 'outline' })}
-              aria-label={`Odstranit termín ${index + 1}`}
               onClick={() => remove(index)}
             >
               <X />

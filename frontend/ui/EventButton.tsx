@@ -45,9 +45,7 @@ export function EventButton({
         : !trainerIds.some((id) => auth.isMyPerson(id));
 
   const showInlineAttendance =
-    attendance === 'inline' &&
-    event.type === 'GROUP' &&
-    auth.canManageEvent(event);
+    attendance === 'inline' && event.type === 'GROUP' && auth.canManageEvent(event);
 
   // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
   // icon, trainer name(s)/participant name(s) + "..."
@@ -70,8 +68,7 @@ export function EventButton({
             className={cn(
               'group grow flex min-w-0 items-center gap-3 p-2.5 rounded-lg',
               'leading-4 text-sm tabular-nums cursor-pointer appearance-none',
-              event?.type === 'LESSON' &&
-                event.registrationInfo?.canRegister
+              event?.type === 'LESSON' && event.registrationInfo?.canRegister
                 ? 'hover:bg-green-3/80 bg-green-3 text-green-11'
                 : 'hover:bg-accent-4',
             )}
@@ -79,9 +76,7 @@ export function EventButton({
             <div className="text-neutral-11">
               {(showDate ? numericFullFormatter : shortTimeFormatter).format(start)}
             </div>
-            <div
-              className={cn('min-w-0 grow', event.isCancelled ? 'line-through' : '')}
-            >
+            <div className={cn('min-w-0 grow', event.isCancelled ? 'line-through' : '')}>
               {event.name ||
                 (showTrainer ? (
                   `${formatEventType(event.type)}: ${trainers}`
@@ -123,7 +118,7 @@ function InlineAttendanceStats({ stats }: { stats: EventWithTrainerFragment['sta
           'bg-green-3 text-green-11',
         )}
       >
-        <Check className="size-3 shrink-0" aria-hidden="true" />
+        <Check className="size-3 shrink-0" />
         <span>{stats.attended}</span>
       </span>
       <span
@@ -133,7 +128,7 @@ function InlineAttendanceStats({ stats }: { stats: EventWithTrainerFragment['sta
           'bg-danger-3 text-danger-11',
         )}
       >
-        <X className="size-3 shrink-0" aria-hidden="true" />
+        <X className="size-3 shrink-0" />
         <span>{stats.notExcused}</span>
       </span>
       {stats.unknown > 0 && (

@@ -140,9 +140,9 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
       <DefinitionList
         items={{
           ID: tenant.id,
-          'Členové': tenant.memberships.totalCount,
-          'Trenéři': tenant.trainers.totalCount,
-          'Správci': tenant.administrators.totalCount,
+          Členové: tenant.memberships.totalCount,
+          Trenéři: tenant.trainers.totalCount,
+          Správci: tenant.administrators.totalCount,
           'Bankovní účet': tenant.bankAccount || '-',
           Domény: tenant.origins?.join(', ') ?? '-',
           IČO: tenant.czIco || '-',

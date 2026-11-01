@@ -25,6 +25,7 @@ export function OfficialAssignments({
   });
 
   const events = data?.federationEvents?.nodes || [];
+  if (events.length === 0) return null;
 
   return (
     <>

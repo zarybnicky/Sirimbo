@@ -256,10 +256,7 @@ export function Results({
                       colSpan={dances.length * judges.length}
                       className="border-l border-t border-neutral-4 px-2 py-0.5"
                     >
-                      <dl
-                        aria-label="Dance results"
-                        className="flex flex-wrap justify-center gap-x-4"
-                      >
+                      <dl className="flex flex-wrap justify-center gap-x-4">
                         {dances.map((dance, index) => (
                           <div key={dance.key} className="flex gap-1">
                             <dt>{dance.label}</dt>

@@ -596,24 +596,13 @@ function Competitors(props: BrowserProps) {
           );
         })}
       </ListHeader>
-      <div className="overflow-x-auto" aria-busy={isPending}>
+      <div className="overflow-x-auto">
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
               {['competitor', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map(
                 (column) => (
-                  <th
-                    key={column}
-                    scope="col"
-                    className="px-2 py-1"
-                    aria-sort={
-                      filters.sort !== column
-                        ? undefined
-                        : filters.descending
-                          ? 'descending'
-                          : 'ascending'
-                    }
-                  >
+                  <th key={column} scope="col" className="px-2 py-1">
                     {['Typ', 'Věk', 'Poslední soutěž'].includes(column) ? (
                       column
                     ) : (

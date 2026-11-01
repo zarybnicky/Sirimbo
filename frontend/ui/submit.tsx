@@ -32,12 +32,7 @@ export function SubmitButton<T extends FieldValues>({
   ...props
 }: SubmitButtonProps<T>) {
   return control ? (
-    <FormStateSubmitButton
-      {...props}
-      control={control}
-      type={type}
-      onClick={onClick}
-    />
+    <FormStateSubmitButton {...props} control={control} type={type} onClick={onClick} />
   ) : (
     <BaseSubmitButton
       {...props}
@@ -65,11 +60,7 @@ function FormStateSubmitButton<T extends FieldValues>({
         : undefined;
 
   return (
-    <BaseSubmitButton
-      {...props}
-      state={controlState ?? state}
-      disabled={disabled}
-    />
+    <BaseSubmitButton {...props} state={controlState ?? state} disabled={disabled} />
   );
 }
 
@@ -124,12 +115,7 @@ function BaseSubmitButton({
 
 function AnimatedCheck() {
   return (
-    <svg
-      role="presentation"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 130.2 130.2"
-    >
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
       <circle
         className="animate-dash [stroke-dasharray:1000] [stroke-dashoffset:0]"
         fill="none"

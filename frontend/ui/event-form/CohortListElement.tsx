@@ -4,7 +4,11 @@ import { buttonCls } from '@/ui/style';
 import { Plus, X } from 'lucide-react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-export function CohortListElement({ cohorts, onAdd, onRemove }: {
+export function CohortListElement({
+  cohorts,
+  onAdd,
+  onRemove,
+}: {
   cohorts: { id: string; name: string; isArchived: boolean }[];
   onAdd: (cohortId: string) => void;
   onRemove: (cohortId: string) => void;
@@ -51,7 +55,6 @@ export function CohortListElement({ cohorts, onAdd, onRemove }: {
           <button
             type="button"
             className={buttonCls({ size: 'sm', variant: 'outline' })}
-            aria-label="Odebrat skupinu"
             onClick={() => {
               onRemove(cohort.cohortId);
               remove(index);

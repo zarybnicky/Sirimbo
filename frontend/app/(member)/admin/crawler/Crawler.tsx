@@ -1,7 +1,7 @@
 'use client';
 
 import { Table } from '@/ui/Table';
-import { Fragment, useEffect, useState, type ComponentProps } from 'react';
+import { type ComponentProps, Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -57,7 +57,10 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
     search.federation && search.kind ? `${search.federation}:${search.kind}` : null;
   const [overview, refreshOverview] = useQuery({
     query: CrawlerOverviewDocument,
-    variables: { federation: search.federation || undefined, kind: search.kind || undefined },
+    variables: {
+      federation: search.federation || undefined,
+      kind: search.kind || undefined,
+    },
     pause: !!target || pending,
   });
   const targets = usePaginatedQuery({
@@ -80,11 +83,7 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
     <>
       <PageHeader
         title={target || 'Crawler'}
-        breadcrumbs={
-          target
-            ? [{ label: 'Crawler', href: '/admin/crawler' }]
-            : undefined
-        }
+        breadcrumbs={target ? [{ label: 'Crawler', href: '/admin/crawler' }] : undefined}
       />
       <div className="flex flex-wrap items-end gap-3">
         <TextField
@@ -135,7 +134,7 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
           Refresh
         </button>
       </div>
-      <p role="status" className="my-2 text-sm text-neutral-11">
+      <p className="my-2 text-sm text-neutral-11">
         {loading ? 'Loading…' : target ? `${targets.pagination.total} targets` : null}
       </p>
       {error ? (
@@ -268,12 +267,8 @@ function Overview({
         footer={
           <tr className="border-t border-neutral-4">
             <th scope="row">{frontiers.length} total</th>
-            <td>
-              {frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}
-            </td>
-            <td>
-              {frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}
-            </td>
+            <td>{frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}</td>
+            <td>{frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}</td>
             <td colSpan={4} />
           </tr>
         }
@@ -307,9 +302,7 @@ function Overview({
                 <td>{row.processError || ''}</td>
                 <td>{row.processReady || ''}</td>
                 <td>
-                  {row.latest
-                    ? numericFullFormatter.format(new Date(row.latest))
-                    : '-'}
+                  {row.latest ? numericFullFormatter.format(new Date(row.latest)) : '-'}
                 </td>
               </tr>
               {row.failures.length > 0 && (
@@ -333,9 +326,7 @@ function Overview({
                             <td>{failure.count}</td>
                             <td>{failure.failure}</td>
                             <td>{failure.httpStatus}</td>
-                            <td className="break-all">
-                              {failure.errorFingerprint}
-                            </td>
+                            <td className="break-all">{failure.errorFingerprint}</td>
                           </tr>
                         ))}
                       </Table>

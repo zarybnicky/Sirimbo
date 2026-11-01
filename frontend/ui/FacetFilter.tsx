@@ -125,7 +125,9 @@ export function FacetFilter<Value extends string>({
         </span>
         {fieldset}
       </div>
-    ) : fieldset;
+    ) : (
+      fieldset
+    );
   }
 
   return dropdown;

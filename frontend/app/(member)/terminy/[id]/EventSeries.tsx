@@ -227,7 +227,6 @@ function EventRow({
       (!event.isCancelled || stats.attended > 0 || stats.notExcused > 0) ? (
         <Link
           href={`/termin/${event.id}?tab=registrations`}
-          aria-label="Docházka"
           className="col-start-4 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
         >
           {attendanceLabels.map(([status, Icon, className]) => (
