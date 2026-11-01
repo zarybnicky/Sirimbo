@@ -62,7 +62,6 @@
     "qrcode.react": "~4.2.0",
     "react": "19.2.8",
     "react-async-hook": "~4.0.0",
-    "react-data-grid": "7.0.0-beta.61",
     "react-dom": "19.2.8",
     "react-dropzone": "^20.1.2",
     "react-facebook-pixel": "~1.0.4",

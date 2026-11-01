@@ -4,11 +4,11 @@ import { DefinitionList } from '@/ui/DefinitionList';
 import { RichTextView } from '@/ui/RichTextView';
 import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
+import { Table } from '@/ui/Table';
+import { cn } from '@/lib/cn';
+import { cardCls } from '@/ui/style';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
-import { type Column, DataGrid } from 'react-data-grid';
 import { Sheet, type SheetRef } from 'react-modal-sheet';
 import { useQuery } from 'urql';
 import { formatAddress } from '@/ui/format.ts';
@@ -27,40 +27,6 @@ function useMediaQuery(query: string) {
 
   return matches;
 }
-
-const columns: Column<TenantFullFragment>[] = [
-  {
-    key: '__actions',
-    name: '',
-    frozen: true,
-    sortable: false,
-    resizable: false,
-    width: 64,
-    renderCell({ row }) {
-      return (
-        <Dialog>
-          <DialogTrigger.Edit text="" size="md" variant="none" />
-          <DialogContent>
-            <TenantAdminEdit tenant={row} />
-          </DialogContent>
-        </Dialog>
-      );
-    },
-  },
-  { key: 'id', name: 'ID', frozen: true },
-  { key: 'name', name: 'Jméno' },
-  {
-    key: 'memberships',
-    name: 'Členové',
-    renderCell: ({ row }) => row.memberships.totalCount,
-  },
-  { key: 'trainers', name: 'Trenéři', renderCell: ({ row }) => row.trainers.totalCount },
-  {
-    key: 'administrators',
-    name: 'Správci',
-    renderCell: ({ row }) => row.administrators.totalCount,
-  },
-];
 
 export function Tenants() {
   const [{ data, fetching, error }] = useQuery({ query: TenantsFullDocument });
@@ -86,72 +52,72 @@ export function Tenants() {
   const isDesktop = useMediaQuery('(min-width: 1024px)'); // Tailwind lg
 
   return (
-    <div className="col-full-width flex">
-      {fetching && (
-        <div className="flex h-40 items-center justify-center">
-          <Spinner />
-        </div>
-      )}
+    <div className="col-full-width grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]">
+      <Table
+        columns={['ID', 'Jméno', 'Členové', 'Trenéři', 'Správci']}
+        busy={fetching}
+        error={error}
+      >
+        {tenants.map((tenant) => (
+          <tr
+            key={tenant.id}
+            className={cn(
+              'cursor-pointer border-t border-neutral-4 hover:bg-neutral-2',
+              tenant.id === selectedId && 'bg-neutral-3',
+            )}
+            onClick={() => setSelectedId(tenant.id)}
+          >
+            <td>{tenant.id}</td>
+            <th scope="row">
+              <button
+                type="button"
+                className="text-left text-accent-11 underline"
+                aria-pressed={tenant.id === selectedId}
+                onClick={() => setSelectedId(tenant.id)}
+              >
+                {tenant.name}
+              </button>
+            </th>
+            <td>{tenant.memberships.totalCount}</td>
+            <td>{tenant.trainers.totalCount}</td>
+            <td>{tenant.administrators.totalCount}</td>
+          </tr>
+        ))}
+      </Table>
 
-      {!fetching && !error && tenants.length === 0 && (
-        <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-          Nebyly nalezeny žádné kluby.
-        </div>
-      )}
-
-      <FormError error={error} />
-      {!fetching && !error && tenants.length > 0 && (
-        <div className="grid gap-4 lg:grid-cols-[3fr_1fr]">
-          <div className="rounded-md border border-neutral-6 bg-neutral-1 overflow-auto">
-            <DataGrid
-              columns={columns}
-              rows={tenants}
-              rowKeyGetter={(r) => r.id!}
-              defaultColumnOptions={{ resizable: true }}
-              headerRowHeight={44}
-              rowHeight={44}
-              onCellClick={({ row }) => setSelectedId(row.id)}
-              rowClass={(row) => (row.id === selectedId ? 'bg-neutral-2' : undefined)}
-            />
+      <aside className="hidden min-w-0 lg:sticky lg:top-4 lg:block">
+        {selected ? (
+          <TenantCard tenant={selected} />
+        ) : (
+          <div className={cardCls({ className: 'text-sm text-neutral-11' })}>
+            Vyber klub ze seznamu.
           </div>
+        )}
+      </aside>
 
-          <aside className="hidden lg:block">
-            <div className="sticky top-4 space-y-3">
-              {selected ? (
-                <TenantCard tenant={selected} />
-              ) : (
-                <div className="rounded-md border border-neutral-6 bg-neutral-2 p-6 text-sm text-neutral-11">
-                  Vyber klub (TODO: cross club statistics, activity?)
-                </div>
-              )}
-            </div>
-          </aside>
-
-          {!isDesktop && (
-            <Sheet
-              ref={sheetRef}
-              isOpen={!!selected}
-              onClose={() => setSelectedId(null)}
-              snapPoints={snapPoints}
-              initialSnap={1}
+      {!isDesktop && (
+        <Sheet
+          ref={sheetRef}
+          isOpen={!!selected}
+          onClose={() => setSelectedId(null)}
+          snapPoints={snapPoints}
+          initialSnap={1}
+        >
+          <Sheet.Container>
+            <Sheet.Header />
+            <Sheet.Content
+              scrollStyle={{
+                overscrollBehavior: 'contain', // prevents scroll chaining to body
+                WebkitOverflowScrolling: 'touch', // iOS momentum scroll
+                touchAction: 'pan-y', // let it scroll when enabled
+              }}
             >
-              <Sheet.Container>
-                <Sheet.Header />
-                <Sheet.Content
-                  scrollStyle={{
-                    overscrollBehavior: 'contain', // prevents scroll chaining to body
-                    WebkitOverflowScrolling: 'touch', // iOS momentum scroll
-                    touchAction: 'pan-y', // let it scroll when enabled
-                  }}
-                >
-                  {selected && <TenantCard tenant={selected} />}
-                </Sheet.Content>
-              </Sheet.Container>
+              {selected && <TenantCard tenant={selected} />}
+            </Sheet.Content>
+          </Sheet.Container>
 
-              {/* Non-blocking: omit Backdrop entirely */}
-            </Sheet>
-          )}
-        </div>
+          {/* Non-blocking: omit Backdrop entirely */}
+        </Sheet>
       )}
     </div>
   );
@@ -159,21 +125,41 @@ export function Tenants() {
 
 function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
   return (
-    <div className="space-y-3 rounded-lg border border-neutral-6 bg-neutral-2 p-4">
-      <div className="flex items-center justify-between">
-        <div className="text-base font-semibold">{tenant.name}</div>
+    <div className={cardCls({ className: 'min-w-0 space-y-3' })}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-lg font-bold">{tenant.name}</h2>
+        <Dialog>
+          <DialogTrigger.Edit size="sm" />
+          <DialogContent>
+            <TenantAdminEdit tenant={tenant} />
+          </DialogContent>
+        </Dialog>
       </div>
       <RichTextView className="text-sm text-neutral-12" value={tenant.description} />
 
       <DefinitionList
-        className="text-sm text-neutral-12"
         items={{
+          ID: tenant.id,
+          'Členové': tenant.memberships.totalCount,
+          'Trenéři': tenant.trainers.totalCount,
+          'Správci': tenant.administrators.totalCount,
           'Bankovní účet': tenant.bankAccount || '-',
           Domény: tenant.origins?.join(', ') ?? '-',
-          'IČO / DIČ': [tenant.czIco ?? '-', tenant.czDic].filter(Boolean).join(' / '),
+          IČO: tenant.czIco || '-',
+          DIČ: tenant.czDic || '-',
           Adresa: formatAddress(tenant.address) || '-',
         }}
       />
+      <details className="text-sm">
+        <summary className="cursor-pointer font-semibold text-accent-11">
+          Nastavení
+        </summary>
+        <pre className="mt-2 overflow-auto whitespace-pre-wrap wrap-anywhere rounded-sm bg-neutral-3 p-2 text-xs">
+          {typeof tenant.tenantSetting?.settings === 'string'
+            ? tenant.tenantSetting.settings
+            : JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2)}
+        </pre>
+      </details>
     </div>
   );
 }
