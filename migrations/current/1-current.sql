@@ -29,6 +29,7 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 --!include functions/set_event_registration.sql
 --!include functions/event_trainer_lessons_remaining.sql
 --!include functions/can_trainer_edit_event.sql
+--!include functions/tg_event__refresh_manager_person_ids.sql
 --!include functions/trainer_group_attendance_completion.sql
 --!include functions/event_trainers.sql
 --!include functions/event_approx_price.sql

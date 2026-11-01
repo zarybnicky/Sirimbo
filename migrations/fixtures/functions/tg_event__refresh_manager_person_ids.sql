@@ -25,15 +25,19 @@ drop function if exists app_private.refresh_event_manager_person_ids;
 create function app_private.refresh_event_manager_person_ids(p_event_id bigint)
   returns void language sql security definer
   set search_path = pg_catalog, public, pg_temp as $$
-  with recursive affected as (
-    select id from event where id = p_event_id
-    union all
-    select child.id
-    from event child
-    join affected parent on child.parent_id = parent.id
-  ), desired as (
+  with recursive desired as (
     select id, app_private.event_manager_person_ids(id) as person_ids
-    from affected
+    from event where id = p_event_id
+    union all
+    select child.id, array(
+      select distinct person_id
+      from unnest(parent.person_ids || array(
+        select person_id from event_trainer where event_id = child.id
+      )) person_id
+      order by person_id
+    )
+    from event child
+    join desired parent on child.parent_id = parent.id
   )
   update event instance
   set manager_person_ids = desired.person_ids
