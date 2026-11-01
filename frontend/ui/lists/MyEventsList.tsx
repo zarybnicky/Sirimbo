@@ -1,7 +1,10 @@
 import { CalendarViews } from '@/calendar/CalendarViews';
 import type { CalendarCompetitionEvent } from '@/calendar/types';
-import { eventTypes } from '@/calendar/state';
-import { useCalendarData, type CalendarFilters } from '@/calendar/useCalendarData';
+import {
+  useCalendarData,
+  calendarTypes,
+  type CalendarFilters,
+} from '@/calendar/useCalendarData';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { useAuth } from '@/lib/auth';
@@ -16,12 +19,12 @@ import { CreateEventForm } from '@/ui/event-form/EventForms';
 import { Plus } from 'lucide-react';
 
 const myEventsFilters: CalendarFilters = {
-  my: true,
   free: false,
-  participants: [],
+  participants: { onlyMine: true },
   trainers: [],
   location: [],
-  types: [...eventTypes],
+  types: calendarTypes,
+  relevantOnly: false,
   columns: null,
 };
 

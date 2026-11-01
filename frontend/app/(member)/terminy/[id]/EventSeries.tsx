@@ -2,7 +2,6 @@
 
 import { DotSeparated } from '@/ui/DotSeparated';
 
-import type { AttendanceType } from '@/graphql';
 import { EventSeriesDocument, type EventSeriesQuery } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { useActions } from '@/lib/actions';
@@ -18,17 +17,16 @@ import {
   numericDateWithYearFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
-import { Check, HelpCircle, type LucideIcon, X } from 'lucide-react';
+import { Check, HelpCircle, X } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
 
-const attendanceLabels: Record<AttendanceType, { icon: LucideIcon; className: string }> =
-  {
-    ATTENDED: { icon: Check, className: 'bg-green-3 text-green-11' },
-    UNKNOWN: { icon: HelpCircle, className: 'bg-neutral-2 text-neutral-11' },
-    NOT_EXCUSED: { icon: X, className: 'bg-danger-3 text-danger-11' },
-  };
+const attendanceLabels = [
+  ['attended', Check, 'bg-green-3 text-green-11'],
+  ['unknown', HelpCircle, 'bg-neutral-2 text-neutral-11'],
+  ['notExcused', X, 'bg-danger-3 text-danger-11'],
+] as const;
 
 type SeriesEvent = NonNullable<EventSeriesQuery['eventSeries']>['eventsList'][number];
 type Detail = {
@@ -187,8 +185,7 @@ function EventRow({
       ? [{ name: common[i]!.name, key: `missing:${i}`, label: missing }]
       : [];
   });
-  const stats =
-    typeof event.stats === 'string' ? JSON.parse(event.stats) : event.stats;
+  const { stats } = event;
 
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4">
@@ -227,15 +224,13 @@ function EventRow({
       )}
 
       {showAttendance &&
-      (!event.isCancelled ||
-        (stats?.ATTENDED ?? 0) > 0 ||
-        (stats?.NOT_EXCUSED ?? 0) > 0) ? (
+      (!event.isCancelled || stats.attended > 0 || stats.notExcused > 0) ? (
         <Link
           href={`/termin/${event.id}?tab=registrations`}
           aria-label="Docházka"
           className="col-start-4 row-start-1 inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums"
         >
-          {Object.entries(attendanceLabels).map(([status, { icon: Icon, className }]) => (
+          {attendanceLabels.map(([status, Icon, className]) => (
             <span
               key={status}
               className={cn(
@@ -244,7 +239,7 @@ function EventRow({
               )}
             >
               <Icon className="size-3 shrink-0" />
-              <span>{stats?.[status] ?? 0}</span>
+              <span>{stats[status]}</span>
             </span>
           ))}
         </Link>

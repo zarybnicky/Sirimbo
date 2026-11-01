@@ -4678,7 +4678,7 @@ export type Event = {
   seriesInfo: Maybe<SeriesInfo>;
   shareToken: Maybe<Scalars['String']['output']>;
   since: Scalars['Datetime']['output'];
-  stats: Scalars['JSON']['output'];
+  stats: EventStat;
   summary: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventTargetCohort`. */
   targetCohortsList: Array<EventTargetCohort>;
@@ -4840,7 +4840,7 @@ export type EventCondition = {
   overlaps?: InputMaybe<EventRangeCondition>;
   /** Checks for equality with the object’s `parentId` field. */
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
-  participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  participant?: InputMaybe<CompetitionParticipantCondition>;
   /** Only top-level events, the viewer’s events, and children of the viewer’s events. */
   relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `seriesId` field. */
@@ -5025,7 +5025,6 @@ export type EventPatch = {
   range?: InputMaybe<DatetimeRangeInput>;
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
-  stats?: InputMaybe<Scalars['JSON']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<EventType>;
@@ -5142,6 +5141,7 @@ export type EventRegistrationCondition = {
   note?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `parentRegistrationId` field. */
   parentRegistrationId?: InputMaybe<Scalars['BigInt']['input']>;
+  participant?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `registrationStatus` field. */
@@ -5347,6 +5347,14 @@ export type EventSeriesPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventStat = {
+  __typename?: 'EventStat';
+  attended: Scalars['Int']['output'];
+  notExcused: Scalars['Int']['output'];
+  total: Scalars['Int']['output'];
+  unknown: Scalars['Int']['output'];
 };
 
 export type EventTargetCohort = {
@@ -13734,6 +13742,7 @@ export type GraphCacheKeysConfig = {
   EventSeries?: (data: WithTypename<EventSeries>) => null | string,
   EventSeriesConnection?: (data: WithTypename<EventSeriesConnection>) => null | string,
   EventSeriesEdge?: (data: WithTypename<EventSeriesEdge>) => null | string,
+  EventStat?: (data: WithTypename<EventStat>) => null | string,
   EventTargetCohort?: (data: WithTypename<EventTargetCohort>) => null | string,
   EventTrainer?: (data: WithTypename<EventTrainer>) => null | string,
   Federation?: (data: WithTypename<Federation>) => null | string,
@@ -15023,7 +15032,7 @@ export type GraphCacheResolvers = {
     seriesInfo?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<SeriesInfo> | string>,
     shareToken?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String']['output'] | string>,
     since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime']['output'] | string>,
-    stats?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['JSON']['output'] | string>,
+    stats?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<EventStat> | string>,
     summary?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String']['output'] | string>,
     targetCohortsList?: GraphCacheResolver<WithTypename<Event>, EventTargetCohortsListArgs, Array<WithTypename<EventTargetCohort> | string>>,
     tenantId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -15146,6 +15155,12 @@ export type GraphCacheResolvers = {
   EventSeriesEdge?: {
     cursor?: GraphCacheResolver<WithTypename<EventSeriesEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<EventSeriesEdge>, Record<string, never>, WithTypename<EventSeries> | string>
+  },
+  EventStat?: {
+    attended?: GraphCacheResolver<WithTypename<EventStat>, Record<string, never>, Scalars['Int']['output'] | string>,
+    notExcused?: GraphCacheResolver<WithTypename<EventStat>, Record<string, never>, Scalars['Int']['output'] | string>,
+    total?: GraphCacheResolver<WithTypename<EventStat>, Record<string, never>, Scalars['Int']['output'] | string>,
+    unknown?: GraphCacheResolver<WithTypename<EventStat>, Record<string, never>, Scalars['Int']['output'] | string>
   },
   EventTargetCohort?: {
     cohort?: GraphCacheResolver<WithTypename<EventTargetCohort>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -17764,6 +17779,12 @@ export type GraphCacheUpdaters = {
   EventSeriesEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeriesEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSeriesEdge>>, Record<string, never>>
+  },
+  EventStat?: {
+    attended?: GraphCacheUpdateResolver<Maybe<WithTypename<EventStat>>, Record<string, never>>,
+    notExcused?: GraphCacheUpdateResolver<Maybe<WithTypename<EventStat>>, Record<string, never>>,
+    total?: GraphCacheUpdateResolver<Maybe<WithTypename<EventStat>>, Record<string, never>>,
+    unknown?: GraphCacheUpdateResolver<Maybe<WithTypename<EventStat>>, Record<string, never>>
   },
   EventTargetCohort?: {
     cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<EventTargetCohort>>, Record<string, never>>,

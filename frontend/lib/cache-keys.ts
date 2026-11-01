@@ -20,6 +20,7 @@ export const cacheKeyFields = {
   EventConflict: null,
   EventFacetsRecord: null,
   EventRegistrationInfo: null,
+  EventStat: null,
   Federation: ['code'],
   FederationCoupleAgeRule: ['ageGroupCode'],
   FederationCompetitorFacetsRecord: null,

@@ -223,8 +223,9 @@ INSERT INTO event_registration (
 VALUES (1000, 9900099, 2900001, 'manager', 'attended');
 
 SELECT tap.ok(
-  (SELECT stats->>'TOTAL' = '0' FROM event WHERE id = 9900001)
-    AND (SELECT stats->>'TOTAL' = '1' FROM event WHERE id = 9900002)
+  (SELECT stats = row(0, 0, 0, 0)::event_stats FROM event WHERE id = 9900001)
+    AND (SELECT stats = row(1, 1, 0, 0)::event_stats FROM event WHERE id = 9900002)
+    AND (SELECT stats = row(1, 0, 1, 0)::event_stats FROM event WHERE id = 9900099)
     AND (
       SELECT event_registration_last_attended(registration)
       FROM event_registration registration
@@ -730,7 +731,7 @@ SELECT tap.ok(
       AND capacity_unit = 'registrations'
       AND is_locked
       AND enable_notes
-      AND stats->>'TOTAL' = '2'
+      AND (stats).total = 2
       AND series_id is not null
   ) AND EXISTS (
     SELECT 1

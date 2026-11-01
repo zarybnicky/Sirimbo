@@ -20,7 +20,12 @@ fragment Event on Event {
   isPublic
   hasPublicDetails
   isCancelled
-  stats
+  stats {
+    total
+    unknown
+    attended
+    notExcused
+  }
 }
 
 query EventSeries($id: BigInt!) {
@@ -452,19 +457,24 @@ query CalendarData(
   $types: [EventType!]
   $trainerIds: [BigInt]
   $participantIds: [BigInt!]
+  $participant: CompetitionParticipantCondition!
+  $membership: PersonMembershipCondition! = { state: CURRENT }
   $onlyMine: Boolean
   $relevantOnly: Boolean
   $parentId: BigInt
   $locationIds: [BigInt]
   $canRegister: Boolean
   $withParticipantOptions: Boolean! = false
+  $withAttendance: Boolean! = false
+  $withCompetitions: Boolean! = true
+  $withBirthdays: Boolean! = true
 ) {
   eventsList(
     condition: {
       overlaps: { start: $start, end: $end }
       types: $types
       trainerIds: $trainerIds
-      participantIds: $participantIds
+      participant: $participant
       onlyMine: $onlyMine
       relevantOnly: $relevantOnly
       parentId: $parentId
@@ -474,23 +484,34 @@ query CalendarData(
     orderBy: SINCE_ASC
   ) {
     ...EventWithTrainer
+    attendance: registrationsList(
+      condition: {
+        registrationStatus: ACTIVE
+        participant: $participant
+      }
+      orderBy: PRIMARY_KEY_ASC
+    ) @include(if: $withAttendance) {
+      id
+      status
+      person { id name firstName lastName }
+    }
   }
   competitions(
     first: 300
     condition: {
       date: { since: $since, until: $until }
-      competitor: { personIds: $participantIds, onlyMine: $onlyMine }
+      competitor: $participant
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  ) {
+  ) @include(if: $withCompetitions) {
     nodes {
       ...Competition
       entries: entriesList(
-        condition: { competitor: { personIds: $participantIds, onlyMine: $onlyMine } }
+        condition: { competitor: $participant }
         orderBy: COMPETITOR_ID_ASC
       ) { ...CompetitionEntry }
       results: resultsList(
-        condition: { competitor: { personIds: $participantIds, onlyMine: $onlyMine } }
+        condition: { competitor: $participant }
         orderBy: COMPETITOR_ID_ASC
       ) { ...CompetitionResult }
     }
@@ -499,12 +520,12 @@ query CalendarData(
     first: 300
     condition: {
       date: { since: $since, until: $until }
-      official: { ids: $participantIds, onlyMine: $onlyMine }
+      official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
-  ) {
+  ) @include(if: $withCompetitions) {
     nodes {
       id federation externalId name startDate endDate location city
-      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine } }) {
+      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership } }) {
         nodes {
           eventId
           personId
@@ -519,13 +540,13 @@ query CalendarData(
     first: 300
     condition: {
       date: { since: $since, until: $until }
-      official: { ids: $participantIds, onlyMine: $onlyMine }
+      official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
-  ) {
+  ) @include(if: $withCompetitions) {
     nodes {
       id federation startDate
       event { id externalId name startDate endDate location city }
-      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine } }) {
+      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership } }) {
         nodes {
           competitionId
           personId
@@ -538,12 +559,12 @@ query CalendarData(
   birthdays: people(
     condition: {
       birthday: { since: $since, until: $until }
-      membership: { state: CURRENT }
+      membership: $membership
       ids: $participantIds
       onlyMine: $onlyMine
     }
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
-  ) {
+  ) @include(if: $withBirthdays) {
     nodes {
       id name firstName lastName
       date: birthday(since: $since)

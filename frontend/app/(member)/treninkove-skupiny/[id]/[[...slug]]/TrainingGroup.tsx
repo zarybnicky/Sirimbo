@@ -25,7 +25,7 @@ import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
 import { isTruthy } from '@/lib/truthyFilter';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
-import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { ActivityList } from '@/ui/ActivityList';
 import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
@@ -106,7 +106,7 @@ export function TrainingGroup({
             <PeopleAccessOverview cohortId={cohort.id} />
           </Tab>
           <Tab id="activity" title="Aktivita">
-            <ActivityTimeline cohortId={cohort.id} />
+            <ActivityList cohortId={cohort.id} />
           </Tab>
         </TabMenu>
       )}

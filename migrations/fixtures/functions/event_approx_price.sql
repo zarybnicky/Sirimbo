@@ -6,7 +6,7 @@ create or replace function event_approx_price(v_instance event)
 as $$
   with stats as (
     select
-      (v_instance.stats->>'TOTAL')::integer as num_participants,
+      (v_instance.stats).total as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
     where v_instance.type = 'lesson'
   )

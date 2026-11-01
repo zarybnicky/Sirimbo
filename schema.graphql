@@ -5869,7 +5869,7 @@ type Event {
   seriesInfo: SeriesInfo
   shareToken: String
   since: Datetime!
-  stats: JSON!
+  stats: EventStat!
   summary: String
 
   """Reads and enables pagination through a set of `EventTargetCohort`."""
@@ -5975,7 +5975,7 @@ input EventCondition {
 
   """Checks for equality with the object’s `parentId` field."""
   parentId: BigInt
-  participantIds: [BigInt]
+  participant: CompetitionParticipantCondition
 
   """
   Only top-level events, the viewer’s events, and children of the viewer’s events.
@@ -6184,7 +6184,6 @@ input EventPatch {
   range: DatetimeRangeInput
   seriesId: BigInt
   since: Datetime
-  stats: JSON
   summary: String
   tenantId: BigInt
   type: EventType
@@ -6349,6 +6348,7 @@ input EventRegistrationCondition {
 
   """Checks for equality with the object’s `parentRegistrationId` field."""
   parentRegistrationId: BigInt
+  participant: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
@@ -6586,6 +6586,13 @@ input EventSeriesPatch {
   name: String
   tenantId: BigInt
   updatedAt: Datetime
+}
+
+type EventStat {
+  attended: Int!
+  notExcused: Int!
+  total: Int!
+  unknown: Int!
 }
 
 type EventTargetCohort {

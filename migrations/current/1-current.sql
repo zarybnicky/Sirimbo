@@ -22,6 +22,38 @@ drop function if exists event_instance_trainers;
 drop function if exists app_private.event_instance_trainers_at;
 drop function if exists app_private.event_trainers_at(event, timestamptz);
 
+do $$
+begin
+  if to_regtype('public.event_stats') is null then
+    create type event_stats as (
+      total integer,
+      unknown integer,
+      attended integer,
+      not_excused integer
+    );
+  end if;
+
+  if exists (select from pg_attribute
+    where attrelid = 'event'::regclass and attname = 'stats' and atttypid = 'jsonb'::regtype) then
+    alter table event alter column stats drop default;
+    alter table event alter column stats type event_stats using row(
+      coalesce((stats->>'TOTAL')::integer, 0),
+      coalesce((stats->>'UNKNOWN')::integer, 0),
+      coalesce((stats->>'ATTENDED')::integer, 0),
+      coalesce((stats->>'NOT_EXCUSED')::integer, 0)
+    )::event_stats;
+  end if;
+end $$;
+
+alter table event alter column stats set default row(0, 0, 0, 0)::event_stats;
+comment on column event.stats is
+  '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+comment on column event_stats.total is '@notNull';
+comment on column event_stats.unknown is '@notNull';
+comment on column event_stats.attended is '@notNull';
+comment on column event_stats.not_excused is '@notNull';
+
+--!include functions/event_stats.sql
 --!include functions/event_registration_info.sql
 --!include functions/event_facets.sql
 --!include functions/activity_timeline.sql

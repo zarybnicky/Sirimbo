@@ -100,8 +100,6 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
       const month = byKey.get(toMonthKey(since));
       if (!month) continue;
 
-      const stats =
-        typeof event.stats === 'string' ? JSON.parse(event.stats) : event.stats;
       const row: ReportRow = {
         event: event,
         title: formatEventName(event) || '-',
@@ -110,14 +108,8 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({ i
           0,
           Math.round((until.getTime() - since.getTime()) / 60_000),
         ),
-        attended:
-          stats && typeof stats === 'object' && typeof stats.ATTENDED === 'number'
-            ? stats.ATTENDED
-            : 0,
-        total:
-          stats && typeof stats === 'object' && typeof stats.TOTAL === 'number'
-            ? stats.TOTAL
-            : 0,
+        attended: event.stats.attended,
+        total: event.stats.total,
       };
 
       month[event.type === 'GROUP' ? 'groupRows' : 'privateRows'].push(row);

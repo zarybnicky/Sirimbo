@@ -65,7 +65,7 @@ const plugins: GraphileConfig.Plugin[] = [
       },
     ),
   ),
-  ...(['types', 'trainerIds', 'participantIds', 'locationIds'] as const).map((field) =>
+  ...(['types', 'trainerIds', 'locationIds'] as const).map((field) =>
     addPgTableCondition(
       { schemaName: 'public', tableName: 'event' },
       field,
@@ -86,9 +86,8 @@ const plugins: GraphileConfig.Plugin[] = [
         const ids = sqlValueWithCodec(values, LIST_TYPES.bigint);
         if (field === 'locationIds') return sql`${row}.location_id = any(${ids})`;
         return sql`exists (
-          select 1 from ${sql.identifier('public', field === 'trainerIds' ? 'event_trainer' : 'event_registration')} p
+          select 1 from public.event_trainer p
           where p.event_id = ${row}.id and p.person_id = any(${ids})
-            ${field === 'participantIds' ? sql`and p.registration_status = 'active'` : sql.blank}
         )`;
       },
     ),

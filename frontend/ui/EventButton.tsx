@@ -113,13 +113,7 @@ export function EventButton({
   );
 }
 
-type AttendanceStats = Record<'TOTAL' | 'UNKNOWN' | 'ATTENDED' | 'NOT_EXCUSED', number>;
-
-function InlineAttendanceStats({ stats: input }: { stats: any }) {
-  const parsed = typeof input === 'string' ? JSON.parse(input) : input;
-  const stats =
-    parsed && typeof parsed === 'object' ? (parsed as Partial<AttendanceStats>) : {};
-
+function InlineAttendanceStats({ stats }: { stats: EventWithTrainerFragment['stats'] }) {
   return (
     <div className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums">
       <span
@@ -130,7 +124,7 @@ function InlineAttendanceStats({ stats: input }: { stats: any }) {
         )}
       >
         <Check className="size-3 shrink-0" aria-hidden="true" />
-        <span>{stats.ATTENDED ?? 0}</span>
+        <span>{stats.attended}</span>
       </span>
       <span
         title="nezúčastnilo se"
@@ -140,9 +134,9 @@ function InlineAttendanceStats({ stats: input }: { stats: any }) {
         )}
       >
         <X className="size-3 shrink-0" aria-hidden="true" />
-        <span>{stats.NOT_EXCUSED ?? 0}</span>
+        <span>{stats.notExcused}</span>
       </span>
-      {typeof stats.UNKNOWN === 'number' && stats.UNKNOWN > 0 && (
+      {stats.unknown > 0 && (
         <span
           title="nezadáno"
           className={cn(
@@ -151,7 +145,7 @@ function InlineAttendanceStats({ stats: input }: { stats: any }) {
           )}
         >
           <HelpCircle className="size-3 shrink-0" aria-hidden="true" />
-          <span>{stats.UNKNOWN}</span>
+          <span>{stats.unknown}</span>
         </span>
       )}
     </div>

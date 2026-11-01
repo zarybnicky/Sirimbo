@@ -7,7 +7,7 @@ import { PersonMembershipsDocument, UpdatePersonDocument } from '@/graphql/Perso
 import { useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { useAuth } from '@/lib/auth';
-import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { ActivityList } from '@/ui/ActivityList';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
 import { FederationLink } from '@/ui/federation-links';
@@ -221,7 +221,7 @@ export const PersonView = React.memo(function PersonView({
         {isAdminOrCurrentPerson && (
           <>
             <Tab id="activity" title="Aktivita">
-              <ActivityTimeline personIds={personIds} />
+              <ActivityList personIds={personIds} />
             </Tab>
             <Tab id="payment" title="Platby">
               <PersonPaymentsView id={id} />

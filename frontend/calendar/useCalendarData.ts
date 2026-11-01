@@ -4,7 +4,7 @@ import {
   type CompetitionOfficialAssignment,
 } from '@/ui/Competitions';
 import { format } from 'date-fns';
-import type { EventType } from '@/graphql';
+import type { CompetitionParticipantCondition } from '@/graphql';
 import { CalendarDataDocument, type CalendarDataQueryVariables } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
@@ -25,11 +25,18 @@ import { useAuth } from '@/lib/auth';
 import { formatEventType } from '@/ui/format';
 
 export type CalendarGroupBy = 'none' | 'trainer' | 'room';
+export const calendarTypeOptions = [
+  ...allEventTypes.map((value) => ({ value, label: formatEventType(value) })),
+  { value: 'COMPETITION', label: 'Soutěže' },
+  { value: 'BIRTHDAY', label: 'Narozeniny' },
+] as const;
+export const calendarTypes = calendarTypeOptions.map(({ value }) => value);
+
 export type CalendarFilters = {
-  participants: string[];
+  participants: CompetitionParticipantCondition;
   trainers: string[];
-  types: EventType[];
-  my: boolean;
+  types: (typeof calendarTypes)[number][];
+  relevantOnly: boolean;
   free: boolean;
   location: string[];
   columns: 'all' | null;
@@ -69,6 +76,7 @@ export function useCalendarData({
   parentId,
   availableTrainers,
   withFacets = true,
+  withAttendance = false,
 }: {
   view: CalendarView;
   date: Date;
@@ -76,10 +84,11 @@ export function useCalendarData({
   parentId?: string;
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
+  withAttendance?: boolean;
 }) {
   const auth = useAuth();
   const groupBy = useAtomValue(groupByAtom);
-  const onlyMine = auth.isLoggedIn && filters.my;
+  const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
   const client = useClient();
   const range = React.useMemo(() => view.range(date), [view, date]);
@@ -87,20 +96,30 @@ export function useCalendarData({
     ? filters.trainers.filter((id) => availableTrainers.some((t) => t.id === id))
     : filters.trainers;
 
-  const [{ data, fetching, operation }] = useQuery({
+  const [{ data, fetching, error, operation }] = useQuery({
     query: CalendarDataDocument,
     variables: prepareVariables(range, {
       trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-      participantIds: filters.participants.length > 0 ? filters.participants : undefined,
+      participant: { ...filters.participants, onlyMine },
+      participantIds: filters.participants.personIds,
+      membership: {
+        state: 'CURRENT',
+        inCohorts: filters.participants.cohortId
+          ? [filters.participants.cohortId]
+          : undefined,
+      },
       locationIds: filters.location.length > 0 ? filters.location : undefined,
-      types: filters.free
-        ? filters.types.filter((type) => type !== 'GROUP')
-        : filters.types,
+      types: allEventTypes.filter(
+        (type) => filters.types.includes(type) && (!filters.free || type !== 'GROUP'),
+      ),
       canRegister: filters.free ? true : undefined,
       onlyMine,
-      relevantOnly: !parentId && filters.location.length === 0,
+      relevantOnly: filters.relevantOnly,
       parentId,
       withFacets,
+      withAttendance,
+      withCompetitions: filters.types.includes('COMPETITION'),
+      withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
   });
@@ -142,7 +161,11 @@ export function useCalendarData({
     });
     const filterOptions = withFacets
       ? {
-          types: allEventTypes.map((type) => option('type', type, formatEventType(type))),
+          types: calendarTypeOptions.map(({ value, label }) =>
+            value === 'COMPETITION' || value === 'BIRTHDAY'
+              ? { value, label }
+              : option('type', value, label),
+          ),
           trainers: trainers
             .filter(
               ({ id }) =>
@@ -154,12 +177,14 @@ export function useCalendarData({
             .map(({ id, name }) => option('trainer', id, name)),
           participants: (data?.people?.nodes ?? [])
             .filter(
-              ({ id }) => !!counts.participant?.[id] || filters.participants.includes(id),
+              ({ id }) =>
+                !!counts.participant?.[id] ||
+                filters.participants.personIds?.includes(id),
             )
             .toSorted(
               (a, b) =>
-                Number(filters.participants.includes(b.id)) -
-                Number(filters.participants.includes(a.id)),
+                Number(filters.participants.personIds?.includes(b.id) ?? false) -
+                Number(filters.participants.personIds?.includes(a.id) ?? false),
             )
             .map(({ id, name }) => option('participant', id, name)),
           locations: (data?.tenant?.locationsList ?? [])
@@ -284,6 +309,7 @@ export function useCalendarData({
       calendarEvents,
       competitions,
       fetching,
+      error,
       filterOptions,
       resources: [...resources.values()]
         .filter(
@@ -306,5 +332,6 @@ export function useCalendarData({
     operation,
     range,
     fetching,
+    error,
   ]);
 }

@@ -23,29 +23,27 @@ declare global {
   }
 }
 
-function participantPredicate(
+function personPredicate(
   column: SQL,
-  scope?: ParticipantCondition | null,
+  { personIds, onlyMine, coupleId, cohortId }: ParticipantCondition,
 ): SQL | null {
-  if (scope == null) return null;
-  const { personIds, onlyMine, coupleId, cohortId } = scope;
   if (personIds?.length === 0) return sql`false`;
 
   const people = [];
   if (onlyMine)
     people.push(
-      sql`link.person_id = any((select public.current_person_ids())::bigint[])`,
+      sql`${column} = any((select public.current_person_ids())::bigint[])`,
     );
   if (personIds != null)
     people.push(
-      sql`link.person_id in (${sql.join(
+      sql`${column} in (${sql.join(
         personIds.map((id) => sqlValueWithCodec(id, TYPES.bigint)),
         ', ',
       )})`,
     );
   if (personIds == null && coupleId == null && !onlyMine)
     people.push(
-      sql`link.person_id in (
+      sql`${column} in (
         select person_id from public.current_tenant_membership
         union all
         select person_id from public.current_tenant_trainer
@@ -54,26 +52,35 @@ function participantPredicate(
       )`,
     );
   if (cohortId != null)
-    people.push(sql`link.person_id in (
+    people.push(sql`${column} in (
       select person_id from public.current_cohort_membership
       where cohort_id = ${sqlValueWithCodec(cohortId, TYPES.bigint)}
     )`);
 
+  return people.length ? sql`(${sql.join(people, ' and ')})` : null;
+}
+
+function participantPredicate(
+  column: SQL,
+  scope?: ParticipantCondition | null,
+): SQL | null {
+  if (scope == null) return null;
+  const people = personPredicate(sql`link.person_id`, scope);
   // Evaluate each scope once; array predicates push into both UNION branches.
   const predicates = [];
-  if (people.length)
+  if (people)
     predicates.push(sql`${column} = any(array(
       select cc.competitor_id
       from public.person_federation_link link
       join federated.person fp
         on (fp.federation, fp.external_id) = (link.federation, link.external_id)
       join federated.competitor_component cc on cc.person_id = fp.id
-      where ${sql.join(people, ' and ')}
+      where ${people}
     ))`);
-  if (coupleId != null)
+  if (scope.coupleId != null)
     predicates.push(sql`${column} = any(array(
       select competitor_id from public.couple_federation_link
-      where couple_id = ${sqlValueWithCodec(coupleId, TYPES.bigint)}
+      where couple_id = ${sqlValueWithCodec(scope.coupleId, TYPES.bigint)}
     ))`);
   return predicates.length ? sql`(${sql.join(predicates, ' and ')})` : null;
 }
@@ -85,6 +92,19 @@ function datePredicate(column: SQL, date?: DateCondition | null): SQL | null {
   if (date?.until != null)
     predicates.push(sql`${column} < ${sqlValueWithCodec(date.until, TYPES.date)}`);
   return predicates.length ? sql`(${sql.join(predicates, ' and ')})` : null;
+}
+
+function registrationPredicate(row: SQL, scope: ParticipantCondition): SQL {
+  const predicates = [personPredicate(sql`${row}.person_id`, scope)];
+  if (scope.coupleId != null) {
+    const coupleId = sqlValueWithCodec(scope.coupleId, TYPES.bigint);
+    predicates.push(sql`(${row}.couple_id = ${coupleId}
+      or ${row}.parent_registration_id in (
+        select id from public.event_registration where couple_id = ${coupleId}
+      ))`);
+  }
+  const filters = predicates.filter((predicate) => predicate !== null);
+  return filters.length ? sql`(${sql.join(filters, ' and ')})` : sql.true;
 }
 
 const plugins: GraphileConfig.Plugin[] = [
@@ -103,6 +123,37 @@ const plugins: GraphileConfig.Plugin[] = [
       }
     `,
   }),
+  addPgTableCondition(
+    { schemaName: 'public', tableName: 'event_registration' },
+    'participant',
+    (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
+    (value, { sqlTableAlias: row }) => value == null
+      ? null : registrationPredicate(row, value as ParticipantCondition),
+  ),
+  addPgTableCondition(
+    { schemaName: 'public', tableName: 'event' },
+    'participant',
+    (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
+    (value, { sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const scope = value as ParticipantCondition;
+      const { personIds, coupleId, cohortId, onlyMine } = scope;
+      if (personIds == null && coupleId == null && cohortId == null && !onlyMine) return null;
+      const registration = sql.identifier(Symbol('registration'));
+      const registered = sql`exists (select 1 from public.event_registration ${registration}
+        where ${registration}.event_id = ${row}.id
+          and ${registration}.registration_status = 'active'
+          and ${registrationPredicate(registration, scope)})`;
+      if (!onlyMine || coupleId != null) return registered;
+      // Mine also includes the viewer's trainer assignments.
+      const trainer = sql.identifier(Symbol('trainer'));
+      return sql`(${registered} or exists (
+        select 1 from public.event_trainer ${trainer}
+        where ${trainer}.event_id = ${row}.id
+          and ${personPredicate(sql`${trainer}.person_id`, scope)!}
+      ))`;
+    },
+  ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition' },
     'competitor',

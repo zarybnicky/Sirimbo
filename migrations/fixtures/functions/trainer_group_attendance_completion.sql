@@ -22,8 +22,8 @@ create or replace function trainer_group_attendance_completion(
   with attendance_stats as (
     select
       trainer.person_id,
-      coalesce((instance.stats->>'TOTAL')::integer, 0) as attendance_count,
-      coalesce((instance.stats->>'UNKNOWN')::integer, 0) as unknown_count
+      (instance.stats).total as attendance_count,
+      (instance.stats).unknown as unknown_count
     from event instance
     join event_trainer trainer on trainer.event_id = instance.id
     where instance.tenant_id = current_tenant_id()

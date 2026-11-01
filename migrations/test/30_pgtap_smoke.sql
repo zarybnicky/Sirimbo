@@ -70,7 +70,7 @@ SELECT tap.is(
 );
 
 UPDATE event SET since = now() - interval '1 day', until = now() - interval '23 hours',
-  type = 'lesson', stats = '{"TOTAL": 2}'::jsonb
+  type = 'lesson', stats = row(2, 2, 0, 0)::event_stats
 WHERE id = -3001;
 
 SELECT tap.is(

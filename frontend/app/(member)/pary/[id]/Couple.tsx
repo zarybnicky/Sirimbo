@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useMutation, useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
-import { ActivityTimeline } from '@/ui/ActivityTimeline';
+import { ActivityList } from '@/ui/ActivityList';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { FederationLink } from '@/ui/federation-links';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
@@ -102,7 +102,7 @@ export function Couple({ id }: { id: string }) {
 
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="activity" title="Aktivita">
-          <ActivityTimeline personIds={personIds} />
+          <ActivityList personIds={personIds} />
         </Tab>
 
         <Tab id="fed" title="Výsledky">

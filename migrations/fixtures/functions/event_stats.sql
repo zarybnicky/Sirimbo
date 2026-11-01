@@ -14,12 +14,12 @@ as $$
   update event instance
   set stats = actual.stats
   from (
-    select jsonb_build_object(
-      'TOTAL', count(*)::int,
-      'UNKNOWN', count(*) filter (where status = 'unknown')::int,
-      'ATTENDED', count(*) filter (where status = 'attended')::int,
-      'NOT_EXCUSED', count(*) filter (where status = 'not-excused')::int
-    ) as stats
+    select row(
+      count(*)::int,
+      count(*) filter (where status = 'unknown')::int,
+      count(*) filter (where status = 'attended')::int,
+      count(*) filter (where status = 'not-excused')::int
+    )::event_stats as stats
     from event_registration
     where event_id = p_event_id
       and person_id is not null

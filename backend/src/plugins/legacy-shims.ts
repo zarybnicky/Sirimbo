@@ -59,7 +59,7 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
             type: input.onlyType ?? undefined,
             types: input.onlyTypes,
             trainerIds: input.trainerIds,
-            participantIds: input.participantIds,
+            participant: input.participantIds == null ? undefined : { personIds: input.participantIds },
             locationIds: input.locationIds,
             parentId: input.parentId ?? undefined,
             onlyMine: input.scope === 'MINE' ||

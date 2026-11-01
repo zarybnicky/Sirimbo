@@ -9,7 +9,7 @@ import { GroupByPicker } from '@/calendar/GroupByPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { defaultsFromSlot, type CreateEventDefaults } from '@/calendar/eventDefaults';
-import { useCalendarData } from '@/calendar/useCalendarData';
+import { useCalendarData, calendarTypes } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
@@ -32,11 +32,7 @@ import {
 import React from 'react';
 import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import {
-  dragListenersAtom,
-  eventTypes as allEventTypes,
-  type ExternalDragSubject,
-} from './state';
+import { dragListenersAtom, type ExternalDragSubject } from './state';
 import {
   type CalendarTrainer,
   type CalendarInstanceEvent,
@@ -103,8 +99,8 @@ export function Calendar({
       location: parseAsArrayOf(parseAsString).withDefault([]),
       trainers: parseAsArrayOf(parseAsString).withDefault([]),
       participants: parseAsArrayOf(parseAsString).withDefault([]),
-      types: parseAsArrayOf(parseAsStringLiteral(allEventTypes)).withDefault([
-        ...allEventTypes,
+      types: parseAsArrayOf(parseAsStringLiteral(calendarTypes)).withDefault([
+        ...calendarTypes,
       ]),
     },
     { history: 'push' },
@@ -130,7 +126,14 @@ export function Calendar({
     useCalendarData({
       view,
       date,
-      filters,
+      filters: {
+        ...filters,
+        participants: {
+          personIds: filters.participants.length > 0 ? filters.participants : undefined,
+          onlyMine: filters.my,
+        },
+        relevantOnly: !parentId && filters.location.length === 0,
+      },
       parentId,
       availableTrainers,
     });
@@ -298,7 +301,7 @@ export function Calendar({
           <FacetFilter
             label="Typy"
             value={filters.types}
-            defaultValue={allEventTypes}
+            defaultValue={calendarTypes}
             options={filterOptions.types}
             onChange={(types) => void setFilters({ types })}
           />

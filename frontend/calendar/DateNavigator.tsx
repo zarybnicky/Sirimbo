@@ -6,10 +6,12 @@ export function DateNavigator({
   date,
   setDate,
   view,
+  onToday,
 }: {
   setDate: (x: Date) => void;
   view: CalendarView;
   date: Date;
+  onToday?: () => void;
 }) {
   const previous = view.nav?.(date, -1);
   const next = view.nav?.(date, 1);
@@ -28,7 +30,7 @@ export function DateNavigator({
       <button
         type="button"
         className={buttonCls({ size: 'sm', variant: 'outline' })}
-        onClick={() => setDate(today)}
+        onClick={() => (onToday ? onToday() : setDate(today))}
       >
         Dnes
       </button>
