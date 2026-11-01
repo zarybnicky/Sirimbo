@@ -99,14 +99,14 @@ const names: { [type in EventType]: string } = {
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
 
-const officialRoleNames: Record<OfficialRole, string> = {
+const roleNames: Record<OfficialRole, string> = {
   ADJUDICATOR: 'Porota',
-  CHAIRPERSON: 'Vedoucí soutěže',
-  INVIGILATOR: 'Dozor',
-  LEAD_SCRUTINEER: 'Hlavní sčitatel',
+  CHAIRPERSON: 'Vedoucí\u00A0soutěže',
+  INVIGILATOR: 'Odborný dozor',
+  LEAD_SCRUTINEER: 'Hlavní\u00A0sčitatel',
   SCRUTINEER: 'Sčitatel',
 };
-export const formatOfficialRole = (role: OfficialRole) => officialRoleNames[role];
+export const formatOfficialRole = (role: OfficialRole) => roleNames[role];
 
 type EventViewer = 'neutral' | 'trainer' | 'participant';
 

@@ -264,13 +264,7 @@ function TimelineDay({
                         entry={item}
                         competitionId={item.competitionExternalId}
                       >
-                        {formatCategoryName(
-                          item.federation,
-                          item.category,
-                          item.competitionType,
-                        ) ||
-                          item.competitionExternalId ||
-                          item.competitionId}
+                        {formatCategoryName(item) || item.competitionExternalId}
                       </CompetitionLink>
                     ))}
                 </div>

@@ -120,12 +120,7 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
     <ul className="space-y-2 text-sm">
       {highlights.map((highlight) => {
         const { competition, label, results } = highlight;
-        const category =
-          formatCategoryName(
-            competition.federation,
-            competition.category,
-            competition.competitionType,
-          ) || 'Neznámá kategorie';
+        const category = formatCategoryName(competition) || 'Neznámá kategorie';
         const years = [
           ...new Set(results.map((result) => result.competition.startDate.slice(0, 4))),
         ]

@@ -28,8 +28,6 @@ export function Competitions({
     getTotal: (data) =>
       data?.federationEventByFederationAndExternalId?.competitions?.totalCount,
   });
-  const competitions = data?.federationEventByFederationAndExternalId?.competitions;
-  const path = `/federated/${federation}/${eventId}`;
 
   return (
     <>
@@ -40,38 +38,29 @@ export function Competitions({
         columns={[
           'Kategorie',
           'Typ',
-          'Stav',
           'Datum',
-          'Konec prezence',
+          'Prezence',
           'Účastníci',
         ]}
-        empty="No competitions"
       >
-        {competitions?.nodes.map((competition) => (
-          <tr key={competition.id} className="border-t border-neutral-4">
+        {data?.federationEventByFederationAndExternalId?.competitions?.nodes.map((comp) => (
+          <tr key={comp.id} className="border-t border-neutral-4">
             <th scope="row">
               <Link
                 className={cn(
                   'text-accent-11',
-                  competition.status === 'CANCELLED' ? 'line-through' : 'underline',
+                  comp.status === 'CANCELLED' ? 'line-through' : 'underline',
                 )}
-                href={`${path}/${competition.externalId}`}
+                href={`/federated/${federation}/${eventId}/${comp.externalId}`}
                 prefetch={false}
               >
-                {formatCategoryName(
-                  federation,
-                  competition.category,
-                  competition.competitionType,
-                ) || competition.externalId}
+                {formatCategoryName(comp) || comp.externalId}
               </Link>
             </th>
-            <td>{competition.competitionType?.toLowerCase().replaceAll('_', ' ')}</td>
-            <td className="whitespace-nowrap">
-              {competition.status.toLowerCase().replaceAll('_', ' ')}
-            </td>
-            <td className="whitespace-nowrap">{formatDateOnly(competition.startDate)}</td>
-            <td>{competition.checkInEnd?.slice(0, 5)}</td>
-            <td>{competition.results.totalCount || competition.entries.totalCount}</td>
+            <td>{comp.competitionType?.toLowerCase().replaceAll('_', ' ')}</td>
+            <td className="whitespace-nowrap">{formatDateOnly(comp.startDate)}</td>
+            <td>{comp.checkInEnd?.slice(0, 5)}</td>
+            <td>{comp.results.totalCount || comp.entries.totalCount}</td>
           </tr>
         ))}
       </Table>

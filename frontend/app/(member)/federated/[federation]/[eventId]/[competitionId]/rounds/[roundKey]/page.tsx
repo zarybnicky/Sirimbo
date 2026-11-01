@@ -37,8 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: [
-      formatCategoryName(federation, competition.category, competition.competitionType) ||
-        competitionId,
+      formatCategoryName(competition) || competitionId,
       round.roundLabel || round.roundKey,
       formatDateOnly(competition.startDate),
     ].join(' · '),
@@ -52,21 +51,14 @@ export default async function RoundPage({ params }: Props) {
 
   const { federation, eventId, competitionId, roundKey } = await params;
   const { competition } = await getRound(federation, competitionId, roundKey);
-
   const round = competition?.round[0];
+
   if (!competition || competition.event?.externalId !== eventId || !round) notFound();
 
-  const startNumbers = new Map(
-    competition.resultsList.map((r) => [r.competitorId, r.startNumber]),
-  );
-
-  const title =
-    formatCategoryName(federation, competition.category, competition.competitionType) ||
-    competitionId;
   return (
     <Layout requireUser>
       <PageHeader
-        title={title}
+        title={formatCategoryName(competition) || competitionId}
         subtitle={
           <DotSeparated className="flex">
             <span className="shrink-0">{formatDateOnly(competition.startDate)}</span>
@@ -102,7 +94,7 @@ export default async function RoundPage({ params }: Props) {
         key={round.id}
         federation={federation}
         round={round}
-        startNumbers={startNumbers}
+        startNumbers={new Map(competition.resultsList.map((r) => [r.competitorId, r.startNumber]))}
         hasNextRound={
           competition.roundsList.findIndex((r) => r.id === round.id) <
           competition.roundsList.length - 1

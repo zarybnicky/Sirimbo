@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { federation, eventId, competitionId } = await params;
   const { competition } = await getCompetition(federation, eventId, competitionId);
   return {
-    title: `${formatCategoryName(federation, competition.category, competition.competitionType) || competitionId} · ${formatDateOnly(competition.startDate)}`,
+    title: `${formatCategoryName(competition) || competitionId} · ${formatDateOnly(competition.startDate)}`,
     robots: { index: false, follow: false },
   };
 }
@@ -49,14 +49,11 @@ export default async function CompetitionPage({ params }: Props) {
 
   const { federation, eventId, competitionId } = await params;
   const { event, competition } = await getCompetition(federation, eventId, competitionId);
-  const title =
-    formatCategoryName(federation, competition.category, competition.competitionType) ||
-    competition.externalId;
 
   return (
     <Layout requireUser>
       <PageHeader
-        title={title}
+        title={formatCategoryName(competition) || competition.externalId}
         subtitle={
           <DotSeparated className="flex">
             <span className="shrink-0">{formatDateOnly(competition.startDate)}</span>

@@ -197,6 +197,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
         name
       }
     }
+    federation
     externalId
     startDate
     checkInEnd
@@ -616,6 +617,7 @@ query FederationEventCompetitions(
       totalCount
       nodes {
         id
+        federation
         externalId
         startDate
         checkInEnd
@@ -645,6 +647,7 @@ query CompetitionRound(
     externalId: $competitionId
   ) {
     id
+    federation
     externalId
     startDate
     competitionType
@@ -750,6 +753,7 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
         orderBy: [START_DATE_ASC, ID_ASC]
       ) {
         id
+        federation
         externalId
         startDate
         competitionType

@@ -88,9 +88,7 @@ function entryLabel(
   },
   competition: boolean,
 ) {
-  return competition
-    ? formatCategoryName(entry.federation, entry.category, entry.competitionType) || ''
-    : (entry.competitorName ?? '');
+  return competition ? formatCategoryName(entry) : (entry.competitorName ?? '');
 }
 
 function checkInTime(entries: readonly CompetitionEntry[]) {

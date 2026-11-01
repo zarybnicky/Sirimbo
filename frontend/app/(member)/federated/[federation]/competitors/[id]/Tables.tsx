@@ -96,9 +96,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
         empty="No registrations or results"
       >
         {history.map((row) => {
-          const categoryName =
-            formatCategoryName(federation, row.category, row.competitionType) ||
-            row.externalId;
+          const categoryName = formatCategoryName(row) || row.externalId;
           const result = row.results?.[0];
           const cancelled = row.entries?.[0]?.cancelled;
           const status = formatResultStatus(result?.completionStatus);

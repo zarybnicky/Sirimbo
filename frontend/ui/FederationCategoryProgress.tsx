@@ -35,8 +35,8 @@ export function FederationCategoryProgress({
             compareText(a.federation, b.federation) ||
             compareCategories(a.category, b.category) ||
             compareNaturalText(
-              formatCategoryName(a.federation, a.category) || a.categoryId,
-              formatCategoryName(b.federation, b.category) || b.categoryId,
+              formatCategoryName(a) || a.categoryId,
+              formatCategoryName(b) || b.categoryId,
             ) ||
             a.competitorId.localeCompare(b.competitorId),
         )
@@ -51,7 +51,7 @@ export function FederationCategoryProgress({
                   (progress.federation === 'csts'
                     ? 'ČSTS'
                     : progress.federation.toUpperCase())}
-                {formatCategoryName(progress.federation, progress.category)}
+                {formatCategoryName(progress)}
               </DotSeparated>
             </th>
             <td className="whitespace-nowrap text-right">

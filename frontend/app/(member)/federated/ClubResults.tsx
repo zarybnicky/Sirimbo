@@ -199,11 +199,7 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
                             className="text-accent-11 underline"
                             prefetch={false}
                           >
-                            {formatCategoryName(
-                              competition.federation,
-                              competition.category,
-                              competition.competitionType,
-                            )}
+                            {formatCategoryName(competition)}
                           </Link>
                           {' · '}
                           {view === 'gallery' ? (

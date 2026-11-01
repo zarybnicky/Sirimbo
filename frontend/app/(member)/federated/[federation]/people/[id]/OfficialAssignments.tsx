@@ -1,14 +1,13 @@
 'use client';
 
-import { formatCategoryName } from '@/ui/csts';
-
-import { Table } from '@/ui/Table';
-import Link from 'next/link';
-import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FederationPersonOfficialAssignmentsDocument } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
-import { formatCount, formatDateOnly } from '@/ui/format';
+import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
+import { formatCategoryName } from '@/ui/csts';
+import { formatDateOnly, formatOfficialRole } from '@/ui/format';
 import { Pagination } from '@/ui/Pagination';
+import { Table } from '@/ui/Table';
+import Link from 'next/link';
 
 export function OfficialAssignments({
   federation,
@@ -63,25 +62,12 @@ export function OfficialAssignments({
                   );
                   return (
                     <div key={role}>
-                      {role.toLowerCase().replaceAll('_', ' ')}
-                      {event.officials.nodes
-                        .filter((x) => x.role === role)
-                        .map(({ discipline, grade }) => (
-                          <span key={discipline} className="text-neutral-11">
-                            {[discipline, grade]
-                              .filter(Boolean)
-                              .map((x) => ` · ${x}`)
-                              .join('')}
-                          </span>
-                        ))}
-                      {competitions.length > 0 && (
+                      {competitions.length === 0 ? (
+                        formatOfficialRole(role)
+                      ) : (
                         <details>
-                          <summary className="cursor-pointer text-neutral-11">
-                            {formatCount(competitions.length, {
-                              one: 'soutěž',
-                              few: 'soutěže',
-                              other: 'soutěží',
-                            })}
+                          <summary className="cursor-pointer">
+                            {formatOfficialRole(role)} ({competitions.length})
                           </summary>
                           <ul className="space-y-1 mt-1">
                             {competitions.map((comp) => (
@@ -96,11 +82,7 @@ export function OfficialAssignments({
                                       : 'underline',
                                   )}
                                 >
-                                  {formatCategoryName(
-                                    federation,
-                                    comp.category,
-                                    comp.competitionType,
-                                  ) || comp.externalId}
+                                  {formatCategoryName(comp)}
                                 </Link>
                                 {comp.startDate !== event.startDate && comp.startDate && (
                                   <span className="text-neutral-11">

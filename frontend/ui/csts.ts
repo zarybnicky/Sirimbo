@@ -178,15 +178,20 @@ const cstsCompetitorTypeNames: Record<CompetitorType, string> = {
 };
 
 export function formatCategoryName(
-  federation: string | null | undefined,
-  category: CompetitionCategoryLabelFragment | null | undefined,
-  competitionType?: CompetitionType | null,
+  competition:
+    | {
+        federation: string | null | undefined;
+        category: CompetitionCategoryLabelFragment | null | undefined;
+        competitionType?: CompetitionType | null;
+      }
+    | null
+    | undefined,
 ) {
-  if (!category) return '';
+  if (!competition?.category) return '';
+  const { category, federation, competitionType } = competition;
   if (federation === 'wdsf') return formatWdsfCategoryName(category);
-  return federation === 'csts'
-    ? formatCstsCategoryName(category, competitionType)
-    : (category?.name ?? '');
+  if (federation === 'csts') return formatCstsCategoryName(category, competitionType);
+  return category.name;
 }
 
 const wdsfAcronyms = new Set(['PD', 'NS', 'DSE', 'GP']);
@@ -357,11 +362,15 @@ function formatCstsCategoryName(
   const { discipline, series, competitorType } = category;
   return [
     competitionType && typePrefix[competitionType],
-    competitionType === 'CHAMPIONSHIP' ? cstsCompetitorTypeNames[competitorType] : undefined,
+    competitionType === 'CHAMPIONSHIP'
+      ? cstsCompetitorTypeNames[competitorType]
+      : undefined,
     series === 'DanceSport' ? undefined : series === 'DanceForAll' ? 'TPV' : series,
     formatAgeGroup(category.ageGroup, category.ageGroupDetails?.name),
     formatClass(category.class),
-    competitionType !== 'CHAMPIONSHIP' ? cstsCompetitorTypeNames[competitorType] : undefined,
+    competitionType !== 'CHAMPIONSHIP'
+      ? cstsCompetitorTypeNames[competitorType]
+      : undefined,
     discipline === 'Standard_Latin'
       ? 'STT+LAT'
       : discipline === 'TenDance'
