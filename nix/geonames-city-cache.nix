@@ -10,7 +10,7 @@ let
   countries = fetchurl {
     name = "geonames-countryInfo-${version}.txt";
     url = "https://download.geonames.org/export/dump/countryInfo.txt";
-    hash = "sha256-xV9jjPqvtP5FqaoVEgoPH3joo0qOGEfXuTIM90D7yas=";
+    hash = "sha256-efj1nqAcu0BDi/GFbdbC/yAfA/j8ctBTCyZGqvYD7wQ=";
   };
   regions = fetchurl {
     name = "geonames-admin1-${version}.txt";
