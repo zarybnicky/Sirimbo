@@ -1805,10 +1805,11 @@ export type CompetitionCondition = {
   checkInEnd?: InputMaybe<Scalars['Time']['input']>;
   /** Checks for equality with the object’s `competitionType` field. */
   competitionType?: InputMaybe<CompetitionType>;
+  competitor?: InputMaybe<CompetitionParticipantCondition>;
   competitorId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `completedAt` field. */
   completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  date?: InputMaybe<CompetitionDateCondition>;
+  date?: InputMaybe<DateRangeCondition>;
   /** Checks for equality with the object’s `endDate` field. */
   endDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
@@ -1821,8 +1822,9 @@ export type CompetitionCondition = {
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Match local people. Without an explicit selection, use current tenant people. */
+  official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
-  participant?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `participantsTotal` field. */
   participantsTotal?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `registrationFee` field. */
@@ -1845,13 +1847,6 @@ export type CompetitionConnection = {
   pageInfo: PageInfo;
   /** The count of *all* `Competition` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
-};
-
-export type CompetitionDateCondition = {
-  /** Inclusive event or competition start date. */
-  since?: InputMaybe<Scalars['Date']['input']>;
-  /** Exclusive event or competition start date. */
-  until?: InputMaybe<Scalars['Date']['input']>;
 };
 
 /** A `Competition` edge in the connection. */
@@ -1898,12 +1893,12 @@ export type CompetitionEntryCondition = {
   cancelled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `competitionId` field. */
   competitionId?: InputMaybe<Scalars['BigInt']['input']>;
+  competitor?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   hasResult?: InputMaybe<Scalars['Boolean']['input']>;
-  participant?: InputMaybe<CompetitionParticipantCondition>;
 };
 
 /** A connection to a list of `CompetitionEntry` values. */
@@ -1952,6 +1947,8 @@ export type CompetitionOfficialCondition = {
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `judgeLabel` field. */
   judgeLabel?: InputMaybe<Scalars['String']['input']>;
+  /** Match local people. Without an explicit selection, use current tenant people. */
+  person?: InputMaybe<PersonCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -2002,6 +1999,8 @@ export type CompetitionParticipantCondition = {
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   /** An exact local partnership, across federations. */
   coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Intersect the selection with all person IDs assigned to the viewer. */
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   /** Local person IDs. An empty list matches nobody. */
   personIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
@@ -2022,6 +2021,8 @@ export type CompetitionResult = {
   pointGain: Maybe<Scalars['BigFloat']['output']>;
   ranking: Scalars['Int']['output'];
   rankingTo: Maybe<Scalars['Int']['output']>;
+  /** Reads a single `CompetitionRound` that is related to this `CompetitionResult`. */
+  round: Maybe<CompetitionRound>;
   startNumber: Maybe<Scalars['String']['output']>;
 };
 
@@ -2033,11 +2034,12 @@ export type CompetitionResultCondition = {
   /** Checks for equality with the object’s `competitionId` field. */
   competitionId?: InputMaybe<Scalars['BigInt']['input']>;
   competitionTypes?: InputMaybe<Array<CompetitionType>>;
+  competitor?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `completionStatus` field. */
   completionStatus?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<CompetitionDateCondition>;
+  date?: InputMaybe<DateRangeCondition>;
   /** Checks for equality with the object’s `finalGain` field. */
   finalGain?: InputMaybe<Scalars['BigFloat']['input']>;
   /** When true, select completed championship results and podiums in leagues, super leagues, cups, and ranking events. */
@@ -2050,7 +2052,6 @@ export type CompetitionResultCondition = {
   lastRound?: InputMaybe<Scalars['String']['input']>;
   /** Maximum placement, including the upper end of a shared placement. */
   maxRanking?: InputMaybe<Scalars['Int']['input']>;
-  participant?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `pointGain` field. */
   pointGain?: InputMaybe<Scalars['BigFloat']['input']>;
   /** Checks for equality with the object’s `ranking` field. */
@@ -2450,18 +2451,11 @@ export type CompetitionRoundsOrderBy =
   | 'ROUND_LABEL_DESC';
 
 export type CompetitionSuggestionCondition = {
-  date: CompetitionSuggestionDateCondition;
+  date: DateRangeCondition;
   /** Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators. */
   participant?: InputMaybe<CompetitionParticipantCondition>;
   /** Only matches with an existing, non-cancelled participation. */
   registeredOnly?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type CompetitionSuggestionDateCondition = {
-  /** Inclusive competition start date. */
-  since: Scalars['Date']['input'];
-  /** Exclusive competition start date. */
-  until?: InputMaybe<Scalars['Date']['input']>;
 };
 
 export type CompetitionSuggestionsRecord = {
@@ -4082,6 +4076,13 @@ export type DateRangeBound = {
   inclusive: Scalars['Boolean']['output'];
   /** The value at one end of our range. */
   value: Scalars['Date']['output'];
+};
+
+export type DateRangeCondition = {
+  /** Inclusive start date. */
+  since?: InputMaybe<Scalars['Date']['input']>;
+  /** Exclusive end date. */
+  until?: InputMaybe<Scalars['Date']['input']>;
 };
 
 /** A range of `Datetime`. */
@@ -6321,7 +6322,7 @@ export type FederationEventCondition = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `country` field. */
   country?: InputMaybe<Scalars['String']['input']>;
-  date?: InputMaybe<CompetitionDateCondition>;
+  date?: InputMaybe<DateRangeCondition>;
   /** Checks for equality with the object’s `endDate` field. */
   endDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
@@ -6341,6 +6342,8 @@ export type FederationEventCondition = {
   location?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Match local people. Without an explicit selection, use current tenant people. */
+  official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `organizingClubId` field. */
   organizingClubId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6417,6 +6420,8 @@ export type FederationEventOfficialCondition = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `grade` field. */
   grade?: InputMaybe<Scalars['String']['input']>;
+  /** Match local people. Without an explicit selection, use current tenant people. */
+  person?: InputMaybe<PersonCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -8776,6 +8781,7 @@ export type Person = {
   allCouplesList: Array<Couple>;
   bio: Scalars['String']['output'];
   birthDate: Maybe<Scalars['Date']['output']>;
+  birthday: Maybe<Scalars['Date']['output']>;
   cohortIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `CohortMembership`. */
   cohortMembershipsList: Array<CohortMembership>;
@@ -8806,7 +8812,7 @@ export type Person = {
   federationCategoryProgresses: FederationCompetitorCategoryProgressConnection;
   /**
    * Competitions entered by this person, across federations.
-   * @deprecated Use competitions with condition.participant.personIds.
+   * @deprecated Use competitions with condition.competitor.personIds.
    */
   federationCompetitions: CompetitionConnection;
   /** Reads and enables pagination through a set of `FederationPerson`. */
@@ -8900,6 +8906,11 @@ export type PersonAllCouplesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
+};
+
+
+export type PersonBirthdayArgs = {
+  since?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
@@ -9125,6 +9136,7 @@ export type PersonCondition = {
   bio?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `birthDate` field. */
   birthDate?: InputMaybe<Scalars['Date']['input']>;
+  birthday?: InputMaybe<DateRangeCondition>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
@@ -9139,6 +9151,7 @@ export type PersonCondition = {
   gender?: InputMaybe<GenderType>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  ids?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   /** Checks for equality with the object’s `imageId` field. */
   imageId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `instagramUsername` field. */
@@ -9155,6 +9168,7 @@ export type PersonCondition = {
   nationality?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `note` field. */
   note?: InputMaybe<Scalars['String']['input']>;
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `phone` field. */
   phone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `prefixTitle` field. */
@@ -9805,6 +9819,7 @@ export type QueryActivityTimelineListArgs = {
   pCohortId?: InputMaybe<Scalars['BigInt']['input']>;
   pEventTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
   pKinds?: InputMaybe<Array<InputMaybe<ActivityTimelineKind>>>;
+  pOnlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   pPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   pSince?: InputMaybe<Scalars['Datetime']['input']>;
   pUntil?: InputMaybe<Scalars['Datetime']['input']>;
@@ -14467,6 +14482,7 @@ export type GraphCacheResolvers = {
     pointGain?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     ranking?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['Int']['output'] | string>,
     rankingTo?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['Int']['output'] | string>,
+    round?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, WithTypename<CompetitionRound> | string>,
     startNumber?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, Scalars['String']['output'] | string>
   },
   CompetitionResultConnection?: {
@@ -15681,6 +15697,7 @@ export type GraphCacheResolvers = {
     allCouplesList?: GraphCacheResolver<WithTypename<Person>, PersonAllCouplesListArgs, Array<WithTypename<Couple> | string>>,
     bio?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     birthDate?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Date']['output'] | string>,
+    birthday?: GraphCacheResolver<WithTypename<Person>, PersonBirthdayArgs, Scalars['Date']['output'] | string>,
     cohortIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt']['output'] | string>>,
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     couplesByManIdList?: GraphCacheResolver<WithTypename<Person>, PersonCouplesByManIdListArgs, Array<WithTypename<Couple> | string>>,
@@ -17083,6 +17100,7 @@ export type GraphCacheUpdaters = {
     pointGain?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
     ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
     rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
+    round?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,
     startNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>
   },
   CompetitionResultConnection?: {
@@ -18297,6 +18315,7 @@ export type GraphCacheUpdaters = {
     allCouplesList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonAllCouplesListArgs>,
     bio?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     birthDate?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    birthday?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonBirthdayArgs>,
     cohortIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCohortMembershipsListArgs>,
     couplesByManIdList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonCouplesByManIdListArgs>,

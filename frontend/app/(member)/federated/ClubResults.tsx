@@ -60,7 +60,7 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
   );
   const year = filters.year ?? (view === 'gallery' ? null : currentYear);
   const week = startOfWeek(filters.week, { weekStartsOn: 1 });
-  const condition: CompetitionResultCondition = { participant: {}, highlight: true };
+  const condition: CompetitionResultCondition = { competitor: {}, highlight: true };
   if (view === 'weekend') {
     condition.date = {
       since: format(week, 'yyyy-MM-dd'),

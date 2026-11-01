@@ -51,7 +51,7 @@ $$;
 
 grant select on activity_timeline_item to anonymous;
 
-create or replace function activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds activity_timeline_kind[] DEFAULT NULL::activity_timeline_kind[], p_event_types event_type[] DEFAULT NULL::event_type[])
+create or replace function activity_timeline(p_since timestamp with time zone, p_until timestamp with time zone, p_person_ids bigint[] DEFAULT NULL::bigint[], p_cohort_id bigint DEFAULT NULL::bigint, p_kinds activity_timeline_kind[] DEFAULT NULL::activity_timeline_kind[], p_event_types event_type[] DEFAULT NULL::event_type[], p_only_mine boolean DEFAULT false)
  returns setof activity_timeline_item
  language plpgsql
  stable
@@ -69,6 +69,13 @@ begin
 
   if cardinality(p_kinds) = 0 then
     return;
+  end if;
+
+  if p_only_mine then
+    p_person_ids := array(
+      select unnest(current_person_ids())
+      intersect select unnest(coalesce(p_person_ids, current_person_ids()))
+    );
   end if;
 
   include_event_attendance =

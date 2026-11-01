@@ -5802,6 +5802,15 @@
             "args": []
           },
           {
+            "name": "round",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CompetitionRound",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "startNumber",
             "type": {
               "kind": "SCALAR",
@@ -22289,6 +22298,22 @@
             "args": []
           },
           {
+            "name": "birthday",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": [
+              {
+                "name": "since",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
+          },
+          {
             "name": "cohortIds",
             "type": {
               "kind": "LIST",
@@ -24841,6 +24866,13 @@
                     "kind": "SCALAR",
                     "name": "Any"
                   }
+                }
+              },
+              {
+                "name": "pOnlyMine",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               },
               {

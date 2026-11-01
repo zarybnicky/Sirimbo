@@ -1,11 +1,30 @@
-import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
+import { LIST_TYPES, TYPES, PgCondition } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
+import { sql, type SQL } from 'postgraphile/pg-sql2';
+import { membershipCandidateIds } from './person-membership-condition.ts';
 
 type CategoryProgressCondition = {
   ageGroups?: string[];
   classes?: string[];
   disciplines?: string[];
 };
+
+function officialPredicate(column: SQL, table: 'event' | 'competition', people: SQL) {
+  return sql`${column} = any(array(
+    with people as materialized (${people})
+    select ${sql.identifier(`${table}_id`)}
+    from ${sql.identifier('federated', `${table}_official`)}
+    where person_id in (select id from people)
+    ${
+      table === 'event'
+        ? sql`union all
+      select c.event_id from federated.competition c
+      join federated.competition_official o on o.competition_id = c.id
+      where o.person_id in (select id from people)`
+        : sql.blank
+    }
+  ))`;
+}
 
 const plugins: GraphileConfig.Plugin[] = [
   ...(
@@ -230,6 +249,52 @@ const plugins: GraphileConfig.Plugin[] = [
       )`;
     },
   ),
+  ...(['event', 'competition', 'event_official', 'competition_official'] as const).map(
+    (tableName) =>
+      addPgTableCondition(
+        { schemaName: 'federated', tableName },
+        tableName.endsWith('_official') ? 'person' : 'official',
+        (build) => ({
+          type: build.getInputTypeByName('PersonCondition'),
+          description:
+            'Match local people. Without an explicit selection, use current tenant people.',
+          apply(condition: PgCondition, value) {
+            if (value == null) return;
+            const alias = sql.identifier(Symbol('person'));
+            const person = new PgCondition(
+              {
+                alias,
+                where(predicate: SQL) {
+                  const people = sql`select fp.id from public.person ${alias}
+                join public.person_federation_link link on link.person_id = ${alias}.id
+                join federated.person fp
+                  on (fp.federation, fp.external_id) = (link.federation, link.external_id)
+                where ${predicate}`;
+                  condition.where(
+                    tableName === 'event' || tableName === 'competition'
+                      ? officialPredicate(sql`${condition.alias}.id`, tableName, people)
+                      : sql`${condition.alias}.person_id = any(array(${people}))`,
+                  );
+                },
+              },
+              { mode: 'AND' },
+            );
+            person.where(sql.true);
+            if (
+              value.id == null &&
+              value.ids == null &&
+              !value.onlyMine &&
+              value.membership == null
+            ) {
+              person.where(
+                sql`${person.alias}.id in (${membershipCandidateIds({ state: 'current' })!})`,
+              );
+            }
+            return person;
+          },
+        }),
+      ),
+  ),
   ...(['event', 'competition'] as const).map((tableName) =>
     addPgTableCondition(
       { schemaName: 'federated', tableName },
@@ -238,17 +303,11 @@ const plugins: GraphileConfig.Plugin[] = [
       (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
         if (value == null) return null;
         const personId = sqlValueWithCodec(value, TYPES.text);
-        return tableName === 'competition'
-          ? sql`${row}.id in (
-              select competition_id from federated.competition_official where person_id = ${personId}
-            )`
-          : sql`${row}.id in (
-              select event_id from federated.event_official where person_id = ${personId}
-              union all
-              select c.event_id from federated.competition c
-              join federated.competition_official o on o.competition_id = c.id
-              where o.person_id = ${personId}
-            )`;
+        return officialPredicate(
+          sql`${row}.id`,
+          tableName,
+          sql`select id from federated.person where id = ${personId}`,
+        );
       },
     ),
   ),

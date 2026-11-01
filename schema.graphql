@@ -2299,11 +2299,12 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `competitionType` field."""
   competitionType: CompetitionType
+  competitor: CompetitionParticipantCondition
   competitorId: String
 
   """Checks for equality with the object’s `completedAt` field."""
   completedAt: Datetime
-  date: CompetitionDateCondition
+  date: DateRangeCondition
 
   """Checks for equality with the object’s `endDate` field."""
   endDate: Date
@@ -2322,8 +2323,12 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """
+  Match local people. Without an explicit selection, use current tenant people.
+  """
+  official: PersonCondition
   officialPersonId: String
-  participant: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `participantsTotal` field."""
   participantsTotal: Int
@@ -2354,14 +2359,6 @@ type CompetitionConnection {
 
   """The count of *all* `Competition` you could get from the connection."""
   totalCount: Int!
-}
-
-input CompetitionDateCondition {
-  """Inclusive event or competition start date."""
-  since: Date
-
-  """Exclusive event or competition start date."""
-  until: Date
 }
 
 """A `Competition` edge in the connection."""
@@ -2415,6 +2412,7 @@ input CompetitionEntryCondition {
 
   """Checks for equality with the object’s `competitionId` field."""
   competitionId: BigInt
+  competitor: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
@@ -2422,7 +2420,6 @@ input CompetitionEntryCondition {
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
   hasResult: Boolean
-  participant: CompetitionParticipantCondition
 }
 
 """A connection to a list of `CompetitionEntry` values."""
@@ -2483,6 +2480,11 @@ input CompetitionOfficialCondition {
 
   """Checks for equality with the object’s `judgeLabel` field."""
   judgeLabel: String
+
+  """
+  Match local people. Without an explicit selection, use current tenant people.
+  """
+  person: PersonCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -2546,6 +2548,9 @@ input CompetitionParticipantCondition {
   """An exact local partnership, across federations."""
   coupleId: BigInt
 
+  """Intersect the selection with all person IDs assigned to the viewer."""
+  onlyMine: Boolean
+
   """Local person IDs. An empty list matches nobody."""
   personIds: [BigInt!]
 }
@@ -2570,6 +2575,11 @@ type CompetitionResult {
   pointGain: BigFloat
   ranking: Int!
   rankingTo: Int
+
+  """
+  Reads a single `CompetitionRound` that is related to this `CompetitionResult`.
+  """
+  round: CompetitionRound
   startNumber: String
 }
 
@@ -2581,13 +2591,14 @@ input CompetitionResultCondition {
   """Checks for equality with the object’s `competitionId` field."""
   competitionId: BigInt
   competitionTypes: [CompetitionType!]
+  competitor: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
 
   """Checks for equality with the object’s `completionStatus` field."""
   completionStatus: String
-  date: CompetitionDateCondition
+  date: DateRangeCondition
 
   """Checks for equality with the object’s `finalGain` field."""
   finalGain: BigFloat
@@ -2608,7 +2619,6 @@ input CompetitionResultCondition {
 
   """Maximum placement, including the upper end of a shared placement."""
   maxRanking: Int
-  participant: CompetitionParticipantCondition
 
   """Checks for equality with the object’s `pointGain` field."""
   pointGain: BigFloat
@@ -3131,7 +3141,7 @@ enum CompetitionRoundsOrderBy {
 }
 
 input CompetitionSuggestionCondition {
-  date: CompetitionSuggestionDateCondition!
+  date: DateRangeCondition!
 
   """
   Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators.
@@ -3140,14 +3150,6 @@ input CompetitionSuggestionCondition {
 
   """Only matches with an existing, non-cancelled participation."""
   registeredOnly: Boolean
-}
-
-input CompetitionSuggestionDateCondition {
-  """Inclusive competition start date."""
-  since: Date!
-
-  """Exclusive competition start date."""
-  until: Date
 }
 
 type CompetitionSuggestionsRecord {
@@ -5112,6 +5114,14 @@ type DateRangeBound {
 
   """The value at one end of our range."""
   value: Date!
+}
+
+input DateRangeCondition {
+  """Inclusive start date."""
+  since: Date
+
+  """Exclusive end date."""
+  until: Date
 }
 
 """
@@ -8015,7 +8025,7 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `country` field."""
   country: String
-  date: CompetitionDateCondition
+  date: DateRangeCondition
 
   """Checks for equality with the object’s `endDate` field."""
   endDate: Date
@@ -8043,6 +8053,11 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
+
+  """
+  Match local people. Without an explicit selection, use current tenant people.
+  """
+  official: PersonCondition
   officialPersonId: String
 
   """Checks for equality with the object’s `organizingClubId` field."""
@@ -8141,6 +8156,11 @@ input FederationEventOfficialCondition {
 
   """Checks for equality with the object’s `grade` field."""
   grade: String
+
+  """
+  Match local people. Without an explicit selection, use current tenant people.
+  """
+  person: PersonCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -10997,6 +11017,7 @@ type Person {
   ): [Couple!]! @deprecated(reason: "Use couplesList.")
   bio: String!
   birthDate: Date
+  birthday(since: Date): Date
   cohortIds: [BigInt]
 
   """Reads and enables pagination through a set of `CohortMembership`."""
@@ -11223,7 +11244,7 @@ type Person {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionConnection! @deprecated(reason: "Use competitions with condition.participant.personIds.")
+  ): CompetitionConnection! @deprecated(reason: "Use competitions with condition.competitor.personIds.")
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(
@@ -11545,6 +11566,7 @@ input PersonCondition {
 
   """Checks for equality with the object’s `birthDate` field."""
   birthDate: Date
+  birthday: DateRangeCondition
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
@@ -11566,6 +11588,7 @@ input PersonCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+  ids: [BigInt!]
 
   """Checks for equality with the object’s `imageId` field."""
   imageId: BigInt
@@ -11592,6 +11615,7 @@ input PersonCondition {
 
   """Checks for equality with the object’s `note` field."""
   note: String
+  onlyMine: Boolean
 
   """Checks for equality with the object’s `phone` field."""
   phone: String
@@ -12069,6 +12093,7 @@ type Query {
     pCohortId: BigInt
     pEventTypes: [EventType]
     pKinds: [ActivityTimelineKind]
+    pOnlyMine: Boolean
     pPersonIds: [BigInt]
     pSince: Datetime
     pUntil: Datetime

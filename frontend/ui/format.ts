@@ -1,6 +1,7 @@
 import {
   AddressDomain,
   EventType,
+  OfficialRole,
   PaymentStatus,
   ScoreComponent,
   ScoringMethod,
@@ -97,6 +98,15 @@ const names: { [type in EventType]: string } = {
 };
 export const formatEventType = (type: EventType | null | undefined) =>
   type ? names[type] : '';
+
+const officialRoleNames: Record<OfficialRole, string> = {
+  ADJUDICATOR: 'Porota',
+  CHAIRPERSON: 'Vedoucí soutěže',
+  INVIGILATOR: 'Dozor',
+  LEAD_SCRUTINEER: 'Hlavní sčitatel',
+  SCRUTINEER: 'Sčitatel',
+};
+export const formatOfficialRole = (role: OfficialRole) => officialRoleNames[role];
 
 type EventViewer = 'neutral' | 'trainer' | 'participant';
 

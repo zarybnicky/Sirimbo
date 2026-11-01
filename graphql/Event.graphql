@@ -439,12 +439,15 @@ query EventList(
   }
 }
 
-query CalendarFacets(
+query CalendarData(
+  $since: Date!
+  $until: Date!
+  $withFacets: Boolean! = true
   $start: Datetime!
   $end: Datetime!
   $types: [EventType!]
   $trainerIds: [BigInt]
-  $participantIds: [BigInt]
+  $participantIds: [BigInt!]
   $onlyMine: Boolean
   $relevantOnly: Boolean
   $parentId: BigInt
@@ -452,32 +455,124 @@ query CalendarFacets(
   $canRegister: Boolean
   $withParticipantOptions: Boolean! = false
 ) {
-  eventFacetsList(
-    startRange: $start, endRange: $end, onlyTypes: $types,
-    trainerIds: $trainerIds, participantIds: $participantIds,
-    onlyMine: $onlyMine, relevantOnly: $relevantOnly,
-    parentId: $parentId, locationIds: $locationIds,
-    canRegister: $canRegister
+  eventsList(
+    condition: {
+      overlaps: { start: $start, end: $end }
+      types: $types
+      trainerIds: $trainerIds
+      participantIds: $participantIds
+      onlyMine: $onlyMine
+      relevantOnly: $relevantOnly
+      parentId: $parentId
+      locationIds: $locationIds
+      canRegister: $canRegister
+    }
+    orderBy: SINCE_ASC
   ) {
-    facet
-    value
-    count
+    ...EventWithTrainer
   }
-  tenant: getCurrentTenant {
-    id
-    locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
-      ...LocationOption
+  competitions(
+    first: 300
+    condition: {
+      date: { since: $since, until: $until }
+      competitor: { personIds: $participantIds, onlyMine: $onlyMine }
     }
-    tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
-      ...TenantTrainerOption
-    }
-  }
-  people(
-    condition: { membership: { state: CURRENT } }
-    orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
-  ) @include(if: $withParticipantOptions) {
+    orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+  ) {
     nodes {
-      ...PersonOption
+      ...Competition
+      entries: entriesList(
+        condition: { competitor: { personIds: $participantIds, onlyMine: $onlyMine } }
+        orderBy: COMPETITOR_ID_ASC
+      ) { ...CompetitionEntry }
+      results: resultsList(
+        condition: { competitor: { personIds: $participantIds, onlyMine: $onlyMine } }
+        orderBy: COMPETITOR_ID_ASC
+      ) { ...CompetitionResult }
+    }
+  }
+  officialEvents: federationEvents(
+    first: 300
+    condition: {
+      date: { since: $since, until: $until }
+      official: { ids: $participantIds, onlyMine: $onlyMine }
+    }
+  ) {
+    nodes {
+      id federation externalId name startDate endDate location city
+      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine } }) {
+        nodes {
+          eventId
+          personId
+          role
+          discipline
+          person { ...OfficialPerson }
+        }
+      }
+    }
+  }
+  officialCompetitions: competitions(
+    first: 300
+    condition: {
+      date: { since: $since, until: $until }
+      official: { ids: $participantIds, onlyMine: $onlyMine }
+    }
+  ) {
+    nodes {
+      id federation startDate
+      event { id externalId name startDate endDate location city }
+      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine } }) {
+        nodes {
+          competitionId
+          personId
+          role
+          person { ...OfficialPerson }
+        }
+      }
+    }
+  }
+  birthdays: people(
+    condition: {
+      birthday: { since: $since, until: $until }
+      membership: { state: CURRENT }
+      ids: $participantIds
+      onlyMine: $onlyMine
+    }
+    orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
+  ) {
+    nodes {
+      id name firstName lastName
+      date: birthday(since: $since)
+    }
+  }
+  ... @include(if: $withFacets) {
+    eventFacetsList(
+      startRange: $start, endRange: $end, onlyTypes: $types,
+      trainerIds: $trainerIds, participantIds: $participantIds,
+      onlyMine: $onlyMine, relevantOnly: $relevantOnly,
+      parentId: $parentId, locationIds: $locationIds,
+      canRegister: $canRegister
+    ) {
+      facet
+      value
+      count
+    }
+    tenant: getCurrentTenant {
+      id
+      locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+        ...LocationOption
+      }
+      tenantTrainersList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
+        ...TenantTrainerOption
+      }
+    }
+    people(
+      condition: { membership: { state: CURRENT } }
+      orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
+    ) @include(if: $withParticipantOptions) {
+      nodes {
+        id name
+      }
     }
   }
 }

@@ -3,7 +3,9 @@ comment on table couple is '@behavior +list -connection +query:resource:list -qu
 @ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 
 comment on table federated.competition_result is '@name competition_result
-@behavior -insert -update -delete -list +query:resource:connection -query:resource:list -query:resource:single';
+@behavior -insert -update -delete -list +query:resource:connection -query:resource:list -query:resource:single
+@foreignKey (competition_id,last_round) references federated.competition_round (competition_id,round_key)|@fieldName round|@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+
 
 drop function if exists person_active_couples(person);
 drop function if exists person_all_couples(person);
@@ -22,6 +24,8 @@ drop function if exists app_private.event_trainers_at(event, timestamptz);
 
 --!include functions/event_registration_info.sql
 --!include functions/event_facets.sql
+--!include functions/activity_timeline.sql
+--!include functions/person_birthday.sql
 --!include functions/set_event_registration.sql
 --!include functions/event_trainer_lessons_remaining.sql
 --!include functions/can_trainer_edit_event.sql
@@ -106,3 +110,35 @@ insert into crawler.frontier (federation, kind, key)
 insert into crawler.rate_limit_rule (host, max_requests, per_interval)
 values ('szts.ksis.eu', 1, interval '5 seconds')
 on conflict (host) do nothing;
+
+do $$
+declare competition_ids bigint[];
+declare competition_id bigint;
+begin
+  with corrected as (
+    update federated.competition_result result
+    set last_round = reached.name, last_dance = reached.dance
+    from crawler.frontier frontier
+    join crawler.json_response response on response.id = frontier.last_successful_response_id
+    join crawler.json_response_cache cache on cache.content_hash = response.content_hash
+    join federated.competition competition
+      on competition.federation = 'wdsf' and competition.external_id = cache.content->>'competitionId'
+    cross join lateral (
+      select round.value->>'name' as name, round.value->'dances'->-1->>'name' as dance
+      from jsonb_array_elements(cache.content->'rounds') with ordinality as round(value, position)
+      order by case when round.value->>'name' ~* '^f(inal)?$' then 2
+        when round.value->>'name' = 'R' then 0 else 1 end desc, position desc
+      limit 1
+    ) reached
+    where frontier.federation = 'wdsf' and frontier.kind = 'participant'
+      and result.competition_id = competition.id
+      and result.competitor_id = 'wdsf:' || (cache.content->>'coupleId')
+      and result.last_round = 'R' and reached.name <> 'R'
+    returning result.competition_id
+  )
+  select array_agg(distinct corrected.competition_id) into competition_ids from corrected;
+
+  foreach competition_id in array coalesce(competition_ids, '{}'::bigint[]) loop
+    perform app_private.refresh_competition_round_results(competition_id);
+  end loop;
+end $$;

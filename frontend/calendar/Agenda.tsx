@@ -100,7 +100,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                     'min-w-[200px] w-full sm:w-72 rounded-lg border-green-7 bg-green-2 p-3',
                 })}
               >
-                <CompetitionEventContent entries={calendarEvent.items} />
+                <CompetitionEventContent entries={calendarEvent.items} officials={calendarEvent.officials} />
               </div>
             ))}
             {dateEntry.groups.map((instance) => (

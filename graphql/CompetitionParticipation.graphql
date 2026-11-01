@@ -21,6 +21,25 @@ fragment Competition on Competition {
   }
 }
 
+fragment CompetitionEntry on CompetitionEntry {
+  competitionId
+  competitorId
+  cancelled
+  competitor { id name }
+}
+
+fragment CompetitionResult on CompetitionResult {
+  competitionId
+  competitorId
+  competitor { id name }
+  ranking
+  rankingTo
+  pointGain
+  finalGain
+  isFinal
+  completionStatus
+}
+
 query Competitions(
   $condition: CompetitionCondition!
   $entryCondition: CompetitionEntryCondition
@@ -43,21 +62,10 @@ query Competitions(
       ... @include(if: $withDetails) {
         ...Competition
         entries: entriesList(condition: $entryCondition, orderBy: COMPETITOR_ID_ASC) {
-          competitionId
-          competitorId
-          cancelled
-          competitor { id name }
+          ...CompetitionEntry
         }
         results: resultsList(condition: $resultCondition, orderBy: COMPETITOR_ID_ASC) {
-          competitionId
-          competitorId
-          competitor { id name }
-          ranking
-          rankingTo
-          pointGain
-          finalGain
-          isFinal
-          completionStatus
+          ...CompetitionResult
         }
       }
     }

@@ -45,6 +45,13 @@ export type CreatePersonInput = {
   sendInvitation?: boolean | null | undefined;
 };
 
+export type DateRangeCondition = {
+  /** Inclusive start date. */
+  since?: string | null | undefined;
+  /** Exclusive end date. */
+  until?: string | null | undefined;
+};
+
 export type EventType =
   | 'CAMP'
   | 'GROUP'
@@ -68,6 +75,7 @@ export type PersonCondition = {
   bio?: string | null | undefined;
   /** Checks for equality with the object’s `birthDate` field. */
   birthDate?: string | null | undefined;
+  birthday?: DateRangeCondition | null | undefined;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: string | null | undefined;
   /** Checks for equality with the object’s `cstsId` field. */
@@ -82,6 +90,7 @@ export type PersonCondition = {
   gender?: GenderType | null | undefined;
   /** Checks for equality with the object’s `id` field. */
   id?: string | null | undefined;
+  ids?: Array<string> | null | undefined;
   /** Checks for equality with the object’s `imageId` field. */
   imageId?: string | null | undefined;
   /** Checks for equality with the object’s `instagramUsername` field. */
@@ -98,6 +107,7 @@ export type PersonCondition = {
   nationality?: string | null | undefined;
   /** Checks for equality with the object’s `note` field. */
   note?: string | null | undefined;
+  onlyMine?: boolean | null | undefined;
   /** Checks for equality with the object’s `phone` field. */
   phone?: string | null | undefined;
   /** Checks for equality with the object’s `prefixTitle` field. */

@@ -215,7 +215,7 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
               ...canonical,
               type: new build.graphql.GraphQLNonNull(build.graphql.getNullableType(canonical.type)),
               description: 'Competitions entered by this person, across federations.',
-              deprecationReason: 'Use competitions with condition.participant.personIds.',
+              deprecationReason: 'Use competitions with condition.competitor.personIds.',
               args: {
                 ...canonical.args,
                 first: {

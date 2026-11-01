@@ -343,7 +343,9 @@ async function loadWdsfParticipant(
   // country, nationalreference, and team country.
   const ranking = parsePositiveRank(p.rank);
   if (ranking) {
-    const lastRound = p.rounds.at(-1);
+    const lastRound = p.rounds.find((round) => /^f(inal)?$/i.test(round.name))
+      ?? p.rounds.findLast((round) => round.name !== 'R')
+      ?? p.rounds.at(-1);
     const lastDance = lastRound?.dances.at(-1);
     await upsertCompetitionResults.run(
       {

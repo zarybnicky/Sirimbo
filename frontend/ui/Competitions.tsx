@@ -5,6 +5,7 @@ import {
   CompetitionsDocument,
   CompetitionSuggestionsDocument,
   CompetitionSuggestionEventsDocument,
+  type CompetitionFragment,
   type CompetitionsQuery,
   type CompetitionsQueryVariables,
 } from '@/graphql/CompetitionParticipation';
@@ -12,8 +13,9 @@ import type {
   CompetitionType,
   FederationEventStatus,
   CompetitionParticipantCondition,
+  OfficialRole,
 } from '@/graphql';
-import type { CompetitionCategoryLabelFragment } from '@/graphql/Federation';
+import type { CompetitionCategoryLabelFragment, OfficialPersonFragment } from '@/graphql/Federation';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
@@ -25,6 +27,7 @@ import { compareNaturalText, compareText } from '@/lib/compare';
 import {
   formatCount,
   formatDateOnly,
+  formatOfficialRole,
   formatPointsAndFinals,
   formatResultStatus,
 } from '@/ui/format';
@@ -39,6 +42,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { parseAsBoolean, parseAsInteger, useQueryStates } from 'nuqs';
+import { FederationLink } from '@/ui/federation-links';
 
 const EventMap = dynamic(() => import('@/ui/EventMap'));
 
@@ -67,6 +71,15 @@ export type CompetitionEntry = {
   cancelled?: boolean;
 };
 
+export type CompetitionOfficialAssignment = {
+  date: string;
+  federation: string;
+  event: NonNullable<CompetitionFragment['event']>;
+  role: OfficialRole;
+  person: OfficialPersonFragment | null;
+};
+
+
 function entryLabel(
   entry: Pick<CompetitionEntry, 'federation' | 'category' | 'competitionType'> & {
     competitorName?: string | null;
@@ -82,23 +95,39 @@ function checkInTime(entries: readonly CompetitionEntry[]) {
   return entries.find((x) => x.checkInEnd)?.checkInEnd;
 }
 
-export function groupCompetitionEvents(entries: readonly CompetitionEntry[]) {
-  return [...Map.groupBy(entries, (x) => x.competitionDate).values()].flatMap((day) =>
-    [...Map.groupBy(day, (x) => x.competitionEventId)]
-      .map(([eventId, entries]) => ({
-        key: `${entries[0]!.competitionDate ?? ''}:${eventId ?? ''}`,
-        entries,
-      }))
+export function groupCompetitionEvents(
+  entries: readonly CompetitionEntry[],
+  officials: readonly CompetitionOfficialAssignment[] = [],
+) {
+  return [
+    ...Map.groupBy([...entries, ...officials], (item) =>
+      'role' in item ? item.date : item.competitionDate,
+    ),
+  ].flatMap(([date, day]) =>
+    [
+      ...Map.groupBy(day, (item) =>
+        'role' in item ? item.event.id : item.competitionEventId,
+      ),
+    ]
+      .map(([eventId, items]) => {
+        const entries = items.filter((item): item is CompetitionEntry => !('role' in item));
+        const officials = [...new Map(
+          items.filter((item) => 'role' in item)
+            .map((item) => [`${item.role}:${item.person?.id}`, item] as const),
+        ).values()];
+        return {
+          key: `${date ?? ''}:${eventId ?? ''}`,
+          date,
+          name: entries[0]?.competitionEventName ?? officials[0]?.event.name ?? '',
+          location:
+            entries[0]?.competitionEventLocation ??
+            (officials[0]?.event.location || officials[0]?.event.city || ''),
+          entries,
+          officials,
+        };
+      })
       .toSorted(
-        (a, b) =>
-          compareText(
-            a.entries[0]!.competitionEventName ?? '',
-            b.entries[0]!.competitionEventName ?? '',
-          ) ||
-          compareText(
-            a.entries[0]!.competitionEventLocation ?? '',
-            b.entries[0]!.competitionEventLocation ?? '',
-          ),
+        (a, b) => compareText(a.name, b.name) || compareText(a.location, b.location),
       ),
   );
 }
@@ -113,14 +142,18 @@ function CompetitionPanelFrame({ entries }: { entries: readonly CompetitionEntry
 
 export function CompetitionEventContent({
   entries,
+  officials = [],
   cards = false,
 }: {
   entries: readonly CompetitionEntry[];
+  officials?: readonly CompetitionOfficialAssignment[];
   cards?: boolean;
 }) {
   const [override, setOverride] = React.useState<boolean | null>(null);
   const event = entries[0];
-  if (!event) return null;
+  const officialEvent = officials[0]?.event;
+  const date = event?.competitionDate ?? officials[0]?.date;
+  if (!event && !officialEvent) return null;
   const unique = new Map<string, CompetitionEntry>();
   for (const entry of entries) {
     const key = `${entry.competitionId}:${entry.competitorId}`;
@@ -148,10 +181,15 @@ export function CompetitionEventContent({
         )}
       >
         <CompetitionLink
-          entry={event}
+          entry={
+            event ?? {
+              federation: officials[0]?.federation ?? null,
+              competitionEventExternalId: officialEvent?.externalId ?? null,
+            }
+          }
           className={cards ? undefined : 'text-green-11 hover:text-green-12'}
         >
-          {event.competitionEventName}
+          {event?.competitionEventName ?? officialEvent?.name}
         </CompetitionLink>
       </div>
       <div
@@ -162,8 +200,9 @@ export function CompetitionEventContent({
       >
         <span className="min-w-0 truncate">
           {[
-            event.competitionEventLocation,
-            cards && event.competitionDate && formatDateOnly(event.competitionDate),
+            event?.competitionEventLocation ??
+              (officialEvent?.location || officialEvent?.city),
+            cards && date && formatDateOnly(date),
           ]
             .filter(Boolean)
             .join(', ')}
@@ -194,6 +233,26 @@ export function CompetitionEventContent({
           <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
         </article>
       ))}
+      {[...Map.groupBy(officials, (item) => item.role)]
+        .toSorted(([a], [b]) => a.localeCompare(b))
+        .map(([role, items]) => {
+          const people = items.flatMap(({ person }) => person ?? [])
+            .toSorted((a, b) => compareText(a.canonicalName ?? '', b.canonicalName ?? ''));
+          if (people.length === 0) return null;
+          return (
+            <div key={role} className="border-t border-green-6 pt-2 text-xs">
+              <span className="font-medium">{formatOfficialRole(role)}: </span>
+              {people.map((person, index) => (
+                <React.Fragment key={person.id}>
+                  {index > 0 && ', '}
+                  <FederationLink federation={items[0]!.federation} externalId={person.externalId} entity="people" className="text-xs">
+                    {person.canonicalName || [person.firstName, person.lastName].filter(Boolean).join(' ')}
+                  </FederationLink>
+                </React.Fragment>
+              ))}
+            </div>
+          );
+        })}
     </div>
   );
 }
@@ -364,7 +423,7 @@ function competitionDetails(
   };
 }
 
-function competitionEntries(
+export function competitionEntries(
   competitions: NonNullable<CompetitionsQuery['competitions']>['nodes'],
 ): CompetitionEntry[] {
   return competitions.flatMap((competition) => {
@@ -391,9 +450,9 @@ export function CompetitionHistory({
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionsDocument,
     variables: (offset): CompetitionsQueryVariables => ({
-      condition: { participant },
-      entryCondition: { participant },
-      resultCondition: { participant },
+      condition: { competitor: participant },
+      entryCondition: { competitor: participant },
+      resultCondition: { competitor: participant },
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
       offset,
     }),
@@ -758,9 +817,9 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
     query: CompetitionsDocument,
     variables: (offset) => ({
       offset,
-      condition: { participant, date },
-      entryCondition: { participant },
-      resultCondition: { participant },
+      condition: { competitor: participant, date },
+      entryCondition: { competitor: participant },
+      resultCondition: { competitor: participant },
     }),
     limit: 50,
     pageKey: 'competitionPage',
@@ -769,7 +828,7 @@ export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
   const [{ data: clubData, fetching: clubFetching }] = useQuery({
     query: CompetitionsDocument,
     variables: {
-      condition: { participant: {}, date },
+      condition: { competitor: {}, date },
       first: 100,
       orderBy: ['START_DATE_ASC', 'ID_ASC'],
       withDetails: false,

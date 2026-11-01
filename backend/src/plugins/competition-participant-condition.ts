@@ -4,6 +4,7 @@ import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type ParticipantCondition = {
   personIds?: string[] | null;
+  onlyMine?: boolean | null;
   coupleId?: string | null;
   cohortId?: string | null;
 };
@@ -27,10 +28,14 @@ function participantPredicate(
   scope?: ParticipantCondition | null,
 ): SQL | null {
   if (scope == null) return null;
-  const { personIds, coupleId, cohortId } = scope;
+  const { personIds, onlyMine, coupleId, cohortId } = scope;
   if (personIds?.length === 0) return sql`false`;
 
   const people = [];
+  if (onlyMine)
+    people.push(
+      sql`link.person_id = any((select public.current_person_ids())::bigint[])`,
+    );
   if (personIds != null)
     people.push(
       sql`link.person_id in (${sql.join(
@@ -38,7 +43,7 @@ function participantPredicate(
         ', ',
       )})`,
     );
-  if (personIds == null && coupleId == null)
+  if (personIds == null && coupleId == null && !onlyMine)
     people.push(
       sql`link.person_id in (
         select person_id from public.current_tenant_membership
@@ -89,22 +94,18 @@ const plugins: GraphileConfig.Plugin[] = [
       input CompetitionParticipantCondition {
         """Local person IDs. An empty list matches nobody."""
         personIds: [BigInt!]
+        """Intersect the selection with all person IDs assigned to the viewer."""
+        onlyMine: Boolean
         """An exact local partnership, across federations."""
         coupleId: BigInt
         """Require a current member of this local cohort."""
         cohortId: BigInt
       }
-      input CompetitionDateCondition {
-        """Inclusive event or competition start date."""
-        since: Date
-        """Exclusive event or competition start date."""
-        until: Date
-      }
     `,
   }),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition' },
-    'participant',
+    'competitor',
     (build) => ({
       type: build.getInputTypeByName('CompetitionParticipantCondition'),
       apply(condition: PgCondition, value: ParticipantCondition | null) {
@@ -137,7 +138,7 @@ const plugins: GraphileConfig.Plugin[] = [
   ...(['competition_entry', 'competition_result'] as const).map((tableName) =>
     addPgTableCondition(
       { schemaName: 'federated', tableName },
-      'participant',
+      'competitor',
       (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
       (value, { sqlTableAlias: row }) =>
         participantPredicate(
@@ -148,7 +149,7 @@ const plugins: GraphileConfig.Plugin[] = [
   ),
   ...(['event', 'competition', 'competition_result'] as const).map((tableName) =>
     addPgTableCondition({ schemaName: 'federated', tableName }, 'date', (build) => ({
-      type: build.getInputTypeByName('CompetitionDateCondition'),
+      type: build.getInputTypeByName('DateRangeCondition'),
       apply(condition: PgCondition, value: DateCondition | null) {
         if (tableName === 'competition_result') {
           const predicate = datePredicate(sql`c.start_date`, value);

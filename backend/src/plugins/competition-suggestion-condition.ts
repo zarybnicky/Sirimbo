@@ -5,26 +5,21 @@ import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 type SuggestionCondition = {
   participant?: {
     personIds?: string[] | null;
+    onlyMine?: boolean | null;
     coupleId?: string | null;
     cohortId?: string | null;
   } | null;
-  date: { since: string; until?: string | null };
+  date: { since?: string | null; until?: string | null };
   registeredOnly?: boolean | null;
 };
 
 const plugins: GraphileConfig.Plugin[] = [
   extendSchema({
     typeDefs: `
-      input CompetitionSuggestionDateCondition {
-        """Inclusive competition start date."""
-        since: Date!
-        """Exclusive competition start date."""
-        until: Date
-      }
       input CompetitionSuggestionCondition {
         """Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators."""
         participant: CompetitionParticipantCondition
-        date: CompetitionSuggestionDateCondition!
+        date: DateRangeCondition!
         """Only matches with an existing, non-cancelled participation."""
         registeredOnly: Boolean
       }
@@ -39,12 +34,23 @@ const plugins: GraphileConfig.Plugin[] = [
         if (value == null) return null;
         const { participant: scope, date, registeredOnly } = value as SuggestionCondition;
         const participant = scope ?? {};
+        const personIds = sqlValueWithCodec(
+          participant.personIds ?? null,
+          listOfCodec(TYPES.bigint),
+        );
         return sql`${row}.id in (
         select ${tableName === 'event' ? sql`c.event_id` : sql`m.competition_id`}
         from public.suggested_competition_matches(
-          ${sqlValueWithCodec(date.since, TYPES.date)},
+          coalesce(${sqlValueWithCodec(date.since ?? null, TYPES.date)}, current_date),
           ${sqlValueWithCodec(date.until ?? null, TYPES.date)},
-          ${sqlValueWithCodec(participant.personIds ?? null, listOfCodec(TYPES.bigint))},
+          ${
+            participant.onlyMine
+              ? sql`array(
+            select unnest(public.current_person_ids())
+            intersect select unnest(coalesce(${personIds}, public.current_person_ids()))
+          )`
+              : personIds
+          },
           ${sqlValueWithCodec(participant.coupleId ?? null, TYPES.bigint)},
           ${sqlValueWithCodec(participant.cohortId ?? null, TYPES.bigint)},
           null,

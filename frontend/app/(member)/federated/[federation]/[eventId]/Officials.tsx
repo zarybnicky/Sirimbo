@@ -2,6 +2,7 @@ import { Table } from '@/ui/Table';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import type { OfficialRole } from '@/graphql';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { formatOfficialRole } from '@/ui/format';
 
 export function Officials({
   federation,
@@ -51,7 +52,7 @@ export function Officials({
             key={`${official.personId}:${official.role}:${official.discipline ?? ''}`}
             className="border-t border-neutral-4"
           >
-            <td>{official.role.toLowerCase().replaceAll('_', ' ')}</td>
+            <td>{formatOfficialRole(official.role)}</td>
             <th scope="row">
               {official.person ? (
                 <FederationLink

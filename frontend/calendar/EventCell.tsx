@@ -75,6 +75,7 @@ function CompetitionEventCell({
     >
       <div className="rbc-event-content px-1 py-0.5 text-[0.68rem] font-semibold leading-tight">
         {event.title}
+        {!!event.officials?.length && <span className="ml-1 font-normal">(Funkcionáři)</span>}
       </div>
     </div>
   );

@@ -253,6 +253,12 @@ fragment ResultHighlight on CompetitionResult {
   competitorId
   ranking
   rankingTo
+  isFinal
+  round {
+    id
+    roundKey
+    roundIndex
+  }
   competitor {
     id
     externalId
@@ -260,6 +266,10 @@ fragment ResultHighlight on CompetitionResult {
   }
   competition {
     ...Competition
+    finalRound: roundsList(first: 1, condition: { roundKey: "F" }) {
+      id
+      roundIndex
+    }
     category {
       ...CompetitionCategory
     }
@@ -386,7 +396,7 @@ fragment FederationMapEvent on FederationEvent {
 query FederationEvents(
   $federation: String!
   $search: String
-  $date: CompetitionDateCondition!
+  $date: DateRangeCondition!
   $includeCancelled: Boolean!
   $hasResults: Boolean
   $hasCoordinates: Boolean
