@@ -76,6 +76,7 @@ export function useCalendarData({
   availableTrainers,
   withFacets = true,
   withAttendance = false,
+  withClubCompetitions = false,
 }: {
   view: CalendarView;
   date: Date;
@@ -84,6 +85,7 @@ export function useCalendarData({
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
   withAttendance?: boolean;
+  withClubCompetitions?: boolean;
 }) {
   const auth = useAuth();
   const groupBy = useAtomValue(groupByAtom);
@@ -118,6 +120,7 @@ export function useCalendarData({
       withFacets,
       withAttendance,
       withCompetitions: filters.types.includes('COMPETITION'),
+      withClubCompetitions,
       withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
@@ -261,18 +264,25 @@ export function useCalendarData({
           : [];
       }),
     ];
-    const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
-      data?.competitions?.nodes ?? [],
-      officials,
-    ).map(({ key, name, date, entries, officials }) => ({
-      kind: 'competition',
-      id: `competition:${key}`,
-      title: name,
-      ...calendarDay(date!),
-      resourceKeys: effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-      items: entries,
-      officials,
-    }));
+    const competitions: CalendarCompetitionEvent[] = [];
+    const clubCompetitions: CalendarCompetitionEvent[] = [];
+    for (const [groups, events] of [
+      [groupCompetitionEvents(data?.competitions?.nodes ?? [], officials), competitions],
+      [groupCompetitionEvents(data?.clubCompetitions?.nodes ?? []), clubCompetitions],
+    ] as const) {
+      for (const { key, name, date, entries, officials } of groups) {
+        events.push({
+          kind: 'competition',
+          id: `competition:${key}`,
+          title: name,
+          ...calendarDay(date!),
+          resourceKeys:
+            effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
+          items: entries,
+          officials,
+        });
+      }
+    }
     calendarEvents.push(...competitions);
 
     for (const person of data?.birthdays?.nodes ?? []) {
@@ -306,6 +316,7 @@ export function useCalendarData({
       events: data?.eventsList ?? [],
       calendarEvents,
       competitions,
+      clubCompetitions,
       fetching,
       error,
       filterOptions,

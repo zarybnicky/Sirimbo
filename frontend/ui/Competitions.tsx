@@ -28,11 +28,7 @@ import {
   formatPointsAndFinals,
   formatResultStatus,
 } from '@/ui/format';
-import { Checkbox } from '@/ui/fields/checkbox';
 import { buttonCls, cardCls } from '@/ui/style';
-import { useAuth } from '@/lib/auth';
-import { WeekPicker } from '@/ui/WeekPicker';
-import { add, startOf } from 'date-arithmetic';
 import { ArrowLeftRight, ChevronDown } from 'lucide-react';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import Link from 'next/link';
@@ -124,20 +120,26 @@ function CompetitionPanelFrame({
 
 export function CompetitionEventContent({
   entries,
+  clubEntries = [],
   officials = [],
   cards = false,
+  showHeader = true,
 }: {
   entries: readonly CompetitionEntry[];
+  clubEntries?: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
   cards?: boolean;
+  showHeader?: boolean;
 }) {
   const [override, setOverride] = React.useState<boolean | null>(null);
+  const [expanded, setExpanded] = React.useState(false);
   const competition = entries[0]?.competition;
   const event = competition?.event ?? officials[0]?.event;
   const date = competition?.startDate ?? officials[0]?.date;
   if (!competition && !event) return null;
-  const competitors = Map.groupBy(entries, (entry) => entry.competitorId);
-  const competitions = Map.groupBy(entries, (entry) => entry.competitionId);
+  const visible = expanded ? [...entries, ...clubEntries] : entries;
+  const competitors = Map.groupBy(visible, (entry) => entry.competitorId);
+  const competitions = Map.groupBy(visible, (entry) => entry.competitionId);
   const canToggle = competitors.size > 1 && competitions.size > 1;
   const byCompetition =
     canToggle && override !== null ? override : competitions.size < competitors.size;
@@ -153,45 +155,51 @@ export function CompetitionEventContent({
 
   return (
     <div className="flex flex-col gap-1">
-      <div
-        className={cn(
-          'text-sm font-semibold leading-tight',
-          cards ? 'text-neutral-12' : 'text-green-11',
-        )}
-      >
-        <CompetitionLink
-          federation={competition?.federation ?? officials[0]?.federation}
-          eventId={event?.externalId}
-          className={cards ? undefined : 'text-green-11 hover:text-green-12'}
+      {showHeader && (
+        <div
+          className={cn(
+            'text-sm font-semibold leading-tight',
+            cards ? 'text-neutral-12' : 'text-green-11',
+          )}
         >
-          {event?.name}
-        </CompetitionLink>
-      </div>
-      <div
-        className={cn(
-          'flex items-baseline justify-between gap-2 text-xs leading-tight',
-          cards ? 'text-neutral-11' : 'text-green-11',
-        )}
-      >
-        <span className="min-w-0 truncate">
-          {[event?.location || event?.city, cards && date && formatDateOnly(date)]
-            .filter(Boolean)
-            .join(', ')}
-        </span>
-        {canToggle && (
-          <button
-            type="button"
-            aria-label={
-              byCompetition ? 'Seskupit podle účastníků' : 'Seskupit podle soutěží'
-            }
-            className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
-            onClick={() => setOverride(!byCompetition)}
+          <CompetitionLink
+            federation={competition?.federation ?? officials[0]?.federation}
+            eventId={event?.externalId}
+            className={cards ? undefined : 'text-green-11 hover:text-green-12'}
           >
-            <ArrowLeftRight className="size-3" aria-hidden />
-            {byCompetition ? 'Soutěže' : 'Účastníci'}
-          </button>
-        )}
-      </div>
+            {event?.name}
+          </CompetitionLink>
+        </div>
+      )}
+      {(showHeader || canToggle) && (
+        <div
+          className={cn(
+            'flex items-baseline justify-between gap-2 text-xs leading-tight',
+            cards ? 'text-neutral-11' : 'text-green-11',
+          )}
+        >
+          {showHeader && (
+            <span className="min-w-0 truncate">
+              {[event?.location || event?.city, cards && date && formatDateOnly(date)]
+                .filter(Boolean)
+                .join(', ')}
+            </span>
+          )}
+          {canToggle && (
+            <button
+              type="button"
+              aria-label={
+                byCompetition ? 'Seskupit podle účastníků' : 'Seskupit podle soutěží'
+              }
+              className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
+              onClick={() => setOverride(!byCompetition)}
+            >
+              <ArrowLeftRight className="size-3" aria-hidden />
+              {byCompetition ? 'Soutěže' : 'Účastníci'}
+            </button>
+          )}
+        </div>
+      )}
       {groups.map(([key, entries]) => (
         <article
           key={key}
@@ -233,6 +241,19 @@ export function CompetitionEventContent({
             </div>
           );
         })}
+      {clubEntries.length > 0 && (
+        <div className="mt-1 text-xs text-neutral-11">
+          <button
+            type="button"
+            aria-expanded={expanded}
+            onClick={() => setExpanded(!expanded)}
+            className="text-sm text-accent-11 underline underline-offset-2 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+          >
+            Ostatní soutěžící
+          </button>{' '}
+          ({new Set(clubEntries.map((x) => x.competitorId)).size})
+        </div>
+      )}
     </div>
   );
 }
@@ -739,105 +760,3 @@ function EligibleCompetitors({
     </Popover>
   );
 }
-
-export const CompetitionWeekPanel = React.memo(function CompetitionWeekPanel({
-  allowOnlyMine = false,
-}: {
-  allowOnlyMine?: boolean;
-}) {
-  const auth = useAuth();
-  const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
-  const [onlyMine, setOnlyMine] = React.useState(allowOnlyMine);
-  const date = {
-    since: format(startDate, 'yyyy-MM-dd'),
-    until: format(add(startDate, 1, 'week'), 'yyyy-MM-dd'),
-  };
-  const competitor = { personIds: onlyMine ? auth.personIds : undefined };
-  const { data, fetching, error, pagination } = usePaginatedQuery({
-    query: CompetitionsDocument,
-    variables: (offset) => ({
-      offset,
-      competitor,
-      date,
-    }),
-    limit: 50,
-    pageKey: 'competitionPage',
-    getTotal: (data) => data?.competitions?.totalCount,
-  });
-  const [{ data: clubData, fetching: clubFetching }] = useQuery({
-    query: CompetitionsDocument,
-    variables: {
-      competitor: {},
-      date,
-      first: 100,
-      orderBy: ['START_DATE_ASC', 'ID_ASC'],
-      withDetails: false,
-    },
-    pause: !onlyMine || fetching || !!error || data?.competitions?.totalCount !== 0,
-  });
-  const visible = data?.competitions?.nodes ?? [];
-  const locations = [
-    ...new Set(
-      (clubData?.competitions?.nodes ?? []).flatMap(
-        (x) => x.event?.location || x.event?.city || [],
-      ),
-    ),
-  ];
-
-  return (
-    <section className="flex flex-col relative">
-      <WeekPicker
-        title="Soutěže"
-        startDate={startDate}
-        onChange={(date) => {
-          setStartDate(date);
-          pagination.onPageChange(1);
-        }}
-      />
-
-      {allowOnlyMine && (
-        <div className="absolute top-7 right-0">
-          <Checkbox
-            name="competitions-only-mine"
-            label="Pouze moje"
-            checked={onlyMine}
-            onChange={(event) => {
-              setOnlyMine(event.currentTarget.checked);
-              pagination.onPageChange(1);
-            }}
-            className="mt-1 shrink-0"
-          />
-        </div>
-      )}
-
-      {error ? (
-        <FormError error={error} />
-      ) : fetching ? (
-        <p className="text-sm text-neutral-9">Načítám...</p>
-      ) : (
-        visible.length === 0 && (
-          <div className="text-sm text-neutral-9">
-            <p>Žádné soutěže tento týden.</p>
-            {onlyMine && !clubFetching && !!clubData?.competitions?.nodes.length && (
-              <button
-                type="button"
-                className="underline text-accent-12"
-                onClick={() => {
-                  setOnlyMine(false);
-                  pagination.onPageChange(1);
-                }}
-              >
-                Další soutěže s klubovou účastí
-                {locations.length > 0 ? `: ${locations.join(', ')}` : ''}
-                {clubData?.competitions?.pageInfo?.hasNextPage ? '…' : '.'}
-              </button>
-            )}
-          </div>
-        )
-      )}
-
-      {!error && !fetching && <CompetitionPanelFrame competitions={visible} />}
-      <Pagination {...pagination} />
-    </section>
-  );
-});

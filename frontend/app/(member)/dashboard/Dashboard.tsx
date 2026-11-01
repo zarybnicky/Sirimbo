@@ -1,7 +1,6 @@
 'use client';
 
 import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
-import { CompetitionWeekPanel } from '@/ui/Competitions';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { useAuth, useAuthLoading } from '@/lib/auth';
@@ -24,9 +23,6 @@ export function Dashboard() {
           <Tab id="myLessons" title="Moje události">
             <MyEventsList />
           </Tab>
-          <Tab id="competitions" title="Soutěže" requireMember>
-            <CompetitionWeekPanel allowOnlyMine />
-          </Tab>
           <Tab id="myAnnouncements" title="Aktuality" requireMember>
             <MyAnnouncements />
           </Tab>
@@ -37,10 +33,7 @@ export function Dashboard() {
       </div>
 
       <div className="hidden xl:grid grid-cols-3 gap-4">
-        <div className="flex flex-col gap-8">
-          <MyEventsList />
-          {auth.isMember && <CompetitionWeekPanel allowOnlyMine />}
-        </div>
+        <MyEventsList />
         {auth.isMember && <MyAnnouncements />}
         {auth.isMember && <StickyAnnouncements />}
       </div>
