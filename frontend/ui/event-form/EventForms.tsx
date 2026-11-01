@@ -266,7 +266,9 @@ function EventEditor({
             <RadioButtonGroupElement
               control={control}
               name="type"
-              options={eventTypeOptions}
+              options={eventTypeOptions.filter(
+                (x) => x.id !== 'RESERVATION' || defaultValues.type === 'RESERVATION',
+              )}
             />
             <TextFieldElement
               control={control}
