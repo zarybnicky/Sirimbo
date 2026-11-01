@@ -114,10 +114,10 @@ export function Couple({ id }: { id: string }) {
             />
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory participant={{ coupleId: id }} />
+          <CompetitionHistory competitor={{ coupleId: id }} />
         </Tab>
         <Tab id="eligible" title="Možné soutěže">
-          <CompetitionSuggestions participant={{ coupleId: id }} />
+          <CompetitionSuggestions competitor={{ coupleId: id }} />
         </Tab>
       </TabMenu>
     </>

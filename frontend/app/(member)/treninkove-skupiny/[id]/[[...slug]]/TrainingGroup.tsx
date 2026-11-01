@@ -97,10 +97,10 @@ export function TrainingGroup({
             <TrainingGroupMembers members={members} />
           </Tab>
           <Tab id="fed" title="Výsledky">
-            <CompetitionHistory participant={{ cohortId: cohort.id }} />
+            <CompetitionHistory competitor={{ cohortId: cohort.id }} />
           </Tab>
           <Tab id="eligible" title="Možné soutěže">
-            <CompetitionSuggestions participant={{ cohortId: cohort.id }} />
+            <CompetitionSuggestions competitor={{ cohortId: cohort.id }} />
           </Tab>
           <Tab id="access" title="Přístupy" requireAdmin>
             <PeopleAccessOverview cohortId={cohort.id} />

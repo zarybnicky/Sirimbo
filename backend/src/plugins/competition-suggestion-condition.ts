@@ -3,7 +3,7 @@ import { sql } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 type SuggestionCondition = {
-  participant?: {
+  competitor?: {
     personIds?: string[] | null;
     onlyMine?: boolean | null;
     coupleId?: string | null;
@@ -18,7 +18,7 @@ const plugins: GraphileConfig.Plugin[] = [
     typeDefs: `
       input CompetitionSuggestionCondition {
         """Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators."""
-        participant: CompetitionParticipantCondition
+        competitor: CompetitionParticipantCondition
         date: DateRangeCondition!
         """Only matches with an existing, non-cancelled participation."""
         registeredOnly: Boolean
@@ -32,10 +32,10 @@ const plugins: GraphileConfig.Plugin[] = [
       (build) => ({ type: build.getInputTypeByName('CompetitionSuggestionCondition') }),
       (value, { sqlTableAlias: row }) => {
         if (value == null) return null;
-        const { participant: scope, date, registeredOnly } = value as SuggestionCondition;
-        const participant = scope ?? {};
+        const { competitor: scope, date, registeredOnly } = value as SuggestionCondition;
+        const competitor = scope ?? {};
         const personIds = sqlValueWithCodec(
-          participant.personIds ?? null,
+          competitor.personIds ?? null,
           listOfCodec(TYPES.bigint),
         );
         return sql`${row}.id in (
@@ -44,15 +44,15 @@ const plugins: GraphileConfig.Plugin[] = [
           coalesce(${sqlValueWithCodec(date.since ?? null, TYPES.date)}, current_date),
           ${sqlValueWithCodec(date.until ?? null, TYPES.date)},
           ${
-            participant.onlyMine
+            competitor.onlyMine
               ? sql`array(
             select unnest(public.current_person_ids())
             intersect select unnest(coalesce(${personIds}, public.current_person_ids()))
           )`
               : personIds
           },
-          ${sqlValueWithCodec(participant.coupleId ?? null, TYPES.bigint)},
-          ${sqlValueWithCodec(participant.cohortId ?? null, TYPES.bigint)},
+          ${sqlValueWithCodec(competitor.coupleId ?? null, TYPES.bigint)},
+          ${sqlValueWithCodec(competitor.cohortId ?? null, TYPES.bigint)},
           null,
           ${registeredOnly ? sql`true` : sql`false`}
         ) m

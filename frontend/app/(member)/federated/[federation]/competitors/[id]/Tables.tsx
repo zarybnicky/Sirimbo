@@ -65,9 +65,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: CompetitionsDocument,
     variables: (offset): CompetitionsQueryVariables => ({
-      condition: { competitorId: id },
-      entryCondition: { competitorId: id },
-      resultCondition: { competitorId: id },
+      competitorId: id,
       offset,
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
     }),

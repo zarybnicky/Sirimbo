@@ -2451,9 +2451,9 @@ export type CompetitionRoundsOrderBy =
   | 'ROUND_LABEL_DESC';
 
 export type CompetitionSuggestionCondition = {
-  date: DateRangeCondition;
   /** Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators. */
-  participant?: InputMaybe<CompetitionParticipantCondition>;
+  competitor?: InputMaybe<CompetitionParticipantCondition>;
+  date: DateRangeCondition;
   /** Only matches with an existing, non-cancelled participation. */
   registeredOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };

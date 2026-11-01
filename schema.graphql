@@ -3141,12 +3141,11 @@ enum CompetitionRoundsOrderBy {
 }
 
 input CompetitionSuggestionCondition {
-  date: DateRangeCondition!
-
   """
   Local people, active couple, or cohort. Defaults to current tenant members, trainers, and administrators.
   """
-  participant: CompetitionParticipantCondition
+  competitor: CompetitionParticipantCondition
+  date: DateRangeCondition!
 
   """Only matches with an existing, non-cancelled participation."""
   registeredOnly: Boolean

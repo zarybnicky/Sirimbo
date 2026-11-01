@@ -213,10 +213,10 @@ export const PersonView = React.memo(function PersonView({
             </div>
           )}
           <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory participant={{ personIds: [id] }} />
+          <CompetitionHistory competitor={{ personIds: [id] }} />
         </Tab>
         <Tab id="eligible" title="Možné soutěže">
-          <CompetitionSuggestions participant={{ personIds: [id] }} />
+          <CompetitionSuggestions competitor={{ personIds: [id] }} />
         </Tab>
         {isAdminOrCurrentPerson && (
           <>

@@ -41,9 +41,9 @@ fragment CompetitionResult on CompetitionResult {
 }
 
 query Competitions(
-  $condition: CompetitionCondition!
-  $entryCondition: CompetitionEntryCondition
-  $resultCondition: CompetitionResultCondition
+  $competitor: CompetitionParticipantCondition
+  $competitorId: String
+  $date: DateRangeCondition
   $first: Int! = 50
   $offset: Int! = 0
   $orderBy: [CompetitionsOrderBy!] = [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
@@ -52,7 +52,7 @@ query Competitions(
   competitions(
     first: $first
     offset: $offset
-    condition: $condition
+    condition: { competitor: $competitor, competitorId: $competitorId, date: $date }
     orderBy: $orderBy
   ) {
     totalCount @include(if: $withDetails)
@@ -61,10 +61,10 @@ query Competitions(
       event { id location city }
       ... @include(if: $withDetails) {
         ...Competition
-        entries: entriesList(condition: $entryCondition, orderBy: COMPETITOR_ID_ASC) {
+        entries: entriesList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
           ...CompetitionEntry
         }
-        results: resultsList(condition: $resultCondition, orderBy: COMPETITOR_ID_ASC) {
+        results: resultsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
           ...CompetitionResult
         }
       }
@@ -94,7 +94,7 @@ query CompetitionResults(
 }
 
 query CompetitionSuggestionEvents(
-  $participant: CompetitionParticipantCondition!
+  $competitor: CompetitionParticipantCondition!
   $since: Date!
   $registeredOnly: Boolean! = false
   $offset: Int! = 0
@@ -103,7 +103,7 @@ query CompetitionSuggestionEvents(
     first: 50
     offset: $offset
     condition: { suggestedFor: {
-      participant: $participant, date: { since: $since }, registeredOnly: $registeredOnly
+      competitor: $competitor, date: { since: $since }, registeredOnly: $registeredOnly
     } }
     orderBy: [START_DATE_ASC, ID_ASC]
   ) {
