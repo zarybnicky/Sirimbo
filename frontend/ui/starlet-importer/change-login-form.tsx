@@ -1,8 +1,7 @@
-import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
+import { UpdateTenantSettingsDocument } from '@/graphql/Tenant';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
-import React from 'react';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';

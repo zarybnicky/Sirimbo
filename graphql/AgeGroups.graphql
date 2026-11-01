@@ -1,17 +1,29 @@
+fragment AgeGroupDetail on AgeGroup {
+  code
+  name
+  age {
+    start {
+      value
+    }
+    end {
+      value
+    }
+  }
+  coupleRules(condition: { division: "General" }) {
+    ageGroupCode
+    olderAge {
+      start { value }
+      end { value }
+    }
+    youngerAge {
+      start { value }
+      end { value }
+    }
+  }
+}
+
 query AgeGroupRules {
   ageGroupsList(condition: { isCouple: true }) {
-    code
-    name
-    coupleRules(condition: { division: "General" }) {
-      ageGroupCode
-      olderAge {
-        start { value }
-        end { value }
-      }
-      youngerAge {
-        start { value }
-        end { value }
-      }
-    }
+    ...AgeGroupDetail
   }
 }

@@ -329,6 +329,9 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
       condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     ) {
       ...EventRegistration
+      childRegistrations(condition: { registrationStatus: ACTIVE }) {
+        totalCount
+      }
     }
   }
 }
@@ -506,14 +509,12 @@ query CalendarData(
   ) @include(if: $withCompetitions) {
     nodes {
       ...Competition
-      entries: entriesList(
-        condition: { competitor: $participant }
-        orderBy: COMPETITOR_ID_ASC
-      ) { ...CompetitionEntry }
-      results: resultsList(
-        condition: { competitor: $participant }
-        orderBy: COMPETITOR_ID_ASC
-      ) { ...CompetitionResult }
+      entries: entriesList(condition: { competitor: $participant }) {
+        ...CompetitionEntry
+      }
+      results: resultsList(condition: { competitor: $participant }) {
+        ...CompetitionResult
+      }
     }
   }
   clubCompetitions: competitions(
@@ -526,14 +527,12 @@ query CalendarData(
   ) @include(if: $withClubCompetitions) {
     nodes {
       ...Competition
-      entries: entriesList(
-        condition: { competitor: {}, cancelled: false }
-        orderBy: COMPETITOR_ID_ASC
-      ) { ...CompetitionEntry }
-      results: resultsList(
-        condition: { competitor: {} }
-        orderBy: COMPETITOR_ID_ASC
-      ) { ...CompetitionResult }
+      entries: entriesList(condition: { competitor: {}, cancelled: false }) {
+        ...CompetitionEntry
+      }
+      results: resultsList(condition: { competitor: {} }) {
+        ...CompetitionResult
+      }
     }
   }
   officialEvents: federationEvents(

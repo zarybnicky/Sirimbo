@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { add } from 'date-arithmetic';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { buttonCls } from '@/ui/style';
 import { capitalize, fullDateFormatter, monthFormatter } from '@/ui/format';
@@ -14,8 +15,8 @@ export type PeriodUnit = (typeof periodOptions)[number]['value'];
 export type PeriodValue = { unit: PeriodUnit; date: Date };
 
 export function getPeriodRange(unit: PeriodUnit, date: Date) {
-  const year = date.getUTCFullYear();
-  const month = date.getUTCMonth();
+  const year = date.getFullYear();
+  const month = date.getMonth();
   const schoolYear = month >= 8 ? year : year - 1;
   const schoolMonth = (year - schoolYear) * 12 + month - 8;
   let startMonth = 8;
@@ -24,8 +25,8 @@ export function getPeriodRange(unit: PeriodUnit, date: Date) {
   switch (unit) {
     case 'month':
       return {
-        since: new Date(Date.UTC(year, month, 1)),
-        until: new Date(Date.UTC(year, month + 1, 1)),
+        since: new Date(year, month, 1),
+        until: new Date(year, month + 1, 1),
       };
     case 'semester':
       startMonth += schoolMonth < 5 ? 0 : 5;
@@ -38,8 +39,8 @@ export function getPeriodRange(unit: PeriodUnit, date: Date) {
   }
 
   return {
-    since: new Date(Date.UTC(schoolYear, startMonth, 1)),
-    until: new Date(Date.UTC(schoolYear, startMonth + months, 1)),
+    since: new Date(schoolYear, startMonth, 1),
+    until: new Date(schoolYear, startMonth + months, 1),
   };
 }
 
@@ -69,19 +70,19 @@ export function PeriodPicker({
           aria-label="Předchozí období"
           className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
           onClick={() =>
-            onChange({ ...value, date: new Date(range.since.getTime() - 86_400_000) })
+            onChange({ ...value, date: add(range.since, -1, 'day') })
           }
         >
           <ChevronLeft aria-hidden />
         </button>
         <span className="text-xs font-medium tabular-nums text-neutral-12">
           {value.unit === 'schoolyear'
-            ? `${range.since.getUTCFullYear()}/${range.until.getUTCFullYear()}`
+            ? `${range.since.getFullYear()}/${range.until.getFullYear()}`
             : value.unit === 'month'
               ? capitalize(monthFormatter.format(range.since))
               : fullDateFormatter.formatRange(
                   range.since,
-                  new Date(range.until.getTime() - 86_400_000),
+                  add(range.until, -1, 'day'),
                 )}
         </span>
         <button

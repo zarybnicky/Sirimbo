@@ -23,7 +23,7 @@ export function AttendanceReport() {
   const [{ data, fetching, error }] = useQuery({
     query: TrainerAttendanceReportDocument,
     variables: {
-      since: period.since.toISOString().slice(0, 10),
+      since: period.since.toISOString(),
       until: now.toISOString(),
     },
   });

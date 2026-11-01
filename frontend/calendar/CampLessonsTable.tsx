@@ -105,7 +105,8 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
           row.prices.set(
             price.currency,
             (row.prices.get(price.currency) ?? 0) +
-              Number(price.amount) * (registration.couple ? 2 : 1),
+              Number(price.amount) *
+                (registration.personId ? 1 : registration.childRegistrations.totalCount),
           );
         }
         rows.set(participantId, row);

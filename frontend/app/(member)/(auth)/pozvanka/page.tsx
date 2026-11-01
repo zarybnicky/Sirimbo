@@ -1,4 +1,4 @@
-import { InvitationInfoDocument } from '@/graphql/CurrentUser';
+import { InvitationInfoDocument } from '@/graphql/Invitation.ts';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { StatusPage } from '@/ui/StatusPage';

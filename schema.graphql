@@ -6027,7 +6027,6 @@ input EventPatch {
   isVisible: Boolean
   locationId: BigInt
   locationText: String
-  managerPersonIds: [BigInt]
   name: String
   parentId: BigInt
   range: DatetimeRangeInput

@@ -4886,7 +4886,6 @@ export type EventPatch = {
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
   locationText?: InputMaybe<Scalars['String']['input']>;
-  managerPersonIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   name?: InputMaybe<Scalars['String']['input']>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;

@@ -17,7 +17,6 @@ import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
-import { format } from 'date-fns';
 import { compareCategories, formatCategoryName } from '@/ui/csts';
 import { cn } from '@/lib/cn';
 import { compareNaturalText, compareText } from '@/lib/compare';
@@ -146,9 +145,7 @@ export function CompetitionEventContent({
   const groups = [...(byCompetition ? competitions : competitors)].toSorted(
     ([, a], [, b]) =>
       (byCompetition
-        ? (a[0]?.competition.checkInEnd ?? '24:00').localeCompare(
-            b[0]?.competition.checkInEnd ?? '24:00',
-          )
+        ? (a[0]?.competition.checkInEnd ?? '').localeCompare(b[0]?.competition.checkInEnd ?? '')
         : 0) ||
       compareText(entryLabel(a[0]!, byCompetition), entryLabel(b[0]!, byCompetition)),
   );
@@ -245,7 +242,6 @@ export function CompetitionEventContent({
         <div className="mt-1 text-xs text-neutral-11">
           <button
             type="button"
-            aria-expanded={expanded}
             onClick={() => setExpanded(!expanded)}
             className="text-sm text-accent-11 underline underline-offset-2 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
           >
@@ -449,7 +445,7 @@ export function CompetitionSuggestions({
 }: {
   competitor?: CompetitionParticipantCondition;
 }) {
-  const [since] = React.useState(() => format(new Date(), 'yyyy-MM-dd'));
+  const [since] = React.useState(() => new Date().toISOString().slice(0, 10));
   const [mapView, setMapView] = React.useState<MapView>();
   const [showMap, setShowMap] = React.useState(true);
   const [filters, setFilters] = useQueryStates(

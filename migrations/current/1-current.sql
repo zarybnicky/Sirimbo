@@ -48,6 +48,8 @@ end $$;
 alter table event alter column stats set default row(0, 0, 0, 0)::event_stats;
 comment on column event.stats is
   '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+comment on column event.manager_person_ids is '@behavior -attribute:insert -attribute:update';
+
 comment on column event_stats.total is '@notNull';
 comment on column event_stats.unknown is '@notNull';
 comment on column event_stats.attended is '@notNull';

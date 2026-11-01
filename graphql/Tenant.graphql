@@ -36,15 +36,6 @@ query TenantsFull {
   }
 }
 
-mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
-  updateTenantSetting(input: { tenantId: $tenantId, patch: { settings: $settings } }) {
-    tenantSetting {
-      tenantId
-      settings
-    }
-  }
-}
-
 query Club($showInLists: Boolean) {
   tenant: getCurrentTenant {
     id
@@ -74,6 +65,31 @@ mutation UpdateTenant($input: UpdateTenantInput!) {
   updateTenant(input: $input) {
     tenant {
       ...TenantFull
+    }
+  }
+}
+
+query TenantSettings($tenantId: BigInt!) {
+  tenantSetting(tenantId: $tenantId) {
+    tenantId
+    settings
+  }
+}
+
+mutation UpdateTenantSettings($input: UpdateTenantSettingsKeyInput!) {
+  updateTenantSettingsKey(input: $input) {
+    result {
+      tenantId
+      settings
+    }
+  }
+}
+
+mutation ReplaceTenantSettings($tenantId: BigInt!, $settings: JSON!) {
+  updateTenantSetting(input: { tenantId: $tenantId, patch: { settings: $settings } }) {
+    tenantSetting {
+      tenantId
+      settings
     }
   }
 }

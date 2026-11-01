@@ -1,4 +1,4 @@
-import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
+import { UpdateTenantSettingsDocument } from '@/graphql/Tenant';
 import { fetchStarlet } from '@/starlet/query';
 import { FoldersAndSeasonsDocument } from '@/starlet/graphql/Query';
 import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';

@@ -14,3 +14,8 @@ mutation DeleteInvitation($input: DeletePersonInvitationInput!) {
     __typename
   }
 }
+
+query InvitationInfo($token: UUID!) {
+  invitationInfo(token: $token)
+  invitationName(token: $token)
+}

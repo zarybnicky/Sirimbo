@@ -16,18 +16,7 @@ fragment CompetitionCategoryLabel on Category {
 fragment CompetitionCategory on Category {
   ...CompetitionCategoryLabel
   ageGroupDetails {
-    code
-    age {
-      start { value }
-      end { value }
-    }
-    coupleRules(condition: { division: "General" }) {
-      ageGroupCode
-      olderAge {
-        start { value }
-        end { value }
-      }
-    }
+    ...AgeGroupDetail
   }
 }
 
@@ -535,23 +524,12 @@ query FederationCompetitors(
           foreignFinals
           category {
             id
-            ageGroup
-            ageGroupDetails {
-              code
-              age {
-                start { value }
-                end { value }
-              }
-              coupleRules(condition: { division: "General" }) {
-                ageGroupCode
-                olderAge {
-                  start { value }
-                  end { value }
-                }
-              }
-            }
             class
             discipline
+            ageGroup
+            ageGroupDetails {
+              ...AgeGroupDetail
+            }
           }
         }
       }
@@ -569,18 +547,7 @@ query FederationCompetitorFacets(
   $competedSince: Date
 ) {
   ageGroupsList {
-    code
-    age {
-      start { value }
-      end { value }
-    }
-    coupleRules(condition: { division: "General" }) {
-      ageGroupCode
-      olderAge {
-        start { value }
-        end { value }
-      }
-    }
+    ...AgeGroupDetail
   }
   federation(code: $federation) {
     code

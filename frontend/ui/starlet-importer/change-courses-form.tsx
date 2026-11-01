@@ -1,4 +1,4 @@
-import { UpdateTenantSettingsDocument } from '@/graphql/CurrentUser';
+import { UpdateTenantSettingsDocument } from '@/graphql/Tenant';
 import { EnumerateCoursesDocument } from '@/starlet/graphql/Query';
 import { VerticalCheckboxButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { FormError, useFormResult } from '@/ui/form';
