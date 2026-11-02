@@ -14,9 +14,9 @@ import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
 import {
+  ageGroupNames,
   formatAgeGroup,
   formatClass,
-  formatDiscipline,
   getBestCstsProgress,
 } from '@/ui/csts';
 import { PageHeader } from '@/ui/PageHeader';
@@ -36,6 +36,42 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
+import { Histogram } from '@/ui/Histogram';
+import { rollup } from 'd3';
+
+const shortAgeGroups: Record<string, string> = {
+  Under_8: 'U8',
+  Juvenile: 'D',
+  Juvenile_I: 'D1',
+  Juvenile_II: 'D2',
+  Junior: 'J',
+  Junior_I: 'J1',
+  Junior_II: 'J2',
+  Youth: 'Ml',
+  Under_21: 'U21',
+  Adult: 'Do',
+  Senior: 'S',
+  Senior_I: 'S1',
+  Senior_II: 'S2',
+  Senior_III: 'S3',
+  Senior_IV: 'S4',
+  Senior_V: 'S5',
+};
+
+const collapsedAgeGroups: Record<string, string> = {
+  Senior_Ia: 'Adult',
+  Senior_Ib: 'Senior_I',
+  Senior_IIa: 'Senior_I',
+  Senior_IIb: 'Senior_II',
+  Senior_IIIa: 'Senior_II',
+  Senior_IIIb: 'Senior_III',
+  Senior_IVa: 'Senior_III',
+  Senior_IVb: 'Senior_IV',
+};
+
+const ageGroupOrder = new Map(
+  Object.keys(ageGroupNames).map((code, index) => [code, index]),
+);
 
 export function TrainingGroup({
   initialCohort,
@@ -157,6 +193,49 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
     auth.isTrainer ? 'activity' : 'competitive',
   );
   const activityView = auth.isTrainer && view === 'activity';
+  const people = members.map((member) => member.person).filter(isTruthy);
+  const ages = rollup(
+    people,
+    (group) => group.length,
+    (person) => collapsedAgeGroups[person.ageGroup ?? ''] ?? person.ageGroup ?? '?',
+  );
+  const ageCounts = [
+    ...new Set([
+      '?',
+      ...Object.keys(shortAgeGroups).filter(
+        (code) => !['Juvenile', 'Junior', 'Senior'].includes(code),
+      ),
+      ...ages.keys(),
+    ]),
+  ]
+    .filter(
+      (code) =>
+        !['Under_8', 'Juvenile_I', 'Juvenile_II'].includes(code) || ages.has(code),
+    )
+    .toSorted(
+      (a, b) =>
+        Number(b === '?') - Number(a === '?') ||
+        (ageGroupOrder.get(a) ?? Infinity) - (ageGroupOrder.get(b) ?? Infinity) ||
+        a.localeCompare(b),
+    )
+    .map((code): [string, number] => [code, ages.get(code) ?? 0]);
+  const classCounts = (discipline: string) => {
+    const counts = rollup(
+      people,
+      (group) => group.length,
+      (person) =>
+        (person.cstsId &&
+          formatClass(
+            getBestCstsProgress(person.federationCategoryProgresses.nodes, discipline)
+              ?.category?.class,
+          )) ||
+        '?',
+    );
+    return ['?', 'E', 'D', 'C', 'B', 'A', 'M'].map((code): [string, number] => [
+      code,
+      counts.get(code) ?? 0,
+    ]);
+  };
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(
     personActions,
@@ -182,6 +261,18 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
             ]}
             onValueChange={(value) => setView(value as typeof view)}
           />
+        </div>
+      )}
+      {!activityView && (
+        <div className="col-span-full flex flex-wrap items-start gap-5">
+          <Histogram
+            label="Věk"
+            data={ageCounts}
+            formatLabel={(value) => shortAgeGroups[value] ?? value}
+            formatTitle={(value) => formatAgeGroup(value) ?? '?'}
+          />
+          <Histogram label="STT" data={classCounts('Standard')} bucketWidth={14} />
+          <Histogram label="LAT" data={classCounts('Latin')} bucketWidth={14} />
         </div>
       )}
       {!activityView && (
