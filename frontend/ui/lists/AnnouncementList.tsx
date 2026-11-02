@@ -150,7 +150,7 @@ function AnnouncementListPage({
   const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
 
   if (!data && fetching) {
-    return <div className="p-4 text-center">Loading...</div>;
+    return <div className="p-4 text-center">Načítám...</div>;
   }
 
   return (

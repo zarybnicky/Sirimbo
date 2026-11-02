@@ -9,7 +9,12 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
-import { formatAgeGroup, formatCompetitorType, formatDiscipline } from '@/ui/csts';
+import {
+  formatAgeGroup,
+  formatCompetitorType,
+  formatDiscipline,
+  genderLabels,
+} from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
@@ -82,7 +87,7 @@ export default async function FederatedPersonPage({ params }: Props) {
             </a>
           ),
           'Datum narození': person.dob && formatDateOnly(person.dob),
-          Pohlaví: person.gender?.toLowerCase(),
+          Pohlaví: genderLabels[person.gender ?? 'UNKNOWN'],
           Národnost: person.nationality,
           Věk: person.ageGroup && formatAgeGroup(person.ageGroup),
           'Soutěží jako':

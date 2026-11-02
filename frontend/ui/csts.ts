@@ -1,4 +1,9 @@
-import type { CompetitionType, CompetitorType } from '@/graphql';
+import type {
+  CompetitionType,
+  CompetitorType,
+  FederationEventStatus,
+  Gender,
+} from '@/graphql';
 import type { AgeGroupDetailFragment, AgeGroupRulesQuery } from '@/graphql/AgeGroups';
 import type {
   CompetitionCategoryLabelFragment,
@@ -126,6 +131,22 @@ export const formatAgeRangeForYear = (year: number, { start, end }: AgeRange): s
   return '—';
 };
 
+export const federationStatusLabels: Record<FederationEventStatus, string> = {
+  PLANNED: 'Plánováná',
+  IN_PROGRESS: 'Probíhá',
+  COMPLETED: 'Dokončená',
+  CANCELLED: 'Zrušená',
+  POSTPONED: 'Odložená',
+  UNKNOWN: 'Neznámý stav',
+};
+
+export const genderLabels: Record<Gender, string> = {
+  MALE: 'Muž',
+  FEMALE: 'Žena',
+  OTHER: 'Jiné',
+  UNKNOWN: 'Neuvedeno',
+};
+
 const disciplineNames: Record<string, string> = {
   STANDARD: 'STT',
   LATIN: 'LAT',
@@ -197,6 +218,18 @@ const competitorTypeNames: Record<string, string> = {
 
 export function formatCompetitorType(value: string | null | undefined) {
   return value ? (competitorTypeNames[value] ?? value) : undefined;
+}
+
+export function formatJudgeLabel(judge: {
+  judgeLabel: string | null;
+  judgeIndex: number;
+}) {
+  if (judge.judgeLabel) return judge.judgeLabel;
+  let label = '';
+  for (let index = judge.judgeIndex; index > 0; index = Math.floor((index - 1) / 26)) {
+    label = String.fromCodePoint(65 + ((index - 1) % 26)) + label;
+  }
+  return label;
 }
 
 const cstsCompetitorTypeNames: Record<CompetitorType, string> = {

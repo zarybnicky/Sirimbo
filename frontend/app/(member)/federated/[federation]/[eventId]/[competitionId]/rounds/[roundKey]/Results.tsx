@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import type { CompetitionRoundQuery } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
 import { formatJudgeScore, numberFormatter } from '@/ui/format';
+import { formatJudgeLabel } from '@/ui/csts';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 
 export function Results({
@@ -53,7 +54,7 @@ export function Results({
   }));
   const judges = round.judgesList.map((judge) => ({
     key: judge.personJudge?.externalId ?? judge.personJudgeId.split(':').at(-1)!,
-    label: judge.judgeLabel || judge.judgeIndex,
+    label: formatJudgeLabel(judge),
     personId: judge.personJudgeId,
   }));
   const groups = showMarks ? (view === 'dance' ? dances : judges) : [];
@@ -121,7 +122,7 @@ export function Results({
             options={[
               { id: 'dance', label: 'Podle tance' },
               { id: 'judge', label: 'Podle porotce' },
-              { id: 'detailed', label: 'Deatilní' },
+              { id: 'detailed', label: 'Detailní' },
             ]}
             onValueChange={(x) => setView(x as typeof view)}
           />
@@ -193,8 +194,8 @@ export function Results({
                   {result.overallRanking ?? '–'}
                   {result.overallRankingTo &&
                   result.overallRankingTo !== result.overallRanking
-                    ? `–${result.overallRankingTo}`
-                    : ''}
+                    ? `–${result.overallRankingTo}.`
+                    : '.'}
                 </td>
                 <td rowSpan={resultRowSpan} className="px-2 py-1">
                   {result.startNumber}
@@ -272,8 +273,8 @@ export function Results({
                 className="col-feature mb-4"
                 caption={dance.title || dance.title}
                 columns={[
-                  'start number',
-                  'competitor',
+                  'Startovní č.',
+                  'Soutěžící',
                   ...judges.map((judge) => (
                     <span key={judge.personId} className="block text-center">
                       {judge.label}

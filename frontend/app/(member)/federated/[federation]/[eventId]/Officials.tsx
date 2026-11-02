@@ -6,6 +6,7 @@ import type { OfficialRole } from '@/graphql';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
 import { formatDiscipline } from '@/ui/csts';
 import { formatOfficialRole } from '@/ui/format';
+import { compareNaturalText } from '@/lib/compare';
 
 export function Officials({
   federation,
@@ -36,8 +37,10 @@ export function Officials({
         ...new Map(
           officials.filter((x) => x.role === 'ADJUDICATOR').map((x) => [x.personId, x]),
         ).values(),
-      ].toSorted((a, b) =>
-        (a.person?.canonicalName ?? '').localeCompare(b.person?.canonicalName ?? ''),
+      ].toSorted(
+        (a, b) =>
+          compareNaturalText(a.judgeLabel ?? '', b.judgeLabel ?? '') ||
+          (a.person?.canonicalName ?? '').localeCompare(b.person?.canonicalName ?? ''),
       )
     : [];
   if (rows.length === 0 && judges.length === 0) return null;
@@ -47,25 +50,21 @@ export function Officials({
     <div className="mt-3 space-y-3">
       {judges.length > 0 && (
         <>
-          <h2 className="mb-2 text-lg font-bold">
-            Porota
-          </h2>
-          <ul className="space-y-1">
-            {judges.map((x) => (
-              <li key={x.personId}>
-                <OfficialName federation={federation} official={x} />
-              </li>
-            ))}
-          </ul>
+          <h2 className="mb-2 text-lg font-bold">Porota</h2>
+          <DefinitionList
+            items={judges.map((x): [string, ReactNode] => [
+              x.judgeLabel ?? '',
+              <OfficialName key={x.personId} federation={federation} official={x} />,
+            ])}
+          />
         </>
       )}
 
       {roles.size > 0 && (
         <>
-          <h2 className="mb-2 text-lg font-bold">
-            Funkcionáři
-          </h2>
-          <DefinitionList className="text-sm tabular space-y-1"
+          <h2 className="mb-2 text-lg font-bold">Funkcionáři</h2>
+          <DefinitionList
+            className="text-sm tabular space-y-1"
             items={[...roles].map(([role, members]): [string, ReactNode] => [
               formatOfficialRole(role),
               <ul key={role}>

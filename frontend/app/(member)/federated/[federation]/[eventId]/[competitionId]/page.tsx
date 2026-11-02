@@ -1,6 +1,6 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import { DefinitionList } from '@/ui/DefinitionList';
-import { formatCategoryName } from '@/ui/csts';
+import { federationStatusLabels, formatCategoryName } from '@/ui/csts';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -91,8 +91,7 @@ export default async function CompetitionPage({ params }: Props) {
               Výsledky
             </CstsResultsLink>
           ),
-          Stav: competition.status.toLowerCase().replaceAll('_', ' '),
-          Typ: competition.competitionType?.toLowerCase().replaceAll('_', ' '),
+          Stav: federationStatusLabels[competition.status],
           'Konec prezence': competition.checkInEnd?.slice(0, 5),
           Účastníků: competition.participantsTotal ?? competition.results.length,
           'Dokončena v':
@@ -110,12 +109,7 @@ export default async function CompetitionPage({ params }: Props) {
       <Officials
         federation={federation}
         officials={competition.officials.nodes}
-        showJudges={
-          event.status !== 'COMPLETED' &&
-          competition.status !== 'COMPLETED' &&
-          competition.results.length === 0 &&
-          competition.rounds.length === 0
-        }
+        showJudges
       />
       <Sources federation={federation} condition={{ competitionId: competition.id }} />
     </Layout>

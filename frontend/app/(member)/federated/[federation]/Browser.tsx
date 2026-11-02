@@ -31,8 +31,9 @@ import {
   formatClass,
   formatCompetitorType,
   formatDiscipline,
+  genderLabels,
 } from '@/ui/csts';
-import type { CompetitorType } from '@/graphql';
+import type { CompetitorType, Gender } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly, formatPointsAndFinals } from '@/ui/format';
 import EventMap, { defaultMapViews, mapViews } from '@/ui/EventMap';
@@ -71,17 +72,11 @@ const peopleFacets = [
   { key: 'nationality', label: 'Národnost' },
 ] as const;
 
-const genderLabels: Record<string, string> = {
-  male: 'Muž',
-  female: 'Žena',
-  unknown: 'Neuvedeno',
-};
-
 function facetLabel(key: string, value: string) {
   if (key === 'ageGroup') return formatAgeGroup(value) ?? value;
   if (key === 'discipline') return formatDiscipline(value) ?? value;
   if (key === 'class') return formatClass(value) ?? value;
-  if (key === 'gender') return genderLabels[value]!;
+  if (key === 'gender') return genderLabels[value.toUpperCase() as Gender];
   return key === 'type' ? (formatCompetitorType(value) ?? value) : value;
 }
 
@@ -113,7 +108,12 @@ function useBrowserState(federation: string) {
       type: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault([]),
       ageGroup: parseAsArrayOf(parseAsString).withDefault([]),
       gender: parseAsArrayOf(
-        parseAsStringLiteral(['male', 'female', 'unknown'] as const),
+        parseAsStringLiteral([
+          'male',
+          'female',
+          'other',
+          'unknown',
+        ] as const satisfies readonly Lowercase<Gender>[]),
       ).withDefault([]),
       nationality: parseAsArrayOf(parseAsString).withDefault([]),
       class: parseAsArrayOf(parseAsString).withDefault([]),
@@ -293,7 +293,7 @@ function Events(props: BrowserProps) {
       )}
 
       <Table
-        columns={['Datum', 'Soutěž', 'Místo', 'Země', 'Soutěží']}
+        columns={['Datum', 'Soutěž', 'Místo', 'Soutěží']}
         busy={isPending}
         error={result.error ?? facets.error}
         empty="Žádné události"
@@ -321,8 +321,9 @@ function Events(props: BrowserProps) {
                 <div className="text-xs text-neutral-11">Zrušeno</div>
               )}
             </th>
-            <td>{event.location || event.city}</td>
-            <td>{event.country}</td>
+            <td>
+              {[event.location || event.city, event.country].filter(Boolean).join(', ')}
+            </td>
             <td>{event.competitions.totalCount}</td>
           </tr>
         ))}
@@ -440,7 +441,7 @@ function People(props: BrowserProps) {
               </Link>
             </th>
             <td>{formatAgeGroup(row.ageGroupDetails ?? row.ageGroup) || '–'}</td>
-            <td>{genderLabels[row.gender?.toLowerCase() ?? 'unknown']}</td>
+            <td>{genderLabels[row.gender ?? 'UNKNOWN']}</td>
             <td>{row.nationality || '–'}</td>
           </tr>
         ))}
@@ -595,31 +596,29 @@ function Competitors(props: BrowserProps) {
         <table className="w-full text-left text-sm tabular-nums">
           <thead>
             <tr>
-              {['competitor', 'Typ', 'Věk', 'Poslední soutěž', ...disciplines].map(
-                (column) => (
-                  <th key={column} scope="col" className="px-2 py-1">
-                    {['Typ', 'Věk', 'Poslední soutěž'].includes(column) ? (
-                      column
-                    ) : (
-                      <SortButton
-                        column={column}
-                        value={{ column: filters.sort, descending: filters.descending }}
-                        defaultDescending={column !== 'competitor'}
-                        onChange={({ column, descending }) =>
-                          setFilters({ sort: column, descending, page: null })
-                        }
-                      >
-                        {column === 'competitor' ? 'Jméno' : formatDiscipline(column)}
-                      </SortButton>
-                    )}
-                  </th>
-                ),
-              )}
+              {['competitor', 'Věk', 'Poslední soutěž', ...disciplines].map((column) => (
+                <th key={column} scope="col" className="px-2 py-1">
+                  {['Věk', 'Poslední soutěž'].includes(column) ? (
+                    column
+                  ) : (
+                    <SortButton
+                      column={column}
+                      value={{ column: filters.sort, descending: filters.descending }}
+                      defaultDescending={column !== 'competitor'}
+                      onChange={({ column, descending }) =>
+                        setFilters({ sort: column, descending, page: null })
+                      }
+                    >
+                      {column === 'competitor' ? 'Jméno' : formatDiscipline(column)}
+                    </SortButton>
+                  )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             <TableStatus
-              colSpan={4 + disciplines.length}
+              colSpan={3 + disciplines.length}
               busy={isPending || facetResult.fetching}
               error={result.error ?? facetResult.error}
               empty={competitors.length === 0 ? 'No competitors found' : undefined}
@@ -643,21 +642,18 @@ function Competitors(props: BrowserProps) {
                 {ageGroups.map((ageGroup, index) => (
                   <tr key={ageGroup}>
                     {index === 0 && (
-                      <>
-                        <th scope="rowgroup" rowSpan={ageGroups.length}>
-                          <Link
-                            className="text-accent-11 underline"
-                            href={`/federated/${federation}/competitors/${row.externalId}`}
-                            prefetch={false}
-                          >
-                            {row.name || row.id}
-                          </Link>
-                        </th>
-
-                        <td rowSpan={ageGroups.length}>
-                          {formatCompetitorType(row.competitorType)}
-                        </td>
-                      </>
+                      <th scope="rowgroup" rowSpan={ageGroups.length}>
+                        <Link
+                          className="text-accent-11 underline"
+                          href={`/federated/${federation}/competitors/${row.externalId}`}
+                          prefetch={false}
+                        >
+                          {row.name || row.id}
+                        </Link>
+                        {row.competitorType !== 'COUPLE' &&
+                          row.competitorType !== 'SOLO' &&
+                          ` (${formatCompetitorType(row.competitorType)})`}
+                      </th>
                     )}
                     <td className="whitespace-nowrap">
                       {formatAgeGroup(

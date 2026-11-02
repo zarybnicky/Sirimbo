@@ -40,8 +40,8 @@ export function Results({
             <td className="whitespace-nowrap">
               {result.ranking}
               {result.rankingTo && result.rankingTo !== result.ranking
-                ? `–${result.rankingTo}`
-                : ''}
+                ? `–${result.rankingTo}.`
+                : '.'}
             </td>
             <td>{result.startNumber}</td>
             <th scope="row">

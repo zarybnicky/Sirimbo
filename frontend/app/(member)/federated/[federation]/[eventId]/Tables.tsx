@@ -28,6 +28,11 @@ export function Competitions({
     getTotal: (data) =>
       data?.federationEventByFederationAndExternalId?.competitions?.totalCount,
   });
+  const competitions =
+    data?.federationEventByFederationAndExternalId?.competitions.nodes ?? [];
+  const showDate = competitions.some(
+    (comp) => comp.startDate !== competitions[0]?.startDate,
+  );
 
   return (
     <>
@@ -37,13 +42,14 @@ export function Competitions({
         error={error}
         columns={[
           'Kategorie',
-          'Typ',
-          'Datum',
+          showDate && 'Datum',
           'Prezence',
-          'Účastníci',
+          <span key="participants" className="block text-right">
+            Účastníci
+          </span>,
         ]}
       >
-        {data?.federationEventByFederationAndExternalId?.competitions?.nodes.map((comp) => (
+        {competitions.map((comp) => (
           <tr key={comp.id} className="border-t border-neutral-4">
             <th scope="row">
               <Link
@@ -57,10 +63,13 @@ export function Competitions({
                 {formatCategoryName(comp) || comp.externalId}
               </Link>
             </th>
-            <td>{comp.competitionType?.toLowerCase().replaceAll('_', ' ')}</td>
-            <td className="whitespace-nowrap">{formatDateOnly(comp.startDate)}</td>
+            {showDate && (
+              <td className="whitespace-nowrap">{formatDateOnly(comp.startDate)}</td>
+            )}
             <td>{comp.checkInEnd?.slice(0, 5)}</td>
-            <td>{comp.results.totalCount || comp.entries.totalCount}</td>
+            <td className="text-right">
+              {comp.results.totalCount || comp.entries.totalCount}
+            </td>
           </tr>
         ))}
       </Table>

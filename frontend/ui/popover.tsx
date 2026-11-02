@@ -53,7 +53,7 @@ export const PopoverContent = React.forwardRef<
         {children}
         <PopoverPrimitive.Close className="absolute right-3 top-3 rounded-xs opacity-70 ring-offset-neutral-7 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-accent-7 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent-5 data-[state=open]:text-white">
           <X className="size-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">Zavřít</span>
         </PopoverPrimitive.Close>
       </PopoverPrimitive.Content>
     </PopoverPortal>

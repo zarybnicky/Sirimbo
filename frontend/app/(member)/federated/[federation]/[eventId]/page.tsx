@@ -1,4 +1,5 @@
 import { DefinitionList } from '@/ui/DefinitionList';
+import { federationStatusLabels } from '@/ui/csts';
 import { CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -66,9 +67,9 @@ export default async function EventPage({ params }: Props) {
         className="text-sm"
         items={{
           Zdroj: federation === 'csts' && (
-            <CstsResultsLink eventId={event.externalId}>ČSTS results</CstsResultsLink>
+            <CstsResultsLink eventId={event.externalId}>ČSTS výsledky</CstsResultsLink>
           ),
-          Stav: event.status.toLowerCase().replaceAll('_', ' '),
+          Stav: federationStatusLabels[event.status],
           'Místo konání':
             [
               event.location,

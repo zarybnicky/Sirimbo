@@ -55,7 +55,6 @@ export function Sources({
           {source.processStatus.toLowerCase()})
         </p>
       ))}
-      {sources.length === 0 && <p>No matching frontiers</p>}
       <Pagination {...pagination} />
     </section>
   );

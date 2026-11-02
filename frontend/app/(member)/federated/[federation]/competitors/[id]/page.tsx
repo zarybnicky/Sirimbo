@@ -65,6 +65,11 @@ export default async function CompetitorPage({ params }: Props) {
           ID: externalId,
           Typ: formatCompetitorType(competitor.competitorType),
           Věk: formatAgeGroup(competitor.ageGroup),
+          'Poslední soutěž':
+            (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +
+            (competitor.latestEntryAt && competitor.latestEntryAt > today
+              ? ' (+ budoucí)'
+              : ''),
           Osoby:
             competitor.components.nodes.length > 0 &&
             competitor.components.nodes.map(({ personId, person, role }) => (
@@ -94,11 +99,6 @@ export default async function CompetitorPage({ params }: Props) {
                 ({formatOpenDateRange(couple)})
               </div>
             )),
-          'Poslední soutěž':
-            (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +
-            (competitor.latestEntryAt && competitor.latestEntryAt > today
-              ? ' (+ budoucí)'
-              : ''),
         }}
       />
 

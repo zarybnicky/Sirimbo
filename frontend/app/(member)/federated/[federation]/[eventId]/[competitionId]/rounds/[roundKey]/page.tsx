@@ -1,6 +1,6 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import { DefinitionList } from '@/ui/DefinitionList';
-import { formatCategoryName } from '@/ui/csts';
+import { formatCategoryName, formatJudgeLabel } from '@/ui/csts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -101,11 +101,11 @@ export default async function RoundPage({ params }: Props) {
         }
       />
 
-      <h2 className="mt-4 mb-2 text-lg font-bold">Porota</h2>
+      <h2 className="mt-4 text-lg font-bold">Porota</h2>
       <dl className="text-sm tabular">
         {round.judgesList.map((judge) => (
           <div key={judge.personJudgeId}>
-            <dt>{judge.judgeLabel || judge.judgeIndex}</dt>
+            <dt>{formatJudgeLabel(judge)}</dt>
             <dd>
               {judge.personJudge ? (
                 <>
