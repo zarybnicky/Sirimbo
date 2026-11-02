@@ -33,7 +33,6 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 }) {
   const auth = useAuth();
   const { enableStarletImport } = useTenantConfig();
-  const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(item.id);
   const tenantId = useTenantId();
   const showClubs =
     auth.isSystemAdmin || (auth.isAdmin && auth.adminTenantIds.length > 1);
@@ -70,15 +69,18 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
   return (
     <div key="info" className="mb-2">
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
+      {(item.couplesList.length > 0 ||
+        actions.some((action) => action.id === 'person.createCouple')) && (
+        <div className="flex justify-between items-baseline flex-wrap gap-4">
+          <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
 
-        <ActionGroup
-          actions={actions.filter((action) => action.id === 'person.createCouple')}
-          primary="person.createCouple"
-          iconOnly
-        />
-      </div>
+          <ActionGroup
+            actions={actions.filter((action) => action.id === 'person.createCouple')}
+            primary="person.createCouple"
+            iconOnly
+          />
+        </div>
+      )}
 
       {item.couplesList
         ?.toSorted((a, b) => a.since.localeCompare(b.since))
@@ -86,15 +88,18 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           <CoupleRow key={couple.id} item={couple} />
         ))}
 
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
+      {(item.cohortMembershipsList.some(keyIsNonNull('cohort')) ||
+        actions.some((action) => action.id === 'person.addToCohort')) && (
+        <div className="flex justify-between items-baseline flex-wrap gap-4">
+          <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
 
-        <ActionGroup
-          actions={actions.filter((action) => action.id === 'person.addToCohort')}
-          primary="person.addToCohort"
-          iconOnly
-        />
-      </div>
+          <ActionGroup
+            actions={actions.filter((action) => action.id === 'person.addToCohort')}
+            primary="person.addToCohort"
+            iconOnly
+          />
+        </div>
+      )}
       {item.cohortMembershipsList
         .filter(keyIsNonNull('cohort'))
         .toSorted((x, y) => x.since.localeCompare(y.since))
@@ -112,26 +117,28 @@ export const PersonMembershipView = memo(function PersonMembershipView({
           </ActionRow>
         ))}
 
-      <div className="flex justify-between items-baseline flex-wrap gap-4">
-        <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
-        <ActionGroup
-          actions={actions.filter((action) =>
-            ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
-              action.id,
-            ),
-          )}
-        />
-      </div>
+      {(item.tenantMembershipsList.some(visibleMembership) ||
+        item.tenantAdministratorsList.some(visibleMembership) ||
+        item.tenantTrainersList.some(visibleMembership) ||
+        actions.some((action) =>
+          ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
+            action.id,
+          ),
+        )) && (
+        <div className="flex justify-between items-baseline flex-wrap gap-4">
+          <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
+          <ActionGroup
+            actions={actions.filter((action) =>
+              ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
+                action.id,
+              ),
+            )}
+          />
+        </div>
+      )}
 
       {item.tenantAdministratorsList.filter(visibleMembership).map((item) => (
-        <ActionRow
-          key={item.id}
-          actions={
-            auth.isSystemAdmin || item.tenantId === tenantId
-              ? tenantAdministratorActionMap.get(item.id)!
-              : []
-          }
-        >
+        <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <DotSeparated className="font-bold">
               Správce{showClubs && item.tenantName}
@@ -142,14 +149,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       ))}
 
       {item.tenantTrainersList.filter(visibleMembership).map((item) => (
-        <ActionRow
-          key={item.id}
-          actions={
-            auth.isSystemAdmin || item.tenantId === tenantId
-              ? tenantTrainerActionMap.get(item.id)!
-              : []
-          }
-        >
+        <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
             <DotSeparated className="font-bold">
               Trenér{showClubs && item.tenantName}
@@ -175,14 +175,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       ))}
 
       {item.tenantMembershipsList.filter(visibleMembership).map((item) => (
-        <ActionRow
-          key={item.id}
-          actions={
-            auth.isSystemAdmin || item.tenantId === tenantId
-              ? tenantMembershipActionMap.get(item.id)!
-              : []
-          }
-        >
+        <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
             <DotSeparated className="font-bold">
               Člen{showClubs && item.tenantName}
@@ -192,106 +185,101 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         </ActionRow>
       ))}
 
-      {isAdminOrCurrentPerson && (
-        <>
-          <div className="flex justify-between items-baseline flex-wrap gap-4">
-            <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
-            {auth.isAdmin && (
-              <ActionGroup
-                actions={actions.filter((action) =>
-                  ['person.invite', 'person.linkUser'].includes(action.id),
-                )}
-                groups={{ add: ['person.invite', 'person.linkUser'] }}
-              />
+      {(item.userProxiesList?.some(keyIsNonNull('user')) ||
+        !!item.personInvitationsList?.length ||
+        actions.some((action) =>
+          ['person.invite', 'person.linkUser'].includes(action.id),
+        )) && (
+        <div className="flex justify-between items-baseline flex-wrap gap-4">
+          <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
+          <ActionGroup
+            actions={actions.filter((action) =>
+              ['person.invite', 'person.linkUser'].includes(action.id),
             )}
-          </div>
+            groups={{ add: ['person.invite', 'person.linkUser'] }}
+          />
+        </div>
+      )}
 
-          {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
-            <ActionRow key={proxy.id} actions={userProxyActionMap.get(proxy.id)!}>
-              <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
-                <b className="wrap-break-word">
-                  <Link href={`/users/${proxy.user.id}`} className="underline">
-                    {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
-                  </Link>
-                </b>
-                <span>{formatOpenDateRange(proxy)}</span>
+      {item.userProxiesList?.filter(keyIsNonNull('user')).map((proxy) => (
+        <ActionRow key={proxy.id} actions={userProxyActionMap.get(proxy.id)!}>
+          <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm gap-y-1 sm:gap-x-3">
+            <b className="wrap-break-word">
+              <Link href={`/users/${proxy.user.id}`} className="underline">
+                {[proxy.user.uEmail, proxy.user.uLogin].filter(Boolean).join(', ')}
+              </Link>
+            </b>
+            <span>{formatOpenDateRange(proxy)}</span>
+          </div>
+        </ActionRow>
+      ))}
+
+      {item.personInvitationsList?.map((invitation) => (
+        <ActionRow key={invitation.id} actions={invitationActionMap.get(invitation.id)!}>
+          <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
+            <b className="wrap-break-word">({invitation.email})</b>
+            <span>
+              pozvánka odeslána {fullDateFormatter.format(new Date(invitation.createdAt))}
+            </span>
+          </div>
+        </ActionRow>
+      ))}
+
+      {enableStarletImport && (
+        <>
+          {(item.accessCredentialsList.length > 0 ||
+            actions.some((action) => action.id === 'person.addAccessCredential')) && (
+            <div className="flex justify-between items-baseline flex-wrap gap-4">
+              <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
+              <ActionGroup
+                actions={actions.filter(
+                  (action) => action.id === 'person.addAccessCredential',
+                )}
+                primary="person.addAccessCredential"
+                iconOnly
+              />
+            </div>
+          )}
+          {item.accessCredentialsList.map((card) => (
+            <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
+              <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
+                <span className={card.isAllowed ? '' : 'line-through'}>
+                  <b>{card.label}</b>
+                  <code className="ml-2 text-neutral-11">{card.code}</code>
+                </span>
+                <span className="text-right text-neutral-11">
+                  {card.lastUsed
+                    ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
+                    : 'Nikdy nepoužita'}
+                </span>
               </div>
             </ActionRow>
           ))}
+        </>
+      )}
 
-          {auth.isAdmin &&
-            item.personInvitationsList?.map((invitation) => (
-              <ActionRow
-                key={invitation.id}
-                actions={invitationActionMap.get(invitation.id)!}
+      {item.accessEventsList.length > 0 && (
+        <>
+          <h3 className="text-lg font-semibold mt-4 mb-2">Poslední průchody</h3>
+          <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
+            {item.accessEventsList.map((event) => (
+              <div
+                key={event.id}
+                className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
               >
-                <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
-                  <b className="wrap-break-word">({invitation.email})</b>
-                  <span>
-                    pozvánka odeslána{' '}
-                    {fullDateFormatter.format(new Date(invitation.createdAt))}
-                  </span>
-                </div>
-              </ActionRow>
-            ))}
-
-          {auth.isAdmin && enableStarletImport && (
-            <>
-              <div className="flex justify-between items-baseline flex-wrap gap-4">
-                <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
-                <ActionGroup
-                  actions={actions.filter(
-                    (action) => action.id === 'person.addAccessCredential',
+                <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
+                <DotSeparated className="text-neutral-11">
+                  {dateTimeFormatter.format(new Date(event.occurredAt))}
+                  {event.location && (
+                    <Link className="underline" href={`/lokality/${event.location.id}`}>
+                      {event.location.name}
+                    </Link>
                   )}
-                  primary="person.addAccessCredential"
-                  iconOnly
-                />
+                  {event.device}
+                </DotSeparated>
               </div>
-              {item.accessCredentialsList.map((card) => (
-                <ActionRow key={card.id} actions={credentialActionMap.get(card.id)!}>
-                  <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
-                    <span className={card.isAllowed ? '' : 'line-through'}>
-                      <b>{card.label}</b>
-                      <code className="ml-2 text-neutral-11">{card.code}</code>
-                    </span>
-                    <span className="text-right text-neutral-11">
-                      {card.lastUsed
-                        ? `Naposledy použita ${dateTimeFormatter.format(new Date(card.lastUsed))}`
-                        : 'Nikdy nepoužita'}
-                    </span>
-                  </div>
-                </ActionRow>
-              ))}
-            </>
-          )}
-
-          {item.accessEventsList.length > 0 && (
-            <>
-              <h3 className="text-lg font-semibold mt-4 mb-2">Poslední průchody</h3>
-              <div className="divide-y divide-neutral-5 rounded-md border border-neutral-5">
-                {item.accessEventsList.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex flex-wrap justify-between gap-2 px-3 py-2 text-sm"
-                  >
-                    <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
-                    <DotSeparated className="text-neutral-11">
-                      {dateTimeFormatter.format(new Date(event.occurredAt))}
-                      {event.location && (
-                        <Link
-                          className="underline"
-                          href={`/lokality/${event.location.id}`}
-                        >
-                          {event.location.name}
-                        </Link>
-                      )}
-                      {event.device}
-                    </DotSeparated>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+            ))}
+          </div>
         </>
       )}
     </div>

@@ -13,6 +13,8 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     label: 'Upravit trenéra',
     icon: Pencil,
     requireAdmin: true,
+    visible: ({ auth, tenantId, item }) =>
+      auth.isSystemAdmin || item.tenantId === tenantId,
     render: ({ item }) => <EditTenantTrainerForm id={item.id} />,
   },
   {
@@ -20,7 +22,8 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     label: 'Ukončit ke dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
-    visible: ({ item }) => item.status === 'ACTIVE',
+    visible: ({ auth, tenantId, item }) =>
+      (auth.isSystemAdmin || item.tenantId === tenantId) && item.status === 'ACTIVE',
     confirm: ({ item }) =>
       `Opravdu chcete ${item.person?.name} ukončit trenérství ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -35,6 +38,8 @@ export const tenantTrainerActions = defineActions<TenantTrainerFragment>()([
     icon: Trash2,
     variant: 'danger',
     requireAdmin: true,
+    visible: ({ auth, tenantId, item }) =>
+      auth.isSystemAdmin || item.tenantId === tenantId,
     confirm:
       'Opravdu chcete trenéra NENÁVRATNĚ smazat, včetně všech odučených lekcí? Spíše použij variantu ukončení členství, ať zůstanou zachována historická data.',
     execute: async ({ item, mutate }) => {
