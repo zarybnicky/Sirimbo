@@ -43,10 +43,14 @@ const errorEmitter = (errorTarget: ErrorEventTarget) =>
 
 const noopExchange: Exchange = ({ forward }) => forward;
 
-function invalidateQueryFields(cache: Cache, fieldNameParts: string[]) {
-  for (const field of cache.inspectFields('Query')) {
-    if (fieldNameParts.some((part) => field.fieldName.includes(part))) {
-      cache.invalidate('Query', field.fieldName, field.arguments);
+function invalidateQueryFields(
+  cache: Cache,
+  fieldNames: string[],
+  entity: Parameters<Cache['invalidate']>[0] = 'Query',
+) {
+  for (const field of cache.inspectFields(entity)) {
+    if (fieldNames.includes(field.fieldName)) {
+      cache.invalidate(entity, field.fieldName, field.arguments);
     }
   }
 }
@@ -293,7 +297,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
             id: args.input.eventId,
           });
         }
-        invalidateQueryFields(cache, ['eventsList', 'eventFacetsList']);
+        invalidateQueryFields(cache, ['eventFacetsList']);
       },
       setEventSharing(_result, args, cache, _info) {
         if (args.input.id) {
@@ -304,7 +308,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         for (const event of result.updateEventSeries?.eventSeries?.eventsList ?? []) {
           cache.invalidate({ __typename: 'Event', id: event.id });
         }
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
+        invalidateQueryFields(cache, ['eventOverlaps', 'eventFacetsList']);
       },
 
       createCouple(_result, args, cache, _info) {
@@ -370,16 +374,16 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         const location = result.upsertLocation?.result;
         if (location) cache.invalidate({ __typename: 'Location', id: location.id });
         const tenantId = location?.tenantId;
-        if (tenantId) cache.invalidate({ __typename: 'Tenant', id: tenantId });
+        if (tenantId)
+          invalidateQueryFields(cache, ['locationsList'], {
+            __typename: 'Tenant',
+            id: tenantId,
+          });
       },
       updateTenant(_result, args, cache, _info) {
-        if (args.input.id) cache.invalidate({ __typename: 'Tenant', id: args.input.id });
-        invalidateQueryFields(cache, ['tenantsList', 'getCurrentTenant']);
-      },
-      updateTenantSetting(_result, args, cache, _info) {
-        if (args.input.tenantId)
-          cache.invalidate({ __typename: 'Tenant', id: args.input.tenantId });
-        invalidateQueryFields(cache, ['tenantsList']);
+        if (args.input.patch.name != null) {
+          invalidateQueryFields(cache, ['tenantsList']);
+        }
       },
 
       deleteCouple(_result, args, cache, _info) {
@@ -413,10 +417,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       updateEvent(result, _args, cache, _info) {
         const id = result.updateEvent?.event?.id;
         if (id) cache.invalidate({ __typename: 'Event', id });
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
+        invalidateQueryFields(cache, ['eventOverlaps', 'eventFacetsList']);
       },
-      moveEvent(_result, _args, cache, _info) {
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
+      moveEvent(_result, _args, cache, info) {
+        if (info.optimistic) return;
+        invalidateQueryFields(cache, ['eventOverlaps', 'eventFacetsList']);
       },
 
       createPerson(_result, _args, cache, _info) {
@@ -432,11 +437,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
-      saveEvents(result, _args, cache, _info) {
-        for (const event of result.saveEvents?.result ?? []) {
+      saveEvents(result, args, cache, _info) {
+        for (const event of result.saveEvents?.result ?? [])
           cache.invalidate({ __typename: 'Event', id: event.id });
-        }
-        invalidateQueryFields(cache, ['eventsList', 'eventOverlaps', 'eventFacetsList']);
+        if (args.input.events?.some((event) => !event?.id))
+          invalidateQueryFields(cache, ['eventsList']);
+        invalidateQueryFields(cache, ['eventOverlaps', 'eventFacetsList']);
       },
 
       createPersonInvitation(_result, args, cache, _info) {

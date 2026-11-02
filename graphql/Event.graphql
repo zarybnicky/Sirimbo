@@ -624,7 +624,7 @@ query CalendarData(
 mutation SaveEvents($input: SaveEventsInput!) {
   saveEvents(input: $input) {
     result {
-      id
+      ...EventWithRegistrations
     }
   }
 }

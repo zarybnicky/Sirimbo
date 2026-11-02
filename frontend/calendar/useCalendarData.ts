@@ -127,11 +127,12 @@ export function useCalendarData({
   });
 
   const effectiveGroupBy = onlyMine ? 'none' : groupBy;
+  const queryVariables = operation?.variables;
 
   React.useEffect(() => {
-    if (fetching || !operation || !view.nav) return;
-    const prev = prepareVariables(view.range(view.nav(date, -1)), operation.variables);
-    const next = prepareVariables(view.range(view.nav(date, 1)), operation.variables);
+    if (!queryVariables || !view.nav) return;
+    const prev = prepareVariables(view.range(view.nav(date, -1)), queryVariables);
+    const next = prepareVariables(view.range(view.nav(date, 1)), queryVariables);
     const timeout = setTimeout(() => {
       void client
         .query(CalendarDataDocument, prev, { requestPolicy: 'cache-first' })
@@ -141,7 +142,7 @@ export function useCalendarData({
         .toPromise();
     }, 100);
     return () => clearTimeout(timeout);
-  }, [client, date, fetching, operation, view]);
+  }, [client, date, queryVariables, view]);
 
   return React.useMemo(() => {
     const trainers =
