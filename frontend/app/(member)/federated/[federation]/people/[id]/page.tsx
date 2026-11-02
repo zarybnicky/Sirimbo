@@ -10,7 +10,7 @@ import { PageHeader } from '@/ui/PageHeader';
 import { Competitors } from './Competitors';
 import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
-import { formatAgeGroup } from '@/ui/csts';
+import { formatAgeGroup, formatDiscipline } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
@@ -137,7 +137,7 @@ export default async function FederatedPersonPage({ params }: Props) {
                 className="border-t border-neutral-4"
               >
                 <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
-                <td>{license.discipline.toLowerCase().replaceAll('_', ' ')}</td>
+                <td>{formatDiscipline(license.discipline)}</td>
                 <td>{license.grade || '-'}</td>
                 <td>{license.status.toLowerCase()}</td>
                 <td className="whitespace-nowrap tabular-nums">

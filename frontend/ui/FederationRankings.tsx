@@ -5,15 +5,10 @@ import {
   compareDisciplines,
   formatAgeGroup,
   formatClass,
+  formatDiscipline,
 } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
 import { Table } from '@/ui/Table';
-
-const disciplineNames: Record<string, string> = {
-  Standard: 'STT',
-  Latin: 'LAT',
-  TenDance: '10T',
-};
 
 function ranklistRows(entries: FederationRankingFragment[]) {
   return entries
@@ -116,7 +111,7 @@ function RankBadge({ entries }: { entries: ReturnType<typeof ranklistRows> }) {
           className="whitespace-nowrap"
           title={`${row.competitor} · ${row.ranklist} · ${formatDateOnly(row.date)}`}
         >
-          {disciplineNames[row.discipline] ?? row.discipline} {row.placement}
+          {formatDiscipline(row.discipline)} {row.placement}
         </span>
       ))}
     </span>
@@ -153,7 +148,7 @@ export function FederationRankings({
         'Ranklist',
         ...columns.map((discipline) => (
           <span key={discipline} className="block text-right">
-            {disciplineNames[discipline] ?? discipline}
+            {formatDiscipline(discipline)}
           </span>
         )),
       ]}

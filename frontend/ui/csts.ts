@@ -126,6 +126,17 @@ export const formatAgeRangeForYear = (year: number, { start, end }: AgeRange): s
   return '—';
 };
 
+const disciplineNames: Record<string, string> = {
+  STANDARD: 'STT',
+  LATIN: 'LAT',
+  STANDARD_LATIN: 'STT+LAT',
+  TENDANCE: '10T',
+};
+
+export function formatDiscipline(value: string | null | undefined) {
+  return value ? (disciplineNames[value.toUpperCase()] ?? value) : undefined;
+}
+
 const hiddenClasses = ['Entry', 'Novice', 'Bronze', 'Silver', 'Gold'];
 const hiddenCategoryClasses = new Set(hiddenClasses);
 const classOrder = ['E', 'D', 'C', 'B', 'A', 'S', 'M'];
@@ -378,15 +389,7 @@ function formatCstsCategoryName(
     competitionType !== 'CHAMPIONSHIP'
       ? cstsCompetitorTypeNames[competitorType]
       : undefined,
-    discipline === 'Standard_Latin'
-      ? 'STT+LAT'
-      : discipline === 'TenDance'
-        ? '10T'
-        : discipline?.toLowerCase() === 'standard'
-          ? 'STT'
-          : discipline?.toLowerCase() === 'latin'
-            ? 'LAT'
-            : discipline,
+    formatDiscipline(discipline),
     competitionType && typeSuffix[competitionType],
   ]
     .filter(Boolean)

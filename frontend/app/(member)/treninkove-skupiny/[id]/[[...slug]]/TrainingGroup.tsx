@@ -13,7 +13,12 @@ import { cohortActions } from '@/lib/actions/cohort';
 import { cohortMembershipActions } from '@/lib/actions/cohortMembership';
 import { useActionMap, useActions } from '@/lib/actions';
 import { RichTextView } from '@/ui/RichTextView';
-import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
+import {
+  formatAgeGroup,
+  formatClass,
+  formatDiscipline,
+  getBestCstsProgress,
+} from '@/ui/csts';
 import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
@@ -137,13 +142,7 @@ function CategoryList({
       <div className="font-medium">
         {[
           formatClass(item.category?.class),
-          item.category?.discipline === 'Standard_Latin'
-            ? 'STT+LAT'
-            : item.category?.discipline === 'Standard'
-              ? 'STT'
-              : item.category?.discipline === 'Latin'
-                ? 'LAT'
-                : item.category?.discipline,
+          formatDiscipline(item.category?.discipline),
         ]
           .filter(Boolean)
           .join(' ')}

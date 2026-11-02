@@ -1,3 +1,4 @@
+import { formatDiscipline } from '@/ui/csts';
 import type { Metadata } from 'next';
 import { ascending, range, scaleOrdinal, schemeTableau10 } from 'd3';
 import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from 'd3-sankey';
@@ -224,7 +225,7 @@ async function CompetitionSankey({
                       : '6 4'
                 }
               >
-                <title>{`${link.source.label} ${link.source.year} -> ${link.target.label} ${link.target.year}\n${link.value} ${link.discipline}; ${KIND_LABEL[link.kind]}`}</title>
+                <title>{`${link.source.label} ${link.source.year} -> ${link.target.label} ${link.target.year}\n${link.value} ${formatDiscipline(link.discipline)}; ${KIND_LABEL[link.kind]}`}</title>
               </path>
             ))}
         </g>
@@ -271,7 +272,7 @@ async function CompetitionSankey({
                 background: color(discipline),
               }}
             />
-            {discipline}
+            {formatDiscipline(discipline)}
           </span>
         ))}
       </figcaption>

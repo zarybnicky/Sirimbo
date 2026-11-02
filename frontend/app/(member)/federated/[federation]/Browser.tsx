@@ -29,6 +29,7 @@ import {
   compareDisciplines,
   formatAgeGroup,
   formatClass,
+  formatDiscipline,
 } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
 import { Pagination } from '@/ui/Pagination';
@@ -77,6 +78,7 @@ const genderLabels: Record<string, string> = {
 
 function facetLabel(key: string, value: string) {
   if (key === 'ageGroup') return formatAgeGroup(value) ?? value;
+  if (key === 'discipline') return formatDiscipline(value) ?? value;
   if (key === 'class') return formatClass(value) ?? value;
   if (key === 'gender') return genderLabels[value]!;
   return key === 'type' ? value.toLowerCase() : value;
@@ -606,7 +608,7 @@ function Competitors(props: BrowserProps) {
                           setFilters({ sort: column, descending, page: null })
                         }
                       >
-                        {column === 'competitor' ? 'Jméno' : column}
+                        {column === 'competitor' ? 'Jméno' : formatDiscipline(column)}
                       </SortButton>
                     )}
                   </th>

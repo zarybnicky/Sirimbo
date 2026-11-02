@@ -4,6 +4,7 @@ import { DotSeparated } from '@/ui/DotSeparated';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import type { OfficialRole } from '@/graphql';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { formatDiscipline } from '@/ui/csts';
 import { formatOfficialRole } from '@/ui/format';
 
 export function Officials({
@@ -73,7 +74,7 @@ export function Officials({
                     <OfficialName federation={federation} official={x} />
                     <DotSeparated className="ml-0.5 flex text-xs text-neutral-11">
                       {x.judgeLabel}
-                      {x.discipline}
+                      {formatDiscipline(x.discipline)}
                     </DotSeparated>
                   </li>
                 ))}
