@@ -15,7 +15,7 @@ export const buttonCls = tv({
     variant: {
       none: ' ',
       primary:
-        'bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11 has-disabled:bg-neutral-3 has-disabled:text-neutral-11',
+        'border border-transparent bg-accent-9 hover:bg-accent-10 active:bg-accent-10 text-accent-0 disabled:bg-neutral-3 disabled:text-neutral-11 has-disabled:bg-neutral-3 has-disabled:text-neutral-11',
       outline:
         'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 ' +
         'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',

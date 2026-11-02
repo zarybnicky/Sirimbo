@@ -8,6 +8,7 @@ import { Spinner } from '@/ui/Spinner';
 type BaseSubmitButtonProps = React.ComponentPropsWithRef<'button'> & {
   state?: AsyncState<unknown>['status'];
   variant?: NonNullable<Parameters<typeof buttonCls>[0]>['variant'];
+  size?: NonNullable<Parameters<typeof buttonCls>[0]>['size'];
 };
 
 type SubmitAction = AsyncState<unknown> & {
@@ -15,11 +16,11 @@ type SubmitAction = AsyncState<unknown> & {
 };
 
 export type SubmitButtonProps<T extends FieldValues = FieldValues> =
-  | (Omit<BaseSubmitButtonProps, 'state'> & {
+  | (BaseSubmitButtonProps & {
       action?: SubmitAction;
       control?: never;
     })
-  | (Omit<BaseSubmitButtonProps, 'state'> & {
+  | (BaseSubmitButtonProps & {
       action?: never;
       control: Control<T>;
     });
@@ -36,7 +37,7 @@ export function SubmitButton<T extends FieldValues>({
   ) : (
     <BaseSubmitButton
       {...props}
-      state={action?.status}
+      state={action?.status ?? props.state}
       type={type ?? (action ? 'button' : undefined)}
       onClick={action?.execute ?? onClick}
     />
@@ -70,6 +71,7 @@ function BaseSubmitButton({
   className,
   children = 'Uložit',
   variant,
+  size,
   type,
   ...props
 }: BaseSubmitButtonProps) {
@@ -93,6 +95,7 @@ function BaseSubmitButton({
       {...props}
       disabled={submitState === 'loading' || disabled}
       className={buttonCls({
+        size,
         className,
         variant: variant || (state === 'NORMAL' ? 'primary' : 'outline'),
       })}

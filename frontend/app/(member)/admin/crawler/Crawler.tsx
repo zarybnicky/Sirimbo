@@ -1,7 +1,7 @@
 'use client';
 
 import { Table } from '@/ui/Table';
-import { type ComponentProps, Fragment, useEffect, useState } from 'react';
+import { type ComponentProps, Fragment, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -14,12 +14,13 @@ import {
 } from '@/graphql/Crawler';
 import { TextField } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
-import { buttonCls } from '@/ui/style';
+import { SubmitButton } from '@/ui/submit';
 import { PageHeader } from '@/ui/PageHeader';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
-import { Spinner } from '@/ui/Spinner';
 import { numericFullFormatter } from '@/ui/format';
+import { ChevronRight } from 'lucide-react';
+import { CrawlerActions } from './CrawlerActions';
 
 export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
   const [filters, setFilters] = useQueryStates(
@@ -79,12 +80,34 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
   });
   const error = target ? targets.error : overview.error;
   const loading = pending || (target ? targets.fetching : overview.fetching);
+  const reexecuteQuery = target ? targets.reexecuteQuery : refreshOverview;
+  const refresh = useCallback(
+    () => reexecuteQuery({ requestPolicy: 'network-only' }),
+    [reexecuteQuery],
+  );
+  useEffect(() => {
+    if (loading) return;
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') refresh();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [loading, refresh]);
   return (
     <>
       <PageHeader
         title={target || 'Crawler'}
         breadcrumbs={target ? [{ label: 'Crawler', href: '/admin/crawler' }] : undefined}
-      />
+      >
+        {target && !pending && (
+          <CrawlerActions
+            key={`${target}:${search.key}`}
+            federation={search.federation}
+            kind={search.kind}
+            keyContains={search.key}
+            onQueued={refresh}
+          />
+        )}
+      </PageHeader>
       <div className="flex flex-wrap items-end gap-3">
         <TextField
           name="federation"
@@ -122,21 +145,22 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
             }
           />
         )}
-        <button
+        <SubmitButton
           type="button"
-          className={buttonCls({ variant: 'outline' })}
-          onClick={() =>
-            target
-              ? targets.reexecuteQuery({ requestPolicy: 'network-only' })
-              : refreshOverview({ requestPolicy: 'network-only' })
-          }
+          size="sm"
+          variant="outline"
+          className="min-w-16"
+          aria-label="Refresh"
+          aria-busy={loading}
+          state={loading ? 'loading' : 'not-requested'}
+          onClick={refresh}
         >
           Refresh
-        </button>
+        </SubmitButton>
       </div>
-      <p className="my-2 text-sm text-neutral-11">
-        {loading ? 'Loading…' : target ? `${targets.pagination.total} targets` : null}
-      </p>
+      {target && (
+        <p className="my-2 text-sm text-neutral-11">{targets.pagination.total} targets</p>
+      )}
       {error ? (
         <FormError error={error} />
       ) : target ? (
@@ -145,14 +169,15 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
             rows={targets.data.crawlerTargets.nodes}
             pagination={targets.pagination}
           />
-        ) : (
-          <Spinner />
-        )
+        ) : null
       ) : overview.data ? (
-        <Overview {...overview.data} all={filters.all} allowRefetch={allowRefetch} />
-      ) : (
-        <Spinner />
-      )}
+        <Overview
+          {...overview.data}
+          all={filters.all}
+          allowRefetch={allowRefetch}
+          onQueued={refresh}
+        />
+      ) : null}
     </>
   );
 }
@@ -210,7 +235,9 @@ function Overview({
   failures,
   all,
   allowRefetch,
-}: CrawlerOverviewQuery & { all: string; allowRefetch: boolean }) {
+  onQueued,
+}: CrawlerOverviewQuery & { all: string; allowRefetch: boolean; onQueued: () => void }) {
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const failuresByTarget = Object.groupBy(
     failures ?? [],
     (row): string => `${row.federation}:${row.kind}`,
@@ -262,7 +289,7 @@ function Overview({
           'process',
           'last fetched',
         ]}
-        className="col-full-width whitespace-nowrap"
+        className="col-feature whitespace-nowrap"
         empty=""
         footer={
           <tr className="border-t border-neutral-4">
@@ -279,16 +306,44 @@ function Overview({
             <Fragment key={row.target}>
               <tr className="border-t border-neutral-4">
                 <th scope="row" className="font-mono">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={{
-                      pathname: '/admin/crawler',
-                      query: { federation: row.federation, kind: row.kind },
-                    }}
-                    prefetch={false}
-                  >
-                    {row.target}
-                  </Link>
+                  <div className="flex items-center gap-2 pl-2">
+                    {row.failures.length > 0 ? (
+                      <button
+                        type="button"
+                        aria-label={`Failures for ${row.target}`}
+                        aria-expanded={expanded.has(row.target)}
+                        aria-controls={`failures-${row.target}`}
+                        className="rounded-sm text-neutral-11 hover:text-neutral-12 focus-visible:outline-accent-9"
+                        onClick={() =>
+                          setExpanded((previous) => {
+                            const next = new Set(previous);
+                            if (next.has(row.target)) next.delete(row.target);
+                            else next.add(row.target);
+                            return next;
+                          })
+                        }
+                      >
+                        <ChevronRight
+                          aria-hidden="true"
+                          className={
+                            expanded.has(row.target) ? 'size-4 rotate-90' : 'size-4'
+                          }
+                        />
+                      </button>
+                    ) : (
+                      <span className="size-4" aria-hidden="true" />
+                    )}
+                    <Link
+                      className="text-accent-11 underline"
+                      href={{
+                        pathname: '/admin/crawler',
+                        query: { federation: row.federation, kind: row.kind },
+                      }}
+                      prefetch={false}
+                    >
+                      {row.target}
+                    </Link>
+                  </div>
                 </th>
                 <td>{row.done || ''}</td>
                 <td>{row.fetchDue || ''}</td>
@@ -306,31 +361,62 @@ function Overview({
                 </td>
               </tr>
               {row.failures.length > 0 && (
-                <tr>
+                <tr id={`failures-${row.target}`} hidden={!expanded.has(row.target)}>
                   <td colSpan={7}>
-                    <details>
-                      <summary className="cursor-pointer">Failures</summary>
-                      <Table
-                        columns={['count', 'failure', 'http', 'details']}
-                        className="whitespace-normal"
-                      >
-                        {row.failures.map((failure) => (
-                          <tr
-                            key={JSON.stringify([
-                              failure.failure,
-                              failure.httpStatus,
-                              failure.errorFingerprint,
-                            ])}
-                            className="border-t border-neutral-4 align-top"
-                          >
-                            <td>{failure.count}</td>
-                            <td>{failure.failure}</td>
-                            <td>{failure.httpStatus}</td>
-                            <td className="break-all">{failure.errorFingerprint}</td>
-                          </tr>
-                        ))}
-                      </Table>
-                    </details>
+                    <Table
+                      columns={[
+                        row.federation && row.kind ? (
+                          <CrawlerActions
+                            key="actions"
+                            federation={row.federation}
+                            kind={row.kind}
+                            primary
+                            onQueued={onQueued}
+                          />
+                        ) : (
+                          'count'
+                        ),
+                        'failure',
+                        'http',
+                        'details',
+                      ]}
+                      className="whitespace-normal"
+                    >
+                      {row.failures.map((failure) => (
+                        <tr
+                          key={JSON.stringify([
+                            failure.failure,
+                            failure.httpStatus,
+                            failure.errorFingerprint,
+                          ])}
+                          className="border-t border-neutral-4 align-top"
+                        >
+                          <td>
+                            <div className="flex items-center gap-2">
+                              {failure.federation &&
+                                failure.kind &&
+                                failure.failure &&
+                                failure.errorFingerprint != null && (
+                                  <CrawlerActions
+                                    federation={failure.federation}
+                                    kind={failure.kind}
+                                    failureGroup={{
+                                      failure: failure.failure,
+                                      httpStatus: failure.httpStatus ?? null,
+                                      errorFingerprint: failure.errorFingerprint,
+                                    }}
+                                    onQueued={onQueued}
+                                  />
+                                )}
+                              {failure.count}
+                            </div>
+                          </td>
+                          <td>{failure.failure}</td>
+                          <td>{failure.httpStatus}</td>
+                          <td className="break-all">{failure.errorFingerprint}</td>
+                        </tr>
+                      ))}
+                    </Table>
                   </td>
                 </tr>
               )}
