@@ -44,31 +44,27 @@ export function ClubResults() {
     { shallow: true, scroll: false },
   );
   return (
-    <section className="mt-8 space-y-3">
-      <h2 className="text-lg font-bold">Výsledky klubu</h2>
-      <TabMenu
-        selected={filters.view}
-        onSelect={(view) =>
-          void setFilters({ view: view as typeof filters.view, page: 1 })
-        }
-      >
-        <Tab id="year" title="Úspěchy roku">
-          <ClubResultReport view="year" />
-        </Tab>
-        <Tab id="gallery" title="Galerie mistrů">
-          <ClubResultReport view="gallery" />
-        </Tab>
-        <Tab id="weekend" title="Víkendové výsledky">
-          <ClubResultReport view="weekend" />
-        </Tab>
-        <Tab id="couples" title="Doplnit páry z ČSTS" requireAdmin>
-          <MissingFederationCouples />
-        </Tab>
-        <Tab id="members" title="Doplnit členy z ČSTS" requireAdmin>
-          <MissingFederationMembers />
-        </Tab>
-      </TabMenu>
-    </section>
+    <TabMenu
+      className="mt-8"
+      selected={filters.view}
+      onSelect={(view) => void setFilters({ view: view as typeof filters.view, page: undefined })}
+    >
+      <Tab id="year" title="Úspěchy roku">
+        <ClubResultReport view="year" />
+      </Tab>
+      <Tab id="gallery" title="Galerie mistrů">
+        <ClubResultReport view="gallery" />
+      </Tab>
+      <Tab id="weekend" title="Poslední víkend">
+        <ClubResultReport view="weekend" />
+      </Tab>
+      <Tab id="couples" title="Doplnit páry z ČSTS" requireAdmin>
+        <MissingFederationCouples />
+      </Tab>
+      <Tab id="members" title="Doplnit členy z ČSTS" requireAdmin>
+        <MissingFederationMembers />
+      </Tab>
+    </TabMenu>
   );
 }
 
@@ -151,7 +147,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
             className={inputCls({ className: 'w-auto' })}
             value={year ?? ''}
             onChange={(event) =>
-              void setFilters({ year: Number(event.target.value) || null, page: 1 })
+              void setFilters({ year: Number(event.target.value) || null, page: undefined })
             }
           >
             {view === 'gallery' && <option value="">Všechny roky</option>}
@@ -177,7 +173,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
             value,
             label: formatCompetitorType(value)!,
           }))}
-          onChange={(competitorTypes) => void setFilters({ competitorTypes, page: 1 })}
+          onChange={(competitorTypes) => void setFilters({ competitorTypes, page: undefined })}
         />
       )}
       {fetching && <p className="text-sm">Načítám…</p>}
