@@ -5,6 +5,7 @@ import {
   compareDisciplines,
   formatAgeGroup,
   formatClass,
+  formatCompetitorType,
   formatDiscipline,
 } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
@@ -33,7 +34,7 @@ function ranklistRows(entries: FederationRankingFragment[]) {
           categoryDetails: category,
           category: [
             formatAgeGroup(category.ageGroupDetails ?? category.ageGroup),
-            category.competitorType !== 'COUPLE' && category.competitorType.toLowerCase(),
+            category.competitorType !== 'COUPLE' && formatCompetitorType(category.competitorType),
             formatClass(category.class),
           ]
             .filter(Boolean)
@@ -103,7 +104,7 @@ function RankBadge({ entries }: { entries: ReturnType<typeof ranklistRows> }) {
       <span title="Ranklist">RL</span>
       {rows[0] && <span>{formatAgeGroup(rows[0].ageGroup)}</span>}
       {rows[0] && rows[0].competitorType !== 'COUPLE' && (
-        <span>{rows[0].competitorType.toLowerCase()}</span>
+        <span>{formatCompetitorType(rows[0].competitorType)}</span>
       )}
       {rows.map((row) => (
         <span

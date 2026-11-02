@@ -1,5 +1,6 @@
 'use client';
 
+import { formatCompetitorType } from '@/ui/csts';
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -43,7 +44,7 @@ export function Competitors({
                 competitorId
               )}
             </th>
-            <td>{competitor?.competitorType.toLowerCase()}</td>
+            <td>{formatCompetitorType(competitor?.competitorType)}</td>
             <td>{role.toLowerCase()}</td>
           </tr>
         ))}

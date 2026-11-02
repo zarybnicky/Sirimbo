@@ -10,7 +10,7 @@ import { PageHeader } from '@/ui/PageHeader';
 import { Members, History } from './Tables';
 import { ResultHighlights } from '../../ResultHighlights';
 import { formatCoupleName, formatDateOnly, formatOpenDateRange } from '@/ui/format';
-import { formatAgeGroup } from '@/ui/csts';
+import { formatAgeGroup, formatCompetitorType } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
@@ -64,7 +64,7 @@ export default async function CompetitorPage({ params }: Props) {
       <DefinitionList
         items={{
           ID: externalId,
-          Typ: competitor.competitorType.toLowerCase(),
+          Typ: formatCompetitorType(competitor.competitorType),
           Věk: formatAgeGroup(competitor.ageGroup),
           'Poslední soutěž':
             (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +

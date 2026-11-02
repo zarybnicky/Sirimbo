@@ -134,7 +134,6 @@ export default async function RoundPage({ params }: Props) {
           </div>
         ))}
       </dl>
-      {round.judgesList.length === 0 && <p>No judging panel</p>}
     </Layout>
   );
 }

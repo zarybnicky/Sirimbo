@@ -29,6 +29,7 @@ import {
   compareDisciplines,
   formatAgeGroup,
   formatClass,
+  formatCompetitorType,
   formatDiscipline,
 } from '@/ui/csts';
 import type { CompetitorType } from '@/graphql';
@@ -81,7 +82,7 @@ function facetLabel(key: string, value: string) {
   if (key === 'discipline') return formatDiscipline(value) ?? value;
   if (key === 'class') return formatClass(value) ?? value;
   if (key === 'gender') return genderLabels[value]!;
-  return key === 'type' ? value.toLowerCase() : value;
+  return key === 'type' ? formatCompetitorType(value) : value;
 }
 
 const clearedCompetitorFilters = {
@@ -654,7 +655,7 @@ function Competitors(props: BrowserProps) {
                         </th>
 
                         <td rowSpan={ageGroups.length}>
-                          {row.competitorType.toLowerCase()}
+                          {formatCompetitorType(row.competitorType)}
                         </td>
                       </>
                     )}

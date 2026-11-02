@@ -185,6 +185,20 @@ const typeSuffix: Partial<Record<CompetitionType, string>> = {
   TOP_LEVEL: 'TopLevel',
 };
 
+const competitorTypeNames: Record<string, string> = {
+  COUPLE: 'Pár',
+  SOLO: 'Sólo',
+  DUO: 'Duo',
+  TRIO: 'Trio',
+  TEAM: 'Tým',
+  GROUP: 'Skupina',
+  FORMATION: 'Formace',
+} satisfies Record<CompetitorType, string>;
+
+export function formatCompetitorType(value: string | null | undefined) {
+  return value ? (competitorTypeNames[value] ?? value) : undefined;
+}
+
 const cstsCompetitorTypeNames: Record<CompetitorType, string> = {
   COUPLE: '',
   SOLO: 'sólo',
