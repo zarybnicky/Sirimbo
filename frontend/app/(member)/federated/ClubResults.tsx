@@ -370,14 +370,6 @@ function MissingFederationCouples() {
                       : ''}
                   </span>
                 )}
-                {created[key] && (
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/pary/${created[key]}`}
-                  >
-                    Pár vytvořen
-                  </Link>
-                )}
               </div>
             </div>
             {!created[key] && editDates ? (
@@ -465,23 +457,21 @@ function MissingFederationMembers() {
     query.data.federationPeople?.nodes.filter(
       (p) => !currentIds.has(Number(p.externalId)),
     ) ?? [];
+
   return (
     <div className="grid gap-3 text-sm">
-      <p className="font-bold">{club.name}</p>
       <FormError error={membership.error ?? query.error ?? tenant.error} />
-      {people.length === 0 && <p>Žádní chybějící členové na této stránce.</p>}
+      {people.length === 0 && <p>Žádní chybějící členové.</p>}
       {people.map((person) => (
-        <div key={person.id} className="grid gap-2 rounded-md bg-neutral-2 px-3 py-2">
+        <div key={person.id} className="flex justify-between gap-2 rounded-md bg-neutral-2 px-3 py-2">
           <FederationLink
             entity="people"
             federation="csts"
             externalId={person.externalId}
           >
-            {person.canonicalName ||
-              `${person.firstName ?? ''} ${person.lastName ?? ''}`.trim() ||
-              person.externalId}{' '}
-            · IDT {person.externalId}
+            {person.canonicalName}{' '} · IDT {person.externalId}
           </FederationLink>
+
           {person.peopleList.length > 0 ? (
             person.peopleList.map((local) => (
               <div
