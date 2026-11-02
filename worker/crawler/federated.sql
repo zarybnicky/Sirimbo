@@ -537,12 +537,13 @@ ON CONFLICT (federation, external_id) DO UPDATE
 
 /* @name UpsertEventsDetailed */
 INSERT INTO federated.event (
-  federation, external_id, name, start_date, end_date, location, city, country, street_address, postal_code,
+  federation, external_id, extra_id, name, start_date, end_date, location, city, country, street_address, postal_code,
   address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
 )
 SELECT
   federation,
   external_id,
+  nullif(extra_id, ''),
   nullif(name, ''),
   start_date,
   end_date,
@@ -563,6 +564,7 @@ SELECT
 FROM unnest(
   :federation::text[],
   :externalId::text[],
+  :extraId::text[],
   :name::text[],
   :startDate::date[],
   :endDate::date[],
@@ -581,7 +583,7 @@ FROM unnest(
   :organizingClubId::text[],
   :status::federated.event_status[]
 ) AS input(
-  federation, external_id, name, start_date, end_date, location, city, country, street_address, postal_code,
+  federation, external_id, extra_id, name, start_date, end_date, location, city, country, street_address, postal_code,
   address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
 )
 ON CONFLICT (federation, external_id) DO UPDATE
@@ -590,6 +592,7 @@ ON CONFLICT (federation, external_id) DO UPDATE
         THEN federated.event.status
         ELSE EXCLUDED.status
       END,
+      extra_id = COALESCE(EXCLUDED.extra_id, federated.event.extra_id),
       name = COALESCE(EXCLUDED.name, federated.event.name),
       start_date = EXCLUDED.start_date,
       end_date = COALESCE(EXCLUDED.end_date, federated.event.end_date),

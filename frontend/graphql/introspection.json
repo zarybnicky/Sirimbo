@@ -15362,6 +15362,14 @@
             "args": []
           },
           {
+            "name": "extraId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "federation",
             "type": {
               "kind": "NON_NULL",

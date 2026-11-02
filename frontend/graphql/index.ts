@@ -6159,6 +6159,7 @@ export type FederationEvent = {
   country: Maybe<Scalars['String']['output']>;
   endDate: Maybe<Scalars['Date']['output']>;
   externalId: Scalars['String']['output'];
+  extraId: Maybe<Scalars['String']['output']>;
   federation: Scalars['String']['output'];
   /** Reads a single `Federation` that is related to this `FederationEvent`. */
   federationByFederation: Maybe<Federation>;
@@ -6236,6 +6237,8 @@ export type FederationEventCondition = {
   endDate?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `externalId` field. */
   externalId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `extraId` field. */
+  extraId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `federation` field. */
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `floorSize` field. */
@@ -6408,6 +6411,8 @@ export type FederationEventsOrderBy =
   | 'END_DATE_DESC'
   | 'EXTERNAL_ID_ASC'
   | 'EXTERNAL_ID_DESC'
+  | 'EXTRA_ID_ASC'
+  | 'EXTRA_ID_DESC'
   | 'FEDERATION_ASC'
   | 'FEDERATION_DESC'
   | 'FLOOR_SIZE_ASC'
@@ -15133,6 +15138,7 @@ export type GraphCacheResolvers = {
     country?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     endDate?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['Date']['output'] | string>,
     externalId?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
+    extraId?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     federation?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
     federationByFederation?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, WithTypename<Federation> | string>,
     floorSize?: GraphCacheResolver<WithTypename<FederationEvent>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -17668,6 +17674,7 @@ export type GraphCacheUpdaters = {
     country?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     endDate?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     externalId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
+    extraId?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     federation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     federationByFederation?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,
     floorSize?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationEvent>>, Record<string, never>>,

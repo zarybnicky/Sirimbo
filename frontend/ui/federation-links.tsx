@@ -76,3 +76,32 @@ export function CstsResultsLink({
     </a>
   );
 }
+
+export function CstsRegistrationLink({
+  eventId,
+  eventCompetitionId,
+  children,
+}: {
+  eventId: string;
+  eventCompetitionId: string;
+  children: React.ReactNode;
+}) {
+  const event = Number(eventId);
+  const competition = Number(eventCompetitionId);
+  if (
+    !Number.isSafeInteger(event) || event <= 0 ||
+    !Number.isSafeInteger(competition) || competition <= 0
+  ) return null;
+
+  return (
+    <a
+      href={`https://www.csts.cz/dancesport/kalendar_akci/event/${event}/competition/${competition}/prihlaseni`}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+    >
+      {children}
+      <ExternalLink className="size-3.5" aria-hidden="true" />
+    </a>
+  );
+}

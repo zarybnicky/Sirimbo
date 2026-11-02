@@ -1,6 +1,6 @@
 import { DefinitionList } from '@/ui/DefinitionList';
 import { federationStatusLabels } from '@/ui/csts';
-import { CstsResultsLink } from '@/ui/federation-links';
+import { CstsRegistrationLink, CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
@@ -68,6 +68,14 @@ export default async function EventPage({ params }: Props) {
         items={{
           Zdroj: federation === 'csts' && (
             <CstsResultsLink eventId={event.externalId}>ČSTS výsledky</CstsResultsLink>
+          ),
+          Přihlášení: federation === 'csts' && event.extraId && (
+            <CstsRegistrationLink
+              eventId={event.externalId}
+              eventCompetitionId={event.extraId}
+            >
+              Přihlásit se
+            </CstsRegistrationLink>
           ),
           Stav: federationStatusLabels[event.status],
           'Místo konání':

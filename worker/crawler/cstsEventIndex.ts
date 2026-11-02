@@ -121,6 +121,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
       status: event_status;
       federation: string;
       externalId: string;
+      extraId: string;
       name: string;
       startDate: string;
       endDate: string;
@@ -142,6 +143,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
         'status',
         'federation',
         'externalId',
+        'extraId',
         'name',
         'startDate',
         'endDate',
@@ -190,6 +192,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
         status: competitionEvent.state === 'Cancelled' ? 'cancelled' : 'planned',
         federation: 'csts',
         externalId: event.id.toString(),
+        extraId: competitionEvent.id.toString(),
         name: competitionEvent.name,
         startDate: competitionEvent.date,
         endDate: event.dateTo,

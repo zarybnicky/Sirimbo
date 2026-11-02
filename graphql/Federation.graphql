@@ -121,6 +121,7 @@ query FederationEvent($federation: String!, $eventId: String!) {
   ) {
     id
     externalId
+    extraId
     name
     status
     startDate
@@ -179,6 +180,7 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
     event {
       id
       externalId
+      extraId
       name
       status
       federationByFederation {

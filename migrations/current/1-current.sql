@@ -207,3 +207,5 @@ comment on constraint competition_result_club_id_fkey on federated.competition_r
 insert into crawler.frontier (federation, kind, key)
 select 'csts', 'memberProfile', external_id from federated.person where federation = 'csts'
 on conflict (federation, kind, key) do nothing;
+
+alter table federated.event add column if not exists extra_id text;

@@ -1,7 +1,7 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { federationStatusLabels, formatCategoryName } from '@/ui/csts';
-import { CstsResultsLink } from '@/ui/federation-links';
+import { CstsRegistrationLink, CstsResultsLink } from '@/ui/federation-links';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
@@ -90,6 +90,14 @@ export default async function CompetitionPage({ params }: Props) {
             >
               Výsledky
             </CstsResultsLink>
+          ),
+          Přihlášení: federation === 'csts' && event.extraId && (
+            <CstsRegistrationLink
+              eventId={event.externalId}
+              eventCompetitionId={event.extraId}
+            >
+              Přihlásit se
+            </CstsRegistrationLink>
           ),
           Stav: federationStatusLabels[competition.status],
           'Konec prezence': competition.checkInEnd?.slice(0, 5),

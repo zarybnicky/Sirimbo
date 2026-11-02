@@ -7846,6 +7846,7 @@ type FederationEvent {
   country: String
   endDate: Date
   externalId: String!
+  extraId: String
   federation: String!
 
   """Reads a single `Federation` that is related to this `FederationEvent`."""
@@ -7933,6 +7934,9 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `externalId` field."""
   externalId: String
+
+  """Checks for equality with the object’s `extraId` field."""
+  extraId: String
 
   """Checks for equality with the object’s `federation` field."""
   federation: String
@@ -8148,6 +8152,8 @@ enum FederationEventsOrderBy {
   END_DATE_DESC
   EXTERNAL_ID_ASC
   EXTERNAL_ID_DESC
+  EXTRA_ID_ASC
+  EXTRA_ID_DESC
   FEDERATION_ASC
   FEDERATION_DESC
   FLOOR_SIZE_ASC
