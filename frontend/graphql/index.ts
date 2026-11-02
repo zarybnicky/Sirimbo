@@ -1904,6 +1904,7 @@ export type CompetitionResultCondition = {
   competitor?: InputMaybe<CompetitionParticipantCondition>;
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: InputMaybe<Scalars['String']['input']>;
+  competitorTypes?: InputMaybe<Array<CompetitorType>>;
   /** Checks for equality with the object’s `completionStatus` field. */
   completionStatus?: InputMaybe<Scalars['String']['input']>;
   date?: InputMaybe<DateRangeCondition>;

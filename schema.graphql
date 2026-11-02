@@ -2444,6 +2444,7 @@ input CompetitionResultCondition {
 
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
+  competitorTypes: [CompetitorType!]
 
   """Checks for equality with the object’s `completionStatus` field."""
   completionStatus: String

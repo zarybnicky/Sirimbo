@@ -3,24 +3,36 @@
 import Link from 'next/link';
 import { addDays, format, startOfWeek } from 'date-fns';
 import {
+  parseAsArrayOf,
   parseAsInteger,
   parseAsIsoDate,
   parseAsStringLiteral,
   useQueryStates,
 } from 'nuqs';
 import { CompetitionResultsDocument } from '@/graphql/CompetitionParticipation';
-import type { CompetitionResultCondition } from '@/graphql';
+import type { CompetitionResultCondition, CompetitorType } from '@/graphql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { compareText } from '@/lib/compare';
 import { Pagination } from '@/ui/Pagination';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { WeekPicker } from '@/ui/WeekPicker';
-import { compareCategories, formatCategoryName } from '@/ui/csts';
+import { compareCategories, formatCategoryName, formatCompetitorType } from '@/ui/csts';
+import { FacetFilter } from '@/ui/FacetFilter';
 import { formatDateOnly } from '@/ui/format';
 import { inputCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
 
 const views = ['year', 'gallery', 'weekend'] as const;
+const competitorTypes = [
+  'COUPLE',
+  'SOLO',
+  'DUO',
+  'TRIO',
+  'TEAM',
+  'GROUP',
+  'FORMATION',
+] as const satisfies readonly CompetitorType[];
+const defaultGalleryTypes = competitorTypes.filter((type) => type !== 'TEAM');
 
 export function ClubResults() {
   const [filters, setFilters] = useQueryStates(
@@ -57,12 +69,16 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
       year: parseAsInteger,
       week: parseAsIsoDate.withDefault(startOfWeek(new Date(), { weekStartsOn: 1 })),
       page: parseAsInteger,
+      competitorTypes: parseAsArrayOf(parseAsStringLiteral(competitorTypes)).withDefault(
+        defaultGalleryTypes,
+      ),
     },
     { shallow: true, scroll: false },
   );
   const year = filters.year ?? (view === 'gallery' ? null : currentYear);
   const week = startOfWeek(filters.week, { weekStartsOn: 1 });
   const condition: CompetitionResultCondition = { competitor: {}, highlight: true };
+  if (view === 'gallery') condition.competitorTypes = filters.competitorTypes;
   if (view === 'weekend') {
     condition.date = {
       since: format(week, 'yyyy-MM-dd'),
@@ -141,6 +157,19 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
         </label>
       )}
 
+      {view === 'gallery' && (
+        <FacetFilter
+          inline
+          label="Typ soutěžícího"
+          value={filters.competitorTypes}
+          defaultValue={defaultGalleryTypes}
+          options={competitorTypes.map((value) => ({
+            value,
+            label: formatCompetitorType(value)!,
+          }))}
+          onChange={(competitorTypes) => void setFilters({ competitorTypes, page: 1 })}
+        />
+      )}
       {fetching && <p className="text-sm">Načítám…</p>}
       {error && <FormError error={error} />}
       {!fetching && !error && (

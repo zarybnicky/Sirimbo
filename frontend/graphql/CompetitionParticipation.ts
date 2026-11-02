@@ -29,6 +29,7 @@ export type CompetitionResultCondition = {
   competitor?: CompetitionParticipantCondition | null | undefined;
   /** Checks for equality with the object’s `competitorId` field. */
   competitorId?: string | null | undefined;
+  competitorTypes?: Array<CompetitorType> | null | undefined;
   /** Checks for equality with the object’s `completionStatus` field. */
   completionStatus?: string | null | undefined;
   date?: DateRangeCondition | null | undefined;

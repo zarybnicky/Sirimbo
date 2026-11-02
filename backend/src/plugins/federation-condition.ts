@@ -169,6 +169,23 @@ const plugins: GraphileConfig.Plugin[] = [
   ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition_result' },
+    'competitorTypes',
+    (build) => ({
+      type: new build.graphql.GraphQLList(
+        new build.graphql.GraphQLNonNull(build.getInputTypeByName('CompetitorType')),
+      ),
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => {
+      if (value == null) return null;
+      return sql`${row}.competition_id in (
+        select c.id from federated.competition c
+        join federated.category cat on cat.id = c.category_id
+        where cat.competitor_type = any(${sqlValueWithCodec(value as string[], LIST_TYPES.text)}::federated.competitor_type[])
+      )`;
+    },
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_result' },
     'competitionTypes',
     (build) => ({
       type: new build.graphql.GraphQLList(
