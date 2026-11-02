@@ -3,11 +3,10 @@ import {
   type EventRegistrationsQuery,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
-import { dateTimeFormatter, formatCoupleName, moneyFormatter } from '@/ui/format';
+import { dateTimeFormatter, moneyFormatter } from '@/ui/format';
 import { Table } from '@/ui/Table';
 import * as React from 'react';
 import { useQuery } from 'urql';
-import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 
 type Lesson = NonNullable<EventRegistrationsQuery['eventsList']>[number];
@@ -55,10 +54,10 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
         : `couple:${registration.coupleId}`;
       const row: Row = {
         id,
-        participant: registration.person?.name || formatCoupleName(registration.couple),
+        participant: registration.person?.name || registration.couple?.name || '',
         note: registration.note,
         coupleMemberIds: registration.couple
-          ? [registration.couple.man?.id, registration.couple.woman?.id].filter(isTruthy)
+          ? [registration.couple.manId, registration.couple.womanId]
           : [],
         cells: new Map(),
         prices: new Map(),
@@ -82,7 +81,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
           : `couple:${registration.coupleId}`;
         const row = rows.get(participantId) ?? {
           id: participantId,
-          participant: registration.person?.name || formatCoupleName(registration.couple),
+          participant: registration.person?.name || registration.couple?.name || '',
           note: registration.note,
           coupleMemberIds: [],
           cells: new Map(),

@@ -6,7 +6,7 @@ import React from 'react';
 import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
-import { formatCoupleName, formatOpenDateRange } from '@/ui/format';
+import { formatOpenDateRange } from '@/ui/format';
 import Link from 'next/link';
 import { useMutation, useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
@@ -33,10 +33,7 @@ export function Couple({ id }: { id: string }) {
   );
 
   if (!item) return null;
-  const personIds = [item.man, item.woman].flatMap((person) =>
-    person ? [person.id] : [],
-  );
-  const title = formatCoupleName(item);
+  const personIds = [item.manId, item.womanId];
 
   return (
     <>
@@ -53,7 +50,7 @@ export function Couple({ id }: { id: string }) {
       <PageHeader
         imageUrl={item.image?.url}
         onEditImage={actions.some((action) => action.id === 'couple.edit') ? () => setEditingImage(true) : undefined}
-        title={title}
+        title={item.name}
         breadcrumbLabel="Pár"
         breadcrumbs={[{ label: 'Páry', href: '/pary' }]}
         actions={actions}

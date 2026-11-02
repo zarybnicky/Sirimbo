@@ -11,10 +11,10 @@ import type { CompetitionResultFragment } from '@/graphql/CompetitionParticipati
 import type { FederationCategoryProgressFragment } from '@/graphql/Federation';
 import { isTruthy } from '@/lib/truthyFilter';
 
-type MaybePerson =
-  { name?: string | null; firstName?: string; lastName?: string } | null | undefined;
-type MaybeCouple = { man: MaybePerson; woman: MaybePerson } | null | undefined;
-type MaybeRegistration = { person: MaybePerson; couple: MaybeCouple | null | undefined };
+type MaybeRegistration = {
+  person: { name?: string | null } | null | undefined;
+  couple: { shortName: string } | null | undefined;
+};
 
 const pluralRules = new Intl.PluralRules('cs-CZ');
 
@@ -30,12 +30,8 @@ export const listFormatter = new Intl.ListFormat('cs-CZ', {
   style: 'long',
 });
 
-export const formatCoupleName = (couple: MaybeCouple) =>
-  !couple ? '' : `${couple.man?.name || ''} - ${couple.woman?.name || ''}`;
-
 export const formatParticipant = ({ person, couple }: MaybeRegistration) =>
-  person?.name ||
-  (!couple ? '' : `${couple.man?.lastName || ''} - ${couple.woman?.lastName || ''}`);
+  person?.name || couple?.shortName || '';
 
 export const scoringMethodLabels: Record<ScoringMethod, string> = {
   SKATING_MARKS: 'Marks',

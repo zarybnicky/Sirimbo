@@ -9,7 +9,7 @@ import { DialogTitle } from '@/ui/dialog';
 import { EventLoginPrompt } from '@/ui/EventLoginPrompt';
 import { ComboboxSearchArea } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatCoupleName, formatParticipant } from '@/ui/format';
+import { formatParticipant } from '@/ui/format';
 import { EventRegistrationForm } from '@/ui/forms/EventRegistrationForm';
 import { Spinner } from '@/ui/Spinner';
 import { buttonCls } from '@/ui/style';
@@ -56,7 +56,7 @@ function useRegistrationCandidates(
     event.registrationsList.flatMap((r) =>
       r.personId
         ? [r.personId]
-        : [r.couple?.man?.id, r.couple?.woman?.id].filter((id): id is string => !!id),
+        : r.couple ? [r.couple.manId, r.couple.womanId] : [],
     ),
   );
 
@@ -88,14 +88,14 @@ function useRegistrationCandidates(
     ...couples
       .filter(
         (c) =>
-          !registeredPeople.has(c.man?.id ?? '') &&
-          !registeredPeople.has(c.woman?.id ?? '') &&
+          !registeredPeople.has(c.manId) &&
+          !registeredPeople.has(c.womanId) &&
           (isManager || capacityLeft >= (event.capacityUnit === 'PEOPLE' ? 2 : 1)),
       )
       .map((couple) => ({
         id: `couple:${couple.id}`,
-        label: formatCoupleName(couple),
-        isExternal: ![couple.man?.id, couple.woman?.id].some(
+        label: couple.name,
+        isExternal: ![couple.manId, couple.womanId].some(
           (id) => !!id && internalPersonIds.has(id),
         ),
         personId: null,

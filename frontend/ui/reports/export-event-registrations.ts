@@ -1,11 +1,11 @@
-import { EventRegistrationsDocument } from '@/graphql/Event';
+import { EventRegistrationsExportDocument } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
 import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { saveAs } from 'file-saver';
 import type { Client } from 'urql';
 
 export async function exportEventRegistrations(client: Client, id: string) {
-  const result = await client.query(EventRegistrationsDocument, { id }).toPromise();
+  const result = await client.query(EventRegistrationsExportDocument, { id }).toPromise();
   if (result.error) throw result.error;
   const { event } = result.data ?? {};
   if (!event) throw new Error("Událost nenalezena");

@@ -156,14 +156,7 @@ fragment CompetitionParticipant on FederationCompetitor {
   name
   couplesList(condition: { status: ACTIVE }, orderBy: ID_ASC) {
     id
-    man {
-      id
-      name
-    }
-    woman {
-      id
-      name
-    }
+    name
   }
   peopleList(orderBy: [NAME_ASC, ID_ASC]) {
     id

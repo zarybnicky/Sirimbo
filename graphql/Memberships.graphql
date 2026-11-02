@@ -4,21 +4,13 @@ fragment Couple on Couple {
     ...File
   }
   id
+  name
+  shortName
+  manId
+  womanId
   status
   since
   until
-  woman {
-    id
-    name
-    firstName
-    lastName
-  }
-  man {
-    id
-    name
-    firstName
-    lastName
-  }
 }
 
 fragment TenantTrainerOption on TenantTrainer {
@@ -133,6 +125,8 @@ query CoupleList {
 query Couple($id: BigInt!) {
   couple(id: $id) {
     ...Couple
+    man { id name }
+    woman { id name }
     ageGroup
     federationRanklistEntries(first: 100, condition: { latestSnapshot: true }) {
       nodes { ...FederationRanking }

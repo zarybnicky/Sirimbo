@@ -144,8 +144,7 @@ query CompetitionSuggestions(
     person { id name }
     couple {
       id
-      man { id name }
-      woman { id name }
+      name
     }
   }
 }

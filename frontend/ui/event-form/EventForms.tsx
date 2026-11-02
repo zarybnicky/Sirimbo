@@ -11,14 +11,14 @@ import {
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
-import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatCoupleName, formatEventType, shortTimeFormatter } from '@/ui/format';
+import { formatEventType, shortTimeFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
@@ -81,10 +81,10 @@ function useEventFormOptions(
       if (!couple) continue;
       participants.set(`couple:${couple.id}`, {
         id: `couple:${couple.id}`,
-        label: formatCoupleName(couple),
+        label: couple.name,
         personId: null,
         coupleId: couple.id,
-        personIds: [couple.man?.id, couple.woman?.id].filter(isTruthy),
+        personIds: [couple.manId, couple.womanId],
       });
     }
 

@@ -107,16 +107,7 @@ fragment EventWithTrainer on Event {
       }
       couple {
         id
-        man {
-          id
-          name
-          lastName
-        }
-        woman {
-          id
-          name
-          lastName
-        }
+        shortName
       }
     }
   }
@@ -240,15 +231,31 @@ query EventParticipantsExport($id: BigInt!) {
         }
         couple {
           id
-          man {
-            id
-            lastName
-          }
-          woman {
-            id
-            lastName
-          }
+          shortName
         }
+      }
+    }
+  }
+}
+
+query EventRegistrationsExport($id: BigInt!) {
+  event(id: $id) {
+    ...Event
+    eventTrainersList {
+      id
+      personId
+      lessonsOffered
+      person { id name }
+    }
+    registrationsList(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
+      orderBy: PRIMARY_KEY_ASC
+    ) {
+      ...EventRegistration
+      couple {
+        id
+        man { id name }
+        woman { id name }
       }
     }
   }
@@ -388,15 +395,10 @@ query EventFormOptions($forRegistration: Boolean! = false) {
   }
   couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) @_required {
     id
+    name
     status
-    man {
-      id
-      name
-    }
-    woman {
-      id
-      name
-    }
+    manId
+    womanId
   }
 }
 

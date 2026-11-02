@@ -2487,6 +2487,10 @@ export type Couple = {
   /** Reads a single `Person` that is related to this `Couple`. */
   man: Maybe<Person>;
   manId: Scalars['BigInt']['output'];
+  /** The partners' first names and surnames, without titles. */
+  name: Scalars['String']['output'];
+  /** The partners' surnames. */
+  shortName: Scalars['String']['output'];
   since: Scalars['Datetime']['output'];
   status: RelationshipStatus;
   until: Maybe<Scalars['Datetime']['output']>;
@@ -14429,6 +14433,8 @@ export type GraphCacheResolvers = {
     imageId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     man?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, WithTypename<Person> | string>,
     manId?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    name?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['String']['output'] | string>,
+    shortName?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['String']['output'] | string>,
     since?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     status?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, RelationshipStatus | string>,
     until?: GraphCacheResolver<WithTypename<Couple>, Record<string, never>, Scalars['Datetime']['output'] | string>,
@@ -16968,6 +16974,8 @@ export type GraphCacheUpdaters = {
     imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     man?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     manId?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    name?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
+    shortName?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     since?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     status?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,
     until?: GraphCacheUpdateResolver<Maybe<WithTypename<Couple>>, Record<string, never>>,

@@ -8,7 +8,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { History } from './Tables';
 import { ResultHighlights } from '../../ResultHighlights';
-import { formatCoupleName, formatDateOnly, formatOpenDateRange } from '@/ui/format';
+import { formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { formatAgeGroup, formatCompetitorType } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -94,7 +94,7 @@ export default async function CompetitorPage({ params }: Props) {
             competitor.couplesList.map((couple) => (
               <div key={couple.id}>
                 <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-                  {formatCoupleName(couple)}
+                  {couple.name}
                 </Link>{' '}
                 ({formatOpenDateRange(couple)})
               </div>

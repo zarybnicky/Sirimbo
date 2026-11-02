@@ -3,7 +3,6 @@ import type { CoupleFragment } from '@/graphql/Memberships';
 import { memo } from 'react';
 import type { PersonMembershipsQuery } from '@/graphql/Person';
 import {
-  formatCoupleName,
   formatOpenDateRange,
   fullDateFormatter,
   dateTimeFormatter,
@@ -293,7 +292,7 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
       <ActionRow actions={actions}>
         <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
           <Link className="underline font-bold" href={`/pary/${item.id}`}>
-            {formatCoupleName(item)}
+            {item.name}
           </Link>
           <span>{formatOpenDateRange(item)}</span>
         </div>

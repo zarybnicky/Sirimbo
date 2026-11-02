@@ -53,16 +53,7 @@ fragment Payment on Payment {
         }
         couple {
           id
-          man {
-            id
-            name
-            lastName
-          }
-          woman {
-            id
-            name
-            lastName
-          }
+          shortName
         }
       }
     }

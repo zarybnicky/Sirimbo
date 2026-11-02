@@ -3,7 +3,6 @@ import { Users } from 'lucide-react';
 import { CoupleListDocument } from '@/graphql/Memberships';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { formatCoupleName } from '@/ui/format';
 import { formatAgeGroup } from '@/ui/csts';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 import { useAuth } from '@/lib/auth';
@@ -30,7 +29,7 @@ export function CoupleList() {
       return {
         id: item.id,
         image: item.image,
-        title: formatCoupleName(item),
+        title: item.name,
         ageGroup: formatAgeGroup(item.ageGroup),
         href: `/pary/${item.id}`,
         cohortNames: cohorts.map((cohort) => cohort.name).join(', '),

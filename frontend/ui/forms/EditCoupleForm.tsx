@@ -2,7 +2,6 @@ import { DialogTitle } from '@/ui/dialog';
 import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { DatePickerElement } from '@/ui/fields/date';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatCoupleName } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
 import { useMutation, useQuery } from 'urql';
@@ -64,7 +63,7 @@ export function EditCoupleForm({ id }: { id: string }) {
       )}
 
       <div>
-        <b>{formatCoupleName(item)}</b>
+        <b>{item?.name}</b>
       </div>
 
       <DatePickerElement control={control} name="since" label="Od" clearable />

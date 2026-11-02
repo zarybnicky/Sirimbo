@@ -1,7 +1,7 @@
 import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { LocalPersonLinks } from '@/ui/federation-links';
-import { formatCoupleName, formatPointsAndFinals, formatResultStatus } from '@/ui/format';
+import { formatPointsAndFinals, formatResultStatus } from '@/ui/format';
 import type {
   CompetitionParticipantFragment,
   FederationCompetitionQuery,
@@ -150,7 +150,7 @@ function LocalMatches({
       {participant.couplesList.map((couple) => (
         <div key={couple.id}>
           <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-            {formatCoupleName(couple)}
+            {couple.name}
           </Link>
         </div>
       ))}

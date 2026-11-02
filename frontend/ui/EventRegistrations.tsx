@@ -5,7 +5,7 @@ import { eventRegistrationActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { Table } from '@/ui/Table';
-import { dateTimeFormatter, formatCoupleName, numericDateFormatter } from '@/ui/format';
+import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
 import { compareText } from '@/lib/compare';
@@ -19,8 +19,11 @@ export const EventRegistrations = memo(function EventRegistrations({
   const registrations = event.attendanceRegistrations.nodes;
   const sortedRegistrations = registrations.toSorted((a, b) =>
     compareText(
-      a.person ? a.person.lastName + a.person.firstName : formatCoupleName(a.couple),
-      b.person ? b.person.lastName + b.person.firstName : formatCoupleName(b.couple),
+      a.person?.lastName ?? a.couple?.shortName ?? '',
+      b.person?.lastName ?? b.couple?.shortName ?? '',
+    ) || compareText(
+      a.person?.firstName ?? a.couple?.name ?? '',
+      b.person?.firstName ?? b.couple?.name ?? '',
     ),
   );
   const rows = sortedRegistrations
@@ -68,7 +71,7 @@ export const EventRegistrations = memo(function EventRegistrations({
                 {x.person ? (
                   <Link href={`/clenove/${x.person.id}`}>{x.person.name}</Link>
                 ) : x.couple ? (
-                  <Link href={`/pary/${x.couple.id}`}>{formatCoupleName(x.couple)}</Link>
+                  <Link href={`/pary/${x.couple.id}`}>{x.couple.name}</Link>
                 ) : null}
                 {x.person &&
                   !x.person.isMember &&

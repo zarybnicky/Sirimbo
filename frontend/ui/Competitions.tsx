@@ -473,9 +473,7 @@ export function CompetitionSuggestions({
         competitor: row.couple
           ? {
               key: `couple:${row.couple.id}`,
-              name: [row.couple.man?.name, row.couple.woman?.name]
-                .filter(Boolean)
-                .join(' – '),
+              name: row.couple.name,
               href: `/pary/${row.couple.id}`,
             }
           : {
