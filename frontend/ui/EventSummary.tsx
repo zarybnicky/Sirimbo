@@ -17,8 +17,10 @@ import Link from 'next/link';
 import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
 import { startOf } from 'date-arithmetic';
+import { useAuth } from '@/lib/auth';
 
 export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
+  const auth = useAuth();
   const actions = useActions(eventActions, event);
   const { seriesInfo, registrations } = event;
   const registrationCount = event.registrationInfo?.registrations ?? 0;
@@ -32,12 +34,13 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
 
   const primaryActions = React.useMemo(() => {
     return [
+      !auth.canManageEvent(event) && 'event.registrations',
       startOf(new Date(event.since), 'day') > startOf(new Date(), 'day')
         ? 'event.registrations'
         : 'event.attendance',
       'event.edit',
     ];
-  }, [event.since]);
+  }, [auth, event]);
 
   return (
     <div className="flex flex-col gap-2 text-sm">
