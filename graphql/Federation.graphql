@@ -385,9 +385,9 @@ query FederationCompetitor($id: String!) {
 }
 
 query FederationEventFacets($federation: String!, $includeCancelled: Boolean!) {
-  federation(code: $federation) {
+  federation(code: $federation) @_required {
     code
-    eventFacets(includeCancelled: $includeCancelled) {
+    eventFacets(includeCancelled: $includeCancelled) @_required {
       years {
         year
         eventCount
@@ -425,7 +425,7 @@ query FederationEvents(
   $hasCoordinates: Boolean
   $offset: Int! = 0
 ) {
-  federation(code: $federation) {
+  federation(code: $federation) @_required {
     code
     withResults: events(first: 0, condition: {
       search: $search, date: $date, includeCancelled: $includeCancelled,
@@ -493,13 +493,13 @@ query FederationPeopleFacets(
   $federation: String!, $search: String,
   $ageGroups: [String!], $genders: [String!], $nationalities: [String!]
 ) {
-  ageGroupsList {
+  ageGroupsList @_required {
     code
     personAge { start { value } end { value } }
   }
-  federation(code: $federation) {
+  federation(code: $federation) @_required {
     code
-    peopleFacetsList(search: $search, ageGroups: $ageGroups, genders: $genders, nationalities: $nationalities) {
+    peopleFacetsList(search: $search, ageGroups: $ageGroups, genders: $genders, nationalities: $nationalities) @_required {
       facet
       value
       count
@@ -575,10 +575,10 @@ query FederationCompetitorFacets(
   $disciplines: [String!]
   $competedSince: Date
 ) {
-  ageGroupsList {
+  ageGroupsList @_required {
     ...AgeGroupDetail
   }
-  federation(code: $federation) {
+  federation(code: $federation) @_required {
     code
     competitorFacetsList(
       search: $search
@@ -587,7 +587,7 @@ query FederationCompetitorFacets(
       classes: $classes
       disciplines: $disciplines
       competedSince: $competedSince
-    ) {
+    ) @_required {
       facet
       value
       count

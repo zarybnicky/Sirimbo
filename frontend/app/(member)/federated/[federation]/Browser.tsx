@@ -136,12 +136,6 @@ function useBrowserState(federation: string) {
 
 type BrowserProps = { federation: string } & ReturnType<typeof useBrowserState>;
 
-function useLastDefined<T>(value: T | null | undefined) {
-  const [previous, setPrevious] = useState(value);
-  if (value != null && value !== previous) setPrevious(value);
-  return value ?? previous;
-}
-
 export function Browser({ federation }: { federation: string }) {
   const state = useBrowserState(federation);
   const props = { federation, ...state };
@@ -189,7 +183,7 @@ function Events(props: BrowserProps) {
     query: FederationEventFacetsDocument,
     variables: { federation, includeCancelled: filters.cancelled },
   });
-  const years = useLastDefined(facets.data?.federation?.eventFacets?.years) ?? [];
+  const years = facets.data?.federation?.eventFacets?.years ?? [];
 
   const result = usePaginatedQuery({
     query: FederationEventsDocument,
@@ -213,7 +207,7 @@ function Events(props: BrowserProps) {
     limit: 300,
     getTotal: (data) => data.federation?.events.totalCount,
   });
-  const counts = useLastDefined(result.data?.federation);
+  const counts = result.data?.federation;
   const events = result.data?.federation?.events.nodes ?? [];
   const isPending = result.fetching || facets.fetching || searchPending;
 
@@ -350,9 +344,8 @@ function People(props: BrowserProps) {
     variables,
     pause: searchPending,
   });
-  const facetOptions =
-    useLastDefined(facetResult.data?.federation?.peopleFacetsList) ?? [];
-  const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
+  const facetOptions = facetResult.data?.federation?.peopleFacetsList ?? [];
+  const ageGroups = facetResult.data?.ageGroupsList ?? [];
   const ageRanges = new Map(ageGroups.map((group) => [group.code, group.personAge]));
 
   const result = usePaginatedQuery({
@@ -472,9 +465,8 @@ function Competitors(props: BrowserProps) {
     requestPolicy: 'cache-first',
   });
 
-  const facetOptions =
-    useLastDefined(facetResult.data?.federation?.competitorFacetsList) ?? [];
-  const ageGroups = useLastDefined(facetResult.data?.ageGroupsList) ?? [];
+  const facetOptions = facetResult.data?.federation?.competitorFacetsList ?? [];
+  const ageGroups = facetResult.data?.ageGroupsList ?? [];
 
   const ageGroupsByCode = new Map(ageGroups.map((x) => [x.code, x]));
   const result = usePaginatedQuery({

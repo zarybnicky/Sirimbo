@@ -20,10 +20,10 @@ fragment EventConflict on EventConflict {
 }
 
 query EventConflictsReport($since: Datetime!, $until: Datetime) {
-  attendeeConflicts: eventOverlapsAttendeeReportList(pSince: $since, pUntil: $until) {
+  attendeeConflicts: eventOverlapsAttendeeReportList(pSince: $since, pUntil: $until) @_required {
     ...EventConflict
   }
-  trainerConflicts: eventOverlapsTrainerReportList(pSince: $since, pUntil: $until) {
+  trainerConflicts: eventOverlapsTrainerReportList(pSince: $since, pUntil: $until) @_required {
     ...EventConflict
   }
 }

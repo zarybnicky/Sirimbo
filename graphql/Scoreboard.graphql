@@ -2,11 +2,11 @@ query Scoreboard($cohortId: BigInt, $since: Date, $until: Date) {
   cohortsList(
     condition: { isVisible: true, isArchived: false }
     orderBy: [ORDERING_ASC, NAME_ASC]
-  ) {
+  ) @_required {
     id
     name
   }
-  scoreboardEntriesList(cohortId: $cohortId, since: $since, until: $until) {
+  scoreboardEntriesList(cohortId: $cohortId, since: $since, until: $until) @_required {
     totalScore
     lessonTotalScore
     groupTotalScore

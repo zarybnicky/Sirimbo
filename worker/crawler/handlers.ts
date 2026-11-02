@@ -34,6 +34,7 @@ import { wdsfCouple } from './wdsfCouple.ts';
 
 export const LOADERS = {
   wdsf: {
+    // https://services.worlddancesport.org/api/1/age
     ageGroups: wdsfAgeGroups,
     // https://services.worlddancesport.org/api/1/person
     memberIndex: wdsfMemberIndex,
@@ -63,11 +64,9 @@ export const LOADERS = {
     // https://services.worlddancesport.org/api/1/country
   },
   csts: {
-    // Soutěžní údaje, modrý web
     // https://www.csts.cz/api/1/athletes/18038132
     member: cstsMember,
 
-    // Ranklisty
     // https://www.csts.cz/api/1/ranklist
     // https://www.csts.cz/api/1/ranklist/6733
     ranklistIndex: cstsRanklistIndex,
@@ -86,25 +85,17 @@ export const LOADERS = {
     // https://www.csts.cz/api/evidence/clenove/prestupy/seznam-clena/14384?%24count=true&%24skip=0&%24top=20&%24orderby=DatPorizeni%20desc
     // https://www.csts.cz/api/evidence/clenove/prestupy/prestup/1159
 
-    // Soutěže
     // https://www.csts.cz/api/1/events?filter=date%3E%3D2025-12-01%20AND%20date%3C%3D2026-03-01
     eventIndex: cstsEventIndex,
     event: cstsEvent,
-    // https://www.csts.cz/api/1/events/327/competitions?filter=eventCompetitionId%3D327&order=type
-    // eventCompetitions: cstsEventCompetitions PART of competition_events??
-    // https://www.csts.cz/api/1/events/327/officials
-    // eventOfficials: cstsEventOfficials PART of competition_events??
     // https://www.csts.cz/api/1/events/327/competitors
     eventCompetitors: cstsEventCompetitors,
-
-    // Výsledky
     // https://www.csts.cz/api/1/competition_events?from=2025-11-01&to=2025-11-30
     competitionEventIndex: cstsCompetitionEventIndex,
     // https://www.csts.cz/api/1/competitions/32329/result
     competitionResults: cstsCompetitionResults,
 
     clubIndex: cstsClubIndex,
-
     divisionIndex: {
       mode: 'text',
       revalidatePeriod: '1 day',
@@ -112,10 +103,11 @@ export const LOADERS = {
       async load() {},
     } satisfies HtmlLoader,
 
+    // https://www.csts.cz/cs/Evidence/SeznamTreneru
     trainerIndex: cstsTrainerIndex,
-
+    // https://www.csts.cz/cs/Evidence/SeznamPorotcu
     judgeIndex: cstsJudgeIndex,
-
+    // https://www.csts.cz/cs/Evidence/SeznamFunkcionaru
     officialIndex: cstsOfficialIndex,
   },
   szts: {

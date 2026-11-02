@@ -308,10 +308,10 @@ query EventDescription($id: BigInt!) {
 }
 
 query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
-  event(id: $id) {
+  event(id: $id) @_required {
     ...EventWithRegistrations
   }
-  eventsList(condition: { parentId: $id, type: LESSON }) @include(if: $withSchedule) {
+  eventsList(condition: { parentId: $id, type: LESSON }) @include(if: $withSchedule) @_required {
     ...Event
     approxPriceList {
       amount
@@ -337,7 +337,7 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
 }
 
 query EventFormOptions($forRegistration: Boolean! = false) {
-  people(condition: { membership: { state: CURRENT } }) @include(if: $forRegistration) {
+  people(condition: { membership: { state: CURRENT } }) @include(if: $forRegistration) @_required {
     nodes {
       id
       name
@@ -346,7 +346,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
       isAdmin
     }
   }
-  tenant: getCurrentTenant {
+  tenant: getCurrentTenant @_required {
     id
     ... @skip(if: $forRegistration) {
       cohortsList(orderBy: ORDERING_ASC) {
@@ -386,7 +386,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
       }
     }
   }
-  couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) {
+  couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) @_required {
     id
     status
     man {
@@ -401,7 +401,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
 }
 
 query CampTrainerOverview($id: BigInt!) {
-  event(id: $id) {
+  event(id: $id) @_required {
     id
     since
     until
@@ -417,7 +417,7 @@ query CampTrainerOverview($id: BigInt!) {
   eventsList(
     condition: { parentId: $id, isCancelled: false }
     orderBy: SINCE_ASC
-  ) {
+  ) @_required {
     id
     type
     since
@@ -596,12 +596,12 @@ query CalendarData(
       onlyMine: $onlyMine, relevantOnly: $relevantOnly,
       parentId: $parentId, locationIds: $locationIds,
       canRegister: $canRegister
-    ) {
+    ) @_required {
       facet
       value
       count
     }
-    tenant: getCurrentTenant {
+    tenant: getCurrentTenant @_required {
       id
       locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
         ...LocationOption
@@ -613,7 +613,7 @@ query CalendarData(
     people(
       condition: { membership: { state: CURRENT } }
       orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
-    ) @include(if: $withParticipantOptions) {
+    ) @include(if: $withParticipantOptions) @_required {
       nodes {
         id name
       }

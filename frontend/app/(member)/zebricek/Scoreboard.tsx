@@ -46,8 +46,7 @@ export function Scoreboard() {
     },
   });
 
-  const [cohorts, setCohorts] = React.useState(data?.cohortsList ?? []);
-  if (data?.cohortsList && data.cohortsList !== cohorts) setCohorts(data.cohortsList);
+  const cohorts = data?.cohortsList ?? [];
   const scoreboard = data?.scoreboardEntriesList ?? [];
 
   return (
