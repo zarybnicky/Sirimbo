@@ -6,7 +6,7 @@ import {
   RadioButtonGroupElement,
   VerticalCheckboxButtonGroupElement,
 } from '@/ui/fields/RadioButtonGroupElement';
-import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuButton,
@@ -98,7 +98,13 @@ const Form = z.object({
   cohortIds: z.array(z.string()).prefault([]),
 });
 
-export function CreatePersonDialog() {
+export function CreatePersonDialog({
+  defaults,
+  redirect = true,
+}: {
+  defaults?: Partial<z.input<typeof Form>>;
+  redirect?: boolean;
+} = {}) {
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
   const router = useRouter();
   const [createResult, create] = useMutation(CreatePersonDocument);
@@ -183,26 +189,28 @@ export function CreatePersonDialog() {
   React.useEffect(() => {
     if (open) {
       reset(
-        {},
+        {
+          isMember: true,
+          sendInvitation: false,
+          nationality: '203',
+          joinDate: new Date(),
+          instagramUsername: null,
+          tiktokUsername: null,
+          facebookUrl: null,
+          websiteUrl: null,
+          cohortIds: [],
+          ...defaults,
+        },
         {
           keepDirtyValues: true,
           keepTouched: true,
           keepErrors: true,
         },
       );
-      setValue('isMember', true);
-      setValue('sendInvitation', false);
-      setValue('nationality', '203');
-      setValue('joinDate', new Date());
-      setValue('instagramUsername', null);
-      setValue('tiktokUsername', null);
-      setValue('facebookUrl', null);
-      setValue('websiteUrl', null);
-      setValue('cohortIds', []);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset both the form and its related state.
       setCohortPickerOpen(false);
     }
-  }, [open, reset, setValue, setCohortPickerOpen]);
+  }, [open, reset, defaults, setCohortPickerOpen]);
 
   const onSubmit = async (data: z.infer<typeof Form>) => {
     const {
@@ -240,26 +248,30 @@ export function CreatePersonDialog() {
 
       toast.success('Přidáno.');
       setOpen(null);
-      router.replace(`/clenove/${id}`);
+      if (redirect) router.replace(`/clenove/${id}`);
     }
   };
 
   return (
-    <Dialog open={!!open} onOpenChange={() => setOpen(null)}>
-      <DropdownMenu>
-        <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
-          <Plus />
-          Přidat osobu
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuButton onClick={() => setOpen('new')}>
-            Nová osoba
-          </DropdownMenuButton>
-          <DropdownMenuButton onClick={() => setOpen('existing')}>
-            Z jiného klubu
-          </DropdownMenuButton>
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <Dialog open={!!open} onOpenChange={(open) => setOpen(open ? 'new' : null)}>
+      {defaults ? (
+        <DialogTrigger.Add size="sm" text="Přidat osobu" />
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm' })}>
+            <Plus />
+            Přidat osobu
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuButton onClick={() => setOpen('new')}>
+              Nová osoba
+            </DropdownMenuButton>
+            <DropdownMenuButton onClick={() => setOpen('existing')}>
+              Z jiného klubu
+            </DropdownMenuButton>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
 
       <DialogContent
         className="sm:max-w-2xl"

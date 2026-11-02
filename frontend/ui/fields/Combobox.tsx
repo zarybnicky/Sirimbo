@@ -19,7 +19,7 @@ type ComboboxProps = {
   onChange: (value: string | null | undefined) => void;
   onBlur?: () => void;
   options?: Item[];
-  placeholder: string;
+  placeholder?: string;
   className?: string;
   label?: React.ReactNode;
   inline?: boolean;

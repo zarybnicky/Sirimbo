@@ -771,6 +771,28 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
   }
 }
 
+query FederationClubMembers($clubId: BigInt!, $offset: Int! = 0) {
+  people(condition: { membership: { state: CURRENT } }) {
+    nodes { id cstsId isMember }
+  }
+  federationPeople(first: 100, offset: $offset, condition: { federation: "csts", clubId: $clubId }, orderBy: [CANONICAL_NAME_ASC, ID_ASC]) {
+    totalCount
+    nodes {
+      id
+      externalId
+      canonicalName
+      firstName
+      lastName
+      gender
+      dob
+      peopleList {
+        id
+        name
+      }
+    }
+  }
+}
+
 query MissingFederationCouples {
   people(condition: { membership: { state: CURRENT } }, orderBy: [NAME_ASC, ID_ASC]) {
     nodes {

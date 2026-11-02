@@ -276,6 +276,13 @@ WHERE host IS NOT NULL
   AND state IN ('ready', 'delayed')
 ORDER BY host, run_at;
 
+/* @name HasQueuedFetchJobs */
+SELECT EXISTS (
+  SELECT FROM crawler.frontier_fetch_job
+  WHERE federation = :federation!
+    AND state IN ('ready', 'delayed')
+) AS "queued!";
+
 /* @name GetFrontierDetail */
 SELECT
   f.id,

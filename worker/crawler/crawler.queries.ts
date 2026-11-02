@@ -595,6 +595,37 @@ const getScheduledFetchSlotsIR: any = {"usedParamSet":{},"params":[],"statement"
 export const getScheduledFetchSlots = new PreparedQuery<IGetScheduledFetchSlotsParams,IGetScheduledFetchSlotsResult>(getScheduledFetchSlotsIR);
 
 
+/** 'HasQueuedFetchJobs' parameters type */
+export interface IHasQueuedFetchJobsParams {
+  federation: string;
+}
+
+/** 'HasQueuedFetchJobs' return type */
+export interface IHasQueuedFetchJobsResult {
+  queued: boolean;
+}
+
+/** 'HasQueuedFetchJobs' query type */
+export interface IHasQueuedFetchJobsQuery {
+  params: IHasQueuedFetchJobsParams;
+  result: IHasQueuedFetchJobsResult;
+}
+
+const hasQueuedFetchJobsIR: any = {"usedParamSet":{"federation":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":78,"b":89}]}],"statement":"SELECT EXISTS (\n  SELECT FROM crawler.frontier_fetch_job\n  WHERE federation = :federation!\n    AND state IN ('ready', 'delayed')\n) AS \"queued!\""};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT EXISTS (
+ *   SELECT FROM crawler.frontier_fetch_job
+ *   WHERE federation = :federation!
+ *     AND state IN ('ready', 'delayed')
+ * ) AS "queued!"
+ * ```
+ */
+export const hasQueuedFetchJobs = new PreparedQuery<IHasQueuedFetchJobsParams,IHasQueuedFetchJobsResult>(hasQueuedFetchJobsIR);
+
+
 /** 'GetFrontierDetail' parameters type */
 export interface IGetFrontierDetailParams {
   federation?: string | null | void;

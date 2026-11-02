@@ -22,8 +22,16 @@ import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { buttonCls, inputCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
-import { MissingFederationCouplesDocument } from '@/graphql/Federation';
-import { CreateCoupleDocument, DeleteCoupleDocument } from '@/graphql/Memberships';
+import {
+  FederationClubMembersDocument,
+  MissingFederationCouplesDocument,
+} from '@/graphql/Federation';
+import {
+  CreateCoupleDocument,
+  CreateTenantMembershipDocument,
+  DeleteCoupleDocument,
+} from '@/graphql/Memberships';
+import { TenantFormDocument } from '@/graphql/Tenant';
 import { useMutation, useQuery } from 'urql';
 import { useState } from 'react';
 import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
@@ -31,8 +39,9 @@ import { Spinner } from '@/ui/Spinner';
 import { Check, Undo2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
+import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 
-const views = ['year', 'gallery', 'weekend', 'couples'] as const;
+const views = ['year', 'gallery', 'weekend', 'couples', 'members'] as const;
 const competitorTypes = [
   'COUPLE',
   'SOLO',
@@ -70,16 +79,15 @@ export function ClubResults() {
         <Tab id="couples" title="Doplnit páry z ČSTS" requireAdmin>
           <MissingFederationCouples />
         </Tab>
+        <Tab id="members" title="Doplnit členy z ČSTS" requireAdmin>
+          <MissingFederationMembers />
+        </Tab>
       </TabMenu>
     </section>
   );
 }
 
-function ClubResultReport({
-  view,
-}: {
-  view: Exclude<(typeof views)[number], 'couples'>;
-}) {
+function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
   const currentYear = new Date().getFullYear();
   const [filters, setFilters] = useQueryStates(
     {
@@ -309,7 +317,7 @@ function MissingFederationCouples() {
   return (
     <div className="grid gap-3 text-sm">
       <FacetRadioGroup
-        label=''
+        label=""
         name="couple-status"
         value={active ? 'active' : 'inactive'}
         options={[
@@ -352,10 +360,12 @@ function MissingFederationCouples() {
                 )}
                 {(candidate.latestResultAt || candidate.latestEntryAt) && (
                   <span>
-                    Poslední soutěž:
-                    {' '}
-                    {candidate.latestResultAt ? formatDateOnly(candidate.latestResultAt) : ''}
-                    {candidate.latestEntryAt && candidate.latestEntryAt > new Date().toISOString()
+                    Poslední soutěž:{' '}
+                    {candidate.latestResultAt
+                      ? formatDateOnly(candidate.latestResultAt)
+                      : ''}
+                    {candidate.latestEntryAt &&
+                    candidate.latestEntryAt > new Date().toISOString()
                       ? ' (+ budoucí)'
                       : ''}
                   </span>
@@ -421,6 +431,96 @@ function MissingFederationCouples() {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function MissingFederationMembers() {
+  const [tenant] = useQuery({ query: TenantFormDocument });
+  const club = tenant.data?.clubs?.nodes.find(
+    (c) => c.externalId === tenant.data?.tenant?.cstsId?.toString(),
+  );
+  const [membership, addMembership] = useMutation(CreateTenantMembershipDocument);
+  const query = usePaginatedQuery({
+    query: FederationClubMembersDocument,
+    variables: (offset) => ({ clubId: club?.id ?? '', offset }),
+    getTotal: (data) => data.federationPeople?.totalCount,
+    limit: 100,
+    pause: !club,
+  });
+  if (!tenant.data)
+    return tenant.error ? <FormError error={tenant.error} /> : <Spinner />;
+  if (!club)
+    return (
+      <Link className="text-accent-11 underline" href="/tanecni-klub">
+        Propojte klub s ČSTS v nastavení klubu.
+      </Link>
+    );
+  if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
+
+  const currentIds = new Set(
+    query.data.people?.nodes.filter((p) => p.isMember).map((p) => p.cstsId),
+  );
+  const people =
+    query.data.federationPeople?.nodes.filter(
+      (p) => !currentIds.has(Number(p.externalId)),
+    ) ?? [];
+  return (
+    <div className="grid gap-3 text-sm">
+      <p className="font-bold">{club.name}</p>
+      <FormError error={membership.error ?? query.error ?? tenant.error} />
+      {people.length === 0 && <p>Žádní chybějící členové na této stránce.</p>}
+      {people.map((person) => (
+        <div key={person.id} className="grid gap-2 rounded-md bg-neutral-2 px-3 py-2">
+          <FederationLink
+            entity="people"
+            federation="csts"
+            externalId={person.externalId}
+          >
+            {person.canonicalName ||
+              `${person.firstName ?? ''} ${person.lastName ?? ''}`.trim() ||
+              person.externalId}{' '}
+            · IDT {person.externalId}
+          </FederationLink>
+          {person.peopleList.length > 0 ? (
+            person.peopleList.map((local) => (
+              <div
+                key={local.id}
+                className="flex flex-wrap items-center justify-between gap-2"
+              >
+                <LocalPersonLinks people={[local]} />
+                <button
+                  type="button"
+                  className={buttonCls({ size: 'sm', variant: 'outline' })}
+                  disabled={membership.fetching}
+                  onClick={() =>
+                    addMembership({ input: { tenantMembership: { personId: local.id } } })
+                  }
+                >
+                  <Check /> Přidat členství
+                </button>
+              </div>
+            ))
+          ) : (
+            <CreatePersonDialog
+              redirect={false}
+              defaults={{
+                firstName: person.firstName ?? '',
+                lastName: person.lastName ?? '',
+                gender:
+                  person.gender === 'MALE'
+                    ? 'MAN'
+                    : person.gender === 'FEMALE'
+                      ? 'WOMAN'
+                      : 'UNSPECIFIED',
+                birthDate: person.dob,
+                cstsId: Number(person.externalId),
+              }}
+            />
+          )}
+        </div>
+      ))}
+      <Pagination {...query.pagination} />
     </div>
   );
 }

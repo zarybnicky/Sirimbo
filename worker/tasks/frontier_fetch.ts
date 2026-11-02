@@ -2,12 +2,14 @@ import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
   getPendingProcessById,
+  hasQueuedFetchJobs,
   insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
   markFrontierProcessError,
   markFrontiersProcessSuccess,
   markFrontierTransient,
+  queueCrawlerSchedule,
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
@@ -135,6 +137,11 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       await markFrontierProcessError.run({ id, error: processError }, client);
       logger.error(`Processing frontier ${id} failed: ${processError}`);
     }
+  });
+
+  await withPgClient(async (client) => {
+    const [queue] = await hasQueuedFetchJobs.run({ federation: frontier.federation }, client);
+    if (!queue.queued) await queueCrawlerSchedule.run(undefined, client);
   });
 };
 
