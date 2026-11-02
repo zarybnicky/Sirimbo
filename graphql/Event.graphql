@@ -485,7 +485,7 @@ query CalendarData(
       canRegister: $canRegister
     }
     orderBy: SINCE_ASC
-  ) {
+  ) @_required {
     ...EventWithTrainer
     attendance: registrationsList(
       condition: {

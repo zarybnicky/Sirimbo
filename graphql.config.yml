@@ -1,5 +1,7 @@
 
-schema: ${GRAPHQL_SCHEMA:schema.graphql}
+schema:
+  - ${GRAPHQL_SCHEMA:schema.graphql}
+  - 'directive @_required on FIELD'
 documents: "graphql/*.graphql"
 overwrite: true
 

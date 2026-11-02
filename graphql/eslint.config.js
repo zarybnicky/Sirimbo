@@ -56,6 +56,13 @@ export default defineConfig([
     },
     rules: {
       ...graphqlPlugin.configs['operations-recommended'].rules,
+      '@graphql-eslint/naming-convention': [
+        'error',
+        {
+          ...graphqlPlugin.configs['operations-recommended'].rules['@graphql-eslint/naming-convention'][1],
+          'DirectiveDefinition, Directive': { ignorePattern: '^_required$' },
+        },
+      ],
       '@graphql-eslint/known-type-names': 'error',
       '@graphql-eslint/no-one-place-fragments': 'off',
       '@graphql-eslint/require-selections': 'off',
