@@ -74,7 +74,7 @@ export default async function CompetitorPage({ params }: Props) {
         }}
       />
 
-      <FederationCategoryProgress singleFederation competitors={[{ ...competitor, federation }]} />
+      <FederationCategoryProgress competitors={[competitor]} />
 
       {competitor.couplesList.length > 0 && (
         <>

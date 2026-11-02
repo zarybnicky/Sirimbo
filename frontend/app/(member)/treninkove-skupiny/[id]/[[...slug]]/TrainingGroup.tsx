@@ -39,7 +39,6 @@ export function TrainingGroup({
   initialCohort: CohortFragment;
   initialMembers: readonly CohortMemberFragment[];
 }) {
-  const auth = useAuth();
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdateCohortDocument);
   const [tab, setTab] = useQueryState(
@@ -94,25 +93,23 @@ export function TrainingGroup({
 
       <RichTextView value={description} />
 
-      {auth.isLoggedIn && (
-        <TabMenu selected={tab} onSelect={setTab}>
-          <Tab id="members" title={`Členové (${members.length})`}>
-            <TrainingGroupMembers members={members} />
-          </Tab>
-          <Tab id="fed" title="Výsledky">
-            <CompetitionHistory competitor={{ cohortId: cohort.id }} />
-          </Tab>
-          <Tab id="eligible" title="Možné soutěže">
-            <CompetitionSuggestions competitor={{ cohortId: cohort.id }} />
-          </Tab>
-          <Tab id="access" title="Přístupy" requireAdmin>
-            <PeopleAccessOverview cohortId={cohort.id} />
-          </Tab>
-          <Tab id="activity" title="Aktivita">
-            <ActivityList cohortId={cohort.id} />
-          </Tab>
-        </TabMenu>
-      )}
+      <TabMenu selected={tab} onSelect={setTab}>
+        <Tab id="members" title={`Členové (${members.length})`} requireMember>
+          <TrainingGroupMembers members={members} />
+        </Tab>
+        <Tab id="activity" title="Tréninky" requireMember>
+          <ActivityList cohortId={cohort.id} />
+        </Tab>
+        <Tab id="fed" title="Soutěže" requireMember>
+          <CompetitionHistory competitor={{ cohortId: cohort.id }} />
+        </Tab>
+        <Tab id="eligible" title="Možné soutěže" requireMember>
+          <CompetitionSuggestions competitor={{ cohortId: cohort.id }} />
+        </Tab>
+        <Tab id="access" title="Přístupy" requireAdmin>
+          <PeopleAccessOverview cohortId={cohort.id} />
+        </Tab>
+      </TabMenu>
     </>
   );
 }
@@ -164,11 +161,10 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   members: readonly CohortMemberFragment[];
 }) {
   const auth = useAuth();
-  const showActivity = auth.isTrainer;
   const [view, setView] = React.useState<'activity' | 'competitive'>(
-    showActivity ? 'activity' : 'competitive',
+    auth.isTrainer ? 'activity' : 'competitive',
   );
-  const activityView = showActivity && view === 'activity';
+  const activityView = auth.isTrainer && view === 'activity';
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(
     personActions,
@@ -184,7 +180,7 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
           : 'grid-cols-[minmax(0,1fr)_max-content_max-content] lg:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
       )}
     >
-      {showActivity && (
+      {auth.isTrainer && (
         <div className="col-span-full justify-self-end">
           <RadioButtonGroup
             value={view}

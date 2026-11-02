@@ -199,23 +199,21 @@ export const PersonView = React.memo(function PersonView({
         <Tab id="info" title="Členství">
           <PersonMembershipView item={item} />
         </Tab>
-        <Tab id="fed" title="Výsledky">
-          {competitors.length > 0 && (
-            <div className="my-4">
-              <FederationCategoryProgress competitors={competitors} />
-            </div>
-          )}
-          <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory competitor={{ personIds: [id] }} />
+        <Tab id="activity" title="Tréninky">
+          <ActivityList personIds={personIds} viewerId={id} />
+        </Tab>
+        <Tab id="fed" title="Soutěže">
+          <div className="flex flex-col gap-4">
+            <FederationCategoryProgress competitors={competitors} />
+            <FederationRankings entries={item.federationRanklistEntries.nodes} />
+            <CompetitionHistory competitor={{ personIds: [id] }} />
+          </div>
         </Tab>
         <Tab id="eligible" title="Možné soutěže">
           <CompetitionSuggestions competitor={{ personIds: [id] }} />
         </Tab>
         {isAdminOrCurrentPerson && (
           <>
-            <Tab id="activity" title="Aktivita">
-              <ActivityList personIds={personIds} />
-            </Tab>
             <Tab id="payment" title="Platby">
               <PersonPaymentsView id={id} />
             </Tab>

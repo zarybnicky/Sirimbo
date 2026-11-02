@@ -7,9 +7,7 @@ import { Table } from '@/ui/Table';
 
 export function FederationCategoryProgress({
   competitors,
-  singleFederation = false,
 }: {
-  singleFederation?: boolean;
   competitors: {
     id: string;
     federation: string;
@@ -18,6 +16,9 @@ export function FederationCategoryProgress({
     >['categoryProgressesList'];
   }[];
 }) {
+  const singleFederation = competitors.every(
+    (x) => x.federation === competitors[0]?.federation,
+  );
   const entries = competitors.flatMap((c) =>
     c.categoryProgressesList.map((x) => ({
       ...x,

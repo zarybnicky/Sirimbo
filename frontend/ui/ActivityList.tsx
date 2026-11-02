@@ -40,9 +40,11 @@ const calendarFilters: CalendarFilters = {
 export const ActivityList = React.memo(function ActivityList({
   personIds,
   cohortId,
+  viewerId,
 }: {
   personIds?: string[];
   cohortId?: string;
+  viewerId?: string;
 }) {
   const [date, setDate] = React.useState(() => new Date());
   const [filters, setFilters] = React.useState(calendarTypes);
@@ -77,14 +79,13 @@ export const ActivityList = React.memo(function ActivityList({
 
   React.useEffect(() => {
     if (fetching || error || !scrollToToday.current) return;
-    todayMarker.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    todayMarker.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
     scrollToToday.current = false;
   }, [date, fetching, error]);
 
   return (
     <>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h4 className="text-xl tracking-tight">{capitalize(monthView.label(range))}</h4>
         <DateNavigator
           date={date}
           view={monthView}
@@ -97,6 +98,7 @@ export const ActivityList = React.memo(function ActivityList({
             setDate(new Date());
           }}
         />
+        <h4 className="text-xl tracking-tight">{capitalize(monthView.label(range))}</h4>
         <FacetFilter
           label="Typy"
           value={filters}
@@ -124,8 +126,8 @@ export const ActivityList = React.memo(function ActivityList({
               className="scroll-mt-20"
             >
               {items.length > 0 && (
-                <div className="mb-4 flex flex-col gap-2">
-                  <h4 className="my-2 text-xl tracking-tight">
+                <div className="mb-2 flex flex-col gap-2">
+                  <h4 className="mt-2 text-lg tracking-tight">
                     {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
                   </h4>
                   {birthdays.length > 0 && (
@@ -156,7 +158,8 @@ export const ActivityList = React.memo(function ActivityList({
                         <EventButton
                           key={id}
                           event={instance}
-                          viewer="auto"
+                          viewer={viewerId ? 'auto' : 'neutral'}
+                          viewerId={viewerId}
                           suffix={
                             <AttendanceSummary
                               items={instance.attendance}

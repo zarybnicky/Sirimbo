@@ -101,20 +101,16 @@ export function Couple({ id }: { id: string }) {
       />
 
       <TabMenu selected={tab} onSelect={setTab}>
-        <Tab id="activity" title="Aktivita">
+        <Tab id="activity" title="Tréninky">
           <ActivityList personIds={personIds} />
         </Tab>
 
-        <Tab id="fed" title="Výsledky">
-          {item.federationCompetitors.nodes.some(
-            (x) => x.categoryProgressesList.length > 0,
-          ) && (
-            <FederationCategoryProgress
-              competitors={item.federationCompetitors.nodes}
-            />
-          )}
-          <FederationRankings entries={item.federationRanklistEntries.nodes} />
-          <CompetitionHistory competitor={{ coupleId: id }} />
+        <Tab id="fed" title="Soutěže">
+          <div className="flex flex-col gap-4">
+            <FederationCategoryProgress competitors={item.federationCompetitors.nodes} />
+            <FederationRankings entries={item.federationRanklistEntries.nodes} />
+            <CompetitionHistory competitor={{ coupleId: id }} />
+          </div>
         </Tab>
         <Tab id="eligible" title="Možné soutěže">
           <CompetitionSuggestions competitor={{ coupleId: id }} />

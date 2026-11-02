@@ -120,7 +120,7 @@ const roleNames: Record<OfficialRole, string> = {
 };
 export const formatOfficialRole = (role: OfficialRole) => roleNames[role];
 
-type EventViewer = 'neutral' | 'trainer' | 'participant';
+export type EventViewer = 'neutral' | 'trainer' | 'participant';
 
 export const formatEventName = (
   event:

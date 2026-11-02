@@ -326,6 +326,7 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
 
 query FederationCompetitor($id: String!) {
   federationCompetitor(id: $id) {
+    federation
     id
     name
     competitorType

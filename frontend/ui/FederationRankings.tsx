@@ -149,7 +149,6 @@ export function FederationRankings({
   );
   return (
     <Table
-      className="my-2"
       columns={[
         'Ranklist',
         ...columns.map((discipline) => (

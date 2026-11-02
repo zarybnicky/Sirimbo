@@ -2,8 +2,8 @@ import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { EventSummary } from '@/ui/EventSummary';
 import { cn } from '@/lib/cn';
 import {
-  formatEventType,
-  formatParticipant,
+  formatEventName,
+  type EventViewer,
   numericFullFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
@@ -17,32 +17,32 @@ import { Check, HelpCircle, X } from 'lucide-react';
 export function EventButton({
   event,
   viewer,
+  viewerId,
   showDate,
   attendance,
   suffix,
 }: {
   event: EventWithTrainerFragment;
   showDate?: boolean;
-  viewer: 'auto' | 'trainer' | 'couple';
+  viewer: EventViewer | 'auto';
+  viewerId?: string;
   attendance?: 'inline';
   suffix?: React.ReactNode;
 }) {
   const auth = useAuth();
 
-  const registrations = event.registrations.nodes || [];
-
   const start = new Date(event.since);
   const end = new Date(event.until);
   const duration = diff(start, end, 'minutes');
 
-  const trainerIds = event.eventTrainersList?.map((x) => x.personId) ?? [];
-  const trainers = event.eventTrainersList?.map((x) => x.person?.name).join(', ') ?? '';
-  const showTrainer =
-    viewer === 'couple'
-      ? true
-      : viewer === 'trainer'
-        ? false
-        : !trainerIds.some((id) => auth.isMyPerson(id));
+  const perspective =
+    viewer === 'auto'
+      ? event.eventTrainersList.some((x) =>
+          viewerId ? x.personId === viewerId : auth.isMyPerson(x.personId),
+        )
+        ? 'trainer'
+        : 'participant'
+      : viewer;
 
   const showInlineAttendance =
     attendance === 'inline' && event.type === 'GROUP' && auth.canManageEvent(event);
@@ -77,21 +77,7 @@ export function EventButton({
               {(showDate ? numericFullFormatter : shortTimeFormatter).format(start)}
             </div>
             <div className={cn('min-w-0 grow', event.isCancelled ? 'line-through' : '')}>
-              {event.name ||
-                (showTrainer ? (
-                  `${formatEventType(event.type)}: ${trainers}`
-                ) : registrations.length > 0 ? (
-                  <>
-                    {registrations.slice(0, 2).map((x, i) => (
-                      <div key={x.id}>
-                        {formatParticipant(x)}
-                        {registrations.length > 2 && i === 1 ? ', ...' : ''}
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  'VOLNO'
-                ))}
+              {formatEventName(event, perspective)}
             </div>
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <EventConflictsBadge eventId={event.id} className="text-accent-11" />
