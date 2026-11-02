@@ -5,7 +5,6 @@ import {
   formatEventName,
   formatEventType,
   formatParticipant,
-  listFormatter,
   moneyFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
@@ -18,6 +17,8 @@ import { isTruthy } from '@/lib/truthyFilter';
 import React from 'react';
 import { startOf } from 'date-arithmetic';
 import { useAuth } from '@/lib/auth';
+import { ListFormat } from '@/ui/ListFormat';
+import { slugify } from '@/lib/slugify';
 
 export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   const auth = useAuth();
@@ -26,6 +27,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   const registrationCount = event.registrationInfo?.registrations ?? 0;
   const locationLabel = event.location?.name || event.locationText;
   const cohorts = event.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
+  const trainers = event.eventTrainersList.map((x) => x.person).filter(isTruthy);
   const priceString = (event.approxPriceList ?? [])
     .filter(isTruthy)
     .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
@@ -34,12 +36,12 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
 
   const primaryActions = React.useMemo(() => {
     return [
-      !auth.canManageEvent(event) && 'event.registrations',
+      !auth.canManageEvent(event) ? 'event.registrations' : undefined,
       startOf(new Date(event.since), 'day') > startOf(new Date(), 'day')
         ? 'event.registrations'
         : 'event.attendance',
       'event.edit',
-    ];
+    ].filter(isTruthy);
   }, [auth, event]);
 
   return (
@@ -95,12 +97,18 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         </div>
       )}
 
-      {!!event.eventTrainersList?.length && (
+      {trainers.length > 0 && (
         <div className="flex items-center gap-2" key="trainers">
           <User className="size-4 text-accent-11 shrink-0" />
-          {listFormatter.format(
-            event.eventTrainersList.map((x) => x.person?.name).filter(isTruthy),
-          )}
+          <span>
+            <ListFormat>
+              {trainers.map((person) => (
+                <Link key={person.id} className="underline" href={`/clenove/${person.id}`}>
+                  {person.name}
+                </Link>
+              ))}
+            </ListFormat>
+          </span>
         </div>
       )}
 
@@ -115,11 +123,33 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         <Users className="size-4 text-accent-11 shrink-0" />
         <div>
           {cohorts.length > 0 ? (
-            listFormatter.format(cohorts.map((x) => x.name))
+            <ListFormat>
+              {cohorts.map((cohort) => (
+                <Link
+                  key={cohort.id}
+                  className="underline"
+                  href={`/treninkove-skupiny/${cohort.id}/${slugify(cohort.name)}`}
+                >
+                  {cohort.name}
+                </Link>
+              ))}
+            </ListFormat>
           ) : registrationCount === 0 ? (
             <div>VOLNÁ</div>
           ) : registrationCount < 6 ? (
-            registrations.nodes.map((x) => <div key={x.id}>{formatParticipant(x)}</div>)
+            registrations.nodes.map((x) => (
+              <div key={x.id}>
+                {x.person ? (
+                  <Link className="underline" href={`/clenove/${x.person.id}`}>
+                    {formatParticipant(x)}
+                  </Link>
+                ) : x.couple ? (
+                  <Link className="underline" href={`/pary/${x.couple.id}`}>
+                    {formatParticipant(x)}
+                  </Link>
+                ) : null}
+              </div>
+            ))
           ) : (
             `${registrationCount} účastníků`
           )}

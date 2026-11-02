@@ -5,7 +5,12 @@ import React from 'react';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
-import { getPeriodRange, PeriodPicker, type PeriodValue } from '@/ui/PeriodPicker';
+import {
+  getPeriodRange,
+  periodOptions,
+  PeriodPicker,
+  type PeriodUnit,
+} from '@/ui/PeriodPicker';
 import { ScoreboardDocument } from '@/graphql/Scoreboard';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { numberFormatter } from '@/ui/format';
@@ -13,19 +18,29 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { buttonCls } from '@/ui/style';
 import { Table } from '@/ui/Table';
 import { InfoIcon } from 'lucide-react';
+import {
+  parseAsIsoDateTime,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryStates,
+} from 'nuqs';
 
 export function Scoreboard() {
-  const [cohortId, setCohortId] = React.useState('');
-  const [period, setPeriod] = React.useState<PeriodValue>(() => ({
-    unit: 'schoolyear',
-    date: new Date(),
-  }));
+  const [filters, setFilters] = useQueryStates(
+    {
+      cohortId: parseAsString.withDefault(''),
+      unit: parseAsStringEnum<PeriodUnit>(periodOptions.map((x) => x.value)).withDefault('schoolyear'),
+      date: parseAsIsoDateTime,
+    },
+    { shallow: true, scroll: false },
+  );
+  const period = { unit: filters.unit, date: filters.date ?? new Date() };
   const range = getPeriodRange(period.unit, period.date);
 
   const [{ data, fetching, error }] = useQuery({
     query: ScoreboardDocument,
     variables: {
-      cohortId: cohortId || null,
+      cohortId: filters.cohortId || null,
       since: range.since.toISOString().slice(0, 10),
       until: range.until.toISOString().slice(0, 10),
     },
@@ -74,15 +89,19 @@ export function Scoreboard() {
             inline
             name="scoreboard-cohort"
             label="Skupina"
-            value={cohortId}
+            value={filters.cohortId}
             defaultValue=""
-            onChange={setCohortId}
+            onChange={(cohortId) => void setFilters({ cohortId })}
             options={[
               { value: '', label: 'Všechny skupiny' },
               ...cohorts.map((cohort) => ({ value: cohort.id, label: cohort.name })),
             ]}
           />
-          <PeriodPicker name="scoreboard-period" value={period} onChange={setPeriod} />
+          <PeriodPicker
+            name="scoreboard-period"
+            value={period}
+            onChange={({ unit, date }) => void setFilters({ unit, date })}
+          />
         </div>
 
         <section>
@@ -131,7 +150,7 @@ export function Scoreboard() {
                     {entry.person ? (
                       <Link
                         href={`/clenove/${entry.person.id}`}
-                        className="hover:underline text-inherit"
+                        className="font-medium text-inherit underline"
                       >
                         {entry.person.name}
                       </Link>

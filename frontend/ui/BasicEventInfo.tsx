@@ -3,6 +3,7 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
+import { ListFormat } from '@/ui/ListFormat';
 
 export function BasicEventInfo({ event }: { event: EventPageFragment }) {
   const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
@@ -56,9 +57,15 @@ export function BasicEventInfo({ event }: { event: EventPageFragment }) {
         {trainers.length > 0 && (
           <>
             <dt>Trenéři</dt>
-            {trainers.map((x) => (
-              <dd key={x.id}>{x.name}</dd>
-            ))}
+            <dd>
+              <ListFormat>
+                {trainers.map((person) => (
+                  <Link key={person.id} className="underline" href={`/clenove/${person.id}`}>
+                    {person.name}
+                  </Link>
+                ))}
+              </ListFormat>
+            </dd>
           </>
         )}
 
