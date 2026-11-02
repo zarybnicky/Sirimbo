@@ -2,7 +2,7 @@ query CrawlerOverview($federation: String, $kind: String) {
   rows: crawlerTargetSummariesList(
     condition: { federation: $federation, kind: $kind }
     orderBy: NATURAL
-  ) {
+  ) @_required {
     federation
     kind
     total
@@ -19,7 +19,7 @@ query CrawlerOverview($federation: String, $kind: String) {
   failures: crawlerTargetFailureGroupsList(
     condition: { federation: $federation, kind: $kind }
     orderBy: [COUNT_DESC, FAILED_AT_DESC]
-  ) {
+  ) @_required {
     federation
     kind
     failure

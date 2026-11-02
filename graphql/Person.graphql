@@ -225,13 +225,13 @@ query MissingFederationIdCandidates($condition: PersonCondition!, $federation: S
 }
 
 query FederationIdIssues($federation: String!) {
-  current: people(condition: { membership: { state: CURRENT } }) {
+  current: people(condition: { membership: { state: CURRENT } }) @_required {
     nodes { id }
   }
-  former: people(condition: { membership: { state: FORMER } }) {
+  former: people(condition: { membership: { state: FORMER } }) @_required {
     nodes { id }
   }
-  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC, ID_ASC]) {
+  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC, ID_ASC]) @_required {
     nodes {
       id
       name

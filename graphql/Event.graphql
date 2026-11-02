@@ -506,7 +506,7 @@ query CalendarData(
       competitor: $participant
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  ) @include(if: $withCompetitions) {
+  ) @include(if: $withCompetitions) @_required {
     nodes {
       ...Competition
       entries: entriesList(condition: { competitor: $participant }) {
@@ -524,7 +524,7 @@ query CalendarData(
       competitor: {}
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  ) @include(if: $withClubCompetitions) {
+  ) @include(if: $withClubCompetitions) @_required {
     nodes {
       ...Competition
       entries: entriesList(condition: { competitor: {}, cancelled: false }) {
@@ -541,7 +541,7 @@ query CalendarData(
       date: { since: $since, until: $until }
       official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
-  ) @include(if: $withCompetitions) {
+  ) @include(if: $withCompetitions) @_required {
     nodes {
       id federation externalId name startDate endDate location city
       officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership } }) {
@@ -561,7 +561,7 @@ query CalendarData(
       date: { since: $since, until: $until }
       official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
-  ) @include(if: $withCompetitions) {
+  ) @include(if: $withCompetitions) @_required {
     nodes {
       id federation startDate
       event { id externalId name startDate endDate location city }
@@ -583,7 +583,7 @@ query CalendarData(
       onlyMine: $onlyMine
     }
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
-  ) @include(if: $withBirthdays) {
+  ) @include(if: $withBirthdays) @_required {
     nodes {
       id name firstName lastName
       date: birthday(since: $since)

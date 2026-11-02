@@ -18,7 +18,7 @@ export function Sources({
 }) {
   const auth = useAuth();
 
-  const { data, fetching, error, pagination } = usePaginatedQuery({
+  const { data, error, pagination } = usePaginatedQuery({
     query: CrawlerTargetsDocument,
     variables: (offset): CrawlerTargetsQueryVariables => ({
       condition,
@@ -34,7 +34,7 @@ export function Sources({
 
   if (!auth.isSystemAdmin) return null;
   if (error) return <FormError error={error} />;
-  if (!data || fetching) return <Spinner />;
+  if (!data) return <Spinner />;
 
   const sources = data.crawlerTargets?.nodes || [];
   if (sources.length === 0) return null;

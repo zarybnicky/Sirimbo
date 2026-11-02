@@ -42,7 +42,7 @@ export function PersonList() {
     query: PersonListDocument,
     variables: { condition: { membership } },
   });
-  const [facetResult] = useQuery({
+  const [{ data: facetData }] = useQuery({
     query: PersonFacetsDocument,
     variables: {
       inCohorts: membership.inCohorts,
@@ -51,10 +51,6 @@ export function PersonList() {
       membershipStates: [membership.state.toLowerCase()],
     },
   });
-  const [facetData, setFacetData] = React.useState(facetResult.data);
-  if (facetResult.data !== undefined && facetResult.data !== facetData) {
-    setFacetData(facetResult.data);
-  }
   const counts: Record<string, Record<string, number>> | undefined = facetData
     ? {}
     : undefined;
