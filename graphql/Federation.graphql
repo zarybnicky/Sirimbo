@@ -274,6 +274,20 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     federation: $federation
     externalId: $externalId
   ) {
+    competitorComponents(first: 300, orderBy: COMPETITOR_ID_ASC) {
+      nodes {
+        competitorId
+        personId
+        role
+        competitor {
+          id
+          externalId
+          name
+          competitorType
+          latestResultAt
+        }
+      }
+    }
     id
     externalId
     canonicalName
@@ -326,6 +340,20 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
 
 query FederationCompetitor($id: String!) {
   federationCompetitor(id: $id) {
+    components(first: 300, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
+      nodes {
+        competitorId
+        personId
+        role
+        person {
+          id
+          externalId
+          canonicalName
+          firstName
+          lastName
+        }
+      }
+    }
     federation
     id
     name
@@ -735,58 +763,6 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
             personId
             role
           }
-        }
-      }
-    }
-  }
-}
-
-query FederationPersonCompetitors(
-  $federation: String!
-  $externalId: BigInt!
-  $competitorsOffset: Int! = 0
-) {
-  federationPersonByFederationAndExternalId(
-    federation: $federation
-    externalId: $externalId
-  ) {
-    id
-    competitorComponents(
-      first: 100
-      offset: $competitorsOffset
-      orderBy: COMPETITOR_ID_ASC
-    ) {
-      totalCount
-      nodes {
-        competitorId
-        personId
-        role
-        competitor {
-          id
-          externalId
-          name
-          competitorType
-        }
-      }
-    }
-  }
-}
-
-query FederationCompetitorMembers($id: String!, $membersOffset: Int! = 0) {
-  federationCompetitor(id: $id) {
-    id
-    components(first: 100, offset: $membersOffset, orderBy: [ROLE_ASC, PERSON_ID_ASC]) {
-      totalCount
-      nodes {
-        competitorId
-        personId
-        role
-        person {
-          id
-          externalId
-          canonicalName
-          firstName
-          lastName
         }
       }
     }

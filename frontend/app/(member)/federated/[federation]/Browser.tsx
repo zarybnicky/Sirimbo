@@ -82,7 +82,7 @@ function facetLabel(key: string, value: string) {
   if (key === 'discipline') return formatDiscipline(value) ?? value;
   if (key === 'class') return formatClass(value) ?? value;
   if (key === 'gender') return genderLabels[value]!;
-  return key === 'type' ? formatCompetitorType(value) : value;
+  return key === 'type' ? (formatCompetitorType(value) ?? value) : value;
 }
 
 const clearedCompetitorFilters = {

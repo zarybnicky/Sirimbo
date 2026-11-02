@@ -1,13 +1,12 @@
 import { DefinitionList } from '@/ui/DefinitionList';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
-import { Table } from '@/ui/Table';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
-import { Members, History } from './Tables';
+import { History } from './Tables';
 import { ResultHighlights } from '../../ResultHighlights';
 import { formatCoupleName, formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { formatAgeGroup, formatCompetitorType } from '@/ui/csts';
@@ -66,6 +65,35 @@ export default async function CompetitorPage({ params }: Props) {
           ID: externalId,
           Typ: formatCompetitorType(competitor.competitorType),
           Věk: formatAgeGroup(competitor.ageGroup),
+          Osoby:
+            competitor.components.nodes.length > 0 &&
+            competitor.components.nodes.map(({ personId, person, role }) => (
+              <div key={personId}>
+                {person ? (
+                  <Link
+                    className="text-accent-11 underline"
+                    href={`/federated/${federation}/people/${person.externalId}`}
+                  >
+                    {person.canonicalName ||
+                      [person.firstName, person.lastName].filter(Boolean).join(' ') ||
+                      personId}
+                  </Link>
+                ) : (
+                  personId
+                )}
+                {role === 'SUBSTITUTE' && ' (náhradník)'}
+              </div>
+            )),
+          'V klubu':
+            competitor.couplesList.length > 0 &&
+            competitor.couplesList.map((couple) => (
+              <div key={couple.id}>
+                <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
+                  {formatCoupleName(couple)}
+                </Link>{' '}
+                ({formatOpenDateRange(couple)})
+              </div>
+            )),
           'Poslední soutěž':
             (competitor.latestResultAt ? formatDateOnly(competitor.latestResultAt) : '') +
             (competitor.latestEntryAt && competitor.latestEntryAt > today
@@ -76,25 +104,6 @@ export default async function CompetitorPage({ params }: Props) {
 
       <FederationCategoryProgress competitors={[competitor]} />
 
-      {competitor.couplesList.length > 0 && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">V klubu</h2>
-          <Table columns={['couple', 'partnership']}>
-            {competitor.couplesList.map((couple) => (
-              <tr key={couple.id} className="border-t border-neutral-4">
-                <th scope="row">
-                  <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-                    {formatCoupleName(couple)}
-                  </Link>
-                </th>
-                <td>{formatOpenDateRange(couple)}</td>
-              </tr>
-            ))}
-          </Table>
-        </>
-      )}
-
-      <Members federation={federation} id={competitor.id} />
       <ResultHighlights results={competitor.highlights} />
       <History federation={federation} id={competitor.id} />
     </Layout>

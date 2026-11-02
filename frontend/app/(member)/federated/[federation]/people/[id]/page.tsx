@@ -7,10 +7,9 @@ import { cache } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
-import { Competitors } from './Competitors';
 import { OfficialAssignments } from './OfficialAssignments';
 import { formatDateOnly } from '@/ui/format';
-import { formatAgeGroup, formatDiscipline } from '@/ui/csts';
+import { formatAgeGroup, formatCompetitorType, formatDiscipline } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
@@ -86,43 +85,60 @@ export default async function FederatedPersonPage({ params }: Props) {
           Pohlaví: person.gender?.toLowerCase(),
           Národnost: person.nationality,
           Věk: person.ageGroup && formatAgeGroup(person.ageGroup),
+          'Soutěží jako':
+            person.competitorComponents.nodes.length > 0 &&
+            person.competitorComponents.nodes
+              .toSorted(
+                (a, b) =>
+                  (b.competitor?.latestResultAt ?? '').localeCompare(
+                    a.competitor?.latestResultAt ?? '',
+                  ) || a.competitorId.localeCompare(b.competitorId),
+              )
+              .map(({ competitorId, competitor, role }) => (
+                <div key={competitorId}>
+                  {competitor ? (
+                    <>
+                      <Link
+                        className="text-accent-11 underline"
+                        href={`/federated/${federation}/competitors/${competitor.externalId}`}
+                      >
+                        {competitor.name || competitorId}
+                      </Link>{' '}
+                      ({formatCompetitorType(competitor.competitorType)}
+                      {competitor.latestResultAt &&
+                        `, ${formatDateOnly(competitor.latestResultAt)}`}
+                      )
+                    </>
+                  ) : (
+                    competitorId
+                  )}
+                  {role === 'SUBSTITUTE' && ' (náhradník)'}
+                </div>
+              )),
+          'V klubu':
+            person.peopleList.length > 0 &&
+            person.peopleList.map((match) => (
+              <div key={match.id}>
+                <Link className="text-accent-11 underline" href={`/clenove/${match.id}`}>
+                  {match.name}
+                </Link>{' '}
+                (
+                {[
+                  ...new Set(
+                    [
+                      ...match.tenantMembershipsList,
+                      ...match.tenantTrainersList,
+                      ...match.tenantAdministratorsList,
+                    ].flatMap((x) => x.tenantName || []),
+                  ),
+                ]
+                  .toSorted((a, b) => a.localeCompare(b))
+                  .join(', ')}
+                )
+              </div>
+            )),
         }}
       />
-
-      {person.peopleList.length > 0 && (
-        <>
-          <h2 className="mt-4 mb-2 text-lg font-bold">V klubu</h2>
-          <Table columns={['person', 'active affiliations']}>
-            {person.peopleList.map((match) => (
-              <tr key={match.id} className="border-t border-neutral-4">
-                <th scope="row">
-                  <Link
-                    className="text-accent-11 underline"
-                    href={`/clenove/${match.id}`}
-                  >
-                    {match.name}
-                  </Link>
-                </th>
-                <td>
-                  {[
-                    ...new Set(
-                      [
-                        ...match.tenantMembershipsList,
-                        ...match.tenantTrainersList,
-                        ...match.tenantAdministratorsList,
-                      ].flatMap((x) => x.tenantName || []),
-                    ),
-                  ]
-                    .toSorted((a, b) => a.localeCompare(b))
-                    .join(', ') || 'Mimo jakýkoli klub'}
-                </td>
-              </tr>
-            ))}
-          </Table>
-        </>
-      )}
-
-      <Competitors federation={federation} externalId={externalId} />
 
       {person.licenses.nodes.length > 0 && (
         <>
