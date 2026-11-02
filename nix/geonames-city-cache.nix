@@ -5,7 +5,7 @@ let
   cities = fetchurl {
     name = "geonames-cities500-${version}.zip";
     url = "https://download.geonames.org/export/dump/cities500.zip";
-    hash = "sha256-aCc1tICIMjlzBW2chEJuJBWmPUzS2COfHFCWbKFx09A=";
+    hash = "sha256-dBV+ArGkXTvcn/dhSbzvHhUh219ZBUrVtt+F4/l9S2k=";
   };
   countries = fetchurl {
     name = "geonames-countryInfo-${version}.txt";
@@ -15,7 +15,7 @@ let
   regions = fetchurl {
     name = "geonames-admin1-${version}.txt";
     url = "https://download.geonames.org/export/dump/admin1CodesASCII.txt";
-    hash = "sha256-QkWIZPqpiHkz11wzQI1KgIt2XtvNYqEyj6noz838cY4=";
+    hash = "sha256-Lkhn9Tl6ywVuomN3YBtXrzfLTIE5l3AiUBjp5DnpGtM=";
   };
 in
 runCommand "geonames-city-cache-${version}.duckdb" {

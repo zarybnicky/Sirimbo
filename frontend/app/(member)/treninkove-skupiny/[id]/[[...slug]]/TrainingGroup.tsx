@@ -140,12 +140,7 @@ function CategoryList({
   return (
     <div className="flex gap-0.5 items-baseline justify-between leading-tight text-center">
       <div className="font-medium">
-        {[
-          formatClass(item.category?.class),
-          formatDiscipline(item.category?.discipline),
-        ]
-          .filter(Boolean)
-          .join(' ')}
+        {formatClass(item.category?.class)}
       </div>
       <div className="whitespace-nowrap text-sm text-neutral-11">
         {formatPointsAndFinals(item)}
@@ -175,8 +170,8 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
       className={cn(
         'grid gap-x-4 gap-y-3 pb-4',
         activityView
-          ? 'grid-cols-1 lg:grid-cols-[minmax(0,1fr)_max-content]'
-          : 'grid-cols-[minmax(0,1fr)_max-content_max-content] lg:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
+          ? 'grid-cols-1 min-[500px]:grid-cols-[minmax(0,1fr)_max-content]'
+          : 'grid-cols-[minmax(0,1fr)_max-content_max-content] min-[500px]:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
       )}
     >
       {auth.isTrainer && (
@@ -191,6 +186,16 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
           />
         </div>
       )}
+      <div className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm">
+        <div             className={cn(
+              'mb-0 min-w-0',
+              activityView ? 'col-span-1' : 'col-span-full min-[500px]:col-span-1',
+            )}
+ />
+        <div />
+        <div>STT</div>
+        <div>LAT</div>
+      </div>
       {members.map(({ id, person }) => (
         <div
           key={id}
@@ -199,7 +204,7 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
           <ActionRow
             className={cn(
               'mb-0 min-w-0',
-              activityView ? 'col-span-1' : 'col-span-full lg:col-span-1',
+              activityView ? 'col-span-1' : 'col-span-full min-[500px]:col-span-1',
             )}
             actions={[
               ...(person ? memberActionMap.get(person.id)! : []),
