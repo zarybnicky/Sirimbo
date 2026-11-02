@@ -4,8 +4,6 @@
 
 - [ ] Redesign reusable faceted search for competitors, then app people/couples; retain inline class, points/finals, and ranklist placement where relevant.
 - [ ] Derive competitor age categories from their members.
-- [x] Retain local person/couple links in competition results. Results and registrations share the query fragment and link rendering.
-- [x] Derive ČSTS event status from competition completion, while preserving explicit cancellation.
 
 ČSTS and WDSF share event status aggregation. ČSTS index refreshes preserve completed
 events, and event detail loads preserve explicit cancellation. Existing events update
@@ -13,8 +11,6 @@ on their next load.
 
 ## Competition results and round marks
 
-- [x] Preserve round dance and judge positions across partial WDSF participant responses and changed official panels. Extend dance programs without renumbering stored scores.
-- [x] Give Bolero, Mambo, and Swing distinct dance codes. Reject duplicate normalized dances instead of overwriting scores.
 - [ ] Store official WDSF final dance results and AJS rankings/scores; current round aggregates sum judges' marks.
 
 The migration reconstructs inconsistent WDSF rounds from cached participants.
@@ -29,13 +25,9 @@ matched their cached responses, including judge, dance, component, and value.
 - [ ] Link in-app ranklist placements to the dated snapshot; retain the compact current-category summary without nomination rankings.
 - [ ] Add WDSF ranklist ingestion; stored snapshots currently cover ČSTS only.
 
-## Remaining app consumers
-
-- [x] [Competitions.tsx](frontend/ui/Competitions.tsx): use shared rows with subgrid alignment, internal event/competition links, and category labels across federations in dashboard, calendar, and timeline cards.
-- [x] [ActivityTimeline.tsx](frontend/ui/ActivityTimeline.tsx): use internal federation event/competition links for judging, including event-only assignments, with federation-appropriate category labels.
-- [x] [FederationIdBackfillWidget.tsx](frontend/ui/FederationIdBackfillWidget.tsx) / `person_federation_candidates`: shared ČSTS/WDSF matching with fuzzy suggestions, explicit selection and undo. Cache candidate scores under each local person so another person's match cannot overwrite them.
-
 ## Clubs and affiliations
+
+- [ ] Load ČSTS loans (`/api/1/loans?filter=memberIdt=…`) as temporary memberships alongside main membership; ignore statuses 0–3, handle Accepted (4), Ended (5), Cancelled (6), and confirm end-date boundaries.
 
 - [ ] Add club listing/detail pages.
 - [ ] Populate `person_club_membership` and `competitor_club_affiliation` (both empty locally on 2026-10-12).
@@ -53,7 +45,6 @@ matched their cached responses, including judge, dance, component, and value.
 
 ## Deferred
 
-- [x] Audit federation `@ref` / `@refVia` consumers. Round dances now expose `dance` directly; other traversals retain needed roles, assignments, or snapshot metadata.
 - [ ] Replace `csts_id`, `wdsf_id`, and ad-hoc external identifiers with persisted federation links.
 - [ ] Remove surrogate IDs for federation events/competitions; external IDs in browser URLs did not replace the database keys.
 - [ ] Add provenance and as-of attribution.
@@ -64,7 +55,6 @@ matched their cached responses, including judge, dance, component, and value.
 
 ### Couple and team composition
 
-- [x] Import couple composition so person-based reports can associate WDSF results with their members.
 - [ ] Finish couple fetching and verify composition coverage after the competitor-ID reconstruction.
 - [ ] Add team composition when a concrete consumer needs it.
 
@@ -166,33 +156,6 @@ we want to keep accepting.
 
 `wdsfOfficialIndex` stores adjudicator labels and propagates them to round judges.
 Official country is parsed but not stored.
-
-### Age rules from `/api/1/age`
-
-- [ ] Restore dated federation age rules and their applicability flags.
-
-The branch had a `wdsfAgeGroups` loader and a `federated.federation_age_group_rule`
-table. The useful idea is storing WDSF age rules as dated federation metadata:
-
-- `federation`
-- `as_of_year`
-- `name`
-- `from_age`
-- `to_age`
-- `min_birthdate`
-- `max_birthdate`
-- `allowed_to_dance_in`
-- `divisions`
-- parsed applicability flags such as person/couple/team/competition
-
-The branch parsed `isPerson`, `isCouple`, `isTeam`, and `isCompetition` but did not
-store them. If this loader is reintroduced, either store those flags or remove them
-from the schema.
-
-The helper concept worth keeping is `yob_range_for_competed_age_group`: given a
-federation, competed age group, and competition date, infer an approximate year of
-birth range. This is useful for candidate matching and data-quality checks, but it
-must not replace WDSF member `yearOfBirth` when that explicit field exists.
 
 ### Approximate birth years
 
