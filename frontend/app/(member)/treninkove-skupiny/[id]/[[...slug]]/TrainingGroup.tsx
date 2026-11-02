@@ -139,9 +139,7 @@ function CategoryList({
 
   return (
     <div className="flex gap-0.5 items-baseline justify-between leading-tight text-center">
-      <div className="font-medium">
-        {formatClass(item.category?.class)}
-      </div>
+      <div className="font-medium">{formatClass(item.category?.class)}</div>
       <div className="whitespace-nowrap text-sm text-neutral-11">
         {formatPointsAndFinals(item)}
       </div>
@@ -186,16 +184,19 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
           />
         </div>
       )}
-      <div className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm">
-        <div             className={cn(
+      {!activityView && (
+        <div className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm">
+          <div
+            className={cn(
               'mb-0 min-w-0',
               activityView ? 'col-span-1' : 'col-span-full min-[500px]:col-span-1',
             )}
- />
-        <div />
-        <div>STT</div>
-        <div>LAT</div>
-      </div>
+          />
+          <div />
+          <div>STT</div>
+          <div>LAT</div>
+        </div>
+      )}
       {members.map(({ id, person }) => (
         <div
           key={id}
