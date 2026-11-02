@@ -4493,6 +4493,23 @@
             "args": []
           },
           {
+            "name": "club",
+            "type": {
+              "kind": "OBJECT",
+              "name": "FederationClub",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "clubId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competition",
             "type": {
               "kind": "OBJECT",
@@ -4533,6 +4550,14 @@
             "args": []
           },
           {
+            "name": "country",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",
@@ -4540,6 +4565,14 @@
                 "kind": "SCALAR",
                 "name": "Any"
               }
+            },
+            "args": []
+          },
+          {
+            "name": "represents",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -4811,6 +4844,23 @@
         "name": "CompetitionResult",
         "fields": [
           {
+            "name": "club",
+            "type": {
+              "kind": "OBJECT",
+              "name": "FederationClub",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "clubId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "competition",
             "type": {
               "kind": "OBJECT",
@@ -4852,6 +4902,14 @@
           },
           {
             "name": "completionStatus",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "country",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -4911,6 +4969,14 @@
           },
           {
             "name": "rankingTo",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "represents",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
@@ -15920,6 +15986,23 @@
           },
           {
             "name": "canonicalName",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "club",
+            "type": {
+              "kind": "OBJECT",
+              "name": "FederationClub",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "clubId",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

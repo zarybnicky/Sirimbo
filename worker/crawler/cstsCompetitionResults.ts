@@ -234,6 +234,8 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
 
   const competitionResults = makePgtypedCollection<{
     competitorId: string;
+    represents: string;
+    country: string;
     startNumber: string;
     ranking: number;
     rankingTo: number;
@@ -246,6 +248,8 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
   }>([
     'competitorId',
     'startNumber',
+    'represents',
+    'country',
     'ranking',
     'rankingTo',
     'pointGain',
@@ -258,6 +262,8 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
   for (const competitor of result.competitors) {
     competitionResults.add({
       competitorId: `csts:${competitor.competitorId}`,
+      represents: competitor.club ?? competitor.competitor.club ?? '',
+      country: competitor.country,
       startNumber: competitor.startNumber > 0 ? competitor.startNumber.toString() : '',
       ranking: competitor.ranking,
       rankingTo: competitor.rankingTo,
@@ -277,7 +283,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
   const dancePrograms = result.rounds.map((round): DanceCode[] =>
     round.dances.some((dance) => cstsAjsComponents[dance])
       ? ['OT']
-      : round.dances as DanceCode[],
+      : (round.dances as DanceCode[]),
   );
   const roundProgramIds = await getDanceProgramIds(dancePrograms);
   if (roundProgramIds.some((id) => !id)) {
@@ -386,10 +392,12 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
           (other) => result.rounds.findIndex((round) => round.round === other.round) > i,
         ),
         overallScore: detail.sum,
-        danceResults: round.dances.some((dance) => cstsAjsComponents[dance])
-          ? round.dances.flatMap((dance, index) =>
-              cstsAjsComponents[dance] === 'total' ? [detail.danceResults[index]] : [],
-            ).join(',')
+        danceResults: round.dances.some((d) => cstsAjsComponents[d])
+          ? round.dances
+              .flatMap((d, i) =>
+                cstsAjsComponents[d] === 'total' ? detail.danceResults[i] : [],
+              )
+              .join(',')
           : detail.danceResults.join(','),
       });
       judgeScores.add(
@@ -428,9 +436,9 @@ function parseCstsMarks(marks: string) {
   return marks.split('|').map((mark) => mark.trim().toLowerCase());
 }
 
-function parseCstsScoreToken(raw: string):
-  | { component: score_component; score: number }
-  | undefined {
+function parseCstsScoreToken(
+  raw: string,
+): { component: score_component; score: number } | undefined {
   const match = /^([x-]|\d+(?:\.\d+)?)(?:\([wdx]\))?$/.exec(raw);
   if (!match) return undefined;
 
@@ -522,7 +530,7 @@ function scoresForRound(args: {
       rows.push({
         scoreRoundId: roundId,
         scoreDanceOrder: ajsComponent ? 1 : danceIndex + 1,
-        scoreDanceCode: ajsComponent ? 'OT' : dance as DanceCode,
+        scoreDanceCode: ajsComponent ? 'OT' : (dance as DanceCode),
         scoreJudgePersonId: judge.id,
         scoreCompetitorId: competitorId.toString(),
         scoreComponent: ajsComponent ?? parsed.component,
@@ -547,10 +555,7 @@ function fullName(...parts: Array<string | undefined>) {
     .join(' ');
 }
 
-function resultCompetitorComponents(
-  competitor: ResultCompetitor,
-  type: competitor_type,
-) {
+function resultCompetitorComponents(competitor: ResultCompetitor, type: competitor_type) {
   const competitorId = `csts:${competitor.competitorId}`;
 
   if (type === 'couple' && competitor.competitor.idt1 && competitor.competitor.idt2) {

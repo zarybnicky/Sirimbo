@@ -23,10 +23,8 @@ const status = z.enum([
 export const schema = z.array(
   z.discriminatedUnion('Kind', [
     z.object({
-      Kind: z.literal("Team"),
-      link: z.array(
-        z.object({ href: z.string(), rel: z.string(), type: z.string() })
-      ),
+      Kind: z.literal('Team'),
+      link: z.array(z.object({ href: z.string(), rel: z.string(), type: z.string() })),
       Team: z.string().optional(),
       TeamCountryXmlName: z.string().optional(),
       id: z.number(),
@@ -36,24 +34,24 @@ export const schema = z.array(
     }),
     z.object({
       Kind: z.undefined().optional(),
-      link: z.array(
-        z.object({ href: z.string(), rel: z.string(), type: z.string() })
-      ),
+      link: z.array(z.object({ href: z.string(), rel: z.string(), type: z.string() })),
       id: z.number(),
       name: z.string(),
       country: z.string().nullable(),
       number: z.number(),
       status,
       nationalreference: z.string().nullish(),
-    })
+    }),
   ]),
-)
+);
 
 export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
   mode: 'json',
   schema,
   buildRequest: (key) => ({
-    url: new URL(`https://services.worlddancesport.org/api/1/participant?competitionID=${key}`),
+    url: new URL(
+      `https://services.worlddancesport.org/api/1/participant?competitionID=${key}`,
+    ),
     init: {
       headers: {
         Authorization: process.env.WDSF_AUTH ?? '',
@@ -84,18 +82,27 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     const entries = makePgtypedCollection<{
       competitorId: string;
       cancelled: boolean;
-    }>(['competitorId', 'cancelled'], ['competitorId']);
+      country: string;
+    }>(['competitorId', 'cancelled', 'country'], ['competitorId']);
 
     let participantsTotal = 0;
     for (const participant of parsed) {
       const competitionLink = participant.link.find(
-        (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/competition',
+        (x) =>
+          x.rel === 'http://services.worlddancesport.org/rel/participant/competition',
       );
-      if (competitionLink && new URL(competitionLink.href).pathname.split('/').at(-1) !== key) {
-        throw new Error(`Participant ${participant.id} does not belong to competition wdsf:${key}`);
+      if (
+        competitionLink &&
+        new URL(competitionLink.href).pathname.split('/').at(-1) !== key
+      ) {
+        throw new Error(
+          `Participant ${participant.id} does not belong to competition wdsf:${key}`,
+        );
       }
 
-      const active = ['Present', 'Registered', 'Provisional'].includes(participant.status);
+      const active = ['Present', 'Registered', 'Provisional'].includes(
+        participant.status,
+      );
       if (active) participantsTotal++;
 
       const competitor = resolveCompetitor(participant);
@@ -109,6 +116,10 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
       });
       entries.add({
         competitorId: `wdsf:${competitor.externalId}`,
+        country:
+          participant.Kind === 'Team'
+            ? (participant.TeamCountryXmlName ?? '')
+            : (participant.country ?? ''),
         cancelled: ['Excused', 'Noshow', 'Withdrawn'].includes(participant.status),
       });
     }
@@ -127,14 +138,19 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     return {
       upsertFrontier: parsed.flatMap((participant) => {
         const couple = participant.link.find(
-          (link) => link.rel === 'http://services.worlddancesport.org/rel/participant/couple',
+          (x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple',
         );
         return [
           { federation: 'wdsf', kind: 'participant', key: participant.id.toString() },
-          ...(couple ? [{
-            federation: 'wdsf', kind: 'couple',
-            key: new URL(couple.href).pathname.split('/').at(-1)!,
-          }] : []),
+          ...(couple
+            ? [
+                {
+                  federation: 'wdsf',
+                  kind: 'couple',
+                  key: new URL(couple.href).pathname.split('/').at(-1)!,
+                },
+              ]
+            : []),
         ];
       }),
     };

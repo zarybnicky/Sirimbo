@@ -2223,19 +2223,31 @@ type CompetitionEdge {
 enum CompetitionEntriesOrderBy {
   CANCELLED_ASC
   CANCELLED_DESC
+  CLUB_ID_ASC
+  CLUB_ID_DESC
   COMPETITION_ID_ASC
   COMPETITION_ID_DESC
   COMPETITOR_ID_ASC
   COMPETITOR_ID_DESC
+  COUNTRY_ASC
+  COUNTRY_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  REPRESENTS_ASC
+  REPRESENTS_DESC
 }
 
 type CompetitionEntry {
   cancelled: Boolean!
+
+  """
+  Reads a single `FederationClub` that is related to this `CompetitionEntry`.
+  """
+  club: FederationClub
+  clubId: BigInt
 
   """
   Reads a single `Competition` that is related to this `CompetitionEntry`.
@@ -2248,7 +2260,9 @@ type CompetitionEntry {
   """
   competitor: FederationCompetitor
   competitorId: String!
+  country: String
   createdAt: Datetime!
+  represents: String
 }
 
 """
@@ -2259,6 +2273,9 @@ input CompetitionEntryCondition {
   """Checks for equality with the object’s `cancelled` field."""
   cancelled: Boolean
 
+  """Checks for equality with the object’s `clubId` field."""
+  clubId: BigInt
+
   """Checks for equality with the object’s `competitionId` field."""
   competitionId: BigInt
   competitor: CompetitionParticipantCondition
@@ -2266,9 +2283,15 @@ input CompetitionEntryCondition {
   """Checks for equality with the object’s `competitorId` field."""
   competitorId: String
 
+  """Checks for equality with the object’s `country` field."""
+  country: String
+
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime
   hasResult: Boolean
+
+  """Checks for equality with the object’s `represents` field."""
+  represents: String
 }
 
 """A connection to a list of `CompetitionEntry` values."""
@@ -2406,6 +2429,12 @@ input CompetitionParticipantCondition {
 
 type CompetitionResult {
   """
+  Reads a single `FederationClub` that is related to this `CompetitionResult`.
+  """
+  club: FederationClub
+  clubId: BigInt
+
+  """
   Reads a single `Competition` that is related to this `CompetitionResult`.
   """
   competition: Competition
@@ -2417,6 +2446,7 @@ type CompetitionResult {
   competitor: FederationCompetitor
   competitorId: String!
   completionStatus: String
+  country: String
   finalGain: BigFloat
   isFinal: Boolean
   lastDance: String
@@ -2424,6 +2454,7 @@ type CompetitionResult {
   pointGain: BigFloat
   ranking: Int!
   rankingTo: Int
+  represents: String
 
   """
   Reads a single `CompetitionRound` that is related to this `CompetitionResult`.
@@ -2437,6 +2468,9 @@ A condition to be used against `CompetitionResult` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input CompetitionResultCondition {
+  """Checks for equality with the object’s `clubId` field."""
+  clubId: BigInt
+
   """Checks for equality with the object’s `competitionId` field."""
   competitionId: BigInt
   competitionTypes: [CompetitionType!]
@@ -2448,6 +2482,9 @@ input CompetitionResultCondition {
 
   """Checks for equality with the object’s `completionStatus` field."""
   completionStatus: String
+
+  """Checks for equality with the object’s `country` field."""
+  country: String
   date: DateRangeCondition
 
   """Checks for equality with the object’s `finalGain` field."""
@@ -2478,6 +2515,9 @@ input CompetitionResultCondition {
 
   """Checks for equality with the object’s `rankingTo` field."""
   rankingTo: Int
+
+  """Checks for equality with the object’s `represents` field."""
+  represents: String
 
   """Checks for equality with the object’s `startNumber` field."""
   startNumber: String
@@ -2513,6 +2553,8 @@ type CompetitionResultEdge {
 
 """Methods to use when ordering `CompetitionResult`."""
 enum CompetitionResultsOrderBy {
+  CLUB_ID_ASC
+  CLUB_ID_DESC
   COMPETITION_DATE_ASC
   COMPETITION_DATE_DESC
   COMPETITION_ID_ASC
@@ -2521,6 +2563,8 @@ enum CompetitionResultsOrderBy {
   COMPETITOR_ID_DESC
   COMPLETION_STATUS_ASC
   COMPLETION_STATUS_DESC
+  COUNTRY_ASC
+  COUNTRY_DESC
   FINAL_GAIN_ASC
   FINAL_GAIN_DESC
   IS_FINAL_ASC
@@ -2538,6 +2582,8 @@ enum CompetitionResultsOrderBy {
   RANKING_DESC
   RANKING_TO_ASC
   RANKING_TO_DESC
+  REPRESENTS_ASC
+  REPRESENTS_DESC
   START_NUMBER_ASC
   START_NUMBER_DESC
 }
@@ -8151,6 +8197,8 @@ enum FederationPeopleOrderBy {
   BIRTH_YEAR_DESC
   CANONICAL_NAME_ASC
   CANONICAL_NAME_DESC
+  CLUB_ID_ASC
+  CLUB_ID_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   DOB_ASC
@@ -8185,6 +8233,12 @@ type FederationPerson {
   ageGroupDetails: AgeGroup
   birthYear: Int
   canonicalName: String
+
+  """
+  Reads a single `FederationClub` that is related to this `FederationPerson`.
+  """
+  club: FederationClub
+  clubId: BigInt
 
   """
   Reads and enables pagination through a set of `FederationPersonClubMembership`.
@@ -8511,6 +8565,9 @@ input FederationPersonCondition {
 
   """Checks for equality with the object’s `canonicalName` field."""
   canonicalName: String
+
+  """Checks for equality with the object’s `clubId` field."""
+  clubId: BigInt
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime

@@ -179,3 +179,31 @@ begin
     perform app_private.refresh_competition_round_results(competition_id);
   end loop;
 end $$;
+
+alter table federated.person add column if not exists club_id bigint references federated.federation_club(id);
+
+create index if not exists person_club_id_idx on federated.person(club_id);
+comment on constraint person_club_id_fkey on federated.person is '@fieldName club
+@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+
+alter table federated.competition_entry
+  add column if not exists club_id bigint references federated.federation_club(id),
+  add column if not exists represents text,
+  add column if not exists country text;
+
+create index if not exists competition_entry_club_id_idx on federated.competition_entry(club_id);
+comment on constraint competition_entry_club_id_fkey on federated.competition_entry is '@fieldName club
+@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+
+alter table federated.competition_result
+  add column if not exists club_id bigint references federated.federation_club(id),
+  add column if not exists represents text,
+  add column if not exists country text;
+
+create index if not exists competition_result_club_id_idx on federated.competition_result(club_id);
+comment on constraint competition_result_club_id_fkey on federated.competition_result is '@fieldName club
+@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+
+insert into crawler.frontier (federation, kind, key)
+select 'csts', 'memberProfile', external_id from federated.person where federation = 'csts'
+on conflict (federation, kind, key) do nothing;

@@ -1,3 +1,4 @@
+import { cstsMemberProfile } from './cstsMemberProfile.ts';
 import { cstsMember } from './cstsMember.ts';
 import { cstsPartnershipRegistrations } from './cstsPartnershipRegistrations.ts';
 import type { HtmlLoader, Loader } from './types.ts';
@@ -66,14 +67,13 @@ export const LOADERS = {
   csts: {
     // https://www.csts.cz/api/1/athletes/18038132
     member: cstsMember,
+    // https://www.csts.cz/api/evidence/clenove/detail-clena/osobni-udaje/18038132
+    memberProfile: cstsMemberProfile,
 
     // https://www.csts.cz/api/1/ranklist
-    // https://www.csts.cz/api/1/ranklist/6733
     ranklistIndex: cstsRanklistIndex,
+    // https://www.csts.cz/api/1/ranklist/6733
     ranklist: cstsRanklist,
-
-    // Osobní údaje, žlutý JS
-    // https://www.csts.cz/api/evidence/clenove/detail-clena/osobni-udaje/18038132
 
     // https://www.csts.cz/api/1/competitors/partnership_registrations?filter=idt=18038132
     partnershipRegistrations: cstsPartnershipRegistrations,

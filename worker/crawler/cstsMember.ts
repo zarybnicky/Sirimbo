@@ -123,6 +123,7 @@ export const cstsMember: JsonLoader<Response> = {
     for (const athlete of parsed.collection) {
       const effects = await loadCstsAthlete(client, athlete);
       upsertFrontier.push(...effects.upsertFrontier);
+      upsertFrontier.push({ federation: 'csts', kind: 'memberProfile', key: athlete.idt.toString() });
       upsertFrontier.push({
         federation: 'csts',
         kind: 'partnershipRegistrations',

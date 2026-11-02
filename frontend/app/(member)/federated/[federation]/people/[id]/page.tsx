@@ -89,6 +89,7 @@ export default async function FederatedPersonPage({ params }: Props) {
           'Datum narození': person.dob && formatDateOnly(person.dob),
           Pohlaví: genderLabels[person.gender ?? 'UNKNOWN'],
           Národnost: person.nationality,
+          'Aktuální klub': person.club?.name,
           Věk: person.ageGroup && formatAgeGroup(person.ageGroup),
           'Soutěží jako':
             person.competitorComponents.nodes.length > 0 &&

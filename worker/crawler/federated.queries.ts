@@ -329,7 +329,7 @@ export interface IUpsertPeopleDetailedQuery {
   result: IUpsertPeopleDetailedResult;
 }
 
-const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true,"birthYear":true,"nationalReference":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":500,"b":510}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":523,"b":533}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":548,"b":561}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":574,"b":583}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":596,"b":604}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":617,"b":623}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":648,"b":659}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":672,"b":680}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":693,"b":717}]},{"name":"birthYear","required":false,"transform":{"type":"scalar"},"locs":[{"a":730,"b":739}]},{"name":"nationalReference","required":false,"transform":{"type":"scalar"},"locs":[{"a":755,"b":772}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,\n  birth_year, national_reference\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date),\n  nullif(birth_year, 0),\n  nullif(national_reference, '')\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[],\n  :birthYear::integer[],\n  :nationalReference::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,\n  birth_year, national_reference)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = EXCLUDED.first_name,\n    last_name = EXCLUDED.last_name,\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration,\n    birth_year = EXCLUDED.birth_year,\n    national_reference = EXCLUDED.national_reference\n  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)\n     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name\n     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name\n     OR federated.person.gender IS DISTINCT FROM CASE\n          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n          THEN EXCLUDED.gender\n          ELSE federated.person.gender\n        END\n     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality\n     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group\n     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration\n     OR federated.person.birth_year IS DISTINCT FROM EXCLUDED.birth_year\n     OR federated.person.national_reference IS DISTINCT FROM EXCLUDED.national_reference"};
+const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true,"gender":true,"nationality":true,"ageGroup":true,"medicalCheckupExpiration":true,"birthYear":true,"nationalReference":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":500,"b":510}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":523,"b":533}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":548,"b":561}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":574,"b":583}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":596,"b":604}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":617,"b":623}]},{"name":"nationality","required":false,"transform":{"type":"scalar"},"locs":[{"a":648,"b":659}]},{"name":"ageGroup","required":false,"transform":{"type":"scalar"},"locs":[{"a":672,"b":680}]},{"name":"medicalCheckupExpiration","required":false,"transform":{"type":"scalar"},"locs":[{"a":693,"b":717}]},{"name":"birthYear","required":false,"transform":{"type":"scalar"},"locs":[{"a":730,"b":739}]},{"name":"nationalReference","required":false,"transform":{"type":"scalar"},"locs":[{"a":755,"b":772}]}],"statement":"INSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,\n  birth_year, national_reference\n)\nSELECT\n  federation,\n  external_id,\n  nullif(canonical_name, ''),\n  nullif(first_name, ''),\n  nullif(last_name, ''),\n  gender,\n  nullif(nationality, ''),\n  nullif(age_group, ''),\n  CAST(NULLIF(medical_checkup_expiration, '') AS date),\n  nullif(birth_year, 0),\n  nullif(national_reference, '')\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :firstName::text[],\n  :lastName::text[],\n  :gender::federated.gender[],\n  :nationality::text[],\n  :ageGroup::text[],\n  :medicalCheckupExpiration::text[],\n  :birthYear::integer[],\n  :nationalReference::text[]\n) AS input(\n  federation, external_id, canonical_name, first_name, last_name, gender, nationality, age_group, medical_checkup_expiration,\n  birth_year, national_reference)\nON CONFLICT (id)\n  DO UPDATE SET\n    canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),\n    first_name = COALESCE(EXCLUDED.first_name, federated.person.first_name),\n    last_name = COALESCE(EXCLUDED.last_name, federated.person.last_name),\n    gender = CASE\n      WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n      THEN EXCLUDED.gender\n      ELSE federated.person.gender\n    END,\n    nationality = EXCLUDED.nationality,\n    age_group = EXCLUDED.age_group,\n    medical_checkup_expiration = EXCLUDED.medical_checkup_expiration,\n    birth_year = EXCLUDED.birth_year,\n    national_reference = EXCLUDED.national_reference\n  WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)\n     OR federated.person.first_name IS DISTINCT FROM COALESCE(EXCLUDED.first_name, federated.person.first_name)\n     OR federated.person.last_name IS DISTINCT FROM COALESCE(EXCLUDED.last_name, federated.person.last_name)\n     OR federated.person.gender IS DISTINCT FROM CASE\n          WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'\n          THEN EXCLUDED.gender\n          ELSE federated.person.gender\n        END\n     OR federated.person.nationality IS DISTINCT FROM EXCLUDED.nationality\n     OR federated.person.age_group IS DISTINCT FROM EXCLUDED.age_group\n     OR federated.person.medical_checkup_expiration IS DISTINCT FROM EXCLUDED.medical_checkup_expiration\n     OR federated.person.birth_year IS DISTINCT FROM EXCLUDED.birth_year\n     OR federated.person.national_reference IS DISTINCT FROM EXCLUDED.national_reference"};
 
 /**
  * Query generated from SQL:
@@ -368,8 +368,8 @@ const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"external
  * ON CONFLICT (id)
  *   DO UPDATE SET
  *     canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),
- *     first_name = EXCLUDED.first_name,
- *     last_name = EXCLUDED.last_name,
+ *     first_name = COALESCE(EXCLUDED.first_name, federated.person.first_name),
+ *     last_name = COALESCE(EXCLUDED.last_name, federated.person.last_name),
  *     gender = CASE
  *       WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
  *       THEN EXCLUDED.gender
@@ -381,8 +381,8 @@ const upsertPeopleDetailedIR: any = {"usedParamSet":{"federation":true,"external
  *     birth_year = EXCLUDED.birth_year,
  *     national_reference = EXCLUDED.national_reference
  *   WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)
- *      OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name
- *      OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name
+ *      OR federated.person.first_name IS DISTINCT FROM COALESCE(EXCLUDED.first_name, federated.person.first_name)
+ *      OR federated.person.last_name IS DISTINCT FROM COALESCE(EXCLUDED.last_name, federated.person.last_name)
  *      OR federated.person.gender IS DISTINCT FROM CASE
  *           WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
  *           THEN EXCLUDED.gender
@@ -1614,8 +1614,10 @@ export interface IMergeCompetitionEntriesByEventIdParams {
   cancelled?: booleanArray | null | void;
   competitionExternalId?: stringArray | null | void;
   competitorId?: stringArray | null | void;
+  country?: stringArray | null | void;
   eventId?: string | null | void;
   federation?: string | null | void;
+  represents?: stringArray | null | void;
 }
 
 /** 'MergeCompetitionEntriesByEventId' return type */
@@ -1627,34 +1629,46 @@ export interface IMergeCompetitionEntriesByEventIdQuery {
   result: IMergeCompetitionEntriesByEventIdResult;
 }
 
-const mergeCompetitionEntriesByEventIdIR: any = {"usedParamSet":{"competitionExternalId":true,"competitorId":true,"cancelled":true,"federation":true,"eventId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":94,"b":115}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":130,"b":142}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":157,"b":166}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":393,"b":403}]},{"name":"eventId","required":false,"transform":{"type":"scalar"},"locs":[{"a":425,"b":432}]}],"statement":"WITH input AS (\n  SELECT competition_external_id, competitor_id, cancelled\n  FROM unnest(\n    :competitionExternalId::text[],\n    :competitorId::text[],\n    :cancelled::boolean[]\n  ) AS input(competition_external_id, competitor_id, cancelled)\n), competitions AS (\n  SELECT c.id, c.external_id\n  FROM federated.competition c\n  JOIN federated.event e ON e.id = c.event_id\n  WHERE c.federation = :federation AND e.external_id = :eventId\n), source AS (\n  SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled\n  FROM input\n  JOIN competitions ON competitions.external_id = input.competition_external_id\n), upserted AS (\n  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)\n  SELECT s.competition_id, s.competitor_id, s.cancelled\n  FROM source s\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET cancelled = EXCLUDED.cancelled\n    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled\n)\nDELETE FROM federated.competition_entry t\nWHERE t.competition_id IN (SELECT id FROM competitions)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competition_id = t.competition_id\n      AND s.competitor_id = t.competitor_id\n  )"};
+const mergeCompetitionEntriesByEventIdIR: any = {"usedParamSet":{"competitionExternalId":true,"competitorId":true,"cancelled":true,"represents":true,"country":true,"federation":true,"eventId":true},"params":[{"name":"competitionExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":115,"b":136}]},{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":151,"b":163}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":178,"b":187}]},{"name":"represents","required":false,"transform":{"type":"scalar"},"locs":[{"a":205,"b":215}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":230,"b":237}]},{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":482,"b":492},{"a":972,"b":982}]},{"name":"eventId","required":false,"transform":{"type":"scalar"},"locs":[{"a":514,"b":521}]}],"statement":"WITH input AS (\n  SELECT competition_external_id, competitor_id, cancelled, represents, country\n  FROM unnest(\n    :competitionExternalId::text[],\n    :competitorId::text[],\n    :cancelled::boolean[],\n    :represents::text[],\n    :country::text[]\n  ) AS input(competition_external_id, competitor_id, cancelled, represents, country)\n), competitions AS (\n  SELECT c.id, c.external_id\n  FROM federated.competition c\n  JOIN federated.event e ON e.id = c.event_id\n  WHERE c.federation = :federation AND e.external_id = :eventId\n), source AS (\n  SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled, club.id AS club_id,\n    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,\n    nullif(btrim(input.country), '') AS country\n  FROM input\n  JOIN competitions ON competitions.external_id = input.competition_external_id\n  LEFT JOIN LATERAL (\n    SELECT min(id) AS id FROM federated.federation_club\n    WHERE federation = :federation AND lower(btrim(name)) = lower(btrim(input.represents))\n    HAVING count(*) = 1\n  ) club ON true\n), upserted AS (\n  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, club_id, represents, country)\n  SELECT s.competition_id, s.competitor_id, s.cancelled, s.club_id, s.represents, s.country\n  FROM source s\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET cancelled = EXCLUDED.cancelled, club_id = EXCLUDED.club_id,\n        represents = EXCLUDED.represents, country = EXCLUDED.country\n    WHERE (federated.competition_entry.cancelled, federated.competition_entry.club_id,\n           federated.competition_entry.represents, federated.competition_entry.country)\n      IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.club_id, EXCLUDED.represents, EXCLUDED.country)\n)\nDELETE FROM federated.competition_entry t\nWHERE t.competition_id IN (SELECT id FROM competitions)\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competition_id = t.competition_id\n      AND s.competitor_id = t.competitor_id\n  )"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH input AS (
- *   SELECT competition_external_id, competitor_id, cancelled
+ *   SELECT competition_external_id, competitor_id, cancelled, represents, country
  *   FROM unnest(
  *     :competitionExternalId::text[],
  *     :competitorId::text[],
- *     :cancelled::boolean[]
- *   ) AS input(competition_external_id, competitor_id, cancelled)
+ *     :cancelled::boolean[],
+ *     :represents::text[],
+ *     :country::text[]
+ *   ) AS input(competition_external_id, competitor_id, cancelled, represents, country)
  * ), competitions AS (
  *   SELECT c.id, c.external_id
  *   FROM federated.competition c
  *   JOIN federated.event e ON e.id = c.event_id
  *   WHERE c.federation = :federation AND e.external_id = :eventId
  * ), source AS (
- *   SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled
+ *   SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled, club.id AS club_id,
+ *     CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+ *     nullif(btrim(input.country), '') AS country
  *   FROM input
  *   JOIN competitions ON competitions.external_id = input.competition_external_id
+ *   LEFT JOIN LATERAL (
+ *     SELECT min(id) AS id FROM federated.federation_club
+ *     WHERE federation = :federation AND lower(btrim(name)) = lower(btrim(input.represents))
+ *     HAVING count(*) = 1
+ *   ) club ON true
  * ), upserted AS (
- *   INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
- *   SELECT s.competition_id, s.competitor_id, s.cancelled
+ *   INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, club_id, represents, country)
+ *   SELECT s.competition_id, s.competitor_id, s.cancelled, s.club_id, s.represents, s.country
  *   FROM source s
  *   ON CONFLICT (competition_id, competitor_id) DO UPDATE
- *     SET cancelled = EXCLUDED.cancelled
- *     WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+ *     SET cancelled = EXCLUDED.cancelled, club_id = EXCLUDED.club_id,
+ *         represents = EXCLUDED.represents, country = EXCLUDED.country
+ *     WHERE (federated.competition_entry.cancelled, federated.competition_entry.club_id,
+ *            federated.competition_entry.represents, federated.competition_entry.country)
+ *       IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.club_id, EXCLUDED.represents, EXCLUDED.country)
  * )
  * DELETE FROM federated.competition_entry t
  * WHERE t.competition_id IN (SELECT id FROM competitions)
@@ -1674,6 +1688,7 @@ export interface IMergeWdsfCompetitionEntriesParams {
   cancelled?: booleanArray | null | void;
   competitionId?: NumberOrString | null | void;
   competitorId?: stringArray | null | void;
+  country?: stringArray | null | void;
   excusedTotal?: number | null | void;
   participantsTotal?: number | null | void;
 }
@@ -1687,14 +1702,14 @@ export interface IMergeWdsfCompetitionEntriesQuery {
   result: IMergeWdsfCompetitionEntriesResult;
 }
 
-const mergeWdsfCompetitionEntriesIR: any = {"usedParamSet":{"competitorId":true,"cancelled":true,"participantsTotal":true,"excusedTotal":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":65,"b":77}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":88,"b":97}]},{"name":"participantsTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":219,"b":236},{"a":407,"b":424}]},{"name":"excusedTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":260,"b":272},{"a":432,"b":444}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":305},{"a":563,"b":576},{"a":982,"b":995}]}],"statement":"WITH source AS (\n  SELECT competitor_id, cancelled\n  FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)\n), totals AS (\n  UPDATE federated.competition\n  SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int\n  WHERE id = :competitionId::bigint AND federation = 'wdsf'\n    AND (participants_total, excused_total) IS DISTINCT FROM\n      (:participantsTotal::int, :excusedTotal::int)\n), upserted AS (\n  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)\n  SELECT :competitionId::bigint, competitor_id, cancelled\n  FROM source\n  ORDER BY competitor_id\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET cancelled = EXCLUDED.cancelled\n    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled\n)\n-- The participant index is a full registration snapshot; results are independent.\nDELETE FROM federated.competition_entry e\nWHERE e.competition_id = :competitionId::bigint\n  AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id)"};
+const mergeWdsfCompetitionEntriesIR: any = {"usedParamSet":{"competitorId":true,"cancelled":true,"country":true,"participantsTotal":true,"excusedTotal":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":97,"b":109}]},{"name":"cancelled","required":false,"transform":{"type":"scalar"},"locs":[{"a":120,"b":129}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":143,"b":150}]},{"name":"participantsTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":278,"b":295},{"a":466,"b":483}]},{"name":"excusedTotal","required":false,"transform":{"type":"scalar"},"locs":[{"a":319,"b":331},{"a":491,"b":503}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":351,"b":364},{"a":631,"b":644},{"a":1152,"b":1165}]}],"statement":"WITH source AS (\n  SELECT competitor_id, cancelled, nullif(country, '') AS country\n  FROM unnest(:competitorId::text[], :cancelled::boolean[], :country::text[]) AS input(competitor_id, cancelled, country)\n), totals AS (\n  UPDATE federated.competition\n  SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int\n  WHERE id = :competitionId::bigint AND federation = 'wdsf'\n    AND (participants_total, excused_total) IS DISTINCT FROM\n      (:participantsTotal::int, :excusedTotal::int)\n), upserted AS (\n  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, country)\n  SELECT :competitionId::bigint, competitor_id, cancelled, country\n  FROM source\n  ORDER BY competitor_id\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET cancelled = EXCLUDED.cancelled, country = EXCLUDED.country\n    WHERE (federated.competition_entry.cancelled, federated.competition_entry.country)\n      IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.country)\n)\n-- The participant index is a full registration snapshot; results are independent.\nDELETE FROM federated.competition_entry e\nWHERE e.competition_id = :competitionId::bigint\n  AND NOT EXISTS (SELECT 1 FROM source s WHERE s.competitor_id = e.competitor_id)"};
 
 /**
  * Query generated from SQL:
  * ```
  * WITH source AS (
- *   SELECT competitor_id, cancelled
- *   FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)
+ *   SELECT competitor_id, cancelled, nullif(country, '') AS country
+ *   FROM unnest(:competitorId::text[], :cancelled::boolean[], :country::text[]) AS input(competitor_id, cancelled, country)
  * ), totals AS (
  *   UPDATE federated.competition
  *   SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int
@@ -1702,13 +1717,14 @@ const mergeWdsfCompetitionEntriesIR: any = {"usedParamSet":{"competitorId":true,
  *     AND (participants_total, excused_total) IS DISTINCT FROM
  *       (:participantsTotal::int, :excusedTotal::int)
  * ), upserted AS (
- *   INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
- *   SELECT :competitionId::bigint, competitor_id, cancelled
+ *   INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, country)
+ *   SELECT :competitionId::bigint, competitor_id, cancelled, country
  *   FROM source
  *   ORDER BY competitor_id
  *   ON CONFLICT (competition_id, competitor_id) DO UPDATE
- *     SET cancelled = EXCLUDED.cancelled
- *     WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+ *     SET cancelled = EXCLUDED.cancelled, country = EXCLUDED.country
+ *     WHERE (federated.competition_entry.cancelled, federated.competition_entry.country)
+ *       IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.country)
  * )
  * -- The participant index is a full registration snapshot; results are independent.
  * DELETE FROM federated.competition_entry e
@@ -1763,6 +1779,7 @@ export interface IMergeCompetitionResultsParams {
   competitionId?: NumberOrString | null | void;
   competitorId?: stringArray | null | void;
   completionStatus?: stringArray | null | void;
+  country?: stringArray | null | void;
   finalGain?: stringArray | null | void;
   isFinal?: booleanArray | null | void;
   lastDance?: stringArray | null | void;
@@ -1770,6 +1787,7 @@ export interface IMergeCompetitionResultsParams {
   pointGain?: stringArray | null | void;
   ranking?: numberArray | null | void;
   rankingTo?: numberArray | null | void;
+  represents?: stringArray | null | void;
   startNumber?: stringArray | null | void;
 }
 
@@ -1782,7 +1800,7 @@ export interface IMergeCompetitionResultsQuery {
   result: IMergeCompetitionResultsResult;
 }
 
-const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":406,"b":418}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":433,"b":444}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":466}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":480,"b":489}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":503,"b":512}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":536}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":551,"b":558}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":576,"b":592}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":607,"b":616}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":631,"b":640}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1031,"b":1044},{"a":2515,"b":2528}]}],"statement":"WITH source AS (\n  SELECT\n    competitor_id,\n    nullif(start_number, '') AS start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  )\n), upserted AS (\n  INSERT INTO federated.competition_result (\n    competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  )\n  SELECT\n    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,\n    s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance\n  FROM source s\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET start_number = EXCLUDED.start_number,\n        ranking = EXCLUDED.ranking,\n        ranking_to = EXCLUDED.ranking_to,\n        point_gain = EXCLUDED.point_gain,\n        final_gain = EXCLUDED.final_gain,\n        is_final = EXCLUDED.is_final,\n        completion_status = EXCLUDED.completion_status,\n        last_round = EXCLUDED.last_round,\n        last_dance = EXCLUDED.last_dance\n    WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number\n       OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking\n       OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to\n       OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain\n       OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain\n       OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final\n       OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status\n       OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round\n       OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance\n)\nDELETE FROM federated.competition_result t\nWHERE t.competition_id = :competitionId\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competitor_id = t.competitor_id\n  )"};
+const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"represents":true,"country":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":569,"b":581}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":596,"b":607}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":622,"b":629}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":643,"b":652}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":666,"b":675}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":690,"b":699}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":714,"b":721}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":739,"b":755}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":770,"b":779}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":794,"b":803}]},{"name":"represents","required":false,"transform":{"type":"scalar"},"locs":[{"a":818,"b":828}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":843,"b":850}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1235,"b":1248},{"a":1617,"b":1630},{"a":3500,"b":3513}]}],"statement":"WITH source AS (\n  SELECT\n    competitor_id,\n    nullif(start_number, '') AS start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance,\n    club.id AS club_id,\n    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,\n    nullif(btrim(input.country), '') AS country\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[],\n    :represents::text[],\n    :country::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance, represents, country\n  )\n  LEFT JOIN LATERAL (\n    SELECT min(club.id) AS id FROM federated.federation_club club\n    JOIN federated.competition competition ON competition.federation = club.federation\n    WHERE competition.id = :competitionId\n      AND lower(btrim(club.name)) = lower(btrim(input.represents))\n    HAVING count(*) = 1\n  ) club ON true\n), upserted AS (\n  INSERT INTO federated.competition_result (\n    competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance, club_id, represents, country\n  )\n  SELECT\n    :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,\n    s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country\n  FROM source s\n  ON CONFLICT (competition_id, competitor_id) DO UPDATE\n    SET start_number = EXCLUDED.start_number,\n        ranking = EXCLUDED.ranking,\n        ranking_to = EXCLUDED.ranking_to,\n        point_gain = EXCLUDED.point_gain,\n        final_gain = EXCLUDED.final_gain,\n        is_final = EXCLUDED.is_final,\n        completion_status = EXCLUDED.completion_status,\n        last_round = EXCLUDED.last_round,\n        last_dance = EXCLUDED.last_dance,\n        club_id = EXCLUDED.club_id,\n        represents = EXCLUDED.represents,\n        country = EXCLUDED.country\n    WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number\n       OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking\n       OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to\n       OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain\n       OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain\n       OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final\n       OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status\n       OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round\n       OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance\n       OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id\n       OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents\n       OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country\n)\nDELETE FROM federated.competition_result t\nWHERE t.competition_id = :competitionId\n  AND NOT EXISTS (\n    SELECT 1\n    FROM source s\n    WHERE s.competitor_id = t.competitor_id\n  )"};
 
 /**
  * Query generated from SQL:
@@ -1798,7 +1816,10 @@ const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"sta
  *     is_final,
  *     nullif(completion_status, '') AS completion_status,
  *     nullif(last_round, '') AS last_round,
- *     nullif(last_dance, '') AS last_dance
+ *     nullif(last_dance, '') AS last_dance,
+ *     club.id AS club_id,
+ *     CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+ *     nullif(btrim(input.country), '') AS country
  *   FROM unnest(
  *     :competitorId::text[],
  *     :startNumber::text[],
@@ -1809,19 +1830,28 @@ const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"sta
  *     :isFinal::boolean[],
  *     :completionStatus::text[],
  *     :lastRound::text[],
- *     :lastDance::text[]
+ *     :lastDance::text[],
+ *     :represents::text[],
+ *     :country::text[]
  *   ) AS input(
  *     competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
- *     is_final, completion_status, last_round, last_dance
+ *     is_final, completion_status, last_round, last_dance, represents, country
  *   )
+ *   LEFT JOIN LATERAL (
+ *     SELECT min(club.id) AS id FROM federated.federation_club club
+ *     JOIN federated.competition competition ON competition.federation = club.federation
+ *     WHERE competition.id = :competitionId
+ *       AND lower(btrim(club.name)) = lower(btrim(input.represents))
+ *     HAVING count(*) = 1
+ *   ) club ON true
  * ), upserted AS (
  *   INSERT INTO federated.competition_result (
  *     competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
- *     is_final, completion_status, last_round, last_dance
+ *     is_final, completion_status, last_round, last_dance, club_id, represents, country
  *   )
  *   SELECT
  *     :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
- *     s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+ *     s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country
  *   FROM source s
  *   ON CONFLICT (competition_id, competitor_id) DO UPDATE
  *     SET start_number = EXCLUDED.start_number,
@@ -1832,7 +1862,10 @@ const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"sta
  *         is_final = EXCLUDED.is_final,
  *         completion_status = EXCLUDED.completion_status,
  *         last_round = EXCLUDED.last_round,
- *         last_dance = EXCLUDED.last_dance
+ *         last_dance = EXCLUDED.last_dance,
+ *         club_id = EXCLUDED.club_id,
+ *         represents = EXCLUDED.represents,
+ *         country = EXCLUDED.country
  *     WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
  *        OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
  *        OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
@@ -1842,6 +1875,9 @@ const mergeCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"sta
  *        OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
  *        OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
  *        OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance
+ *        OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id
+ *        OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents
+ *        OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country
  * )
  * DELETE FROM federated.competition_result t
  * WHERE t.competition_id = :competitionId
@@ -1860,6 +1896,7 @@ export interface IUpsertCompetitionResultsParams {
   competitionId?: NumberOrString | null | void;
   competitorId?: stringArray | null | void;
   completionStatus?: stringArray | null | void;
+  country?: stringArray | null | void;
   finalGain?: stringArray | null | void;
   isFinal?: booleanArray | null | void;
   lastDance?: stringArray | null | void;
@@ -1867,6 +1904,7 @@ export interface IUpsertCompetitionResultsParams {
   pointGain?: stringArray | null | void;
   ranking?: numberArray | null | void;
   rankingTo?: numberArray | null | void;
+  represents?: stringArray | null | void;
   startNumber?: stringArray | null | void;
 }
 
@@ -1879,7 +1917,7 @@ export interface IUpsertCompetitionResultsQuery {
   result: IUpsertCompetitionResultsResult;
 }
 
-const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":406,"b":418}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":433,"b":444}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":459,"b":466}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":480,"b":489}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":503,"b":512}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":527,"b":536}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":551,"b":558}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":576,"b":592}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":607,"b":616}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":631,"b":640}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1004,"b":1017}]}],"statement":"WITH source AS (\n  SELECT\n    competitor_id,\n    nullif(start_number, '') AS start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance\n  )\n)\nINSERT INTO federated.competition_result (\n  competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n  is_final, completion_status, last_round, last_dance\n)\nSELECT\n  :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,\n  s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance\nFROM source s\nON CONFLICT (competition_id, competitor_id) DO UPDATE\n  SET start_number = EXCLUDED.start_number,\n      ranking = EXCLUDED.ranking,\n      ranking_to = EXCLUDED.ranking_to,\n      point_gain = EXCLUDED.point_gain,\n      final_gain = EXCLUDED.final_gain,\n      is_final = EXCLUDED.is_final,\n      completion_status = EXCLUDED.completion_status,\n      last_round = EXCLUDED.last_round,\n      last_dance = EXCLUDED.last_dance\n  WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number\n     OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking\n     OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to\n     OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain\n     OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain\n     OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final\n     OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status\n     OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round\n     OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance"};
+const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"startNumber":true,"ranking":true,"rankingTo":true,"pointGain":true,"finalGain":true,"isFinal":true,"completionStatus":true,"lastRound":true,"lastDance":true,"represents":true,"country":true,"competitionId":true},"params":[{"name":"competitorId","required":false,"transform":{"type":"scalar"},"locs":[{"a":569,"b":581}]},{"name":"startNumber","required":false,"transform":{"type":"scalar"},"locs":[{"a":596,"b":607}]},{"name":"ranking","required":false,"transform":{"type":"scalar"},"locs":[{"a":622,"b":629}]},{"name":"rankingTo","required":false,"transform":{"type":"scalar"},"locs":[{"a":643,"b":652}]},{"name":"pointGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":666,"b":675}]},{"name":"finalGain","required":false,"transform":{"type":"scalar"},"locs":[{"a":690,"b":699}]},{"name":"isFinal","required":false,"transform":{"type":"scalar"},"locs":[{"a":714,"b":721}]},{"name":"completionStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":739,"b":755}]},{"name":"lastRound","required":false,"transform":{"type":"scalar"},"locs":[{"a":770,"b":779}]},{"name":"lastDance","required":false,"transform":{"type":"scalar"},"locs":[{"a":794,"b":803}]},{"name":"represents","required":false,"transform":{"type":"scalar"},"locs":[{"a":818,"b":828}]},{"name":"country","required":false,"transform":{"type":"scalar"},"locs":[{"a":843,"b":850}]},{"name":"competitionId","required":false,"transform":{"type":"scalar"},"locs":[{"a":1235,"b":1248},{"a":1590,"b":1603}]}],"statement":"WITH source AS (\n  SELECT\n    competitor_id,\n    nullif(start_number, '') AS start_number,\n    ranking,\n    ranking_to,\n    nullif(point_gain, '')::numeric(10,3) AS point_gain,\n    nullif(final_gain, '')::numeric(10,3) AS final_gain,\n    is_final,\n    nullif(completion_status, '') AS completion_status,\n    nullif(last_round, '') AS last_round,\n    nullif(last_dance, '') AS last_dance,\n    club.id AS club_id,\n    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,\n    nullif(btrim(input.country), '') AS country\n  FROM unnest(\n    :competitorId::text[],\n    :startNumber::text[],\n    :ranking::int[],\n    :rankingTo::int[],\n    :pointGain::text[],\n    :finalGain::text[],\n    :isFinal::boolean[],\n    :completionStatus::text[],\n    :lastRound::text[],\n    :lastDance::text[],\n    :represents::text[],\n    :country::text[]\n  ) AS input(\n    competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n    is_final, completion_status, last_round, last_dance, represents, country\n  )\n  LEFT JOIN LATERAL (\n    SELECT min(club.id) AS id FROM federated.federation_club club\n    JOIN federated.competition competition ON competition.federation = club.federation\n    WHERE competition.id = :competitionId\n      AND lower(btrim(club.name)) = lower(btrim(input.represents))\n    HAVING count(*) = 1\n  ) club ON true\n)\nINSERT INTO federated.competition_result (\n  competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,\n  is_final, completion_status, last_round, last_dance, club_id, represents, country\n)\nSELECT\n  :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,\n  s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country\nFROM source s\nON CONFLICT (competition_id, competitor_id) DO UPDATE\n  SET start_number = EXCLUDED.start_number,\n      ranking = EXCLUDED.ranking,\n      ranking_to = EXCLUDED.ranking_to,\n      point_gain = EXCLUDED.point_gain,\n      final_gain = EXCLUDED.final_gain,\n      is_final = EXCLUDED.is_final,\n      completion_status = EXCLUDED.completion_status,\n      last_round = EXCLUDED.last_round,\n      last_dance = EXCLUDED.last_dance,\n      club_id = EXCLUDED.club_id,\n      represents = EXCLUDED.represents,\n      country = EXCLUDED.country\n  WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number\n     OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking\n     OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to\n     OR federated.competition_result.point_gain IS DISTINCT FROM EXCLUDED.point_gain\n     OR federated.competition_result.final_gain IS DISTINCT FROM EXCLUDED.final_gain\n     OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final\n     OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status\n     OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round\n     OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance\n     OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id\n     OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents\n     OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country"};
 
 /**
  * Query generated from SQL:
@@ -1895,7 +1933,10 @@ const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"st
  *     is_final,
  *     nullif(completion_status, '') AS completion_status,
  *     nullif(last_round, '') AS last_round,
- *     nullif(last_dance, '') AS last_dance
+ *     nullif(last_dance, '') AS last_dance,
+ *     club.id AS club_id,
+ *     CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+ *     nullif(btrim(input.country), '') AS country
  *   FROM unnest(
  *     :competitorId::text[],
  *     :startNumber::text[],
@@ -1906,19 +1947,28 @@ const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"st
  *     :isFinal::boolean[],
  *     :completionStatus::text[],
  *     :lastRound::text[],
- *     :lastDance::text[]
+ *     :lastDance::text[],
+ *     :represents::text[],
+ *     :country::text[]
  *   ) AS input(
  *     competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
- *     is_final, completion_status, last_round, last_dance
+ *     is_final, completion_status, last_round, last_dance, represents, country
  *   )
+ *   LEFT JOIN LATERAL (
+ *     SELECT min(club.id) AS id FROM federated.federation_club club
+ *     JOIN federated.competition competition ON competition.federation = club.federation
+ *     WHERE competition.id = :competitionId
+ *       AND lower(btrim(club.name)) = lower(btrim(input.represents))
+ *     HAVING count(*) = 1
+ *   ) club ON true
  * )
  * INSERT INTO federated.competition_result (
  *   competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
- *   is_final, completion_status, last_round, last_dance
+ *   is_final, completion_status, last_round, last_dance, club_id, represents, country
  * )
  * SELECT
  *   :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
- *   s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+ *   s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country
  * FROM source s
  * ON CONFLICT (competition_id, competitor_id) DO UPDATE
  *   SET start_number = EXCLUDED.start_number,
@@ -1929,7 +1979,10 @@ const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"st
  *       is_final = EXCLUDED.is_final,
  *       completion_status = EXCLUDED.completion_status,
  *       last_round = EXCLUDED.last_round,
- *       last_dance = EXCLUDED.last_dance
+ *       last_dance = EXCLUDED.last_dance,
+ *       club_id = EXCLUDED.club_id,
+ *       represents = EXCLUDED.represents,
+ *       country = EXCLUDED.country
  *   WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
  *      OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
  *      OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
@@ -1939,6 +1992,9 @@ const upsertCompetitionResultsIR: any = {"usedParamSet":{"competitorId":true,"st
  *      OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
  *      OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
  *      OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance
+ *      OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id
+ *      OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents
+ *      OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country
  * ```
  */
 export const upsertCompetitionResults = new PreparedQuery<IUpsertCompetitionResultsParams,IUpsertCompetitionResultsResult>(upsertCompetitionResultsIR);
@@ -2688,5 +2744,60 @@ const mergeWdsfSeniorRulesIR: any = {"usedParamSet":{},"params":[],"statement":"
  * ```
  */
 export const mergeWdsfSeniorRules = new PreparedQuery<IMergeWdsfSeniorRulesParams,IMergeWdsfSeniorRulesResult>(mergeWdsfSeniorRulesIR);
+
+
+/** 'UpsertCstsMemberProfile' parameters type */
+export interface IUpsertCstsMemberProfileParams {
+  canonicalName?: string | null | void;
+  clubExternalId?: string | null | void;
+  clubName?: string | null | void;
+  externalId?: NumberOrString | null | void;
+  firstName?: string | null | void;
+  lastName?: string | null | void;
+}
+
+/** 'UpsertCstsMemberProfile' return type */
+export type IUpsertCstsMemberProfileResult = void;
+
+/** 'UpsertCstsMemberProfile' query type */
+export interface IUpsertCstsMemberProfileQuery {
+  params: IUpsertCstsMemberProfileParams;
+  result: IUpsertCstsMemberProfileResult;
+}
+
+const upsertCstsMemberProfileIR: any = {"usedParamSet":{"clubExternalId":true,"clubName":true,"externalId":true,"canonicalName":true,"firstName":true,"lastName":true},"params":[{"name":"clubExternalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":113,"b":127},{"a":185,"b":199},{"a":531,"b":545}]},{"name":"clubName","required":false,"transform":{"type":"scalar"},"locs":[{"a":142,"b":150}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":713,"b":723}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":734,"b":747}]},{"name":"firstName","required":false,"transform":{"type":"scalar"},"locs":[{"a":750,"b":759}]},{"name":"lastName","required":false,"transform":{"type":"scalar"},"locs":[{"a":762,"b":770}]}],"statement":"WITH club AS (\n  INSERT INTO federated.federation_club (federation, external_id, name, country)\n  SELECT 'csts', :clubExternalId::text, btrim(:clubName::text), 'Czechia'\n  WHERE nullif(:clubExternalId::text, '') IS NOT NULL\n  ON CONFLICT (federation, external_id) DO UPDATE SET name = EXCLUDED.name\n    WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name\n  RETURNING id\n), resolved_club AS (\n  SELECT id FROM club\n  UNION ALL\n  SELECT id FROM federated.federation_club\n  WHERE federation = 'csts' AND external_id = :clubExternalId AND NOT EXISTS (SELECT FROM club)\n)\nINSERT INTO federated.person (\n  federation, external_id, canonical_name, first_name, last_name, gender, club_id\n)\nSELECT 'csts', :externalId::bigint, :canonicalName, :firstName, :lastName,\n  'unknown', (SELECT id FROM resolved_club)\nON CONFLICT (id) DO UPDATE SET\n  canonical_name = EXCLUDED.canonical_name,\n  first_name = EXCLUDED.first_name,\n  last_name = EXCLUDED.last_name,\n  club_id = EXCLUDED.club_id\nWHERE (federated.person.canonical_name, federated.person.first_name,\n       federated.person.last_name, federated.person.club_id) IS DISTINCT FROM\n      (EXCLUDED.canonical_name, EXCLUDED.first_name, EXCLUDED.last_name, EXCLUDED.club_id)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH club AS (
+ *   INSERT INTO federated.federation_club (federation, external_id, name, country)
+ *   SELECT 'csts', :clubExternalId::text, btrim(:clubName::text), 'Czechia'
+ *   WHERE nullif(:clubExternalId::text, '') IS NOT NULL
+ *   ON CONFLICT (federation, external_id) DO UPDATE SET name = EXCLUDED.name
+ *     WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name
+ *   RETURNING id
+ * ), resolved_club AS (
+ *   SELECT id FROM club
+ *   UNION ALL
+ *   SELECT id FROM federated.federation_club
+ *   WHERE federation = 'csts' AND external_id = :clubExternalId AND NOT EXISTS (SELECT FROM club)
+ * )
+ * INSERT INTO federated.person (
+ *   federation, external_id, canonical_name, first_name, last_name, gender, club_id
+ * )
+ * SELECT 'csts', :externalId::bigint, :canonicalName, :firstName, :lastName,
+ *   'unknown', (SELECT id FROM resolved_club)
+ * ON CONFLICT (id) DO UPDATE SET
+ *   canonical_name = EXCLUDED.canonical_name,
+ *   first_name = EXCLUDED.first_name,
+ *   last_name = EXCLUDED.last_name,
+ *   club_id = EXCLUDED.club_id
+ * WHERE (federated.person.canonical_name, federated.person.first_name,
+ *        federated.person.last_name, federated.person.club_id) IS DISTINCT FROM
+ *       (EXCLUDED.canonical_name, EXCLUDED.first_name, EXCLUDED.last_name, EXCLUDED.club_id)
+ * ```
+ */
+export const upsertCstsMemberProfile = new PreparedQuery<IUpsertCstsMemberProfileParams,IUpsertCstsMemberProfileResult>(upsertCstsMemberProfileIR);
 
 

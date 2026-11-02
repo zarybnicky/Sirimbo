@@ -214,6 +214,9 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
       roundLabel
     }
     results: resultsList(orderBy: [RANKING_ASC, COMPETITOR_ID_ASC]) {
+      club { id name }
+      represents
+      country
       competitionId
       competitorId
       ranking
@@ -234,6 +237,9 @@ query FederationCompetition($federation: String!, $competitionId: String!) {
       competitionId
       competitorId
       cancelled
+      club { id name }
+      represents
+      country
       competitor {
         ...CompetitionParticipant
       }
@@ -274,6 +280,7 @@ query FederationPerson($federation: String!, $externalId: BigInt!) {
     federation: $federation
     externalId: $externalId
   ) {
+    club { id name }
     competitorComponents(first: 300, orderBy: COMPETITOR_ID_ASC) {
       nodes {
         competitorId

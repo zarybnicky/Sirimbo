@@ -186,8 +186,8 @@ FROM unnest(
 ON CONFLICT (id)
   DO UPDATE SET
     canonical_name = COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name),
-    first_name = EXCLUDED.first_name,
-    last_name = EXCLUDED.last_name,
+    first_name = COALESCE(EXCLUDED.first_name, federated.person.first_name),
+    last_name = COALESCE(EXCLUDED.last_name, federated.person.last_name),
     gender = CASE
       WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
       THEN EXCLUDED.gender
@@ -199,8 +199,8 @@ ON CONFLICT (id)
     birth_year = EXCLUDED.birth_year,
     national_reference = EXCLUDED.national_reference
   WHERE federated.person.canonical_name IS DISTINCT FROM COALESCE(EXCLUDED.canonical_name, federated.person.canonical_name)
-     OR federated.person.first_name IS DISTINCT FROM EXCLUDED.first_name
-     OR federated.person.last_name IS DISTINCT FROM EXCLUDED.last_name
+     OR federated.person.first_name IS DISTINCT FROM COALESCE(EXCLUDED.first_name, federated.person.first_name)
+     OR federated.person.last_name IS DISTINCT FROM COALESCE(EXCLUDED.last_name, federated.person.last_name)
      OR federated.person.gender IS DISTINCT FROM CASE
           WHEN EXCLUDED.gender IS NOT NULL AND EXCLUDED.gender <> 'unknown'
           THEN EXCLUDED.gender
@@ -856,28 +856,40 @@ WHERE c.federation = 'wdsf' AND c.external_id = :competitionExternalId
 
 /* @name MergeCompetitionEntriesByEventId */
 WITH input AS (
-  SELECT competition_external_id, competitor_id, cancelled
+  SELECT competition_external_id, competitor_id, cancelled, represents, country
   FROM unnest(
     :competitionExternalId::text[],
     :competitorId::text[],
-    :cancelled::boolean[]
-  ) AS input(competition_external_id, competitor_id, cancelled)
+    :cancelled::boolean[],
+    :represents::text[],
+    :country::text[]
+  ) AS input(competition_external_id, competitor_id, cancelled, represents, country)
 ), competitions AS (
   SELECT c.id, c.external_id
   FROM federated.competition c
   JOIN federated.event e ON e.id = c.event_id
   WHERE c.federation = :federation AND e.external_id = :eventId
 ), source AS (
-  SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled
+  SELECT competitions.id AS competition_id, input.competitor_id, input.cancelled, club.id AS club_id,
+    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+    nullif(btrim(input.country), '') AS country
   FROM input
   JOIN competitions ON competitions.external_id = input.competition_external_id
+  LEFT JOIN LATERAL (
+    SELECT min(id) AS id FROM federated.federation_club
+    WHERE federation = :federation AND lower(btrim(name)) = lower(btrim(input.represents))
+    HAVING count(*) = 1
+  ) club ON true
 ), upserted AS (
-  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
-  SELECT s.competition_id, s.competitor_id, s.cancelled
+  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, club_id, represents, country)
+  SELECT s.competition_id, s.competitor_id, s.cancelled, s.club_id, s.represents, s.country
   FROM source s
   ON CONFLICT (competition_id, competitor_id) DO UPDATE
-    SET cancelled = EXCLUDED.cancelled
-    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+    SET cancelled = EXCLUDED.cancelled, club_id = EXCLUDED.club_id,
+        represents = EXCLUDED.represents, country = EXCLUDED.country
+    WHERE (federated.competition_entry.cancelled, federated.competition_entry.club_id,
+           federated.competition_entry.represents, federated.competition_entry.country)
+      IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.club_id, EXCLUDED.represents, EXCLUDED.country)
 )
 DELETE FROM federated.competition_entry t
 WHERE t.competition_id IN (SELECT id FROM competitions)
@@ -890,8 +902,8 @@ WHERE t.competition_id IN (SELECT id FROM competitions)
 
 /* @name MergeWdsfCompetitionEntries */
 WITH source AS (
-  SELECT competitor_id, cancelled
-  FROM unnest(:competitorId::text[], :cancelled::boolean[]) AS input(competitor_id, cancelled)
+  SELECT competitor_id, cancelled, nullif(country, '') AS country
+  FROM unnest(:competitorId::text[], :cancelled::boolean[], :country::text[]) AS input(competitor_id, cancelled, country)
 ), totals AS (
   UPDATE federated.competition
   SET participants_total = :participantsTotal::int, excused_total = :excusedTotal::int
@@ -899,13 +911,14 @@ WITH source AS (
     AND (participants_total, excused_total) IS DISTINCT FROM
       (:participantsTotal::int, :excusedTotal::int)
 ), upserted AS (
-  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled)
-  SELECT :competitionId::bigint, competitor_id, cancelled
+  INSERT INTO federated.competition_entry (competition_id, competitor_id, cancelled, country)
+  SELECT :competitionId::bigint, competitor_id, cancelled, country
   FROM source
   ORDER BY competitor_id
   ON CONFLICT (competition_id, competitor_id) DO UPDATE
-    SET cancelled = EXCLUDED.cancelled
-    WHERE federated.competition_entry.cancelled IS DISTINCT FROM EXCLUDED.cancelled
+    SET cancelled = EXCLUDED.cancelled, country = EXCLUDED.country
+    WHERE (federated.competition_entry.cancelled, federated.competition_entry.country)
+      IS DISTINCT FROM (EXCLUDED.cancelled, EXCLUDED.country)
 )
 -- The participant index is a full registration snapshot; results are independent.
 DELETE FROM federated.competition_entry e
@@ -939,7 +952,10 @@ WITH source AS (
     is_final,
     nullif(completion_status, '') AS completion_status,
     nullif(last_round, '') AS last_round,
-    nullif(last_dance, '') AS last_dance
+    nullif(last_dance, '') AS last_dance,
+    club.id AS club_id,
+    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+    nullif(btrim(input.country), '') AS country
   FROM unnest(
     :competitorId::text[],
     :startNumber::text[],
@@ -950,19 +966,28 @@ WITH source AS (
     :isFinal::boolean[],
     :completionStatus::text[],
     :lastRound::text[],
-    :lastDance::text[]
+    :lastDance::text[],
+    :represents::text[],
+    :country::text[]
   ) AS input(
     competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
-    is_final, completion_status, last_round, last_dance
+    is_final, completion_status, last_round, last_dance, represents, country
   )
+  LEFT JOIN LATERAL (
+    SELECT min(club.id) AS id FROM federated.federation_club club
+    JOIN federated.competition competition ON competition.federation = club.federation
+    WHERE competition.id = :competitionId
+      AND lower(btrim(club.name)) = lower(btrim(input.represents))
+    HAVING count(*) = 1
+  ) club ON true
 ), upserted AS (
   INSERT INTO federated.competition_result (
     competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
-    is_final, completion_status, last_round, last_dance
+    is_final, completion_status, last_round, last_dance, club_id, represents, country
   )
   SELECT
     :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
-    s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+    s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country
   FROM source s
   ON CONFLICT (competition_id, competitor_id) DO UPDATE
     SET start_number = EXCLUDED.start_number,
@@ -973,7 +998,10 @@ WITH source AS (
         is_final = EXCLUDED.is_final,
         completion_status = EXCLUDED.completion_status,
         last_round = EXCLUDED.last_round,
-        last_dance = EXCLUDED.last_dance
+        last_dance = EXCLUDED.last_dance,
+        club_id = EXCLUDED.club_id,
+        represents = EXCLUDED.represents,
+        country = EXCLUDED.country
     WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
        OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
        OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
@@ -983,6 +1011,9 @@ WITH source AS (
        OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
        OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
        OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance
+       OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id
+       OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents
+       OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country
 )
 DELETE FROM federated.competition_result t
 WHERE t.competition_id = :competitionId
@@ -1004,7 +1035,10 @@ WITH source AS (
     is_final,
     nullif(completion_status, '') AS completion_status,
     nullif(last_round, '') AS last_round,
-    nullif(last_dance, '') AS last_dance
+    nullif(last_dance, '') AS last_dance,
+    club.id AS club_id,
+    CASE WHEN club.id IS NULL THEN nullif(btrim(input.represents), '') END AS represents,
+    nullif(btrim(input.country), '') AS country
   FROM unnest(
     :competitorId::text[],
     :startNumber::text[],
@@ -1015,19 +1049,28 @@ WITH source AS (
     :isFinal::boolean[],
     :completionStatus::text[],
     :lastRound::text[],
-    :lastDance::text[]
+    :lastDance::text[],
+    :represents::text[],
+    :country::text[]
   ) AS input(
     competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
-    is_final, completion_status, last_round, last_dance
+    is_final, completion_status, last_round, last_dance, represents, country
   )
+  LEFT JOIN LATERAL (
+    SELECT min(club.id) AS id FROM federated.federation_club club
+    JOIN federated.competition competition ON competition.federation = club.federation
+    WHERE competition.id = :competitionId
+      AND lower(btrim(club.name)) = lower(btrim(input.represents))
+    HAVING count(*) = 1
+  ) club ON true
 )
 INSERT INTO federated.competition_result (
   competition_id, competitor_id, start_number, ranking, ranking_to, point_gain, final_gain,
-  is_final, completion_status, last_round, last_dance
+  is_final, completion_status, last_round, last_dance, club_id, represents, country
 )
 SELECT
   :competitionId, s.competitor_id, s.start_number, s.ranking, s.ranking_to, s.point_gain,
-  s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance
+  s.final_gain, s.is_final, s.completion_status, s.last_round, s.last_dance, s.club_id, s.represents, s.country
 FROM source s
 ON CONFLICT (competition_id, competitor_id) DO UPDATE
   SET start_number = EXCLUDED.start_number,
@@ -1038,7 +1081,10 @@ ON CONFLICT (competition_id, competitor_id) DO UPDATE
       is_final = EXCLUDED.is_final,
       completion_status = EXCLUDED.completion_status,
       last_round = EXCLUDED.last_round,
-      last_dance = EXCLUDED.last_dance
+      last_dance = EXCLUDED.last_dance,
+      club_id = EXCLUDED.club_id,
+      represents = EXCLUDED.represents,
+      country = EXCLUDED.country
   WHERE federated.competition_result.start_number IS DISTINCT FROM EXCLUDED.start_number
      OR federated.competition_result.ranking IS DISTINCT FROM EXCLUDED.ranking
      OR federated.competition_result.ranking_to IS DISTINCT FROM EXCLUDED.ranking_to
@@ -1047,7 +1093,10 @@ ON CONFLICT (competition_id, competitor_id) DO UPDATE
      OR federated.competition_result.is_final IS DISTINCT FROM EXCLUDED.is_final
      OR federated.competition_result.completion_status IS DISTINCT FROM EXCLUDED.completion_status
      OR federated.competition_result.last_round IS DISTINCT FROM EXCLUDED.last_round
-     OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance;
+     OR federated.competition_result.last_dance IS DISTINCT FROM EXCLUDED.last_dance
+     OR federated.competition_result.club_id IS DISTINCT FROM EXCLUDED.club_id
+     OR federated.competition_result.represents IS DISTINCT FROM EXCLUDED.represents
+     OR federated.competition_result.country IS DISTINCT FROM EXCLUDED.country;
 
 /* @name UpsertCompetitionRounds */
 WITH input AS (
@@ -1424,3 +1473,31 @@ WHERE c.code ~ '^Senior_[IV]+$' AND c.is_couple
 ON CONFLICT (age_group_code, division) DO UPDATE SET
   older_age = EXCLUDED.older_age, younger_age = EXCLUDED.younger_age
 WHERE t IS DISTINCT FROM EXCLUDED;
+
+/* @name UpsertCstsMemberProfile */
+WITH club AS (
+  INSERT INTO federated.federation_club (federation, external_id, name, country)
+  SELECT 'csts', :clubExternalId::text, btrim(:clubName::text), 'Czechia'
+  WHERE nullif(:clubExternalId::text, '') IS NOT NULL
+  ON CONFLICT (federation, external_id) DO UPDATE SET name = EXCLUDED.name
+    WHERE federated.federation_club.name IS DISTINCT FROM EXCLUDED.name
+  RETURNING id
+), resolved_club AS (
+  SELECT id FROM club
+  UNION ALL
+  SELECT id FROM federated.federation_club
+  WHERE federation = 'csts' AND external_id = :clubExternalId AND NOT EXISTS (SELECT FROM club)
+)
+INSERT INTO federated.person (
+  federation, external_id, canonical_name, first_name, last_name, gender, club_id
+)
+SELECT 'csts', :externalId::bigint, :canonicalName, :firstName, :lastName,
+  'unknown', (SELECT id FROM resolved_club)
+ON CONFLICT (id) DO UPDATE SET
+  canonical_name = EXCLUDED.canonical_name,
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  club_id = EXCLUDED.club_id
+WHERE (federated.person.canonical_name, federated.person.first_name,
+       federated.person.last_name, federated.person.club_id) IS DISTINCT FROM
+      (EXCLUDED.canonical_name, EXCLUDED.first_name, EXCLUDED.last_name, EXCLUDED.club_id);

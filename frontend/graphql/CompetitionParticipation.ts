@@ -23,6 +23,8 @@ export type CompetitionParticipantCondition = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type CompetitionResultCondition = {
+  /** Checks for equality with the object’s `clubId` field. */
+  clubId?: string | null | undefined;
   /** Checks for equality with the object’s `competitionId` field. */
   competitionId?: string | null | undefined;
   competitionTypes?: Array<CompetitionType> | null | undefined;
@@ -32,6 +34,8 @@ export type CompetitionResultCondition = {
   competitorTypes?: Array<CompetitorType> | null | undefined;
   /** Checks for equality with the object’s `completionStatus` field. */
   completionStatus?: string | null | undefined;
+  /** Checks for equality with the object’s `country` field. */
+  country?: string | null | undefined;
   date?: DateRangeCondition | null | undefined;
   /** Checks for equality with the object’s `finalGain` field. */
   finalGain?: string | null | undefined;
@@ -51,6 +55,8 @@ export type CompetitionResultCondition = {
   ranking?: number | null | undefined;
   /** Checks for equality with the object’s `rankingTo` field. */
   rankingTo?: number | null | undefined;
+  /** Checks for equality with the object’s `represents` field. */
+  represents?: string | null | undefined;
   /** Checks for equality with the object’s `startNumber` field. */
   startNumber?: string | null | undefined;
 };

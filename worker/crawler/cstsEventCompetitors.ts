@@ -50,6 +50,7 @@ const competitorSchema = z.object({
       z.object({
         competitorId: z.number(),
         idt: z.number(),
+        sex: z.enum(['M', 'F']).optional(),
         name: z.string(),
         surname: z.string(),
         backup: z.boolean().optional(),
@@ -96,8 +97,10 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       competitionExternalId: string;
       competitorId: string;
       cancelled: boolean;
+      represents: string;
+      country: string;
     }>(
-      ['competitionExternalId', 'competitorId', 'cancelled'],
+      ['competitionExternalId', 'competitorId', 'cancelled', 'represents', 'country'],
       ['competitionExternalId', 'competitorId'],
     );
     const components = makePgtypedCollection<PayloadCompetitorComponent>(
@@ -125,6 +128,8 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       entries.add({
         competitionExternalId: competitor.competitionId.toString(),
         competitorId: `csts:${competitor.competitorId}`,
+        represents: competitor.club ?? '',
+        country: competitor.country,
         cancelled: competitor.registrationState !== 1,
       });
 
@@ -142,6 +147,7 @@ export const cstsEventCompetitors: JsonLoader<Response> = {
       { federation: 'csts', eventId: eventId.toString(), ...entries.params },
       client,
     );
+
     return {
       upsertFrontier: components.params.personExternalId.map((key) => ({
         federation: 'csts',

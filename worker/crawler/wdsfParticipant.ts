@@ -330,8 +330,7 @@ async function loadWdsfParticipant(
     );
   }
 
-  // TODO(wdsf): Persist parsed participant metadata such as basepoints,
-  // country, nationalreference, and team country.
+  // TODO(wdsf): Persist parsed participant basepoints and nationalreference.
   const ranking = parsePositiveRank(p.rank);
   if (ranking) {
     const lastRound =
@@ -343,6 +342,8 @@ async function loadWdsfParticipant(
       {
         competitionId: context.id,
         competitorId: [competitorId],
+        represents: [''],
+        country: [p.country ?? p.TeamCountryXmlName ?? ''],
         startNumber: [p.number?.toString() ?? ''],
         ranking: [ranking],
         rankingTo: [ranking],

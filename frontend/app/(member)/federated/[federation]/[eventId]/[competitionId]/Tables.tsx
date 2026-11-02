@@ -31,6 +31,7 @@ export function Results({
           'Umístění',
           'Start. č.',
           'Soutěžící',
+          'Soutěží za',
           showPoints && 'Body',
           showLocalMatches && 'V klubu',
         ]}
@@ -60,6 +61,11 @@ export function Results({
                 {formatResultStatus(result.completionStatus)}
               </div>
             </th>
+            <td>
+              {[result.club?.name ?? result.represents, result.country]
+                .filter(Boolean)
+                .join(', ')}
+            </td>
             {showPoints && (
               <td className="whitespace-nowrap">
                 {formatPointsAndFinals(result, 'gain')}
@@ -97,32 +103,35 @@ export function Registrations({
       <h2 className="mt-4 mb-2 text-lg font-bold">
         {hasResults ? 'No-show' : 'Přihlášky'}
       </h2>
-      <Table columns={['Jméno', showLocalMatches && 'V klubu']}>
-        {entries.map(({ competitor, competitorId, cancelled }) => (
-          <tr key={competitorId} className="border-t border-neutral-4 align-top">
-            <th scope="row">
-              {competitor ? (
-                <Link
-                  className={cn(
-                    'text-accent-11 underline',
-                    cancelled ? 'line-through' : '',
-                  )}
-                  href={`/federated/${federation}/competitors/${competitor?.externalId}`}
-                  prefetch={false}
-                >
-                  {competitor.name || competitor.id}
-                </Link>
-              ) : (
-                competitorId
+      <Table columns={['Jméno', 'Soutěží za', showLocalMatches && 'V klubu']}>
+        {entries.map(
+          ({ competitor, competitorId, cancelled, club, represents, country }) => (
+            <tr key={competitorId} className="border-t border-neutral-4 align-top">
+              <th scope="row">
+                {competitor ? (
+                  <Link
+                    className={cn(
+                      'text-accent-11 underline',
+                      cancelled ? 'line-through' : '',
+                    )}
+                    href={`/federated/${federation}/competitors/${competitor?.externalId}`}
+                    prefetch={false}
+                  >
+                    {competitor.name || competitor.id}
+                  </Link>
+                ) : (
+                  competitorId
+                )}
+              </th>
+              <td>{[club?.name ?? represents, country].filter(Boolean).join(', ')}</td>
+              {showLocalMatches && (
+                <td>
+                  <LocalMatches participant={competitor} />
+                </td>
               )}
-            </th>
-            {showLocalMatches && (
-              <td>
-                <LocalMatches participant={competitor} />
-              </td>
-            )}
-          </tr>
-        ))}
+            </tr>
+          ),
+        )}
       </Table>
     </>
   );
