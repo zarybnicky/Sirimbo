@@ -773,7 +773,7 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
 
 query FederationClubMembers($clubId: BigInt!, $offset: Int! = 0) {
   people(condition: { membership: { state: CURRENT } }) {
-    nodes { id cstsId isMember }
+    nodes { id cstsId }
   }
   federationPeople(first: 100, offset: $offset, condition: { federation: "csts", clubId: $clubId }, orderBy: [CANONICAL_NAME_ASC, ID_ASC]) {
     totalCount
