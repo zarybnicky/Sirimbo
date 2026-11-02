@@ -1,6 +1,7 @@
 fragment TenantFull on Tenant {
   id
   name
+  cstsId
   bankAccount
   origins
   czIco
@@ -56,8 +57,16 @@ query TenantForm {
   tenant: getCurrentTenant {
     id
     name
+    cstsId
     bankAccount
     description
+  }
+  clubs: federationClubs(first: 300, condition: { federation: "csts" }, orderBy: NAME_ASC) {
+    nodes {
+      id
+      externalId
+      name
+    }
   }
 }
 

@@ -214,3 +214,6 @@ alter table federated.competitor
   add column if not exists active boolean,
   add column if not exists since timestamptz,
   add column if not exists until timestamptz;
+
+alter table tenant add column if not exists csts_id integer;
+grant update (csts_id) on tenant to administrator;

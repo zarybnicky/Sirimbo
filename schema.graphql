@@ -14425,6 +14425,7 @@ type Tenant {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]!
+  cstsId: Int
   czDic: String!
   czIco: String!
   description: String!
@@ -15187,6 +15188,9 @@ input TenantCondition {
   """Checks for equality with the object’s `bankAccount` field."""
   bankAccount: String
 
+  """Checks for equality with the object’s `cstsId` field."""
+  cstsId: Int
+
   """Checks for equality with the object’s `czDic` field."""
   czDic: String
 
@@ -15336,6 +15340,7 @@ Represents an update to a `Tenant`. Fields that are set will be updated.
 input TenantPatch {
   address: AddressDomainInput
   bankAccount: String
+  cstsId: Int
   czDic: String
   czIco: String
   description: String
@@ -15579,6 +15584,8 @@ enum TenantTrainersOrderBy {
 enum TenantsOrderBy {
   BANK_ACCOUNT_ASC
   BANK_ACCOUNT_DESC
+  CSTS_ID_ASC
+  CSTS_ID_DESC
   CZ_DIC_ASC
   CZ_DIC_DESC
   CZ_ICO_ASC
