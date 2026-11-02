@@ -5687,6 +5687,7 @@ export type FederationClubsOrderBy =
 
 export type FederationCompetitor = {
   __typename?: 'FederationCompetitor';
+  active: Maybe<Scalars['Boolean']['output']>;
   ageGroup: Maybe<Scalars['String']['output']>;
   /** Reads a single `AgeGroup` that is related to this `FederationCompetitor`. */
   ageGroupDetails: Maybe<AgeGroup>;
@@ -5723,6 +5724,8 @@ export type FederationCompetitor = {
   ranklistEntries: RanklistEntryConnection;
   /** Reads and enables pagination through a set of `CompetitionRoundResult`. */
   roundResults: CompetitionRoundResultConnection;
+  since: Maybe<Scalars['Datetime']['output']>;
+  until: Maybe<Scalars['Datetime']['output']>;
 };
 
 
@@ -6028,6 +6031,8 @@ export type FederationCompetitorComponentsOrderBy =
  * are tested for equality and combined with a logical ‘and.’
  */
 export type FederationCompetitorCondition = {
+  /** Checks for equality with the object’s `active` field. */
+  active?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `ageGroup` field. */
   ageGroup?: InputMaybe<Scalars['String']['input']>;
   categoryProgress?: InputMaybe<CompetitorCategoryProgressCondition>;
@@ -6050,6 +6055,10 @@ export type FederationCompetitorCondition = {
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `FederationCompetitor` values. */
@@ -6083,6 +6092,8 @@ export type FederationCompetitorFacetsRecord = {
 
 /** Methods to use when ordering `FederationCompetitor`. */
 export type FederationCompetitorsOrderBy =
+  | 'ACTIVE_ASC'
+  | 'ACTIVE_DESC'
   | 'AGE_GROUP_ASC'
   | 'AGE_GROUP_DESC'
   | 'CREATED_AT_ASC'
@@ -6101,7 +6112,11 @@ export type FederationCompetitorsOrderBy =
   | 'NAME_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PRIMARY_KEY_DESC'
+  | 'SINCE_ASC'
+  | 'SINCE_DESC'
+  | 'UNTIL_ASC'
+  | 'UNTIL_DESC';
 
 /**
  * A condition to be used against `Federation` object types. All fields are tested
@@ -15027,6 +15042,7 @@ export type GraphCacheResolvers = {
     node?: GraphCacheResolver<WithTypename<FederationClubEdge>, Record<string, never>, WithTypename<FederationClub> | string>
   },
   FederationCompetitor?: {
+    active?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     ageGroup?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     ageGroupDetails?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, WithTypename<AgeGroup> | string>,
     categoryProgressesList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorCategoryProgressesListArgs, Array<WithTypename<FederationCompetitorCategoryProgress> | string>>,
@@ -15049,7 +15065,9 @@ export type GraphCacheResolvers = {
     name?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['String']['output'] | string>,
     peopleList?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorPeopleListArgs, Array<WithTypename<Person> | string>>,
     ranklistEntries?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRanklistEntriesArgs, WithTypename<RanklistEntryConnection> | string>,
-    roundResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRoundResultsArgs, WithTypename<CompetitionRoundResultConnection> | string>
+    roundResults?: GraphCacheResolver<WithTypename<FederationCompetitor>, FederationCompetitorRoundResultsArgs, WithTypename<CompetitionRoundResultConnection> | string>,
+    since?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Datetime']['output'] | string>,
+    until?: GraphCacheResolver<WithTypename<FederationCompetitor>, Record<string, never>, Scalars['Datetime']['output'] | string>
   },
   FederationCompetitorCategoryProgress?: {
     category?: GraphCacheResolver<WithTypename<FederationCompetitorCategoryProgress>, Record<string, never>, WithTypename<Category> | string>,
@@ -17563,6 +17581,7 @@ export type GraphCacheUpdaters = {
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationClubEdge>>, Record<string, never>>
   },
   FederationCompetitor?: {
+    active?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     ageGroup?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     ageGroupDetails?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     categoryProgressesList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorCategoryProgressesListArgs>,
@@ -17585,7 +17604,9 @@ export type GraphCacheUpdaters = {
     name?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
     peopleList?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorPeopleListArgs>,
     ranklistEntries?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRanklistEntriesArgs>,
-    roundResults?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRoundResultsArgs>
+    roundResults?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, FederationCompetitorRoundResultsArgs>,
+    since?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>,
+    until?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitor>>, Record<string, never>>
   },
   FederationCompetitorCategoryProgress?: {
     category?: GraphCacheUpdateResolver<Maybe<WithTypename<FederationCompetitorCategoryProgress>>, Record<string, never>>,

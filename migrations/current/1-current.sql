@@ -209,3 +209,8 @@ select 'csts', 'memberProfile', external_id from federated.person where federati
 on conflict (federation, kind, key) do nothing;
 
 alter table federated.event add column if not exists extra_id text;
+
+alter table federated.competitor
+  add column if not exists active boolean,
+  add column if not exists since timestamptz,
+  add column if not exists until timestamptz;

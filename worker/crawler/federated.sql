@@ -313,41 +313,33 @@ FROM target_component
 ON CONFLICT (competitor_id, person_id) DO NOTHING;
 
 /* @name UpsertCompetitorsDetailed */
-INSERT INTO federated.competitor (federation, external_id, competitor_type, name, age_group, divisions)
-SELECT input.federation, input.external_id, input.competitor_type, input.name,
-  nullif(input.age_group, ''), array(select jsonb_array_elements_text(input.divisions))
-FROM unnest(
-  :federation::text[],
-  :externalId::text[],
-  :type::federated.competitor_type[],
-  :label::text[],
-  :ageGroup::text[],
-  :divisions::jsonb[]
-) AS input(federation, external_id, competitor_type, name, age_group, divisions)
-WHERE NOT EXISTS (
-  SELECT 1 FROM federated.competitor c
-  WHERE c.id = input.federation || ':' || input.external_id
-    AND c.competitor_type IS NOT DISTINCT FROM input.competitor_type
-    AND (input.name = '' OR c.name IS NOT DISTINCT FROM input.name)
-    AND (nullif(input.age_group, '') IS NULL OR c.age_group IS NOT DISTINCT FROM input.age_group)
-    AND c.divisions IS NOT DISTINCT FROM array(select jsonb_array_elements_text(input.divisions))
+INSERT INTO federated.competitor AS c (
+  federation, external_id, competitor_type, name, age_group, divisions, active, since, until
 )
+SELECT input.federation, input.external_id, input.competitor_type, input.name,
+  nullif(input.age_group, ''), array(select jsonb_array_elements_text(input.divisions)),
+  nullif(input.active, '')::boolean, nullif(input.since, '')::timestamptz, nullif(input.until, '')::timestamptz
+FROM unnest(
+  :federation::text[], :externalId::text[], :type::federated.competitor_type[],
+  :label::text[], :ageGroup::text[], :divisions::jsonb[],
+  :active::text[], :since::text[], :until::text[]
+) AS input(federation, external_id, competitor_type, name, age_group, divisions, active, since, until)
 ORDER BY federation, external_id
 ON CONFLICT (id) DO UPDATE
-  SET competitor_type = EXCLUDED.competitor_type,
-      name = CASE
-        WHEN EXCLUDED.name <> '' THEN EXCLUDED.name
-        ELSE federated.competitor.name
-      END,
-      age_group = coalesce(EXCLUDED.age_group, federated.competitor.age_group),
-      divisions = EXCLUDED.divisions
-  WHERE federated.competitor.divisions IS DISTINCT FROM EXCLUDED.divisions
-     OR federated.competitor.age_group IS DISTINCT FROM coalesce(EXCLUDED.age_group, federated.competitor.age_group)
-     OR federated.competitor.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
-     OR (
-       EXCLUDED.name <> ''
-       AND federated.competitor.name IS DISTINCT FROM EXCLUDED.name
-     );
+SET competitor_type = EXCLUDED.competitor_type,
+    name = coalesce(nullif(EXCLUDED.name, ''), c.name),
+    age_group = coalesce(EXCLUDED.age_group, c.age_group),
+    divisions = EXCLUDED.divisions,
+    active = CASE WHEN :active::text[] IS NULL THEN c.active ELSE EXCLUDED.active END,
+    since = CASE WHEN :since::text[] IS NULL THEN c.since ELSE EXCLUDED.since END,
+    until = CASE WHEN :until::text[] IS NULL THEN c.until ELSE EXCLUDED.until END
+WHERE c.competitor_type IS DISTINCT FROM EXCLUDED.competitor_type
+   OR c.name IS DISTINCT FROM coalesce(nullif(EXCLUDED.name, ''), c.name)
+   OR c.age_group IS DISTINCT FROM coalesce(EXCLUDED.age_group, c.age_group)
+   OR c.divisions IS DISTINCT FROM EXCLUDED.divisions
+   OR (:active::text[] IS NOT NULL AND c.active IS DISTINCT FROM EXCLUDED.active)
+   OR (:since::text[] IS NOT NULL AND c.since IS DISTINCT FROM EXCLUDED.since)
+   OR (:until::text[] IS NOT NULL AND c.until IS DISTINCT FROM EXCLUDED.until);
 
 /* @name MergeCompetitorComponents */
 WITH source AS (

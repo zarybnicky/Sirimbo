@@ -777,3 +777,42 @@ query FederationPersonOfficialAssignments($id: String!, $offset: Int! = 0) {
     }
   }
 }
+
+query MissingFederationCouples {
+  people(condition: { membership: { state: CURRENT } }, orderBy: [NAME_ASC, ID_ASC]) {
+    nodes {
+      id
+      name
+      federationPeople(first: 2) {
+        nodes {
+          id
+          competitorComponents(first: 300) {
+            nodes {
+              competitorId
+              personId
+              competitor {
+                id
+                externalId
+                federation
+                competitorType
+                active
+                since
+                until
+                latestEntryAt
+                latestResultAt
+                couplesList { id }
+                components(first: 3) {
+                  nodes {
+                    competitorId
+                    personId
+                    role
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -386,7 +386,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         }
       },
 
-      deleteCouple(_result, args, cache, _info) {
+      deleteCouple(result, args, cache, _info) {
+        const couple = result.deleteCouple?.couple;
+        if (couple) {
+          cache.invalidate({ __typename: 'Person', id: couple.manId });
+          cache.invalidate({ __typename: 'Person', id: couple.womanId });
+        }
         cache.invalidate({ __typename: 'Couple', id: args.input.id });
         invalidateQueryFields(cache, ['couplesList']);
       },

@@ -18,11 +18,21 @@ import { Tab, TabMenu } from '@/ui/TabMenu';
 import { WeekPicker } from '@/ui/WeekPicker';
 import { compareCategories, formatCategoryName, formatCompetitorType } from '@/ui/csts';
 import { FacetFilter } from '@/ui/FacetFilter';
-import { formatDateOnly } from '@/ui/format';
-import { inputCls } from '@/ui/style';
+import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
+import { formatDateOnly, formatOpenDateRange } from '@/ui/format';
+import { buttonCls, inputCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
+import { MissingFederationCouplesDocument } from '@/graphql/Federation';
+import { CreateCoupleDocument, DeleteCoupleDocument } from '@/graphql/Memberships';
+import { useMutation, useQuery } from 'urql';
+import { useState } from 'react';
+import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { Spinner } from '@/ui/Spinner';
+import { Check, Undo2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
 
-const views = ['year', 'gallery', 'weekend'] as const;
+const views = ['year', 'gallery', 'weekend', 'couples'] as const;
 const competitorTypes = [
   'COUPLE',
   'SOLO',
@@ -57,12 +67,19 @@ export function ClubResults() {
         <Tab id="weekend" title="Víkendové výsledky">
           <ClubResultReport view="weekend" />
         </Tab>
+        <Tab id="couples" title="Doplnit páry z ČSTS" requireAdmin>
+          <MissingFederationCouples />
+        </Tab>
       </TabMenu>
     </section>
   );
 }
 
-function ClubResultReport({ view }: { view: (typeof views)[number] }) {
+function ClubResultReport({
+  view,
+}: {
+  view: Exclude<(typeof views)[number], 'couples'>;
+}) {
   const currentYear = new Date().getFullYear();
   const [filters, setFilters] = useQueryStates(
     {
@@ -243,5 +260,167 @@ function ClubResultReport({ view }: { view: (typeof views)[number] }) {
       )}
       <Pagination {...pagination} />
     </>
+  );
+}
+
+function MissingFederationCouples() {
+  const [active, setActive] = useState(true);
+  const [query] = useQuery({ query: MissingFederationCouplesDocument });
+  const [creation, createCouple] = useMutation(CreateCoupleDocument);
+  const [deletion, deleteCouple] = useMutation(DeleteCoupleDocument);
+  const [created, setCreated] = useState<Record<string, string | undefined>>({});
+  const people = query.data?.people?.nodes ?? [];
+  const identities = Map.groupBy(
+    people.flatMap((p) =>
+      p.federationPeople.nodes.map((fp) => ({ ...p, federationId: fp.id })),
+    ),
+    (p) => p.federationId,
+  );
+  const couples = new Map(
+    people
+      .flatMap((p) =>
+        p.federationPeople.nodes.flatMap((fp) => fp.competitorComponents.nodes),
+      )
+      .flatMap(({ competitor: c }) => {
+        if (
+          !c ||
+          Boolean(c.active) !== active ||
+          c.competitorType !== 'COUPLE' ||
+          c.components.nodes.length !== 2
+        )
+          return [];
+        const man = identities.get(
+          c.components.nodes.find((p) => p.role === 'LEAD')?.personId ?? '',
+        );
+        const woman = identities.get(
+          c.components.nodes.find((p) => p.role === 'FOLLOW')?.personId ?? '',
+        );
+        if (man?.length !== 1 || woman?.length !== 1 || man[0]!.id === woman[0]!.id)
+          return [];
+        const key = `${man[0]!.id}:${woman[0]!.id}`;
+        if (c.couplesList.length > 0 && !created[key]) return [];
+        return [[key, { ...c, man: man[0]!, woman: woman[0]! }] as const];
+      }),
+  );
+  const saving = creation.fetching || deletion.fetching;
+
+  if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
+
+  return (
+    <div className="grid gap-3 text-sm">
+      <FacetRadioGroup
+        label=''
+        name="couple-status"
+        value={active ? 'active' : 'inactive'}
+        options={[
+          { value: 'active', label: 'Aktivní páry' },
+          { value: 'inactive', label: 'Neaktivní páry' },
+        ]}
+        onChange={(value) => setActive(value === 'active')}
+      />
+      <FormError error={creation.error ?? deletion.error ?? query.error} />
+      {query.fetching && <Spinner />}
+      {couples.size === 0 && <p>Žádné chybějící páry</p>}
+      {[...couples].map(([key, candidate]) => {
+        const editDates =
+          !candidate.since ||
+          (candidate.active === false && !candidate.until) ||
+          (!!candidate.until &&
+            Date.parse(candidate.since) >= Date.parse(candidate.until));
+        return (
+          <div
+            key={key}
+            className={`flex flex-wrap items-center justify-between gap-3 rounded-md px-3 py-2 ${created[key] ? 'bg-accent-2' : 'bg-neutral-2'}`}
+          >
+            <div className="grid gap-1">
+              <div className="font-bold">
+                <LocalPersonLinks people={[candidate.man, candidate.woman]} />
+              </div>
+              <div className="flex flex-wrap gap-x-3 gap-y-1 text-neutral-11">
+                <FederationLink
+                  entity="competitors"
+                  federation={candidate.federation}
+                  externalId={candidate.externalId}
+                >
+                  {candidate.federation === 'csts'
+                    ? 'ČSTS'
+                    : candidate.federation.toUpperCase()}{' '}
+                  {candidate.externalId}
+                </FederationLink>
+                {(candidate.since || candidate.until) && (
+                  <span>{formatOpenDateRange(candidate)}</span>
+                )}
+                {(candidate.latestResultAt || candidate.latestEntryAt) && (
+                  <span>
+                    Poslední soutěž:
+                    {' '}
+                    {candidate.latestResultAt ? formatDateOnly(candidate.latestResultAt) : ''}
+                    {candidate.latestEntryAt && candidate.latestEntryAt > new Date().toISOString()
+                      ? ' (+ budoucí)'
+                      : ''}
+                  </span>
+                )}
+                {created[key] && (
+                  <Link
+                    className="text-accent-11 underline"
+                    href={`/pary/${created[key]}`}
+                  >
+                    Pár vytvořen
+                  </Link>
+                )}
+              </div>
+            </div>
+            {!created[key] && editDates ? (
+              <Dialog>
+                <DialogTrigger.Add size="sm" text="Vytvořit pár" />
+                <DialogContent>
+                  <CreateCoupleForm
+                    couple={{
+                      manId: candidate.man.id,
+                      womanId: candidate.woman.id,
+                      since: candidate.since,
+                      until: candidate.until,
+                    }}
+                    onCreated={(id) =>
+                      setCreated((previous) => ({ ...previous, [key]: id }))
+                    }
+                  />
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <button
+                type="button"
+                className={buttonCls({ size: 'sm', variant: 'outline' })}
+                disabled={saving}
+                onClick={async () => {
+                  if (created[key]) {
+                    const result = await deleteCouple({ id: created[key] });
+                    if (result.error || !result.data?.deleteCouple) return;
+                    setCreated((previous) => ({ ...previous, [key]: undefined }));
+                  } else {
+                    const result = await createCouple({
+                      input: {
+                        couple: {
+                          manId: candidate.man.id,
+                          womanId: candidate.woman.id,
+                          since: candidate.since ?? undefined,
+                          until: candidate.until ?? undefined,
+                        },
+                      },
+                    });
+                    const id = result.data?.createCouple?.couple?.id;
+                    if (result.error || !id) return;
+                    setCreated((previous) => ({ ...previous, [key]: id }));
+                  }
+                }}
+              >
+                {created[key] ? <Undo2 /> : <Check />}
+                {created[key] ? 'Zpět' : 'Vytvořit pár'}
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }

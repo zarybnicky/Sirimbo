@@ -7112,6 +7112,7 @@ enum FederationClubsOrderBy {
 }
 
 type FederationCompetitor {
+  active: Boolean
   ageGroup: String
 
   """
@@ -7413,6 +7414,8 @@ type FederationCompetitor {
     """The method to use when ordering `CompetitionRoundResult`."""
     orderBy: [CompetitionRoundResultsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionRoundResultConnection!
+  since: Datetime
+  until: Datetime
 }
 
 type FederationCompetitorCategoryProgress {
@@ -7655,6 +7658,9 @@ A condition to be used against `FederationCompetitor` object types. All fields
 are tested for equality and combined with a logical ‘and.’
 """
 input FederationCompetitorCondition {
+  """Checks for equality with the object’s `active` field."""
+  active: Boolean
+
   """Checks for equality with the object’s `ageGroup` field."""
   ageGroup: String
   categoryProgress: CompetitorCategoryProgressCondition
@@ -7685,6 +7691,12 @@ input FederationCompetitorCondition {
   """Checks for equality with the object’s `name` field."""
   name: String
   search: String
+
+  """Checks for equality with the object’s `since` field."""
+  since: Datetime
+
+  """Checks for equality with the object’s `until` field."""
+  until: Datetime
 }
 
 """A connection to a list of `FederationCompetitor` values."""
@@ -7723,6 +7735,8 @@ type FederationCompetitorFacetsRecord {
 
 """Methods to use when ordering `FederationCompetitor`."""
 enum FederationCompetitorsOrderBy {
+  ACTIVE_ASC
+  ACTIVE_DESC
   AGE_GROUP_ASC
   AGE_GROUP_DESC
   CREATED_AT_ASC
@@ -7742,6 +7756,10 @@ enum FederationCompetitorsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SINCE_ASC
+  SINCE_DESC
+  UNTIL_ASC
+  UNTIL_DESC
 }
 
 """

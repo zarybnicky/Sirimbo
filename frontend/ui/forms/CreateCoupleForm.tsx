@@ -12,20 +12,32 @@ import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GenderType } from '@/graphql';
+import type { CoupleInput, GenderType } from '@/graphql';
+import { DatePickerElement } from '@/ui/fields/date';
 
-const Form = z.object({
-  man: z.string().min(1, 'Vyberte partnera'),
-  woman: z.string().min(1, 'Vyberte partnerku'),
-});
+const Form = z
+  .object({
+    man: z.string().min(1, 'Vyberte partnera'),
+    woman: z.string().min(1, 'Vyberte partnerku'),
+    since: z.date().nullish().prefault(null),
+    until: z.date().nullish().prefault(null),
+  })
+  .refine((values) => !values.since || !values.until || values.until > values.since, {
+    path: ['until'],
+    message: 'Konec musí být po začátku.',
+  });
 
 export function CreateCoupleForm({
   person: initialPerson,
+  couple,
+  onCreated,
 }: {
   person?: {
     id: string;
     gender: GenderType;
   };
+  couple?: Pick<CoupleInput, 'manId' | 'womanId' | 'since' | 'until'>;
+  onCreated?: (id: string) => void;
 }) {
   const { onSuccess } = useFormResult();
   const [showEveryone, setShowEveryone] = React.useState(false);
@@ -60,9 +72,12 @@ export function CreateCoupleForm({
   ];
   const { control, handleSubmit, setValue } = useForm({
     resolver: zodResolver(Form),
-    values: {
-      man: initialPerson?.gender === 'MAN' ? initialPerson.id : '',
-      woman: initialPerson?.gender === 'WOMAN' ? initialPerson.id : '',
+    defaultValues: {
+      man: couple?.manId ?? (initialPerson?.gender === 'MAN' ? initialPerson.id : ''),
+      woman:
+        couple?.womanId ?? (initialPerson?.gender === 'WOMAN' ? initialPerson.id : ''),
+      since: couple?.since ? new Date(couple.since) : new Date(),
+      until: couple?.until ? new Date(couple.until) : null,
     },
   });
   const [manId, womanId] = useWatch({ control, name: ['man', 'woman'] });
@@ -112,11 +127,16 @@ export function CreateCoupleForm({
         couple: {
           manId: values.man,
           womanId: values.woman,
-          since: new Date().toISOString(),
+          since: values.since?.toISOString(),
+          until: values.until?.toISOString(),
         },
       },
     });
-    if (!result.error && result.data?.createCouple?.couple?.id) onSuccess();
+    const id = result.data?.createCouple?.couple?.id;
+    if (!result.error && id) {
+      onCreated?.(id);
+      onSuccess(id);
+    }
   };
 
   return (
@@ -194,6 +214,12 @@ export function CreateCoupleForm({
             />
           )}
         </div>
+      )}
+      {couple && (
+        <>
+          <DatePickerElement control={control} name="since" label="Od" clearable />
+          <DatePickerElement control={control} name="until" label="Do" clearable />
+        </>
       )}
       <SubmitButton control={control} disabled={!manId || !womanId}>
         Spárovat

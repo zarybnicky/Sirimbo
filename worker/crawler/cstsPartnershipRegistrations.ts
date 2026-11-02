@@ -76,8 +76,21 @@ export const cstsPartnershipRegistrations: JsonLoader<z.output<typeof schema>> =
       type: competitor_type;
       ageGroup: string;
       divisions: string;
+      active: string;
+      since: string;
+      until: string;
     }>(
-      ['federation', 'externalId', 'label', 'type', 'ageGroup', 'divisions'],
+      [
+        'federation',
+        'externalId',
+        'label',
+        'type',
+        'ageGroup',
+        'divisions',
+        'active',
+        'since',
+        'until',
+      ],
       ['federation', 'externalId'],
     );
     const people = makePgtypedCollection<{
@@ -94,9 +107,17 @@ export const cstsPartnershipRegistrations: JsonLoader<z.output<typeof schema>> =
       personId: string;
       role: competitor_role;
     }>(['competitorId', 'personId', 'role'], ['competitorId', 'personId']);
-
-    for (const registration of parsed.collection) {
+    for (const registrations of Map.groupBy(
+      parsed.collection,
+      (r) => r.competitorId,
+    ).values()) {
+      const registration = registrations[0]!;
       const id = `csts:${registration.competitorId}`;
+      const active = registrations.some((r) => r.state === 1)
+        ? true
+        : registrations.every((r) => r.state === 2)
+          ? false
+          : null;
       const type = mapCompetitorType(registration.competitorType);
       const members = [registration.person1, registration.person2];
       competitors.add({
@@ -108,6 +129,17 @@ export const cstsPartnershipRegistrations: JsonLoader<z.output<typeof schema>> =
         type,
         ageGroup: '',
         divisions: '[]',
+        active: active === null ? '' : String(active),
+        since:
+          registrations
+            .flatMap((r) => (r.registrationDate ? [r.registrationDate] : []))
+            .toSorted((a, b) => Date.parse(a) - Date.parse(b))[0] ?? '',
+        until:
+          active === false && registrations.every((r) => r.separationDate)
+            ? registrations
+                .map((r) => r.separationDate!)
+                .toSorted((a, b) => Date.parse(b) - Date.parse(a))[0]!
+            : '',
       });
       for (const [index, person] of members.entries()) {
         people.add({

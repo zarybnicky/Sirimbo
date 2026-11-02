@@ -175,6 +175,11 @@ mutation UpdateCouple($input: UpdateCoupleInput!) {
 mutation DeleteCouple($id: BigInt!) {
   deleteCouple(input: { id: $id }) {
     __typename
+    couple {
+      id
+      manId
+      womanId
+    }
   }
 }
 

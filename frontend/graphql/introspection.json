@@ -13691,6 +13691,14 @@
         "name": "FederationCompetitor",
         "fields": [
           {
+            "name": "active",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "ageGroup",
             "type": {
               "kind": "SCALAR",
@@ -14496,6 +14504,22 @@
                 }
               }
             ]
+          },
+          {
+            "name": "since",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "until",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []

@@ -59,6 +59,8 @@ export const wdsfCouple: JsonLoader<z.output<typeof schema>> = {
       label: [couple.name],
       ageGroup: [couple.age ?? ''],
       divisions: [JSON.stringify([couple.division])],
+      active: [couple.status === 'Active' ? 'true' : couple.status === 'Retired' ? 'false' : ''],
+      until: [couple.retireOn ? `${couple.retireOn}T00:00:00Z` : ''],
     }, client);
     if (members.length) {
       await ensurePeople.run({
