@@ -80,7 +80,7 @@ export interface IEnsurePeopleQuery {
   result: IEnsurePeopleResult;
 }
 
-const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":197,"b":210}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":229}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nORDER BY federation, external_id\nON CONFLICT (id) DO NOTHING"};
+const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true,"canonicalName":true,"gender":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":149,"b":159}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":172,"b":182}]},{"name":"canonicalName","required":false,"transform":{"type":"scalar"},"locs":[{"a":197,"b":210}]},{"name":"gender","required":false,"transform":{"type":"scalar"},"locs":[{"a":223,"b":229}]}],"statement":"INSERT INTO federated.person (federation, external_id, canonical_name, gender)\nSELECT federation, external_id, canonical_name, gender\nFROM unnest(\n  :federation::text[],\n  :externalId::bigint[],\n  :canonicalName::text[],\n  :gender::federated.gender[]\n) AS i (federation, external_id, canonical_name, gender)\nORDER BY federation, external_id\nON CONFLICT (id) DO UPDATE SET\n  canonical_name = EXCLUDED.canonical_name\nWHERE nullif(federated.person.canonical_name, '') IS NULL\n  AND nullif(EXCLUDED.canonical_name, '') IS NOT NULL"};
 
 /**
  * Query generated from SQL:
@@ -94,7 +94,10 @@ const ensurePeopleIR: any = {"usedParamSet":{"federation":true,"externalId":true
  *   :gender::federated.gender[]
  * ) AS i (federation, external_id, canonical_name, gender)
  * ORDER BY federation, external_id
- * ON CONFLICT (id) DO NOTHING
+ * ON CONFLICT (id) DO UPDATE SET
+ *   canonical_name = EXCLUDED.canonical_name
+ * WHERE nullif(federated.person.canonical_name, '') IS NULL
+ *   AND nullif(EXCLUDED.canonical_name, '') IS NOT NULL
  * ```
  */
 export const ensurePeople = new PreparedQuery<IEnsurePeopleParams,IEnsurePeopleResult>(ensurePeopleIR);

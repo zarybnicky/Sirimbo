@@ -8,7 +8,10 @@ FROM unnest(
   :gender::federated.gender[]
 ) AS i (federation, external_id, canonical_name, gender)
 ORDER BY federation, external_id
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET
+  canonical_name = EXCLUDED.canonical_name
+WHERE nullif(federated.person.canonical_name, '') IS NULL
+  AND nullif(EXCLUDED.canonical_name, '') IS NOT NULL;
 
 /* @name MergePersonLicenses */
 WITH input AS (
