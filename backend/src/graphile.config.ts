@@ -14,10 +14,8 @@ import federationConditionPlugins from './plugins/federation-condition.ts';
 import competitionParticipantConditionPlugins from './plugins/competition-participant-condition.ts';
 import competitionSuggestionConditionPlugins from './plugins/competition-suggestion-condition.ts';
 import federationOrderPlugin from './plugins/federation-order.ts';
-import personMembershipConditionPlugin from './plugins/person-membership-condition.ts';
-import personConditionPlugins from './plugins/person-condition.ts';
+import peoplePlugins from './plugins/people.ts';
 import { DateRangeConditionPlugin } from './plugins/date-range-condition.ts';
-import coupleConditionPlugins from './plugins/couple-condition.ts';
 import eventConditionPlugins from './plugins/event-condition.ts';
 import transactionConditionPlugins from './plugins/transaction-condition.ts';
 import paymentConditionPlugins from './plugins/payment-condition.ts';
@@ -40,9 +38,7 @@ const preset: GraphileConfig.Preset = {
     ApiInflectionPlugin,
     currentUserPlugin,
     DateRangeConditionPlugin,
-    ...personMembershipConditionPlugin,
-    ...personConditionPlugins,
-    ...coupleConditionPlugins,
+    ...peoplePlugins,
     ...eventConditionPlugins,
     ...transactionConditionPlugins,
     ...paymentConditionPlugins,
