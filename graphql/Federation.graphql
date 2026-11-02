@@ -393,7 +393,6 @@ query FederationEventFacets($federation: String!, $includeCancelled: Boolean!) {
       years {
         year
         eventCount
-        mappedEventCount
       }
     }
   }

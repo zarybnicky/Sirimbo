@@ -28,7 +28,7 @@ export function Sources({
     }),
     limit: 100,
     pageKey: 'sourcesPage',
-    getTotal: (data) => data?.crawlerTargets?.totalCount,
+    getTotal: (data) => data.crawlerTargets?.totalCount,
     pause: !auth.isSystemAdmin,
   });
 

@@ -10,7 +10,7 @@ export function PeriodPicker({
   month,
   onChange,
 }: {
-  years: { year: number; eventCount: number; mappedEventCount: number }[];
+  years: { year: number; eventCount: number }[];
   year: number;
   month: number;
   onChange: (period: { year: number; month: number }) => void;
@@ -18,9 +18,7 @@ export function PeriodPicker({
   if (years.length === 0) return null;
   const options = years.some((y) => y.year === year)
     ? years
-    : [...years, { year, eventCount: 0, mappedEventCount: 0 }].toSorted(
-        (a, b) => a.year - b.year,
-      );
+    : [...years, { year, eventCount: 0 }].toSorted((a, b) => a.year - b.year);
   const index = options.findIndex((y) => y.year === year);
 
   return (

@@ -29,8 +29,7 @@ export function Officials({
     .toSorted(
       (a, b) =>
         a.role.localeCompare(b.role) ||
-        (a.person?.canonicalName ?? '').localeCompare(b.person?.canonicalName ?? '') ||
-        (a.discipline ?? '').localeCompare(b.discipline ?? ''),
+        (a.person?.canonicalName ?? '').localeCompare(b.person?.canonicalName ?? ''),
     );
   const judges = showJudges
     ? [
@@ -86,12 +85,14 @@ export function Officials({
   );
 }
 
-function OfficialName({
+export function OfficialName({
   federation,
   official,
+  compact = true,
 }: {
   federation: string;
   official: { personId: string; person?: OfficialPersonFragment | null };
+  compact?: boolean;
 }) {
   const person = official.person;
   const name =
@@ -100,13 +101,13 @@ function OfficialName({
     official.personId;
 
   return (
-    <span className="inline-flex items-baseline gap-2">
+    <span className={compact ? 'inline-flex items-baseline gap-2' : 'contents'}>
       {person ? (
         <FederationLink
           entity="people"
           federation={federation}
           externalId={person.externalId}
-          className="font-medium text-accent-11"
+          className={compact ? 'font-medium text-accent-11' : 'text-accent-11'}
         >
           {name}
         </FederationLink>
@@ -114,7 +115,7 @@ function OfficialName({
         name
       )}
       {!!person?.peopleList.length && (
-        <span className="text-xs text-neutral-11">
+        <span className={compact ? 'text-xs text-neutral-11' : 'ml-2 text-sm'}>
           V klubu: <LocalPersonLinks people={person.peopleList} />
         </span>
       )}

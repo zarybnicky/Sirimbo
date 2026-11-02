@@ -98,7 +98,7 @@ export default async function FederatedPersonPage({ params }: Props) {
                 (a, b) =>
                   (b.competitor?.latestResultAt ?? '').localeCompare(
                     a.competitor?.latestResultAt ?? '',
-                  ) || a.competitorId.localeCompare(b.competitorId),
+                  ),
               )
               .map(({ competitorId, competitor, role }) => (
                 <div key={competitorId}>

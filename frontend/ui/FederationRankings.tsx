@@ -1,5 +1,4 @@
 import type { FederationRankingFragment } from '@/graphql/Federation';
-import { compareText } from '@/lib/compare';
 import {
   compareCategories,
   compareDisciplines,
@@ -19,43 +18,28 @@ function ranklistRows(entries: FederationRankingFragment[]) {
       const category = ranklist?.category;
       if (!snapshot || !ranklist || !category || snapshot.kind === 'Nomination')
         return [];
+      const total = snapshot.ranklistEntriesBySnapshotId.totalCount;
       return [
         {
+          ...entry,
+          snapshot,
+          ranklist,
+          category,
           id: `${entry.snapshotId}:${entry.competitorId}`,
-          competitor: entry.competitor?.name,
-          ranklist: ranklist.name,
-          federation:
-            ranklist.federation === 'csts' ? 'ČSTS' : ranklist.federation.toUpperCase(),
-          date: snapshot.asOfDate,
-          kind: snapshot.kind,
-          ageGroup: category.ageGroup,
-          competitorType: category.competitorType,
-          series: category.series,
-          categoryDetails: category,
-          category: [
-            formatAgeGroup(category.ageGroupDetails ?? category.ageGroup),
-            category.competitorType !== 'COUPLE' && formatCompetitorType(category.competitorType),
-            formatClass(category.class),
-          ]
-            .filter(Boolean)
-            .join(' '),
-          discipline: category.discipline,
           percentile:
-            entry.ranking > 0 && snapshot.ranklistEntriesBySnapshotId.totalCount > 0
-              ? (entry.ranking + (entry.rankingTo ?? entry.ranking)) /
-                2 /
-                snapshot.ranklistEntriesBySnapshotId.totalCount
+            entry.ranking > 0 && total > 0
+              ? (entry.ranking + (entry.rankingTo ?? entry.ranking)) / 2 / total
               : null,
           placement:
             entry.ranking +
             (entry.rankingTo && entry.rankingTo !== entry.ranking
               ? `–${entry.rankingTo}.`
               : '.'),
-          total: snapshot.ranklistEntriesBySnapshotId.totalCount,
+          total,
         },
       ];
     })
-    .toSorted((a, b) => compareCategories(a.categoryDetails, b.categoryDetails));
+    .toSorted((a, b) => compareCategories(a.category, b.category));
 }
 
 export function FederationRankBadge({
@@ -63,30 +47,20 @@ export function FederationRankBadge({
 }: {
   entries: FederationRankingFragment[];
 }) {
-  const types = Object.groupBy(ranklistRows(entries), (row) => row.competitorType);
-  return (
-    <>
-      {Object.entries(types).map(([type, rows]) => (
-        <RankBadge key={type} entries={rows!} />
-      ))}
-    </>
-  );
-}
-
-function RankBadge({ entries }: { entries: ReturnType<typeof ranklistRows> }) {
-  const groups = Object.groupBy(
-    entries.filter((row) => row.ageGroup && row.percentile !== null),
-    (row) => row.ageGroup!,
+  const groups = Map.groupBy(
+    ranklistRows(entries).filter(
+      (row) => row.category.ageGroup && row.percentile !== null,
+    ),
+    (row) => row.category.ageGroup!,
   );
   let rows: ReturnType<typeof ranklistRows> = [];
   let bestCoverage = 0;
   let bestScore = Infinity;
-  for (const group of Object.values(groups)) {
-    if (!group) continue;
-    const disciplines = Object.groupBy(group, (row) => row.discipline);
+  for (const group of groups.values()) {
+    const disciplines = Map.groupBy(group, (row) => row.category.discipline);
     // Count each discipline once, even with results in several ranklists.
-    const scores = Object.values(disciplines).map((results) =>
-      Math.min(...results!.map((row) => row.percentile!)),
+    const scores = [...disciplines.values()].map((results) =>
+      Math.min(...results.map((row) => row.percentile!)),
     );
     const score = scores.reduce((sum, value) => sum + value, 0) / scores.length;
     if (
@@ -98,21 +72,19 @@ function RankBadge({ entries }: { entries: ReturnType<typeof ranklistRows> }) {
       bestScore = score;
     }
   }
-  if (rows.length === 0) return null;
+  const first = rows[0];
+  if (!first) return null;
   return (
     <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
       <span title="Ranklist">RL</span>
-      {rows[0] && <span>{formatAgeGroup(rows[0].ageGroup)}</span>}
-      {rows[0] && rows[0].competitorType !== 'COUPLE' && (
-        <span>{formatCompetitorType(rows[0].competitorType)}</span>
-      )}
+      <span>{formatAgeGroup(first.category.ageGroup)}</span>
       {rows.map((row) => (
         <span
           key={row.id}
           className="whitespace-nowrap"
-          title={`${row.competitor} · ${row.ranklist} · ${formatDateOnly(row.date)}`}
+          title={`${row.competitor?.name} · ${row.ranklist.name} · ${formatDateOnly(row.snapshot.asOfDate)}`}
         >
-          {formatDiscipline(row.discipline)} {row.placement}
+          {formatDiscipline(row.category.discipline)} {row.placement}
         </span>
       ))}
     </span>
@@ -126,19 +98,22 @@ export function FederationRankings({
 }) {
   const rows = ranklistRows(entries);
   if (rows.length === 0) return null;
-  const columns = [...new Set(rows.map((row) => row.discipline))].toSorted(
-    (a, b) => compareDisciplines(a, b) || compareText(a, b),
+  const columns = [...new Set(rows.map((row) => row.category.discipline))].toSorted(
+    compareDisciplines,
   );
-  const groups = Object.groupBy(rows, (row) =>
+  const groups = Map.groupBy(rows, ({ ranklist, category, snapshot }) =>
     [
-      row.federation,
-      row.category,
-      row.series === 'DanceSport'
+      ranklist.federation === 'csts' ? 'ČSTS' : ranklist.federation.toUpperCase(),
+      formatAgeGroup(category.ageGroupDetails ?? category.ageGroup),
+      category.competitorType !== 'COUPLE' &&
+        formatCompetitorType(category.competitorType),
+      formatClass(category.class),
+      category.series === 'DanceSport'
         ? null
-        : row.series === 'DanceForAll'
+        : category.series === 'DanceForAll'
           ? 'TPV'
-          : row.series,
-      `(${formatDateOnly(row.date)})`,
+          : category.series,
+      `(${formatDateOnly(snapshot.asOfDate)})`,
     ]
       .filter(Boolean)
       .join(' '),
@@ -154,13 +129,13 @@ export function FederationRankings({
         )),
       ]}
     >
-      {Object.entries(groups).map(([label, entries]) => (
+      {[...groups].map(([label, entries]) => (
         <tr key={label} className="border-t border-neutral-4">
           <th scope="row">{label}</th>
           {columns.map((discipline) => (
             <td key={discipline} className="text-right">
               {entries
-                ?.filter((x) => x.discipline === discipline)
+                .filter((x) => x.category.discipline === discipline)
                 .map((x) => (
                   <div key={x.id}>
                     {x.placement}/{x.total}

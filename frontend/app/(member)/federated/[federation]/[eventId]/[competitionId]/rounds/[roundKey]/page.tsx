@@ -3,7 +3,7 @@ import { DefinitionList } from '@/ui/DefinitionList';
 import { formatCategoryName, formatJudgeLabel } from '@/ui/csts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { cache } from 'react';
+import { cache, type ReactNode } from 'react';
 import { CompetitionRoundDocument } from '@/graphql/Federation';
 import { executeGraphql } from '@/lib/server/graphql';
 import { getRequestContext } from '@/lib/server/tenant';
@@ -12,7 +12,7 @@ import { formatDateOnly, scoringMethodLabels } from '@/ui/format';
 import { RoundNav } from '../../RoundNav';
 import { PageHeader } from '@/ui/PageHeader';
 import { Results } from './Results';
-import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { OfficialName } from '../../../Officials';
 
 type Props = {
   params: Promise<{
@@ -23,17 +23,25 @@ type Props = {
   }>;
 };
 
-const getRound = cache((federation: string, competitionId: string, roundKey: string) =>
-  executeGraphql(CompetitionRoundDocument, { federation, competitionId, roundKey }),
+const getRound = cache(
+  async (federation: string, eventId: string, competitionId: string, roundKey: string) => {
+    const { competition } = await executeGraphql(CompetitionRoundDocument, {
+      federation,
+      competitionId,
+      roundKey,
+    });
+    const event = competition?.event;
+    const round = competition?.round[0];
+    if (!competition || !event || event.externalId !== eventId || !round) notFound();
+    return { competition, event, round };
+  },
 );
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { auth } = await getRequestContext();
   if (!auth.isLoggedIn) return { robots: { index: false, follow: false } };
   const { federation, eventId, competitionId, roundKey } = await params;
-  const { competition } = await getRound(federation, competitionId, roundKey);
-  const round = competition?.round[0];
-  if (!competition || competition.event?.externalId !== eventId || !round) notFound();
+  const { competition, round } = await getRound(federation, eventId, competitionId, roundKey);
 
   return {
     title: [
@@ -50,10 +58,7 @@ export default async function RoundPage({ params }: Props) {
   if (!auth.isLoggedIn) return <Layout requireUser />;
 
   const { federation, eventId, competitionId, roundKey } = await params;
-  const { competition } = await getRound(federation, competitionId, roundKey);
-  const round = competition?.round[0];
-
-  if (!competition || competition.event?.externalId !== eventId || !round) notFound();
+  const { competition, event, round } = await getRound(federation, eventId, competitionId, roundKey);
 
   return (
     <Layout requireUser>
@@ -62,8 +67,8 @@ export default async function RoundPage({ params }: Props) {
         subtitle={
           <DotSeparated className="flex">
             <span className="shrink-0">{formatDateOnly(competition.startDate)}</span>
-            <span className="truncate" title={competition.event.name || eventId}>
-              {competition.event.name || eventId}
+            <span className="truncate" title={event.name || eventId}>
+              {event.name || eventId}
             </span>
           </DotSeparated>
         }
@@ -71,11 +76,11 @@ export default async function RoundPage({ params }: Props) {
         breadcrumbs={[
           { label: 'Soutěžní data', href: '/federated' },
           {
-            label: competition.event.federationByFederation?.name ?? federation,
+            label: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
           },
           {
-            label: competition.event.name || eventId,
+            label: event.name || eventId,
             href: `/federated/${federation}/${eventId}`,
           },
         ]}
@@ -102,38 +107,17 @@ export default async function RoundPage({ params }: Props) {
       />
 
       <h2 className="mt-4 text-lg font-bold">Porota</h2>
-      <dl className="text-sm tabular">
-        {round.judgesList.map((judge) => (
-          <div key={judge.personJudgeId}>
-            <dt>{formatJudgeLabel(judge)}</dt>
-            <dd>
-              {judge.personJudge ? (
-                <>
-                  <FederationLink
-                    entity="people"
-                    federation={federation}
-                    externalId={judge.personJudge.externalId}
-                    className="text-accent-11"
-                  >
-                    {judge.personJudge.canonicalName ||
-                      [judge.personJudge.firstName, judge.personJudge.lastName]
-                        .filter(Boolean)
-                        .join(' ') ||
-                      judge.personJudgeId}
-                  </FederationLink>
-                  {judge.personJudge.peopleList.length > 0 && (
-                    <span className="ml-2 text-sm">
-                      V klubu: <LocalPersonLinks people={judge.personJudge.peopleList} />
-                    </span>
-                  )}
-                </>
-              ) : (
-                judge.personJudgeId
-              )}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <DefinitionList
+        items={round.judgesList.map((judge): [string, ReactNode] => [
+          formatJudgeLabel(judge),
+          <OfficialName
+            key={judge.personJudgeId}
+            federation={federation}
+            official={{ personId: judge.personJudgeId, person: judge.personJudge }}
+            compact={false}
+          />,
+        ])}
+      />
     </Layout>
   );
 }

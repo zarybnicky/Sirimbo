@@ -187,8 +187,8 @@ function CoupleSuggestion({
                   couple: {
                     manId: candidate.man.id,
                     womanId: candidate.woman.id,
-                    since: candidate.since ?? undefined,
-                    until: candidate.until ?? undefined,
+                    since: candidate.since,
+                    until: candidate.until,
                   },
                 },
               });

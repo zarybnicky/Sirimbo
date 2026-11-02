@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  MembershipApplicationsDocument,
   type MembershipApplicationFragment,
+  MembershipApplicationsDocument,
 } from '@/graphql/MembershipApplication';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/PageHeader';
@@ -22,7 +22,7 @@ import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { ActionRow } from '@/ui/ActionRow';
-import { FederationIdWidget } from '@/ui/FederationIdWidget';
+import { FederationIdWidget } from './FederationIdWidget.tsx';
 import { badgeCls } from '@/ui/style';
 import { CompetitionSuggestions } from '@/ui/Competitions';
 import { Tab, TabMenu } from '@/ui/TabMenu';

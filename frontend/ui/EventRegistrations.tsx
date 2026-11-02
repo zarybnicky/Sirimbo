@@ -17,14 +17,16 @@ export const EventRegistrations = memo(function EventRegistrations({
 }) {
   const auth = useAuth();
   const registrations = event.attendanceRegistrations.nodes;
-  const sortedRegistrations = registrations.toSorted((a, b) =>
-    compareText(
-      a.person?.lastName ?? a.couple?.shortName ?? '',
-      b.person?.lastName ?? b.couple?.shortName ?? '',
-    ) || compareText(
-      a.person?.firstName ?? a.couple?.name ?? '',
-      b.person?.firstName ?? b.couple?.name ?? '',
-    ),
+  const sortedRegistrations = registrations.toSorted(
+    (a, b) =>
+      compareText(
+        a.person?.lastName ?? a.couple?.shortName ?? '',
+        b.person?.lastName ?? b.couple?.shortName ?? '',
+      ) ||
+      compareText(
+        a.person?.firstName ?? a.couple?.name ?? '',
+        b.person?.firstName ?? b.couple?.name ?? '',
+      ),
   );
   const rows = sortedRegistrations
     .filter((r) => !r.parentRegistrationId)
@@ -106,9 +108,7 @@ export const EventRegistrations = memo(function EventRegistrations({
           </td>
           {auth.isTrainer && (
             <td className="text-center align-middle">
-              {x.person && x.status && (
-                <EventAttendance attendance={x} canEdit={canEditAttendance} />
-              )}
+              <EventAttendance attendance={x} canEdit={canEditAttendance} />
             </td>
           )}
         </tr>

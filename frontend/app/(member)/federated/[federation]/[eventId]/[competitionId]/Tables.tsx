@@ -114,7 +114,7 @@ export function Registrations({
                       'text-accent-11 underline',
                       cancelled ? 'line-through' : '',
                     )}
-                    href={`/federated/${federation}/competitors/${competitor?.externalId}`}
+                    href={`/federated/${federation}/competitors/${competitor.externalId}`}
                     prefetch={false}
                   >
                     {competitor.name || competitor.id}

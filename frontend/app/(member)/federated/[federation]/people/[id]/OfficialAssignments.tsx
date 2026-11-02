@@ -21,7 +21,7 @@ export function OfficialAssignments({
     variables: (offset) => ({ id, offset }),
     limit: 20,
     pageKey: 'officialsPage',
-    getTotal: (data) => data?.federationEvents?.totalCount,
+    getTotal: (data) => data.federationEvents?.totalCount,
   });
 
   const events = data?.federationEvents?.nodes || [];
@@ -85,7 +85,7 @@ export function OfficialAssignments({
                                 >
                                   {formatCategoryName(comp)}
                                 </Link>
-                                {comp.startDate !== event.startDate && comp.startDate && (
+                                {comp.startDate !== event.startDate && (
                                   <span className="text-neutral-11">
                                     {' '}
                                     · {formatDateOnly(comp.startDate)}

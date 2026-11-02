@@ -22,11 +22,11 @@ export function History({ federation, id }: { federation: string; id: string }) 
       orderBy: ['START_DATE_DESC', 'ID_DESC'],
     }),
     limit: 50,
-    getTotal: (data) => data?.competitions?.totalCount,
+    getTotal: (data) => data.competitions?.totalCount,
   });
   const history = data?.competitions?.nodes || [];
 
-  const showPoints = history.some((row) => row.results?.some((x) => x.pointGain != null));
+  const showPoints = history.some((row) => row.results.some((x) => x.pointGain != null));
 
   return (
     <>
@@ -39,13 +39,11 @@ export function History({ federation, id }: { federation: string; id: string }) 
       >
         {history.map((row) => {
           const categoryName = formatCategoryName(row) || row.externalId;
-          const result = row.results?.[0];
-          const cancelled = row.entries?.[0]?.cancelled;
+          const result = row.results[0];
+          const cancelled = row.entries[0]?.cancelled;
           return (
             <tr key={row.id} className="border-t border-neutral-4">
-              <td className="whitespace-nowrap">
-                {row.startDate && formatDateOnly(row.startDate)}
-              </td>
+              <td className="whitespace-nowrap">{formatDateOnly(row.startDate)}</td>
               <td>
                 {row.event && (
                   <Link
@@ -81,11 +79,15 @@ export function History({ federation, id }: { federation: string; id: string }) 
                 </div>
               </th>
               <td className="whitespace-nowrap">
-                {result?.ranking}
-                {result?.rankingTo && result?.rankingTo !== result?.ranking
-                  ? `–${result?.rankingTo}`
-                  : ''}
-                {!!row.participantsTotal && `/${row.participantsTotal}`}
+                {result?.ranking && (
+                  <>
+                    {result.ranking}
+                    {result.rankingTo && result.rankingTo !== result.ranking
+                      ? `–${result.rankingTo}.`
+                      : '.'}
+                    {!!row.participantsTotal && `/${row.participantsTotal}`}
+                  </>
+                )}
               </td>
               {showPoints && (
                 <td className="whitespace-nowrap">

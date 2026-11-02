@@ -268,8 +268,8 @@ export function useCalendarData({
     const competitions: CalendarCompetitionEvent[] = [];
     const clubCompetitions: CalendarCompetitionEvent[] = [];
     for (const [groups, events] of [
-      [groupCompetitionEvents(data?.competitions?.nodes ?? [], officials), competitions],
-      [groupCompetitionEvents(data?.clubCompetitions?.nodes ?? []), clubCompetitions],
+      [groupCompetitionEvents(data?.competitions?.nodes, officials), competitions],
+      [groupCompetitionEvents(data?.clubCompetitions?.nodes), clubCompetitions],
     ] as const) {
       for (const { key, name, date, entries, officials } of groups) {
         events.push({

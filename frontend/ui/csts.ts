@@ -448,14 +448,17 @@ export function getBestCstsProgress(
   discipline: string,
 ) {
   return (progressList ?? [])
-    .filter((x) => x.competitor?.federation === 'csts')
-    .filter((x) => !hiddenCategoryClasses.has(x?.category?.class ?? ''))
-    .filter((x) => x?.category?.discipline === discipline)
+    .filter(
+      (x) =>
+        x.competitor?.federation === 'csts' &&
+        !hiddenCategoryClasses.has(x.category?.class ?? '') &&
+        x.category?.discipline === discipline,
+    )
     .reduce<FederationCategoryProgressFragment | null>((best, x) => {
       const bestRank = best
-        ? classOrder.indexOf(formatClass(best?.category?.class) ?? '')
+        ? classOrder.indexOf(formatClass(best.category?.class) ?? '')
         : -1;
-      const progressRank = classOrder.indexOf(formatClass(x?.category?.class) ?? '');
+      const progressRank = classOrder.indexOf(formatClass(x.category?.class) ?? '');
       return progressRank > bestRank ? x : best;
     }, null);
 }

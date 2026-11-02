@@ -57,12 +57,12 @@ function entryLabel(entry: CompetitionEntry, competition: boolean) {
 }
 
 export function groupCompetitionEvents(
-  competitions: readonly Competition[],
+  competitions: readonly Competition[] = [],
   officials: readonly CompetitionOfficialAssignment[] = [],
 ) {
   const entries = competitions.flatMap((comp) => {
     const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [...(comp.entries ?? []), ...(comp.results ?? [])]) {
+    for (const entry of [...comp.entries, ...comp.results]) {
       entries.set(entry.competitorId, {
         cancelled: false,
         ...entries.get(entry.competitorId),
@@ -87,14 +87,12 @@ export function groupCompetitionEvents(
               .map((x) => [`${x.role}:${x.person?.id}`, x] as const),
           ).values(),
         ];
+        const event = entries[0]?.competition.event ?? officials[0]?.event;
         return {
           key: `${date ?? ''}:${eventId ?? ''}`,
           date,
-          name: entries[0]?.competition.event?.name ?? officials[0]?.event.name ?? '',
-          location:
-            (entries[0]?.competition.event?.location ||
-              entries[0]?.competition.event?.city) ??
-            (officials[0]?.event.location || officials[0]?.event.city || ''),
+          name: event?.name ?? '',
+          location: event?.location || event?.city || '',
           entries,
           officials,
         };
@@ -131,8 +129,8 @@ export function CompetitionEventContent({
   const groups = [...(byCompetition ? competitions : competitors)].toSorted(
     ([, a], [, b]) =>
       (byCompetition
-        ? (a[0]?.competition.checkInEnd ?? '').localeCompare(
-            b[0]?.competition.checkInEnd ?? '',
+        ? (a[0]!.competition.checkInEnd ?? '').localeCompare(
+            b[0]!.competition.checkInEnd ?? '',
           )
         : 0) ||
       compareText(entryLabel(a[0]!, byCompetition), entryLabel(b[0]!, byCompetition)),
@@ -278,7 +276,7 @@ function CompetitionGroupContent({
   entries: readonly CompetitionEntry[];
   byCompetition: boolean;
 }) {
-  const checkInEnd = byCompetition && entries[0]?.competition.checkInEnd;
+  const checkInEnd = byCompetition && entries[0]!.competition.checkInEnd;
   const showLeadingColumn =
     !byCompetition || entries.some((x) => x.ranking !== undefined);
   return (
@@ -307,10 +305,7 @@ function CompetitionGroupContent({
       {entries
         .toSorted(
           (a, b) =>
-            Number(a.ranking === undefined) - Number(b.ranking === undefined) ||
             (a.ranking ?? Infinity) - (b.ranking ?? Infinity) ||
-            Number(b.finalGain ?? 0) - Number(a.finalGain ?? 0) ||
-            Number(b.pointGain ?? 0) - Number(a.pointGain ?? 0) ||
             (a.ranking === undefined
               ? (a.competition.checkInEnd ?? '24:00').localeCompare(
                   b.competition.checkInEnd ?? '24:00',
@@ -319,7 +314,8 @@ function CompetitionGroupContent({
             compareText(entryLabel(a, !byCompetition), entryLabel(b, !byCompetition)),
         )
         .map((entry) => {
-          const result = entry.ranking !== undefined ? entry : null;
+          const ranking = entry.ranking;
+          const hasResult = ranking !== undefined;
           const status = formatResultStatus(entry.completionStatus);
           return (
             <div
@@ -328,29 +324,29 @@ function CompetitionGroupContent({
             >
               {showLeadingColumn && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
-                  {result
-                    ? result.ranking != null && (
-                        <>
-                          <span className={result.ranking <= 3 ? 'text-accent-11' : ''}>
-                            {result.ranking}
-                            {result.rankingTo && result.rankingTo !== result.ranking
-                              ? `–${result.rankingTo}`
-                              : ''}
-                            .
-                          </span>
-                          {result.competition.participantsTotal != null &&
-                            ` z ${result.competition.participantsTotal}`}
-                        </>
-                      )
-                    : !byCompetition && entry.competition.checkInEnd?.slice(0, 5)}
+                  {hasResult ? (
+                    <>
+                      <span className={ranking <= 3 ? 'text-accent-11' : ''}>
+                        {ranking}
+                        {entry.rankingTo && entry.rankingTo !== ranking
+                          ? `–${entry.rankingTo}`
+                          : ''}
+                        .
+                      </span>
+                      {entry.competition.participantsTotal != null &&
+                        ` z ${entry.competition.participantsTotal}`}
+                    </>
+                  ) : (
+                    !byCompetition && entry.competition.checkInEnd?.slice(0, 5)
+                  )}
                 </div>
               )}
               <div className="min-w-0 font-semibold text-neutral-12">
                 <CompetitionLabel entry={entry} competition={!byCompetition} />
               </div>
-              {result && (
+              {hasResult && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
-                  {formatPointsAndFinals(result, 'gain')}
+                  {formatPointsAndFinals(entry, 'gain')}
                 </div>
               )}
               {status && <div className="col-span-full text-neutral-11">{status}</div>}
@@ -404,7 +400,7 @@ export function CompetitionHistory({
     }),
     limit: 50,
     pageKey: 'competitionPage',
-    getTotal: (data) => data?.competitions?.totalCount,
+    getTotal: (data) => data.competitions?.totalCount,
   });
 
   return (
@@ -450,7 +446,7 @@ export function CompetitionSuggestions({
     }),
     limit: 50,
     pageKey: 'suggestionPage',
-    getTotal: (data) => data?.federationEvents?.totalCount,
+    getTotal: (data) => data.federationEvents?.totalCount,
   });
   const events = data?.federationEvents?.nodes ?? [];
   const [{ data: matchData, fetching: matchFetching, error: matchError }] = useQuery({
@@ -465,22 +461,14 @@ export function CompetitionSuggestions({
   });
 
   const matches = (matchData?.competitionSuggestionsList ?? []).flatMap((row) => {
-    if (!row.competition || (!row.couple && !row.person)) return [];
+    const competitor = row.couple ?? row.person;
+    if (!row.competition || !competitor) return [];
     return [
       {
         competition: row.competition,
-        matchStatus: row.status,
-        competitor: row.couple
-          ? {
-              key: `couple:${row.couple.id}`,
-              name: row.couple.name,
-              href: `/pary/${row.couple.id}`,
-            }
-          : {
-              key: `person:${row.person!.id}`,
-              name: row.person!.name,
-              href: `/clenove/${row.person!.id}`,
-            },
+        status: row.status,
+        name: competitor.name,
+        href: `/${row.couple ? 'pary' : 'clenove'}/${competitor.id}`,
       },
     ];
   });
@@ -542,7 +530,7 @@ export function CompetitionSuggestions({
                 const matches = byEvent.get(event.id) ?? [];
                 return (
                   <DotSeparated className="text-xs text-neutral-11">
-                    {formatCount(new Set(matches.map((x) => x.competitor.key)).size, {
+                    {formatCount(new Set(matches.map((x) => x.href)).size, {
                       one: 'soutěžící',
                       few: 'soutěžící',
                       other: 'soutěžících',
@@ -559,19 +547,16 @@ export function CompetitionSuggestions({
           )}
           {events.map((event) => {
             const eventMatches = byEvent.get(event.id) ?? [];
-            const competitors = [
-              ...Map.groupBy(eventMatches, (x) => x.competitor.key).values(),
-            ].map((matches) => ({
-              ...matches[0]!.competitor,
-              status: matches.some((x) => x.matchStatus === 'registered')
-                ? 'registered'
-                : matches[0]!.matchStatus,
-            }));
-            const competitions = [
-              ...Map.groupBy(eventMatches, (x) => x.competition.id).values(),
-            ].toSorted((a, b) =>
-              compareCategories(a[0]!.competition.category, b[0]!.competition.category),
-            );
+            const competitors = Map.groupBy(eventMatches, (x) => x.href)
+              .values()
+              .map((xs) => xs.find((x) => x.status === 'registered') ?? xs[0]!)
+              .toArray();
+            const competitions = Map.groupBy(eventMatches, (x) => x.competition.id)
+              .values()
+              .toArray()
+              .toSorted((a, b) =>
+                compareCategories(a[0]!.competition.category, b[0]!.competition.category),
+              );
             return (
               <Collapsible.Root key={event.id} asChild>
                 <article className={cardCls({ className: 'rounded-lg p-3' })}>
@@ -588,7 +573,7 @@ export function CompetitionSuggestions({
 
                       <DotSeparated className="flex text-sm text-neutral-11">
                         {[
-                          event.startDate && formatDateOnly(event.startDate),
+                          formatDateOnly(event.startDate),
                           event.endDate &&
                             event.endDate !== event.startDate &&
                             formatDateOnly(event.endDate),
@@ -632,12 +617,7 @@ export function CompetitionSuggestions({
                             >
                               {formatCategoryName(entry.competition)}
                             </CompetitionLink>
-                            <EligibleCompetitors
-                              competitors={matches.map((x) => ({
-                                ...x.competitor,
-                                status: x.matchStatus,
-                              }))}
-                            />
+                            <EligibleCompetitors competitors={matches} />
                           </li>
                         );
                       })}
@@ -659,7 +639,7 @@ export function CompetitionSuggestions({
 function EligibleCompetitors({
   competitors,
 }: {
-  competitors: { key: string; name: string; href: string; status?: string | null }[];
+  competitors: { name: string; href: string; status: string | null }[];
 }) {
   if (competitors.length === 0) return null;
   const registered = competitors.filter((x) => x.status === 'registered').length;
@@ -695,7 +675,7 @@ function EligibleCompetitors({
             .toSorted((a, b) => compareText(a.name, b.name))
             .map((competitor) => (
               <li
-                key={competitor.key}
+                key={competitor.href}
                 className="flex items-baseline justify-between gap-3"
               >
                 <Link

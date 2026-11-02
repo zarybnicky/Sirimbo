@@ -115,8 +115,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
     entries.sort(
       (a, b) =>
         (view === 'gallery'
-          ? b.competition.startDate.localeCompare(a.competition.startDate) ||
-            compareCategories(a.competition.category, b.competition.category)
+          ? b.competition.startDate.localeCompare(a.competition.startDate)
           : 0) ||
         compareCategories(a.competition.category, b.competition.category) ||
         (a.rankingTo ?? a.ranking) - (b.rankingTo ?? b.ranking) ||

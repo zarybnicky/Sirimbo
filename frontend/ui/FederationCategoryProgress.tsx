@@ -41,8 +41,7 @@ export function FederationCategoryProgress({
         .toSorted(
           (a, b) =>
             compareText(a.federation, b.federation) ||
-            compareCategories(a.category, b.category) ||
-            a.competitorId.localeCompare(b.competitorId),
+            compareCategories(a.category, b.category),
         )
         .map((progress) => (
           <tr

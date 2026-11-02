@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { ResultHighlightFragment } from '@/graphql/Federation';
-import { compareNaturalText } from '@/lib/compare';
 import { Checkbox } from '@/ui/fields/checkbox';
 import { formatCategoryName } from '@/ui/csts';
 import { formatDateOnly } from '@/ui/format';
@@ -20,12 +19,7 @@ export function ResultHighlights({
   const [groupByCompetitor, setGroupByCompetitor] = useState(false);
   const entries = results
     .filter((result): result is Entry => result.competition != null)
-    .toSorted(
-      (a, b) =>
-        b.competition.startDate.localeCompare(a.competition.startDate) ||
-        compareNaturalText(b.competitionId, a.competitionId) ||
-        compareNaturalText(a.competitorId, b.competitorId),
-    );
+    .toSorted((a, b) => b.competition.startDate.localeCompare(a.competition.startDate));
   if (entries.length === 0) return null;
   const competitors = Map.groupBy(entries, (x) => x.competitorId);
   return (
@@ -101,8 +95,7 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
         a.order - b.order ||
         (a.rankingTo ?? a.ranking) - (b.rankingTo ?? b.ranking) ||
         a.ranking - b.ranking ||
-        b.competition.startDate.localeCompare(a.competition.startDate) ||
-        a.key.localeCompare(b.key),
+        b.competition.startDate.localeCompare(a.competition.startDate),
     );
 
   return (
@@ -111,12 +104,11 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
         <li key={key}>
           <details>
             <summary className="cursor-pointer">
-              <span className="font-medium tabular-nums">
-                {results.length}× {label}
-              </span>
+              <span className="font-medium tabular-nums">{label}</span>
               {' — '}
               {formatCategoryName(competition) || '?'}
               {' ('}
+              {results.length > 1 && `${results.length}×, `}
               {[...new Set(results.map((x) => x.competition.startDate.slice(0, 4)))]
                 .toSorted()
                 .join(', ')}

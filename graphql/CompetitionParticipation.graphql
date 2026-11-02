@@ -47,7 +47,6 @@ query Competitions(
   $first: Int! = 50
   $offset: Int! = 0
   $orderBy: [CompetitionsOrderBy!] = [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  $withDetails: Boolean! = true
 ) {
   competitions(
     first: $first
@@ -55,22 +54,15 @@ query Competitions(
     condition: { competitor: $competitor, competitorId: $competitorId, date: $date }
     orderBy: $orderBy
   ) {
-    totalCount @include(if: $withDetails)
+    totalCount
     nodes {
-      id
-      event { id location city }
-      ... @include(if: $withDetails) {
-        ...Competition
-        entries: entriesList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
-          ...CompetitionEntry
-        }
-        results: resultsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
-          ...CompetitionResult
-        }
+      ...Competition
+      entries: entriesList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
+        ...CompetitionEntry
       }
-    }
-    ... @skip(if: $withDetails) {
-      pageInfo { hasNextPage }
+      results: resultsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
+        ...CompetitionResult
+      }
     }
   }
 }
@@ -135,8 +127,6 @@ query CompetitionSuggestions(
       federation
       externalId
       eventId
-      startDate
-      checkInEnd
       competitionType
       category { ...CompetitionCategory }
     }

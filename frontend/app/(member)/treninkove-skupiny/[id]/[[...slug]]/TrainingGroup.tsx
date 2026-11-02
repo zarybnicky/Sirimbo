@@ -210,7 +210,9 @@ const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
   ]
     .filter(
       (code) =>
-        !['Under_8', 'Juvenile_I', 'Juvenile_II'].includes(code) || ages.has(code),
+        ages.has(code) ||
+        (!['Under_8', 'Juvenile_I', 'Juvenile_II'].includes(code) &&
+          !code.startsWith('Senior_')),
     )
     .toSorted(
       (a, b) =>

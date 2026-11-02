@@ -1,5 +1,3 @@
-'use client';
-
 import type { ReactNode } from 'react';
 import { ArrowDown, ArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/cn';
@@ -18,11 +16,10 @@ export function SortButton<Column extends string>({
   defaultDescending?: boolean;
   children: ReactNode;
 }) {
-  const active = value.column === column;
   return (
     <button
       type="button"
-      aria-pressed={active}
+      aria-pressed={value.column === column}
       className={buttonCls({
         display: 'none',
         variant: 'none',
@@ -32,12 +29,12 @@ export function SortButton<Column extends string>({
       onClick={() =>
         onChange({
           column,
-          descending: active ? !value.descending : defaultDescending,
+          descending: value.column === column ? !value.descending : defaultDescending,
         })
       }
     >
       {children}
-      {active ? (
+      {value.column === column ? (
         <>
           <ArrowDown
             className={cn('size-4', !value.descending && 'rotate-180')}

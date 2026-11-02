@@ -26,7 +26,7 @@ export function Competitions({
     }),
     limit: 100,
     getTotal: (data) =>
-      data?.federationEventByFederationAndExternalId?.competitions?.totalCount,
+      data.federationEventByFederationAndExternalId?.competitions.totalCount,
   });
   const competitions =
     data?.federationEventByFederationAndExternalId?.competitions.nodes ?? [];

@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
-import { compareNaturalText, compareText } from '@/lib/compare';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
@@ -142,22 +141,20 @@ export function Browser({ federation }: { federation: string }) {
   return (
     <TabMenu
       selected={state.filters.view}
-      onSelect={(view) => {
-        const selected = views.find((item) => item === view);
-        if (selected)
-          void state.setFilters(
-            {
-              view: selected,
-              search: null,
-              sort: null,
-              descending: null,
-              ...clearedCompetitorFilters,
-              gender: null,
-              nationality: null,
-            },
-            { history: 'push' },
-          );
-      }}
+      onSelect={(view) =>
+        void state.setFilters(
+          {
+            view: view as typeof state.filters.view,
+            search: null,
+            sort: null,
+            descending: null,
+            ...clearedCompetitorFilters,
+            gender: null,
+            nationality: null,
+          },
+          { history: 'push' },
+        )
+      }
     >
       <Tab id="events" title="Soutěže">
         <Events {...props} />
@@ -389,11 +386,8 @@ function People(props: BrowserProps) {
               if (a === 'unknown' || b === 'unknown')
                 return Number(a === 'unknown') - Number(b === 'unknown');
               if (key === 'ageGroup')
-                return (
-                  compareAgeRanges(ageRanges.get(a) ?? null, ageRanges.get(b) ?? null) ||
-                  compareNaturalText(a, b)
-                );
-              return (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareText(a, b);
+                return compareAgeRanges(ageRanges.get(a), ageRanges.get(b));
+              return (counts.get(b) ?? 0) - (counts.get(a) ?? 0);
             },
           );
           return (
@@ -549,22 +543,14 @@ function Competitors(props: BrowserProps) {
           );
           const values = [...new Set([...counts.keys(), ...filters[key]])].toSorted(
             (a, b) => {
-              if (key === 'ageGroup') {
-                return (
-                  compareAgeGroups(ageGroupsByCode.get(a), ageGroupsByCode.get(b)) ||
-                  compareNaturalText(a, b)
-                );
-              }
-              if (key === 'class') {
-                return compareClasses(a, b) || compareNaturalText(a, b);
-              }
+              if (key === 'ageGroup')
+                return compareAgeGroups(ageGroupsByCode.get(a), ageGroupsByCode.get(b));
+              if (key === 'class') return compareClasses(a, b);
               if (key === 'discipline') {
                 const discipline = compareDisciplines(a, b);
                 if (discipline) return discipline;
               }
-              return (
-                (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || compareNaturalText(a, b)
-              );
+              return (counts.get(b) ?? 0) - (counts.get(a) ?? 0);
             },
           );
           if (values.length === 0) return null;
@@ -617,21 +603,18 @@ function Competitors(props: BrowserProps) {
             />
           </tbody>
           {competitors.map((row) => {
-            const progressByAge = Object.groupBy(
-              row.categoryProgressesList.toSorted((a, b) =>
-                compareCategories(a.category, b.category),
+            const ageGroups = [
+              ...Map.groupBy(
+                row.categoryProgressesList.toSorted((a, b) =>
+                  compareCategories(a.category, b.category),
+                ),
+                (p) => p.category?.ageGroup ?? '',
               ),
-              (p) => p.category?.ageGroup ?? '',
-            );
-            const ageGroups = Object.keys(progressByAge).toSorted((a, b) => {
-              const left = progressByAge[a]?.[0]?.category?.ageGroupDetails;
-              const right = progressByAge[b]?.[0]?.category?.ageGroupDetails;
-              return compareAgeGroups(left, right) || compareNaturalText(a, b);
-            });
-            if (ageGroups.length === 0) ageGroups.push('');
+            ];
+            if (ageGroups.length === 0) ageGroups.push(['', []]);
             return (
               <tbody key={row.id} className="border-t border-neutral-4">
-                {ageGroups.map((ageGroup, index) => (
+                {ageGroups.map(([ageGroup, progress], index) => (
                   <tr key={ageGroup}>
                     {index === 0 && (
                       <th scope="rowgroup" rowSpan={ageGroups.length}>
@@ -649,8 +632,7 @@ function Competitors(props: BrowserProps) {
                     )}
                     <td className="whitespace-nowrap">
                       {formatAgeGroup(
-                        progressByAge[ageGroup]?.[0]?.category?.ageGroupDetails ??
-                          ageGroup,
+                        progress[0]?.category?.ageGroupDetails ?? ageGroup,
                       ) || '–'}
                     </td>
 
@@ -665,7 +647,7 @@ function Competitors(props: BrowserProps) {
 
                     {disciplines.map((x) => (
                       <td key={x} className="whitespace-nowrap">
-                        {(progressByAge[ageGroup] ?? [])
+                        {progress
                           .filter((p) => p.category?.discipline === x)
                           .map((p) => (
                             <div key={p.categoryId}>
