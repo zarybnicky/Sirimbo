@@ -1,8 +1,6 @@
-'use client';
-
 import { useEffect } from 'react';
 import { parseAsInteger, useQueryState } from 'nuqs';
-import { useQuery, type AnyVariables, type TypedDocumentNode } from 'urql';
+import { type AnyVariables, type TypedDocumentNode, useQuery } from 'urql';
 
 export function usePaginatedQuery<Data, Variables extends AnyVariables>({
   query,

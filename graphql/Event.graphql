@@ -464,6 +464,7 @@ query CalendarData(
   $trainerIds: [BigInt]
   $participantIds: [BigInt!]
   $participant: CompetitionParticipantCondition!
+  $cohortId: BigInt
   $membership: PersonMembershipCondition! = { state: CURRENT }
   $onlyMine: Boolean
   $relevantOnly: Boolean
@@ -596,6 +597,7 @@ query CalendarData(
     eventFacetsList(
       startRange: $start, endRange: $end, onlyTypes: $types,
       trainerIds: $trainerIds, participantIds: $participantIds,
+      cohortId: $cohortId,
       onlyMine: $onlyMine, relevantOnly: $relevantOnly,
       parentId: $parentId, locationIds: $locationIds,
       canRegister: $canRegister
@@ -606,6 +608,9 @@ query CalendarData(
     }
     tenant: getCurrentTenant @_required {
       id
+      cohortsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
+        id name
+      }
       locationsList(orderBy: [ORDERING_ASC, NAME_ASC, PRIMARY_KEY_ASC]) {
         ...LocationOption
       }

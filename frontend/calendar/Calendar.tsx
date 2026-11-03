@@ -99,6 +99,7 @@ export function Calendar({
       location: parseAsArrayOf(parseAsString).withDefault([]),
       trainers: parseAsArrayOf(parseAsString).withDefault([]),
       participants: parseAsArrayOf(parseAsString).withDefault([]),
+      cohort: parseAsString,
       types: parseAsArrayOf(parseAsStringLiteral(calendarTypes)).withDefault([
         ...calendarTypes,
       ]),
@@ -130,6 +131,7 @@ export function Calendar({
         ...filters,
         participants: {
           personIds: filters.participants.length > 0 ? filters.participants : undefined,
+          cohortId: filters.cohort,
           onlyMine: filters.my,
         },
         relevantOnly: !parentId && filters.location.length === 0,
@@ -294,6 +296,12 @@ export function Calendar({
               onChange={(participants) => setFilters({ participants })}
             />
           )}
+          <FacetFilter
+            label="Skupina"
+            value={filters.cohort ? [filters.cohort] : []}
+            options={filterOptions.cohorts}
+            onChange={(cohorts) => setFilters({ cohort: cohorts.at(-1) ?? null })}
+          />
           <FacetFilter
             label="Typy"
             value={filters.types}

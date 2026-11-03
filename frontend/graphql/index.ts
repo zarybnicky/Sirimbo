@@ -10155,6 +10155,7 @@ export type QueryEventArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryEventFacetsListArgs = {
   canRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;

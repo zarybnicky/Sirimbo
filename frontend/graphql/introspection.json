@@ -26083,6 +26083,13 @@
                 }
               },
               {
+                "name": "cohortId",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "endRange",
                 "type": {
                   "kind": "SCALAR",

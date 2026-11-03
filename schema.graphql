@@ -12622,6 +12622,7 @@ type Query {
   event(id: BigInt!): Event
   eventFacetsList(
     canRegister: Boolean
+    cohortId: BigInt
     endRange: Datetime
 
     """Only read the first `n` values of the set."""

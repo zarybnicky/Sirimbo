@@ -103,6 +103,7 @@ export function useCalendarData({
       trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
       participant: { ...filters.participants, onlyMine },
       participantIds: filters.participants.personIds,
+      cohortId: filters.participants.cohortId,
       membership: {
         state: !filters.participants.personIds && !onlyMine ? 'CURRENT' : undefined,
         inCohorts: filters.participants.cohortId
@@ -190,6 +191,9 @@ export function useCalendarData({
                 Number(filters.participants.personIds?.includes(a.id) ?? false),
             )
             .map(({ id, name }) => option('participant', id, name)),
+          cohorts: (data?.tenant?.cohortsList ?? [])
+            .filter(({ id }) => !!counts.cohort?.[id] || filters.participants.cohortId === id)
+            .map(({ id, name }) => option('cohort', id, name)),
           locations: (data?.tenant?.locationsList ?? [])
             .filter(
               ({ id, showInLists }) =>
@@ -197,7 +201,7 @@ export function useCalendarData({
             )
             .map(({ id, name }) => option('location', id, name)),
         }
-      : { types: [], trainers: [], participants: [], locations: [] };
+      : { types: [], trainers: [], participants: [], cohorts: [], locations: [] };
 
     const calendarEvents: CalendarEvent[] = [];
     const resources = new Map<string, Resource>();
