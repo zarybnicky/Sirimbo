@@ -6,7 +6,8 @@ CREATE TABLE public.tenant (
     cz_dic text DEFAULT ''::text NOT NULL,
     address public.address_domain,
     description text DEFAULT ''::text NOT NULL,
-    bank_account text DEFAULT ''::text NOT NULL
+    bank_account text DEFAULT ''::text NOT NULL,
+    csts_id integer
 );
 
 COMMENT ON TABLE public.tenant IS '@behavior +list -connection -insert -delete -singularRelation:resource:single -query:resource:connection';
@@ -19,6 +20,7 @@ GRANT UPDATE(cz_dic) ON TABLE public.tenant TO administrator;
 GRANT UPDATE(address) ON TABLE public.tenant TO administrator;
 GRANT UPDATE(description) ON TABLE public.tenant TO administrator;
 GRANT UPDATE(bank_account) ON TABLE public.tenant TO administrator;
+GRANT UPDATE(csts_id) ON TABLE public.tenant TO administrator;
 ALTER TABLE public.tenant ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE ONLY public.tenant

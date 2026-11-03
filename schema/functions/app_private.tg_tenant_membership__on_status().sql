@@ -3,11 +3,11 @@ CREATE FUNCTION app_private.tg_tenant_membership__on_status() RETURNS trigger
     AS $$
 begin
   if new.status = 'expired' and not exists (
-    select from tenant_membership
-    where id <> new.id
-      and tenant_id = new.tenant_id
-      and person_id = new.person_id
-      and active_range @> new.until
+    select from tenant_membership where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
+    union all
+    select from tenant_trainer where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
+    union all
+    select from tenant_administrator where tenant_id = new.tenant_id and person_id = new.person_id and active_range @> new.until
   ) then
     update cohort_membership
     set status = 'expired', until = new.until

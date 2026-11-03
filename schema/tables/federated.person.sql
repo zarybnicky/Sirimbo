@@ -15,12 +15,14 @@ CREATE TABLE federated.person (
     search_name text GENERATED ALWAYS AS (app_private.normalize_name(COALESCE(canonical_name, public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED,
     age_group_code text,
     birth_year integer,
-    national_reference text
+    national_reference text,
+    club_id bigint
 );
 
 COMMENT ON TABLE federated.person IS '@name federation_person
 @behavior -insert -update -delete -list
-@ref people via:public.person_federation_link;public.person behavior:"+list -connection"';
+@ref people via:public.person_federation_link;public.person behavior:"+list -connection"
+@ref competitionResults via:federated.competitor_component;federated.competitor;federated.competition_result behavior:"+list -connection"';
 COMMENT ON COLUMN federated.person.age_group IS '@behavior -*';
 COMMENT ON COLUMN federated.person.age_group_code IS '@name ageGroup
 @behavior -insert -update';
@@ -35,6 +37,8 @@ ALTER TABLE ONLY federated.person
 ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
 ALTER TABLE ONLY federated.person
+    ADD CONSTRAINT person_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
+ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
 
 CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.person FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
@@ -43,4 +47,5 @@ CREATE INDEX federated_person_csts_search_name_trgm_idx ON federated.person USIN
 CREATE INDEX federated_person_wdsf_national_reference_idx ON federated.person USING btree (national_reference) WHERE (federation = 'wdsf'::text);
 CREATE INDEX idx_person_search_name_trgm ON federated.person USING gin (search_name public.gin_trgm_ops);
 CREATE INDEX person_age_group_code_idx ON federated.person USING btree (age_group_code);
+CREATE INDEX person_club_id_idx ON federated.person USING btree (club_id);
 CREATE INDEX person_external_id_text_idx ON federated.person USING btree (((external_id)::text));

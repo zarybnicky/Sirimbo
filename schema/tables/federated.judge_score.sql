@@ -18,6 +18,6 @@ GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_pkey PRIMARY KEY (round_id, dance_order, judge_person_id, competitor_id, component);
 ALTER TABLE ONLY federated.judge_score
-    ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE;
+    ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE DEFERRABLE;
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON UPDATE CASCADE ON DELETE CASCADE;

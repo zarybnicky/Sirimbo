@@ -45,6 +45,7 @@ CREATE POLICY system_admin_all ON public.tenant_trainer TO system_admin USING (t
 
 CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+CREATE TRIGGER _500_on_status AFTER UPDATE ON public.tenant_trainer FOR EACH ROW WHEN ((old.status IS DISTINCT FROM new.status)) EXECUTE FUNCTION app_private.tg_tenant_membership__on_status();
 CREATE TRIGGER _900_security_event AFTER INSERT OR DELETE OR UPDATE OF status ON public.tenant_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_security_event__range('trainer_granted', 'trainer_revoked');
 
 CREATE INDEX tenant_trainer_active_by_person ON public.tenant_trainer USING btree (person_id) INCLUDE (tenant_id) WHERE (status = 'active'::public.relationship_status);

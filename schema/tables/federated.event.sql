@@ -24,6 +24,7 @@ CREATE TABLE federated.event (
     venue_location_source text,
     venue_location_ref text,
     status federated.event_status DEFAULT 'unknown'::federated.event_status NOT NULL,
+    extra_id text,
     CONSTRAINT event_check CHECK (((end_date IS NULL) OR (end_date >= start_date)))
 );
 

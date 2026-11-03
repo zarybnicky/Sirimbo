@@ -11,10 +11,16 @@ CREATE TABLE public.payment (
     due_at timestamp with time zone,
     paid_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    kind public.payment_kind GENERATED ALWAYS AS (
+CASE
+    WHEN (event_id IS NOT NULL) THEN 'event'::public.payment_kind
+    WHEN (cohort_subscription_id IS NOT NULL) THEN 'cohort-subscription'::public.payment_kind
+    ELSE 'other'::public.payment_kind
+END) STORED
 );
 
-COMMENT ON TABLE public.payment IS '@behavior +list -connection -insert -query:resource:list -query:resource:connection';
+COMMENT ON TABLE public.payment IS '@behavior +list +connection -insert -query:resource:list +query:resource:connection';
 
 GRANT ALL ON TABLE public.payment TO anonymous;
 ALTER TABLE public.payment ENABLE ROW LEVEL SECURITY;

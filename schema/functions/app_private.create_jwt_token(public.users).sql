@@ -3,7 +3,7 @@ CREATE FUNCTION app_private.create_jwt_token(u public.users) RETURNS public.jwt_
     AS $$
 with
   person_ids as (
-    select distinct up.person_id from user_proxy up where up.user_id = u.id
+    select distinct up.person_id from user_proxy up where up.user_id = u.id and up.status = 'active'
   ),
   tenant_memberships as (
     select distinct tm.tenant_id from tenant_membership tm join person_ids p on p.person_id = tm.person_id where tm.status = 'active'

@@ -1,22 +1,20 @@
 CREATE FUNCTION public.event_approx_price(v_instance public.event) RETURNS TABLE(amount numeric, currency text)
     LANGUAGE sql STABLE
     AS $$
-  with stats as materialized (
+  with stats as (
     select
-      count(*) as num_participants,
+      (v_instance.stats).total as num_participants,
       extract(epoch from (v_instance.until - v_instance.since)) / 60.0 as duration
-    from event_registration registration
-    where
-      v_instance.type = 'lesson'
-      and registration.event_id = v_instance.id
-      and registration.person_id is not null
-      and registration.registration_status = 'active'
+    where v_instance.type = 'lesson'
   )
   select
     sum(tt.member_price_45min_amount * s.duration / 45 / s.num_participants) as amount,
     tt.currency as currency
   from stats s
-  join lateral event_trainers(v_instance) tt on true
+  join event_trainer assignment on assignment.event_id = v_instance.id
+  join tenant_trainer tt on tt.tenant_id = assignment.tenant_id
+    and tt.person_id = assignment.person_id
+    and tt.active_range @> v_instance.since
   where
     s.num_participants > 0
     and s.duration > 0

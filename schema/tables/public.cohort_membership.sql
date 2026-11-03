@@ -33,6 +33,7 @@ CREATE POLICY admin_all ON public.cohort_membership TO administrator USING (true
 CREATE POLICY my_tenant ON public.cohort_membership AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY view_all ON public.cohort_membership FOR SELECT USING (true);
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _500_on_status AFTER INSERT OR DELETE OR UPDATE OF status, cohort_id, person_id, since, until ON public.cohort_membership FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
 

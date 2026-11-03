@@ -26,3 +26,4 @@ CREATE POLICY member_view ON public.payment_debtor FOR SELECT TO member USING ((
 CREATE INDEX payment_debtor_payment_id_idx ON public.payment_debtor USING btree (payment_id);
 CREATE INDEX payment_debtor_person_id_idx ON public.payment_debtor USING btree (person_id);
 CREATE INDEX payment_debtor_tenant_id_idx ON public.payment_debtor USING btree (tenant_id);
+CREATE INDEX payment_debtor_tenant_person_payment_idx ON public.payment_debtor USING btree (tenant_id, person_id, payment_id);

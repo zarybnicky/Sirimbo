@@ -13,7 +13,7 @@ CREATE TABLE public.couple (
     CONSTRAINT couple_until_gt_since CHECK ((until > since))
 );
 
-COMMENT ON TABLE public.couple IS '@behavior +list -connection -query:resource:list -query:resource:connection
+COMMENT ON TABLE public.couple IS '@behavior +list -connection +query:resource:list -query:resource:connection
 @ref federationCompetitors via:public.couple_federation_link;federated.competitor
 @ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
 COMMENT ON COLUMN public.couple.legacy_pary_id IS '@behavior -*';
@@ -39,6 +39,7 @@ CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((
   WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.parent_registration_id IS NULL) AND (event_registration.couple_id IS NOT NULL) AND (event_registration.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[]))))));
 CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids)) OR (woman_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids))));
 
+CREATE TRIGGER _050_relationship_status BEFORE INSERT OR UPDATE OF since, until ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_relationship__status();
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
 CREATE INDEX couple_image_idx ON public.couple USING btree (image_id) WHERE (image_id IS NOT NULL);

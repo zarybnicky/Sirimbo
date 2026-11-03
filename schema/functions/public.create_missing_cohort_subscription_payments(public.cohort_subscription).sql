@@ -28,7 +28,6 @@ begin
       specific_symbol,
       variable_symbol,
       cohort_subscription_id,
-      accounting_period_id,
       is_auto_credit_allowed,
       due_at
     ) values (
@@ -36,7 +35,6 @@ begin
       v_specific,
       regexp_replace(coalesce(nullif(member.tax_identification_number, ''), member.id::text), '[^0-9]', '', 'g'),
       c.id,
-      (select id from accounting_period where range @> now()),
       current_tenant_id() <> 1,
       v_renews_on
     ) returning * into v_payment;

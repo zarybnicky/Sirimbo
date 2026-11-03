@@ -15,7 +15,7 @@ declare
 begin
   if is_registered is null or num_nonnulls(person_id, couple_id, person) <> 1
     or (person is distinct from null and not is_registered) then
-    raise exception 'INVALID_REGISTRANT' using errcode = '22023';
+    raise exception 'INVALID_PARTICIPANT' using errcode = '22023';
   end if;
 
   if num_nonnulls(lesson_trainer_ids, lesson_counts) = 1
@@ -165,7 +165,7 @@ begin
     end if;
 
     if not is_manager then
-      remaining_capacity := event_remaining_person_spots(target_instance);
+      remaining_capacity := (event_registration_info(target_instance)).remaining_capacity;
       required_capacity := case
         when target_instance.capacity_unit = 'people' and couple_id is not null then 2
         when target_instance.capacity_unit = 'registrations' and exists (

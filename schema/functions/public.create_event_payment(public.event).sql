@@ -32,9 +32,8 @@ begin
 
   duration := extract(epoch from (target_event.until - target_event.since)) / 60;
 
-  insert into payment (accounting_period_id, status, event_id, due_at)
+  insert into payment (status, event_id, due_at)
   values (
-    (select id from accounting_period where tenant_id = current_tenant_id() and range @> now()),
     'tentative', target_event.id, now() + interval '2 weeks'
   )
   on conflict (event_id) where event_id is not null do nothing
@@ -49,9 +48,12 @@ begin
     created_payment.id,
     account.id,
     trainer.member_price_45min_amount / 45 * duration
-  from event_trainers(target_event) trainer
+  from event_trainer assignment
+  join tenant_trainer trainer on trainer.tenant_id = assignment.tenant_id
+    and trainer.person_id = assignment.person_id
+    and trainer.active_range @> target_event.since
   cross join lateral person_account(trainer.person_id, trainer.currency) account
-  where trainer.tenant_id = current_tenant_id()
+  where assignment.event_id = target_event.id
     and trainer.member_price_45min_amount is not null;
 
   insert into payment_debtor (payment_id, person_id)

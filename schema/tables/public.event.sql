@@ -14,7 +14,7 @@ CREATE TABLE public.event (
     is_visible boolean,
     is_public boolean,
     manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
-    stats jsonb DEFAULT '{}'::jsonb NOT NULL,
+    stats public.event_stats DEFAULT ROW(0, 0, 0, 0)::public.event_stats NOT NULL,
     parent_id bigint,
     capacity integer,
     capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit NOT NULL,
@@ -33,6 +33,8 @@ CREATE TABLE public.event (
 );
 
 COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
+COMMENT ON COLUMN public.event.manager_person_ids IS '@behavior -attribute:insert -attribute:update';
+COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
 COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
 COMMENT ON COLUMN public.event.series_info IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
 

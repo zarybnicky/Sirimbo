@@ -9,7 +9,7 @@ CREATE TABLE public.posting (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-COMMENT ON TABLE public.posting IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.posting IS '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
 
 GRANT ALL ON TABLE public.posting TO anonymous;
 ALTER TABLE public.posting ENABLE ROW LEVEL SECURITY;

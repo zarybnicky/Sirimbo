@@ -10,14 +10,18 @@ CREATE TABLE federated.competitor (
     external_id text CONSTRAINT competitor_external_id_text_not_null NOT NULL,
     latest_result_at date,
     latest_entry_at date,
-    divisions text[] DEFAULT '{}'::text[] NOT NULL
+    divisions text[] DEFAULT '{}'::text[] NOT NULL,
+    active boolean,
+    since timestamp with time zone,
+    until timestamp with time zone
 );
 
 COMMENT ON TABLE federated.competitor IS '@name federation_competitor
 @behavior -insert -update -delete -list
 @ref people via:federated.competitor_component;federated.person;public.person_federation_link;public.person behavior:"+list -connection"
 @ref couples via:public.couple_federation_link;public.couple
-@ref competitions via:federated.competition_participation;federated.competition';
+@ref competitions via:federated.competition_participation;federated.competition
+@ref competitionResults via:federated.competition_result behavior:"+list -connection"';
 COMMENT ON COLUMN federated.competitor.age_group IS '@behavior -*';
 COMMENT ON COLUMN federated.competitor.age_group_code IS '@name ageGroup
 @behavior -insert -update';
