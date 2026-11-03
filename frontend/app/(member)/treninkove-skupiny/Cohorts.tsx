@@ -1,7 +1,7 @@
 'use client';
 
 import Image from '@/ui/Image';
-import { TrainingGroupComparison } from './TrainingGroupComparison';
+import { CohortComparison } from './CohortComparison';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { cohortActions } from '@/lib/actions/cohort';
 import { useActionMap } from '@/lib/actions';
@@ -18,7 +18,7 @@ import { useClient, useQuery } from 'urql';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 
-export function TrainingGroups() {
+export function Cohorts() {
   const auth = useAuth();
   const [tab, setTab] = useQueryState(
     'tab',
@@ -99,7 +99,7 @@ export function TrainingGroups() {
           </div>
         </Tab>
         <Tab id="comparison" title="Porovnání" requireMember>
-          <TrainingGroupComparison data={cohorts} />
+          <CohortComparison data={cohorts} />
         </Tab>
       </TabMenu>
     </div>

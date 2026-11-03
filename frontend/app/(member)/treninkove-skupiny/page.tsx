@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { TrainingGroups } from './TrainingGroups';
+import { Cohorts } from './Cohorts';
 
 export const metadata: Metadata = {
   title: 'Tréninkové skupiny',
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/treninkove-skupiny' },
 };
 
-export default function TrainingGroupsPage() {
-  return <TrainingGroups />;
+export default function CohortsPage() {
+  return <Cohorts />;
 }

@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import type { ReactNode } from 'react';
 
-export default function TrainingGroupsLayout({ children }: { children: ReactNode }) {
+export default function CohortsLayout({ children }: { children: ReactNode }) {
   const detail = useSelectedLayoutSegment();
   const auth = useAuth();
 

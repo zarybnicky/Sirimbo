@@ -5,13 +5,13 @@ import { stripHtml } from '@/lib/stripHtml';
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
-import { TrainingGroup } from './TrainingGroup';
+import { Cohort } from './Cohort';
 
 type Props = {
   params: Promise<{ id: string; slug?: string[] }>;
 };
 
-const getTrainingGroup = cache(async (id: string) => {
+const getCohort = cache(async (id: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
   return executeGraphql(CohortDocument, {
     id,
@@ -21,7 +21,7 @@ const getTrainingGroup = cache(async (id: string) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const cohort = await getTrainingGroup(id);
+  const cohort = await getCohort(id);
   if (!cohort) notFound();
 
   return {
@@ -37,9 +37,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function TrainingGroupPage({ params }: Props) {
+export default async function CohortPage({ params }: Props) {
   const { id, slug } = await params;
-  const cohort = await getTrainingGroup(id);
+  const cohort = await getCohort(id);
   if (!cohort) notFound();
 
   const expectedSlug = slugify(cohort.name);
@@ -48,7 +48,7 @@ export default async function TrainingGroupPage({ params }: Props) {
   }
 
   return (
-    <TrainingGroup
+    <Cohort
       initialCohort={cohort}
       initialMembers={cohort.cohortMembershipsList ?? []}
     />

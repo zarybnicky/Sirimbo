@@ -15,7 +15,7 @@ import { Table } from '@/ui/Table';
 import { compareText } from '@/lib/compare';
 import { slugify } from '@/lib/slugify';
 
-export function TrainingGroupComparison({ data }: { data: CohortListQuery | undefined }) {
+export function CohortComparison({ data }: { data: CohortListQuery | undefined }) {
   const [selection, setSelection] = useState<{
     title: string;
     people: readonly PersonHistogramFragment[];

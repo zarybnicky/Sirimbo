@@ -31,9 +31,9 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
-import { AgeHistogram, ClassHistogram } from '../../TrainingGroupComparison';
+import { AgeHistogram, ClassHistogram } from '../../CohortComparison';
 
-export function TrainingGroup({
+export function Cohort({
   initialCohort,
   initialMembers,
 }: {
@@ -96,7 +96,7 @@ export function TrainingGroup({
 
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="members" title={`Členové (${members.length})`} requireMember>
-          <TrainingGroupMembers members={members} />
+          <CohortMembers members={members} />
         </Tab>
         <Tab id="activity" title="Tréninky" requireMember>
           <ActivityList cohortId={cohort.id} />
@@ -143,7 +143,7 @@ function CategoryList({
   );
 }
 
-const TrainingGroupMembers = React.memo(function TrainingGroupMembers({
+const CohortMembers = React.memo(function CohortMembers({
   members,
 }: {
   members: readonly CohortMemberFragment[];
