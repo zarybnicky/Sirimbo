@@ -4,12 +4,14 @@ export function Histogram({
   label,
   data,
   bucketWidth = 18,
+  onSelect,
   formatLabel = (value) => value,
   formatTitle = (value) => value,
 }: {
-  label: string;
+  label?: string;
   data: readonly (readonly [string, number])[];
   bucketWidth?: number;
+  onSelect?: (value: string) => void;
   formatLabel?: (value: string) => string;
   formatTitle?: (value: string) => string;
 }) {
@@ -23,19 +25,35 @@ export function Histogram({
 
   return (
     <figure className="min-w-0">
-      <figcaption className="mb-1 text-xs text-neutral-11">{label}</figcaption>
-      <svg
-        role="img"
-        aria-label={`${label}: ${data.map(([value, count]) => `${formatTitle(value)}: ${count}`).join(', ') || '?'}`}
-        width={width}
-        height={68}
-        className="max-w-full"
-        viewBox={`0 0 ${width} 68`}
-      >
+      {label && (
+        <figcaption className="mb-1 text-xs text-neutral-11">{label}</figcaption>
+      )}
+      <svg width={width} height={68} className="max-w-full" viewBox={`0 0 ${width} 68`}>
         <path d={`M0 ${height}H${width}`} className="stroke-neutral-5" />
         {data.map(([value, count]) => (
-          <g key={value} transform={`translate(${x(value)}, 0)`}>
+          <g
+            key={value}
+            transform={`translate(${x(value)}, 0)`}
+            tabIndex={onSelect ? 0 : undefined}
+            onClick={onSelect ? () => onSelect(value) : undefined}
+            onKeyDown={
+              onSelect
+                ? (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      onSelect(value);
+                    }
+                  }
+                : undefined
+            }
+            className={
+              onSelect ? 'cursor-pointer outline-accent-9 hover:opacity-70' : undefined
+            }
+          >
             <title>{`${formatTitle(value)}: ${count}`}</title>
+            {onSelect && (
+              <rect y={0} width={x.bandwidth()} height={68} fill="transparent" />
+            )}
             <rect
               y={y(count)}
               width={x.bandwidth()}

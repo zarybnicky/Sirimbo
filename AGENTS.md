@@ -22,15 +22,16 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## Design preferences
 
-- Understand the affected data flow and callers before choosing a solution. Fix the cause at the appropriate shared boundary.
-- Prefer the simplest design that meets the whole request and remains easy to maintain. Judge simplicity by clarity, not line count.
-- Reuse existing code, standard libraries, and native platform features before adding dependencies or custom machinery.
-- Add abstractions for clear concepts, meaningful duplication, or current requirements. Leave speculative flexibility for a concrete need.
-- Preserve real differences in the data and behavior. Do not sacrifice correctness, security, data integrity, or necessary verification for a smaller change.
+- Trace the affected data flow and callers, inspect existing implementations, and briefly state what you will extend before editing. Fix the cause at the appropriate shared boundary.
+- Simplicity means compact code that is easy to read end to end. Evaluate total code, branching, indirection, and concepts. Elementary syntax, tiny functions, or verbose explicit steps do not make a longer, harder-to-follow implementation simpler.
+- Extend existing queries, components, and modules at their current boundaries. Follow repository patterns and use native platform features before adding custom machinery or dependencies.
+- Abstractions must remove meaningful duplication or clarify a real concept. Extra wrappers and helper files are not reuse or separation of concerns by themselves. Keep related logic together, preserve real differences, and leave speculative flexibility for a concrete need.
+- Preserve correctness, security, data integrity, and required behavior. Keep accessibility work, defensive handling, and verification proportional to concrete task needs. Extra fallbacks and hypothetical edge-case handling are not automatically improvements.
+- Apply corrections to the underlying design across the whole change. Review the complete diff against these rules; passing checks alone does not establish that the design is appropriate.
+- Prefer compact, elegant code that keeps the local control flow easy to read. Extract functions only when they name a real concept, isolate complex behavior, or remove meaningful duplication.
+- Avoid one-line or single-use functions; they usually make this codebase harder to read than an inline expression.
 
 ## Code style preferences
-- Prefer compact, elegant code that keeps the local control flow easy to read. Extract helpers when they name a real concept, isolate complex behavior, or remove meaningful duplication.
-- Avoid one-line helper functions used in a single place; they usually make this codebase harder to read than an inline expression.
 - Backend and worker code run as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
 
 ## High-level structure

@@ -31,11 +31,7 @@ fragment CohortMember on CohortMembership {
       trainingAt
       competitionOn
     }
-    ageGroup
-    cstsId
-    federationCategoryProgresses(first: 100) {
-      nodes { ...FederationCategoryProgress }
-    }
+    ...PersonHistogram
   }
 }
 
@@ -45,6 +41,7 @@ query CohortList(
   $visible: Boolean
   $archived: Boolean
   $withDetails: Boolean! = false
+  $withMembers: Boolean! = false
 ) {
   cohortsList(first: $first, offset: $offset, condition: {isVisible: $visible, isArchived: $archived}, orderBy: [ORDERING_ASC]) {
     ...CohortBasic
@@ -53,6 +50,13 @@ query CohortList(
     ...Cohort @include(if: $withDetails)
     cohortMembershipsList(condition: {status: ACTIVE}) @include(if: $withDetails) {
       id
+      person @include(if: $withMembers) { ...PersonHistogram }
+    }
+  }
+  people(condition: { membership: { state: CURRENT } }, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) @include(if: $withMembers) {
+    nodes {
+      ...PersonHistogram
+      cohortIds
     }
   }
 }
@@ -91,5 +95,15 @@ mutation ArchiveCohort($id: BigInt!) {
 mutation SyncCohortMemberships($input: SyncCohortMembershipsInput!) {
   syncCohortMemberships(input: $input) {
     __typename
+  }
+}
+
+fragment PersonHistogram on Person {
+  id
+  name
+  ageGroup
+  cstsId
+  federationCategoryProgresses(first: 100) {
+    nodes { ...FederationCategoryProgress }
   }
 }

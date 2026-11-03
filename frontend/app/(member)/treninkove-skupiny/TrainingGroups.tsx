@@ -1,7 +1,7 @@
 'use client';
 
 import Image from '@/ui/Image';
-
+import { TrainingGroupComparison } from './TrainingGroupComparison';
 import { CohortListDocument } from '@/graphql/Cohorts';
 import { cohortActions } from '@/lib/actions/cohort';
 import { useActionMap } from '@/lib/actions';
@@ -15,13 +15,24 @@ import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { useClient, useQuery } from 'urql';
+import { Tab, TabMenu } from '@/ui/TabMenu';
+import { parseAsString, useQueryState } from 'nuqs';
 
 export function TrainingGroups() {
   const auth = useAuth();
+  const [tab, setTab] = useQueryState(
+    'tab',
+    parseAsString.withOptions({ history: 'push' }),
+  );
   const client = useClient();
   const [{ data: cohorts }] = useQuery({
     query: CohortListDocument,
-    variables: { visible: true, archived: false, withDetails: true },
+    variables: {
+      visible: true,
+      archived: false,
+      withDetails: true,
+      withMembers: auth.isMember && tab === 'comparison',
+    },
   });
   const cohortActionMap = useActionMap(cohortActions, cohorts?.cohortsList ?? []);
 
@@ -45,43 +56,52 @@ export function TrainingGroups() {
         }
       />
 
-      <div className={auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : ''}>
-        {cohorts?.cohortsList?.map((item) => (
-          <div
-            key={item.id}
-            className={cardCls({ className: 'group break-inside-avoid pl-6' })}
-          >
-            <div className="mb-2 flex items-start justify-between gap-3">
-              <h5 className="text-xl underline">
-                <Link href={`/treninkove-skupiny/${item.id}/${slugify(item.name)}`}>
-                  {item.name}
-                </Link>
-              </h5>
-              <ActionGroup actions={cohortActionMap.get(item.id)!} />
-            </div>
-            <h6 className="font-bold mb-2">{item.location}</h6>
-            {item.image && (
-              <div className="relative mb-3 aspect-video overflow-hidden rounded-md">
-                <Image
-                  src={item.image.url}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
+      <TabMenu selected={tab} onSelect={setTab}>
+        <Tab id="list" title="Seznam">
+          <div className={auth.isLoggedIn ? 'gap-4 lg:columns-2 xl:columns-2' : ''}>
+            {cohorts?.cohortsList?.map((item) => (
+              <div
+                key={item.id}
+                className={cardCls({ className: 'group break-inside-avoid pl-6' })}
+              >
+                <div className="mb-2 flex items-start justify-between gap-3">
+                  <h5 className="text-xl underline">
+                    <Link href={`/treninkove-skupiny/${item.id}/${slugify(item.name)}`}>
+                      {item.name}
+                    </Link>
+                  </h5>
+                  <ActionGroup actions={cohortActionMap.get(item.id)!} />
+                </div>
+                <h6 className="font-bold mb-2">{item.location}</h6>
+                {item.image && (
+                  <div className="relative mb-3 aspect-video overflow-hidden rounded-md">
+                    <Image
+                      src={item.image.url}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
+                <RichTextView
+                  value={item.description
+                    ?.replaceAll('&nbsp;', ' ')
+                    .replaceAll('<br /> ', '')}
+                />
+                <div
+                  className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-xs inset-y-0 left-0"
+                  style={{ backgroundColor: item.colorRgb }}
                 />
               </div>
-            )}
-
-            <RichTextView
-              value={item.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
-            />
-            <div
-              className="absolute rounded-l-lg w-4 border-r border-neutral-6 shadow-xs inset-y-0 left-0"
-              style={{ backgroundColor: item.colorRgb }}
-            />
+            ))}
           </div>
-        ))}
-      </div>
+        </Tab>
+        <Tab id="comparison" title="Porovnání" requireMember>
+          <TrainingGroupComparison data={cohorts} />
+        </Tab>
+      </TabMenu>
     </div>
   );
 }
