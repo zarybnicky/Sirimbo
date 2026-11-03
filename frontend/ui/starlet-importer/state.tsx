@@ -32,41 +32,27 @@ export const starletTokenAtom = atom(
   },
 );
 
-const baseStarletRawSettingsAtom = atom<unknown>();
-const baseStarletSettingsAtom = atom<{
-  auth?: { login: string; password: string };
-  folders: [string, string][];
-  seasons: [string, string][];
-  courses: [string, string, string][];
-}>({
-  folders: [],
-  seasons: [],
-  courses: [],
-});
+export const starletRawSettingsAtom = atom<{
+  evidenceAuth?: { login: string; password: string };
+  evidenceFolders?: (string | [string, string])[];
+  evidenceSeasons?: (string | [string, string])[];
+  evidenceCourses?: (string | [string, string, string])[];
+}>({});
 
-export const starletSettingsAtom = atom(
-  (get) => get(baseStarletSettingsAtom),
-  (get, set, raw: unknown) => {
-    if (raw === get(baseStarletRawSettingsAtom)) return;
-    set(baseStarletRawSettingsAtom, raw);
-    set(baseStarletSettingsAtom, parseSettings(raw));
-  },
-);
-
-function parseSettings(raw: unknown) {
-  const settings = typeof raw === 'string' ? JSON.parse(raw) : raw;
+export const starletSettingsAtom = atom((get) => {
+  const settings = get(starletRawSettingsAtom);
   return {
-    auth: settings?.['evidenceAuth'] as { login: string; password: string },
-    folders: (settings?.['evidenceFolders']?.map((x: any) =>
+    auth: settings.evidenceAuth,
+    folders: settings.evidenceFolders?.map<[string, string]>((x) =>
       typeof x === 'string' ? [x, '?'] : x,
-    ) || []) as [string, string][],
-    seasons: (settings?.['evidenceSeasons']?.map((x: any) =>
+    ) ?? [],
+    seasons: settings.evidenceSeasons?.map<[string, string]>((x) =>
       typeof x === 'string' ? [x, '?'] : x,
-    ) || []) as [string, string][],
+    ) ?? [],
     courses: (
-      (settings?.['evidenceCourses']?.map((x: any) =>
+      settings.evidenceCourses?.map<[string, string, string]>((x) =>
         typeof x === 'string' ? [x, '?', '?'] : x,
-      ) || []) as [string, string, string][]
+      ) ?? []
     ).toSorted((x, y) => x[1].localeCompare(y[1])),
   };
-}
+});

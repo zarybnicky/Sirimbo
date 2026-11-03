@@ -13,35 +13,25 @@ export function Crm() {
   const client = useClient();
   const [{ data, fetching, error }] = useQuery({ query: FormResponsesDocument });
 
-  const dataset = React.useMemo(() => {
-    return (data?.formResponses?.nodes || []).map((x) => ({
-      ...x,
-      data: typeof x.data === 'string' ? JSON.parse(x.data) : x.data,
-    }));
-  }, [data?.formResponses?.nodes]);
+  const dataset = data?.formResponses?.nodes;
 
   const types = React.useMemo(() => {
     const types = new Set<string>();
-    for (const entry of dataset) {
+    for (const entry of dataset ?? []) {
       if (entry.type !== 'Zpětná vazba, web 05/2023') types.add(entry.type);
     }
-    return [...types.values()].toSorted();
+    return [...types].toSorted();
   }, [dataset]);
 
   const [state, setState] = React.useState('');
   const currentData = React.useMemo(() => {
-    return dataset.filter((x) => x.type === (state || types[0]));
+    return dataset?.filter((x) => x.type === (state || types[0])) ?? [];
   }, [types, state, dataset]);
 
-  const columns = React.useMemo(() => {
-    const columns = new Set<string>();
-    for (const entry of currentData) {
-      for (const column in entry.data) {
-        columns.add(column);
-      }
-    }
-    return [...columns.values()].toSorted();
-  }, [currentData]);
+  const columns = React.useMemo(
+    () => [...new Set(currentData.flatMap(({ data }) => Object.keys(data ?? {})))].toSorted(),
+    [currentData],
+  );
 
   return (
     <div className="container col-feature">
@@ -74,8 +64,8 @@ export function Crm() {
           <span key="createdAt" className="block text-right">Vytvořeno</span>,
         ]}
       >
-        {currentData.map((row, i) => (
-          <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
+        {currentData.map((row) => (
+          <tr key={row.id} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
             {columns.map((x) => (
               <td key={x}>
                 {x === 'date'

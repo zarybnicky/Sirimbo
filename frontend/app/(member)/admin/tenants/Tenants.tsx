@@ -9,10 +9,13 @@ import { cn } from '@/lib/cn';
 import { cardCls } from '@/ui/style';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
-import { Sheet, type SheetRef } from 'react-modal-sheet';
+import { Sheet } from 'react-modal-sheet';
 import { useQuery } from 'urql';
 import { formatAddress } from '@/ui/format.ts';
 import { TenantAdminEdit } from '@/ui/forms/TenantAdminForm.tsx';
+
+// Mobile sheet: 2 detents + closed.
+const snapPoints = [0, 0.2, 1];
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = React.useState(false);
@@ -30,22 +33,15 @@ function useMediaQuery(query: string) {
 
 export function Tenants() {
   const [{ data, fetching, error }] = useQuery({ query: TenantsFullDocument });
-  const tenants = React.useMemo(() => data?.tenantsList ?? [], [data]);
+  const tenants = data?.tenantsList;
 
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
-  const selected = React.useMemo(
-    () => tenants.find((t) => t.id === selectedId) ?? null,
-    [tenants, selectedId],
-  );
-
-  // Mobile sheet: 2 detents + closed.
-  const sheetRef = React.useRef<SheetRef>(null);
-  const snapPoints = React.useMemo(() => [0, 0.2, 1], []); // must include 0 and 1 :contentReference[oaicite:1]{index=1}
+  const selected = tenants?.find((t) => t.id === selectedId) ?? null;
 
   useLayoutEffect(() => {
-    if (selected) document.querySelector('body')!.style.overscrollBehavior = 'none';
+    if (selected) document.body.style.overscrollBehavior = 'none';
     return () => {
-      document.querySelector('body')!.style.overscrollBehavior = 'unset';
+      document.body.style.overscrollBehavior = 'unset';
     };
   }, [selected]);
 
@@ -58,7 +54,7 @@ export function Tenants() {
         busy={fetching}
         error={error}
       >
-        {tenants.map((tenant) => (
+        {tenants?.map((tenant) => (
           <tr
             key={tenant.id}
             className={cn(
@@ -97,7 +93,6 @@ export function Tenants() {
 
       {!isDesktop && (
         <Sheet
-          ref={sheetRef}
           isOpen={!!selected}
           onClose={() => setSelectedId(null)}
           snapPoints={snapPoints}
@@ -155,9 +150,7 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
           Nastavení
         </summary>
         <pre className="mt-2 overflow-auto whitespace-pre-wrap wrap-anywhere rounded-sm bg-neutral-3 p-2 text-xs">
-          {typeof tenant.tenantSetting?.settings === 'string'
-            ? tenant.tenantSetting.settings
-            : JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2)}
+          {JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2)}
         </pre>
       </details>
     </div>

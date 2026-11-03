@@ -17,10 +17,6 @@ export type MenuStructItem =
     }
   | MenuLink;
 
-export function getHrefs(x: MenuStructItem): string[] {
-  return x.type === 'link' ? [x.href] : x.children.flatMap((x) => getHrefs(x));
-}
-
 function filterMenu(
   items: readonly MenuStructItem[],
   auth: ResolvedAuth,

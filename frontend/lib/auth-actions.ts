@@ -10,7 +10,7 @@ import {
   type LoginMutationVariables,
 } from '@/graphql/CurrentUser';
 import type { RequestAuthState } from '@/lib/auth';
-import { parseCurrentClaims } from '@/lib/auth-claims';
+import { normalizeClaims } from '@/lib/auth-claims';
 import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { sanitizeReturnURL } from '@/lib/sanitize';
@@ -50,7 +50,7 @@ export async function refreshSessionAction(): Promise<RequestAuthState> {
     withRefreshJwt: true,
   });
   const auth = {
-    claims: parseCurrentClaims(data.currentClaims),
+    claims: normalizeClaims(data.currentClaims),
     user: data.getCurrentUser,
   };
   if (

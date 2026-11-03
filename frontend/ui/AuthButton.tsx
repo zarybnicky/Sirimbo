@@ -43,14 +43,14 @@ export function AuthButton() {
       <DropdownMenuContent align="end">
         {memberMenu.map((item) =>
           item.type === 'link' ? (
-            <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+            <DropdownMenuLink key={item.href} href={item.href}>
               {item.title}
             </DropdownMenuLink>
           ) : (
             <React.Fragment key={item.title}>
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
               {item.children.map((item) => (
-                <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+                <DropdownMenuLink key={item.href} href={item.href}>
                   {item.title}
                 </DropdownMenuLink>
               ))}

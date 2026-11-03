@@ -1,5 +1,5 @@
 import { cn } from '@/lib/cn';
-import { getHrefs, type MenuStructItem, topMenu } from '@/lib/use-menu';
+import { type MenuStructItem, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
 import { AuthButton } from '@/ui/AuthButton';
 import {
@@ -69,10 +69,11 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
 }
 
 function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: string }) {
-  const inPath = getHrefs(item).some((x) => {
-    const [y] = x.split('?');
-    if (!y) return false;
-    return y === '/' ? pathname === '/' : pathname === y || pathname.startsWith(`${y}/`);
+  const links = item.type === 'link' ? [item] : item.children;
+  const inPath = links.some(({ href }) => {
+    const [path] = href.split('?');
+    if (!path) return false;
+    return path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(`${path}/`);
   });
 
   const classes = cn(
@@ -99,7 +100,7 @@ function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: s
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
         {item.children.map((child) => (
-          <DropdownMenuLink key={JSON.stringify(child.href)} href={child.href}>
+          <DropdownMenuLink key={child.href} href={child.href}>
             {child.title}
           </DropdownMenuLink>
         ))}

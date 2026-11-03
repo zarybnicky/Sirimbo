@@ -2,7 +2,7 @@ import { CurrentUserDocument } from '@/graphql/CurrentUser';
 import type { RequestAuthState } from '@/lib/auth';
 import {
   type JwtClaims,
-  parseCurrentClaims,
+  normalizeClaims,
   resolveAuth,
   type ResolvedAuth,
 } from '@/lib/auth-claims';
@@ -35,7 +35,7 @@ export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
   }
 
   const data = await executeGraphql(CurrentUserDocument, { versionId: buildId });
-  const claims = parseCurrentClaims(data.currentClaims);
+  const claims = normalizeClaims(data.currentClaims);
 
   return {
     claims,
@@ -54,14 +54,13 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
         algorithms: ['HS256'],
         ignoreExpiration: true,
       }) as JwtClaims;
-      claims =
-        parseCurrentClaims(
-          Object.fromEntries(
-            Object.entries(payload).filter(
-              ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
-            ),
+      claims = normalizeClaims(
+        Object.fromEntries(
+          Object.entries(payload).filter(
+            ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
           ),
-        ) ?? null;
+        ),
+      );
     } catch (error) {
       if (!(error instanceof jwt.JsonWebTokenError)) throw error;
     }

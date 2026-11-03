@@ -15,12 +15,16 @@ export type JwtClaims = {
   admin_tenant_ids: string[];
 };
 
-export function parseCurrentClaims(value: unknown): JwtClaims | null {
+export function normalizeClaims(value: Record<string, unknown> | null | undefined): JwtClaims | null {
   if (!value) return null;
 
-  const json = typeof value === 'string' ? value : JSON.stringify(value);
-  return JSON.parse(json, (_key, claim) =>
-    typeof claim === 'number' ? String(claim) : claim,
+  return Object.fromEntries(
+    Object.entries(value).map(([key, claim]) => [
+      key,
+      Array.isArray(claim)
+        ? claim.map(String)
+        : typeof claim === 'number' ? String(claim) : claim,
+    ]),
   ) as JwtClaims;
 }
 
@@ -80,9 +84,9 @@ export function canAccess(
 ) {
   return (
     (!x.requireUser || auth.isLoggedIn) &&
-    (!x.requireMember || auth.isMember || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin) &&
-    (!x.requireTrainer || auth.isTrainer || auth.isAdmin || auth.isSystemAdmin) &&
-    (!x.requireAdmin || auth.isAdmin || auth.isSystemAdmin) &&
+    (!x.requireMember || auth.isMember || auth.isTrainer) &&
+    (!x.requireTrainer || auth.isTrainer) &&
+    (!x.requireAdmin || auth.isAdmin) &&
     (!x.requireSystemAdmin || auth.isSystemAdmin) &&
     (!x.requirePublicSite || !!tenant.publicSite) &&
     (!x.requireStarletImport || !!tenant.enableStarletImport)

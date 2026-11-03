@@ -5,8 +5,7 @@ import type { Client } from 'urql';
 export async function exportFormResponses(client: Client) {
   const result = await client.query(FormResponsesDocument, {}).toPromise();
   if (result.error) throw result.error;
-  const data = result.data!;
-  const nodes = data?.formResponses?.nodes || [];
+  const nodes = result.data?.formResponses?.nodes ?? [];
 
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
@@ -28,17 +27,16 @@ export async function exportFormResponses(client: Client) {
     column.alignment = { horizontal: 'center' };
   }
 
-  for (const x of nodes) {
-    if (x.type === 'Zpětná vazba, web 05/2023') continue;
-    const data = typeof x.data === 'string' ? JSON.parse(x.data) : x.data;
+  for (const { type, data, url, createdAt } of nodes) {
+    if (type === 'Zpětná vazba, web 05/2023') continue;
     worksheet.addRow({
       name: data.name,
       surname: data.surname,
       email: data.email,
       phone: data.phone,
       born: data.yearofbirth,
-      source: x.url,
-      createdAt: x.createdAt ? new Date(x.createdAt).toISOString().slice(0, 10) : '',
+      source: url,
+      createdAt: createdAt ? new Date(createdAt).toISOString().slice(0, 10) : '',
     });
   }
 

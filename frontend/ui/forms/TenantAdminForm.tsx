@@ -40,10 +40,7 @@ export function TenantAdminEdit({ tenant }: Readonly<{ tenant: TenantFullFragmen
       origins: tenant.origins?.join(', ') ?? '',
       czIco: tenant.czIco || '',
       czDic: tenant.czDic || '',
-      settings:
-        typeof tenant.tenantSetting?.settings === 'string'
-          ? tenant.tenantSetting.settings
-          : JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2),
+      settings: JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2),
     },
   });
   const [result, updateTenant] = useMutation(UpdateTenantDocument);
