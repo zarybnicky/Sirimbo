@@ -52,4 +52,6 @@ export type EventParticipantOption = {
   personId: string | null;
   coupleId: string | null;
   personIds: string[];
+  person: { name: string } | null;
+  couple: { shortName: string } | null;
 };

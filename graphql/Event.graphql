@@ -396,6 +396,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
   couplesList(condition: { membership: { state: CURRENT }, status: ACTIVE }, orderBy: ID_ASC) @_required {
     id
     name
+    shortName
     status
     manId
     womanId

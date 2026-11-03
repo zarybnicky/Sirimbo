@@ -18,7 +18,7 @@ import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
 import { TextFieldElement } from '@/ui/fields/text';
 import { FormError, useFormResult } from '@/ui/form';
-import { formatEventType, shortTimeFormatter } from '@/ui/format';
+import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/format';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
@@ -72,6 +72,8 @@ function useEventFormOptions(
         personId: person.id,
         coupleId: null,
         personIds: [person.id],
+        person,
+        couple: null,
       });
     }
     for (const couple of [
@@ -85,6 +87,8 @@ function useEventFormOptions(
         personId: null,
         coupleId: couple.id,
         personIds: [couple.manId, couple.womanId],
+        person: null,
+        couple,
       });
     }
 
@@ -119,7 +123,25 @@ function EventEditor({
     defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
-  const [type, instances, isPublic] = useWatch({ control, name: ['type', 'instances', 'isPublic'] });
+  const [type, instances, isPublic, trainers, registrations] = useWatch({
+    control,
+    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations'],
+  });
+  const namePlaceholder = formatEventName({
+    name: null,
+    type: type ?? 'LESSON',
+    eventTrainersList: (trainers ?? []).map(({ personId }) => ({
+      person: { name: options.trainers.find((x) => x.id === personId)?.label },
+    })),
+    registrations: {
+      nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
+        const participant = options.participants.get(
+          personId ? `person:${personId}` : `couple:${coupleId}`,
+        );
+        return !isCancelled && participant ? [participant] : [];
+      }),
+    },
+  }, 'neutral');
 
   React.useEffect(() => {
     if (!isPublic) setValue('hasPublicDetails', false);
@@ -274,6 +296,7 @@ function EventEditor({
               control={control}
               name="name"
               label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
+              placeholder={namePlaceholder}
             />
             <InstanceListElement control={control} />
             <LocationField
