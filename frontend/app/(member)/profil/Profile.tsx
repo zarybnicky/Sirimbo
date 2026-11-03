@@ -11,7 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { useAuth, useAuthLoading, useTenantConfig } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import { Check, ChevronDown } from 'lucide-react';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useCallback } from 'react';
@@ -19,7 +19,6 @@ import { useQuery } from 'urql';
 
 export function Profile() {
   const auth = useAuth();
-  const authLoading = useAuthLoading();
   const { enableRegistration } = useTenantConfig();
   const [{ data }] = useQuery({
     query: MembershipApplicationsDocument,
@@ -42,7 +41,7 @@ export function Profile() {
     () => setSelectedApplication('new-application'),
     [setSelectedApplication],
   );
-  if (authLoading || !auth.isLoggedIn) return null;
+  if (!auth.isLoggedIn) return null;
 
   const applications = data?.membershipApplicationsList ?? [];
   const options = [

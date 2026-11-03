@@ -3,7 +3,7 @@
 import { canAccess, type AccessRequirements } from '@/lib/auth-claims';
 import { getTenantUi } from '@/tenant/ui';
 import { StatusPage } from '@/ui/StatusPage';
-import { useAuth, useAuthLoading, useTenantConfig, useTenantId } from '@/lib/auth';
+import { useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
 import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
@@ -28,7 +28,6 @@ export const Layout = React.memo(function Layout({
 }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const auth = useAuth();
-  const authLoading = useAuthLoading();
   const tenantId = useTenantId();
   const tenant = useTenantConfig();
   const { Footer } = getTenantUi(tenantId);
@@ -43,17 +42,17 @@ export const Layout = React.memo(function Layout({
   const missingPermission = !canAccess(auth, tenant, requirements);
 
   React.useEffect(() => {
-    if (!authLoading && missingPermission && !auth.isLoggedIn) {
+    if (missingPermission && !auth.isLoggedIn) {
       router.push(`/login?from=${encodeURIComponent(url)}`);
     }
-  }, [router, auth.isLoggedIn, authLoading, missingPermission, url]);
+  }, [router, auth.isLoggedIn, missingPermission, url]);
 
   showTopMenu = tenant.publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !!tenant.publicSite && !auth.isLoggedIn;
   }
   if (missingPermission) {
-    children = authLoading ? null : auth.isLoggedIn ? (
+    children = auth.isLoggedIn ? (
       <StatusPage
         status="error"
         title="Přístup zamítnut"

@@ -3,18 +3,17 @@
 import { MyAnnouncements, StickyAnnouncements } from '@/ui/Announcements';
 import { MyEventsList } from '@/ui/lists/MyEventsList';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { useAuth, useAuthLoading } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
 
 export function Dashboard() {
   const auth = useAuth();
-  const authLoading = useAuthLoading();
   const [variant, setVariant] = useQueryState(
     'tab',
     parseAsString.withDefault('myLessons').withOptions({ history: 'push' }),
   );
 
-  if (authLoading || !auth.userId) return null;
+  if (!auth.userId) return null;
 
   return (
     <div className="col-full-width p-4 lg:py-8 h-full bg-neutral-2">

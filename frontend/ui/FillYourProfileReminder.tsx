@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAuth, useAuthLoading } from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
@@ -8,12 +8,9 @@ import { Edit } from 'lucide-react';
 
 export function FillYourProfileReminder() {
   const auth = useAuth();
-  const authLoading = useAuthLoading();
   const [personId, setPersonId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (authLoading) return;
-
     const now = Date.now() - 24 * 60 * 60 * 1000;
     const shouldCheck = now - 24 * 60 * 60 * 1000;
     for (const person of auth.persons) {
@@ -49,7 +46,7 @@ export function FillYourProfileReminder() {
         </>,
       );
     }
-  }, [auth.persons, authLoading]);
+  }, [auth.persons]);
 
   return (
     <Dialog open={!!personId} onOpenChange={() => setPersonId(null)}>

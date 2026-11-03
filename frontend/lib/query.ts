@@ -8,7 +8,7 @@ import type {
   Person,
   WithTypename,
 } from '@/graphql';
-import { storeRef, tenantIdAtom, tokenAtom } from '@/lib/auth';
+import { storeRef, tenantIdAtom } from '@/lib/auth';
 import { type Cache, cacheExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
 import { TypedEventTarget } from 'typescript-event-target';
@@ -144,7 +144,6 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
         ],
   fetchOptions: () => {
     const tenantId = storeRef.current.get(tenantIdAtom);
-    const token = storeRef.current.get(tokenAtom);
     const eventShareId =
       typeof window === 'undefined'
         ? undefined
@@ -159,11 +158,6 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
     return {
       credentials: 'include',
       headers: {
-        ...(token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {}),
         ...(tenantId
           ? {
               'x-tenant-id': tenantId,
