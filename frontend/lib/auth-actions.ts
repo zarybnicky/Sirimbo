@@ -4,6 +4,7 @@ import type { RegisterUsingInvitationInput, RegisterWithoutInvitationInput } fro
 import {
   CurrentUserDocument,
   LoginDocument,
+  LogInAsDocument,
   RegisterUsingInvitationDocument,
   RegisterWithoutInvitationDocument,
   type LoginMutationVariables,
@@ -13,11 +14,30 @@ import { parseCurrentClaims } from '@/lib/auth-claims';
 import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { sanitizeReturnURL } from '@/lib/sanitize';
-import { setSessionCookie } from '@/lib/server/session';
+import { clearSessionCookie, setSessionCookie } from '@/lib/server/session';
 import { getRequestContext } from '@/lib/server/tenant';
 import { isDeepStrictEqual } from 'node:util';
 
 type AuthActionResult = { error: string } | { redirectTo: string };
+
+export async function logoutAction(): Promise<void> {
+  await clearSessionCookie();
+}
+
+export async function logInAsAction(id: string): Promise<AuthActionResult> {
+  if (typeof id !== 'string' || !id) return { error: 'Chybí ID uživatele' };
+
+  try {
+    const { logInAs } = await executeGraphql(LogInAsDocument, { id });
+    const token = logInAs?.result?.jwt;
+    if (!token) return { error: 'Přihlášení selhalo' };
+
+    await setSessionCookie(token);
+  } catch {
+    return { error: 'Přihlášení selhalo' };
+  }
+  return { redirectTo: '/dashboard' };
+}
 
 export async function refreshSessionAction(): Promise<RequestAuthState> {
   const context = await getRequestContext();

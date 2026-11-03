@@ -1,5 +1,6 @@
 import { atom, createStore, useAtomValue } from 'jotai';
 import { resolveAuth, type JwtClaims, type ResolvedAuth } from '@/lib/auth-claims';
+import { logoutAction } from '@/lib/auth-actions';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
@@ -95,8 +96,7 @@ export const useTenantConfig = () => useAtomValue(tenantAtom).config;
 export const useAuth = () => useAtomValue(authHelpersAtom);
 
 export async function signOut() {
-  const response = await fetch('/api/auth/logout', { method: 'POST' });
-  if (!response.ok) throw new Error('Odhlášení selhalo');
+  await logoutAction();
 
   storeRef.current.set(authAtom, { claims: null, user: null });
   storeRef.resetUrqlClient();

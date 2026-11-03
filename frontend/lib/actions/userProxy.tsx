@@ -5,6 +5,7 @@ import {
   type UserProxyFragment,
 } from '@/graphql/Memberships';
 import { defineActions } from '@/lib/actions';
+import { logInAsAction } from '@/lib/auth-actions';
 import { EditUserProxyForm } from '@/ui/forms/EditUserProxyForm';
 
 export const userProxyActions = defineActions<UserProxyFragment>()([
@@ -23,14 +24,10 @@ export const userProxyActions = defineActions<UserProxyFragment>()([
     visible: ({ item }) => !!item.user,
     execute: async ({ item }) => {
       if (!item.user) return;
-      const response = await fetch('/api/auth/log-in-as', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ id: item.user.id }),
-      });
-      if (!response.ok) throw new Error('Přihlášení selhalo');
+      const result = await logInAsAction(item.user.id);
+      if ('error' in result) throw new Error(result.error);
 
-      window.location.replace('/dashboard');
+      window.location.replace(result.redirectTo);
     },
   },
   {
