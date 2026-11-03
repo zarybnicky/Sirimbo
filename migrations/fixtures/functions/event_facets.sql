@@ -64,26 +64,26 @@ language sql stable as $$
       location_ids is null or location_id = any(location_ids) as location_matches
     from candidates
   ), facets as (
-    select m.id, option.facet, option.value
+    select m.id, 'type' as facet, upper(m.type::text) as value
     from matches m
-    cross join lateral (
-    select 'type' as facet, upper(m.type::text) as value
     where m.trainer_matches and m.participant_matches and m.location_matches and m.cohort_matches
     union all
-    select 'trainer', unnest(m.trainers)::text
+    select m.id, 'trainer', unnest(m.trainers)::text
+    from matches m
     where m.type_matches and m.participant_matches and m.location_matches and m.cohort_matches
     union all
-    select 'participant', person_id::text
-    from unnest(m.participants) person(person_id)
+    select m.id, 'participant', person_id::text
+    from matches m
+    cross join lateral unnest(m.participants) person(person_id)
     where m.type_matches and m.trainer_matches and m.location_matches and m.cohort_matches
       and ($11 is null or person_id in (
         select person_id from cohort_people c where c.cohort_id = $11
       ))
     union all
-    select 'location', m.location_id::text
+    select m.id, 'location', m.location_id::text
+    from matches m
     where m.type_matches and m.trainer_matches and m.participant_matches and m.cohort_matches
       and m.location_id is not null
-    ) option
     union all
     select m.id, 'cohort', c.cohort_id::text
     from matches m
@@ -92,10 +92,9 @@ language sql stable as $$
     where m.type_matches and m.trainer_matches and m.location_matches
       and (participant_ids is null or c.person_id = any(participant_ids))
   )
-  select facet, value, count(distinct id)::integer
-  from facets
-  group by facet, value
-  order by facet, value;
+  select facet, value, count(*)::integer
+  from (select distinct id, facet, value from facets) events
+  group by facet, value;
 $$;
 comment on function event_facets is '@behavior +list -connection';
 revoke all on function event_facets from public;
