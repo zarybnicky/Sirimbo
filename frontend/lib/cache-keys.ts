@@ -34,12 +34,14 @@ export const cacheKeyFields = {
   IntRangeBound: null,
   LocationImage: ['fileId'],
   PersonFacetsRecord: null,
+  PaymentFacetsRecord: null,
   PersonFederationCandidatesRecord: null,
   PersonLastActivity: null,
   Price: null,
   RanklistEntry: ['snapshotId', 'competitorId'],
   ScoreboardRecord: ['personId'],
   TenantSetting: ['tenantId'],
+  TransactionFacetsRecord: null,
 } as const satisfies CacheKeyFields;
 
 export const cacheKeys = Object.fromEntries(

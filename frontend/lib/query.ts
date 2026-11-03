@@ -243,7 +243,21 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deletePayment(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Payment', id: args.input.id });
-        invalidateQueryFields(cache, ['payments']);
+        invalidateQueryFields(cache, [
+          'payments',
+          'transactions',
+          'accountsList',
+          'paymentFacetsList',
+          'transactionFacetsList',
+        ]);
+      },
+      deleteTransaction(_result, args, cache) {
+        cache.invalidate({ __typename: 'Transaction', id: args.input.id });
+        invalidateQueryFields(cache, [
+          'transactions',
+          'transactionFacetsList',
+          'accountsList',
+        ]);
       },
 
       updateCohort(_result, args, cache, _info) {
@@ -465,6 +479,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       createCreditTransactionForPerson(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Person', id: args.input.vPersonId! });
+        invalidateQueryFields(cache, ['transactionFacetsList']);
       },
 
       updateAnnouncement(_result, _args, cache) {
@@ -474,7 +489,11 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate('Query', field.fieldName, field.arguments);
       },
       updatePayment(_result, _args, cache) {
-        invalidateQueryFields(cache, ['paymentDebtorsList', 'payments']);
+        invalidateQueryFields(cache, [
+          'paymentDebtorsList',
+          'payments',
+          'paymentFacetsList',
+        ]);
       },
     },
   },

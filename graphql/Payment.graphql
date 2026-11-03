@@ -159,12 +159,20 @@ query TransactionAccounts {
   }
 }
 
-query PaymentListOptions {
-  people(orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC, ID_ASC]) {
-    nodes {
-      id
-      name
-    }
+query PaymentListOptions($status: PaymentStatus, $kind: PaymentKind, $personIds: [BigInt], $search: String) {
+  paymentFacetsList(onlyStatus: $status, onlyKind: $kind, personIds: $personIds, search: $search) @_required {
+    facet
+    value
+    count
+    label
+  }
+}
+
+query TransactionFacets($since: Datetime, $until: Datetime, $sources: [TransactionSource], $accountIds: [BigInt], $search: String) {
+  transactionFacetsList(since: $since, until: $until, sources: $sources, accountIds: $accountIds, search: $search) @_required {
+    facet
+    value
+    count
   }
 }
 

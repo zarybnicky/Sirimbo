@@ -1,6 +1,7 @@
 'use client';
 
 import { parseAsArrayOf, parseAsString, parseAsStringEnum, useQueryStates } from 'nuqs';
+import React from 'react';
 import { useQuery } from 'urql';
 import type { PaymentKind, PaymentStatus } from '@/graphql';
 import { PaymentListDocument, PaymentListOptionsDocument } from '@/graphql/Payment';
@@ -39,21 +40,33 @@ export function PaymentList() {
     Number(filters.status !== '') +
     Number(filters.kind !== '') +
     Number(filters.personIds.length > 0);
-  const [options] = useQuery({ query: PaymentListOptionsDocument });
+  const search = React.useDeferredValue(filters.search.trim());
+  const searchPending = search !== filters.search.trim();
+  const condition = {
+    status: filters.status || undefined,
+    kind: filters.kind || undefined,
+    personIds: filters.personIds.length > 0 ? filters.personIds : null,
+    search,
+  };
+  const [options] = useQuery({
+    query: PaymentListOptionsDocument,
+    variables: condition,
+    pause: searchPending,
+  });
+  const counts: Record<string, Record<string, number>> = {};
+  for (const { facet, value, count } of options.data?.paymentFacetsList ?? []) {
+    if (facet && value != null) (counts[facet] ??= {})[value] = count ?? 0;
+  }
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: PaymentListDocument,
     variables: (offset) => ({
       first: 50,
       offset,
-      condition: {
-        status: filters.status || undefined,
-        kind: filters.kind || undefined,
-        personIds: filters.personIds.length > 0 ? filters.personIds : null,
-        search: filters.search.trim(),
-      },
+      condition,
     }),
     getTotal: (data) => data.payments?.totalCount,
     limit: 50,
+    pause: searchPending,
   });
   const payments = data?.payments?.nodes ?? [];
   const change = (value: Partial<typeof filters>) => {
@@ -80,7 +93,10 @@ export function PaymentList() {
           name="status"
           label="Stav"
           value={filters.status}
-          options={statusOptions}
+          options={statusOptions.map((option) => ({
+            ...option,
+            count: options.data ? (counts.status?.[option.value] ?? 0) : undefined,
+          }))}
           onChange={(status) => change({ status })}
         />
         <FacetRadioGroup
@@ -88,7 +104,10 @@ export function PaymentList() {
           name="kind"
           label="Typ"
           value={filters.kind}
-          options={kindOptions}
+          options={kindOptions.map((option) => ({
+            ...option,
+            count: options.data ? (counts.kind?.[option.value] ?? 0) : undefined,
+          }))}
           onChange={(kind) => change({ kind })}
         />
         <FacetFilter
@@ -97,15 +116,22 @@ export function PaymentList() {
           value={filters.personIds}
           maxVisibleOptions={5}
           moreLabel="Další"
-          options={(options.data?.people?.nodes ?? []).map((x) => ({
-            value: x.id,
-            label: x.name,
-          }))}
+          options={(options.data?.paymentFacetsList ?? [])
+            .flatMap(({ facet, value, label, count }) =>
+              facet === 'person' && value && label
+                ? [{ value, label, count: count ?? 0 }]
+                : [],
+            )
+            .toSorted((a, b) => a.label.localeCompare(b.label, 'cs'))}
           onChange={(personIds) => change({ personIds })}
         />
       </ListHeader>
 
-      <PaymentTable payments={payments} busy={fetching} error={error ?? options.error} />
+      <PaymentTable
+        payments={payments}
+        busy={fetching || searchPending}
+        error={error ?? options.error}
+      />
       <Pagination {...pagination} />
     </>
   );

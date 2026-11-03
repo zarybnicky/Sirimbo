@@ -8,7 +8,11 @@ import {
 } from 'nuqs';
 import { useQuery } from 'urql';
 import type { AccountFragment } from '@/graphql/Payment';
-import { TransactionAccountsDocument, TransactionsDocument } from '@/graphql/Payment';
+import {
+  TransactionAccountsDocument,
+  TransactionFacetsDocument,
+  TransactionsDocument,
+} from '@/graphql/Payment';
 import type { TransactionSource } from '@/graphql';
 import {
   describePosting,
@@ -68,22 +72,31 @@ export function TransactionList() {
   const accountIds = filters.accountIds.length > 0 ? filters.accountIds : null;
   const period = { unit: filters.unit, date: filters.date ?? new Date() };
   const range = getPeriodRange(period.unit, period.date);
+  const condition = {
+    accountIds,
+    sources: filters.sources.length === defaultSources.length ? null : filters.sources,
+    date: {
+      since: range.since.toISOString(),
+      until: range.until.toISOString(),
+    },
+    search,
+  };
+  const [facets] = useQuery({
+    query: TransactionFacetsDocument,
+    variables: { ...condition, ...condition.date },
+    pause: searchPending,
+  });
+  const counts: Record<string, Record<string, number>> = {};
+  for (const { facet, value, count } of facets.data?.transactionFacetsList ?? []) {
+    if (facet && value) (counts[facet] ??= {})[value] = count ?? 0;
+  }
   const { data, fetching, error, pagination } = usePaginatedQuery({
     query: TransactionsDocument,
     variables: (offset) => ({
       first: TRANSACTIONS_PAGE_SIZE,
       offset,
       accountIds,
-      condition: {
-        accountIds,
-        sources:
-          filters.sources.length === defaultSources.length ? null : filters.sources,
-        date: {
-          since: range.since.toISOString(),
-          until: range.until.toISOString(),
-        },
-        search,
-      },
+      condition,
     }),
     getTotal: (data) => data.transactions?.totalCount,
     limit: TRANSACTIONS_PAGE_SIZE,
@@ -162,7 +175,10 @@ export function TransactionList() {
           label="Zdroj"
           value={filters.sources}
           defaultValue={defaultSources}
-          options={sourceOptions}
+          options={sourceOptions.map((option) => ({
+            ...option,
+            count: facets.data ? (counts.source?.[option.value] ?? 0) : undefined,
+          }))}
           onChange={(sources) => change({ sources })}
         />
         <FacetFilter
@@ -172,12 +188,17 @@ export function TransactionList() {
           maxVisibleOptions={5}
           moreLabel="Další"
           options={(accounts.data?.accountsList ?? [])
+            .filter((x) => !!counts.account?.[x.id] || filters.accountIds.includes(x.id))
             .toSorted(
               (a, b) =>
                 Number(a.personId !== null) - Number(b.personId !== null) ||
                 compareText(accountLabel(a), accountLabel(b)),
             )
-            .map((x) => ({ value: x.id, label: accountLabel(x) }))}
+            .map((x) => ({
+              value: x.id,
+              label: accountLabel(x),
+              count: facets.data ? (counts.account?.[x.id] ?? 0) : undefined,
+            }))}
           onChange={(accountIds) => change({ accountIds })}
         />
         <PeriodPicker
@@ -217,7 +238,7 @@ export function TransactionList() {
           )
         }
         busy={fetching || searchPending}
-        error={error ?? accounts.error}
+        error={error ?? accounts.error ?? facets.error}
       >
         {(data?.transactions?.nodes ?? []).flatMap((transaction) =>
           transaction.postingsList.map(({ id, amount, account }, i) => (

@@ -8543,6 +8543,14 @@ export type PaymentEdge = {
   node: Payment;
 };
 
+export type PaymentFacetsRecord = {
+  __typename?: 'PaymentFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  label: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
+};
+
 export type PaymentKind =
   | 'COHORT_SUBSCRIPTION'
   | 'EVENT'
@@ -9654,6 +9662,7 @@ export type Query = {
   paymentDebtor: Maybe<PaymentDebtor>;
   /** Reads a set of `PaymentDebtor`. */
   paymentDebtorsList: Maybe<Array<PaymentDebtor>>;
+  paymentFacetsList: Maybe<Array<PaymentFacetsRecord>>;
   /** Get a single `PaymentRecipient`. */
   paymentRecipient: Maybe<PaymentRecipient>;
   /** Reads and enables pagination through a set of `Payment`. */
@@ -9694,6 +9703,7 @@ export type Query = {
   trainerGroupAttendanceCompletionList: Maybe<Array<TrainerGroupAttendanceCompletion>>;
   /** Get a single `Transaction`. */
   transaction: Maybe<Transaction>;
+  transactionFacetsList: Maybe<Array<TransactionFacetsRecord>>;
   /** Reads and enables pagination through a set of `Transaction`. */
   transactions: Maybe<TransactionConnection>;
   /** Get a single `User`. */
@@ -10493,6 +10503,17 @@ export type QueryPaymentDebtorsListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPaymentFacetsListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  onlyKind?: InputMaybe<PaymentKind>;
+  onlyStatus?: InputMaybe<PaymentStatus>;
+  personIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPaymentRecipientArgs = {
   id: Scalars['BigInt']['input'];
 };
@@ -10651,6 +10672,18 @@ export type QueryTrainerGroupAttendanceCompletionListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryTransactionArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTransactionFacetsListArgs = {
+  accountIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  since?: InputMaybe<Scalars['Datetime']['input']>;
+  sources?: InputMaybe<Array<InputMaybe<TransactionSource>>>;
+  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -12575,6 +12608,13 @@ export type TransactionEdge = {
   node: Transaction;
 };
 
+export type TransactionFacetsRecord = {
+  __typename?: 'TransactionFacetsRecord';
+  count: Maybe<Scalars['Int']['output']>;
+  facet: Maybe<Scalars['String']['output']>;
+  value: Maybe<Scalars['String']['output']>;
+};
+
 export type TransactionSource =
   | 'AUTO_BANK'
   | 'AUTO_CREDIT'
@@ -13727,6 +13767,7 @@ export type GraphCacheKeysConfig = {
   PaymentDebtor?: (data: WithTypename<PaymentDebtor>) => null | string,
   PaymentDebtorPriceRecord?: (data: WithTypename<PaymentDebtorPriceRecord>) => null | string,
   PaymentEdge?: (data: WithTypename<PaymentEdge>) => null | string,
+  PaymentFacetsRecord?: (data: WithTypename<PaymentFacetsRecord>) => null | string,
   PaymentRecipient?: (data: WithTypename<PaymentRecipient>) => null | string,
   Person?: (data: WithTypename<Person>) => null | string,
   PersonConnection?: (data: WithTypename<PersonConnection>) => null | string,
@@ -13786,6 +13827,7 @@ export type GraphCacheKeysConfig = {
   Transaction?: (data: WithTypename<Transaction>) => null | string,
   TransactionConnection?: (data: WithTypename<TransactionConnection>) => null | string,
   TransactionEdge?: (data: WithTypename<TransactionEdge>) => null | string,
+  TransactionFacetsRecord?: (data: WithTypename<TransactionFacetsRecord>) => null | string,
   UpdateAccessCredentialPayload?: (data: WithTypename<UpdateAccessCredentialPayload>) => null | string,
   UpdateAnnouncementPayload?: (data: WithTypename<UpdateAnnouncementPayload>) => null | string,
   UpdateAttendancePayload?: (data: WithTypename<UpdateAttendancePayload>) => null | string,
@@ -13912,6 +13954,7 @@ export type GraphCacheResolvers = {
     payment?: GraphCacheResolver<WithTypename<Query>, QueryPaymentArgs, WithTypename<Payment> | string>,
     paymentDebtor?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorArgs, WithTypename<PaymentDebtor> | string>,
     paymentDebtorsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentDebtorsListArgs, Array<WithTypename<PaymentDebtor> | string>>,
+    paymentFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryPaymentFacetsListArgs, Array<WithTypename<PaymentFacetsRecord> | string>>,
     paymentRecipient?: GraphCacheResolver<WithTypename<Query>, QueryPaymentRecipientArgs, WithTypename<PaymentRecipient> | string>,
     payments?: GraphCacheResolver<WithTypename<Query>, QueryPaymentsArgs, WithTypename<PaymentConnection> | string>,
     people?: GraphCacheResolver<WithTypename<Query>, QueryPeopleArgs, WithTypename<PersonConnection> | string>,
@@ -13934,6 +13977,7 @@ export type GraphCacheResolvers = {
     tenantsList?: GraphCacheResolver<WithTypename<Query>, QueryTenantsListArgs, Array<WithTypename<Tenant> | string>>,
     trainerGroupAttendanceCompletionList?: GraphCacheResolver<WithTypename<Query>, QueryTrainerGroupAttendanceCompletionListArgs, Array<WithTypename<TrainerGroupAttendanceCompletion> | string>>,
     transaction?: GraphCacheResolver<WithTypename<Query>, QueryTransactionArgs, WithTypename<Transaction> | string>,
+    transactionFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryTransactionFacetsListArgs, Array<WithTypename<TransactionFacetsRecord> | string>>,
     transactions?: GraphCacheResolver<WithTypename<Query>, QueryTransactionsArgs, WithTypename<TransactionConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     userProxy?: GraphCacheResolver<WithTypename<Query>, QueryUserProxyArgs, WithTypename<UserProxy> | string>,
@@ -15529,6 +15573,12 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<PaymentEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<PaymentEdge>, Record<string, never>, WithTypename<Payment> | string>
   },
+  PaymentFacetsRecord?: {
+    count?: GraphCacheResolver<WithTypename<PaymentFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    facet?: GraphCacheResolver<WithTypename<PaymentFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    label?: GraphCacheResolver<WithTypename<PaymentFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<PaymentFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   PaymentRecipient?: {
     account?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, WithTypename<Account> | string>,
     accountId?: GraphCacheResolver<WithTypename<PaymentRecipient>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -16042,6 +16092,11 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<TransactionEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<TransactionEdge>, Record<string, never>, WithTypename<Transaction> | string>
   },
+  TransactionFacetsRecord?: {
+    count?: GraphCacheResolver<WithTypename<TransactionFacetsRecord>, Record<string, never>, Scalars['Int']['output'] | string>,
+    facet?: GraphCacheResolver<WithTypename<TransactionFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>,
+    value?: GraphCacheResolver<WithTypename<TransactionFacetsRecord>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   UpdateAccessCredentialPayload?: {
     accessCredential?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, WithTypename<AccessCredential> | string>,
     clientMutationId?: GraphCacheResolver<WithTypename<UpdateAccessCredentialPayload>, Record<string, never>, Scalars['String']['output'] | string>
@@ -16372,6 +16427,7 @@ export type GraphCacheUpdaters = {
     payment?: GraphCacheUpdateResolver<{ payment: Maybe<WithTypename<Payment>> }, QueryPaymentArgs>,
     paymentDebtor?: GraphCacheUpdateResolver<{ paymentDebtor: Maybe<WithTypename<PaymentDebtor>> }, QueryPaymentDebtorArgs>,
     paymentDebtorsList?: GraphCacheUpdateResolver<{ paymentDebtorsList: Maybe<Array<WithTypename<PaymentDebtor>>> }, QueryPaymentDebtorsListArgs>,
+    paymentFacetsList?: GraphCacheUpdateResolver<{ paymentFacetsList: Maybe<Array<WithTypename<PaymentFacetsRecord>>> }, QueryPaymentFacetsListArgs>,
     paymentRecipient?: GraphCacheUpdateResolver<{ paymentRecipient: Maybe<WithTypename<PaymentRecipient>> }, QueryPaymentRecipientArgs>,
     payments?: GraphCacheUpdateResolver<{ payments: Maybe<WithTypename<PaymentConnection>> }, QueryPaymentsArgs>,
     people?: GraphCacheUpdateResolver<{ people: Maybe<WithTypename<PersonConnection>> }, QueryPeopleArgs>,
@@ -16394,6 +16450,7 @@ export type GraphCacheUpdaters = {
     tenantsList?: GraphCacheUpdateResolver<{ tenantsList: Maybe<Array<WithTypename<Tenant>>> }, QueryTenantsListArgs>,
     trainerGroupAttendanceCompletionList?: GraphCacheUpdateResolver<{ trainerGroupAttendanceCompletionList: Maybe<Array<WithTypename<TrainerGroupAttendanceCompletion>>> }, QueryTrainerGroupAttendanceCompletionListArgs>,
     transaction?: GraphCacheUpdateResolver<{ transaction: Maybe<WithTypename<Transaction>> }, QueryTransactionArgs>,
+    transactionFacetsList?: GraphCacheUpdateResolver<{ transactionFacetsList: Maybe<Array<WithTypename<TransactionFacetsRecord>>> }, QueryTransactionFacetsListArgs>,
     transactions?: GraphCacheUpdateResolver<{ transactions: Maybe<WithTypename<TransactionConnection>> }, QueryTransactionsArgs>,
     user?: GraphCacheUpdateResolver<{ user: Maybe<WithTypename<User>> }, QueryUserArgs>,
     userProxy?: GraphCacheUpdateResolver<{ userProxy: Maybe<WithTypename<UserProxy>> }, QueryUserProxyArgs>,
@@ -18071,6 +18128,12 @@ export type GraphCacheUpdaters = {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentEdge>>, Record<string, never>>
   },
+  PaymentFacetsRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentFacetsRecord>>, Record<string, never>>,
+    facet?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentFacetsRecord>>, Record<string, never>>,
+    label?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentFacetsRecord>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentFacetsRecord>>, Record<string, never>>
+  },
   PaymentRecipient?: {
     account?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
     accountId?: GraphCacheUpdateResolver<Maybe<WithTypename<PaymentRecipient>>, Record<string, never>>,
@@ -18583,6 +18646,11 @@ export type GraphCacheUpdaters = {
   TransactionEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionEdge>>, Record<string, never>>
+  },
+  TransactionFacetsRecord?: {
+    count?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionFacetsRecord>>, Record<string, never>>,
+    facet?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionFacetsRecord>>, Record<string, never>>,
+    value?: GraphCacheUpdateResolver<Maybe<WithTypename<TransactionFacetsRecord>>, Record<string, never>>
   },
   UpdateAccessCredentialPayload?: {
     accessCredential?: GraphCacheUpdateResolver<Maybe<WithTypename<UpdateAccessCredentialPayload>>, Record<string, never>>,
