@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { SESSION_COOKIE, SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
+import { SESSION_COOKIE } from '@/lib/session-cookies';
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
@@ -28,11 +28,9 @@ export function sameOrigin(request: NextRequest) {
 export async function setSessionCookie(token: string) {
   const store = await cookies();
   store.set(SESSION_COOKIE, token, { ...COOKIE_OPTIONS, httpOnly: true });
-  store.set(SESSION_PRESENT_COOKIE, '1', COOKIE_OPTIONS);
 }
 
 export async function clearSessionCookie() {
   const store = await cookies();
   store.set(SESSION_COOKIE, '', { ...COOKIE_OPTIONS, httpOnly: true, maxAge: 0 });
-  store.set(SESSION_PRESENT_COOKIE, '', { ...COOKIE_OPTIONS, maxAge: 0 });
 }

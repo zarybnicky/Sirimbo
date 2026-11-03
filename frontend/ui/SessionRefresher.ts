@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { authAtom, sessionPresentAtom } from '@/lib/auth';
+import { authAtom } from '@/lib/auth';
 import { refreshSessionAction } from '@/lib/auth-actions';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
@@ -10,7 +10,7 @@ export const SessionRefresher = React.memo(function SessionRefresher({
   initialSessionStale: boolean;
 }) {
   const router = useRouter();
-  const sessionPresent = useAtomValue(sessionPresentAtom);
+  const sessionPresent = !!useAtomValue(authAtom).claims;
   const setRequestAuth = useSetAtom(authAtom);
   const initialRefreshStarted = React.useRef(false);
 

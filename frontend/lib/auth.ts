@@ -1,9 +1,8 @@
-import { atom, createStore, type PrimitiveAtom, useAtomValue } from 'jotai';
+import { atom, createStore, useAtomValue } from 'jotai';
 import { resolveAuth, type JwtClaims, type ResolvedAuth } from '@/lib/auth-claims';
 import type { CoupleFragment } from '@/graphql/Memberships';
 import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
-import { SESSION_PRESENT_COOKIE } from '@/lib/session-cookies';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { getCookie, setCookie } from 'cookies-next/client';
 
@@ -70,13 +69,6 @@ export const tenantIdAtom = atom<string, [string], void>(
   },
 );
 
-export const sessionPresentAtom: PrimitiveAtom<boolean> = atom(
-  getCookie(SESSION_PRESENT_COOKIE) === '1',
-);
-sessionPresentAtom.onMount = (setPresent) => {
-  setPresent(getCookie(SESSION_PRESENT_COOKIE) === '1');
-};
-
 const authHelpersAtom = atom<AuthState>((get) => {
   const { claims, user } = get(authAtom);
   if (!user || !claims) return defaultAuthState;
@@ -107,6 +99,5 @@ export async function signOut() {
   if (!response.ok) throw new Error('Odhlášení selhalo');
 
   storeRef.current.set(authAtom, { claims: null, user: null });
-  storeRef.current.set(sessionPresentAtom, false);
   storeRef.resetUrqlClient();
 }
