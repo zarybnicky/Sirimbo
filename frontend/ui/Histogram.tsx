@@ -34,24 +34,13 @@ export function Histogram({
           <g
             key={value}
             transform={`translate(${x(value)}, 0)`}
-            tabIndex={onSelect ? 0 : undefined}
-            onClick={onSelect ? () => onSelect(value) : undefined}
-            onKeyDown={
-              onSelect
-                ? (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      onSelect(value);
-                    }
-                  }
-                : undefined
-            }
+            onClick={onSelect && count ? () => onSelect(value) : undefined}
             className={
-              onSelect ? 'cursor-pointer outline-accent-9 hover:opacity-70' : undefined
+              onSelect && count ? 'cursor-pointer outline-accent-9 hover:opacity-70' : undefined
             }
           >
             <title>{`${formatTitle(value)}: ${count}`}</title>
-            {onSelect && (
+            {onSelect && count && (
               <rect y={0} width={x.bandwidth()} height={68} fill="transparent" />
             )}
             <rect

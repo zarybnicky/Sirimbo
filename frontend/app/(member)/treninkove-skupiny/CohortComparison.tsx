@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import type { CohortListQuery, PersonHistogramFragment } from '@/graphql/Cohorts';
@@ -102,21 +100,17 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
         <DialogContent>
           <DialogTitle>{selection?.title}</DialogTitle>
           <p className="text-sm text-neutral-11">Osob: {selection?.people.length ?? 0}</p>
-          {selection?.people.length ? (
-            <ul className="space-y-2">
-              {selection.people
-                .toSorted((a, b) => compareText(a.name, b.name))
-                .map((x) => (
-                  <li key={x.id}>
-                    <Link className="text-accent-11 underline" href={`/clenove/${x.id}`}>
-                      {x.name}
-                    </Link>
-                  </li>
-                ))}
-            </ul>
-          ) : (
-            <p>V této kategorii nikdo není.</p>
-          )}
+          <ul className="space-y-2">
+            {selection?.people
+              .toSorted((a, b) => compareText(a.name, b.name))
+              .map((x) => (
+                <li key={x.id}>
+                  <Link className="text-accent-11 underline" href={`/clenove/${x.id}`}>
+                    {x.name}
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </DialogContent>
       </Dialog>
     </>
@@ -229,7 +223,7 @@ export function AgeHistogram({
           ? (code) =>
               onSelect(
                 `Věk: ${formatAgeGroup(code) ?? '?'}`,
-                people.filter((person) => personAgeGroup(person) === code),
+                people.filter((x) => personAgeGroup(x) === code),
               )
           : undefined
       }
@@ -261,8 +255,8 @@ export function ClassHistogram({
         onSelect
           ? (code) =>
               onSelect(
-                `${label}: ${code}`,
-                people.filter((person) => personClass(person, discipline) === code),
+                `${discipline}: ${code}`,
+                people.filter((x) => personClass(x, discipline) === code),
               )
           : undefined
       }
