@@ -37,5 +37,3 @@ from crawler.frontier f
 left join crawler.json_response jr on jr.id = f.last_response_id
 where f.fetch_status in ('error', 'transient')
    or f.process_status = 'error';
-
-revoke all on crawler.frontier_failure from public;

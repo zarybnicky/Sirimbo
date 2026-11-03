@@ -45,5 +45,4 @@ begin
 end;
 $$;
 
-revoke all on function app_private.ensure_couple_person_registrations from public;
 grant execute on function app_private.ensure_couple_person_registrations to trainer, administrator;

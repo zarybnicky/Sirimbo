@@ -97,5 +97,4 @@ language sql stable as $$
   group by facet, value;
 $$;
 comment on function event_facets is '@behavior +list -connection';
-revoke all on function event_facets from public;
 grant execute on function event_facets to anonymous;

@@ -68,8 +68,6 @@ begin
 end;
 $$;
 
-revoke execute on function app_private.tg_event_registration__refresh_stats_stmt() from public, anonymous;
-
 create or replace trigger _500_refresh_stats_ins
   after insert on event_registration
   referencing new table as changed_rows for each statement

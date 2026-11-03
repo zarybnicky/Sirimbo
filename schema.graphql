@@ -10703,6 +10703,13 @@ type PaymentEdge {
   node: Payment!
 }
 
+type PaymentFacetsRecord {
+  count: Int
+  facet: String
+  label: String
+  value: String
+}
+
 enum PaymentKind {
   COHORT_SUBSCRIPTION
   EVENT
@@ -13026,6 +13033,17 @@ type Query {
     """The method to use when ordering `PaymentDebtor`."""
     orderBy: [PaymentDebtorsOrderBy!]
   ): [PaymentDebtor!]
+  paymentFacetsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    onlyKind: PaymentKind
+    onlyStatus: PaymentStatus
+    personIds: [BigInt]
+    search: String
+  ): [PaymentFacetsRecord!]
 
   """Get a single `PaymentRecipient`."""
   paymentRecipient(id: BigInt!): PaymentRecipient
@@ -13218,6 +13236,19 @@ type Query {
 
   """Get a single `Transaction`."""
   transaction(id: BigInt!): Transaction
+  transactionFacetsList(
+    accountIds: [BigInt]
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    search: String
+    since: Datetime
+    sources: [TransactionSource]
+    until: Datetime
+  ): [TransactionFacetsRecord!]
 
   """Reads and enables pagination through a set of `Transaction`."""
   transactions(
@@ -15754,6 +15785,12 @@ type TransactionEdge {
 
   """The `Transaction` at the end of the edge."""
   node: Transaction!
+}
+
+type TransactionFacetsRecord {
+  count: Int
+  facet: String
+  value: String
 }
 
 enum TransactionSource {

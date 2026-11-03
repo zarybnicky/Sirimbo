@@ -40,7 +40,6 @@ language sql stable as $$
     p.id in (select person_id from admins)
   from person p;
 $$;
-revoke all on function app_private.person_membership_candidates from public;
 grant execute on function app_private.person_membership_candidates to anonymous;
 
 create or replace function person_facets(
@@ -80,5 +79,4 @@ language sql stable as $$
   order by option.facet, option.value;
 $$;
 comment on function person_facets is '@behavior +list -connection';
-revoke all on function person_facets from public;
 grant execute on function person_facets to anonymous;

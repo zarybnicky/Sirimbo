@@ -6,4 +6,3 @@ begin
 end;
 $$;
 comment on function app_private.tg_resolve_age_group() is '@behavior -*';
-revoke all on function app_private.tg_resolve_age_group() from public;

@@ -27,7 +27,6 @@ begin
   return new;
 end;
 $$;
-revoke execute on function app_private.tg_event_registration__attendance_timestamps() from public, anonymous;
 
 create or replace trigger _200_attendance_timestamps
   before insert or update of person_id, status, attendance_note

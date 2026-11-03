@@ -37,7 +37,6 @@ language sql stable as $$
   ))::federated.federation_event_facets;
 $$;
 
-revoke all on function federated.federation_event_facets from public;
 grant execute on function federated.federation_event_facets to anonymous;
 
 comment on type federated.federation_event_year is '@name federation_event_year';

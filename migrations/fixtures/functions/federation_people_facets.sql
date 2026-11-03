@@ -37,5 +37,4 @@ $$;
 
 comment on function federated.federation_people_facets is '@name federation_people_facets
 @behavior +list -connection';
-revoke all on function federated.federation_people_facets from public;
 grant execute on function federated.federation_people_facets to anonymous;

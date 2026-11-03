@@ -1,3 +1,5 @@
+drop trigger if exists _500_reconcile_registrations on event_target_cohort;
+drop function if exists app_private.tg_event_instance_target_cohort__reconcile();
 drop function if exists app_private.reconcile_event_instance_cohort_registrations(bigint[], bigint[], bigint[]);
 drop function if exists app_private.reconcile_event_instance_cohort_registrations(bigint[], bigint[]);
 
@@ -61,8 +63,4 @@ as $$
       is distinct from ('active'::event_registration_status, excluded.target_cohort_id);
 $$;
 
-revoke all on function app_private.reconcile_event_cohort_registrations from public;
 grant execute on function app_private.reconcile_event_cohort_registrations to trainer, administrator;
-
-drop trigger if exists _500_reconcile_registrations on event_target_cohort;
-drop function if exists app_private.tg_event_instance_target_cohort__reconcile();

@@ -31,17 +31,9 @@ export function transactionDatePredicate(row: SQL, value: DateCondition | null) 
 export function transactionSearchPredicate(row: SQL, value: string | null) {
   const search = value?.trim();
   if (!search) return null;
-  const pattern = sqlValueWithCodec(
-    `%${search.replaceAll(/[\\%_]/g, '\\$&')}%`,
-    TYPES.text,
-  );
-  return sql`(
-      ${row}.description ilike ${pattern}
-      or exists (
-        select 1 from public.payment payment where payment.id = ${row}.payment_id
-          and (payment.variable_symbol ilike ${pattern} or payment.specific_symbol ilike ${pattern})
-      )
-    )`;
+  return sql`${row}.id in (
+    select * from app_private.transaction_search_ids(${sqlValueWithCodec(search, TYPES.text)})
+  )`;
 }
 
 const plugins: GraphileConfig.Plugin[] = [

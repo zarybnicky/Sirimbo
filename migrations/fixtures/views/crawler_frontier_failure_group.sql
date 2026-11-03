@@ -12,5 +12,4 @@ group by federation, kind, failure, http_status, error_fingerprint;
 
 comment on view crawler.frontier_failure_group is '@name crawler_target_failure_group
 @behavior +list -connection -insert -update -delete';
-revoke all on crawler.frontier_failure_group from public;
 grant select on crawler.frontier_failure_group to system_admin;

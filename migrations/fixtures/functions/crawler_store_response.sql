@@ -68,5 +68,3 @@ begin
   return response_id;
 end;
 $$;
-
-revoke all on function crawler.store_response(bigint, text, integer, text, jsonb, crawler.fetch_status) from public;

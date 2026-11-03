@@ -17,5 +17,4 @@ group by federation, kind;
 
 comment on view crawler.frontier_summary is '@name crawler_target_summary
 @behavior +list -connection -insert -update -delete';
-revoke all on crawler.frontier_summary from public;
 grant select on crawler.frontier_summary to system_admin;

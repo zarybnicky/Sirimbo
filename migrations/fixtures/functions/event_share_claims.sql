@@ -32,5 +32,3 @@ as $$
   select array(select id from events)
   where exists (select 1 from root);
 $$;
-
-revoke all on function app_private.event_share_claims from public;

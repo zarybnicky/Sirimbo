@@ -217,3 +217,9 @@ alter table federated.competitor
 
 alter table tenant add column if not exists csts_id integer;
 grant update (csts_id) on tenant to administrator;
+
+create index if not exists payment_debtor_tenant_person_payment_idx
+  on payment_debtor (tenant_id, person_id, payment_id);
+
+--!include functions/payment_facets.sql
+--!include functions/transaction_facets.sql

@@ -4,6 +4,5 @@ language sql stable strict as $$
   where regexp_replace(lower(source_name), '[^a-z0-9]', '', 'g')
     = any(array_prepend(regexp_replace(lower(code), '[^a-z0-9]', '', 'g'), aliases));
 $$;
-comment on function federated.resolve_age_group(text) is '@behavior -*';
-revoke all on function federated.resolve_age_group(text) from public;
-grant execute on function federated.resolve_age_group(text) to anonymous;
+comment on function federated.resolve_age_group is '@behavior -*';
+grant execute on function federated.resolve_age_group to anonymous;
