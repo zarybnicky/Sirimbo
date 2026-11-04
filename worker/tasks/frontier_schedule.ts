@@ -53,7 +53,7 @@ export const frontier_schedule: Task<'frontier_schedule'> = async (_payload, hel
   });
 };
 
-export async function scheduleFetches(client: PoolClient, { addJobs, logger }: Helpers) {
+export async function scheduleFetches(client: PoolClient, { addJobs }: Helpers) {
   const allowRefetch = process.env.CRAWLER_DISABLE_REFETCH !== 'true';
 
   const scheduleRows = await getScheduleStatus.run(undefined, client);
@@ -94,9 +94,6 @@ export async function scheduleFetches(client: PoolClient, { addJobs, logger }: H
     });
   }
   if (jobs.length > 0) await addJobs(jobs, true);
-  if (pendingIds.length > 0 || outstanding > 0) {
-    logger.info(`${jobs.length} new fetch jobs, outstanding ${outstanding}`);
-  }
 }
 
 export default frontier_schedule;
