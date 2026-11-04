@@ -105,16 +105,3 @@ end;
 $$;
 
 grant all on function set_lesson_request to anonymous;
-
-create function set_lesson_demand(
-  instance_registration_id bigint,
-  instance_trainer_id bigint,
-  lesson_count integer
-) returns event_lesson_request
-language sql strict
-as $$
-  select public.set_lesson_request($1, $2, $3);
-$$;
-
-comment on function set_lesson_demand is E'@deprecated Use setLessonRequest.\n@resultFieldName eventLessonDemand';
-grant execute on function set_lesson_demand to anonymous;

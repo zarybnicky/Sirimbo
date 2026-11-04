@@ -5210,16 +5210,6 @@ input DeleteEventInput {
   id: BigInt!
 }
 
-"""All input for the `deleteEvent` mutation."""
-input DeleteEventInstanceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-}
-
 """The output of our delete `Event` mutation."""
 type DeleteEventPayload {
   """
@@ -5230,9 +5220,6 @@ type DeleteEventPayload {
 
   """The `Event` that was deleted by this mutation."""
   event: Event
-
-  """The `Event` that was deleted by this mutation."""
-  eventInstance: Event @deprecated(reason: "Use event.")
 }
 
 """All input for the `deleteEventSeries` mutation."""
@@ -5564,23 +5551,6 @@ type Event {
   capacityUnit: EventCapacityUnit!
 
   """Reads and enables pagination through a set of `Event`."""
-  childEventInstancesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Event`."""
-    orderBy: [EventsOrderBy!]
-  ): [Event!]! @deprecated(reason: "Use childEventsList.")
-
-  """Reads and enables pagination through a set of `Event`."""
   childEventsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -5603,40 +5573,6 @@ type Event {
   createdAt: Datetime!
   description: String
   enableNotes: Boolean
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventInstanceRegistrationsByInstanceIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]! @deprecated(reason: "Use registrationsList.")
-
-  """Reads and enables pagination through a set of `EventTrainer`."""
-  eventInstanceTrainersByInstanceIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventTrainer`."""
-    orderBy: [EventTrainersOrderBy!]
-  ): [EventTrainer!]! @deprecated(reason: "Use eventTrainersList.")
 
   """Reads and enables pagination through a set of `EventTrainer`."""
   eventTrainersList(
@@ -6146,25 +6082,7 @@ type EventRegistration {
   """Reads a single `Event` that is related to this `EventRegistration`."""
   event: Event
   eventId: BigInt!
-
-  """Reads and enables pagination through a set of `EventLessonRequest`."""
-  eventLessonDemandsByRegistrationIdList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventLessonRequestCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventLessonRequest`."""
-    orderBy: [EventLessonRequestsOrderBy!]
-  ): [EventLessonRequest!]! @deprecated(reason: "Use lessonRequestsList.")
   id: BigInt!
-  instanceId: BigInt! @deprecated(reason: "Use eventId.")
   lastAttended: Datetime
 
   """Reads and enables pagination through a set of `EventLessonRequest`."""
@@ -10028,14 +9946,6 @@ type Mutation {
     input: DeleteEventInput!
   ): DeleteEventPayload
 
-  """Deletes a single `Event` using a unique key."""
-  deleteEventInstance(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEventInstanceInput!
-  ): DeleteEventPayload @deprecated(reason: "Use deleteEvent.")
-
   """Deletes a single `EventSeries` using a unique key."""
   deleteEventSeries(
     """
@@ -10193,12 +10103,6 @@ type Mutation {
     """
     input: SaveEventsInput!
   ): SaveEventsPayload
-  setEventInstanceRegistration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: SetEventInstanceRegistrationInput!
-  ): SetEventInstanceRegistrationPayload @deprecated(reason: "Use setEventRegistration.")
   setEventRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -10211,12 +10115,6 @@ type Mutation {
     """
     input: SetEventSharingInput!
   ): SetEventSharingPayload
-  setLessonDemand(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: SetLessonDemandInput!
-  ): SetLessonDemandPayload @deprecated(reason: "Use setLessonRequest.")
   setLessonRequest(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -10295,14 +10193,6 @@ type Mutation {
     """
     input: UpdateEventInput!
   ): UpdateEventPayload
-
-  """Updates a single `Event` using a unique key and a patch."""
-  updateEventInstance(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventInstanceInput!
-  ): UpdateEventPayload @deprecated(reason: "Use updateEvent.")
 
   """Updates a single `EventSeries` using a unique key and a patch."""
   updateEventSeries(
@@ -10914,42 +10804,8 @@ type Person {
     """The method to use when ordering `Account`."""
     orderBy: [AccountsOrderBy!]
   ): [Account!]!
-
-  """Partnerships involving this person."""
-  activeCouplesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CoupleCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!]
-  ): [Couple!]! @deprecated(reason: "Use couplesList with condition.status: ACTIVE.")
   address: AddressDomain
   ageGroup: String
-
-  """Partnerships involving this person."""
-  allCouplesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CoupleCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Couple`."""
-    orderBy: [CouplesOrderBy!]
-  ): [Couple!]! @deprecated(reason: "Use couplesList.")
   bio: String!
   birthDate: Date
   birthday(since: Date): Date
@@ -11025,23 +10881,6 @@ type Person {
   createdAt: Datetime!
   cstsId: Int
   email: String
-
-  """Reads and enables pagination through a set of `EventRegistration`."""
-  eventInstanceRegistrationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: EventRegistrationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]
-  ): [EventRegistration!]! @deprecated(reason: "Use eventRegistrationsList.")
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventRegistrations(
@@ -11151,35 +10990,6 @@ type Person {
     """
     orderBy: [FederationCompetitorCategoryProgressesOrderBy!] = [PRIMARY_KEY_ASC]
   ): FederationCompetitorCategoryProgressConnection!
-
-  """Competitions entered by this person, across federations."""
-  federationCompetitions(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CompetitionCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int = 30
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Competition`."""
-    orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CompetitionConnection! @deprecated(reason: "Use competitions with condition.competitor.personIds.")
 
   """Reads and enables pagination through a set of `FederationPerson`."""
   federationPeople(
@@ -12635,9 +12445,6 @@ type Query {
     startRange: Datetime
     trainerIds: [BigInt]
   ): [EventFacetsRecord!]
-
-  """Get a single `Event`."""
-  eventInstance(id: BigInt!): Event @deprecated(reason: "Use event.")
   eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
   eventOverlapsAttendeeReportList(
     """Only read the first `n` values of the set."""
@@ -13708,7 +13515,6 @@ type SaveEventsPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-  eventInstances: [Event!] @deprecated(reason: "Use result.")
   result: [Event!]
 }
 
@@ -13962,39 +13768,6 @@ type SeriesInfo {
   until: Datetime
 }
 
-"""All input for the `setEventInstanceRegistration` mutation."""
-input SetEventInstanceRegistrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  pCoupleId: BigInt
-  pInstanceId: BigInt
-  pIsRegistered: Boolean
-  pLessonCounts: [Int]
-  pLessonTrainerIds: [BigInt]
-  pNote: String
-  pPerson: EventRegistrationPersonInputRecordInput
-  pPersonId: BigInt
-}
-
-"""The output of our `setEventInstanceRegistration` mutation."""
-type SetEventInstanceRegistrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  eventInstanceRegistration: EventRegistration
-
-  """An edge for our `EventRegistration`. May be used by Relay 1."""
-  eventRegistrationEdge(
-    """The method to use when ordering `EventRegistration`."""
-    orderBy: [EventRegistrationsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventRegistrationEdge
-}
-
 """All input for the `setEventRegistration` mutation."""
 input SetEventRegistrationInput {
   """
@@ -14047,34 +13820,6 @@ type SetEventSharingPayload {
   """
   clientMutationId: String
   result: String
-}
-
-"""All input for the `setLessonDemand` mutation."""
-input SetLessonDemandInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  instanceRegistrationId: BigInt!
-  instanceTrainerId: BigInt!
-  lessonCount: Int!
-}
-
-"""The output of our `setLessonDemand` mutation."""
-type SetLessonDemandPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  eventLessonDemand: EventLessonRequest
-
-  """An edge for our `EventLessonRequest`. May be used by Relay 1."""
-  eventLessonRequestEdge(
-    """The method to use when ordering `EventLessonRequest`."""
-    orderBy: [EventLessonRequestsOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): EventLessonRequestEdge
 }
 
 """All input for the `setLessonRequest` mutation."""
@@ -14896,23 +14641,6 @@ type Tenant {
     """The method to use when ordering `TenantAdministrator`."""
     orderBy: [TenantAdministratorsOrderBy!]
   ): [TenantAdministrator!]!
-
-  """Reads and enables pagination through a set of `Location`."""
-  tenantLocationsList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!]
-  ): [Location!]! @deprecated(reason: "Use locationsList.")
 
   """Reads and enables pagination through a set of `TenantMembership`."""
   tenantMemberships(
@@ -16002,21 +15730,6 @@ input UpdateEventInput {
   patch: EventPatch!
 }
 
-"""All input for the `updateEvent` mutation."""
-input UpdateEventInstanceInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: BigInt!
-
-  """
-  An object where the defined keys will be set on the `Event` being updated.
-  """
-  patch: EventPatch!
-}
-
 """The output of our update `Event` mutation."""
 type UpdateEventPayload {
   """
@@ -16027,9 +15740,6 @@ type UpdateEventPayload {
 
   """The `Event` that was updated by this mutation."""
   event: Event
-
-  """The `Event` that was updated by this mutation."""
-  eventInstance: Event @deprecated(reason: "Use event.")
 }
 
 """All input for the `updateEventSeries` mutation."""
@@ -16440,8 +16150,6 @@ input UpsertAnnouncementInput {
 
 """The output of our `upsertAnnouncement` mutation."""
 type UpsertAnnouncementPayload {
-  announcement: Announcement @deprecated(reason: "Use result.")
-
   """An edge for our `Announcement`. May be used by Relay 1."""
   announcementEdge(
     """The method to use when ordering `Announcement`."""

@@ -270,21 +270,3 @@ end;
 $$;
 
 grant execute on function set_event_registration to anonymous;
-
-create function set_event_instance_registration(
-  p_instance_id bigint,
-  p_person_id bigint,
-  p_couple_id bigint,
-  p_is_registered boolean,
-  p_note text default null,
-  p_lesson_trainer_ids bigint[] default null,
-  p_lesson_counts integer[] default null,
-  p_person event_registration_person_input default null
-) returns event_registration
-language sql
-as $$
-  select public.set_event_registration($1, $2, $3, $4, $5, $6, $7, $8);
-$$;
-
-comment on function set_event_instance_registration is E'@deprecated Use setEventRegistration.\n@resultFieldName eventInstanceRegistration';
-grant execute on function set_event_instance_registration to anonymous;

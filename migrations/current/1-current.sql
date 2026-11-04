@@ -71,3 +71,7 @@ drop function if exists event_trainer_tenant_trainer;
 drop function if exists account_assets;
 drop function if exists account_liabilities;
 drop function if exists event_trainers;
+
+--!include functions/set_lesson_request.sql
+
+--!include functions/set_event_registration.sql
