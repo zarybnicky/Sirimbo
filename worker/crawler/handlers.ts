@@ -173,6 +173,28 @@ export type LoaderIds = {
   };
 }[keyof Loaders];
 
+export const SEED_FRONTIERS: LoaderIds[] = [
+  { federation: 'wdsf', kind: 'ageGroups' },
+  { federation: 'wdsf', kind: 'memberIndex' },
+
+  { federation: 'csts', kind: 'ranklistIndex' },
+  { federation: 'csts', kind: 'clubIndex' },
+  { federation: 'csts', kind: 'divisionIndex' },
+  { federation: 'csts', kind: 'trainerIndex' },
+  { federation: 'csts', kind: 'judgeIndex' },
+  { federation: 'csts', kind: 'officialIndex' },
+
+  { federation: 'szts', kind: 'competitionIndex' },
+  { federation: 'szts', kind: 'memberIndex' },
+  { federation: 'szts', kind: 'trainerIndex' },
+  { federation: 'szts', kind: 'officialIndex' },
+  { federation: 'szts', kind: 'scrutineerIndex' },
+  { federation: 'szts', kind: 'judgeIndex' },
+  { federation: 'szts', kind: 'clubIndex' },
+  { federation: 'szts', kind: 'soloIndex' },
+  { federation: 'szts', kind: 'coupleIndex' },
+];
+
 export type LoaderEntry<I extends LoaderIds = LoaderIds> =
   I extends { federation: infer F; kind: infer K }
     ? F extends keyof Loaders

@@ -27,9 +27,8 @@ function bump(
 const BUDGET_MS = 1000;
 const PROCESS_BATCH_SIZE = 20;
 
-export const frontier_process: Task<'frontier_process'> = async (payload, helpers) => {
+export const frontier_process: Task<'frontier_process'> = async (_payload, helpers) => {
   const { logger, withPgClient } = helpers;
-  const { isFullRebuild = false } = payload;
 
   let processed = 0;
   let foundNoMoreRows = false;
@@ -77,6 +76,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
           });
         }
 
+        failedFrontier = null;
         await flushLoaderEffects(client, effects);
 
         const ids = frontiers.map((f) => f.id);
@@ -120,7 +120,7 @@ export const frontier_process: Task<'frontier_process'> = async (payload, helper
     }
 
     if (!foundNoMoreRows) {
-      await helpers.addJob('frontier_process', { isFullRebuild }, { runAt });
+      await helpers.addJob('frontier_process', undefined, { runAt });
     }
   });
 };

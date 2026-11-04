@@ -5,6 +5,8 @@ export type fetch_status = 'error' | 'gone' | 'ok' | 'pending' | 'transient';
 
 export type process_status = 'error' | 'ok' | 'pending';
 
+export type DateArray = (Date)[];
+
 export type DateOrString = Date | string;
 
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
@@ -168,9 +170,7 @@ export const getCrawlerStatus = new PreparedQuery<IGetCrawlerStatusParams,IGetCr
 
 
 /** 'QueueCrawlerSchedule' parameters type */
-export interface IQueueCrawlerScheduleParams {
-  host?: string | null | void;
-}
+export type IQueueCrawlerScheduleParams = void;
 
 /** 'QueueCrawlerSchedule' return type */
 export interface IQueueCrawlerScheduleResult {
@@ -183,7 +183,7 @@ export interface IQueueCrawlerScheduleQuery {
   result: IQueueCrawlerScheduleResult;
 }
 
-const queueCrawlerScheduleIR: any = {"usedParamSet":{"host":true},"params":[{"name":"host","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":221},{"a":368,"b":372}]}],"statement":"SELECT (\n  graphile_worker.add_job(\n    identifier => 'frontier_schedule',\n    payload => '{}'::json,\n    run_at => now(),\n    job_key => 'frontier_schedule',\n    job_key_mode => 'replace'\n  )\n).id AS \"job_id!\"\nWHERE :host::text IS NULL OR NOT EXISTS (\n  SELECT FROM graphile_worker.jobs\n  WHERE task_identifier = 'frontier_fetch'\n    AND starts_with(key, 'fetch:' || :host || ':')\n    AND locked_at IS NULL\n    AND attempts < max_attempts\n)"};
+const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT (\n  graphile_worker.add_job(\n    identifier => 'frontier_schedule',\n    payload => '{}'::json,\n    run_at => now(),\n    job_key => 'frontier_schedule',\n    job_key_mode => 'replace'\n  )\n).id AS \"job_id!\""};
 
 /**
  * Query generated from SQL:
@@ -197,13 +197,6 @@ const queueCrawlerScheduleIR: any = {"usedParamSet":{"host":true},"params":[{"na
  *     job_key_mode => 'replace'
  *   )
  * ).id AS "job_id!"
- * WHERE :host::text IS NULL OR NOT EXISTS (
- *   SELECT FROM graphile_worker.jobs
- *   WHERE task_identifier = 'frontier_fetch'
- *     AND starts_with(key, 'fetch:' || :host || ':')
- *     AND locked_at IS NULL
- *     AND attempts < max_attempts
- * )
  * ```
  */
 export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParams,IQueueCrawlerScheduleResult>(queueCrawlerScheduleIR);
@@ -526,14 +519,11 @@ export type IGetScheduleStatusParams = void;
 
 /** 'GetScheduleStatus' return type */
 export interface IGetScheduleStatusResult {
-  delayed: number;
   host: string;
   locked: number;
-  max_requests: number | null;
   next_available_at: Date | null;
-  per_interval: string | null;
   queued: number;
-  ready: number;
+  slots: DateArray;
   spacing: number | null;
 }
 
@@ -543,7 +533,7 @@ export interface IGetScheduleStatusQuery {
   result: IGetScheduleStatusResult;
 }
 
-const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'ready')::int AS ready,\n    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  r.max_requests AS \"max_requests?\",\n  r.per_interval::text AS \"per_interval?\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.ready, 0)::int AS \"ready!\",\n  COALESCE(fj.delayed, 0)::int AS \"delayed!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\"\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
+const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WITH fetch_jobs AS (\n  SELECT\n    host,\n    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,\n    count(*) FILTER (WHERE state = 'locked')::int AS locked,\n    array_agg(run_at ORDER BY run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS slots\n  FROM crawler.frontier_fetch_job\n  WHERE host IS NOT NULL\n  GROUP BY host\n)\nSELECT\n  COALESCE(r.host, fj.host) AS \"host!\",\n  (extract(epoch from r.spacing) * 1000)::int AS \"spacing?\",\n  r.next_available_at AS \"next_available_at?\",\n  COALESCE(fj.queued, 0)::int AS \"queued!\",\n  COALESCE(fj.locked, 0)::int AS \"locked!\",\n  COALESCE(fj.slots, '{}'::timestamptz[]) AS \"slots!\"\nFROM crawler.rate_limit_rule r\nFULL JOIN fetch_jobs fj USING (host)\nORDER BY host"};
 
 /**
  * Query generated from SQL:
@@ -552,59 +542,25 @@ const getScheduleStatusIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *   SELECT
  *     host,
  *     count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,
- *     count(*) FILTER (WHERE state = 'ready')::int AS ready,
- *     count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
- *     count(*) FILTER (WHERE state = 'locked')::int AS locked
+ *     count(*) FILTER (WHERE state = 'locked')::int AS locked,
+ *     array_agg(run_at ORDER BY run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS slots
  *   FROM crawler.frontier_fetch_job
  *   WHERE host IS NOT NULL
  *   GROUP BY host
  * )
  * SELECT
  *   COALESCE(r.host, fj.host) AS "host!",
- *   r.max_requests AS "max_requests?",
- *   r.per_interval::text AS "per_interval?",
  *   (extract(epoch from r.spacing) * 1000)::int AS "spacing?",
  *   r.next_available_at AS "next_available_at?",
  *   COALESCE(fj.queued, 0)::int AS "queued!",
- *   COALESCE(fj.ready, 0)::int AS "ready!",
- *   COALESCE(fj.delayed, 0)::int AS "delayed!",
- *   COALESCE(fj.locked, 0)::int AS "locked!"
+ *   COALESCE(fj.locked, 0)::int AS "locked!",
+ *   COALESCE(fj.slots, '{}'::timestamptz[]) AS "slots!"
  * FROM crawler.rate_limit_rule r
  * FULL JOIN fetch_jobs fj USING (host)
  * ORDER BY host
  * ```
  */
 export const getScheduleStatus = new PreparedQuery<IGetScheduleStatusParams,IGetScheduleStatusResult>(getScheduleStatusIR);
-
-
-/** 'GetScheduledFetchSlots' parameters type */
-export type IGetScheduledFetchSlotsParams = void;
-
-/** 'GetScheduledFetchSlots' return type */
-export interface IGetScheduledFetchSlotsResult {
-  host: string;
-  run_at: Date;
-}
-
-/** 'GetScheduledFetchSlots' query type */
-export interface IGetScheduledFetchSlotsQuery {
-  params: IGetScheduledFetchSlotsParams;
-  result: IGetScheduledFetchSlotsResult;
-}
-
-const getScheduledFetchSlotsIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT host AS \"host!\", run_at AS \"run_at!\"\nFROM crawler.frontier_fetch_job\nWHERE host IS NOT NULL\n  AND state IN ('ready', 'delayed')\nORDER BY host, run_at"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT host AS "host!", run_at AS "run_at!"
- * FROM crawler.frontier_fetch_job
- * WHERE host IS NOT NULL
- *   AND state IN ('ready', 'delayed')
- * ORDER BY host, run_at
- * ```
- */
-export const getScheduledFetchSlots = new PreparedQuery<IGetScheduledFetchSlotsParams,IGetScheduledFetchSlotsResult>(getScheduledFetchSlotsIR);
 
 
 /** 'GetFrontierDetail' parameters type */
@@ -731,34 +687,43 @@ const getLatestFrontierResponseIR: any = {"usedParamSet":{"id":true,"federation"
 export const getLatestFrontierResponse = new PreparedQuery<IGetLatestFrontierResponseParams,IGetLatestFrontierResponseResult>(getLatestFrontierResponseIR);
 
 
-/** 'GetOutstandingJobCountForTask' parameters type */
-export interface IGetOutstandingJobCountForTaskParams {
-  task?: string | null | void;
+/** 'QueuePendingProcess' parameters type */
+export type IQueuePendingProcessParams = void;
+
+/** 'QueuePendingProcess' return type */
+export interface IQueuePendingProcessResult {
+  job_id: string;
 }
 
-/** 'GetOutstandingJobCountForTask' return type */
-export interface IGetOutstandingJobCountForTaskResult {
-  count: number;
+/** 'QueuePendingProcess' query type */
+export interface IQueuePendingProcessQuery {
+  params: IQueuePendingProcessParams;
+  result: IQueuePendingProcessResult;
 }
 
-/** 'GetOutstandingJobCountForTask' query type */
-export interface IGetOutstandingJobCountForTaskQuery {
-  params: IGetOutstandingJobCountForTaskParams;
-  result: IGetOutstandingJobCountForTaskResult;
-}
-
-const getOutstandingJobCountForTaskIR: any = {"usedParamSet":{"task":true},"params":[{"name":"task","required":false,"transform":{"type":"scalar"},"locs":[{"a":83,"b":87}]}],"statement":"SELECT count(*)::int AS \"count!\"\nFROM graphile_worker.jobs\nWHERE task_identifier = :task::text\n  AND attempts < max_attempts"};
+const queuePendingProcessIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT (\n  graphile_worker.add_job(\n    identifier => 'frontier_process',\n    job_key => 'frontier_process',\n    job_key_mode => 'preserve_run_at'\n  )\n).id AS \"job_id!\"\nWHERE NOT EXISTS (\n  SELECT FROM graphile_worker.jobs\n  WHERE task_identifier = 'frontier_process' AND attempts < max_attempts\n)\nAND EXISTS (\n  SELECT FROM crawler.frontier\n  WHERE fetch_status = 'ok' AND process_status = 'pending'\n)"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT count(*)::int AS "count!"
- * FROM graphile_worker.jobs
- * WHERE task_identifier = :task::text
- *   AND attempts < max_attempts
+ * SELECT (
+ *   graphile_worker.add_job(
+ *     identifier => 'frontier_process',
+ *     job_key => 'frontier_process',
+ *     job_key_mode => 'preserve_run_at'
+ *   )
+ * ).id AS "job_id!"
+ * WHERE NOT EXISTS (
+ *   SELECT FROM graphile_worker.jobs
+ *   WHERE task_identifier = 'frontier_process' AND attempts < max_attempts
+ * )
+ * AND EXISTS (
+ *   SELECT FROM crawler.frontier
+ *   WHERE fetch_status = 'ok' AND process_status = 'pending'
+ * )
  * ```
  */
-export const getOutstandingJobCountForTask = new PreparedQuery<IGetOutstandingJobCountForTaskParams,IGetOutstandingJobCountForTaskResult>(getOutstandingJobCountForTaskIR);
+export const queuePendingProcess = new PreparedQuery<IQueuePendingProcessParams,IQueuePendingProcessResult>(queuePendingProcessIR);
 
 
 /** 'GetPendingFetch' parameters type */

@@ -87,14 +87,7 @@ SELECT (
     job_key => 'frontier_schedule',
     job_key_mode => 'replace'
   )
-).id AS "job_id!"
-WHERE :host::text IS NULL OR NOT EXISTS (
-  SELECT FROM graphile_worker.jobs
-  WHERE task_identifier = 'frontier_fetch'
-    AND starts_with(key, 'fetch:' || :host || ':')
-    AND locked_at IS NULL
-    AND attempts < max_attempts
-);
+).id AS "job_id!";
 
 /* @name GetFrontierResponses */
 SELECT
@@ -256,33 +249,22 @@ WITH fetch_jobs AS (
   SELECT
     host,
     count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,
-    count(*) FILTER (WHERE state = 'ready')::int AS ready,
-    count(*) FILTER (WHERE state = 'delayed')::int AS delayed,
-    count(*) FILTER (WHERE state = 'locked')::int AS locked
+    count(*) FILTER (WHERE state = 'locked')::int AS locked,
+    array_agg(run_at ORDER BY run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS slots
   FROM crawler.frontier_fetch_job
   WHERE host IS NOT NULL
   GROUP BY host
 )
 SELECT
   COALESCE(r.host, fj.host) AS "host!",
-  r.max_requests AS "max_requests?",
-  r.per_interval::text AS "per_interval?",
   (extract(epoch from r.spacing) * 1000)::int AS "spacing?",
   r.next_available_at AS "next_available_at?",
   COALESCE(fj.queued, 0)::int AS "queued!",
-  COALESCE(fj.ready, 0)::int AS "ready!",
-  COALESCE(fj.delayed, 0)::int AS "delayed!",
-  COALESCE(fj.locked, 0)::int AS "locked!"
+  COALESCE(fj.locked, 0)::int AS "locked!",
+  COALESCE(fj.slots, '{}'::timestamptz[]) AS "slots!"
 FROM crawler.rate_limit_rule r
 FULL JOIN fetch_jobs fj USING (host)
 ORDER BY host;
-
-/* @name GetScheduledFetchSlots */
-SELECT host AS "host!", run_at AS "run_at!"
-FROM crawler.frontier_fetch_job
-WHERE host IS NOT NULL
-  AND state IN ('ready', 'delayed')
-ORDER BY host, run_at;
 
 /* @name GetFrontierDetail */
 SELECT
@@ -331,11 +313,22 @@ LEFT JOIN crawler.json_response_cache jrc ON jrc.content_hash = jr.content_hash
 WHERE (:id::bigint IS NOT NULL AND f.id = :id::bigint)
    OR (:id::bigint IS NULL AND (f.federation, f.kind, f.key) = (:federation, :kind, :key));
 
-/* @name GetOutstandingJobCountForTask */
-SELECT count(*)::int AS "count!"
-FROM graphile_worker.jobs
-WHERE task_identifier = :task::text
-  AND attempts < max_attempts;
+/* @name QueuePendingProcess */
+SELECT (
+  graphile_worker.add_job(
+    identifier => 'frontier_process',
+    job_key => 'frontier_process',
+    job_key_mode => 'preserve_run_at'
+  )
+).id AS "job_id!"
+WHERE NOT EXISTS (
+  SELECT FROM graphile_worker.jobs
+  WHERE task_identifier = 'frontier_process' AND attempts < max_attempts
+)
+AND EXISTS (
+  SELECT FROM crawler.frontier
+  WHERE fetch_status = 'ok' AND process_status = 'pending'
+);
 
 /* @name GetPendingFetch */
 WITH allowed_loaders AS (

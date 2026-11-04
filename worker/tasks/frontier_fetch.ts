@@ -8,7 +8,6 @@ import {
   markFrontierProcessError,
   markFrontiersProcessSuccess,
   markFrontierTransient,
-  queueCrawlerSchedule,
   rescheduleFrontier,
   reserveRequest,
 } from '../crawler/crawler.queries.ts';
@@ -17,6 +16,7 @@ import { formatException } from '../crawler/error.ts';
 import { fetchResponse } from '../crawler/fetch.ts';
 import { loaderFor } from '../crawler/handlers.ts';
 import { loadFrontier } from '../crawler/process.ts';
+import { scheduleFetches } from './frontier_schedule.ts';
 
 export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) => {
   const { withPgClient, logger } = helpers;
@@ -112,21 +112,16 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       await client.query('ROLLBACK');
       throw e;
     }
-  });
 
-  if (fetchStatus === 'ok') {
-    await withPgClient(async (client) => {
+    if (fetchStatus === 'ok') {
       await client.query('BEGIN');
       try {
         const [pending] = await getPendingProcessById.run({ id }, client);
-        if (!pending) {
-          await client.query('ROLLBACK');
-          return;
+        if (pending) {
+          const effect = await loadFrontier(client, pending, 'loose');
+          await flushLoaderEffects(client, effect ? [effect] : []);
+          await markFrontiersProcessSuccess.run({ ids: [id] }, client);
         }
-
-        const effect = await loadFrontier(client, pending, 'loose');
-        await flushLoaderEffects(client, effect ? [effect] : []);
-        await markFrontiersProcessSuccess.run({ ids: [id] }, client);
         await client.query('COMMIT');
       } catch (e) {
         await client.query('ROLLBACK');
@@ -134,10 +129,10 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
         await markFrontierProcessError.run({ id, error: processError }, client);
         logger.error(`Processing frontier ${id} failed: ${processError}`);
       }
-    });
-  }
+    }
 
-  await withPgClient((client) => queueCrawlerSchedule.run({ host: url.host }, client));
+    await scheduleFetches(client, helpers);
+  });
 };
 
 export default frontier_fetch;

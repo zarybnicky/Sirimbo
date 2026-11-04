@@ -31,4 +31,4 @@ INSERT INTO federated.dance (code, name, discipline) VALUES
   ('KRB', 'Caribbean',        'caribbean'),
   ('OT',  'Other',            'other');
 
-select graphile_worker.add_job('frontier_process', json_build_object('isFullRebuild', true));
+select graphile_worker.add_job('frontier_process');

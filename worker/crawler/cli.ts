@@ -530,7 +530,7 @@ async function refetch(target: string, options: RefetchOptions) {
     { ...parsed, includeOk: options.all ?? false },
     pool,
   );
-  if (rows.length > 0) await queueCrawlerSchedule.run({}, pool);
+  if (rows.length > 0) await queueCrawlerSchedule.run(undefined, pool);
   if (parsed.key && rows.length === 0) throw new Error(`Frontier ${target} not found`);
 
   if (options.json) {
