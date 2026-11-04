@@ -42,12 +42,13 @@ async function request(
   query: string,
   variables = {},
   claims?: Record<string, unknown>,
+  tenantId = '1',
 ) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-tenant-id': '1',
+      'x-tenant-id': tenantId,
       ...(claims
         ? {
             authorization: `Bearer ${jwt.sign(claims, JWT_SECRET, { algorithm: 'HS256' })}`,
@@ -58,6 +59,7 @@ async function request(
   });
   return (await response.json()) as {
     errors?: { message: string }[];
+    data?: { people: { nodes: Array<{ id: string; isMember: boolean; isTrainer: boolean; isAdmin: boolean; isExternal: boolean }> } };
   };
 }
 
@@ -150,4 +152,45 @@ test('depth limits reject deep traversal through valid relationships', async () 
     `{ federationPeople(first: 1) { nodes { ${selection} } } }`,
   );
   assert.match(result.errors?.[0]?.message ?? '', /depth limit/);
+});
+
+
+test('person flags match active roles within each request tenant', async () => {
+  const tenants = await pool.query<{ id: string }>('select id from tenant order by id limit 2');
+  const client = await pool.connect();
+  try {
+    await client.query('begin');
+    await client.query(`select set_config('jwt.claims.my_person_ids', '{}', true),
+      set_config('jwt.claims.my_tenant_ids', '{}', true),
+      set_config('jwt.claims.my_cohort_ids', '{}', true),
+      set_config('jwt.claims.my_couple_ids', '{}', true),
+      set_config('jwt.claims.shared.event_ids', '{}', true)`);
+    for (const { id: tenantId } of tenants.rows) {
+      for (const role of ['anonymous', 'system_admin']) {
+        await client.query("select set_config('jwt.claims.tenant_id', $1, true), set_config('role', $2, true)", [tenantId, role]);
+        const expected = await client.query(`
+          select id, "isMember", "isTrainer", "isAdmin",
+            not ("isMember" or "isTrainer" or "isAdmin") as "isExternal"
+          from (
+            select p.id::text,
+              exists (select from current_tenant_membership where person_id = p.id) as "isMember",
+              exists (select from current_tenant_trainer where person_id = p.id) as "isTrainer",
+              exists (select from current_tenant_administrator where person_id = p.id) as "isAdmin"
+            from person p order by p.id limit 300
+          ) flags
+        `);
+        const result = await request(`{
+          people(first: 300, orderBy: ID_ASC) {
+            nodes { id isMember isTrainer isAdmin isExternal }
+          }
+        }`, {}, role === 'system_admin' ? { is_system_admin: true } : undefined, tenantId);
+        assert.equal(result.errors, undefined);
+        assert.deepEqual(result.data?.people.nodes, expected.rows);
+        await client.query('reset role');
+      }
+    }
+  } finally {
+    await client.query('rollback');
+    client.release();
+  }
 });

@@ -1,7 +1,46 @@
-import { LIST_TYPES, sql, sqlValueWithCodec, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
+import { pgClassExpression, LIST_TYPES, sql, sqlValueWithCodec, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
 import { lambda, list, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 import personMembershipPlugins, { membershipCandidateIds } from './person-membership-condition.ts';
+
+const PersonRoleFlagsPlugin = extendSchema({
+  typeDefs: `
+    extend type Person {
+      isMember: Boolean
+      isTrainer: Boolean
+      isAdmin: Boolean
+      isExternal: Boolean!
+    }
+  `,
+  objects: {
+    Person: {
+      plans: {
+        isMember($person: PgSelectSingleStep) {
+          return pgClassExpression($person, TYPES.boolean)`
+            ${$person.get('id')} in (select person_id from public.current_tenant_membership)`;
+        },
+        isTrainer($person: PgSelectSingleStep) {
+          return pgClassExpression($person, TYPES.boolean)`
+            ${$person.get('id')} in (select person_id from public.current_tenant_trainer)`;
+        },
+        isAdmin($person: PgSelectSingleStep) {
+          return pgClassExpression($person, TYPES.boolean)`
+            ${$person.get('id')} in (select person_id from public.current_tenant_administrator)`;
+        },
+        isExternal($person: PgSelectSingleStep) {
+          return pgClassExpression($person, TYPES.boolean)`
+            ${$person.get('id')} not in (
+              select person_id from public.current_tenant_membership
+              union all
+              select person_id from public.current_tenant_trainer
+              union all
+              select person_id from public.current_tenant_administrator
+            )`;
+        },
+      },
+    },
+  },
+}, 'PersonRoleFlagsPlugin');
 
 const CoupleNamesPlugin = extendSchema((build) => {
   const person = build.input.pgRegistry.pgResources.person;
@@ -40,6 +79,7 @@ const CoupleNamesPlugin = extendSchema((build) => {
 
 const plugins: GraphileConfig.Plugin[] = [
   ...personMembershipPlugins,
+  PersonRoleFlagsPlugin,
   CoupleNamesPlugin,
   addPgTableCondition(
     { schemaName: 'public', tableName: 'person' },
@@ -128,8 +168,7 @@ const plugins: GraphileConfig.Plugin[] = [
                   plan($person, args, info) {
                     const $couples = plan($person, args, info) as PgSelectStep;
                     const personId = $couples.placeholder($person.get('id'));
-                    $couples.where(sql`(${$couples.alias}.man_id = ${personId}
-                      or ${$couples.alias}.woman_id = ${personId})`);
+                    $couples.where(sql`(${$couples.alias}.man_id = ${personId} or ${$couples.alias}.woman_id = ${personId})`);
                     return $couples;
                   },
                 },
