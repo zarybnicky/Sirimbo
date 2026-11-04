@@ -73,7 +73,10 @@ function partitionActions<Id extends string>(
   if (remaining.length > 0) buckets.push({ key: 'more', items: remaining });
 
   return {
-    primary: actions.filter((a) => primarySet.has(a.id)),
+    primary:
+      explicitPrimary.length > 0
+        ? [...primarySet].flatMap((id) => actions.filter((a) => a.id === id))
+        : actions.filter((a) => primarySet.has(a.id)),
     buckets,
   };
 }
