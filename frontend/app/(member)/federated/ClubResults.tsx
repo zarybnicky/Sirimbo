@@ -163,6 +163,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
       )}
 
       {view === 'gallery' && (
+        <div className="my-1">
         <FacetFilter
           inline
           label="Typ soutěžícího"
@@ -174,6 +175,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
           }))}
           onChange={(competitorTypes) => void setFilters({ competitorTypes, page: undefined })}
         />
+        </div>
       )}
       {fetching && <p className="text-sm">Načítám…</p>}
       {error && <FormError error={error} />}

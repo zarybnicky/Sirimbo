@@ -1,8 +1,5 @@
-query CrawlerOverview($federation: String, $kind: String) {
-  rows: crawlerTargetSummariesList(
-    condition: { federation: $federation, kind: $kind }
-    orderBy: NATURAL
-  ) @_required {
+query CrawlerOverview {
+  rows: crawlerTargetSummariesList(orderBy: NATURAL) @_required {
     federation
     kind
     total
@@ -17,7 +14,6 @@ query CrawlerOverview($federation: String, $kind: String) {
     latest
   }
   failures: crawlerTargetFailureGroupsList(
-    condition: { federation: $federation, kind: $kind }
     orderBy: [COUNT_DESC, FAILED_AT_DESC]
   ) @_required {
     federation
@@ -29,8 +25,12 @@ query CrawlerOverview($federation: String, $kind: String) {
   }
 }
 
-query CrawlerTarget($id: BigInt!, $offset: Int! = 0) {
-  crawlerTarget(id: $id) {
+query CrawlerTarget($federation: String!, $kind: String!, $key: String!, $offset: Int! = 0) {
+  crawlerTarget: crawlerTargetByFederationAndKindAndKey(
+    federation: $federation
+    kind: $kind
+    key: $key
+  ) {
     id
     federation
     kind
@@ -69,7 +69,7 @@ query CrawlerTarget($id: BigInt!, $offset: Int! = 0) {
     }
   }
   crawlerFetchJobs(
-    condition: { frontierId: $id }
+    condition: { federation: $federation, kind: $kind, frontierKey: $key }
     first: 1
     orderBy: [JOB_UPDATED_AT_DESC, JOB_ID_DESC]
   ) {
@@ -88,7 +88,6 @@ query CrawlerTarget($id: BigInt!, $offset: Int! = 0) {
 query CrawlerResponse($id: BigInt!) {
   crawlerResponse(id: $id) {
     id
-    frontierId
     url
     httpStatus
     error
@@ -120,6 +119,7 @@ query CrawlerTargets(
     totalCount
     nodes {
       id
+      federation
       kind
       key
       fetchStatus
@@ -127,6 +127,23 @@ query CrawlerTargets(
       errorCount
       lastFetchedAt
       nextFetchAt
+    }
+  }
+}
+
+query CrawlerJobs {
+  crawlerFetchJobs(orderBy: [RUN_AT_ASC, JOB_ID_ASC]) {
+    nodes {
+      jobId
+      federation
+      kind
+      frontierKey
+      state
+      runAt
+      lockedAt
+      attempts
+      maxAttempts
+      jobError
     }
   }
 }

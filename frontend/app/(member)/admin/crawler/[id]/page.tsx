@@ -10,11 +10,12 @@ import { Table } from '@/ui/Table';
 import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly, numericFullFormatter } from '@/ui/format';
 import { Metadata } from 'next';
+import { CrawlerTargets } from '../Crawler';
 
 const pageSize = 50;
 
 export const metadata: Metadata = {
-  title: 'Crawler frontier',
+  title: 'Crawler',
   robots: { index: false, follow: false },
 };
 
@@ -28,14 +29,25 @@ export default async function FrontierPage({
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
 
-  const [{ id }, search] = await Promise.all([params, searchParams]);
-  if (!/^[0-9]{1,18}$/.test(id)) notFound();
+  const [{ id: identifier }, search] = await Promise.all([params, searchParams]);
+  const [federation, kind, ...keyParts] = decodeURIComponent(identifier).split(':');
+  if (!federation || !kind) notFound();
+  if (keyParts.length === 0) {
+    return (
+      <Layout requireSystemAdmin>
+        <CrawlerTargets federation={federation} kind={kind} />
+      </Layout>
+    );
+  }
+  const key = keyParts.join(':');
   const rawPage = Array.isArray(search.page) ? search.page[0] : search.page;
   const page = Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1);
   const { crawlerTarget: frontier, crawlerFetchJobs } = await executeGraphql(
     CrawlerTargetDocument,
     {
-      id,
+      federation,
+      kind,
+      key,
       offset: Math.min((page - 1) * pageSize, 2_147_483_647),
     },
   );
@@ -44,7 +56,7 @@ export default async function FrontierPage({
   const job = crawlerFetchJobs?.nodes[0];
   const { nodes: responses, totalCount } = frontier.responses;
   const lastPage = Math.max(1, Math.ceil(totalCount / pageSize));
-  const basePath = `/admin/crawler/${id}`;
+  const basePath = `/admin/crawler/${federation}:${kind}:${encodeURIComponent(key)}`;
   if (page > lastPage) {
     redirect(lastPage > 1 ? `${basePath}?page=${lastPage}` : basePath);
   }
@@ -60,10 +72,7 @@ export default async function FrontierPage({
           { label: 'Crawler', href: '/admin/crawler' },
           {
             label: `${frontier.federation}:${frontier.kind}`,
-            href: {
-              pathname: '/admin/crawler',
-              query: { federation: frontier.federation, kind: frontier.kind },
-            },
+            href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
           },
         ]}
       />
@@ -103,13 +112,17 @@ export default async function FrontierPage({
             items={{
               id: job.jobId,
               state: job.state === 'locked' ? 'running' : job.state,
-              scheduled: job.runAt ? numericFullFormatter.format(new Date(job.runAt)) : '-',
+              scheduled: job.runAt
+                ? numericFullFormatter.format(new Date(job.runAt))
+                : '-',
               'locked since': job.lockedAt
                 ? numericFullFormatter.format(new Date(job.lockedAt))
                 : '-',
               attempts: `${job.attempts ?? '-'} / ${job.maxAttempts ?? '-'}`,
               'worker error': job.jobError && (
-                <pre className="whitespace-pre-wrap break-all text-sm">{job.jobError}</pre>
+                <pre className="whitespace-pre-wrap break-all text-sm">
+                  {job.jobError}
+                </pre>
               ),
             }}
           />

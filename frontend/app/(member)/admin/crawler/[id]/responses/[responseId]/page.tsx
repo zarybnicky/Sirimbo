@@ -19,13 +19,18 @@ export default async function ResponsePage({
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
 
-  const { id, responseId } = await params;
-  if (!/^[0-9]{1,18}$/.test(id) || !/^[0-9]{1,18}$/.test(responseId)) notFound();
+  const { id: identifier, responseId } = await params;
+  if (!/^[0-9]{1,18}$/.test(responseId)) notFound();
   const { crawlerResponse: response } = await executeGraphql(CrawlerResponseDocument, {
     id: responseId,
   });
-  if (!response || response.frontierId !== id || !response.frontier) notFound();
+  if (!response?.frontier) notFound();
   const { frontier } = response;
+  if (
+    decodeURIComponent(identifier) !==
+    `${frontier.federation}:${frontier.kind}:${frontier.key}`
+  )
+    notFound();
   const rawContent = response.crawlerResponseCache?.content;
   let content = rawContent;
   if (typeof content === 'string') {
@@ -45,12 +50,12 @@ export default async function ResponsePage({
           { label: 'Crawler', href: '/admin/crawler' },
           {
             label: `${frontier.federation}:${frontier.kind}`,
-            href: {
-              pathname: '/admin/crawler',
-              query: { federation: frontier.federation, kind: frontier.kind },
-            },
+            href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
           },
-          { label: frontierTitle, href: `/admin/crawler/${id}` },
+          {
+            label: frontierTitle,
+            href: `/admin/crawler/${frontier.federation}:${frontier.kind}:${encodeURIComponent(frontier.key)}`,
+          },
         ]}
       />
       <DefinitionList

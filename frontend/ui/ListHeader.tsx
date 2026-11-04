@@ -14,6 +14,7 @@ export function ListHeader({
   activeFilterCount = 0,
   onReset,
   actions,
+  collapsible = true,
   defaultFiltersOpen = true,
   children,
 }: {
@@ -24,6 +25,7 @@ export function ListHeader({
   activeFilterCount?: number;
   onReset?: () => void;
   actions?: ReactNode;
+  collapsible?: boolean;
   defaultFiltersOpen?: boolean;
   children?: ReactNode;
 }) {
@@ -38,7 +40,7 @@ export function ListHeader({
               : `${(pagination.page - 1) * pagination.limit + 1}–${Math.min(pagination.page * pagination.limit, pagination.total)} / ${pagination.total}`}
           </p>
         )}
-        {children && (
+        {children && collapsible && (
           <button
             type="button"
             className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
@@ -77,7 +79,7 @@ export function ListHeader({
         <div
           className={cn(
             'mb-3 w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]',
-            filtersOpen ? 'grid' : 'hidden',
+            !collapsible || filtersOpen ? 'grid' : 'hidden',
           )}
         >
           {children}

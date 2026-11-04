@@ -6,8 +6,12 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationListDocument } from '@/graphql/Federation';
 import { ClubResults } from './ClubResults';
+import { Metadata } from 'next';
 
-export const metadata = { title: 'Soutěžní data', robots: { index: false, follow: false } };
+export const metadata: Metadata = {
+  title: 'Soutěžní data',
+  robots: { index: false, follow: false },
+};
 
 export default async function FederationsPage() {
   const { auth } = await getRequestContext();
@@ -16,14 +20,7 @@ export default async function FederationsPage() {
   return (
     <Layout requireUser>
       <PageHeader title="Soutěžní data" />
-      <Table
-        columns={[
-          'Organizace',
-          'Soutěže',
-          'Osoby',
-          'Soutěžící',
-        ]}
-      >
+      <Table columns={['Organizace', 'Soutěže', 'Osoby', 'Soutěžící']}>
         {federations?.map((federation) => (
           <tr key={federation.code} className="border-t border-neutral-4">
             <th scope="row">

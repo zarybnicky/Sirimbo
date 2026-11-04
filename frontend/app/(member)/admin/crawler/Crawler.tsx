@@ -3,84 +3,34 @@
 import { Table } from '@/ui/Table';
 import { type ComponentProps, Fragment, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
+import {
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryState,
+  useQueryStates,
+} from 'nuqs';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
-import { useQuery } from 'urql';
+import { useQuery, type UseQueryExecute } from 'urql';
 import {
   CrawlerOverviewDocument,
   type CrawlerOverviewQuery,
+  CrawlerJobsDocument,
   CrawlerTargetsDocument,
   type CrawlerTargetsQuery,
 } from '@/graphql/Crawler';
-import { TextField } from '@/ui/fields/text';
-import { Checkbox } from '@/ui/fields/checkbox';
-import { SubmitButton } from '@/ui/submit';
+import { FacetFilter } from '@/ui/FacetFilter';
+import { ListHeader } from '@/ui/ListHeader';
 import { PageHeader } from '@/ui/PageHeader';
 import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { numericFullFormatter } from '@/ui/format';
-import { ChevronRight } from 'lucide-react';
+import { buttonCls } from '@/ui/style';
+import { ChevronRight, ListTodo, RefreshCw } from 'lucide-react';
 import { CrawlerActions } from './CrawlerActions';
 
-export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
-  const [filters, setFilters] = useQueryStates(
-    {
-      federation: parseAsString.withDefault(''),
-      kind: parseAsString.withDefault(''),
-      key: parseAsString.withDefault(''),
-      all: parseAsString.withDefault(''),
-      page: parseAsInteger,
-    },
-    { shallow: true, scroll: false },
-  );
-  const [search, setSearch] = useState({
-    federation: filters.federation,
-    kind: filters.kind,
-    key: filters.key,
-  });
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setSearch({
-          federation: filters.federation,
-          kind: filters.kind,
-          key: filters.key,
-        }),
-      300,
-    );
-    return () => clearTimeout(timeout);
-  }, [filters.federation, filters.kind, filters.key]);
-  const pending =
-    search.federation !== filters.federation ||
-    search.kind !== filters.kind ||
-    search.key !== filters.key;
-  const target =
-    search.federation && search.kind ? `${search.federation}:${search.kind}` : null;
-  const [overview, refreshOverview] = useQuery({
-    query: CrawlerOverviewDocument,
-    variables: {
-      federation: search.federation || undefined,
-      kind: search.kind || undefined,
-    },
-    pause: !!target || pending,
-  });
-  const targets = usePaginatedQuery({
-    query: CrawlerTargetsDocument,
-    pause: !target || pending,
-    variables: (offset) => ({
-      condition: {
-        federation: search.federation,
-        kind: search.kind,
-        keyContains: search.key,
-      },
-      offset,
-    }),
-    limit: 50,
-    getTotal: (data) => data.crawlerTargets?.totalCount,
-  });
-  const error = target ? targets.error : overview.error;
-  const loading = pending || (target ? targets.fetching : overview.fetching);
-  const reexecuteQuery = target ? targets.reexecuteQuery : refreshOverview;
+function useRefresh(reexecuteQuery: UseQueryExecute, loading: boolean) {
   const refresh = useCallback(
     () => reexecuteQuery({ requestPolicy: 'network-only' }),
     [reexecuteQuery],
@@ -92,87 +42,98 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
     }, 1000);
     return () => clearInterval(interval);
   }, [loading, refresh]);
+  return refresh;
+}
+
+function Refresh({ loading, onClick }: { loading: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Refresh"
+      title="Refresh"
+      aria-busy={loading}
+      onClick={onClick}
+      className="rounded-sm p-1 text-neutral-11 hover:text-neutral-12 focus-visible:outline-accent-9"
+    >
+      <RefreshCw
+        aria-hidden="true"
+        className={loading ? 'size-4 animate-spin' : 'size-4'}
+      />
+    </button>
+  );
+}
+
+export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
+  const [filters, setFilters] = useQueryStates(
+    {
+      federation: parseAsArrayOf(parseAsString).withDefault([]),
+      all: parseAsString.withDefault(''),
+    },
+    { shallow: true, scroll: false },
+  );
+  const [overview, reexecuteQuery] = useQuery({ query: CrawlerOverviewDocument });
+  const refresh = useRefresh(reexecuteQuery, overview.fetching);
+  const rows = overview.data?.rows ?? [];
+  const federations = [
+    ...new Set(rows.map((row) => row.federation).filter((value) => value != null)),
+  ].toSorted();
+  const matches = (row: { federation: string | null }) =>
+    filters.federation.length === 0 || filters.federation.includes(row.federation ?? '');
+  const filteredRows = rows.filter(matches);
+
   return (
     <>
       <PageHeader
-        title={target || 'Crawler'}
-        breadcrumbs={target ? [{ label: 'Crawler', href: '/admin/crawler' }] : undefined}
+        title="Crawler"
+        primary="jobs"
+        actions={[
+          {
+            id: 'jobs',
+            key: 'jobs',
+            label: 'Jobs',
+            icon: ListTodo,
+            href: '/admin/crawler/jobs',
+          },
+        ]}
       >
-        {target && !pending && (
-          <CrawlerActions
-            key={`${target}:${search.key}`}
-            federation={search.federation}
-            kind={search.kind}
-            keyContains={search.key}
-            onQueued={refresh}
-          />
-        )}
+        <Refresh loading={overview.fetching} onClick={refresh} />
       </PageHeader>
-      <div className="flex flex-wrap items-end gap-3">
-        <TextField
-          name="federation"
-          label="federation"
-          className="w-32"
+      <ListHeader
+        collapsible={false}
+        pagination={
+          overview.data && !overview.error
+            ? { total: filteredRows.length, page: 1, limit: filteredRows.length }
+            : undefined
+        }
+        actions={
+          <button
+            type="button"
+            aria-pressed={filters.all === '1'}
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setFilters({ all: filters.all === '1' ? null : '1' })}
+          >
+            Show completed
+          </button>
+        }
+      >
+        <FacetFilter
+          inline
+          label="Federation"
           value={filters.federation}
-          onChange={(event) =>
-            setFilters({ federation: event.target.value, key: null, page: null })
-          }
+          options={federations.map((value) => ({
+            value,
+            label: value,
+            count: rows.filter((row) => row.federation === value).length,
+          }))}
+          onChange={(federation) => setFilters({ federation })}
         />
-        <TextField
-          name="kind"
-          label="kind"
-          className="w-48"
-          value={filters.kind}
-          onChange={(event) =>
-            setFilters({ kind: event.target.value, key: null, page: null })
-          }
-        />
-        {filters.federation && filters.kind ? (
-          <TextField
-            name="key"
-            label="key"
-            className="w-48"
-            value={filters.key}
-            onChange={(event) => setFilters({ key: event.target.value, page: null })}
-          />
-        ) : (
-          <Checkbox
-            name="all"
-            label="Show completed"
-            checked={filters.all === '1'}
-            onChange={(event) =>
-              setFilters({ all: event.currentTarget.checked ? '1' : '' })
-            }
-          />
-        )}
-        <SubmitButton
-          type="button"
-          size="sm"
-          variant="outline"
-          className="min-w-16"
-          aria-label="Refresh"
-          aria-busy={loading}
-          state={loading ? 'loading' : 'not-requested'}
-          onClick={refresh}
-        >
-          Refresh
-        </SubmitButton>
-      </div>
-      {target && (
-        <p className="my-2 text-sm text-neutral-11">{targets.pagination.total} targets</p>
-      )}
-      {error ? (
-        <FormError error={error} />
-      ) : target ? (
-        targets.data?.crawlerTargets ? (
-          <Targets
-            rows={targets.data.crawlerTargets.nodes}
-            pagination={targets.pagination}
-          />
-        ) : null
+      </ListHeader>
+      {overview.error ? (
+        <FormError error={overview.error} />
       ) : overview.data ? (
         <Overview
-          {...overview.data}
+          rows={filteredRows}
+          failures={(overview.data.failures ?? []).filter(matches)}
           all={filters.all}
           allowRefetch={allowRefetch}
           onQueued={refresh}
@@ -182,7 +143,209 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
   );
 }
 
-function Targets({
+const fetchStatuses = ['PENDING', 'OK', 'ERROR', 'TRANSIENT', 'GONE'] as const;
+const processStatuses = ['PENDING', 'OK', 'ERROR'] as const;
+
+export function CrawlerTargets({
+  federation,
+  kind,
+}: {
+  federation: string;
+  kind: string;
+}) {
+  const [filters, setFilters] = useQueryStates(
+    {
+      key: parseAsString.withDefault(''),
+      fetchStatus: parseAsStringLiteral(fetchStatuses),
+      processStatus: parseAsStringLiteral(processStatuses),
+      page: parseAsInteger,
+    },
+    { shallow: true, scroll: false },
+  );
+  const [key, setKey] = useState(filters.key);
+  useEffect(() => {
+    const timeout = setTimeout(() => setKey(filters.key), 300);
+    return () => clearTimeout(timeout);
+  }, [filters.key]);
+  const pending = key !== filters.key;
+  const targets = usePaginatedQuery({
+    query: CrawlerTargetsDocument,
+    pause: pending,
+    variables: (offset) => ({
+      condition: {
+        federation,
+        kind,
+        keyContains: key,
+        fetchStatus: filters.fetchStatus ?? undefined,
+        processStatus: filters.processStatus ?? undefined,
+      },
+      offset,
+    }),
+    limit: 50,
+    getTotal: (data) => data.crawlerTargets?.totalCount,
+  });
+  const loading = pending || targets.fetching;
+  const refresh = useRefresh(targets.reexecuteQuery, loading);
+
+  return (
+    <>
+      <PageHeader
+        title={federation + ':' + kind}
+        breadcrumbs={[{ label: 'Crawler', href: '/admin/crawler' }]}
+      >
+        {!pending && (
+          <CrawlerActions
+            key={key}
+            federation={federation}
+            kind={kind}
+            keyContains={key}
+            onQueued={refresh}
+          />
+        )}
+        <Refresh loading={loading} onClick={refresh} />
+      </PageHeader>
+      <ListHeader
+        collapsible={false}
+        pagination={!targets.error ? targets.pagination : undefined}
+        search={filters.key}
+        onSearchChange={(key) => setFilters({ key, page: null })}
+        searchPlaceholder="Frontier key…"
+      >
+        <FacetFilter
+          inline
+          label="Fetch status"
+          value={filters.fetchStatus ? [filters.fetchStatus] : []}
+          options={fetchStatuses.map((value) => ({
+            value,
+            label: value.toLowerCase(),
+          }))}
+          onChange={(statuses) =>
+            setFilters({ fetchStatus: statuses.at(-1) ?? null, page: null })
+          }
+        />
+        <FacetFilter
+          inline
+          label="Process status"
+          value={filters.processStatus ? [filters.processStatus] : []}
+          options={processStatuses.map((value) => ({
+            value,
+            label: value.toLowerCase(),
+          }))}
+          onChange={(statuses) =>
+            setFilters({ processStatus: statuses.at(-1) ?? null, page: null })
+          }
+        />
+      </ListHeader>
+      {targets.error ? (
+        <FormError error={targets.error} />
+      ) : targets.data?.crawlerTargets ? (
+        <TargetTable
+          rows={targets.data.crawlerTargets.nodes}
+          pagination={targets.pagination}
+        />
+      ) : null}
+    </>
+  );
+}
+
+const jobStates = ['ready', 'delayed', 'locked', 'failed'];
+
+export function CrawlerJobs() {
+  const [states, setStates] = useQueryState(
+    'state',
+    parseAsArrayOf(parseAsStringLiteral(jobStates)).withDefault(jobStates),
+  );
+  const [result, reexecuteQuery] = useQuery({ query: CrawlerJobsDocument });
+  const refresh = useRefresh(reexecuteQuery, result.fetching);
+  const jobs = result.data?.crawlerFetchJobs?.nodes ?? [];
+  const rows = jobs.filter((row) => states.includes(row.state ?? ''));
+
+  return (
+    <>
+      <PageHeader
+        title="Crawler jobs"
+        breadcrumbs={[{ label: 'Crawler', href: '/admin/crawler' }]}
+      >
+        <Refresh loading={result.fetching} onClick={refresh} />
+      </PageHeader>
+      <ListHeader
+        collapsible={false}
+        pagination={
+          result.data && !result.error
+            ? { total: rows.length, page: 1, limit: rows.length }
+            : undefined
+        }
+      >
+        <FacetFilter
+          inline
+          label="State"
+          value={states}
+          defaultValue={jobStates}
+          options={jobStates.map((value) => ({
+            value,
+            label:
+              value === 'locked'
+                ? 'Running'
+                : value.charAt(0).toUpperCase() + value.slice(1),
+            count: jobs.filter((row) => row.state === value).length,
+          }))}
+          onChange={setStates}
+        />
+      </ListHeader>
+      <Table
+        columns={[
+          'state',
+          'job',
+          'target',
+          'attempts',
+          'scheduled',
+          'locked since',
+          'worker error',
+        ]}
+        className="col-full-width whitespace-nowrap"
+        empty="No fetch jobs"
+        busy={result.fetching && !result.data}
+        error={result.error}
+      >
+        {rows.map((row) => (
+          <tr key={row.jobId} className="border-t border-neutral-4 align-top">
+            <td>{row.state === 'locked' ? 'running' : row.state}</td>
+            <td>{row.jobId}</td>
+            <th scope="row" className="font-mono">
+              <Link
+                className="text-accent-11 underline"
+                href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.frontierKey ?? '')}`}
+                prefetch={false}
+              >
+                {row.federation}:{row.kind}
+                {row.frontierKey ? ':' + row.frontierKey : ''}
+              </Link>
+            </th>
+            <td>
+              {row.attempts ?? '-'} / {row.maxAttempts ?? '-'}
+            </td>
+            <td>{row.runAt ? numericFullFormatter.format(new Date(row.runAt)) : '-'}</td>
+            <td>
+              {row.lockedAt ? numericFullFormatter.format(new Date(row.lockedAt)) : '-'}
+            </td>
+            <td className="min-w-64 whitespace-normal break-all">
+              {row.jobError && (
+                <details>
+                  <summary className="cursor-pointer">Error</summary>
+                  <pre className="max-h-72 overflow-auto whitespace-pre-wrap">
+                    {row.jobError}
+                  </pre>
+                </details>
+              )}
+            </td>
+          </tr>
+        ))}
+      </Table>
+    </>
+  );
+}
+
+function TargetTable({
   rows,
   pagination,
 }: {
@@ -207,7 +370,7 @@ function Targets({
             <th scope="row" className="font-mono">
               <Link
                 className="text-accent-11 underline"
-                href={`/admin/crawler/${row.id}`}
+                href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.key)}`}
                 prefetch={false}
               >
                 {row.key || '(root)'}
@@ -335,10 +498,7 @@ function Overview({
                     )}
                     <Link
                       className="text-accent-11 underline"
-                      href={{
-                        pathname: '/admin/crawler',
-                        query: { federation: row.federation, kind: row.kind },
-                      }}
+                      href={`/admin/crawler/${row.target}`}
                       prefetch={false}
                     >
                       {row.target}
@@ -442,10 +602,7 @@ function Overview({
                       {index > 0 && ', '}
                       <Link
                         className="text-accent-11 underline"
-                        href={{
-                          pathname: '/admin/crawler',
-                          query: { federation, kind: row.kind },
-                        }}
+                        href={`/admin/crawler/${federation}:${row.kind}`}
                         prefetch={false}
                       >
                         {row.total === 1 ? row.kind : `${row.kind} (${row.total})`}

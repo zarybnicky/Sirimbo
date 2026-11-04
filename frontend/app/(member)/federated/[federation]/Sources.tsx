@@ -2,7 +2,10 @@
 
 import Link from 'next/link';
 import type { CrawlerTargetCondition } from '@/graphql';
-import { CrawlerTargetsDocument, type CrawlerTargetsQueryVariables } from '@/graphql/Crawler';
+import {
+  CrawlerTargetsDocument,
+  type CrawlerTargetsQueryVariables,
+} from '@/graphql/Crawler';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { FormError } from '@/ui/form';
 import { Pagination } from '@/ui/Pagination';
@@ -46,7 +49,7 @@ export function Sources({
         <p key={source.id}>
           <Link
             className="text-accent-11 underline"
-            href={`/admin/crawler/${source.id}`}
+            href={`/admin/crawler/${federation}:${source.kind}:${encodeURIComponent(source.key)}`}
             prefetch={false}
           >
             {federation}:{source.kind}:{source.key}
