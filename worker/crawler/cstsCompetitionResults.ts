@@ -469,6 +469,7 @@ function validateRoundMarks(result: Result) {
 }
 
 function roundKey(label: string) {
+  if (/^opakovan[eé]\s/i.test(label)) return label;
   const semifinal = /semifin[aá]le\s*(\d*)/i.exec(label);
   if (semifinal) return `SF${semifinal[1]}`;
   const final = /fin[aá]le\s*(\d*)/i.exec(label);

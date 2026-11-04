@@ -47,8 +47,8 @@ export const wdsfCouple: JsonLoader<z.output<typeof schema>> = {
   async load(client, couple) {
     const id = `wdsf:${couple.id}`;
     const members = ([
-      { min: couple.man, role: 'lead' },
-      { min: couple.woman, role: 'follow' },
+      { min: couple.man, role: couple.man === couple.woman ? 'member' : 'lead' },
+      { min: couple.woman === couple.man ? null : couple.woman, role: 'follow' },
     ] as const).flatMap(({ min, role }) => min ? [{ key: min.toString(), role }] : []);
 
     await upsertCompetitorsDetailed.run({

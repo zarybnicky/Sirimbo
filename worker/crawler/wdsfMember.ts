@@ -268,6 +268,7 @@ function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline | string): person_li
     case 'Caribbean Dances':
       return 'caribbean';
     case 'Hip Hop':
+    case 'Hip-Hop Freestyle':
       return 'hiphop';
     case 'Unknown':
       return 'unknown';
