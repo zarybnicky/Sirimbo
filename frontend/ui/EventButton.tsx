@@ -12,8 +12,7 @@ import { useAuth } from '@/lib/auth';
 import { diff } from 'date-arithmetic';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import * as React from 'react';
-import { AttendanceStats } from '@/ui/AttendanceStats';
-import Link from 'next/link';
+import { AttendanceStatsLink } from '@/ui/AttendanceStats';
 
 export function EventButton({
   event,
@@ -83,18 +82,7 @@ export function EventButton({
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <EventConflictsBadge eventId={event.id} className="text-accent-11" />
             {showInlineAttendance && (
-              <Link
-                href={`/termin/${event.id}?tab=registrations`}
-                aria-label="Docházka"
-                title="Docházka"
-                className="shrink-0 rounded-lg shadow-xs hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <AttendanceStats
-                  stats={event.stats}
-                  className="flex h-6 border-accent-7 hover:border-accent-9"
-                />
-              </Link>
+              <AttendanceStatsLink eventId={event.id} stats={event.stats} />
             )}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>

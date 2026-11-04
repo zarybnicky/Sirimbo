@@ -10,6 +10,7 @@ import type { EventRegistrationAttendanceFragment } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
+import { AttendanceStatsLink } from '@/ui/AttendanceStats';
 import { attendanceIcons } from '@/ui/EventAttendance';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { LocalPersonLinks } from '@/ui/federation-links';
@@ -162,6 +163,7 @@ export const ActivityList = React.memo(function ActivityList({
                           viewerId={viewerId}
                           suffix={
                             <AttendanceSummary
+                              eventId={instance.id}
                               items={instance.attendance}
                               compact={!!cohortId}
                             />
@@ -181,24 +183,26 @@ export const ActivityList = React.memo(function ActivityList({
 });
 
 function AttendanceSummary({
+  eventId,
   items = [],
   compact,
 }: {
   items:
     Pick<EventRegistrationAttendanceFragment, 'id' | 'status' | 'person'>[] | undefined;
   compact: boolean;
+  eventId: string;
 }) {
   if (compact) {
-    const AttendedIcon = attendanceIcons.ATTENDED;
-    const NotExcusedIcon = attendanceIcons.NOT_EXCUSED;
     return (
-      <div className="inline-flex items-center gap-1 whitespace-nowrap text-neutral-11">
-        <AttendedIcon className="size-4 text-green-11" />
-        <span>{items.filter(({ status }) => status === 'ATTENDED').length}</span>
-        <NotExcusedIcon className="size-4 text-danger-11" />
-        <span>{items.filter(({ status }) => status === 'NOT_EXCUSED').length}</span>
-        <span>/ {items.length}</span>
-      </div>
+      <AttendanceStatsLink
+        eventId={eventId}
+        stats={{
+          total: items.length,
+          attended: items.filter(({ status }) => status === 'ATTENDED').length,
+          notExcused: items.filter(({ status }) => status === 'NOT_EXCUSED').length,
+          unknown: items.filter(({ status }) => !status || status === 'UNKNOWN').length,
+        }}
+      />
     );
   }
   return (

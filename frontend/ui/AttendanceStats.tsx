@@ -1,6 +1,7 @@
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
 import { Check, HelpCircle, X } from 'lucide-react';
+import Link from 'next/link';
 
 export function AttendanceStats({
   stats,
@@ -49,5 +50,33 @@ export function AttendanceStats({
         </span>
       )}
     </span>
+  );
+}
+
+export function AttendanceStatsLink({
+  eventId,
+  stats,
+  className,
+}: {
+  eventId: string;
+  stats: EventWithTrainerFragment['stats'];
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/termin/${eventId}?tab=registrations`}
+      aria-label="Docházka"
+      title="Docházka"
+      className={cn(
+        'inline-flex shrink-0 rounded-lg shadow-sm hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        className,
+      )}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <AttendanceStats
+        stats={stats}
+        className="flex h-6 border-accent-7 hover:border-accent-9"
+      />
+    </Link>
   );
 }
