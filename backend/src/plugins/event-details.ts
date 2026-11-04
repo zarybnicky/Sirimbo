@@ -1,6 +1,30 @@
-import { pgClassExpression, PgSelectStep, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
+import { pgClassExpression, PgSelectStep, sql, TYPES, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
 import type { ConnectionStep } from 'postgraphile/grafast';
-import { wrapPlans } from 'postgraphile/utils';
+import { extendSchema, wrapPlans } from 'postgraphile/utils';
+
+export const EventTrainerFieldsPlugin = extendSchema((build) => ({
+  typeDefs: `extend type EventTrainer { tenantTrainer: TenantTrainer }`,
+  objects: {
+    EventTrainer: {
+      plans: {
+        tenantTrainer($trainer: PgSelectSingleStep) {
+          const resources = build.input.pgRegistry.pgResources;
+          const $event = resources.event.get({
+            id: $trainer.get('event_id'),
+            tenant_id: $trainer.get('tenant_id'),
+          });
+          const $relationship = resources.tenant_trainer.find({
+            tenant_id: $event.get('tenant_id'),
+            person_id: $trainer.get('person_id'),
+          });
+          const since = $relationship.placeholder($event.get('since'), TYPES.timestamptz);
+          $relationship.where(sql`${$relationship.alias}.active_range @> ${since}`);
+          return $relationship.single();
+        },
+      },
+    },
+  },
+}), 'EventTrainerFieldsPlugin');
 
 export const EventDetailsPlugin = wrapPlans((build) => {
   // Treat the composite as one value. Its children read the decoded record,
