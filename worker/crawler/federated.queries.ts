@@ -1562,7 +1562,7 @@ export interface IGetCompetitionContextQuery {
   result: IGetCompetitionContextResult;
 }
 
-const getCompetitionContextIR: any = {"usedParamSet":{"federation":true,"externalId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":225,"b":235}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":269}]}],"statement":"SELECT\n  c.id,\n  coalesce(c.end_date, c.start_date)::text AS \"referenceDate!\",\n  cat.competitor_type AS \"competitorType\"\nFROM federated.competition c\nJOIN federated.category cat ON cat.id = c.category_id\nWHERE c.federation = :federation\n  AND c.external_id = :externalId"};
+const getCompetitionContextIR: any = {"usedParamSet":{"federation":true,"externalId":true},"params":[{"name":"federation","required":false,"transform":{"type":"scalar"},"locs":[{"a":225,"b":235}]},{"name":"externalId","required":false,"transform":{"type":"scalar"},"locs":[{"a":259,"b":269}]}],"statement":"SELECT\n  c.id,\n  coalesce(c.end_date, c.start_date)::text AS \"referenceDate!\",\n  cat.competitor_type AS \"competitorType\"\nFROM federated.competition c\nJOIN federated.category cat ON cat.id = c.category_id\nWHERE c.federation = :federation\n  AND c.external_id = :externalId\nFOR NO KEY UPDATE OF c"};
 
 /**
  * Query generated from SQL:
@@ -1575,6 +1575,7 @@ const getCompetitionContextIR: any = {"usedParamSet":{"federation":true,"externa
  * JOIN federated.category cat ON cat.id = c.category_id
  * WHERE c.federation = :federation
  *   AND c.external_id = :externalId
+ * FOR NO KEY UPDATE OF c
  * ```
  */
 export const getCompetitionContext = new PreparedQuery<IGetCompetitionContextParams,IGetCompetitionContextResult>(getCompetitionContextIR);

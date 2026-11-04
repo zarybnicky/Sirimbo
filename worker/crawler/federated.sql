@@ -840,7 +840,8 @@ SELECT
 FROM federated.competition c
 JOIN federated.category cat ON cat.id = c.category_id
 WHERE c.federation = :federation
-  AND c.external_id = :externalId;
+  AND c.external_id = :externalId
+FOR NO KEY UPDATE OF c;
 
 /* @name UpdateWdsfRoundJudgeLabels */
 UPDATE federated.competition_round_judge crj
