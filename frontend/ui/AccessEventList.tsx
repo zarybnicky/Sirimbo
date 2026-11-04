@@ -62,7 +62,7 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
             )}
           </span>
           <DotSeparated className="ml-auto text-neutral-11 tabular-nums">
-            {event.allowed ? 'Povoleno' : 'Zamítnuto'}
+            {!event.allowed && 'Zamítnuto'}
             {event.location && (
               <Link className="underline" href={`/lokality/${event.location.id}`}>
                 {event.location.name}

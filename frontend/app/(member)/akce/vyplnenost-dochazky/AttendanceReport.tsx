@@ -77,7 +77,7 @@ export function AttendanceReport() {
       <section className="text-sm">
         {fullDateFormatter.formatRange(period.since, now)}
 
-        {summary.total > 0 ? (
+        {summary.total > 0 && (
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>
               Celkem vedených:{' '}
@@ -107,10 +107,6 @@ export function AttendanceReport() {
               </span>
             </li>
           </ul>
-        ) : (
-          <p className="mt-2 text-neutral-10">
-            Z proběhlých vedených zatím nemáme žádná data.
-          </p>
         )}
       </section>
 

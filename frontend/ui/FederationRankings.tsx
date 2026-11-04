@@ -15,29 +15,26 @@ function ranklistRows(entries: FederationRankingFragment[]) {
     .flatMap((entry) => {
       const snapshot = entry.snapshot;
       const ranklist = snapshot?.ranklist;
-      const category = ranklist?.category;
-      if (!snapshot || !ranklist || !category || snapshot.kind === 'Nomination')
+      if (!snapshot || !ranklist || !ranklist?.category || snapshot.kind === 'Nomination')
         return [];
       const total = snapshot.ranklistEntriesBySnapshotId.totalCount;
-      return [
-        {
-          ...entry,
-          snapshot,
-          ranklist,
-          category,
-          id: `${entry.snapshotId}:${entry.competitorId}`,
-          percentile:
-            entry.ranking > 0 && total > 0
-              ? (entry.ranking + (entry.rankingTo ?? entry.ranking)) / 2 / total
-              : null,
-          placement:
-            entry.ranking +
-            (entry.rankingTo && entry.rankingTo !== entry.ranking
-              ? `–${entry.rankingTo}.`
-              : '.'),
-          total,
-        },
-      ];
+      return {
+        ...entry,
+        snapshot,
+        ranklist,
+        category: ranklist?.category,
+        id: `${entry.snapshotId}:${entry.competitorId}`,
+        percentile:
+          entry.ranking > 0 && total > 0
+            ? (entry.ranking + (entry.rankingTo ?? entry.ranking)) / 2 / total
+            : null,
+        placement:
+          entry.ranking +
+          (entry.rankingTo && entry.rankingTo !== entry.ranking
+            ? `–${entry.rankingTo}.`
+            : '.'),
+        total,
+      };
     })
     .toSorted((a, b) => compareCategories(a.category, b.category));
 }

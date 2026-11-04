@@ -41,11 +41,11 @@ const registrant = (x: EventRegistrationFragment): Registrant => ({
 });
 
 function useRegistrationCandidates(
-  event: EventWithRegistrationsFragment,
+  event: EventWithRegistrationsFragment | null | undefined,
   enabled: boolean,
 ) {
   const auth = useAuth();
-  const isManager = auth.canManageEvent(event);
+  const isManager = !!event && auth.canManageEvent(event);
 
   const [query] = useQuery({
     query: EventFormOptionsDocument,
@@ -53,10 +53,8 @@ function useRegistrationCandidates(
     pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(
-    event.registrationsList.flatMap((r) =>
-      r.personId
-        ? [r.personId]
-        : r.couple ? [r.couple.manId, r.couple.womanId] : [],
+    (event?.registrationsList ?? []).flatMap((r) =>
+      r.personId ? [r.personId] : r.couple ? [r.couple.manId, r.couple.womanId] : [],
     ),
   );
 
@@ -74,7 +72,7 @@ function useRegistrationCandidates(
       );
 
   const capacityLeft =
-    event.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
+    event?.registrationInfo?.remainingCapacity ?? Number.POSITIVE_INFINITY;
   const candidates = [
     ...people
       .filter((x) => !registeredPeople.has(x.id))
@@ -90,7 +88,7 @@ function useRegistrationCandidates(
         (c) =>
           !registeredPeople.has(c.manId) &&
           !registeredPeople.has(c.womanId) &&
-          (isManager || capacityLeft >= (event.capacityUnit === 'PEOPLE' ? 2 : 1)),
+          (isManager || capacityLeft >= (event?.capacityUnit === 'PEOPLE' ? 2 : 1)),
       )
       .map((couple) => ({
         id: `couple:${couple.id}`,
@@ -102,7 +100,7 @@ function useRegistrationCandidates(
         coupleId: couple.id,
       })),
   ]
-    .filter(() => isManager || event.registrationInfo?.canRegister)
+    .filter(() => isManager || event?.registrationInfo?.canRegister)
     .toSorted((a, b) => {
       const aMine = auth.isMyPerson(a.personId) || auth.isMyCouple(a.coupleId);
       const bMine = auth.isMyPerson(b.personId) || auth.isMyCouple(b.coupleId);
@@ -134,70 +132,59 @@ export function MyRegistrationsDialog({
     variables: { id: eventId },
   });
 
-  if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
-  if (!query.data.event) return <FormError error="Termín není dostupný." />;
-
-  return (
-    <RegistrationsDialogContent
-      event={query.data.event}
-      initialRegistrationId={initialRegistrationId}
-      initialPage={initialPage}
-    />
-  );
-}
-
-function RegistrationsDialogContent({
-  event,
-  initialRegistrationId,
-  initialPage,
-}: {
-  event: EventWithRegistrationsFragment;
-  initialRegistrationId?: string;
-  initialPage?: 'overview' | 'candidates' | 'new-person';
-}) {
+  const event = query.data?.event;
   const auth = useAuth();
-  const isManager = auth.canManageEvent(event);
+  const isManager = !!event && auth.canManageEvent(event);
   const { onSuccess: onClose } = useFormResult();
   const registrations = isManager
-    ? event.registrationsList
-    : event.registrationsList.filter(
+    ? (event?.registrationsList ?? [])
+    : (event?.registrationsList ?? []).filter(
         (r) => auth.isMyPerson(r.personId) || auth.isMyCouple(r.coupleId),
       );
-  const [selection, setSelection] = React.useState<Selection>(() => {
-    if (initialPage) return { kind: initialPage };
-    const initial =
-      registrations.find((r) => r.id === initialRegistrationId) ??
-      (registrations.length === 1 ? registrations[0] : undefined);
-    return initial
-      ? { kind: 'registration', id: initial.id }
-      : { kind: registrations.length > 0 ? 'overview' : 'candidates' };
-  });
+  const [selection, setSelection] = React.useState<Selection | null>(null);
   const registration =
-    selection.kind === 'registration'
+    selection?.kind === 'registration'
       ? registrations.find((r) => r.id === selection.id)
       : undefined;
   const selected = registration
     ? registrant(registration)
-    : selection.kind === 'candidate'
+    : selection?.kind === 'candidate'
       ? selection.registrant
       : undefined;
   const {
     candidates,
     error: candidateError,
     loading: candidatesLoading,
-  } = useRegistrationCandidates(event, selection.kind === 'candidates');
-  const page = selected
-    ? 'editor'
-    : selection.kind === 'candidates'
-      ? !candidatesLoading && !candidateError && candidates.length === 0
-        ? 'new-person'
-        : 'candidates'
-      : selection.kind === 'new-person'
-        ? 'new-person'
-        : 'overview';
+  } = useRegistrationCandidates(event, selection?.kind === 'candidates');
   const [setRegistrationResult, setRegistration] = useMutation(
     SetEventRegistrationDocument,
   );
+
+  if (!query.data) return query.error ? <FormError error={query.error} /> : <Spinner />;
+  if (!event) return <FormError error="Termín není dostupný." />;
+  if (!selection) {
+    const initial =
+      registrations.find((r) => r.id === initialRegistrationId) ??
+      (registrations.length === 1 ? registrations[0] : undefined);
+    setSelection(
+      initialPage
+        ? { kind: initialPage }
+        : initial
+          ? { kind: 'registration', id: initial.id }
+          : { kind: registrations.length > 0 ? 'overview' : 'candidates' },
+    );
+    return null;
+  }
+
+  const page = selected
+    ? 'editor'
+    : selection?.kind === 'candidates'
+      ? !candidatesLoading && !candidateError && candidates.length === 0
+        ? 'new-person'
+        : 'candidates'
+      : selection?.kind === 'new-person'
+        ? 'new-person'
+        : 'overview';
   const i = registration ? registrations.indexOf(registration) : -1;
   const canCycle = !!registration && registrations.length > 1;
   const simpleRegistration = event.type === 'LESSON' || event.type === 'GROUP';
@@ -231,26 +218,32 @@ function RegistrationsDialogContent({
     <>
       <div className="flex items-center gap-2 pr-8">
         {page === 'new-person' && candidates.length > 0 && (
-          <IconButton
-            label="Zpět na výběr osoby"
+          <button
+            type="button"
+            className={buttonCls({ size: 'icon', variant: 'outline' })}
             onClick={() => setSelection({ kind: 'candidates' })}
           >
             <ChevronLeft />
-          </IconButton>
+          </button>
         )}
         {page !== 'overview' && registrations.length > 0 && (
-          <IconButton
-            label="Zobrazit přihlášky"
+          <button
+            type="button"
+            className={buttonCls({ size: 'icon', variant: 'outline' })}
             onClick={() => setSelection({ kind: 'overview' })}
           >
             <List />
-          </IconButton>
+          </button>
         )}
 
         {canCycle && (
-          <IconButton label="Předchozí přihláška" onClick={() => changeRegistration(-1)}>
+          <button
+            type="button"
+            className={buttonCls({ size: 'icon', variant: 'outline' })}
+            onClick={() => changeRegistration(-1)}
+          >
             <ChevronLeft />
-          </IconButton>
+          </button>
         )}
         <DialogTitle className="grow">
           {selected?.label ??
@@ -264,9 +257,13 @@ function RegistrationsDialogContent({
           {canCycle && ` (${i + 1}/${registrations.length})`}
         </DialogTitle>
         {canCycle && (
-          <IconButton label="Následující přihláška" onClick={() => changeRegistration(1)}>
+          <button
+            type="button"
+            className={buttonCls({ size: 'icon', variant: 'outline' })}
+            onClick={() => changeRegistration(1)}
+          >
             <ChevronRight />
-          </IconButton>
+          </button>
         )}
 
         {page === 'candidates' && (
@@ -280,12 +277,13 @@ function RegistrationsDialogContent({
           </button>
         )}
         {(page === 'overview' || registration) && (
-          <IconButton
-            label="Přidat přihlášku"
+          <button
+            type="button"
+            className={buttonCls({ size: 'icon', variant: 'outline' })}
             onClick={() => setSelection({ kind: 'candidates' })}
           >
             <Plus />
-          </IconButton>
+          </button>
         )}
         {selected && !registration && (
           <button
@@ -347,23 +345,5 @@ function RegistrationsDialogContent({
         )
       )}
     </>
-  );
-}
-
-function IconButton({
-  label,
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      className={buttonCls({ size: 'icon', variant: 'outline' })}
-      {...props}
-    >
-      {children}
-    </button>
   );
 }
