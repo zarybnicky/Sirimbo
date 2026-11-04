@@ -1,19 +1,19 @@
 { fetchurl, runCommand, duckdb, unzip }:
 
 let
-  version = "20261104";
+  version = "20261015";
   cities = fetchurl {
-    name = "geonames-cities500-${version}.zip";
+    name = "geonames-cities500-20261015.zip";
     url = "https://download.geonames.org/export/dump/cities500.zip";
-    hash = "sha256-e+pMCfbfd9+bW7zN6vo9njiHO0YDfgOFzA9CGjTUJuE=";
+    hash = "sha256-baefaH1Q9qXCA1aHaXxwt/gwosg0PJJ+HQDqiXLItQg=";
   };
   countries = fetchurl {
-    name = "geonames-countryInfo-${version}.txt";
+    name = "geonames-countryInfo-20261015.txt";
     url = "https://download.geonames.org/export/dump/countryInfo.txt";
     hash = "sha256-efj1nqAcu0BDi/GFbdbC/yAfA/j8ctBTCyZGqvYD7wQ=";
   };
   regions = fetchurl {
-    name = "geonames-admin1-${version}.txt";
+    name = "geonames-admin1-20261015.txt";
     url = "https://download.geonames.org/export/dump/admin1CodesASCII.txt";
     hash = "sha256-Lkhn9Tl6ywVuomN3YBtXrzfLTIE5l3AiUBjp5DnpGtM=";
   };

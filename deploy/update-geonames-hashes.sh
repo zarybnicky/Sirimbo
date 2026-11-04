@@ -7,13 +7,21 @@ file=deploy/geonames-city-cache.nix
 updated=$(mktemp)
 trap 'rm -f "$updated"' EXIT
 cp "$file" "$updated"
+version=$(date -u +%Y%m%d)
 
 for source in cities countries regions; do
   url=$(nix eval --raw ".#geonames-city-cache.$source.url")
+  current_hash=$(nix eval --raw ".#geonames-city-cache.$source.outputHash")
   hash=$(nix store prefetch-file --refresh --json "$url" | jq -er '.hash')
-  sed -i "/^  $source = fetchurl {/,/^  };/ s|hash = \".*\";|hash = \"$hash\";|" "$updated"
+  if [ "$hash" != "$current_hash" ]; then
+    sed -i "/^  $source = fetchurl {/,/^  };/ {
+      s|\(name = \".*-\)[0-9]*\.|\1$version.|
+      s|hash = \".*\";|hash = \"$hash\";|
+    }" "$updated"
+  fi
 done
 
-version=$(date -u +%Y%m%d)
-sed -i "s/version = \"[0-9]*\";/version = \"$version\";/" "$updated"
-cat "$updated" > "$file"
+if ! cmp -s "$file" "$updated"; then
+  sed -i "s/version = \"[0-9]*\";/version = \"$version\";/" "$updated"
+  cat "$updated" > "$file"
+fi
