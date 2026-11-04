@@ -153,23 +153,43 @@ export function ActionGroup<Id extends string = string>({
           <Link
             key={a.key}
             href={a.href}
-            title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: a.variant ?? 'outline', size: 'sm' })}
+            title={iconOnly || a.primaryContent != null ? a.label : undefined}
+            className={buttonCls({
+              variant: a.variant ?? 'outline',
+              size: 'sm',
+              className: a.primaryContent != null ? 'p-0 overflow-hidden hover:brightness-90' : undefined,
+            })}
           >
-            {a.icon && <a.icon className="size-4" />}
-            <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
+            {a.primaryContent ?? (
+              <>
+                {a.icon && <a.icon className="size-4" />}
+                <span className={iconOnly && a.icon ? 'sr-only' : undefined}>
+                  {a.label}
+                </span>
+              </>
+            )}
           </Link>
         ) : (
           <button
             key={a.key}
             type="button"
             disabled={pending === a.key}
-            title={iconOnly ? a.label : undefined}
-            className={buttonCls({ variant: a.variant ?? 'outline', size: 'sm' })}
+            title={iconOnly || a.primaryContent != null ? a.label : undefined}
+            className={buttonCls({
+              variant: a.variant ?? 'outline',
+              size: 'sm',
+              className: a.primaryContent != null ? 'p-0 overflow-hidden hover:brightness-90' : undefined,
+            })}
             onClick={() => fire(a)}
           >
-            {a.icon && <a.icon className="size-4" />}
-            <span className={iconOnly && a.icon ? 'sr-only' : undefined}>{a.label}</span>
+            {a.primaryContent ?? (
+              <>
+                {a.icon && <a.icon className="size-4" />}
+                <span className={iconOnly && a.icon ? 'sr-only' : undefined}>
+                  {a.label}
+                </span>
+              </>
+            )}
           </button>
         ),
       )}

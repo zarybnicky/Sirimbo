@@ -1,3 +1,4 @@
+import { AttendanceStats } from '@/ui/AttendanceStats';
 import {
   CalendarPlus,
   CheckSquare,
@@ -118,6 +119,9 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'event.attendance',
     label: 'Docházka',
+    primaryContent: ({ item }) => (
+      <AttendanceStats stats={item.stats} className="h-7 rounded-none border-0" />
+    ),
     visible: ({ auth, item }) => auth.canManageEvent(item),
     href: ({ item }) => `/termin/${item.id}?tab=registrations`,
   },

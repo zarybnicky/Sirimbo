@@ -8,7 +8,7 @@ import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
 import { Table } from '@/ui/Table';
 import { Pagination } from '@/ui/Pagination';
-import { numericFullFormatter } from '@/ui/format';
+import { formatDateOnly, numericFullFormatter } from '@/ui/format';
 import { Metadata } from 'next';
 
 const pageSize = 50;
@@ -32,12 +32,16 @@ export default async function FrontierPage({
   if (!/^[0-9]{1,18}$/.test(id)) notFound();
   const rawPage = Array.isArray(search.page) ? search.page[0] : search.page;
   const page = Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1);
-  const { crawlerTarget: frontier } = await executeGraphql(CrawlerTargetDocument, {
-    id,
-    offset: Math.min((page - 1) * pageSize, 2_147_483_647),
-  });
+  const { crawlerTarget: frontier, crawlerFetchJobs } = await executeGraphql(
+    CrawlerTargetDocument,
+    {
+      id,
+      offset: Math.min((page - 1) * pageSize, 2_147_483_647),
+    },
+  );
   if (!frontier) notFound();
 
+  const job = crawlerFetchJobs?.nodes[0];
   const { nodes: responses, totalCount } = frontier.responses;
   const lastPage = Math.max(1, Math.ceil(totalCount / pageSize));
   const basePath = `/admin/crawler/${id}`;
@@ -72,6 +76,9 @@ export default async function FrontierPage({
           discovered: frontier.discoveredAt
             ? numericFullFormatter.format(new Date(frontier.discoveredAt))
             : '-',
+          'reference date': frontier.referenceDate
+            ? formatDateOnly(frontier.referenceDate)
+            : '-',
           'last fetched': frontier.lastFetchedAt
             ? numericFullFormatter.format(new Date(frontier.lastFetchedAt))
             : '-',
@@ -87,6 +94,26 @@ export default async function FrontierPage({
         <pre className="whitespace-pre-wrap break-all text-sm">
           {frontier.lastProcessError}
         </pre>
+      )}
+
+      {job && (
+        <>
+          <h2 className="mt-4 mb-2 text-lg font-bold">Fetch job</h2>
+          <DefinitionList
+            items={{
+              id: job.jobId,
+              state: job.state === 'locked' ? 'running' : job.state,
+              scheduled: job.runAt ? numericFullFormatter.format(new Date(job.runAt)) : '-',
+              'locked since': job.lockedAt
+                ? numericFullFormatter.format(new Date(job.lockedAt))
+                : '-',
+              attempts: `${job.attempts ?? '-'} / ${job.maxAttempts ?? '-'}`,
+              'worker error': job.jobError && (
+                <pre className="whitespace-pre-wrap break-all text-sm">{job.jobError}</pre>
+              ),
+            }}
+          />
+        </>
       )}
 
       <h2 className="mt-4 mb-2 text-lg font-bold">Responses</h2>

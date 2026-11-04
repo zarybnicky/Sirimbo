@@ -12,7 +12,8 @@ import { useAuth } from '@/lib/auth';
 import { diff } from 'date-arithmetic';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import * as React from 'react';
-import { Check, HelpCircle, X } from 'lucide-react';
+import { AttendanceStats } from '@/ui/AttendanceStats';
+import Link from 'next/link';
 
 export function EventButton({
   event,
@@ -81,7 +82,20 @@ export function EventButton({
             </div>
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <EventConflictsBadge eventId={event.id} className="text-accent-11" />
-            {showInlineAttendance && <InlineAttendanceStats stats={event.stats} />}
+            {showInlineAttendance && (
+              <Link
+                href={`/termin/${event.id}?tab=registrations`}
+                aria-label="Docházka"
+                title="Docházka"
+                className="shrink-0 rounded-lg shadow-xs hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AttendanceStats
+                  stats={event.stats}
+                  className="flex h-6 border-accent-7 hover:border-accent-9"
+                />
+              </Link>
+            )}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}
           </div>
         </PopoverTrigger>
@@ -90,45 +104,6 @@ export function EventButton({
           <EventSummary event={event} />
         </PopoverContent>
       </Popover>
-    </div>
-  );
-}
-
-function InlineAttendanceStats({ stats }: { stats: EventWithTrainerFragment['stats'] }) {
-  return (
-    <div className="inline-flex h-5 shrink-0 overflow-hidden rounded-lg border border-neutral-6 bg-neutral-1 text-[11px] font-medium leading-none tabular-nums">
-      <span
-        title="zůčastnilo se"
-        className={cn(
-          'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-          'bg-green-3 text-green-11',
-        )}
-      >
-        <Check className="size-3 shrink-0" />
-        <span>{stats.attended}</span>
-      </span>
-      <span
-        title="nezúčastnilo se"
-        className={cn(
-          'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-          'bg-danger-3 text-danger-11',
-        )}
-      >
-        <X className="size-3 shrink-0" />
-        <span>{stats.notExcused}</span>
-      </span>
-      {stats.unknown > 0 && (
-        <span
-          title="nezadáno"
-          className={cn(
-            'inline-flex min-w-7 items-center justify-center gap-0.5 border-l border-neutral-6 px-1 first:border-l-0',
-            'bg-neutral-2 text-neutral-11',
-          )}
-        >
-          <HelpCircle className="size-3 shrink-0" aria-hidden="true" />
-          <span>{stats.unknown}</span>
-        </span>
-      )}
     </div>
   );
 }
