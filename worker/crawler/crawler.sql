@@ -87,7 +87,14 @@ SELECT (
     job_key => 'frontier_schedule',
     job_key_mode => 'replace'
   )
-).id AS "job_id!";
+).id AS "job_id!"
+WHERE :host::text IS NULL OR NOT EXISTS (
+  SELECT FROM graphile_worker.jobs
+  WHERE task_identifier = 'frontier_fetch'
+    AND starts_with(key, 'fetch:' || :host || ':')
+    AND locked_at IS NULL
+    AND attempts < max_attempts
+);
 
 /* @name GetFrontierResponses */
 SELECT
@@ -276,13 +283,6 @@ FROM crawler.frontier_fetch_job
 WHERE host IS NOT NULL
   AND state IN ('ready', 'delayed')
 ORDER BY host, run_at;
-
-/* @name HasQueuedFetchJobs */
-SELECT EXISTS (
-  SELECT FROM crawler.frontier_fetch_job
-  WHERE federation = :federation!
-    AND state IN ('ready', 'delayed')
-) AS "queued!";
 
 /* @name GetFrontierDetail */
 SELECT

@@ -168,7 +168,9 @@ export const getCrawlerStatus = new PreparedQuery<IGetCrawlerStatusParams,IGetCr
 
 
 /** 'QueueCrawlerSchedule' parameters type */
-export type IQueueCrawlerScheduleParams = void;
+export interface IQueueCrawlerScheduleParams {
+  host?: string | null | void;
+}
 
 /** 'QueueCrawlerSchedule' return type */
 export interface IQueueCrawlerScheduleResult {
@@ -181,7 +183,7 @@ export interface IQueueCrawlerScheduleQuery {
   result: IQueueCrawlerScheduleResult;
 }
 
-const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT (\n  graphile_worker.add_job(\n    identifier => 'frontier_schedule',\n    payload => '{}'::json,\n    run_at => now(),\n    job_key => 'frontier_schedule',\n    job_key_mode => 'replace'\n  )\n).id AS \"job_id!\""};
+const queueCrawlerScheduleIR: any = {"usedParamSet":{"host":true},"params":[{"name":"host","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":221},{"a":368,"b":372}]}],"statement":"SELECT (\n  graphile_worker.add_job(\n    identifier => 'frontier_schedule',\n    payload => '{}'::json,\n    run_at => now(),\n    job_key => 'frontier_schedule',\n    job_key_mode => 'replace'\n  )\n).id AS \"job_id!\"\nWHERE :host::text IS NULL OR NOT EXISTS (\n  SELECT FROM graphile_worker.jobs\n  WHERE task_identifier = 'frontier_fetch'\n    AND starts_with(key, 'fetch:' || :host || ':')\n    AND locked_at IS NULL\n    AND attempts < max_attempts\n)"};
 
 /**
  * Query generated from SQL:
@@ -195,6 +197,13 @@ const queueCrawlerScheduleIR: any = {"usedParamSet":{},"params":[],"statement":"
  *     job_key_mode => 'replace'
  *   )
  * ).id AS "job_id!"
+ * WHERE :host::text IS NULL OR NOT EXISTS (
+ *   SELECT FROM graphile_worker.jobs
+ *   WHERE task_identifier = 'frontier_fetch'
+ *     AND starts_with(key, 'fetch:' || :host || ':')
+ *     AND locked_at IS NULL
+ *     AND attempts < max_attempts
+ * )
  * ```
  */
 export const queueCrawlerSchedule = new PreparedQuery<IQueueCrawlerScheduleParams,IQueueCrawlerScheduleResult>(queueCrawlerScheduleIR);
@@ -596,37 +605,6 @@ const getScheduledFetchSlotsIR: any = {"usedParamSet":{},"params":[],"statement"
  * ```
  */
 export const getScheduledFetchSlots = new PreparedQuery<IGetScheduledFetchSlotsParams,IGetScheduledFetchSlotsResult>(getScheduledFetchSlotsIR);
-
-
-/** 'HasQueuedFetchJobs' parameters type */
-export interface IHasQueuedFetchJobsParams {
-  federation: string;
-}
-
-/** 'HasQueuedFetchJobs' return type */
-export interface IHasQueuedFetchJobsResult {
-  queued: boolean;
-}
-
-/** 'HasQueuedFetchJobs' query type */
-export interface IHasQueuedFetchJobsQuery {
-  params: IHasQueuedFetchJobsParams;
-  result: IHasQueuedFetchJobsResult;
-}
-
-const hasQueuedFetchJobsIR: any = {"usedParamSet":{"federation":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":78,"b":89}]}],"statement":"SELECT EXISTS (\n  SELECT FROM crawler.frontier_fetch_job\n  WHERE federation = :federation!\n    AND state IN ('ready', 'delayed')\n) AS \"queued!\""};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT EXISTS (
- *   SELECT FROM crawler.frontier_fetch_job
- *   WHERE federation = :federation!
- *     AND state IN ('ready', 'delayed')
- * ) AS "queued!"
- * ```
- */
-export const hasQueuedFetchJobs = new PreparedQuery<IHasQueuedFetchJobsParams,IHasQueuedFetchJobsResult>(hasQueuedFetchJobsIR);
 
 
 /** 'GetFrontierDetail' parameters type */

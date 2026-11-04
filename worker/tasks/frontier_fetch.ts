@@ -2,7 +2,6 @@ import type { Task } from 'graphile-worker';
 import {
   getFrontierForUpdate,
   getPendingProcessById,
-  hasQueuedFetchJobs,
   insertResponse,
   markFrontierFetchError,
   markFrontierFetchSuccess,
@@ -115,33 +114,30 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
     }
   });
 
-  if (fetchStatus !== 'ok') return;
+  if (fetchStatus === 'ok') {
+    await withPgClient(async (client) => {
+      await client.query('BEGIN');
+      try {
+        const [pending] = await getPendingProcessById.run({ id }, client);
+        if (!pending) {
+          await client.query('ROLLBACK');
+          return;
+        }
 
-  await withPgClient(async (client) => {
-    await client.query('BEGIN');
-    try {
-      const [pending] = await getPendingProcessById.run({ id }, client);
-      if (!pending) {
+        const effect = await loadFrontier(client, pending, 'loose');
+        await flushLoaderEffects(client, effect ? [effect] : []);
+        await markFrontiersProcessSuccess.run({ ids: [id] }, client);
+        await client.query('COMMIT');
+      } catch (e) {
         await client.query('ROLLBACK');
-        return;
+        const processError = formatException(e);
+        await markFrontierProcessError.run({ id, error: processError }, client);
+        logger.error(`Processing frontier ${id} failed: ${processError}`);
       }
+    });
+  }
 
-      const effect = await loadFrontier(client, pending, 'loose');
-      await flushLoaderEffects(client, effect ? [effect] : []);
-      await markFrontiersProcessSuccess.run({ ids: [id] }, client);
-      await client.query('COMMIT');
-    } catch (e) {
-      await client.query('ROLLBACK');
-      const processError = formatException(e);
-      await markFrontierProcessError.run({ id, error: processError }, client);
-      logger.error(`Processing frontier ${id} failed: ${processError}`);
-    }
-  });
-
-  await withPgClient(async (client) => {
-    const [queue] = await hasQueuedFetchJobs.run({ federation: frontier.federation }, client);
-    if (!queue.queued) await queueCrawlerSchedule.run(undefined, client);
-  });
+  await withPgClient((client) => queueCrawlerSchedule.run({ host: url.host }, client));
 };
 
 export default frontier_fetch;
