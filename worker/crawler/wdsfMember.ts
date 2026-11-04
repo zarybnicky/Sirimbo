@@ -1,11 +1,11 @@
 import type { JsonLoader } from './types.ts';
 import {
-  replacePersonLicensesForPerson,
-  upsertPeopleDetailed,
   type gender,
   type person_license_discipline,
   type person_license_kind,
   type person_license_status,
+  replacePersonLicensesForPerson,
+  upsertPeopleDetailed,
 } from './federated.queries.ts';
 import { makePgtypedCollection } from './pgtypedCollection.ts';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ const personSchema = z.object({
   ),
   id: z.number(),
   nickname: z.string().nullable(),
-  name: z.string(),
+  name: z.string().nullable(),
   surname: z.string().nullable(),
   sex: z.enum(['Male', 'Female', '']),
   nationality: z.string().nullable(),
@@ -61,18 +61,20 @@ const personSchema = z.object({
   ageGroup: z.string().nullable(),
   yearOfBirth: z.number().int(),
   nationalReference: z.string().nullable(),
-  licenses: z.array(
-    z.object({
-      type: wdsfLicenseTypeSchema,
-      status: wdsfLicenseStatusSchema,
-      division: wdsfLicenseDisciplineSchema,
-      disciplines: z.array(z.string()),
-      grade: z.string().optional(),
-      expiresOn: z.iso.date().optional(),
-      wrlBLockedUntil: z.iso.date().optional(),
-      cupOrChampionshipBlockedUntil: z.iso.date().optional(),
-    }),
-  ).optional(),
+  licenses: z
+    .array(
+      z.object({
+        type: wdsfLicenseTypeSchema,
+        status: wdsfLicenseStatusSchema,
+        division: wdsfLicenseDisciplineSchema,
+        disciplines: z.array(z.string()),
+        grade: z.string().optional(),
+        expiresOn: z.iso.date().optional(),
+        wrlBLockedUntil: z.iso.date().optional(),
+        cupOrChampionshipBlockedUntil: z.iso.date().optional(),
+      }),
+    )
+    .optional(),
 });
 
 type WdsfLicenseType = z.output<typeof wdsfLicenseTypeSchema>;
@@ -102,7 +104,7 @@ export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
         federation: ['wdsf'],
         externalId: [member.id.toString()],
         canonicalName: [[member.name, member.surname].join(' ').trim()],
-        firstName: [member.name],
+        firstName: [member.name ?? ''],
         lastName: [member.surname ?? ''],
         gender: [wdsfGender(member.sex)],
         nationality: [member.nationality ?? member.country ?? ''],
@@ -208,7 +210,10 @@ function wdsfLicenseKind(value: WdsfLicenseType): person_license_kind | undefine
 }
 
 function parseWdsfLicenseDiscipline(value: string) {
-  const match = /^(.+) \(([^()]*)\) for .*[ \t]+acquired on ([0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})$/.exec(value);
+  const match =
+    /^(.+) \(([^()]*)\) for .*[ \t]+acquired on ([0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})$/.exec(
+      value,
+    );
   if (!match) throw new Error(`Unexpected WDSF license discipline: ${value}`);
 
   return {
@@ -222,7 +227,9 @@ function fallbackWdsfLicenseDiscipline(division: WdsfLicenseDiscipline, grade: s
   return [{ discipline: wdsfLicenseDiscipline(division), grade }];
 }
 
-function wdsfLicenseDiscipline(value: WdsfLicenseDiscipline | string): person_license_discipline {
+function wdsfLicenseDiscipline(
+  value: WdsfLicenseDiscipline | string,
+): person_license_discipline {
   switch (value) {
     case 'General':
       return 'general';

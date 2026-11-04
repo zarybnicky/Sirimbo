@@ -35,11 +35,11 @@ const scoreCommon = {
 
 const onScaleCommon = {
   ...scoreCommon,
-  tq: z.number(),
-  mm: z.number(),
-  ps: z.number(),
-  cp: z.number(),
-  reduction: z.number(),
+  tq: z.number().optional(),
+  mm: z.number().optional(),
+  ps: z.number().optional(),
+  cp: z.number().optional(),
+  reduction: z.number().optional(),
   set: z.boolean().optional(),
 };
 
@@ -212,34 +212,31 @@ const schema = z.object({
 
 type Participant = z.infer<typeof schema>;
 type Round = Participant['rounds'][number];
-type Score = Round['dances'][number]['scores'][number];
-type ScoreRow = {
-  component: score_component;
-  score: number;
-};
-type SupportedScore = {
-  adjudicatorExternalId: string;
-  rows: ScoreRow[];
-};
-type SupportedDance = {
-  code: DanceCode;
-  order: number;
-  scores: SupportedScore[];
-};
+
 type SupportedRound = {
   key: string;
   label: string;
   index: number;
-  dances: SupportedDance[];
   scoringMethod: scoring_method;
+  dances: {
+    code: DanceCode;
+    order: number;
+    scores: {
+      adjudicatorExternalId: string;
+      rows: {
+        component: score_component;
+        score: number;
+      }[];
+    }[];
+  }[];
 };
+
 type Adjudicator = {
   personId: string;
   personExternalId: string;
   judgeIndex: number;
   judgeLabel: string | null;
 };
-
 type ResolvedCompetitor = {
   externalId: string;
   type: competitor_type;
@@ -636,58 +633,43 @@ function supportedRounds(rounds: Round[]): SupportedRound[] {
 
 function roundScoringMethod(round: Round): scoring_method {
   if (
-    round.dances.some((dance) =>
-      dance.scores.some(
-        (score) =>
-          score.kind === 'onScale' ||
-          score.kind === 'onScale2' ||
-          score.kind === 'onScale3' ||
-          score.kind === 'onScaleSkating',
-      ),
-    )
+    round.dances
+      .flatMap((d) => d.scores)
+      .some((s) => ['onScale', 'onScale2', 'onScale3', 'onScaleSkating'].includes(s.kind))
   ) {
     return 'ajs-3.0';
   }
-  if (
-    round.dances.some((dance) => dance.scores.some((score) => score.kind === 'final'))
-  ) {
+  if (round.dances.some((d) => d.scores.some((s) => s.kind === 'final'))) {
     return 'skating_places';
   }
   return 'skating_marks';
 }
 
-function scoreRows(score: Score): ScoreRow[] {
+function scoreRows(score: Round['dances'][number]['scores'][number]): {
+  component: score_component;
+  score: number;
+}[] {
   switch (score.kind) {
     case 'mark':
-      return [
-        {
-          component: 'mark',
-          score: score.set === false ? 0 : 1,
-        },
-      ];
+      return [{ component: 'mark', score: score.set === false ? 0 : 1 }];
     case 'final':
-      return [scoreRow('places', score.rank)];
+      return [{ component: 'places', score: score.rank }];
     case 'onScale':
     case 'onScale2':
     case 'onScale3':
     case 'onScaleSkating':
       return [
-        scoreRow('ajs_tq', score.tq),
-        scoreRow('ajs_mm', score.mm),
-        scoreRow('ajs_ps', score.ps),
-        scoreRow('ajs_cp', score.cp),
-        scoreRow('ajs_reduction', score.reduction),
-      ];
+        { component: 'ajs_tq', score: score.tq },
+        { component: 'ajs_mm', score: score.mm },
+        { component: 'ajs_ps', score: score.ps },
+        { component: 'ajs_cp', score: score.cp },
+        { component: 'ajs_reduction', score: score.reduction },
+      ].filter(
+        (x): x is { component: score_component; score: number } => x.score !== undefined,
+      );
     default:
       // TODO(wdsf): These score kinds are parsed but discarded. Add score
       // components/materialization for breaking, Trivium, IDO, Disco, MTC, and TCPS.
       return [];
   }
-}
-
-function scoreRow(component: score_component, score: number): ScoreRow {
-  return {
-    component,
-    score,
-  };
 }
