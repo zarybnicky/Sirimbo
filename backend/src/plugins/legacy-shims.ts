@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { sql, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
-import { access, applyInput, constant, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
+import { applyInput, lambda, type ConnectionStep, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
 export const LegacyShimsPlugin = extendSchema((build) => ({
@@ -25,25 +25,6 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
         first: Int
         offset: Int
       ): [Event!] @deprecated(reason: "Use eventsList with filters.")
-    }
-
-    type EventExternalRegistration {
-      id: BigInt!
-      note: String
-      email: String!
-      firstName: String!
-      lastName: String!
-    }
-
-    extend type Event {
-      remainingPersonSpots: Int
-        @deprecated(reason: "Use registrationInfo.remainingCapacity.")
-      eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]!
-        @deprecated(reason: "Use registrationsList.")
-    }
-
-    extend type EventTrainer {
-      name: String @deprecated(reason: "Use person { name }.")
     }
   `,
   objects: {
@@ -91,29 +72,6 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
           $events.setOffset(args.$offset);
           return $events;
         },
-      },
-    },
-    EventTrainer: {
-      plans: {
-        name($trainer, args, info) {
-          const trainer = build.getTypeByName('EventTrainer');
-          assert(build.graphql.isObjectType(trainer));
-          const plan = trainer.getFields().person.extensions?.grafast?.plan;
-          assert(plan);
-          return (plan($trainer, args, info) as PgSelectSingleStep).get('name');
-        },
-      },
-    },
-    Event: {
-      plans: {
-        remainingPersonSpots($event, args, info) {
-          const event = build.getTypeByName('Event');
-          assert(build.graphql.isObjectType(event));
-          const plan = event.getFields().registrationInfo.extensions?.grafast?.plan;
-          assert(plan);
-          return access(plan($event, args, info), 'remaining_capacity');
-        },
-        eventExternalRegistrationsByInstanceIdList: () => constant([]),
       },
     },
   },

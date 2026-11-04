@@ -10326,24 +10326,6 @@
             "args": []
           },
           {
-            "name": "eventExternalRegistrationsByInstanceIdList",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "name": "EventExternalRegistration",
-                    "kind": "OBJECT",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
             "name": "eventInstanceRegistrationsByInstanceIdList",
             "type": {
               "kind": "NON_NULL",
@@ -10895,14 +10877,6 @@
             ]
           },
           {
-            "name": "remainingPersonSpots",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "series",
             "type": {
               "kind": "OBJECT",
@@ -11030,36 +11004,6 @@
               }
             },
             "args": []
-          },
-          {
-            "name": "trainersList",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "name": "TenantTrainer",
-                  "kind": "OBJECT",
-                  "ofType": null
-                }
-              }
-            },
-            "args": [
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
           },
           {
             "name": "type",
@@ -11273,65 +11217,6 @@
                 "kind": "OBJECT",
                 "ofType": null
               }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "EventExternalRegistration",
-        "fields": [
-          {
-            "name": "email",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "firstName",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "lastName",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "note",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           }
@@ -12538,14 +12423,6 @@
           },
           {
             "name": "lessonsRemaining",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "name",
             "type": {
               "kind": "SCALAR",
               "name": "Any"

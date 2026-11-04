@@ -70,3 +70,4 @@ alter type federated.person_license_discipline add value if not exists 'esports'
 drop function if exists event_trainer_tenant_trainer;
 drop function if exists account_assets;
 drop function if exists account_liabilities;
+drop function if exists event_trainers;

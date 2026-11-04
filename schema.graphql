@@ -5603,7 +5603,6 @@ type Event {
   createdAt: Datetime!
   description: String
   enableNotes: Boolean
-  eventExternalRegistrationsByInstanceIdList: [EventExternalRegistration!]! @deprecated(reason: "Use registrationsList.")
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   eventInstanceRegistrationsByInstanceIdList(
@@ -5767,7 +5766,6 @@ type Event {
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]!
-  remainingPersonSpots: Int @deprecated(reason: "Use registrationInfo.remainingCapacity.")
 
   """Reads a single `EventSeries` that is related to this `Event`."""
   series: EventSeries
@@ -5795,13 +5793,6 @@ type Event {
     orderBy: [EventTargetCohortsOrderBy!]
   ): [EventTargetCohort!]!
   tenantId: BigInt!
-  trainersList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [TenantTrainer!] @deprecated(reason: "Use eventTrainersList.")
   type: EventType
   until: Datetime!
   updatedAt: Datetime!
@@ -5957,14 +5948,6 @@ type EventEdge {
 
   """The `Event` at the end of the edge."""
   node: Event!
-}
-
-type EventExternalRegistration {
-  email: String!
-  firstName: String!
-  id: BigInt!
-  lastName: String!
-  note: String
 }
 
 type EventFacetsRecord {
@@ -6583,7 +6566,6 @@ type EventTrainer {
   ): [EventLessonRequest!]!
   lessonsOffered: Int
   lessonsRemaining: Int
-  name: String @deprecated(reason: "Use person { name }.")
 
   """Reads a single `Person` that is related to this `EventTrainer`."""
   person: Person
