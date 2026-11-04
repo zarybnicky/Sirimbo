@@ -30,6 +30,7 @@ const wdsfLicenseStatusSchema = z.enum([
   'Retired',
   'Aspiring',
   'Suspended',
+  'Temporary',
 ]);
 
 const wdsfLicenseDisciplineSchema = z.enum([
@@ -44,6 +45,7 @@ const wdsfLicenseDisciplineSchema = z.enum([
   'Professional',
   'Breaking',
   'HipHop',
+  'ESports',
   'Unknown',
 ]);
 
@@ -277,6 +279,9 @@ function wdsfLicenseDiscipline(
     case 'Hip Hop':
     case 'Hip-Hop Freestyle':
       return 'hiphop';
+    case 'ESports':
+    case 'eSport':
+      return 'esports';
     case 'Unknown':
       return 'unknown';
     default:
@@ -300,5 +305,7 @@ function wdsfLicenseStatus(value: WdsfLicenseStatus): person_license_status {
       return 'aspiring';
     case 'Suspended':
       return 'suspended';
+    case 'Temporary':
+      return 'temporary';
   }
 }

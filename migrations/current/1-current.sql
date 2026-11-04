@@ -63,3 +63,6 @@ update crawler.frontier f set reference_date = (rc.content->'entity'->>'date')::
 from crawler.json_response r join crawler.json_response_cache rc on rc.content_hash = r.content_hash
 where f.federation = 'csts' and f.kind = 'ranklist' and f.reference_date is null
   and r.id = f.last_successful_response_id;
+
+alter type federated.person_license_status add value if not exists 'temporary';
+alter type federated.person_license_discipline add value if not exists 'esports';

@@ -13,11 +13,11 @@ export type gender = 'female' | 'male' | 'other' | 'unknown';
 
 export type official_role = 'adjudicator' | 'chairperson' | 'invigilator' | 'lead_scrutineer' | 'scrutineer';
 
-export type person_license_discipline = 'breaking' | 'caribbean' | 'disco' | 'formation_latin' | 'formation_standard' | 'general' | 'hiphop' | 'latin' | 'pd_latin' | 'pd_show_dance_latin' | 'pd_show_dance_standard' | 'pd_standard' | 'pd_ten_dance' | 'show_dance_latin' | 'show_dance_standard' | 'smooth' | 'solo_syncro_choreo' | 'stage' | 'standard' | 'ten_dance' | 'unknown';
+export type person_license_discipline = 'breaking' | 'caribbean' | 'disco' | 'esports' | 'formation_latin' | 'formation_standard' | 'general' | 'hiphop' | 'latin' | 'pd_latin' | 'pd_show_dance_latin' | 'pd_show_dance_standard' | 'pd_standard' | 'pd_ten_dance' | 'show_dance_latin' | 'show_dance_standard' | 'smooth' | 'solo_syncro_choreo' | 'stage' | 'standard' | 'ten_dance' | 'unknown';
 
 export type person_license_kind = 'adjudicator' | 'athlete' | 'chairperson' | 'dj' | 'examiner' | 'head_judge' | 'invigilator' | 'lead_scrutineer' | 'official' | 'scrutineer' | 'trainer';
 
-export type person_license_status = 'active' | 'aspiring' | 'expired' | 'resting' | 'retired' | 'revoked' | 'suspended' | 'unknown';
+export type person_license_status = 'active' | 'aspiring' | 'expired' | 'resting' | 'retired' | 'revoked' | 'suspended' | 'temporary' | 'unknown';
 
 export type score_component = 'ajs_cp' | 'ajs_mm' | 'ajs_ps' | 'ajs_reduction' | 'ajs_tq' | 'mark' | 'places';
 

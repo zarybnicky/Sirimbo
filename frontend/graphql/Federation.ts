@@ -112,6 +112,7 @@ export type PersonLicenseDiscipline =
   | 'BREAKING'
   | 'CARIBBEAN'
   | 'DISCO'
+  | 'ESPORTS'
   | 'FORMATION_LATIN'
   | 'FORMATION_STANDARD'
   | 'GENERAL'
@@ -152,6 +153,7 @@ export type PersonLicenseStatus =
   | 'RETIRED'
   | 'REVOKED'
   | 'SUSPENDED'
+  | 'TEMPORARY'
   | 'UNKNOWN';
 
 export type RelationshipStatus =
