@@ -183,12 +183,15 @@ const schema = z.object({
     'Processing',
     'PostponedTBC',
     'Postponed',
+    'Provisional',
+    'ProvisionalEPC',
   ]),
   type: z.enum(competitionType, { error: '' }),
   age: z.enum([
     'JUVENILE',
     'JUVENILE T',
     'JUVENILE I',
+    'JUVENILE I C',
     'JUVENILE II',
     'JUNIOR',
     'JUNIOR T',
@@ -254,8 +257,10 @@ const schema = z.object({
     'F VS F',
     'M VS M',
   ]),
-  discipline: z.preprocess(x => typeof x === 'string' ? x.toUpperCase() : x, z.enum([
+  discipline: z.preprocess(x => typeof x === 'string' ? x.toUpperCase() : x === null ? '' : x, z.enum([
+    '',
     'LATIN',
+    '2D LATIN',
     '3D LATIN',
     'PD LATIN',
     'SYN LATIN',
@@ -263,6 +268,7 @@ const schema = z.object({
     'CHOR LATIN',
     'FORMATION LATIN',
     'STANDARD',
+    '2D STANDARD',
     '3D STANDARD',
     'PD STANDARD',
     'SYN STANDARD',
@@ -287,8 +293,10 @@ const schema = z.object({
     'BREAK',
     'HIPHOP',
     'HH CHOREO',
+    'HH FREE',
     'ACRO DISCO',
     'DISCO',
+    'DISCO SLOW',
     'ROCK N ROLL',
     'SMOOTH',
     'PD SMOOTH',
@@ -339,6 +347,10 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       },
     },
   }),
+  mapResponseToStatus({ httpStatus }) {
+    if (httpStatus === 404) return 'gone';
+    return undefined;
+  },
   load: async (client, c) => {
     // TODO(wdsf): Persist parsed coefficient, eventId, lastmodifiedDate,
     // and link relations, or remove them from the schema.
@@ -382,6 +394,8 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
             RegistrationClosed: 'planned',
             PreRegistration: 'planned',
             Registering: 'planned',
+            Provisional: 'planned',
+            ProvisionalEPC: 'planned',
             InProgress: 'in_progress',
             Processing: 'in_progress',
             PostponedTBC: 'postponed',
