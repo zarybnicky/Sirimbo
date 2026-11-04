@@ -219,7 +219,6 @@ enum AccessEventsOrderBy {
 }
 
 type Account {
-  assets(since: Datetime, until: Datetime): BigFloat
   balance: BigFloat
 
   """Reads and enables pagination through a set of `CohortSubscription`."""
@@ -241,7 +240,6 @@ type Account {
   createdAt: Datetime!
   currency: String!
   id: BigInt!
-  liabilities(since: Datetime, until: Datetime): BigFloat
   openingBalance: BigFloat!
 
   """Reads and enables pagination through a set of `PaymentRecipient`."""

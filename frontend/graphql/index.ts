@@ -237,14 +237,12 @@ export type AccessEventsOrderBy =
 
 export type Account = {
   __typename?: 'Account';
-  assets: Maybe<Scalars['BigFloat']['output']>;
   balance: Maybe<Scalars['BigFloat']['output']>;
   /** Reads and enables pagination through a set of `CohortSubscription`. */
   cohortSubscriptionsList: Array<CohortSubscription>;
   createdAt: Scalars['Datetime']['output'];
   currency: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
-  liabilities: Maybe<Scalars['BigFloat']['output']>;
   openingBalance: Scalars['BigFloat']['output'];
   /** Reads and enables pagination through a set of `PaymentRecipient`. */
   paymentRecipientsList: Array<PaymentRecipient>;
@@ -264,23 +262,11 @@ export type Account = {
 };
 
 
-export type AccountAssetsArgs = {
-  since?: InputMaybe<Scalars['Datetime']['input']>;
-  until?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-
 export type AccountCohortSubscriptionsListArgs = {
   condition?: InputMaybe<CohortSubscriptionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
-};
-
-
-export type AccountLiabilitiesArgs = {
-  since?: InputMaybe<Scalars['Datetime']['input']>;
-  until?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -14026,13 +14012,11 @@ export type GraphCacheResolvers = {
     tenantId?: GraphCacheResolver<WithTypename<AccessEvent>, Record<string, never>, Scalars['BigInt']['output'] | string>
   },
   Account?: {
-    assets?: GraphCacheResolver<WithTypename<Account>, AccountAssetsArgs, Scalars['BigFloat']['output'] | string>,
     balance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Account>, AccountCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     createdAt?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     currency?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigInt']['output'] | string>,
-    liabilities?: GraphCacheResolver<WithTypename<Account>, AccountLiabilitiesArgs, Scalars['BigFloat']['output'] | string>,
     openingBalance?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     paymentRecipientsList?: GraphCacheResolver<WithTypename<Account>, AccountPaymentRecipientsListArgs, Array<WithTypename<PaymentRecipient> | string>>,
     person?: GraphCacheResolver<WithTypename<Account>, Record<string, never>, WithTypename<Person> | string>,
@@ -16583,13 +16567,11 @@ export type GraphCacheUpdaters = {
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<AccessEvent>>, Record<string, never>>
   },
   Account?: {
-    assets?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountAssetsArgs>,
     balance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountCohortSubscriptionsListArgs>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     currency?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
-    liabilities?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountLiabilitiesArgs>,
     openingBalance?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,
     paymentRecipientsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, AccountPaymentRecipientsListArgs>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<Account>>, Record<string, never>>,

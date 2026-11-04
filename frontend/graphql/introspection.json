@@ -333,29 +333,6 @@
         "name": "Account",
         "fields": [
           {
-            "name": "assets",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "since",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "until",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
-          },
-          {
             "name": "balance",
             "type": {
               "kind": "SCALAR",
@@ -448,29 +425,6 @@
               }
             },
             "args": []
-          },
-          {
-            "name": "liabilities",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "since",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "until",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
           },
           {
             "name": "openingBalance",

@@ -67,4 +67,6 @@ where f.federation = 'csts' and f.kind = 'ranklist' and f.reference_date is null
 alter type federated.person_license_status add value if not exists 'temporary';
 alter type federated.person_license_discipline add value if not exists 'esports';
 
-drop function if exists event_trainer_tenant_trainer(event_trainer);
+drop function if exists event_trainer_tenant_trainer;
+drop function if exists account_assets;
+drop function if exists account_liabilities;
