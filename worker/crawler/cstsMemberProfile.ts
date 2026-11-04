@@ -19,7 +19,6 @@ const schema = z.object({
 export const cstsMemberProfile: JsonLoader<z.output<typeof schema>> = {
   mode: 'json',
   schema,
-  revalidatePeriod: '7 day',
   buildRequest: (key) => ({
     url: new URL(`https://www.csts.cz/api/members/${key}`),
     init: {

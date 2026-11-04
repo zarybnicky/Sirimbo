@@ -118,7 +118,6 @@ type PayloadCompetitorComponent = {
 export const cstsCompetitionResults: JsonLoader<Response> = {
   mode: 'json',
   schema: responseSchema,
-  revalidatePeriod: '1 day',
   buildRequest: (key) => {
     return {
       url: new URL(`https://www.csts.cz/api/1/competitions/${key}/result`),
@@ -425,6 +424,7 @@ async function loadCstsCompetitionResults(client: PoolClient, result: Result) {
     );
   }
   return {
+    referenceDate: context.referenceDate,
     upsertFrontier: [
       ...people.params.externalId,
       ...components.params.personExternalId,

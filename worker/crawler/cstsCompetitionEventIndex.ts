@@ -24,7 +24,6 @@ const schema = z.object({
 export const cstsCompetitionEventIndex: JsonLoader<z.infer<typeof schema>> = {
   mode: 'json',
   schema,
-  revalidatePeriod: '1 day',
   buildRequest(key) {
     if (!/^\d{4}-\d{2}$/.test(key)) {
       throw new Error(`Invalid csts competitionEventIndex key: ${key}`);
@@ -38,17 +37,17 @@ export const cstsCompetitionEventIndex: JsonLoader<z.infer<typeof schema>> = {
       init: { headers: { Referer: 'https://www.csts.cz/dancesport/vysledky_soutezi' } },
     };
   },
-  async load(_client, parsed) {
+  async load(_client, parsed, key) {
     if (parsed.paging && parsed.paging.totalCount > parsed.collection.length) {
       throw new Error('ČSTS competition event index response is incomplete');
     }
-    // Results can exist without a planning/calendar record. Both indexes feed
-    // the same event loader, which already reads planning and archived results.
     return {
-      upsertFrontier: parsed.collection.map(({ eventId }) => ({
+      referenceDate: endOfMonth(new Date(`${key}-01T00:00:00Z`)).toISOString().slice(0, 10),
+      upsertFrontier: parsed.collection.map(({ eventId, dateTo }) => ({
         federation: 'csts',
         kind: 'event',
         key: eventId.toString(),
+        referenceDate: dateTo,
       })),
     };
   },

@@ -98,7 +98,6 @@ export const LOADERS = {
     clubIndex: cstsClubIndex,
     divisionIndex: {
       mode: 'text',
-      revalidatePeriod: '1 day',
       buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Divize') }),
       async load() {},
     } satisfies HtmlLoader,
@@ -114,7 +113,6 @@ export const LOADERS = {
     // soutěže https://szts.ksis.eu/menu.php?akcia=KS
     competitionIndex: {
       mode: 'text',
-      revalidatePeriod: '1 day',
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=KS') }),
       async load() {},
     } satisfies HtmlLoader,
@@ -137,7 +135,6 @@ export const LOADERS = {
     // kluby https://szts.ksis.eu/menu.php?akcia=CZK
     clubIndex: {
       mode: 'text',
-      revalidatePeriod: '1 day',
       buildRequest: () => ({ url: new URL('https://szts.ksis.eu/menu.php?akcia=CZK') }),
       async load() {},
     } satisfies HtmlLoader,

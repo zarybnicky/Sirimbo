@@ -58,7 +58,6 @@ export const wdsfOfficialIndex: JsonLoader<z.infer<typeof schema>> = {
       },
     },
   }),
-  revalidatePeriod: '7d',
   mapResponseToStatus({ httpStatus }) {
     if (httpStatus === 404) return 'gone';
     if (httpStatus === 500) return 'error';

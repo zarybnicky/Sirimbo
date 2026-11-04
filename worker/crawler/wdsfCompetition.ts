@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { JsonLoader } from './types.ts';
 import { getFederatedCategoryId } from './federatedCategory.ts';
 import { resolveEventVenueLocations } from './eventVenueLocation.ts';
+import { reprocessWdsfParticipantIndex } from './crawler.queries.ts';
 import {
   type competition_type,
   type competitor_type,
@@ -338,7 +339,6 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       },
     },
   }),
-  revalidatePeriod: '30d',
   load: async (client, c) => {
     // TODO(wdsf): Persist parsed coefficient, eventId, lastmodifiedDate,
     // and link relations, or remove them from the schema.
@@ -397,17 +397,24 @@ export const wdsfCompetition: JsonLoader<z.infer<typeof schema>> = {
       { federation: 'wdsf', eventExternalId: c.groupId.toString() },
       client,
     );
+    await reprocessWdsfParticipantIndex.run(
+      { competitionExternalId: c.id.toString(), referenceDate: c.date.slice(0, 10) },
+      client,
+    );
     return {
+      referenceDate: c.date.slice(0, 10),
       upsertFrontier: [
         {
           federation: 'wdsf',
           kind: 'participantIndex',
           key: c.id.toString(),
+          referenceDate: c.date.slice(0, 10),
         },
         {
           federation: 'wdsf',
           kind: 'officialIndex',
           key: c.id.toString(),
+          referenceDate: c.date.slice(0, 10),
         },
       ],
     };

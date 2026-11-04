@@ -102,7 +102,6 @@ type Response = z.output<typeof responseSchema>;
 export const cstsEventIndex: JsonLoader<Response> = {
   mode: 'json',
   schema: responseSchema,
-  revalidatePeriod: '1 day',
   buildRequest: (key) => {
     const { from, to } = parseRangeKey(key);
     const url = new URL('https://www.csts.cz/api/1/events');
@@ -116,7 +115,7 @@ export const cstsEventIndex: JsonLoader<Response> = {
       },
     };
   },
-  async load(client, parsed) {
+  async load(client, parsed, key) {
     const events = makePgtypedCollection<{
       status: event_status;
       federation: string;
@@ -225,10 +224,12 @@ export const cstsEventIndex: JsonLoader<Response> = {
     }
 
     return {
+      referenceDate: parseRangeKey(key).to,
       upsertFrontier: parsed.collection.map((e) => ({
         federation: 'csts',
         kind: 'event',
         key: e.id.toString(),
+        referenceDate: e.dateTo,
       })),
     };
   },

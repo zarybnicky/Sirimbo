@@ -46,9 +46,9 @@ export const wdsfCompetitionIndex: JsonLoader<z.infer<typeof schema>> = {
       },
     };
   },
-  revalidatePeriod: '12h',
-  async load(_, parsed) {
+  async load(_, parsed, key) {
     return {
+      referenceDate: endOfMonth(new Date(`${key}-01T00:00:00Z`)).toISOString().slice(0, 10),
       upsertFrontier: parsed.map((x) => ({
         federation: 'wdsf',
         kind: 'competition',

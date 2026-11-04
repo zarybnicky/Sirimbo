@@ -3061,6 +3061,7 @@ export type CrawlerTarget = {
   meta: Scalars['JSON']['output'];
   nextFetchAt: Scalars['Datetime']['output'];
   processStatus: CrawlerProcessStatus;
+  referenceDate: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `CrawlerResponse`. */
   responses: CrawlerResponseConnection;
 };
@@ -3112,6 +3113,8 @@ export type CrawlerTargetCondition = {
   nextFetchAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `processStatus` field. */
   processStatus?: InputMaybe<CrawlerProcessStatus>;
+  /** Checks for equality with the object’s `referenceDate` field. */
+  referenceDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
 /** A connection to a list of `CrawlerTarget` values. */
@@ -3397,7 +3400,9 @@ export type CrawlerTargetsOrderBy =
   | 'NEXT_FETCH_AT_ASC'
   | 'NEXT_FETCH_AT_DESC'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PRIMARY_KEY_DESC'
+  | 'REFERENCE_DATE_ASC'
+  | 'REFERENCE_DATE_DESC';
 
 /** All input for the create `AccessCredential` mutation. */
 export type CreateAccessCredentialInput = {
@@ -14615,6 +14620,7 @@ export type GraphCacheResolvers = {
     meta?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['JSON']['output'] | string>,
     nextFetchAt?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     processStatus?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, CrawlerProcessStatus | string>,
+    referenceDate?: GraphCacheResolver<WithTypename<CrawlerTarget>, Record<string, never>, Scalars['Date']['output'] | string>,
     responses?: GraphCacheResolver<WithTypename<CrawlerTarget>, CrawlerTargetResponsesArgs, WithTypename<CrawlerResponseConnection> | string>
   },
   CrawlerTargetConnection?: {
@@ -17171,6 +17177,7 @@ export type GraphCacheUpdaters = {
     meta?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
     nextFetchAt?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
     processStatus?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
+    referenceDate?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, Record<string, never>>,
     responses?: GraphCacheUpdateResolver<Maybe<WithTypename<CrawlerTarget>>, CrawlerTargetResponsesArgs>
   },
   CrawlerTargetConnection?: {

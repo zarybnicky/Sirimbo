@@ -31,7 +31,6 @@ const schema = z.object({
 export const wdsfCouple: JsonLoader<z.output<typeof schema>> = {
   mode: 'json',
   schema,
-  revalidatePeriod: '7d',
   buildRequest: (key) => ({
     url: new URL(`https://services.worlddancesport.org/api/1/couple/${key}`),
     init: {

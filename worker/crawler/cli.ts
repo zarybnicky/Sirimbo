@@ -481,6 +481,7 @@ async function explainFrontier(target: string, options: { json?: boolean }) {
       fetch: result.fetch_status,
       process: result.process_status,
       errors: result.error_count,
+      reference: result.reference_date ?? '-',
       next: formatDate(result.next_fetch_at),
       state: result.state,
     },

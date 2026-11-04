@@ -1,5 +1,5 @@
 /* @name GetFrontierForUpdate */
-SELECT id, federation, kind, key, fetch_status, error_count, meta
+SELECT id, federation, kind, key, fetch_status, error_count, meta, next_fetch_at
 FROM crawler.frontier
 WHERE id = :id::bigint
 FOR UPDATE;
@@ -95,6 +95,7 @@ SELECT
   f.federation AS "federation!",
   f.kind AS "kind!",
   f.key AS "key!",
+  f.reference_date::text AS "reference_date?",
   jr.url AS "url!",
   jr.http_status,
   coalesce(jr.last_observed_at, jr.fetched_at) AS "fetched_at!",
@@ -290,6 +291,7 @@ SELECT
   f.kind,
   f.key,
   f.discovered_at,
+  f.reference_date::text AS "reference_date?",
   f.last_fetched_at,
   f.fetch_status,
   f.process_status,
@@ -394,7 +396,7 @@ LIMIT :capacity;
 
 /* @name GetNextPendingProcess */
 WITH pending AS MATERIALIZED (
-  SELECT f.id, f.federation, f.kind, f.key, jr.url, jr.http_status, jr.error, jrc.content,
+  SELECT f.id, f.federation, f.kind, f.key, f.reference_date::text, jr.url, jr.http_status, jr.error, jrc.content,
     c.id AS competition_id
   FROM crawler.frontier f
   JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
@@ -415,7 +417,7 @@ WITH pending AS MATERIALIZED (
   FOR NO KEY UPDATE SKIP LOCKED
 )
 SELECT id AS "id!", federation AS "federation!", kind AS "kind!", key AS "key!",
-  url, http_status, error, content,
+  reference_date, url, http_status, error, content,
   competition_id IS NULL OR competition_id IN (SELECT id FROM owned_competitions) AS "canProcess!"
 FROM pending;
 
@@ -424,6 +426,7 @@ SELECT
   f.federation AS "federation!",
   f.kind AS "kind!",
   f.key AS "key!",
+  f.reference_date::text AS "reference_date?",
   jrc.content
 FROM crawler.frontier f
 JOIN crawler.json_response jr ON jr.id = f.last_successful_response_id
@@ -461,7 +464,7 @@ WHERE id = :id::bigint;
 
 /* @name MarkFrontierFetchSuccess */
 UPDATE crawler.frontier
-SET last_fetched_at = clock_timestamp(),
+SET last_fetched_at = now(),
     fetch_status = :fetchStatus::crawler.fetch_status,
     process_status = CASE
       WHEN :fetchStatus::crawler.fetch_status = 'gone'::crawler.fetch_status
@@ -471,7 +474,7 @@ SET last_fetched_at = clock_timestamp(),
     last_process_error = NULL,
     last_process_error_at = NULL,
     error_count = 0,
-    next_fetch_at = now() + :revalidatePeriod::interval
+    next_fetch_at = crawler.next_fetch_at(federation, kind, reference_date, now())
 WHERE id = :id::bigint;
 
 /* @name MarkFrontiersProcessSuccess */
@@ -492,7 +495,8 @@ WHERE id = :id::bigint;
 UPDATE crawler.frontier
 SET process_status = 'pending'
 WHERE federation = 'wdsf' AND kind = 'participantIndex' AND key = :competitionExternalId
-  AND fetch_status = 'ok' AND process_status <> 'pending';
+  AND fetch_status = 'ok' AND process_status <> 'pending'
+  AND (:referenceDate::date IS NULL OR reference_date IS DISTINCT FROM :referenceDate::date);
 
 /* @name RescheduleFrontier */
 UPDATE crawler.frontier SET next_fetch_at = :nextRetryAt WHERE id = :id::bigint;
@@ -545,25 +549,39 @@ WHERE f.process_status = 'error'
    OR f.fetch_status = 'gone';
 
 /* @name UpsertFrontiers */
-INSERT INTO crawler.frontier AS f (federation, kind, key)
-SELECT federation, kind, key
-FROM unnest(
-  :federations::text[],
-  :kinds::text[],
-  :keys::text[]
-) AS input(federation, kind, key)
+WITH input AS (
+  SELECT federation, kind, key, nullif(reference_date, '')::date AS reference_date
+  FROM unnest(
+    :federations::text[],
+    :kinds::text[],
+    :keys::text[],
+    :referenceDates::text[]
+  ) AS rows(federation, kind, key, reference_date)
+)
+INSERT INTO crawler.frontier AS f (federation, kind, key, reference_date)
+SELECT federation, kind, key, reference_date
+FROM input
 WHERE NOT EXISTS (
   SELECT 1 FROM crawler.frontier existing
   WHERE (existing.federation, existing.kind, existing.key) = (input.federation, input.kind, input.key)
     AND existing.process_status <> 'error' AND existing.fetch_status <> 'gone'
+    AND (input.reference_date IS NULL OR existing.reference_date IS NOT DISTINCT FROM input.reference_date)
 )
 ORDER BY federation, kind, key
 ON CONFLICT (federation, kind, key) DO UPDATE
-SET process_status = 'pending',
+SET reference_date = coalesce(EXCLUDED.reference_date, f.reference_date),
+    process_status = CASE WHEN f.process_status = 'error' OR f.fetch_status = 'gone'
+      THEN 'pending'::crawler.process_status ELSE f.process_status END,
     fetch_status = CASE f.fetch_status WHEN 'gone' THEN 'pending' ELSE f.fetch_status END,
     next_fetch_at = CASE f.fetch_status WHEN 'gone' THEN now() ELSE f.next_fetch_at END
 WHERE f.process_status = 'error'
-   OR f.fetch_status = 'gone';
+   OR f.fetch_status = 'gone'
+   OR (EXCLUDED.reference_date IS NOT NULL AND f.reference_date IS DISTINCT FROM EXCLUDED.reference_date);
+
+/* @name SetFrontierReferenceDate */
+UPDATE crawler.frontier SET reference_date = :referenceDate!::date
+WHERE (federation, kind, key) = (:federation!, :kind!, :key!)
+  AND reference_date IS DISTINCT FROM :referenceDate!::date;
 
 /* @name UpsertFrontierKeys */
 INSERT INTO crawler.frontier AS f (federation, kind, key)

@@ -54,6 +54,8 @@ export type CrawlerTargetCondition = {
   nextFetchAt?: string | null | undefined;
   /** Checks for equality with the object’s `processStatus` field. */
   processStatus?: CrawlerProcessStatus | null | undefined;
+  /** Checks for equality with the object’s `referenceDate` field. */
+  referenceDate?: string | null | undefined;
 };
 
 /** Methods to use when ordering `CrawlerTarget`. */
@@ -84,7 +86,9 @@ export type CrawlerTargetsOrderBy =
   | 'NEXT_FETCH_AT_ASC'
   | 'NEXT_FETCH_AT_DESC'
   | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PRIMARY_KEY_DESC'
+  | 'REFERENCE_DATE_ASC'
+  | 'REFERENCE_DATE_DESC';
 
 export type CrawlerOverviewQueryVariables = Exact<{
   federation?: string | null | undefined;

@@ -54,7 +54,6 @@ const schema = z.object({
 export const cstsPartnershipRegistrations: JsonLoader<z.output<typeof schema>> = {
   mode: 'json',
   schema,
-  revalidatePeriod: '3 day',
   buildRequest(key) {
     const url = new URL(
       'https://www.csts.cz/api/1/competitors/partnership_registrations',

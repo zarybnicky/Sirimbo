@@ -28,8 +28,9 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
 
     try {
       const [frontier] = await getFrontierForUpdate.run({ id }, client);
-      if (!frontier) {
-        logger.info(`Frontier ${id} not found`);
+      if (!frontier || (frontier.fetch_status === 'ok' && frontier.next_fetch_at.getTime() > Date.now())) {
+        if (!frontier) logger.info(`Frontier ${id} not found`);
+        else logger.info(`Frontier ${id} scheduled before its next_fetch_at, assuming it was rescheduled`)
         await client.query('COMMIT');
         committed = true;
         return;
@@ -104,8 +105,7 @@ export const frontier_fetch: Task<'frontier_fetch'> = async ({ id }, helpers) =>
       } else if (fetchStatus === 'error') {
         await markFrontierFetchError.run({ id }, client);
       } else {
-        const { revalidatePeriod } = handler;
-        await markFrontierFetchSuccess.run({ id, fetchStatus, revalidatePeriod }, client);
+        await markFrontierFetchSuccess.run({ id, fetchStatus }, client);
       }
 
       await client.query('COMMIT');

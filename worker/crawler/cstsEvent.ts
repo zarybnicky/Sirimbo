@@ -104,7 +104,6 @@ type Response = z.output<typeof responseSchema>;
 export const cstsEvent: JsonLoader<Response> = {
   mode: 'json',
   schema: responseSchema,
-  revalidatePeriod: '1 day',
   buildRequest: (key) => {
     return {
       url: new URL(`https://www.csts.cz/api/1/competition_events/${key}`),
@@ -246,6 +245,7 @@ export const cstsEvent: JsonLoader<Response> = {
     );
 
     return {
+      referenceDate: event.dateTo,
       upsertFrontier: [
         ...people.params.externalId.map((key) => ({
           federation: 'csts',
@@ -256,6 +256,7 @@ export const cstsEvent: JsonLoader<Response> = {
           federation: 'csts',
           kind: 'eventCompetitors',
           key: event.eventId.toString(),
+          referenceDate: event.dateTo,
         },
         ...event.competitions
           .filter((x) => !!x.completedAt)
@@ -263,6 +264,7 @@ export const cstsEvent: JsonLoader<Response> = {
             federation: 'csts',
             kind: 'competitionResults',
             key: competition.competitionId.toString(),
+            referenceDate: competition.date,
           })),
       ],
     };

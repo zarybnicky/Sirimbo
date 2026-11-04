@@ -34,7 +34,6 @@ export const sztsJudgeIndex = sztsLicenseIndexLoader(
 function sztsPersonIndexLoader(url: string): HtmlLoader {
   return {
     mode: 'text',
-    revalidatePeriod: '1 day',
     buildRequest: () => ({ url: new URL(url) }),
     async load(client, html) {
       const people = makePgtypedCollection<{
@@ -86,7 +85,6 @@ function sztsLicenseIndexLoader(
 ): HtmlLoader {
   return {
     mode: 'text',
-    revalidatePeriod: '1 day',
     buildRequest: () => ({ url: new URL(url) }),
     async load(client, html) {
       const parsed = parseSztsLicenseIndex(html, licenseColumns);

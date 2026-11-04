@@ -60,7 +60,6 @@ type Ranklist = z.infer<typeof ranklistSnapshotSchema>;
 
 export const cstsRanklist: JsonLoader<Response> = {
   mode: 'json',
-  revalidatePeriod: '5 day',
   buildRequest: (key) => ({
     url: new URL(`https://www.csts.cz/api/1/ranklist/${key}`),
     init: {
@@ -72,6 +71,7 @@ export const cstsRanklist: JsonLoader<Response> = {
   schema: responseSchema,
   async load(client, parsed) {
     await loadCstsRanklist(client, parsed.entity);
+    return { referenceDate: parsed.entity.date.slice(0, 10) };
   },
 };
 

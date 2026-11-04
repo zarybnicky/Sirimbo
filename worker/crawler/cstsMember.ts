@@ -99,7 +99,6 @@ const MEDAL_CLASS_ORDER = ['NOVICE', 'BRONZE', 'SILVER', 'GOLD'];
 export const cstsMember: JsonLoader<Response> = {
   mode: 'json',
   schema: athletesResponseSchema,
-  revalidatePeriod: '3 day',
   buildRequest: (key) => ({
     url: new URL(`https://www.csts.cz/api/1/athletes/${key}`),
     init: {

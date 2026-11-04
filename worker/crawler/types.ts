@@ -18,7 +18,6 @@ interface LoaderBase<T> {
   buildRequest: (key: string) => { url: URL; init?: RequestInit };
   mapResponseToStatus?: (args: MapperArgs<T>) => fetch_status | undefined;
   cleanResponse?: (url: URL, parsed: T, raw: unknown) => T;
-  revalidatePeriod: string;
   load: (client: PoolClient, parsed: T, key: string) => Promise<LoaderResult>;
 }
 

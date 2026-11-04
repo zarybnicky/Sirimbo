@@ -3947,6 +3947,7 @@ type CrawlerTarget {
   meta: JSON!
   nextFetchAt: Datetime!
   processStatus: CrawlerProcessStatus!
+  referenceDate: Date
 
   """Reads and enables pagination through a set of `CrawlerResponse`."""
   responses(
@@ -4030,6 +4031,9 @@ input CrawlerTargetCondition {
 
   """Checks for equality with the object’s `processStatus` field."""
   processStatus: CrawlerProcessStatus
+
+  """Checks for equality with the object’s `referenceDate` field."""
+  referenceDate: Date
 }
 
 """A connection to a list of `CrawlerTarget` values."""
@@ -4357,6 +4361,8 @@ enum CrawlerTargetsOrderBy {
   NEXT_FETCH_AT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  REFERENCE_DATE_ASC
+  REFERENCE_DATE_DESC
 }
 
 """All input for the create `AccessCredential` mutation."""

@@ -82,7 +82,6 @@ type WdsfLicenseDiscipline = z.output<typeof wdsfLicenseDisciplineSchema>;
 export const wdsfMember: JsonLoader<z.output<typeof personSchema>> = {
   mode: 'json',
   schema: personSchema,
-  revalidatePeriod: '5 day',
   buildRequest: (key) => ({
     url: new URL(`https://services.worlddancesport.org/api/1/person/${key}`),
     init: {

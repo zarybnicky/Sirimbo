@@ -59,7 +59,6 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
       },
     },
   }),
-  revalidatePeriod: '7d',
   mapResponseToStatus({ httpStatus }) {
     if (httpStatus === 404) return 'gone';
     if (httpStatus === 500) return 'error';
@@ -136,12 +135,13 @@ export const wdsfParticipantIndex: JsonLoader<z.infer<typeof schema>> = {
     );
 
     return {
+      referenceDate: competition.referenceDate,
       upsertFrontier: parsed.flatMap((participant) => {
         const couple = participant.link.find(
           (x) => x.rel === 'http://services.worlddancesport.org/rel/participant/couple',
         );
         return [
-          { federation: 'wdsf', kind: 'participant', key: participant.id.toString() },
+          { federation: 'wdsf', kind: 'participant', key: participant.id.toString(), referenceDate: competition.referenceDate },
           ...(couple
             ? [
                 {

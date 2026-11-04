@@ -835,6 +835,7 @@ WHERE t.competition_id IN (SELECT id FROM competitions)
 /* @name GetCompetitionContext */
 SELECT
   c.id,
+  coalesce(c.end_date, c.start_date)::text AS "referenceDate!",
   cat.competitor_type AS "competitorType"
 FROM federated.competition c
 JOIN federated.category cat ON cat.id = c.category_id

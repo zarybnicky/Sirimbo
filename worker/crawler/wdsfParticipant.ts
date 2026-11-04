@@ -259,7 +259,6 @@ export const wdsfParticipant: JsonLoader<Participant> = {
       },
     },
   }),
-  revalidatePeriod: '10d',
   mapResponseToStatus({ httpStatus }) {
     if (httpStatus === 404) return 'gone';
     if (httpStatus === 500) return 'error';
@@ -297,7 +296,7 @@ async function loadWdsfParticipant(
   if (!context) throw new Error(`Competition wdsf:${competitionExternalId} is missing`);
 
   const competitor = resolveCompetitor(p);
-  if (!competitor) return;
+  if (!competitor) return { referenceDate: context.referenceDate };
 
   const competitorId = `wdsf:${competitor.externalId}`;
   await ensureCompetitors.run(
@@ -361,6 +360,7 @@ async function loadWdsfParticipant(
   const effects = await loadWdsfRoundDetails(client, context.id, p, competitor);
   return {
     ...effects,
+    referenceDate: context.referenceDate,
     upsertFrontier:
       competitor.type === 'couple'
         ? [{ federation: 'wdsf', kind: 'couple', key: competitor.externalId }]

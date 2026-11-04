@@ -5,7 +5,6 @@ import { makePgtypedCollection } from './pgtypedCollection.ts';
 
 export const cstsClubIndex: HtmlLoader = {
   mode: 'text',
-  revalidatePeriod: '1 day',
   buildRequest: () => ({ url: new URL('https://www.csts.cz/cs/Kluby') }),
   async load(client, html) {
     const clubs = makePgtypedCollection<{

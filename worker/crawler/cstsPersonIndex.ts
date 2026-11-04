@@ -57,7 +57,6 @@ function cstsPersonIndexLoader(
 ): HtmlLoader {
   return {
     mode: 'text',
-    revalidatePeriod: '1 day',
     buildRequest: () => ({ url: new URL(url) }),
     async load(client, html) {
       const parsed = parseCstsPersonIndex(html, licenseBlocks);

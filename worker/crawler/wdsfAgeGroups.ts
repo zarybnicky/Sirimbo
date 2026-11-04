@@ -19,7 +19,6 @@ const ageGroupSchema = z.object({
 export const wdsfAgeGroups: JsonLoader<z.output<typeof ageGroupSchema>[]> = {
   mode: 'json',
   schema: z.array(ageGroupSchema).min(1),
-  revalidatePeriod: '30 days',
   buildRequest: () => ({
     url: new URL('https://services.worlddancesport.org/api/1/age?format=json'),
     init: {

@@ -60,6 +60,7 @@ const seedFrontierParams = {
   federations: SEED_FRONTIERS.map((frontier) => frontier.federation),
   kinds: SEED_FRONTIERS.map((frontier) => frontier.kind),
   keys: SEED_FRONTIERS.map(() => ''),
+  referenceDates: SEED_FRONTIERS.map(() => ''),
 };
 
 const knownKinds = Object.entries(LOADERS).flatMap(([federation, loaders]) =>

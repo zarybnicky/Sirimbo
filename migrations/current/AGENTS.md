@@ -54,6 +54,7 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
 - Preserve unrelated SQL already in `1-current.sql`. Migration promotion includes the whole scratchpad, not just your changes. Leave promotion to the maintainer unless the task explicitly includes that work.
 - Edit `1-current.sql` or a fixture under `migrations/fixtures/`.
 - For each new or changed fixture, add its `--!include` directive to `1-current.sql`. Paths are relative to `migrations/fixtures/`, such as `--!include functions/upsert_location.sql`.
+- Schema, index, or FK changes belong to the current migration, whereas function fixtures belong into `migrations/fixtures/functions/`. Compiled migrations are spliced versions of fixtures and inline migrations
 - Before running migrations, make sure that `DATABASE_URL` and `SHADOW_DATABASE_URL` identify local development databases.
 - The Overmind `migrate` process runs `graphile-migrate watch` and can apply edits before a manual command runs. Do not start another watcher.
 - After editing SQL, run `pnpm exec graphile-migrate current --forceActions`, even when the watcher is running. This applies pending SQL and runs the `.gmrc` tests, including SQL function checks and pgTAP assertions.
@@ -66,5 +67,5 @@ This guide covers changes under `migrations/current/` and `migrations/fixtures/`
 ## Don't dos
 - **Do not write non-repeatable DDL.** Avoid bare `insert`, `update`, or `delete` statements that would error or duplicate data on reruns; always include conflict handling or checks.
 - **Do not treat existence guards as data protection.** Apply the new-table exception and authorization rules above. Preserve existing data and required readers across renames.
-- **Do not disable RLS or grants implicitly.** Every change must leave row-level security and permissions in a valid state—if you drop and recreate a table or function, restate the grants and policies within the same migration.
+- **Do not disable RLS or grants implicitly.** Every change must leave row-level security and permissions in a valid state—if you drop and recreate a table or function, restate the grants and policies within the same migration. Don't repeat implicit or default grants.
 - **Do not remove the `--!` metadata headers Graphile Migrate expects.** Preserve include directives or file headers already present in `1-current.sql` when editing.
