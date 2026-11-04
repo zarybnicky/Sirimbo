@@ -10,21 +10,21 @@
     }));
 
   in {
-    nixosModules.default = ./nix/module.nix;
+    nixosModules.default = ./deploy/backend.nix;
 
     overlays.default = final: prev: {
-      graphile-migrate = final.callPackage ./nix/graphile-migrate {};
-      ruian-address-cache = final.callPackage ./nix/ruian-address-cache.nix {};
-      geonames-city-cache = final.callPackage ./nix/geonames-city-cache.nix {};
+      graphile-migrate = final.callPackage ./deploy/graphile-migrate {};
+      ruian-address-cache = final.callPackage ./deploy/ruian-address-cache.nix {};
+      geonames-city-cache = final.callPackage ./deploy/geonames-city-cache.nix {};
 
-      rozpisovnik-worker = final.callPackage ./nix/build-pnpm-package.nix {
+      rozpisovnik-worker = final.callPackage ./deploy/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./worker/package.json;
         workspaceFolders = [ "worker" ];
         pnpmDepsHash = builtins.readFile ./worker/pnpm-deps-hash.txt;
         postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
       };
 
-      rozpisovnik-api = final.callPackage ./nix/build-pnpm-package.nix {
+      rozpisovnik-api = final.callPackage ./deploy/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
         workspaceFolders = [ "backend" ];
         pnpmDepsHash = builtins.readFile ./backend/pnpm-deps-hash.txt;
@@ -116,7 +116,7 @@
         })
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
-        ./nix/container.nix
+        ./deploy/container.nix
       ];
     };
   };

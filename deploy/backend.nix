@@ -3,7 +3,7 @@
   pkgName = "tkolymp.cz";
 in {
   imports = [
-    ../deploy/module.nix
+    ./module.nix
   ];
 
   options.services.olymp = {
