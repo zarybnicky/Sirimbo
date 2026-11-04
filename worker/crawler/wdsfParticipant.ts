@@ -407,9 +407,7 @@ async function loadWdsfRoundDetails(
     });
   }
   if (missingAdjudicators.length > 0) {
-    throw new Error(
-      `Missing WDSF adjudicator mapping for competition ${participant.competitionId}, participant ${participant.id}: ${missingAdjudicators.join(', ')}`,
-    );
+    throw new Error('Missing WDSF adjudicator mapping for competition');
   }
 
   const existingPrograms = new Map<string, DanceCode[]>();

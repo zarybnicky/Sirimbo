@@ -1,7 +1,50 @@
-import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
-import { addPgTableCondition } from 'postgraphile/utils';
+import { LIST_TYPES, TYPES, pgClassExpression, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
+import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 const plugins: GraphileConfig.Plugin[] = [
+  extendSchema((build) => ({
+    typeDefs: `
+      extend type Account { balance: BigFloat }
+      extend type PaymentDebtor { isUnpaid: Boolean }
+    `,
+    objects: {
+      Account: {
+        plans: {
+          balance($account: PgSelectSingleStep) {
+            const $balances = build.input.pgRegistry.pgResources.account_balances.find({
+              id: $account.get('id'),
+            });
+            $balances.setInliningForbidden();
+            return $balances.single().get('balance');
+          },
+        },
+      },
+      PaymentDebtor: {
+        plans: {
+          isUnpaid($debtor: PgSelectSingleStep) {
+            const $payment = build.input.pgRegistry.pgResources.payment.get({
+              id: $debtor.get('payment_id'),
+            });
+            return pgClassExpression($payment, TYPES.boolean)`${$payment.get('status')} = 'unpaid'`;
+          },
+        },
+      },
+    },
+  }), 'PaymentFieldsPlugin'),
+  addPgTableCondition(
+    { schemaName: 'public', tableName: 'payment_debtor' },
+    'isUnpaid',
+    (build) => ({
+      type: build.graphql.GraphQLBoolean,
+      description: 'Checks for equality with the object’s `isUnpaid` field.',
+    }),
+    (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => value == null
+      ? sql`not exists (select from public.payment p where p.id = ${row}.payment_id)`
+      : sql`${row}.payment_id in (
+          select id from public.payment
+          where (status = 'unpaid') = ${sqlValueWithCodec(value, TYPES.boolean)}
+        )`,
+  ),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'payment' },
     'personIds',

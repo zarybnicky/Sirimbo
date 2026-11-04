@@ -14,6 +14,7 @@ import federationConditionPlugins from './plugins/federation-condition.ts';
 import competitionParticipantConditionPlugins from './plugins/competition-participant-condition.ts';
 import competitionSuggestionConditionPlugins from './plugins/competition-suggestion-condition.ts';
 import federationOrderPlugin from './plugins/federation-order.ts';
+import { AccessCredentialFieldsPlugin } from './plugins/access-credentials.ts';
 import peoplePlugins from './plugins/people.ts';
 import { DateRangeConditionPlugin } from './plugins/date-range-condition.ts';
 import eventConditionPlugins from './plugins/event-condition.ts';
@@ -39,6 +40,7 @@ const preset: GraphileConfig.Preset = {
     currentUserPlugin,
     DateRangeConditionPlugin,
     ...peoplePlugins,
+    AccessCredentialFieldsPlugin,
     ...eventConditionPlugins,
     ...transactionConditionPlugins,
     ...paymentConditionPlugins,

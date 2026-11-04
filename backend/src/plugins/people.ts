@@ -3,9 +3,10 @@ import { lambda, list, type GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 import personMembershipPlugins, { membershipCandidateIds } from './person-membership-condition.ts';
 
-const PersonRoleFlagsPlugin = extendSchema({
+const PersonFieldsPlugin = extendSchema((build) => ({
   typeDefs: `
     extend type Person {
+      cohortIds: [BigInt]
       isMember: Boolean
       isTrainer: Boolean
       isAdmin: Boolean
@@ -15,6 +16,14 @@ const PersonRoleFlagsPlugin = extendSchema({
   objects: {
     Person: {
       plans: {
+        cohortIds($person: PgSelectSingleStep) {
+          const $cohorts = build.input.pgRegistry.pgResources.cohort_membership.find({
+            person_id: $person.get('id'),
+          }).clone('aggregate');
+          $cohorts.where(sql`now() <@ ${$cohorts.alias}.active_range`);
+          $cohorts.setInliningForbidden();
+          return pgClassExpression($cohorts.single(), LIST_TYPES.bigint)`array_agg(${$cohorts.alias}.cohort_id)`;
+        },
         isMember($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`
             ${$person.get('id')} in (select person_id from public.current_tenant_membership)`;
@@ -40,7 +49,30 @@ const PersonRoleFlagsPlugin = extendSchema({
       },
     },
   },
-}, 'PersonRoleFlagsPlugin');
+}), 'PersonFieldsPlugin');
+
+const TenantNamesPlugin = extendSchema((build) => {
+  const tenant = build.input.pgRegistry.pgResources.tenant;
+  const plans = {
+    tenantName($membership: PgSelectSingleStep) {
+      const $tenant = tenant.get({ id: $membership.get('tenant_id') });
+      $tenant.getClassStep().setInliningForbidden();
+      return $tenant.get('name');
+    },
+  };
+  return {
+    typeDefs: `
+      extend type TenantMembership { tenantName: String }
+      extend type TenantTrainer { tenantName: String }
+      extend type TenantAdministrator { tenantName: String }
+    `,
+    objects: {
+      TenantMembership: { plans },
+      TenantTrainer: { plans },
+      TenantAdministrator: { plans },
+    },
+  };
+}, 'TenantNamesPlugin');
 
 const CoupleNamesPlugin = extendSchema((build) => {
   const person = build.input.pgRegistry.pgResources.person;
@@ -79,7 +111,8 @@ const CoupleNamesPlugin = extendSchema((build) => {
 
 const plugins: GraphileConfig.Plugin[] = [
   ...personMembershipPlugins,
-  PersonRoleFlagsPlugin,
+  PersonFieldsPlugin,
+  TenantNamesPlugin,
   CoupleNamesPlugin,
   addPgTableCondition(
     { schemaName: 'public', tableName: 'person' },

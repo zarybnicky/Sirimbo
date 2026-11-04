@@ -62,7 +62,12 @@ export async function GET(request: Request) {
       `select c.kind, c.code, c.person_id::text as "personId", p.name as "personName"
        from access_credential c
        join person p on p.id = c.person_id
-       where c.tenant_id = $1 and access_credential_is_allowed(c)
+       where c.tenant_id = $1 and c.valid_range @> now()
+         and c.person_id in (
+           select person_id from current_tenant_membership
+           union all select person_id from current_tenant_trainer
+           union all select person_id from current_tenant_administrator
+         )
        order by c.id`,
       [tenantId],
     );
