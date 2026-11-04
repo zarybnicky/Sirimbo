@@ -1,6 +1,8 @@
 /** Types generated for queries found in "app/(member)/admin/crawler/crawler.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
+export type NumberOrString = number | string;
+
 /** 'RefetchCrawlerErrors' parameters type */
 export interface IRefetchCrawlerErrorsParams {
   errorFingerprint?: string | null | void;
@@ -140,5 +142,39 @@ const scheduleCrawlerIR: any = {"usedParamSet":{},"params":[],"statement":"SELEC
  * ```
  */
 export const scheduleCrawler = new PreparedQuery<IScheduleCrawlerParams,IScheduleCrawlerResult>(scheduleCrawlerIR);
+
+
+/** 'CompleteCrawlerJob' parameters type */
+export interface ICompleteCrawlerJobParams {
+  jobId: NumberOrString;
+}
+
+/** 'CompleteCrawlerJob' return type */
+export interface ICompleteCrawlerJobResult {
+  id: string;
+}
+
+/** 'CompleteCrawlerJob' query type */
+export interface ICompleteCrawlerJobQuery {
+  params: ICompleteCrawlerJobParams;
+  result: ICompleteCrawlerJobResult;
+}
+
+const completeCrawlerJobIR: any = {"usedParamSet":{"jobId":true},"params":[{"name":"jobId","required":true,"transform":{"type":"scalar"},"locs":[{"a":177,"b":183}]}],"statement":"-- complete_jobs() skips locked jobs; this action also removes those.\nDELETE FROM graphile_worker._private_jobs\nWHERE id IN (\n  SELECT id FROM graphile_worker.jobs\n  WHERE id = :jobId!::bigint\n    AND task_identifier = 'frontier_fetch'\n)\nRETURNING id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * -- complete_jobs() skips locked jobs; this action also removes those.
+ * DELETE FROM graphile_worker._private_jobs
+ * WHERE id IN (
+ *   SELECT id FROM graphile_worker.jobs
+ *   WHERE id = :jobId!::bigint
+ *     AND task_identifier = 'frontier_fetch'
+ * )
+ * RETURNING id
+ * ```
+ */
+export const completeCrawlerJob = new PreparedQuery<ICompleteCrawlerJobParams,ICompleteCrawlerJobResult>(completeCrawlerJobIR);
 
 

@@ -58,3 +58,13 @@ SELECT (graphile_worker.add_job(
   job_key => 'frontier_schedule',
   job_key_mode => 'replace'
 )).id;
+
+/* @name CompleteCrawlerJob */
+-- complete_jobs() skips locked jobs; this action also removes those.
+DELETE FROM graphile_worker._private_jobs
+WHERE id IN (
+  SELECT id FROM graphile_worker.jobs
+  WHERE id = :jobId!::bigint
+    AND task_identifier = 'frontier_fetch'
+)
+RETURNING id;

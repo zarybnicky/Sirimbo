@@ -1,9 +1,10 @@
 'use server';
 
 import { z } from 'zod';
-import { withTransaction } from '@/lib/server/postgresql';
+import { runQuery, withTransaction } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import {
+  completeCrawlerJob as completeCrawlerJobQuery,
   refetchCrawlerErrors,
   reprocessCrawlerTargets,
   scheduleCrawler,
@@ -22,6 +23,18 @@ const targetSchema = z.object({
     })
     .optional(),
 });
+
+export async function completeCrawlerJob(jobId: string) {
+  const { auth } = await getRequestContext();
+  if (!auth.isSystemAdmin) throw new Error('FORBIDDEN');
+
+  await runQuery(completeCrawlerJobQuery, {
+    jobId: z
+      .string()
+      .regex(/^[1-9]\d{0,18}$/)
+      .parse(jobId),
+  });
+}
 
 export async function queueCrawlerAction(
   action: z.infer<typeof actionSchema>,

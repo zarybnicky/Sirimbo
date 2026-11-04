@@ -384,7 +384,7 @@ SELECT
   kind AS "kind!",
   key AS "key!"
 FROM ranked
-ORDER BY rn, next_fetch_at, last_fetched_at NULLS FIRST, id
+ORDER BY rn, random()
 LIMIT :capacity;
 
 /* @name GetNextPendingProcess */

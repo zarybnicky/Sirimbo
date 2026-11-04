@@ -13,6 +13,7 @@ import {
 } from 'nuqs';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { useQuery, type UseQueryExecute } from 'urql';
+import { toast } from 'react-toastify';
 import {
   CrawlerOverviewDocument,
   type CrawlerOverviewQuery,
@@ -27,8 +28,10 @@ import { Pagination } from '@/ui/Pagination';
 import { FormError } from '@/ui/form';
 import { numericFullFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
-import { ChevronRight, ListTodo, RefreshCw } from 'lucide-react';
+import { ActionGroup } from '@/ui/ActionGroup';
+import { Check, ChevronRight, ListTodo, RefreshCw } from 'lucide-react';
 import { CrawlerActions } from './CrawlerActions';
+import { completeCrawlerJob } from './actions';
 
 function useRefresh(reexecuteQuery: UseQueryExecute, loading: boolean) {
   const refresh = useCallback(
@@ -310,7 +313,35 @@ export function CrawlerJobs() {
         {rows.map((row) => (
           <tr key={row.jobId} className="border-t border-neutral-4 align-top">
             <td>{row.state === 'locked' ? 'running' : row.state}</td>
-            <td>{row.jobId}</td>
+            <td>
+              <div className="flex items-center gap-2">
+                <ActionGroup
+                  primary="complete"
+                  iconOnly
+                  actions={[
+                    {
+                      id: 'complete',
+                      key: row.jobId!,
+                      label: 'Mark complete',
+                      icon: Check,
+                      execute: async () => {
+                        try {
+                          await completeCrawlerJob(row.jobId!);
+                          refresh();
+                        } catch (error) {
+                          toast.error(
+                            error instanceof Error
+                              ? error.message
+                              : 'Could not complete job.',
+                          );
+                        }
+                      },
+                    },
+                  ]}
+                />
+                {row.jobId}
+              </div>
+            </td>
             <th scope="row" className="font-mono">
               <Link
                 className="text-accent-11 underline"
