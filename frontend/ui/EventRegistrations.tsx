@@ -75,14 +75,11 @@ export const EventRegistrations = memo(function EventRegistrations({
                 ) : x.couple ? (
                   <Link href={`/pary/${x.couple.id}`}>{x.couple.name}</Link>
                 ) : null}
-                {x.person &&
-                  !x.person.isMember &&
-                  !x.person.isTrainer &&
-                  !x.person.isAdmin && (
-                    <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
-                      Externí
-                    </span>
-                  )}
+                {x.person?.isExternal && (
+                  <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
+                    Externí
+                  </span>
+                )}
                 {canEditAttendance &&
                   event.seriesId &&
                   (event.seriesInfo?.length ?? 0) > 1 && (

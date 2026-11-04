@@ -11261,10 +11261,6 @@ type Person {
   imageId: BigInt
   instagramUsername: String
   isAdmin: Boolean
-
-  """
-  Whether the person has no active member, trainer, or administrator relationship in the current tenant.
-  """
   isExternal: Boolean!
   isMember: Boolean
   isTrainer: Boolean

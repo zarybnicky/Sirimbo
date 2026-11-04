@@ -22,6 +22,7 @@ fragment PersonBasic on Person {
   isMember
   isTrainer
   isAdmin
+  isExternal
 }
 
 fragment Person on Person {

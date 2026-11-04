@@ -58,12 +58,7 @@ function useRegistrationCandidates(
     ),
   );
 
-  const people = (isManager ? (query.data?.people?.nodes ?? []) : auth.persons).map(
-    (person) => ({
-      ...person,
-      isExternal: !person.isMember && !person.isTrainer && !person.isAdmin,
-    }),
-  );
+  const people = isManager ? (query.data?.people?.nodes ?? []) : auth.persons;
   const internalPersonIds = new Set(people.filter((x) => !x.isExternal).map((x) => x.id));
   const couples = isManager
     ? (query.data?.couplesList ?? [])

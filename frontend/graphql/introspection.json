@@ -22546,6 +22546,17 @@
             "args": []
           },
           {
+            "name": "isExternal",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "isMember",
             "type": {
               "kind": "SCALAR",

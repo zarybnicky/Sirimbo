@@ -167,9 +167,7 @@ fragment EventRegistration on EventRegistration {
     name
     firstName
     lastName
-    isMember
-    isTrainer
-    isAdmin
+    isExternal
   }
   coupleId
   couple {
@@ -348,9 +346,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
     nodes {
       id
       name
-      isMember
-      isTrainer
-      isAdmin
+      isExternal
     }
   }
   tenant: getCurrentTenant @_required {
@@ -368,9 +364,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
           person {
             id
             name
-            isMember
-            isTrainer
-            isAdmin
+            isExternal
           }
         }
       }
@@ -386,9 +380,7 @@ query EventFormOptions($forRegistration: Boolean! = false) {
         person {
           id
           name
-          isMember
-          isTrainer
-          isAdmin
+          isExternal
         }
       }
     }

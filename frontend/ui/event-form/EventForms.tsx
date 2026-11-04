@@ -64,7 +64,7 @@ function useEventFormOptions(
       ...(tenant?.tenantMembershipsList ?? []),
     ]) {
       if (!person) continue;
-      const isExternal = !person.isMember && !person.isTrainer && !person.isAdmin;
+      const isExternal = person.isExternal;
       if (!isExternal) internalPersonIds.add(person.id);
       participants.set(`person:${person.id}`, {
         id: `person:${person.id}`,

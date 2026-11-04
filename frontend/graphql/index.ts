@@ -8775,6 +8775,7 @@ export type Person = {
   imageId: Maybe<Scalars['BigInt']['output']>;
   instagramUsername: Maybe<Scalars['String']['output']>;
   isAdmin: Maybe<Scalars['Boolean']['output']>;
+  isExternal: Scalars['Boolean']['output'];
   isMember: Maybe<Scalars['Boolean']['output']>;
   isTrainer: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `PersonLastActivity` that is related to this `Person`. */
@@ -15625,6 +15626,7 @@ export type GraphCacheResolvers = {
     imageId?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     instagramUsername?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     isAdmin?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
+    isExternal?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isMember?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     isTrainer?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     lastActivity?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, WithTypename<PersonLastActivity> | string>,
@@ -18180,6 +18182,7 @@ export type GraphCacheUpdaters = {
     imageId?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     instagramUsername?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isAdmin?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
+    isExternal?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isMember?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     isTrainer?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     lastActivity?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
