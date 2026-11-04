@@ -106,6 +106,7 @@ export function CreatePersonDialog({
   redirect?: boolean;
 } = {}) {
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
+  const [linksExpanded, setLinksExpanded] = React.useState(false);
   const router = useRouter();
   const [createResult, create] = useMutation(CreatePersonDocument);
   const [syncResult, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
@@ -146,6 +147,7 @@ export function CreatePersonDialog({
   );
 
   const personId = useWatch({ control, name: 'personId' });
+  const linkDefaults = personId ? people?.find((x) => x.id === personId) : defaults;
   const selectedCohortCount = useWatch({ control, name: 'cohortIds' })?.length ?? 0;
   const [cohortPickerOpen, setCohortPickerOpen] = React.useState(false);
   const initializedPersonId = React.useRef<typeof personId>(undefined);
@@ -208,6 +210,7 @@ export function CreatePersonDialog({
         },
       );
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset both the form and its related state.
+      setLinksExpanded(false);
       setCohortPickerOpen(false);
     }
   }, [open, reset, defaults, setCohortPickerOpen]);
@@ -382,32 +385,49 @@ export function CreatePersonDialog({
                   label="E-mail"
                   type="email"
                 />
-                <TextFieldElement
-                  control={control}
-                  name="instagramUsername"
-                  label="Instagram"
-                  placeholder="uzivatel"
-                />
-                <TextFieldElement
-                  control={control}
-                  name="tiktokUsername"
-                  label="TikTok"
-                  placeholder="uzivatel"
-                />
-                <TextFieldElement
-                  control={control}
-                  name="facebookUrl"
-                  type="url"
-                  label="Facebook"
-                  placeholder="https://www.facebook.com/..."
-                />
-                <TextFieldElement
-                  control={control}
-                  name="websiteUrl"
-                  type="url"
-                  label="Web"
-                  placeholder="https://..."
-                />
+                {linksExpanded || [
+                  linkDefaults?.instagramUsername,
+                  linkDefaults?.tiktokUsername,
+                  linkDefaults?.facebookUrl,
+                  linkDefaults?.websiteUrl,
+                ].some(Boolean) ? (
+                  <>
+                    <TextFieldElement
+                      control={control}
+                      name="instagramUsername"
+                      label="Instagram"
+                      placeholder="uzivatel"
+                    />
+                    <TextFieldElement
+                      control={control}
+                      name="tiktokUsername"
+                      label="TikTok"
+                      placeholder="uzivatel"
+                    />
+                    <TextFieldElement
+                      control={control}
+                      name="facebookUrl"
+                      type="url"
+                      label="Facebook"
+                      placeholder="https://www.facebook.com/..."
+                    />
+                    <TextFieldElement
+                      control={control}
+                      name="websiteUrl"
+                      type="url"
+                      label="Web"
+                      placeholder="https://..."
+                    />
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="col-full justify-self-start text-accent-11 hover:underline"
+                    onClick={() => setLinksExpanded(true)}
+                  >
+                    + Instagram, Facebook, TikTok, web
+                  </button>
+                )}
               </fieldset>
 
               <div className="grid lg:grid-cols-2 gap-2">

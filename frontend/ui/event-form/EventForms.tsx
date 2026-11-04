@@ -56,7 +56,6 @@ function useEventFormOptions(
   const participants = React.useMemo(() => {
     const tenant = query.data?.tenant;
     const participants = new Map<string, EventParticipantOption>();
-    const internalPersonIds = new Set<string>();
 
     for (const { person } of [
       ...(savedRegistrations ?? []),
@@ -64,11 +63,10 @@ function useEventFormOptions(
       ...(tenant?.tenantMembershipsList ?? []),
     ]) {
       if (!person) continue;
-      const isExternal = person.isExternal;
-      if (!isExternal) internalPersonIds.add(person.id);
       participants.set(`person:${person.id}`, {
         id: `person:${person.id}`,
-        label: person.name + (isExternal ? ' (Externí)' : ''),
+        label: person.name + (person.isExternal ? ' (Externí)' : ''),
+        isExternal: person.isExternal,
         personId: person.id,
         coupleId: null,
         personIds: [person.id],
@@ -84,6 +82,9 @@ function useEventFormOptions(
       participants.set(`couple:${couple.id}`, {
         id: `couple:${couple.id}`,
         label: couple.name,
+        isExternal: ![couple.manId, couple.womanId].some(
+          (id) => !participants.get(`person:${id}`)?.isExternal,
+        ),
         personId: null,
         coupleId: couple.id,
         personIds: [couple.manId, couple.womanId],
@@ -93,8 +94,7 @@ function useEventFormOptions(
     }
 
     return new Map([...participants].toSorted(([, a], [, b]) =>
-      Number(b.personIds.some((id) => internalPersonIds.has(id))) -
-      Number(a.personIds.some((id) => internalPersonIds.has(id))) ||
+      Number(a.isExternal) - Number(b.isExternal) ||
       compareText(a.label, b.label),
     ));
   }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);

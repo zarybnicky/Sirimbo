@@ -78,6 +78,7 @@ const Form = z.object({
 
 export function EditPersonForm({ id }: { id: string }) {
   const { onSuccess } = useFormResult();
+  const [linksExpandedFor, setLinksExpandedFor] = React.useState<string>();
   const { reset, control, handleSubmit, getValues, setValue } = useForm({
     resolver: zodResolver(Form),
   });
@@ -134,34 +135,51 @@ export function EditPersonForm({ id }: { id: string }) {
 
       <TextFieldElement control={control} name="email" type="email" label="E-mail" />
       <TextFieldElement control={control} name="phone" type="tel" label="Telefon" />
-      <TextFieldElement
-        control={control}
-        name="instagramUsername"
-        label="Instagram"
-        placeholder="uzivatel"
-        helperText="Uživatelské jméno bez @"
-      />
-      <TextFieldElement
-        control={control}
-        name="tiktokUsername"
-        label="TikTok"
-        placeholder="uzivatel"
-        helperText="Uživatelské jméno bez @"
-      />
-      <TextFieldElement
-        control={control}
-        name="facebookUrl"
-        type="url"
-        label="Facebook"
-        placeholder="https://www.facebook.com/..."
-      />
-      <TextFieldElement
-        control={control}
-        name="websiteUrl"
-        type="url"
-        label="Web"
-        placeholder="https://..."
-      />
+      {linksExpandedFor === id || [
+        data?.instagramUsername,
+        data?.tiktokUsername,
+        data?.facebookUrl,
+        data?.websiteUrl,
+      ].some(Boolean) ? (
+        <>
+          <TextFieldElement
+            control={control}
+            name="instagramUsername"
+            label="Instagram"
+            placeholder="uzivatel"
+            helperText="Uživatelské jméno bez @"
+          />
+          <TextFieldElement
+            control={control}
+            name="tiktokUsername"
+            label="TikTok"
+            placeholder="uzivatel"
+            helperText="Uživatelské jméno bez @"
+          />
+          <TextFieldElement
+            control={control}
+            name="facebookUrl"
+            type="url"
+            label="Facebook"
+            placeholder="https://www.facebook.com/..."
+          />
+          <TextFieldElement
+            control={control}
+            name="websiteUrl"
+            type="url"
+            label="Web"
+            placeholder="https://..."
+          />
+        </>
+      ) : (
+        <button
+          type="button"
+          className="col-full justify-self-start text-accent-11 hover:underline"
+          onClick={() => setLinksExpandedFor(id)}
+        >
+          + Instagram, Facebook, TikTok, web
+        </button>
+      )}
 
       <DatePickerElement
         control={control}

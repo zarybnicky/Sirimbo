@@ -49,6 +49,7 @@ export type EventFormControl = Control<EventFormInput, unknown, EventFormType>;
 export type EventParticipantOption = {
   id: string;
   label: string;
+  isExternal: boolean;
   personId: string | null;
   coupleId: string | null;
   personIds: string[];
