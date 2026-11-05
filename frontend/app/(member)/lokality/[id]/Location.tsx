@@ -86,7 +86,7 @@ export function Location({
           {ongoingEvents.length > 0 ? (
             <div className="flex flex-col gap-1">
               {ongoingEvents.map((event) => (
-                <EventButton key={event.id} event={event} viewer="auto" showDate />
+                <EventButton key={event.id} event={event} viewer="neutral" showDate />
               ))}
             </div>
           ) : (
@@ -98,7 +98,7 @@ export function Location({
               <h2 className="mt-4 mb-2 text-lg font-bold">Nadcházející</h2>
               <div className="flex flex-col gap-1">
                 {upcomingEvents.map((event) => (
-                  <EventButton key={event.id} event={event} viewer="auto" showDate />
+                  <EventButton key={event.id} event={event} viewer="neutral" showDate />
                 ))}
               </div>
               <Link

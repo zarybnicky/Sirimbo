@@ -7,6 +7,7 @@ import {
   fullDateFormatter,
   dateTimeFormatter,
   moneyFormatter,
+  numericFullFormatter,
 } from '@/ui/format';
 import { useAuth, useTenantId, useTenantConfig } from '@/lib/auth';
 import Link from 'next/link';
@@ -70,7 +71,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
     <div key="info" className="mb-2">
       {(item.couplesList.length > 0 ||
         actions.some((x) => x.id === 'person.createCouple')) && (
-        <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <div className="flex justify-between items-baseline flex-wrap gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
 
           <ActionGroup
@@ -89,7 +90,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {(item.cohortMembershipsList.some(keyIsNonNull('cohort')) ||
         actions.some((x) => x.id === 'person.addToCohort')) && (
-        <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <div className="flex justify-between items-baseline flex-wrap gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
 
           <ActionGroup
@@ -117,7 +118,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         actions.some((x) =>
           ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(x.id),
         )) && (
-        <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <div className="flex justify-between items-baseline flex-wrap gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
           <ActionGroup
             actions={actions.filter((x) =>
@@ -138,7 +139,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {item.tenantTrainersList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
-          <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <div className="grow gap-x-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <span className="font-bold">{`Trenér ${showClubs ? item.tenantName : ''}`}</span>
             {auth.isAdmin && (
               <>
@@ -162,7 +163,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {item.tenantMembershipsList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
-          <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <div className="grow gap-x-2 align-baseline flex flex-wrap justify-between text-sm py-1">
             <span className="font-bold">{`Člen ${showClubs ? item.tenantName : ''}`}</span>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
@@ -172,7 +173,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {(item.userProxiesList?.some(keyIsNonNull('user')) ||
         !!item.personInvitationsList?.length ||
         actions.some((x) => ['person.invite', 'person.linkUser'].includes(x.id))) && (
-        <div className="flex justify-between items-baseline flex-wrap gap-4">
+        <div className="flex justify-between items-baseline gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
           <ActionGroup
             actions={actions.filter((x) =>
@@ -211,7 +212,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         <>
           {(item.accessCredentialsList.length > 0 ||
             actions.some((x) => x.id === 'person.addAccessCredential')) && (
-            <div className="flex justify-between items-baseline flex-wrap gap-4">
+            <div className="flex justify-between items-baseline flex-wrap gap-x-2">
               <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
               <ActionGroup
                 actions={actions.filter((x) => x.id === 'person.addAccessCredential')}
@@ -249,7 +250,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
               >
                 <b>{event.allowed ? 'Povoleno' : 'Zamítnuto'}</b>
                 <DotSeparated className="text-neutral-11">
-                  {dateTimeFormatter.format(new Date(event.occurredAt))}
+                  {numericFullFormatter.format(new Date(event.occurredAt))}
                   {event.location && (
                     <Link className="underline" href={`/lokality/${event.location.id}`}>
                       {event.location.name}
@@ -270,7 +271,7 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
   return (
     <div>
       <ActionRow actions={actions}>
-        <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
+        <div className="grow gap-x-2 align-baseline flex flex-wrap justify-between text-sm py-1">
           <EntityLink type="couple" entity={item} className="font-bold" />
           <span>{formatOpenDateRange(item)}</span>
         </div>

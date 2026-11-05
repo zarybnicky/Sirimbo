@@ -50,7 +50,7 @@ export const ActivityList = React.memo(function ActivityList({
   const [date, setDate] = React.useState(() => new Date());
   const [filters, setFilters] = React.useState(calendarTypes);
   const todayMarker = React.useRef<HTMLElement>(null);
-  const scrollToToday = React.useRef(true);
+  const scrollToToday = React.useRef(false);
   const today = format(new Date(), 'yyyy-MM-dd');
   const { range, calendarEvents, fetching, error } = useCalendarData({
     view: monthView,
@@ -99,7 +99,7 @@ export const ActivityList = React.memo(function ActivityList({
             setDate(new Date());
           }}
         />
-        <h4 className="text-xl tracking-tight">{capitalize(monthView.label(range))}</h4>
+        <h4 className="text-lg tracking-tight flex-1">{capitalize(monthView.label(range))}</h4>
         <FacetFilter
           label="Typy"
           value={filters}
@@ -127,8 +127,8 @@ export const ActivityList = React.memo(function ActivityList({
               className="scroll-mt-20"
             >
               {items.length > 0 && (
-                <div className="mb-2 flex flex-col gap-2">
-                  <h4 className="mt-2 text-lg tracking-tight">
+                <div className="mb-2 flex flex-col gap-1">
+                  <h4 className="text-lg tracking-tight">
                     {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
                   </h4>
                   {birthdays.length > 0 && (
@@ -143,7 +143,7 @@ export const ActivityList = React.memo(function ActivityList({
                       <div
                         key={id}
                         className={cardCls({
-                          className: 'rounded-lg border-green-7 bg-green-2 p-3',
+                          className: 'rounded-lg border-green-7 bg-green-2 p-3 mb-0',
                         })}
                       >
                         <CompetitionEventContent entries={items} officials={officials} />
