@@ -1,7 +1,13 @@
 'use client';
 
 import { Table } from '@/ui/Table';
-import { type ComponentProps, Fragment, useCallback, useEffect, useState } from 'react';
+import {
+  type ComponentProps,
+  type ReactNode,
+  Fragment,
+  useEffect,
+  useState,
+} from 'react';
 import Link from 'next/link';
 import {
   parseAsArrayOf,
@@ -33,29 +39,28 @@ import { Check, ChevronRight, ListTodo, RefreshCw } from 'lucide-react';
 import { CrawlerActions } from './CrawlerActions';
 import { completeCrawlerJob } from './actions';
 
-function useRefresh(reexecuteQuery: UseQueryExecute, loading: boolean) {
-  const refresh = useCallback(
-    () => reexecuteQuery({ requestPolicy: 'network-only' }),
-    [reexecuteQuery],
-  );
+function Refresh({
+  loading,
+  reexecuteQuery,
+}: {
+  loading: boolean;
+  reexecuteQuery: UseQueryExecute;
+}) {
   useEffect(() => {
     if (loading) return;
     const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') refresh();
+      if (document.visibilityState === 'visible')
+        reexecuteQuery({ requestPolicy: 'network-only' });
     }, 1000);
     return () => clearInterval(interval);
-  }, [loading, refresh]);
-  return refresh;
-}
-
-function Refresh({ loading, onClick }: { loading: boolean; onClick: () => void }) {
+  }, [loading, reexecuteQuery]);
   return (
     <button
       type="button"
       aria-label="Refresh"
       title="Refresh"
       aria-busy={loading}
-      onClick={onClick}
+      onClick={() => reexecuteQuery({ requestPolicy: 'network-only' })}
       className="rounded-sm p-1 text-neutral-11 hover:text-neutral-12 focus-visible:outline-accent-9"
     >
       <RefreshCw
@@ -66,7 +71,13 @@ function Refresh({ loading, onClick }: { loading: boolean; onClick: () => void }
   );
 }
 
-export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
+export function Crawler({
+  allowRefetch,
+  children,
+}: {
+  allowRefetch: boolean;
+  children?: ReactNode;
+}) {
   const [filters, setFilters] = useQueryStates(
     {
       federation: parseAsArrayOf(parseAsString).withDefault([]),
@@ -75,7 +86,6 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
     { shallow: true, scroll: false },
   );
   const [overview, reexecuteQuery] = useQuery({ query: CrawlerOverviewDocument });
-  const refresh = useRefresh(reexecuteQuery, overview.fetching);
   const rows = overview.data?.rows ?? [];
   const federations = [
     ...new Set(rows.map((row) => row.federation).filter((value) => value != null)),
@@ -99,7 +109,7 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
           },
         ]}
       >
-        <Refresh loading={overview.fetching} onClick={refresh} />
+        <Refresh loading={overview.fetching} reexecuteQuery={reexecuteQuery} />
       </PageHeader>
       <ListHeader
         collapsible={false}
@@ -139,9 +149,13 @@ export function Crawler({ allowRefetch }: { allowRefetch: boolean }) {
           failures={(overview.data.failures ?? []).filter(matches)}
           all={filters.all}
           allowRefetch={allowRefetch}
-          onQueued={refresh}
+          onQueued={() => reexecuteQuery({ requestPolicy: 'network-only' })}
         />
       ) : null}
+
+      <div className="col-feature my-4">
+        {children}
+      </div>
     </>
   );
 }
@@ -188,7 +202,6 @@ export function CrawlerTargets({
     getTotal: (data) => data.crawlerTargets?.totalCount,
   });
   const loading = pending || targets.fetching;
-  const refresh = useRefresh(targets.reexecuteQuery, loading);
 
   return (
     <>
@@ -202,10 +215,10 @@ export function CrawlerTargets({
             federation={federation}
             kind={kind}
             keyContains={key}
-            onQueued={refresh}
+            onQueued={() => targets.reexecuteQuery({ requestPolicy: 'network-only' })}
           />
         )}
-        <Refresh loading={loading} onClick={refresh} />
+        <Refresh loading={loading} reexecuteQuery={targets.reexecuteQuery} />
       </PageHeader>
       <ListHeader
         collapsible={false}
@@ -259,7 +272,6 @@ export function CrawlerJobs() {
     parseAsArrayOf(parseAsStringLiteral(jobStates)).withDefault(jobStates),
   );
   const [result, reexecuteQuery] = useQuery({ query: CrawlerJobsDocument });
-  const refresh = useRefresh(reexecuteQuery, result.fetching);
   const jobs = result.data?.crawlerFetchJobs?.nodes ?? [];
   const rows = jobs.filter((row) => states.includes(row.state ?? ''));
 
@@ -269,7 +281,7 @@ export function CrawlerJobs() {
         title="Crawler jobs"
         breadcrumbs={[{ label: 'Crawler', href: '/admin/crawler' }]}
       >
-        <Refresh loading={result.fetching} onClick={refresh} />
+        <Refresh loading={result.fetching} reexecuteQuery={reexecuteQuery} />
       </PageHeader>
       <ListHeader
         collapsible={false}
@@ -327,7 +339,7 @@ export function CrawlerJobs() {
                       execute: async () => {
                         try {
                           await completeCrawlerJob(row.jobId!);
-                          refresh();
+                          reexecuteQuery({ requestPolicy: 'network-only' });
                         } catch (error) {
                           toast.error(
                             error instanceof Error
