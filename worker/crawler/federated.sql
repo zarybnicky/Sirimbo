@@ -531,6 +531,7 @@ ON CONFLICT (federation, external_id) DO UPDATE
         THEN EXCLUDED.venue_location_ref ELSE federated.event.venue_location_ref END;
 
 /* @name UpsertEventsDetailed */
+WITH events AS (
 INSERT INTO federated.event (
   federation, external_id, extra_id, name, start_date, end_date, location, city, country, street_address, postal_code,
   address_note, geo_reference, floor_size, contact_name, contact_phone, contact_email, website_url, organizing_club_id, status
@@ -603,7 +604,15 @@ ON CONFLICT (federation, external_id) DO UPDATE
       contact_phone = EXCLUDED.contact_phone,
       contact_email = EXCLUDED.contact_email,
       website_url = EXCLUDED.website_url,
-      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id);
+      organizing_club_id = COALESCE(EXCLUDED.organizing_club_id, federated.event.organizing_club_id)
+RETURNING id, status
+)
+-- Event indexes can report cancellation even after the detail endpoint disappears.
+UPDATE federated.competition c
+SET status = 'cancelled'
+FROM events e
+WHERE c.event_id = e.id AND e.status = 'cancelled'
+  AND c.status IS DISTINCT FROM 'cancelled';
 
 /* @name UpdateEventVenueLocations */
 UPDATE federated.event e
@@ -677,7 +686,7 @@ FROM programs p;
 
 /* @name UpsertCompetitions */
 WITH event AS (
-  SELECT id
+  SELECT id, status
   FROM federated.event
   WHERE federation = :federation AND external_id = :eventExternalId
 ), input AS (
@@ -716,7 +725,8 @@ SELECT
   nullif(input.registration_fee, '')::numeric(10,3),
   input.excused_total,
   input.competition_type,
-  coalesce(input.status, 'unknown')
+  CASE WHEN event.status = 'cancelled' THEN 'cancelled'::federated.event_status
+    ELSE coalesce(input.status, 'unknown') END
 FROM input
 CROSS JOIN event
 ON CONFLICT (federation, external_id) DO UPDATE
