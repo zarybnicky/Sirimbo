@@ -56,12 +56,14 @@ const plugins: GraphileConfig.Plugin[] = [
       },
     ),
   ),
-  addPgTableCondition(
-    { schemaName: 'federated', tableName: 'event' },
-    'includeCancelled',
-    (build) => ({ type: build.graphql.GraphQLBoolean }),
-    (value, { sql, sqlTableAlias: row }) =>
-      value === false ? sql`${row}.status <> 'cancelled'` : null,
+  ...(['event', 'competition'] as const).map((tableName) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName },
+      'includeCancelled',
+      (build) => ({ type: build.graphql.GraphQLBoolean }),
+      (value, { sql, sqlTableAlias: row }) =>
+        value === false ? sql`${row}.status <> 'cancelled'` : null,
+    ),
   ),
   addPgTableCondition(
     { schemaName: 'federated', tableName: 'event' },
