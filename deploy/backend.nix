@@ -233,6 +233,8 @@ in {
           OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
           OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
           OTEL_SERVICE_NAME = "rozpisovnik-worker";
+          # Graphile Worker must finish jobs and release locks before exiting.
+          HDX_NODE_STOP_ON_TERMINATION_SIGNALS = "false";
           HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
           HDX_NODE_BETA_MODE = "1";
           NODE_OPTIONS = "--require ${pkgs.rozpisovnik-worker}/share/worker/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
