@@ -21,7 +21,6 @@ import { z } from 'zod';
 import { useController, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePicker, ImageUrlField } from '@/ui/forms/FilePicker';
-import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
   atJmeno: z.string().min(1, 'Zadejte název článku'),
@@ -58,8 +57,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
         titlePhotoUrl: data?.titlePhotoUrl ?? '',
         isVisible: data?.isVisible ?? false,
         publishedAt: data?.publishedAt ? new Date(data.publishedAt) : null,
-        attachmentIds:
-          data?.explicitAttachments.nodes.map((x) => x.file?.id).filter(isTruthy) ?? [],
+        attachmentIds: data?.explicitAttachments.nodes.flatMap((x) => x.file?.id ?? []) ?? [],
       },
       {
         keepDirtyValues: true,

@@ -44,16 +44,8 @@ export function EventButton({
         : 'participant'
       : viewer;
 
-  const showInlineAttendance =
-    attendance === 'inline' && event.type === 'GROUP' && auth.canManageEvent(event);
-
-  // icon by type: camp=calendar, reservation=question mark, holiday=beach, lesson=milestone
-  // icon, trainer name(s)/participant name(s) + "..."
-
-  // camp: spots/lessons, location, trainers, přihláška na stránce události
-  // reservation: spots/lessons, location, trainers, lekce ve vyskakovacím okně
-  // lesson: duration, spots/lessons, location, trainers, účastníci/skupiny (top 3), přihláška jako tlačítko
-  // holiday: no popup
+  let name = formatEventName(event, perspective);
+  if (perspective === 'trainer' && name === 'Lekce') name = event.registrationInfo?.canRegister ? 'Volná' : '-';
 
   return (
     <div
@@ -77,11 +69,11 @@ export function EventButton({
               {(showDate ? numericFullFormatter : shortTimeFormatter).format(start)}
             </div>
             <div className={cn('min-w-0 grow', event.isCancelled ? 'line-through' : '')}>
-              {formatEventName(event, perspective)}
+              {name}
             </div>
             {suffix ? <div className="shrink-0">{suffix}</div> : null}
             <EventConflictsBadge eventId={event.id} className="text-accent-11" />
-            {showInlineAttendance && (
+            {attendance === 'inline' && event.type === 'GROUP' && auth.canManageEvent(event) && (
               <AttendanceStatsLink eventId={event.id} stats={event.stats} />
             )}
             {duration < 210 && <div className="text-neutral-11">{duration}&apos;</div>}

@@ -8,7 +8,6 @@ import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName, shortTimeFormatter } from '@/ui/format';
-import { isTruthy } from '@/lib/truthyFilter';
 import { useTenantConfig } from '@/lib/auth';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import { CompetitionEventContent } from '@/ui/Competitions';
@@ -145,21 +144,19 @@ function InstanceTimeGridEvent({
           eventId={event.id}
           className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
         />
-        {event.instance.targetCohortsList &&
-          event.instance.targetCohortsList.length > 0 && (
-            <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-xs inset-y-0 left-0 flex flex-col">
-              {event.instance.targetCohortsList
-                .map((x) => x.cohort?.colorRgb)
-                .filter(isTruthy)
-                .map((color) => (
-                  <div
-                    key={color}
-                    className="flex-1 w-2"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-            </div>
-          )}
+        {!!event.instance.targetCohortsList?.length && (
+          <div className="absolute overflow-hidden opacity-80 border-r border-neutral-10/50 shadow-xs inset-y-0 left-0 flex flex-col">
+            {event.instance.targetCohortsList
+              .flatMap((x) => x.cohort?.colorRgb || [])
+              .map((color) => (
+                <div
+                  key={color}
+                  className="flex-1 w-2"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+          </div>
+        )}
         {!continuesPrior && isResizable && (
           <div
             className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"

@@ -144,10 +144,10 @@ export const formatEventName = (
   const registrations = event.registrations?.nodes;
   const type = formatEventType(event.type);
   const trainers = listFormatter.format(
-    event.eventTrainersList?.map((x) => x.person?.name).filter(isTruthy) ?? [],
+    event.eventTrainersList?.flatMap((x) => x.person?.name ?? []) ?? [],
   );
   if (viewer === 'participant' && event.type === 'LESSON') {
-    return [type, trainers].filter(isTruthy).join(': ');
+    return [type, trainers].filter(Boolean).join(': ');
   }
   if (viewer === 'neutral') {
     const participants =
@@ -163,7 +163,7 @@ export const formatEventName = (
   if (event.type === 'LESSON' && registrations?.length)
     return listFormatter.format(registrations.map(formatParticipant).filter(isTruthy));
 
-  if (event.type === 'RESERVATION') return [type, trainers].filter(isTruthy).join(': ');
+  if (event.type === 'RESERVATION') return [type, trainers].filter(Boolean).join(': ');
   return type;
 };
 
@@ -299,12 +299,19 @@ export const paymentStatusLabels: Record<PaymentStatus, string> = {
 
 export const moneyFormatter = {
   format(
-    price: {
-      amount: string | number | null;
-      currency: string | null;
-    } | null,
+    price:
+      | {
+          amount?: string | number | null;
+          currency: string | null;
+        }
+      | {
+          balance?: string | number | null;
+          currency: string | null;
+        }
+      | null
+      | undefined,
   ) {
-    if (!price || price.amount === null) return null;
+    if (!price || ('amount' in price && price.amount === null)) return null;
     const currency = price.currency ?? 'CZK';
     let formatter = currencyFormatters.get(currency);
     if (!formatter) {
@@ -316,9 +323,15 @@ export const moneyFormatter = {
       });
       currencyFormatters.set(currency, formatter);
     }
-    const amount =
-      typeof price.amount === 'string' ? Number.parseFloat(price.amount) : price.amount;
-    return formatter.format(amount);
+    const amountString =
+      ('balance' in price
+        ? price.balance
+        : 'amount' in price
+          ? price.amount
+          : undefined) ?? '0';
+    return formatter.format(
+      typeof amountString === 'string' ? Number.parseFloat(amountString) : amountString,
+    );
   },
 };
 

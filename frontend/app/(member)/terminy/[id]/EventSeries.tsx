@@ -96,7 +96,6 @@ export function EventSeries({
 }: Readonly<{
   initialSeries: NonNullable<EventSeriesQuery['eventSeries']>;
 }>) {
-  const auth = useAuth();
   const [{ data, error }] = useQuery({
     query: EventSeriesDocument,
     variables: { id: initialSeries.id },
@@ -110,9 +109,9 @@ export function EventSeries({
   return (
     <>
       <PageHeader
-        title={series.name || 'Termíny'}
-        breadcrumbLabel="Termíny"
-        breadcrumbs={[{ label: 'Akce', href: '/akce' }]}
+        title={series.name || 'Série'}
+        breadcrumbLabel={`Série ${series.name}`}
+        breadcrumbs={[{ label: 'Události', href: '/akce' }]}
         actions={actions}
       />
       <dl className="mb-4 text-sm tabular">
@@ -143,7 +142,6 @@ export function EventSeries({
               event={event}
               details={rows[i]!}
               seriesName={series.name}
-              showAttendance={auth.isTrainer}
               common={common}
             />
           ))}
@@ -157,15 +155,14 @@ function EventRow({
   event,
   details,
   seriesName,
-  showAttendance,
   common,
 }: Readonly<{
   event: SeriesEvent;
   details: Detail[];
   seriesName: string | null;
-  showAttendance: boolean;
   common: Detail[];
 }>) {
+  const auth = useAuth();
   const actions = useActions(eventActions, event);
   const name = event.name?.trim();
   const displayName = name === seriesName?.trim() ? null : name;
@@ -215,12 +212,12 @@ function EventRow({
         ))}
       </DotSeparated>
 
-      {showAttendance &&
-        (!event.isCancelled || event.stats.attended > 0 || event.stats.notExcused > 0) ? (
+      {auth.isTrainer &&
+        (!event.isCancelled || event.stats.attended > 0 || event.stats.notExcused > 0) && (
         <div className="col-start-4 row-start-1">
           <AttendanceStatsLink eventId={event.id} stats={event.stats} />
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

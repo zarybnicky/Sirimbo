@@ -11,7 +11,6 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { isTruthy } from '@/lib/truthyFilter';
 
 const Form = z.object({
   folders: z.array(z.string()),
@@ -47,12 +46,12 @@ export function ChangeFoldersForm() {
     fetchStarlet(FoldersAndSeasonsDocument, {}).then(({ folders, seasons }) => {
       if (!folders || !seasons) return;
       setFolders(
-        (folders.filter(isTruthy) as FolderOrSeason[]).toSorted(
+        (folders.filter(Boolean) as FolderOrSeason[]).toSorted(
           (x, y) => x.order_value - y.order_value,
         ),
       );
       setSeasons(
-        (seasons.filter(isTruthy) as FolderOrSeason[]).toSorted(
+        (seasons.filter(Boolean) as FolderOrSeason[]).toSorted(
           (x, y) => x.order_value - y.order_value,
         ),
       );

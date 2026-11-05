@@ -44,11 +44,12 @@ export const EventRegistrations = memo(function EventRegistrations({
   return (
     <Table
       className="prose prose-accent max-w-none"
+      empty="Žádné přihlášky"
       columns={[
         <span key="attendee" className="sr-only">
           Účastník
         </span>,
-        auth.isTrainer && (
+        auth.isTrainer && rows.length > 0 && (
           <div key="attendance" className="flex justify-center gap-2">
             <span className="rounded-full bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
               {attendees.filter((r) => r.status === 'ATTENDED').length}

@@ -69,16 +69,11 @@ export const AccountList = React.memo(function AccountList() {
               {person.name}
             </Link>
           </th>
-          {currencies.map((currency) => {
-            const account = person.accountsList.find((x) => x.currency === currency);
-            return (
-              <td key={currency} className="whitespace-nowrap text-right">
-                {account
-                  ? moneyFormatter.format({ amount: account.balance ?? '0', currency })
-                  : ''}
-              </td>
-            );
-          })}
+          {currencies.map((currency) => (
+            <td key={currency} className="whitespace-nowrap text-right">
+              {moneyFormatter.format(person.accountsList.find((x) => x.currency === currency))}
+            </td>
+          ))}
         </tr>
       ))}
     </Table>

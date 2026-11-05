@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!series) notFound();
 
   return {
-    title: series.name || 'Termíny',
+    title: `Série ${series.name}`,
     alternates: { canonical: `/terminy/${series.id}` },
   };
 }

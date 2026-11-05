@@ -22,7 +22,6 @@ import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
-import { isTruthy } from '@/lib/truthyFilter';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { ActivityList } from '@/ui/ActivityList';
 import { useAuth } from '@/lib/auth';
@@ -153,12 +152,9 @@ const CohortMembers = React.memo(function CohortMembers({
     auth.isTrainer ? 'activity' : 'competitive',
   );
   const activityView = auth.isTrainer && view === 'activity';
-  const people = members.map((member) => member.person).filter(isTruthy);
+  const people = members.flatMap((x) => x.person ?? []);
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
-  const memberActionMap = useActionMap(
-    personActions,
-    members.map((x) => x.person).filter(isTruthy),
-  );
+  const memberActionMap = useActionMap(personActions, people);
 
   return (
     <div

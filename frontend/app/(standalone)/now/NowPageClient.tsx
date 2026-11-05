@@ -11,7 +11,6 @@ import {
   formatStartsIn,
   shortTimeFormatter,
 } from '@/ui/format';
-import { isTruthy } from '@/lib/truthyFilter';
 import { add } from 'date-arithmetic';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -115,10 +114,7 @@ function gatherBuckets(
 }
 
 function formatTrainers(event: Event) {
-  return (event.eventTrainersList ?? [])
-    .map((x) => x.person?.name)
-    .filter(isTruthy)
-    .join(', ');
+  return event.eventTrainersList?.flatMap((x) => x.person?.name ?? []).join(', ');
 }
 
 export default function NowPage() {

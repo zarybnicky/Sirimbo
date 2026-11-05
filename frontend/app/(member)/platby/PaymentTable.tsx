@@ -72,7 +72,7 @@ export function PaymentTable({
               </td>
               <td>{debtor?.person?.name}</td>
               <td className="whitespace-nowrap text-right">
-                {moneyFormatter.format(debtor?.price ?? null)}
+                {moneyFormatter.format(debtor?.price)}
               </td>
             </tr>
             {others.map((debtor) => (

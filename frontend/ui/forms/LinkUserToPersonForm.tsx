@@ -37,8 +37,8 @@ export function LinkUserToPersonForm({ personId }: { personId: string }) {
         .map((x) => x.user?.id),
     );
     return (list.data?.users?.nodes ?? [])
-      .filter((item) => !linkedIds.has(item.id))
-      .map((item) => ({ id: item.id, label: [item.uEmail, item.uLogin].filter(isTruthy).join(', ') }));
+      .filter((x) => !linkedIds.has(x.id))
+      .map((x) => ({ id: x.id, label: [x.uEmail, x.uLogin].filter(Boolean).join(', ') }));
   }, [query.data?.person, list.data]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {

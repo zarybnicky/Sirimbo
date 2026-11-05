@@ -1,6 +1,5 @@
 import { AnnouncementAudienceRole } from '@/graphql';
 import { cn } from '@/lib/cn';
-import { isTruthy } from '@/lib/truthyFilter';
 import { AnnouncementAudienceFragment } from '@/graphql/Announcement';
 import { badgeCls } from '@/ui/style';
 
@@ -16,8 +15,8 @@ interface Props {
 }
 
 export function AnnouncementAudienceBadges({ audiences, className }: Readonly<Props>) {
-  const derivedCohorts = audiences?.map((x) => x.cohort).filter(isTruthy) || [];
-  const derivedRoles = audiences?.map((x) => x.audienceRole).filter(isTruthy) || [];
+  const derivedCohorts = audiences?.flatMap((x) => x.cohort ?? []) || [];
+  const derivedRoles = audiences?.flatMap((x) => x.audienceRole ?? []) || [];
 
   return (
     <div

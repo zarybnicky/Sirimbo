@@ -406,8 +406,8 @@ function compare(
       );
     }
   }
-  const unresolvedNames = new Set(unresolvedStudents.map((student) => student.normal_name));
-  const unresolvedRefKeys = new Set(unresolvedStudents.map((student) => student.ref_key).filter(isTruthy));
+  const unresolvedNames = new Set(unresolvedStudents.map((x) => x.normal_name));
+  const unresolvedRefKeys = new Set(unresolvedStudents.map((x) => x.ref_key ?? []));
   for (const person of people) {
     const currentCohortIds = new Set(person.cohortIds || []);
     if (
@@ -418,7 +418,7 @@ function compare(
       person.isTrainer ||
       !person.isMember ||
       !person.externalIds?.length ||
-      !managedCohorts.some((cohort) => currentCohortIds.has(cohort.id))
+      !managedCohorts.some((x) => currentCohortIds.has(x.id))
     ) {
       continue;
     }
@@ -518,9 +518,9 @@ function deduplicateStudents(courses: CleanedCourse[]) {
   for (const [normalName, candidates] of studentMap.entries()) {
     if (candidates.length === 0) continue;
 
-    const birthYears = new Set(candidates.map((x) => x.year).filter(isTruthy));
-    const phones = new Set(candidates.map((x) => x.phone).filter(isTruthy));
-    const emails = new Set(candidates.map((x) => x.email).filter(isTruthy));
+    const birthYears = new Set(candidates.map((x) => x.year ?? []));
+    const phones = new Set(candidates.map((x) => x.phone ?? []));
+    const emails = new Set(candidates.map((x) => x.email ?? []));
 
     if (birthYears.size < 2) {
       if (phones.size < 2 && emails.size < 2) {
@@ -582,10 +582,10 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
     street_no: candidates.map((x) => x.street_no).find(isTruthy) || null,
     city: candidates.map((x) => x.city).find(isTruthy) || null,
     post_code: candidates.map((x) => x.post_code).find(isTruthy) || null,
-    keys: candidates.map((x) => x.key).filter(isTruthy),
-    course_names: candidates.map((x) => x.course_name).filter(isTruthy),
-    course_keys: candidates.map((x) => x.course_key).filter(isTruthy),
-    ref_keys: candidates.map((x) => x.ref_key).filter(isTruthy),
+    keys: candidates.flatMap((x) => x.key ?? []),
+    course_names: candidates.flatMap((x) => x.course_name ?? []),
+    course_keys: candidates.flatMap((x) => x.course_key ?? []),
+    ref_keys: candidates.flatMap((x) => x.ref_key ?? []),
   };
 }
 

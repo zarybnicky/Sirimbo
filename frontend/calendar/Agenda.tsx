@@ -1,7 +1,6 @@
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import type { CalendarBirthdayEvent, ViewProps } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
-import { isTruthy } from '@/lib/truthyFilter';
 import { compareText } from '@/lib/compare';
 import { CompetitionEventContent } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
@@ -152,13 +151,12 @@ function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
     >
       <EventConflictsBadge
         eventId={instance.id}
-        className="absolute right-8 top-3 text-accent-11"
+        className="absolute right-3 top-3 text-accent-11"
       />
-      {instance.targetCohortsList && instance.targetCohortsList.length > 0 && (
+      {!!instance.targetCohortsList?.length && (
         <div className="absolute rounded-l-lg overflow-hidden opacity-80 border-r border-neutral-6 shadow-xs inset-y-0 left-0 flex flex-col">
           {instance.targetCohortsList
-            .map((x) => x.cohort?.colorRgb)
-            .filter(isTruthy)
+            .flatMap((x) => x.cohort?.colorRgb || [])
             .map((c) => (
               <div key={c} className="flex-1 w-2" style={{ backgroundColor: c }} />
             ))}
@@ -197,7 +195,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
 
       <div className="ml-2 text-xl mb-1">
         {listFormatter.format(
-          (items[0]?.eventTrainersList ?? []).map((x) => x.person?.name).filter(isTruthy),
+          (items[0]?.eventTrainersList ?? []).flatMap((x) => x.person?.name ?? []),
         )}
       </div>
 

@@ -20,7 +20,6 @@ import React from 'react';
 import { type Control, useController, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { isTruthy } from '../../lib/truthyFilter';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CohortListDocument } from '@/graphql/Cohorts';
@@ -94,11 +93,11 @@ export function AnnouncementForm({
         scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
         scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
         audienceRoles:
-          data?.announcementAudiences.nodes.map((x) => x.audienceRole).filter(isTruthy),
+          data?.announcementAudiences.nodes.flatMap((x) => x.audienceRole ?? []),
         cohortIds:
-          data?.announcementAudiences.nodes.map((x) => x.cohortId).filter(isTruthy),
+          data?.announcementAudiences.nodes.flatMap((x) => x.cohortId ?? []),
         attachmentIds:
-          data?.explicitAttachments.nodes.map((f) => f.file?.id).filter(isTruthy),
+          data?.explicitAttachments.nodes.flatMap((f) => f.file?.id ?? []),
       },
       {
         keepDirtyValues: true,

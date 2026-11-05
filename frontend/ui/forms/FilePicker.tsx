@@ -23,7 +23,6 @@ import {
   useController,
 } from 'react-hook-form';
 import { useQuery } from 'urql';
-import { isTruthy } from '@/lib/truthyFilter.ts';
 import { formatFileSize, numericFullFormatter } from '@/ui/format';
 
 type Props = {
@@ -62,7 +61,7 @@ export function FilePicker({ value, onChange, imagesOnly, title = 'Přílohy' }:
   );
   const selected = new Set(value);
   const filesById = new Map(files.map((file) => [file.id, file]));
-  const selectedFiles = value.map((id) => filesById.get(id)).filter(isTruthy);
+  const selectedFiles = value.flatMap((id) => filesById.get(id) ?? []);
 
   const upload = async (input: FileList | null) => {
     const sources = [...(input ?? [])];

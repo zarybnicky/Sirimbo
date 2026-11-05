@@ -7,7 +7,6 @@ import { type DragSubject, dragSubjectAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName } from '@/ui/format';
-import { isTruthy } from '@/lib/truthyFilter';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import { Cake } from 'lucide-react';
 
@@ -142,11 +141,10 @@ function InstanceEventCell({
             eventId={event.instance.id}
             className="absolute right-1 top-1 text-accent-11 drop-shadow-sm"
           />
-          {event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0 && (
+          {!!event.instance.targetCohortsList?.length && (
             <div className="absolute rounded-l-lg overflow-hidden border-r border-neutral-6 shadow-xs inset-y-0 left-0 flex flex-col">
               {event.instance.targetCohortsList
-                .map((x) => x.cohort?.colorRgb)
-                .filter(isTruthy)
+                .flatMap((x) => x.cohort?.colorRgb || [])
                 .map((color) => (
                   <div
                     key={color}

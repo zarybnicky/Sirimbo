@@ -223,15 +223,7 @@ export function TransactionList() {
               className="text-sm tabular"
               items={(accounts.data?.accountsList || []).flatMap((x) =>
                 filters.accountIds.includes(x.id)
-                  ? ([
-                      [
-                        accountLabel(x),
-                        moneyFormatter.format({
-                          amount: x.balance ?? '0',
-                          currency: x.currency,
-                        }),
-                      ],
-                    ] as const)
+                  ? ([[accountLabel(x), moneyFormatter.format(x)]] as const)
                   : [],
               )}
             />

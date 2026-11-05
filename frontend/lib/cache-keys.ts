@@ -34,6 +34,7 @@ export const cacheKeyFields = {
   IntRangeBound: null,
   LocationImage: ['fileId'],
   PersonFacetsRecord: null,
+  PaymentDebtorPriceRecord: null,
   PaymentFacetsRecord: null,
   PersonFederationCandidatesRecord: null,
   PersonLastActivity: null,

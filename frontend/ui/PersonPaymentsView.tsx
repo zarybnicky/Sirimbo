@@ -5,7 +5,7 @@ import { useActionMap } from '@/lib/actions';
 import { compareText } from '@/lib/compare';
 import { paymentActions } from '@/lib/actions/payment';
 import { transactionActions } from '@/lib/actions/transaction';
-import { isTruthy, keyIsNonNull } from '@/lib/truthyFilter';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 import { ActionGroup } from '@/ui/ActionGroup';
 import {
   describePosting,
@@ -89,10 +89,7 @@ export const PersonPaymentsView = React.memo(function PersonPaymentsView({
         <div key={account.id}>
           <div>
             Stav kreditu:{' '}
-            {moneyFormatter.format({
-              amount: account.balance,
-              currency: account.currency,
-            })}
+            {moneyFormatter.format(account)}
           </div>
 
           {account.postingsList?.length ? (
@@ -136,7 +133,7 @@ function AccountPaymentsTable({
   });
   const paymentActionMap = useActionMap(
     paymentActions,
-    baseRows.map((row) => row.transaction.payment).filter(isTruthy),
+    baseRows.flatMap((x) => x.transaction.payment ?? []),
   );
   const transactionActionMap = useActionMap(
     transactionActions,

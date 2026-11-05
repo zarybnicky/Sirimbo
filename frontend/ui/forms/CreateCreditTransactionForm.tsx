@@ -57,9 +57,9 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
 
   if (!person) return null;
 
-  const balance = Number.parseFloat(
-    person.accountsList.find((x) => x.currency === currency)?.balance ?? '0',
-  );
+  const account = person.accountsList.find((x) => x.currency === currency);
+  const balance = Number.parseFloat(account?.balance ?? '0');
+
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
@@ -96,7 +96,7 @@ export function CreateCreditTransactionForm({ personId }: { personId: string }) 
 
         <div className="text-right m-3">
           <div>
-            {moneyFormatter.format({ amount: balance, currency })}
+            {moneyFormatter.format(account)}
           </div>
           <div>
             {isDeposit ? '+ ' : '- '}

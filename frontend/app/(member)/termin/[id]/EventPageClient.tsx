@@ -24,7 +24,6 @@ import { useMutation, useQuery } from 'urql';
 import React from 'react';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PaymentTable } from '@/app/(member)/platby/PaymentTable';
-import { isTruthy } from '@/lib/truthyFilter';
 import { RichTextView } from '@/ui/RichTextView';
 import { ListFormat } from '@/ui/ListFormat';
 import { EntityLink } from '@/ui/EntityLink';
@@ -58,7 +57,7 @@ export function EventPageClient({
   );
   const [signup, setSignup] = useQueryState('signup');
 
-  const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
+  const trainers = event.eventTrainersList.flatMap((t) => t.person ?? []);
   const { seriesInfo, registrationInfo } = event;
   const numRegistrations = registrationInfo?.registrations ?? 0;
   const hasPayments = [event, ...event.childEventsList].some(

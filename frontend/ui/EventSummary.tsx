@@ -24,17 +24,14 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   const actions = useActions(eventActions, event);
   const { seriesInfo, registrations } = event;
   const registrationCount = event.registrationInfo?.registrations ?? 0;
-  const cohorts = event.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
-  const trainers = event.eventTrainersList.map((x) => x.person).filter(isTruthy);
-  const priceString = (event.approxPriceList ?? [])
-    .filter(isTruthy)
-    .filter((x) => !Number.isNaN(x.amount) && x.amount !== 'NaN')
-    .map((price) => moneyFormatter.format(price))
-    .join(', ');
+  const cohorts = event.targetCohortsList.flatMap((x) => x.cohort ?? []);
+  const trainers = event.eventTrainersList.flatMap((x) => x.person ?? []);
+  const prices = event.approxPriceList?.flatMap((x) => moneyFormatter.format(x) ?? []);
 
   const primaryActions = React.useMemo(() => {
     return [
-      !auth.canManageEvent(event) ? 'event.registrations' : undefined,
+      !auth.canManageEvent(event) ||
+      event.type === 'LESSON' ||
       startOf(new Date(event.since), 'day') > startOf(new Date(), 'day')
         ? 'event.registrations'
         : 'event.attendance',
@@ -99,35 +96,43 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         </div>
       )}
 
-      {priceString && (
+      {!!prices?.length && (
         <div className="flex items-center gap-2">
           <Coins className="size-4 text-accent-11 shrink-0" />
-          {priceString + ' / osobu'}
+          {prices.join(', ') + ' / osobu'}
         </div>
       )}
 
-      <div className="flex items-center gap-2">
-        <Users className="size-4 text-accent-11 shrink-0" />
-        <div>
-          {cohorts.length > 0 ? (
-            <ListFormat>
-              {cohorts.map((cohort) => (
-                <EntityLink key={cohort.id} type="cohort" entity={cohort} />
-              ))}
-            </ListFormat>
-          ) : registrationCount === 0 ? (
-            <div>VOLNÁ</div>
-          ) : registrationCount < 6 ? (
-            registrations.nodes.map((x) => (
-              <div key={x.id}>
-                <EntityLink type="participant" entity={x} />
-              </div>
-            ))
-          ) : (
-            `${registrationCount} účastníků`
-          )}
+      {(cohorts.length > 0 ||
+        registrationCount > 0 ||
+        event.registrationInfo?.canRegister) && (
+        <div className="flex items-center gap-2">
+          <Users className="size-4 text-accent-11 shrink-0" />
+          <div>
+            {cohorts.length > 0 ? (
+              <ListFormat>
+                {cohorts.map((x) => (
+                  <EntityLink key={x.id} type="cohort" entity={x} />
+                ))}
+              </ListFormat>
+            ) : registrationCount === 0 ? (
+              event.registrationInfo?.canRegister ? (
+                'VOLNÁ'
+              ) : (
+                '-'
+              )
+            ) : registrationCount < 6 ? (
+              registrations.nodes.map((x) => (
+                <div key={x.id}>
+                  <EntityLink type="participant" entity={x} />
+                </div>
+              ))
+            ) : (
+              `${registrationCount} účastníků`
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <ActionGroup
         className="max-w-full flex-wrap"
