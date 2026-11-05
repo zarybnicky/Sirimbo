@@ -215,9 +215,11 @@ export const PersonView = React.memo(function PersonView({
                 <PersonPaymentsView id={id} />
               </Tab>
             )}
-            <Tab id="workReport" title="Výkaz práce" requireTrainer>
-              <PersonWorkReportView id={id} />
-            </Tab>
+            {item.eventTrainersList.length > 0 && (
+              <Tab id="workReport" title="Výkaz práce" requireTrainer>
+                <PersonWorkReportView id={id} />
+              </Tab>
+            )}
           </>
         )}
       </TabMenu>

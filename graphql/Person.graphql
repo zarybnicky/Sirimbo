@@ -131,6 +131,9 @@ query PersonMemberships($id: BigInt!) {
     paymentDebtorsList(first: 1) {
       id
     }
+    eventTrainersList(first: 1) {
+      id
+    }
     lastActivity {
       webAt
       cardEntryAt
