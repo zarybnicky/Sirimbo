@@ -77,17 +77,18 @@ WITH bounds AS (
     CASE WHEN next_fetch_at >= now()
       THEN (next_fetch_at AT TIME ZONE 'UTC')::date
     END AS day,
+    federation,
     count(*)::int AS count
   FROM crawler.frontier, bounds
   WHERE fetch_status = 'ok' AND process_status = 'ok'
     AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'
-  GROUP BY 1
+  GROUP BY 1, 2
 ), buckets AS (
   SELECT NULL::date AS day
   UNION ALL
   SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day
 )
-SELECT buckets.day::text AS "day?", coalesce(counts.count, 0)::int AS "count!"
+SELECT buckets.day::text AS "day?", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
 FROM buckets
 LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
-ORDER BY buckets.day NULLS FIRST;
+ORDER BY buckets.day NULLS FIRST, counts.federation;

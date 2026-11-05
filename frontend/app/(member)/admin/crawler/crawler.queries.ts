@@ -185,6 +185,7 @@ export type IGetRefetchOutlookParams = void;
 export interface IGetRefetchOutlookResult {
   count: number;
   day: string | null;
+  federation: string | null;
 }
 
 /** 'GetRefetchOutlook' query type */
@@ -193,7 +194,7 @@ export interface IGetRefetchOutlookQuery {
   result: IGetRefetchOutlookResult;
 }
 
-const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WITH bounds AS (\n  SELECT (now() AT TIME ZONE 'UTC')::date AS today\n), counts AS (\n  SELECT\n    CASE WHEN next_fetch_at >= now()\n      THEN (next_fetch_at AT TIME ZONE 'UTC')::date\n    END AS day,\n    count(*)::int AS count\n  FROM crawler.frontier, bounds\n  WHERE fetch_status = 'ok' AND process_status = 'ok'\n    AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'\n  GROUP BY 1\n), buckets AS (\n  SELECT NULL::date AS day\n  UNION ALL\n  SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day\n)\nSELECT buckets.day::text AS \"day?\", coalesce(counts.count, 0)::int AS \"count!\"\nFROM buckets\nLEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day\nORDER BY buckets.day NULLS FIRST"};
+const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WITH bounds AS (\n  SELECT (now() AT TIME ZONE 'UTC')::date AS today\n), counts AS (\n  SELECT\n    CASE WHEN next_fetch_at >= now()\n      THEN (next_fetch_at AT TIME ZONE 'UTC')::date\n    END AS day,\n    federation,\n    count(*)::int AS count\n  FROM crawler.frontier, bounds\n  WHERE fetch_status = 'ok' AND process_status = 'ok'\n    AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'\n  GROUP BY 1, 2\n), buckets AS (\n  SELECT NULL::date AS day\n  UNION ALL\n  SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day\n)\nSELECT buckets.day::text AS \"day?\", counts.federation AS \"federation?\", coalesce(counts.count, 0)::int AS \"count!\"\nFROM buckets\nLEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day\nORDER BY buckets.day NULLS FIRST, counts.federation"};
 
 /**
  * Query generated from SQL:
@@ -205,20 +206,21 @@ const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *     CASE WHEN next_fetch_at >= now()
  *       THEN (next_fetch_at AT TIME ZONE 'UTC')::date
  *     END AS day,
+ *     federation,
  *     count(*)::int AS count
  *   FROM crawler.frontier, bounds
  *   WHERE fetch_status = 'ok' AND process_status = 'ok'
  *     AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'
- *   GROUP BY 1
+ *   GROUP BY 1, 2
  * ), buckets AS (
  *   SELECT NULL::date AS day
  *   UNION ALL
  *   SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day
  * )
- * SELECT buckets.day::text AS "day?", coalesce(counts.count, 0)::int AS "count!"
+ * SELECT buckets.day::text AS "day?", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
  * FROM buckets
  * LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
- * ORDER BY buckets.day NULLS FIRST
+ * ORDER BY buckets.day NULLS FIRST, counts.federation
  * ```
  */
 export const getRefetchOutlook = new PreparedQuery<IGetRefetchOutlookParams,IGetRefetchOutlookResult>(getRefetchOutlookIR);
