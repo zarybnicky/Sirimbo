@@ -8,7 +8,7 @@ import {
 } from '../crawler/crawler.queries.ts';
 import { ALL_LOADERS, loaderFor, SEED_FRONTIERS } from '../crawler/handlers.ts';
 
-const MAX_OUTSTANDING_FETCH = 200;
+const MAX_OUTSTANDING_FETCH = 100;
 
 function reserveEarliestSlot(
   sortedSlots: number[],
