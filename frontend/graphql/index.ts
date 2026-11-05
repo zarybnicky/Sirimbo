@@ -1675,6 +1675,7 @@ export type CompetitionCondition = {
   federation?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Match local people. Without an explicit selection, use current tenant people. */
   official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;

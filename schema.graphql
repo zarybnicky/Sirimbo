@@ -2170,6 +2170,7 @@ input CompetitionCondition {
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+  includeCancelled: Boolean
 
   """
   Match local people. Without an explicit selection, use current tenant people.

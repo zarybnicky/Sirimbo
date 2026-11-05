@@ -498,6 +498,7 @@ query CalendarData(
   competitions(
     first: 300
     condition: {
+      includeCancelled: false
       date: { since: $since, until: $until }
       competitor: $participant
     }
@@ -516,6 +517,7 @@ query CalendarData(
   myCompetitions: competitions(
     first: 300
     condition: {
+      includeCancelled: false
       date: { since: $since, until: $until }
       competitor: { onlyMine: true }
     }
@@ -535,6 +537,7 @@ query CalendarData(
   clubCompetitions: competitions(
     first: 300
     condition: {
+      includeCancelled: false
       date: { since: $since, until: $until }
       competitor: {}
     }
@@ -553,6 +556,7 @@ query CalendarData(
   officialEvents: federationEvents(
     first: 300
     condition: {
+      includeCancelled: false
       date: { since: $since, until: $until }
       official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
@@ -573,6 +577,7 @@ query CalendarData(
   officialCompetitions: competitions(
     first: 300
     condition: {
+      includeCancelled: false
       date: { since: $since, until: $until }
       official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
     }
