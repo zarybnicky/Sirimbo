@@ -71,7 +71,7 @@ export function AttendanceReport() {
     <div className="container col-feature space-y-6 py-6">
       <PageHeader
         title="Vyplněnost docházky"
-        breadcrumbs={[{ label: 'Události', href: '/akce' }]}
+        breadcrumbs={[{ title: 'Události', href: '/akce' }]}
       />
 
       <section className="text-sm">

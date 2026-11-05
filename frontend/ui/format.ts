@@ -157,7 +157,7 @@ export const formatEventName = (
           )
         : '';
     return event.type === 'LESSON'
-      ? `${trainers} / ${participants}`
+      ? `${trainers} / ${participants || '-'}`
       : [type, trainers].filter(isTruthy).join(': ');
   }
   if (event.type === 'LESSON' && registrations?.length)

@@ -65,8 +65,6 @@ export function AttendanceStatsLink({
   return (
     <Link
       href={`/termin/${eventId}?tab=registrations`}
-      aria-label="Docházka"
-      title="Docházka"
       className={cn(
         'inline-flex shrink-0 rounded-lg shadow-sm hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,

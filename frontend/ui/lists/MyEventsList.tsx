@@ -138,7 +138,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
                         <Collapsible.Trigger asChild>
                           <button
                             type="button"
-                            className="text-left text-sm text-accent-11 underline underline-offset-2 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+                            className="text-left text-sm text-accent-11 underline hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
                           >
                             {title}
                           </button>

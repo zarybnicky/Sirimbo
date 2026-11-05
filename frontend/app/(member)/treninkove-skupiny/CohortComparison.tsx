@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Link from 'next/link';
 import type { CohortListQuery, PersonHistogramFragment } from '@/graphql/Cohorts';
 import {
   ageGroupNames,
@@ -11,7 +10,7 @@ import { Histogram } from '@/ui/Histogram';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { Table } from '@/ui/Table';
 import { compareText } from '@/lib/compare';
-import { slugify } from '@/lib/slugify';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function CohortComparison({ data }: { data: CohortListQuery | undefined }) {
   const [selection, setSelection] = useState<{
@@ -49,13 +48,12 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
           <tr key={row.id ?? row.name}>
             <th scope="row">
               {row.id ? (
-                <Link
-                  href={`/treninkove-skupiny/${row.id}/${slugify(row.name)}`}
+                <EntityLink
+                  type="cohort"
+                  entity={row}
                   className="block border-l-4 pl-2 underline"
                   style={{ borderColor: row.color ?? undefined }}
-                >
-                  {row.name}
-                </Link>
+                />
               ) : (
                 row.name
               )}
@@ -105,9 +103,7 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
               .toSorted((a, b) => compareText(a.name, b.name))
               .map((x) => (
                 <li key={x.id}>
-                  <Link className="text-accent-11 underline" href={`/clenove/${x.id}`}>
-                    {x.name}
-                  </Link>
+                  <EntityLink type="person" entity={x} />
                 </li>
               ))}
           </ul>

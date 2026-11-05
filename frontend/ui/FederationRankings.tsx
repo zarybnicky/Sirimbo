@@ -72,7 +72,7 @@ export function FederationRankBadge({
   const first = rows[0];
   if (!first) return null;
   return (
-    <span className="inline-flex flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
+    <span className="inline-flex self-start flex-wrap gap-x-1 rounded-full bg-accent-3 px-2 py-0.5">
       <span title="Ranklist">RL</span>
       <span>{formatAgeGroup(first.category.ageGroup)}</span>
       {rows.map((row) => (

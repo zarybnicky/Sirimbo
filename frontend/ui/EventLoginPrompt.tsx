@@ -49,7 +49,7 @@ export function EventLoginPrompt({ eventId }: { eventId: string }) {
       </form>
       <button
         type="button"
-        className="justify-self-start text-sm text-neutral-11 underline underline-offset-2 hover:text-neutral-12"
+        className="justify-self-start text-sm text-neutral-11 underline hover:text-neutral-12"
         onClick={() => setDismissed(true)}
       >
         Nemám účet

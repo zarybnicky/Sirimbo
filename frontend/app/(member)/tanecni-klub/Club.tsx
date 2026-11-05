@@ -28,6 +28,8 @@ import { CompetitionSuggestions } from '@/ui/Competitions';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
+import { EntityLink } from '@/ui/EntityLink.tsx';
+import { keyIsNonNull } from '@/lib/truthyFilter.ts';
 
 type ClubData = NonNullable<ClubQuery['tenant']>;
 
@@ -176,19 +178,14 @@ const ClubTrainers = React.memo(function ClubTrainers({ club }: { club: ClubData
   const trainerActionMap = useActionMap(tenantTrainerActions, club.tenantTrainersList);
   return (
     <>
-      {club.tenantTrainersList.map((item) => (
+      {club.tenantTrainersList.filter(keyIsNonNull('person')).map((item) => (
         <ActionRow key={item.id} actions={trainerActionMap.get(item.id)!}>
           <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
-            {!item.person ? (
-              '?'
-            ) : (
-              <Link
-                className="underline font-bold w-fit min-w-0"
-                href={`/clenove/${item.person.id}`}
-              >
-                {item.person.name}
-              </Link>
-            )}
+            <EntityLink
+              type="person"
+              entity={item.person}
+              className="font-bold text-sm py-1"
+            />
             {auth.isAdmin && (
               <div className="self-end">
                 {moneyFormatter.format({
@@ -220,18 +217,13 @@ const ClubAdministrators = React.memo(function ClubAdministrators({
   );
   return (
     <>
-      {club.tenantAdministratorsList.map((item) => (
+      {club.tenantAdministratorsList.filter(keyIsNonNull('person')).map((item) => (
         <ActionRow key={item.id} actions={administratorActionMap.get(item.id)!}>
-          {!item.person ? (
-            '?'
-          ) : (
-            <Link
-              className="underline font-bold text-sm py-1"
-              href={`/clenove/${item.person.id}`}
-            >
-              {item.person.name}
-            </Link>
-          )}
+          <EntityLink
+            type="person"
+            entity={item.person}
+            className="font-bold text-sm py-1"
+          />
         </ActionRow>
       ))}
     </>

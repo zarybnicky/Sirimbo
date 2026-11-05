@@ -3,7 +3,6 @@ import { useQuery } from 'urql';
 import { PersonAccountsDocument, PersonAccountsQuery } from '@/graphql/Person';
 import { moneyFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
-import Link from 'next/link';
 import { Table } from '@/ui/Table';
 import { SortButton } from '@/ui/SortButton';
 import { compareText } from '@/lib/compare';
@@ -11,6 +10,7 @@ import { Download } from 'lucide-react';
 import { useAsyncCallback } from 'react-async-hook';
 import { Spinner } from '@/ui/Spinner';
 import { saveAs } from 'file-saver';
+import { EntityLink } from '@/ui/EntityLink';
 
 export const AccountList = React.memo(function AccountList() {
   const [{ data, fetching, error }] = useQuery({ query: PersonAccountsDocument });
@@ -65,9 +65,7 @@ export const AccountList = React.memo(function AccountList() {
       {rows.map((person) => (
         <tr key={person.id} className="border-t border-neutral-4 align-top">
           <th scope="row">
-            <Link href={`/clenove/${person.id}`} className="text-accent-11 underline">
-              {person.name}
-            </Link>
+            <EntityLink type="person" entity={person} />
           </th>
           {currencies.map((currency) => (
             <td key={currency} className="whitespace-nowrap text-right">

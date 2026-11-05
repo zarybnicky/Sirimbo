@@ -1,11 +1,12 @@
 'use client';
 
+import { getEntityLink } from '@/ui/EntityLink';
 import { ListItem } from '@/ui/ListItem';
 
 import { EventListDocument } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { TextField } from '@/ui/fields/text';
-import { formatEventType, fullDateFormatter } from '@/ui/format';
+import { formatEventName, fullDateFormatter } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { endOf, startOf } from 'date-arithmetic';
@@ -42,7 +43,8 @@ function EventListPage({ search, currentId }: EventListPageProps) {
   const nodes: EventNode[] = React.useMemo(() => {
     return (data?.eventsList ?? []).map((event) => ({
       id: event.id,
-      title: event.name || formatEventType(event.type),
+      title: formatEventName(event) ?? '',
+      href: getEntityLink('event', event).href,
       date: event.since,
       subtitle: [
         fullDateFormatter.formatRange(new Date(event.since), new Date(event.until)),
@@ -54,7 +56,6 @@ function EventListPage({ search, currentId }: EventListPageProps) {
       ]
         .filter(Boolean)
         .join(', '),
-      href: `/termin/${event.id}`,
       imageUrl: event.coverImage?.url ?? null,
     }));
   }, [data]);

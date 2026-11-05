@@ -5,7 +5,6 @@ import {
   UpdatePersonDocument,
 } from '@/graphql/Person.ts';
 import { useAuth } from '@/lib/auth.ts';
-import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMutation, useQuery } from 'urql';
 import { Spinner } from '@/ui/Spinner.tsx';
@@ -122,12 +121,7 @@ function FederationIdBackfillWidget({ federation }: { federation: 'csts' | 'wdsf
           className="grid gap-2 border-b border-neutral-4 py-3 text-sm"
         >
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <Link
-              href={`/clenove/${person.id}`}
-              className="font-bold text-accent-11 underline"
-            >
-              {person.name}
-            </Link>
+            <EntityLink type="person" entity={person} className="font-bold" />
             <DotSeparated className="text-neutral-11">
               {formatAgeGroup(person.ageGroup)}
               {person.birthDate ? new Date(person.birthDate).getFullYear() : null}
@@ -238,12 +232,7 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
               className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-neutral-2 px-2 py-1.5"
             >
               <div className="flex flex-wrap items-baseline gap-x-2">
-                <Link
-                  href={`/clenove/${person.id}`}
-                  className="font-bold text-accent-11 underline"
-                >
-                  {person.name}
-                </Link>
+                <EntityLink type="person" entity={person} className="font-bold" />
                 {person.birthDate && (
                   <span className="text-neutral-11">
                     {formatDateOnly(person.birthDate)}

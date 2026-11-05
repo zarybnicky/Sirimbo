@@ -77,7 +77,7 @@ export function Location({
         }
         actions={actions}
         breadcrumbLabel="Místo"
-        breadcrumbs={[{ label: 'Klub', href: '/tanecni-klub' }]}
+        breadcrumbs={[{ title: 'Klub', href: '/tanecni-klub' }]}
       />
 
       <TabMenu selected={tab} onSelect={setTab}>

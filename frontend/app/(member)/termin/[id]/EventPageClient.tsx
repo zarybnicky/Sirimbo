@@ -26,7 +26,7 @@ import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PaymentTable } from '@/app/(member)/platby/PaymentTable';
 import { RichTextView } from '@/ui/RichTextView';
 import { ListFormat } from '@/ui/ListFormat';
-import { EntityLink } from '@/ui/EntityLink';
+import { EntityLink, getEntityLink } from '@/ui/EntityLink';
 import { DotSeparated } from '@/ui/DotSeparated';
 
 export function EventPageClient({
@@ -118,19 +118,19 @@ export function EventPageClient({
               : formatEventType(event.type)
          }
           breadcrumbs={[
-            { label: 'Události', href: '/akce' },
+            { title: 'Události', href: '/akce' },
             ...(event.parentId
               ? [
-                  {
-                    label: event.parent?.name ?? 'Soustředění',
-                    href: `/termin/${event.parentId}`,
-                  },
+                  getEntityLink('event', {
+                    id: event.parentId,
+                    name: event.parent?.name ?? 'Soustředění',
+                  }),
                 ]
               : []),
             ...(event.seriesId
               ? [
                   {
-                    label: `Série ${event.seriesInfo?.name}`,
+                    title: `Série ${event.seriesInfo?.name}`,
                     href: `/terminy/${event.seriesId}`,
                   },
                 ]

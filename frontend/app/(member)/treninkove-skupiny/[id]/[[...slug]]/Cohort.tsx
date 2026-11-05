@@ -18,7 +18,6 @@ import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PersonActivityBadges } from '@/ui/PersonActivityBadges';
 import { PeopleAccessOverview } from '@/ui/PeopleAccessOverview';
-import Link from 'next/link';
 import React from 'react';
 import { ActionRow } from '@/ui/ActionRow';
 import { personActions } from '@/lib/actions/person';
@@ -31,6 +30,7 @@ import { cn } from '@/lib/cn';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
 import { AgeHistogram, ClassHistogram } from '../../CohortComparison';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function Cohort({
   initialCohort,
@@ -81,7 +81,7 @@ export function Cohort({
         }
         title={cohort.name}
         breadcrumbLabel="Skupina"
-        breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
+        breadcrumbs={[{ title: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
         subtitle={
           <DotSeparated>
             {cohort.location || undefined}
@@ -213,12 +213,7 @@ const CohortMembers = React.memo(function CohortMembers({
             ]}
           >
             {person ? (
-              <Link
-                className="min-w-0 font-bold underline"
-                href={`/clenove/${person.id}`}
-              >
-                {person.name}
-              </Link>
+              <EntityLink type="person" entity={person} className="min-w-0 font-bold" />
             ) : (
               '?'
             )}

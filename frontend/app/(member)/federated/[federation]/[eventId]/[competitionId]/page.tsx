@@ -64,13 +64,13 @@ export default async function CompetitionPage({ params }: Props) {
         }
         breadcrumbLabel="Soutěž"
         breadcrumbs={[
-          { label: 'Organizace', href: '/federated' },
+          { title: 'Organizace', href: '/federated' },
           {
-            label: event.federationByFederation?.name ?? federation,
+            title: event.federationByFederation?.name ?? federation,
             href: `/federated/${federation}`,
           },
           {
-            label: event.name || event.externalId,
+            title: event.name || event.externalId,
             href: `/federated/${federation}/${eventId}`,
           },
         ]}

@@ -1,3 +1,4 @@
+import { getEntityLink } from '@/ui/EntityLink';
 import { ListItem } from '@/ui/ListItem';
 import { Users } from 'lucide-react';
 import { CoupleListDocument } from '@/graphql/Memberships';
@@ -29,9 +30,8 @@ export function CoupleList() {
       return {
         id: item.id,
         image: item.image,
-        title: item.name,
+        ...getEntityLink('couple', item),
         ageGroup: formatAgeGroup(item.ageGroup),
-        href: `/pary/${item.id}`,
         cohortNames: cohorts.map((cohort) => cohort.name).join(', '),
         cohortColors: cohorts.map((cohort) => cohort.colorRgb),
       };

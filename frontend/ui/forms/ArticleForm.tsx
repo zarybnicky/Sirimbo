@@ -127,7 +127,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
       <PageHeader
         title={title}
         breadcrumbLabel={id ? 'Upravit článek' : undefined}
-        breadcrumbs={[{ label: 'Aktuality', href: '/aktuality' }]}
+        breadcrumbs={[{ title: 'Aktuality', href: '/aktuality' }]}
         actions={actions}
       />
 

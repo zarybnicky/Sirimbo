@@ -10,7 +10,7 @@ import {
 import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
 import { type JSX, useMemo } from 'react';
-import Link from 'next/link';
+import { EntityLink } from '../EntityLink';
 
 type CohortTask =
   | { type: 'create'; name: string; description: string; externalId: string }
@@ -97,9 +97,7 @@ function compare(
           <li className="mt-0">
             {cohort ? <>
               ✅{' '}
-              <Link href={`/treninkove-skupiny/${cohort.id}`}>
-                {cohort.name}
-              </Link>
+              <EntityLink type="cohort" entity={cohort} />
               {needsUpdate
                 ? ' - změnilo se ID kurzu, bude aktualizováno'
                 : ''}
@@ -118,9 +116,8 @@ function compare(
         ❌
         <ul className="my-0">
           <li className="mt-0">
-            <Link href={`/treninkove-skupiny/${cohort.id}`}>
-              {cohort.name}
-            </Link>{' '}
+            <EntityLink type="cohort" entity={cohort} />
+            {' '}
             Tréninková skupina bude archivována
           </li>
         </ul>

@@ -207,7 +207,7 @@ export function CrawlerTargets({
     <>
       <PageHeader
         title={federation + ':' + kind}
-        breadcrumbs={[{ label: 'Crawler', href: '/admin/crawler' }]}
+        breadcrumbs={[{ title: 'Crawler', href: '/admin/crawler' }]}
       >
         {!pending && (
           <CrawlerActions
@@ -279,7 +279,7 @@ export function CrawlerJobs() {
     <>
       <PageHeader
         title="Crawler jobs"
-        breadcrumbs={[{ label: 'Crawler', href: '/admin/crawler' }]}
+        breadcrumbs={[{ title: 'Crawler', href: '/admin/crawler' }]}
       >
         <Refresh loading={result.fetching} reexecuteQuery={reexecuteQuery} />
       </PageHeader>

@@ -20,6 +20,7 @@ import { executeGraphql } from '@/lib/server/graphql';
 import { FederationPersonDocument } from '@/graphql/Federation';
 import { ResultHighlights } from '../../ResultHighlights';
 import { Sources } from '../../Sources';
+import { EntityLink } from '@/ui/EntityLink';
 
 type Props = {
   params: Promise<{ federation: string; id: string }>;
@@ -61,9 +62,9 @@ export default async function FederatedPersonPage({ params }: Props) {
         title={name}
         breadcrumbLabel="Osoba"
         breadcrumbs={[
-          { label: 'Soutěžní data', href: '/federated' },
+          { title: 'Soutěžní data', href: '/federated' },
           {
-            label: person.federationByFederation?.name ?? federation,
+            title: person.federationByFederation?.name ?? federation,
             href: `/federated/${federation}?view=people`,
           },
         ]}
@@ -122,9 +123,8 @@ export default async function FederatedPersonPage({ params }: Props) {
             person.peopleList.length > 0 &&
             person.peopleList.map((match) => (
               <div key={match.id}>
-                <Link className="text-accent-11 underline" href={`/clenove/${match.id}`}>
-                  {match.name}
-                </Link>{' '}
+                <EntityLink type="person" entity={match} className="text-accent-11" />
+                {' '}
                 (
                 {[
                   ...new Set(

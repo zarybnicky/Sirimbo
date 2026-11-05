@@ -36,15 +36,16 @@ const signals = [
 export function PersonActivityBadges({
   activity,
 }: {
-  activity: {
+  activity?: {
     webAt: string | null;
     cardEntryAt: string | null;
     trainingAt: string | null;
     competitionOn: string | null;
-  };
+  } | null;
 }) {
   const { enableStarletImport } = useTenantConfig();
   const [now] = useState(Date.now);
+  if (!activity) return null;
   return (
     <div className="flex flex-wrap gap-1">
       {signals.map(({ key, label, greenDays, amberDays }) => {

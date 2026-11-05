@@ -88,7 +88,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <PageHeader
         title={item.atJmeno}
         breadcrumbLabel="Článek"
-        breadcrumbs={[{ label: 'Články', href: '/clanky' }]}
+        breadcrumbs={[{ title: 'Články', href: '/clanky' }]}
       />
       <div className="text-neutral-11 mb-6 -mt-4">
         {item.publishedAt

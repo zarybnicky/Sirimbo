@@ -31,7 +31,7 @@ export const PersonView = React.memo(function PersonView({
   renderTitle,
 }: {
   id: string;
-  parent?: { label: string; href: string };
+  parent?: { title: string; href: string };
   renderTitle?: (title: string) => React.ReactNode;
 }) {
   const auth = useAuth();
@@ -82,9 +82,11 @@ export const PersonView = React.memo(function PersonView({
   });
 
   const subtitleParts = [
-    <span key="category" className="inline-flex flex-wrap items-center gap-2">
-      {categoryProgress}
-    </span>,
+    categoryProgress && (
+      <span key="category" className="inline-flex flex-wrap items-center gap-2">
+        {categoryProgress}
+      </span>
+    ),
     item.phone && (
       <a className="underline" href={`tel:${item.phone.replaceAll(' ', '')}`}>
         {item.phone}
@@ -97,9 +99,8 @@ export const PersonView = React.memo(function PersonView({
     ),
     ...item.federationPeople.nodes.map((person) => (
       <EntityLink
-        type="federation-person"
-        fallback={false}
         key={person.id}
+        type="federation-person"
         entity={person}
         className="text-accent-12"
       >
@@ -165,18 +166,13 @@ export const PersonView = React.memo(function PersonView({
         breadcrumbLabel="Člen"
         breadcrumbs={parent ? [parent] : undefined}
         subtitle={
-          subtitleParts.length > 0 ? (
+          <div className="flex flex-col gap-2">
             <DotSeparated>{subtitleParts}</DotSeparated>
-          ) : undefined
+            <PersonActivityBadges activity={item.lastActivity} />
+          </div>
         }
         actions={actions}
       />
-
-      {item.lastActivity && (
-        <div className="-mt-2 mb-4">
-          <PersonActivityBadges activity={item.lastActivity} />
-        </div>
-      )}
 
       {socialLinks.length > 0 && (
         <div className="-mt-2 mb-4 flex flex-wrap gap-2">

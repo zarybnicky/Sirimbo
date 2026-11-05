@@ -7,6 +7,7 @@ import type {
   FederationCompetitionQuery,
 } from '@/graphql/Federation';
 import { cn } from '@/lib/cn';
+import { EntityLink } from '@/ui/EntityLink';
 
 type Competition = NonNullable<FederationCompetitionQuery['competition']>;
 
@@ -144,14 +145,14 @@ function LocalMatches({
 }) {
   if (!participant) return null;
 
+  if (participant.couplesList.length === 0)
+    return <LocalPersonLinks people={participant.peopleList} />
+
   return (
     <>
-      <LocalPersonLinks people={participant.peopleList} />
       {participant.couplesList.map((couple) => (
         <div key={couple.id}>
-          <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-            {couple.name}
-          </Link>
+          <EntityLink type="couple" entity={couple} className="text-accent-11" />
         </div>
       ))}
     </>

@@ -6,7 +6,6 @@ import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { formatOpenDateRange } from '@/ui/format';
-import Link from 'next/link';
 import { useMutation, useQuery } from 'urql';
 import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
@@ -19,6 +18,7 @@ import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import { DefinitionList } from '@/ui/DefinitionList';
+import { DotSeparated } from '@/ui/DotSeparated';
 
 export function Couple({ id }: { id: string }) {
   const [editingImage, setEditingImage] = React.useState(false);
@@ -55,26 +55,28 @@ export function Couple({ id }: { id: string }) {
         }
         title={item.name}
         breadcrumbLabel="Pár"
-        breadcrumbs={[{ label: 'Páry', href: '/pary' }]}
+        breadcrumbs={[{ title: 'Páry', href: '/pary' }]}
         actions={actions}
         subtitle={
-          <span className="inline-flex flex-wrap items-center gap-2">
-            {formatAgeGroup(item.ageGroup)}
+          <div className="flex flex-col gap-2">
+            <DotSeparated>
+              {formatAgeGroup(item.ageGroup)}
+              {item.federationCompetitors.nodes.map((competitor) => (
+                <EntityLink
+                  key={competitor.id}
+                  type="federation-competitor"
+                  entity={competitor}
+                  className="text-accent-12"
+                  fallback={false}
+                >
+                  {competitor.federation === 'csts'
+                    ? 'ČSTS'
+                    : competitor.federation.toUpperCase()}
+                </EntityLink>
+              ))}
+            </DotSeparated>
             <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
-            {item.federationCompetitors.nodes.map((competitor) => (
-              <EntityLink
-                key={competitor.id}
-                type="federation-competitor"
-                entity={competitor}
-                className="text-accent-12"
-                fallback={false}
-              >
-                {competitor.federation === 'csts'
-                  ? 'ČSTS'
-                  : competitor.federation.toUpperCase()}
-              </EntityLink>
-            ))}
-          </span>
+          </div>
         }
       />
 

@@ -15,7 +15,6 @@ import { useAtomValue } from 'jotai';
 import { starletSettingsAtom, starletTokenAtom } from './state';
 import { isTruthy } from '@/lib/truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import Link from 'next/link';
 import { useAsyncCallback } from 'react-async-hook';
 import {
   CreateTenantMembershipDocument,
@@ -23,6 +22,7 @@ import {
 } from '@/graphql/Memberships';
 import { useTenantId } from '@/lib/auth';
 import { capitalize } from '@/ui/format';
+import { EntityLink } from '../EntityLink';
 
 type QueriedStudent = Pick<
   Student,
@@ -396,9 +396,9 @@ function compare(
           <ul className="my-0">
             <li className="mt-0">
               ✅{' '}
-              <Link href={`/clenove/${person.id}`}>
+              <EntityLink type="person" entity={person}>
                 {person.name} ({birthYear})
-              </Link>
+              </EntityLink>
               {' - změnily se detaily osoby, bude aktualizovaná'}
             </li>
           </ul>
@@ -433,9 +433,9 @@ function compare(
         ❌
         <ul className="my-0">
           <li className="mt-0">
-            <Link href={`/clenove/${person.id}`}>
+            <EntityLink type="person" entity={person}>
               {person.name} ({birthYear})
-            </Link>{' '}
+            </EntityLink>
             {unmanagedCohortIds.length > 0
               ? 'Externě spravovaná členství budou ukončena. Osoba zůstane členem v ostatních skupinách.'
               : 'Osoba bude archivována'}

@@ -5,8 +5,9 @@ import { CrawlerResponseDocument } from '@/graphql/Crawler';
 import { getRequestContext } from '@/lib/server/tenant';
 import { Layout } from '@/ui/Layout';
 import { PageHeader } from '@/ui/PageHeader';
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Crawler response',
   robots: { index: false, follow: false },
 };
@@ -47,13 +48,13 @@ export default async function ResponsePage({
         title={`Response ${response.id}`}
         breadcrumbLabel="Response"
         breadcrumbs={[
-          { label: 'Crawler', href: '/admin/crawler' },
+          { title: 'Crawler', href: '/admin/crawler' },
           {
-            label: `${frontier.federation}:${frontier.kind}`,
+            title: `${frontier.federation}:${frontier.kind}`,
             href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
           },
           {
-            label: frontierTitle,
+            title: frontierTitle,
             href: `/admin/crawler/${frontier.federation}:${frontier.kind}:${encodeURIComponent(frontier.key)}`,
           },
         ]}

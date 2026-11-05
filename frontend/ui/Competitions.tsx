@@ -254,9 +254,7 @@ export function CompetitionEventContent({
               {people.map((person, index) => (
                 <React.Fragment key={person.id}>
                   {index > 0 && ', '}
-                  <EntityLink type="federation-person" entity={person}>
-                    {person.canonicalName}
-                  </EntityLink>
+                  <EntityLink type="federation-person" entity={person} />
                 </React.Fragment>
               ))}
             </div>
@@ -267,7 +265,7 @@ export function CompetitionEventContent({
           <button
             type="button"
             onClick={() => setExpanded(!expanded)}
-            className="text-sm text-accent-11 underline underline-offset-2 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
+            className="text-sm text-accent-11 underline hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"
           >
             Ostatní soutěžící
           </button>{' '}

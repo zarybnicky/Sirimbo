@@ -1,6 +1,5 @@
 import { DotSeparated } from '@/ui/DotSeparated';
 import { EventWithTrainerFragment } from '@/graphql/Event';
-import { cn } from '@/lib/cn';
 import {
   formatEventName,
   formatEventType,
@@ -44,12 +43,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
       <DotSeparated className="-mb-2 text-sm text-accent-11">
         {formatEventType(event.type)}
         {event.parent && (
-          <Link
-            href={`/termin/${event.parent.id}`}
-            className="text-xs hover:text-accent-11 underline"
-          >
-            {event.parent.name}
-          </Link>
+          <EntityLink type="event" entity={event.parent} className="text-xs" />
         )}
         {seriesInfo?.id && seriesInfo.length !== null && seriesInfo.length > 1 && (
           <Link
@@ -61,15 +55,9 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
         )}
       </DotSeparated>
 
-      <Link
-        href={`/termin/${event.id}`}
-        className={cn(
-          'block text-xl',
-          event.isCancelled ? 'line-through' : 'underline decoration-accent-12/50',
-        )}
-      >
+      <EntityLink type="event" entity={event} className="block text-xl">
         {formatEventName(event)}
-      </Link>
+      </EntityLink>
 
       <div className="flex items-center gap-2">
         <Clock className="size-4 text-accent-11 shrink-0" />

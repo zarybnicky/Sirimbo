@@ -12,7 +12,7 @@ type PageHeaderProps<Id extends string = string> = {
   actions?: ResolvedAction<Id>[];
   primary?: Id | readonly Id[];
   groups?: Record<'add', Id[]>;
-  breadcrumbs?: { label: string; href: LinkProps['href'] }[];
+  breadcrumbs?: { title: string; href: LinkProps['href'] }[];
   title: React.ReactNode;
   breadcrumbLabel?: string;
   subtitle?: React.ReactNode;
@@ -44,11 +44,11 @@ export function PageHeader<Id extends string = string>({
           <nav className="min-w-0 flex-1 text-sm text-neutral-11">
             <Link
               href={parent.href}
-              className="flex items-center gap-1.5 lg:hidden wrap-anywhere underline decoration-current/50 underline-offset-2 hover:decoration-current hover:text-neutral-12"
+              className="flex items-center gap-1.5 lg:hidden wrap-anywhere underline decoration-current/50 hover:decoration-current hover:text-neutral-12"
             >
               <ArrowLeft aria-hidden="true" className="size-3.5 shrink-0" />
-              <span className="truncate" title={parent.label}>
-                {parent.label}
+              <span className="truncate" title={parent.title}>
+                {parent.title}
               </span>
             </Link>
 
@@ -66,10 +66,10 @@ export function PageHeader<Id extends string = string>({
                   )}
                   <Link
                     href={crumb.href}
-                    className="truncate text-neutral-11 underline decoration-current/50 underline-offset-2 hover:decoration-current hover:text-neutral-12"
-                    title={crumb.label}
+                    className="truncate text-neutral-11 underline decoration-current/50 hover:decoration-current hover:text-neutral-12"
+                    title={crumb.title}
                   >
-                    {crumb.label}
+                    {crumb.title}
                   </Link>
                 </li>
               ))}

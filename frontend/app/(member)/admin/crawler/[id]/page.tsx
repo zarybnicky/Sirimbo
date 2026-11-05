@@ -69,9 +69,9 @@ export default async function FrontierPage({
         title={title}
         breadcrumbLabel="Frontier"
         breadcrumbs={[
-          { label: 'Crawler', href: '/admin/crawler' },
+          { title: 'Crawler', href: '/admin/crawler' },
           {
-            label: `${frontier.federation}:${frontier.kind}`,
+            title: `${frontier.federation}:${frontier.kind}`,
             href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
           },
         ]}

@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserProxyDocument } from '@/graphql/Memberships';
 import { UserListDocument } from '@/graphql/CurrentUser';
 import { PersonMembershipsDocument } from '@/graphql/Person';
-import { isTruthy } from '@/lib/truthyFilter';
 import { DialogTitle } from '@/ui/dialog';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError, useFormResult } from '@/ui/form';

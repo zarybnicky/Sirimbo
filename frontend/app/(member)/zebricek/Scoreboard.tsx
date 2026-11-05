@@ -1,8 +1,6 @@
 'use client';
 
 import { DefinitionList } from '@/ui/DefinitionList';
-import React from 'react';
-import Link from 'next/link';
 import { useQuery } from 'urql';
 import { PageHeader } from '@/ui/PageHeader';
 import {
@@ -24,12 +22,15 @@ import {
   parseAsStringEnum,
   useQueryStates,
 } from 'nuqs';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function Scoreboard() {
   const [filters, setFilters] = useQueryStates(
     {
       cohortId: parseAsString.withDefault(''),
-      unit: parseAsStringEnum<PeriodUnit>(periodOptions.map((x) => x.value)).withDefault('schoolyear'),
+      unit: parseAsStringEnum<PeriodUnit>(periodOptions.map((x) => x.value)).withDefault(
+        'schoolyear',
+      ),
       date: parseAsIsoDateTime,
     },
     { shallow: true, scroll: false },
@@ -147,12 +148,11 @@ export function Scoreboard() {
                   </td>
                   <td>
                     {entry.person ? (
-                      <Link
-                        href={`/clenove/${entry.person.id}`}
-                        className="font-medium text-inherit underline"
-                      >
-                        {entry.person.name}
-                      </Link>
+                      <EntityLink
+                        type="person"
+                        entity={entry.person}
+                        className="font-medium text-inherit"
+                      />
                     ) : (
                       '?'
                     )}

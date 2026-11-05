@@ -33,7 +33,7 @@ export function Announcement({ id, edit = false }: { id: string; edit?: boolean 
       <PageHeader
         title={pageTitle}
         breadcrumbLabel={editing ? 'Upravit příspěvek' : 'Příspěvek'}
-        breadcrumbs={[{ label: 'Nástěnka', href: '/nastenka' }]}
+        breadcrumbs={[{ title: 'Nástěnka', href: '/nastenka' }]}
         primary="announcement.edit"
         actions={
           data

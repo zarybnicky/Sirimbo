@@ -6,13 +6,12 @@ import {
 } from '@/graphql/CohortGroup';
 import { useActionMap } from '@/lib/actions';
 import { cohortActions } from '@/lib/actions/cohort';
-import { slugify } from '@/lib/slugify';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
 import { cardCls } from '@/ui/style';
 import { PageHeader } from '@/ui/PageHeader';
-import Link from 'next/link';
 import { useQuery } from 'urql';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function TrainingProgramDetails({
   initialItem,
@@ -32,7 +31,7 @@ export function TrainingProgramDetails({
         title={item.name}
         breadcrumbLabel="Program"
         breadcrumbs={[
-          { label: 'Tréninkové programy', href: '/treninkove-programy' },
+          { title: 'Tréninkové programy', href: '/treninkove-programy' },
         ]}
       />
       <div className="container py-4">
@@ -44,11 +43,7 @@ export function TrainingProgramDetails({
           >
             <div className="mb-2 flex items-start justify-between gap-3">
               <h5 className="text-xl underline">
-                <Link
-                  href={`/treninkove-skupiny/${cohort.id}/${slugify(cohort.name)}`}
-                >
-                  {cohort.name}
-                </Link>
+                <EntityLink type="cohort" entity={cohort} />
               </h5>
               <ActionGroup actions={cohortActionMap.get(cohort.id)!} />
             </div>

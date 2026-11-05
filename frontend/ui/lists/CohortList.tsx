@@ -1,3 +1,4 @@
+import { getEntityLink } from '@/ui/EntityLink';
 import { ListItem } from '@/ui/ListItem';
 import { Users } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -10,7 +11,6 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 import { CohortListDocument } from '@/graphql/Cohorts';
-import { slugify } from '@/lib/slugify';
 import { formatCount } from '@/ui/format';
 
 export function CohortList() {
@@ -30,7 +30,7 @@ export function CohortList() {
       cohorts?.cohortsList?.map((x) => ({
         id: x.id,
         image: x.image,
-        title: x.name,
+        ...getEntityLink('cohort', x),
         subtitle: [
           x.location,
           formatCount(x.cohortMembershipsList?.length ?? 0, {
@@ -44,7 +44,6 @@ export function CohortList() {
           .filter(Boolean)
           .join(', '),
         colorRgb: x.colorRgb,
-        href: `/treninkove-skupiny/${x.id}/${slugify(x.name)}`,
       })) || [],
     [cohorts?.cohortsList],
   );

@@ -26,11 +26,11 @@ import { formatCount, numericFullFormatter } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { Clock3, CreditCard, KeyRound } from 'lucide-react';
-import Link from 'next/link';
 import { parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs';
 import * as React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
+import { EntityLink } from './EntityLink';
 
 type ActivityStatus = 'never' | '<30' | '<90' | '>90';
 type AccessStatus = 'none' | ActivityStatus;
@@ -402,9 +402,7 @@ function AccessWarning({
           {people.map((person, index) => (
             <React.Fragment key={person.id}>
               {index > 0 && ', '}
-              <Link className="text-neutral-12 underline" href={`/clenove/${person.id}`}>
-                {person.name}
-              </Link>
+              <EntityLink type="person" entity={person} />
               {person.email && <> ({person.email})</>}
             </React.Fragment>
           ))}
@@ -444,12 +442,11 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
   return (
     <tr className="border-b border-neutral-5 hover:bg-neutral-2 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 max-sm:py-2">
       <th scope="row" className="max-sm:min-w-0">
-        <Link
-          className="font-semibold underline max-sm:block max-sm:truncate"
-          href={`/clenove/${person.id}`}
-        >
-          {person.name}
-        </Link>
+        <EntityLink
+          type="person"
+          entity={person}
+          className="font-medium max-sm:block max-sm:truncate"
+        />
       </th>
       <td className="text-xs text-neutral-11 max-sm:col-start-1 max-sm:row-start-2 max-sm:min-w-0">
         <div className="flex min-w-0 items-center gap-1.5" title={`${accountCount} účtů`}>

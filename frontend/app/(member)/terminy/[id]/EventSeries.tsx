@@ -18,6 +18,7 @@ import {
   shortTimeFormatter,
 } from '@/ui/format';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
+import { EntityLink } from '@/ui/EntityLink';
 import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -111,7 +112,7 @@ export function EventSeries({
       <PageHeader
         title={series.name || 'Série'}
         breadcrumbLabel={`Série ${series.name}`}
-        breadcrumbs={[{ label: 'Události', href: '/akce' }]}
+        breadcrumbs={[{ title: 'Události', href: '/akce' }]}
         actions={actions}
       />
       <dl className="mb-4 text-sm tabular">
@@ -178,18 +179,20 @@ function EventRow({
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4">
       <ActionGroup className="col-start-1 row-start-1" variant="row" actions={actions} />
-      <Link
-        href={`/termin/${event.id}?tab=registrations`}
+      <EntityLink
+        type="event"
+        entity={event}
+        tab="registrations"
         className={cn(
           'col-start-2 row-start-1 text-right font-medium leading-5 tabular-nums text-neutral-12 underline',
-          event.isCancelled && 'line-through text-neutral-10',
+          event.isCancelled && 'text-neutral-10',
         )}
       >
         {numericDateWithYearFormatter.formatRange(
           new Date(event.since),
           new Date(event.until),
         )}
-      </Link>
+      </EntityLink>
       <DotSeparated
         className={cn(
           'col-start-3 row-start-1 min-w-0 text-neutral-11',

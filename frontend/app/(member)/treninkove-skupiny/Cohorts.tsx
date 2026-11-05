@@ -6,17 +6,16 @@ import { CohortListDocument } from '@/graphql/Cohorts';
 import { cohortActions } from '@/lib/actions/cohort';
 import { useActionMap } from '@/lib/actions';
 import { cn } from '@/lib/cn';
-import { slugify } from '@/lib/slugify';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/PageHeader';
 import { exportCohort } from '@/ui/reports/export-cohort';
 import { cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
-import Link from 'next/link';
 import { useClient, useQuery } from 'urql';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function Cohorts() {
   const auth = useAuth();
@@ -66,9 +65,7 @@ export function Cohorts() {
               >
                 <div className="mb-2 flex items-start justify-between gap-3">
                   <h5 className="text-xl underline">
-                    <Link href={`/treninkove-skupiny/${item.id}/${slugify(item.name)}`}>
-                      {item.name}
-                    </Link>
+                    <EntityLink type="cohort" entity={item} />
                   </h5>
                   <ActionGroup actions={cohortActionMap.get(item.id)!} />
                 </div>

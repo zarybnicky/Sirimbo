@@ -13,6 +13,7 @@ import { formatAgeGroup, formatCompetitorType } from '@/ui/csts';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationCompetitorDocument } from '@/graphql/Federation';
+import { EntityLink } from '@/ui/EntityLink';
 
 type Props = {
   params: Promise<{ federation: string; id: string }>;
@@ -52,9 +53,9 @@ export default async function CompetitorPage({ params }: Props) {
         title={competitor.name || competitor.id}
         breadcrumbLabel="Soutěžící"
         breadcrumbs={[
-          { label: 'Soutěžní data', href: '/federated' },
+          { title: 'Soutěžní data', href: '/federated' },
           {
-            label: competitor.federationByFederation?.name ?? federation,
+            title: competitor.federationByFederation?.name ?? federation,
             href: `/federated/${federation}?view=competitors`,
           },
         ]}
@@ -90,9 +91,8 @@ export default async function CompetitorPage({ params }: Props) {
             competitor.couplesList.length > 0 &&
             competitor.couplesList.map((couple) => (
               <div key={couple.id}>
-                <Link className="text-accent-11 underline" href={`/pary/${couple.id}`}>
-                  {couple.name}
-                </Link>{' '}
+                <EntityLink type="couple" entity={couple} className="text-accent-11" />
+                {' '}
                 ({formatOpenDateRange(couple)})
               </div>
             )),

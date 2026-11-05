@@ -13,5 +13,5 @@ export default async function MemberPage({
 }) {
   const { id } = await params;
 
-  return <PersonView id={id} parent={{ label: 'Členové', href: '/clenove' }} />;
+  return <PersonView id={id} parent={{ title: 'Členové', href: '/clenove' }} />;
 }

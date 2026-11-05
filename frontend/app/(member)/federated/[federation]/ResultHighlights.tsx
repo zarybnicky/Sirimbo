@@ -72,7 +72,7 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
     else if (finalIndex != null && reachedIndex != null && finalIndex >= reachedIndex)
       depth = finalIndex - reachedIndex;
     const label =
-      ['finalista', 'semifinalista', 'čtvrtfinalista', 'osmifinalista'][depth] ??
+      ['finalista', 'semifinalista', 'čtvrtfinalista'][depth] ??
       `1/${2 ** depth} finále`;
     return { ...result, placement, label, order: 4 + depth };
   });
@@ -130,7 +130,7 @@ function HighlightList({ results }: { results: readonly Entry[] }) {
                     {event ? (
                       <Link
                         href={`/federated/${competition.federation}/${event.externalId}/${competition.externalId}`}
-                        className="text-accent-11 underline underline-offset-2"
+                        className="text-accent-11 underline"
                         prefetch={false}
                       >
                         {text}

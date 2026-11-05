@@ -3,8 +3,8 @@
 import { PaymentDocument } from '@/graphql/Payment';
 import { useActions } from '@/lib/actions';
 import { paymentActions } from '@/lib/actions/payment';
-import { slugify } from '@/lib/slugify';
 import { DefinitionList } from '@/ui/DefinitionList';
+import { EntityLink } from '@/ui/EntityLink';
 import {
   formatEventName,
   moneyFormatter,
@@ -13,7 +13,6 @@ import {
 } from '@/ui/format';
 import { PageHeader } from '@/ui/PageHeader';
 import { Table } from '@/ui/Table';
-import Link from 'next/link';
 import { useQuery } from 'urql';
 
 export function Payment({ id }: { id: string }) {
@@ -31,7 +30,7 @@ export function Payment({ id }: { id: string }) {
     <>
       <PageHeader
         title={`Platba ${id}`}
-        breadcrumbs={[{ label: 'Platby', href: '/platby' }]}
+        breadcrumbs={[{ title: 'Platby', href: '/platby' }]}
         actions={actions}
       />
 
@@ -47,23 +46,17 @@ export function Payment({ id }: { id: string }) {
               payment.paidAt && numericFullFormatter.format(new Date(payment.paidAt)),
             'Variabilní symbol': payment.variableSymbol,
             'Specifický symbol': payment.specificSymbol,
-            'Členské příspěvky': cohort && (
-              <Link
-                href={`/treninkove-skupiny/${cohort.id}/${slugify(cohort.name)}`}
-                className="text-accent-11 underline"
-              >
-                {cohort.name}
-              </Link>
-            ),
+            'Členské příspěvky': cohort && <EntityLink type="cohort" entity={cohort} />,
             Událost: payment.event && (
-              <Link
-                href={`/termin/${payment.event.id}`}
+              <EntityLink
+                type="event"
+                entity={payment.event}
                 className="text-accent-11 underline"
               >
                 {numericFullFormatter.format(new Date(payment.event.since))}
                 {' · '}
                 {formatEventName(payment.event, 'neutral')}
-              </Link>
+              </EntityLink>
             ),
           }}
         />
@@ -81,16 +74,7 @@ export function Payment({ id }: { id: string }) {
         {payment?.paymentDebtorsList.map((debtor) => (
           <tr key={debtor.id} className="border-t border-neutral-4 align-top">
             <th scope="row">
-              {debtor.person ? (
-                <Link
-                  href={`/clenove/${debtor.person.id}`}
-                  className="text-accent-11 underline"
-                >
-                  {debtor.person.name}
-                </Link>
-              ) : (
-                '—'
-              )}
+              {debtor.person ? <EntityLink type="person" entity={debtor.person} /> : '?'}
             </th>
             <td className="whitespace-nowrap text-right">
               {moneyFormatter.format(debtor.price) || '—'}
@@ -132,13 +116,8 @@ export function Payment({ id }: { id: string }) {
                 </>
               )}
               <th scope="row" className="pl-2!">
-                {account?.personId ? (
-                  <Link
-                    href={`/clenove/${account.personId}`}
-                    className="text-accent-11 underline"
-                  >
-                    {account.person?.name ?? '—'}
-                  </Link>
+                {account?.personId && account.person ? (
+                  <EntityLink type="person" entity={account.person} />
                 ) : account ? (
                   'Klub'
                 ) : (

@@ -8,7 +8,7 @@ import {
   monthFormatter,
 } from '@/ui/format';
 import { Table } from '@/ui/Table';
-import Link from 'next/link';
+import { EntityLink } from '@/ui/EntityLink';
 import { parseAsString, useQueryStates } from 'nuqs';
 import React from 'react';
 import { useQuery } from 'urql';
@@ -236,7 +236,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
                         {dateTimeFormatter.format(new Date(row.event.since))}
                       </td>
                       <td>
-                        <Link href={`/termin/${row.event.id}`}>{row.title}</Link>
+                        <EntityLink type="event" entity={row.event}>{row.title}</EntityLink>
                       </td>
                       <td>{row.location}</td>
                       {reportTypes[rowsKey] === 'GROUP' && (

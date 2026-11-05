@@ -22,8 +22,8 @@ import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { ActionRow } from '@/ui/ActionRow';
 import { ActionGroup } from '@/ui/ActionGroup';
-import { slugify } from '@/lib/slugify';
 import { accessCredentialActions } from '@/lib/actions/accessCredential';
+import { EntityLink } from './EntityLink';
 
 export const PersonMembershipView = memo(function PersonMembershipView({
   item,
@@ -69,12 +69,12 @@ export const PersonMembershipView = memo(function PersonMembershipView({
   return (
     <div key="info" className="mb-2">
       {(item.couplesList.length > 0 ||
-        actions.some((action) => action.id === 'person.createCouple')) && (
+        actions.some((x) => x.id === 'person.createCouple')) && (
         <div className="flex justify-between items-baseline flex-wrap gap-4">
           <h3 className="text-lg font-semibold mt-4 mb-2">Páry</h3>
 
           <ActionGroup
-            actions={actions.filter((action) => action.id === 'person.createCouple')}
+            actions={actions.filter((x) => x.id === 'person.createCouple')}
             primary="person.createCouple"
             iconOnly
           />
@@ -88,12 +88,12 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         ))}
 
       {(item.cohortMembershipsList.some(keyIsNonNull('cohort')) ||
-        actions.some((action) => action.id === 'person.addToCohort')) && (
+        actions.some((x) => x.id === 'person.addToCohort')) && (
         <div className="flex justify-between items-baseline flex-wrap gap-4">
           <h3 className="text-lg font-semibold mt-4 mb-2">Tréninkové skupiny</h3>
 
           <ActionGroup
-            actions={actions.filter((action) => action.id === 'person.addToCohort')}
+            actions={actions.filter((x) => x.id === 'person.addToCohort')}
             primary="person.addToCohort"
             iconOnly
           />
@@ -105,12 +105,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         .map((item) => (
           <ActionRow key={item.id} actions={cohortMembershipActionMap.get(item.id)!}>
             <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-              <Link
-                className="underline font-bold"
-                href={`/treninkove-skupiny/${item.cohort.id}/${slugify(item.cohort.name)}`}
-              >
-                {item.cohort.name}
-              </Link>
+              <EntityLink type="cohort" entity={item.cohort} className="font-bold" />
               <span>{formatOpenDateRange(item)}</span>
             </div>
           </ActionRow>
@@ -119,18 +114,14 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {(item.tenantMembershipsList.some(visibleMembership) ||
         item.tenantAdministratorsList.some(visibleMembership) ||
         item.tenantTrainersList.some(visibleMembership) ||
-        actions.some((action) =>
-          ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
-            action.id,
-          ),
+        actions.some((x) =>
+          ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(x.id),
         )) && (
         <div className="flex justify-between items-baseline flex-wrap gap-4">
           <h3 className="text-lg font-semibold mt-4 mb-2">Členství</h3>
           <ActionGroup
-            actions={actions.filter((action) =>
-              ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(
-                action.id,
-              ),
+            actions={actions.filter((x) =>
+              ['person.addMember', 'person.addTrainer', 'person.addAdmin'].includes(x.id),
             )}
           />
         </div>
@@ -139,9 +130,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantAdministratorsList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <span className="font-bold">
-              {`Správce ${showClubs && item.tenantName}`}
-            </span>
+            <span className="font-bold">{`Správce ${showClubs ? item.tenantName : ''}`}</span>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -150,9 +139,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantTrainersList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <span className="font-bold">
-              {`Trenér ${showClubs && item.tenantName}`}
-            </span>
+            <span className="font-bold">{`Trenér ${showClubs ? item.tenantName : ''}`}</span>
             {auth.isAdmin && (
               <>
                 <div>
@@ -176,9 +163,7 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantMembershipsList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <span className="font-bold">
-              {`Člen ${showClubs && item.tenantName}`}
-            </span>
+            <span className="font-bold">{`Člen ${showClubs ? item.tenantName : ''}`}</span>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -186,14 +171,12 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {(item.userProxiesList?.some(keyIsNonNull('user')) ||
         !!item.personInvitationsList?.length ||
-        actions.some((action) =>
-          ['person.invite', 'person.linkUser'].includes(action.id),
-        )) && (
+        actions.some((x) => ['person.invite', 'person.linkUser'].includes(x.id))) && (
         <div className="flex justify-between items-baseline flex-wrap gap-4">
           <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
           <ActionGroup
-            actions={actions.filter((action) =>
-              ['person.invite', 'person.linkUser'].includes(action.id),
+            actions={actions.filter((x) =>
+              ['person.invite', 'person.linkUser'].includes(x.id),
             )}
             groups={{ add: ['person.invite', 'person.linkUser'] }}
           />
@@ -227,13 +210,11 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {enableStarletImport && (
         <>
           {(item.accessCredentialsList.length > 0 ||
-            actions.some((action) => action.id === 'person.addAccessCredential')) && (
+            actions.some((x) => x.id === 'person.addAccessCredential')) && (
             <div className="flex justify-between items-baseline flex-wrap gap-4">
               <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové karty</h3>
               <ActionGroup
-                actions={actions.filter(
-                  (action) => action.id === 'person.addAccessCredential',
-                )}
+                actions={actions.filter((x) => x.id === 'person.addAccessCredential')}
                 primary="person.addAccessCredential"
                 iconOnly
               />
@@ -290,9 +271,7 @@ function CoupleRow({ item }: { item: CoupleFragment }) {
     <div>
       <ActionRow actions={actions}>
         <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-          <Link className="underline font-bold" href={`/pary/${item.id}`}>
-            {item.name}
-          </Link>
+          <EntityLink type="couple" entity={item} className="font-bold" />
           <span>{formatOpenDateRange(item)}</span>
         </div>
       </ActionRow>

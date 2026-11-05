@@ -10,9 +10,10 @@ import { ActionGroup } from '@/ui/ActionGroup';
 import { ActionRow } from '@/ui/ActionRow';
 import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
 import { PageHeader } from '@/ui/PageHeader';
-import Link from 'next/link';
 import React from 'react';
 import { useQuery } from 'urql';
+import { EntityLink } from '@/ui/EntityLink';
+import { keyIsNonNull } from '@/lib/truthyFilter';
 
 export function User({ id }: { id: string }) {
   const [{ data, fetching, error }] = useQuery({
@@ -36,7 +37,7 @@ export function User({ id }: { id: string }) {
       <PageHeader
         title={pageTitle}
         breadcrumbLabel="Uživatel"
-        breadcrumbs={[{ label: 'Členové', href: '/clenove' }]}
+        breadcrumbs={[{ title: 'Členové', href: '/clenove' }]}
       />
 
       {fetching && <p>Načítám...</p>}
@@ -71,7 +72,7 @@ export function User({ id }: { id: string }) {
               <h2 className="text-lg font-medium">Připojené osoby</h2>
               <ActionGroup actions={actions} />
             </div>
-            {user.userProxiesList.map((item) => (
+            {user.userProxiesList.filter(keyIsNonNull('person')).map((item) => (
               <ActionRow
                 key={item.id}
                 actions={[
@@ -80,12 +81,7 @@ export function User({ id }: { id: string }) {
                 ]}
               >
                 <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-                  <Link
-                    className="underline font-bold"
-                    href={`/clenove/${item.personId}`}
-                  >
-                    {item.person?.name}
-                  </Link>
+                  <EntityLink type="person" entity={item.person} className="font-bold" />
                   <span>{formatOpenDateRange(item)}</span>
                 </div>
               </ActionRow>
