@@ -167,8 +167,6 @@ function EventRow({
   common: Detail[];
 }>) {
   const actions = useActions(eventActions, event);
-  const start = new Date(event.since);
-  const end = new Date(event.until);
   const name = event.name?.trim();
   const displayName = name === seriesName?.trim() ? null : name;
   const inlineDetails = details.flatMap((detail, i) => {
@@ -179,7 +177,6 @@ function EventRow({
       ? [{ name: common[i]!.name, key: `missing:${i}`, label: missing }]
       : [];
   });
-  const { stats } = event;
 
   return (
     <div className="col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 px-3 py-2 text-sm lg:gap-x-4">
@@ -191,36 +188,37 @@ function EventRow({
           event.isCancelled && 'line-through text-neutral-10',
         )}
       >
-        {numericDateWithYearFormatter.formatRange(start, end)}
+        {numericDateWithYearFormatter.formatRange(
+          new Date(event.since),
+          new Date(event.until),
+        )}
       </Link>
-      {(displayName || inlineDetails.length > 0) && (
-        <DotSeparated
-          className={cn(
-            'col-start-3 row-start-1 min-w-0 text-neutral-11',
-            event.isCancelled && 'line-through text-neutral-10',
-          )}
-        >
-          {displayName && (
-            <span className="font-medium text-neutral-12">{displayName}</span>
-          )}
-          {inlineDetails.map((detail) => (
-            <span key={detail.key}>
-              {detail.href ? (
-                <Link className="underline" href={detail.href}>
-                  {detail.label}
-                </Link>
-              ) : (
-                detail.label
-              )}
-            </span>
-          ))}
-        </DotSeparated>
-      )}
+      <DotSeparated
+        className={cn(
+          'col-start-3 row-start-1 min-w-0 text-neutral-11',
+          event.isCancelled && 'line-through text-neutral-10',
+        )}
+      >
+        {displayName && (
+          <span className="font-medium text-neutral-12">{displayName}</span>
+        )}
+        {inlineDetails.map((detail) => (
+          <span key={detail.key}>
+            {detail.href ? (
+              <Link className="underline" href={detail.href}>
+                {detail.label}
+              </Link>
+            ) : (
+              detail.label
+            )}
+          </span>
+        ))}
+      </DotSeparated>
 
       {showAttendance &&
-      (!event.isCancelled || stats.attended > 0 || stats.notExcused > 0) ? (
+        (!event.isCancelled || event.stats.attended > 0 || event.stats.notExcused > 0) ? (
         <div className="col-start-4 row-start-1">
-          <AttendanceStatsLink eventId={event.id} stats={stats} />
+          <AttendanceStatsLink eventId={event.id} stats={event.stats} />
         </div>
       ) : null}
     </div>

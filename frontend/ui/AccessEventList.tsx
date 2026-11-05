@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import { numericFullFormatter } from '@/ui/format';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { PowerIcon } from 'lucide-react';
-import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { EntityLink } from './EntityLink';

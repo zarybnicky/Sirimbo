@@ -109,11 +109,9 @@ export function FederationIdFieldElement<T extends FieldValues>({
       >
         <span className="text-neutral-12">Je to {candidate.name}?</span>
         <DotSeparated className="text-xs text-neutral-11">
-          {[
-            candidate.birthYear,
-            formatAgeGroup(candidate.ageGroup),
-            `${federation === 'csts' ? 'IDT' : 'MIN'} ${candidate.id}`,
-          ]}
+          {candidate.birthYear}
+          {formatAgeGroup(candidate.ageGroup)}
+          {`${federation === 'csts' ? 'IDT' : 'MIN'} ${candidate.id}`}
         </DotSeparated>
       </button>
     );

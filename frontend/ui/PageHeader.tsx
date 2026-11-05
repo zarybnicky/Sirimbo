@@ -44,7 +44,7 @@ export function PageHeader<Id extends string = string>({
           <nav className="min-w-0 flex-1 text-sm text-neutral-11">
             <Link
               href={parent.href}
-              className="flex items-center gap-1.5 lg:hidden wrap-anywhere hover:text-neutral-12"
+              className="flex items-center gap-1.5 lg:hidden wrap-anywhere underline decoration-current/50 underline-offset-2 hover:decoration-current hover:text-neutral-12"
             >
               <ArrowLeft aria-hidden="true" className="size-3.5 shrink-0" />
               <span className="truncate" title={parent.label}>
@@ -66,7 +66,7 @@ export function PageHeader<Id extends string = string>({
                   )}
                   <Link
                     href={crumb.href}
-                    className="truncate text-neutral-11 hover:text-neutral-12"
+                    className="truncate text-neutral-11 underline decoration-current/50 underline-offset-2 hover:decoration-current hover:text-neutral-12"
                     title={crumb.label}
                   >
                     {crumb.label}

@@ -3,11 +3,13 @@ import { listFormatter } from '@/ui/format';
 
 export function ListFormat({ children }: { children: ReactNode }) {
   const items = Children.toArray(children);
-  return listFormatter.formatToParts(items.map((_, index) => String(index))).map(
-    (part, index) => (
-      <Fragment key={index}>
-        {part.type === 'element' ? items[Number(part.value)] : part.value}
+  if (items.length === 0) return null;
+
+  return listFormatter
+    .formatToParts(items.map((_, i) => String(i)))
+    .map((x, i) => (
+      <Fragment key={i}>
+        {x.type === 'element' ? items[Number(x.value)] : x.value}
       </Fragment>
-    ),
-  );
+    ));
 }

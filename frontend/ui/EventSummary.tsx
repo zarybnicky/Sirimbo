@@ -45,7 +45,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   return (
     <div className="flex flex-col gap-2 text-sm">
       <DotSeparated className="-mb-2 text-sm text-accent-11">
-        <span>{formatEventType(event.type)}</span>
+        {formatEventType(event.type)}
         {event.parent && (
           <Link
             href={`/termin/${event.parent.id}`}

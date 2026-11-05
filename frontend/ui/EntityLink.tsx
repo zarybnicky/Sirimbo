@@ -106,7 +106,7 @@ export function EntityLink(props: EntityLinkProps) {
       {...linkProps}
       href={href}
       className={cn(
-        'underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
+        'underline decoration-current/50 underline-offset-2 hover:decoration-current hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
         className,
       )}
     >

@@ -139,9 +139,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantAdministratorsList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantAdministratorActionMap.get(item.id)!}>
           <div className="grow gap-2 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <DotSeparated className="font-bold">
-              Správce{showClubs && item.tenantName}
-            </DotSeparated>
+            <span className="font-bold">
+              {`Správce ${showClubs && item.tenantName}`}
+            </span>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -150,9 +150,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantTrainersList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantTrainerActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <DotSeparated className="font-bold">
-              Trenér{showClubs && item.tenantName}
-            </DotSeparated>
+            <span className="font-bold">
+              {`Trenér ${showClubs && item.tenantName}`}
+            </span>
             {auth.isAdmin && (
               <>
                 <div>
@@ -176,9 +176,9 @@ export const PersonMembershipView = memo(function PersonMembershipView({
       {item.tenantMembershipsList.filter(visibleMembership).map((item) => (
         <ActionRow key={item.id} actions={tenantMembershipActionMap.get(item.id)!}>
           <div className="grow gap-4 align-baseline flex flex-wrap justify-between text-sm py-1">
-            <DotSeparated className="font-bold">
-              Člen{showClubs && item.tenantName}
-            </DotSeparated>
+            <span className="font-bold">
+              {`Člen ${showClubs && item.tenantName}`}
+            </span>
             {auth.isAdmin && <span>{formatOpenDateRange(item)}</span>}
           </div>
         </ActionRow>
@@ -274,7 +274,6 @@ export const PersonMembershipView = memo(function PersonMembershipView({
                       {event.location.name}
                     </Link>
                   )}
-                  {event.device}
                 </DotSeparated>
               </div>
             ))}

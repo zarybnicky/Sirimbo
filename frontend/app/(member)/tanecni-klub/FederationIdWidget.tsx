@@ -129,10 +129,8 @@ function FederationIdBackfillWidget({ federation }: { federation: 'csts' | 'wdsf
               {person.name}
             </Link>
             <DotSeparated className="text-neutral-11">
-              {[
-                formatAgeGroup(person.ageGroup),
-                person.birthDate ? new Date(person.birthDate).getFullYear() : null,
-              ]}
+              {formatAgeGroup(person.ageGroup)}
+              {person.birthDate ? new Date(person.birthDate).getFullYear() : null}
             </DotSeparated>
           </div>
 
@@ -155,7 +153,7 @@ function FederationIdBackfillWidget({ federation }: { federation: 'csts' | 'wdsf
                       {candidate.name || 'bez jména'}
                     </EntityLink>
                   </div>
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
+                  <div className="flex flex-wrap gap-x-2 gap-y-1 text-xs text-neutral-11">
                     <span>
                       {idLabel} {candidate.id}
                     </span>

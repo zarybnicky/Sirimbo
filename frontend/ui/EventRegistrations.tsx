@@ -5,7 +5,7 @@ import { eventRegistrationActions } from '@/lib/actions/event';
 import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { Table } from '@/ui/Table';
-import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
+import { dateTimeFormatter } from '@/ui/format';
 import { EntityLink } from '@/ui/EntityLink';
 import { useAuth } from '@/lib/auth';
 import { compareText } from '@/lib/compare';
@@ -45,7 +45,9 @@ export const EventRegistrations = memo(function EventRegistrations({
     <Table
       className="prose prose-accent max-w-none"
       columns={[
-        numericDateFormatter.formatRange(new Date(event.since), new Date(event.until)),
+        <span key="attendee" className="sr-only">
+          Účastník
+        </span>,
         auth.isTrainer && (
           <div key="attendance" className="flex justify-center gap-2">
             <span className="rounded-full bg-green-3 px-3 py-2 tabular-nums text-sm font-medium text-green-11">
@@ -78,16 +80,14 @@ export const EventRegistrations = memo(function EventRegistrations({
                     Externí
                   </span>
                 )}
-                {canEditAttendance &&
-                  event.seriesId &&
-                  (event.seriesInfo?.length ?? 0) > 1 && (
-                    <div className="text-xs text-neutral-9">
-                      Poslední účast:{' '}
-                      {x.lastAttended
-                        ? dateTimeFormatter.format(new Date(x.lastAttended))
-                        : '-'}
-                    </div>
-                  )}
+                {canEditAttendance && (event.seriesInfo?.length ?? 0) > 1 && (
+                  <div className="text-xs text-neutral-9">
+                    Poslední účast:{' '}
+                    {x.lastAttended
+                      ? dateTimeFormatter.format(new Date(x.lastAttended))
+                      : '-'}
+                  </div>
+                )}
                 {auth.isTrainer && (
                   <div className="text-sm text-neutral-11">
                     {x.lessonRequestsList.map((request) => (

@@ -85,7 +85,7 @@ export function Cohort({
         breadcrumbs={[{ label: 'Tréninkové skupiny', href: '/treninkove-skupiny' }]}
         subtitle={
           <DotSeparated>
-            {cohort.location}
+            {cohort.location || undefined}
             {formatCount(members.length, { one: 'člen', few: 'členové', other: 'členů' })}
           </DotSeparated>
         }

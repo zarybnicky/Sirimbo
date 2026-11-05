@@ -343,14 +343,12 @@ function LessonRequests({
     <div className="flex min-h-full flex-col">
       <div className="border-b border-neutral-6 bg-neutral-1 py-2 pl-3 pr-10">
         <div className="font-semibold text-neutral-12">Požadavky na lekce</div>
-        {(requests.length > 0 || scheduledCount > 0) && (
-          <DotSeparated className="text-sm text-neutral-11">
-            {lessonCount > 0 && `${requests.length} požadavků`}
-            {lessonCount > 0
-              ? `${scheduledCount} / ${lessonCount} lekcí`
-              : `${scheduledCount} lekcí navíc`}
-          </DotSeparated>
-        )}
+        <DotSeparated className="text-sm text-neutral-11">
+          {lessonCount > 0 && `${requests.length} požadavků`}
+          {lessonCount > 0
+            ? `${scheduledCount} / ${lessonCount} lekcí`
+            : `${scheduledCount} lekcí navíc`}
+        </DotSeparated>
       </div>
 
       <FormError error={error} />

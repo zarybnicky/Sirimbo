@@ -26,10 +26,9 @@ import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PaymentTable } from '@/app/(member)/platby/PaymentTable';
 import { isTruthy } from '@/lib/truthyFilter';
 import { RichTextView } from '@/ui/RichTextView';
-import Link from 'next/link';
 import { ListFormat } from '@/ui/ListFormat';
 import { EntityLink } from '@/ui/EntityLink';
-import { DefinitionList } from '@/ui/DefinitionList';
+import { DotSeparated } from '@/ui/DotSeparated';
 
 export function EventPageClient({
   id,
@@ -60,11 +59,30 @@ export function EventPageClient({
   const [signup, setSignup] = useQueryState('signup');
 
   const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
-  const { seriesInfo } = event;
-  const numRegistrations = event.registrationInfo?.registrations ?? 0;
+  const { seriesInfo, registrationInfo } = event;
+  const numRegistrations = registrationInfo?.registrations ?? 0;
   const hasPayments = [event, ...event.childEventsList].some(
     (e) => e.paymentsList.length > 0,
   );
+
+  const subtitleParts = [
+    dateTimeFormatter.formatRange(new Date(event.since), new Date(event.until)),
+    (event.location?.name || event.locationText) && (
+      <EntityLink type="event-location" entity={event} />
+    ),
+  ].filter(Boolean);
+
+  const subtitlePartsSecondary = [
+    <div className="" key="trainers">
+      <ListFormat>
+        {trainers.map((x) => (
+          <EntityLink key={x.id} type="person" entity={x} />
+        ))}
+      </ListFormat>
+    </div>,
+    !!event.capacity &&
+      `Kapacita: zbývá ${registrationInfo?.remainingCapacity} míst z ${event.capacity}`,
+  ].filter(Boolean);
 
   return (
     <Layout hideTopMenuIfLoggedIn>
@@ -95,14 +113,36 @@ export function EventPageClient({
               : undefined
           }
           title={formatEventName(event)}
-          breadcrumbLabel="Termín"
+          breadcrumbLabel={
+            seriesInfo && (seriesInfo.length ?? 0) > 1
+              ? `${seriesInfo.position}. ${formatEventType(event.type).toLowerCase()} z ${seriesInfo.length}`
+              : formatEventType(event.type)
+         }
           breadcrumbs={[
-            { label: 'Akce', href: '/akce' },
+            { label: 'Události', href: '/akce' },
+            ...(event.parentId
+              ? [
+                  {
+                    label: event.parent?.name ?? 'Soustředění',
+                    href: `/termin/${event.parentId}`,
+                  },
+                ]
+              : []),
             ...(event.seriesId
-              ? [{ label: 'Termíny', href: `/terminy/${event.seriesId}` }]
+              ? [
+                  {
+                    label: `Série ${event.seriesInfo?.name}`,
+                    href: `/terminy/${event.seriesId}`,
+                  },
+                ]
               : []),
           ]}
-          subtitle={formatEventType(event.type)}
+          subtitle={
+            <div className="flex flex-col gap-2">
+              <DotSeparated>{subtitleParts}</DotSeparated>
+              <DotSeparated>{subtitlePartsSecondary}</DotSeparated>
+            </div>
+          }
           actions={actions}
           primary={primaryAction}
         />
@@ -113,68 +153,21 @@ export function EventPageClient({
         selected={tab === 'attendance' ? 'registrations' : tab}
         onSelect={setTab}
       >
+        {(event.summary || event.description) && (
+          <Tab id="info" title="Info">
+            <div className="flex flex-col gap-3">
+              <RichTextView value={event.summary} />
+              <RichTextView value={event.description} />
+            </div>
+          </Tab>
+        )}
+
         {event.type === 'CAMP' &&
           (auth.isLoggedIn || event.hasPublicDetails || hasShareToken) && (
             <Tab id="schedule" title="Rozpis">
               <CampSchedule id={event.id} since={event.since} until={event.until} />
             </Tab>
           )}
-
-        <Tab id="info" title="Info">
-          <div className="flex flex-col gap-3">
-            {seriesInfo?.id && (seriesInfo.length ?? 0) > 1 && (
-              <div>
-                <Link
-                  href={`/terminy/${seriesInfo.id}`}
-                  className="text-xs hover:text-accent-11 underline"
-                >
-                  {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
-                  {seriesInfo.name?.trim()}
-                </Link>
-              </div>
-            )}
-
-            {event.parent && (
-              <div>
-                <Link
-                  href={`/termin/${event.parent.id}`}
-                  className="text-xs hover:text-accent-11 underline"
-                >
-                  {event.parent.name}
-                </Link>
-              </div>
-            )}
-
-            <DefinitionList
-              className="not-prose tabular"
-              items={{
-                Termín: dateTimeFormatter.formatRange(
-                  new Date(event.since),
-                  new Date(event.until),
-                ),
-                'Místo konání': (event.location?.name || event.locationText) && (
-                  <EntityLink type="event-location" entity={event} />
-                ),
-                Trenéři: trainers.length > 0 && (
-                  <ListFormat>
-                    {trainers.map((x) => (
-                      <EntityLink key={x.id} type="person" entity={x} />
-                    ))}
-                  </ListFormat>
-                ),
-                Kapacita: !!event.capacity && (
-                  <>
-                    Zbývá {event.registrationInfo?.remainingCapacity} míst z{' '}
-                    {event.capacity}
-                  </>
-                ),
-              }}
-            />
-
-            <RichTextView value={event.summary} />
-            <RichTextView value={event.description} />
-          </div>
-        </Tab>
 
         {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
           <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
