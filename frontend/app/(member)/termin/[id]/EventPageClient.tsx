@@ -11,20 +11,25 @@ import {
 } from '@/graphql/Event';
 import { eventActions } from '@/lib/actions/event';
 import { useActions } from '@/lib/actions';
-import { BasicEventInfo } from '@/ui/BasicEventInfo';
 import { EventRegistrations } from '@/ui/EventRegistrations';
 import { Layout } from '@/ui/Layout';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
-import { formatEventName, formatEventType } from '@/ui/format';
+import { dateTimeFormatter, formatEventName, formatEventType } from '@/ui/format';
 import { useAuth } from '@/lib/auth';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useMutation, useQuery } from 'urql';
 import React from 'react';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
 import { PaymentTable } from '@/app/(member)/platby/PaymentTable';
+import { isTruthy } from '@/lib/truthyFilter';
+import { RichTextView } from '@/ui/RichTextView';
+import Link from 'next/link';
+import { ListFormat } from '@/ui/ListFormat';
+import { EntityLink } from '@/ui/EntityLink';
+import { DefinitionList } from '@/ui/DefinitionList';
 
 export function EventPageClient({
   id,
@@ -54,6 +59,8 @@ export function EventPageClient({
   );
   const [signup, setSignup] = useQueryState('signup');
 
+  const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
+  const { seriesInfo } = event;
   const numRegistrations = event.registrationInfo?.registrations ?? 0;
   const hasPayments = [event, ...event.childEventsList].some(
     (e) => e.paymentsList.length > 0,
@@ -87,7 +94,7 @@ export function EventPageClient({
               ? () => setEditingImage(true)
               : undefined
           }
-          title={formatEventName(event) || ''}
+          title={formatEventName(event)}
           breadcrumbLabel="Termín"
           breadcrumbs={[
             { label: 'Akce', href: '/akce' },
@@ -112,9 +119,63 @@ export function EventPageClient({
               <CampSchedule id={event.id} since={event.since} until={event.until} />
             </Tab>
           )}
+
         <Tab id="info" title="Info">
-          <BasicEventInfo event={event} />
+          <div className="flex flex-col gap-3">
+            {seriesInfo?.id && (seriesInfo.length ?? 0) > 1 && (
+              <div>
+                <Link
+                  href={`/terminy/${seriesInfo.id}`}
+                  className="text-xs hover:text-accent-11 underline"
+                >
+                  {seriesInfo.position}. z {seriesInfo.length} v sérii{' '}
+                  {seriesInfo.name?.trim()}
+                </Link>
+              </div>
+            )}
+
+            {event.parent && (
+              <div>
+                <Link
+                  href={`/termin/${event.parent.id}`}
+                  className="text-xs hover:text-accent-11 underline"
+                >
+                  {event.parent.name}
+                </Link>
+              </div>
+            )}
+
+            <DefinitionList
+              className="not-prose tabular"
+              items={{
+                Termín: dateTimeFormatter.formatRange(
+                  new Date(event.since),
+                  new Date(event.until),
+                ),
+                'Místo konání': (event.location?.name || event.locationText) && (
+                  <EntityLink type="event-location" entity={event} />
+                ),
+                Trenéři: trainers.length > 0 && (
+                  <ListFormat>
+                    {trainers.map((x) => (
+                      <EntityLink key={x.id} type="person" entity={x} />
+                    ))}
+                  </ListFormat>
+                ),
+                Kapacita: !!event.capacity && (
+                  <>
+                    Zbývá {event.registrationInfo?.remainingCapacity} míst z{' '}
+                    {event.capacity}
+                  </>
+                ),
+              }}
+            />
+
+            <RichTextView value={event.summary} />
+            <RichTextView value={event.description} />
+          </div>
         </Tab>
+
         {(auth.isTrainer || (auth.isLoggedIn && numRegistrations > 0)) && (
           <Tab id="registrations" title={`Přihlášky (${numRegistrations})`}>
             <div className="col-popout">
