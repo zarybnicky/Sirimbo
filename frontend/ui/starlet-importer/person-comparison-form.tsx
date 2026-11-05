@@ -168,8 +168,10 @@ export function PersonComparisonForm() {
 
   const onSubmit = useAsyncCallback(async () => {
     for (const task of tasks) {
+      const { cohortIds } = task;
+      let personId: string;
       if (task.type === 'create') {
-        const { student, cohortIds } = task;
+        const { student } = task;
         const res = await create({
           input: {
             p: {
@@ -185,17 +187,12 @@ export function PersonComparisonForm() {
           },
         });
         if (res.error) throw res.error;
-        if (res.data?.createPerson?.result?.id) {
-          const syncResult = await syncCohorts({
-            input: {
-              personId: res.data.createPerson.result.id,
-              cohortIds,
-            },
-          });
-          if (syncResult.error) throw syncResult.error;
-        }
+        const createdId = res.data?.createPerson?.result?.id;
+        if (!createdId) continue;
+        personId = createdId;
       } else if (task.type === 'update') {
-        const { student, person, cohortIds } = task;
+        const { student, person } = task;
+        personId = person.id;
         const updateResult = await update({
           input: {
             id: person.id,
@@ -209,43 +206,33 @@ export function PersonComparisonForm() {
           });
           if (membershipResult.error) throw membershipResult.error;
         }
-        const syncResult = await syncCohorts({
-          input: {
-            personId: person.id,
-            cohortIds,
-          },
-        });
-        if (syncResult.error) throw syncResult.error;
       } else {
-        const { person, cohortIds } = task;
-        const syncResult = await syncCohorts({
-          input: {
-            personId: person.id,
-            cohortIds,
-          },
-        });
-        if (syncResult.error) throw syncResult.error;
-        if (cohortIds.length === 0) {
-          const membershipsResult = await client
-            .query(PersonMembershipsDocument, { id: person.id })
-            .toPromise();
-          if (membershipsResult.error) throw membershipsResult.error;
-          const memberships = membershipsResult.data!;
-          const currentMembership = memberships.person?.tenantMembershipsList.find(
-            (x) => x.tenantId === tenantId && x.status === 'ACTIVE',
-          );
-          if (currentMembership) {
-            const membershipResult = await updateMembership({
-              input: {
-                id: currentMembership.id,
-                patch: {
-                  status: 'EXPIRED',
-                  until: new Date().toISOString(),
-                },
+        personId = task.person.id;
+      }
+
+      const syncResult = await syncCohorts({ input: { personId, cohortIds } });
+      if (syncResult.error) throw syncResult.error;
+
+      if (task.type === 'archive' && cohortIds.length === 0) {
+        const membershipsResult = await client
+          .query(PersonMembershipsDocument, { id: personId })
+          .toPromise();
+        if (membershipsResult.error) throw membershipsResult.error;
+        const memberships = membershipsResult.data!;
+        const currentMembership = memberships.person?.tenantMembershipsList.find(
+          (x) => x.tenantId === tenantId && x.status === 'ACTIVE',
+        );
+        if (currentMembership) {
+          const membershipResult = await updateMembership({
+            input: {
+              id: currentMembership.id,
+              patch: {
+                status: 'EXPIRED',
+                until: new Date().toISOString(),
               },
-            });
-            if (membershipResult.error) throw membershipResult.error;
-          }
+            },
+          });
+          if (membershipResult.error) throw membershipResult.error;
         }
       }
     }
