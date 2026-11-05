@@ -75,3 +75,5 @@ drop function if exists event_trainers;
 --!include functions/set_lesson_request.sql
 
 --!include functions/set_event_registration.sql
+
+--!include views/crawler_frontier_fetch_job.sql

@@ -251,7 +251,7 @@ export function CrawlerTargets({
   );
 }
 
-const jobStates = ['ready', 'delayed', 'locked', 'failed'];
+const jobStates = ['queued', 'locked', 'failed'];
 
 export function CrawlerJobs() {
   const [states, setStates] = useQueryState(

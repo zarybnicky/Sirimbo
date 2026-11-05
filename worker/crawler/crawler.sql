@@ -38,12 +38,12 @@ WITH frontier_status AS (
   SELECT
     federation,
     kind,
-    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued_fetch,
+    count(*) FILTER (WHERE state = 'queued')::int AS queued_fetch,
     count(*) FILTER (WHERE state = 'locked')::int AS locked_fetch
   FROM crawler.frontier_fetch_job
   WHERE (:federation::text IS NULL OR federation = :federation)
     AND (:kind::text IS NULL OR kind = :kind)
-    AND state IN ('ready', 'delayed', 'locked')
+    AND state IN ('queued', 'locked')
   GROUP BY federation, kind
 )
 SELECT
@@ -236,8 +236,7 @@ ORDER BY
   CASE j.state
     WHEN 'failed' THEN 0
     WHEN 'locked' THEN 1
-    WHEN 'ready' THEN 2
-    ELSE 3
+    ELSE 2
   END,
   j.job_updated_at DESC,
   j.run_at,
@@ -248,9 +247,9 @@ LIMIT :limit;
 WITH fetch_jobs AS (
   SELECT
     host,
-    count(*) FILTER (WHERE state IN ('ready', 'delayed'))::int AS queued,
+    count(*) FILTER (WHERE state = 'queued')::int AS queued,
     count(*) FILTER (WHERE state = 'locked')::int AS locked,
-    array_agg(run_at ORDER BY run_at) FILTER (WHERE state IN ('ready', 'delayed')) AS slots
+    array_agg(run_at ORDER BY run_at) FILTER (WHERE state = 'queued') AS slots
   FROM crawler.frontier_fetch_job
   WHERE host IS NOT NULL
   GROUP BY host
@@ -340,7 +339,7 @@ WITH allowed_loaders AS (
 ), active_fetches AS MATERIALIZED (
   SELECT frontier_id
   FROM crawler.frontier_fetch_job
-  WHERE state IN ('ready', 'delayed', 'locked')
+  WHERE state IN ('queued', 'locked')
 ), ranked AS (
   SELECT
     candidate.*,
