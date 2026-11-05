@@ -125,6 +125,12 @@ query PersonPayments($id: BigInt!, $withDetails: Boolean! = false) {
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
     ...PersonWithLinks
+    accountsList(first: 1) {
+      id
+    }
+    paymentDebtorsList(first: 1) {
+      id
+    }
     lastActivity {
       webAt
       cardEntryAt

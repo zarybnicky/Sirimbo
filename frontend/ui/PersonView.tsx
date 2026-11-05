@@ -210,9 +210,11 @@ export const PersonView = React.memo(function PersonView({
         </Tab>
         {isAdminOrCurrentPerson && (
           <>
-            <Tab id="payment" title="Platby">
-              <PersonPaymentsView id={id} />
-            </Tab>
+            {(item.accountsList.length > 0 || item.paymentDebtorsList.length > 0) && (
+              <Tab id="payment" title="Platby">
+                <PersonPaymentsView id={id} />
+              </Tab>
+            )}
             <Tab id="workReport" title="Výkaz práce" requireTrainer>
               <PersonWorkReportView id={id} />
             </Tab>
