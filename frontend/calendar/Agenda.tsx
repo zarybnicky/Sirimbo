@@ -91,17 +91,28 @@ function Agenda({ events }: ViewProps): React.ReactNode {
           </div>
 
           <div className="flex justify-start items-start flex-wrap gap-2 opacity-90">
-            {dateEntry.competitions.map(({ id, items, officials }) => (
-              <div
-                key={id}
-                className={cardCls({
-                  className:
-                    'min-w-[200px] w-full sm:w-72 rounded-lg border-green-7 bg-green-2 p-3',
-                })}
-              >
-                <CompetitionEventContent entries={items} officials={officials} />
+            {dateEntry.competitions.length > 0 && (
+              <div className="flex w-full flex-col gap-2 sm:w-72">
+                {dateEntry.competitions.map(
+                  ({ id, items, officials, myCompetitorIds }) => (
+                    <div
+                      key={id}
+                      className={cardCls({
+                        className:
+                          'min-w-[200px] w-full rounded-lg border-green-7 bg-green-2 p-3',
+                      })}
+                    >
+                      <CompetitionEventContent
+                        entries={items}
+                        officials={officials}
+                        collapsible
+                        myCompetitorIds={myCompetitorIds}
+                      />
+                    </div>
+                  ),
+                )}
               </div>
-            ))}
+            )}
             {dateEntry.groups.map((instance) => (
               <GroupLesson key={instance.id} instance={instance} />
             ))}

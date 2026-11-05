@@ -269,6 +269,15 @@ export function useCalendarData({
           : [];
       }),
     ];
+    const myCompetitorIds = [
+      ...new Set(
+        data?.myCompetitions?.nodes.flatMap((competition) =>
+          [...competition.entries, ...competition.results].map(
+            (entry) => entry.competitorId,
+          ),
+        ),
+      ),
+    ];
     const competitions: CalendarCompetitionEvent[] = [];
     const clubCompetitions: CalendarCompetitionEvent[] = [];
     for (const [groups, events] of [
@@ -284,6 +293,7 @@ export function useCalendarData({
           resourceKeys:
             effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
           items: entries,
+          myCompetitorIds,
           officials,
         });
       }

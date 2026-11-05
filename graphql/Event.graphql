@@ -513,6 +513,25 @@ query CalendarData(
       }
     }
   }
+  myCompetitions: competitions(
+    first: 300
+    condition: {
+      date: { since: $since, until: $until }
+      competitor: { onlyMine: true }
+    }
+  ) @include(if: $withCompetitions) @_required {
+    nodes {
+      id
+      entries: entriesList(condition: { competitor: { onlyMine: true } }) {
+        competitionId
+        competitorId
+      }
+      results: resultsList(condition: { competitor: { onlyMine: true } }) {
+        competitionId
+        competitorId
+      }
+    }
+  }
   clubCompetitions: competitions(
     first: 300
     condition: {

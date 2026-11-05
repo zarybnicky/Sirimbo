@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { useAuth } from '@/lib/auth';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
@@ -107,20 +108,36 @@ export function CompetitionEventContent({
   officials = [],
   cards = false,
   showHeader = true,
+  collapsible = false,
+  myCompetitorIds = [],
 }: {
   entries: readonly CompetitionEntry[];
   clubEntries?: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
   cards?: boolean;
   showHeader?: boolean;
+  collapsible?: boolean;
+  myCompetitorIds?: readonly string[];
 }) {
+  const auth = useAuth();
+  const [open, setOpen] = React.useState(false);
   const [override, setOverride] = React.useState<boolean | null>(null);
   const [expanded, setExpanded] = React.useState(false);
   const competition = entries[0]?.competition;
   const event = competition?.event ?? officials[0]?.event;
   const date = competition?.startDate ?? officials[0]?.date;
   if (!competition && !event) return null;
-  const visible = expanded ? [...entries, ...clubEntries] : entries;
+  const allEntries = expanded ? [...entries, ...clubEntries] : entries;
+  const visible =
+    collapsible && !open
+      ? allEntries.filter((entry) => myCompetitorIds.includes(entry.competitorId))
+      : allEntries;
+  const visibleOfficials =
+    collapsible && !open
+      ? officials.filter(({ person }) =>
+          person?.peopleList.some(({ id }) => auth.isMyPerson(id)),
+        )
+      : officials;
   const competitors = Map.groupBy(visible, (entry) => entry.competitorId);
   const competitions = Map.groupBy(visible, (entry) => entry.competitionId);
   const canToggle = competitors.size > 1 && competitions.size > 1;
@@ -138,46 +155,76 @@ export function CompetitionEventContent({
 
   return (
     <div className="flex flex-col gap-1">
-      {showHeader && (
-        <div
-          className={cn(
-            'text-sm font-semibold leading-tight',
-            cards ? 'text-neutral-12' : 'text-green-11',
-          )}
-        >
-          <CompetitionLink
-            federation={competition?.federation ?? officials[0]?.federation}
-            eventId={event?.externalId}
-            className={cards ? undefined : 'text-green-11 hover:text-green-12'}
+      <div
+        className={cn(
+          'relative flex flex-col gap-1',
+          showHeader &&
+            collapsible && [
+              '-mx-3 -mt-3 rounded-lg p-3 hover:bg-green-4',
+              visible.length === 0 &&
+                visibleOfficials.length === 0 &&
+                clubEntries.length === 0 &&
+                '-mb-3',
+            ],
+        )}
+      >
+        {showHeader && collapsible && (
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="absolute inset-0 flex cursor-pointer items-center justify-end rounded-lg p-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-8"
           >
-            {event?.name}
-          </CompetitionLink>
-        </div>
-      )}
-      {(showHeader || canToggle) && (
-        <div
-          className={cn(
-            'flex items-baseline justify-between gap-2 text-xs leading-tight',
-            cards ? 'text-neutral-11' : 'text-green-11',
-          )}
-        >
-          {showHeader && (
-            <span className="min-w-0 truncate">
-              {[event?.location || event?.city, cards && date && formatDateOnly(date)]
-                .filter(Boolean)
-                .join(', ')}
-            </span>
-          )}
-          {canToggle && (
-            <button
-              type="button"
-              className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
-              onClick={() => setOverride(!byCompetition)}
+            <ChevronDown className={cn('size-4', open && 'rotate-180')} aria-hidden />
+          </button>
+        )}
+        {showHeader && (
+          <div
+            className={cn(
+              'flex items-start justify-between gap-2 text-sm font-semibold leading-tight',
+              collapsible && 'relative pointer-events-none pr-6',
+              cards ? 'text-neutral-12' : 'text-green-11',
+            )}
+          >
+            <CompetitionLink
+              federation={competition?.federation ?? officials[0]?.federation}
+              eventId={event?.externalId}
+              className={cn(
+                collapsible && 'pointer-events-auto',
+                !cards && 'text-green-11 hover:text-green-12',
+              )}
             >
-              <ArrowLeftRight className="size-3" aria-hidden />
-              {byCompetition ? 'Soutěže' : 'Účastníci'}
-            </button>
-          )}
+              {event?.name}
+            </CompetitionLink>
+          </div>
+        )}
+        {showHeader && (
+          <div
+            className={cn(
+              'flex items-baseline justify-between gap-2 text-xs leading-tight',
+              collapsible && 'relative pointer-events-none pr-6',
+              cards ? 'text-neutral-11' : 'text-green-11',
+            )}
+          >
+            {showHeader && (
+              <span className="min-w-0 truncate">
+                {[event?.location || event?.city, cards && date && formatDateOnly(date)]
+                  .filter(Boolean)
+                  .join(', ')}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+      {canToggle && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
+            onClick={() => setOverride(!byCompetition)}
+          >
+            <ArrowLeftRight className="size-3" aria-hidden />
+            {byCompetition ? 'Soutěže' : 'Účastníci'}
+          </button>
         </div>
       )}
       {groups.map(([key, entries]) => (
@@ -186,13 +233,13 @@ export function CompetitionEventContent({
           className={
             cards
               ? cardCls({ className: 'rounded-lg border-neutral-6 p-2 pb-1' })
-              : 'border-t border-green-6 pt-2 first-of-type:border-t-0'
+              : 'border-t border-green-6 first-of-type:border-t-0'
           }
         >
           <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
         </article>
       ))}
-      {[...Map.groupBy(officials, (x) => x.role)]
+      {[...Map.groupBy(visibleOfficials, (x) => x.role)]
         .toSorted(([a], [b]) => a.localeCompare(b))
         .map(([role, items]) => {
           const people = items
