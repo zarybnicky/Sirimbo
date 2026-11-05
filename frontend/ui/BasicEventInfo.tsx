@@ -4,6 +4,7 @@ import { RichTextView } from '@/ui/RichTextView';
 import { dateTimeFormatter } from '@/ui/format';
 import Link from 'next/link';
 import { ListFormat } from '@/ui/ListFormat';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function BasicEventInfo({ event }: { event: EventPageFragment }) {
   const trainers = event.eventTrainersList.map((t) => t.person).filter(isTruthy);
@@ -43,13 +44,7 @@ export function BasicEventInfo({ event }: { event: EventPageFragment }) {
           <>
             <dt>Místo konání</dt>
             <dd>
-              {event.location ? (
-                <Link className="underline" href={`/lokality/${event.location.id}`}>
-                  {event.location.name}
-                </Link>
-              ) : (
-                event.locationText
-              )}
+              <EntityLink type="event-location" entity={event} />
             </dd>
           </>
         )}
@@ -59,10 +54,8 @@ export function BasicEventInfo({ event }: { event: EventPageFragment }) {
             <dt>Trenéři</dt>
             <dd>
               <ListFormat>
-                {trainers.map((person) => (
-                  <Link key={person.id} className="underline" href={`/clenove/${person.id}`}>
-                    {person.name}
-                  </Link>
+                {trainers.map((x) => (
+                  <EntityLink key={x.id} type="person" entity={x} />
                 ))}
               </ListFormat>
             </dd>

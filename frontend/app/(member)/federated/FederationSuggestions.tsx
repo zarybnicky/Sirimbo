@@ -21,7 +21,8 @@ import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
 import { formatDateOnly, formatOpenDateRange } from '@/ui/format';
 import { buttonCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
-import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { LocalPersonLinks } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 import { Spinner } from '@/ui/Spinner';
 import { Check, Undo2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
@@ -131,16 +132,12 @@ function CoupleSuggestion({
           <LocalPersonLinks people={[candidate.man, candidate.woman]} />
         </div>
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-neutral-11">
-          <FederationLink
-            entity="competitors"
-            federation={candidate.federation}
-            externalId={candidate.externalId}
-          >
+          <EntityLink type="federation-competitor" entity={candidate} fallback={false}>
             {candidate.federation === 'csts'
               ? 'ČSTS'
               : candidate.federation.toUpperCase()}{' '}
             {candidate.externalId}
-          </FederationLink>
+          </EntityLink>
           {(candidate.since || candidate.until) && (
             <span>{formatOpenDateRange(candidate)}</span>
           )}
@@ -255,9 +252,9 @@ function MemberSuggestion({
   const [membership, addMembership] = useMutation(CreateTenantMembershipDocument);
   return (
     <div className="flex justify-between gap-2 rounded-md bg-neutral-2 px-3 py-2">
-      <FederationLink entity="people" federation="csts" externalId={person.externalId}>
+      <EntityLink type="federation-person" entity={{ federation: 'csts', ...person}}>
         {person.canonicalName} · IDT {person.externalId}
-      </FederationLink>
+      </EntityLink>
 
       {person.peopleList.length > 0 ? (
         person.peopleList.map((local) => (

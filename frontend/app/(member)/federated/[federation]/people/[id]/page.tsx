@@ -34,10 +34,7 @@ const getPerson = cache(async (federation: string, externalId: string) => {
   if (!person) notFound();
   return {
     person,
-    name:
-      person.canonicalName ||
-      [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-      person.id,
+    name: person.canonicalName || person.id,
   };
 });
 

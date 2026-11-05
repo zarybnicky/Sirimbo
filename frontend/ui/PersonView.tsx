@@ -9,7 +9,7 @@ import { useAuth } from '@/lib/auth';
 import { ActivityList } from '@/ui/ActivityList';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { formatAgeGroup, formatClass, getBestCstsProgress } from '@/ui/csts';
-import { FederationLink } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
 import { FederationRankings } from '@/ui/FederationRankings';
 import { PageHeader } from '@/ui/PageHeader';
@@ -96,15 +96,15 @@ export const PersonView = React.memo(function PersonView({
       </a>
     ),
     ...item.federationPeople.nodes.map((person) => (
-      <FederationLink
-        entity="people"
+      <EntityLink
+        type="federation-person"
+        fallback={false}
         key={person.id}
-        federation={person.federation}
-        externalId={person.externalId}
-        className="text-accent-12 hover:text-accent-11"
+        entity={person}
+        className="text-accent-12"
       >
         {person.federation === 'csts' ? 'ČSTS' : person.federation.toUpperCase()}
-      </FederationLink>
+      </EntityLink>
     )),
   ].filter(Boolean);
 

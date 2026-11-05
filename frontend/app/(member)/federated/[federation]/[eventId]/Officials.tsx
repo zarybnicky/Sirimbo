@@ -3,17 +3,16 @@ import { DefinitionList } from '@/ui/DefinitionList';
 import { DotSeparated } from '@/ui/DotSeparated';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import type { OfficialRole } from '@/graphql';
-import { FederationLink, LocalPersonLinks } from '@/ui/federation-links';
+import { LocalPersonLinks } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 import { formatDiscipline } from '@/ui/csts';
 import { formatOfficialRole } from '@/ui/format';
 import { compareNaturalText } from '@/lib/compare';
 
 export function Officials({
-  federation,
   officials,
   showJudges = false,
 }: {
-  federation: string;
   officials: {
     personId: string;
     person?: OfficialPersonFragment | null;
@@ -53,7 +52,7 @@ export function Officials({
           <DefinitionList
             items={judges.map((x): [string, ReactNode] => [
               x.judgeLabel ?? '',
-              <OfficialName key={x.personId} federation={federation} official={x} />,
+              <OfficialName key={x.personId} official={x} />,
             ])}
           />
         </>
@@ -69,7 +68,7 @@ export function Officials({
               <ul key={role}>
                 {members.map((x) => (
                   <li key={`${x.personId}:${x.discipline ?? ''}`}>
-                    <OfficialName federation={federation} official={x} />
+                    <OfficialName official={x} />
                     <DotSeparated className="ml-0.5 flex text-xs text-neutral-11">
                       {x.judgeLabel}
                       {formatDiscipline(x.discipline)}
@@ -86,31 +85,25 @@ export function Officials({
 }
 
 export function OfficialName({
-  federation,
   official,
   compact = true,
 }: {
-  federation: string;
   official: { personId: string; person?: OfficialPersonFragment | null };
   compact?: boolean;
 }) {
   const person = official.person;
-  const name =
-    person?.canonicalName ||
-    [person?.firstName, person?.lastName].filter(Boolean).join(' ') ||
-    official.personId;
+  const name = person?.canonicalName || official.personId;
 
   return (
     <span className={compact ? 'inline-flex items-baseline gap-2' : 'contents'}>
       {person ? (
-        <FederationLink
-          entity="people"
-          federation={federation}
-          externalId={person.externalId}
+        <EntityLink
+          type="federation-person"
+          entity={person}
           className={compact ? 'font-medium text-accent-11' : 'text-accent-11'}
         >
           {name}
-        </FederationLink>
+        </EntityLink>
       ) : (
         name
       )}

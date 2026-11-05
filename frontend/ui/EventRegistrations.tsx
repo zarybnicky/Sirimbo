@@ -6,7 +6,7 @@ import { ActionGroup } from '@/ui/ActionGroup';
 import { EventAttendance } from '@/ui/EventAttendance';
 import { Table } from '@/ui/Table';
 import { dateTimeFormatter, numericDateFormatter } from '@/ui/format';
-import Link from 'next/link';
+import { EntityLink } from '@/ui/EntityLink';
 import { useAuth } from '@/lib/auth';
 import { compareText } from '@/lib/compare';
 
@@ -70,11 +70,9 @@ export const EventRegistrations = memo(function EventRegistrations({
                 iconOnly
               />
               <div>
-                {x.person ? (
-                  <Link href={`/clenove/${x.person.id}`}>{x.person.name}</Link>
-                ) : x.couple ? (
-                  <Link href={`/pary/${x.couple.id}`}>{x.couple.name}</Link>
-                ) : null}
+                <EntityLink type="participant" entity={x}>
+                  {x.person?.name || x.couple?.name}
+                </EntityLink>
                 {x.person?.isExternal && (
                   <span className="ml-2 rounded bg-neutral-3 px-1.5 py-0.5 text-xs text-neutral-11">
                     Externí

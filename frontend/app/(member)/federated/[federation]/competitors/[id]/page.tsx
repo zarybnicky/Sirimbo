@@ -78,9 +78,7 @@ export default async function CompetitorPage({ params }: Props) {
                     className="text-accent-11 underline"
                     href={`/federated/${federation}/people/${person.externalId}`}
                   >
-                    {person.canonicalName ||
-                      [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-                      personId}
+                    {person.canonicalName || personId}
                   </Link>
                 ) : (
                   personId

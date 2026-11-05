@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'urql';
 import { Spinner } from '@/ui/Spinner.tsx';
 import { Tab, TabMenu } from '@/ui/TabMenu.tsx';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog.tsx';
-import { FederationLink } from '@/ui/federation-links.tsx';
+import { EntityLink } from '@/ui/EntityLink';
 import { FormError } from '@/ui/form.tsx';
 import { formatDateOnly } from '@/ui/format.ts';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm.tsx';
@@ -148,13 +148,12 @@ function FederationIdBackfillWidget({ federation }: { federation: 'csts' | 'wdsf
                 <div className="min-w-0">
                   <div className="flex min-w-0 items-center gap-1 font-medium">
                     {person.selected && 'Vyplněno: '}
-                    <FederationLink
-                      entity="people"
-                      federation={federation}
-                      externalId={candidate.id}
+                    <EntityLink
+                      type="federation-person"
+                      entity={{ federation, externalId: candidate.id }}
                     >
                       {candidate.name || 'bez jména'}
-                    </FederationLink>
+                    </EntityLink>
                   </div>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-11">
                     <span>
@@ -227,10 +226,10 @@ function FederationIdIssues({ federation }: { federation: Federation }) {
           <h3 className="font-bold">
             {idLabel} {id}{' '}
             {id > 0 ? (
-              <FederationLink entity="people" federation={federation} externalId={id}>
+              <EntityLink type="federation-person" entity={{ federation, externalId: id }}>
                 {people[0]!.federationPeople.nodes[0]?.canonicalName ||
                   `${idLabel} ${id}`}
-              </FederationLink>
+              </EntityLink>
             ) : (
               'Neplatné ID'
             )}

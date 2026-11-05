@@ -422,9 +422,7 @@ function People(props: BrowserProps) {
                 href={`/federated/${federation}/people/${row.externalId}`}
                 prefetch={false}
               >
-                {row.name ||
-                  [row.firstName, row.lastName].filter(Boolean).join(' ') ||
-                  row.id}
+                {row.name || row.id}
               </Link>
             </th>
             <td>{formatAgeGroup(row.ageGroupDetails ?? row.ageGroup) || '–'}</td>

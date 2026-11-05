@@ -92,10 +92,7 @@ export default async function CompetitionPage({ params }: Props) {
             </CstsResultsLink>
           ),
           Přihlášení: federation === 'csts' && event.extraId && (
-            <CstsRegistrationLink
-              eventId={event.externalId}
-              eventCompetitionId={event.extraId}
-            >
+            <CstsRegistrationLink eventId={event.externalId} extraId={event.extraId}>
               Přihlásit se
             </CstsRegistrationLink>
           ),
@@ -114,11 +111,7 @@ export default async function CompetitionPage({ params }: Props) {
         entries={competition.entries}
         hasResults={competition.results.length > 0}
       />
-      <Officials
-        federation={federation}
-        officials={competition.officials.nodes}
-        showJudges
-      />
+      <Officials officials={competition.officials.nodes} showJudges />
       <Sources federation={federation} condition={{ competitionId: competition.id }} />
     </Layout>
   );

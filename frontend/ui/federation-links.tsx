@@ -1,34 +1,7 @@
 import { cn } from '@/lib/cn';
-import Link from 'next/link';
+import { EntityLink } from '@/ui/EntityLink';
 import { ExternalLink } from 'lucide-react';
-
-export function FederationLink({
-  entity,
-  federation,
-  externalId,
-  className,
-  children,
-}: {
-  entity: 'people' | 'competitors';
-  federation: string;
-  externalId?: number | string | null;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  if (!externalId || externalId === '0') return null;
-
-  return (
-    <Link
-      href={`/federated/${federation}/${entity}/${externalId}`}
-      className={cn(
-        'inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-11 underline hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8',
-        className,
-      )}
-    >
-      {children}
-    </Link>
-  );
-}
+import React from 'react';
 
 export function LocalPersonLinks({ people }: { people: { id: string; name: string }[] }) {
   return (
@@ -36,9 +9,7 @@ export function LocalPersonLinks({ people }: { people: { id: string; name: strin
       {people.map((person, index) => (
         <span key={person.id}>
           {index > 0 && ', '}
-          <Link className="text-accent-11 underline" href={`/clenove/${person.id}`}>
-            {person.name}
-          </Link>
+          <EntityLink type="person" entity={person} className="text-accent-11" />
         </span>
       ))}
     </>
@@ -56,13 +27,10 @@ export function CstsResultsLink({
   className?: string;
   children: React.ReactNode;
 }) {
-  const event = Number(eventId);
-  const competition = Number(competitionId);
-  if (!event || (competitionId != null && !competition)) return null;
-
+  if (!eventId) return null;
   return (
     <a
-      href={`https://www.csts.cz/dancesport/vysledky_soutezi/event/${event}${competition ? `/competition/${competition}` : ''}`}
+      href={`https://www.csts.cz/dancesport/vysledky_soutezi/event/${eventId}${competitionId ? `/competition/${competitionId}` : ''}`}
       target="_blank"
       rel="noreferrer"
       title="Otevřít výsledky na ČSTS"
@@ -79,23 +47,17 @@ export function CstsResultsLink({
 
 export function CstsRegistrationLink({
   eventId,
-  eventCompetitionId,
+  extraId,
   children,
 }: {
   eventId: string;
-  eventCompetitionId: string;
+  extraId: string;
   children: React.ReactNode;
 }) {
-  const event = Number(eventId);
-  const competition = Number(eventCompetitionId);
-  if (
-    !Number.isSafeInteger(event) || event <= 0 ||
-    !Number.isSafeInteger(competition) || competition <= 0
-  ) return null;
-
+  if (!eventId || !extraId) return null;
   return (
     <a
-      href={`https://www.csts.cz/dancesport/kalendar_akci/event/${event}/competition/${competition}/prihlaseni`}
+      href={`https://www.csts.cz/dancesport/kalendar_akci/event/${eventId}/competition/${extraId}/prihlaseni`}
       target="_blank"
       rel="noreferrer"
       className="inline-flex gap-1 items-baseline rounded-xs text-sm text-neutral-9 underline hover:text-accent-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-8"

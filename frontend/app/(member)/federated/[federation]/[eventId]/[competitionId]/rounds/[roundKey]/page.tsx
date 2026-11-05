@@ -112,7 +112,6 @@ export default async function RoundPage({ params }: Props) {
           formatJudgeLabel(judge),
           <OfficialName
             key={judge.personJudgeId}
-            federation={federation}
             official={{ personId: judge.personJudgeId, person: judge.personJudge }}
             compact={false}
           />,

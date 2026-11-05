@@ -4,7 +4,6 @@ import { cn } from '@/lib/cn';
 import {
   formatEventName,
   formatEventType,
-  formatParticipant,
   moneyFormatter,
   shortTimeFormatter,
 } from '@/ui/format';
@@ -18,14 +17,13 @@ import React from 'react';
 import { startOf } from 'date-arithmetic';
 import { useAuth } from '@/lib/auth';
 import { ListFormat } from '@/ui/ListFormat';
-import { slugify } from '@/lib/slugify';
+import { EntityLink } from '@/ui/EntityLink';
 
 export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
   const auth = useAuth();
   const actions = useActions(eventActions, event);
   const { seriesInfo, registrations } = event;
   const registrationCount = event.registrationInfo?.registrations ?? 0;
-  const locationLabel = event.location?.name || event.locationText;
   const cohorts = event.targetCohortsList.flatMap((x) => (x.cohort ? [x.cohort] : []));
   const trainers = event.eventTrainersList.map((x) => x.person).filter(isTruthy);
   const priceString = (event.approxPriceList ?? [])
@@ -78,22 +76,13 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
 
       <div className="flex items-center gap-2">
         <Clock className="size-4 text-accent-11 shrink-0" />
-        {shortTimeFormatter.formatRange(
-          new Date(event.since),
-          new Date(event.until),
-        )}
+        {shortTimeFormatter.formatRange(new Date(event.since), new Date(event.until))}
       </div>
 
-      {locationLabel && (
+      {(event.location || event.locationText) && (
         <div className="flex items-center gap-2">
           <MapPin className="size-4 text-accent-11 shrink-0" />
-          {event.location ? (
-            <Link className="underline" href={`/lokality/${event.location.id}`}>
-              {event.location.name}
-            </Link>
-          ) : (
-            locationLabel
-          )}
+          <EntityLink type="event-location" entity={event} />
         </div>
       )}
 
@@ -102,10 +91,8 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
           <User className="size-4 text-accent-11 shrink-0" />
           <span>
             <ListFormat>
-              {trainers.map((person) => (
-                <Link key={person.id} className="underline" href={`/clenove/${person.id}`}>
-                  {person.name}
-                </Link>
+              {trainers.map((x) => (
+                <EntityLink key={x.id} type="person" entity={x} />
               ))}
             </ListFormat>
           </span>
@@ -125,13 +112,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
           {cohorts.length > 0 ? (
             <ListFormat>
               {cohorts.map((cohort) => (
-                <Link
-                  key={cohort.id}
-                  className="underline"
-                  href={`/treninkove-skupiny/${cohort.id}/${slugify(cohort.name)}`}
-                >
-                  {cohort.name}
-                </Link>
+                <EntityLink key={cohort.id} type="cohort" entity={cohort} />
               ))}
             </ListFormat>
           ) : registrationCount === 0 ? (
@@ -139,15 +120,7 @@ export function EventSummary({ event }: { event: EventWithTrainerFragment }) {
           ) : registrationCount < 6 ? (
             registrations.nodes.map((x) => (
               <div key={x.id}>
-                {x.person ? (
-                  <Link className="underline" href={`/clenove/${x.person.id}`}>
-                    {formatParticipant(x)}
-                  </Link>
-                ) : x.couple ? (
-                  <Link className="underline" href={`/pary/${x.couple.id}`}>
-                    {formatParticipant(x)}
-                  </Link>
-                ) : null}
+                <EntityLink type="participant" entity={x} />
               </div>
             ))
           ) : (

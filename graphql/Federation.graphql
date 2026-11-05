@@ -104,6 +104,7 @@ fragment FederationRanking on RanklistEntry {
 
 fragment OfficialPerson on FederationPerson {
   id
+  federation
   externalId
   canonicalName
   firstName

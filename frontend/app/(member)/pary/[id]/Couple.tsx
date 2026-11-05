@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-
 import { CoupleDocument, UpdateCoupleDocument } from '@/graphql/Memberships';
 import { PageHeader } from '@/ui/PageHeader';
 import { ImageEditorDialog } from '@/ui/ImageEditorDialog';
@@ -13,7 +12,7 @@ import { useActions } from '@/lib/actions';
 import { coupleActions } from '@/lib/actions/couple';
 import { ActivityList } from '@/ui/ActivityList';
 import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
-import { FederationLink } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 import { FederationRankBadge, FederationRankings } from '@/ui/FederationRankings';
 import { formatAgeGroup } from '@/ui/csts';
 import { FederationCategoryProgress } from '@/ui/FederationCategoryProgress';
@@ -49,7 +48,11 @@ export function Couple({ id }: { id: string }) {
       )}
       <PageHeader
         imageUrl={item.image?.url}
-        onEditImage={actions.some((action) => action.id === 'couple.edit') ? () => setEditingImage(true) : undefined}
+        onEditImage={
+          actions.some((action) => action.id === 'couple.edit')
+            ? () => setEditingImage(true)
+            : undefined
+        }
         title={item.name}
         breadcrumbLabel="Pár"
         breadcrumbs={[{ label: 'Páry', href: '/pary' }]}
@@ -59,41 +62,28 @@ export function Couple({ id }: { id: string }) {
             {formatAgeGroup(item.ageGroup)}
             <FederationRankBadge entries={item.federationRanklistEntries.nodes} />
             {item.federationCompetitors.nodes.map((competitor) => (
-              <FederationLink
-                entity="competitors"
+              <EntityLink
                 key={competitor.id}
-                federation={competitor.federation}
-                externalId={competitor.externalId}
-                className="text-accent-12 hover:text-accent-11"
+                type="federation-competitor"
+                entity={competitor}
+                className="text-accent-12"
+                fallback={false}
               >
                 {competitor.federation === 'csts'
                   ? 'ČSTS'
                   : competitor.federation.toUpperCase()}
-              </FederationLink>
+              </EntityLink>
             ))}
           </span>
         }
       />
 
-
       <DefinitionList
         className="mb-2 text-sm tabular"
         items={{
-          Partner: !item.man ? (
-            '?'
-          ) : (
-            <Link className="underline font-medium" href={`/clenove/${item.man.id}`}>
-              {item.man?.name}
-            </Link>
-          ),
-          Partnerka: !item.woman ? (
-            '?'
-          ) : (
-            <Link className="underline font-medium" href={`/clenove/${item.woman.id}`}>
-              {item.woman?.name}
-            </Link>
-          ),
-          Aktivní: formatOpenDateRange(item)
+          Partner: item.man ? <EntityLink type="person" entity={item.man} /> : '?',
+          Partnerka: item.woman ? <EntityLink type="person" entity={item.woman} /> : '?',
+          Aktivní: formatOpenDateRange(item),
         }}
       />
 

@@ -2,7 +2,7 @@ import { DotSeparated } from '@/ui/DotSeparated';
 /* eslint-disable react-hooks/refs -- Keep lookup history and automatic-selection metadata alongside the RHF value. */
 import { FederationPersonLookupDocument } from '@/graphql/Federation';
 import { formatAgeGroup } from '@/ui/csts';
-import { FederationLink } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 import { TextField, type TextFieldElementProps } from '@/ui/fields/text';
 import React from 'react';
 import { type FieldValues, type Path, useController, useWatch } from 'react-hook-form';
@@ -88,17 +88,12 @@ export function FederationIdFieldElement<T extends FieldValues>({
     helperText = 'Vyhledávání se nezdařilo';
   } else if (externalId && (person || candidate?.id === id)) {
     helperText = (
-      <FederationLink
-        entity="people"
-        federation={federation}
-        externalId={person?.externalId ?? externalId}
+      <EntityLink
+        type="federation-person"
+        entity={{ federation, externalId: person?.externalId ?? externalId }}
       >
-        {person
-          ? person.canonicalName ||
-            [person.firstName, person.lastName].filter(Boolean).join(' ') ||
-            person.externalId
-          : candidate?.name}
-      </FederationLink>
+        {person ? person.canonicalName || person.externalId : candidate?.name}
+      </EntityLink>
     );
   } else if (byId && resolved && data) {
     helperText = 'Nenalezeno';

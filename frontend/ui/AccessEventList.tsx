@@ -12,6 +12,7 @@ import { PowerIcon } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
+import { EntityLink } from './EntityLink';
 
 export function AccessEventList({ locationId }: { locationId?: string }) {
   const auth = useAuth();
@@ -49,9 +50,7 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
               {numericFullFormatter.format(new Date(event.occurredAt))}
             </b>
             {event.person ? (
-              <Link className="underline" href={`/clenove/${event.person.id}`}>
-                {event.person.name}
-              </Link>
+              <EntityLink type="person" entity={event.person} />
             ) : event.code !== '00000000' ? (
               <>
                 {mifareCodeToLabel(event.code)}
@@ -63,11 +62,7 @@ export function AccessEventList({ locationId }: { locationId?: string }) {
           </span>
           <DotSeparated className="ml-auto text-neutral-11 tabular-nums">
             {!event.allowed && 'Zamítnuto'}
-            {event.location && (
-              <Link className="underline" href={`/lokality/${event.location.id}`}>
-                {event.location.name}
-              </Link>
-            )}
+            {event.location && <EntityLink type="location" entity={event.location} />}
           </DotSeparated>
           {auth.isAdmin &&
             !event.allowed &&

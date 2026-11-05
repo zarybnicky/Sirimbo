@@ -70,10 +70,7 @@ export default async function EventPage({ params }: Props) {
             <CstsResultsLink eventId={event.externalId}>ČSTS výsledky</CstsResultsLink>
           ),
           Přihlášení: federation === 'csts' && event.extraId && (
-            <CstsRegistrationLink
-              eventId={event.externalId}
-              eventCompetitionId={event.extraId}
-            >
+            <CstsRegistrationLink eventId={event.externalId} extraId={event.extraId}>
               Přihlásit se
             </CstsRegistrationLink>
           ),
@@ -93,7 +90,6 @@ export default async function EventPage({ params }: Props) {
 
       <Competitions federation={federation} eventId={eventId} />
       <Officials
-        federation={federation}
         officials={event.officials.nodes}
         showJudges={event.status === 'PLANNED' || event.status === 'IN_PROGRESS'}
       />

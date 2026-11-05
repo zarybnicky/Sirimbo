@@ -35,7 +35,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 import { parseAsBoolean, parseAsInteger, useQueryStates } from 'nuqs';
-import { FederationLink } from '@/ui/federation-links';
+import { EntityLink } from '@/ui/EntityLink';
 
 const EventMap = dynamic(() => import('@/ui/EventMap'));
 
@@ -254,15 +254,9 @@ export function CompetitionEventContent({
               {people.map((person, index) => (
                 <React.Fragment key={person.id}>
                   {index > 0 && ', '}
-                  <FederationLink
-                    federation={items[0]!.federation}
-                    externalId={person.externalId}
-                    entity="people"
-                    className="text-xs"
-                  >
-                    {person.canonicalName ||
-                      [person.firstName, person.lastName].filter(Boolean).join(' ')}
-                  </FederationLink>
+                  <EntityLink type="federation-person" entity={person}>
+                    {person.canonicalName}
+                  </EntityLink>
                 </React.Fragment>
               ))}
             </div>
