@@ -1,5 +1,5 @@
 import { fetchStarlet } from '@/starlet/query';
-import { Course, Student } from '@/starlet/graphql';
+import { Student } from '@/starlet/graphql';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { slugify } from '@/lib/slugify';
 import { type JSX, useEffect, useMemo, useState } from 'react';
@@ -30,7 +30,6 @@ type QueriedStudent = Pick<
   | 'course_key'
   | 'sex'
   | 'ref_key'
-  | 'partner_ref_key'
   | 'name'
   | 'surname'
   | 'email'
@@ -42,10 +41,9 @@ type QueriedStudent = Pick<
   | 'post_code'
 > & {
   normal_name: string;
-  partner_name: string | null;
   course_name: string;
 };
-type CleanedCourse = { course: Course; students: QueriedStudent[] };
+type CleanedCourse = { students: QueriedStudent[] };
 
 type DeduplicatedStudent = {
   normal_name: string;
@@ -63,8 +61,6 @@ type DeduplicatedStudent = {
   course_keys: string[];
   course_names: string[];
   ref_keys: string[];
-  partner_ref_keys: string[];
-  partner_names: string[];
 };
 
 type Person = {
@@ -90,18 +86,35 @@ type Person = {
   isMember: boolean | null;
   isTrainer: boolean | null;
   isAdmin: boolean | null;
-  couplesList:
-    | {
-        id: string;
-        man: {
-          id: string;
-        } | null;
-        woman: {
-          id: string;
-        } | null;
-      }[]
-    | null;
 };
+
+type PersonTask =
+  | { type: 'create'; student: DeduplicatedStudent; cohortIds: string[] }
+  | { type: 'update'; student: DeduplicatedStudent; person: Person; cohortIds: string[] }
+  | { type: 'archive'; person: Person; cohortIds: string[] };
+
+function personFieldsFromStudent(student: DeduplicatedStudent, person?: Person) {
+  return {
+    firstName: student.name,
+    lastName: student.surname,
+    gender: student.gender,
+    email: student.email,
+    phone: student.phone,
+    ...(!person || (!person.birthDate && student.year)
+      ? { birthDate: student.year ? `${student.year}-01-01` : null }
+      : {}),
+    externalIds: student.ref_keys,
+    address: {
+      ...person?.address,
+      street: student.street ?? '',
+      orientationNumber: student.street_no ?? '',
+      city: student.city ?? '',
+      postalCode: student.post_code ?? '',
+      conscriptionNumber: person?.address?.conscriptionNumber ?? '',
+      region: person?.address?.region ?? '',
+    },
+  };
+}
 
 export function PersonComparisonForm() {
   const client = useClient();
@@ -119,18 +132,18 @@ export function PersonComparisonForm() {
   const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
   const persons = useMemo(() => {
     const byId = new Map(
-      [...(personQuery?.people?.nodes ?? []), ...(formerPersonQuery?.people?.nodes ?? [])].map(
-        (person) => [person.id, person],
-      ),
+      [
+        ...(personQuery?.people?.nodes ?? []),
+        ...(formerPersonQuery?.people?.nodes ?? []),
+      ].map((person) => [person.id, person]),
     );
     return [...byId.values()];
   }, [personQuery, formerPersonQuery]);
-  const cohorts = cohortQuery?.cohortsList;
 
   const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
   useEffect(() => {
     if (!token?.auth_ok) return;
-    fetchCoursesWithStudents(courses.map((x) => x[0])).then(setCoursesWithStudents);
+    fetchCoursesWithStudents(courses.map(({ id }) => id)).then(setCoursesWithStudents);
   }, [token?.auth_ok, courses]);
 
   const [students, problematic] = useMemo(
@@ -138,8 +151,13 @@ export function PersonComparisonForm() {
     [coursesWithStudents],
   );
   const [tasks, views] = useMemo(
-    () => compare(persons || [], students, cohorts || []),
-    [persons, students, cohorts],
+    () => compare(
+      persons || [],
+      students,
+      cohortQuery?.cohortsList || [],
+      problematic.flatMap(([, candidates]) => candidates),
+    ),
+    [persons, students, cohortQuery?.cohortsList, problematic],
   );
 
   const create = useMutation(CreatePersonDocument)[1];
@@ -149,28 +167,15 @@ export function PersonComparisonForm() {
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
   const onSubmit = useAsyncCallback(async () => {
-    for (const [task, student, person, cohortIds] of tasks) {
-      if (task === 'create' && student) {
+    for (const task of tasks) {
+      if (task.type === 'create') {
+        const { student, cohortIds } = task;
         const res = await create({
           input: {
             p: {
-              firstName: student.name,
-              lastName: student.surname,
-              gender: student.gender,
+              ...personFieldsFromStudent(student),
               nationality: '203',
-              email: student.email,
-              phone: student.phone,
-              birthDate: student.year ? `${student.year}-01-01` : null,
-              externalIds: student.ref_keys,
-              address: {
-                street: student.street ?? '',
-                orientationNumber: student.street_no ?? '',
-                city: student.city ?? '',
-                postalCode: student.post_code ?? '',
-                conscriptionNumber: '',
-                district: '',
-                region: '',
-              },
+              // create_person explicitly inserts these columns, bypassing their defaults.
               prefixTitle: '',
               suffixTitle: '',
               bio: '',
@@ -189,61 +194,40 @@ export function PersonComparisonForm() {
           });
           if (syncResult.error) throw syncResult.error;
         }
-      } else if (task === 'update' && student) {
+      } else if (task.type === 'update') {
+        const { student, person, cohortIds } = task;
         const updateResult = await update({
           input: {
-            id: person!.id,
-            patch: {
-              firstName: student.name,
-              lastName: student.surname,
-              gender: student.gender,
-              nationality: '203',
-              email: student.email,
-              phone: student.phone,
-              ...(!person!.birthDate && student.year
-                ? { birthDate: `${student.year}-01-01` }
-                : {}),
-              externalIds: student.ref_keys,
-              address: {
-                street: student.street ?? '',
-                orientationNumber: student.street_no ?? '',
-                city: student.city ?? '',
-                postalCode: student.post_code ?? '',
-                conscriptionNumber: '',
-                district: '',
-                region: '',
-              },
-              prefixTitle: '',
-              suffixTitle: '',
-              bio: '',
-            },
+            id: person.id,
+            patch: personFieldsFromStudent(student, person),
           },
         });
         if (updateResult.error) throw updateResult.error;
-        if (!person!.isMember) {
+        if (!person.isMember) {
           const membershipResult = await createMembership({
-            input: { tenantMembership: { personId: person!.id, tenantId } },
+            input: { tenantMembership: { personId: person.id, tenantId } },
           });
           if (membershipResult.error) throw membershipResult.error;
         }
         const syncResult = await syncCohorts({
           input: {
-            personId: person!.id,
+            personId: person.id,
             cohortIds,
           },
         });
         if (syncResult.error) throw syncResult.error;
       } else {
+        const { person, cohortIds } = task;
         const syncResult = await syncCohorts({
           input: {
-            personId: person!.id,
+            personId: person.id,
             cohortIds,
           },
         });
         if (syncResult.error) throw syncResult.error;
         if (cohortIds.length === 0) {
           const membershipsResult = await client
-            .query(PersonMembershipsDocument, { id: person!.id })
+            .query(PersonMembershipsDocument, { id: person.id })
             .toPromise();
           if (membershipsResult.error) throw membershipsResult.error;
           const memberships = membershipsResult.data!;
@@ -282,7 +266,7 @@ export function PersonComparisonForm() {
                 {candidates.map((x) => x.course_name).join(', ')}
                 <ul>
                   {Object.entries(
-                    diffObjectsList(candidates as any as Record<string, string>[]),
+                    diffObjectsList(candidates),
                   ).map((x) => (
                     <li key={x[0]}>
                       {x[0]}: {JSON.stringify(x[1])}
@@ -346,15 +330,11 @@ function compare(
     name: string;
     isVisible: boolean;
     externalIds: (string | null)[] | null;
-  }[],
+  }[] = [],
+  unresolvedStudents: QueriedStudent[] = [],
 ) {
   const views: JSX.Element[] = [];
-  const tasks: [
-    'create' | 'update' | 'archive',
-    DeduplicatedStudent | null,
-    Person | null,
-    string[],
-  ][] = [];
+  const tasks: PersonTask[] = [];
   const managedCohorts = cohorts.filter((cohort) => cohort.externalIds?.length);
 
   const peopleByNormalName = new Map<string, Person[]>();
@@ -370,7 +350,7 @@ function compare(
       }
     }
   }
-  const studentToPerson = new Map<string, Person>();
+
   const processedPeople = new Set<string>();
   for (const student of students) {
     const candidates = (peopleByNormalName.get(student.normal_name) || []).filter(
@@ -378,15 +358,17 @@ function compare(
     );
 
     const person =
-      student.ref_keys.map((x) => peopleByExternalId.get(x)).find((x) => x && !processedPeople.has(x.id)) ??
+      student.ref_keys
+        .map((x) => peopleByExternalId.get(x))
+        .find((x) => x && !processedPeople.has(x.id)) ??
       (candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined);
 
+    const targetCohortIds = managedCohorts
+      .filter((x) => student.course_names.includes(x.name))
+      .map((x) => x.id);
+
     if (!person) {
-      const cohortIds = managedCohorts
-        .filter((x) => student.course_names.includes(x.name))
-        .map((x) => x.id);
-      tasks.push(['create', student, null, cohortIds]);
-      // include cohort memberships, map course_names to cohortIds
+      tasks.push({ type: 'create', student, cohortIds: targetCohortIds });
 
       views.push(
         <li key={student.ref_keys.join(',')} className="my-0">
@@ -398,7 +380,6 @@ function compare(
       );
       continue;
     }
-    for (const refKey of student.ref_keys) studentToPerson.set(refKey, person);
     processedPeople.add(person.id);
 
     const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null;
@@ -408,10 +389,9 @@ function compare(
       .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
       .map((cohort) => cohort.id);
     const cohortList = new Set(
-      managedCohorts.filter((cohort) => currentCohortIds.has(cohort.id)).map((x) => x.name),
+      managedCohorts.filter((x) => currentCohortIds.has(x.id)).map((x) => x.name),
     );
 
-    let willUpdate = false;
     if (
       new Set(person.externalIds || []).symmetricDifference(new Set(student.ref_keys))
         .size > 0 ||
@@ -421,16 +401,8 @@ function compare(
       (!person.birthDate && !!student.year) ||
       cohortList.symmetricDifference(courseList).size > 0
     ) {
-      willUpdate = true;
-      const cohortIds = [
-        ...managedCohorts
-          .filter((x) => student.course_names.includes(x.name))
-          .map((x) => x.id),
-        ...unmanagedCohortIds,
-      ];
-      tasks.push(['update', student, person, cohortIds]);
-    }
-    if (willUpdate) {
+      const cohortIds = [...targetCohortIds, ...unmanagedCohortIds];
+      tasks.push({ type: 'update', student, person, cohortIds });
       views.push(
         <li key={student.ref_keys.join(',')} className="my-0">
           {student.normal_name} ({student.year})
@@ -440,17 +412,21 @@ function compare(
               <Link href={`/clenove/${person.id}`}>
                 {person.name} ({birthYear})
               </Link>
-              {willUpdate ? ' - změnily se detaily osoby, bude aktualizovaná' : ''}
+              {' - změnily se detaily osoby, bude aktualizovaná'}
             </li>
           </ul>
         </li>,
       );
     }
   }
+  const unresolvedNames = new Set(unresolvedStudents.map((student) => student.normal_name));
+  const unresolvedRefKeys = new Set(unresolvedStudents.map((student) => student.ref_key).filter(isTruthy));
   for (const person of people) {
     const currentCohortIds = new Set(person.cohortIds || []);
     if (
       processedPeople.has(person.id) ||
+      unresolvedNames.has(getNormalizedName(person.firstName, person.lastName)) ||
+      person.externalIds?.some((id) => id && unresolvedRefKeys.has(id)) ||
       person.isAdmin ||
       person.isTrainer ||
       !person.isMember ||
@@ -464,7 +440,7 @@ function compare(
       .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
       .map((cohort) => cohort.id);
 
-    tasks.push(['archive', null, person, unmanagedCohortIds]);
+    tasks.push({ type: 'archive', person, cohortIds: unmanagedCohortIds });
     views.push(
       <li key={person.id} className="my-0">
         ❌
@@ -486,13 +462,12 @@ function compare(
 
 function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person[]) {
   const byBirthYears = candidates.map(
-    (person) =>
-      [new Date(person.birthDate || '1900-01-01').getFullYear(), person] as const,
+    (x) => [new Date(x.birthDate || '1900-01-01').getFullYear(), x] as const,
   );
   const matchingBirthYear = byBirthYears.filter((x) => x[0] === student.year);
   const missingBirthYear = byBirthYears.filter((x) => x[0] === 1900);
-  const matchesEmail = (person: Person) =>
-    !!student.email && person.email?.trim().toLowerCase() === student.email;
+  const matchesEmail = (x: Person) =>
+    !!student.email && x.email?.trim().toLowerCase() === student.email;
   const matchingEmail = candidates.filter(matchesEmail);
 
   return (
@@ -509,29 +484,20 @@ async function fetchCoursesWithStudents(courses: string[]) {
   const result: CleanedCourse[] = [];
 
   for (const key of courses) {
-    const data = await fetchStarlet(CourseDocument, { key });
-    const { course } = data;
+    const { course, students } = await fetchStarlet(CourseDocument, { key });
     if (!course) continue;
-    const students = data.students ?? [];
 
     const cleanedStudents = [];
-    for (const student of students ?? []) {
+    for (const student of students || []) {
       if (!student) continue;
 
-      const name = getNormalizedName(student.name, student.surname);
-      const partner = student.partner_ref_key
-        ? students.find((s) => s?.ref_key === student.partner_ref_key)
-        : null;
-
       const cleanedStudent: QueriedStudent = {
-        normal_name: name,
-        partner_name: partner ? getNormalizedName(partner.name, partner.surname) : null,
+        normal_name: getNormalizedName(student.name, student.surname),
         course_name: course.code!,
         key: student.key,
         course_key: student.course_key,
         sex: student.sex,
         ref_key: student.ref_key,
-        partner_ref_key: student.partner_ref_key,
         name: student.name?.trim() ?? null,
         surname: student.surname?.trim() ?? null,
         email: student.email?.trim().toLowerCase() ?? null,
@@ -544,7 +510,7 @@ async function fetchCoursesWithStudents(courses: string[]) {
       };
       cleanedStudents.push(cleanedStudent);
     }
-    result.push({ course: course as any, students: cleanedStudents });
+    result.push({ students: cleanedStudents });
   }
   return result;
 }
@@ -600,6 +566,11 @@ function deduplicateStudents(courses: CleanedCourse[]) {
             [],
           ]);
       }
+    } else {
+      problematic.push([
+        `${normalName}: Konfliktní roky narození a kontaktní údaje, nemůžu rozdělit`,
+        candidates,
+      ]);
     }
   }
 
@@ -628,8 +599,6 @@ function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
     course_names: candidates.map((x) => x.course_name).filter(isTruthy),
     course_keys: candidates.map((x) => x.course_key).filter(isTruthy),
     ref_keys: candidates.map((x) => x.ref_key).filter(isTruthy),
-    partner_names: candidates.map((x) => x.partner_name).filter(isTruthy),
-    partner_ref_keys: candidates.map((x) => x.partner_ref_key).filter(isTruthy),
   };
 }
 
@@ -637,13 +606,13 @@ function getNormalizedName(name: string | null, surname: string | null): string 
   return `${capitalize(slugify(name || '').trim())} ${capitalize(slugify(surname || '').trim())}`;
 }
 
-function diffObjectsList(objects: Record<string, string>[]) {
-  const diff: Record<string, string[]> = {};
+function diffObjectsList(objects: Record<string, unknown>[]) {
+  const diff: Record<string, unknown[]> = {};
   const keys = new Set(objects.flatMap((obj) => Object.keys(obj)));
 
   for (const key of keys) {
     if (['key', 'course_key', 'ref_key', 'comment'].includes(key)) continue;
-    const values = new Set(objects.map((obj) => obj[key]!));
+    const values = new Set(objects.map((obj) => obj[key]));
     if (values.size > 1) {
       diff[key] = [...values];
     }

@@ -32,6 +32,8 @@ export const starletTokenAtom = atom(
   },
 );
 
+export type StarletCourse = { id: string; code: string; name: string };
+
 export const starletRawSettingsAtom = atom<{
   evidenceAuth?: { login: string; password: string };
   evidenceFolders?: (string | [string, string])[];
@@ -43,16 +45,18 @@ export const starletSettingsAtom = atom((get) => {
   const settings = get(starletRawSettingsAtom);
   return {
     auth: settings.evidenceAuth,
-    folders: settings.evidenceFolders?.map<[string, string]>((x) =>
-      typeof x === 'string' ? [x, '?'] : x,
+    folders: settings.evidenceFolders?.map((x) =>
+      typeof x === 'string' ? { id: x, name: '?' } : { id: x[0], name: x[1] },
     ) ?? [],
-    seasons: settings.evidenceSeasons?.map<[string, string]>((x) =>
-      typeof x === 'string' ? [x, '?'] : x,
+    seasons: settings.evidenceSeasons?.map((x) =>
+      typeof x === 'string' ? { id: x, name: '?' } : { id: x[0], name: x[1] },
     ) ?? [],
     courses: (
-      settings.evidenceCourses?.map<[string, string, string]>((x) =>
-        typeof x === 'string' ? [x, '?', '?'] : x,
+      settings.evidenceCourses?.map<StarletCourse>((x) =>
+        typeof x === 'string'
+          ? { id: x, code: '?', name: '?' }
+          : { id: x[0], code: x[1], name: x[2] },
       ) ?? []
-    ).toSorted((x, y) => x[1].localeCompare(y[1])),
+    ).toSorted((x, y) => x.code.localeCompare(y.code)),
   };
 });

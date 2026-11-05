@@ -28,7 +28,7 @@ export function ChangeCoursesForm() {
   const { folders, seasons, courses: prevCourses } = useAtomValue(starletSettingsAtom);
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
-    defaultValues: { courses: prevCourses.map(([id]) => id) },
+    defaultValues: { courses: prevCourses.map(({ id }) => id) },
   });
   const [result, update] = useMutation(UpdateTenantSettingsDocument);
   const token = useAtomValue(starletTokenAtom);
@@ -39,8 +39,8 @@ export function ChangeCoursesForm() {
     if (!token?.auth_ok) return;
 
     fetchCoursesByFolders(
-      folders.map((x) => x[0]),
-      seasons.map((x) => x[0]),
+      folders.map(({ id }) => id),
+      seasons.map(({ id }) => id),
     ).then(setCourses);
   }, [folders, token?.auth_ok, seasons]);
 

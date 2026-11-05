@@ -55,9 +55,9 @@ export function StarletImporter() {
       </h2>
 
       <p>
-        Sezóny: {seasons.map((x) => x[1]).join(', ')}
+        Sezóny: {seasons.map(({ name }) => name).join(', ')}
         <br />
-        Složky: {folders.map((x) => x[1]).join(', ')}
+        Složky: {folders.map(({ name }) => name).join(', ')}
       </p>
 
       <h2 className="flex justify-between">

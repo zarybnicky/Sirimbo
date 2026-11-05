@@ -31,8 +31,8 @@ export function ChangeFoldersForm() {
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
-      folders: prevFolders.map(([id]) => id),
-      seasons: prevSeasons.map(([id]) => id),
+      folders: prevFolders.map(({ id }) => id),
+      seasons: prevSeasons.map(({ id }) => id),
     },
   });
   const [result, updateSettings] = useMutation(UpdateTenantSettingsDocument);
