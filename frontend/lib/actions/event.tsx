@@ -28,52 +28,41 @@ import { exportEventRegistrations } from '@/ui/reports/export-event-registration
 
 const preventDefault = (e: Event) => e.preventDefault();
 
-export const eventRegistrationActions = defineActions<EventRegistrationFragment & {
-  event: EventWithTrainerFragment;
-}>()([
+export const eventRegistrationActions = defineActions<
+  EventRegistrationFragment & {
+    event: EventWithTrainerFragment;
+  }
+>()([
   {
     id: 'eventRegistration.edit',
     label: 'Upravit přihlášku',
     icon: Pencil,
     visible: ({ auth, item }) =>
       auth.canManageEvent(item.event) ||
-      auth.isMyPerson(item.personId) || auth.isMyCouple(item.coupleId),
+      auth.isMyPerson(item.personId) ||
+      auth.isMyCouple(item.coupleId),
     render: ({ item }) => (
       <MyRegistrationsDialog eventId={item.event.id} initialRegistrationId={item.id} />
     ),
   },
 ]);
 
-function canOpenRegistrations({
-  auth,
-  item,
-}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
-  return (
-    auth.canManageEvent(item) ||
-    !!item.registrationInfo?.my ||
-    !!item.registrationInfo?.canRegister
-  );
-}
-
-function registrationActionLabel({
-  auth,
-  item,
-}: Pick<ActionContext<EventWithTrainerFragment>, 'auth' | 'item'>) {
-  if (auth.canManageEvent(item)) {
-    return `Přihlášky (${item.registrationInfo?.registrations ?? 0})`;
-  }
-
-  return !auth.isLoggedIn || !item.registrationInfo?.my ? 'Přihlásit' : 'Moje přihlášky';
-}
-
 export const eventActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'event.registrations',
     group: 'primary',
-    label: registrationActionLabel,
-    variant: ({ auth }) => (auth.isMember || auth.isTrainer) ? 'outline' : 'primary',
+    label: ({ auth, item }) =>
+      auth.canManageEvent(item)
+        ? `Přihlášky (${item.registrationInfo?.registrations ?? 0})`
+        : !auth.isLoggedIn || !item.registrationInfo?.my
+          ? 'Přihlásit'
+          : 'Moje přihlášky',
+    variant: ({ auth }) => (auth.isMember || auth.isTrainer ? 'outline' : 'primary'),
     icon: UserPlus,
-    visible: canOpenRegistrations,
+    visible: ({ auth, item }) =>
+      auth.canManageEvent(item) ||
+      !!item.registrationInfo?.my ||
+      !!item.registrationInfo?.canRegister,
     render: ({ item }) => <MyRegistrationsDialog eventId={item.id} />,
   },
   {
@@ -128,6 +117,7 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
   {
     id: 'event.attendance',
     label: 'Docházka',
+    primaryOnly: true,
     primaryContent: ({ item }) => (
       <AttendanceStats stats={item.stats} className="h-7 rounded-none border-0" />
     ),
@@ -142,33 +132,29 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     render: ({ item }) => <AddToEventScheduleForm eventId={item.id} />,
   },
   {
-    id: 'event.detach',
-    label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit ze série'),
+    id: 'event.detachFromParent',
+    label: 'Vyjmout z programu',
     icon: GitBranch,
-    visible: ({ item, auth }) =>
-      auth.canManageEvent(item) && !!(item.parentId || item.seriesId),
-    confirm: ({ item }) =>
-      item.parentId
-        ? {
-            description: 'Opravdu chcete událost vyjmout z programu?',
-            confirmationText: 'Vyjmout termín',
-          }
-        : {
-            description: 'Opravdu chcete událost odebrat ze série?',
-            confirmationText: 'Oddělit termín',
-          },
+    visible: ({ item, auth }) => auth.canManageEvent(item) && !!item.parentId,
+    confirm: {
+      description: 'Opravdu chcete událost vyjmout z programu?',
+      confirmationText: 'Vyjmout termín',
+    },
     execute: async ({ item, mutate }) => {
-      if (item.parentId) {
-        await mutate(UpdateEventDocument, {
-          id: item.id,
-          patch: { parentId: null },
-        });
-      } else {
-        await mutate(UpdateEventDocument, {
-          id: item.id,
-          patch: { seriesId: null },
-        });
-      }
+      await mutate(UpdateEventDocument, { id: item.id, patch: { parentId: null } });
+    },
+  },
+  {
+    id: 'event.detachFromSeries',
+    label: 'Oddělit ze série',
+    icon: GitBranch,
+    visible: ({ item, auth }) => auth.canManageEvent(item) && !!item.seriesId,
+    confirm: {
+      description: 'Opravdu chcete událost odebrat ze série?',
+      confirmationText: 'Oddělit termín',
+    },
+    execute: async ({ item, mutate }) => {
+      await mutate(UpdateEventDocument, { id: item.id, patch: { seriesId: null } });
     },
   },
   {

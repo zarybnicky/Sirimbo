@@ -42,10 +42,11 @@ function partitionActions<Id extends string>(
     items: readonly ResolvedAction<Id>[];
   }[];
 } {
+  const menuActions = actions.filter((a) => !a.primaryOnly);
   if (variant === 'row') {
     return {
       primary: [],
-      buckets: actions.length > 0 ? [{ key: 'more' as const, items: actions }] : [],
+      buckets: menuActions.length > 0 ? [{ key: 'more' as const, items: menuActions }] : [],
     };
   }
 
@@ -64,12 +65,12 @@ function partitionActions<Id extends string>(
 
   for (const [key, ids] of Object.entries(declaredGroups) as ['add', readonly Id[]][]) {
     const idSet = new Set(ids);
-    const items = actions.filter((a) => !claimed.has(a.id) && idSet.has(a.id));
+    const items = menuActions.filter((a) => !claimed.has(a.id) && idSet.has(a.id));
     for (const a of items) claimed.add(a.id);
     if (items.length > 0) buckets.push({ key, items });
   }
 
-  const remaining = actions.filter((a) => !claimed.has(a.id));
+  const remaining = menuActions.filter((a) => !claimed.has(a.id));
   if (remaining.length > 0) buckets.push({ key: 'more', items: remaining });
 
   return {

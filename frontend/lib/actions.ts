@@ -40,6 +40,7 @@ export type Action<T, Id extends string = string> = AccessRequirements & {
   id: Id;
   label: Resolvable<T, string>;
   primaryContent?: Resolvable<T, React.ReactNode>;
+  primaryOnly?: boolean;
   icon?: Resolvable<T, Icon>;
   visible?: Resolvable<T, boolean>;
   variant?: Resolvable<T, ActionVariant>;
@@ -69,6 +70,7 @@ export type ResolvedAction<Id extends string = string> = {
   key: string;
   label: string;
   primaryContent?: React.ReactNode;
+  primaryOnly?: boolean;
   icon?: Icon;
   variant?: ActionVariant;
   group?: 'primary' | 'add';
@@ -106,6 +108,7 @@ function resolveOne<T, Id extends string>(
     key,
     label: resolve(a.label, ctx),
     primaryContent: a.primaryContent ? resolve(a.primaryContent, ctx) : undefined,
+    primaryOnly: a.primaryOnly,
     icon: a.icon ? resolve(a.icon, ctx) : undefined,
     variant: a.variant ? resolve(a.variant, ctx) : undefined,
     group: a.group,
