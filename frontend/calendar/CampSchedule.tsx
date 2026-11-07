@@ -2,9 +2,7 @@ import { DotSeparated } from '@/ui/DotSeparated';
 import {
   DeleteEventDocument,
   type EventRegistrationFragment,
-  EventRegistrationsDocument,
-  type EventRegistrationsQuery,
-  type EventWithTrainerFragment,
+  type EventWithAttendanceQuery,
   SaveEventsDocument,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
@@ -18,7 +16,6 @@ import {
 import type { CalendarClubEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
 import { formatEventName } from '@/ui/format';
-import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -33,24 +30,24 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
-import { useMutation, useQuery } from 'urql';
+import { useMutation } from 'urql';
 import { Calendar } from './Calendar';
-
-const emptyRegistrations: EventRegistrationFragment[] = [];
 
 export const CampSchedule = React.memo(function CampSchedule({
   event,
 }: {
-  event: EventWithTrainerFragment;
+  event: NonNullable<EventWithAttendanceQuery['event']>;
 }) {
   const { id, since, until } = event;
   const auth = useAuth();
-  const [query] = useQuery({
-    query: EventRegistrationsDocument,
-    variables: { id, withSchedule: true },
-    pause: !auth.isTrainer,
-  });
-  const registrations = query.data?.event?.registrationsList ?? emptyRegistrations;
+  const registrations = React.useMemo(
+    () => event.attendanceRegistrations.nodes.filter((x) => !x.parentRegistrationId),
+    [event.attendanceRegistrations.nodes],
+  );
+  const lessons = React.useMemo(
+    () => event.childEventsList.filter((x) => x.type === 'LESSON'),
+    [event.childEventsList],
+  );
   const requestCount = registrations.reduce((n, x) => n + x.lessonRequestsList.length, 0);
   const [requestsOpen, setRequestsOpen] = React.useState<boolean>();
   const saveEvents = useMutation(SaveEventsDocument)[1];
@@ -73,13 +70,13 @@ export const CampSchedule = React.memo(function CampSchedule({
         if (person) trainers.set(person.id, person.name);
       }
     }
-    for (const lesson of query.data?.eventsList ?? []) {
+    for (const lesson of lessons) {
       for (const trainer of lesson.eventTrainersList ?? []) {
         trainers.set(trainer.personId, trainer.person?.name ?? '');
       }
     }
     return [...trainers].map(([id, name]) => ({ id, name }));
-  }, [registrations, event.eventTrainersList, query.data?.eventsList]);
+  }, [registrations, event.eventTrainersList, lessons]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -134,7 +131,7 @@ export const CampSchedule = React.memo(function CampSchedule({
     const result = await deleteInstance({ id: instance.id });
     if (result.error) throw result.error;
   });
-  const requestError = query.error || scheduleRequest.error || removeLesson.error;
+  const requestError = scheduleRequest.error || removeLesson.error;
   const canShowRequests = auth.isTrainer && requestCount > 0;
   const showRequests = requestsOpen && canShowRequests;
 
@@ -226,8 +223,7 @@ export const CampSchedule = React.memo(function CampSchedule({
           {showRequests && (
             <LessonRequests
               registrations={registrations}
-              scheduledLessons={query.data?.eventsList ?? []}
-              fetching={query.fetching}
+              scheduledLessons={lessons}
               error={requestError}
               lockTrainers={groupBy === 'trainer' || groupBy === 'day-trainer'}
             />
@@ -246,7 +242,7 @@ export const CampSchedule = React.memo(function CampSchedule({
   );
 });
 
-type ScheduledLesson = NonNullable<EventRegistrationsQuery['eventsList']>[number];
+type ScheduledLesson = NonNullable<EventWithAttendanceQuery['event']>['childEventsList'][number];
 
 function scheduledTrainers(
   registration: EventRegistrationFragment,
@@ -295,13 +291,11 @@ function progressStyle(scheduled: number, requested: number): React.CSSPropertie
 function LessonRequests({
   registrations,
   scheduledLessons,
-  fetching,
   error,
   lockTrainers,
 }: {
   registrations: EventRegistrationFragment[];
   scheduledLessons: ScheduledLesson[];
-  fetching: boolean;
   error: React.ReactNode | Error;
   lockTrainers: boolean;
 }) {
@@ -348,7 +342,6 @@ function LessonRequests({
       </div>
 
       <FormError error={error} />
-      {fetching && <Spinner />}
 
       <div className="grid gap-2 p-2">
         {registrationRows.map(({ registration, scheduledByTrainer, extras }) => {
@@ -447,9 +440,9 @@ function LessonRequests({
           );
         })}
 
-        {!fetching && registrationRows.length === 0 && (
+        {registrationRows.length === 0 && (
           <div className="px-1 py-3 text-sm text-neutral-11">
-            Zatím nejsou zadané žádné požadavky.
+            Žádné požadavky na lekce.
           </div>
         )}
       </div>

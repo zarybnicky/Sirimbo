@@ -455,6 +455,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           cache.invalidate({ __typename: 'Event', id: event.id });
         if (args.input.events?.some((event) => !event?.id))
           invalidateQueryFields(cache, ['eventsList']);
+        if (args.input.details?.parentId)
+          cache.invalidate({ __typename: 'Event', id: args.input.details.parentId }, 'childEventsList');
         invalidateQueryFields(cache, ['eventOverlaps', 'eventFacetsList']);
       },
 

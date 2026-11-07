@@ -302,6 +302,17 @@ query EventWithAttendance($id: BigInt!) {
     }
     childEventsList {
       id
+      type
+      eventTrainersList {
+        id
+        personId
+        person { id name }
+      }
+      registrationsList(condition: { parentRegistrationId: null, registrationStatus: ACTIVE }) {
+        id
+        personId
+        coupleId
+      }
       paymentsList(first: 1) {
         id
       }
