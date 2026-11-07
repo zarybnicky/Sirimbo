@@ -167,6 +167,7 @@ export const ActivityList = React.memo(function ActivityList({
                               eventId={instance.id}
                               items={instance.attendance}
                               compact={!!cohortId}
+                              future={new Date(instance.since).getTime() > Date.now()}
                             />
                           }
                         />
@@ -187,14 +188,16 @@ function AttendanceSummary({
   eventId,
   items = [],
   compact,
+  future,
 }: {
   items:
     Pick<EventRegistrationAttendanceFragment, 'id' | 'status' | 'person'>[] | undefined;
   compact: boolean;
+  future: boolean;
   eventId: string;
 }) {
   if (compact) {
-    return (
+    return future ? null : (
       <AttendanceStatsLink
         eventId={eventId}
         stats={{
@@ -209,6 +212,7 @@ function AttendanceSummary({
   return (
     <div className="inline-flex flex-wrap items-center justify-end gap-3 text-sm">
       {items
+        .filter(({ status }) => !future || (status !== null && status !== 'UNKNOWN'))
         .toSorted((a, b) => compareText(a.person?.name ?? '', b.person?.name ?? ''))
         .map(({ id, person, status }) => {
           const Icon = status ? attendanceIcons[status] : null;
