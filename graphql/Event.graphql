@@ -346,7 +346,17 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
   }
 }
 
-query EventFormOptions($forRegistration: Boolean! = false) {
+query EventFormOptions(
+  $forRegistration: Boolean! = false
+  $eventId: BigInt
+  $withRegistrations: Boolean! = false
+) {
+  registrations: eventRegistrationsList(
+    condition: { eventId: $eventId, parentRegistrationId: null, registrationStatus: ACTIVE }
+    orderBy: PRIMARY_KEY_ASC
+  ) @include(if: $withRegistrations) @_required {
+    ...EventRegistration
+  }
   people(condition: { membership: { state: CURRENT } }) @include(if: $forRegistration) @_required {
     nodes {
       id

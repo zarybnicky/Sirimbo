@@ -1,5 +1,5 @@
 import type { SlotInfo } from '@/calendar/types';
-import type { EventWithTrainerFragment } from '@/graphql/Event';
+import type { EventFormOptionsQuery, EventWithTrainerFragment } from '@/graphql/Event';
 import { EventForm, type EventFormType } from '@/ui/event-form/types';
 import { add, eq } from 'date-arithmetic';
 
@@ -91,4 +91,51 @@ export function createEventDefaults(
     }],
     trainers: trainerPersonIds.map((personId) => ({ personId, lessonsOffered: 0 })),
   });
+}
+
+export function editEventDefaults(
+  event: EventWithTrainerFragment,
+  data: EventFormOptionsQuery | undefined,
+  now: number,
+): EventFormType {
+  const at = Math.min(now, Date.parse(event.since));
+  const registrations = data?.registrations ?? [];
+  return {
+    name: event.name ?? '',
+    type: event.type ?? 'LESSON',
+    locationId: event.locationText ? 'other' : (event.location?.id ?? 'none'),
+    locationText: event.locationText ?? '',
+    capacity: event.capacity ?? 0,
+    capacityUnit: event.capacityUnit,
+    isVisible: event.isVisible ?? false,
+    isPublic: event.isPublic ?? false,
+    hasPublicDetails: event.hasPublicDetails,
+    registrationPeriod: event.registrationPeriod,
+    enableNotes: event.enableNotes ?? false,
+    instances: [
+      {
+        itemId: event.id,
+        since: event.since,
+        until: event.until,
+        isCancelled: event.isCancelled,
+      },
+    ],
+    trainers: event.eventTrainersList.map((trainer) => ({
+      personId: trainer.personId,
+      lessonsOffered: trainer.lessonsOffered,
+    })),
+    cohorts: event.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
+    registrations: registrations.map((r) => ({
+      personId: r.personId,
+      coupleId: r.coupleId,
+      isCancelled: false,
+      cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
+        .filter(({ cohortId }) => cohortId === r.targetCohortId ||
+          data?.tenant?.cohortsList?.find((x) => x.id === cohortId)?.cohortMembershipsList
+            .some((m) => m.person?.id === r.personId &&
+              (at < now || m.status === 'ACTIVE') && Date.parse(m.since) <= at &&
+              (!m.until || Date.parse(m.until) > at)))
+        .map((x) => x.cohortId),
+    })),
+  };
 }

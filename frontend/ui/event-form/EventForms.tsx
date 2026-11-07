@@ -1,13 +1,12 @@
 import {
   createEventDefaults,
+  editEventDefaults,
   splitIntoLessonRanges,
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
 import {
-  EventRegistrationsDocument,
   EventFormOptionsDocument,
   SaveEventsDocument,
-  type EventRegistrationFragment,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
@@ -40,11 +39,13 @@ const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-function useEventFormOptions(
-  savedRegistrations?: readonly EventRegistrationFragment[],
-) {
+function useEventFormOptions(eventId?: string) {
   const auth = useAuth();
-  const [query] = useQuery({ query: EventFormOptionsDocument });
+  const [query] = useQuery({
+    query: EventFormOptionsDocument,
+    variables: { eventId, withRegistrations: !!eventId },
+  });
+  const savedRegistrations = query.data?.registrations;
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
     .map(({ person }) => ({
@@ -120,12 +121,14 @@ function EventEditor({
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm<EventFormInput, unknown, EventFormType>({
     resolver: zodResolver(EventForm),
-    defaultValues: mode === 'create' ? {
+    resetOptions: { keepDirtyValues: true },
+    values: mode === 'create' ? {
       ...defaultValues,
       registrationPeriod: lockEventsByDefault ? null : { start: null, end: null },
     } : defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
+  const ready = !!options.data;
   const [type, instances, isPublic, trainers, registrations] = useWatch({
     control,
     name: ['type', 'instances', 'isPublic', 'trainers', 'registrations'],
@@ -169,6 +172,7 @@ function EventEditor({
   }, [canSplit, splitLessons]);
 
   const onSubmit = async (values: EventFormType) => {
+    if (!ready) return;
     const events = isSplitting
       ? lessonRanges.map(({ since, until }) => {
           const registration = options.participants.get(
@@ -256,11 +260,13 @@ function EventEditor({
               nameSince="instances.0.since"
               nameUntil="instances.0.until"
             />
-            <LocationField
-              control={control}
-              locations={options.data?.tenant?.locationsList ?? []}
-            />
-            <TrainerListElement control={control} trainers={options.trainers} />
+            <fieldset disabled={!ready} className="min-w-0">
+              <LocationField
+                control={control}
+                locations={options.data?.tenant?.locationsList ?? []}
+              />
+              <TrainerListElement control={control} trainers={options.trainers} />
+            </fieldset>
             <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
               {lessonRanges.map((range) => {
                 const key = range.since.toISOString();
@@ -274,6 +280,7 @@ function EventEditor({
                     </span>
                     <div className="sm:justify-self-end">
                       <ComboboxButton
+                        disabled={!ready}
                         value={splitIds[key] ?? null}
                         options={[...options.participants.values()]}
                         placeholder="Volno"
@@ -302,15 +309,19 @@ function EventEditor({
               placeholder={namePlaceholder}
             />
             <InstanceListElement control={control} />
-            <LocationField
-              control={control}
-              locations={options.data?.tenant?.locationsList ?? []}
-            />
-            <TrainerListElement control={control} trainers={options.trainers} />
-            <ParticipantListElement
-              options={options.participants}
-              cohorts={options.data?.tenant?.cohortsList ?? []}
-            />
+            <fieldset disabled={!ready} className="min-w-0 space-y-2">
+              <LocationField
+                control={control}
+                locations={options.data?.tenant?.locationsList ?? []}
+              />
+              <TrainerListElement control={control} trainers={options.trainers} />
+            </fieldset>
+            <fieldset disabled={!ready} className="min-w-0 space-y-2">
+              <ParticipantListElement
+                options={options.participants}
+                cohorts={options.data?.tenant?.cohortsList ?? []}
+              />
+            </fieldset>
           </>
         )}
 
@@ -342,7 +353,7 @@ function EventEditor({
         </div>
 
         <div className="flex justify-end pt-1">
-          <SubmitButton control={control}>
+          <SubmitButton control={control} disabled={!ready}>
             {mode === 'create' ? 'Vytvořit' : 'Uložit'}
           </SubmitButton>
         </div>
@@ -351,53 +362,38 @@ function EventEditor({
   );
 }
 
-export function CreateEventForm({
-  parentId,
-  ...input
-}: CreateEventDefaults & { parentId?: string }) {
+export function CreateEventForm(input: CreateEventDefaults & { parentId?: string }) {
   const auth = useAuth();
+  const [now] = React.useState(() => new Date());
   const options = useEventFormOptions();
-  if (!options.data)
-    return options.error ? <FormError error={options.error} /> : <div>Načítám…</div>;
 
   const enabledTrainers = options.trainers.filter((x) => x.enabled);
   const trainer =
     (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
       auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
 
+  const defaults = React.useMemo(
+    () => createEventDefaults({ ...input, date: input.date ?? now }, trainer?.id),
+    [input, now, trainer?.id],
+  );
+
   return (
     <EventEditor
       mode="create"
-      parentId={parentId ?? input.after?.parentId}
+      parentId={input.parentId ?? input.after?.parentId}
       options={options}
-      defaultValues={createEventDefaults(input, trainer?.id)}
+      defaultValues={defaults}
     />
   );
 }
 
 export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
-  const [now] = React.useState(() => Date.now());
-  const [query] = useQuery({
-    query: EventRegistrationsDocument,
-    variables: { id: event.id, withSchedule: false },
-    requestPolicy: 'network-only',
-  });
-
-  const registrations = query.data?.event?.registrationsList;
-  const options = useEventFormOptions(registrations);
-  if ((!registrations && query.fetching) || (!options.data && options.fetching)) {
-    return <div className="text-sm text-neutral-11">Načítám účastníky…</div>;
-  }
-
-  if (!registrations || !options.data) {
-    return query.error || options.error ? (
-      <FormError error={query.error ?? options.error} />
-    ) : (
-      <div className="text-sm text-neutral-11">Událost není dostupná.</div>
-    );
-  }
-
-  const at = Math.min(now, Date.parse(event.since));
+  const [now] = React.useState(Date.now);
+  const options = useEventFormOptions(event.id);
+  const defaults = React.useMemo(
+    () => editEventDefaults(event, options.data, now),
+    [event, options.data, now],
+  );
 
   return (
     <EventEditor
@@ -406,44 +402,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
       parentId={event.parentId}
       seriesId={event.seriesId}
       options={options}
-      defaultValues={{
-        name: event.name ?? '',
-        type: event.type ?? 'LESSON',
-        locationId: event.locationText ? 'other' : (event.location?.id ?? 'none'),
-        locationText: event.locationText ?? '',
-        capacity: event.capacity ?? 0,
-        capacityUnit: event.capacityUnit,
-        isVisible: event.isVisible ?? false,
-        isPublic: event.isPublic ?? false,
-        hasPublicDetails: event.hasPublicDetails,
-        registrationPeriod: event.registrationPeriod,
-        enableNotes: event.enableNotes ?? false,
-        instances: [
-          {
-            itemId: event.id,
-            since: event.since,
-            until: event.until,
-            isCancelled: event.isCancelled,
-          },
-        ],
-        trainers: event.eventTrainersList.map((trainer) => ({
-          personId: trainer.personId,
-          lessonsOffered: trainer.lessonsOffered,
-        })),
-        cohorts: event.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
-        registrations: registrations.map((r) => ({
-          personId: r.personId,
-          coupleId: r.coupleId,
-          isCancelled: false,
-          cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
-            .filter(({ cohortId }) => cohortId === r.targetCohortId ||
-              options.data?.tenant?.cohortsList?.find((x) => x.id === cohortId)?.cohortMembershipsList
-                .some((m) => m.person?.id === r.personId &&
-                  (at < now || m.status === 'ACTIVE') && Date.parse(m.since) <= at &&
-                  (!m.until || Date.parse(m.until) > at)))
-            .map((x) => x.cohortId),
-        })),
-      }}
+      defaultValues={defaults}
     />
   );
 }
