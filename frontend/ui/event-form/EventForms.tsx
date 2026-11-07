@@ -54,13 +54,14 @@ function useEventFormOptions(input: EventFormProps) {
     variables: { eventId: event?.id, withRegistrations: !!event },
   });
   const savedRegistrations = query.data?.registrations;
+  const parent = input.parent ?? query.data?.event?.parent;
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
-    .filter(({ person }) => !input.parent || input.parent.eventTrainersList.some((x) => x.personId === person.id))
     .map(({ person }) => ({
       id: person.id,
       label: person.name,
-      enabled: auth.isAdmin || auth.isMyPerson(person.id),
+      hidden: !auth.isAdmin && !auth.isMyPerson(person.id),
+      disabled: !!parent && !parent.eventTrainersList.some((x) => x.personId === person.id),
     }));
 
   const participants = React.useMemo(() => {
@@ -111,7 +112,7 @@ function useEventFormOptions(input: EventFormProps) {
 
   const defaultValues = React.useMemo(() => {
     if (event) return editEventDefaults(event, query.data, now.getTime());
-    const enabledTrainers = trainers.filter((x) => x.enabled);
+    const enabledTrainers = trainers.filter((x) => !x.hidden && !x.disabled);
     const trainer =
       (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
         auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));

@@ -359,9 +359,19 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
 
 query EventFormOptions(
   $forRegistration: Boolean! = false
-  $eventId: BigInt
+  $eventId: BigInt! = "0"
   $withRegistrations: Boolean! = false
 ) {
+  event(id: $eventId) @include(if: $withRegistrations) {
+    id
+    parent {
+      id
+      eventTrainersList {
+        id
+        personId
+      }
+    }
+  }
   registrations: eventRegistrationsList(
     condition: { eventId: $eventId, parentRegistrationId: null, registrationStatus: ACTIVE }
     orderBy: PRIMARY_KEY_ASC
@@ -492,6 +502,7 @@ query CalendarData(
   $withParticipantOptions: Boolean! = false
   $withAttendance: Boolean! = false
   $withCompetitions: Boolean! = true
+  $withMyCompetitions: Boolean! = false
   $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
@@ -547,7 +558,7 @@ query CalendarData(
       date: { since: $since, until: $until }
       competitor: { onlyMine: true }
     }
-  ) @include(if: $withCompetitions) @_required {
+  ) @include(if: $withMyCompetitions) @_required {
     nodes {
       id
       entries: entriesList(condition: { competitor: { onlyMine: true } }) {

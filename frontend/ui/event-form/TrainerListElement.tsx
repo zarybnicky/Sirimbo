@@ -5,7 +5,12 @@ import { Plus, X } from 'lucide-react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
 
-export type EventTrainerOption = { id: string; label: string; enabled: boolean };
+export type EventTrainerOption = {
+  id: string;
+  label: string;
+  hidden: boolean;
+  disabled: boolean;
+};
 
 export function TrainerListElement({
   control,
@@ -39,7 +44,7 @@ export function TrainerListElement({
             }
           }}
           options={trainers.filter(
-            (x) => x.enabled && !fields.some((y) => y.personId === x.id),
+            (x) => !x.hidden && !fields.some((y) => y.personId === x.id),
           )}
         />
       </div>

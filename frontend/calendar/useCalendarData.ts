@@ -101,6 +101,7 @@ export function useCalendarData({
   availableTrainers,
   withFacets = true,
   withAttendance = false,
+  withMyCompetitions = false,
   withOtherClubCompetitors = false,
 }: {
   view: CalendarView;
@@ -110,6 +111,7 @@ export function useCalendarData({
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
   withAttendance?: boolean;
+  withMyCompetitions?: boolean;
   withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
@@ -145,6 +147,7 @@ export function useCalendarData({
       withFacets,
       withAttendance,
       withCompetitions: filters.types.includes('COMPETITION'),
+      withMyCompetitions: withMyCompetitions && filters.types.includes('COMPETITION'),
       withOtherClubCompetitors: withOtherClubCompetitors && filters.types.includes('COMPETITION'),
       withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
