@@ -67,6 +67,11 @@ begin
   end if;
 
   perform app_private.refresh_event_series_info(series_ids);
+  if tg_op <> 'INSERT' then
+    delete from event_series series
+    where series.id = any(series_ids)
+      and not exists (select 1 from event where series_id = series.id);
+  end if;
   return null;
 end;
 $$;

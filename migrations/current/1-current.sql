@@ -89,6 +89,7 @@ comment on column event.registration_period is null;
 comment on column event.is_locked is '@behavior -*';
 
 --!include functions/save_events.sql
+--!include functions/event_series_info.sql
 --!include functions/tg_event__refresh_manager_person_ids.sql
 --!include functions/event_registration_info.sql
 --!include functions/set_lesson_request.sql
