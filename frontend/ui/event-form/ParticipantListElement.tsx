@@ -117,12 +117,12 @@ export function ParticipantListElement({
                 <Plus /> {kind === 'couple' ? 'Pár' : 'Člověk'}
               </button>
             }
-            options={[...options.values()].filter(
-              (x) =>
-                x.id.startsWith(`${kind}:`) &&
-                !selected.has(x.id) &&
-                !x.personIds.some((p) => couplePeople.has(p)),
-            )}
+            options={[...options.values()]
+              .filter((x) => x.id.startsWith(`${kind}:`))
+              .map((x) => ({
+                ...x,
+                disabled: selected.has(x.id) || x.personIds.some((p) => couplePeople.has(p)),
+              }))}
             onChange={(id) => {
               if (id) change(id, true);
             }}

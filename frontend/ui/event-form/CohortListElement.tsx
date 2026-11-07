@@ -17,6 +17,7 @@ export function CohortListElement({
 }) {
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove } = useFieldArray({ name: 'cohorts', control });
+  const selected = new Set(fields.map((cohort) => cohort.cohortId));
 
   return (
     <>
@@ -36,8 +37,8 @@ export function CohortListElement({
               </button>
             }
             options={cohorts
-              .filter((x) => !x.isArchived && !fields.some((y) => y.cohortId === x.id))
-              .map(({ id, name }) => ({ id, label: name }))}
+              .filter((x) => !x.isArchived || selected.has(x.id))
+              .map(({ id, name }) => ({ id, label: name, disabled: selected.has(id) }))}
             onChange={(cohortId) => {
               if (cohortId && !fields.some((c) => c.cohortId === cohortId)) {
                 onAdd(cohortId);

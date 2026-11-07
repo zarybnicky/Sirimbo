@@ -13,7 +13,7 @@ import { cn } from '@/lib/cn';
 import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { rankItem } from '@tanstack/match-sorter-utils';
 
-type Item = { id: string | null; label: string; count?: number };
+type Item = { id: string | null; label: string; count?: number; disabled?: boolean };
 type ComboboxProps = {
   value: string | null | undefined;
   onChange: (value: string | null | undefined) => void;
@@ -223,6 +223,7 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
       )}
       filter={(_value, search, keywords) =>
         rankItem(keywords?.[0] ?? '', search.trim()).rank
+          / (keywords?.[1] === 'disabled' ? 10 : 1)
       }
     >
       {searchable && (
@@ -271,30 +272,34 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
           'h-(--cmdk-list-height)',
         )}
       >
-        {options.map((item) => (
-          <Command.Item
-            value={`${item.id}: ${item.label}`}
-            keywords={[item.label]}
-            key={item.id}
-            disabled={disabled}
-            onSelect={() => onChange(item.id)}
-            className={cn(
-              'relative flex p-2 cursor-default select-none items-center rounded-xs',
-              'text-sm outline-hidden data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
-              'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
-            )}
-          >
-            <Check
-              className={cn(
-                'mr-2 size-4',
-                item.id === value ? 'opacity-100' : 'opacity-0',
-              )}
-            />
-            {item.label}
-            {item.count != null && (
-              <span className="ml-auto pl-3 tabular-nums opacity-75">{item.count}</span>
-            )}
-          </Command.Item>
+        {[false, true].map((itemDisabled) => (
+          <Command.Group key={String(itemDisabled)}>
+            {options.filter((item) => !!item.disabled === itemDisabled).map((item) => (
+              <Command.Item
+                value={`${item.id}: ${item.label}`}
+                keywords={[item.label, itemDisabled ? 'disabled' : 'enabled']}
+                key={item.id}
+                disabled={disabled || item.disabled}
+                onSelect={() => onChange(item.id)}
+                className={cn(
+                  'relative flex p-2 cursor-default select-none items-center rounded-xs',
+                  'text-sm outline-hidden data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12 text-accent-11',
+                  'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
+                )}
+              >
+                <Check
+                  className={cn(
+                    'mr-2 size-4',
+                    item.id === value ? 'opacity-100' : 'opacity-0',
+                  )}
+                />
+                {item.label}
+                {item.count != null && (
+                  <span className="ml-auto pl-3 tabular-nums opacity-75">{item.count}</span>
+                )}
+              </Command.Item>
+            ))}
+          </Command.Group>
         ))}
       </Command.List>
     </Command>
