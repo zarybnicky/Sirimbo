@@ -29,7 +29,7 @@ import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListElement';
 import {
-  EventForm,
+  EventForm as EventFormSchema,
   type EventFormInput,
   type EventFormType,
   type EventParticipantOption,
@@ -39,11 +39,20 @@ const eventTypeOptions = (
   ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
 ).map((type) => ({ id: type, label: formatEventType(type) }));
 
-function useEventFormOptions(eventId?: string) {
+type EventFormProps = CreateEventDefaults & {
+  event?: EventWithTrainerFragment;
+  parentId?: string;
+  seriesId?: string;
+};
+
+function useEventFormOptions(input: EventFormProps) {
+  const { event } = input;
   const auth = useAuth();
+  const { lockEventsByDefault } = useTenantConfig();
+  const [now] = React.useState(() => new Date());
   const [query] = useQuery({
     query: EventFormOptionsDocument,
-    variables: { eventId, withRegistrations: !!eventId },
+    variables: { eventId: event?.id, withRegistrations: !!event },
   });
   const savedRegistrations = query.data?.registrations;
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
@@ -92,43 +101,53 @@ function useEventFormOptions(eventId?: string) {
         couple,
       });
     }
-
     return new Map([...participants].toSorted(([, a], [, b]) =>
       Number(a.isExternal) - Number(b.isExternal) ||
       compareText(a.label, b.label),
     ));
   }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);
-  return { ...query, trainers, participants };
+
+  const enabledTrainers = trainers.filter((x) => x.enabled);
+  const trainer =
+    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
+      auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
+
+  const defaultValues = React.useMemo(
+    () => event
+      ? editEventDefaults(event, query.data, now.getTime())
+      : {
+          ...createEventDefaults({ ...input, date: input.date ?? now }, trainer?.id),
+          registrationPeriod: lockEventsByDefault ? null : { start: null, end: null },
+        },
+    [event, input, lockEventsByDefault, now, query.data, trainer?.id],
+  );
+
+  return {
+    ...query,
+    trainers,
+    participants,
+    defaultValues,
+  };
 }
 
-function EventEditor({
-  defaultValues,
-  parentId,
-  seriesId,
-  options,
-  mode,
-}: {
-  defaultValues: EventFormType;
-  parentId?: string | null;
-  seriesId?: string | null;
-  options: ReturnType<typeof useEventFormOptions>;
-  mode: 'create' | 'edit';
-}) {
+export function EventForm(input: EventFormProps) {
+  const { event } = input;
+  const options = useEventFormOptions(input);
+  const { defaultValues } = options;
+  const mode = event ? 'edit' : 'create';
+  const parentId = input.parentId ?? event?.parentId ?? input.after?.parentId;
+  const seriesId = input.seriesId ?? event?.seriesId;
+  const ready = !!options.data;
   const { onSuccess } = useFormResult();
-  const { lockEventsByDefault } = useTenantConfig();
   const [result, saveEvents] = useMutation(SaveEventsDocument);
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm<EventFormInput, unknown, EventFormType>({
-    resolver: zodResolver(EventForm),
+    resolver: zodResolver(EventFormSchema),
     resetOptions: { keepDirtyValues: true },
-    values: mode === 'create' ? {
-      ...defaultValues,
-      registrationPeriod: lockEventsByDefault ? null : { start: null, end: null },
-    } : defaultValues,
+    values: defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
-  const ready = !!options.data;
   const [type, instances, isPublic, trainers, registrations] = useWatch({
     control,
     name: ['type', 'instances', 'isPublic', 'trainers', 'registrations'],
@@ -359,50 +378,5 @@ function EventEditor({
         </div>
       </form>
     </FormProvider>
-  );
-}
-
-export function CreateEventForm(input: CreateEventDefaults & { parentId?: string }) {
-  const auth = useAuth();
-  const [now] = React.useState(() => new Date());
-  const options = useEventFormOptions();
-
-  const enabledTrainers = options.trainers.filter((x) => x.enabled);
-  const trainer =
-    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
-      auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
-
-  const defaults = React.useMemo(
-    () => createEventDefaults({ ...input, date: input.date ?? now }, trainer?.id),
-    [input, now, trainer?.id],
-  );
-
-  return (
-    <EventEditor
-      mode="create"
-      parentId={input.parentId ?? input.after?.parentId}
-      options={options}
-      defaultValues={defaults}
-    />
-  );
-}
-
-export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
-  const [now] = React.useState(Date.now);
-  const options = useEventFormOptions(event.id);
-  const defaults = React.useMemo(
-    () => editEventDefaults(event, options.data, now),
-    [event, options.data, now],
-  );
-
-  return (
-    <EventEditor
-      key={event.id}
-      mode="edit"
-      parentId={event.parentId}
-      seriesId={event.seriesId}
-      options={options}
-      defaultValues={defaults}
-    />
   );
 }

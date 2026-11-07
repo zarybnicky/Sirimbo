@@ -38,7 +38,7 @@ export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
     trainerPersonIds:
       resource?.type === 'person'
         ? [resource.id]
-        : resource?.type === 'unassigned' || resource?.type === 'competition'
+        : resource?.type === 'unassigned'
           ? []
           : undefined,
     locationId: resource?.type === 'location' ? resource.id : undefined,

@@ -14,7 +14,7 @@ import { startOf } from 'date-arithmetic';
 import * as React from 'react';
 import { buttonCls, cardCls } from '@/ui/style';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { CreateEventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForms';
 import { Plus } from 'lucide-react';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { FormError } from '@/ui/form';
@@ -109,7 +109,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
                       <Plus />
                     </DialogTrigger.Plain>
                     <DialogContent className="sm:max-w-xl">
-                      <CreateEventForm date={new Date(date)} events={events} />
+                      <EventForm date={new Date(date)} events={events} />
                     </DialogContent>
                   </Dialog>
                 )}

@@ -13,7 +13,7 @@ import { endOf, startOf } from 'date-arithmetic';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
-import { CreateEventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForms';
 import { CalendarDays } from 'lucide-react';
 
 interface EventNode {
@@ -96,7 +96,7 @@ export function EventList() {
           <Dialog modal={false}>
             <DialogTrigger.Add size="sm" text="Přidat událost" />
             <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-              <CreateEventForm type="CAMP" date={createDate} trainerPersonIds={[]} />
+              <EventForm type="CAMP" date={createDate} trainerPersonIds={[]} />
             </DialogContent>
           </Dialog>
         )}

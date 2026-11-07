@@ -17,7 +17,7 @@ import {
   UpdateEventDocument,
 } from '@/graphql/Event';
 import { type ActionContext, defineActions } from '@/lib/actions';
-import { EditEventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForms';
 import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm.tsx';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
@@ -80,7 +80,7 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     label: 'Upravit',
     icon: Pencil,
     visible: ({ auth, item }) => auth.canManageEvent(item),
-    render: ({ item }) => <EditEventForm event={item} />,
+    render: ({ item }) => <EventForm event={item} />,
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,

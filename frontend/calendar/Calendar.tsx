@@ -14,7 +14,7 @@ import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
-import { CreateEventForm } from '@/ui/event-form/EventForms';
+import { EventForm } from '@/ui/event-form/EventForms';
 import { buttonCls } from '@/ui/style';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { DropdownMenuButton } from '@/ui/dropdown';
@@ -341,7 +341,7 @@ export function Calendar({
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             {creating && (
-              <CreateEventForm {...creating} events={events} parentId={parentId} />
+              <EventForm {...creating} events={events} parentId={parentId} />
             )}
           </DialogContent>
         </Dialog>
