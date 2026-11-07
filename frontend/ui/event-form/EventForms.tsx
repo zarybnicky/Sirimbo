@@ -314,7 +314,7 @@ function EventEditor({
           </>
         )}
 
-        <div className="flex flex-wrap items-baseline justify-between gap-x-1">
+        <div className="grid grid-cols-2 items-baseline justify-between gap-x-1">
           <CheckboxElement name="isVisible" label="Viditelná pro členy" />
           <Controller
             control={control}
@@ -322,24 +322,24 @@ function EventEditor({
             render={({ field }) => (
               <Checkbox
                 name={field.name}
-                label="Zakázat přihlašování/odhlašování"
-                checked={field.value === null}
+                label="Povolit přihlášky"
+                checked={field.value !== null}
                 onBlur={field.onBlur}
                 onChange={() => field.onChange(
-                  field.value === null ? { start: null, end: null } : null,
+                  field.value !== null ? null : { start: null, end: null },
                 )}
               />
             )}
           />
-          <CheckboxElement name="isPublic" label="Zveřejnit přihlášky" />
-          <CheckboxElement name="hasPublicDetails" label="Zveřejnit program" disabled={!isPublic} />
-          {(type === 'RESERVATION' || type === 'CAMP') && (
-            <CheckboxElement name="enableNotes" label="Povolit poznámky k přihlášce" />
+          <CheckboxElement name="isPublic" label="Viditelná pro veřejnost" />
+          <CheckboxElement name="hasPublicDetails" label="Veřejný program" disabled={!isPublic} />
+          {type === 'CAMP' && (
+            <CheckboxElement name="enableNotes" label="Poznámky k přihlášce" />
+          )}
+          {mode === 'edit' && (
+            <CheckboxElement name="instances.0.isCancelled" label="Zrušeno" />
           )}
         </div>
-        {mode === 'edit' && (
-          <CheckboxElement name="instances.0.isCancelled" label="Zrušeno" />
-        )}
 
         <div className="flex justify-end pt-1">
           <SubmitButton control={control}>
@@ -362,15 +362,15 @@ export function CreateEventForm({
 
   const enabledTrainers = options.trainers.filter((x) => x.enabled);
   const trainer =
-    auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id)) ??
-    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined);
+    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
+      auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
 
   return (
     <EventEditor
       mode="create"
       parentId={parentId ?? input.after?.parentId}
       options={options}
-      defaultValues={createEventDefaults(input, trainer ? [trainer.id] : [])}
+      defaultValues={createEventDefaults(input, trainer?.id)}
     />
   );
 }

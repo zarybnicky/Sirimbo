@@ -34,7 +34,7 @@ export function AddToEventScheduleForm({
   const options = React.useMemo(
     () =>
       (data?.eventsList ?? [])
-        .filter((event) => event.id !== eventId)
+        .filter((x) => x.id !== eventId)
         .map((event) => ({
           id: event.id,
           label: `${formatEventName(event)} - ${fullDateFormatter.formatRange(
