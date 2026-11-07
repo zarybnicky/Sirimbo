@@ -7,7 +7,6 @@ import type { CompetitionParticipantCondition } from '@/graphql';
 import { CalendarDataDocument, type CalendarDataQueryVariables } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
-import { useAtomValue } from 'jotai';
 import { useClient, useQuery } from 'urql';
 import {
   type CalendarCompetitionEvent,
@@ -18,12 +17,37 @@ import {
   resourceKey,
 } from './types';
 import type { CalendarView } from '@/calendar/CalendarViews';
-import { eventTypes as allEventTypes, groupByAtom } from '@/calendar/state';
+import { eventTypes as allEventTypes } from '@/calendar/state';
 import { compareText } from '@/lib/compare';
 import { useAuth } from '@/lib/auth';
 import { formatEventType } from '@/ui/format';
 
-export type CalendarGroupBy = 'none' | 'trainer' | 'room';
+const groupByLabels = {
+  none: {
+    label: 'Neseskupovat',
+    shortLabel: 'Neseskupovat',
+  },
+  'day-trainer': {
+    label: 'Podle dne, pak podle trenéra',
+    shortLabel: 'Den / trenér',
+  },
+  'day-room': {
+    label: 'Podle dne, pak podle sálu',
+    shortLabel: 'Den / sál',
+  },
+  trainer: {
+    label: 'Podle trenéra, pak podle dne',
+    shortLabel: 'Trenér / den',
+  },
+  room: {
+    label: 'Podle sálu, pak podle dne',
+    shortLabel: 'Sál / den',
+  },
+};
+export type CalendarGroupBy = keyof typeof groupByLabels;
+export const calendarGroupBy = Object.keys(groupByLabels) as CalendarGroupBy[];
+export const calendarGroupByOptions = calendarGroupBy.map((id) => ({ id, ...groupByLabels[id] }));
+
 export const calendarTypeOptions = [
   ...allEventTypes.map((value) => ({ value, label: formatEventType(value) })),
   { value: 'COMPETITION', label: 'Soutěže' },
@@ -32,6 +56,7 @@ export const calendarTypeOptions = [
 export const calendarTypes = calendarTypeOptions.map(({ value }) => value);
 
 export type CalendarFilters = {
+  groupBy: CalendarGroupBy;
   participants: CompetitionParticipantCondition;
   trainers: string[];
   types: (typeof calendarTypes)[number][];
@@ -88,7 +113,6 @@ export function useCalendarData({
   withClubCompetitions?: boolean;
 }) {
   const auth = useAuth();
-  const groupBy = useAtomValue(groupByAtom);
   const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
   const client = useClient();
@@ -127,7 +151,10 @@ export function useCalendarData({
     }),
   });
 
-  const effectiveGroupBy = onlyMine ? 'none' : groupBy;
+  const effectiveGroupBy = onlyMine ? 'none'
+    : filters.groupBy === 'day-trainer' ? 'trainer'
+    : filters.groupBy === 'day-room' ? 'room'
+    : filters.groupBy;
   const queryVariables = operation?.variables;
 
   React.useEffect(() => {

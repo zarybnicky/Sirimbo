@@ -30,6 +30,7 @@ const monthView = {
   }),
 };
 const calendarFilters: CalendarFilters = {
+  groupBy: 'none',
   participants: {},
   trainers: [],
   location: [],

@@ -1,6 +1,8 @@
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { canAccess, type AccessRequirements, type ResolvedAuth } from '@/lib/auth-claims';
 import type { TenantConfig } from '@/tenant/types';
+import { useAtomValue } from 'jotai';
+import { calendarPreferencesAtom } from '@/calendar/state';
 
 export type MenuLink = AccessRequirements & {
   type: 'link';
@@ -176,5 +178,17 @@ const memberMenu: MenuStructItem[] = [
 export function useMemberMenu(): MenuStructItem[] {
   const auth = useAuth();
   const tenant = useTenantConfig();
-  return filterMenu(memberMenu, auth, tenant);
+  const preferences = useAtomValue(calendarPreferencesAtom);
+  const params = new URLSearchParams(preferences);
+  const calendarHref = `/rozpis${params.size > 0 ? `?${params}` : ''}`;
+  return filterMenu(memberMenu, auth, tenant).map((item) =>
+    item.type === 'menu'
+      ? {
+          ...item,
+          children: item.children.map((link) =>
+            link.href === '/rozpis' ? { ...link, href: calendarHref } : link,
+          ),
+        }
+      : item,
+  );
 }

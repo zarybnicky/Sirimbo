@@ -1,5 +1,7 @@
 import { atom } from 'jotai';
-import { selectAtom } from 'jotai/utils';
+import { atomWithStorage, selectAtom } from 'jotai/utils';
+import type { CalendarViewKey } from './CalendarViews';
+import type { CalendarGroupBy } from './useCalendarData';
 import type { EventType } from '@/graphql';
 import type { CreateEventDefaults } from './eventDefaults';
 import type {
@@ -23,6 +25,11 @@ export const stepAtom = atom(15);
 export const minTimeAtom = atom(new Date(1972, 0, 1, 7, 0, 0));
 export const maxTimeAtom = atom(new Date(1972, 0, 1, 23, 59, 59, 999));
 export const focusedTimeAtom = atom(new Date(1972, 0, 1, 16, 0, 0));
+
+export const calendarPreferencesAtom = atomWithStorage<{
+  v?: CalendarViewKey;
+  groupBy?: CalendarGroupBy;
+}>('calendarPreferences', {});
 
 export const isDraggingAtom = atom(false);
 
@@ -76,21 +83,6 @@ export const calendarConflictsFor = (instanceId: string | null | undefined) =>
     return conflicts[instanceId] ?? emptyConflicts;
   });
 
-// declare function dragFromOutsideItem(): CalendarEvent | undefined;
-
-const storage = {
-  getItem(key: string): string | null {
-    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
-  },
-  setItem(key: string, value: string | null) {
-    if (value) {
-      localStorage.setItem(key, value);
-    } else {
-      localStorage.removeItem(key);
-    }
-  },
-};
-
 export const eventTypes = [
   'LESSON',
   'GROUP',
@@ -98,16 +90,3 @@ export const eventTypes = [
   'CAMP',
   'HOLIDAY',
 ] as const satisfies readonly EventType[];
-const baseGroupByAtom = atom(
-  ((storage.getItem('groupBy') as any) || 'trainer') as 'none' | 'trainer' | 'room',
-);
-
-export const groupByAtom = atom(
-  (get) => get(baseGroupByAtom),
-  (get, set, nextValue: 'none' | 'trainer' | 'room') => {
-    if (get(baseGroupByAtom) !== nextValue) {
-      set(baseGroupByAtom, nextValue);
-      storage.setItem('groupBy', nextValue);
-    }
-  },
-);

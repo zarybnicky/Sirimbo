@@ -345,8 +345,6 @@ export function EventForm(input: EventFormProps) {
               locations={options.data?.tenant?.locationsList ?? []}
             />
             <TrainerListElement control={control} trainers={options.trainers} />
-          </fieldset>
-          <fieldset disabled={!ready} className="min-w-0 space-y-2">
             <ParticipantListElement
               control={control}
               setValue={setValue}

@@ -5,16 +5,22 @@ import {
   CalendarViews,
 } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
-import { GroupByPicker } from '@/calendar/GroupByPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import { type CreateEventDefaults } from '@/calendar/eventDefaults';
-import { calendarTypes, useCalendarData } from '@/calendar/useCalendarData';
+import {
+  calendarGroupBy,
+  calendarGroupByOptions,
+  type CalendarGroupBy,
+  calendarTypes,
+  useCalendarData,
+} from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EventForm } from '@/ui/event-form/EventForms';
+import { ComboboxButton } from '@/ui/fields/Combobox';
 import { buttonCls } from '@/ui/style';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { DropdownMenuButton } from '@/ui/dropdown';
@@ -30,15 +36,15 @@ import {
   useQueryStates,
 } from 'nuqs';
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import { dragListenersAtom, type ExternalDragSubject } from './state';
+import { calendarPreferencesAtom, dragListenersAtom, type ExternalDragSubject } from './state';
 import {
   type CalendarClubEvent,
   type CalendarTrainer,
   type DateRange,
   type InteractionInfo,
-  type ViewProps,
 } from './types';
 
 const emptyArray: readonly [] = [];
@@ -63,7 +69,7 @@ export function Calendar({
   onDropFromOutside,
   onRemove,
   availableTrainers,
-  primary,
+  defaultGroupBy = 'trainer',
   scrollView = false,
 }: {
   parentId?: string;
@@ -75,10 +81,12 @@ export function Calendar({
   ) => void | Promise<void>;
   onRemove?: (event: CalendarClubEvent) => void | Promise<void>;
   availableTrainers?: readonly CalendarTrainer[];
-  primary?: ViewProps['primary'];
+  defaultGroupBy?: CalendarGroupBy;
   scrollView?: boolean;
 }) {
   const auth = useAuth();
+  const pathname = usePathname();
+  const setPreferences = useSetAtom(calendarPreferencesAtom);
 
   const defaultView = !dateRange ? 'agenda' : auth.isMember ? 'range' : 'day';
   const defaultOnlyMine = !!dateRange && auth.isMember;
@@ -93,6 +101,7 @@ export function Calendar({
       free: parseAsBoolean.withDefault(false),
       v: parseAsStringLiteral(availableViews).withDefault(defaultView),
       columns: parseAsStringLiteral(columnModes),
+      groupBy: parseAsStringLiteral(calendarGroupBy).withDefault(defaultGroupBy),
       date: calendarDateParser
         .withDefault(defaultDate)
         .withOptions({ clearOnDefault: false }),
@@ -108,6 +117,10 @@ export function Calendar({
   );
   const { date, v: viewInput } = filters;
   const onlyMine = auth.isLoggedIn && filters.my;
+  const setView = (v: CalendarViewKey) => {
+    void setFilters({ v });
+    if (pathname === '/rozpis') setPreferences((previous) => ({ ...previous, v }));
+  };
 
   const rangeView = React.useMemo<CalendarView | undefined>(
     () =>
@@ -198,7 +211,7 @@ export function Calendar({
       events={calendarEvents}
       backgroundEvents={emptyArray}
       resources={resources}
-      primary={primary}
+      primary={filters.groupBy.startsWith('day-') ? 'day' : 'resource'}
       showAllResources={filters.columns === 'all'}
     />
   );
@@ -213,7 +226,7 @@ export function Calendar({
               date={date}
               view={viewInput}
               setDate={(date) => void setFilters({ date })}
-              setView={(v) => void setFilters({ v })}
+              setView={setView}
             />
           )}
           {!dateRange && view.nav && (
@@ -225,10 +238,23 @@ export function Calendar({
           )}
           <ViewPicker
             view={viewInput}
-            setView={(v) => void setFilters({ v })}
+            setView={setView}
             views={availableViews}
           />
-          {!onlyMine && view.supportsGrouping && <GroupByPicker />}
+          {!onlyMine && view.supportsGrouping && (
+            <ComboboxButton
+              searchable={false}
+              value={filters.groupBy}
+              options={calendarGroupByOptions}
+              onChange={(id) => {
+                const groupBy = calendarGroupBy.find((value) => value === id) ?? 'none';
+                void setFilters({ groupBy });
+                if (pathname === '/rozpis') {
+                  setPreferences((previous) => ({ ...previous, groupBy }));
+                }
+              }}
+            />
+          )}
           {auth.isLoggedIn && (
             <button
               type="button"

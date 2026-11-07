@@ -23,6 +23,7 @@ import { FormError } from '@/ui/form';
 const showClubCompetitions = false;
 
 const myEventsFilters: CalendarFilters = {
+  groupBy: 'none',
   free: false,
   participants: { onlyMine: true },
   trainers: [],

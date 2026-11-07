@@ -13,7 +13,13 @@ import { cn } from '@/lib/cn';
 import { buttonCls, inputCls, inputGroupCls } from '@/ui/style';
 import { rankItem } from '@tanstack/match-sorter-utils';
 
-type Item = { id: string | null; label: string; count?: number; disabled?: boolean };
+type Item = {
+  id: string | null;
+  label: string;
+  shortLabel?: string;
+  count?: number;
+  disabled?: boolean;
+};
 type ComboboxProps = {
   value: string | null | undefined;
   onChange: (value: string | null | undefined) => void;
@@ -23,6 +29,7 @@ type ComboboxProps = {
   className?: string;
   label?: React.ReactNode;
   inline?: boolean;
+  searchable?: boolean;
   disabled?: boolean;
 } & Omit<Popover.PopoverContentProps, 'onChange' | 'onBlur'>;
 
@@ -67,10 +74,12 @@ export function Combobox({
   placeholder,
   className,
   inline = false,
+  searchable = true,
   disabled = false,
   ...props
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
+  const selected = options.find((item) => item.id === value);
   const realOnChange = React.useCallback(
     (x: string | null | undefined) => {
       onChange(x);
@@ -96,6 +105,7 @@ export function Combobox({
           value={value}
           onChange={onChange}
           options={options}
+          searchable={searchable}
           disabled={disabled}
         />
       </div>
@@ -118,7 +128,7 @@ export function Combobox({
             'disabled:bg-neutral-2 disabled:border-neutral-7',
           )}
         >
-          {value ? options.find((item) => item.id === value)?.label : placeholder}
+          {value ? selected?.shortLabel ?? selected?.label : placeholder}
           <ChevronsDown className="size-4 shrink-0 opacity-50" />
         </Popover.Trigger>
       </div>
@@ -131,7 +141,7 @@ export function Combobox({
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} disabled={disabled} />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} searchable={searchable} disabled={disabled} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
@@ -146,6 +156,7 @@ export function ComboboxButton({
   className,
   buttonClassName,
   trigger,
+  searchable = true,
   disabled,
   ...props
 }: Omit<ComboboxProps, 'label' | 'onBlur' | 'value' | 'placeholder' | 'inline'> & {
@@ -175,7 +186,7 @@ export function ComboboxButton({
               buttonClassName,
             )}
           >
-            {value ? selected?.label : placeholder}
+            {value ? selected?.shortLabel ?? selected?.label : placeholder}
             {value && selected?.count != null && (
               <span className="tabular-nums opacity-75">{selected.count}</span>
             )}
@@ -192,7 +203,7 @@ export function ComboboxButton({
           sideOffset={5}
           {...props}
         >
-          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} disabled={disabled} />
+          <ComboboxSearchArea value={value} onChange={realOnChange} options={options} searchable={searchable} disabled={disabled} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

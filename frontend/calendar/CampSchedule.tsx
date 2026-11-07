@@ -12,7 +12,6 @@ import {
   externalDragDataType,
   type ExternalDragSubject,
   externalDragSubjectAtom,
-  groupByAtom,
   isDraggingAtom,
 } from '@/calendar/state';
 import type { CalendarClubEvent, InteractionInfo } from '@/calendar/types';
@@ -21,7 +20,9 @@ import { formatEventName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
 import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { parseAsStringLiteral, useQueryState } from 'nuqs';
+import { calendarGroupBy } from './useCalendarData';
 import {
   ChevronRight,
   GripVertical,
@@ -56,15 +57,12 @@ export const CampSchedule = React.memo(function CampSchedule({
   const [requestsOpen, setRequestsOpen] = React.useState<boolean>();
   const saveEvents = useMutation(SaveEventsDocument)[1];
   const deleteInstance = useMutation(DeleteEventDocument)[1];
-  const [groupBy, setGroupBy] = useAtom(groupByAtom);
+  const [groupBy] = useQueryState(
+    'groupBy',
+    parseAsStringLiteral(calendarGroupBy).withDefault('day-trainer'),
+  );
   const dragSubject = useAtomValue(dragSubjectAtom);
   const isDragging = useAtomValue(isDraggingAtom);
-  const previousGroupBy = React.useRef(groupBy);
-  React.useEffect(() => {
-    const previous = previousGroupBy.current;
-    setGroupBy('trainer');
-    return () => setGroupBy(previous);
-  }, [setGroupBy]);
 
   const availableTrainers = React.useMemo(() => {
     const trainers = new Map<string, string>();
@@ -195,7 +193,7 @@ export const CampSchedule = React.memo(function CampSchedule({
           onDropFromOutside={scheduleRequest.execute}
           onRemove={removeLesson.execute}
           availableTrainers={query.data?.event ? availableTrainers : undefined}
-          primary="day"
+          defaultGroupBy="day-trainer"
         />
       </div>
       {canShowRequests && (
@@ -233,7 +231,7 @@ export const CampSchedule = React.memo(function CampSchedule({
               scheduledLessons={query.data?.eventsList ?? []}
               fetching={query.fetching}
               error={requestError}
-              lockTrainers={groupBy === 'trainer'}
+              lockTrainers={groupBy === 'trainer' || groupBy === 'day-trainer'}
             />
           )}
           {showRequests && draggedLesson && (
