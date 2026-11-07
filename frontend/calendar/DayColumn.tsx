@@ -28,6 +28,7 @@ import {
 } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { cn } from '@/lib/cn';
+import { CompetitionEventList } from '@/ui/Competitions';
 import { layoutEvents } from '@/calendar/layout';
 import { shortTimeFormatter } from '@/ui/format';
 import { defaultsFromSlot } from './eventDefaults';
@@ -421,8 +422,16 @@ function DayColumn({
   const backgroundEventsInRange = React.useMemo(() => {
     return layoutEvents(backgroundEvents, slotMetrics, 5);
   }, [backgroundEvents, slotMetrics]);
-  const eventsInRange = React.useMemo(() => {
-    return layoutEvents(events, slotMetrics, 5); // allow 5 minute overlaps
+  const { competitions, eventsInRange } = React.useMemo(() => {
+    const competitions = events.filter((x) => x.kind === 'competition');
+    return {
+      competitions,
+      eventsInRange: layoutEvents(
+        events.filter((x) => x.kind !== 'competition' || x === competitions[0]),
+        slotMetrics,
+        5, // allow 5 minute overlaps
+      ),
+    };
   }, [events, slotMetrics]);
 
   const isToday = eq(date, new Date(), 'day');
@@ -455,7 +464,7 @@ function DayColumn({
       ))}
 
       <div className="absolute inset-0 mr-1 md:mr-2 lg:mr-4">
-        {backgroundEventsInRange.map(({ event, style }) => (
+        {backgroundEventsInRange.map(({ event, style }) => event.kind === 'event' && (
           <TimeGridEvent
             isBackgroundEvent
             key={event.id}
@@ -464,7 +473,20 @@ function DayColumn({
             slotMetrics={slotMetrics}
           />
         ))}
-        {eventsInRange.map(({ event, style }) => (
+        {eventsInRange.map(({ event, style }) => event.kind === 'competition' ? (
+          <div
+            key="competitions"
+            style={{
+              top: `${style.top}%`,
+              width: `${style.width}%`,
+              height: `${style.height}%`,
+              left: `${style.xOffset}%`,
+            }}
+            className="@container/competition rbc-event absolute max-h-full min-h-5 overflow-y-auto bg-transparent p-0 text-green-12"
+          >
+            <CompetitionEventList events={competitions} />
+          </div>
+        ) : event.kind === 'event' && (
           <TimeGridEvent
             key={event.id}
             style={style}

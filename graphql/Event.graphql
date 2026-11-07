@@ -502,7 +502,6 @@ query CalendarData(
   $withParticipantOptions: Boolean! = false
   $withAttendance: Boolean! = false
   $withCompetitions: Boolean! = true
-  $withMyCompetitions: Boolean! = false
   $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
@@ -532,6 +531,22 @@ query CalendarData(
       person { id name firstName lastName }
     }
   }
+  viewerPeople: people(condition: { onlyMine: true }) @include(if: $withCompetitions) @_required {
+    nodes {
+      id
+      federationPeople(first: 300) {
+        nodes {
+          id
+          competitorComponents(first: 300) {
+            nodes {
+              competitorId
+              personId
+            }
+          }
+        }
+      }
+    }
+  }
   competitions(
     first: 300
     condition: {
@@ -548,26 +563,6 @@ query CalendarData(
       }
       results: resultsList(condition: { competitor: $participant }) {
         ...CompetitionResult
-      }
-    }
-  }
-  myCompetitions: competitions(
-    first: 300
-    condition: {
-      includeCancelled: false
-      date: { since: $since, until: $until }
-      competitor: { onlyMine: true }
-    }
-  ) @include(if: $withMyCompetitions) @_required {
-    nodes {
-      id
-      entries: entriesList(condition: { competitor: { onlyMine: true } }) {
-        competitionId
-        competitorId
-      }
-      results: resultsList(condition: { competitor: { onlyMine: true } }) {
-        competitionId
-        competitorId
       }
     }
   }

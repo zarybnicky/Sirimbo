@@ -101,7 +101,6 @@ export function useCalendarData({
   availableTrainers,
   withFacets = true,
   withAttendance = false,
-  withMyCompetitions = false,
   withOtherClubCompetitors = false,
 }: {
   view: CalendarView;
@@ -111,7 +110,6 @@ export function useCalendarData({
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
   withAttendance?: boolean;
-  withMyCompetitions?: boolean;
   withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
@@ -147,7 +145,6 @@ export function useCalendarData({
       withFacets,
       withAttendance,
       withCompetitions: filters.types.includes('COMPETITION'),
-      withMyCompetitions: withMyCompetitions && filters.types.includes('COMPETITION'),
       withOtherClubCompetitors: withOtherClubCompetitors && filters.types.includes('COMPETITION'),
       withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
@@ -299,15 +296,16 @@ export function useCalendarData({
           : [];
       }),
     ];
-    const myCompetitorIds = [
-      ...new Set(
-        data?.myCompetitions?.nodes.flatMap((competition) =>
-          [...competition.entries, ...competition.results].map(
-            (entry) => entry.competitorId,
-          ),
-        ),
-      ),
-    ];
+    const viewerCompetitorIds = new Set(
+      (data?.viewerPeople?.nodes ?? [])
+        .flatMap((x) => x.federationPeople.nodes)
+        .flatMap((x) => x.competitorComponents.nodes)
+        .map((x) => x.competitorId),
+    );
+    const hasParticipantSelection = onlyMine ||
+      filters.participants.personIds != null ||
+      filters.participants.coupleId != null ||
+      filters.participants.cohortId != null;
     const clubEntries = new Map(
       groupCompetitionEvents(data?.clubCompetitions?.nodes).map(({ key, entries }) => [key, entries]),
     );
@@ -322,12 +320,16 @@ export function useCalendarData({
         ...calendarDay(date!),
         resourceKeys:
           effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-        items: entries,
-        clubEntries: (clubEntries.get(key) ?? []).filter(
+        items: [...entries, ...(clubEntries.get(key) ?? []).filter(
           (x) => !selected.has(`${x.competitionId}:${x.competitorId}`),
+        )],
+        collapsedEntries: hasParticipantSelection ? entries : entries.filter(
+          (entry) => viewerCompetitorIds.has(entry.competitorId),
         ),
-        myCompetitorIds,
         officials,
+        collapsedOfficials: hasParticipantSelection ? officials : officials.filter(
+          ({ person }) => person?.peopleList.some(({ id }) => auth.isMyPerson(id)),
+        ),
       };
     });
     calendarEvents.push(...competitions);
@@ -383,6 +385,7 @@ export function useCalendarData({
     filters,
     showAllResources,
     auth,
+    onlyMine,
     effectiveGroupBy,
     operation,
     range,

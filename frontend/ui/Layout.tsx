@@ -8,7 +8,7 @@ import { CallToAction } from '@/ui/CallToAction';
 import React from 'react';
 import { Header } from '@/ui/Header';
 import { Sidebar } from '@/ui/Sidebar';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 type LayoutProps = AccessRequirements & {
   hideTopMenuIfLoggedIn?: boolean;
@@ -35,7 +35,6 @@ export const Layout = React.memo(function Layout({
     ? '/'
     : '/dashboard';
 
-  const router = useRouter();
   const search = useSearchParams()?.toString();
   const url = usePathname() + (search ? `?${search}` : '');
 
@@ -43,9 +42,9 @@ export const Layout = React.memo(function Layout({
 
   React.useEffect(() => {
     if (missingPermission && !auth.isLoggedIn) {
-      router.push(`/login?from=${encodeURIComponent(url)}`);
+      window.location.replace(`/login?from=${encodeURIComponent(url)}`);
     }
-  }, [router, auth.isLoggedIn, missingPermission, url]);
+  }, [auth.isLoggedIn, missingPermission, url]);
 
   showTopMenu = tenant.publicSite ? showTopMenu : false;
   if (hideTopMenuIfLoggedIn) {

@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { useAuth } from '@/lib/auth';
+import type { CalendarCompetitionEvent } from '@/calendar/types';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
@@ -102,38 +102,49 @@ export function groupCompetitionEvents(
   );
 }
 
+export function CompetitionEventList({ events }: { events: readonly CalendarCompetitionEvent[] }) {
+  return (
+    <div className="flex flex-col gap-2">
+      {events.map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
+        <div
+          key={id}
+          className={cardCls({ className: 'w-full rounded-lg border-green-7 bg-green-2 p-3' })}
+        >
+          <CompetitionEventContent
+            entries={items}
+            officials={officials}
+            collapsedEntries={collapsedEntries}
+            collapsedOfficials={collapsedOfficials}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function CompetitionEventContent({
   entries,
-  clubEntries = [],
   officials = [],
+  collapsedEntries = entries,
+  collapsedOfficials = officials,
   cards = false,
-  myCompetitorIds,
 }: {
   entries: readonly CompetitionEntry[];
-  clubEntries?: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
+  collapsedEntries?: readonly CompetitionEntry[];
+  collapsedOfficials?: readonly CompetitionOfficialAssignment[];
   cards?: boolean;
-  myCompetitorIds?: readonly string[];
 }) {
-  const auth = useAuth();
   const [open, setOpen] = React.useState(false);
   const [override, setOverride] = React.useState<boolean | null>(null);
   const competition = entries[0]?.competition;
   const event = competition?.event ?? officials[0]?.event;
   const date = competition?.startDate ?? officials[0]?.date;
   if (!competition && !event) return null;
-  const collapsedEntries = myCompetitorIds
-    ? entries.filter((entry) => myCompetitorIds.includes(entry.competitorId))
-    : entries;
-  const collapsedOfficials = myCompetitorIds
-    ? officials.filter(({ person }) =>
-        person?.peopleList.some(({ id }) => auth.isMyPerson(id)),
-      )
-    : officials;
   const canExpand =
-    entries.length + clubEntries.length > collapsedEntries.length ||
+    entries.length > collapsedEntries.length ||
     officials.length > collapsedOfficials.length;
-  const visible = open ? [...entries, ...clubEntries] : collapsedEntries;
+  const visible = open ? entries : collapsedEntries;
   const visibleOfficials = open ? officials : collapsedOfficials;
   const competitors = Map.groupBy(visible, (entry) => entry.competitorId);
   const competitions = Map.groupBy(visible, (entry) => entry.competitionId);
@@ -173,7 +184,7 @@ export function CompetitionEventContent({
         <div
           className={cn(
             'flex items-start justify-between gap-2 text-sm font-semibold leading-tight',
-            canExpand && 'relative pointer-events-none pr-6',
+            canExpand && 'relative pointer-events-none pr-4',
             cards ? 'text-neutral-12' : 'text-green-11',
           )}
         >
@@ -191,7 +202,7 @@ export function CompetitionEventContent({
         <div
           className={cn(
             'flex items-baseline justify-between gap-2 text-xs leading-tight',
-            canExpand && 'relative pointer-events-none pr-6',
+            canExpand && 'relative pointer-events-none',
             cards ? 'text-neutral-11' : 'text-green-11',
           )}
         >

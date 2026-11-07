@@ -78,7 +78,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   </Dialog>
                 )}
               </div>
-              {comps.map(({ id, items, officials, clubEntries }) => (
+              {comps.map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
                 <div
                   key={id}
                   className="mx-2 mb-3 rounded-lg border border-green-7 bg-green-2 p-3"
@@ -86,7 +86,8 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   <CompetitionEventContent
                     entries={items}
                     officials={officials}
-                    clubEntries={clubEntries}
+                    collapsedEntries={collapsedEntries}
+                    collapsedOfficials={collapsedOfficials}
                   />
                 </div>
               ))}

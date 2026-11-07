@@ -31,9 +31,9 @@ export type CalendarCompetitionEvent = CalendarItemBase & {
   id: string;
   title: string;
   items: readonly CompetitionEntry[];
-  clubEntries?: readonly CompetitionEntry[];
-  myCompetitorIds?: readonly string[];
+  collapsedEntries: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
+  collapsedOfficials: readonly CompetitionOfficialAssignment[];
 };
 
 export type CalendarBirthdayEvent = CalendarItemBase & {

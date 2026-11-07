@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import type { TimeSlotMetrics } from './TimeSlotMetrics';
-import type { CalendarEvent, DragDirection } from './types';
+import type { CalendarClubEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -10,7 +10,6 @@ import { selectAtom } from 'jotai/utils';
 import { formatEventName, shortTimeFormatter } from '@/ui/format';
 import { useTenantConfig } from '@/lib/auth';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
-import { CompetitionEventContent } from '@/ui/Competitions';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
   if (!name) return '';
@@ -34,28 +33,18 @@ type TimeGridEventProps = {
     xOffset: number;
   };
   className?: string;
-  event: CalendarEvent;
+  event: CalendarClubEvent;
   isBackgroundEvent?: boolean;
   slotMetrics: TimeSlotMetrics;
 };
 
-function TimeGridEvent({ event, ...props }: TimeGridEventProps) {
-  if (event.kind === 'competition') {
-    return <CompetitionTimeGridEvent event={event} {...props} />;
-  }
-  if (event.kind === 'event') {
-    return <InstanceTimeGridEvent event={event} {...props} />;
-  }
-  return null;
-}
-
-function InstanceTimeGridEvent({
+function TimeGridEvent({
   style,
   className,
   event,
   isBackgroundEvent,
   slotMetrics,
-}: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
+}: TimeGridEventProps) {
   const { useTrainerInitials } = useTenantConfig();
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
@@ -192,30 +181,6 @@ function InstanceTimeGridEvent({
         <EventSummary event={event.instance} />
       </PopoverContent>
     </Popover>
-  );
-}
-
-function CompetitionTimeGridEvent({
-  style,
-  className,
-  event,
-}: TimeGridEventProps & { event: Extract<CalendarEvent, { kind: 'competition' }> }) {
-  return (
-    <div
-      style={{
-        top: `${style.top}%`,
-        width: `${style.width}%`,
-        height: `${style.height}%`,
-        left: `${style.xOffset}%`,
-      }}
-      title={event.title}
-      className={cn(
-        className,
-        '@container/competition rbc-event absolute max-h-full min-h-5 overflow-y-auto border border-green-7 bg-green-3 p-2 text-green-12',
-      )}
-    >
-      <CompetitionEventContent entries={event.items} officials={event.officials} />
-    </div>
   );
 }
 

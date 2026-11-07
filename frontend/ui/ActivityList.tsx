@@ -141,7 +141,7 @@ export const ActivityList = React.memo(function ActivityList({
                   )}
                   {items
                     .filter((x) => x.kind === 'competition')
-                    .map(({ id, items, officials, clubEntries }) => (
+                    .map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
                       <div
                         key={id}
                         className={cardCls({
@@ -151,7 +151,8 @@ export const ActivityList = React.memo(function ActivityList({
                         <CompetitionEventContent
                           entries={items}
                           officials={officials}
-                          clubEntries={clubEntries}
+                          collapsedEntries={collapsedEntries}
+                          collapsedOfficials={collapsedOfficials}
                         />
                       </div>
                     ))}

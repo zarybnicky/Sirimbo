@@ -152,7 +152,6 @@ export function Calendar({
       },
       parentId,
       availableTrainers,
-      withMyCompetitions: auth.isLoggedIn && viewInput === 'agenda',
     });
   const [, moveEvent] = useMutation(MoveEventDocument);
 

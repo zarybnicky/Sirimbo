@@ -2,7 +2,7 @@ import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import type { CalendarBirthdayEvent, ViewProps } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
-import { CompetitionEventContent } from '@/ui/Competitions';
+import { CompetitionEventList } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
 import { capitalize, listFormatter, longDayFormatter } from '@/ui/format';
@@ -91,24 +91,8 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 
           <div className="flex justify-start items-start flex-wrap gap-2 opacity-90">
             {dateEntry.competitions.length > 0 && (
-              <div className="flex w-full flex-col gap-2 sm:w-72">
-                {dateEntry.competitions.map(
-                  ({ id, items, officials, myCompetitorIds }) => (
-                    <div
-                      key={id}
-                      className={cardCls({
-                        className:
-                          'min-w-[200px] w-full rounded-lg border-green-7 bg-green-2 p-3',
-                      })}
-                    >
-                      <CompetitionEventContent
-                        entries={items}
-                        officials={officials}
-                        myCompetitorIds={myCompetitorIds}
-                      />
-                    </div>
-                  ),
-                )}
+              <div className="w-full sm:w-72">
+                <CompetitionEventList events={dateEntry.competitions} />
               </div>
             )}
             {dateEntry.groups.map((instance) => (
