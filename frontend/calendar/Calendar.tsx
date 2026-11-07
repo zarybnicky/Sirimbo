@@ -347,7 +347,7 @@ export function Calendar({
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             {creating && (
-              <EventForm {...creating} events={events} parentId={parentId} />
+              <EventForm {...creating} events={events} parentId={parentId} availableTrainers={availableTrainers} />
             )}
           </DialogContent>
         </Dialog>

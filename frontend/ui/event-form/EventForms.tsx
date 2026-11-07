@@ -4,6 +4,7 @@ import {
   splitIntoLessonRanges,
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
+import type { CalendarTrainer } from '@/calendar/types';
 import {
   EventFormOptionsDocument,
   SaveEventsDocument,
@@ -43,6 +44,7 @@ type EventFormProps = CreateEventDefaults & {
   event?: EventWithTrainerFragment;
   parentId?: string;
   seriesId?: string;
+  availableTrainers?: readonly CalendarTrainer[];
 };
 
 function useEventFormOptions(input: EventFormProps) {
@@ -57,6 +59,7 @@ function useEventFormOptions(input: EventFormProps) {
   const savedRegistrations = query.data?.registrations;
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
+    .filter(({ person }) => !input.availableTrainers || input.availableTrainers.some((x) => x.id === person.id))
     .map(({ person }) => ({
       id: person.id,
       label: person.name,
