@@ -15,22 +15,20 @@ type CalendarItemBase = {
   start: Date;
   end: Date;
   resourceKeys: readonly string[];
-  isDraggable?: boolean;
-  isResizable?: boolean;
-  __isPreview?: boolean;
 };
 
 export type CalendarClubEvent = CalendarItemBase & {
   kind: 'event';
   id: string;
   instance: NonNullable<CalendarDataQuery['eventsList']>[number];
+  __isPreview?: boolean;
 };
 
 export type CalendarCompetitionEvent = CalendarItemBase & {
   kind: 'competition';
   id: string;
   title: string;
-  items: readonly CompetitionEntry[];
+  entries: readonly CompetitionEntry[];
   collapsedEntries: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
   collapsedOfficials: readonly CompetitionOfficialAssignment[];

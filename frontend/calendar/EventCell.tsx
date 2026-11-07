@@ -3,12 +3,13 @@ import type { CalendarEvent, DragDirection } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { EventSummary } from '@/ui/EventSummary';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { type DragSubject, dragSubjectAtom } from './state';
+import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName } from '@/ui/format';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 import { Cake } from 'lucide-react';
+import { useAuth } from '@/lib/auth';
 
 type EventCellProps = {
   style?: React.CSSProperties;
@@ -87,9 +88,10 @@ function ClubEventCell({
   continuesPrior,
   continuesAfter,
 }: EventCellProps & { event: Extract<CalendarEvent, { kind: 'event' }> }) {
+  const auth = useAuth();
   const { instance } = event;
-  const isResizable = event.isResizable !== false;
-  const isDraggable = event.isDraggable !== false;
+  const canEdit = auth.canManageEvent(instance);
+  const isDragging = useAtomValue(isDraggingAtom);
 
   const setDragSubject = useSetAtom(dragSubjectAtom);
   const getCurrentEvent = useCallback(
@@ -100,21 +102,21 @@ function ClubEventCell({
 
   const onTouchOrMouse = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      if ((e as React.MouseEvent).button) {
+      if (!canEdit || (e as React.MouseEvent).button) {
         return;
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;
-      if (isResizable && resizeDirection) {
+      if (resizeDirection) {
         setDragSubject({
           action: 'resize',
           event,
           direction: resizeDirection as DragDirection,
         });
-      } else if (isDraggable) {
+      } else {
         setDragSubject({ action: 'move', event });
       }
     },
-    [setDragSubject, event, isDraggable, isResizable],
+    [setDragSubject, event, canEdit],
   );
 
   return (
@@ -126,13 +128,13 @@ function ClubEventCell({
           onTouchStart={onTouchOrMouse}
           className={cn(className, {
             'rbc-event group transition-opacity': true,
-            'relative w-full h-full': isResizable,
+            'relative w-full h-full': canEdit,
             'rounded-l-none': continuesPrior,
             'rounded-r-none': continuesAfter,
-            'cursor-grab': event.isDraggable !== false,
-            'rbc-nondraggable': event.isDraggable === false,
+            'cursor-grab': canEdit,
+            'rbc-nondraggable': !canEdit,
             'rbc-drag-preview': event.__isPreview,
-            'rbc-dragged-event': !!currentDragSubject && !event.__isPreview,
+            'rbc-dragged-event': isDragging && currentDragSubject && !event.__isPreview,
             'pl-3': event.instance.targetCohortsList && event.instance.targetCohortsList.length > 0,
             relative: true,
           })}
@@ -155,7 +157,7 @@ function ClubEventCell({
             </div>
           )}
 
-          {!continuesPrior && isResizable && (
+          {!continuesPrior && canEdit && (
             <div
               className="absolute left-0 opacity-0 group-hover:opacity-100 cursor-w-resize h-3 top-2 mx-auto border-l-4 border-double"
               data-resize="LEFT"
@@ -168,7 +170,7 @@ function ClubEventCell({
             {formatEventName(event.instance)}
           </div>
 
-          {!continuesAfter && isResizable && (
+          {!continuesAfter && canEdit && (
             <div
               className="absolute right-0 opacity-0 group-hover:opacity-100 cursor-e-resize h-3 top-2 mx-auto border-l-4 border-double"
               data-resize="RIGHT"

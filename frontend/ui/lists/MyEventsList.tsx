@@ -4,7 +4,7 @@ import {
   calendarTypes,
   useCalendarData,
 } from '@/calendar/useCalendarData';
-import { CompetitionEventContent } from '@/ui/Competitions';
+import { CompetitionEventCard } from '@/ui/Competitions';
 import { useAuth } from '@/lib/auth';
 import { EventButton } from '@/ui/EventButton';
 import { WeekPicker } from '@/ui/WeekPicker';
@@ -39,9 +39,10 @@ export const MyEventsList = React.memo(function MyEventsList() {
     withOtherClubCompetitors: true,
   });
   const eventsByDay = React.useMemo(
-    () => [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))].toSorted(
-      ([a], [b]) => a - b,
-    ),
+    () =>
+      [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))].toSorted(
+        ([a], [b]) => a - b,
+      ),
     [calendarEvents],
   );
 
@@ -60,7 +61,9 @@ export const MyEventsList = React.memo(function MyEventsList() {
           return (
             <div
               key={date}
-              className={cardCls({ className: 'rounded-lg border-neutral-6 border px-1 py-3' })}
+              className={cardCls({
+                className: 'rounded-lg border-neutral-6 border px-1 py-3',
+              })}
             >
               <div className="ml-3 mb-1 flex items-center gap-2 font-bold">
                 {capitalize(longDayFormatter.format(new Date(date)))}
@@ -78,18 +81,8 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   </Dialog>
                 )}
               </div>
-              {comps.map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
-                <div
-                  key={id}
-                  className="mx-2 mb-3 rounded-lg border border-green-7 bg-green-2 p-3"
-                >
-                  <CompetitionEventContent
-                    entries={items}
-                    officials={officials}
-                    collapsedEntries={collapsedEntries}
-                    collapsedOfficials={collapsedOfficials}
-                  />
-                </div>
+              {comps.map((x) => (
+                <CompetitionEventCard key={x.id} {...x} className="mx-2 mb-3" />
               ))}
               {events.map((event, i) => {
                 const location = event.location?.name || event.locationText || '';

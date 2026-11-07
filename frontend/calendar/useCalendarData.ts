@@ -74,8 +74,6 @@ const competitionResource: Resource = {
 const calendarDay = (date: string) => ({
   start: new Date(`${date}T00:00:00`),
   end: new Date(`${date}T23:59:00`),
-  isDraggable: false,
-  isResizable: false,
 });
 
 function prepareVariables(
@@ -320,7 +318,7 @@ export function useCalendarData({
         ...calendarDay(date!),
         resourceKeys:
           effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-        items: [...entries, ...(clubEntries.get(key) ?? []).filter(
+        entries: [...entries, ...(clubEntries.get(key) ?? []).filter(
           (x) => !selected.has(`${x.competitionId}:${x.competitorId}`),
         )],
         collapsedEntries: hasParticipantSelection ? entries : entries.filter(
@@ -364,7 +362,6 @@ export function useCalendarData({
       range,
       events: data?.eventsList ?? [],
       calendarEvents,
-      competitions,
       fetching,
       error,
       filterOptions,

@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import type { CalendarCompetitionEvent } from '@/calendar/types';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
@@ -93,7 +92,6 @@ export function groupCompetitionEvents(
           key: `${date ?? ''}:${eventId ?? ''}`,
           date,
           name: event?.name ?? '',
-          location: event?.location || event?.city || '',
           entries,
           officials,
         };
@@ -102,38 +100,20 @@ export function groupCompetitionEvents(
   );
 }
 
-export function CompetitionEventList({ events }: { events: readonly CalendarCompetitionEvent[] }) {
-  return (
-    <div className="flex flex-col gap-2">
-      {events.map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
-        <div
-          key={id}
-          className={cardCls({ className: 'w-full rounded-lg border-green-7 bg-green-2 p-3' })}
-        >
-          <CompetitionEventContent
-            entries={items}
-            officials={officials}
-            collapsedEntries={collapsedEntries}
-            collapsedOfficials={collapsedOfficials}
-          />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function CompetitionEventContent({
+export function CompetitionEventCard({
   entries,
   officials = [],
   collapsedEntries = entries,
   collapsedOfficials = officials,
-  cards = false,
+  showDate = false,
+  className,
 }: {
   entries: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];
   collapsedEntries?: readonly CompetitionEntry[];
   collapsedOfficials?: readonly CompetitionOfficialAssignment[];
-  cards?: boolean;
+  showDate?: boolean;
+  className?: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const [override, setOverride] = React.useState<boolean | null>(null);
@@ -162,7 +142,11 @@ export function CompetitionEventContent({
   );
 
   return (
-    <div className="flex flex-col gap-1">
+    <div
+      className={cardCls({
+        className: cn('flex flex-col gap-1 rounded-lg border-green-7 bg-green-2', className),
+      })}
+    >
       <div
         className={cn(
           'relative flex flex-col gap-1',
@@ -183,17 +167,16 @@ export function CompetitionEventContent({
         )}
         <div
           className={cn(
-            'flex items-start justify-between gap-2 text-sm font-semibold leading-tight',
+            'flex items-start justify-between gap-2 text-sm font-semibold leading-tight text-green-11',
             canExpand && 'relative pointer-events-none pr-4',
-            cards ? 'text-neutral-12' : 'text-green-11',
           )}
         >
           <CompetitionLink
             federation={competition?.federation ?? officials[0]?.federation}
             eventId={event?.externalId}
             className={cn(
+              'text-green-11 hover:text-green-12',
               canExpand && 'pointer-events-auto',
-              !cards && 'text-green-11 hover:text-green-12',
             )}
           >
             {event?.name}
@@ -201,13 +184,12 @@ export function CompetitionEventContent({
         </div>
         <div
           className={cn(
-            'flex items-baseline justify-between gap-2 text-xs leading-tight',
+            'flex items-baseline justify-between gap-2 text-xs leading-tight text-green-11',
             canExpand && 'relative pointer-events-none',
-            cards ? 'text-neutral-11' : 'text-green-11',
           )}
         >
           <span className="min-w-0 truncate">
-            {[event?.location || event?.city, cards && date && formatDateOnly(date)]
+            {[event?.location || event?.city, showDate && date && formatDateOnly(date)]
               .filter(Boolean)
               .join(', ')}
           </span>
@@ -228,11 +210,7 @@ export function CompetitionEventContent({
       {groups.map(([key, entries]) => (
         <article
           key={key}
-          className={
-            cards
-              ? cardCls({ className: 'rounded-lg border-neutral-6 p-2 pb-1' })
-              : 'border-t border-green-6 first-of-type:border-t-0'
-          }
+          className="border-t border-green-6 first-of-type:border-t-0"
         >
           <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
         </article>
@@ -340,7 +318,6 @@ function CompetitionGroupContent({
         )
         .map((entry) => {
           const ranking = entry.ranking;
-          const hasResult = ranking !== undefined;
           const status = formatResultStatus(entry.completionStatus);
           return (
             <div
@@ -349,7 +326,7 @@ function CompetitionGroupContent({
             >
               {showLeadingColumn && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
-                  {hasResult ? (
+                  {ranking !== undefined ? (
                     <>
                       <span className={ranking <= 3 ? 'text-accent-11' : ''}>
                         {ranking}
@@ -369,7 +346,7 @@ function CompetitionGroupContent({
               <div className="min-w-0 font-semibold text-neutral-12">
                 <CompetitionLabel entry={entry} competition={!byCompetition} />
               </div>
-              {hasResult && (
+              {ranking !== undefined && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
                   {formatPointsAndFinals(entry, 'gain')}
                 </div>
@@ -436,7 +413,7 @@ export function CompetitionHistory({
         <p className="text-sm text-neutral-11">Načítám...</p>
       ) : data?.competitions?.nodes.length ? (
         groupCompetitionEvents(data.competitions.nodes).map(({ key, entries }) => (
-          <CompetitionEventContent key={key} entries={entries} cards />
+          <CompetitionEventCard key={key} entries={entries} showDate />
         ))
       ) : (
         <p className="text-sm text-neutral-11">Žádné přihlášky ani výsledky soutěží.</p>

@@ -28,7 +28,7 @@ import {
 } from './state';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { cn } from '@/lib/cn';
-import { CompetitionEventList } from '@/ui/Competitions';
+import { CompetitionEventCard } from '@/ui/Competitions';
 import { layoutEvents } from '@/calendar/layout';
 import { shortTimeFormatter } from '@/ui/format';
 import { defaultsFromSlot } from './eventDefaults';
@@ -484,7 +484,11 @@ function DayColumn({
             }}
             className="@container/competition rbc-event absolute max-h-full min-h-5 overflow-y-auto bg-transparent p-0 text-green-12"
           >
-            <CompetitionEventList events={competitions} />
+            <div className="flex flex-col gap-2">
+              {competitions.map((x) => (
+                <CompetitionEventCard key={x.id} {...x} />
+              ))}
+            </div>
           </div>
         ) : event.kind === 'event' && (
           <TimeGridEvent

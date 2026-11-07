@@ -8,7 +8,7 @@ import {
 } from '@/calendar/useCalendarData';
 import type { EventRegistrationAttendanceFragment } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
-import { CompetitionEventContent } from '@/ui/Competitions';
+import { CompetitionEventCard } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
 import { attendanceIcons } from '@/ui/EventAttendance';
@@ -101,7 +101,9 @@ export const ActivityList = React.memo(function ActivityList({
             setDate(new Date());
           }}
         />
-        <h4 className="text-lg tracking-tight flex-1">{capitalize(monthView.label(range))}</h4>
+        <h4 className="text-lg tracking-tight flex-1">
+          {capitalize(monthView.label(range))}
+        </h4>
         <FacetFilter
           label="Typy"
           value={filters}
@@ -114,7 +116,7 @@ export const ActivityList = React.memo(function ActivityList({
       <div className="text-sm text-neutral-9">
         {fetching
           ? 'Načítám...'
-          : !error && !days.some(([, items]) => items.length)
+          : !error && !days.some(([, xs]) => xs.length)
             ? 'Žádná aktivita v tomto měsíci.'
             : null}
       </div>
@@ -141,20 +143,8 @@ export const ActivityList = React.memo(function ActivityList({
                   )}
                   {items
                     .filter((x) => x.kind === 'competition')
-                    .map(({ id, items, officials, collapsedEntries, collapsedOfficials }) => (
-                      <div
-                        key={id}
-                        className={cardCls({
-                          className: 'rounded-lg border-green-7 bg-green-2 p-3 mb-0',
-                        })}
-                      >
-                        <CompetitionEventContent
-                          entries={items}
-                          officials={officials}
-                          collapsedEntries={collapsedEntries}
-                          collapsedOfficials={collapsedOfficials}
-                        />
-                      </div>
+                    .map((x) => (
+                      <CompetitionEventCard key={x.id} {...x} className="mb-0" />
                     ))}
                   {events.length > 0 && (
                     <div

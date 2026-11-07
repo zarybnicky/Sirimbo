@@ -8,7 +8,7 @@ import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
 import { formatEventName, shortTimeFormatter } from '@/ui/format';
-import { useTenantConfig } from '@/lib/auth';
+import { useAuth, useTenantConfig } from '@/lib/auth';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
 
 function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
@@ -45,6 +45,7 @@ function TimeGridEvent({
   isBackgroundEvent,
   slotMetrics,
 }: TimeGridEventProps) {
+  const auth = useAuth();
   const { useTrainerInitials } = useTenantConfig();
   const isDragging = useAtomValue(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
@@ -53,9 +54,7 @@ function TimeGridEvent({
     [event],
   );
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
-
-  const isResizable = event.isResizable !== false;
-  const isDraggable = event.isDraggable !== false;
+  const canEdit = auth.canManageEvent(event.instance);
 
   const startsBeforeDay = slotMetrics.startsBeforeDay(event.start);
   const startsBefore = slotMetrics.startsBefore(event.start);
@@ -67,21 +66,21 @@ function TimeGridEvent({
 
   const onTouchOrMouse = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      if ((e as React.MouseEvent).button) {
+      if (!canEdit || (e as React.MouseEvent).button) {
         return;
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;
-      if (isResizable && resizeDirection) {
+      if (resizeDirection) {
         setDragSubject({
           action: 'resize',
           event,
           direction: resizeDirection as DragDirection,
         });
-      } else if (isDraggable) {
+      } else {
         setDragSubject({ action: 'move', event });
       }
     },
-    [setDragSubject, event, isDraggable, isResizable],
+    [setDragSubject, event, canEdit],
   );
 
   let title = formatEventName(event.instance) || '-';
@@ -119,7 +118,7 @@ function TimeGridEvent({
           'rbc-event group transition-opacity',
           'absolute overflow-hidden max-h-full min-h-5 border border-b-transparent',
           {
-            'w-full h-full': isResizable,
+            'w-full h-full': canEdit,
             'empty-event': event.instance.registrationInfo?.canRegister,
             'saturate-50 opacity-75': !event.instance.registrationInfo?.registrations &&
               !event.instance.registrationInfo?.registrationOpen && !event.instance.name,
@@ -150,7 +149,7 @@ function TimeGridEvent({
               ))}
           </div>
         )}
-        {!continuesPrior && isResizable && (
+        {!continuesPrior && canEdit && (
           <div
             className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
             data-resize="UP"
@@ -169,7 +168,7 @@ function TimeGridEvent({
         </div>
         <div className="block truncate text-[80%] pr-1.25 w-auto">{label}</div>
 
-        {!continuesPrior && isResizable && (
+        {!continuesPrior && canEdit && (
           <div
             className="absolute bottom-0 opacity-0 group-hover:opacity-100 cursor-s-resize w-3 left-1/2 mx-auto border-t-[6px] border-double"
             data-resize="DOWN"
