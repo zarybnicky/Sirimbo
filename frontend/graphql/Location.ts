@@ -57,8 +57,6 @@ export type EventCondition = {
   id?: string | null | undefined;
   /** Checks for equality with the object’s `isCancelled` field. */
   isCancelled?: boolean | null | undefined;
-  /** Checks for equality with the object’s `isLocked` field. */
-  isLocked?: boolean | null | undefined;
   /** Checks for equality with the object’s `isPublic` field. */
   isPublic?: boolean | null | undefined;
   /** Checks for equality with the object’s `isVisible` field. */

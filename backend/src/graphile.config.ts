@@ -20,7 +20,7 @@ import { DateRangeConditionPlugin } from './plugins/date-range-condition.ts';
 import eventConditionPlugins from './plugins/event-condition.ts';
 import transactionConditionPlugins from './plugins/transaction-condition.ts';
 import paymentConditionPlugins from './plugins/payment-condition.ts';
-import { EventDetailsPlugin, EventTrainerFieldsPlugin } from './plugins/event-details.ts';
+import { EventDetailsPlugin, EventFieldsPlugin } from './plugins/event-details.ts';
 import { OTELPlugin } from './postgraphile-otel.ts';
 import { ApiInflectionPlugin } from './plugins/api-inflection.ts';
 
@@ -45,7 +45,7 @@ const preset: GraphileConfig.Preset = {
     ...transactionConditionPlugins,
     ...paymentConditionPlugins,
     EventDetailsPlugin,
-    EventTrainerFieldsPlugin,
+    EventFieldsPlugin,
     ...federationConditionPlugins,
     ...competitionParticipantConditionPlugins,
     ...competitionSuggestionConditionPlugins,

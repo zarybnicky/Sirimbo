@@ -35,7 +35,7 @@ as $$
   select row(
     registrations, people, remaining_capacity, my,
     coalesce(
-          not coalesce(e.is_locked, false)
+          coalesce(e.registration_period @> now(), false)
       and not e.is_cancelled
       and e.until > now()
       and coalesce(remaining_capacity > 0, true),

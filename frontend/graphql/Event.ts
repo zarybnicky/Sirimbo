@@ -86,8 +86,6 @@ export type EventCondition = {
   id?: string | null | undefined;
   /** Checks for equality with the object’s `isCancelled` field. */
   isCancelled?: boolean | null | undefined;
-  /** Checks for equality with the object’s `isLocked` field. */
-  isLocked?: boolean | null | undefined;
   /** Checks for equality with the object’s `isPublic` field. */
   isPublic?: boolean | null | undefined;
   /** Checks for equality with the object’s `isVisible` field. */
@@ -138,6 +136,7 @@ export type EventDetailsInputRecordInput = {
   locationText?: string | null | undefined;
   name?: string | null | undefined;
   parentId?: string | null | undefined;
+  registrationPeriod?: DatetimeRangeInput | null | undefined;
   type?: EventType | null | undefined;
 };
 
@@ -162,7 +161,6 @@ export type EventPatch = {
   hasPublicDetails?: boolean | null | undefined;
   id?: string | null | undefined;
   isCancelled?: boolean | null | undefined;
-  isLocked?: boolean | null | undefined;
   isPublic?: boolean | null | undefined;
   isVisible?: boolean | null | undefined;
   locationId?: string | null | undefined;
@@ -170,6 +168,7 @@ export type EventPatch = {
   name?: string | null | undefined;
   parentId?: string | null | undefined;
   range?: DatetimeRangeInput | null | undefined;
+  registrationPeriod?: DatetimeRangeInput | null | undefined;
   seriesId?: string | null | undefined;
   since?: string | null | undefined;
   summary?: string | null | undefined;
@@ -264,8 +263,6 @@ export type EventsOrderBy =
   | 'ID_DESC'
   | 'IS_CANCELLED_ASC'
   | 'IS_CANCELLED_DESC'
-  | 'IS_LOCKED_ASC'
-  | 'IS_LOCKED_DESC'
   | 'IS_PUBLIC_ASC'
   | 'IS_PUBLIC_DESC'
   | 'IS_VISIBLE_ASC'

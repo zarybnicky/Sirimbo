@@ -1,10 +1,21 @@
 import { pgClassExpression, PgSelectStep, sql, TYPES, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
-import type { ConnectionStep } from 'postgraphile/grafast';
+import { inhibitIf, type ConnectionStep } from 'postgraphile/grafast';
 import { extendSchema, wrapPlans } from 'postgraphile/utils';
 
-export const EventTrainerFieldsPlugin = extendSchema((build) => ({
-  typeDefs: `extend type EventTrainer { tenantTrainer: TenantTrainer }`,
+export const EventFieldsPlugin = extendSchema((build) => ({
+  typeDefs: `
+    extend type Event { isLocked: Boolean }
+    extend type EventTrainer { tenantTrainer: TenantTrainer }
+  `,
   objects: {
+    Event: {
+      plans: {
+        isLocked($event: PgSelectSingleStep) {
+          return pgClassExpression($event, TYPES.boolean)`
+            not coalesce(${$event.get('registration_period')} @> now(), false)`;
+        },
+      },
+    },
     EventTrainer: {
       plans: {
         tenantTrainer($trainer: PgSelectSingleStep) {
@@ -24,7 +35,7 @@ export const EventTrainerFieldsPlugin = extendSchema((build) => ({
       },
     },
   },
-}), 'EventTrainerFieldsPlugin');
+}), 'EventFieldsPlugin');
 
 export const EventDetailsPlugin = wrapPlans((build) => {
   // Treat the composite as one value. Its children read the decoded record,
@@ -53,6 +64,12 @@ export const EventDetailsPlugin = wrapPlans((build) => {
       },
     },
     Event: {
+      registrationPeriod(plan, $source) {
+        const $event = $source as PgSelectSingleStep;
+        // The range codec turns SQL NULL into an object with two null bounds.
+        return inhibitIf(plan(), pgClassExpression($event, TYPES.boolean)`
+          ${$event.get('registration_period')} is null`);
+      },
       registrations(plan, $source) {
         const $event = $source as PgSelectSingleStep;
         const $connection = plan() as ConnectionStep<unknown>;

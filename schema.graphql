@@ -5657,6 +5657,7 @@ type Event {
   ): [Payment!]!
   range: DatetimeRange!
   registrationInfo: EventRegistrationInfo
+  registrationPeriod: DatetimeRange
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   registrations(
@@ -5782,9 +5783,6 @@ input EventCondition {
   """Checks for equality with the object’s `isCancelled` field."""
   isCancelled: Boolean
 
-  """Checks for equality with the object’s `isLocked` field."""
-  isLocked: Boolean
-
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
 
@@ -5875,6 +5873,7 @@ input EventDetailsInputRecordInput {
   locationText: String
   name: String
   parentId: BigInt
+  registrationPeriod: DatetimeRangeInput
   type: EventType
 }
 
@@ -5999,7 +5998,6 @@ input EventPatch {
   hasPublicDetails: Boolean
   id: BigInt
   isCancelled: Boolean
-  isLocked: Boolean
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
@@ -6007,6 +6005,7 @@ input EventPatch {
   name: String
   parentId: BigInt
   range: DatetimeRangeInput
+  registrationPeriod: DatetimeRangeInput
   seriesId: BigInt
   since: Datetime
   summary: String
@@ -6576,8 +6575,6 @@ enum EventsOrderBy {
   ID_DESC
   IS_CANCELLED_ASC
   IS_CANCELLED_DESC
-  IS_LOCKED_ASC
-  IS_LOCKED_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
   IS_VISIBLE_ASC

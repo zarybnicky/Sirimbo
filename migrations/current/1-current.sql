@@ -72,8 +72,24 @@ drop function if exists account_assets;
 drop function if exists account_liabilities;
 drop function if exists event_trainers;
 
+do $$
+begin
+  if not exists (
+    select 1 from pg_attribute
+    where attrelid = 'public.event'::regclass
+      and attname = 'registration_period' and not attisdropped
+  ) then
+    alter table event add column registration_period tstzrange default '(,)'::tstzrange;
+    update event set registration_period = null where is_locked;
+  end if;
+end;
+$$;
+
+comment on column event.registration_period is null;
+comment on column event.is_locked is '@behavior -*';
+
+--!include functions/save_events.sql
+--!include functions/event_registration_info.sql
 --!include functions/set_lesson_request.sql
-
 --!include functions/set_event_registration.sql
-
 --!include views/crawler_frontier_fetch_job.sql

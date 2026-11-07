@@ -10588,6 +10588,15 @@
             "args": []
           },
           {
+            "name": "registrationPeriod",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DatetimeRange",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "registrations",
             "type": {
               "kind": "NON_NULL",

@@ -31,7 +31,7 @@ CREATE FUNCTION pg_temp.save_group(
   LEFT JOIN event old ON old.id = event_id
   CROSS JOIN LATERAL save_events(
     details => ROW(null, 'Registration intent', 'group', null, '', 0, 'people',
-      true, false, false, false, false)::event_details_input,
+      true, false, false, false, false, null)::event_details_input,
     events => ARRAY[ROW(event_id, coalesce(old.since, starts_at),
       coalesce(old.until, starts_at + interval '1 hour'), false,
       ARRAY(SELECT r FROM jsonb_populate_recordset(null::event_registration_input, registrations) r)
@@ -334,7 +334,7 @@ SELECT tap.is((SELECT count(*) FROM person_invitation WHERE person_id=(SELECT pe
   1::bigint, 'signup creates one event invitation across retries');
 SELECT tap.is((SELECT count(*) FROM tenant_membership WHERE person_id=(SELECT person_id FROM submitted)),
   0::bigint, 'camp registration does not create club membership');
-UPDATE event SET is_locked=true, capacity=null WHERE id=-8650;
+UPDATE event SET registration_period=null, capacity=null WHERE id=-8650;
 DELETE FROM event_trainer WHERE id=-8650;
 SET LOCAL ROLE anonymous;
 SELECT tap.throws_ok($$SELECT pg_temp.signup('Second')$$,

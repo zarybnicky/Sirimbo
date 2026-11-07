@@ -4532,6 +4532,7 @@ export type Event = {
   paymentsList: Array<Payment>;
   range: DatetimeRange;
   registrationInfo: Maybe<EventRegistrationInfo>;
+  registrationPeriod: Maybe<DatetimeRange>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
   registrations: EventRegistrationConnection;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -4654,8 +4655,6 @@ export type EventCondition = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isCancelled` field. */
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Checks for equality with the object’s `isLocked` field. */
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isPublic` field. */
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
@@ -4727,6 +4726,7 @@ export type EventDetailsInputRecordInput = {
   locationText?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
+  registrationPeriod?: InputMaybe<DatetimeRangeInput>;
   type?: InputMaybe<EventType>;
 };
 
@@ -4837,7 +4837,6 @@ export type EventPatch = {
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
-  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4845,6 +4844,7 @@ export type EventPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
   range?: InputMaybe<DatetimeRangeInput>;
+  registrationPeriod?: InputMaybe<DatetimeRangeInput>;
   seriesId?: InputMaybe<Scalars['BigInt']['input']>;
   since?: InputMaybe<Scalars['Datetime']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
@@ -5316,8 +5316,6 @@ export type EventsOrderBy =
   | 'ID_DESC'
   | 'IS_CANCELLED_ASC'
   | 'IS_CANCELLED_DESC'
-  | 'IS_LOCKED_ASC'
-  | 'IS_LOCKED_DESC'
   | 'IS_PUBLIC_ASC'
   | 'IS_PUBLIC_DESC'
   | 'IS_VISIBLE_ASC'
@@ -14586,6 +14584,7 @@ export type GraphCacheResolvers = {
     paymentsList?: GraphCacheResolver<WithTypename<Event>, EventPaymentsListArgs, Array<WithTypename<Payment> | string>>,
     range?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     registrationInfo?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<EventRegistrationInfo> | string>,
+    registrationPeriod?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<DatetimeRange> | string>,
     registrations?: GraphCacheResolver<WithTypename<Event>, EventRegistrationsArgs, WithTypename<EventRegistrationConnection> | string>,
     registrationsList?: GraphCacheResolver<WithTypename<Event>, EventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
     series?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, WithTypename<EventSeries> | string>,
@@ -17097,6 +17096,7 @@ export type GraphCacheUpdaters = {
     paymentsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventPaymentsListArgs>,
     range?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     registrationInfo?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
+    registrationPeriod?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,
     registrations?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrationsArgs>,
     registrationsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, EventRegistrationsListArgs>,
     series?: GraphCacheUpdateResolver<Maybe<WithTypename<Event>>, Record<string, never>>,

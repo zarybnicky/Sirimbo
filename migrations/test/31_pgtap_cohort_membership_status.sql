@@ -79,7 +79,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     instance.capacity, instance.capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, true
+    instance.is_locked, true, instance.registration_period
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -408,7 +408,7 @@ FROM public.save_events(
   details => ROW(
     9900001, 'Scheduled lesson copy', 'lesson'::event_type,
     null::bigint, 'Scheduled lesson', 2, 'registrations'::event_capacity_unit,
-    false, true, false, false, true
+    false, true, false, false, true, null
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -488,7 +488,7 @@ FROM public.save_events(
   details => ROW(
     null::bigint, 'Created series', 'lesson'::event_type,
     null::bigint, '', 2, 'people'::event_capacity_unit,
-    null, null, null, null, null
+    null, null, null, null, null, null
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -530,7 +530,7 @@ SELECT tap.ok(
       AND child.capacity_unit = 'registrations'
       AND child.is_visible = false
       AND child.is_public = true
-      AND child.is_locked = false
+      AND child.registration_period = '(,)'::tstzrange
       AND child.enable_notes = true
       AND child.description = ''
       AND child.summary = ''
@@ -552,8 +552,8 @@ SELECT tap.ok(
         FROM event instance
         WHERE instance.series_id = created.series_id
           AND (instance.is_visible, instance.is_public,
-            instance.has_public_details, instance.is_locked, instance.enable_notes)
-            IS DISTINCT FROM (true, false, false, false, false)
+            instance.has_public_details, instance.registration_period, instance.enable_notes)
+            IS DISTINCT FROM (true, false, false, null::tstzrange, false)
       )
   ),
   'event save creates a series with two instances and default settings'
@@ -678,7 +678,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     4, 'registrations'::event_capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    true, true
+    true, true, null
   )::public.event_details_input,
   events => ARRAY[
     ROW(
@@ -729,7 +729,7 @@ SELECT tap.ok(
       AND name = 'Scheduled lesson renamed'
       AND capacity = 4
       AND capacity_unit = 'registrations'
-      AND is_locked
+      AND registration_period is null
       AND enable_notes
       AND (stats).total = 2
       AND series_id is not null
@@ -785,7 +785,7 @@ SELECT public.save_events(
     instance.location_id, instance.location_text,
     instance.capacity, instance.capacity_unit,
     instance.is_visible, instance.is_public, instance.has_public_details,
-    instance.is_locked, instance.enable_notes
+    instance.is_locked, instance.enable_notes, instance.registration_period
   )::public.event_details_input,
   events => ARRAY[
     ROW(
