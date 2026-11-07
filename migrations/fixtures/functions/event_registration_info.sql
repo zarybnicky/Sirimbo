@@ -6,7 +6,8 @@ create type event_registration_info as (
   people integer,
   remaining_capacity integer,
   my boolean,
-  can_register boolean
+  can_register boolean,
+  registration_open boolean
 );
 
 create or replace function event_registration_info(e event)
@@ -22,7 +23,7 @@ as $$
     from event_registration
     where event_id = e.id and registration_status = 'active'
   ), capacity as (
-    select counts.*, case
+    select counts.*, coalesce(e.registration_period @> now(), false) as registration_open, case
       when e.capacity is null or e.capacity <= 0 then null
       else e.capacity
         - case e.capacity_unit
@@ -35,12 +36,13 @@ as $$
   select row(
     registrations, people, remaining_capacity, my,
     coalesce(
-          coalesce(e.registration_period @> now(), false)
+          registration_open
       and not e.is_cancelled
       and e.until > now()
       and coalesce(remaining_capacity > 0, true),
       false
-    )
+    ),
+    registration_open
   )::event_registration_info
   from capacity;
 $$;

@@ -22,7 +22,7 @@ import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/forma
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
@@ -75,10 +75,9 @@ function useEventFormOptions(
       });
     }
     for (const couple of [
-      ...(savedRegistrations ?? []).map((x) => x.couple),
+      ...(savedRegistrations ?? []).flatMap((x) => x.couple || []),
       ...(query.data?.couplesList ?? []),
     ]) {
-      if (!couple) continue;
       participants.set(`couple:${couple.id}`, {
         id: `couple:${couple.id}`,
         label: couple.name,
@@ -115,12 +114,16 @@ function EventEditor({
   mode: 'create' | 'edit';
 }) {
   const { onSuccess } = useFormResult();
+  const { lockEventsByDefault } = useTenantConfig();
   const [result, saveEvents] = useMutation(SaveEventsDocument);
   const [splitLessons, setSplitLessons] = React.useState(false);
   const [splitIds, setSplitIds] = React.useState<Record<string, string | null>>({});
   const form = useForm<EventFormInput, unknown, EventFormType>({
     resolver: zodResolver(EventForm),
-    defaultValues,
+    defaultValues: mode === 'create' ? {
+      ...defaultValues,
+      registrationPeriod: lockEventsByDefault ? null : { start: null, end: null },
+    } : defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
   const [type, instances, isPublic, trainers, registrations] = useWatch({
@@ -215,7 +218,7 @@ function EventEditor({
           isVisible: values.isVisible,
           isPublic: values.isPublic,
           hasPublicDetails: values.hasPublicDetails,
-          isLocked: values.isLocked,
+          registrationPeriod: values.registrationPeriod,
           enableNotes: values.enableNotes,
         },
         events,
@@ -313,7 +316,21 @@ function EventEditor({
 
         <div className="flex flex-wrap items-baseline justify-between gap-x-1">
           <CheckboxElement name="isVisible" label="Viditelná pro členy" />
-          <CheckboxElement name="isLocked" label="Zakázat přihlašování/odhlašování" />
+          <Controller
+            control={control}
+            name="registrationPeriod"
+            render={({ field }) => (
+              <Checkbox
+                name={field.name}
+                label="Zakázat přihlašování/odhlašování"
+                checked={field.value === null}
+                onBlur={field.onBlur}
+                onChange={() => field.onChange(
+                  field.value === null ? { start: null, end: null } : null,
+                )}
+              />
+            )}
+          />
           <CheckboxElement name="isPublic" label="Zveřejnit přihlášky" />
           <CheckboxElement name="hasPublicDetails" label="Zveřejnit program" disabled={!isPublic} />
           {(type === 'RESERVATION' || type === 'CAMP') && (
@@ -339,7 +356,6 @@ export function CreateEventForm({
   ...input
 }: CreateEventDefaults & { parentId?: string }) {
   const auth = useAuth();
-  const { lockEventsByDefault } = useTenantConfig();
   const options = useEventFormOptions();
   if (!options.data)
     return options.error ? <FormError error={options.error} /> : <div>Načítám…</div>;
@@ -354,10 +370,7 @@ export function CreateEventForm({
       mode="create"
       parentId={parentId ?? input.after?.parentId}
       options={options}
-      defaultValues={createEventDefaults(input, {
-        trainerPersonIds: trainer ? [trainer.id] : [],
-        isLocked: lockEventsByDefault,
-      })}
+      defaultValues={createEventDefaults(input, trainer ? [trainer.id] : [])}
     />
   );
 }
@@ -403,7 +416,7 @@ export function EditEventForm({ event }: { event: EventWithTrainerFragment }) {
         isVisible: event.isVisible ?? false,
         isPublic: event.isPublic ?? false,
         hasPublicDetails: event.hasPublicDetails,
-        isLocked: event.isLocked ?? false,
+        registrationPeriod: event.registrationPeriod,
         enableNotes: event.enableNotes ?? false,
         instances: [
           {

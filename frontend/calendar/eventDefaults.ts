@@ -48,14 +48,14 @@ export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
 
 export function createEventDefaults(
   input: CreateEventDefaults,
-  fallback: { trainerPersonIds: readonly string[]; isLocked: boolean },
+  fallbackTrainerPersonIds: readonly string[],
 ): EventFormType {
   const { after, events = [], type = 'LESSON' } = input;
   const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
   if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
   const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
   const trainerPersonIds = input.trainerPersonIds ??
-    after?.eventTrainersList.map((x) => x.personId) ?? fallback.trainerPersonIds;
+    after?.eventTrainersList.map((x) => x.personId) ?? fallbackTrainerPersonIds;
 
   let previous = after;
   if (!previous) {
@@ -84,7 +84,6 @@ export function createEventDefaults(
     capacity: type === 'LESSON' ? 1 : 0,
     capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
     isVisible: true,
-    isLocked: fallback.isLocked,
     instances: [{
       since: since.toISOString(),
       until: until.toISOString(),

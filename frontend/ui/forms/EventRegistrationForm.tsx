@@ -49,7 +49,7 @@ export function EventRegistrationForm({
   const registration = 'lessonRequestsList' in participant ? participant : undefined;
   const { personId, coupleId } = participant;
   const enableDetails = event.type !== 'LESSON' && event.type !== 'GROUP';
-  const readOnly = !!event.isLocked && !auth.canManageEvent(event);
+  const readOnly = !event.registrationInfo?.registrationOpen && !auth.canManageEvent(event);
   const requestCounts = Object.fromEntries(
     registration?.lessonRequestsList.map((x) => [x.trainerId, x.lessonCount]) ?? [],
   );

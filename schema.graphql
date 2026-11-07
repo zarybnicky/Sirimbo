@@ -5595,7 +5595,7 @@ type Event {
   hasPublicDetails: Boolean!
   id: BigInt!
   isCancelled: Boolean!
-  isLocked: Boolean
+  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
 
@@ -5866,7 +5866,7 @@ input EventDetailsInputRecordInput {
   capacityUnit: EventCapacityUnit
   enableNotes: Boolean
   hasPublicDetails: Boolean
-  isLocked: Boolean
+  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
@@ -5998,6 +5998,7 @@ input EventPatch {
   hasPublicDetails: Boolean
   id: BigInt
   isCancelled: Boolean
+  isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
   isPublic: Boolean
   isVisible: Boolean
   locationId: BigInt
@@ -6210,6 +6211,7 @@ type EventRegistrationInfo {
   canRegister: Boolean
   my: Boolean
   people: Int
+  registrationOpen: Boolean
   registrations: Int
   remainingCapacity: Int
 }

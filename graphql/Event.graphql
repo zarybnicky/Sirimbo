@@ -16,7 +16,6 @@ fragment Event on Event {
     id
     name
   }
-  isLocked
   isVisible
   isPublic
   hasPublicDetails
@@ -53,6 +52,10 @@ mutation UpdateEventSeries($id: BigInt!, $patch: EventSeriesPatch!) {
 
 fragment EventWithTrainer on Event {
   ...Event
+  registrationPeriod {
+    start { value inclusive }
+    end { value inclusive }
+  }
   seriesInfo {
     id
     name
@@ -72,6 +75,7 @@ fragment EventWithTrainer on Event {
     remainingCapacity
     my
     canRegister
+    registrationOpen
   }
   approxPriceList {
     amount

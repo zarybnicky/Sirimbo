@@ -11726,6 +11726,14 @@
             "args": []
           },
           {
+            "name": "registrationOpen",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "registrations",
             "type": {
               "kind": "SCALAR",

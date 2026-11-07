@@ -4,7 +4,8 @@ import { extendSchema, wrapPlans } from 'postgraphile/utils';
 
 export const EventFieldsPlugin = extendSchema((build) => ({
   typeDefs: `
-    extend type Event { isLocked: Boolean }
+    extend type Event { isLocked: Boolean @deprecated(reason: "Use registrationPeriod.") }
+    extend input EventPatch { isLocked: Boolean @deprecated(reason: "Use registrationPeriod.") }
     extend type EventTrainer { tenantTrainer: TenantTrainer }
   `,
   objects: {
@@ -31,6 +32,15 @@ export const EventFieldsPlugin = extendSchema((build) => ({
           const since = $relationship.placeholder($event.get('since'), TYPES.timestamptz);
           $relationship.where(sql`${$relationship.alias}.active_range @> ${since}`);
           return $relationship.single();
+        },
+      },
+    },
+  },
+  inputObjects: {
+    EventPatch: {
+      plans: {
+        isLocked(patch, value: boolean | null) {
+          patch.set('registration_period', value ? null : { start: null, end: null });
         },
       },
     },
@@ -90,6 +100,12 @@ EventDetailsPlugin.schema = {
   ...EventDetailsPlugin.schema,
   hooks: {
     ...EventDetailsPlugin.schema?.hooks,
+    GraphQLInputObjectType_fields_field(field, _build, { Self, scope }) {
+      return (Self.name === 'EventDetailsInputRecordInput' || Self.name === 'EventPatch')
+        && scope.fieldName === 'isLocked'
+        ? { ...field, deprecationReason: 'Use registrationPeriod.' }
+        : field;
+    },
     GraphQLObjectType(spec) {
       return spec.name === 'EventRegistrationInfo'
         ? { ...spec, assertStep: undefined }

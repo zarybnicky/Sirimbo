@@ -4514,6 +4514,7 @@ export type Event = {
   hasPublicDetails: Scalars['Boolean']['output'];
   id: Scalars['BigInt']['output'];
   isCancelled: Scalars['Boolean']['output'];
+  /** @deprecated Use registrationPeriod. */
   isLocked: Maybe<Scalars['Boolean']['output']>;
   isPublic: Maybe<Scalars['Boolean']['output']>;
   isVisible: Maybe<Scalars['Boolean']['output']>;
@@ -4719,6 +4720,7 @@ export type EventDetailsInputRecordInput = {
   capacityUnit?: InputMaybe<EventCapacityUnit>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
+  /** @deprecated Use registrationPeriod. */
   isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4837,6 +4839,8 @@ export type EventPatch = {
   hasPublicDetails?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   isCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** @deprecated Use registrationPeriod. */
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   locationId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4992,6 +4996,7 @@ export type EventRegistrationInfo = {
   canRegister: Maybe<Scalars['Boolean']['output']>;
   my: Maybe<Scalars['Boolean']['output']>;
   people: Maybe<Scalars['Int']['output']>;
+  registrationOpen: Maybe<Scalars['Boolean']['output']>;
   registrations: Maybe<Scalars['Int']['output']>;
   remainingCapacity: Maybe<Scalars['Int']['output']>;
 };
@@ -14685,6 +14690,7 @@ export type GraphCacheResolvers = {
     canRegister?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     my?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     people?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
+    registrationOpen?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     registrations?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>,
     remainingCapacity?: GraphCacheResolver<WithTypename<EventRegistrationInfo>, Record<string, never>, Scalars['Int']['output'] | string>
   },
@@ -17197,6 +17203,7 @@ export type GraphCacheUpdaters = {
     canRegister?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     my?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     people?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
+    registrationOpen?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     registrations?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>,
     remainingCapacity?: GraphCacheUpdateResolver<Maybe<WithTypename<EventRegistrationInfo>>, Record<string, never>>
   },

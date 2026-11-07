@@ -12,7 +12,10 @@ export const EventForm = z.object({
   isPublic: z.boolean().prefault(false),
   hasPublicDetails: z.boolean().prefault(false),
   enableNotes: z.boolean().prefault(false),
-  isLocked: z.boolean().prefault(false),
+  registrationPeriod: z.object({
+    start: z.object({ value: z.string(), inclusive: z.boolean() }).nullable(),
+    end: z.object({ value: z.string(), inclusive: z.boolean() }).nullable(),
+  }).nullable().prefault({ start: null, end: null }),
   instances: z.array(
     z.object({
       itemId: z.string().nullable().prefault(null),
