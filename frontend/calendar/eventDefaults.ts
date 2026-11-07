@@ -6,6 +6,7 @@ import { add, eq } from 'date-arithmetic';
 export type CreateEventDefaults = {
   date?: Date;
   after?: EventWithTrainerFragment;
+  parent?: EventWithTrainerFragment;
   events?: readonly EventWithTrainerFragment[];
   type?: EventFormType['type'];
   since?: Date;
@@ -88,12 +89,13 @@ export function createEventDefaults(
   }
   const explicitLocation =
     input.locationId !== undefined || input.locationText !== undefined;
-  const locationId = explicitLocation ? input.locationId : previous?.location?.id;
+  const locationEvent = previous?.location?.id || previous?.locationText ? previous : input.parent;
+  const locationId = explicitLocation ? input.locationId : locationEvent?.location?.id;
   const locationText = explicitLocation
     ? (input.locationText ?? '')
-    : previous?.location?.id
+    : locationEvent?.location?.id
       ? ''
-      : (previous?.locationText ?? '');
+      : (locationEvent?.locationText ?? '');
 
   return EventFormSchema.parse({
     type,

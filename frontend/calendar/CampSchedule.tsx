@@ -4,6 +4,7 @@ import {
   type EventRegistrationFragment,
   EventRegistrationsDocument,
   type EventRegistrationsQuery,
+  type EventWithTrainerFragment,
   SaveEventsDocument,
 } from '@/graphql/Event';
 import { cn } from '@/lib/cn';
@@ -38,14 +39,11 @@ import { Calendar } from './Calendar';
 const emptyRegistrations: EventRegistrationFragment[] = [];
 
 export const CampSchedule = React.memo(function CampSchedule({
-  id,
-  since,
-  until,
+  event,
 }: {
-  id: string;
-  since: string;
-  until: string;
+  event: EventWithTrainerFragment;
 }) {
+  const { id, since, until } = event;
   const auth = useAuth();
   const [query] = useQuery({
     query: EventRegistrationsDocument,
@@ -66,7 +64,7 @@ export const CampSchedule = React.memo(function CampSchedule({
 
   const availableTrainers = React.useMemo(() => {
     const trainers = new Map<string, string>();
-    for (const trainer of query.data?.event?.eventTrainersList ?? []) {
+    for (const trainer of event.eventTrainersList) {
       trainers.set(trainer.personId, trainer.person?.name ?? '');
     }
     for (const registration of registrations) {
@@ -81,7 +79,7 @@ export const CampSchedule = React.memo(function CampSchedule({
       }
     }
     return [...trainers].map(([id, name]) => ({ id, name }));
-  }, [registrations, query.data?.event?.eventTrainersList, query.data?.eventsList]);
+  }, [registrations, event.eventTrainersList, query.data?.eventsList]);
   const dateRange = React.useMemo(
     () => ({
       since: startOf(new Date(since), 'day'),
@@ -187,12 +185,12 @@ export const CampSchedule = React.memo(function CampSchedule({
         )}
       >
         <Calendar
-          parentId={id}
+          parent={event}
           initialDate={initialDate}
           dateRange={dateRange}
           onDropFromOutside={scheduleRequest.execute}
           onRemove={removeLesson.execute}
-          availableTrainers={query.data?.event ? availableTrainers : undefined}
+          availableTrainers={availableTrainers}
           defaultGroupBy="day-trainer"
         />
       </div>

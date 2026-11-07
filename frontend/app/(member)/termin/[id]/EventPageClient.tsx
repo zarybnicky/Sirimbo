@@ -164,7 +164,7 @@ export function EventPageClient({
         {event.type === 'CAMP' &&
           (auth.isLoggedIn || event.hasPublicDetails || hasShareToken) && (
             <Tab id="schedule" title="Rozpis">
-              <CampSchedule id={event.id} since={event.since} until={event.until} />
+              <CampSchedule event={event} />
             </Tab>
           )}
 

@@ -4,7 +4,6 @@ import {
   splitIntoLessonRanges,
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
-import type { CalendarTrainer } from '@/calendar/types';
 import {
   EventFormOptionsDocument,
   SaveEventsDocument,
@@ -42,9 +41,7 @@ const eventTypeOptions = (
 
 type EventFormProps = CreateEventDefaults & {
   event?: EventWithTrainerFragment;
-  parentId?: string;
   seriesId?: string;
-  availableTrainers?: readonly CalendarTrainer[];
 };
 
 function useEventFormOptions(input: EventFormProps) {
@@ -59,7 +56,7 @@ function useEventFormOptions(input: EventFormProps) {
   const savedRegistrations = query.data?.registrations;
   const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
-    .filter(({ person }) => !input.availableTrainers || input.availableTrainers.some((x) => x.id === person.id))
+    .filter(({ person }) => !input.parent || input.parent.eventTrainersList.some((x) => x.personId === person.id))
     .map(({ person }) => ({
       id: person.id,
       label: person.name,
@@ -142,7 +139,7 @@ export function EventForm(input: EventFormProps) {
   const options = useEventFormOptions(input);
   const { defaultValues } = options;
   const mode = event ? 'edit' : 'create';
-  const parentId = input.parentId ?? event?.parentId ?? input.after?.parentId;
+  const parentId = input.parent?.id ?? event?.parentId ?? input.after?.parentId;
   const seriesId = input.seriesId ?? event?.seriesId;
   const ready = !!options.data;
   const { onSuccess } = useFormResult();

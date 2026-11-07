@@ -63,7 +63,7 @@ const standardViewKeys = ['month', 'week', 'work_week', 'day', 'agenda'] as cons
 const boundedViewKeys = ['range', 'day', 'agenda'] as const;
 
 export function Calendar({
-  parentId,
+  parent,
   initialDate,
   dateRange,
   onDropFromOutside,
@@ -72,7 +72,7 @@ export function Calendar({
   defaultGroupBy = 'trainer',
   scrollView = false,
 }: {
-  parentId?: string;
+  parent?: CreateEventDefaults['parent'];
   initialDate?: Date;
   dateRange?: DateRange;
   onDropFromOutside?: (
@@ -84,6 +84,7 @@ export function Calendar({
   defaultGroupBy?: CalendarGroupBy;
   scrollView?: boolean;
 }) {
+  const parentId = parent?.id;
   const auth = useAuth();
   const pathname = usePathname();
   const setPreferences = useSetAtom(calendarPreferencesAtom);
@@ -347,7 +348,7 @@ export function Calendar({
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
             {creating && (
-              <EventForm {...creating} events={events} parentId={parentId} availableTrainers={availableTrainers} />
+              <EventForm {...creating} events={events} parent={parent} />
             )}
           </DialogContent>
         </Dialog>
