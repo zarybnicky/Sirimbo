@@ -101,7 +101,7 @@ export function useCalendarData({
   availableTrainers,
   withFacets = true,
   withAttendance = false,
-  withClubCompetitions = false,
+  withOtherClubCompetitors = false,
 }: {
   view: CalendarView;
   date: Date;
@@ -110,7 +110,7 @@ export function useCalendarData({
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
   withAttendance?: boolean;
-  withClubCompetitions?: boolean;
+  withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
   const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
@@ -145,7 +145,7 @@ export function useCalendarData({
       withFacets,
       withAttendance,
       withCompetitions: filters.types.includes('COMPETITION'),
-      withClubCompetitions,
+      withOtherClubCompetitors: withOtherClubCompetitors && filters.types.includes('COMPETITION'),
       withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
@@ -305,26 +305,28 @@ export function useCalendarData({
         ),
       ),
     ];
-    const competitions: CalendarCompetitionEvent[] = [];
-    const clubCompetitions: CalendarCompetitionEvent[] = [];
-    for (const [groups, events] of [
-      [groupCompetitionEvents(data?.competitions?.nodes, officials), competitions],
-      [groupCompetitionEvents(data?.clubCompetitions?.nodes), clubCompetitions],
-    ] as const) {
-      for (const { key, name, date, entries, officials } of groups) {
-        events.push({
-          kind: 'competition',
-          id: `competition:${key}`,
-          title: name,
-          ...calendarDay(date!),
-          resourceKeys:
-            effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-          items: entries,
-          myCompetitorIds,
-          officials,
-        });
-      }
-    }
+    const clubEntries = new Map(
+      groupCompetitionEvents(data?.clubCompetitions?.nodes).map(({ key, entries }) => [key, entries]),
+    );
+    const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
+      data?.competitions?.nodes, officials,
+    ).map(({ key, name, date, entries, officials }) => {
+      const selected = new Set(entries.map((x) => `${x.competitionId}:${x.competitorId}`));
+      return {
+        kind: 'competition',
+        id: `competition:${key}`,
+        title: name,
+        ...calendarDay(date!),
+        resourceKeys:
+          effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
+        items: entries,
+        clubEntries: (clubEntries.get(key) ?? []).filter(
+          (x) => !selected.has(`${x.competitionId}:${x.competitorId}`),
+        ),
+        myCompetitorIds,
+        officials,
+      };
+    });
     calendarEvents.push(...competitions);
 
     for (const person of data?.birthdays?.nodes ?? []) {
@@ -358,7 +360,6 @@ export function useCalendarData({
       events: data?.eventsList ?? [],
       calendarEvents,
       competitions,
-      clubCompetitions,
       fetching,
       error,
       filterOptions,

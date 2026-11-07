@@ -63,6 +63,7 @@ export const ActivityList = React.memo(function ActivityList({
     },
     withFacets: false,
     withAttendance: true,
+    withOtherClubCompetitors: true,
   });
 
   const days = React.useMemo(() => {
@@ -140,14 +141,18 @@ export const ActivityList = React.memo(function ActivityList({
                   )}
                   {items
                     .filter((x) => x.kind === 'competition')
-                    .map(({ id, items, officials }) => (
+                    .map(({ id, items, officials, clubEntries }) => (
                       <div
                         key={id}
                         className={cardCls({
                           className: 'rounded-lg border-green-7 bg-green-2 p-3 mb-0',
                         })}
                       >
-                        <CompetitionEventContent entries={items} officials={officials} />
+                        <CompetitionEventContent
+                          entries={items}
+                          officials={officials}
+                          clubEntries={clubEntries}
+                        />
                       </div>
                     ))}
                   {events.length > 0 && (

@@ -104,7 +104,6 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                       <CompetitionEventContent
                         entries={items}
                         officials={officials}
-                        collapsible
                         myCompetitorIds={myCompetitorIds}
                       />
                     </div>

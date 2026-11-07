@@ -492,7 +492,7 @@ query CalendarData(
   $withParticipantOptions: Boolean! = false
   $withAttendance: Boolean! = false
   $withCompetitions: Boolean! = true
-  $withClubCompetitions: Boolean! = false
+  $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
   eventsList(
@@ -568,7 +568,7 @@ query CalendarData(
       competitor: {}
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  ) @include(if: $withClubCompetitions) @_required {
+  ) @include(if: $withOtherClubCompetitors) @_required {
     nodes {
       ...Competition
       entries: entriesList(condition: { competitor: {}, cancelled: false }) {
