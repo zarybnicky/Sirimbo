@@ -9,8 +9,10 @@ const errorMessages: Record<string, string> = {
   LESSON_LIMIT_EXCEEDED: 'Požadovaný počet lekcí už není k dispozici.',
   'duplicate key value violates unique constraint "users_email_key"':
     'Pro tento e-mail už zřejmě existuje účet. Zkuste se přihlásit.',
+  'update or delete on table "event" violates foreign key constraint "event_parent_id_fkey" on table "event"':
+    'Událost obsahuje podřízené události. Pro odstranění potvrďte i jejich odstranění.',
 };
 
 export function getErrorMessage(error: string) {
-  return errorMessages[error];
+  return errorMessages[error.replace(/^\[GraphQL\] /, '')];
 }

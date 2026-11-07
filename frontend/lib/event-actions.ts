@@ -1,6 +1,6 @@
 'use server';
 
-import { campCloneEvents, cloneCampEvent, copyEventMetadata, populateEventCohorts } from './event-actions.queries';
+import { campCloneEvents, cloneCampEvent, copyEventMetadata, deleteEventRecursive, populateEventCohorts } from './event-actions.queries';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { redirect } from 'next/navigation';
@@ -41,4 +41,18 @@ export async function cloneCampAction(
     return { error: error instanceof Error ? error.message : 'Kopírování se nezdařilo.' };
   }
   redirect(`/termin/${campId}`);
+}
+
+export async function deleteEventRecursiveAction(id: string) {
+  try {
+    await withRequestPgClient(async (client) => {
+      const deleted = await deleteEventRecursive.run({ id }, client);
+      if (!deleted.some((event) => event.id === id)) {
+        throw new Error('Událost nebyla nalezena nebo ji nelze odstranit.');
+      }
+    });
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Odstranění se nezdařilo.' };
+  }
+  return {};
 }

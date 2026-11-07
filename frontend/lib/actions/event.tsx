@@ -12,7 +12,6 @@ import {
   UserPlus,
 } from 'lucide-react';
 import {
-  DeleteEventDocument,
   type EventRegistrationFragment,
   type EventWithTrainerFragment,
   UpdateEventDocument,
@@ -21,6 +20,7 @@ import { type ActionContext, defineActions } from '@/lib/actions';
 import { EventForm } from '@/ui/event-form/EventForms';
 import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
 import { CloneCampForm } from '@/ui/forms/CloneCampForm';
+import { DeleteEventForm } from '@/ui/forms/DeleteEventForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm.tsx';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -143,18 +143,18 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
   },
   {
     id: 'event.detach',
-    label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit termín'),
+    label: ({ item }) => (item.parentId ? 'Vyjmout z programu' : 'Oddělit ze série'),
     icon: GitBranch,
     visible: ({ item, auth }) =>
       auth.canManageEvent(item) && !!(item.parentId || item.seriesId),
     confirm: ({ item }) =>
       item.parentId
         ? {
-            description: 'Opravdu chcete termín vyjmout z programu?',
+            description: 'Opravdu chcete událost vyjmout z programu?',
             confirmationText: 'Vyjmout termín',
           }
         : {
-            description: 'Opravdu chcete tento termín odebrat ze série?',
+            description: 'Opravdu chcete událost odebrat ze série?',
             confirmationText: 'Oddělit termín',
           },
     execute: async ({ item, mutate }) => {
@@ -173,17 +173,11 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
   },
   {
     id: 'event.delete',
-    label: 'Odstranit termín',
+    label: 'Odstranit událost',
     icon: Trash2,
     variant: 'danger',
     visible: ({ auth, item }) => auth.canManageEvent(item),
-    confirm: {
-      description:
-        'Opravdu chcete smazat termín? Tím se smažou také všechny jeho záznamy o účasti a platby.',
-    },
-    execute: async ({ item, mutate }) => {
-      await mutate(DeleteEventDocument, { id: item.id });
-    },
+    render: ({ item }) => <DeleteEventForm id={item.id} name={item.name ?? 'Událost'} />,
   },
   {
     id: 'event.exportParticipants',

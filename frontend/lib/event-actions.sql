@@ -51,3 +51,12 @@ select app_private.reconcile_event_cohort_registrations(:ids!::bigint[]);
 
 /* @name EventSeriesEvents */
 select i.id from event_series s join event i on s.id = i.series_id where s.id = :id;
+
+/* @name DeleteEventRecursive */
+with recursive tree as (
+  select id from event where id = :id!
+  union all
+  select child.id from event child join tree parent on child.parent_id = parent.id
+)
+delete from event where id in (select id from tree)
+returning id::text as "id!";

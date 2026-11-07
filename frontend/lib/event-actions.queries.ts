@@ -187,3 +187,36 @@ const eventSeriesEventsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"
 export const eventSeriesEvents = new PreparedQuery<IEventSeriesEventsParams,IEventSeriesEventsResult>(eventSeriesEventsIR);
 
 
+/** 'DeleteEventRecursive' parameters type */
+export interface IDeleteEventRecursiveParams {
+  id: NumberOrString;
+}
+
+/** 'DeleteEventRecursive' return type */
+export interface IDeleteEventRecursiveResult {
+  id: string;
+}
+
+/** 'DeleteEventRecursive' query type */
+export interface IDeleteEventRecursiveQuery {
+  params: IDeleteEventRecursiveParams;
+  result: IDeleteEventRecursiveResult;
+}
+
+const deleteEventRecursiveIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":59,"b":62}]}],"statement":"with recursive tree as (\n  select id from event where id = :id!\n  union all\n  select child.id from event child join tree parent on child.parent_id = parent.id\n)\ndelete from event where id in (select id from tree)\nreturning id::text as \"id!\""};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * with recursive tree as (
+ *   select id from event where id = :id!
+ *   union all
+ *   select child.id from event child join tree parent on child.parent_id = parent.id
+ * )
+ * delete from event where id in (select id from tree)
+ * returning id::text as "id!"
+ * ```
+ */
+export const deleteEventRecursive = new PreparedQuery<IDeleteEventRecursiveParams,IDeleteEventRecursiveResult>(deleteEventRecursiveIR);
+
+
