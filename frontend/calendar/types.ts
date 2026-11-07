@@ -20,7 +20,7 @@ type CalendarItemBase = {
   __isPreview?: boolean;
 };
 
-export type CalendarInstanceEvent = CalendarItemBase & {
+export type CalendarClubEvent = CalendarItemBase & {
   kind: 'event';
   id: string;
   instance: NonNullable<CalendarDataQuery['eventsList']>[number];
@@ -48,7 +48,7 @@ export type CalendarBirthdayEvent = CalendarItemBase & {
 };
 
 export type CalendarEvent =
-  CalendarInstanceEvent | CalendarCompetitionEvent | CalendarBirthdayEvent;
+  CalendarClubEvent | CalendarCompetitionEvent | CalendarBirthdayEvent;
 
 export type ResourceRef =
   | { type: 'person' | 'location' | 'locationText'; id: string }
@@ -68,14 +68,6 @@ export type ViewProps = {
   resources: readonly Resource[];
   primary?: 'resource' | 'day';
   showAllResources?: boolean;
-};
-
-export type SlotInfo = {
-  start: Date;
-  end: Date;
-  action: 'select' | 'click' | 'day';
-  /** For "TimeGrid" views */
-  resource?: Resource;
 };
 
 export type DragAction = 'resize' | 'move';

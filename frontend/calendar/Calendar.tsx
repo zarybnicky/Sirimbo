@@ -8,7 +8,7 @@ import { DateNavigator } from '@/calendar/DateNavigator';
 import { GroupByPicker } from '@/calendar/GroupByPicker';
 import TimeGrid from '@/calendar/TimeGrid';
 import { ViewPicker } from '@/calendar/ViewPicker';
-import { type CreateEventDefaults, defaultsFromSlot } from '@/calendar/eventDefaults';
+import { type CreateEventDefaults } from '@/calendar/eventDefaults';
 import { calendarTypes, useCalendarData } from '@/calendar/useCalendarData';
 import { MoveEventDocument } from '@/graphql/Event';
 import { useAuth } from '@/lib/auth';
@@ -34,7 +34,7 @@ import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
 import { dragListenersAtom, type ExternalDragSubject } from './state';
 import {
-  type CalendarInstanceEvent,
+  type CalendarClubEvent,
   type CalendarTrainer,
   type DateRange,
   type InteractionInfo,
@@ -73,7 +73,7 @@ export function Calendar({
     subject: ExternalDragSubject,
     info: InteractionInfo,
   ) => void | Promise<void>;
-  onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
+  onRemove?: (event: CalendarClubEvent) => void | Promise<void>;
   availableTrainers?: readonly CalendarTrainer[];
   primary?: ViewProps['primary'];
   scrollView?: boolean;
@@ -140,75 +140,55 @@ export function Calendar({
       availableTrainers,
     });
   const [, moveEvent] = useMutation(MoveEventDocument);
-  const onMove = React.useCallback(
-    async ({ instance }: CalendarInstanceEvent, info: InteractionInfo) => {
-      const { resource } = info;
 
-      await moveEvent({
-        input: {
-          id: instance.id,
-          since: info.start.toISOString(),
-          until: info.end.toISOString(),
-          trainerPersonId: resource?.type === 'person' ? resource.id : null,
-          locationId: resource?.type === 'location' ? resource.id : null,
-          locationText: resource?.type === 'locationText' ? resource.id : null,
-        },
-      });
-    },
-    [moveEvent],
-  );
-
-  const onResize = React.useCallback(
-    async ({ instance }: CalendarInstanceEvent, { start, end }: InteractionInfo) => {
-      await moveEvent({
-        input: {
-          id: instance.id,
-          since: start.toISOString(),
-          until: end.toISOString(),
-        },
-      });
-    },
-    [moveEvent],
-  );
   const [creating, setCreating] = React.useState<CreateEventDefaults>();
-
-  const onCreate = React.useCallback(
-    (defaults: CreateEventDefaults) => {
-      const [locationId] = filters.location;
-      if (!defaults.after && filters.location.length === 1 && locationId) {
-        defaults = { ...defaults, locationId, locationText: '' };
-      }
-      setTimeout(() => setCreating((prev) => prev || defaults));
-    },
-    [filters.location],
-  );
-
-  const onDrillDown = React.useCallback(
-    (date: Date) => {
-      if (!availableViews.includes('day')) return;
-      void setFilters({ date, v: 'day' });
-    },
-    [availableViews, setFilters],
-  );
 
   React.useEffect(() => {
     setDragListeners({
-      onMove,
-      onResize,
       onRemove,
       onDropFromOutside,
-      onCreate,
-      onSelectSlot: (slot) => onCreate(defaultsFromSlot(slot)),
-      onDrillDown,
+      async onMove({ instance }: CalendarClubEvent, info: InteractionInfo) {
+        const { resource } = info;
+        await moveEvent({
+          input: {
+            id: instance.id,
+            since: info.start.toISOString(),
+            until: info.end.toISOString(),
+            trainerPersonId: resource?.type === 'person' ? resource.id : null,
+            locationId: resource?.type === 'location' ? resource.id : null,
+            locationText: resource?.type === 'locationText' ? resource.id : null,
+          },
+        });
+      },
+      async onResize({ instance }: CalendarClubEvent, { start, end }: InteractionInfo) {
+        await moveEvent({
+          input: {
+            id: instance.id,
+            since: start.toISOString(),
+            until: end.toISOString(),
+          },
+        });
+      },
+      onCreate(defaults: CreateEventDefaults) {
+        const [locationId] = filters.location;
+        if (!defaults.after && filters.location.length === 1 && locationId) {
+          defaults = { ...defaults, locationId, locationText: '' };
+        }
+        setTimeout(() => setCreating((prev) => prev || defaults));
+      },
+      onDrillDown(date: Date) {
+        if (!availableViews.includes('day')) return;
+        void setFilters({ date, v: 'day' });
+      },
     });
     return () => setDragListeners({});
   }, [
-    onMove,
-    onResize,
     onRemove,
     onDropFromOutside,
-    onCreate,
-    onDrillDown,
+    moveEvent,
+    filters.location,
+    availableViews,
+    setFilters,
     setDragListeners,
   ]);
 

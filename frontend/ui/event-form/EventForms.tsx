@@ -21,7 +21,7 @@ import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/forma
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
@@ -29,7 +29,7 @@ import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListElement';
 import {
-  EventForm as EventFormSchema,
+  EventFormSchema,
   type EventFormInput,
   type EventFormType,
   type EventParticipantOption,
@@ -101,24 +101,27 @@ function useEventFormOptions(input: EventFormProps) {
         couple,
       });
     }
-    return new Map([...participants].toSorted(([, a], [, b]) =>
-      Number(a.isExternal) - Number(b.isExternal) ||
-      compareText(a.label, b.label),
-    ));
+    return new Map(
+      [...participants].toSorted(
+        ([, a], [, b]) =>
+          Number(a.isExternal) - Number(b.isExternal) || compareText(a.label, b.label),
+      ),
+    );
   }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);
 
   const enabledTrainers = trainers.filter((x) => x.enabled);
   const trainer =
     (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
-      auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
+    auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
 
   const defaultValues = React.useMemo(
-    () => event
-      ? editEventDefaults(event, query.data, now.getTime())
-      : {
-          ...createEventDefaults({ ...input, date: input.date ?? now }, trainer?.id),
-          registrationPeriod: lockEventsByDefault ? null : { start: null, end: null },
-        },
+    () =>
+      event
+        ? editEventDefaults(event, query.data, now.getTime())
+        : createEventDefaults({ ...input, date: input.date ?? now }, {
+          lockEventsByDefault,
+          trainerId: trainer?.id
+        }),
     [event, input, lockEventsByDefault, now, query.data, trainer?.id],
   );
 
@@ -152,21 +155,24 @@ export function EventForm(input: EventFormProps) {
     control,
     name: ['type', 'instances', 'isPublic', 'trainers', 'registrations'],
   });
-  const namePlaceholder = formatEventName({
-    name: null,
-    type: type ?? 'LESSON',
-    eventTrainersList: (trainers ?? []).map(({ personId }) => ({
-      person: { name: options.trainers.find((x) => x.id === personId)?.label },
-    })),
-    registrations: {
-      nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
-        const participant = options.participants.get(
-          personId ? `person:${personId}` : `couple:${coupleId}`,
-        );
-        return !isCancelled && participant ? [participant] : [];
-      }),
+  const namePlaceholder = formatEventName(
+    {
+      name: null,
+      type: type ?? 'LESSON',
+      eventTrainersList: (trainers ?? []).map(({ personId }) => ({
+        person: { name: options.trainers.find((x) => x.id === personId)?.label },
+      })),
+      registrations: {
+        nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
+          const participant = options.participants.get(
+            personId ? `person:${personId}` : `couple:${coupleId}`,
+          );
+          return !isCancelled && participant ? [participant] : [];
+        }),
+      },
     },
-  }, 'neutral');
+    'neutral',
+  );
 
   React.useEffect(() => {
     if (!isPublic) setValue('hasPublicDetails', false);
@@ -259,124 +265,135 @@ export function EventForm(input: EventFormProps) {
   };
 
   return (
-    <FormProvider {...form}>
-      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-        <FormError error={result.error ?? options.error} />
+    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+      <FormError error={result.error ?? options.error} />
 
-        {canSplit && (
-          <Checkbox
-            name="splitLessons"
-            checked={splitLessons}
-            onChange={() => setSplitLessons((x) => !x)}
-            label={`Rozdělit na samostatné lekce? (${lessonRanges.length} x 45 min)`}
-          />
-        )}
+      {canSplit && (
+        <Checkbox
+          name="splitLessons"
+          checked={splitLessons}
+          onChange={() => setSplitLessons((x) => !x)}
+          label={`Rozdělit na samostatné lekce? (${lessonRanges.length} x 45 min)`}
+        />
+      )}
 
-        {isSplitting ? (
-          <>
-            <DateTimeRangeField
-              control={control}
-              nameSince="instances.0.since"
-              nameUntil="instances.0.until"
-            />
-            <fieldset disabled={!ready} className="min-w-0">
-              <LocationField
-                control={control}
-                locations={options.data?.tenant?.locationsList ?? []}
-              />
-              <TrainerListElement control={control} trainers={options.trainers} />
-            </fieldset>
-            <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
-              {lessonRanges.map((range) => {
-                const key = range.since.toISOString();
-                return (
-                  <div
-                    key={key}
-                    className="flex flex-wrap items-center justify-between gap-2 text-sm"
-                  >
-                    <span className="text-neutral-11">
-                      {shortTimeFormatter.formatRange(range.since, range.until)}
-                    </span>
-                    <div className="sm:justify-self-end">
-                      <ComboboxButton
-                        disabled={!ready}
-                        value={splitIds[key] ?? null}
-                        options={[...options.participants.values()]}
-                        placeholder="Volno"
-                        buttonClassName={splitIds[key] ? undefined : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'}
-                        onChange={(x) => setSplitIds((prev) => ({ ...prev, [key]: x ?? null }))}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        ) : (
-          <>
-            <RadioButtonGroupElement
-              control={control}
-              name="type"
-              options={eventTypeOptions.filter(
-                (x) => x.id !== 'RESERVATION' || defaultValues.type === 'RESERVATION',
-              )}
-            />
-            <TextFieldElement
-              control={control}
-              name="name"
-              label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
-              placeholder={namePlaceholder}
-            />
-            <InstanceListElement control={control} />
-            <fieldset disabled={!ready} className="min-w-0 space-y-2">
-              <LocationField
-                control={control}
-                locations={options.data?.tenant?.locationsList ?? []}
-              />
-              <TrainerListElement control={control} trainers={options.trainers} />
-            </fieldset>
-            <fieldset disabled={!ready} className="min-w-0 space-y-2">
-              <ParticipantListElement
-                options={options.participants}
-                cohorts={options.data?.tenant?.cohortsList ?? []}
-              />
-            </fieldset>
-          </>
-        )}
-
-        <div className="grid grid-cols-2 items-baseline justify-between gap-x-1">
-          <CheckboxElement name="isVisible" label="Viditelná pro členy" />
-          <Controller
+      {isSplitting ? (
+        <>
+          <DateTimeRangeField
             control={control}
-            name="registrationPeriod"
-            render={({ field }) => (
-              <Checkbox
-                name={field.name}
-                label="Povolit přihlášky"
-                checked={field.value !== null}
-                onBlur={field.onBlur}
-                onChange={() => field.onChange(
-                  field.value !== null ? null : { start: null, end: null },
-                )}
-              />
+            nameSince="instances.0.since"
+            nameUntil="instances.0.until"
+          />
+          <fieldset disabled={!ready} className="min-w-0">
+            <LocationField
+              control={control}
+              locations={options.data?.tenant?.locationsList ?? []}
+            />
+            <TrainerListElement control={control} trainers={options.trainers} />
+          </fieldset>
+          <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
+            {lessonRanges.map((range) => {
+              const key = range.since.toISOString();
+              return (
+                <div
+                  key={key}
+                  className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                >
+                  <span className="text-neutral-11">
+                    {shortTimeFormatter.formatRange(range.since, range.until)}
+                  </span>
+                  <div className="sm:justify-self-end">
+                    <ComboboxButton
+                      disabled={!ready}
+                      value={splitIds[key] ?? null}
+                      options={[...options.participants.values()]}
+                      placeholder="Volno"
+                      buttonClassName={
+                        splitIds[key]
+                          ? undefined
+                          : 'border-green-7 bg-green-3 text-green-11 hover:border-green-7 hover:bg-green-3/80'
+                      }
+                      onChange={(x) =>
+                        setSplitIds((prev) => ({ ...prev, [key]: x ?? null }))
+                      }
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <>
+          <RadioButtonGroupElement
+            control={control}
+            name="type"
+            options={eventTypeOptions.filter(
+              (x) => x.id !== 'RESERVATION' || defaultValues.type === 'RESERVATION',
             )}
           />
-          <CheckboxElement name="isPublic" label="Viditelná pro veřejnost" />
-          <CheckboxElement name="hasPublicDetails" label="Veřejný program" disabled={!isPublic} />
-          {type === 'CAMP' && (
-            <CheckboxElement name="enableNotes" label="Poznámky k přihlášce" />
-          )}
-          {mode === 'edit' && (
-            <CheckboxElement name="instances.0.isCancelled" label="Zrušeno" />
-          )}
-        </div>
+          <TextFieldElement
+            control={control}
+            name="name"
+            label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
+            placeholder={namePlaceholder}
+          />
+          <InstanceListElement control={control} />
+          <fieldset disabled={!ready} className="min-w-0 space-y-2">
+            <LocationField
+              control={control}
+              locations={options.data?.tenant?.locationsList ?? []}
+            />
+            <TrainerListElement control={control} trainers={options.trainers} />
+          </fieldset>
+          <fieldset disabled={!ready} className="min-w-0 space-y-2">
+            <ParticipantListElement
+              control={control}
+              setValue={setValue}
+              options={options.participants}
+              cohorts={options.data?.tenant?.cohortsList ?? []}
+            />
+          </fieldset>
+        </>
+      )}
 
-        <div className="flex justify-end pt-1">
-          <SubmitButton control={control} disabled={!ready}>
-            {mode === 'create' ? 'Vytvořit' : 'Uložit'}
-          </SubmitButton>
-        </div>
-      </form>
-    </FormProvider>
+      <div className="grid grid-cols-2 items-baseline justify-between gap-x-1">
+        <CheckboxElement control={control} name="isVisible" label="Viditelná pro členy" />
+        <Controller
+          control={control}
+          name="registrationPeriod"
+          render={({ field }) => (
+            <Checkbox
+              name={field.name}
+              label="Povolit přihlášky"
+              checked={field.value !== null}
+              onBlur={field.onBlur}
+              onChange={() =>
+                field.onChange(field.value !== null ? null : { start: null, end: null })
+              }
+            />
+          )}
+        />
+        <CheckboxElement control={control} name="isPublic" label="Viditelná pro veřejnost" />
+        <CheckboxElement
+          control={control}
+          name="hasPublicDetails"
+          label="Veřejný program"
+          disabled={!isPublic}
+        />
+        {type === 'CAMP' && (
+          <CheckboxElement control={control} name="enableNotes" label="Poznámky k přihlášce" />
+        )}
+        {mode === 'edit' && (
+          <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
+        )}
+      </div>
+
+      <div className="flex justify-end pt-1">
+        <SubmitButton control={control} disabled={!ready}>
+          {mode === 'create' ? 'Vytvořit' : 'Uložit'}
+        </SubmitButton>
+      </div>
+    </form>
   );
 }

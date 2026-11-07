@@ -3,12 +3,11 @@ import { selectAtom } from 'jotai/utils';
 import type { EventType } from '@/graphql';
 import type { CreateEventDefaults } from './eventDefaults';
 import type {
-  CalendarInstanceEvent,
+  CalendarClubEvent,
   DragAction,
   DragDirection,
   InteractionInfo,
   ResourceRef,
-  SlotInfo,
 } from './types';
 
 export type CalendarEventConflict = {
@@ -29,7 +28,7 @@ export const isDraggingAtom = atom(false);
 
 export type DragSubject = null | {
   action: DragAction;
-  event?: CalendarInstanceEvent | null;
+  event?: CalendarClubEvent | null;
   direction?: DragDirection | null;
 };
 export const dragSubjectAtom = atom<DragSubject>(null);
@@ -56,15 +55,14 @@ export function readExternalDragSubject(
   }
 }
 export const dragListenersAtom = atom<{
-  onMove?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
-  onResize?: (event: CalendarInstanceEvent, info: InteractionInfo) => void;
-  onRemove?: (event: CalendarInstanceEvent) => void | Promise<void>;
+  onMove?: (event: CalendarClubEvent, info: InteractionInfo) => void;
+  onResize?: (event: CalendarClubEvent, info: InteractionInfo) => void;
+  onRemove?: (event: CalendarClubEvent) => void | Promise<void>;
   onDropFromOutside?: (
     subject: ExternalDragSubject,
     info: InteractionInfo,
   ) => void | Promise<void>;
   onCreate?: (defaults: CreateEventDefaults) => void;
-  onSelectSlot?: (slot: SlotInfo) => void;
   onDrillDown?: (date: Date) => void;
 }>({});
 

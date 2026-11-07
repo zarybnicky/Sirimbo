@@ -12,6 +12,7 @@ import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { cn } from '@/lib/cn';
 import type { Resource } from './types';
+import { defaultsFromSlot } from './eventDefaults';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement | null>;
@@ -57,7 +58,7 @@ function BackgroundCells({
   const auth = useAuth();
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const { onSelectSlot } = useAtomValue(dragListenersAtom);
+  const { onCreate } = useAtomValue(dragListenersAtom);
 
   useLayoutEffect(() => {
     if (!auth.isTrainer) return;
@@ -136,12 +137,12 @@ function BackgroundCells({
         }
         const currentSlot = getSlotAtX(rowBox, point.x, range.length);
         if (currentSlot !== -1) {
-          onSelectSlot?.({
+          onCreate?.(defaultsFromSlot({
             start: range[currentSlot]!,
             end: range[currentSlot]!,
             action: 'click',
             resource,
-          });
+          }));
         }
         return EMPTY;
       });
@@ -150,12 +151,12 @@ function BackgroundCells({
     selector.addEventListener('select', () => {
       setState(({ start, end }) => {
         if (start && end && end !== -1 && start !== -1) {
-          onSelectSlot?.({
+          onCreate?.(defaultsFromSlot({
             start: range[start]!,
             end: range[end]!,
             action: 'select',
             resource,
-          });
+          }));
         }
         return EMPTY;
       });
@@ -166,7 +167,7 @@ function BackgroundCells({
     });
 
     return () => selector.teardown();
-  }, [auth.isTrainer, onSelectSlot, range, resource, rowRef]);
+  }, [auth.isTrainer, onCreate, range, resource, rowRef]);
 
   return (
     <div

@@ -1,19 +1,20 @@
-import type { EventFormInput, EventFormType } from '@/ui/event-form/types';
+import type { EventFormControl } from '@/ui/event-form/types';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { buttonCls } from '@/ui/style';
 import { Plus, X } from 'lucide-react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useFieldArray, useWatch } from 'react-hook-form';
 
 export function CohortListElement({
+  control,
   cohorts,
   onAdd,
   onRemove,
 }: {
+  control: EventFormControl;
   cohorts: { id: string; name: string; isArchived: boolean }[];
   onAdd: (cohortId: string) => void;
   onRemove: (cohortId: string) => void;
 }) {
-  const { control } = useFormContext<EventFormInput, unknown, EventFormType>();
   const type = useWatch({ control, name: 'type' });
   const { fields, append, remove } = useFieldArray({ name: 'cohorts', control });
 

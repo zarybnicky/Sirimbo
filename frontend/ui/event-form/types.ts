@@ -1,7 +1,7 @@
 import type { Control } from 'react-hook-form';
 import { z } from 'zod';
 
-export const EventForm = z.object({
+export const EventFormSchema = z.object({
   name: z.string().prefault(''),
   type: z.enum(['CAMP', 'LESSON', 'RESERVATION', 'HOLIDAY', 'GROUP']).prefault('LESSON'),
   locationId: z.string().prefault('none'),
@@ -45,8 +45,8 @@ export const EventForm = z.object({
     .prefault([]),
 });
 
-export type EventFormInput = z.input<typeof EventForm>;
-export type EventFormType = z.infer<typeof EventForm>;
+export type EventFormInput = z.input<typeof EventFormSchema>;
+export type EventFormType = z.infer<typeof EventFormSchema>;
 export type EventFormControl = Control<EventFormInput, unknown, EventFormType>;
 
 export type EventParticipantOption = {

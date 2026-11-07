@@ -1,6 +1,6 @@
-import type { SlotInfo } from '@/calendar/types';
+import type { Resource } from '@/calendar/types';
 import type { EventFormOptionsQuery, EventWithTrainerFragment } from '@/graphql/Event';
-import { EventForm, type EventFormType } from '@/ui/event-form/types';
+import { EventFormSchema, type EventFormType } from '@/ui/event-form/types';
 import { add, eq } from 'date-arithmetic';
 
 export type CreateEventDefaults = {
@@ -28,7 +28,12 @@ export function splitIntoLessonRanges(since: Date, until: Date) {
   return ranges;
 }
 
-export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
+export function defaultsFromSlot(slot: {
+  start: Date;
+  end: Date;
+  action: 'select' | 'click' | 'day';
+  resource?: Resource;
+}) {
   if (slot.action === 'day') return { date: slot.start };
 
   const { resource } = slot;
@@ -48,7 +53,10 @@ export function defaultsFromSlot(slot: SlotInfo): CreateEventDefaults {
 
 export function createEventDefaults(
   input: CreateEventDefaults,
-  fallbackTrainer?: string,
+  fallback: {
+    lockEventsByDefault: boolean;
+    trainerId?: string;
+  }
 ): EventFormType {
   const { after, events = [], type = 'LESSON' } = input;
   const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
@@ -56,7 +64,7 @@ export function createEventDefaults(
   const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
   const trainerPersonIds = input.trainerPersonIds ??
     after?.eventTrainersList.map((x) => x.personId) ??
-    (fallbackTrainer ? [fallbackTrainer] : []);
+    (fallback.trainerId ? [fallback.trainerId] : []);
 
   let previous = after;
   if (!previous) {
@@ -78,7 +86,7 @@ export function createEventDefaults(
     ? input.locationText ?? ''
     : previous?.location?.id ? '' : previous?.locationText ?? '';
 
-  return EventForm.parse({
+  return EventFormSchema.parse({
     type,
     locationId: locationText ? 'other' : locationId ?? 'none',
     locationText,
@@ -90,6 +98,7 @@ export function createEventDefaults(
       until: until.toISOString(),
     }],
     trainers: trainerPersonIds.map((personId) => ({ personId, lessonsOffered: 0 })),
+    registrationPeriod: fallback.lockEventsByDefault ? null : { start: null, end: null },
   });
 }
 
@@ -99,6 +108,17 @@ export function editEventDefaults(
   now: number,
 ): EventFormType {
   const at = Math.min(now, Date.parse(event.since));
+  const isPast = at < now;
+  const cohortMembers = new Map((data?.tenant?.cohortsList ?? []).map((cohort) => [
+    cohort.id,
+    new Set(cohort.cohortMembershipsList.flatMap((membership) =>
+      membership.person
+        && (isPast || membership.status === 'ACTIVE')
+        && Date.parse(membership.since) <= at
+        && (!membership.until || Date.parse(membership.until) > at)
+        ? [membership.person.id] : [],
+    )),
+  ]));
   const registrations = data?.registrations ?? [];
   return {
     name: event.name ?? '',
@@ -131,10 +151,7 @@ export function editEventDefaults(
       isCancelled: false,
       cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
         .filter(({ cohortId }) => cohortId === r.targetCohortId ||
-          data?.tenant?.cohortsList?.find((x) => x.id === cohortId)?.cohortMembershipsList
-            .some((m) => m.person?.id === r.personId &&
-              (at < now || m.status === 'ACTIVE') && Date.parse(m.since) <= at &&
-              (!m.until || Date.parse(m.until) > at)))
+          (r.personId !== null && cohortMembers.get(cohortId)?.has(r.personId)))
         .map((x) => x.cohortId),
     })),
   };

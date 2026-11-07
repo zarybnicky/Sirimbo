@@ -1,5 +1,5 @@
-import { useFormContext, useWatch } from 'react-hook-form';
-import type { EventFormInput, EventFormType, EventParticipantOption } from './types';
+import { useWatch, type UseFormSetValue } from 'react-hook-form';
+import type { EventFormControl, EventFormInput, EventParticipantOption } from './types';
 import { buttonCls } from '@/ui/style';
 import { Plus, X } from 'lucide-react';
 import { ComboboxButton } from '@/ui/fields/Combobox';
@@ -8,13 +8,16 @@ import type { EventFormOptionsQuery } from '@/graphql/Event';
 import { CohortListElement } from './CohortListElement';
 
 export function ParticipantListElement({
+  control,
+  setValue,
   options,
   cohorts,
 }: {
+  control: EventFormControl;
+  setValue: UseFormSetValue<EventFormInput>;
   options: Map<string, EventParticipantOption>;
   cohorts: NonNullable<NonNullable<EventFormOptionsQuery['tenant']>['cohortsList']>;
 }) {
-  const { control, setValue } = useFormContext<EventFormInput, unknown, EventFormType>();
   const registrations = useWatch({ control, name: 'registrations' }) ?? [];
 
   const active = registrations.filter((x) => !x.isCancelled);
@@ -98,7 +101,7 @@ export function ParticipantListElement({
 
   return (
     <>
-      <CohortListElement cohorts={cohorts} onAdd={addCohort} onRemove={removeCohort} />
+      <CohortListElement control={control} cohorts={cohorts} onAdd={addCohort} onRemove={removeCohort} />
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
         <b className="grow">Účastníci ({selected.size})</b>
         {(['couple', 'person'] as const).map((kind) => (

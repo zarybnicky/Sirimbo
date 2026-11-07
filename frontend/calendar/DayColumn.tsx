@@ -13,7 +13,7 @@ import Selection, {
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import { diff } from './localizer';
-import { resourceKey, type CalendarEvent, type CalendarInstanceEvent, type Resource } from './types';
+import { resourceKey, type CalendarEvent, type CalendarClubEvent, type Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import {
   dragListenersAtom,
@@ -30,6 +30,7 @@ import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { cn } from '@/lib/cn';
 import { layoutEvents } from '@/calendar/layout';
 import { shortTimeFormatter } from '@/ui/format';
+import { defaultsFromSlot } from './eventDefaults';
 
 const EMPTY = {};
 
@@ -66,7 +67,7 @@ type BackgroundSelectionState = {
   endDate?: Date;
 };
 type EventSelectionState = {
-  event?: CalendarInstanceEvent;
+  event?: CalendarClubEvent;
   top?: number;
   height?: number;
 };
@@ -86,7 +87,7 @@ function DayColumn({
   const store = useStore();
 
   const auth = useAuth();
-  const { onSelectSlot, onMove, onResize, onRemove, onDropFromOutside } =
+  const { onCreate, onMove, onResize, onRemove, onDropFromOutside } =
     useAtomValue(dragListenersAtom);
   const minTime = useAtomValue(minTimeAtom);
   const maxTime = useAtomValue(maxTimeAtom);
@@ -157,12 +158,12 @@ function DayColumn({
           return EMPTY;
         }
         const { startDate, endDate } = selectionState(point, backgroundState);
-        onSelectSlot?.({
+        onCreate?.(defaultsFromSlot({
           start: startDate,
           end: endDate,
           resource,
           action: 'click',
-        });
+        }));
         return EMPTY;
       });
     });
@@ -171,12 +172,12 @@ function DayColumn({
       setBackgroundState((backgroundState) => {
         if (!backgroundState.selecting) return backgroundState;
         const { startDate, endDate } = backgroundState;
-        onSelectSlot?.({
+        onCreate?.(defaultsFromSlot({
           start: startDate!,
           end: endDate!,
           resource,
           action: 'select',
-        });
+        }));
         return EMPTY;
       });
     });
@@ -186,7 +187,7 @@ function DayColumn({
     });
 
     return () => selector.teardown();
-  }, [onSelectSlot, resource, slotMetrics, auth.isTrainer]);
+  }, [onCreate, resource, slotMetrics, auth.isTrainer]);
 
   useLayoutEffect(() => {
     if (!auth.isTrainer) return;

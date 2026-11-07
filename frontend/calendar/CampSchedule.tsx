@@ -15,7 +15,7 @@ import {
   groupByAtom,
   isDraggingAtom,
 } from '@/calendar/state';
-import type { CalendarInstanceEvent, InteractionInfo } from '@/calendar/types';
+import type { CalendarClubEvent, InteractionInfo } from '@/calendar/types';
 import { FormError } from '@/ui/form';
 import { formatEventName } from '@/ui/format';
 import { Spinner } from '@/ui/Spinner';
@@ -133,7 +133,7 @@ export const CampSchedule = React.memo(function CampSchedule({
       if (result.error) throw result.error;
     },
   );
-  const removeLesson = useAsyncCallback(async ({ instance }: CalendarInstanceEvent) => {
+  const removeLesson = useAsyncCallback(async ({ instance }: CalendarClubEvent) => {
     if (instance.parentId !== id || instance.type !== 'LESSON') return;
     const result = await deleteInstance({ id: instance.id });
     if (result.error) throw result.error;

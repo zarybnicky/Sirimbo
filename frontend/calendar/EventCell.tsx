@@ -21,7 +21,7 @@ type EventCellProps = {
 function EventCell({ event, ...props }: EventCellProps) {
   if (event.kind === 'birthday') return <BirthdayEventCell event={event} {...props} />;
   if (event.kind === 'competition') return <CompetitionEventCell event={event} {...props} />;
-  return <InstanceEventCell event={event} {...props} />;
+  return <ClubEventCell event={event} {...props} />;
 }
 
 function BirthdayEventCell({
@@ -80,7 +80,7 @@ function CompetitionEventCell({
   );
 }
 
-function InstanceEventCell({
+function ClubEventCell({
   style,
   className,
   event,
