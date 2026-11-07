@@ -2,6 +2,7 @@ import { AttendanceStats } from '@/ui/AttendanceStats';
 import {
   CalendarPlus,
   CheckSquare,
+  Copy,
   GitBranch,
   NotebookPen,
   Pencil,
@@ -19,6 +20,7 @@ import {
 import { type ActionContext, defineActions } from '@/lib/actions';
 import { EventForm } from '@/ui/event-form/EventForms';
 import { AddToEventScheduleForm } from '@/ui/forms/AddToEventScheduleForm';
+import { CloneCampForm } from '@/ui/forms/CloneCampForm';
 import { EditEventDescriptionForm } from '@/ui/forms/EditEventDescriptionForm.tsx';
 import { MyRegistrationsDialog } from '@/ui/MyRegistrationsDialog';
 import { exportEventParticipants } from '@/ui/reports/export-event-participants';
@@ -85,6 +87,13 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,
     },
+  },
+  {
+    id: 'event.clone',
+    label: 'Duplikovat soustředění',
+    icon: Copy,
+    visible: ({ auth, item }) => auth.isSystemAdmin && item.type === 'CAMP',
+    render: ({ item }) => <CloneCampForm id={item.id} since={item.since} />,
   },
   {
     id: 'event.editDescription',

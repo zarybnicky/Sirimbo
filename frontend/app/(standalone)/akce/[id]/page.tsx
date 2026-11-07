@@ -1,6 +1,6 @@
 import { runQuery } from '@/lib/server/postgresql';
 import { notFound, redirect } from 'next/navigation';
-import { eventSeriesEvents } from './akce.queries';
+import { eventSeriesEvents } from '@/lib/event-actions.queries';
 
 type LegacyEventRedirectPageProps = {
   params: Promise<{ id: string }>;

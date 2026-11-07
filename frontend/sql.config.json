@@ -2,6 +2,11 @@
   "transforms": [
     {
       "mode": "sql",
+      "include": "lib/**/*.sql",
+      "emitTemplate": "{{dir}}/{{name}}.queries.ts"
+    },
+    {
+      "mode": "sql",
       "include": "app/**/*.sql",
       "emitTemplate": "{{dir}}/{{name}}.queries.ts"
     }
