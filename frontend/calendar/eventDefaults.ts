@@ -56,15 +56,21 @@ export function createEventDefaults(
   fallback: {
     lockEventsByDefault: boolean;
     trainerId?: string;
-  }
+    allowedTrainerIds: readonly string[];
+  },
 ): EventFormType {
   const { after, events = [], type = 'LESSON' } = input;
   const since = new Date(input.since ?? after?.until ?? input.date ?? new Date());
   if (!input.since && !after) since.setHours(type === 'CAMP' ? 9 : 15, 0, 0, 0);
   const until = input.until ?? add(since, type === 'CAMP' ? 480 : 45, 'minutes');
-  const trainerPersonIds = input.trainerPersonIds ??
+  const prefilledTrainerIds =
+    input.trainerPersonIds ??
     after?.eventTrainersList.map((x) => x.personId) ??
     (fallback.trainerId ? [fallback.trainerId] : []);
+  const trainerPersonIds = prefilledTrainerIds.filter((id) => fallback.allowedTrainerIds.includes(id));
+  if (prefilledTrainerIds.length > 0 && trainerPersonIds.length === 0 && fallback.trainerId) {
+    trainerPersonIds.push(fallback.trainerId);
+  }
 
   let previous = after;
   if (!previous) {
@@ -80,23 +86,28 @@ export function createEventDefaults(
       }
     }
   }
-  const explicitLocation = input.locationId !== undefined || input.locationText !== undefined;
+  const explicitLocation =
+    input.locationId !== undefined || input.locationText !== undefined;
   const locationId = explicitLocation ? input.locationId : previous?.location?.id;
   const locationText = explicitLocation
-    ? input.locationText ?? ''
-    : previous?.location?.id ? '' : previous?.locationText ?? '';
+    ? (input.locationText ?? '')
+    : previous?.location?.id
+      ? ''
+      : (previous?.locationText ?? '');
 
   return EventFormSchema.parse({
     type,
-    locationId: locationText ? 'other' : locationId ?? 'none',
+    locationId: locationText ? 'other' : (locationId ?? 'none'),
     locationText,
     capacity: type === 'LESSON' ? 1 : 0,
     capacityUnit: type === 'LESSON' ? 'REGISTRATIONS' : 'PEOPLE',
     isVisible: true,
-    instances: [{
-      since: since.toISOString(),
-      until: until.toISOString(),
-    }],
+    instances: [
+      {
+        since: since.toISOString(),
+        until: until.toISOString(),
+      },
+    ],
     trainers: trainerPersonIds.map((personId) => ({ personId, lessonsOffered: 0 })),
     registrationPeriod: fallback.lockEventsByDefault ? null : { start: null, end: null },
   });
@@ -109,16 +120,21 @@ export function editEventDefaults(
 ): EventFormType {
   const at = Math.min(now, Date.parse(event.since));
   const isPast = at < now;
-  const cohortMembers = new Map((data?.tenant?.cohortsList ?? []).map((cohort) => [
-    cohort.id,
-    new Set(cohort.cohortMembershipsList.flatMap((membership) =>
-      membership.person
-        && (isPast || membership.status === 'ACTIVE')
-        && Date.parse(membership.since) <= at
-        && (!membership.until || Date.parse(membership.until) > at)
-        ? [membership.person.id] : [],
-    )),
-  ]));
+  const cohortMembers = new Map(
+    (data?.tenant?.cohortsList ?? []).map((cohort) => [
+      cohort.id,
+      new Set(
+        cohort.cohortMembershipsList.flatMap((membership) =>
+          membership.person &&
+          (isPast || membership.status === 'ACTIVE') &&
+          Date.parse(membership.since) <= at &&
+          (!membership.until || Date.parse(membership.until) > at)
+            ? [membership.person.id]
+            : [],
+        ),
+      ),
+    ]),
+  );
   const registrations = data?.registrations ?? [];
   return {
     name: event.name ?? '',
@@ -149,10 +165,16 @@ export function editEventDefaults(
       personId: r.personId,
       coupleId: r.coupleId,
       isCancelled: false,
-      cohortIds: r.source !== 'COHORT' ? [] : event.targetCohortsList
-        .filter(({ cohortId }) => cohortId === r.targetCohortId ||
-          (r.personId !== null && cohortMembers.get(cohortId)?.has(r.personId)))
-        .map((x) => x.cohortId),
+      cohortIds:
+        r.source !== 'COHORT'
+          ? []
+          : event.targetCohortsList
+              .filter(
+                ({ cohortId }) =>
+                  cohortId === r.targetCohortId ||
+                  (r.personId !== null && cohortMembers.get(cohortId)?.has(r.personId)),
+              )
+              .map((x) => x.cohortId),
     })),
   };
 }

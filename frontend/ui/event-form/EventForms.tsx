@@ -109,21 +109,22 @@ function useEventFormOptions(input: EventFormProps) {
     );
   }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);
 
-  const enabledTrainers = trainers.filter((x) => x.enabled);
-  const trainer =
-    (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
-    auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
+  const defaultValues = React.useMemo(() => {
+    if (event) return editEventDefaults(event, query.data, now.getTime());
+    const enabledTrainers = trainers.filter((x) => x.enabled);
+    const trainer =
+      (enabledTrainers.length === 1 ? enabledTrainers[0] : undefined) ??
+        auth.persons.find((p) => p.isTrainer && enabledTrainers.some((x) => x.id === p.id));
 
-  const defaultValues = React.useMemo(
-    () =>
-      event
-        ? editEventDefaults(event, query.data, now.getTime())
-        : createEventDefaults({ ...input, date: input.date ?? now }, {
-          lockEventsByDefault,
-          trainerId: trainer?.id
-        }),
-    [event, input, lockEventsByDefault, now, query.data, trainer?.id],
-  );
+    return createEventDefaults(
+      { ...input, date: input.date ?? now },
+      {
+        lockEventsByDefault,
+        trainerId: trainer?.id,
+        allowedTrainerIds: enabledTrainers.map((x) => x.id),
+      },
+    );
+  }, [event, input, lockEventsByDefault, now, query.data, auth.persons, trainers]);
 
   return {
     ...query,
@@ -372,7 +373,11 @@ export function EventForm(input: EventFormProps) {
             />
           )}
         />
-        <CheckboxElement control={control} name="isPublic" label="Viditelná pro veřejnost" />
+        <CheckboxElement
+          control={control}
+          name="isPublic"
+          label="Viditelná pro veřejnost"
+        />
         <CheckboxElement
           control={control}
           name="hasPublicDetails"
@@ -380,10 +385,18 @@ export function EventForm(input: EventFormProps) {
           disabled={!isPublic}
         />
         {type === 'CAMP' && (
-          <CheckboxElement control={control} name="enableNotes" label="Poznámky k přihlášce" />
+          <CheckboxElement
+            control={control}
+            name="enableNotes"
+            label="Poznámky k přihlášce"
+          />
         )}
         {mode === 'edit' && (
-          <CheckboxElement control={control} name="instances.0.isCancelled" label="Zrušeno" />
+          <CheckboxElement
+            control={control}
+            name="instances.0.isCancelled"
+            label="Zrušeno"
+          />
         )}
       </div>
 
