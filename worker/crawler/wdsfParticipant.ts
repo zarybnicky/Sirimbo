@@ -80,6 +80,13 @@ const Score = z.discriminatedUnion('kind', [
     ...scoreCommon,
   }),
   z.object({
+    kind: z.literal('onScaleDisco'),
+    c: z.number(),
+    p: z.number(),
+    t: z.number(),
+    ...scoreCommon,
+  }),
+  z.object({
     kind: z.literal('onScaleDisco3'),
     c: z.number(),
     p: z.number(),
