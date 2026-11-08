@@ -226,3 +226,43 @@ const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
 export const getRefetchOutlook = new PreparedQuery<IGetRefetchOutlookParams,IGetRefetchOutlookResult>(getRefetchOutlookIR);
 
 
+/** 'GetRefetchPolicies' parameters type */
+export type IGetRefetchPoliciesParams = void;
+
+/** 'GetRefetchPolicies' return type */
+export interface IGetRefetchPoliciesResult {
+  federation: string | null;
+  fetchInterval: string | null;
+  kind: string | null;
+  offsetDays: number | null;
+  offsetLabel: string | null;
+}
+
+/** 'GetRefetchPolicies' query type */
+export interface IGetRefetchPoliciesQuery {
+  params: IGetRefetchPoliciesParams;
+  result: IGetRefetchPoliciesResult;
+}
+
+const getRefetchPoliciesIR: any = {"usedParamSet":{},"params":[],"statement":"WITH kinds AS (\n  SELECT DISTINCT federation, kind FROM crawler.frontier\n  UNION\n  SELECT federation, kind FROM crawler.refetch_policy\n)\nSELECT k.federation, k.kind,\n  p.reference_offset::text AS \"offsetLabel?\",\n  (extract(epoch FROM p.reference_offset) / 86400)::float8 AS \"offsetDays?\",\n  p.fetch_interval::text AS \"fetchInterval?\"\nFROM kinds k\nLEFT JOIN crawler.refetch_policy p USING (federation, kind)\nORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH kinds AS (
+ *   SELECT DISTINCT federation, kind FROM crawler.frontier
+ *   UNION
+ *   SELECT federation, kind FROM crawler.refetch_policy
+ * )
+ * SELECT k.federation, k.kind,
+ *   p.reference_offset::text AS "offsetLabel?",
+ *   (extract(epoch FROM p.reference_offset) / 86400)::float8 AS "offsetDays?",
+ *   p.fetch_interval::text AS "fetchInterval?"
+ * FROM kinds k
+ * LEFT JOIN crawler.refetch_policy p USING (federation, kind)
+ * ORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST
+ * ```
+ */
+export const getRefetchPolicies = new PreparedQuery<IGetRefetchPoliciesParams,IGetRefetchPoliciesResult>(getRefetchPoliciesIR);
+
+

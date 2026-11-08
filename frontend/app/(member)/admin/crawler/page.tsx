@@ -4,7 +4,8 @@ import { Layout } from '@/ui/Layout';
 import { Crawler } from './Crawler';
 import { runQuery } from '@/lib/server/postgresql';
 import { Histogram } from '@/ui/Histogram';
-import { getRefetchOutlook } from './crawler.queries';
+import { getRefetchOutlook, getRefetchPolicies } from './crawler.queries';
+import { RefetchPolicies } from './RefetchPolicies';
 
 export const metadata: Metadata = {
   title: 'Crawler',
@@ -20,7 +21,10 @@ const federationColors: Record<string, string> = {
 export default async function CrawlerPage() {
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) return <Layout requireSystemAdmin />;
-  const outlook = await runQuery(getRefetchOutlook);
+  const [outlook, policies] = await Promise.all([
+    runQuery(getRefetchOutlook),
+    runQuery(getRefetchPolicies),
+  ]);
   const days = Map.groupBy(outlook, (row) => row.day);
   const federations = [
     ...new Set(
@@ -73,6 +77,7 @@ export default async function CrawlerPage() {
           bucketWidth={36}
           formatLabel={(day) => day.slice(8) + '.' + day.slice(5, 7)}
         />
+        <RefetchPolicies policies={policies} />
       </Crawler>
     </Layout>
   );

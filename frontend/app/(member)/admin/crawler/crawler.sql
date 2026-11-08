@@ -92,3 +92,17 @@ SELECT buckets.day::text AS "day?", counts.federation AS "federation?", coalesce
 FROM buckets
 LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
 ORDER BY buckets.day NULLS FIRST, counts.federation;
+
+/* @name GetRefetchPolicies */
+WITH kinds AS (
+  SELECT DISTINCT federation, kind FROM crawler.frontier
+  UNION
+  SELECT federation, kind FROM crawler.refetch_policy
+)
+SELECT k.federation, k.kind,
+  p.reference_offset::text AS "offsetLabel?",
+  (extract(epoch FROM p.reference_offset) / 86400)::float8 AS "offsetDays?",
+  p.fetch_interval::text AS "fetchInterval?"
+FROM kinds k
+LEFT JOIN crawler.refetch_policy p USING (federation, kind)
+ORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST;
