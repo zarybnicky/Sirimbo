@@ -233,6 +233,7 @@ export type IGetRefetchPoliciesParams = void;
 export interface IGetRefetchPoliciesResult {
   federation: string | null;
   fetchInterval: string | null;
+  frontierCount: number;
   kind: string | null;
   offsetDays: number | null;
   offsetLabel: string | null;
@@ -244,25 +245,159 @@ export interface IGetRefetchPoliciesQuery {
   result: IGetRefetchPoliciesResult;
 }
 
-const getRefetchPoliciesIR: any = {"usedParamSet":{},"params":[],"statement":"WITH kinds AS (\n  SELECT DISTINCT federation, kind FROM crawler.frontier\n  UNION\n  SELECT federation, kind FROM crawler.refetch_policy\n)\nSELECT k.federation, k.kind,\n  p.reference_offset::text AS \"offsetLabel?\",\n  (extract(epoch FROM p.reference_offset) / 86400)::float8 AS \"offsetDays?\",\n  p.fetch_interval::text AS \"fetchInterval?\"\nFROM kinds k\nLEFT JOIN crawler.refetch_policy p USING (federation, kind)\nORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST"};
+const getRefetchPoliciesIR: any = {"usedParamSet":{},"params":[],"statement":"WITH counts AS (\n  SELECT federation, kind, count(*)::int AS count\n  FROM crawler.frontier\n  GROUP BY federation, kind\n), kinds AS (\n  SELECT federation, kind FROM counts\n  UNION\n  SELECT federation, kind FROM crawler.refetch_policy\n)\nSELECT k.federation, k.kind,\n  coalesce(c.count, 0)::int AS \"frontierCount!\",\n  p.reference_offset::text AS \"offsetLabel?\",\n  (extract(epoch FROM p.reference_offset) / 86400)::float8 AS \"offsetDays?\",\n  p.fetch_interval::text AS \"fetchInterval?\"\nFROM kinds k\nLEFT JOIN counts c USING (federation, kind)\nLEFT JOIN crawler.refetch_policy p USING (federation, kind)\nORDER BY coalesce(c.count, 0) DESC, k.federation, k.kind, p.reference_offset NULLS FIRST"};
 
 /**
  * Query generated from SQL:
  * ```
- * WITH kinds AS (
- *   SELECT DISTINCT federation, kind FROM crawler.frontier
+ * WITH counts AS (
+ *   SELECT federation, kind, count(*)::int AS count
+ *   FROM crawler.frontier
+ *   GROUP BY federation, kind
+ * ), kinds AS (
+ *   SELECT federation, kind FROM counts
  *   UNION
  *   SELECT federation, kind FROM crawler.refetch_policy
  * )
  * SELECT k.federation, k.kind,
+ *   coalesce(c.count, 0)::int AS "frontierCount!",
  *   p.reference_offset::text AS "offsetLabel?",
  *   (extract(epoch FROM p.reference_offset) / 86400)::float8 AS "offsetDays?",
  *   p.fetch_interval::text AS "fetchInterval?"
  * FROM kinds k
+ * LEFT JOIN counts c USING (federation, kind)
  * LEFT JOIN crawler.refetch_policy p USING (federation, kind)
- * ORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST
+ * ORDER BY coalesce(c.count, 0) DESC, k.federation, k.kind, p.reference_offset NULLS FIRST
  * ```
  */
 export const getRefetchPolicies = new PreparedQuery<IGetRefetchPoliciesParams,IGetRefetchPoliciesResult>(getRefetchPoliciesIR);
+
+
+/** 'CreateRefetchPolicy' parameters type */
+export interface ICreateRefetchPolicyParams {
+  federation: string;
+  fetchInterval: string;
+  kind: string;
+  offset: string;
+}
+
+/** 'CreateRefetchPolicy' return type */
+export interface ICreateRefetchPolicyResult {
+  federation: string;
+}
+
+/** 'CreateRefetchPolicy' query type */
+export interface ICreateRefetchPolicyQuery {
+  params: ICreateRefetchPolicyParams;
+  result: ICreateRefetchPolicyResult;
+}
+
+const createRefetchPolicyIR: any = {"usedParamSet":{"federation":true,"kind":true,"offset":true,"fetchInterval":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":96,"b":107}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":110,"b":115}]},{"name":"offset","required":true,"transform":{"type":"scalar"},"locs":[{"a":118,"b":125}]},{"name":"fetchInterval","required":true,"transform":{"type":"scalar"},"locs":[{"a":144,"b":158}]}],"statement":"INSERT INTO crawler.refetch_policy (federation, kind, reference_offset, fetch_interval)\nVALUES (:federation!, :kind!, :offset!::text::interval, :fetchInterval!::text::interval)\nON CONFLICT DO NOTHING\nRETURNING federation"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO crawler.refetch_policy (federation, kind, reference_offset, fetch_interval)
+ * VALUES (:federation!, :kind!, :offset!::text::interval, :fetchInterval!::text::interval)
+ * ON CONFLICT DO NOTHING
+ * RETURNING federation
+ * ```
+ */
+export const createRefetchPolicy = new PreparedQuery<ICreateRefetchPolicyParams,ICreateRefetchPolicyResult>(createRefetchPolicyIR);
+
+
+/** 'UpdateRefetchPolicy' parameters type */
+export interface IUpdateRefetchPolicyParams {
+  federation: string;
+  fetchInterval: string;
+  kind: string;
+  newFetchInterval: string;
+  newOffset: string;
+  offset?: string | null | void;
+}
+
+/** 'UpdateRefetchPolicy' return type */
+export interface IUpdateRefetchPolicyResult {
+  federation: string;
+}
+
+/** 'UpdateRefetchPolicy' query type */
+export interface IUpdateRefetchPolicyQuery {
+  params: IUpdateRefetchPolicyParams;
+  result: IUpdateRefetchPolicyResult;
+}
+
+const updateRefetchPolicyIR: any = {"usedParamSet":{"newOffset":true,"newFetchInterval":true,"federation":true,"kind":true,"offset":true,"fetchInterval":true},"params":[{"name":"newOffset","required":true,"transform":{"type":"scalar"},"locs":[{"a":103,"b":113}]},{"name":"newFetchInterval","required":true,"transform":{"type":"scalar"},"locs":[{"a":157,"b":174}]},{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":211,"b":222}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":235,"b":240}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":286,"b":292}]},{"name":"fetchInterval","required":true,"transform":{"type":"scalar"},"locs":[{"a":333,"b":347}]}],"statement":"UPDATE crawler.refetch_policy\nSET reference_offset = CASE WHEN reference_offset IS NULL THEN NULL ELSE :newOffset!::text::interval END,\n    fetch_interval = :newFetchInterval!::text::interval\nWHERE federation = :federation! AND kind = :kind!\n  AND reference_offset IS NOT DISTINCT FROM :offset::text::interval\n  AND fetch_interval = :fetchInterval!::text::interval\nRETURNING federation"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE crawler.refetch_policy
+ * SET reference_offset = CASE WHEN reference_offset IS NULL THEN NULL ELSE :newOffset!::text::interval END,
+ *     fetch_interval = :newFetchInterval!::text::interval
+ * WHERE federation = :federation! AND kind = :kind!
+ *   AND reference_offset IS NOT DISTINCT FROM :offset::text::interval
+ *   AND fetch_interval = :fetchInterval!::text::interval
+ * RETURNING federation
+ * ```
+ */
+export const updateRefetchPolicy = new PreparedQuery<IUpdateRefetchPolicyParams,IUpdateRefetchPolicyResult>(updateRefetchPolicyIR);
+
+
+/** 'RemoveRefetchPolicy' parameters type */
+export interface IRemoveRefetchPolicyParams {
+  federation: string;
+  kind: string;
+  offset: string;
+}
+
+/** 'RemoveRefetchPolicy' return type */
+export type IRemoveRefetchPolicyResult = void;
+
+/** 'RemoveRefetchPolicy' query type */
+export interface IRemoveRefetchPolicyQuery {
+  params: IRemoveRefetchPolicyParams;
+  result: IRemoveRefetchPolicyResult;
+}
+
+const removeRefetchPolicyIR: any = {"usedParamSet":{"federation":true,"kind":true,"offset":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":54,"b":65}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":78,"b":83}]},{"name":"offset","required":true,"transform":{"type":"scalar"},"locs":[{"a":110,"b":117}]}],"statement":"DELETE FROM crawler.refetch_policy\nWHERE federation = :federation! AND kind = :kind!\n  AND reference_offset = :offset!::text::interval"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM crawler.refetch_policy
+ * WHERE federation = :federation! AND kind = :kind!
+ *   AND reference_offset = :offset!::text::interval
+ * ```
+ */
+export const removeRefetchPolicy = new PreparedQuery<IRemoveRefetchPolicyParams,IRemoveRefetchPolicyResult>(removeRefetchPolicyIR);
+
+
+/** 'RecalculateCrawlerFetchTimes' parameters type */
+export interface IRecalculateCrawlerFetchTimesParams {
+  federation: string;
+  kind: string;
+}
+
+/** 'RecalculateCrawlerFetchTimes' return type */
+export interface IRecalculateCrawlerFetchTimesResult {
+  count: number;
+}
+
+/** 'RecalculateCrawlerFetchTimes' query type */
+export interface IRecalculateCrawlerFetchTimesQuery {
+  params: IRecalculateCrawlerFetchTimesParams;
+  result: IRecalculateCrawlerFetchTimesResult;
+}
+
+const recalculateCrawlerFetchTimesIR: any = {"usedParamSet":{"federation":true,"kind":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":39,"b":50}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":53,"b":58}]}],"statement":"SELECT crawler.recalculate_fetch_times(:federation!, :kind!) AS \"count!\""};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT crawler.recalculate_fetch_times(:federation!, :kind!) AS "count!"
+ * ```
+ */
+export const recalculateCrawlerFetchTimes = new PreparedQuery<IRecalculateCrawlerFetchTimesParams,IRecalculateCrawlerFetchTimesResult>(recalculateCrawlerFetchTimesIR);
 
 

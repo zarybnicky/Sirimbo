@@ -62,10 +62,18 @@
 
   --color-warning-11: #ad5700;
 
+  --color-danger-1: #fffcfc;
+  --color-danger-2: #fff5f5;
   --color-danger-3: #fbe4e8;
+  --color-danger-4: #ffd1d1;
+  --color-danger-5: #ffb3b3;
+  --color-danger-6: #f58b8b;
+  --color-danger-7: #ef3030;
+  --color-danger-8: #df2929;
   --color-danger-9: #d94b67;
   --color-danger-10: #e05570;
   --color-danger-11: #b42346;
+  --color-danger-12: #641e27;
 
   --animate-slideDownAndFade: slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
   --animate-slideLeftAndFade: slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -207,8 +215,14 @@
 
       --color-warning-11: #ffca16;
 
+      --color-danger-1: #180c0d;
+      --color-danger-2: #211113;
       --color-danger-3: #471823;
+      --color-danger-4: #5e2026;
+      --color-danger-5: #76272e;
+      --color-danger-6: #94353a;
       --color-danger-11: #ffb4c2;
+      --color-danger-12: #ffe4e6;
     }
 
     [data-tenant='1'] {

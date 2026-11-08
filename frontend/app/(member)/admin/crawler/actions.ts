@@ -6,6 +6,11 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { revalidatePath } from 'next/cache';
 import {
   completeCrawlerJob as completeCrawlerJobQuery,
+  createRefetchPolicy as createRefetchPolicyQuery,
+  updateRefetchPolicy as updateRefetchPolicyQuery,
+  removeRefetchPolicy as removeRefetchPolicyQuery,
+  type IRemoveRefetchPolicyParams,
+  recalculateCrawlerFetchTimes,
   refetchCrawlerErrors,
   reprocessCrawlerTargets,
   scheduleCrawler,
@@ -25,43 +30,63 @@ const targetSchema = z.object({
     .optional(),
 });
 
-const policyEditSchema = z
-  .object({
-    federation: z.string().min(1),
-    kind: z.string().min(1),
-    offset: z.string().nullable(),
-    fetchInterval: z.string(),
-    field: z.enum(['offset', 'fetchInterval']),
-    amount: z.int(),
-    unit: z.enum(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years']),
-  })
-  .refine(
-    (edit) => (edit.field === 'offset' ? edit.offset !== null : edit.amount > 0),
-    'Fetch intervals must be positive; default policies have no boundary.',
-  );
+const intervalUnitSchema = z.enum([
+  'seconds',
+  'minutes',
+  'hours',
+  'days',
+  'weeks',
+  'months',
+  'years',
+]);
+
+const policyCreateSchema = z.object({
+  federation: z.string().min(1),
+  kind: z.string().min(1),
+  amount: z.int().positive(),
+  unit: intervalUnitSchema,
+  offsetAmount: z.int(),
+  offsetUnit: intervalUnitSchema,
+});
+
+export async function createRefetchPolicy(input: z.input<typeof policyCreateSchema>) {
+  const { auth } = await getRequestContext();
+  if (!auth.isSystemAdmin) throw new Error('FORBIDDEN');
+  const policy = policyCreateSchema.parse(input);
+  await withTransaction(async (client) => {
+    const result = await createRefetchPolicyQuery.run(
+      {
+        federation: policy.federation,
+        kind: policy.kind,
+        offset: `${policy.offsetAmount} ${policy.offsetUnit}`,
+        fetchInterval: `${policy.amount} ${policy.unit}`,
+      },
+      client,
+    );
+    if (result.length !== 1) throw new Error('This offset already exists.');
+    await recalculateCrawlerFetchTimes.run(policy, client);
+  });
+  revalidatePath('/admin/crawler');
+}
+
+const policyEditSchema = policyCreateSchema.extend({
+  offset: z.string().nullable(),
+  fetchInterval: z.string(),
+});
 
 export async function updateRefetchPolicy(input: z.input<typeof policyEditSchema>) {
   const { auth } = await getRequestContext();
   if (!auth.isSystemAdmin) throw new Error('FORBIDDEN');
   const edit = policyEditSchema.parse(input);
   await withTransaction(async (client) => {
-    const result = await client
-      .query(
-        `UPDATE crawler.refetch_policy
-       SET reference_offset = CASE WHEN $5 = 'offset' THEN $6::interval ELSE reference_offset END,
-           fetch_interval = CASE WHEN $5 = 'fetchInterval' THEN $6::interval ELSE fetch_interval END
-       WHERE federation = $1 AND kind = $2
-         AND reference_offset IS NOT DISTINCT FROM $3::interval
-         AND fetch_interval = $4::interval
-       RETURNING federation`,
-        [
-          edit.federation,
-          edit.kind,
-          edit.offset,
-          edit.fetchInterval,
-          edit.field,
-          `${edit.amount} ${edit.unit}`,
-        ],
+    const result = await updateRefetchPolicyQuery
+      .run(
+        {
+          ...edit,
+          newOffset: `${edit.offsetAmount} ${edit.offsetUnit}`,
+          newFetchInterval: `${edit.amount} ${edit.unit}`,
+        },
+        client,
       )
       .catch((error: unknown) => {
         if (
@@ -70,16 +95,23 @@ export async function updateRefetchPolicy(input: z.input<typeof policyEditSchema
           'code' in error &&
           error.code === '23505'
         ) {
-          throw new Error('A policy already has this boundary. Choose another offset.');
+          throw new Error('This offset already exists.');
         }
         throw error;
       });
-    if (result.rowCount !== 1)
-      throw new Error('This policy changed. Reload the page and try again.');
-    await client.query('SELECT crawler.recalculate_fetch_times($1, $2)', [
-      edit.federation,
-      edit.kind,
-    ]);
+    if (result.length !== 1)
+      throw new Error('This interval changed. Reload the page and try again.');
+    await recalculateCrawlerFetchTimes.run(edit, client);
+  });
+  revalidatePath('/admin/crawler');
+}
+
+export async function removeRefetchPolicy(policy: IRemoveRefetchPolicyParams) {
+  const { auth } = await getRequestContext();
+  if (!auth.isSystemAdmin) throw new Error('FORBIDDEN');
+  await withTransaction(async (client) => {
+    await removeRefetchPolicyQuery.run(policy, client);
+    await recalculateCrawlerFetchTimes.run(policy, client);
   });
   revalidatePath('/admin/crawler');
 }

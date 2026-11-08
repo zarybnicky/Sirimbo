@@ -94,15 +94,44 @@ LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
 ORDER BY buckets.day NULLS FIRST, counts.federation;
 
 /* @name GetRefetchPolicies */
-WITH kinds AS (
-  SELECT DISTINCT federation, kind FROM crawler.frontier
+WITH counts AS (
+  SELECT federation, kind, count(*)::int AS count
+  FROM crawler.frontier
+  GROUP BY federation, kind
+), kinds AS (
+  SELECT federation, kind FROM counts
   UNION
   SELECT federation, kind FROM crawler.refetch_policy
 )
 SELECT k.federation, k.kind,
+  coalesce(c.count, 0)::int AS "frontierCount!",
   p.reference_offset::text AS "offsetLabel?",
   (extract(epoch FROM p.reference_offset) / 86400)::float8 AS "offsetDays?",
   p.fetch_interval::text AS "fetchInterval?"
 FROM kinds k
+LEFT JOIN counts c USING (federation, kind)
 LEFT JOIN crawler.refetch_policy p USING (federation, kind)
-ORDER BY k.federation, k.kind, p.reference_offset NULLS FIRST;
+ORDER BY coalesce(c.count, 0) DESC, k.federation, k.kind, p.reference_offset NULLS FIRST;
+
+/* @name CreateRefetchPolicy */
+INSERT INTO crawler.refetch_policy (federation, kind, reference_offset, fetch_interval)
+VALUES (:federation!, :kind!, :offset!::text::interval, :fetchInterval!::text::interval)
+ON CONFLICT DO NOTHING
+RETURNING federation;
+
+/* @name UpdateRefetchPolicy */
+UPDATE crawler.refetch_policy
+SET reference_offset = CASE WHEN reference_offset IS NULL THEN NULL ELSE :newOffset!::text::interval END,
+    fetch_interval = :newFetchInterval!::text::interval
+WHERE federation = :federation! AND kind = :kind!
+  AND reference_offset IS NOT DISTINCT FROM :offset::text::interval
+  AND fetch_interval = :fetchInterval!::text::interval
+RETURNING federation;
+
+/* @name RemoveRefetchPolicy */
+DELETE FROM crawler.refetch_policy
+WHERE federation = :federation! AND kind = :kind!
+  AND reference_offset = :offset!::text::interval;
+
+/* @name RecalculateCrawlerFetchTimes */
+SELECT crawler.recalculate_fetch_times(:federation!, :kind!) AS "count!";

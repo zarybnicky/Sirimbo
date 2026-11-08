@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -9,8 +10,9 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { FormError } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
+import { cn } from '@/lib/cn';
 import type { IGetRefetchPoliciesResult } from './crawler.queries';
-import { updateRefetchPolicy } from './actions';
+import { createRefetchPolicy, removeRefetchPolicy, updateRefetchPolicy } from './actions';
 
 const units = [
   'seconds',
@@ -23,6 +25,12 @@ const units = [
 ] as const;
 const unitOptions = units.map((id) => ({ id, label: id }));
 type IntervalInput = { amount: number; unit: (typeof units)[number] };
+const Form = z.object({
+  amount: z.int().positive(),
+  unit: z.enum(units),
+  offsetAmount: z.int(),
+  offsetUnit: z.enum(units),
+});
 
 function intervalInput(interval: string): IntervalInput | null {
   // PostgreSQL returns calendar intervals as text and sub-day intervals as a clock.
@@ -68,30 +76,37 @@ function intervalInput(interval: string): IntervalInput | null {
 
 export function RefetchPolicyEditor({
   rule,
-  field,
+  create = false,
   className,
   children,
 }: {
   rule: IGetRefetchPoliciesResult | undefined;
-  field: 'offset' | 'fetchInterval';
+  create?: boolean;
   className?: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
-  const value = field === 'offset' ? rule?.offsetLabel : rule?.fetchInterval;
-  const initial = value ? intervalInput(value) : null;
-  if (!rule?.fetchInterval || !initial)
-    return <span className={className}>{children}</span>;
+  const interval: IntervalInput | null = create
+    ? { amount: 1, unit: 'days' }
+    : rule?.fetchInterval
+      ? intervalInput(rule.fetchInterval)
+      : null;
+  const offset: IntervalInput | null =
+    !create && rule?.offsetLabel
+      ? intervalInput(rule.offsetLabel)
+      : { amount: 0, unit: 'days' };
+  if (!rule || !interval || !offset) return <span className={className}>{children}</span>;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           type="button"
-          className={className}
-          title={
-            field === 'offset' ? `Edit boundary: ${value}` : `Edit interval: ${value}`
-          }
+          className={cn(
+            !create &&
+              'whitespace-nowrap underline decoration-dotted underline-offset-2 hover:text-accent-11',
+            className,
+          )}
         >
           {children}
         </button>
@@ -99,8 +114,8 @@ export function RefetchPolicyEditor({
       <PopoverContent align="start" className="w-80 text-sm">
         <RefetchPolicyForm
           rule={rule}
-          field={field}
-          initial={initial}
+          create={create}
+          initial={{ ...interval, offsetAmount: offset.amount, offsetUnit: offset.unit }}
           onSuccess={() => setOpen(false)}
         />
       </PopoverContent>
@@ -110,40 +125,41 @@ export function RefetchPolicyEditor({
 
 function RefetchPolicyForm({
   rule,
-  field,
+  create,
   initial,
   onSuccess,
 }: {
   rule: IGetRefetchPoliciesResult;
-  field: 'offset' | 'fetchInterval';
-  initial: IntervalInput;
+  create: boolean;
+  initial: z.infer<typeof Form>;
   onSuccess: () => void;
 }) {
-  const Form = z.object({
-    amount: z
-      .int()
-      .refine((value) => field === 'offset' || value > 0, 'Enter a positive interval.'),
-    unit: z.enum(units),
-  });
   const {
     control,
     handleSubmit,
     setError,
-    formState: { errors },
-  } = useForm({
+    formState: { errors, isSubmitting },
+  } = useForm<z.infer<typeof Form>>({
     resolver: zodResolver(Form),
     defaultValues: initial,
   });
   const onSubmit = async (values: z.infer<typeof Form>) => {
     try {
-      await updateRefetchPolicy({
-        federation: rule.federation!,
-        kind: rule.kind!,
-        offset: rule.offsetLabel,
-        fetchInterval: rule.fetchInterval!,
-        field,
-        ...values,
-      });
+      if (create) {
+        await createRefetchPolicy({
+          federation: rule.federation!,
+          kind: rule.kind!,
+          ...values,
+        });
+      } else {
+        await updateRefetchPolicy({
+          federation: rule.federation!,
+          kind: rule.kind!,
+          offset: rule.offsetLabel,
+          fetchInterval: rule.fetchInterval!,
+          ...values,
+        });
+      }
       onSuccess();
     } catch (error) {
       setError('root.server', {
@@ -151,13 +167,40 @@ function RefetchPolicyForm({
       });
     }
   };
+  const remove = useAsyncCallback(async () => {
+    await removeRefetchPolicy({
+      federation: rule.federation!,
+      kind: rule.kind!,
+      offset: rule.offsetLabel!,
+    });
+    onSuccess();
+  });
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <h4 className="pr-6 font-semibold">
-        {field === 'offset' ? 'Policy boundary' : 'Fetch interval'}
+        {create ? 'Add offset' : rule.offsetLabel === null ? 'Fetch interval' : 'Offset'}
       </h4>
-      <FormError error={errors.root?.server?.message} />
+      <FormError error={errors.root?.server?.message || remove.error} />
+      {(create || rule.offsetLabel !== null) && (
+        <div className="grid grid-cols-2 gap-2">
+          <TextFieldElement
+            control={control}
+            name="offsetAmount"
+            type="number"
+            step="1"
+            required
+            label="Offset"
+          />
+          <ComboboxElement
+            control={control}
+            name="offsetUnit"
+            label="Unit"
+            options={unitOptions}
+            searchable={false}
+          />
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-2">
         <TextFieldElement
           control={control}
@@ -165,8 +208,8 @@ function RefetchPolicyForm({
           type="number"
           step="1"
           required
-          min={field === 'fetchInterval' ? 1 : undefined}
-          label={field === 'offset' ? 'Offset' : 'Every'}
+          min={1}
+          label="Fetch interval"
         />
         <ComboboxElement
           control={control}
@@ -176,13 +219,20 @@ function RefetchPolicyForm({
           searchable={false}
         />
       </div>
-      {field === 'offset' && (
+      {(create || rule.offsetLabel !== null) && (
         <p className="text-xs text-neutral-11">
           Offsets start at 00:00 UTC on the reference day. +1 day is the next midnight.
         </p>
       )}
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Save</SubmitButton>
+        <SubmitButton control={control} disabled={remove.loading}>
+          Save
+        </SubmitButton>
+        {!create && rule.offsetLabel !== null && (
+          <SubmitButton action={remove} variant="danger" disabled={isSubmitting}>
+            Remove
+          </SubmitButton>
+        )}
       </div>
     </form>
   );

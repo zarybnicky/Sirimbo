@@ -20,7 +20,7 @@ export const buttonCls = tv({
         'bg-accent-2 hover:bg-accent-3 active:bg-accent-5 text-accent-12 border border-accent-6 hover:border-accent-7 ' +
         'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
       danger:
-        'bg-danger-2 hover:bg-danger-3 active:bg-danger-5 text-danger-12 border border-danger-6 hover:border-danger-7 focus-visible:ring-danger-10 has-focus-visible:ring-danger-10 ' +
+        'bg-danger-7 hover:bg-danger-8 active:bg-danger-8 text-white border border-transparent focus-visible:ring-danger-8 has-focus-visible:ring-danger-8 ' +
         'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
       facet:
