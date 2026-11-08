@@ -40,13 +40,13 @@ jobs:
             --file deploy/Dockerfile \
             --target runner \
             --no-cache-filter graphql-validation \
+            --no-cache="${{ github.event_name == 'workflow_dispatch' }}" \
             --platform linux/amd64 \
             --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
             --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
             --build-arg SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}" \
-            --build-arg SENTRY_RELEASE="${GITHUB_SHA}" \
-            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+            --secret id=GITHUB_SHA,env=GITHUB_SHA \
             --tag "127.0.0.1:5000/sirimbo:${GITHUB_SHA}" \
             --push \
             .

@@ -44,7 +44,6 @@
     stateDir = "/var/lib/olymp";
 
     migrations.enable = true;
-    worker.enable = false;
 
     backend = {
       enable = true;

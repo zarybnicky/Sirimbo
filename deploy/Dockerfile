@@ -25,24 +25,26 @@ RUN --mount=type=cache,id=sirimbo-pnpm,target=/pnpm/store,sharing=locked \
 
 FROM deps AS graphql-validation
 
-COPY . .
+COPY graphql.config.yml ./
+COPY graphql/ graphql/
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND
 RUN test -n "$NEXT_PUBLIC_GRAPHQL_BACKEND" \
   && GRAPHQL_SCHEMA="${NEXT_PUBLIC_GRAPHQL_BACKEND%/}/graphql" pnpm schema
 
-FROM graphql-validation AS builder
+FROM deps AS builder
+
+COPY frontend/ frontend/
+COPY --from=graphql-validation /repo/frontend/graphql /repo/frontend/graphql
 
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND
 ARG NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT
 ARG SENTRY_AUTH_TOKEN
 
-ARG GITHUB_SHA
-ENV SENTRY_RELEASE=${GITHUB_SHA}
-ENV NEXT_DEPLOYMENT_ID=${GITHUB_SHA}
-
+# Build metadata must not invalidate the cache for unchanged application inputs.
 RUN --mount=type=cache,id=sirimbo-next,target=/repo/frontend/.next/cache,sharing=locked \
-  pnpm --filter @rozpisovnik/web build
+    --mount=type=secret,id=GITHUB_SHA,env=GITHUB_SHA,required=true \
+  NEXT_DEPLOYMENT_ID="$GITHUB_SHA" SENTRY_RELEASE="$GITHUB_SHA" pnpm --filter @rozpisovnik/web build
 
 FROM gcr.io/distroless/nodejs24-debian12:nonroot AS runner
 
@@ -58,8 +60,5 @@ EXPOSE 3000
 COPY --from=builder --chown=65532:65532 /repo/frontend/.next/standalone ./
 COPY --from=builder --chown=65532:65532 /repo/frontend/.next/static ./frontend/.next/static
 COPY --from=builder --chown=65532:65532 /repo/frontend/public ./frontend/public
-
-ARG GITHUB_SHA
-ENV NEXT_DEPLOYMENT_ID=${GITHUB_SHA}
 
 CMD ["frontend/server.js"]

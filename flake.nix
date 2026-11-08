@@ -17,13 +17,6 @@
       ruian-address-cache = final.callPackage ./deploy/ruian-address-cache.nix {};
       geonames-city-cache = final.callPackage ./deploy/geonames-city-cache.nix {};
 
-      rozpisovnik-worker = final.callPackage ./deploy/build-pnpm-package.nix {
-        packageJSON = final.lib.importJSON ./worker/package.json;
-        workspaceFolders = [ "worker" ];
-        pnpmDepsHash = builtins.readFile ./worker/pnpm-deps-hash.txt;
-        postInstall = "cp -s $out/share/worker/rozpisovnik-worker $out/bin/";
-      };
-
       rozpisovnik-api = final.callPackage ./deploy/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
         workspaceFolders = [ "backend" ];
@@ -73,7 +66,6 @@
       inherit (pkgs)
         graphile-migrate
         rozpisovnik-api
-        rozpisovnik-worker
         rozpisovnik-migrations
         ruian-address-cache
         geonames-city-cache;
@@ -81,7 +73,6 @@
 
     checks = forAllSystems (pkgs: {
       rozpisovnik-api = pkgs.rozpisovnik-api;
-      rozpisovnik-worker = pkgs.rozpisovnik-worker;
       module-eval = pkgs.runCommand "my-module-eval-check" { }
         "echo ${builtins.deepSeq self.nixosConfigurations.container.config.system.build.toplevel.outPath "ok"} > $out";
     });

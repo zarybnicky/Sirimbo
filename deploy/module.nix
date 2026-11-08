@@ -131,7 +131,7 @@ in
               }
               {
                 name = "worker.enabled";
-                value = lib.boolToString cfg.worker.enable;
+                value = "true";
               }
               {
                 name = "smtp.auth";

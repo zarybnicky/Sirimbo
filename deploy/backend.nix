@@ -22,9 +22,6 @@ in {
       description = "${pkgName} state directory";
     };
 
-    worker = {
-      enable = lib.mkEnableOption "${pkgName}";
-    };
     migrations = {
       enable = lib.mkEnableOption "${pkgName}";
     };
@@ -207,46 +204,6 @@ in {
           RemainAfterExit = "true";
           WorkingDirectory = pkgs.rozpisovnik-migrations;
           ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
-        };
-      };
-    })
-
-    # TODO: remove after k3s is running the worker
-    (lib.mkIf cfg.worker.enable {
-      systemd.services.rozpisovnik-worker = {
-        description = "${pkgName} Worker";
-        after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "network-online.target" "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-
-        environment = config.my.seaweedfs.buckets.olymp.environment // {
-          DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
-          SMTP_AUTH = if cfg.smtp.auth then "1" else "";
-          SMTP_TLS = if cfg.smtp.tls then "1" else "";
-          SMTP_HOST = cfg.smtp.host;
-          SMTP_PORT = toString cfg.smtp.port;
-          SMTP_USER = cfg.smtp.user;
-          SMTP_PASS = cfg.smtp.pass;
-          WDSF_AUTH = cfg.wdsfAuth;
-          RUIAN_ADDRESS_SOURCE = toString pkgs.ruian-address-cache;
-          GEONAMES_CITY_SOURCE = toString pkgs.geonames-city-cache;
-
-          OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
-          OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
-          OTEL_SERVICE_NAME = "rozpisovnik-worker";
-          # Graphile Worker must finish jobs and release locks before exiting.
-          HDX_NODE_STOP_ON_TERMINATION_SIGNALS = "false";
-          HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
-          HDX_NODE_BETA_MODE = "1";
-          NODE_OPTIONS = "--require ${pkgs.rozpisovnik-worker}/share/worker/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
-        };
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          ExecStart = "${pkgs.rozpisovnik-worker}/bin/rozpisovnik-worker -j 5";
-          Restart = "always";
-          RestartSec = "10s";
         };
       };
     })

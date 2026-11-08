@@ -39,9 +39,9 @@ ENV HDX_NODE_STOP_ON_TERMINATION_SIGNALS=false
 ENV HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE=1
 ENV HDX_NODE_BETA_MODE=1
 
-COPY --from=deps /repo/node_modules /app/node_modules
-COPY --from=deps /repo/worker /app/worker
+COPY --from=deps --chown=65532:65532 /repo/node_modules /app/node_modules
+COPY --from=deps --chown=65532:65532 /repo/worker /app/worker
 # Supplied by --build-context worker-data=... after building the Nix datasets.
-COPY --from=worker-data / /app/data/
+COPY --from=worker-data --chown=65532:65532 / /app/data/
 
 CMD ["rozpisovnik-worker", "-j", "5"]
