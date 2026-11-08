@@ -51,6 +51,23 @@ jobs:
             --push \
             .
 
+      - name: Build worker datasets and push worker image
+        run: |
+          set -euo pipefail
+
+          worker_data="${RUNNER_TEMP}/sirimbo-worker-data"
+          mkdir -p "$worker_data"
+          cp "$(nix build --no-link --print-out-paths .#ruian-address-cache)" "$worker_data/ruian.duckdb"
+          cp "$(nix build --no-link --print-out-paths .#geonames-city-cache)" "$worker_data/geonames.duckdb"
+
+          docker buildx build \
+            --file deploy/worker.Dockerfile \
+            --platform linux/amd64 \
+            --build-context "worker-data=${worker_data}" \
+            --tag "127.0.0.1:5000/rozpisovnik/worker:${GITHUB_SHA}" \
+            --push \
+            .
+
       - name: Deploy exact Git SHA with Argo
         run: |
           set -euo pipefail

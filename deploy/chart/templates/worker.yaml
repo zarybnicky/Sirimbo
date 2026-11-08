@@ -1,0 +1,72 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sirimbo-worker
+  labels:
+    app.kubernetes.io/name: sirimbo-worker
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sirimbo-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sirimbo-worker
+    spec:
+      terminationGracePeriodSeconds: 300
+      containers:
+        - name: worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PGHOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: PGUSER
+              value: {{ .Values.postgresql.user | quote }}
+            - name: PGDATABASE
+              value: {{ .Values.postgresql.database | quote }}
+
+            - name: S3_LOCAL_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: S3_BUCKET
+              value: {{ .Values.s3.bucket | quote }}
+            - name: AWS_ENDPOINT_URL_S3
+              value: "http://$(S3_LOCAL_HOST):{{ .Values.s3.port }}"
+            - name: AWS_REGION
+              value: {{ .Values.s3.region | quote }}
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.s3.accessKeyId | quote }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.s3.secretAccessKey | quote }}
+            - name: AWS_EC2_METADATA_DISABLED
+              value: "true"
+            - name: SMTP_AUTH
+              value: {{ ternary "1" "" .Values.smtp.auth | quote }}
+            - name: SMTP_TLS
+              value: {{ ternary "1" "" .Values.smtp.tls | quote }}
+            - name: SMTP_HOST
+              value: {{ .Values.smtp.host | quote }}
+            - name: SMTP_PORT
+              value: {{ .Values.smtp.port | quote }}
+            - name: SMTP_USER
+              value: {{ .Values.smtp.user | quote }}
+            - name: SMTP_PASS
+              value: {{ .Values.smtp.pass | quote }}
+            - name: WDSF_AUTH
+              value: {{ .Values.runtime.wdsfAuth | quote }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ .Values.otel.endpoint | quote }}
+            - name: OTEL_EXPORTER_OTLP_HEADERS
+              value: {{ .Values.otel.headers | quote }}
+{{- end }}

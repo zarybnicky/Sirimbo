@@ -106,6 +106,14 @@ in
                 value = toString cfg.frontend.nodePort;
               }
               {
+                name = "postgresql.user";
+                value = cfg.user;
+              }
+              {
+                name = "postgresql.database";
+                value = cfg.backend.database;
+              }
+              {
                 name = "runtime.graphqlBackend";
                 value = "https://api.rozpisovnik.cz";
               }
@@ -120,6 +128,50 @@ in
               {
                 name = "runtime.sentryEnvironment";
                 value = "production";
+              }
+              {
+                name = "worker.enabled";
+                value = lib.boolToString cfg.worker.enable;
+              }
+              {
+                name = "smtp.auth";
+                value = lib.boolToString cfg.smtp.auth;
+              }
+              {
+                name = "smtp.tls";
+                value = lib.boolToString cfg.smtp.tls;
+              }
+              {
+                name = "smtp.host";
+                value = if builtins.elem cfg.smtp.host [ "localhost" "127.0.0.1" ]
+                  then "$(PGHOST)" else cfg.smtp.host;
+              }
+              {
+                name = "smtp.port";
+                value = toString cfg.smtp.port;
+              }
+              {
+                name = "smtp.user";
+                value = cfg.smtp.user;
+              }
+              {
+                name = "smtp.pass";
+                value = cfg.smtp.pass;
+                forceString = true;
+              }
+              {
+                name = "runtime.wdsfAuth";
+                value = cfg.wdsfAuth;
+              }
+              {
+                name = "otel.endpoint";
+                value = lib.replaceStrings
+                  [ "://localhost:" "://127.0.0.1:" ]
+                  [ "://$(PGHOST):" "://$(PGHOST):" ] cfg.otel.endpoint;
+              }
+              {
+                name = "otel.headers";
+                value = "authorization=${cfg.otel.apiKey}";
               }
             ] ++ config.my.seaweedfs.buckets.olymp.helmValues;
           };
@@ -157,6 +209,14 @@ in
               {
                 name = "service.nodePort";
                 value = toString cfg.frontend.staging.nodePort;
+              }
+              {
+                name = "postgresql.user";
+                value = cfg.user;
+              }
+              {
+                name = "postgresql.database";
+                value = cfg.backend.database;
               }
               {
                 name = "runtime.graphqlBackend";

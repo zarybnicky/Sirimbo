@@ -12,6 +12,10 @@
 
 !deploy/
 !deploy/Dockerfile
+!deploy/worker.Dockerfile
+
+!worker/
+!worker/**
 
 !frontend/
 !frontend/**

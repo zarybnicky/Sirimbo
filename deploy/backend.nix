@@ -211,6 +211,7 @@ in {
       };
     })
 
+    # TODO: remove after k3s is running the worker
     (lib.mkIf cfg.worker.enable {
       systemd.services.rozpisovnik-worker = {
         description = "${pkgName} Worker";

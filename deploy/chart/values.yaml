@@ -5,6 +5,11 @@ image:
   tag: dev
   pullPolicy: IfNotPresent
 
+worker:
+  enabled: false
+  image:
+    repository: 127.0.0.1:5000/rozpisovnik/worker
+
 service:
   type: NodePort
   nodePort: 30100
@@ -27,3 +32,16 @@ runtime:
   jwtSecret: ""
   sentryDsn: ""
   sentryEnvironment: production
+  wdsfAuth: ""
+
+smtp:
+  auth: false
+  tls: false
+  host: ""
+  port: 25
+  user: ""
+  pass: ""
+
+otel:
+  endpoint: ""
+  headers: ""
