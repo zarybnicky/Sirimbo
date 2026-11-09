@@ -4,7 +4,6 @@ import {
   type MembershipApplicationFragment,
   MembershipApplicationsDocument,
 } from '@/graphql/MembershipApplication';
-import { RichTextView } from '@/ui/RichTextView';
 import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { formatAddress, moneyFormatter } from '@/ui/format';
@@ -30,6 +29,8 @@ import { parseAsString, useQueryState } from 'nuqs';
 import React from 'react';
 import { EntityLink } from '@/ui/EntityLink.tsx';
 import { keyIsNonNull } from '@/lib/truthyFilter.ts';
+import { DefinitionList } from '@/ui/DefinitionList';
+import { RichTextView } from '@/ui/RichTextView';
 
 type ClubData = NonNullable<ClubQuery['tenant']>;
 
@@ -41,7 +42,10 @@ export function Club() {
   );
   const [{ data: tenant }] = useQuery({
     query: ClubDocument,
-    variables: { showInLists: auth.isAdmin ? undefined : true },
+    variables: {
+      showInLists: auth.isAdmin ? undefined : true,
+      isSystemAdmin: auth.isSystemAdmin,
+    },
   });
   const [{ data: applications }] = useQuery({
     query: MembershipApplicationsDocument,
@@ -56,7 +60,7 @@ export function Club() {
         label: 'Upravit klub',
         icon: Pencil,
         requireAdmin: true,
-        render: () => <TenantForm />,
+        render: ({ item }) => <TenantForm tenant={item} />,
       },
     ],
     tenant?.tenant,
@@ -68,7 +72,7 @@ export function Club() {
 
   return (
     <>
-      <PageHeader title="Klub" actions={tenantActions} />
+      <PageHeader title={club.name} actions={tenantActions} />
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="info" title="Informace">
           <ClubInformation club={club} />
@@ -168,6 +172,31 @@ const ClubInformation = React.memo(function ClubInformation({
         ))
       ) : (
         <p className="text-sm text-neutral-10">Nejsou přidána žádná místa.</p>
+      )}
+
+      {auth.isAdmin && (
+        <>
+          <h2 className="mt-2 text-lg font-bold">Detaily</h2>
+          <DefinitionList
+            items={{
+              ID: club.id,
+              Členové: club.memberships.totalCount,
+              Trenéři: club.trainers.totalCount,
+              Správci: club.administrators.totalCount,
+              'Bankovní účet': club.bankAccount,
+              'ČSTS ID': club.cstsId,
+              Domény: club.origins.join(', '),
+              IČO: club.czIco,
+              DIČ: club.czDic,
+              Adresa: formatAddress(club.address),
+              Nastavení: auth.isSystemAdmin && (
+                <pre className="overflow-auto whitespace-pre-wrap wrap-anywhere">
+                  {JSON.stringify(club.tenantSetting?.settings ?? {}, null, 2)}
+                </pre>
+              ),
+            }}
+          />
+        </>
       )}
     </>
   );

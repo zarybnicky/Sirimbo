@@ -2,6 +2,7 @@
 
 import { DefinitionList } from '@/ui/DefinitionList';
 import { RichTextView } from '@/ui/RichTextView';
+import { formatAddress } from '@/ui/format';
 import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Table } from '@/ui/Table';
@@ -10,8 +11,7 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
 import { Sheet } from 'react-modal-sheet';
 import { useQuery } from 'urql';
-import { formatAddress } from '@/ui/format.ts';
-import { TenantAdminEdit } from '@/ui/forms/TenantAdminForm.tsx';
+import { TenantForm } from '@/ui/forms/TenantForm';
 import { parseAsString, useQueryState } from 'nuqs';
 
 // Mobile sheet: 2 detents + closed.
@@ -32,7 +32,10 @@ function useMediaQuery(query: string) {
 }
 
 export function Tenants() {
-  const [{ data, fetching, error }] = useQuery({ query: TenantsFullDocument });
+  const [{ data, fetching, error }] = useQuery({
+    query: TenantsFullDocument,
+    variables: { isSystemAdmin: true },
+  });
   const tenants = data?.tenantsList;
 
   const [selectedId, setSelectedId] = useQueryState(
@@ -125,12 +128,11 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
         <Dialog>
           <DialogTrigger.Edit size="sm" />
           <DialogContent>
-            <TenantAdminEdit tenant={tenant} />
+            <TenantForm tenant={tenant} />
           </DialogContent>
         </Dialog>
       </div>
       <RichTextView className="text-sm text-neutral-12" value={tenant.description} />
-
       <DefinitionList
         items={{
           ID: tenant.id,
@@ -138,7 +140,8 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
           Trenéři: tenant.trainers.totalCount,
           Správci: tenant.administrators.totalCount,
           'Bankovní účet': tenant.bankAccount || '-',
-          Domény: tenant.origins?.join(', ') ?? '-',
+          'ČSTS ID': tenant.cstsId,
+          Domény: tenant.origins.join(', ') || '-',
           IČO: tenant.czIco || '-',
           DIČ: tenant.czDic || '-',
           Adresa: formatAddress(tenant.address) || '-',

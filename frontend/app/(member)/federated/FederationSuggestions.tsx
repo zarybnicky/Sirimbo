@@ -14,7 +14,7 @@ import {
   CreateTenantMembershipDocument,
   DeleteCoupleDocument,
 } from '@/graphql/Memberships';
-import { TenantFormDocument } from '@/graphql/Tenant';
+import { TenantFormOptionsDocument } from '@/graphql/Tenant';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Pagination } from '@/ui/Pagination';
 import { FacetRadioGroup } from '@/ui/FacetRadioGroup';
@@ -205,7 +205,7 @@ function CoupleSuggestion({
 }
 
 export function MissingFederationMembers() {
-  const [tenant] = useQuery({ query: TenantFormDocument });
+  const [tenant] = useQuery({ query: TenantFormOptionsDocument });
   const club = tenant.data?.clubs?.nodes.find(
     (c) => c.externalId === tenant.data?.tenant?.cstsId?.toString(),
   );
