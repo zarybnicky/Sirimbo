@@ -76,7 +76,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
                       <Plus />
                     </DialogTrigger.Plain>
                     <DialogContent className="sm:max-w-xl">
-                      <EventForm date={new Date(date)} events={events} />
+                      <EventForm date={new Date(date)} after={events.at(-1)} events={events} />
                     </DialogContent>
                   </Dialog>
                 )}

@@ -62,7 +62,7 @@ export function eventTargetsNode(
 
 const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e;
 function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
-  const target = isTouchEvent(e) ? e.touches[0] ?? e.changedTouches[0]! : e;
+  const target = isTouchEvent(e) ? (e.touches[0] ?? e.changedTouches[0]!) : e;
   return {
     clientX: target.clientX,
     clientY: target.clientY,
@@ -118,7 +118,7 @@ class Selection extends TypedEventTarget<EventMap> {
     container: () => HTMLElement | null,
     options: {
       shouldSelect: (point: ClientPoint) => boolean;
-    }
+    },
   ) {
     super();
     this.container = container;
@@ -179,12 +179,10 @@ class Selection extends TypedEventTarget<EventMap> {
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e);
 
     const node = this.container();
-    if (!node || this.isDetached) {
-      return null;
-    }
     if (
-      e.which === 3 ||
-      (e as MouseEvent).button === 2 ||
+      !node ||
+      this.isDetached ||
+      (!isTouchEvent(e) && e.button !== 0) ||
       !node.contains(document.elementFromPoint(clientX, clientY))
     ) {
       return null;
@@ -276,9 +274,7 @@ class Selection extends TypedEventTarget<EventMap> {
         );
         this.removeMouseLeaveListener = addEventListener('mouseout', (e) => {
           if (!e.relatedTarget) {
-            this.handleTerminatingEvent(
-              new KeyboardEvent('keydown', { key: 'Escape' }),
-            );
+            this.handleTerminatingEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
           }
         });
         this.removeSelectStartListener = addEventListener('selectstart', (e) =>
@@ -346,7 +342,9 @@ class Selection extends TypedEventTarget<EventMap> {
     latestActiveClientPoint = undefined;
 
     if (click && inRoot) {
-      const { pageX, pageY, clientX, clientY } = getEventCoordinates(e as MouseEvent | TouchEvent);
+      const { pageX, pageY, clientX, clientY } = getEventCoordinates(
+        e as MouseEvent | TouchEvent,
+      );
       const detail = { x: pageX, y: pageY, clientX, clientY };
       return setTimeout(() =>
         this.dispatchTypedEvent('click', new CustomEvent('click', { detail })),
@@ -355,10 +353,14 @@ class Selection extends TypedEventTarget<EventMap> {
 
     // User drag-clicked in the Selectable area
     if (!click) {
-      const removeClickListener = addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-      }, true);
+      const removeClickListener = addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        },
+        true,
+      );
       return setTimeout(() => {
         removeClickListener();
         this.dispatchTypedEvent(
