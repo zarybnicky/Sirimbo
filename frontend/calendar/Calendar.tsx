@@ -20,11 +20,15 @@ import { useAuth } from '@/lib/auth';
 import { Spinner } from '@/ui/Spinner';
 import { Dialog, DialogContent } from '@/ui/dialog';
 import { EventForm } from '@/ui/event-form/EventForms';
-import { ComboboxButton } from '@/ui/fields/Combobox';
 import { buttonCls } from '@/ui/style';
 import { FacetFilter } from '@/ui/FacetFilter';
-import { DropdownMenuButton } from '@/ui/dropdown';
-import { CheckCircle2, Circle } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuButton,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/ui/dropdown';
+import { Check, ChevronDown, Square, SquareCheck } from 'lucide-react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import { useSetAtom } from 'jotai';
 import {
@@ -39,7 +43,11 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useMutation } from 'urql';
 import { CalendarConflictsIndicator } from './CalendarConflictsIndicator';
-import { calendarPreferencesAtom, dragListenersAtom, type ExternalDragSubject } from './state';
+import {
+  calendarPreferencesAtom,
+  dragListenersAtom,
+  type ExternalDragSubject,
+} from './state';
 import {
   type CalendarClubEvent,
   type CalendarTrainer,
@@ -237,24 +245,47 @@ export function Calendar({
               view={view}
             />
           )}
-          <ViewPicker
-            view={viewInput}
-            setView={setView}
-            views={availableViews}
-          />
+          <ViewPicker view={viewInput} setView={setView} views={availableViews} />
           {!onlyMine && view.supportsGrouping && (
-            <ComboboxButton
-              searchable={false}
-              value={filters.groupBy}
-              options={calendarGroupByOptions}
-              onChange={(id) => {
-                const groupBy = calendarGroupBy.find((value) => value === id) ?? 'none';
-                void setFilters({ groupBy });
-                if (pathname === '/rozpis') {
-                  setPreferences((previous) => ({ ...previous, groupBy }));
-                }
-              }}
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={buttonCls({ variant: 'outline', size: 'sm' })}
+              >
+                {calendarGroupByOptions.find((x) => x.id === filters.groupBy)?.shortLabel}
+                <ChevronDown />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {calendarGroupByOptions.map(({ id, label }) => (
+                  <DropdownMenuButton
+                    key={id}
+                    onSelect={() => {
+                      void setFilters({ groupBy: id });
+                      if (pathname === '/rozpis') {
+                        setPreferences((previous) => ({ ...previous, groupBy: id }));
+                      }
+                    }}
+                  >
+                    <Check className={filters.groupBy === id ? undefined : 'invisible'} />
+                    {label}
+                  </DropdownMenuButton>
+                ))}
+                {(filters.groupBy === 'trainer' || filters.groupBy === 'day-trainer') && (
+                  <>
+                    <hr className="my-1 border-neutral-4" />
+                    <DropdownMenuButton
+                      onSelect={() => {
+                        void setFilters((x) => ({
+                          columns: x.columns === 'all' ? null : 'all',
+                        }));
+                      }}
+                    >
+                      {filters.columns === 'all' ? <SquareCheck /> : <Square />}
+                      Zobrazit všechny trenéry
+                    </DropdownMenuButton>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           {auth.isLoggedIn && (
             <button
@@ -284,17 +315,7 @@ export function Calendar({
             value={filters.trainers}
             options={filterOptions.trainers}
             onChange={(trainers) => setFilters({ trainers })}
-          >
-            <DropdownMenuButton
-              onSelect={(event) => {
-                event.preventDefault();
-                setFilters((x) => ({ columns: x.columns === 'all' ? null : 'all' }));
-              }}
-            >
-              {filters.columns === 'all' ? <CheckCircle2 /> : <Circle />}
-              Zobrazit všechny trenéry
-            </DropdownMenuButton>
-          </FacetFilter>
+          />
           {auth.isLoggedIn && (
             <FacetFilter
               label="Účastníci"
@@ -347,9 +368,7 @@ export function Calendar({
           modal={false}
         >
           <DialogContent className="sm:max-w-xl" onOpenAutoFocus={preventDefault}>
-            {creating && (
-              <EventForm {...creating} events={events} parent={parent} />
-            )}
+            {creating && <EventForm {...creating} events={events} parent={parent} />}
           </DialogContent>
         </Dialog>
       )}
