@@ -17,6 +17,7 @@ import { resourceKey, type CalendarEvent, type CalendarClubEvent, type Resource 
 import { useAuth } from '@/lib/auth';
 import {
   dragListenersAtom,
+  formPreviewAtom,
   dragSubjectAtom,
   externalDragSubjectAtom,
   isDraggingAtom,
@@ -81,6 +82,8 @@ function DayColumn({
   gridRef,
 }: DayColumnProps) {
   const columnRef = React.useRef<HTMLDivElement>(null);
+  const preview = useAtomValue(formPreviewAtom);
+  const isDragging = useAtomValue(isDraggingAtom);
   const eventOffsetTopRef = React.useRef<number>(0);
   const setIsDragging = useSetAtom(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
@@ -434,6 +437,12 @@ function DayColumn({
     };
   }, [events, slotMetrics]);
 
+  const selectionPreview = backgroundState.startDate && backgroundState.endDate
+    ? [slotMetrics.getRange(backgroundState.startDate, backgroundState.endDate, false, true)]
+    : !isDragging && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
+      ? preview?.events.map(({ since, until }) => slotMetrics.getRange(since, until)) ?? []
+      : [];
+
   const isToday = eq(date, new Date(), 'day');
 
   return (
@@ -513,19 +522,15 @@ function DayColumn({
         )}
       </div>
 
-      {backgroundState.startDate && backgroundState.endDate && (
+      {selectionPreview.map(({ startDate, endDate, top, height }, index) => height > 0 && (
         <div
-          className="absolute z-10 w-full p-0.75 text-xs bg-neutral-9 text-white"
-          style={{ top: backgroundState.top, height: backgroundState.height }}
+          key={index}
+          className="rbc-drag-preview pointer-events-none absolute z-10 w-full p-0.75 text-xs bg-neutral-9 text-white"
+          style={{ top: `${top}%`, height: `${height}%` }}
         >
-          <span>
-            {shortTimeFormatter.formatRange(
-              backgroundState.startDate,
-              backgroundState.endDate,
-            )}
-          </span>
+          {shortTimeFormatter.formatRange(startDate, endDate)}
         </div>
-      )}
+      ))}
       <NowIndicator date={date} slotMetrics={slotMetrics} />
     </div>
   );

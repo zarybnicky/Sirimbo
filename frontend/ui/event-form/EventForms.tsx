@@ -21,6 +21,8 @@ import { formatEventName, formatEventType, shortTimeFormatter } from '@/ui/forma
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
+import { useSetAtom } from 'jotai';
+import { formPreviewAtom } from '@/calendar/state';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation, useQuery } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
@@ -137,6 +139,7 @@ function useEventFormOptions(input: EventFormProps) {
 
 export function EventForm(input: EventFormProps) {
   const { event } = input;
+  const setPreview = useSetAtom(formPreviewAtom);
   const options = useEventFormOptions(input);
   const { defaultValues } = options;
   const mode = event ? 'edit' : 'create';
@@ -153,9 +156,9 @@ export function EventForm(input: EventFormProps) {
     values: defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
-  const [type, instances, isPublic, trainers, registrations] = useWatch({
+  const [type, instances, isPublic, trainers, registrations, locationId, locationText] = useWatch({
     control,
-    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations'],
+    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations', 'locationId', 'locationText'],
   });
   const namePlaceholder = formatEventName(
     {
@@ -175,6 +178,22 @@ export function EventForm(input: EventFormProps) {
     },
     'neutral',
   );
+
+  React.useEffect(() => {
+    const resourceKeys = (trainers ?? []).map((x) => `person:${x.personId}`);
+    if (locationId === 'other') {
+      if (locationText) resourceKeys.push(`locationText:${locationText}`);
+    } else if (locationId && locationId !== 'none') {
+      resourceKeys.push(`location:${locationId}`);
+    }
+    setPreview({
+      events: instances.filter((x) => !x.isCancelled).map((x) => ({
+        since: new Date(x.since), until: new Date(x.until),
+      })),
+      resourceKeys: resourceKeys.length > 0 ? resourceKeys : ['unassigned'],
+    });
+    return () => setPreview(null);
+  }, [instances, trainers, locationId, locationText, setPreview]);
 
   React.useEffect(() => {
     if (!isPublic) setValue('hasPublicDetails', false);
