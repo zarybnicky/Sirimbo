@@ -11,6 +11,7 @@ import type {
   InteractionInfo,
   ResourceRef,
 } from './types';
+import { resourceKey } from './types.ts';
 
 export type CalendarEventConflict = {
   id: string;
@@ -37,6 +38,15 @@ export const formPreviewAtom = atom<{
   events: CalendarClubEvent[];
   resourceKeys: string[];
 } | null>(null);
+
+export function formPreviewFor(resource: ResourceRef | undefined, since: Date, until: Date) {
+  return selectAtom(formPreviewAtom, (preview) =>
+    preview &&
+    (!resource || preview.resourceKeys.includes(resourceKey(resource))) &&
+    preview.events.some((event) => event.start < until && event.end > since)
+      ? preview : null,
+  );
+}
 
 export type DragSubject = null | {
   action: DragAction;

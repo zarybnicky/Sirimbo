@@ -57,14 +57,14 @@ function useEventFormOptions(input: EventFormProps) {
   });
   const savedRegistrations = query.data?.registrations;
   const parent = input.parent ?? query.data?.event?.parent;
-  const trainers = (query.data?.tenant?.tenantTrainersList ?? [])
+  const trainers = React.useMemo(() => (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
     .map(({ person }) => ({
       id: person.id,
       label: person.name,
       hidden: !auth.isAdmin && !auth.isMyPerson(person.id),
       disabled: !!parent && !parent.eventTrainersList.some((x) => x.personId === person.id),
-    }));
+    })), [query.data?.tenant?.tenantTrainersList, auth, parent]);
 
   const participants = React.useMemo(() => {
     const tenant = query.data?.tenant;

@@ -38,7 +38,7 @@ export const buttonCls = tv({
       xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:size-3',
       sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:size-3',
       md: 'px-3 py-2 text-sm rounded-xl [&_svg]:size-4',
-      lg: 'px-6 py-3 text-base rounded-xl [&_svg]:size-5',
+      lg: 'px-4 py-3 text-base rounded-xl [&_svg]:size-5',
     },
   },
   defaultVariants: {

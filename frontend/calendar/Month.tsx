@@ -54,7 +54,7 @@ function MonthView({ range: { since, until }, events }: ViewProps) {
   );
 }
 
-export default MonthView;
+export default React.memo(MonthView);
 
 function sortEvents(a: { start: Date; end: Date }, b: { start: Date; end: Date }) {
   const durA = diff(a.start, ceil(a.end, 'day'), 'day');

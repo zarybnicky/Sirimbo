@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import { memo, type JSX } from 'react';
 import EventCell from './EventCell';
 import type { DateSlotMetrics } from './DateSlotMetrics';
 import type { Segment } from './common';
@@ -37,4 +37,4 @@ function EventRow({ className, segments = [], slotMetrics }: EventRowProps) {
   return <div className={cn(className, 'rbc-row')}>{row}</div>;
 }
 
-export default EventRow;
+export default memo(EventRow);

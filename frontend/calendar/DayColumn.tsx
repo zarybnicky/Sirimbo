@@ -17,7 +17,7 @@ import { resourceKey, type CalendarEvent, type CalendarClubEvent, type Resource 
 import { useAuth } from '@/lib/auth';
 import {
   dragListenersAtom,
-  formPreviewAtom,
+  formPreviewFor,
   dragSubjectAtom,
   externalDragSubjectAtom,
   isDraggingAtom,
@@ -82,7 +82,10 @@ function DayColumn({
   gridRef,
 }: DayColumnProps) {
   const columnRef = React.useRef<HTMLDivElement>(null);
-  const preview = useAtomValue(formPreviewAtom);
+  const preview = useAtomValue(React.useMemo(
+    () => formPreviewFor(resource, date, add(date, 1, 'day')),
+    [resource, date],
+  ));
   const isDragging = useAtomValue(isDraggingAtom);
   const eventOffsetTopRef = React.useRef<number>(0);
   const setIsDragging = useSetAtom(isDraggingAtom);
@@ -439,7 +442,7 @@ function DayColumn({
 
   const eventPreviews = eventState.event
     ? [{ event: eventState.event, top: eventState.top ?? 0, height: eventState.height ?? 0 }]
-    : !isDragging && !backgroundState.selecting && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
+    : !isDragging && !backgroundState.selecting
       ? preview?.events.map((event) => ({ event, ...slotMetrics.getRange(event.start, event.end) })) ?? []
       : [];
 

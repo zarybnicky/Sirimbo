@@ -8,10 +8,10 @@ import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { eventSegments, type Segment } from './common';
 import { diff, merge, inEventRange } from './localizer';
-import { resourceKey, type CalendarEvent, type Resource } from './types';
+import type { CalendarEvent, Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
-import { formPreviewAtom, dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
+import { formPreviewFor, dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 
@@ -34,7 +34,10 @@ function DateContentRow({
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
 
-  const preview = useAtomValue(formPreviewAtom);
+  const preview = useAtomValue(React.useMemo(
+    () => formPreviewFor(resource, range[0]!, add(range.at(-1)!, 1, 'day')),
+    [resource, range],
+  ));
   const isDragging = useAtomValue(isDraggingAtom);
   const store = useStore();
   const setIsDragging = useSetAtom(isDraggingAtom);
@@ -242,7 +245,7 @@ function DateContentRow({
   }, [renderForMeasure, containerRef]);
 
   const previewSegments = segment ? [segment]
-    : !isDragging && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
+    : !isDragging
       ? preview?.events
           .filter((event) => inEventRange(event, { start: range[0]!, end: range.at(-1)! }))
           .map((event) => eventSegments(event, range)) ?? []

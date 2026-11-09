@@ -183,4 +183,4 @@ function TimeGridEvent({
   );
 }
 
-export default TimeGridEvent;
+export default React.memo(TimeGridEvent);
