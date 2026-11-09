@@ -102,7 +102,7 @@ function ClubEventCell({
 
   const onTouchOrMouse = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
-      if (!canEdit || (e as React.MouseEvent).button) {
+      if (!canEdit || (e as React.MouseEvent).button || ('touches' in e && e.touches.length !== 1)) {
         return;
       }
       const resizeDirection = (e.target as HTMLElement).dataset.resize;

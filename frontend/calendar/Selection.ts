@@ -61,8 +61,12 @@ export function eventTargetsNode(
 }
 
 const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e;
-function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
-  const target = isTouchEvent(e) ? (e.touches[0] ?? e.changedTouches[0]!) : e;
+function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent, touchId?: number) {
+  const target = isTouchEvent(e)
+    ? touchId === undefined
+      ? e.touches[0] ?? e.changedTouches[0]!
+      : [...e.touches, ...e.changedTouches].find((touch) => touch.identifier === touchId)!
+    : e;
   return {
     clientX: target.clientX,
     clientY: target.clientY,
@@ -113,6 +117,7 @@ class Selection extends TypedEventTarget<EventMap> {
   public removeSelectStartListener?: () => void;
   public removeLongPressListener?: () => void;
   public initialEventData?: ClientPoint & { isTouch: boolean };
+  private touchId?: number;
 
   constructor(
     container: () => HTMLElement | null,
@@ -209,6 +214,14 @@ class Selection extends TypedEventTarget<EventMap> {
   }
 
   handleInitialTouchEvent(e: TouchEvent) {
+    if (this.initialEventData) {
+      if (e.cancelable) e.preventDefault();
+      return;
+    }
+    if (e.touches.length !== 1) {
+      this.removeLongPressListener?.();
+      return;
+    }
     if (this.initialEventData || !this.getInitialEventData(e)) {
       return;
     }
@@ -257,6 +270,7 @@ class Selection extends TypedEventTarget<EventMap> {
       return;
     }
     this.initialEventData = initialEventData;
+    this.touchId = isTouchEvent(e) ? e.touches[0]!.identifier : undefined;
 
     switch (e.type) {
       case 'mousedown':
@@ -309,6 +323,11 @@ class Selection extends TypedEventTarget<EventMap> {
 
   handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
     if ('key' in e && e.key !== 'Escape') return;
+    if (
+      isTouchEvent(e) &&
+      e.type === 'touchend' &&
+      ![...e.changedTouches].some((touch) => touch.identifier === this.touchId)
+    ) return;
     if (e.type === 'mouseup' || e.type === 'touchend') {
       this.handleMoveEvent(e as MouseEvent | TouchEvent);
     }
@@ -335,7 +354,7 @@ class Selection extends TypedEventTarget<EventMap> {
       return setTimeout(() => this.dispatchTypedEvent('reset', new CustomEvent('reset')));
     }
 
-    const { pageX, pageY } = getEventCoordinates(e as MouseEvent | TouchEvent);
+    const { pageX, pageY } = getEventCoordinates(e as MouseEvent | TouchEvent, this.touchId);
     const click = this.isClick(pageX, pageY);
 
     this.initialEventData = undefined;
@@ -344,6 +363,7 @@ class Selection extends TypedEventTarget<EventMap> {
     if (click && inRoot) {
       const { pageX, pageY, clientX, clientY } = getEventCoordinates(
         e as MouseEvent | TouchEvent,
+        this.touchId,
       );
       const detail = { x: pageX, y: pageY, clientX, clientY };
       return setTimeout(() =>
@@ -437,7 +457,7 @@ class Selection extends TypedEventTarget<EventMap> {
     if (!this.initialEventData || this.isDetached) return;
     if (e.cancelable) e.preventDefault();
 
-    const { pageX, pageY, clientX, clientY } = getEventCoordinates(e);
+    const { pageX, pageY, clientX, clientY } = getEventCoordinates(e, this.touchId);
     this.updateSelectionPoint({ pageX, pageY, clientX, clientY });
   }
 
@@ -471,7 +491,7 @@ function ensureSelectionListeners() {
   });
   removeTouchStartListener = addEventListener('touchstart', (e) => {
     forEachSelection((selection) => selection.handleInitialTouchEvent(e));
-  });
+  }, { passive: false });
   removeDropListener = addEventListener(
     'drop',
     (e) => {
