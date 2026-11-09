@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { fullDateFormatter } from '@/ui/format';
 import { getWeek } from 'date-fns/getWeek';
 import { add, endOf, subtract } from 'date-arithmetic';
+import { typographyCls } from './style';
 
 type WeekPickerProps = {
   title: React.ReactNode;
@@ -12,43 +13,32 @@ type WeekPickerProps = {
 
 export function WeekPicker({ title, startDate, onChange }: WeekPickerProps) {
   const setPrevWeek = React.useCallback(() => {
-    onChange((startDate) => subtract(startDate, 7, 'day'));
+    onChange((x) => subtract(x, 7, 'day'));
   }, [onChange]);
 
   const setNextWeek = React.useCallback(() => {
-    onChange((startDate) => add(startDate, 7, 'day'));
+    onChange((x) => add(x, 7, 'day'));
   }, [onChange]);
 
   return (
     <div>
       <div className="flex justify-between items-center">
-        <h4 className="text-2xl tracking-wide">
-          {title} ({getWeek(startDate, { weekStartsOn: 1 })}. týden)
+        <h4 className={typographyCls({ variant: 'smallHeading', className: 'grow' })}>
+          {title}
         </h4>
-        <div>
-          <button
-            type="button"
-            className="px-1.5 shadow-none text-neutral-11"
-            onClick={setPrevWeek}
-          >
+        <div className="flex flex-nowrap">
+          <button type="button" className="px-1.5" onClick={setPrevWeek}>
             <ChevronLeft />
           </button>
-          <button
-            type="button"
-            className="px-1.5 shadow-none text-neutral-11"
-            onClick={setNextWeek}
-          >
+          <button type="button" className="px-1.5" onClick={setNextWeek}>
             <ChevronRight />
           </button>
         </div>
       </div>
 
-      <div className="mb-2 flex items-center">
-        <div className="text-neutral-11">
-          {fullDateFormatter
-            .formatRange(startDate, endOf(startDate, 'week', 1))
-            .replace(' – ', ' – ')}
-        </div>
+      <div className="mb-2 flex items-center text-neutral-11 text-sm">
+        {fullDateFormatter.formatRange(startDate, endOf(startDate, 'week', 1))}
+        {` (${getWeek(startDate, { weekStartsOn: 1 })}. týden)`}
       </div>
     </div>
   );

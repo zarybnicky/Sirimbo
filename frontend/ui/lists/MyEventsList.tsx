@@ -68,7 +68,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
               })}
             >
               <div className="ml-2 flex justify-between flex-wrap items-center gap-2">
-                <h4 className="text-lg tracking-tight">
+                <h4 className="md:text-lg tracking-tight">
                   {capitalize(longDayFormatter.format(new Date(date)))}
                 </h4>
                 <div className="flex gap-1">

@@ -139,7 +139,7 @@ export const ActivityList = React.memo(function ActivityList({
               {items.length > 0 && (
                 <div className="mb-2 flex flex-col gap-1">
                   <div className="flex justify-between flex-wrap items-center gap-2">
-                    <h4 className="text-lg tracking-tight">
+                    <h4 className="md:text-lg tracking-tight">
                       {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
                     </h4>
                     <div className="flex gap-1">

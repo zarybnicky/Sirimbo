@@ -16,7 +16,7 @@ import { useQuery } from 'urql';
 
 const options = [
   { label: 'Aktuální', id: 'current' },
-  { label: 'Archiv příspěvků', id: 'archive' },
+  { label: 'Archiv', id: 'archive' },
 ];
 
 export type SortOption = 'created' | 'updated';
@@ -86,12 +86,10 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex gap-6 flex-wrap grow-0 h-min justify-between items-baseline relative">
-        <h1
-          className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })}
-        >
+      <div className="mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-center relative">
+        <h2 className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })} >
           Aktuality
-        </h1>
+        </h2>
 
         <RadioButtonGroup
           value={state}
@@ -107,11 +105,10 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
             setSort(value);
             setPage(1);
           }}
-          className="mb-3"
         />
       </div>
 
-      <div className="space-y-2 rounded-lg">
+      <div className="space-y-2">
         {(data?.announcements?.nodes || []).map((a) => (
           <AnnouncementCard key={a.id} item={a} />
         ))}
@@ -149,8 +146,10 @@ export const StickyAnnouncements = React.memo(function StickyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <h4 className="text-2xl tracking-wide grow">Stálá nástěnka</h4>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 className={typographyCls({ variant: 'smallHeading', className: 'grow' })}>
+          Stálá nástěnka
+        </h2>
         <AnnouncementSortControls sort={sort} onChange={setSort} />
       </div>
       <div className="space-y-2 rounded-lg">

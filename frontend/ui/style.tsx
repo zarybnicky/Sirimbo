@@ -98,7 +98,7 @@ export const checkboxInputCls = tv({
 });
 
 export const typographyCls = tv({
-  base: '',
+  base: 'tracking-tight',
   variants: {
     variant: {
       heading: 'text-3xl md:text-4xl text-accent-12 drop-shadow-sm tracking-wide',
