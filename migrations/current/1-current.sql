@@ -95,3 +95,4 @@ comment on column event.is_locked is '@behavior -*';
 --!include functions/set_lesson_request.sql
 --!include functions/set_event_registration.sql
 --!include views/crawler_frontier_fetch_job.sql
+--!include functions/tg_event_people__refresh.sql
