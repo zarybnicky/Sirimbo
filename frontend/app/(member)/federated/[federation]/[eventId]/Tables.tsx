@@ -50,7 +50,7 @@ export function Competitions({
         ]}
       >
         {competitions.map((comp) => (
-          <tr key={comp.id} className="border-t border-neutral-4">
+          <tr key={comp.id}>
             <th scope="row">
               <Link
                 className={cn(

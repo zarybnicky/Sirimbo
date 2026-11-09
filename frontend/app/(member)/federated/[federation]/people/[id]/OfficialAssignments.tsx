@@ -33,7 +33,7 @@ export function OfficialAssignments({
 
       <Table columns={['Datum', 'Soutěž', 'Role']} busy={fetching} error={error}>
         {events.map((event) => (
-          <tr key={event.id} className="border-t border-neutral-4 align-top">
+          <tr key={event.id} className="align-top">
             <td className="whitespace-nowrap">{formatDateOnly(event.startDate)}</td>
             <th scope="row">
               <Link

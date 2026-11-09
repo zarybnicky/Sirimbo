@@ -5,7 +5,6 @@ import { RichTextView } from '@/ui/RichTextView';
 import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { Table } from '@/ui/Table';
-import { cn } from '@/lib/cn';
 import { cardCls } from '@/ui/style';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
@@ -13,6 +12,7 @@ import { Sheet } from 'react-modal-sheet';
 import { useQuery } from 'urql';
 import { formatAddress } from '@/ui/format.ts';
 import { TenantAdminEdit } from '@/ui/forms/TenantAdminForm.tsx';
+import { parseAsString, useQueryState } from 'nuqs';
 
 // Mobile sheet: 2 detents + closed.
 const snapPoints = [0, 0.2, 1];
@@ -35,7 +35,10 @@ export function Tenants() {
   const [{ data, fetching, error }] = useQuery({ query: TenantsFullDocument });
   const tenants = data?.tenantsList;
 
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [selectedId, setSelectedId] = useQueryState(
+    'tenant',
+    parseAsString.withOptions({ history: 'push' }),
+  );
   const selected = tenants?.find((t) => t.id === selectedId) ?? null;
 
   useLayoutEffect(() => {
@@ -57,11 +60,7 @@ export function Tenants() {
         {tenants?.map((tenant) => (
           <tr
             key={tenant.id}
-            className={cn(
-              'cursor-pointer border-t border-neutral-4 hover:bg-neutral-2',
-              tenant.id === selectedId && 'bg-neutral-3',
-            )}
-            onClick={() => setSelectedId(tenant.id)}
+            className={tenant.id === selectedId ? 'bg-neutral-3' : undefined}
           >
             <td>{tenant.id}</td>
             <th scope="row">

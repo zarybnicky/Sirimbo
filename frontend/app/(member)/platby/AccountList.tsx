@@ -63,7 +63,7 @@ export const AccountList = React.memo(function AccountList() {
       error={error}
     >
       {rows.map((person) => (
-        <tr key={person.id} className="border-t border-neutral-4 align-top">
+        <tr key={person.id}>
           <th scope="row">
             <EntityLink type="person" entity={person} />
           </th>

@@ -44,10 +44,7 @@ export function FederationCategoryProgress({
             compareCategories(a.category, b.category),
         )
         .map((progress) => (
-          <tr
-            key={`${progress.competitorId}:${progress.categoryId}`}
-            className="border-t border-neutral-4"
-          >
+          <tr key={`${progress.competitorId}:${progress.categoryId}`}>
             <th scope="row">
               <DotSeparated>
                 {!singleFederation &&

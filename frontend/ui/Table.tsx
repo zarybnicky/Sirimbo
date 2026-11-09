@@ -14,6 +14,7 @@ export function Table({
   children,
   empty = 'Žádná data',
   className,
+  bordered = true,
   busy,
   error,
 }: {
@@ -23,6 +24,7 @@ export function Table({
   footer?: ReactNode;
   children: ReactNode;
   className?: string;
+  bordered?: boolean;
 } & TableStateProps) {
   const headers = columns
     .filter((c) => !!c)
@@ -30,6 +32,7 @@ export function Table({
       typeof c === 'object' && c !== null && 'label' in c ? c : { label: c, colSpan: 1 },
     );
   const rows = Children.toArray(children);
+  const rowBorders = bordered ? '[&>tr]:border-t [&>tr]:border-neutral-4' : undefined;
   return (
     <div className={cn('overflow-x-auto', className)} aria-busy={busy}>
       {actions && (
@@ -48,7 +51,7 @@ export function Table({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className={rowBorders}>
           <TableStatus
             colSpan={headers.reduce((sum, header) => sum + header.colSpan, 0)}
             busy={busy}
@@ -57,7 +60,7 @@ export function Table({
           />
           {rows}
         </tbody>
-        {footer && <tfoot>{footer}</tfoot>}
+        {footer && <tfoot className={rowBorders}>{footer}</tfoot>}
       </table>
     </div>
   );

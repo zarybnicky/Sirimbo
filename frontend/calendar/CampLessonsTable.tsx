@@ -179,7 +179,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
         const cells = [...row.cells.values()];
 
         return (
-          <tr key={row.id} className="border-t border-neutral-4 align-middle">
+          <tr key={row.id}>
             <th scope="row">
               <div className="flex items-center gap-2">
                 {row.nested && <span className="text-neutral-9">↳</span>}

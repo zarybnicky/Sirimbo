@@ -290,7 +290,7 @@ function Events(props: BrowserProps) {
         empty="Žádné události"
       >
         {events.map((event) => (
-          <tr key={event.id} className="border-t border-neutral-4">
+          <tr key={event.id}>
             <td className="whitespace-nowrap">
               {formatDateOnly(event.startDate)}
               {event.endDate && event.endDate !== event.startDate && (
@@ -415,7 +415,7 @@ function People(props: BrowserProps) {
         empty="Źádní lidé nenalezení"
       >
         {result.data?.federation?.people.nodes.map((row) => (
-          <tr key={row.id} className="border-t border-neutral-4">
+          <tr key={row.id}>
             <th scope="row">
               <Link
                 className="text-accent-11 underline"

@@ -44,7 +44,7 @@ export const EventRegistrations = memo(function EventRegistrations({
 
   return (
     <Table
-      className="prose prose-accent max-w-none prose-thead:border-0 prose-tr:border-0"
+      bordered={false}
       empty="Žádné přihlášky"
       columns={[
         <span key="attendee" className="sr-only">
@@ -67,7 +67,7 @@ export const EventRegistrations = memo(function EventRegistrations({
           key={x.id}
           className={x.groupIndex % 2 === 0 ? 'bg-neutral-3/80' : 'bg-neutral-1'}
         >
-          <td className="align-middle">
+          <td>
             <div
               className={`flex items-center gap-3 ${x.parentRegistrationId ? 'pl-8' : 'pl-1'}`}
             >
@@ -107,7 +107,7 @@ export const EventRegistrations = memo(function EventRegistrations({
             </div>
           </td>
           {auth.isTrainer && (
-            <td className="text-center align-middle">
+            <td className="text-center">
               <EventAttendance attendance={x} canEdit={canEditAttendance} />
             </td>
           )}

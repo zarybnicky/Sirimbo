@@ -151,10 +151,7 @@ export default async function FederatedPersonPage({ params }: Props) {
             empty="Žádné licence"
           >
             {person.licenses.nodes.map((license) => (
-              <tr
-                key={`${license.kind}:${license.discipline}`}
-                className="border-t border-neutral-4"
-              >
+              <tr key={`${license.kind}:${license.discipline}`}>
                 <th scope="row">{license.kind.toLowerCase().replaceAll('_', ' ')}</th>
                 <td>{formatDiscipline(license.discipline)}</td>
                 <td>{license.grade || '-'}</td>

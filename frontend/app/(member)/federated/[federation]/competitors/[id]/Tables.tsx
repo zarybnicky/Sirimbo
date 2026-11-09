@@ -42,7 +42,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
           const result = row.results[0];
           const cancelled = row.entries[0]?.cancelled;
           return (
-            <tr key={row.id} className="border-t border-neutral-4">
+            <tr key={row.id}>
               <td className="whitespace-nowrap">{formatDateOnly(row.startDate)}</td>
               <td>
                 {row.event && (

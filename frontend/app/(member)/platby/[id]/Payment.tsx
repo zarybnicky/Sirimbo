@@ -72,7 +72,7 @@ export function Payment({ id }: { id: string }) {
         ]}
       >
         {payment?.paymentDebtorsList.map((debtor) => (
-          <tr key={debtor.id} className="border-t border-neutral-4 align-top">
+          <tr key={debtor.id}>
             <th scope="row">
               {debtor.person ? <EntityLink type="person" entity={debtor.person} /> : '?'}
             </th>
@@ -99,7 +99,7 @@ export function Payment({ id }: { id: string }) {
       >
         {payment?.transactions.nodes.flatMap((transaction) =>
           transaction.postingsList.map(({ id, account, amount }, index) => (
-            <tr key={id} className="border-t border-neutral-4 align-top">
+            <tr key={id}>
               {index === 0 && (
                 <>
                   <td

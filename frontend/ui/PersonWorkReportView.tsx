@@ -131,8 +131,8 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
 
   return (
     <div className="grid gap-6">
-      <section className="prose prose-accent max-w-none">
-        <h3>Měsíce</h3>
+      <section className="grid gap-3">
+        <h3 className="text-lg font-semibold">Měsíce</h3>
         <Table
           busy={fetching}
           error={error}
@@ -195,8 +195,8 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
       </section>
 
       {selectedMonth && (
-        <section className="prose prose-accent max-w-none">
-          <h3>{selectedMonth.label}</h3>
+        <section className="grid gap-3">
+          <h3 className="text-lg font-semibold">{selectedMonth.label}</h3>
 
           {!selectedMonth.groupRows?.length &&
             !selectedMonth?.privateRows?.length &&
@@ -214,7 +214,7 @@ export const PersonWorkReportView = React.memo(function PersonWorkReportView({
 
             return (
               <React.Fragment key={rowsKey}>
-                <h4>{title}</h4>
+                <h4 className="font-semibold">{title}</h4>
                 <Table
                   columns={[
                     'Termín',

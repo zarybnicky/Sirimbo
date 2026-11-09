@@ -112,7 +112,7 @@ export const CampTrainersTable = React.memo(function CampTrainersTable({
       error={query.error}
     >
       {rows.map((row) => (
-        <tr key={row.id} className="border-t border-neutral-4 align-middle">
+        <tr key={row.id}>
           <th scope="row">{row.trainer}</th>
           {days.map(([dayKey]) => (
             <td key={dayKey}>

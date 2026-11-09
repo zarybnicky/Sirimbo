@@ -440,7 +440,7 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
   const invitations = person.personInvitationsList;
 
   return (
-    <tr className="border-b border-neutral-5 hover:bg-neutral-2 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 max-sm:py-2">
+    <tr className="hover:bg-neutral-2 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 max-sm:py-2">
       <th scope="row" className="max-sm:min-w-0">
         <EntityLink
           type="person"

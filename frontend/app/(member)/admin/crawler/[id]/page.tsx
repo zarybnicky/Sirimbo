@@ -143,7 +143,7 @@ export default async function FrontierPage({
         empty="No responses"
       >
         {responses.map((response) => (
-          <tr key={response.id} className="border-t border-neutral-4 align-top">
+          <tr key={response.id} className="align-top">
             <td className="whitespace-nowrap">
               {response.contentHash ? (
                 <Link

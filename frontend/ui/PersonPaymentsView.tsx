@@ -175,7 +175,7 @@ function AccountPaymentsTable({
       ]}
     >
       {rows.map(({ id, amount, description, transaction }) => (
-        <tr key={id} className="border-t border-neutral-4 align-top">
+        <tr key={id} className="align-top">
           {auth.isAdmin && (
             <td className="w-0">
               <ActionGroup

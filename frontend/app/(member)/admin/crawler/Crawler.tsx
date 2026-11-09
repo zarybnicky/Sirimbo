@@ -323,7 +323,7 @@ export function CrawlerJobs() {
         error={result.error}
       >
         {rows.map((row) => (
-          <tr key={row.jobId} className="border-t border-neutral-4 align-top">
+          <tr key={row.jobId}>
             <td>{row.state === 'locked' ? 'running' : row.state}</td>
             <td>
               <div className="flex items-center gap-2">
@@ -409,7 +409,7 @@ function TargetTable({
         className="col-full-width whitespace-nowrap"
       >
         {rows.map((row) => (
-          <tr key={row.id} className="border-t border-neutral-4">
+          <tr key={row.id}>
             <th scope="row" className="font-mono">
               <Link
                 className="text-accent-11 underline"
@@ -498,7 +498,7 @@ function Overview({
         className="col-feature whitespace-nowrap"
         empty=""
         footer={
-          <tr className="border-t border-neutral-4">
+          <tr>
             <th scope="row">{frontiers.length} total</th>
             <td>{frontiers.reduce((sum, row) => sum + (row.done ?? 0), 0) || ''}</td>
             <td>{frontiers.reduce((sum, row) => sum + (row.fetchDue ?? 0), 0) || ''}</td>
@@ -510,7 +510,7 @@ function Overview({
           .filter((row) => all === '1' || !row.stable)
           .map((row) => (
             <Fragment key={row.target}>
-              <tr className="border-t border-neutral-4">
+              <tr>
                 <th scope="row" className="font-mono">
                   <div className="flex items-center gap-2 pl-2">
                     {row.failures.length > 0 ? (
@@ -592,7 +592,6 @@ function Overview({
                             failure.httpStatus,
                             failure.errorFingerprint,
                           ])}
-                          className="border-t border-neutral-4 align-top"
                         >
                           <td>
                             <div className="flex items-center gap-2">

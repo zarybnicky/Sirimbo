@@ -65,7 +65,7 @@ export function Crm() {
         ]}
       >
         {currentData.map((row) => (
-          <tr key={row.id} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
+          <tr key={row.id} className="even:bg-neutral-2 odd:bg-neutral-1">
             {columns.map((x) => (
               <td key={x}>
                 {x === 'date'

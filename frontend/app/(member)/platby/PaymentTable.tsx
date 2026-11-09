@@ -47,7 +47,7 @@ export function PaymentTable({
         const rowSpan = others.length + 1;
         return (
           <React.Fragment key={payment.id}>
-            <tr className="border-t border-neutral-4 align-top">
+            <tr>
               <td rowSpan={rowSpan} className="w-0">
                 <ActionGroup variant="row" actions={actionMap.get(payment.id)!} />
               </td>
@@ -76,7 +76,7 @@ export function PaymentTable({
               </td>
             </tr>
             {others.map((debtor) => (
-              <tr key={debtor.id} className="border-t border-neutral-4 align-top">
+              <tr key={debtor.id}>
                 <td className="pl-2!">{debtor.person?.name}</td>
                 <td className="whitespace-nowrap text-right">
                   {moneyFormatter.format(debtor.price)}

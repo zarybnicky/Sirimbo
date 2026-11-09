@@ -234,7 +234,7 @@ export function TransactionList() {
       >
         {(data?.transactions?.nodes ?? []).flatMap((transaction) =>
           transaction.postingsList.map(({ id, amount, account }, i) => (
-            <tr key={id} className="border-t border-neutral-4 align-top">
+            <tr key={id}>
               {i === 0 && (
                 <>
                   <td

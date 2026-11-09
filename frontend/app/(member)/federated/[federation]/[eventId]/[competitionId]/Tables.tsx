@@ -38,7 +38,7 @@ export function Results({
         ]}
       >
         {results.map((result) => (
-          <tr key={result.competitorId} className="border-t border-neutral-4 align-top">
+          <tr key={result.competitorId} className="align-top">
             <td className="whitespace-nowrap">
               {result.ranking}
               {result.rankingTo && result.rankingTo !== result.ranking
@@ -107,7 +107,7 @@ export function Registrations({
       <Table columns={['Jméno', 'Soutěží za', showLocalMatches && 'V klubu']}>
         {entries.map(
           ({ competitor, competitorId, cancelled, club, represents, country }) => (
-            <tr key={competitorId} className="border-t border-neutral-4 align-top">
+            <tr key={competitorId} className="align-top">
               <th scope="row">
                 {competitor ? (
                   <Link

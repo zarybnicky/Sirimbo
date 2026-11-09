@@ -127,7 +127,7 @@ export function FederationRankings({
       ]}
     >
       {[...groups].map(([label, entries]) => (
-        <tr key={label} className="border-t border-neutral-4">
+        <tr key={label}>
           <th scope="row">{label}</th>
           {columns.map((discipline) => (
             <td key={discipline} className="text-right">

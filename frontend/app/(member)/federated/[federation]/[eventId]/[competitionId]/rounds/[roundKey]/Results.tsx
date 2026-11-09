@@ -279,10 +279,7 @@ export function Results({
             ]}
           >
             {rows.map((result) => (
-              <tr
-                key={result.competitorId}
-                className="border-t border-neutral-4 align-top"
-              >
+              <tr key={result.competitorId} className="align-top">
                 <td>{result.startNumber}</td>
                 <th scope="row" className="min-w-48">
                   {result.competitorLink}

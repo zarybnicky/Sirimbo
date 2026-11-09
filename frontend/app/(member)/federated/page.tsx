@@ -22,7 +22,7 @@ export default async function FederationsPage() {
       <PageHeader title="Soutěžní data" />
       <Table columns={['Organizace', 'Soutěže', 'Osoby', 'Soutěžící']}>
         {federations?.map((federation) => (
-          <tr key={federation.code} className="border-t border-neutral-4">
+          <tr key={federation.code}>
             <th scope="row">
               <Link
                 className="text-accent-11 underline"
