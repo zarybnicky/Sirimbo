@@ -22,6 +22,9 @@ export const buttonCls = tv({
       danger:
         'bg-danger-7 hover:bg-danger-8 active:bg-danger-8 text-white border border-transparent focus-visible:ring-danger-8 has-focus-visible:ring-danger-8 ' +
         'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
+      success:
+        'bg-green-9 hover:bg-green-10 active:bg-green-10 text-white border border-transparent focus-visible:ring-green-8 has-focus-visible:ring-green-8 ' +
+        'disabled:bg-neutral-2 disabled:text-neutral-9 disabled:border-neutral-5 has-disabled:bg-neutral-2 has-disabled:text-neutral-9 has-disabled:border-neutral-5',
       outlineDark: 'bg-neutral-12 text-neutral-0',
       facet:
         'border border-accent-5 bg-accent-2/50 text-accent-12 hover:bg-accent-3 disabled:opacity-50 ' +
@@ -31,6 +34,7 @@ export const buttonCls = tv({
     size: {
       none: ' ',
       icon: 'size-8 rounded-xl [&_svg]:size-4',
+      iconLg: 'px-2 py-1 rounded-xl [&_svg]:size-6',
       xs: 'px-1.5 py-1 text-xs rounded-xl tracking-tight [&_svg]:size-3',
       sm: 'px-2 py-1.5 text-xs rounded-xl tracking-tight [&_svg]:size-3',
       md: 'px-3 py-2 text-sm rounded-xl [&_svg]:size-4',
@@ -70,7 +74,7 @@ export const buttonGroupCls = tv({
   base: 'inline-flex',
   variants: {
     layout: {
-      joined: 'rounded-xl shadow-md *:rounded-none *:shadow-none *:first:rounded-l-xl *:last:rounded-r-xl',
+      joined: 'isolate rounded-xl shadow-md *:-ml-px *:first:ml-0 *:rounded-none *:shadow-none *:first:rounded-l-xl *:last:rounded-r-xl [&>*:focus-visible]:z-10',
       wrap: 'flex-wrap gap-1',
     },
   },

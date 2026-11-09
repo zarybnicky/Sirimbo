@@ -30,10 +30,11 @@ export const EventRegistrations = memo(function EventRegistrations({
   );
   const rows = sortedRegistrations
     .filter((r) => !r.parentRegistrationId)
-    .flatMap((r) => [
-      r,
-      ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id),
-    ]);
+    .flatMap((r, groupIndex) =>
+      [r, ...sortedRegistrations.filter((x) => x.parentRegistrationId === r.id)].map(
+        (registration) => ({ ...registration, groupIndex }),
+      ),
+    );
   const attendees = rows.filter((r) => r.person && r.status);
   const canEditAttendance = auth.canManageEvent(event);
   const registrationActionMap = useActionMap(
@@ -43,7 +44,7 @@ export const EventRegistrations = memo(function EventRegistrations({
 
   return (
     <Table
-      className="prose prose-accent max-w-none"
+      className="prose prose-accent max-w-none prose-thead:border-0 prose-tr:border-0"
       empty="Žádné přihlášky"
       columns={[
         <span key="attendee" className="sr-only">
@@ -62,10 +63,13 @@ export const EventRegistrations = memo(function EventRegistrations({
       ]}
     >
       {rows.map((x) => (
-        <tr key={x.id}>
+        <tr
+          key={x.id}
+          className={x.groupIndex % 2 === 0 ? 'bg-neutral-3/80' : 'bg-neutral-1'}
+        >
           <td className="align-middle">
             <div
-              className={`flex items-center gap-3 ${x.parentRegistrationId ? 'pl-8' : ''}`}
+              className={`flex items-center gap-3 ${x.parentRegistrationId ? 'pl-8' : 'pl-1'}`}
             >
               <ActionGroup
                 actions={registrationActionMap.get(x.id) ?? []}
