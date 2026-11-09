@@ -187,9 +187,9 @@ export const dayFormatter = new Intl.DateTimeFormat('cs-CZ', {
 });
 
 export const longDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
-  weekday: 'short',
+  weekday: 'long',
   day: 'numeric',
-  month: 'long',
+  month: 'numeric',
 });
 
 export const fullDateFormatter = new Intl.DateTimeFormat('cs-CZ', {

@@ -14,8 +14,10 @@ import * as React from 'react';
 import { buttonCls, cardCls } from '@/ui/style';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { EventForm } from '@/ui/event-form/EventForms';
-import { Plus } from 'lucide-react';
+import { CalendarDays, List, Plus, Search } from 'lucide-react';
 import { FormError } from '@/ui/form';
+import Link from 'next/link';
+import { format } from 'date-fns/format';
 
 const myEventsFilters: CalendarFilters = {
   groupBy: 'none',
@@ -62,11 +64,14 @@ export const MyEventsList = React.memo(function MyEventsList() {
             <div
               key={date}
               className={cardCls({
-                className: 'rounded-lg border-neutral-6 border px-1 py-3',
+                className: 'rounded-lg border-neutral-6 border p-1',
               })}
             >
-              <div className="ml-3 mb-1 flex items-center gap-2 font-bold">
-                {capitalize(longDayFormatter.format(new Date(date)))}
+              <div className="ml-2 flex justify-between flex-wrap items-center gap-2">
+                <h4 className="text-lg tracking-tight">
+                  {capitalize(longDayFormatter.format(new Date(date)))}
+                </h4>
+                <div className="flex gap-1">
                 {auth.isTrainer && (
                   <Dialog modal={false}>
                     <DialogTrigger.Plain
@@ -80,10 +85,31 @@ export const MyEventsList = React.memo(function MyEventsList() {
                     </DialogContent>
                   </Dialog>
                 )}
+                <Link
+                  href={`/rozpis?v=agenda&date=${format(date, 'yyyy-MM-dd')}`}
+                  className={buttonCls({ display: 'none', variant: 'none' })}
+                >
+                  <span className="relative inline-block size-5 align-middle">
+                    <List className="size-4!" />
+                    <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                  </span>
+                </Link>
+                <Link
+                  href={`/rozpis?v=week&date=${format(date, 'yyyy-MM-dd')}`}
+                  className={buttonCls({ display: 'none', variant: 'none' })}
+                >
+                  <span className="relative inline-block size-5 align-middle">
+                    <CalendarDays className="size-4!" />
+                    <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                  </span>
+                </Link>
+                  </div>
               </div>
+
               {comps.map((x) => (
                 <CompetitionEventCard key={x.id} {...x} className="mx-2 mb-3" />
               ))}
+
               {events.map((event, i) => {
                 const location = event.location?.name || event.locationText || '';
                 const previous = i === 0 ? null : events.at(i - 1);

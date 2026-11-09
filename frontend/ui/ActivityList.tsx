@@ -16,11 +16,15 @@ import { FacetFilter } from '@/ui/FacetFilter';
 import { LocalPersonLinks } from '@/ui/federation-links';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { FormError } from '@/ui/form';
-import { cardCls } from '@/ui/style';
+import { buttonCls, cardCls } from '@/ui/style';
 import { endOf, startOf } from 'date-arithmetic';
 import { format } from 'date-fns';
-import { Cake } from 'lucide-react';
+import { Cake, CalendarDays, List, Plus, Search } from 'lucide-react';
 import * as React from 'react';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { EventForm } from './event-form/EventForms';
+import Link from 'next/link';
+import { useAuth } from '@/lib/auth';
 
 const monthView = {
   ...CalendarViews.month,
@@ -39,6 +43,7 @@ const calendarFilters: CalendarFilters = {
   free: false,
   columns: null,
 };
+
 export const ActivityList = React.memo(function ActivityList({
   personIds,
   cohortId,
@@ -48,6 +53,7 @@ export const ActivityList = React.memo(function ActivityList({
   cohortId?: string;
   viewerId?: string;
 }) {
+  const auth = useAuth();
   const [date, setDate] = React.useState(() => new Date());
   const [filters, setFilters] = React.useState(calendarTypes);
   const todayMarker = React.useRef<HTMLElement>(null);
@@ -122,7 +128,7 @@ export const ActivityList = React.memo(function ActivityList({
       </div>
       <div className="scroll-mt-20">
         {days.map(([day, items]) => {
-          const events = items.filter((x) => x.kind === 'event');
+          const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);
           const birthdays = items.filter((x) => x.kind === 'birthday');
           return (
             <section
@@ -132,9 +138,49 @@ export const ActivityList = React.memo(function ActivityList({
             >
               {items.length > 0 && (
                 <div className="mb-2 flex flex-col gap-1">
-                  <h4 className="text-lg tracking-tight">
-                    {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
-                  </h4>
+                  <div className="flex justify-between flex-wrap items-center gap-2">
+                    <h4 className="text-lg tracking-tight">
+                      {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
+                    </h4>
+                    <div className="flex gap-1">
+                      {auth.isTrainer && (
+                        <Dialog modal={false}>
+                          <DialogTrigger.Plain
+                            type="button"
+                            className={buttonCls({ display: 'none', variant: 'none' })}
+                          >
+                            <Plus />
+                          </DialogTrigger.Plain>
+                          <DialogContent className="sm:max-w-xl">
+                            <EventForm
+                              date={new Date(date)}
+                              after={events.at(-1)}
+                              events={events}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                      <Link
+                        href={`/rozpis?v=agenda&date=${format(date, 'yyyy-MM-dd')}`}
+                        className={buttonCls({ display: 'none', variant: 'none' })}
+                      >
+                        <span className="relative inline-block size-5 align-middle">
+                          <List className="size-4!" />
+                          <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                        </span>
+                      </Link>
+                      <Link
+                        href={`/rozpis?v=week&date=${format(date, 'yyyy-MM-dd')}`}
+                        className={buttonCls({ display: 'none', variant: 'none' })}
+                      >
+                        <span className="relative inline-block size-5 align-middle">
+                          <CalendarDays className="size-4!" />
+                          <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+
                   {birthdays.length > 0 && (
                     <div className="flex items-center gap-2 text-sm">
                       <Cake className="size-4 shrink-0 text-accent-11" />
@@ -152,20 +198,20 @@ export const ActivityList = React.memo(function ActivityList({
                         className: 'rounded-lg border-neutral-6 border p-0',
                       })}
                     >
-                      {events.map(({ id, instance }) => (
+                      {events.map((clubEvent) => (
                         <EventButton
-                          key={id}
-                          event={instance}
+                          key={clubEvent.id}
+                          event={clubEvent}
                           viewer={viewerId ? 'auto' : 'neutral'}
                           viewerId={viewerId}
                           suffix={
-                            instance.type !== 'LESSON' && (
-                            <AttendanceSummary
-                              eventId={instance.id}
-                              items={instance.attendance}
-                              compact={!!cohortId}
-                              future={new Date(instance.since).getTime() > Date.now()}
-                            />
+                            clubEvent.type !== 'LESSON' && (
+                              <AttendanceSummary
+                                eventId={clubEvent.id}
+                                items={clubEvent.attendance}
+                                compact={!!cohortId}
+                                future={new Date(clubEvent.since).getTime() > Date.now()}
+                              />
                             )
                           }
                         />
