@@ -91,10 +91,10 @@ export function Cohort({
         actions={actions}
       />
 
-      <RichTextView value={description} />
 
       <TabMenu selected={tab} onSelect={setTab}>
-        <Tab id="members" title={`Členové (${members.length})`} requireMember>
+        <Tab id="members" title="Info">
+          <RichTextView value={description} />
           <CohortMembers members={members} />
         </Tab>
         <Tab id="activity" title="Tréninky" requireMember>
@@ -155,6 +155,8 @@ const CohortMembers = React.memo(function CohortMembers({
   const people = members.flatMap((x) => x.person ?? []);
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(personActions, people);
+
+  if (!auth.isMember || !auth.isTrainer) return null;
 
   return (
     <div

@@ -144,7 +144,7 @@ export function CompetitionEventCard({
   return (
     <div
       className={cardCls({
-        className: cn('flex flex-col gap-1 rounded-lg border-green-7 bg-green-2', className),
+        className: cn('flex flex-col rounded-lg border-green-5 bg-green-2/80', className),
       })}
     >
       <div
@@ -195,24 +195,16 @@ export function CompetitionEventCard({
           </span>
         </div>
       </div>
-      {canToggle && (
-        <div className="flex justify-end">
-          <button
-            type="button"
-            className="inline-flex shrink-0 items-center gap-1 rounded px-1 py-0.5 text-[11px] leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
-            onClick={() => setOverride(!byCompetition)}
-          >
-            <ArrowLeftRight className="size-3" aria-hidden />
-            {byCompetition ? 'Soutěže' : 'Účastníci'}
-          </button>
-        </div>
-      )}
-      {groups.map(([key, entries]) => (
+      {groups.map(([key, entries], index) => (
         <article
           key={key}
-          className="border-t border-green-6 first-of-type:border-t-0"
+          className="pt-1.5 pb-1 border-t border-green-6 first-of-type:border-t-0"
         >
-          <CompetitionGroupContent entries={entries} byCompetition={byCompetition} />
+          <CompetitionGroupContent
+            entries={entries}
+            byCompetition={byCompetition}
+            onToggle={index === 0 && canToggle ? () => setOverride(!byCompetition) : undefined}
+          />
         </article>
       ))}
       {[...Map.groupBy(visibleOfficials, (x) => x.role)]
@@ -225,7 +217,7 @@ export function CompetitionEventCard({
             );
           if (people.length === 0) return null;
           return (
-            <div key={role} className="border-t border-green-6 pt-2 text-xs">
+            <article key={role} className="border-t border-green-6 first-of-type:border-t-0 pt-2 text-sm">
               <span className="font-medium">{formatOfficialRole(role)}: </span>
               {people.map((person, index) => (
                 <React.Fragment key={person.id}>
@@ -233,7 +225,7 @@ export function CompetitionEventCard({
                   <EntityLink type="federation-person" entity={person} />
                 </React.Fragment>
               ))}
-            </div>
+            </article>
           );
         })}
     </div>
@@ -275,9 +267,11 @@ function CompetitionLabel({
 function CompetitionGroupContent({
   entries,
   byCompetition,
+  onToggle,
 }: {
   entries: readonly CompetitionEntry[];
   byCompetition: boolean;
+  onToggle?: () => void;
 }) {
   const checkInEnd = byCompetition && entries[0]!.competition.checkInEnd;
   const showLeadingColumn =
@@ -297,13 +291,23 @@ function CompetitionGroupContent({
             {checkInEnd.slice(0, 5)}
           </span>
         )}
-        <span className="min-w-0">
+        <span className="min-w-0 flex-1">
           <CompetitionLabel
             entry={entries[0]!}
             competition={byCompetition}
             cancelled={entries.every((x) => x.cancelled)}
           />
         </span>
+        {onToggle && (
+          <button
+            type="button"
+            className="inline-flex shrink-0 items-center gap-1 self-start rounded px-1 py-0.5 text-[11px] font-normal leading-tight text-green-11 hover:bg-green-4 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-green-8"
+            onClick={onToggle}
+          >
+            <ArrowLeftRight className="size-3" aria-hidden />
+            {byCompetition ? 'Soutěže' : 'Účastníci'}
+          </button>
+        )}
       </h5>
       {entries
         .toSorted(
@@ -322,7 +326,7 @@ function CompetitionGroupContent({
           return (
             <div
               key={`${entry.competitionId}:${entry.competitorId}`}
-              className="col-span-full grid grid-cols-subgrid items-baseline py-1.5 text-xs"
+              className="col-span-full grid grid-cols-subgrid items-baseline py-1 text-xs"
             >
               {showLeadingColumn && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">

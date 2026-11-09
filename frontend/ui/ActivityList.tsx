@@ -159,12 +159,14 @@ export const ActivityList = React.memo(function ActivityList({
                           viewer={viewerId ? 'auto' : 'neutral'}
                           viewerId={viewerId}
                           suffix={
+                            instance.type !== 'LESSON' && (
                             <AttendanceSummary
                               eventId={instance.id}
                               items={instance.attendance}
                               compact={!!cohortId}
                               future={new Date(instance.since).getTime() > Date.now()}
                             />
+                            )
                           }
                         />
                       ))}
