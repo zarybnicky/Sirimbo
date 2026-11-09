@@ -1,6 +1,6 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
-import { add, eq, neq } from 'date-arithmetic';
+import { eq, neq } from 'date-arithmetic';
 import Selection, {
   type Bounds,
   getBoundsForNode,
@@ -8,10 +8,10 @@ import Selection, {
   pointInBox,
 } from './Selection';
 import { useAuth } from '@/lib/auth';
-import { formPreviewAtom, dragListenersAtom, isDraggingAtom } from './state';
+import { dragListenersAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { cn } from '@/lib/cn';
-import { resourceKey, type Resource } from './types';
+import type { Resource } from './types';
 import { defaultsFromSlot } from './eventDefaults';
 
 type BackgroundCellsProps = {
@@ -56,8 +56,6 @@ function BackgroundCells({
   resource,
 }: BackgroundCellsProps) {
   const auth = useAuth();
-  const preview = useAtomValue(formPreviewAtom);
-  const isDragging = useAtomValue(isDraggingAtom);
   const [state, setState] = React.useState<SelectingState>(EMPTY);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const { onCreate } = useAtomValue(dragListenersAtom);
@@ -182,11 +180,8 @@ function BackgroundCells({
           className={cn('rbc-day-bg', {
             'bg-accent-3/80': eq(date, new Date(), 'day'),
             'bg-neutral-3': currentDate && neq(currentDate, date, 'month'),
-            'bg-neutral-5':
-              state.selecting
-                ? index >= (state.start ?? -1) && index <= (state.end ?? Number.POSITIVE_INFINITY)
-                : !isDragging && (!resource || preview?.resourceKeys.includes(resourceKey(resource))) &&
-                  preview?.events.some(({ since, until }) => since < add(date, 1, 'day') && until > date),
+            'bg-neutral-5': state.selecting &&
+              index >= (state.start ?? -1) && index <= (state.end ?? Number.POSITIVE_INFINITY),
           })}
         />
       ))}

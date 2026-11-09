@@ -7,11 +7,11 @@ import EventEndingRow from './EventEndingRow';
 import EventRow from './EventRow';
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
 import { eventSegments, type Segment } from './common';
-import { diff, merge } from './localizer';
-import type { CalendarEvent, Resource } from './types';
+import { diff, merge, inEventRange } from './localizer';
+import { resourceKey, type CalendarEvent, type Resource } from './types';
 import { useAuth } from '@/lib/auth';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
-import { dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
+import { formPreviewAtom, dragListenersAtom, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { numericDateFormatter } from '@/ui/format';
 
@@ -34,6 +34,8 @@ function DateContentRow({
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
 
+  const preview = useAtomValue(formPreviewAtom);
+  const isDragging = useAtomValue(isDraggingAtom);
   const store = useStore();
   const setIsDragging = useSetAtom(isDraggingAtom);
   const setDragSubject = useSetAtom(dragSubjectAtom);
@@ -239,6 +241,13 @@ function DateContentRow({
     }
   }, [renderForMeasure, containerRef]);
 
+  const previewSegments = segment ? [segment]
+    : !isDragging && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
+      ? preview?.events
+          .filter((event) => inEventRange(event, { start: range[0]!, end: range.at(-1)! }))
+          .map((event) => eventSegments(event, range)) ?? []
+      : [];
+
   return (
     <div
       ref={containerRef}
@@ -293,13 +302,14 @@ function DateContentRow({
             {slotMetrics.extra.length > 0 && (
               <EventEndingRow segments={slotMetrics.extra} slotMetrics={slotMetrics} />
             )}
-            {segment && (
+            {previewSegments.map((segment, index) => (
               <EventRow
-                className="absolute inset-x-0 top-0"
+                key={index}
+                className="pointer-events-none absolute inset-x-0 top-0 z-10"
                 segments={[segment]}
                 slotMetrics={slotMetrics}
               />
-            )}
+            ))}
           </div>
         )}
       </div>

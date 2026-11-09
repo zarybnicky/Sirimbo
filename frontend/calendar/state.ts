@@ -6,7 +6,6 @@ import type { EventType } from '@/graphql';
 import type { CreateEventDefaults } from './eventDefaults';
 import type {
   CalendarClubEvent,
-  DateRange,
   DragAction,
   DragDirection,
   InteractionInfo,
@@ -35,7 +34,7 @@ export const calendarPreferencesAtom = atomWithStorage<{
 export const isDraggingAtom = atom(false);
 
 export const formPreviewAtom = atom<{
-  events: DateRange[];
+  events: CalendarClubEvent[];
   resourceKeys: string[];
 } | null>(null);
 

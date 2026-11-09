@@ -156,28 +156,41 @@ export function EventForm(input: EventFormProps) {
     values: defaultValues,
   });
   const { control, handleSubmit, setValue } = form;
-  const [type, instances, isPublic, trainers, registrations, locationId, locationText] = useWatch({
+  const [type, instances, isPublic, trainers, registrations, locationId, locationText, name] = useWatch({
     control,
-    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations', 'locationId', 'locationText'],
+    name: ['type', 'instances', 'isPublic', 'trainers', 'registrations', 'locationId', 'locationText', 'name'],
   });
-  const namePlaceholder = formatEventName(
-    {
-      name: null,
-      type: type ?? 'LESSON',
-      eventTrainersList: (trainers ?? []).map(({ personId }) => ({
-        person: { name: options.trainers.find((x) => x.id === personId)?.label },
-      })),
-      registrations: {
-        nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
-          const participant = options.participants.get(
-            personId ? `person:${personId}` : `couple:${coupleId}`,
-          );
-          return !isCancelled && participant ? [participant] : [];
-        }),
-      },
+  const draft = React.useMemo<EventWithTrainerFragment>(() => ({
+    id: event?.id ?? 'form-preview',
+    name: name ?? '',
+    type: type ?? 'LESSON',
+    since: '', until: '',
+    summary: null, capacity: 0, capacityUnit: 'REGISTRATIONS',
+    shareToken: null, enableNotes: false, seriesId: null, parentId: parentId ?? null,
+    managerPersonIds: (trainers ?? []).map((x) => x.personId),
+    isVisible: true, isPublic: isPublic ?? false, hasPublicDetails: false,
+    isCancelled: false, registrationPeriod: null, seriesInfo: null,
+    registrationInfo: null, approxPriceList: null, parent: null,
+    stats: { total: 0, unknown: 0, attended: 0, notExcused: 0 },
+    location: options.data?.tenant?.locationsList?.find((x) => x.id === locationId) ?? null,
+    locationText: locationId === 'other' ? locationText ?? '' : '',
+    targetCohortsList: [],
+    eventTrainersList: (trainers ?? []).map(({ personId }) => ({
+      id: personId, personId, lessonsOffered: 0,
+      person: { id: personId, name: options.trainers.find((x) => x.id === personId)?.label ?? '' },
+    })),
+    registrations: {
+      nodes: (registrations ?? []).flatMap(({ personId, coupleId, isCancelled }) => {
+        const participant = options.participants.get(personId ? `person:${personId}` : `couple:${coupleId}`);
+        return !isCancelled && participant ? [{
+          id: participant.id,
+          person: participant.person && personId ? { ...participant.person, id: personId } : null,
+          couple: participant.couple && coupleId ? { ...participant.couple, id: coupleId } : null,
+        }] : [];
+      }),
     },
-    'neutral',
-  );
+  }), [event?.id, name, type, parentId, trainers, isPublic, locationId, locationText, registrations, options.data, options.trainers, options.participants]);
+  const namePlaceholder = formatEventName({ ...draft, name: null }, 'neutral');
 
   React.useEffect(() => {
     const resourceKeys = (trainers ?? []).map((x) => `person:${x.personId}`);
@@ -187,13 +200,15 @@ export function EventForm(input: EventFormProps) {
       resourceKeys.push(`location:${locationId}`);
     }
     setPreview({
-      events: instances.filter((x) => !x.isCancelled).map((x) => ({
-        since: new Date(x.since), until: new Date(x.until),
+      events: instances.filter((x) => !x.isCancelled).map((x, index) => ({
+        kind: 'event', id: `form-preview-${index}`, __isPreview: true,
+        start: new Date(x.since), end: new Date(x.until), resourceKeys,
+        instance: { ...draft, since: x.since, until: x.until },
       })),
       resourceKeys: resourceKeys.length > 0 ? resourceKeys : ['unassigned'],
     });
     return () => setPreview(null);
-  }, [instances, trainers, locationId, locationText, setPreview]);
+  }, [draft, instances, trainers, locationId, locationText, setPreview]);
 
   React.useEffect(() => {
     if (!isPublic) setValue('hasPublicDetails', false);

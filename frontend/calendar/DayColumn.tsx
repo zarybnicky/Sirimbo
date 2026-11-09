@@ -437,10 +437,10 @@ function DayColumn({
     };
   }, [events, slotMetrics]);
 
-  const selectionPreview = backgroundState.startDate && backgroundState.endDate
-    ? [slotMetrics.getRange(backgroundState.startDate, backgroundState.endDate, false, true)]
-    : !isDragging && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
-      ? preview?.events.map(({ since, until }) => slotMetrics.getRange(since, until)) ?? []
+  const eventPreviews = eventState.event
+    ? [{ event: eventState.event, top: eventState.top ?? 0, height: eventState.height ?? 0 }]
+    : !isDragging && !backgroundState.selecting && (!resource || preview?.resourceKeys.includes(resourceKey(resource)))
+      ? preview?.events.map((event) => ({ event, ...slotMetrics.getRange(event.start, event.end) })) ?? []
       : [];
 
   const isToday = eq(date, new Date(), 'day');
@@ -507,30 +507,25 @@ function DayColumn({
             slotMetrics={slotMetrics}
           />
         ))}
-        {eventState.event && (
+        {eventPreviews.map(({ event, top, height }) => height > 0 && (
           <TimeGridEvent
-            event={eventState.event}
-            className="rbc-drag-preview"
-            style={{
-              top: eventState.top ?? 0,
-              height: eventState.height ?? 0,
-              width: 100,
-              xOffset: 0,
-            }}
+            key={event.id}
+            event={event}
+            className="rbc-drag-preview pointer-events-none z-10"
+            style={{ top, height, width: 100, xOffset: 0 }}
             slotMetrics={slotMetrics}
           />
-        )}
+        ))}
       </div>
 
-      {selectionPreview.map(({ startDate, endDate, top, height }, index) => height > 0 && (
+      {backgroundState.startDate && backgroundState.endDate && (
         <div
-          key={index}
           className="rbc-drag-preview pointer-events-none absolute z-10 w-full p-0.75 text-xs bg-neutral-9 text-white"
-          style={{ top: `${top}%`, height: `${height}%` }}
+          style={{ top: backgroundState.top, height: backgroundState.height }}
         >
-          {shortTimeFormatter.formatRange(startDate, endDate)}
+          {shortTimeFormatter.formatRange(backgroundState.startDate, backgroundState.endDate)}
         </div>
-      ))}
+      )}
       <NowIndicator date={date} slotMetrics={slotMetrics} />
     </div>
   );
