@@ -7704,6 +7704,7 @@ export type Mutation = {
   registerUsingInvitation: Maybe<RegisterUsingInvitationPayload>;
   registerWithoutInvitation: Maybe<RegisterWithoutInvitationPayload>;
   rejectMembershipApplication: Maybe<RejectMembershipApplicationPayload>;
+  resendPersonInvitation: Maybe<ResendPersonInvitationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   saveEvents: Maybe<SaveEventsPayload>;
   setEventRegistration: Maybe<SetEventRegistrationPayload>;
@@ -8017,6 +8018,12 @@ export type MutationRegisterWithoutInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationRejectMembershipApplicationArgs = {
   input: RejectMembershipApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationResendPersonInvitationArgs = {
+  input: ResendPersonInvitationInput;
 };
 
 
@@ -10813,6 +10820,26 @@ export type RelationshipStatus =
   | 'EXPIRED'
   | 'PENDING';
 
+/** All input for the `resendPersonInvitation` mutation. */
+export type ResendPersonInvitationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  invitationId: Scalars['BigInt']['input'];
+};
+
+/** The output of our `resendPersonInvitation` mutation. */
+export type ResendPersonInvitationPayload = {
+  __typename?: 'ResendPersonInvitationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+};
+
 /** All input for the `resetPassword` mutation. */
 export type ResetPasswordInput = {
   /**
@@ -13442,6 +13469,7 @@ export type GraphCacheKeysConfig = {
   RegisterUsingInvitationPayload?: (data: WithTypename<RegisterUsingInvitationPayload>) => null | string,
   RegisterWithoutInvitationPayload?: (data: WithTypename<RegisterWithoutInvitationPayload>) => null | string,
   RejectMembershipApplicationPayload?: (data: WithTypename<RejectMembershipApplicationPayload>) => null | string,
+  ResendPersonInvitationPayload?: (data: WithTypename<ResendPersonInvitationPayload>) => null | string,
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
   Result?: (data: WithTypename<Result>) => null | string,
   SaveEventsPayload?: (data: WithTypename<SaveEventsPayload>) => null | string,
@@ -15418,6 +15446,9 @@ export type GraphCacheResolvers = {
     membershipApplicationEdge?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs, WithTypename<MembershipApplicationEdge> | string>,
     result?: GraphCacheResolver<WithTypename<RejectMembershipApplicationPayload>, Record<string, never>, WithTypename<MembershipApplication> | string>
   },
+  ResendPersonInvitationPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<ResendPersonInvitationPayload>, Record<string, never>, Scalars['String']['output'] | string>
+  },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheResolver<WithTypename<ResetPasswordPayload>, Record<string, never>, Scalars['String']['output'] | string>
   },
@@ -15877,6 +15908,7 @@ export type GraphCacheOptimisticUpdaters = {
   registerUsingInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterUsingInvitationArgs, Maybe<WithTypename<RegisterUsingInvitationPayload>>>,
   registerWithoutInvitation?: GraphCacheOptimisticMutationResolver<MutationRegisterWithoutInvitationArgs, Maybe<WithTypename<RegisterWithoutInvitationPayload>>>,
   rejectMembershipApplication?: GraphCacheOptimisticMutationResolver<MutationRejectMembershipApplicationArgs, Maybe<WithTypename<RejectMembershipApplicationPayload>>>,
+  resendPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationResendPersonInvitationArgs, Maybe<WithTypename<ResendPersonInvitationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   saveEvents?: GraphCacheOptimisticMutationResolver<MutationSaveEventsArgs, Maybe<WithTypename<SaveEventsPayload>>>,
   setEventRegistration?: GraphCacheOptimisticMutationResolver<MutationSetEventRegistrationArgs, Maybe<WithTypename<SetEventRegistrationPayload>>>,
@@ -16079,6 +16111,7 @@ export type GraphCacheUpdaters = {
     registerUsingInvitation?: GraphCacheUpdateResolver<{ registerUsingInvitation: Maybe<WithTypename<RegisterUsingInvitationPayload>> }, MutationRegisterUsingInvitationArgs>,
     registerWithoutInvitation?: GraphCacheUpdateResolver<{ registerWithoutInvitation: Maybe<WithTypename<RegisterWithoutInvitationPayload>> }, MutationRegisterWithoutInvitationArgs>,
     rejectMembershipApplication?: GraphCacheUpdateResolver<{ rejectMembershipApplication: Maybe<WithTypename<RejectMembershipApplicationPayload>> }, MutationRejectMembershipApplicationArgs>,
+    resendPersonInvitation?: GraphCacheUpdateResolver<{ resendPersonInvitation: Maybe<WithTypename<ResendPersonInvitationPayload>> }, MutationResendPersonInvitationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     saveEvents?: GraphCacheUpdateResolver<{ saveEvents: Maybe<WithTypename<SaveEventsPayload>> }, MutationSaveEventsArgs>,
     setEventRegistration?: GraphCacheUpdateResolver<{ setEventRegistration: Maybe<WithTypename<SetEventRegistrationPayload>> }, MutationSetEventRegistrationArgs>,
@@ -17903,6 +17936,9 @@ export type GraphCacheUpdaters = {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>,
     membershipApplicationEdge?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, RejectMembershipApplicationPayloadMembershipApplicationEdgeArgs>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<RejectMembershipApplicationPayload>>, Record<string, never>>
+  },
+  ResendPersonInvitationPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResendPersonInvitationPayload>>, Record<string, never>>
   },
   ResetPasswordPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<ResetPasswordPayload>>, Record<string, never>>

@@ -13,6 +13,6 @@ query FormResponses($type: String) {
 
 mutation SubmitForm($type: String!, $url: String!, $data: JSON!) {
   submitForm(input: { type: $type, url: $url, data: $data }) {
-    clientMutationId
+    __typename
   }
 }

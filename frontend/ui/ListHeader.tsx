@@ -1,5 +1,3 @@
-'use client';
-
 import { type ReactNode, useState } from 'react';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/cn';

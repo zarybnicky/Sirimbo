@@ -1,5 +1,5 @@
-import { Copy, Trash2 } from 'lucide-react';
-import { DeleteInvitationDocument } from '@/graphql/Invitation';
+import { Copy, Mail, Trash2 } from 'lucide-react';
+import { DeleteInvitationDocument, ResendInvitationDocument } from '@/graphql/Invitation';
 import { defineActions } from '@/lib/actions';
 
 export type PersonInvitationActionItem = {
@@ -8,6 +8,15 @@ export type PersonInvitationActionItem = {
 };
 
 export const personInvitationActions = defineActions<PersonInvitationActionItem>()([
+  {
+    id: 'personInvitation.resend',
+    label: 'Poslat znovu',
+    icon: Mail,
+    requireAdmin: true,
+    execute: async ({ item, mutate }) => {
+      await mutate(ResendInvitationDocument, { id: item.id });
+    },
+  },
   {
     id: 'personInvitation.copyLink',
     label: 'Kopírovat odkaz',

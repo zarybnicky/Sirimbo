@@ -1,4 +1,10 @@
 
+mutation ResendInvitation($id: BigInt!) {
+  resendPersonInvitation(input: { invitationId: $id }) {
+    __typename
+  }
+}
+
 mutation CreateInvitation($input: CreatePersonInvitationInput!) {
   createPersonInvitation(input: $input) {
     personInvitation {

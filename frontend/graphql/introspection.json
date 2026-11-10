@@ -19536,6 +19536,26 @@
             ]
           },
           {
+            "name": "resendPersonInvitation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ResendPersonInvitationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "resetPassword",
             "type": {
               "kind": "OBJECT",
@@ -28729,6 +28749,21 @@
               "kind": "OBJECT",
               "name": "MembershipApplication",
               "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ResendPersonInvitationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
