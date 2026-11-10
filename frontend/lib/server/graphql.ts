@@ -30,15 +30,17 @@ export async function executeGraphql<
   variables?: TVariables,
   headers?: Record<string, string>,
 ) {
-  const { tenant, token } = await getRequestContext();
+  const context = headers?.authorization ? null : await getRequestContext();
   const response = await fetch(graphqlUrl(), {
     method: 'POST',
     cache: 'no-store',
     headers: {
-      ...headers,
       'content-type': 'application/json',
-      'x-tenant-id': tenant.id.toString(),
-      ...(token ? { cookie: `${SESSION_COOKIE}=${token}` } : {}),
+      ...(context ? {
+        'x-tenant-id': context.tenant.id.toString(),
+        ...(context.token ? { cookie: `${SESSION_COOKIE}=${context.token}` } : {}),
+      } : {}),
+      ...headers,
     },
     body: JSON.stringify({
       query: print(document),

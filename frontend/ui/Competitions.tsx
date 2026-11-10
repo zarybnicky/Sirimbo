@@ -2,17 +2,12 @@ import dynamic from 'next/dynamic';
 import type { MapView } from '@/ui/EventMap';
 import { DotSeparated } from '@/ui/DotSeparated';
 import {
-  type CompetitionEntryFragment,
-  type CompetitionFragment,
-  type CompetitionResultFragment,
   CompetitionsDocument,
-  type CompetitionsQuery,
   type CompetitionsQueryVariables,
   CompetitionSuggestionEventsDocument,
   CompetitionSuggestionsDocument,
 } from '@/graphql/CompetitionParticipation';
-import type { CompetitionParticipantCondition, OfficialRole } from '@/graphql';
-import type { OfficialPersonFragment } from '@/graphql/Federation';
+import type { CompetitionParticipantCondition } from '@/graphql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover';
 import { Pagination } from '@/ui/Pagination';
@@ -35,69 +30,20 @@ import * as React from 'react';
 import { useQuery } from 'urql';
 import { parseAsBoolean, parseAsInteger, useQueryStates } from 'nuqs';
 import { EntityLink } from '@/ui/EntityLink';
+import {
+  groupCompetitionEvents,
+  type CompetitionEntry,
+  type CompetitionOfficialAssignment,
+} from '@/calendar/competitions';
+export { groupCompetitionEvents } from '@/calendar/competitions';
+export type { CompetitionEntry, CompetitionOfficialAssignment } from '@/calendar/competitions';
 
 const EventMap = dynamic(() => import('@/ui/EventMap'));
-
-type Competition = NonNullable<CompetitionsQuery['competitions']>['nodes'][number];
-export type CompetitionEntry = CompetitionEntryFragment &
-  Partial<CompetitionResultFragment> & { competition: Competition };
-
-export type CompetitionOfficialAssignment = {
-  date: string;
-  federation: string;
-  event: NonNullable<CompetitionFragment['event']>;
-  role: OfficialRole;
-  person: OfficialPersonFragment | null;
-};
 
 function entryLabel(entry: CompetitionEntry, competition: boolean) {
   return competition
     ? formatCategoryName(entry.competition)
     : (entry.competitor?.name ?? entry.competitorId);
-}
-
-export function groupCompetitionEvents(
-  competitions: readonly Competition[] = [],
-  officials: readonly CompetitionOfficialAssignment[] = [],
-) {
-  const entries = competitions.flatMap((comp) => {
-    const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [...comp.entries, ...comp.results]) {
-      entries.set(entry.competitorId, {
-        cancelled: false,
-        ...entries.get(entry.competitorId),
-        ...entry,
-        competition: comp,
-      });
-    }
-    return [...entries.values()];
-  });
-  return [
-    ...Map.groupBy([...entries, ...officials], (x) =>
-      'role' in x ? x.date : x.competition.startDate,
-    ),
-  ].flatMap(([date, day]) =>
-    [...Map.groupBy(day, (x) => ('role' in x ? x.event.id : x.competition.event?.id))]
-      .map(([eventId, items]) => {
-        const entries = items.filter((x): x is CompetitionEntry => !('role' in x));
-        const officials = [
-          ...new Map(
-            items
-              .filter((x) => 'role' in x)
-              .map((x) => [`${x.role}:${x.person?.id}`, x] as const),
-          ).values(),
-        ];
-        const event = entries[0]?.competition.event ?? officials[0]?.event;
-        return {
-          key: `${date ?? ''}:${eventId ?? ''}`,
-          date,
-          name: event?.name ?? '',
-          entries,
-          officials,
-        };
-      })
-      .toSorted((a, b) => compareText(a.name, b.name)),
-  );
 }
 
 export function CompetitionEventCard({

@@ -1,0 +1,114 @@
+fragment CalendarFeedVenue on FederationEvent {
+  id
+  federation
+  externalId
+  name
+  startDate
+  endDate
+  status
+  location
+  streetAddress
+  postalCode
+  city
+  country
+  venueLat
+  venueLng
+}
+
+query CalendarFeed(
+  $savedSearch: BigInt!
+  $withCompetitions: Boolean!
+  $withEvents: Boolean! = true
+  $offset: Int! = 0
+) {
+  eventsList(savedSearch: $savedSearch, orderBy: [SINCE_ASC, ID_ASC]) @include(if: $withEvents) {
+    ...Event
+    createdAt
+    updatedAt
+    summary
+    location {
+      id
+      name
+      longName
+      latitude
+      longitude
+      address {
+        city
+        conscriptionNumber
+        district
+        orientationNumber
+        postalCode
+        region
+        street
+      }
+    }
+    eventTrainersList {
+      id
+      personId
+      person { id name }
+    }
+    hasMyRegistration
+    targetCohortsList {
+      id
+      cohort { id name }
+    }
+    registrations(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE, excludeCohortSource: true }
+      orderBy: PRIMARY_KEY_ASC
+    ) {
+      nodes {
+        id
+        person { id name }
+        couple { id shortName }
+      }
+    }
+  }
+  competitions(
+    savedSearch: $savedSearch
+    first: 300
+    offset: $offset
+    condition: { includeCancelled: false }
+    orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+  ) @include(if: $withCompetitions) {
+    pageInfo { hasNextPage }
+    nodes {
+      ...Competition
+      event { ...CalendarFeedVenue }
+      entries: entriesList(savedSearch: $savedSearch) {
+        ...CompetitionEntry
+      }
+      results: resultsList(savedSearch: $savedSearch) {
+        ...CompetitionResult
+      }
+      officials(first: 300, savedSearch: $savedSearch) {
+        nodes {
+          competitionId
+          personId
+          role
+          person { ...OfficialPerson }
+        }
+      }
+    }
+  }
+  officialEvents: federationEvents(
+    savedSearch: $savedSearch
+    first: 300
+    offset: $offset
+    condition: { includeCancelled: false }
+    orderBy: [START_DATE_ASC, ID_ASC]
+  ) @include(if: $withCompetitions) {
+    pageInfo { hasNextPage }
+    nodes {
+      ...CalendarFeedVenue
+      officials(first: 300, savedSearch: $savedSearch) {
+        nodes {
+          eventId
+          personId
+          discipline
+          role
+          person { ...OfficialPerson }
+        }
+      }
+    }
+  }
+}

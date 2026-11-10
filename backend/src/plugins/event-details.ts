@@ -4,13 +4,24 @@ import { extendSchema, wrapPlans } from 'postgraphile/utils';
 
 export const EventFieldsPlugin = extendSchema((build) => ({
   typeDefs: `
-    extend type Event { isLocked: Boolean @deprecated(reason: "Use registrationPeriod.") }
+    extend type Event {
+      isLocked: Boolean @deprecated(reason: "Use registrationPeriod.")
+      hasMyRegistration: Boolean!
+    }
     extend input EventPatch { isLocked: Boolean @deprecated(reason: "Use registrationPeriod.") }
     extend type EventTrainer { tenantTrainer: TenantTrainer }
   `,
   objects: {
     Event: {
       plans: {
+        hasMyRegistration($event: PgSelectSingleStep) {
+          return pgClassExpression($event, TYPES.boolean)`exists (
+            select 1 from public.event_registration registration
+            where registration.event_id = ${$event.get('id')}
+              and registration.person_id = any((select public.current_person_ids())::bigint[])
+              and registration.registration_status = 'active'
+          )`;
+        },
         isLocked($event: PgSelectSingleStep) {
           return pgClassExpression($event, TYPES.boolean)`
             not coalesce(${$event.get('registration_period')} @> now(), false)`;

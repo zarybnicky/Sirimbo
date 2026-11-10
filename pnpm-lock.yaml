@@ -326,9 +326,15 @@ importers:
       html-react-parser:
         specifier: ^6.1.8
         version: 6.1.8(@types/react@19.3.0)(react@19.2.8)
+      html-to-text:
+        specifier: ~10.0.1
+        version: 10.0.1
       iban:
         specifier: ~0.0.14
         version: 0.0.14
+      ical-generator:
+        specifier: ^11.1.3
+        version: 11.1.3(@types/node@24.13.6)(dayjs@1.11.19)
       jotai:
         specifier: ^2.20.3
         version: 2.20.3(@babel/core@7.29.7)(@babel/template@7.29.7)(@types/react@19.3.0)(react@19.2.8)
@@ -456,6 +462,9 @@ importers:
       '@types/file-saver':
         specifier: ~2.0.7
         version: 2.0.7
+      '@types/html-to-text':
+        specifier: ~9.0.4
+        version: 9.0.4
       '@types/iban':
         specifier: ~0.0.35
         version: 0.0.35
@@ -7252,6 +7261,39 @@ packages:
   iban@0.0.14:
     resolution: {integrity: sha512-+rocNKk+Ga9m8Lr9fTMWd+87JnsBrucm0ZsIx5ROOarZlaDLmd+FKdbtvb0XyoBw9GAFOYG2GuLqoNB16d+p3w==}
 
+  ical-generator@11.1.3:
+    resolution: {integrity: sha512-Wim2JmodqbNtyXXKU8X8+2RFnm0NPfm/Ww6zXaTuOEa2Ui0ZlNzVrKGr8+1pfrW2ik66dfbqu6p9nRF1B9pA2g==}
+    engines: {node: 22 || >=24.0.0}
+    peerDependencies:
+      '@touch4it/ical-timezones': '>=1.6.0'
+      '@types/luxon': '>= 1.26.0'
+      '@types/mocha': '>= 8.2.1'
+      '@types/node': '*'
+      dayjs: '>= 1.10.0'
+      luxon: '>= 1.26.0'
+      moment: '>= 2.29.0'
+      moment-timezone: '>= 0.5.33'
+      rrule: '>= 2.6.8'
+    peerDependenciesMeta:
+      '@touch4it/ical-timezones':
+        optional: true
+      '@types/luxon':
+        optional: true
+      '@types/mocha':
+        optional: true
+      '@types/node':
+        optional: true
+      dayjs:
+        optional: true
+      luxon:
+        optional: true
+      moment:
+        optional: true
+      moment-timezone:
+        optional: true
+      rrule:
+        optional: true
+
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -10952,6 +10994,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-upload': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-alignment@47.6.2':
     dependencies:
@@ -10971,6 +11015,8 @@ snapshots:
       '@ckeditor/ckeditor5-typing': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-autosave@47.6.2':
     dependencies:
@@ -11041,6 +11087,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-clipboard@47.6.2':
     dependencies:
@@ -11056,6 +11104,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-code-block@47.6.2':
     dependencies:
@@ -11125,6 +11175,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-multi-root@47.6.2':
     dependencies:
@@ -11155,6 +11207,8 @@ snapshots:
     dependencies:
       '@ckeditor/ckeditor5-utils': 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-enter@47.6.2':
     dependencies:
@@ -11172,6 +11226,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-undo': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-find-and-replace@47.6.2':
     dependencies:
@@ -11225,6 +11281,8 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-horizontal-line@47.6.2':
     dependencies:
@@ -11234,8 +11292,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@47.6.2':
     dependencies:
@@ -11245,6 +11301,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-html-support@47.6.2':
     dependencies:
@@ -11260,6 +11318,8 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-icons@47.6.2': {}
 
@@ -11336,6 +11396,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-markdown-gfm@47.6.2':
     dependencies:
@@ -11373,6 +11435,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 47.6.2
       '@ckeditor/ckeditor5-widget': 47.6.2
       ckeditor5: 47.6.2
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-mention@47.6.2':
     dependencies:
@@ -11413,8 +11477,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-paste-from-office@47.6.2':
     dependencies:
@@ -11445,8 +11507,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
       ckeditor5: 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-select-all@47.6.2':
     dependencies:
@@ -11455,8 +11515,6 @@ snapshots:
       '@ckeditor/ckeditor5-icons': 47.6.2
       '@ckeditor/ckeditor5-ui': 47.6.2
       '@ckeditor/ckeditor5-utils': 47.6.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-show-blocks@47.6.2':
     dependencies:
@@ -18719,6 +18777,11 @@ snapshots:
       - supports-color
 
   iban@0.0.14: {}
+
+  ical-generator@11.1.3(@types/node@24.13.6)(dayjs@1.11.19):
+    optionalDependencies:
+      '@types/node': 24.13.6
+      dayjs: 1.11.19
 
   iconv-lite@0.4.24:
     dependencies:

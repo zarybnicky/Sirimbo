@@ -470,11 +470,12 @@ query CampTrainerOverview($id: BigInt!) {
 }
 
 query EventList(
+  $savedSearch: BigInt
   $condition: EventCondition
   $orderBy: [EventsOrderBy!]
   $includeCoverImage: Boolean! = false
 ) {
-  eventsList(condition: $condition, orderBy: $orderBy) {
+  eventsList(savedSearch: $savedSearch, condition: $condition, orderBy: $orderBy) {
     coverImage @include(if: $includeCoverImage) {
       ...File
     }

@@ -2021,6 +2021,9 @@ type Competition {
 
     """The method to use when ordering `CompetitionEntry`."""
     orderBy: [CompetitionEntriesOrderBy!]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): [CompetitionEntry!]!
 
   """
@@ -2063,6 +2066,9 @@ type Competition {
 
     """The method to use when ordering `CompetitionOfficial`."""
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): CompetitionOfficialConnection!
   participantsTotal: Int
   registrationFee: BigFloat
@@ -2111,6 +2117,9 @@ type Competition {
 
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): [CompetitionResult!]!
 
   """Reads and enables pagination through a set of `CompetitionRound`."""
@@ -4490,6 +4499,30 @@ type CreateCreditTransactionForPersonPayload {
   ): TransactionEdge
 }
 
+"""All input for the create `EventSavedSearch` mutation."""
+input CreateEventSavedSearchInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EventSavedSearch` to be created by this mutation."""
+  eventSavedSearch: EventSavedSearchInput!
+}
+
+"""The output of our create `EventSavedSearch` mutation."""
+type CreateEventSavedSearchPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EventSavedSearch` that was created by this mutation."""
+  eventSavedSearch: EventSavedSearch
+}
+
 """All input for the create `EventSeries` mutation."""
 input CreateEventSeriesInput {
   """
@@ -5223,6 +5256,28 @@ type DeleteEventPayload {
   event: Event
 }
 
+"""All input for the `deleteEventSavedSearch` mutation."""
+input DeleteEventSavedSearchInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `EventSavedSearch` mutation."""
+type DeleteEventSavedSearchPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EventSavedSearch` that was deleted by this mutation."""
+  eventSavedSearch: EventSavedSearch
+}
+
 """All input for the `deleteEventSeries` mutation."""
 input DeleteEventSeriesInput {
   """
@@ -5592,6 +5647,7 @@ type Event {
     orderBy: [EventTrainersOrderBy!]
   ): [EventTrainer!]!
   filesLegacy: String
+  hasMyRegistration: Boolean!
   hasPublicDetails: Boolean!
   id: BigInt!
   isCancelled: Boolean!
@@ -6147,6 +6203,11 @@ input EventRegistrationCondition {
   """Checks for equality with the object’s `eventId` field."""
   eventId: BigInt
 
+  """
+  Exclude automatic cohort registrations; retain explicit and legacy registrations.
+  """
+  excludeCohortSource: Boolean
+
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -6279,6 +6340,102 @@ enum EventRegistrationsOrderBy {
   TENANT_ID_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+type EventSavedSearch {
+  condition: EventSearchCondition!
+  crossTenant: Boolean!
+  feedKey: UUID
+  id: BigInt!
+  name: String!
+  tenantId: BigInt!
+
+  """Reads a single `User` that is related to this `EventSavedSearch`."""
+  user: User
+  userId: BigInt!
+}
+
+"""
+A condition to be used against `EventSavedSearch` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EventSavedSearchCondition {
+  """Checks for equality with the object’s `crossTenant` field."""
+  crossTenant: Boolean
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: BigInt
+}
+
+"""An input for mutations affecting `EventSavedSearch`"""
+input EventSavedSearchInput {
+  condition: EventSearchConditionInput!
+  crossTenant: Boolean
+  feedKey: UUID
+  name: String!
+}
+
+"""
+Represents an update to a `EventSavedSearch`. Fields that are set will be updated.
+"""
+input EventSavedSearchPatch {
+  condition: EventSearchConditionInput
+  crossTenant: Boolean
+  feedKey: UUID
+  name: String
+}
+
+"""Methods to use when ordering `EventSavedSearch`."""
+enum EventSavedSearchesOrderBy {
+  CROSS_TENANT_ASC
+  CROSS_TENANT_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
+type EventSearchCondition {
+  canRegister: Boolean
+  cohortId: BigInt
+  locationIds: [BigInt]
+  onlyMine: Boolean
+  parentId: BigInt
+  participantIds: [BigInt]
+  relevantOnly: Boolean
+  trainerIds: [BigInt]
+  types: [EventType]
+  withCompetitions: Boolean
+}
+
+"""An input for mutations affecting `EventSearchCondition`"""
+input EventSearchConditionInput {
+  canRegister: Boolean
+  cohortId: BigInt
+  locationIds: [BigInt]
+  onlyMine: Boolean
+  parentId: BigInt
+  participantIds: [BigInt]
+  relevantOnly: Boolean
+  trainerIds: [BigInt]
+  types: [EventType]
+  withCompetitions: Boolean
 }
 
 type EventSeries {
@@ -7814,6 +7971,9 @@ type FederationEvent {
 
     """The method to use when ordering `FederationEventOfficial`."""
     orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): FederationEventOfficialConnection!
 
   """
@@ -9820,6 +9980,14 @@ type Mutation {
     input: CreateCreditTransactionForPersonInput!
   ): CreateCreditTransactionForPersonPayload
 
+  """Creates a single `EventSavedSearch`."""
+  createEventSavedSearch(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEventSavedSearchInput!
+  ): CreateEventSavedSearchPayload
+
   """Creates a single `EventSeries`."""
   createEventSeries(
     """
@@ -9945,6 +10113,14 @@ type Mutation {
     """
     input: DeleteEventInput!
   ): DeleteEventPayload
+
+  """Deletes a single `EventSavedSearch` using a unique key."""
+  deleteEventSavedSearch(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventSavedSearchInput!
+  ): DeleteEventSavedSearchPayload
 
   """Deletes a single `EventSeries` using a unique key."""
   deleteEventSeries(
@@ -10199,6 +10375,14 @@ type Mutation {
     """
     input: UpdateEventInput!
   ): UpdateEventPayload
+
+  """Updates a single `EventSavedSearch` using a unique key and a patch."""
+  updateEventSavedSearch(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventSavedSearchInput!
+  ): UpdateEventSavedSearchPayload
 
   """Updates a single `EventSeries` using a unique key and a patch."""
   updateEventSeries(
@@ -12091,6 +12275,9 @@ type Query {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): CompetitionConnection
 
   """Get a single `Couple`."""
@@ -12527,6 +12714,26 @@ type Query {
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]
 
+  """Get a single `EventSavedSearch`."""
+  eventSavedSearch(id: BigInt!): EventSavedSearch
+
+  """Reads a set of `EventSavedSearch`."""
+  eventSavedSearchesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventSavedSearchCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventSavedSearch`."""
+    orderBy: [EventSavedSearchesOrderBy!]
+  ): [EventSavedSearch!]
+
   """Get a single `EventSeries`."""
   eventSeries(id: BigInt!): EventSeries
 
@@ -12545,6 +12752,9 @@ type Query {
 
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): [Event!]
 
   """Get a single `Federation`."""
@@ -12654,6 +12864,9 @@ type Query {
 
     """The method to use when ordering `FederationEvent`."""
     orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """Apply one of your saved searches within the current tenant."""
+    savedSearch: BigInt
   ): FederationEventConnection
 
   """Reads and enables pagination through a set of `FederationPerson`."""
@@ -14212,6 +14425,23 @@ type Tenant {
     orderBy: [EventRegistrationsOrderBy!]
   ): [EventRegistration!]!
 
+  """Reads and enables pagination through a set of `EventSavedSearch`."""
+  eventSavedSearchesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventSavedSearchCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventSavedSearch`."""
+    orderBy: [EventSavedSearchesOrderBy!]
+  ): [EventSavedSearch!]!
+
   """Reads and enables pagination through a set of `EventSeries`."""
   eventSeries(
     """Read all values in the set after (below) this cursor."""
@@ -15712,6 +15942,33 @@ type UpdateEventPayload {
   event: Event
 }
 
+"""All input for the `updateEventSavedSearch` mutation."""
+input UpdateEventSavedSearchInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `EventSavedSearch` being updated.
+  """
+  patch: EventSavedSearchPatch!
+}
+
+"""The output of our update `EventSavedSearch` mutation."""
+type UpdateEventSavedSearchPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EventSavedSearch` that was updated by this mutation."""
+  eventSavedSearch: EventSavedSearch
+}
+
 """All input for the `updateEventSeries` mutation."""
 input UpdateEventSeriesInput {
   """
@@ -16266,6 +16523,23 @@ type User {
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementConnection!
   createdAt: Datetime!
+
+  """Reads and enables pagination through a set of `EventSavedSearch`."""
+  eventSavedSearchesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventSavedSearchCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EventSavedSearch`."""
+    orderBy: [EventSavedSearchesOrderBy!]
+  ): [EventSavedSearch!]!
 
   """Reads and enables pagination through a set of `File`."""
   filesByUploadedBy(
