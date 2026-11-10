@@ -201,9 +201,11 @@ export const PersonMembershipView = memo(function PersonMembershipView({
         <ActionRow key={invitation.id} actions={invitationActionMap.get(invitation.id)!}>
           <div className="grow flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-y-1 sm:gap-x-3 text-sm py-1">
             <b className="wrap-break-word">({invitation.email})</b>
-            <span>
-              pozvánka odeslána {fullDateFormatter.format(new Date(invitation.createdAt))}
-            </span>
+            {invitation.lastSentAt && (
+              <span>
+                pozvánka odeslána {fullDateFormatter.format(new Date(invitation.lastSentAt))}
+              </span>
+            )}
           </div>
         </ActionRow>
       ))}

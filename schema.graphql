@@ -11471,6 +11471,7 @@ type PersonInvitation {
   createdAt: Datetime!
   email: String!
   id: BigInt!
+  lastSentAt: Datetime
 
   """Reads a single `Person` that is related to this `PersonInvitation`."""
   person: Person
@@ -11497,6 +11498,9 @@ input PersonInvitationCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
+  """Checks for equality with the object’s `lastSentAt` field."""
+  lastSentAt: Datetime
+
   """Checks for equality with the object’s `personId` field."""
   personId: BigInt
 
@@ -11515,6 +11519,7 @@ input PersonInvitationInput {
   accessToken: UUID
   createdAt: Datetime
   email: String!
+  lastSentAt: Datetime
   personId: BigInt
   tenantId: BigInt
   updatedAt: Datetime
@@ -11531,6 +11536,8 @@ enum PersonInvitationsOrderBy {
   EMAIL_DESC
   ID_ASC
   ID_DESC
+  LAST_SENT_AT_ASC
+  LAST_SENT_AT_DESC
   NATURAL
   PERSON_ID_ASC
   PERSON_ID_DESC

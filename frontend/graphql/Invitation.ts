@@ -32,6 +32,7 @@ export type PersonInvitationInput = {
   accessToken?: any;
   createdAt?: string | null | undefined;
   email: string;
+  lastSentAt?: string | null | undefined;
   personId?: string | null | undefined;
   tenantId?: string | null | undefined;
   updatedAt?: string | null | undefined;

@@ -22927,6 +22927,14 @@
             "args": []
           },
           {
+            "name": "lastSentAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "person",
             "type": {
               "kind": "OBJECT",

@@ -1,4 +1,5 @@
 import type { Task } from 'graphile-worker';
+import sendEmail from './send_email.ts';
 
 export const task: Task<'send_invitation'> = async ({ id }, workerUtils) => {
   const {
@@ -30,7 +31,8 @@ where person_invitation.id = $1`,
     console.error('Invitation not found; aborting');
     return;
   }
-  await workerUtils.addJob('send_email', {
+
+  await sendEmail({
     template: 'send_invitation.mjml',
     options: {
       to: invitation.target_email,
@@ -47,7 +49,14 @@ where person_invitation.id = $1`,
         : invitation.tenant_domain,
       domain: invitation.tenant_domain.replace('http://', '').replace('https://', ''),
     },
-  });
+  }, workerUtils);
+
+  await workerUtils.withPgClient((pgClient) =>
+    pgClient.query(
+      'update person_invitation set last_sent_at = clock_timestamp() where id = $1',
+      [id],
+    ),
+  );
 };
 
 export default task;

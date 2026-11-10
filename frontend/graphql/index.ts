@@ -9029,6 +9029,7 @@ export type PersonInvitation = {
   createdAt: Scalars['Datetime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
+  lastSentAt: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `Person` that is related to this `PersonInvitation`. */
   person: Maybe<Person>;
   personId: Maybe<Scalars['BigInt']['output']>;
@@ -9050,6 +9051,8 @@ export type PersonInvitationCondition = {
   email?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `lastSentAt` field. */
+  lastSentAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
@@ -9065,6 +9068,7 @@ export type PersonInvitationInput = {
   accessToken?: InputMaybe<Scalars['UUID']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   email: Scalars['String']['input'];
+  lastSentAt?: InputMaybe<Scalars['Datetime']['input']>;
   personId?: InputMaybe<Scalars['BigInt']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
@@ -9081,6 +9085,8 @@ export type PersonInvitationsOrderBy =
   | 'EMAIL_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LAST_SENT_AT_ASC'
+  | 'LAST_SENT_AT_DESC'
   | 'NATURAL'
   | 'PERSON_ID_ASC'
   | 'PERSON_ID_DESC'
@@ -15335,6 +15341,7 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     email?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['String']['output'] | string>,
     id?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    lastSentAt?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     person?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, WithTypename<Person> | string>,
     personId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PersonInvitation>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -17826,6 +17833,7 @@ export type GraphCacheUpdaters = {
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     email?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     id?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
+    lastSentAt?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     person?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     personId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
     tenantId?: GraphCacheUpdateResolver<Maybe<WithTypename<PersonInvitation>>, Record<string, never>>,
