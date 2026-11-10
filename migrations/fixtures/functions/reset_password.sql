@@ -1,7 +1,7 @@
-CREATE or replace FUNCTION reset_password(email character varying) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO pg_catalog, public, pg_temp
-    AS $$
+create or replace function reset_password(email character varying) returns void
+    language plpgsql strict security definer
+    set search_path to pg_catalog, public, pg_temp
+    as $$
 declare
   v_tenant tenant;
   v_user users;
@@ -39,4 +39,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION reset_password TO anonymous;
+grant all on function reset_password to anonymous;

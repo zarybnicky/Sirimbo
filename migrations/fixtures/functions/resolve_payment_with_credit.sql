@@ -1,6 +1,6 @@
-CREATE or replace FUNCTION resolve_payment_with_credit(p payment) RETURNS payment
-  LANGUAGE plpgsql
-AS $$
+create or replace function resolve_payment_with_credit(p payment) returns payment
+  language plpgsql
+as $$
 declare
   trans transaction;
   recipient payment_recipient;

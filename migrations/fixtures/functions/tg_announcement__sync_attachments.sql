@@ -26,9 +26,6 @@ begin
 end;
 $$;
 
-comment on function app_private.tg_announcement__sync_attachments()
-  is 'Synchronizes inline file references from announcement content.';
-
 drop trigger if exists _500_sync_attachments_insert on announcement;
 create trigger _500_sync_attachments_insert
   after insert on announcement

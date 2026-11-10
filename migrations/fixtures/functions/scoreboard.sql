@@ -1,4 +1,3 @@
-drop view if exists scoreboard;
 drop function if exists scoreboard_entries;
 
 create or replace function scoreboard_entries(

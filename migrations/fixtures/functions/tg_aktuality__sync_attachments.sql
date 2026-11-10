@@ -30,9 +30,6 @@ begin
 end;
 $$;
 
-comment on function app_private.tg_aktuality__sync_attachments()
-  is 'Synchronizes inline file references from article content.';
-
 drop trigger if exists _500_sync_attachments_insert on aktuality;
 create trigger _500_sync_attachments_insert
   after insert on aktuality

@@ -1,7 +1,7 @@
-CREATE or replace FUNCTION register_without_invitation(email text, passwd text) RETURNS login_result
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO pg_catalog, public, pg_temp
-    AS $$
+create or replace function register_without_invitation(email text, passwd text) returns login_result
+    language plpgsql strict security definer
+    set search_path to pg_catalog, public, pg_temp
+    as $$
 declare
   v_salt text;
   usr users;
@@ -21,4 +21,4 @@ begin
 end
 $$;
 
-GRANT ALL ON FUNCTION register_without_invitation TO anonymous;
+grant all on function register_without_invitation to anonymous;

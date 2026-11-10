@@ -1,10 +1,10 @@
 drop function if exists log_in_as;
 
-CREATE FUNCTION log_in_as(id bigint) RETURNS login_result
-  LANGUAGE plpgsql
-  STRICT SECURITY DEFINER
-  SET search_path TO pg_catalog, public, pg_temp
-AS $$
+create function log_in_as(id bigint) returns login_result
+  language plpgsql
+  strict security definer
+  set search_path to pg_catalog, public, pg_temp
+as $$
 declare
   v_id alias for $1;
   usr users;

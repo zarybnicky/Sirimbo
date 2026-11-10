@@ -1,7 +1,7 @@
-CREATE or replace FUNCTION submit_form(type text, data jsonb, url text) RETURNS void
-    LANGUAGE plpgsql STRICT SECURITY DEFINER
-    SET search_path TO pg_catalog, public, pg_temp
-    AS $$
+create or replace function submit_form(type text, data jsonb, url text) returns void
+    language plpgsql strict security definer
+    set search_path to pg_catalog, public, pg_temp
+    as $$
 declare
   v_email text;
 begin
@@ -27,4 +27,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION submit_form TO anonymous;
+grant all on function submit_form to anonymous;

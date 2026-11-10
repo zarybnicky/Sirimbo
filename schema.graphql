@@ -12972,23 +12972,6 @@ type Query {
   """Get a single `ScoreboardManualAdjustment`."""
   scoreboardManualAdjustment(id: BigInt!): ScoreboardManualAdjustment
 
-  """
-  Reads and enables pagination through a set of `SystemAdminTenantsRecord`.
-  """
-  systemAdminTenants(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): SystemAdminTenantsConnection
-
   """Get a single `Tenant`."""
   tenant(id: BigInt!): Tenant
 
@@ -13889,51 +13872,6 @@ type SyncCohortMembershipsPayload {
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-}
-
-"""A connection to a list of `SystemAdminTenantsRecord` values."""
-type SystemAdminTenantsConnection {
-  """
-  A list of edges which contains the `SystemAdminTenantsRecord` and cursor to aid in pagination.
-  """
-  edges: [SystemAdminTenantsEdge!]!
-
-  """A list of `SystemAdminTenantsRecord` objects."""
-  nodes: [SystemAdminTenantsRecord!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `SystemAdminTenantsRecord` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `SystemAdminTenantsRecord` edge in the connection."""
-type SystemAdminTenantsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `SystemAdminTenantsRecord` at the end of the edge."""
-  node: SystemAdminTenantsRecord!
-}
-
-type SystemAdminTenantsRecord {
-  address: AddressDomain
-  administratorCount: BigInt
-  bankAccount: String
-  czDic: String
-  czIco: String
-  description: String
-  id: BigInt
-  membershipCount: BigInt
-  name: String
-  origins: [String]
-  sessionCountLast30Days: BigInt
-  sessionCountPerTrainerLast30Days: Float
-  settings: String
-  trainerCount: BigInt
 }
 
 """All input for the `systemAdminUpdateTenant` mutation."""

@@ -1,11 +1,11 @@
 drop function if exists otp_login;
 
-CREATE or replace FUNCTION otp_login(token uuid)
-  RETURNS login_result
-  LANGUAGE plpgsql
-  STRICT SECURITY DEFINER
-  SET search_path TO pg_catalog, public, pg_temp
-  AS $$
+create or replace function otp_login(token uuid)
+  returns login_result
+  language plpgsql
+  strict security definer
+  set search_path to pg_catalog, public, pg_temp
+  as $$
 declare
   v_token otp_token;
   usr users;
@@ -38,4 +38,4 @@ begin
 end;
 $$;
 
-GRANT ALL ON FUNCTION otp_login TO anonymous;
+grant all on function otp_login to anonymous;

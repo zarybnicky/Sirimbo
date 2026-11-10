@@ -68,3 +68,5 @@ begin
   return response_id;
 end;
 $$;
+
+comment on function crawler.store_response is '@behavior -*';

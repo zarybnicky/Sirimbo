@@ -71,6 +71,9 @@ drop function if exists event_trainer_tenant_trainer;
 drop function if exists account_assets;
 drop function if exists account_liabilities;
 drop function if exists event_trainers;
+drop function if exists competition_brief;
+drop function if exists competition_report;
+drop function if exists system_admin_tenants;
 
 do $$
 begin
@@ -85,6 +88,7 @@ begin
 end;
 $$;
 
+comment on function app_private.tg_aktuality__sync_attachments is null;
 comment on column event.registration_period is null;
 comment on column event.is_locked is '@behavior -*';
 

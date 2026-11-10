@@ -1,8 +1,8 @@
-CREATE or replace FUNCTION app_private.tg_cohort_membership__on_status()
-  RETURNS trigger LANGUAGE plpgsql
+create or replace function app_private.tg_cohort_membership__on_status()
+  returns trigger language plpgsql
   security definer
-  SET search_path = pg_catalog, public, app_private, pg_temp
-  AS $$
+  set search_path = pg_catalog, public, app_private, pg_temp
+  as $$
 declare
   event_ids bigint[];
   person_ids bigint[];
@@ -32,8 +32,8 @@ $$;
 
 grant all on function app_private.tg_cohort_membership__on_status to trainer;
 
-DROP TRIGGER IF EXISTS _500_on_status ON cohort_membership;
-CREATE TRIGGER _500_on_status
-  AFTER INSERT OR DELETE OR UPDATE OF status, cohort_id, person_id, since, until
-  ON cohort_membership
-  FOR EACH ROW EXECUTE FUNCTION app_private.tg_cohort_membership__on_status();
+drop trigger if exists _500_on_status on cohort_membership;
+create trigger _500_on_status
+  after insert or delete or update of status, cohort_id, person_id, since, until
+  on cohort_membership
+  for each row execute function app_private.tg_cohort_membership__on_status();

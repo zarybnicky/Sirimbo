@@ -40,7 +40,7 @@ with
     coalesce((select array_agg(p.person_id) from person_ids p), '{}'::bigint[]) as my_person_ids,
     coalesce((select array_agg(p.tenant_id) from tenant_ids p), '{}'::bigint[]) as my_tenant_ids,
     coalesce((select array_agg(p.cohort_id) from cohort_ids p), '{}'::bigint[]) as my_cohort_ids,
-    coalesce((select array_agg(p.id) from couple_ids p), '{}'::bigint[]) as my_couple_ids,
+    coalesce((select array_agg(p.id)        from couple_ids p), '{}'::bigint[]) as my_couple_ids,
 
     app_private.is_system_admin(u.id) as is_system_admin,
 

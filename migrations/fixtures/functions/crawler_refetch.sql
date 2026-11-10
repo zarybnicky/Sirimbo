@@ -21,7 +21,6 @@ begin
   return least(p_fetched_at + fetch_interval, next_boundary);
 end;
 $$;
-comment on function crawler.next_fetch_at(text, text, date, timestamptz) is '@behavior -*';
 
 create or replace function crawler.tg_frontier_reference_date() returns trigger
 language plpgsql as $$
@@ -34,11 +33,10 @@ end;
 $$;
 
 create or replace trigger frontier_reference_date
-before update of reference_date on crawler.frontier
-for each row execute function crawler.tg_frontier_reference_date();
+  before update of reference_date on crawler.frontier
+  for each row execute function crawler.tg_frontier_reference_date();
 
-drop function if exists crawler.recalculate_fetch_times(text, text);
-create function crawler.recalculate_fetch_times(p_federation text, p_kind text)
+create or replace function crawler.recalculate_fetch_times(p_federation text, p_kind text)
 returns integer language plpgsql as $$
 declare
   updated integer;
@@ -55,4 +53,6 @@ begin
   return updated;
 end;
 $$;
-comment on function crawler.recalculate_fetch_times(text, text) is '@behavior -*';
+
+comment on function crawler.next_fetch_at is '@behavior -*';
+comment on function crawler.recalculate_fetch_times is '@behavior -*';

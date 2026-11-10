@@ -1,4 +1,3 @@
-
 create or replace function get_current_user(version_id text default null) returns users
 language sql volatile security definer
 set search_path = pg_catalog, public, pg_temp
@@ -20,5 +19,4 @@ as $$
 $$;
 
 grant all on function get_current_user to anonymous;
-
 comment on function get_current_user is '@behavior -*';
