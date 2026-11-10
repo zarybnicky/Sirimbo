@@ -28,6 +28,7 @@ CREATE TABLE public.event (
     share_token text,
     cover_image_id bigint,
     series_info public.series_info,
+    registration_period tstzrange DEFAULT '(,)'::tstzrange,
     CONSTRAINT event_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
     CONSTRAINT event_until_gt_since CHECK ((until > since))
 );
@@ -35,6 +36,7 @@ CREATE TABLE public.event (
 COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
 COMMENT ON COLUMN public.event.manager_person_ids IS '@behavior -attribute:insert -attribute:update';
 COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+COMMENT ON COLUMN public.event.is_locked IS '@behavior -*';
 COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
 COMMENT ON COLUMN public.event.series_info IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
 
@@ -73,7 +75,9 @@ CREATE TRIGGER _500_refresh_manager_person_ids_from_parent AFTER INSERT OR UPDAT
 CREATE TRIGGER _600_refresh_series_info_del AFTER DELETE ON public.event REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event__refresh_series_info();
 CREATE TRIGGER _600_refresh_series_info_ins AFTER INSERT ON public.event REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event__refresh_series_info();
 CREATE TRIGGER _600_refresh_series_info_upd AFTER UPDATE ON public.event REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event__refresh_series_info();
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, parent_id ON public.event FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('id, parent_id');
 
 CREATE INDEX event_cover_image_idx ON public.event USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
 CREATE INDEX event_parent_id_idx ON public.event USING btree (parent_id);

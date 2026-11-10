@@ -20,6 +20,7 @@ CREATE FUNCTION app_private.refresh_event_manager_person_ids(p_event_id bigint) 
   set manager_person_ids = desired.person_ids
   from desired
   where instance.id = desired.id
+    and instance.id = any(array(select id from desired))
     and instance.manager_person_ids is distinct from desired.person_ids
 $$;
 

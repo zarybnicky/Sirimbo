@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict AT2LDpE59XDcvOAOIyYm0SZ34P1jI2JGRwFZIuSWmgj5KCzOTu1yvvoXpaEQW7l
+\restrict MOmjn8rnvgyBE2T1T3V2Uc1NelJfMmjjCFjX3VKekgICVhaJ3lEkIq5iD8q6XpO
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -387,7 +387,8 @@ CREATE TYPE federated.person_license_discipline AS ENUM (
     'pd_ten_dance',
     'pd_show_dance_standard',
     'pd_show_dance_latin',
-    'unknown'
+    'unknown',
+    'esports'
 );
 
 
@@ -436,7 +437,8 @@ CREATE TYPE federated.person_license_status AS ENUM (
     'retired',
     'aspiring',
     'suspended',
-    'unknown'
+    'unknown',
+    'temporary'
 );
 
 
@@ -781,7 +783,8 @@ CREATE TYPE public.event_details_input AS (
 	is_public boolean,
 	has_public_details boolean,
 	is_locked boolean,
-	enable_notes boolean
+	enable_notes boolean,
+	registration_period tstzrange
 );
 
 
@@ -819,7 +822,8 @@ CREATE TYPE public.event_registration_info AS (
 	people integer,
 	remaining_capacity integer,
 	my boolean,
-	can_register boolean
+	can_register boolean,
+	registration_open boolean
 );
 
 
@@ -2137,6 +2141,7 @@ CREATE FUNCTION app_private.refresh_event_manager_person_ids(p_event_id bigint) 
   set manager_person_ids = desired.person_ids
   from desired
   where instance.id = desired.id
+    and instance.id = any(array(select id from desired))
     and instance.manager_person_ids is distinct from desired.person_ids
 $$;
 
@@ -2621,13 +2626,6 @@ $$;
 
 
 --
--- Name: FUNCTION tg_aktuality__sync_attachments(); Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON FUNCTION app_private.tg_aktuality__sync_attachments() IS 'Synchronizes inline file references from article content.';
-
-
---
 -- Name: tg_announcement__after_write(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -2926,6 +2924,11 @@ begin
   end if;
 
   perform app_private.refresh_event_series_info(series_ids);
+  if tg_op <> 'INSERT' then
+    delete from event_series series
+    where series.id = any(series_ids)
+      and not exists (select 1 from event where series_id = series.id);
+  end if;
   return null;
 end;
 $$;
@@ -2970,17 +2973,38 @@ $$;
 
 CREATE FUNCTION app_private.tg_event_people__refresh() RETURNS trigger
     LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
+    SET search_path TO 'pg_catalog', 'pg_temp'
+    AS $_$
+-- @plpgsql_check_options: oldtable = deleted_rows, newtable = changed_rows
+declare
+  has_changes boolean;
 begin
-  perform graphile_worker.add_job(
-    'refresh_event_people',
-    queue_name := 'refresh_event_people',
-    job_key := 'refresh_event_people'
-  );
+  if tg_op = 'INSERT' then
+    has_changes := exists (select 1 from changed_rows);
+  elsif tg_op = 'DELETE' then
+    has_changes := exists (select 1 from deleted_rows);
+  else
+    -- The trigger argument supplies the view's input columns for each table.
+    -- Compare sets: row order and duplicate inputs do not affect event_people.
+    execute format(
+      'select exists (
+        (select %1$s from changed_rows except select %1$s from deleted_rows)
+        union all
+        (select %1$s from deleted_rows except select %1$s from changed_rows)
+      )', tg_argv[0]
+    ) into has_changes;
+  end if;
+
+  if has_changes then
+    perform graphile_worker.add_job(
+      'refresh_event_people',
+      queue_name := 'refresh_event_people',
+      job_key := 'refresh_event_people'
+    );
+  end if;
   return null;
 end;
-$$;
+$_$;
 
 
 --
@@ -3683,6 +3707,73 @@ $$;
 
 
 --
+-- Name: next_fetch_at(text, text, date, timestamp with time zone); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.next_fetch_at(p_federation text, p_kind text, p_reference_date date, p_fetched_at timestamp with time zone) RETURNS timestamp with time zone
+    LANGUAGE plpgsql STABLE
+    SET "TimeZone" TO 'UTC'
+    AS $$
+declare
+  fetch_interval interval;
+  next_boundary timestamptz;
+begin
+  select p.fetch_interval into fetch_interval
+  from crawler.refetch_policy p
+  where p.federation = p_federation and p.kind = p_kind
+    and (p.reference_offset is null or p_reference_date + p.reference_offset <= p_fetched_at)
+  order by (p_reference_date + p.reference_offset) desc nulls last
+  limit 1;
+
+  select min((p_reference_date + p.reference_offset)::timestamptz) into next_boundary
+  from crawler.refetch_policy p
+  where p.federation = p_federation and p.kind = p_kind
+    and p_reference_date + p.reference_offset > p_fetched_at;
+
+  return least(p_fetched_at + fetch_interval, next_boundary);
+end;
+$$;
+
+
+--
+-- Name: FUNCTION next_fetch_at(p_federation text, p_kind text, p_reference_date date, p_fetched_at timestamp with time zone); Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON FUNCTION crawler.next_fetch_at(p_federation text, p_kind text, p_reference_date date, p_fetched_at timestamp with time zone) IS '@behavior -*';
+
+
+--
+-- Name: recalculate_fetch_times(text, text); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.recalculate_fetch_times(p_federation text, p_kind text) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+declare
+  updated integer;
+begin
+  with times as materialized (
+    select f.id, crawler.next_fetch_at(f.federation, f.kind, f.reference_date, f.last_fetched_at) as next_fetch_at
+    from crawler.frontier f
+    where f.fetch_status = 'ok' and f.last_fetched_at is not null
+      and f.federation = p_federation and f.kind = p_kind
+  )
+  update crawler.frontier f set next_fetch_at = t.next_fetch_at
+  from times t where f.id = t.id and f.next_fetch_at is distinct from t.next_fetch_at;
+  get diagnostics updated = row_count;
+  return updated;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION recalculate_fetch_times(p_federation text, p_kind text); Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON FUNCTION crawler.recalculate_fetch_times(p_federation text, p_kind text) IS '@behavior -*';
+
+
+--
 -- Name: reserve_request(text); Type: FUNCTION; Schema: crawler; Owner: -
 --
 
@@ -3806,6 +3897,22 @@ $$;
 --
 
 COMMENT ON FUNCTION crawler.store_response(p_frontier_id bigint, p_url text, p_http_status integer, p_error text, p_content jsonb, p_fetch_status crawler.fetch_status) IS '@behavior -*';
+
+
+--
+-- Name: tg_frontier_reference_date(); Type: FUNCTION; Schema: crawler; Owner: -
+--
+
+CREATE FUNCTION crawler.tg_frontier_reference_date() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  if new.reference_date is distinct from old.reference_date and new.fetch_status = 'ok' then
+    new.next_fetch_at := crawler.next_fetch_at(new.federation, new.kind, new.reference_date, new.last_fetched_at);
+  end if;
+  return new;
+end;
+$$;
 
 
 --
@@ -4043,21 +4150,6 @@ COMMENT ON COLUMN public.access_credential.valid_range IS '@behavior -*';
 
 
 --
--- Name: access_credential_is_allowed(public.access_credential); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.access_credential_is_allowed(c public.access_credential) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select c.valid_range @> now() and (
-    exists (select 1 from current_tenant_membership r where r.person_id = c.person_id)
-    or exists (select 1 from current_tenant_trainer r where r.person_id = c.person_id)
-    or exists (select 1 from current_tenant_administrator r where r.person_id = c.person_id)
-  );
-$$;
-
-
---
 -- Name: access_credential_last_used(public.access_credential); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4072,122 +4164,6 @@ CREATE FUNCTION public.access_credential_last_used(c public.access_credential) R
     and e.allowed
     and c.valid_range @> e.occurred_at;
 $$;
-
-
---
--- Name: account; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.account (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint,
-    opening_balance numeric(19,4) DEFAULT 0.0 NOT NULL,
-    currency public.citext DEFAULT 'CZK'::public.citext NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE account; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.account IS '@behavior +list -connection -insert -update -delete -query:resource:single';
-
-
---
--- Name: posting; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.posting (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    transaction_id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    original_account_id bigint,
-    amount numeric(19,4) NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.posting IS '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
-
-
---
--- Name: transaction; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.transaction (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    accounting_period_id bigint NOT NULL,
-    payment_id bigint,
-    source public.transaction_source NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    description text,
-    effective_date timestamp with time zone NOT NULL
-);
-
-
---
--- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.transaction IS '@behavior -insert -update';
-
-
---
--- Name: account_assets(public.account, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.account_assets(a public.account, since timestamp with time zone, until timestamp with time zone) RETURNS numeric
-    LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT COALESCE(sum(s.s), 0.0) AS "coalesce"
-    FROM ( SELECT 0 AS s
-         UNION
-          SELECT COALESCE(sum(posting.amount), 0.0) AS s
-            FROM (public.posting
-              JOIN public.transaction ON ((posting.transaction_id = transaction.id)))
-           WHERE (((account_assets.a).id = posting.account_id) AND (posting.amount > 0.0) AND (transaction.effective_date >= account_assets.since) AND (transaction.effective_date <= account_assets.until))
-           GROUP BY posting.account_id) s;
-END;
-
-
---
--- Name: account_balance(public.account); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.account_balance(a public.account) RETURNS numeric
-    LANGUAGE sql STABLE
-    AS $$
-  select balance from account_balances where id=a.id;
-$$;
-
-
---
--- Name: account_liabilities(public.account, timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) RETURNS numeric
-    LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT COALESCE(sum(s.s), 0.0) AS "coalesce"
-    FROM ( SELECT 0 AS s
-         UNION
-          SELECT COALESCE(sum(posting.amount), 0.0) AS s
-            FROM (public.posting
-              JOIN public.transaction ON ((posting.transaction_id = transaction.id)))
-           WHERE (((account_liabilities.a).id = posting.account_id) AND (posting.amount < 0.0) AND (transaction.effective_date >= account_liabilities.since) AND (transaction.effective_date <= account_liabilities.until))
-           GROUP BY posting.account_id) s;
-END;
 
 
 --
@@ -4288,190 +4264,6 @@ begin
   where id = current_user_id();
 end;
 $$;
-
-
---
--- Name: competition_brief(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.competition_brief(p_since date DEFAULT ((date_trunc('week'::text, now()))::date + 4), p_until date DEFAULT ((date_trunc('week'::text, now()))::date + 7), p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
-    LANGUAGE sql STABLE
-    AS $$
-  with scoped_people as materialized (
-    select p.id, p.name
-    from person p
-    where (p.id = any(p_person_ids)
-       or (p_person_ids is null and p.id in (
-         select person_id from current_tenant_membership
-         union all
-         select person_id from current_tenant_trainer
-         union all
-         select person_id from current_tenant_administrator
-       )))
-      and (p_cohort_id is null
-       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
-  ),
-  federated_people as (
-    select
-      sp.id as person_id,
-      sp.name as person_name,
-      fp.id as federated_person_id,
-      fp.federation
-    from scoped_people sp
-    join person_federation_link link on link.person_id = sp.id
-    join federated.person fp
-      on (fp.federation, fp.external_id) = (link.federation, link.external_id)
-  )
-  select
-    fp.person_id,
-    fp.person_name,
-    fp.federation,
-    fp.federated_person_id,
-    c.id as competitor_id,
-    c.name as competitor_name,
-    c.competitor_type,
-    e.id as event_id,
-    e.name as event_name,
-    coalesce(e.location, e.city) as event_location,
-    comp.id as competition_id,
-    comp.start_date as competition_date,
-    comp.check_in_end,
-    cat as category,
-    dances.dances,
-    comp.participants_total as participants,
-    null::integer as ranking,
-    null::integer as ranking_to,
-    null::numeric(10,3) as point_gain,
-    null::boolean as is_final,
-    false as has_result,
-    comp.competition_type,
-    e.external_id as event_external_id,
-    comp.external_id as competition_external_id,
-    null::numeric(10,3) as final_gain
-  from federated_people fp
-  join federated.competitor_component cc on cc.person_id = fp.federated_person_id
-  join federated.competitor c on c.id = cc.competitor_id
-  join federated.competition_entry ce on ce.competitor_id = c.id and not ce.cancelled
-  join federated.competition comp on comp.id = ce.competition_id
-  join federated.event e on e.id = comp.event_id
-  join federated.category cat on cat.id = comp.category_id
-  left join lateral (
-    select coalesce(array_agg(d.name order by dpd.dance_order), '{}'::text[]) as dances
-    from federated.dance_program_dance dpd
-    join federated.dance d on d.code = dpd.dance_code
-    where dpd.program_id = cat.base_dance_program_id
-  ) dances on true
-  where comp.start_date >= p_since
-    and comp.start_date < p_until
-  order by
-    comp.start_date,
-    comp.check_in_end nulls last,
-    fp.person_name,
-    cat.discipline,
-    cat.class,
-    c.name;
-$$;
-
-
---
--- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@behavior -*';
-
-
---
--- Name: competition_report(date, date, bigint, bigint[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.competition_report(p_since date DEFAULT ((date_trunc('week'::text, now()))::date - 2), p_until date DEFAULT (date_trunc('week'::text, now()))::date, p_cohort_id bigint DEFAULT NULL::bigint, p_person_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF public.competition_participation_record
-    LANGUAGE sql STABLE
-    AS $$
-  with scoped_people as materialized (
-    select p.id, p.name
-    from person p
-    where (p.id = any(p_person_ids)
-       or (p_person_ids is null and p.id in (
-         select person_id from current_tenant_membership
-         union all select person_id from current_tenant_trainer
-         union all select person_id from current_tenant_administrator
-       )))
-      and (p_cohort_id is null
-       or exists (select 1 from current_cohort_membership cm where cm.person_id = p.id and cm.cohort_id = p_cohort_id))
-  ),
-  federated_people as (
-    select
-      sp.id as person_id,
-      sp.name as person_name,
-      fp.id as federated_person_id,
-      fp.federation
-    from scoped_people sp
-    join person_federation_link link on link.person_id = sp.id
-    join federated.person fp
-      on (fp.federation, fp.external_id) = (link.federation, link.external_id)
-  )
-  select
-    fp.person_id,
-    fp.person_name,
-    fp.federation,
-    fp.federated_person_id,
-    c.id as competitor_id,
-    c.name as competitor_name,
-    c.competitor_type,
-    e.id as event_id,
-    e.name as event_name,
-    coalesce(e.location, e.city) as event_location,
-    comp.id as competition_id,
-    comp.start_date as competition_date,
-    comp.check_in_end,
-    cat as category,
-    coalesce(dances.dances, '{}'::text[]) as dances,
-    comp.participants_total as participants,
-    cr.ranking,
-    cr.ranking_to,
-    cr.point_gain,
-    cr.is_final,
-    true as has_result,
-    comp.competition_type,
-    e.external_id as event_external_id,
-    comp.external_id as competition_external_id,
-    cr.final_gain
-  from federated_people fp
-  join federated.competitor_component cc on cc.person_id = fp.federated_person_id
-  join federated.competitor c on c.id = cc.competitor_id
-  join federated.competition_result cr on cr.competitor_id = c.id
-  join federated.competition comp on comp.id = cr.competition_id
-  join federated.event e on e.id = comp.event_id
-  join federated.category cat on cat.id = comp.category_id
-  left join lateral (
-    select array_agg(d.name order by rd.dance_order) as dances
-    from (
-      select r.id
-      from federated.competition_round r
-      where r.competition_id = comp.id
-      order by r.round_index desc, (r.round_key = 'F') desc, r.id desc
-      limit 1
-    ) r
-    join federated.round_dance rd on rd.round_id = r.id
-    join federated.dance d on d.code = rd.dance_code
-  ) dances on true
-  where comp.start_date >= p_since
-    and comp.start_date < p_until
-  order by
-    comp.start_date,
-    fp.person_name,
-    cat.discipline,
-    cat.class,
-    cr.ranking,
-    c.name;
-$$;
-
-
---
--- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) IS '@behavior -*';
 
 
 --
@@ -4738,6 +4530,30 @@ COMMENT ON FUNCTION public.couple_age_group(c public.couple) IS '@behavior -quer
 
 
 --
+-- Name: transaction; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transaction (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    accounting_period_id bigint NOT NULL,
+    payment_id bigint,
+    source public.transaction_source NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    description text,
+    effective_date timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE transaction; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.transaction IS '@behavior -insert -update';
+
+
+--
 -- Name: create_credit_transaction_for_person(bigint, text, numeric, text, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4789,6 +4605,7 @@ CREATE TABLE public.event (
     share_token text,
     cover_image_id bigint,
     series_info public.series_info,
+    registration_period tstzrange DEFAULT '(,)'::tstzrange,
     CONSTRAINT event_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
     CONSTRAINT event_until_gt_since CHECK ((until > since))
 );
@@ -4813,6 +4630,13 @@ COMMENT ON COLUMN public.event.manager_person_ids IS '@behavior -attribute:inser
 --
 
 COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+
+
+--
+-- Name: COLUMN event.is_locked; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.is_locked IS '@behavior -*';
 
 
 --
@@ -5451,7 +5275,7 @@ CREATE FUNCTION public.event_registration_info(e public.event) RETURNS public.ev
     from event_registration
     where event_id = e.id and registration_status = 'active'
   ), capacity as (
-    select counts.*, case
+    select counts.*, coalesce(e.registration_period @> now(), false) as registration_open, case
       when e.capacity is null or e.capacity <= 0 then null
       else e.capacity
         - case e.capacity_unit
@@ -5464,12 +5288,13 @@ CREATE FUNCTION public.event_registration_info(e public.event) RETURNS public.ev
   select row(
     registrations, people, remaining_capacity, my,
     coalesce(
-          not coalesce(e.is_locked, false)
+          registration_open
       and not e.is_cancelled
       and e.until > now()
       and coalesce(remaining_capacity > 0, true),
       false
-    )
+    ),
+    registration_open
   )::event_registration_info
   from capacity;
 $$;
@@ -5551,99 +5376,6 @@ CREATE FUNCTION public.event_trainer_lessons_remaining(e public.event_trainer) R
     )
   end;
 $$;
-
-
---
--- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_trainer (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    member_price_45min public.price DEFAULT NULL::public.price_type,
-    member_payout_45min public.price DEFAULT NULL::public.price_type,
-    guest_price_45min public.price DEFAULT NULL::public.price_type,
-    guest_payout_45min public.price DEFAULT NULL::public.price_type,
-    create_payout_payments boolean DEFAULT true NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    member_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_price_45min).amount) STORED,
-    member_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_payout_45min).amount) STORED,
-    guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
-    guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
-    currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
-    is_external boolean DEFAULT false NOT NULL,
-    CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_trainer IS '@behavior +list +connection -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_trainer.active_range IS '@behavior -*';
-
-
---
--- Name: event_trainer_tenant_trainer(public.event_trainer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_trainer_tenant_trainer(trainer public.event_trainer) RETURNS public.tenant_trainer
-    LANGUAGE sql STABLE
-    AS $$
-  select tt.*
-  from event e
-  join tenant_trainer tt on tt.tenant_id = e.tenant_id
-    and tt.person_id = trainer.person_id
-    and tt.active_range @> e.since
-  where e.id = trainer.event_id and e.tenant_id = trainer.tenant_id;
-$$;
-
-
---
--- Name: FUNCTION event_trainer_tenant_trainer(trainer public.event_trainer); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_trainer_tenant_trainer(trainer public.event_trainer) IS '@behavior -queryField';
-
-
---
--- Name: event_trainers(public.event); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_trainers(v_instance public.event) RETURNS SETOF public.tenant_trainer
-    LANGUAGE sql STABLE
-    AS $$
--- Compatibility for external clients; internal callers use event assignments.
-select tt.*
-from event_trainer assignment
-join tenant_trainer tt on tt.tenant_id = assignment.tenant_id
-  and tt.person_id = assignment.person_id
-  and tt.active_range @> v_instance.since
-where assignment.event_id = v_instance.id;
-$$;
-
-
---
--- Name: FUNCTION event_trainers(v_instance public.event); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_trainers(v_instance public.event) IS '@behavior +list -connection
-@deprecated Use eventTrainersList.';
 
 
 --
@@ -6018,24 +5750,6 @@ COMMENT ON TABLE public.payment_debtor IS '@behavior +list -connection -insert -
 
 
 --
--- Name: payment_debtor_is_unpaid(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $$
-  select status = 'unpaid' from payment where p.payment_id=payment.id;
-$$;
-
-
---
--- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) IS '@behavior +filter +filterProc +filterBy';
-
-
---
 -- Name: payment_debtor_price(public.payment_debtor); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -6130,6 +5844,28 @@ COMMENT ON FUNCTION public.payment_facets(only_status public.payment_status, onl
 
 
 --
+-- Name: account; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint,
+    opening_balance numeric(19,4) DEFAULT 0.0 NOT NULL,
+    currency public.citext DEFAULT 'CZK'::public.citext NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE account; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.account IS '@behavior +list -connection -insert -update -delete -query:resource:single';
+
+
+--
 -- Name: person_account(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -6201,17 +5937,6 @@ COMMENT ON FUNCTION public.person_birthday(p public.person, since date) IS '@beh
 
 
 --
--- Name: person_cohort_ids(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_cohort_ids(p public.person) RETURNS bigint[]
-    LANGUAGE sql STABLE
-    AS $$
-  select array_agg(cohort_id) from cohort_membership where now() <@ active_range and person_id = p.id;
-$$;
-
-
---
 -- Name: person_facets(text[], bigint[], boolean, boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -6275,39 +6000,6 @@ $_$;
 
 COMMENT ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) IS '@behavior +list -connection
 @notNull';
-
-
---
--- Name: person_is_admin(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_is_admin(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
-    AS $$
-  select exists (select 1 from current_tenant_administrator where person_id = p.id);
-$$;
-
-
---
--- Name: person_is_member(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_is_member(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
-    AS $$
-  select exists (select 1 from current_tenant_membership where person_id = p.id);
-$$;
-
-
---
--- Name: person_is_trainer(public.person); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.person_is_trainer(p public.person) RETURNS boolean
-    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
-    AS $$
-  select exists (select 1 from current_tenant_trainer where person_id = p.id);
-$$;
 
 
 --
@@ -6587,7 +6279,11 @@ declare
   v_is_visible boolean := coalesce((details).is_visible, true);
   v_is_public boolean := coalesce((details).is_public, false);
   v_has_public_details boolean := v_is_public and coalesce((details).has_public_details, false);
-  v_is_locked boolean := coalesce((details).is_locked, false);
+  v_registration_period tstzrange := case
+    when (details).is_locked is null then (details).registration_period
+    when (details).is_locked then null
+    else '(,)'::tstzrange
+  end;
   v_enable_notes boolean := coalesce((details).enable_notes, false);
   v_expected_existing_count bigint;
   v_locked_existing_count bigint;
@@ -6712,7 +6408,7 @@ begin
         is_visible,
         is_public,
         has_public_details,
-        is_locked,
+        registration_period,
         enable_notes,
         description,
         summary,
@@ -6732,7 +6428,7 @@ begin
         v_is_visible,
         v_is_public,
         v_has_public_details,
-        v_is_locked,
+        v_registration_period,
         v_enable_notes,
         '',
         '',
@@ -6753,7 +6449,7 @@ begin
           is_visible = v_is_visible,
           is_public = v_is_public,
           has_public_details = v_has_public_details,
-          is_locked = v_is_locked,
+          registration_period = v_registration_period,
           enable_notes = v_enable_notes,
           series_id = case
             when v_assign_series then v_series_id
@@ -7025,25 +6721,6 @@ COMMENT ON FUNCTION public.scoreboard_entries(since date, until date, cohort_id 
 
 
 --
--- Name: set_event_instance_registration(bigint, bigint, bigint, boolean, text, bigint[], integer[], public.event_registration_person_input); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text DEFAULT NULL::text, p_lesson_trainer_ids bigint[] DEFAULT NULL::bigint[], p_lesson_counts integer[] DEFAULT NULL::integer[], p_person public.event_registration_person_input DEFAULT NULL::public.event_registration_person_input) RETURNS public.event_registration
-    LANGUAGE sql
-    AS $_$
-  select public.set_event_registration($1, $2, $3, $4, $5, $6, $7, $8);
-$_$;
-
-
---
--- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[], p_person public.event_registration_person_input); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[], p_person public.event_registration_person_input) IS '@deprecated Use setEventRegistration.
-@resultFieldName eventInstanceRegistration';
-
-
---
 -- Name: set_event_registration(bigint, bigint, bigint, boolean, text, bigint[], integer[], public.event_registration_person_input); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -7161,7 +6838,7 @@ begin
   if not is_self and not is_manager then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
-  if target_instance.is_locked and not is_manager then
+  if not coalesce(target_instance.registration_period @> now(), false) and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
   registration_source := case when is_self
@@ -7322,25 +6999,6 @@ $_$;
 
 
 --
--- Name: set_lesson_demand(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) RETURNS public.event_lesson_request
-    LANGUAGE sql STRICT
-    AS $_$
-  select public.set_lesson_request($1, $2, $3);
-$_$;
-
-
---
--- Name: FUNCTION set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) IS '@deprecated Use setLessonRequest.
-@resultFieldName eventLessonDemand';
-
-
---
 -- Name: set_lesson_request(bigint, bigint, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -7379,7 +7037,7 @@ begin
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
 
-  if instance.is_locked and not is_manager then
+  if not coalesce(instance.registration_period @> now(), false) and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
 
@@ -7616,64 +7274,6 @@ $_$;
 
 
 --
--- Name: system_admin_tenants(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.system_admin_tenants() RETURNS TABLE(id bigint, name text, description text, bank_account text, origins text[], cz_ico text, cz_dic text, address public.address_domain, settings text, membership_count bigint, trainer_count bigint, administrator_count bigint, session_count_last_30_days bigint, session_count_per_trainer_last_30_days double precision)
-    LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
-    AS $$
-begin
-  if not app_private.is_system_admin(current_user_id()) then
-    raise exception 'permission denied for system admin tenant overview'
-      using errcode = '42501';
-  end if;
-
-  return query
-  select
-    t.id,
-    t.name,
-    t.description,
-    t.bank_account,
-    t.origins,
-    t.cz_ico,
-    t.cz_dic,
-    t.address,
-    coalesce(ts.settings::text, '{}'),
-    membership_counts.membership_count,
-    staffing.trainer_count,
-    administrators.administrator_count,
-    load.session_count_last_30_days,
-    load.session_count_per_trainer_last_30_days
-  from tenant t
-  left join tenant_settings ts on ts.tenant_id = t.id
-  cross join lateral (
-    select count(*) as membership_count from tenant_membership tm where tm.tenant_id = t.id and tm.status = 'active'
-  ) as membership_counts
-  cross join lateral (
-    select count(*) as trainer_count from tenant_trainer tt where tt.tenant_id = t.id and tt.status = 'active'
-  ) as staffing
-  cross join lateral (
-    select count(*) as administrator_count from tenant_administrator ta where ta.tenant_id = t.id and ta.status = 'active'
-  ) as administrators
-  cross join lateral (
-    select
-      count(*) as session_count_last_30_days,
-      case
-        when coalesce(staffing.trainer_count, 0) > 0 then count(*)::double precision / staffing.trainer_count::double precision
-        else 0::double precision
-      end as session_count_per_trainer_last_30_days
-    from event ei
-    where ei.tenant_id = t.id
-      and coalesce(ei.is_cancelled, false) = false
-      and ei.since >= now() - interval '30 days'
-  ) as load
-  order by t.name;
-end;
-$$;
-
-
---
 -- Name: system_admin_update_tenant(bigint, text, text, text, text[], public.address_domain, text, text, jsonb); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -7743,105 +7343,6 @@ $$;
 --
 
 COMMENT ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) IS '@behavior -*';
-
-
---
--- Name: tenant_administrator; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_administrator (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT tenant_administrator_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_administrator IS '@behavior +list +connection -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN tenant_administrator.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_administrator.active_range IS '@behavior -*';
-
-
---
--- Name: tenant_administrator_tenant_name(public.tenant_administrator); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_administrator_tenant_name(public.tenant_administrator) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  select name from tenant where id = $1.tenant_id;
-$_$;
-
-
---
--- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.tenant_membership (
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    person_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    id bigint NOT NULL,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    CONSTRAINT tenant_membership_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.tenant_membership IS '@behavior +list +connection -query:resource:list -query:resource:connection';
-
-
---
--- Name: COLUMN tenant_membership.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.tenant_membership.active_range IS '@behavior -*';
-
-
---
--- Name: tenant_membership_tenant_name(public.tenant_membership); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_membership_tenant_name(public.tenant_membership) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  select name from tenant where id = $1.tenant_id;
-$_$;
-
-
---
--- Name: tenant_trainer_tenant_name(public.tenant_trainer); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.tenant_trainer_tenant_name(public.tenant_trainer) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  select name from tenant where id = $1.tenant_id;
-$_$;
 
 
 --
@@ -8776,7 +8277,8 @@ CREATE TABLE crawler.frontier (
     last_process_error text,
     last_process_error_at timestamp with time zone,
     last_response_id bigint,
-    last_successful_response_id bigint
+    last_successful_response_id bigint,
+    reference_date date
 );
 
 
@@ -8931,8 +8433,7 @@ CREATE VIEW crawler.frontier_fetch_job AS
         CASE
             WHEN (j.attempts >= j.max_attempts) THEN 'failed'::text
             WHEN (j.locked_at IS NOT NULL) THEN 'locked'::text
-            WHEN (j.run_at <= now()) THEN 'ready'::text
-            ELSE 'delayed'::text
+            ELSE 'queued'::text
         END AS state
    FROM (jobs j
      JOIN crawler.frontier f ON ((f.id = j.frontier_id)))
@@ -9073,6 +8574,26 @@ CREATE TABLE crawler.rate_limit_rule (
 
 COMMENT ON TABLE crawler.rate_limit_rule IS '@name crawler_rate_limit_rule
 @behavior -insert -update -delete -list';
+
+
+--
+-- Name: refetch_policy; Type: TABLE; Schema: crawler; Owner: -
+--
+
+CREATE TABLE crawler.refetch_policy (
+    federation text NOT NULL,
+    kind text NOT NULL,
+    reference_offset interval,
+    fetch_interval interval NOT NULL,
+    CONSTRAINT refetch_policy_fetch_interval_check CHECK ((fetch_interval > '00:00:00'::interval))
+);
+
+
+--
+-- Name: TABLE refetch_policy; Type: COMMENT; Schema: crawler; Owner: -
+--
+
+COMMENT ON TABLE crawler.refetch_policy IS '@behavior -*';
 
 
 --
@@ -10413,6 +9934,40 @@ COMMENT ON VIEW public.current_cohort_membership IS '@behavior -*';
 
 
 --
+-- Name: tenant_administrator; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_administrator (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT tenant_administrator_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE tenant_administrator; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_administrator IS '@behavior +list +connection -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN tenant_administrator.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_administrator.active_range IS '@behavior -*';
+
+
+--
 -- Name: current_tenant_administrator; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -10440,6 +9995,38 @@ COMMENT ON VIEW public.current_tenant_administrator IS '@behavior -*';
 
 
 --
+-- Name: tenant_membership; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_membership (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    CONSTRAINT tenant_membership_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE tenant_membership; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_membership IS '@behavior +list +connection -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN tenant_membership.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_membership.active_range IS '@behavior -*';
+
+
+--
 -- Name: current_tenant_membership; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -10462,6 +10049,51 @@ CREATE VIEW public.current_tenant_membership AS
 --
 
 COMMENT ON VIEW public.current_tenant_membership IS '@behavior -*';
+
+
+--
+-- Name: tenant_trainer; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_trainer (
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    person_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    id bigint NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    member_price_45min public.price DEFAULT NULL::public.price_type,
+    member_payout_45min public.price DEFAULT NULL::public.price_type,
+    guest_price_45min public.price DEFAULT NULL::public.price_type,
+    guest_payout_45min public.price DEFAULT NULL::public.price_type,
+    create_payout_payments boolean DEFAULT true NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    member_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_price_45min).amount) STORED,
+    member_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((member_payout_45min).amount) STORED,
+    guest_price_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_price_45min).amount) STORED,
+    guest_payout_45min_amount numeric(19,4) GENERATED ALWAYS AS ((guest_payout_45min).amount) STORED,
+    currency text GENERATED ALWAYS AS ((member_price_45min).currency) STORED,
+    is_external boolean DEFAULT false NOT NULL,
+    CONSTRAINT tenant_trainer_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE tenant_trainer; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.tenant_trainer IS '@behavior +list +connection -query:resource:list -query:resource:connection';
+
+
+--
+-- Name: COLUMN tenant_trainer.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_trainer.active_range IS '@behavior -*';
 
 
 --
@@ -11047,6 +10679,29 @@ COMMENT ON COLUMN public.person_last_activity.person_id IS '@notNull';
 
 
 --
+-- Name: posting; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.posting (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    transaction_id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    original_account_id bigint,
+    amount numeric(19,4) NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE posting; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.posting IS '@behavior +list +connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+
+
+--
 -- Name: posting_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -11520,6 +11175,14 @@ ALTER TABLE ONLY crawler.json_response
 
 ALTER TABLE ONLY crawler.rate_limit_rule
     ADD CONSTRAINT rate_limit_rule_pkey PRIMARY KEY (host);
+
+
+--
+-- Name: refetch_policy refetch_policy_federation_kind_reference_offset_key; Type: CONSTRAINT; Schema: crawler; Owner: -
+--
+
+ALTER TABLE ONLY crawler.refetch_policy
+    ADD CONSTRAINT refetch_policy_federation_kind_reference_offset_key UNIQUE NULLS NOT DISTINCT (federation, kind, reference_offset);
 
 
 --
@@ -14024,6 +13687,13 @@ CREATE INDEX users_tenant_id_idx ON public.users USING btree (tenant_id);
 
 
 --
+-- Name: frontier frontier_reference_date; Type: TRIGGER; Schema: crawler; Owner: -
+--
+
+CREATE TRIGGER frontier_reference_date BEFORE UPDATE OF reference_date ON crawler.frontier FOR EACH ROW EXECUTE FUNCTION crawler.tg_frontier_reference_date();
+
+
+--
 -- Name: competition _900_refresh_competitor_activity_dates; Type: TRIGGER; Schema: federated; Owner: -
 --
 
@@ -14619,24 +14289,66 @@ CREATE TRIGGER _900_fix_balance_entries AFTER INSERT OR DELETE OR UPDATE OF amou
 
 
 --
--- Name: event _900_refresh_event_people; Type: TRIGGER; Schema: public; Owner: -
+-- Name: event _900_refresh_event_people_del; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, parent_id ON public.event FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
-
-
---
--- Name: event_registration _900_refresh_event_people; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, event_id, person_id, registration_status ON public.event_registration FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
 
 
 --
--- Name: event_trainer _900_refresh_event_people; Type: TRIGGER; Schema: public; Owner: -
+-- Name: event_registration _900_refresh_event_people_del; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, event_id, person_id ON public.event_trainer FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+
+--
+-- Name: event_trainer _900_refresh_event_people_del; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event_trainer REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+
+--
+-- Name: event _900_refresh_event_people_ins; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+
+--
+-- Name: event_registration _900_refresh_event_people_ins; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+
+--
+-- Name: event_trainer _900_refresh_event_people_ins; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event_trainer REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+
+
+--
+-- Name: event _900_refresh_event_people_upd; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('id, parent_id');
+
+
+--
+-- Name: event_registration _900_refresh_event_people_upd; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('event_id, person_id, registration_status');
+
+
+--
+-- Name: event_trainer _900_refresh_event_people_upd; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event_trainer REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('event_id, person_id');
 
 
 --
@@ -16964,6 +16676,12 @@ ALTER TABLE crawler.json_response_cache ENABLE ROW LEVEL SECURITY;
 ALTER TABLE crawler.rate_limit_rule ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: refetch_policy; Type: ROW SECURITY; Schema: crawler; Owner: -
+--
+
+ALTER TABLE crawler.refetch_policy ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: frontier system_admin_read; Type: POLICY; Schema: crawler; Owner: -
 --
 
@@ -16996,6 +16714,13 @@ CREATE POLICY system_admin_read ON crawler.json_response_cache FOR SELECT TO sys
 --
 
 CREATE POLICY system_admin_read ON crawler.rate_limit_rule FOR SELECT TO system_admin USING (true);
+
+
+--
+-- Name: refetch_policy system_admin_read; Type: POLICY; Schema: crawler; Owner: -
+--
+
+CREATE POLICY system_admin_read ON crawler.refetch_policy FOR SELECT TO system_admin USING (true);
 
 
 --
@@ -18738,59 +18463,10 @@ GRANT ALL ON TABLE public.access_credential TO anonymous;
 
 
 --
--- Name: FUNCTION access_credential_is_allowed(c public.access_credential); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.access_credential_is_allowed(c public.access_credential) TO anonymous;
-
-
---
 -- Name: FUNCTION access_credential_last_used(c public.access_credential); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.access_credential_last_used(c public.access_credential) TO anonymous;
-
-
---
--- Name: TABLE account; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.account TO anonymous;
-
-
---
--- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.posting TO anonymous;
-
-
---
--- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.transaction TO anonymous;
-
-
---
--- Name: FUNCTION account_assets(a public.account, since timestamp with time zone, until timestamp with time zone); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.account_assets(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
-
-
---
--- Name: FUNCTION account_balance(a public.account); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.account_balance(a public.account) TO anonymous;
-
-
---
--- Name: FUNCTION account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.account_liabilities(a public.account, since timestamp with time zone, until timestamp with time zone) TO anonymous;
 
 
 --
@@ -18826,20 +18502,6 @@ GRANT ALL ON FUNCTION public.archive_cohort(cohort_id bigint) TO administrator;
 --
 
 GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
-
-
---
--- Name: FUNCTION competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.competition_brief(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;
-
-
---
--- Name: FUNCTION competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.competition_report(p_since date, p_until date, p_cohort_id bigint, p_person_ids bigint[]) TO anonymous;
 
 
 --
@@ -18889,6 +18551,13 @@ GRANT ALL ON FUNCTION public.confirm_membership_application(application_id bigin
 --
 
 GRANT ALL ON FUNCTION public.couple_age_group(c public.couple) TO anonymous;
+
+
+--
+-- Name: TABLE transaction; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.transaction TO anonymous;
 
 
 --
@@ -19046,27 +18715,6 @@ GRANT ALL ON FUNCTION public.event_trainer_lessons_remaining(e public.event_trai
 
 
 --
--- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
-
-
---
--- Name: FUNCTION event_trainer_tenant_trainer(trainer public.event_trainer); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_trainer_tenant_trainer(trainer public.event_trainer) TO anonymous;
-
-
---
--- Name: FUNCTION event_trainers(v_instance public.event); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_trainers(v_instance public.event) TO anonymous;
-
-
---
 -- Name: FUNCTION federation_person_candidates(first_name text, last_name text, federation text, gender public.gender_type, birth_date date, "limit" integer, threshold real); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19202,13 +18850,6 @@ GRANT ALL ON TABLE public.payment_debtor TO anonymous;
 
 
 --
--- Name: FUNCTION payment_debtor_is_unpaid(p public.payment_debtor); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.payment_debtor_is_unpaid(p public.payment_debtor) TO anonymous;
-
-
---
 -- Name: FUNCTION payment_debtor_price(p public.payment_debtor, OUT amount numeric, OUT currency text); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19220,6 +18861,13 @@ GRANT ALL ON FUNCTION public.payment_debtor_price(p public.payment_debtor, OUT a
 --
 
 GRANT ALL ON FUNCTION public.payment_facets(only_status public.payment_status, only_kind public.payment_kind, person_ids bigint[], search text) TO anonymous;
+
+
+--
+-- Name: TABLE account; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.account TO anonymous;
 
 
 --
@@ -19244,13 +18892,6 @@ GRANT ALL ON FUNCTION public.person_birthday(p public.person, since date) TO ano
 
 
 --
--- Name: FUNCTION person_cohort_ids(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_cohort_ids(p public.person) TO anonymous;
-
-
---
 -- Name: FUNCTION person_facets(membership_states text[], in_cohorts bigint[], is_trainer boolean, is_admin boolean); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19263,27 +18904,6 @@ GRANT ALL ON FUNCTION public.person_facets(membership_states text[], in_cohorts 
 --
 
 GRANT ALL ON FUNCTION public.person_federation_candidates(in_person public.person, federation text, "limit" integer, threshold real) TO anonymous;
-
-
---
--- Name: FUNCTION person_is_admin(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_is_admin(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_is_member(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_is_member(p public.person) TO anonymous;
-
-
---
--- Name: FUNCTION person_is_trainer(p public.person); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.person_is_trainer(p public.person) TO anonymous;
 
 
 --
@@ -19449,13 +19069,6 @@ GRANT ALL ON FUNCTION public.scoreboard_entries(since date, until date, cohort_i
 
 
 --
--- Name: FUNCTION set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[], p_person public.event_registration_person_input); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.set_event_instance_registration(p_instance_id bigint, p_person_id bigint, p_couple_id bigint, p_is_registered boolean, p_note text, p_lesson_trainer_ids bigint[], p_lesson_counts integer[], p_person public.event_registration_person_input) TO anonymous;
-
-
---
 -- Name: FUNCTION set_event_registration(event_id bigint, person_id bigint, couple_id bigint, is_registered boolean, note text, lesson_trainer_ids bigint[], lesson_counts integer[], person public.event_registration_person_input); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19467,13 +19080,6 @@ GRANT ALL ON FUNCTION public.set_event_registration(event_id bigint, person_id b
 --
 
 GRANT ALL ON FUNCTION public.set_event_sharing(id bigint, p_enabled boolean) TO anonymous;
-
-
---
--- Name: FUNCTION set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.set_lesson_demand(instance_registration_id bigint, instance_trainer_id bigint, lesson_count integer) TO anonymous;
 
 
 --
@@ -19505,13 +19111,6 @@ GRANT ALL ON FUNCTION public.sync_cohort_memberships(person_id bigint, cohort_id
 
 
 --
--- Name: FUNCTION system_admin_tenants(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.system_admin_tenants() TO anonymous;
-
-
---
 -- Name: FUNCTION system_admin_update_tenant(tenant_id bigint, name text, description text, bank_account text, origins text[], address public.address_domain, cz_ico text, cz_dic text, settings jsonb); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19523,20 +19122,6 @@ GRANT ALL ON FUNCTION public.system_admin_update_tenant(tenant_id bigint, name t
 --
 
 GRANT ALL ON FUNCTION public.tenant_account(in_currency text, OUT acc public.account) TO anonymous;
-
-
---
--- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
-
-
---
--- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.tenant_membership TO anonymous;
 
 
 --
@@ -19754,6 +19339,13 @@ GRANT SELECT ON TABLE crawler.json_response_cache TO system_admin;
 --
 
 GRANT SELECT ON TABLE crawler.rate_limit_rule TO system_admin;
+
+
+--
+-- Name: TABLE refetch_policy; Type: ACL; Schema: crawler; Owner: -
+--
+
+GRANT SELECT ON TABLE crawler.refetch_policy TO system_admin;
 
 
 --
@@ -20100,6 +19692,13 @@ GRANT SELECT ON TABLE public.current_cohort_membership TO anonymous;
 
 
 --
+-- Name: TABLE tenant_administrator; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_administrator TO anonymous;
+
+
+--
 -- Name: TABLE current_tenant_administrator; Type: ACL; Schema: public; Owner: -
 --
 
@@ -20107,10 +19706,24 @@ GRANT SELECT ON TABLE public.current_tenant_administrator TO anonymous;
 
 
 --
+-- Name: TABLE tenant_membership; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_membership TO anonymous;
+
+
+--
 -- Name: TABLE current_tenant_membership; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT SELECT ON TABLE public.current_tenant_membership TO anonymous;
+
+
+--
+-- Name: TABLE tenant_trainer; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.tenant_trainer TO anonymous;
 
 
 --
@@ -20303,6 +19916,13 @@ GRANT SELECT ON TABLE public.person_last_activity TO anonymous;
 
 
 --
+-- Name: TABLE posting; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.posting TO anonymous;
+
+
+--
 -- Name: SEQUENCE posting_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -20433,5 +20053,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict AT2LDpE59XDcvOAOIyYm0SZ34P1jI2JGRwFZIuSWmgj5KCzOTu1yvvoXpaEQW7l
+\unrestrict MOmjn8rnvgyBE2T1T3V2Uc1NelJfMmjjCFjX3VKekgICVhaJ3lEkIq5iD8q6XpO
 

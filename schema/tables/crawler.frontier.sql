@@ -13,7 +13,8 @@ CREATE TABLE crawler.frontier (
     last_process_error text,
     last_process_error_at timestamp with time zone,
     last_response_id bigint,
-    last_successful_response_id bigint
+    last_successful_response_id bigint,
+    reference_date date
 );
 
 COMMENT ON TABLE crawler.frontier IS '@name crawler_target
@@ -32,6 +33,8 @@ ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 
 CREATE POLICY system_admin_read ON crawler.frontier FOR SELECT TO system_admin USING (true);
+
+CREATE TRIGGER frontier_reference_date BEFORE UPDATE OF reference_date ON crawler.frontier FOR EACH ROW EXECUTE FUNCTION crawler.tg_frontier_reference_date();
 
 CREATE INDEX frontier_failure_idx ON crawler.frontier USING btree (federation, kind, id) WHERE ((fetch_status = ANY (ARRAY['error'::crawler.fetch_status, 'transient'::crawler.fetch_status])) OR (process_status = 'error'::crawler.process_status));
 CREATE INDEX frontier_federation_kind_idx ON crawler.frontier USING btree (federation, kind);

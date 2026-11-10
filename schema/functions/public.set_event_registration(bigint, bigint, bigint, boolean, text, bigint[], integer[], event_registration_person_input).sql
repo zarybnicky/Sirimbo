@@ -112,7 +112,7 @@ begin
   if not is_self and not is_manager then
     raise exception 'ACCESS_DENIED' using errcode = '42501';
   end if;
-  if target_instance.is_locked and not is_manager then
+  if not coalesce(target_instance.registration_period @> now(), false) and not is_manager then
     raise exception 'NOT_ALLOWED' using errcode = '28000';
   end if;
   registration_source := case when is_self

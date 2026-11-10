@@ -19,5 +19,6 @@ CREATE TYPE federated.person_license_discipline AS ENUM (
     'pd_ten_dance',
     'pd_show_dance_standard',
     'pd_show_dance_latin',
-    'unknown'
+    'unknown',
+    'esports'
 );

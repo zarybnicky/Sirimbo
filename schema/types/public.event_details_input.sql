@@ -10,5 +10,6 @@ CREATE TYPE public.event_details_input AS (
 	is_public boolean,
 	has_public_details boolean,
 	is_locked boolean,
-	enable_notes boolean
+	enable_notes boolean,
+	registration_period tstzrange
 );

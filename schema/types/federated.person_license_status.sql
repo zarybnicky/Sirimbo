@@ -6,5 +6,6 @@ CREATE TYPE federated.person_license_status AS ENUM (
     'retired',
     'aspiring',
     'suspended',
-    'unknown'
+    'unknown',
+    'temporary'
 );

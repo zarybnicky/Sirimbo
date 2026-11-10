@@ -11,7 +11,11 @@ declare
   v_is_visible boolean := coalesce((details).is_visible, true);
   v_is_public boolean := coalesce((details).is_public, false);
   v_has_public_details boolean := v_is_public and coalesce((details).has_public_details, false);
-  v_is_locked boolean := coalesce((details).is_locked, false);
+  v_registration_period tstzrange := case
+    when (details).is_locked is null then (details).registration_period
+    when (details).is_locked then null
+    else '(,)'::tstzrange
+  end;
   v_enable_notes boolean := coalesce((details).enable_notes, false);
   v_expected_existing_count bigint;
   v_locked_existing_count bigint;
@@ -136,7 +140,7 @@ begin
         is_visible,
         is_public,
         has_public_details,
-        is_locked,
+        registration_period,
         enable_notes,
         description,
         summary,
@@ -156,7 +160,7 @@ begin
         v_is_visible,
         v_is_public,
         v_has_public_details,
-        v_is_locked,
+        v_registration_period,
         v_enable_notes,
         '',
         '',
@@ -177,7 +181,7 @@ begin
           is_visible = v_is_visible,
           is_public = v_is_public,
           has_public_details = v_has_public_details,
-          is_locked = v_is_locked,
+          registration_period = v_registration_period,
           enable_notes = v_enable_notes,
           series_id = case
             when v_assign_series then v_series_id

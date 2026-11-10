@@ -36,8 +36,7 @@ CREATE VIEW crawler.frontier_fetch_job AS
         CASE
             WHEN (j.attempts >= j.max_attempts) THEN 'failed'::text
             WHEN (j.locked_at IS NOT NULL) THEN 'locked'::text
-            WHEN (j.run_at <= now()) THEN 'ready'::text
-            ELSE 'delayed'::text
+            ELSE 'queued'::text
         END AS state
    FROM (jobs j
      JOIN crawler.frontier f ON ((f.id = j.frontier_id)))

@@ -35,7 +35,9 @@ CREATE POLICY trainer_same_tenant ON public.event_trainer TO trainer USING (app_
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 CREATE TRIGGER _500_refresh_manager_person_ids AFTER INSERT OR DELETE OR UPDATE OF event_id, person_id ON public.event_trainer FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_trainer__refresh_manager_person_ids();
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, event_id, person_id ON public.event_trainer FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event_trainer REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event_trainer REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event_trainer REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('event_id, person_id');
 
 CREATE INDEX event_trainer_event_id_idx ON public.event_trainer USING btree (event_id);
 CREATE INDEX event_trainer_person_id_idx ON public.event_trainer USING btree (person_id);

@@ -10,7 +10,7 @@ CREATE FUNCTION public.event_registration_info(e public.event) RETURNS public.ev
     from event_registration
     where event_id = e.id and registration_status = 'active'
   ), capacity as (
-    select counts.*, case
+    select counts.*, coalesce(e.registration_period @> now(), false) as registration_open, case
       when e.capacity is null or e.capacity <= 0 then null
       else e.capacity
         - case e.capacity_unit
@@ -23,12 +23,13 @@ CREATE FUNCTION public.event_registration_info(e public.event) RETURNS public.ev
   select row(
     registrations, people, remaining_capacity, my,
     coalesce(
-          not coalesce(e.is_locked, false)
+          registration_open
       and not e.is_cancelled
       and e.until > now()
       and coalesce(remaining_capacity > 0, true),
       false
-    )
+    ),
+    registration_open
   )::event_registration_info
   from capacity;
 $$;

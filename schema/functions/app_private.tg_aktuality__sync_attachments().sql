@@ -28,5 +28,3 @@ begin
   return new;
 end;
 $$;
-
-COMMENT ON FUNCTION app_private.tg_aktuality__sync_attachments() IS 'Synchronizes inline file references from article content.';

@@ -337,9 +337,9 @@ CREATE TABLE federated.person_club_membership (
 
 CREATE TYPE federated.person_license_kind AS ENUM ('athlete', 'trainer', 'adjudicator', 'chairperson', 'invigilator', 'scrutineer', 'lead_scrutineer', 'examiner', 'dj', 'head_judge', 'official');
 
-CREATE TYPE federated.person_license_discipline AS ENUM ('general', 'standard', 'latin', 'breaking', 'hiphop', 'caribbean', 'stage', 'smooth', 'disco', 'solo_syncro_choreo', 'ten_dance', 'show_dance_standard', 'show_dance_latin', 'formation_standard', 'formation_latin', 'pd_standard', 'pd_latin', 'pd_ten_dance', 'pd_show_dance_standard', 'pd_show_dance_latin', 'unknown');
+CREATE TYPE federated.person_license_discipline AS ENUM ('general', 'standard', 'latin', 'breaking', 'hiphop', 'caribbean', 'stage', 'smooth', 'disco', 'solo_syncro_choreo', 'ten_dance', 'show_dance_standard', 'show_dance_latin', 'formation_standard', 'formation_latin', 'pd_standard', 'pd_latin', 'pd_ten_dance', 'pd_show_dance_standard', 'pd_show_dance_latin', 'unknown', 'esports');
 
-CREATE TYPE federated.person_license_status AS ENUM ('active', 'expired', 'revoked', 'resting', 'retired', 'aspiring', 'suspended', 'unknown');
+CREATE TYPE federated.person_license_status AS ENUM ('active', 'expired', 'revoked', 'resting', 'retired', 'aspiring', 'suspended', 'unknown', 'temporary');
 
 CREATE TABLE federated.person_license (
   person_id text NOT NULL REFERENCES federated.person (id)
@@ -723,6 +723,7 @@ CREATE TABLE public.event (
   share_token text,
   cover_image_id bigint,
   series_info public.series_info,
+  registration_period tstzrange DEFAULT CAST('(,)' AS tstzrange),
   CHECK (
     NOT (has_public_details)
       OR is_public IS TRUE
@@ -1470,6 +1471,15 @@ CREATE TABLE crawler.rate_limit_rule (
   CHECK (per_interval > '00:00:00'::interval)
 );
 
+CREATE TABLE crawler.refetch_policy (
+  federation text NOT NULL,
+  kind text NOT NULL,
+  reference_offset interval,
+  fetch_interval interval NOT NULL,
+  CHECK (fetch_interval > '00:00:00'::interval),
+  UNIQUE NULLS NOT DISTINCT (federation, kind, reference_offset)
+);
+
 CREATE TYPE crawler.fetch_status AS ENUM ('pending', 'ok', 'gone', 'error', 'transient');
 
 CREATE TYPE crawler.process_status AS ENUM ('pending', 'ok', 'error');
@@ -1492,6 +1502,7 @@ CREATE TABLE crawler.frontier (
     ON DELETE SET NULL,
   last_successful_response_id bigint REFERENCES crawler.json_response (id)
     ON DELETE SET NULL,
+  reference_date date,
   UNIQUE (federation, kind, key)
 );
 
@@ -1536,13 +1547,13 @@ CREATE TYPE public.competition_participation_record AS (person_id bigint, person
 
 CREATE TYPE public.event_conflict AS (person_id bigint, person_name text, first_event_id bigint, first_event_name text, first_since timestamp with time zone, first_until timestamp with time zone, second_event_id bigint, second_event_name text, second_since timestamp with time zone, second_until timestamp with time zone, overlap_range tstzrange);
 
-CREATE TYPE public.event_details_input AS (parent_id bigint, name text, type public.event_type, location_id bigint, location_text text, capacity int, capacity_unit public.event_capacity_unit, is_visible boolean, is_public boolean, has_public_details boolean, is_locked boolean, enable_notes boolean);
+CREATE TYPE public.event_details_input AS (parent_id bigint, name text, type public.event_type, location_id bigint, location_text text, capacity int, capacity_unit public.event_capacity_unit, is_visible boolean, is_public boolean, has_public_details boolean, is_locked boolean, enable_notes boolean, registration_period tstzrange);
 
 CREATE TYPE public.event_registration_input AS (person_id bigint, couple_id bigint, target_cohort_id bigint, is_cancelled boolean);
 
 CREATE TYPE public.event_input AS (id bigint, since timestamp with time zone, until timestamp with time zone, is_cancelled boolean, registrations public.event_registration_input[]);
 
-CREATE TYPE public.event_registration_info AS (registrations int, people int, remaining_capacity int, my boolean, can_register boolean);
+CREATE TYPE public.event_registration_info AS (registrations int, people int, remaining_capacity int, my boolean, can_register boolean, registration_open boolean);
 
 CREATE TYPE public.event_registration_person_input AS (first_name text, last_name text, gender public.gender_type, nationality text, email text, phone text, birth_date date, csts_id int, wdsf_id int);
 

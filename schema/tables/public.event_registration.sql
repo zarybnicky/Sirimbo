@@ -63,7 +63,9 @@ CREATE TRIGGER _500_refresh_stats_del AFTER DELETE ON public.event_registration 
 CREATE TRIGGER _500_refresh_stats_ins AFTER INSERT ON public.event_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_registration__refresh_stats_stmt();
 CREATE TRIGGER _500_refresh_stats_upd AFTER UPDATE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_registration__refresh_stats_stmt();
 CREATE CONSTRAINT TRIGGER _800_sync_lesson_payment AFTER INSERT OR DELETE OR UPDATE OF event_id, person_id, registration_status ON public.event_registration DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_registration__sync_lesson_payment();
-CREATE TRIGGER _900_refresh_event_people AFTER INSERT OR DELETE OR UPDATE OF tenant_id, event_id, person_id, registration_status ON public.event_registration FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_del AFTER DELETE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_ins AFTER INSERT ON public.event_registration REFERENCING NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh();
+CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event_registration REFERENCING OLD TABLE AS deleted_rows NEW TABLE AS changed_rows FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_event_people__refresh('event_id, person_id, registration_status');
 
 CREATE INDEX event_registration_active_person_idx ON public.event_registration USING btree (tenant_id, person_id) INCLUDE (event_id, status) WHERE (registration_status = 'active'::public.event_registration_status);
 CREATE INDEX event_registration_couple_id_idx ON public.event_registration USING btree (couple_id);
