@@ -1,4 +1,5 @@
 import { sqlValueWithCodec, TYPES, type PgCondition } from 'postgraphile/@dataplan/pg';
+import type { GraphQLInputObjectType } from 'postgraphile/graphql';
 import { sql, type SQL } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
@@ -123,6 +124,28 @@ const plugins: GraphileConfig.Plugin[] = [
       }
     `,
   }),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition' },
+    'involvement',
+    (build) => ({
+      type: new build.graphql.GraphQLInputObjectType({
+        name: 'CompetitionInvolvementCondition',
+        description: 'Match selected competitors or officials.',
+        fields: () => {
+          const condition = build.getInputTypeByName('CompetitionCondition') as GraphQLInputObjectType;
+          const { competitor, official } = condition.toConfig().fields;
+          return { competitor: competitor!, official: official! };
+        },
+      }),
+      apply(condition: PgCondition, value) {
+        if (value == null) return;
+        const alternatives = condition.orPlan();
+        // Keep the date restriction available to the competitor subquery.
+        alternatives.extensions = Object.create(condition.extensions);
+        return alternatives;
+      },
+    }),
+  ),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'event_registration' },
     'participant',

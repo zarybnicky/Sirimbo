@@ -1,4 +1,4 @@
-import type { CalendarDataQuery } from '@/graphql/Event';
+import type { CalendarDataQuery, EventWithTrainerFragment } from '@/graphql/Event';
 import type { CompetitionEntry, CompetitionOfficialAssignment } from '@/ui/Competitions';
 
 export type DateRange = {
@@ -20,7 +20,9 @@ type CalendarItemBase = {
 export type CalendarClubEvent = CalendarItemBase & {
   kind: 'event';
   id: string;
-  instance: NonNullable<CalendarDataQuery['eventsList']>[number];
+  instance: EventWithTrainerFragment & Pick<
+    NonNullable<CalendarDataQuery['eventsList']>[number], 'attendance'
+  >;
   __isPreview?: boolean;
 };
 

@@ -2180,6 +2180,7 @@ input CompetitionCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
   includeCancelled: Boolean
+  involvement: CompetitionInvolvementCondition
 
   """
   Match local people. Without an explicit selection, use current tenant people.
@@ -2328,6 +2329,16 @@ type CompetitionEntryEdge {
 
   """The `CompetitionEntry` at the end of the edge."""
   node: CompetitionEntry!
+}
+
+"""Match selected competitors or officials."""
+input CompetitionInvolvementCondition {
+  competitor: CompetitionParticipantCondition
+
+  """
+  Match local people. Without an explicit selection, use current tenant people.
+  """
+  official: PersonCondition
 }
 
 type CompetitionOfficial {
@@ -12627,23 +12638,15 @@ type Query {
   """Get a single `Event`."""
   event(id: BigInt!): Event
   eventFacetsList(
-    canRegister: Boolean
-    cohortId: BigInt
+    condition: EventSearchConditionInput
     endRange: Datetime
 
     """Only read the first `n` values of the set."""
     first: Int
-    locationIds: [BigInt]
 
     """Skip the first `n` values."""
     offset: Int
-    onlyMine: Boolean
-    onlyTypes: [EventType]
-    parentId: BigInt
-    participantIds: [BigInt]
-    relevantOnly: Boolean
     startRange: Datetime
-    trainerIds: [BigInt]
   ): [EventFacetsRecord!]
   eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
   eventOverlapsAttendeeReportList(

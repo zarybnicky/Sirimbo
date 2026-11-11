@@ -1,7 +1,7 @@
 import {
   type CompetitionOfficialAssignment,
   groupCompetitionEvents,
-} from '@/ui/Competitions';
+} from '@/calendar/competitions';
 import { format } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
 import { CalendarDataDocument, type CalendarDataQueryVariables } from '@/graphql/Event';
@@ -10,6 +10,7 @@ import React from 'react';
 import { useClient, useQuery } from 'urql';
 import {
   type CalendarCompetitionEvent,
+  type CalendarClubEvent,
   type CalendarEvent,
   type CalendarTrainer,
   type DateRange,
@@ -78,16 +79,22 @@ const calendarDay = (date: string) => ({
 
 function prepareVariables(
   range: DateRange,
-  variables: Omit<CalendarDataQueryVariables, 'start' | 'end' | 'since' | 'until'>,
+  variables: CalendarDataQueryVariables,
 ): CalendarDataQueryVariables {
   const start = startOf(range.since, 'day');
   const end = add(startOf(range.until, 'day'), 1, 'day');
-  return {
-    ...variables,
-    start: start.toISOString(),
-    end: end.toISOString(),
+  const overlaps = { start: start.toISOString(), end: end.toISOString() };
+  const dates = {
     since: format(start, 'yyyy-MM-dd'),
     until: format(end, 'yyyy-MM-dd'),
+  };
+
+  return {
+    ...variables,
+    ...overlaps,
+    ...dates,
+    eventCondition: { ...variables.eventCondition, overlaps },
+    birthdayCondition: { ...variables.peopleCondition, birthday: dates },
   };
 }
 
@@ -113,37 +120,50 @@ export function useCalendarData({
   const auth = useAuth();
   const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
+  const withCompetitions = filters.types.includes('COMPETITION');
   const client = useClient();
   const range = React.useMemo(() => view.range(date), [view, date]);
   const trainerIds = availableTrainers
     ? filters.trainers.filter((id) => availableTrainers.some((t) => t.id === id))
     : filters.trainers;
 
+  const { personIds, cohortId } = filters.participants;
+  const participant = { ...filters.participants, onlyMine };
+  const condition = {
+    trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+    locationIds: filters.location.length > 0 ? filters.location : undefined,
+    types: allEventTypes.filter(
+      (type) => filters.types.includes(type) && (!filters.free || type !== 'GROUP'),
+    ),
+    canRegister: filters.free ? true : undefined,
+    relevantOnly: filters.relevantOnly,
+    parentId,
+  };
+
   const [{ data, fetching, error, operation }] = useQuery({
     query: CalendarDataDocument,
     variables: prepareVariables(range, {
-      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-      participant: { ...filters.participants, onlyMine },
-      participantIds: filters.participants.personIds,
-      cohortId: filters.participants.cohortId,
-      membership: {
-        state: !filters.participants.personIds && !onlyMine ? 'CURRENT' : undefined,
-        inCohorts: filters.participants.cohortId
-          ? [filters.participants.cohortId]
-          : undefined,
+      eventCondition: { ...condition, participant },
+      participant,
+      peopleCondition: {
+        ids: personIds,
+        onlyMine,
+        membership: {
+          state: !personIds && !onlyMine ? 'CURRENT' : undefined,
+          inCohorts: cohortId ? [cohortId] : undefined,
+        },
       },
-      locationIds: filters.location.length > 0 ? filters.location : undefined,
-      types: allEventTypes.filter(
-        (type) => filters.types.includes(type) && (!filters.free || type !== 'GROUP'),
-      ),
-      canRegister: filters.free ? true : undefined,
-      onlyMine,
-      relevantOnly: filters.relevantOnly,
-      parentId,
+      facetCondition: {
+        ...condition,
+        participantIds: personIds,
+        cohortId,
+        onlyMine,
+        withCompetitions,
+      },
       withFacets,
       withAttendance,
-      withCompetitions: filters.types.includes('COMPETITION'),
-      withOtherClubCompetitors: withOtherClubCompetitors && filters.types.includes('COMPETITION'),
+      withCompetitions,
+      withOtherClubCompetitors: withOtherClubCompetitors && withCompetitions,
       withBirthdays: filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
@@ -236,7 +256,8 @@ export function useCalendarData({
       return key;
     };
 
-    for (const instance of data?.eventsList ?? []) {
+    const events = (data?.eventsList ?? []) as CalendarClubEvent['instance'][];
+    for (const instance of events) {
       let eventResources: Resource[] = [];
       if (effectiveGroupBy === 'trainer') {
         eventResources = instance.eventTrainersList.map(({ person, personId }) => ({
@@ -282,14 +303,13 @@ export function useCalendarData({
           date: event.startDate,
         })),
       ),
-      ...(data?.officialCompetitions?.nodes ?? []).flatMap((competition) => {
-        const event = competition.event;
-        return event
-          ? competition.officials.nodes.map((official) => ({
+      ...(data?.competitions?.nodes ?? []).flatMap((x) => {
+        return x.event
+          ? x.officials.nodes.map((official) => ({
               ...official,
-              event,
-              federation: competition.federation,
-              date: competition.startDate,
+              event: x.event!,
+              federation: x.federation,
+              date: x.startDate,
             }))
           : [];
       }),
@@ -304,8 +324,13 @@ export function useCalendarData({
       filters.participants.personIds != null ||
       filters.participants.coupleId != null ||
       filters.participants.cohortId != null;
+    const clubCompetitions = new Map(
+      (data?.competitions?.nodes ?? [])
+        .flatMap(({ event }) => event?.clubCompetitions?.nodes ?? [])
+        .map((competition) => [competition.id, competition]),
+    );
     const clubEntries = new Map(
-      groupCompetitionEvents(data?.clubCompetitions?.nodes).map(({ key, entries }) => [key, entries]),
+      groupCompetitionEvents([...clubCompetitions.values()]).map(({ key, entries }) => [key, entries]),
     );
     const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
       data?.competitions?.nodes, officials,
@@ -360,7 +385,7 @@ export function useCalendarData({
     }
     return {
       range,
-      events: data?.eventsList ?? [],
+      events,
       calendarEvents,
       fetching,
       error,
@@ -369,9 +394,9 @@ export function useCalendarData({
         .filter(
           (resource) =>
             effectiveGroupBy !== 'trainer' ||
-            !operation?.variables.trainerIds ||
+            !operation?.variables.eventCondition?.trainerIds ||
             resource.type !== 'person' ||
-            operation.variables.trainerIds.includes(resource.id),
+            operation.variables.eventCondition.trainerIds.includes(resource.id),
         )
         .toSorted((a, b) => compareText(a.resourceTitle, b.resourceTitle)),
     };

@@ -25815,14 +25815,7 @@
             },
             "args": [
               {
-                "name": "canRegister",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "cohortId",
+                "name": "condition",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -25843,58 +25836,7 @@
                 }
               },
               {
-                "name": "locationIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
                 "name": "offset",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "onlyMine",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "onlyTypes",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "parentId",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "participantIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "relevantOnly",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -25905,16 +25847,6 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
-                }
-              },
-              {
-                "name": "trainerIds",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
                 }
               }
             ]

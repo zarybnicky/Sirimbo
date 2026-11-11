@@ -50,8 +50,30 @@ mutation UpdateEventSeries($id: BigInt!, $patch: EventSeriesPatch!) {
   }
 }
 
-fragment EventWithTrainer on Event {
+fragment EventWithPeople on Event {
   ...Event
+  summary
+  eventTrainersList {
+    id
+    personId
+    lessonsOffered
+    person {
+      id
+      name
+    }
+  }
+  targetCohortsList {
+    id
+    cohortId
+    cohort {
+      id
+      name
+      colorRgb
+    }
+  }
+}
+
+fragment EventRegistrationOptions on Event {
   registrationPeriod {
     start { value inclusive }
     end { value inclusive }
@@ -64,7 +86,6 @@ fragment EventWithTrainer on Event {
     since
     until
   }
-  summary
   capacity
   capacityUnit
   shareToken
@@ -81,25 +102,12 @@ fragment EventWithTrainer on Event {
     amount
     currency
   }
-  eventTrainersList {
-    id
-    personId
-    lessonsOffered
-    person {
-      id
-      name
-    }
-  }
   managerPersonIds
-  targetCohortsList {
-    id
-    cohortId
-    cohort {
-      id
-      name
-      colorRgb
-    }
-  }
+}
+
+fragment EventWithTrainer on Event {
+  ...EventWithPeople
+  ...EventRegistrationOptions
   registrations(
     condition: { parentRegistrationId: null, registrationStatus: ACTIVE }
     first: 3
@@ -483,43 +491,85 @@ query EventList(
   }
 }
 
+fragment CalendarFederationEvent on FederationEvent {
+  id
+  federation
+  externalId
+  name
+  startDate
+  endDate
+  location
+  city
+  ... @include(if: $forIcs) {
+    status
+    streetAddress
+    postalCode
+    country
+    venueLat
+    venueLng
+  }
+}
+
 query CalendarData(
-  $since: Date!
-  $until: Date!
+  $savedSearch: BigInt
+  $eventCondition: EventCondition
+  $since: Date
+  $until: Date
   $withFacets: Boolean! = true
-  $start: Datetime!
-  $end: Datetime!
-  $types: [EventType!]
-  $trainerIds: [BigInt]
-  $participantIds: [BigInt!]
-  $participant: CompetitionParticipantCondition!
-  $cohortId: BigInt
-  $membership: PersonMembershipCondition! = { state: CURRENT }
-  $onlyMine: Boolean
-  $relevantOnly: Boolean
-  $parentId: BigInt
-  $locationIds: [BigInt]
-  $canRegister: Boolean
+  $start: Datetime
+  $end: Datetime
+  $participant: CompetitionParticipantCondition
+  $peopleCondition: PersonCondition
+  $birthdayCondition: PersonCondition
+  $facetCondition: EventSearchConditionInput
   $withParticipantOptions: Boolean! = false
   $withAttendance: Boolean! = false
+  $withEvents: Boolean! = true
+  $forIcs: Boolean! = false
+  $registrationLimit: Int = 3
+  $offset: Int! = 0
   $withCompetitions: Boolean! = true
   $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
   eventsList(
-    condition: {
-      overlaps: { start: $start, end: $end }
-      types: $types
-      trainerIds: $trainerIds
-      participant: $participant
-      relevantOnly: $relevantOnly
-      parentId: $parentId
-      locationIds: $locationIds
-      canRegister: $canRegister
+    savedSearch: $savedSearch
+    condition: $eventCondition
+    orderBy: [SINCE_ASC, ID_ASC]
+  ) @include(if: $withEvents) @_required {
+    ...EventWithPeople
+    ...EventRegistrationOptions @skip(if: $forIcs)
+    registrations(
+      condition: { parentRegistrationId: null, registrationStatus: ACTIVE, excludeCohortSource: true }
+      first: $registrationLimit
+      orderBy: PRIMARY_KEY_ASC
+    ) {
+      nodes {
+        id
+        person { id name }
+        couple { id shortName }
+      }
     }
-    orderBy: SINCE_ASC
-  ) @_required {
-    ...EventWithTrainer
+    ... @include(if: $forIcs) {
+      createdAt
+      updatedAt
+      hasMyRegistration
+      location {
+        id
+        longName
+        latitude
+        longitude
+        address {
+          city
+          conscriptionNumber
+          district
+          orientationNumber
+          postalCode
+          region
+          street
+        }
+      }
+    }
     attendance: registrationsList(
       condition: {
         registrationStatus: ACTIVE
@@ -532,7 +582,7 @@ query CalendarData(
       person { id name firstName lastName }
     }
   }
-  viewerPeople: people(condition: { onlyMine: true }) @include(if: $withCompetitions) @_required {
+  viewerPeople: people(condition: { onlyMine: true }) @include(if: $withCompetitions) @skip(if: $forIcs) @_required {
     nodes {
       id
       federationPeople(first: 300) {
@@ -549,54 +599,72 @@ query CalendarData(
     }
   }
   competitions(
+    savedSearch: $savedSearch
     first: 300
+    offset: $offset
     condition: {
       includeCancelled: false
       date: { since: $since, until: $until }
-      competitor: $participant
+      involvement: { competitor: $participant, official: $peopleCondition }
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
   ) @include(if: $withCompetitions) @_required {
+    pageInfo { hasNextPage }
     nodes {
       ...Competition
-      entries: entriesList(condition: { competitor: $participant }) {
+      event {
+        ...CalendarFederationEvent
+        clubCompetitions: competitions(
+          first: 300
+          condition: {
+            includeCancelled: false
+            date: { since: $since, until: $until }
+            competitor: {}
+          }
+          orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
+        ) @include(if: $withOtherClubCompetitors) {
+          nodes {
+            ...Competition
+            entries: entriesList(condition: { competitor: {}, cancelled: false }) {
+              ...CompetitionEntry
+            }
+            results: resultsList(condition: { competitor: {} }) {
+              ...CompetitionResult
+            }
+          }
+        }
+      }
+      entries: entriesList(savedSearch: $savedSearch, condition: { competitor: $participant }) {
         ...CompetitionEntry
       }
-      results: resultsList(condition: { competitor: $participant }) {
+      results: resultsList(savedSearch: $savedSearch, condition: { competitor: $participant }) {
         ...CompetitionResult
       }
-    }
-  }
-  clubCompetitions: competitions(
-    first: 300
-    condition: {
-      includeCancelled: false
-      date: { since: $since, until: $until }
-      competitor: {}
-    }
-    orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
-  ) @include(if: $withOtherClubCompetitors) @_required {
-    nodes {
-      ...Competition
-      entries: entriesList(condition: { competitor: {}, cancelled: false }) {
-        ...CompetitionEntry
-      }
-      results: resultsList(condition: { competitor: {} }) {
-        ...CompetitionResult
+      officials(first: 300, savedSearch: $savedSearch, condition: { person: $peopleCondition }) {
+        nodes {
+          competitionId
+          personId
+          role
+          person { ...OfficialPerson }
+        }
       }
     }
   }
   officialEvents: federationEvents(
+    savedSearch: $savedSearch
     first: 300
+    offset: $offset
     condition: {
       includeCancelled: false
       date: { since: $since, until: $until }
-      official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
+      official: $peopleCondition
     }
+    orderBy: [START_DATE_ASC, ID_ASC]
   ) @include(if: $withCompetitions) @_required {
+    pageInfo { hasNextPage }
     nodes {
-      id federation externalId name startDate endDate location city
-      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership } }) {
+      ...CalendarFederationEvent
+      officials(first: 300, savedSearch: $savedSearch, condition: { person: $peopleCondition }) {
         nodes {
           eventId
           personId
@@ -607,49 +675,18 @@ query CalendarData(
       }
     }
   }
-  officialCompetitions: competitions(
-    first: 300
-    condition: {
-      includeCancelled: false
-      date: { since: $since, until: $until }
-      official: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership }
-    }
-  ) @include(if: $withCompetitions) @_required {
-    nodes {
-      id federation startDate
-      event { id externalId name startDate endDate location city }
-      officials(first: 300, condition: { person: { ids: $participantIds, onlyMine: $onlyMine, membership: $membership } }) {
-        nodes {
-          competitionId
-          personId
-          role
-          person { ...OfficialPerson }
-        }
-      }
-    }
-  }
   birthdays: people(
-    condition: {
-      birthday: { since: $since, until: $until }
-      membership: $membership
-      ids: $participantIds
-      onlyMine: $onlyMine
-    }
+    condition: $birthdayCondition
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
-  ) @include(if: $withBirthdays) @_required {
+  ) @include(if: $withBirthdays) @skip(if: $forIcs) @_required {
     nodes {
       id name firstName lastName
       date: birthday(since: $since)
     }
   }
-  ... @include(if: $withFacets) {
+  ... @include(if: $withFacets) @skip(if: $forIcs) {
     eventFacetsList(
-      startRange: $start, endRange: $end, onlyTypes: $types,
-      trainerIds: $trainerIds, participantIds: $participantIds,
-      cohortId: $cohortId,
-      onlyMine: $onlyMine, relevantOnly: $relevantOnly,
-      parentId: $parentId, locationIds: $locationIds,
-      canRegister: $canRegister
+      startRange: $start, endRange: $end, condition: $facetCondition
     ) @_required {
       facet
       value

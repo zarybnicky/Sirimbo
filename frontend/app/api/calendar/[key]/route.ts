@@ -1,5 +1,5 @@
 import { groupCompetitionEvents, type CompetitionOfficialAssignment } from '@/calendar/competitions';
-import { CalendarFeedDocument, type CalendarFeedQuery, type CalendarFeedVenueFragment } from '@/graphql/CalendarFeed';
+import { CalendarDataDocument, type CalendarDataQuery, type CalendarFederationEventFragment } from '@/graphql/Event';
 import { normalizeClaims } from '@/lib/auth-claims';
 import { executeGraphql } from '@/lib/server/graphql';
 import { runQuery } from '@/lib/server/postgresql';
@@ -7,6 +7,7 @@ import { slugify } from '@/lib/slugify';
 import { getTenant } from '@/tenant/catalog';
 import { formatCategoryName } from '@/ui/csts';
 import { formatAddress, formatEventName, formatOfficialRole, formatParticipant, listFormatter } from '@/ui/format';
+import { formatDocument } from '@urql/core';
 import { compile } from 'html-to-text';
 import ical, { ICalEventStatus } from 'ical-generator';
 import jwt from 'jsonwebtoken';
@@ -14,7 +15,7 @@ import { calendarFeedOwner } from './calendar.queries';
 
 const summaryToText = compile({ wordwrap: false });
 
-type Competition = NonNullable<CalendarFeedQuery['competitions']>['nodes'][number];
+type Competition = NonNullable<CalendarDataQuery['competitions']>['nodes'][number];
 
 export async function GET(request: Request, { params }: { params: Promise<{ key: string }> }) {
   const { key } = await params;
@@ -29,13 +30,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
   const claims = normalizeClaims(owner)!;
 
   const calendars = await Promise.all((search.tenant_ids ?? []).map(async (tenantId) => {
-    const pages: CalendarFeedQuery[] = [];
+    const pages: CalendarDataQuery[] = [];
     let hasNextPage = false;
     do {
-      const data = await executeGraphql(CalendarFeedDocument, {
+      const data = await executeGraphql(formatDocument(CalendarDataDocument), {
         savedSearch: search.id,
         withCompetitions: search.with_competitions ?? false,
         withEvents: pages.length === 0,
+        forIcs: true,
+        registrationLimit: null,
         offset: pages.length * 300,
       }, {
         authorization: `Bearer ${token}`,
@@ -53,7 +56,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
   const calendar = ical({ name, prodId: { company: 'Sirimbo', product: 'Calendar', language: 'CS' } });
   const competitions = new Map<string, Competition>();
   const officials: CompetitionOfficialAssignment[] = [];
-  const venues = new Map<string, { event: CalendarFeedVenueFragment; origin: string }>();
+  const venues = new Map<string, { event: CalendarFederationEventFragment; origin: string }>();
 
   for (const { origin, pages } of calendars) {
     for (const data of pages) {
@@ -72,8 +75,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
           id: `event-${event.id}@sirimbo`,
           start: new Date(event.since),
           end: new Date(event.until),
-          created: new Date(event.createdAt),
-          lastModified: new Date(event.updatedAt),
+          created: new Date(event.createdAt!),
+          lastModified: new Date(event.updatedAt!),
           summary: formatEventName(event, viewer),
           description: [
             trainers && `Trenéři: ${trainers}`,

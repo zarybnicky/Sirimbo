@@ -63,7 +63,7 @@ const plugins: GraphileConfig.Plugin[] = [
                         inCohorts: filter.cohort_id == null ? undefined : [filter.cohort_id],
                       },
                     };
-                    if (conditionType === 'CompetitionCondition') return { competitor: participant, official };
+                    if (conditionType === 'CompetitionCondition') return { involvement: { competitor: participant, official } };
                     if (conditionType === 'FederationEventCondition') return { official };
                     if (conditionType.endsWith('OfficialCondition')) return { person: official };
                     return { competitor: participant };
@@ -72,8 +72,7 @@ const plugins: GraphileConfig.Plugin[] = [
                 const $select = scope.isPgFieldConnection ? $field.getSubplan() : $field;
                 $select.apply(applyInput(build.getInputTypeByName(conditionType),
                   $condition as unknown as Parameters<typeof applyInput>[1],
-                  (qb) => conditionType === 'CompetitionCondition'
-                    ? qb.whereBuilder().orPlan() : qb.whereBuilder()));
+                  (qb) => qb.whereBuilder()));
               },
             },
           };

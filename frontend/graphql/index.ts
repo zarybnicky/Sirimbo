@@ -1679,6 +1679,7 @@ export type CompetitionCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;
+  involvement?: InputMaybe<CompetitionInvolvementCondition>;
   /** Match local people. Without an explicit selection, use current tenant people. */
   official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
@@ -1795,6 +1796,13 @@ export type CompetitionEntryEdge = {
   cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CompetitionEntry` at the end of the edge. */
   node: CompetitionEntry;
+};
+
+/** Match selected competitors or officials. */
+export type CompetitionInvolvementCondition = {
+  competitor?: InputMaybe<CompetitionParticipantCondition>;
+  /** Match local people. Without an explicit selection, use current tenant people. */
+  official?: InputMaybe<PersonCondition>;
 };
 
 export type CompetitionOfficial = {
@@ -10154,19 +10162,11 @@ export type QueryEventArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventFacetsListArgs = {
-  canRegister?: InputMaybe<Scalars['Boolean']['input']>;
-  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  condition?: InputMaybe<EventSearchConditionInput>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
-  onlyTypes?: InputMaybe<Array<InputMaybe<EventType>>>;
-  parentId?: InputMaybe<Scalars['BigInt']['input']>;
-  participantIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
-  trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
 };
 
 

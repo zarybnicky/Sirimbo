@@ -283,8 +283,8 @@ SELECT tap.ok(NOT EXISTS (
   WHERE event_count IS DISTINCT FROM (
     SELECT coalesce(sum(count), 0)::integer
     FROM event_facets(now(), now() + interval '1 day',
-      parent_id => expected.parent_id, only_mine => expected.only_mine,
-      relevant_only => expected.relevant_only)
+      row(null, null, null, expected.parent_id, null, null,
+        expected.only_mine, expected.relevant_only, null, null)::event_search_condition)
     WHERE facet = 'type'
   )
 ), 'event facets combine mine, relevant and parent restrictions');

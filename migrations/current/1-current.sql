@@ -63,3 +63,5 @@ grant insert (name, condition, feed_key, cross_tenant),
   update (name, condition, feed_key, cross_tenant) on event_saved_search to anonymous;
 
 create index if not exists event_saved_search_user_id_idx on event_saved_search (user_id, tenant_id);
+
+--!include functions/event_facets.sql
