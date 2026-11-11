@@ -491,8 +491,21 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           'paymentFacetsList',
         ]);
       },
-      savePaymentGroup(_result, _args, cache) {
-        invalidateQueryFields(cache, ['cohortSubscriptionsList', 'payments', 'paymentDebtorsList', 'paymentFacetsList']);
+      savePaymentGroup(result, _args, cache) {
+        for (const payment of result.savePaymentGroup?.result ?? []) {
+          cache.invalidate({ __typename: 'Payment', id: payment.id }, 'transactions');
+          for (const debtor of payment.paymentDebtorsList)
+            if (debtor.person)
+              cache.invalidate({ __typename: 'Person', id: debtor.person.id });
+        }
+        invalidateQueryFields(cache, [
+          'cohortSubscriptionsList',
+          'payments',
+          'paymentDebtorsList',
+          'paymentFacetsList',
+          'transactions',
+          'transactionFacetsList',
+        ]);
       },
     },
   },

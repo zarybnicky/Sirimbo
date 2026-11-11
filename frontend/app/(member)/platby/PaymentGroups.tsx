@@ -3,6 +3,12 @@
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import {
+  parseAsIsoDateTime,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryStates,
+} from 'nuqs';
+import {
   useForm,
   useFormState,
   useWatch,
@@ -24,7 +30,12 @@ import { TextFieldElement } from '@/ui/fields/text';
 import { Table, TableStatus } from '@/ui/Table';
 import { SubmitButton } from '@/ui/submit';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
-import { getPeriodRange, PeriodPicker, type PeriodValue } from '@/ui/PeriodPicker';
+import {
+  getPeriodRange,
+  periodOptions,
+  PeriodPicker,
+  type PeriodUnit,
+} from '@/ui/PeriodPicker';
 
 type Values = { dates: string[]; amounts: Record<string, string> };
 
@@ -72,16 +83,25 @@ const iconButtonClass =
   'inline-flex align-middle text-neutral-11 hover:text-neutral-12 disabled:opacity-50';
 
 export function PaymentGroups() {
-  const [selected, setSelected] = React.useState('');
+  const [filters, setFilters] = useQueryStates(
+    {
+      groupId: parseAsString.withDefault(''),
+      unit: parseAsStringEnum<PeriodUnit>(periodOptions.map((x) => x.value)).withDefault(
+        '12months',
+      ),
+      date: parseAsIsoDateTime,
+    },
+    { shallow: true, scroll: false, urlKeys: { unit: 'groupUnit', date: 'groupDate' } },
+  );
   const [creating, setCreating] = React.useState<ColumnValues>();
   const [now] = React.useState(Date.now);
-  const [period, setPeriod] = React.useState<PeriodValue>(() => ({
-    unit: '12months',
-    date: new Date(now),
-  }));
+  const period = React.useMemo(
+    () => ({ unit: filters.unit, date: filters.date ?? new Date(now) }),
+    [filters.unit, filters.date, now],
+  );
   const [query] = useQuery({
     query: PaymentGroupsDocument,
-    variables: { condition: selected ? { id: selected } : null },
+    variables: { condition: filters.groupId ? { id: filters.groupId } : null },
   });
   const group = query.data?.selected?.[0];
 
@@ -328,7 +348,7 @@ export function PaymentGroups() {
                 includeAll
                 name="payment-groups-period"
                 value={period}
-                onChange={setPeriod}
+                onChange={({ unit, date }) => void setFilters({ unit, date })}
               />
             </fieldset>
 
@@ -342,7 +362,7 @@ export function PaymentGroups() {
                   name="payment-groups-group"
                   label="Skupina"
                   value={group?.id ?? ''}
-                  onChange={setSelected}
+                  onChange={(groupId) => void setFilters({ groupId })}
                   options={groupOptions}
                 />
               </fieldset>
