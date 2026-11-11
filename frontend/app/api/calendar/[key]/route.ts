@@ -52,7 +52,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
     return { origin, pages };
   }));
 
-  const name = search.cross_tenant ? search.name : `${search.name}, ${search.tenant_name}`;
+  const name = `${search.tenant_name ?? 'Sirimbo'} – ${search.name}`;
   const calendar = ical({ name, prodId: { company: 'Sirimbo', product: 'Calendar', language: 'CS' } });
   const competitions = new Map<string, Competition>();
   const officials: CompetitionOfficialAssignment[] = [];
@@ -77,7 +77,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
           end: new Date(event.until),
           created: new Date(event.createdAt!),
           lastModified: new Date(event.updatedAt!),
-          summary: formatEventName(event, viewer),
+          summary: formatEventName(event, viewer, viewer === 'neutral'),
           description: [
             trainers && `Trenéři: ${trainers}`,
             cohorts && `Tréninkové skupiny: ${cohorts}`,

@@ -118,6 +118,18 @@ export const formatOfficialRole = (role: OfficialRole) => roleNames[role];
 
 export type EventViewer = 'neutral' | 'trainer' | 'participant';
 
+export function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
+  if (!name) return '';
+  if (!useInitials) return name;
+
+  const sanitized = name
+    .replaceAll(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
+    .normalize('NFKD')
+    .replaceAll(/[^A-Z]/g, '');
+
+  return sanitized || name;
+}
+
 export const formatEventName = (
   event:
     | {
@@ -137,6 +149,7 @@ export const formatEventName = (
     | null
     | undefined,
   viewer: EventViewer = 'trainer',
+  useTrainerInitials = false,
 ) => {
   if (!event) return;
   if (event.name) return event.name;
@@ -144,7 +157,8 @@ export const formatEventName = (
   const registrations = event.registrations?.nodes;
   const type = formatEventType(event.type);
   const trainers = listFormatter.format(
-    event.eventTrainersList?.flatMap((x) => x.person?.name ?? []) ?? [],
+    event.eventTrainersList?.flatMap((x) => x.person?.name
+      ? formatTrainerLabel(x.person.name, useTrainerInitials) : []) ?? [],
   );
   if (viewer === 'participant' && event.type === 'LESSON') {
     return [type, trainers].filter(Boolean).join(': ');

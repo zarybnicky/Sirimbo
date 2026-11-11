@@ -7,23 +7,9 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { type DragSubject, dragSubjectAtom, isDraggingAtom } from './state';
 import { cn } from '@/lib/cn';
 import { selectAtom } from 'jotai/utils';
-import { formatEventName, shortTimeFormatter } from '@/ui/format';
+import { formatEventName, formatTrainerLabel, shortTimeFormatter } from '@/ui/format';
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
-
-function formatTrainerLabel(name: string | undefined, useInitials: boolean): string {
-  if (!name) return '';
-  if (!useInitials) {
-    return name;
-  }
-
-  const sanitized = name
-    .replaceAll(/\b(Mgr\.|Ing\.|Bc\.)\s*/g, '')
-    .normalize('NFKD')
-    .replaceAll(/[^A-Z]/g, '');
-
-  return sanitized || name;
-}
 
 type TimeGridEventProps = {
   style: {
