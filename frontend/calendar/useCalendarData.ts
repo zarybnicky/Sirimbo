@@ -102,25 +102,32 @@ export function useCalendarData({
   view,
   date,
   filters,
+  savedSearch,
+  withSavedSearches = false,
   parentId,
   availableTrainers,
   withFacets = true,
   withAttendance = false,
+  withCompetitions = false,
+  withBirthdays = false,
   withOtherClubCompetitors = false,
 }: {
   view: CalendarView;
   date: Date;
   filters: CalendarFilters;
+  savedSearch?: string | null;
+  withSavedSearches?: boolean;
   parentId?: string;
   availableTrainers?: readonly CalendarTrainer[];
   withFacets?: boolean;
   withAttendance?: boolean;
+  withCompetitions?: boolean;
+  withBirthdays?: boolean;
   withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
   const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
-  const withCompetitions = !filters.canRegister && filters.types.includes('COMPETITION');
   const client = useClient();
   const range = React.useMemo(() => view.range(date), [view, date]);
   const trainerIds = availableTrainers
@@ -139,9 +146,9 @@ export function useCalendarData({
     parentId,
   };
 
-  const [{ data, fetching, error, operation }] = useQuery({
-    query: CalendarDataDocument,
-    variables: prepareVariables(range, {
+  const variables: CalendarDataQueryVariables = savedSearch
+    ? { savedSearch }
+    : {
       eventCondition: {
         ...condition,
         onlyMine,
@@ -163,11 +170,18 @@ export function useCalendarData({
         onlyMine,
         withCompetitions,
       },
+    };
+
+  const [{ data, fetching, error, operation }] = useQuery({
+    query: CalendarDataDocument,
+    variables: prepareVariables(range, {
+      ...variables,
       withFacets,
       withAttendance,
       withCompetitions,
+      withBirthdays,
+      withSavedSearches,
       withOtherClubCompetitors: withOtherClubCompetitors && withCompetitions,
-      withBirthdays: !filters.canRegister && filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
   });
@@ -323,7 +337,7 @@ export function useCalendarData({
         .flatMap((x) => x.competitorComponents.nodes)
         .map((x) => x.competitorId),
     );
-    const hasParticipantSelection = onlyMine ||
+    const hasParticipantSelection = !!savedSearch || onlyMine ||
       filters.participants.personIds != null ||
       filters.participants.coupleId != null ||
       filters.participants.cohortId != null;
@@ -390,6 +404,7 @@ export function useCalendarData({
       range,
       events,
       calendarEvents,
+      savedSearches: data?.eventSavedSearchesList ?? [],
       fetching,
       error,
       filterOptions,
@@ -407,6 +422,7 @@ export function useCalendarData({
     availableTrainers,
     withFacets,
     data,
+    savedSearch,
     filters.trainers,
     filters.location,
     filters.participants.personIds,

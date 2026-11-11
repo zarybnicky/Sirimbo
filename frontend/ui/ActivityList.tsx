@@ -69,6 +69,8 @@ export const ActivityList = React.memo(function ActivityList({
     },
     withFacets: false,
     withAttendance: true,
+    withCompetitions: filters.includes('COMPETITION'),
+    withBirthdays: filters.includes('BIRTHDAY'),
     withOtherClubCompetitors: true,
   });
 

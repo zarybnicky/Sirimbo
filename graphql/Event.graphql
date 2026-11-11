@@ -367,9 +367,18 @@ query EventRegistrations($id: BigInt!, $withSchedule: Boolean! = false) {
 
 query EventFormOptions(
   $forRegistration: Boolean! = false
+  $withPeople: Boolean! = false
+  $peopleCondition: PersonCondition = { membership: { state: CURRENT } }
   $eventId: BigInt! = "0"
   $withRegistrations: Boolean! = false
+  $withParents: Boolean! = false
 ) {
+  parents: eventsList(condition: { type: CAMP }, orderBy: SINCE_DESC) @include(if: $withParents) {
+    id
+    name
+    since
+    until
+  }
   event(id: $eventId) @include(if: $withRegistrations) {
     id
     parent {
@@ -386,7 +395,7 @@ query EventFormOptions(
   ) @include(if: $withRegistrations) @_required {
     ...EventRegistration
   }
-  people(condition: { membership: { state: CURRENT } }) @include(if: $forRegistration) @_required {
+  people(condition: $peopleCondition, orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]) @include(if: $withPeople) @_required {
     nodes {
       id
       name
@@ -512,6 +521,7 @@ fragment CalendarFederationEvent on FederationEvent {
 
 query CalendarData(
   $savedSearch: BigInt
+  $withSavedSearches: Boolean! = false
   $eventCondition: EventCondition
   $since: Date
   $until: Date
@@ -532,6 +542,9 @@ query CalendarData(
   $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
+  eventSavedSearchesList(orderBy: [NAME_ASC, ID_ASC]) @include(if: $withSavedSearches) {
+    ...EventSavedSearch
+  }
   eventsList(
     savedSearch: $savedSearch
     condition: $eventCondition
@@ -791,6 +804,41 @@ mutation UpdateAttendance($input: UpdateAttendanceInput!) {
       id
       status
       attendanceNote
+    }
+  }
+}
+
+fragment EventSavedSearch on EventSavedSearch {
+  id
+  name
+  crossTenant
+  feedKey
+  condition {
+    types
+    trainerIds
+    locationIds
+    participantIds
+    parentId
+    cohortId
+    onlyMine
+    relevantOnly
+    canRegister
+    withCompetitions
+  }
+}
+
+mutation CreateEventSavedSearch($input: EventSavedSearchInput!) {
+  createEventSavedSearch(input: { eventSavedSearch: $input }) {
+    eventSavedSearch {
+      ...EventSavedSearch
+    }
+  }
+}
+
+mutation UpdateEventSavedSearch($id: BigInt!, $patch: EventSavedSearchPatch!) {
+  updateEventSavedSearch(input: { id: $id, patch: $patch }) {
+    eventSavedSearch {
+      ...EventSavedSearch
     }
   }
 }

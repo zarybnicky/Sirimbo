@@ -60,7 +60,7 @@ export function CheckboxElement<T extends FieldValues>({
   return (
     <Checkbox
       name={name}
-      value={field.value}
+      value={field.value ?? undefined}
       checked={!!field.value}
       error={fieldState.error}
       {...props}

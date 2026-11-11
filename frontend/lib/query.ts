@@ -214,6 +214,17 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   },
   updates: {
     Mutation: {
+      createEventSavedSearch(_result, _args, cache) {
+        invalidateQueryFields(cache, ['eventSavedSearchesList']);
+      },
+      updateEventSavedSearch(_result, args, cache) {
+        for (const field of cache.inspectFields('Query')) {
+          if (field.arguments?.savedSearch === args.input.id) {
+            cache.invalidate('Query', field.fieldName, field.arguments);
+          }
+        }
+      },
+
       createMembershipApplication(_result, _args, cache, _info) {
         cache.invalidate('Query', 'membershipApplicationsList');
       },

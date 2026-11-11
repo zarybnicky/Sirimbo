@@ -160,6 +160,8 @@ export function Calendar({
       },
       parentId,
       availableTrainers,
+      withCompetitions: !filters.canRegister && filters.types.includes('COMPETITION'),
+      withBirthdays: !filters.canRegister && filters.types.includes('BIRTHDAY'),
     });
   const [, moveEvent] = useMutation(MoveEventDocument);
 

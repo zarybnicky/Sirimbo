@@ -51,7 +51,7 @@ const plugins: GraphileConfig.Plugin[] = [
                       canRegister: filter.can_register,
                     };
                     const participant = {
-                      personIds: filter.with_competitions ? filter.participant_ids : [],
+                      personIds: filter.with_competitions && !filter.can_register ? filter.participant_ids : [],
                       cohortId: filter.cohort_id,
                       onlyMine: filter.only_mine,
                     };

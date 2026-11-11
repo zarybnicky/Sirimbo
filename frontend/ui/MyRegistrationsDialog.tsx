@@ -49,7 +49,7 @@ function useRegistrationCandidates(
 
   const [query] = useQuery({
     query: EventFormOptionsDocument,
-    variables: { forRegistration: true },
+    variables: { forRegistration: true, withPeople: true },
     pause: !isManager || !enabled,
   });
   const registeredPeople = new Set(

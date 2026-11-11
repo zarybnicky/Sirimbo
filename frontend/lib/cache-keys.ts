@@ -20,6 +20,7 @@ export const cacheKeyFields = {
   EventConflict: null,
   EventFacetsRecord: null,
   EventRegistrationInfo: null,
+  EventSearchCondition: null,
   EventStat: null,
   Federation: ['code'],
   FederationCompetitorCategoryProgress: ['competitorId', 'categoryId'],
