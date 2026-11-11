@@ -244,17 +244,22 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
           })}
           cmdk-input-wrapper=""
         >
-          <span className="inline-flex items-center border border-accent-7 bg-accent-2 px-3 text-accent-10">
-            <Search className="size-4" aria-hidden="true" />
-          </span>
-          <Command.Input
-            autoFocus={!inline}
-            placeholder="Vyhledat.."
-            className={inputCls({
-              className:
-                'h-10 min-w-0 grow disabled:cursor-not-allowed disabled:opacity-50',
-            })}
-          />
+          <div className="relative min-w-0 grow">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-accent-10"
+              aria-hidden="true"
+            />
+            <Command.Input
+              autoFocus={!inline}
+              placeholder="Vyhledat.."
+              className={inputCls({
+                className: cn(
+                  'h-10 min-w-0 rounded-b-none pl-10 disabled:cursor-not-allowed disabled:opacity-50',
+                  value && 'rounded-tr-none',
+                ),
+              })}
+            />
+          </div>
           {value && (
             <button
               type="button"
