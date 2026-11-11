@@ -40,7 +40,7 @@ const calendarFilters: CalendarFilters = {
   location: [],
   types: calendarTypes,
   relevantOnly: false,
-  free: false,
+  canRegister: false,
   columns: null,
 };
 

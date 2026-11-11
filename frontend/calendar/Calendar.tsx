@@ -107,7 +107,7 @@ export function Calendar({
   const [filters, setFilters] = useQueryStates(
     {
       my: parseAsBoolean.withDefault(defaultOnlyMine),
-      free: parseAsBoolean.withDefault(false),
+      canRegister: parseAsBoolean.withDefault(false),
       v: parseAsStringLiteral(availableViews).withDefault(defaultView),
       columns: parseAsStringLiteral(columnModes),
       groupBy: parseAsStringLiteral(calendarGroupBy).withDefault(defaultGroupBy),
@@ -301,12 +301,12 @@ export function Calendar({
           )}
           <button
             type="button"
-            aria-pressed={filters.free}
+            aria-pressed={filters.canRegister}
             className={buttonCls({
-              variant: filters.free ? 'primary' : 'outline',
+              variant: filters.canRegister ? 'primary' : 'outline',
               size: 'sm',
             })}
-            onClick={() => void setFilters((previous) => ({ free: !previous.free }))}
+            onClick={() => void setFilters((previous) => ({ canRegister: !previous.canRegister }))}
           >
             Pouze volné
           </button>

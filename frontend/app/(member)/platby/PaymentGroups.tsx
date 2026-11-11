@@ -156,6 +156,7 @@ export function PaymentGroups() {
   const {
     control,
     register,
+    handleSubmit,
     getValues,
     setValue,
     reset,
@@ -198,13 +199,6 @@ export function PaymentGroups() {
       })),
     [dates, rows],
   );
-  const gridStyle = React.useMemo(
-    () => ({
-      gridTemplateColumns: `12rem repeat(${dates.length + 1}, 6rem)`,
-    }),
-    [dates.length],
-  );
-
   const initialColumn = React.useMemo(() => {
     const closest = dates.toSorted(
       (a, b) => Math.abs(Date.parse(a) - now) - Math.abs(Date.parse(b) - now),
@@ -244,7 +238,7 @@ export function PaymentGroups() {
   const addColumn = React.useCallback(
     (column: ColumnValues) => {
       const date = column.dueAt;
-      if (dates.some((d) => format(new Date(d), 'yyyy-MM-dd') === date)) return;
+      if (dates.some((d) => format(new Date(d), 'yyyy-MM-dd') === date)) return false;
       const dueAt = new Date(`${date}T00:00:00`).toISOString();
       const values = getValues();
       const amounts = { ...values.amounts };
@@ -253,12 +247,12 @@ export function PaymentGroups() {
       }
       setValue('amounts', amounts, { shouldDirty: true });
       setValue('dates', [...dates, dueAt].toSorted(), { shouldDirty: true });
+      return true;
     },
     [dates, getValues, setValue],
   );
 
-  const submit = useAsyncCallback(async () => {
-    const values = getValues();
+  const submit = useAsyncCallback(async (values: Values) => {
     const payments: PaymentGroupItemInput[] = [];
     for (const row of rows) {
       for (const cell of row.cells) {
@@ -316,7 +310,13 @@ export function PaymentGroups() {
   return (
     <div className="col-full-width content">
       <FormError error={query.error ?? submit.error} />
-      <div className="col-full-width isolate">
+      <form
+        className="col-full-width isolate"
+        onSubmit={handleSubmit(submit.execute)}
+        style={
+          { '--payment-columns': `12rem repeat(${dates.length + 1}, 6rem)` } as React.CSSProperties
+        }
+      >
         <div className="sticky top-0 z-20 bg-neutral-1 content">
           <div className="col-content my-2 grid gap-1 lg:col-popout">
             <fieldset
@@ -356,7 +356,8 @@ export function PaymentGroups() {
                   Zrušit
                 </button>
                 <SubmitButton
-                  action={submit}
+                  type="submit"
+                  state={submit.status}
                   disabled={!isDirty}
                   size="sm"
                   className="h-8 normal-case"
@@ -368,7 +369,7 @@ export function PaymentGroups() {
           <div ref={headerRef} className="col-full-width overflow-hidden">
             <table className="mx-auto block w-max text-sm">
               <thead className="block">
-                <tr className="grid" style={gridStyle}>
+                <tr className="grid grid-cols-(--payment-columns)">
                   <th className={nameCellClass}>Osoba</th>
                   {columns.map((column) => (
                     <th key={column.dueAt} className={cellClass}>
@@ -418,12 +419,11 @@ export function PaymentGroups() {
                   register={register}
                   control={control}
                   disabled={submit.loading}
-                  style={gridStyle}
                 />
               ))}
             </tbody>
             <tfoot className="block font-medium">
-              <tr className="grid" style={gridStyle}>
+              <tr className="grid grid-cols-(--payment-columns)">
                 <th className={nameCellClass}>Celkem {group?.currency}</th>
                 {columns.map((c) => (
                   <PaymentTotal key={c.dueAt} fields={c.fields} control={control} />
@@ -433,7 +433,7 @@ export function PaymentGroups() {
             </tfoot>
           </table>
         </div>
-      </div>
+      </form>
       <Dialog
         open={!!creating}
         onOpenChange={(open) => {
@@ -453,13 +453,11 @@ const PaymentRow = React.memo(function PaymentRow({
   register,
   control,
   disabled,
-  style,
 }: {
   person: Row;
   register: UseFormRegister<Values>;
   control: Control<Values>;
   disabled: boolean;
-  style: React.CSSProperties;
 }) {
   const fields = React.useMemo(
     () => person.cells.map((cell) => `amounts.${cell.key}` as const),
@@ -467,7 +465,7 @@ const PaymentRow = React.memo(function PaymentRow({
   );
   const { dirtyFields } = useFormState({ control, name: fields, exact: true });
   return (
-    <tr className="grid" style={style}>
+    <tr className="grid grid-cols-(--payment-columns)">
       <th scope="row" className={cn(nameCellClass, 'font-normal')}>
         <EntityLink type="person" entity={person} className="block truncate" />
       </th>
@@ -539,7 +537,7 @@ function ColumnForm({
   onAdd,
 }: {
   initialValues: ColumnValues;
-  onAdd: (values: ColumnValues) => void;
+  onAdd: (values: ColumnValues) => boolean;
 }) {
   const { onSuccess } = useFormResult();
 
@@ -558,6 +556,7 @@ function ColumnForm({
   const {
     control,
     handleSubmit,
+    setError,
     resetField,
     getFieldState,
     formState: { dirtyFields },
@@ -587,7 +586,10 @@ function ColumnForm({
     for (const [index, [, people]] of groups.entries()) {
       for (const personId of people) amounts[personId] = String(values.rates[index]);
     }
-    onAdd({ ...initialValues, dueAt: values.dueAt, amounts });
+    if (!onAdd({ ...initialValues, dueAt: values.dueAt, amounts })) {
+      setError('dueAt', { message: 'Sloupec pro toto datum už existuje.' });
+      return;
+    }
     onSuccess();
   });
 

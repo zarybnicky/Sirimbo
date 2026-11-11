@@ -62,7 +62,7 @@ export type CalendarFilters = {
   trainers: string[];
   types: (typeof calendarTypes)[number][];
   relevantOnly: boolean;
-  free: boolean;
+  canRegister: boolean;
   location: string[];
   columns: 'all' | null;
 };
@@ -120,22 +120,21 @@ export function useCalendarData({
   const auth = useAuth();
   const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
-  const withCompetitions = filters.types.includes('COMPETITION');
+  const withCompetitions = !filters.canRegister && filters.types.includes('COMPETITION');
   const client = useClient();
   const range = React.useMemo(() => view.range(date), [view, date]);
   const trainerIds = availableTrainers
     ? filters.trainers.filter((id) => availableTrainers.some((t) => t.id === id))
     : filters.trainers;
 
-  const { personIds, cohortId } = filters.participants;
-  const participant = { ...filters.participants, onlyMine };
+  const { personIds, cohortId, coupleId } = filters.participants;
   const condition = {
     trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
     locationIds: filters.location.length > 0 ? filters.location : undefined,
     types: allEventTypes.filter(
-      (type) => filters.types.includes(type) && (!filters.free || type !== 'GROUP'),
+      (type) => filters.types.includes(type) && (!filters.canRegister || type !== 'GROUP'),
     ),
-    canRegister: filters.free ? true : undefined,
+    canRegister: filters.canRegister ? true : undefined,
     relevantOnly: filters.relevantOnly,
     parentId,
   };
@@ -143,8 +142,12 @@ export function useCalendarData({
   const [{ data, fetching, error, operation }] = useQuery({
     query: CalendarDataDocument,
     variables: prepareVariables(range, {
-      eventCondition: { ...condition, participant },
-      participant,
+      eventCondition: {
+        ...condition,
+        onlyMine,
+        participant: { personIds, cohortId, coupleId },
+      },
+      participant: { ...filters.participants, onlyMine },
       peopleCondition: {
         ids: personIds,
         onlyMine,
@@ -164,7 +167,7 @@ export function useCalendarData({
       withAttendance,
       withCompetitions,
       withOtherClubCompetitors: withOtherClubCompetitors && withCompetitions,
-      withBirthdays: filters.types.includes('BIRTHDAY'),
+      withBirthdays: !filters.canRegister && filters.types.includes('BIRTHDAY'),
       withParticipantOptions: auth.isLoggedIn,
     }),
   });

@@ -21,7 +21,7 @@ import { format } from 'date-fns/format';
 
 const myEventsFilters: CalendarFilters = {
   groupBy: 'none',
-  free: false,
+  canRegister: false,
   participants: { onlyMine: true },
   trainers: [],
   location: [],

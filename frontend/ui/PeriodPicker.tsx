@@ -31,8 +31,8 @@ export function getPeriodRange(unit: PeriodUnit, date: Date) {
   switch (unit) {
     case '12months':
       return {
-        since: add(date, -12, 'month'),
-        until: date,
+        since: new Date(year, month - 11, 1),
+        until: new Date(year, month + 1, 1),
       };
     case 'month':
       return {
@@ -61,10 +61,10 @@ function movePeriod(value: PeriodValue, direction: -1 | 1): PeriodValue {
   return {
     ...value,
     date:
-      value.unit === '12months'
-        ? add(value.date, direction * 12, 'month')
-        : direction < 0
-          ? add(range.since, -1, 'day')
+      direction < 0
+        ? add(range.since, -1, 'day')
+        : value.unit === '12months'
+          ? add(range.until, 11, 'month')
           : range.until,
   };
 }
@@ -111,12 +111,7 @@ export function PeriodPicker({
               : value.unit === 'month'
                 ? capitalize(monthFormatter.format(range.since))
                 : fullDateFormatter
-                    .formatRange(
-                      range.since,
-                      value.unit === '12months'
-                        ? range.until
-                        : add(range.until, -1, 'day'),
-                    )
+                    .formatRange(range.since, add(range.until, -1, 'day'))
                     .replaceAll(/\s+/g, ' ')}
           </span>
           <button

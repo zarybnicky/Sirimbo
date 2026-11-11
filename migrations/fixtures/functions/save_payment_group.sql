@@ -25,22 +25,45 @@ begin
     for update of p;
 
     if found then
-      update payment_recipient set amount = item.amount where payment_id = payment_row.id;
+      update payment_recipient set amount = item.amount
+      where payment_id = payment_row.id and amount is distinct from item.amount;
+      if not found then
+        return next payment_row;
+        continue;
+      end if;
     else
       select * into strict person_row from person where id = item.person_id;
 
-      insert into payment (cohort_subscription_id, due_at, status, variable_symbol, specific_symbol, is_auto_credit_allowed)
-      values (group_id, item.due_at,
+      insert into payment (
+        cohort_subscription_id,
+        due_at,
+        status,
+        variable_symbol,
+        specific_symbol,
+        is_auto_credit_allowed
+      ) values (
+        group_id,
+        item.due_at,
         case when item.due_at > now() then 'tentative'::payment_status else 'unpaid'::payment_status end,
         regexp_replace(coalesce(nullif(person_row.tax_identification_number, ''), person_row.id::text), '[^0-9]', '', 'g'),
-        '' || (extract(year from item.due_at) - 2000) || extract(month from item.due_at)
-          || extract(day from item.due_at) || group_id,
-        current_tenant_id() <> 1)
+        '' || (extract(year from item.due_at) - 2000) || extract(month from item.due_at) || extract(day from item.due_at) || group_id,
+        current_tenant_id() = 2
+      )
       returning * into payment_row;
 
       insert into payment_debtor (payment_id, person_id) values (payment_row.id, item.person_id);
       insert into payment_recipient (payment_id, account_id, amount)
       values (payment_row.id, subscription.account_id, item.amount);
+    end if;
+
+    if payment_row.is_auto_credit_allowed then
+      -- Keep the payment ID while rebuilding its credit transaction and postings.
+      delete from transaction where payment_id = payment_row.id and source = 'auto-credit';
+      update payment set
+        status = case when due_at > now() then 'tentative'::payment_status else 'unpaid'::payment_status end,
+        paid_at = null
+      where id = payment_row.id returning * into payment_row;
+      payment_row := coalesce(resolve_payment_with_credit(payment_row), payment_row);
     end if;
 
     return next payment_row;

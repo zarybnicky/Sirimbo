@@ -234,12 +234,8 @@ export function formatDateOnly(value: string) {
   return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
 }
 
-function createNumericDateFormatter() {
-  const formatter = new Intl.DateTimeFormat('cs-CZ', {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+function createCompactFormatter(options: Intl.DateTimeFormatOptions = {}) {
+  const formatter = new Intl.DateTimeFormat('cs-CZ', options);
   return {
     format(value?: Date | number) {
       return formatter.format(value).replaceAll(/\.\s+/g, '.');
@@ -247,25 +243,20 @@ function createNumericDateFormatter() {
   };
 }
 
-function createNumericDateTimeFormatter() {
-  const formatter = new Intl.DateTimeFormat('cs-CZ', {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-  return {
-    format(value?: Date | number) {
-      return formatter.format(value).replaceAll(/\.\s+/g, '.');
-    },
-  };
-}
-
-export const compactDateFormatter = createNumericDateFormatter();
-export const numericFullFormatter = createNumericDateTimeFormatter();
+export const compactDateFormatter = createCompactFormatter({
+  year: '2-digit',
+  month: '2-digit',
+  day: '2-digit',
+});
+export const numericFullFormatter = createCompactFormatter({
+  year: '2-digit',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+});
 
 const hoursFormatter = new Intl.NumberFormat('cs-CZ', {
   style: 'unit',

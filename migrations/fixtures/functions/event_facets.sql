@@ -45,7 +45,7 @@ language sql stable as $$
       (condition).types is null or type = any((condition).types) as type_matches,
       (condition).trainer_ids is null or trainers && (condition).trainer_ids as trainer_matches,
       (condition).participant_ids is null or case when (condition).cohort_id is null
-        then participants && (condition).participant_ids
+        then (trainers || participants) && (condition).participant_ids
         else (trainers || participants) && array(
           select person_id from cohort_people c
           where c.cohort_id = (condition).cohort_id and person_id = any((condition).participant_ids)
@@ -66,7 +66,7 @@ language sql stable as $$
     union all
     select m.id, 'participant', person_id::text
     from matches m
-    cross join lateral unnest(m.participants) person(person_id)
+    cross join lateral unnest(m.trainers || m.participants) person(person_id)
     where m.type_matches and m.trainer_matches and m.location_matches and m.cohort_matches
       and ((condition).cohort_id is null or person_id in (
         select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
