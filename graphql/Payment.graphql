@@ -153,6 +153,44 @@ mutation MarkAsPaid($id: BigInt!) {
   }
 }
 
+mutation SavePaymentGroup($groupId: BigInt!, $payments: [PaymentGroupItemInput]!) {
+  savePaymentGroup(input: { groupId: $groupId, payments: $payments }) {
+    result {
+      ...PaymentWithDebtors
+    }
+  }
+}
+
+query PaymentGroups($condition: CohortSubscriptionCondition) {
+  groups: cohortSubscriptionsList(orderBy: PRIMARY_KEY_ASC) {
+    id
+    cohort { id name }
+  }
+  selected: cohortSubscriptionsList(first: 1, condition: $condition, orderBy: PRIMARY_KEY_ASC) {
+    id
+    currency
+    cohort {
+      id
+      cohortMembershipsList {
+        id
+        since
+        until
+        person { id name }
+      }
+    }
+    paymentsList {
+      id
+      dueAt
+      status
+      paymentDebtorsList {
+        id
+        price { amount }
+        person { id name }
+      }
+    }
+  }
+}
+
 query TransactionAccounts {
   accountsList {
     ...Account

@@ -15,6 +15,7 @@ export function Table({
   empty = 'Žádná data',
   className,
   bordered = true,
+  stickyFirstColumn = false,
   busy,
   error,
 }: {
@@ -25,6 +26,7 @@ export function Table({
   children: ReactNode;
   className?: string;
   bordered?: boolean;
+  stickyFirstColumn?: boolean;
 } & TableStateProps) {
   const headers = columns
     .filter((c) => !!c)
@@ -34,7 +36,17 @@ export function Table({
   const rows = Children.toArray(children);
   const rowBorders = bordered ? '[&>tr]:border-t [&>tr]:border-neutral-4' : undefined;
   return (
-    <div className={cn('overflow-x-auto', className)} aria-busy={busy}>
+    <div
+      className={cn(
+        'overflow-x-auto',
+        stickyFirstColumn && [
+          'isolate [&_tr>:first-child]:sticky [&_tr>:first-child]:left-0',
+          '[&_tr>:first-child]:z-10 [&_tr>:first-child]:bg-neutral-1',
+        ],
+        className,
+      )}
+      aria-busy={busy}
+    >
       {actions && (
         <div className="mb-2 flex flex-wrap items-center justify-end gap-2">
           {actions}

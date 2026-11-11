@@ -10296,6 +10296,12 @@ type Mutation {
     """
     input: SaveEventsInput!
   ): SaveEventsPayload
+  savePaymentGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SavePaymentGroupInput!
+  ): SavePaymentGroupPayload
   setEventRegistration(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -10785,6 +10791,13 @@ type PaymentFacetsRecord {
   facet: String
   label: String
   value: String
+}
+
+"""An input for mutations affecting `PaymentGroupItem`"""
+input PaymentGroupItemInput {
+  amount: BigFloat
+  dueAt: Datetime
+  personId: BigInt
 }
 
 enum PaymentKind {
@@ -12185,6 +12198,23 @@ type Query {
 
   """Get a single `CohortMembership`."""
   cohortMembership(id: BigInt!): CohortMembership
+
+  """Reads a set of `CohortSubscription`."""
+  cohortSubscriptionsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CohortSubscriptionCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CohortSubscription`."""
+    orderBy: [CohortSubscriptionsOrderBy!]
+  ): [CohortSubscription!]
 
   """Reads a set of `Cohort`."""
   cohortsList(
@@ -13747,6 +13777,27 @@ type SaveEventsPayload {
   """
   clientMutationId: String
   result: [Event!]
+}
+
+"""All input for the `savePaymentGroup` mutation."""
+input SavePaymentGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  groupId: BigInt
+  payments: [PaymentGroupItemInput]
+}
+
+"""The output of our `savePaymentGroup` mutation."""
+type SavePaymentGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  result: [Payment!]
 }
 
 enum ScoreComponent {

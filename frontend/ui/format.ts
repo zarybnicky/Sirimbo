@@ -220,6 +220,19 @@ export function formatDateOnly(value: string) {
   return numericDateWithYearFormatter.format(new Date(`${value}T00:00:00`));
 }
 
+function createNumericDateFormatter() {
+  const formatter = new Intl.DateTimeFormat('cs-CZ', {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return {
+    format(value?: Date | number) {
+      return formatter.format(value).replaceAll(/\.\s+/g, '.');
+    },
+  };
+}
+
 function createNumericDateTimeFormatter() {
   const formatter = new Intl.DateTimeFormat('cs-CZ', {
     year: '2-digit',
@@ -237,6 +250,7 @@ function createNumericDateTimeFormatter() {
   };
 }
 
+export const compactDateFormatter = createNumericDateFormatter();
 export const numericFullFormatter = createNumericDateTimeFormatter();
 
 const hoursFormatter = new Intl.NumberFormat('cs-CZ', {

@@ -42,8 +42,8 @@ export function Scoreboard() {
     query: ScoreboardDocument,
     variables: {
       cohortId: filters.cohortId || null,
-      since: range.since.toISOString().slice(0, 10),
-      until: range.until.toISOString().slice(0, 10),
+      since: range?.since.toISOString().slice(0, 10),
+      until: range?.until.toISOString().slice(0, 10),
     },
   });
 

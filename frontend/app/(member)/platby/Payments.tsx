@@ -4,6 +4,7 @@ import { PageHeader } from '@/ui/PageHeader';
 import { parseAsString, useQueryState } from 'nuqs';
 import { Tab, TabMenu } from '@/ui/TabMenu';
 import { PaymentList } from './PaymentList';
+import { PaymentGroups } from './PaymentGroups';
 import { TransactionList } from './TransactionList';
 import { AccountList } from './AccountList';
 
@@ -22,6 +23,9 @@ export function Payments() {
         </Tab>
         <Tab id="payments" title="Platby">
           <PaymentList />
+        </Tab>
+        <Tab id="groups" title="Skupiny plateb">
+          <PaymentGroups />
         </Tab>
         <Tab id="transactions" title="Transakce">
           <TransactionList />

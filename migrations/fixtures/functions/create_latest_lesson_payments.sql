@@ -2,6 +2,8 @@ CREATE or replace FUNCTION app_private.create_latest_lesson_payments() RETURNS S
   LANGUAGE plpgsql
 AS $$
 begin
+  return query select * from app_private.resolve_due_payments();
+
   perform set_config('jwt.claims.tenant_id', '2', true);
   perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
   if not (select row_security_active('event')) then

@@ -65,3 +65,8 @@ grant insert (name, condition, feed_key, cross_tenant),
 create index if not exists event_saved_search_user_id_idx on event_saved_search (user_id, tenant_id);
 
 --!include functions/event_facets.sql
+--!include functions/save_payment_group.sql
+--!include functions/resolve_payment_with_credit.sql
+--!include functions/create_latest_lesson_payments.sql
+
+comment on table cohort_subscription is '@behavior +list -connection -insert -update -delete -query:resource:connection -query:resource:single';

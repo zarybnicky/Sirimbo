@@ -7861,6 +7861,7 @@ export type Mutation = {
   resendPersonInvitation: Maybe<ResendPersonInvitationPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   saveEvents: Maybe<SaveEventsPayload>;
+  savePaymentGroup: Maybe<SavePaymentGroupPayload>;
   setEventRegistration: Maybe<SetEventRegistrationPayload>;
   setEventSharing: Maybe<SetEventSharingPayload>;
   setLessonRequest: Maybe<SetLessonRequestPayload>;
@@ -8204,6 +8205,12 @@ export type MutationResetPasswordArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSaveEventsArgs = {
   input: SaveEventsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationSavePaymentGroupArgs = {
+  input: SavePaymentGroupInput;
 };
 
 
@@ -8595,6 +8602,13 @@ export type PaymentFacetsRecord = {
   facet: Maybe<Scalars['String']['output']>;
   label: Maybe<Scalars['String']['output']>;
   value: Maybe<Scalars['String']['output']>;
+};
+
+/** An input for mutations affecting `PaymentGroupItem` */
+export type PaymentGroupItemInput = {
+  amount?: InputMaybe<Scalars['BigFloat']['input']>;
+  dueAt?: InputMaybe<Scalars['Datetime']['input']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PaymentKind =
@@ -9517,6 +9531,8 @@ export type Query = {
   cohortGroups: Maybe<CohortGroupConnection>;
   /** Get a single `CohortMembership`. */
   cohortMembership: Maybe<CohortMembership>;
+  /** Reads a set of `CohortSubscription`. */
+  cohortSubscriptionsList: Maybe<Array<CohortSubscription>>;
   /** Reads a set of `Cohort`. */
   cohortsList: Maybe<Array<Cohort>>;
   /** Get a single `Competition`. */
@@ -9862,6 +9878,15 @@ export type QueryCohortGroupsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCohortMembershipArgs = {
   id: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCohortSubscriptionsListArgs = {
+  condition?: InputMaybe<CohortSubscriptionCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CohortSubscriptionsOrderBy>>;
 };
 
 
@@ -11083,6 +11108,28 @@ export type SaveEventsPayload = {
    */
   clientMutationId: Maybe<Scalars['String']['output']>;
   result: Maybe<Array<Event>>;
+};
+
+/** All input for the `savePaymentGroup` mutation. */
+export type SavePaymentGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  groupId?: InputMaybe<Scalars['BigInt']['input']>;
+  payments?: InputMaybe<Array<InputMaybe<PaymentGroupItemInput>>>;
+};
+
+/** The output of our `savePaymentGroup` mutation. */
+export type SavePaymentGroupPayload = {
+  __typename?: 'SavePaymentGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  result: Maybe<Array<Payment>>;
 };
 
 export type ScoreComponent =
@@ -13715,6 +13762,7 @@ export type GraphCacheKeysConfig = {
   ResetPasswordPayload?: (data: WithTypename<ResetPasswordPayload>) => null | string,
   Result?: (data: WithTypename<Result>) => null | string,
   SaveEventsPayload?: (data: WithTypename<SaveEventsPayload>) => null | string,
+  SavePaymentGroupPayload?: (data: WithTypename<SavePaymentGroupPayload>) => null | string,
   ScoreboardManualAdjustment?: (data: WithTypename<ScoreboardManualAdjustment>) => null | string,
   ScoreboardRecord?: (data: WithTypename<ScoreboardRecord>) => null | string,
   SecurityEvent?: (data: WithTypename<SecurityEvent>) => null | string,
@@ -13794,6 +13842,7 @@ export type GraphCacheResolvers = {
     cohortGroup?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupArgs, WithTypename<CohortGroup> | string>,
     cohortGroups?: GraphCacheResolver<WithTypename<Query>, QueryCohortGroupsArgs, WithTypename<CohortGroupConnection> | string>,
     cohortMembership?: GraphCacheResolver<WithTypename<Query>, QueryCohortMembershipArgs, WithTypename<CohortMembership> | string>,
+    cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     cohortsList?: GraphCacheResolver<WithTypename<Query>, QueryCohortsListArgs, Array<WithTypename<Cohort> | string>>,
     competition?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionArgs, WithTypename<Competition> | string>,
     competitionByFederationAndExternalId?: GraphCacheResolver<WithTypename<Query>, QueryCompetitionByFederationAndExternalIdArgs, WithTypename<Competition> | string>,
@@ -15737,6 +15786,10 @@ export type GraphCacheResolvers = {
     clientMutationId?: GraphCacheResolver<WithTypename<SaveEventsPayload>, Record<string, never>, Scalars['String']['output'] | string>,
     result?: GraphCacheResolver<WithTypename<SaveEventsPayload>, Record<string, never>, Array<WithTypename<Event> | string>>
   },
+  SavePaymentGroupPayload?: {
+    clientMutationId?: GraphCacheResolver<WithTypename<SavePaymentGroupPayload>, Record<string, never>, Scalars['String']['output'] | string>,
+    result?: GraphCacheResolver<WithTypename<SavePaymentGroupPayload>, Record<string, never>, Array<WithTypename<Payment> | string>>
+  },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, Scalars['Date']['output'] | string>,
     cohort?: GraphCacheResolver<WithTypename<ScoreboardManualAdjustment>, Record<string, never>, WithTypename<Cohort> | string>,
@@ -16196,6 +16249,7 @@ export type GraphCacheOptimisticUpdaters = {
   resendPersonInvitation?: GraphCacheOptimisticMutationResolver<MutationResendPersonInvitationArgs, Maybe<WithTypename<ResendPersonInvitationPayload>>>,
   resetPassword?: GraphCacheOptimisticMutationResolver<MutationResetPasswordArgs, Maybe<WithTypename<ResetPasswordPayload>>>,
   saveEvents?: GraphCacheOptimisticMutationResolver<MutationSaveEventsArgs, Maybe<WithTypename<SaveEventsPayload>>>,
+  savePaymentGroup?: GraphCacheOptimisticMutationResolver<MutationSavePaymentGroupArgs, Maybe<WithTypename<SavePaymentGroupPayload>>>,
   setEventRegistration?: GraphCacheOptimisticMutationResolver<MutationSetEventRegistrationArgs, Maybe<WithTypename<SetEventRegistrationPayload>>>,
   setEventSharing?: GraphCacheOptimisticMutationResolver<MutationSetEventSharingArgs, Maybe<WithTypename<SetEventSharingPayload>>>,
   setLessonRequest?: GraphCacheOptimisticMutationResolver<MutationSetLessonRequestArgs, Maybe<WithTypename<SetLessonRequestPayload>>>,
@@ -16249,6 +16303,7 @@ export type GraphCacheUpdaters = {
     cohortGroup?: GraphCacheUpdateResolver<{ cohortGroup: Maybe<WithTypename<CohortGroup>> }, QueryCohortGroupArgs>,
     cohortGroups?: GraphCacheUpdateResolver<{ cohortGroups: Maybe<WithTypename<CohortGroupConnection>> }, QueryCohortGroupsArgs>,
     cohortMembership?: GraphCacheUpdateResolver<{ cohortMembership: Maybe<WithTypename<CohortMembership>> }, QueryCohortMembershipArgs>,
+    cohortSubscriptionsList?: GraphCacheUpdateResolver<{ cohortSubscriptionsList: Maybe<Array<WithTypename<CohortSubscription>>> }, QueryCohortSubscriptionsListArgs>,
     cohortsList?: GraphCacheUpdateResolver<{ cohortsList: Maybe<Array<WithTypename<Cohort>>> }, QueryCohortsListArgs>,
     competition?: GraphCacheUpdateResolver<{ competition: Maybe<WithTypename<Competition>> }, QueryCompetitionArgs>,
     competitionByFederationAndExternalId?: GraphCacheUpdateResolver<{ competitionByFederationAndExternalId: Maybe<WithTypename<Competition>> }, QueryCompetitionByFederationAndExternalIdArgs>,
@@ -16404,6 +16459,7 @@ export type GraphCacheUpdaters = {
     resendPersonInvitation?: GraphCacheUpdateResolver<{ resendPersonInvitation: Maybe<WithTypename<ResendPersonInvitationPayload>> }, MutationResendPersonInvitationArgs>,
     resetPassword?: GraphCacheUpdateResolver<{ resetPassword: Maybe<WithTypename<ResetPasswordPayload>> }, MutationResetPasswordArgs>,
     saveEvents?: GraphCacheUpdateResolver<{ saveEvents: Maybe<WithTypename<SaveEventsPayload>> }, MutationSaveEventsArgs>,
+    savePaymentGroup?: GraphCacheUpdateResolver<{ savePaymentGroup: Maybe<WithTypename<SavePaymentGroupPayload>> }, MutationSavePaymentGroupArgs>,
     setEventRegistration?: GraphCacheUpdateResolver<{ setEventRegistration: Maybe<WithTypename<SetEventRegistrationPayload>> }, MutationSetEventRegistrationArgs>,
     setEventSharing?: GraphCacheUpdateResolver<{ setEventSharing: Maybe<WithTypename<SetEventSharingPayload>> }, MutationSetEventSharingArgs>,
     setLessonRequest?: GraphCacheUpdateResolver<{ setLessonRequest: Maybe<WithTypename<SetLessonRequestPayload>> }, MutationSetLessonRequestArgs>,
@@ -18273,6 +18329,10 @@ export type GraphCacheUpdaters = {
   SaveEventsPayload?: {
     clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SaveEventsPayload>>, Record<string, never>>,
     result?: GraphCacheUpdateResolver<Maybe<WithTypename<SaveEventsPayload>>, Record<string, never>>
+  },
+  SavePaymentGroupPayload?: {
+    clientMutationId?: GraphCacheUpdateResolver<Maybe<WithTypename<SavePaymentGroupPayload>>, Record<string, never>>,
+    result?: GraphCacheUpdateResolver<Maybe<WithTypename<SavePaymentGroupPayload>>, Record<string, never>>
   },
   ScoreboardManualAdjustment?: {
     awardedAt?: GraphCacheUpdateResolver<Maybe<WithTypename<ScoreboardManualAdjustment>>, Record<string, never>>,

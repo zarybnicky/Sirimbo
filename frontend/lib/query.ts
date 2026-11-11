@@ -491,6 +491,9 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           'paymentFacetsList',
         ]);
       },
+      savePaymentGroup(_result, _args, cache) {
+        invalidateQueryFields(cache, ['cohortSubscriptionsList', 'payments', 'paymentDebtorsList', 'paymentFacetsList']);
+      },
     },
   },
 };

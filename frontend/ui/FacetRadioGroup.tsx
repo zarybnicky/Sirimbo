@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
 import { buttonCls } from '@/ui/style';
+import type { ReactNode } from 'react';
 
 export function FacetRadioGroup<Value extends string>({
   name,
@@ -9,6 +10,7 @@ export function FacetRadioGroup<Value extends string>({
   options,
   onChange,
   inline = false,
+  children,
 }: {
   name: string;
   label: string;
@@ -17,14 +19,12 @@ export function FacetRadioGroup<Value extends string>({
   options: readonly { value: Value; label: string; count?: number; className?: string }[];
   onChange: (value: Value) => void;
   inline?: boolean;
+  children?: ReactNode;
 }) {
   const fieldset = (
     <fieldset className="min-w-0">
       <legend
-        className={cn(
-          'text-xs font-medium text-neutral-11',
-          inline ? 'sr-only' : 'mb-1',
-        )}
+        className={cn('text-xs font-medium text-neutral-11', inline ? 'sr-only' : 'mb-1')}
       >
         {label}
       </legend>
@@ -70,6 +70,7 @@ export function FacetRadioGroup<Value extends string>({
             </span>
           </label>
         ))}
+        {children}
       </div>
     </fieldset>
   );
@@ -80,5 +81,7 @@ export function FacetRadioGroup<Value extends string>({
       </span>
       {fieldset}
     </div>
-  ) : fieldset;
+  ) : (
+    fieldset
+  );
 }

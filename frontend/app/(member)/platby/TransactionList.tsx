@@ -76,8 +76,8 @@ export function TransactionList() {
     accountIds,
     sources: filters.sources.length === defaultSources.length ? null : filters.sources,
     date: {
-      since: range.since.toISOString(),
-      until: range.until.toISOString(),
+      since: range?.since.toISOString(),
+      until: range?.until.toISOString(),
     },
     search,
   };
