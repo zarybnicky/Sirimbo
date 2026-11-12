@@ -1,4 +1,4 @@
-fragment TenantFull on Tenant {
+fragment Tenant on Tenant {
   id
   name
   cstsId
@@ -16,7 +16,7 @@ fragment TenantFull on Tenant {
     postalCode
   }
   origins
-  tenantSetting @include(if: $isSystemAdmin) {
+  tenantSetting {
     tenantId
     settings
   }
@@ -31,15 +31,28 @@ fragment TenantFull on Tenant {
   }
 }
 
-query TenantsFull($isSystemAdmin: Boolean! = false) {
+query Tenants {
   tenantsList(orderBy: [NAME_ASC]) {
-    ...TenantFull
+    ...Tenant
   }
 }
 
-query Club($showInLists: Boolean, $isSystemAdmin: Boolean! = false) {
+query Tenant($tenantId: BigInt!) {
+  tenant(id: $tenantId) {
+    ...Tenant
+  }
+  clubs: federationClubs(first: 300, orderBy: NAME_ASC) {
+    nodes {
+      id
+      externalId
+      name
+    }
+  }
+}
+
+query Club($showInLists: Boolean) {
   tenant: getCurrentTenant {
-    ...TenantFull
+    ...Tenant
     tenantAdministratorsList(condition: { status: ACTIVE }, orderBy: SINCE_ASC) {
       ...TenantAdministrator
     }
@@ -66,10 +79,10 @@ query TenantFormOptions {
   }
 }
 
-mutation UpdateTenant($input: UpdateTenantInput!, $isSystemAdmin: Boolean! = false) {
+mutation UpdateTenant($input: UpdateTenantInput!) {
   updateTenant(input: $input) {
     tenant {
-      ...TenantFull
+      ...Tenant
     }
   }
 }

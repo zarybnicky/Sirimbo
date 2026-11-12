@@ -9,14 +9,14 @@ import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { formatAddress, moneyFormatter } from '@/ui/format';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { LocationForm } from '@/ui/forms/LocationForm';
-import { TenantForm } from '@/ui/forms/TenantForm.tsx';
 import { useAuth } from '@/lib/auth';
-import { Pencil, PinIcon } from 'lucide-react';
+import { PinIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from '@/ui/Image';
 import { useQuery } from 'urql';
 import { ClubDocument, type ClubQuery } from '@/graphql/Tenant';
 import { useActionMap, useActions } from '@/lib/actions';
+import { tenantActions } from '@/lib/actions/tenant';
 import { tenantAdministratorActions } from '@/lib/actions/tenantAdministrator';
 import { locationActions } from '@/lib/actions/location';
 import { tenantTrainerActions } from '@/lib/actions/tenantTrainer';
@@ -44,7 +44,6 @@ export function Club() {
     query: ClubDocument,
     variables: {
       showInLists: auth.isAdmin ? undefined : true,
-      isSystemAdmin: auth.isSystemAdmin,
     },
   });
   const [{ data: applications }] = useQuery({
@@ -52,19 +51,7 @@ export function Club() {
     variables: { condition: { status: 'SENT' } },
     pause: !auth.isAdmin,
   });
-  const tenantActions = useActions(
-    [
-      {
-        id: 'tenant.edit',
-        group: 'primary',
-        label: 'Upravit klub',
-        icon: Pencil,
-        requireAdmin: true,
-        render: ({ item }) => <TenantForm tenant={item} />,
-      },
-    ],
-    tenant?.tenant,
-  );
+  const actions = useActions(tenantActions, tenant?.tenant ? tenant.tenant : null);
 
   if (!tenant?.tenant) return null;
   const club = tenant.tenant;
@@ -72,7 +59,7 @@ export function Club() {
 
   return (
     <>
-      <PageHeader title={club.name} actions={tenantActions} />
+      <PageHeader title={club.name} actions={actions} />
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="info" title="Informace">
           <ClubInformation club={club} />

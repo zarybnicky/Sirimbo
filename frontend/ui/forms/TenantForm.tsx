@@ -1,14 +1,9 @@
-import {
-  TenantFormOptionsDocument,
-  type TenantFullFragment,
-  UpdateTenantDocument,
-  ReplaceTenantSettingsDocument,
-} from '@/graphql/Tenant';
+import { TenantDocument, UpdateTenantDocument } from '@/graphql/Tenant';
 import { useAuth } from '@/lib/auth';
 import { RichTextEditor } from '@/ui/fields/richtext';
 import { ComboboxElement } from '@/ui/fields/Combobox';
 import { TextFieldElement } from '@/ui/fields/text';
-import { TextAreaElement } from '@/ui/fields/textarea';
+import { DialogTitle } from '@/ui/dialog';
 import { FormError, useFormResult } from '@/ui/form';
 import { SubmitButton } from '@/ui/submit';
 import React from 'react';
@@ -25,17 +20,6 @@ const Form = z.object({
   czIco: z.string(),
   czDic: z.string(),
   origins: z.string(),
-  settings: z
-    .string()
-    .refine((value) => {
-      try {
-        const parsed = JSON.parse(value);
-        return parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    }, 'Nastavení musí být JSON objekt.')
-    .optional(),
   address: z
     .object({
       street: z.string().nullish(),
@@ -49,25 +33,26 @@ const Form = z.object({
     .nullable(),
 });
 
-export function TenantForm({ tenant }: { tenant: TenantFullFragment }) {
+export function TenantForm({ tenantId }: { tenantId: string }) {
   const auth = useAuth();
-  const [{ data, error }] = useQuery({ query: TenantFormOptionsDocument });
+  const [query] = useQuery({
+    query: TenantDocument,
+    variables: { tenantId },
+  });
   const { onSuccess } = useFormResult();
   const [result, update] = useMutation(UpdateTenantDocument);
-  const [settingsResult, replaceSettings] = useMutation(ReplaceTenantSettingsDocument);
 
   const { reset, control, handleSubmit } = useForm({
     resolver: zodResolver(Form),
   });
+  const tenant = query.data?.tenant;
   React.useEffect(() => {
+    if (!tenant) return;
     reset(
       {
         ...tenant,
         cstsId: tenant.cstsId?.toString() ?? null,
         origins: tenant.origins.join(', '),
-        settings: auth.isSystemAdmin
-          ? JSON.stringify(tenant.tenantSetting?.settings ?? {}, null, 2)
-          : undefined,
       },
       {
         keepDirtyValues: true,
@@ -75,13 +60,14 @@ export function TenantForm({ tenant }: { tenant: TenantFullFragment }) {
         keepErrors: true,
       },
     );
-  }, [reset, tenant, auth.isSystemAdmin]);
+  }, [reset, tenant]);
 
   const onSubmit = async (values: z.infer<typeof Form>) => {
-    const { origins, settings, ...details } = values;
+    if (!tenant || query.error) return;
+    const { origins, ...details } = values;
     const result = await update({
       input: {
-        id: tenant.id,
+        id: tenantId,
         patch: {
           ...details,
           ...(auth.isSystemAdmin && {
@@ -96,28 +82,20 @@ export function TenantForm({ tenant }: { tenant: TenantFullFragment }) {
             : null,
         },
       },
-      isSystemAdmin: auth.isSystemAdmin,
     });
-    if (result.error) return;
-    if (auth.isSystemAdmin && settings !== undefined) {
-      const saved = await replaceSettings({
-        tenantId: tenant.id,
-        settings: JSON.parse(settings),
-      });
-      if (saved.error) return;
-    }
-    onSuccess();
+    if (!result.error) onSuccess();
   };
 
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
-      <FormError error={result.error ?? settingsResult.error ?? error} />
+      <DialogTitle>Upravit klub</DialogTitle>
+      <FormError error={result.error ?? query.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <ComboboxElement
         control={control}
         name="cstsId"
         label="Klub ČSTS"
-        options={data?.clubs?.nodes.map((club) => ({
+        options={query.data?.clubs?.nodes.map((club) => ({
           id: club.externalId,
           label: `${club.name} (${club.externalId})`,
         }))}
@@ -165,15 +143,7 @@ export function TenantForm({ tenant }: { tenant: TenantFullFragment }) {
           <TextFieldElement control={control} name="address.region" label="Kraj" />
         </div>
       </fieldset>
-      {auth.isSystemAdmin && (
-        <TextAreaElement
-          control={control}
-          name="settings"
-          label="Nastavení (JSON)"
-          className="font-mono"
-        />
-      )}
-      <SubmitButton control={control} />
+      <SubmitButton control={control} disabled={!tenant || !!query.error} />
     </form>
   );
 }

@@ -3,15 +3,16 @@
 import { DefinitionList } from '@/ui/DefinitionList';
 import { RichTextView } from '@/ui/RichTextView';
 import { formatAddress } from '@/ui/format';
-import { TenantFullFragment, TenantsFullDocument } from '@/graphql/Tenant.ts';
-import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
+import { TenantFragment, TenantsDocument } from '@/graphql/Tenant.ts';
+import { useActions } from '@/lib/actions';
+import { tenantActions } from '@/lib/actions/tenant';
+import { ActionGroup } from '@/ui/ActionGroup';
 import { Table } from '@/ui/Table';
 import { cardCls } from '@/ui/style';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import React from 'react';
 import { Sheet } from 'react-modal-sheet';
 import { useQuery } from 'urql';
-import { TenantForm } from '@/ui/forms/TenantForm';
 import { parseAsString, useQueryState } from 'nuqs';
 
 // Mobile sheet: 2 detents + closed.
@@ -32,10 +33,7 @@ function useMediaQuery(query: string) {
 }
 
 export function Tenants() {
-  const [{ data, fetching, error }] = useQuery({
-    query: TenantsFullDocument,
-    variables: { isSystemAdmin: true },
-  });
+  const [{ data, fetching, error }] = useQuery({ query: TenantsDocument });
   const tenants = data?.tenantsList;
 
   const [selectedId, setSelectedId] = useQueryState(
@@ -120,17 +118,13 @@ export function Tenants() {
   );
 }
 
-function TenantCard({ tenant }: Readonly<{ tenant: TenantFullFragment }>) {
+function TenantCard({ tenant }: Readonly<{ tenant: TenantFragment }>) {
+  const actions = useActions(tenantActions, tenant);
   return (
     <div className={cardCls({ className: 'min-w-0 space-y-3' })}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-bold">{tenant.name}</h2>
-        <Dialog>
-          <DialogTrigger.Edit size="sm" />
-          <DialogContent>
-            <TenantForm tenant={tenant} />
-          </DialogContent>
-        </Dialog>
+        <ActionGroup actions={actions} />
       </div>
       <RichTextView className="text-sm text-neutral-12" value={tenant.description} />
       <DefinitionList
