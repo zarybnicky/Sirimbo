@@ -7,6 +7,7 @@ type CacheKeyFields = {
 
 export const cacheKeyFields = {
   AddressDomain: null,
+  AnnouncementAttachment: ['announcementId', 'fileId'],
   AgeGroup: ['code'],
   CompetitionEntry: ['competitionId', 'competitorId'],
   CompetitionOfficial: ['competitionId', 'personId', 'role'],
