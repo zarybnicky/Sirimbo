@@ -12692,9 +12692,6 @@ type Query {
 
     """Skip the first `n` values."""
     offset: Int
-
-    """Apply one of your saved searches within the current tenant."""
-    savedSearch: BigInt
     startRange: Datetime
   ): [EventFacetsRecord!]
   eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")

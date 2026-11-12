@@ -10209,7 +10209,6 @@ export type QueryEventFacetsListArgs = {
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
 };
 

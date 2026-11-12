@@ -17,7 +17,9 @@ language sql stable as $$
     where person_id = any((select current_person_ids())::bigint[])
   ), cohort_people as (
     select cohort_id, person_id from current_cohort_membership
-    where ((condition).participant_ids is not null
+    where (not coalesce((condition).only_mine, false)
+        or person_id = any((select current_person_ids())::bigint[]))
+      and ((condition).participant_ids is not null or coalesce((condition).only_mine, false)
         or person_id in (
           select person_id from current_tenant_membership
           union all select person_id from current_tenant_trainer

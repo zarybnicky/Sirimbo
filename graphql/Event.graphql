@@ -699,7 +699,7 @@ query CalendarData(
   }
   ... @include(if: $withFacets) @skip(if: $forIcs) {
     eventFacetsList(
-      startRange: $start, endRange: $end, condition: $facetCondition, savedSearch: $savedSearch
+      startRange: $start, endRange: $end, condition: $facetCondition
     ) @_required {
       facet
       value
