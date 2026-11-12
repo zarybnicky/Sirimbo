@@ -25987,6 +25987,13 @@
                 }
               },
               {
+                "name": "savedSearch",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "startRange",
                 "type": {
                   "kind": "SCALAR",
