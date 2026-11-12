@@ -1,4 +1,4 @@
-import { Coins, Link2, LockKeyhole, MailPlus, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
+import { Coins, Link2, LockKeyhole, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
 import { DeletePersonDocument } from '@/graphql/Person';
 import { EditPersonForm } from '@/ui/forms/EditPersonForm';
 import { CreateCoupleForm } from '@/ui/forms/CreateCoupleForm';
@@ -13,8 +13,7 @@ import {
 } from '@/graphql/Memberships';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
-import { LinkUserToPersonForm } from '@/ui/forms/LinkUserToPersonForm';
-import { CreateInvitationForm } from '@/ui/forms/CreateInvitationForm';
+import { AddPersonAccessForm } from '@/ui/forms/AddPersonAccessForm';
 import { DialogTitle } from '@/ui/dialog';
 import { GenderType } from '@/graphql';
 
@@ -26,7 +25,6 @@ export type PersonActionItem = {
   isMember: boolean | null;
   isTrainer: boolean | null;
   isAdmin: boolean | null;
-  canInvite?: boolean;
   matchingUserIds?: string[];
 };
 
@@ -114,11 +112,11 @@ export const personActions = defineActions<PersonActionItem>()([
     },
   },
   {
-    id: 'person.linkUser',
-    label: 'Přiřadit existující účet',
-    icon: Link2,
+    id: 'person.addAccess',
+    label: 'Pozvat uživatele',
+    icon: UserPlus,
     requireAdmin: true,
-    render: ({ item }) => <LinkUserToPersonForm personId={item.id} />,
+    render: ({ item }) => <AddPersonAccessForm personId={item.id} />,
   },
   {
     id: 'person.assignUserByEmail',
@@ -135,14 +133,6 @@ export const personActions = defineActions<PersonActionItem>()([
         ),
       );
     },
-  },
-  {
-    id: 'person.invite',
-    label: 'Pozvat e-mailem',
-    icon: MailPlus,
-    requireAdmin: true,
-    visible: ({ item }) => item.canInvite !== false,
-    render: ({ item }) => <CreateInvitationForm personId={item.id} />,
   },
   {
     id: 'person.addAccessCredential',

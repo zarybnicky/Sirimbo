@@ -51,7 +51,7 @@ export function Club() {
     variables: { condition: { status: 'SENT' } },
     pause: !auth.isAdmin,
   });
-  const actions = useActions(tenantActions, tenant?.tenant ? tenant.tenant : null);
+  const actions = useActions(tenantActions, tenant?.tenant ?? null);
 
   if (!tenant?.tenant) return null;
   const club = tenant.tenant;

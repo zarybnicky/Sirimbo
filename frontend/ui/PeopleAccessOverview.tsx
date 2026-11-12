@@ -538,10 +538,7 @@ const PersonAccessRow = React.memo(function PersonAccessRow({
       )}
       <td className="text-right max-sm:col-start-2 max-sm:row-start-1">
         <AccessMenu
-          person={{
-            ...person,
-            canInvite: accountCount === 0 && invitations.length === 0,
-          }}
+          person={person}
           credentials={credentials}
           userActionMap={userActionMap}
           invitationActionMap={invitationActionMap}
@@ -559,7 +556,7 @@ function AccessMenu({
   invitationActionMap,
   credentialActionMap,
 }: Readonly<{
-  person: AccessPerson & { canInvite: boolean };
+  person: AccessPerson;
   credentials: readonly AccessCredentialFragment[];
   userActionMap: ActionMap;
   invitationActionMap: ActionMap;
@@ -567,9 +564,7 @@ function AccessMenu({
 }>) {
   const resolvedPersonActions = useActions(personActions, person);
   const actions: ResolvedAction[] = [
-    ...resolvedPersonActions.filter(({ id }) =>
-      ['person.linkUser', 'person.invite'].includes(id),
-    ),
+    ...resolvedPersonActions.filter(({ id }) => id === 'person.addAccess'),
     ...person.userProxiesList.flatMap((proxy) =>
       (userActionMap.get(proxy.id) ?? []).filter((x) =>
         ['userProxy.edit', 'userProxy.endToday'].includes(x.id),

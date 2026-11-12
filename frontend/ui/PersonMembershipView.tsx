@@ -172,14 +172,13 @@ export const PersonMembershipView = memo(function PersonMembershipView({
 
       {(item.userProxiesList?.some(keyIsNonNull('user')) ||
         !!item.personInvitationsList?.length ||
-        actions.some((x) => ['person.invite', 'person.linkUser'].includes(x.id))) && (
+        actions.some((x) => x.id === 'person.addAccess')) && (
         <div className="flex justify-between items-baseline gap-x-2">
           <h3 className="text-lg font-semibold mt-4 mb-2">Přístupové údaje</h3>
           <ActionGroup
-            actions={actions.filter((x) =>
-              ['person.invite', 'person.linkUser'].includes(x.id),
-            )}
-            groups={{ add: ['person.invite', 'person.linkUser'] }}
+            actions={actions.filter((x) => x.id === 'person.addAccess')}
+            primary="person.addAccess"
+            iconOnly
           />
         </div>
       )}

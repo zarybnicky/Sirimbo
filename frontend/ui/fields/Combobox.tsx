@@ -1,4 +1,4 @@
-import { Check, ChevronDown, ChevronsDown, Search, XCircle } from 'lucide-react';
+import { Check, ChevronDown, ChevronsDown, Info, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import {
@@ -217,6 +217,9 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   inline = false,
   disabled = false,
   searchable = true,
+  inputProps,
+  inputIcon: InputIcon = Search,
+  emptyMessage = 'Nic jsme nenašli.',
 }: {
   value?: string | null | undefined;
   onChange: (x: string | null | undefined) => void;
@@ -224,10 +227,18 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
   inline?: boolean;
   disabled?: boolean;
   searchable?: boolean;
+  inputProps?: React.ComponentProps<typeof Command.Input> & {
+    type?: React.HTMLInputTypeAttribute;
+  };
+  inputIcon?: typeof Search;
+  emptyMessage?: React.ReactNode;
 }) {
+  const hasResults = options.length > 0 || !!emptyMessage;
+
   return (
     <Command
       tabIndex={searchable ? -1 : 0}
+      label={inputProps?.['aria-label']}
       className={cn(
         'rounded-md border border-accent-7 bg-neutral-1 h-full max-h-full relative',
         !searchable && 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9',
@@ -240,25 +251,34 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
       {searchable && (
         <div
           className={inputGroupCls({
-            className: '-m-px mb-0 w-[calc(100%+2px)] [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none',
+            className: cn(
+              '-m-px w-[calc(100%+2px)]',
+              hasResults && 'mb-0 [&>*:first-child]:rounded-bl-none [&>*:last-child]:rounded-br-none',
+            ),
           })}
           cmdk-input-wrapper=""
         >
           <div className="relative min-w-0 grow">
-            <Search
+            <InputIcon
               className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-accent-10"
               aria-hidden="true"
             />
             <Command.Input
               autoFocus={!inline}
               placeholder="Vyhledat.."
+              disabled={disabled}
               className={inputCls({
                 className: cn(
-                  'h-10 min-w-0 rounded-b-none pl-10 disabled:cursor-not-allowed disabled:opacity-50',
+                  'h-10 min-w-0 pl-10 disabled:cursor-not-allowed disabled:opacity-50',
+                  hasResults && 'rounded-b-none',
                   value && 'rounded-tr-none',
                 ),
               })}
-            />
+              {...inputProps}
+              asChild
+            >
+              <input type={inputProps?.type ?? 'text'} />
+            </Command.Input>
           </div>
           {value && (
             <button
@@ -278,7 +298,6 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
         </div>
       )}
 
-      <Command.Empty>Nic jsme nenašli.</Command.Empty>
       <Command.List
         className={cn(
           'scrollbar overflow-auto overscroll-contain',
@@ -288,6 +307,12 @@ export const ComboboxSearchArea = React.memo(function ComboboxSearchArea({
           'h-(--cmdk-list-height)',
         )}
       >
+        {emptyMessage && (
+          <Command.Empty className="flex items-center gap-2 rounded-b-md bg-neutral-2 p-3 text-sm text-neutral-11">
+            <Info className="size-4 shrink-0 text-neutral-9" aria-hidden="true" />
+            <span>{emptyMessage}</span>
+          </Command.Empty>
+        )}
         {[false, true].map((itemDisabled) => (
           <Command.Group key={String(itemDisabled)}>
             {options.filter((item) => !!item.disabled === itemDisabled).map((item) => (

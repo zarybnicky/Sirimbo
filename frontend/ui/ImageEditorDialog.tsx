@@ -1,5 +1,3 @@
-'use client';
-
 import Image from '@/ui/Image';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import { ImageLibraryDialog, uploadFile } from '@/ui/forms/FilePicker';
