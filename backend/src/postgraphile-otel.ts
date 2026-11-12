@@ -1,7 +1,7 @@
 import { type Span, SpanStatusCode, trace } from '@opentelemetry/api';
 import type { Result } from 'postgraphile/grafserv';
 import { isPromiseLike } from 'postgraphile/grafast';
-import { print } from 'postgraphile/graphql';
+import { getOperationAST, print } from 'postgraphile/graphql';
 
 declare module 'postgraphile/grafast' {
   interface ExecutionExtra {
@@ -92,17 +92,24 @@ export const OTELPlugin: GraphileConfig.Plugin = {
           return next();
         }
 
+        const inferredOperationName = operationName == null
+          ? getOperationAST(document)?.name?.value
+          : undefined;
         let traceName = '';
         if (requestContext?.http) {
           traceName = `${requestContext.http.method} ${requestContext.http.path}`;
         }
-
         if (operationName) {
           traceName += ` (${operationName})`;
+        } else if (inferredOperationName) {
+          traceName += ` (${inferredOperationName}?)`;
         }
 
         span.updateName(traceName);
         span.setAttribute('operation.name', operationName || 'unknown');
+        if (inferredOperationName) {
+          span.setAttribute('operation.name.inferred', inferredOperationName);
+        }
         span.setAttribute('operation.document', print(document));
         if (
           typeof contextValue === 'object' &&

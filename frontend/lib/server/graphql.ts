@@ -4,6 +4,7 @@ import { getRequestContext } from '@/lib/server/tenant';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { getOperationAST, print } from 'graphql';
+import { headers as getHeaders } from 'next/headers';
 
 type GraphqlError = {
   message: string;
@@ -31,11 +32,26 @@ export async function executeGraphql<
   headers?: Record<string, string>,
 ) {
   const context = headers?.authorization ? null : await getRequestContext();
+  const incomingHeaders = await getHeaders();
+  const forwardedHeaders: Record<string, string> = {};
+  for (const name of [
+    'user-agent',
+    'accept-language',
+    'origin',
+    'referer',
+    'x-forwarded-for',
+    'x-forwarded-host',
+    'x-forwarded-proto',
+  ]) {
+    const value = incomingHeaders.get(name);
+    if (value) forwardedHeaders[name] = value;
+  }
   const response = await fetch(graphqlUrl(), {
     method: 'POST',
     cache: 'no-store',
     headers: {
       'content-type': 'application/json',
+      ...forwardedHeaders,
       ...(context ? {
         'x-tenant-id': context.tenant.id.toString(),
         ...(context.token ? { cookie: `${SESSION_COOKIE}=${context.token}` } : {}),
