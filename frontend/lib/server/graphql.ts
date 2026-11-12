@@ -3,7 +3,7 @@ import 'server-only';
 import { getRequestContext } from '@/lib/server/tenant';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { print } from 'graphql';
+import { getOperationAST, print } from 'graphql';
 
 type GraphqlError = {
   message: string;
@@ -44,6 +44,7 @@ export async function executeGraphql<
     },
     body: JSON.stringify({
       query: print(document),
+      operationName: getOperationAST(document)?.name?.value,
       variables: variables ?? {},
     }),
   });
