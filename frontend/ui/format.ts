@@ -7,7 +7,7 @@ import {
   ScoringMethod,
 } from '@/graphql';
 import type { PaymentFragment } from '@/graphql/Payment';
-import type { CompetitionResultFragment } from '@/graphql/CompetitionParticipation';
+import type { CompetitionParticipationFragment } from '@/graphql/CompetitionParticipation';
 import type { FederationCategoryProgressFragment } from '@/graphql/Federation';
 import { isTruthy } from '@/lib/truthyFilter';
 
@@ -45,7 +45,7 @@ export const numberFormatter = new Intl.NumberFormat('cs-CZ', {
 
 export function formatPointsAndFinals(
   value:
-    | Partial<Pick<CompetitionResultFragment, 'pointGain' | 'finalGain'>>
+    | Partial<Pick<CompetitionParticipationFragment, 'pointGain' | 'finalGain'>>
     | Pick<
         FederationCategoryProgressFragment,
         'points' | 'domesticFinals' | 'foreignFinals'

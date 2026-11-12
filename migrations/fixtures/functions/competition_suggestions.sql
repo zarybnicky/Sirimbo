@@ -85,7 +85,7 @@ language sql stable as $$
       and c.status <> 'cancelled' and e.status <> 'cancelled'
     group by c.federation, c.competition_type, extract(year from c.start_date)::int, cat.id
   ), participations as materialized (
-    select p.*
+    select p.competition_id, p.competitor_id, p.cancelled
     from federated.competition_participation p
     where p.competition_id = any(array(select unnest(competition_ids) from upcoming))
       and p.competitor_id = any(array(select id from scoped_competitors))

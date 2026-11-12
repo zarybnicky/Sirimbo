@@ -49,12 +49,16 @@ function entryLabel(entry: CompetitionEntry, competition: boolean) {
 export function CompetitionEventCard({
   entries,
   officials = [],
+  event: suppliedEvent,
+  date: suppliedDate,
   collapsedEntries = entries,
   collapsedOfficials = officials,
   showDate = false,
   className,
 }: {
   entries: readonly CompetitionEntry[];
+  event?: CompetitionEntry['competition']['event'];
+  date?: string;
   officials?: readonly CompetitionOfficialAssignment[];
   collapsedEntries?: readonly CompetitionEntry[];
   collapsedOfficials?: readonly CompetitionOfficialAssignment[];
@@ -64,8 +68,8 @@ export function CompetitionEventCard({
   const [open, setOpen] = React.useState(false);
   const [override, setOverride] = React.useState<boolean | null>(null);
   const competition = entries[0]?.competition;
-  const event = competition?.event ?? officials[0]?.event;
-  const date = competition?.startDate ?? officials[0]?.date;
+  const event = suppliedEvent ?? competition?.event;
+  const date = suppliedDate ?? competition?.startDate;
   if (!competition && !event) return null;
   const canExpand =
     entries.length > collapsedEntries.length ||
@@ -118,7 +122,7 @@ export function CompetitionEventCard({
           )}
         >
           <CompetitionLink
-            federation={competition?.federation ?? officials[0]?.federation}
+            federation={competition?.federation ?? event?.federation}
             eventId={event?.externalId}
             className={cn(
               'text-green-11 hover:text-green-12',
@@ -221,7 +225,7 @@ function CompetitionGroupContent({
 }) {
   const checkInEnd = byCompetition && entries[0]!.competition.checkInEnd;
   const showLeadingColumn =
-    !byCompetition || entries.some((x) => x.ranking !== undefined);
+    !byCompetition || entries.some((x) => x.ranking != null);
   return (
     <div
       className={cn(
@@ -259,7 +263,7 @@ function CompetitionGroupContent({
         .toSorted(
           (a, b) =>
             (a.ranking ?? Infinity) - (b.ranking ?? Infinity) ||
-            (a.ranking === undefined
+            (a.ranking == null
               ? (a.competition.checkInEnd ?? '24:00').localeCompare(
                   b.competition.checkInEnd ?? '24:00',
                 )
@@ -276,7 +280,7 @@ function CompetitionGroupContent({
             >
               {showLeadingColumn && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-neutral-11">
-                  {ranking !== undefined ? (
+                  {ranking != null ? (
                     <>
                       <span className={ranking <= 3 ? 'text-accent-11' : ''}>
                         {ranking}
@@ -296,7 +300,7 @@ function CompetitionGroupContent({
               <div className="min-w-0 font-semibold text-neutral-12">
                 <CompetitionLabel entry={entry} competition={!byCompetition} />
               </div>
-              {ranking !== undefined && (
+              {ranking != null && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
                   {formatPointsAndFinals(entry, 'gain')}
                 </div>

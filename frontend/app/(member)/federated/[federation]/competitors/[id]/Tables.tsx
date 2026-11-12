@@ -26,7 +26,7 @@ export function History({ federation, id }: { federation: string; id: string }) 
   });
   const history = data?.competitions?.nodes || [];
 
-  const showPoints = history.some((row) => row.results.some((x) => x.pointGain != null));
+  const showPoints = history.some((row) => row.participations.some((x) => x.pointGain != null));
 
   return (
     <>
@@ -39,8 +39,8 @@ export function History({ federation, id }: { federation: string; id: string }) 
       >
         {history.map((row) => {
           const categoryName = formatCategoryName(row) || row.externalId;
-          const result = row.results[0];
-          const cancelled = row.entries[0]?.cancelled;
+          const result = row.participations[0];
+          const cancelled = result?.cancelled;
           return (
             <tr key={row.id}>
               <td className="whitespace-nowrap">{formatDateOnly(row.startDate)}</td>

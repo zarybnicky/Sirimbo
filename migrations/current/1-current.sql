@@ -142,3 +142,13 @@ drop function if exists app_private.accessible_event_ids();
 --!include policies/event_target_cohort.sql
 --!include functions/cohort_has_accessible_event.sql
 --!include functions/visible_file_ids.sql
+
+--!include views/competition_participation.sql
+--!include views/official_assignment.sql
+drop function if exists federation_calendar(text[], bigint[], text[], date, date, boolean, integer, integer);
+drop function if exists federation_calendar(text[], bigint[], text[], date, date, boolean, boolean, integer, integer);
+drop type if exists federation_calendar_day;
+drop type if exists federation_calendar_official;
+drop type if exists federation_calendar_participation;
+
+--!include functions/competition_suggestions.sql

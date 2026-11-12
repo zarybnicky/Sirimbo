@@ -1,5 +1,5 @@
-import { groupCompetitionEvents, type CompetitionOfficialAssignment } from '@/calendar/competitions';
-import { CalendarDataDocument, type CalendarDataQuery, type CalendarFederationEventFragment } from '@/graphql/Event';
+import { federationCalendarDays } from '@/calendar/competitions';
+import { CalendarDataDocument, type CalendarDataQuery } from '@/graphql/Event';
 import { normalizeClaims } from '@/lib/auth-claims';
 import { executeGraphql } from '@/lib/server/graphql';
 import { runQuery } from '@/lib/server/postgresql';
@@ -15,7 +15,7 @@ import { calendarFeedOwner } from './calendar.queries';
 
 const summaryToText = compile({ wordwrap: false });
 
-type Competition = NonNullable<CalendarDataQuery['competitions']>['nodes'][number];
+type CalendarDay = ReturnType<typeof federationCalendarDays>[number];
 
 export async function GET(request: Request, { params }: { params: Promise<{ key: string }> }) {
   const { key } = await params;
@@ -37,7 +37,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         savedSearch: search.id,
         withCompetitions: search.with_competitions ?? false,
         withEvents: pages.length === 0,
-        forIcs: true,
+        withCalendarExport: true,
+        withRegistrationOptions: false,
+        withFacets: false,
+        withBirthdays: false,
         registrationLimit: null,
         offset: pages.length * 300,
       }, {
@@ -45,8 +48,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         'x-tenant-id': tenantId,
       });
       pages.push(data);
-      hasNextPage = [data.competitions, data.officialEvents]
-        .some((connection) => connection?.pageInfo.hasNextPage);
+      hasNextPage = data.federationEvents?.pageInfo.hasNextPage ?? false;
     } while (hasNextPage);
     const origin = getTenant(tenantId)?.config.origin ?? new URL(request.url).origin;
     return { origin, pages };
@@ -54,9 +56,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
 
   const name = `${search.tenant_name ?? 'Sirimbo'} – ${search.name}`;
   const calendar = ical({ name, prodId: { company: 'Sirimbo', product: 'Calendar', language: 'CS' } });
-  const competitions = new Map<string, Competition>();
-  const officials: CompetitionOfficialAssignment[] = [];
-  const venues = new Map<string, { event: CalendarFederationEventFragment; origin: string }>();
+  const days = new Map<string, CalendarDay & { origin: string }>();
 
   for (const { origin, pages } of calendars) {
     for (const data of pages) {
@@ -97,35 +97,25 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         });
       }
 
-      for (const competition of data.competitions?.nodes ?? []) {
-        const previous = competitions.get(competition.id);
-        competitions.set(competition.id, {
-          ...competition,
-          entries: [...previous?.entries ?? [], ...competition.entries],
-          results: [...previous?.results ?? [], ...competition.results],
+      for (const day of federationCalendarDays(data.federationEvents?.nodes)) {
+        const key = `${day.event.id}:${day.date}`;
+        const previous = days.get(key);
+        days.set(key, {
+          ...day,
+          origin: previous?.origin ?? origin,
+          participations: [...new Map([
+            ...previous?.participations ?? [], ...day.participations,
+          ].map((p) => [`${p.competitionId}:${p.competitorId}`, p])).values()],
+          officials: [...new Map([
+            ...previous?.officials ?? [], ...day.officials,
+          ].map((o) => [`${o.role}:${o.person.id}`, o])).values()],
         });
-        if (competition.event && !venues.has(competition.event.id)) {
-          venues.set(competition.event.id, { event: competition.event, origin });
-        }
-        if (competition.event) officials.push(...competition.officials.nodes.map((official) => ({
-          ...official, event: competition.event!, federation: competition.federation, date: competition.startDate,
-        })));
-      }
-      for (const event of data.officialEvents?.nodes ?? []) {
-        if (!venues.has(event.id)) venues.set(event.id, { event, origin });
-        officials.push(...event.officials.nodes.map((official) => ({
-          ...official, event, federation: event.federation, date: event.startDate,
-        })));
       }
     }
   }
 
-  for (const group of groupCompetitionEvents([...competitions.values()], officials)) {
-    const source = group.entries[0]?.competition.event ?? group.officials[0]?.event;
-    const venue = source && venues.get(source.id);
-    if (!venue || !group.date) continue;
-    const { event, origin } = venue;
-    const start = new Date(`${group.date}T00:00:00Z`);
+  for (const { date, event, origin, participations, officials } of days.values()) {
+    const start = new Date(`${date}T00:00:00Z`);
     const end = new Date(start);
     end.setUTCDate(end.getUTCDate() + 1);
 
@@ -133,16 +123,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
     const url = `${origin}/federated/${event.federation}/${event.externalId}`;
 
     calendar.createEvent({
-      id: `competition-${event.federation}-${event.externalId}-${group.date}@sirimbo`,
+      id: `competition-${event.federation}-${event.externalId}-${date}@sirimbo`,
       start, end, allDay: true,
       summary: event.name ?? 'Soutěž',
       description: [
-        ...group.entries.map((entry) => [
+        ...participations.map((entry) => [
           formatCategoryName(entry.competition),
           entry.competitor?.name,
           entry.cancelled && 'Odhlášeno',
         ].filter(Boolean).join(' — ')),
-        ...group.officials.map((x) => `${formatOfficialRole(x.role)}: ${x.person?.canonicalName ?? ''}`),
+        ...officials.map((x) => `${formatOfficialRole(x.role)}: ${x.person?.canonicalName ?? ''}`),
         `Zobrazit v aplikaci: ${url}`,
       ].filter(Boolean).join('\n\n'),
       location: event.location || address ? {
@@ -152,7 +142,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
           ? { lat: event.venueLat, lon: event.venueLng } : undefined,
       } : undefined,
       url,
-      status: group.entries.length > 0 && group.entries.every((x) => x.cancelled) && group.officials.length === 0
+      status: participations.length > 0 && participations.every((x) => x.cancelled) && officials.length === 0
         ? ICalEventStatus.CANCELLED : ICalEventStatus.CONFIRMED,
     });
   }

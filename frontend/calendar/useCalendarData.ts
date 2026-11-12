@@ -1,7 +1,4 @@
-import {
-  type CompetitionOfficialAssignment,
-  groupCompetitionEvents,
-} from '@/calendar/competitions';
+import { federationCalendarDays } from './competitions';
 import { format } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
 import { CalendarDataDocument, type CalendarDataQueryVariables } from '@/graphql/Event';
@@ -125,7 +122,7 @@ export function useCalendarData({
   withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
-  const onlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
+  const filterOnlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
   const client = useClient();
   const range = React.useMemo(() => view.range(date), [view, date]);
@@ -144,7 +141,7 @@ export function useCalendarData({
       participantIds: personIds,
       coupleId,
       cohortId,
-      onlyMine,
+      onlyMine: filterOnlyMine,
       relevantOnly: filters.relevantOnly,
       canRegister: filters.canRegister ? true : undefined,
     },
@@ -158,11 +155,17 @@ export function useCalendarData({
       withAttendance,
       withCompetitions,
       withBirthdays,
-      withSavedSearches,
+      withSavedSearches: withSavedSearches || !!savedSearch,
       withOtherClubCompetitors: withOtherClubCompetitors && withCompetitions,
       withParticipantOptions: auth.isLoggedIn,
     }),
   });
+
+  const selectedSearch = data?.eventSavedSearchesList?.find((search) => search.id === savedSearch);
+  const people = savedSearch ? selectedSearch?.condition : variables.filter;
+  const onlyMine = !!people?.onlyMine;
+  const hasPersonFilter = onlyMine || people?.participantIds != null || people?.cohortId != null
+    || (!savedSearch && filters.participants.coupleId != null);
 
   const effectiveGroupBy = onlyMine ? 'none'
     : filters.groupBy === 'day-trainer' ? 'trainer'
@@ -289,67 +292,21 @@ export function useCalendarData({
       });
     }
 
-    const officials: CompetitionOfficialAssignment[] = [
-      ...(data?.officialEvents?.nodes ?? []).flatMap((event) =>
-        event.officials.nodes.map((official) => ({
-          ...official,
-          event,
-          federation: event.federation,
-          date: event.startDate,
-        })),
-      ),
-      ...(data?.competitions?.nodes ?? []).flatMap((x) => {
-        return x.event
-          ? x.officials.nodes.map((official) => ({
-              ...official,
-              event: x.event!,
-              federation: x.federation,
-              date: x.startDate,
-            }))
-          : [];
-      }),
-    ];
-    const viewerCompetitorIds = new Set(
-      (data?.viewerPeople?.nodes ?? [])
-        .flatMap((x) => x.federationPeople.nodes)
-        .flatMap((x) => x.competitorComponents.nodes)
-        .map((x) => x.competitorId),
-    );
-    const hasParticipantSelection = !!savedSearch || onlyMine ||
-      filters.participants.personIds != null ||
-      filters.participants.coupleId != null ||
-      filters.participants.cohortId != null;
-    const clubCompetitions = new Map(
-      (data?.competitions?.nodes ?? [])
-        .flatMap(({ event }) => event?.clubCompetitions?.nodes ?? [])
-        .map((competition) => [competition.id, competition]),
-    );
-    const clubEntries = new Map(
-      groupCompetitionEvents([...clubCompetitions.values()]).map(({ key, entries }) => [key, entries]),
-    );
-    const competitions: CalendarCompetitionEvent[] = groupCompetitionEvents(
-      data?.competitions?.nodes, officials,
-    ).map(({ key, name, date, entries, officials }) => {
-      const selected = new Set(entries.map((x) => `${x.competitionId}:${x.competitorId}`));
-      return {
+    const competitions: CalendarCompetitionEvent[] = federationCalendarDays(data?.federationEvents?.nodes).map(
+      ({ date, event, participations, selected, officials }) => ({
         kind: 'competition',
-        id: `competition:${key}`,
-        title: name,
-        ...calendarDay(date!),
-        resourceKeys:
-          effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-        entries: [...entries, ...(clubEntries.get(key) ?? []).filter(
-          (x) => !selected.has(`${x.competitionId}:${x.competitorId}`),
-        )],
-        collapsedEntries: hasParticipantSelection ? entries : entries.filter(
-          (entry) => viewerCompetitorIds.has(entry.competitorId),
-        ),
+        id: `competition:${date}:${event.id}`,
+        title: event.name ?? '',
+        ...calendarDay(date),
+        resourceKeys: effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
+        entries: participations,
+        collapsedEntries: hasPersonFilter ? selected : selected.filter((p) => p.competitor?.isMine),
         officials,
-        collapsedOfficials: hasParticipantSelection ? officials : officials.filter(
-          ({ person }) => person?.peopleList.some(({ id }) => auth.isMyPerson(id)),
-        ),
-      };
-    });
+        collapsedOfficials: hasPersonFilter ? officials : officials.filter((o) => o.person.isMine),
+        event,
+        date,
+      }),
+    );
     calendarEvents.push(...competitions);
 
     for (const person of data?.birthdays?.nodes ?? []) {
@@ -400,16 +357,14 @@ export function useCalendarData({
     availableTrainers,
     withFacets,
     data,
-    savedSearch,
     filters.trainers,
     filters.location,
     filters.participants.personIds,
-    filters.participants.coupleId,
     filters.participants.cohortId,
     showAllResources,
     auth,
-    onlyMine,
     effectiveGroupBy,
+    hasPersonFilter,
     operation,
     range,
     fetching,

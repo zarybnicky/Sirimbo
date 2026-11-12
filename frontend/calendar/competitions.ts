@@ -1,66 +1,53 @@
+import type { CalendarDataQuery } from '@/graphql/Event';
 import type {
-  CompetitionEntryFragment,
+  CompetitionParticipationFragment,
   CompetitionFragment,
-  CompetitionResultFragment,
-  CompetitionsQuery,
 } from '@/graphql/CompetitionParticipation';
 import type { OfficialRole } from '@/graphql';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import { compareText } from '@/lib/compare';
 
-type Competition = NonNullable<CompetitionsQuery['competitions']>['nodes'][number];
-export type CompetitionEntry = CompetitionEntryFragment &
-  Partial<CompetitionResultFragment> & { competition: Competition };
+type Competition = CompetitionFragment & { participations: readonly CompetitionParticipationFragment[] };
+export type CompetitionEntry = CompetitionParticipationFragment & { competition: CompetitionFragment };
 
 export type CompetitionOfficialAssignment = {
-  date: string;
-  federation: string;
-  event: NonNullable<CompetitionFragment['event']>;
   role: OfficialRole;
   person: OfficialPersonFragment | null;
 };
 
 export function groupCompetitionEvents(
   competitions: readonly Competition[] = [],
-  officials: readonly CompetitionOfficialAssignment[] = [],
 ) {
-  const entries = competitions.flatMap((comp) => {
-    const entries = new Map<string, CompetitionEntry>();
-    for (const entry of [...comp.entries, ...comp.results]) {
-      entries.set(entry.competitorId, {
-        cancelled: false,
-        ...entries.get(entry.competitorId),
-        ...entry,
-        competition: comp,
-      });
-    }
-    return [...entries.values()];
-  });
-  return [
-    ...Map.groupBy([...entries, ...officials], (x) =>
-      'role' in x ? x.date : x.competition.startDate,
-    ),
-  ].flatMap(([date, day]) =>
-    [...Map.groupBy(day, (x) => ('role' in x ? x.event.id : x.competition.event?.id))]
-      .map(([eventId, items]) => {
-        const entries = items.filter((x): x is CompetitionEntry => !('role' in x));
-        const officials = [
-          ...new Map(
-            items
-              .filter((x) => 'role' in x)
-              .map((x) => [`${x.role}:${x.person?.id}`, x] as const),
-          ).values(),
-        ];
-        const event = entries[0]?.competition.event ?? officials[0]?.event;
-        return {
-          key: `${date ?? ''}:${eventId ?? ''}`,
-          date,
-          name: event?.name ?? '',
-          entries,
-          officials,
-        };
-      })
-      .toSorted((a, b) => compareText(a.name, b.name)),
+  const entries = competitions.flatMap((competition) =>
+    competition.participations.map((participation) => ({ ...participation, competition })),
+  );
+  return [...Map.groupBy(entries, (x) => x.competition.startDate)].flatMap(([date, day]) =>
+    [...Map.groupBy(day, (x) => x.competition.event?.id)].map(([eventId, entries]) => ({
+      key: `${date}:${eventId}`,
+      date,
+      name: entries[0]?.competition.event?.name ?? '',
+      entries,
+    })).toSorted((a, b) => compareText(a.name, b.name)),
   );
 }
 
+// Both the calendar and ICS use the dates of participations/assignments, which
+// can differ from the federation event's start date.
+export function federationCalendarDays(
+  events: NonNullable<CalendarDataQuery['federationEvents']>['nodes'] = [],
+) {
+  return events.flatMap((event) => {
+    const selected = Map.groupBy(event.selected, (p) => p.date);
+    const club = Map.groupBy(event.club ?? [], (p) => p.date);
+    const officials = Map.groupBy(event.officials, (o) => o.date);
+    return [...new Set([...selected.keys(), ...officials.keys()])].toSorted().map((date) => ({
+      event,
+      date,
+      selected: selected.get(date) ?? [],
+      participations: [...new Map([
+        ...club.get(date) ?? [], ...selected.get(date) ?? [],
+      ].map((p) => [`${p.competitionId}:${p.competitorId}`, p])).values()],
+      officials: officials.get(date) ?? [],
+    }));
+  });
+}

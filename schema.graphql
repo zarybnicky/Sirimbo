@@ -2024,9 +2024,6 @@ type Competition {
 
   """Reads and enables pagination through a set of `CompetitionEntry`."""
   entriesList(
-    """Apply calendar selectors in addition to the native condition."""
-    calendarFilter: CalendarFilterInput
-
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2040,11 +2037,6 @@ type Competition {
 
     """The method to use when ordering `CompetitionEntry`."""
     orderBy: [CompetitionEntriesOrderBy!]
-
-    """
-    Apply one of your saved searches within the current tenant, replacing calendarFilter.
-    """
-    savedSearch: BigInt
   ): [CompetitionEntry!]!
 
   """
@@ -2068,9 +2060,6 @@ type Competition {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
-    """Apply calendar selectors in addition to the native condition."""
-    calendarFilter: CalendarFilterInput
-
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2090,13 +2079,27 @@ type Competition {
 
     """The method to use when ordering `CompetitionOfficial`."""
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    Apply one of your saved searches within the current tenant, replacing calendarFilter.
-    """
-    savedSearch: BigInt
   ): CompetitionOfficialConnection!
   participantsTotal: Int
+
+  """
+  Reads and enables pagination through a set of `CompetitionParticipation`.
+  """
+  participationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionParticipationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionParticipation`."""
+    orderBy: [CompetitionParticipationsOrderBy!]
+  ): [CompetitionParticipation!]!
   registrationFee: BigFloat
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
@@ -2130,9 +2133,6 @@ type Competition {
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
   resultsList(
-    """Apply calendar selectors in addition to the native condition."""
-    calendarFilter: CalendarFilterInput
-
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2146,11 +2146,6 @@ type Competition {
 
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!]
-
-    """
-    Apply one of your saved searches within the current tenant, replacing calendarFilter.
-    """
-    savedSearch: BigInt
   ): [CompetitionResult!]!
 
   """Reads and enables pagination through a set of `CompetitionRound`."""
@@ -2211,7 +2206,6 @@ input CompetitionCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
   includeCancelled: Boolean
-  involvement: CompetitionInvolvementCondition
 
   """
   Match local people. Without an explicit selection, use current tenant people.
@@ -2362,16 +2356,6 @@ type CompetitionEntryEdge {
   node: CompetitionEntry!
 }
 
-"""Match selected competitors or officials."""
-input CompetitionInvolvementCondition {
-  competitor: CompetitionParticipantCondition
-
-  """
-  Match local people. Without an explicit selection, use current tenant people.
-  """
-  official: PersonCondition
-}
-
 type CompetitionOfficial {
   """
   Reads a single `Competition` that is related to this `CompetitionOfficial`.
@@ -2475,6 +2459,113 @@ input CompetitionParticipantCondition {
 
   """Local person IDs. An empty list matches nobody."""
   personIds: [BigInt!]
+}
+
+type CompetitionParticipation {
+  cancelled: Boolean!
+
+  """
+  Reads a single `Competition` that is related to this `CompetitionParticipation`.
+  """
+  competition: Competition!
+  competitionId: BigInt!
+
+  """
+  Reads a single `FederationCompetitor` that is related to this `CompetitionParticipation`.
+  """
+  competitor: FederationCompetitor!
+  competitorId: String!
+  completionStatus: String
+  date: Date!
+
+  """
+  Reads a single `FederationEvent` that is related to this `CompetitionParticipation`.
+  """
+  event: FederationEvent!
+  eventId: BigInt!
+  finalGain: BigFloat
+  isFinal: Boolean
+  pointGain: BigFloat
+  ranking: Int
+  rankingTo: Int
+}
+
+"""
+A condition to be used against `CompetitionParticipation` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input CompetitionParticipationCondition {
+  """Checks for equality with the object’s `cancelled` field."""
+  cancelled: Boolean
+
+  """Checks for equality with the object’s `competitionId` field."""
+  competitionId: BigInt
+  competitor: CompetitionParticipantCondition
+
+  """Checks for equality with the object’s `competitorId` field."""
+  competitorId: String
+
+  """Checks for equality with the object’s `completionStatus` field."""
+  completionStatus: String
+
+  """Checks for equality with the object’s `date` field."""
+  date: Date
+
+  """
+  Inclusive start and exclusive end of the participation or assignment dates.
+  """
+  dateRange: DateRangeCondition
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `finalGain` field."""
+  finalGain: BigFloat
+  includeCancelledCompetitions: Boolean
+
+  """Include cancelled entries without a ranked result."""
+  includeCancelledEntries: Boolean
+
+  """Checks for equality with the object’s `isFinal` field."""
+  isFinal: Boolean
+
+  """Checks for equality with the object’s `pointGain` field."""
+  pointGain: BigFloat
+
+  """Checks for equality with the object’s `ranking` field."""
+  ranking: Int
+
+  """Checks for equality with the object’s `rankingTo` field."""
+  rankingTo: Int
+}
+
+"""Methods to use when ordering `CompetitionParticipation`."""
+enum CompetitionParticipationsOrderBy {
+  CANCELLED_ASC
+  CANCELLED_DESC
+  COMPETITION_ID_ASC
+  COMPETITION_ID_DESC
+  COMPETITOR_ID_ASC
+  COMPETITOR_ID_DESC
+  COMPLETION_STATUS_ASC
+  COMPLETION_STATUS_DESC
+  DATE_ASC
+  DATE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  FINAL_GAIN_ASC
+  FINAL_GAIN_DESC
+  IS_FINAL_ASC
+  IS_FINAL_DESC
+  NATURAL
+  POINT_GAIN_ASC
+  POINT_GAIN_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  RANKING_ASC
+  RANKING_DESC
+  RANKING_TO_ASC
+  RANKING_TO_DESC
 }
 
 type CompetitionResult {
@@ -7324,6 +7415,25 @@ type FederationCompetitor {
     orderBy: [CompetitionEntriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompetitionEntryConnection!
 
+  """
+  Reads and enables pagination through a set of `CompetitionParticipation`.
+  """
+  competitionParticipationsList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionParticipationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionParticipation`."""
+    orderBy: [CompetitionParticipationsOrderBy!]
+  ): [CompetitionParticipation!]!
+
   """Reads and enables pagination through a set of `CompetitionResult`."""
   competitionResultsByCompetitorId(
     """Read all values in the set after (below) this cursor."""
@@ -7457,6 +7567,7 @@ type FederationCompetitor {
   """
   federationByFederation: Federation
   id: String!
+  isMine: Boolean!
   latestEntryAt: Date
   latestResultAt: Date
   name: String
@@ -7998,6 +8109,31 @@ type FederationEvent {
   location: String
   name: String
 
+  """Reads and enables pagination through a set of `OfficialAssignment`."""
+  officialAssignmentsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: OfficialAssignmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `OfficialAssignment`."""
+    orderBy: [OfficialAssignmentsOrderBy!]
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
+  ): [OfficialAssignment!]!
+
   """
   Reads and enables pagination through a set of `FederationEventOfficial`.
   """
@@ -8007,9 +8143,6 @@ type FederationEvent {
 
     """Read all values in the set before (above) this cursor."""
     before: Cursor
-
-    """Apply calendar selectors in addition to the native condition."""
-    calendarFilter: CalendarFilterInput
 
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -8030,11 +8163,6 @@ type FederationEvent {
 
     """The method to use when ordering `FederationEventOfficial`."""
     orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    Apply one of your saved searches within the current tenant, replacing calendarFilter.
-    """
-    savedSearch: BigInt
   ): FederationEventOfficialConnection!
 
   """
@@ -8042,6 +8170,33 @@ type FederationEvent {
   """
   organizingClub: FederationClub
   organizingClubId: BigInt
+
+  """
+  Reads and enables pagination through a set of `CompetitionParticipation`.
+  """
+  participationsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompetitionParticipationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `CompetitionParticipation`."""
+    orderBy: [CompetitionParticipationsOrderBy!]
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
+  ): [CompetitionParticipation!]!
   postalCode: String
   range: DateRange
   startDate: Date!
@@ -8116,6 +8271,12 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `organizingClubId` field."""
   organizingClubId: BigInt
+  participant: CompetitionParticipantCondition
+
+  """
+  Date bounds for the participant condition. Use date for the event start date.
+  """
+  participationDate: DateRangeCondition
 
   """Checks for equality with the object’s `postalCode` field."""
   postalCode: String
@@ -8545,6 +8706,7 @@ type FederationPerson {
   firstName: String
   gender: Gender
   id: String!
+  isMine: Boolean!
   lastName: String
 
   """
@@ -8580,6 +8742,23 @@ type FederationPerson {
   medicalCheckupExpiration: Date
   medicalCheckupType: String
   nationality: String
+
+  """Reads and enables pagination through a set of `OfficialAssignment`."""
+  officialAssignmentsByPersonIdList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: OfficialAssignmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `OfficialAssignment`."""
+    orderBy: [OfficialAssignmentsOrderBy!]
+  ): [OfficialAssignment!]!
 
   """Reads and enables pagination through a set of `Person`."""
   peopleList(
@@ -10586,6 +10765,60 @@ type Mutation {
   ): UpsertLocationPayload
 }
 
+type OfficialAssignment {
+  date: Date!
+
+  """
+  Reads a single `FederationEvent` that is related to this `OfficialAssignment`.
+  """
+  event: FederationEvent!
+  eventId: BigInt!
+
+  """
+  Reads a single `FederationPerson` that is related to this `OfficialAssignment`.
+  """
+  person: FederationPerson!
+  personId: String!
+  role: OfficialRole!
+}
+
+"""
+A condition to be used against `OfficialAssignment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input OfficialAssignmentCondition {
+  """Checks for equality with the object’s `date` field."""
+  date: Date
+
+  """
+  Inclusive start and exclusive end of the participation or assignment dates.
+  """
+  dateRange: DateRangeCondition
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+  person: CompetitionParticipantCondition
+
+  """Checks for equality with the object’s `personId` field."""
+  personId: String
+
+  """Checks for equality with the object’s `role` field."""
+  role: OfficialRole
+}
+
+"""Methods to use when ordering `OfficialAssignment`."""
+enum OfficialAssignmentsOrderBy {
+  DATE_ASC
+  DATE_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 enum OfficialRole {
   ADJUDICATOR
   CHAIRPERSON
@@ -12357,9 +12590,6 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
-    """Apply calendar selectors in addition to the native condition."""
-    calendarFilter: CalendarFilterInput
-
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -12379,11 +12609,6 @@ type Query {
 
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    Apply one of your saved searches within the current tenant, replacing calendarFilter.
-    """
-    savedSearch: BigInt
   ): CompetitionConnection
 
   """Get a single `Couple`."""

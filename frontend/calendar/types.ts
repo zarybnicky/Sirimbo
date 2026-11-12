@@ -30,6 +30,8 @@ export type CalendarCompetitionEvent = CalendarItemBase & {
   kind: 'competition';
   id: string;
   title: string;
+  event: NonNullable<CalendarDataQuery['federationEvents']>['nodes'][number];
+  date: string;
   entries: readonly CompetitionEntry[];
   collapsedEntries: readonly CompetitionEntry[];
   officials?: readonly CompetitionOfficialAssignment[];

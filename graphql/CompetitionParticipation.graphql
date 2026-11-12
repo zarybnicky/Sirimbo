@@ -9,6 +9,7 @@ fragment Competition on Competition {
   participantsTotal
   event {
     id
+    federation
     externalId
     name
     startDate
@@ -21,16 +22,10 @@ fragment Competition on Competition {
   }
 }
 
-fragment CompetitionEntry on CompetitionEntry {
+fragment CompetitionParticipation on CompetitionParticipation {
   competitionId
   competitorId
   cancelled
-  competitor { id name }
-}
-
-fragment CompetitionResult on CompetitionResult {
-  competitionId
-  competitorId
   competitor { id name }
   ranking
   rankingTo
@@ -57,11 +52,8 @@ query Competitions(
     totalCount
     nodes {
       ...Competition
-      entries: entriesList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
-        ...CompetitionEntry
-      }
-      results: resultsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
-        ...CompetitionResult
+      participations: participationsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
+        ...CompetitionParticipation
       }
     }
   }

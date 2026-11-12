@@ -1,5 +1,4 @@
-import { sqlValueWithCodec, TYPES, type PgCondition } from 'postgraphile/@dataplan/pg';
-import type { GraphQLInputObjectType } from 'postgraphile/graphql';
+import { pgClassExpression, sqlValueWithCodec, TYPES, type PgCondition, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
 import { sql, type SQL } from 'postgraphile/pg-sql2';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
@@ -95,6 +94,18 @@ function datePredicate(column: SQL, date?: DateCondition | null): SQL | null {
   return predicates.length ? sql`(${sql.join(predicates, ' and ')})` : null;
 }
 
+function federationPeople(scope: ParticipantCondition): SQL {
+  const people = personPredicate(sql`link.person_id`, scope) ?? sql.true;
+  const couple = scope.coupleId == null ? sql.true : sql`link.person_id in (
+    select man_id from public.couple where id = ${sqlValueWithCodec(scope.coupleId, TYPES.bigint)}
+    union all
+    select woman_id from public.couple where id = ${sqlValueWithCodec(scope.coupleId, TYPES.bigint)}
+  )`;
+  return sql`select fp.id from public.person_federation_link link
+    join federated.person fp on (fp.federation, fp.external_id) = (link.federation, link.external_id)
+    where ${people} and ${couple}`;
+}
+
 function registrationPredicate(row: SQL, scope: ParticipantCondition): SQL {
   const predicates = [personPredicate(sql`${row}.person_id`, scope)];
   if (scope.coupleId != null) {
@@ -111,6 +122,8 @@ function registrationPredicate(row: SQL, scope: ParticipantCondition): SQL {
 const plugins: GraphileConfig.Plugin[] = [
   extendSchema({
     typeDefs: `
+      extend type FederationCompetitor { isMine: Boolean! }
+      extend type FederationPerson { isMine: Boolean! }
       """Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators."""
       input CompetitionParticipantCondition {
         """Local person IDs. An empty list matches nobody."""
@@ -123,28 +136,94 @@ const plugins: GraphileConfig.Plugin[] = [
         cohortId: BigInt
       }
     `,
+    objects: {
+      FederationCompetitor: {
+        plans: {
+          isMine($row: PgSelectSingleStep) {
+            return pgClassExpression($row, TYPES.boolean)`${$row.get('id')} in (
+              select competitor_id from federated.competitor_component
+              where person_id in (${federationPeople({ onlyMine: true })})
+            )`;
+          },
+        },
+      },
+      FederationPerson: {
+        plans: {
+          isMine($row: PgSelectSingleStep) {
+            return pgClassExpression($row, TYPES.boolean)`${$row.get('id')} in (
+              ${federationPeople({ onlyMine: true })}
+            )`;
+          },
+        },
+      },
+    },
   }),
   addPgTableCondition(
-    { schemaName: 'federated', tableName: 'competition' },
-    'involvement',
+    { schemaName: 'federated', tableName: 'event' },
+    'participant',
     (build) => ({
-      type: new build.graphql.GraphQLInputObjectType({
-        name: 'CompetitionInvolvementCondition',
-        description: 'Match selected competitors or officials.',
-        fields: () => {
-          const condition = build.getInputTypeByName('CompetitionCondition') as GraphQLInputObjectType;
-          const { competitor, official } = condition.toConfig().fields;
-          return { competitor: competitor!, official: official! };
-        },
-      }),
-      apply(condition: PgCondition, value) {
+      type: build.getInputTypeByName('CompetitionParticipantCondition'),
+      apply(condition: PgCondition, value: ParticipantCondition | null) {
         if (value == null) return;
-        const alternatives = condition.orPlan();
-        // Keep the date restriction available to the competitor subquery.
-        alternatives.extensions = Object.create(condition.extensions);
-        return alternatives;
+        condition.where(() => {
+          const date = condition.extensions.competitionDate;
+          return sql`${condition.alias}.id in (
+            select p.event_id from federated.competition_participation p
+            join federated.competition c on c.id = p.competition_id
+            where c.status <> 'cancelled'
+              and ${datePredicate(sql`p.date`, date) ?? sql.true}
+              and ${participantPredicate(sql`p.competitor_id`, value) ?? sql.true}
+            union
+            select o.event_id from federated.official_assignment o
+            where ${datePredicate(sql`o.date`, date) ?? sql.true}
+              and o.person_id = any(array(${federationPeople(value)}))
+          )`;
+        });
       },
     }),
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_participation' },
+    'includeCancelledEntries',
+    (build) => ({
+      type: build.graphql.GraphQLBoolean,
+      description: 'Include cancelled entries without a ranked result.',
+    }),
+    (value, { sqlTableAlias: row }) => value === false
+      ? sql`(not ${row}.cancelled or ${row}.ranking is not null)` : null,
+  ),
+  ...(['event', 'competition_participation', 'official_assignment'] as const).map((tableName) =>
+    addPgTableCondition(
+      { schemaName: 'federated', tableName },
+      tableName === 'event' ? 'participationDate' : 'dateRange',
+      (build) => ({
+        type: build.getInputTypeByName('DateRangeCondition'),
+        description: tableName === 'event'
+          ? 'Date bounds for the participant condition. Use date for the event start date.'
+          : 'Inclusive start and exclusive end of the participation or assignment dates.',
+        apply(condition: PgCondition, value: DateCondition | null) {
+          condition.extensions.competitionDate = value;
+          if (tableName !== 'event') {
+            const predicate = datePredicate(sql`${condition.alias}.date`, value);
+            if (predicate) condition.where(predicate);
+          }
+        },
+      }),
+    ),
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'official_assignment' },
+    'person',
+    (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
+    (value, { sqlTableAlias: row }) => value == null ? null
+      : sql`${row}.person_id = any(array(${federationPeople(value as ParticipantCondition)}))`,
+  ),
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'competition_participation' },
+    'includeCancelledCompetitions',
+    (build) => ({ type: build.graphql.GraphQLBoolean }),
+    (value, { sqlTableAlias: row }) => value === false
+      ? sql`${row}.competition_id in (select id from federated.competition where status <> 'cancelled')` : null,
   ),
   addPgTableCondition(
     { schemaName: 'public', tableName: 'event_registration' },
@@ -208,16 +287,22 @@ const plugins: GraphileConfig.Plugin[] = [
       },
     }),
   ),
-  ...(['competition_entry', 'competition_result'] as const).map((tableName) =>
+  ...(['competition_entry', 'competition_result', 'competition_participation'] as const).map((tableName) =>
     addPgTableCondition(
       { schemaName: 'federated', tableName },
       'competitor',
       (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
-      (value, { sqlTableAlias: row }) =>
-        participantPredicate(
-          sql`${row}.competitor_id`,
-          value as ParticipantCondition | null,
-        ),
+      (value, { sqlTableAlias: row }) => {
+        const scope = value as ParticipantCondition | null;
+        if (tableName !== 'competition_participation' || scope == null || scope.coupleId != null)
+          return participantPredicate(sql`${row}.competitor_id`, scope);
+        // These rows are already restricted by event/competition. A semijoin avoids
+        // probing the entry index once for every member of the club.
+        return sql`${row}.competitor_id in (
+          select competitor_id from federated.competitor_component
+          where person_id = any(array(${federationPeople(scope)}))
+        )`;
+      },
     ),
   ),
   ...(['event', 'competition', 'competition_result'] as const).map((tableName) =>

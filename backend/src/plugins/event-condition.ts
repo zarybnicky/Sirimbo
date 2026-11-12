@@ -11,13 +11,10 @@ type EventRangeCondition = { start: string; end?: string | null };
 const calendarConditions: Record<string, string> = {
   'Query.events': 'EventCondition',
   'Query.eventsList': 'EventCondition',
-  'Query.competitions': 'CompetitionCondition',
   'Query.federationEvents': 'FederationEventCondition',
-  'Competition.entriesList': 'CompetitionEntryCondition',
-  'Competition.resultsList': 'CompetitionResultCondition',
-  'Competition.officials': 'CompetitionOfficialCondition',
-  'FederationEvent.officials': 'FederationEventOfficialCondition',
   'Query.people': 'PersonCondition',
+  'FederationEvent.participationsList': 'CompetitionParticipationCondition',
+  'FederationEvent.officialAssignmentsList': 'OfficialAssignmentCondition',
   'Event.registrationsList': 'EventRegistrationCondition',
   'Query.eventFacetsList': 'EventSearchConditionInput',
 };
@@ -94,6 +91,8 @@ const savedSearchPlugin = wrapPlans(
             inCohorts: filter.cohortId == null ? undefined : [filter.cohortId],
           },
         };
+        if (['FederationEventCondition', 'CompetitionParticipationCondition', 'OfficialAssignmentCondition'].includes(conditionType)
+          && (filter.withCompetitions === false || filter.canRegister)) participant.personIds = [];
         let mapped;
         if (conditionType === 'EventCondition') {
           const eventTypes = (build.getInputTypeByName('EventType') as GraphQLEnumType)
@@ -118,15 +117,12 @@ const savedSearchPlugin = wrapPlans(
           mapped = person;
         } else if (conditionType === 'EventRegistrationCondition') {
           mapped = { participant };
-        } else {
-          if (filter.withCompetitions === false || filter.canRegister) {
-            participant.personIds = [];
-            person.ids = [];
-          }
-          mapped = conditionType === 'CompetitionCondition' ? { involvement: { competitor: participant, official: person } }
-            : conditionType === 'FederationEventCondition' ? { official: person }
-            : conditionType.endsWith('OfficialCondition') ? { person }
-            : { competitor: participant };
+        } else if (conditionType === 'FederationEventCondition') {
+          mapped = { participant };
+        } else if (conditionType === 'OfficialAssignmentCondition') {
+          mapped = { person: participant };
+        } else if (conditionType === 'CompetitionParticipationCondition') {
+          mapped = { competitor: participant };
         }
         return [native, mapped];
       },
@@ -142,7 +138,7 @@ const savedSearchPlugin = wrapPlans(
     }
     const $field = plan();
     const $select = isConnection ? $field.getSubplan() : $field;
-    // Both conditions use one builder so competition dates reach participation lookups.
+    // Native and saved conditions share the date bounds on one builder.
     $select.apply(applyInput(new GraphQLList(build.getInputTypeByName(conditionType)),
       $condition as unknown as Parameters<typeof applyInput>[1], (qb) => qb.whereBuilder()));
     return $field;

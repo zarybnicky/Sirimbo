@@ -1,7 +1,7 @@
 begin;
 
 set local search_path to public, tap;
-select tap.plan(3);
+select tap.plan(6);
 
 insert into federated.federation (code, name) values ('participation-test', 'Test');
 insert into federated.category (id, name, series, discipline, age_group, class)
@@ -42,7 +42,33 @@ select tap.is(
 );
 select tap.ok(not has_table_privilege(current_user,
   'federated.competition_participation', 'insert,update,delete'), 'anonymous cannot write participation');
+select tap.results_eq(
+  $$select cancelled, ranking from federated.competition_participation
+    where competition_id = -380001 and competitor_id = 'participation-test:cancelled-result'$$,
+  $$values (true, 3)$$, 'participation retains cancellation together with result fields'
+);
 reset role;
+
+insert into public.person (id, first_name, last_name, gender, nationality, csts_id)
+  overriding system value values (-380001, 'Calendar', 'Official', 'unspecified', '', -380001);
+insert into federated.person (federation, external_id) values ('csts', -380001);
+insert into federated.competition (id, federation, external_id, event_id, category_id, start_date)
+  overriding system value values
+  (-380002, 'participation-test', 'second-day', -380001, -380001, '2026-01-02');
+insert into federated.event_official (event_id, person_id, role)
+  values (-380001, 'csts:-380001', 'adjudicator');
+insert into federated.competition_official (competition_id, person_id, role)
+  values (-380001, 'csts:-380001', 'adjudicator'), (-380002, 'csts:-380001', 'adjudicator');
+select tap.is(
+  (select count(*) from federated.official_assignment
+    where event_id = -380001 and date = '2026-01-01'),
+  1::bigint, 'official assignments deduplicate event and competition roles on the same day'
+);
+select tap.is(
+  (select date from federated.official_assignment
+    where event_id = -380001 and date > '2026-01-01'),
+  '2026-01-02'::date, 'competition officials retain their competition date'
+);
 
 select tap.finish(true);
 rollback;
