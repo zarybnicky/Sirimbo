@@ -975,6 +975,20 @@ export type AttendanceType =
   | 'NOT_EXCUSED'
   | 'UNKNOWN';
 
+/** Calendar selectors. Collection switches and date bounds are supplied separately. */
+export type CalendarFilterInput = {
+  canRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
+  locationIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
+  parentId?: InputMaybe<Scalars['BigInt']['input']>;
+  participantIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  trainerIds?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  types?: InputMaybe<Array<EventType>>;
+};
+
 /** Methods to use when ordering `Category`. */
 export type CategoriesOrderBy =
   | 'AGE_GROUP_ASC'
@@ -1603,6 +1617,7 @@ export type CompetitionEntriesArgs = {
 
 
 export type CompetitionEntriesListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<CompetitionEntryCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1614,6 +1629,7 @@ export type CompetitionEntriesListArgs = {
 export type CompetitionOfficialsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<CompetitionOfficialCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -1635,6 +1651,7 @@ export type CompetitionResultsArgs = {
 
 
 export type CompetitionResultsListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<CompetitionResultCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4671,10 +4688,12 @@ export type EventRegistrationsArgs = {
 
 
 export type EventRegistrationsListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<EventRegistrationCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventRegistrationsOrderBy>>;
+  savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 
@@ -6285,6 +6304,7 @@ export type FederationEventCompetitionsListArgs = {
 export type FederationEventOfficialsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<FederationEventOfficialCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -9973,6 +9993,7 @@ export type QueryCompetitionSuggestionsListArgs = {
 export type QueryCompetitionsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<CompetitionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -10205,10 +10226,12 @@ export type QueryEventArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventFacetsListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<EventSearchConditionInput>;
   endRange?: InputMaybe<Scalars['Datetime']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -10297,6 +10320,7 @@ export type QueryEventSeriesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventsListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<EventCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -10379,6 +10403,7 @@ export type QueryFederationEventByFederationAndExternalIdArgs = {
 export type QueryFederationEventsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<FederationEventCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -10588,11 +10613,13 @@ export type QueryPaymentsArgs = {
 export type QueryPeopleArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<PersonCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
+  savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 

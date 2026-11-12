@@ -1184,6 +1184,22 @@ strings and not numbers.
 """
 scalar BigInt
 
+"""
+Calendar selectors. Collection switches and date bounds are supplied separately.
+"""
+input CalendarFilterInput {
+  canRegister: Boolean
+  cohortId: BigInt
+  coupleId: BigInt
+  locationIds: [BigInt!]
+  onlyMine: Boolean
+  parentId: BigInt
+  participantIds: [BigInt!]
+  relevantOnly: Boolean
+  trainerIds: [BigInt!]
+  types: [EventType!]
+}
+
 """Methods to use when ordering `Category`."""
 enum CategoriesOrderBy {
   AGE_GROUP_ASC
@@ -2008,6 +2024,9 @@ type Competition {
 
   """Reads and enables pagination through a set of `CompetitionEntry`."""
   entriesList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2022,7 +2041,9 @@ type Competition {
     """The method to use when ordering `CompetitionEntry`."""
     orderBy: [CompetitionEntriesOrderBy!]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): [CompetitionEntry!]!
 
@@ -2047,6 +2068,9 @@ type Competition {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2067,7 +2091,9 @@ type Competition {
     """The method to use when ordering `CompetitionOfficial`."""
     orderBy: [CompetitionOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): CompetitionOfficialConnection!
   participantsTotal: Int
@@ -2104,6 +2130,9 @@ type Competition {
 
   """Reads and enables pagination through a set of `CompetitionResult`."""
   resultsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -2118,7 +2147,9 @@ type Competition {
     """The method to use when ordering `CompetitionResult`."""
     orderBy: [CompetitionResultsOrderBy!]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): [CompetitionResult!]!
 
@@ -5763,6 +5794,9 @@ type Event {
 
   """Reads and enables pagination through a set of `EventRegistration`."""
   registrationsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -5776,6 +5810,11 @@ type Event {
 
     """The method to use when ordering `EventRegistration`."""
     orderBy: [EventRegistrationsOrderBy!]
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
   ): [EventRegistration!]!
 
   """Reads a single `EventSeries` that is related to this `Event`."""
@@ -7969,6 +8008,9 @@ type FederationEvent {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -7989,7 +8031,9 @@ type FederationEvent {
     """The method to use when ordering `FederationEventOfficial`."""
     orderBy: [FederationEventOfficialsOrderBy!] = [PRIMARY_KEY_ASC]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): FederationEventOfficialConnection!
 
@@ -12313,6 +12357,9 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -12333,7 +12380,9 @@ type Query {
     """The method to use when ordering `Competition`."""
     orderBy: [CompetitionsOrderBy!] = [PRIMARY_KEY_ASC]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): CompetitionConnection
 
@@ -12684,6 +12733,8 @@ type Query {
   """Get a single `Event`."""
   event(id: BigInt!): Event
   eventFacetsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
     condition: EventSearchConditionInput
     endRange: Datetime
 
@@ -12692,6 +12743,11 @@ type Query {
 
     """Skip the first `n` values."""
     offset: Int
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
     startRange: Datetime
   ): [EventFacetsRecord!]
   eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
@@ -12788,6 +12844,9 @@ type Query {
 
   """Reads a set of `Event`."""
   eventsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -12802,7 +12861,9 @@ type Query {
     """The method to use when ordering `Event`."""
     orderBy: [EventsOrderBy!]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): [Event!]
 
@@ -12894,6 +12955,9 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -12914,7 +12978,9 @@ type Query {
     """The method to use when ordering `FederationEvent`."""
     orderBy: [FederationEventsOrderBy!] = [PRIMARY_KEY_ASC]
 
-    """Apply one of your saved searches within the current tenant."""
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
     savedSearch: BigInt
   ): FederationEventConnection
 
@@ -13165,6 +13231,9 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+
     """
     A condition to be used in determining which values should be returned by the collection.
     """
@@ -13184,6 +13253,11 @@ type Query {
 
     """The method to use when ordering `Person`."""
     orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
   ): PersonConnection
 
   """Get a single `Person`."""

@@ -522,16 +522,13 @@ fragment CalendarFederationEvent on FederationEvent {
 query CalendarData(
   $savedSearch: BigInt
   $withSavedSearches: Boolean! = false
-  $eventCondition: EventCondition
+  $filter: CalendarFilterInput
+  $overlaps: EventRangeCondition
   $since: Date
   $until: Date
   $withFacets: Boolean! = true
   $start: Datetime
   $end: Datetime
-  $participant: CompetitionParticipantCondition
-  $peopleCondition: PersonCondition
-  $birthdayCondition: PersonCondition
-  $facetCondition: EventSearchConditionInput
   $withParticipantOptions: Boolean! = false
   $withAttendance: Boolean! = false
   $withEvents: Boolean! = true
@@ -547,7 +544,8 @@ query CalendarData(
   }
   eventsList(
     savedSearch: $savedSearch
-    condition: $eventCondition
+    calendarFilter: $filter
+    condition: { overlaps: $overlaps }
     orderBy: [SINCE_ASC, ID_ASC]
   ) @include(if: $withEvents) @_required {
     ...EventWithPeople
@@ -584,10 +582,9 @@ query CalendarData(
       }
     }
     attendance: registrationsList(
-      condition: {
-        registrationStatus: ACTIVE
-        participant: $participant
-      }
+      calendarFilter: $filter
+      savedSearch: $savedSearch
+      condition: { registrationStatus: ACTIVE }
       orderBy: PRIMARY_KEY_ASC
     ) @include(if: $withAttendance) {
       id
@@ -613,12 +610,12 @@ query CalendarData(
   }
   competitions(
     savedSearch: $savedSearch
+    calendarFilter: $filter
     first: 300
     offset: $offset
     condition: {
       includeCancelled: false
       date: { since: $since, until: $until }
-      involvement: { competitor: $participant, official: $peopleCondition }
     }
     orderBy: [START_DATE_ASC, CHECK_IN_END_ASC, ID_ASC]
   ) @include(if: $withCompetitions) @_required {
@@ -647,13 +644,13 @@ query CalendarData(
           }
         }
       }
-      entries: entriesList(savedSearch: $savedSearch, condition: { competitor: $participant }) {
+      entries: entriesList(calendarFilter: $filter, savedSearch: $savedSearch) {
         ...CompetitionEntry
       }
-      results: resultsList(savedSearch: $savedSearch, condition: { competitor: $participant }) {
+      results: resultsList(calendarFilter: $filter, savedSearch: $savedSearch) {
         ...CompetitionResult
       }
-      officials(first: 300, savedSearch: $savedSearch, condition: { person: $peopleCondition }) {
+      officials(first: 300, calendarFilter: $filter, savedSearch: $savedSearch) {
         nodes {
           competitionId
           personId
@@ -665,19 +662,19 @@ query CalendarData(
   }
   officialEvents: federationEvents(
     savedSearch: $savedSearch
+    calendarFilter: $filter
     first: 300
     offset: $offset
     condition: {
       includeCancelled: false
       date: { since: $since, until: $until }
-      official: $peopleCondition
     }
     orderBy: [START_DATE_ASC, ID_ASC]
   ) @include(if: $withCompetitions) @_required {
     pageInfo { hasNextPage }
     nodes {
       ...CalendarFederationEvent
-      officials(first: 300, savedSearch: $savedSearch, condition: { person: $peopleCondition }) {
+      officials(first: 300, calendarFilter: $filter, savedSearch: $savedSearch) {
         nodes {
           eventId
           personId
@@ -689,7 +686,9 @@ query CalendarData(
     }
   }
   birthdays: people(
-    condition: $birthdayCondition
+    calendarFilter: $filter
+    savedSearch: $savedSearch
+    condition: { birthday: { since: $since, until: $until } }
     orderBy: [LAST_NAME_ASC, FIRST_NAME_ASC]
   ) @include(if: $withBirthdays) @skip(if: $forIcs) @_required {
     nodes {
@@ -699,7 +698,7 @@ query CalendarData(
   }
   ... @include(if: $withFacets) @skip(if: $forIcs) {
     eventFacetsList(
-      startRange: $start, endRange: $end, condition: $facetCondition
+      startRange: $start, endRange: $end, calendarFilter: $filter, savedSearch: $savedSearch
     ) @_required {
       facet
       value

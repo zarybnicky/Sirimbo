@@ -93,8 +93,7 @@ function prepareVariables(
     ...variables,
     ...overlaps,
     ...dates,
-    eventCondition: { ...variables.eventCondition, overlaps },
-    birthdayCondition: { ...variables.peopleCondition, birthday: dates },
+    overlaps,
   };
 }
 
@@ -135,42 +134,21 @@ export function useCalendarData({
     : filters.trainers;
 
   const { personIds, cohortId, coupleId } = filters.participants;
-  const condition = {
-    trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-    locationIds: filters.location.length > 0 ? filters.location : undefined,
-    types: allEventTypes.filter(
-      (type) => filters.types.includes(type) && (!filters.canRegister || type !== 'GROUP'),
-    ),
-    canRegister: filters.canRegister ? true : undefined,
-    relevantOnly: filters.relevantOnly,
-    parentId,
+  const variables: CalendarDataQueryVariables = {
+    savedSearch,
+    filter: savedSearch ? undefined : {
+      types: allEventTypes.filter((type) => filters.types.includes(type)),
+      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+      locationIds: filters.location.length > 0 ? filters.location : undefined,
+      parentId,
+      participantIds: personIds,
+      coupleId,
+      cohortId,
+      onlyMine,
+      relevantOnly: filters.relevantOnly,
+      canRegister: filters.canRegister ? true : undefined,
+    },
   };
-
-  const variables: CalendarDataQueryVariables = savedSearch
-    ? { savedSearch }
-    : {
-      eventCondition: {
-        ...condition,
-        onlyMine,
-        participant: { personIds, cohortId, coupleId },
-      },
-      participant: { ...filters.participants, onlyMine },
-      peopleCondition: {
-        ids: personIds,
-        onlyMine,
-        membership: {
-          state: !personIds && !onlyMine ? 'CURRENT' : undefined,
-          inCohorts: cohortId ? [cohortId] : undefined,
-        },
-      },
-      facetCondition: {
-        ...condition,
-        participantIds: personIds,
-        cohortId,
-        onlyMine,
-        withCompetitions,
-      },
-    };
 
   const [{ data, fetching, error, operation }] = useQuery({
     query: CalendarDataDocument,
@@ -412,9 +390,9 @@ export function useCalendarData({
         .filter(
           (resource) =>
             effectiveGroupBy !== 'trainer' ||
-            !operation?.variables.eventCondition?.trainerIds ||
+            !operation?.variables.filter?.trainerIds ||
             resource.type !== 'person' ||
-            operation.variables.eventCondition.trainerIds.includes(resource.id),
+            operation.variables.filter.trainerIds.includes(resource.id),
         )
         .toSorted((a, b) => compareText(a.resourceTitle, b.resourceTitle)),
     };

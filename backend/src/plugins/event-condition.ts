@@ -1,11 +1,14 @@
 import { LIST_TYPES, TYPES } from 'postgraphile/@dataplan/pg';
-import { applyInput, lambda, object } from 'postgraphile/grafast';
-import { GraphQLError } from 'postgraphile/graphql';
-import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
+import {
+  applyInput, bakedInput, inhibitOnNull, lambda, object,
+  trap, TRAP_INHIBITED, type Step,
+} from 'postgraphile/grafast';
+import { GraphQLError, GraphQLList, type GraphQLEnumType } from 'postgraphile/graphql';
+import { addPgTableCondition, extendSchema, wrapPlans } from 'postgraphile/utils';
 
 type EventRangeCondition = { start: string; end?: string | null };
 
-const savedSearchConditions: Record<string, string> = {
+const calendarConditions: Record<string, string> = {
   'Query.events': 'EventCondition',
   'Query.eventsList': 'EventCondition',
   'Query.competitions': 'CompetitionCondition',
@@ -14,74 +17,182 @@ const savedSearchConditions: Record<string, string> = {
   'Competition.resultsList': 'CompetitionResultCondition',
   'Competition.officials': 'CompetitionOfficialCondition',
   'FederationEvent.officials': 'FederationEventOfficialCondition',
+  'Query.people': 'PersonCondition',
+  'Event.registrationsList': 'EventRegistrationCondition',
+  'Query.eventFacetsList': 'EventSearchConditionInput',
 };
 
-const plugins: GraphileConfig.Plugin[] = [
-  {
-    name: 'EventSavedSearchPlugin',
-    schema: {
-      hooks: {
-        GraphQLObjectType_fields_field_args(args, build, { Self, scope }) {
-          const conditionType = savedSearchConditions[`${Self.name}.${scope.fieldName}`];
-          if (!conditionType) return args;
+function calendarFilter(
+  build: Pick<GraphileBuild.Build, 'input'>,
+  $id: Step,
+  $input: Step,
+) {
+  return $id.withLayerPlan(() => {
+    const $search = build.input.pgRegistry.pgResources.event_saved_search.get({ id: inhibitOnNull($id) });
+    return lambda(
+      object({ id: $id, filter: trap($search.get('condition'), TRAP_INHIBITED), input: $input }),
+      ({ id, filter, input }) => {
+        if (id == null) return input;
+        if (filter == null) throw new GraphQLError('Saved search not found.');
+        return {
+          types: filter.types,
+          trainerIds: filter.trainer_ids,
+          locationIds: filter.location_ids,
+          parentId: filter.parent_id,
+          participantIds: filter.participant_ids,
+          cohortId: filter.cohort_id,
+          onlyMine: filter.only_mine,
+          relevantOnly: filter.relevant_only,
+          canRegister: filter.can_register,
+          withCompetitions: filter.with_competitions ?? false,
+        };
+      },
+    );
+  });
+}
+
+const savedSearchPlugin = wrapPlans(
+  ({ Self, scope }, build) => {
+    const conditionType = calendarConditions[`${Self.name}.${scope.fieldName}`];
+    return conditionType ? { conditionType, build, isConnection: scope.isPgFieldConnection } : null;
+  },
+  ({ conditionType, build, isConnection }) => (plan, _source, args) => {
+    const $filter = calendarFilter(build, args.getRaw('savedSearch'), args.getRaw('calendarFilter'));
+    const $native = conditionType === 'EventSearchConditionInput'
+      ? bakedInput(args.typeAt('condition'), args.getRaw('condition')) : args.getRaw('condition');
+    // applyInput is planned at the root, including for nested collection fields.
+    const $condition = $filter.withLayerPlan(() => lambda(
+      object({ filter: $filter, native: $native }),
+      ({ filter, native }) => {
+        if (conditionType === 'EventSearchConditionInput') {
+          if (filter == null) return native;
           return {
-            ...args,
-            savedSearch: {
-              type: build.getInputTypeByName('BigInt'),
-              description: 'Apply one of your saved searches within the current tenant.',
-              applyPlan(_, $field, arg) {
-                const $id = arg.getRaw();
-                // Resolve the saved search before planning the nested list filters.
-                const $condition = $id.withLayerPlan(() => {
-                  const $search = build.input.pgRegistry.pgResources.event_saved_search.get({ id: $id });
-                  return lambda(object({ id: $id, filter: $search.get('condition') }), ({ id, filter }) => {
-                    if (id == null) return {};
-                    if (filter == null) throw new GraphQLError('Saved search not found.');
-                    if (conditionType === 'EventCondition') return {
-                      types: filter.types,
-                      trainerIds: filter.trainer_ids,
-                      locationIds: filter.location_ids,
-                      parentId: filter.parent_id ?? undefined,
-                      participant: filter.participant_ids == null && filter.cohort_id == null ? undefined : {
-                        personIds: filter.participant_ids,
-                        cohortId: filter.cohort_id,
-                      },
-                      onlyMine: filter.only_mine,
-                      relevantOnly: filter.relevant_only,
-                      canRegister: filter.can_register,
-                    };
-                    const participant = {
-                      personIds: filter.with_competitions && !filter.can_register ? filter.participant_ids : [],
-                      cohortId: filter.cohort_id,
-                      onlyMine: filter.only_mine,
-                    };
-                    const official = {
-                      ids: participant.personIds,
-                      onlyMine: filter.only_mine,
-                      membership: {
-                        state: filter.participant_ids == null && !filter.only_mine ? 'current' : undefined,
-                        inCohorts: filter.cohort_id == null ? undefined : [filter.cohort_id],
-                      },
-                    };
-                    if (conditionType === 'CompetitionCondition') return { involvement: { competitor: participant, official } };
-                    if (conditionType === 'FederationEventCondition') return { official };
-                    if (conditionType.endsWith('OfficialCondition')) return { person: official };
-                    return { competitor: participant };
-                  });
-                });
-                const $select = scope.isPgFieldConnection ? $field.getSubplan() : $field;
-                $select.apply(applyInput(build.getInputTypeByName(conditionType),
-                  $condition as unknown as Parameters<typeof applyInput>[1],
-                  (qb) => qb.whereBuilder()));
-              },
-            },
+            types: filter.types,
+            trainer_ids: filter.trainerIds,
+            location_ids: filter.locationIds,
+            parent_id: filter.parentId,
+            participant_ids: filter.participantIds,
+            cohort_id: filter.cohortId,
+            only_mine: filter.onlyMine,
+            relevant_only: filter.relevantOnly,
+            can_register: filter.canRegister,
           };
-        },
+        }
+        if (filter == null) return [native];
+
+        const participant = {
+          personIds: filter.participantIds,
+          coupleId: filter.coupleId,
+          cohortId: filter.cohortId,
+          onlyMine: filter.onlyMine,
+        };
+        const person = {
+          ids: filter.participantIds,
+          onlyMine: filter.onlyMine,
+          membership: {
+            state: filter.participantIds == null && !filter.onlyMine ? 'current' : undefined,
+            inCohorts: filter.cohortId == null ? undefined : [filter.cohortId],
+          },
+        };
+        let mapped;
+        if (conditionType === 'EventCondition') {
+          const eventTypes = (build.getInputTypeByName('EventType') as GraphQLEnumType)
+            .getValues().map(({ value }) => value as string);
+          mapped = {
+            types: filter.canRegister
+              ? (filter.types ?? eventTypes).filter((type: string) => type !== 'group')
+              : filter.types,
+            trainerIds: filter.trainerIds,
+            locationIds: filter.locationIds,
+            parentId: filter.parentId ?? undefined,
+            participant: {
+              personIds: filter.participantIds,
+              coupleId: filter.coupleId,
+              cohortId: filter.cohortId,
+            },
+            onlyMine: filter.onlyMine,
+            relevantOnly: filter.relevantOnly,
+            canRegister: filter.canRegister,
+          };
+        } else if (conditionType === 'PersonCondition') {
+          mapped = person;
+        } else if (conditionType === 'EventRegistrationCondition') {
+          mapped = { participant };
+        } else {
+          if (filter.withCompetitions === false || filter.canRegister) {
+            participant.personIds = [];
+            person.ids = [];
+          }
+          mapped = conditionType === 'CompetitionCondition' ? { involvement: { competitor: participant, official: person } }
+            : conditionType === 'FederationEventCondition' ? { official: person }
+            : conditionType.endsWith('OfficialCondition') ? { person }
+            : { competitor: participant };
+        }
+        return [native, mapped];
+      },
+    ));
+
+    if (conditionType === 'EventSearchConditionInput') {
+      const resource = build.input.pgRegistry.pgResources.event_facets;
+      return resource.execute([
+        { step: args.getRaw('startRange'), pgCodec: TYPES.timestamptz },
+        { step: args.getRaw('endRange'), pgCodec: TYPES.timestamptz },
+        { step: $condition, pgCodec: resource.parameters![2]!.codec },
+      ]);
+    }
+    const $field = plan();
+    const $select = isConnection ? $field.getSubplan() : $field;
+    // Both conditions use one builder so competition dates reach participation lookups.
+    $select.apply(applyInput(new GraphQLList(build.getInputTypeByName(conditionType)),
+      $condition as unknown as Parameters<typeof applyInput>[1], (qb) => qb.whereBuilder()));
+    return $field;
+  },
+  { name: 'EventSavedSearchPlugin' },
+);
+
+savedSearchPlugin.schema = {
+  ...savedSearchPlugin.schema,
+  hooks: {
+    ...savedSearchPlugin.schema?.hooks,
+    GraphQLObjectType_fields_field_args: {
+      after: ['PgConditionArgumentPlugin'],
+      callback(args, build, { Self, scope }) {
+        if (!calendarConditions[`${Self.name}.${scope.fieldName}`]) return args;
+        return {
+          ...args,
+          condition: { ...args.condition, applyPlan() {} },
+          calendarFilter: {
+            type: build.getInputTypeByName('CalendarFilterInput'),
+            description: 'Apply calendar selectors in addition to the native condition.',
+          },
+          savedSearch: {
+            type: build.getInputTypeByName('BigInt'),
+            description: 'Apply one of your saved searches within the current tenant, replacing calendarFilter.',
+          },
+        };
       },
     },
   },
+};
+
+const plugins: GraphileConfig.Plugin[] = [
+  savedSearchPlugin,
   extendSchema({
     typeDefs: `
+      """Calendar selectors. Collection switches and date bounds are supplied separately."""
+      input CalendarFilterInput {
+        types: [EventType!]
+        trainerIds: [BigInt!]
+        locationIds: [BigInt!]
+        parentId: BigInt
+        participantIds: [BigInt!]
+        coupleId: BigInt
+        cohortId: BigInt
+        onlyMine: Boolean
+        relevantOnly: Boolean
+        canRegister: Boolean
+      }
+
       input EventRangeCondition {
         """Inclusive start of the time window."""
         start: Datetime!

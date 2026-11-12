@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { sql, TYPES, type PgSelectStep } from 'postgraphile/@dataplan/pg';
+import { sql, TYPES } from 'postgraphile/@dataplan/pg';
 import { applyInput, lambda } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
@@ -30,12 +30,8 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
   objects: {
     Query: {
       plans: {
-        eventInstancesForRangeList($root, args, info) {
-          const query = build.getTypeByName('Query');
-          assert(build.graphql.isObjectType(query));
-          const plan = query.getFields().eventsList.extensions?.grafast?.plan;
-          assert(plan);
-          const $events = plan($root, args, info) as PgSelectStep;
+        eventInstancesForRangeList(_root, args) {
+          const $events = build.input.pgRegistry.pgResources.event.find();
           const $condition = lambda(args.getRaw(), (input) => ({
             type: input.onlyType ?? undefined,
             types: input.onlyTypes,

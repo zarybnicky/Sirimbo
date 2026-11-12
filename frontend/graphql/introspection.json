@@ -3950,6 +3950,13 @@
             },
             "args": [
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -4082,6 +4089,13 @@
               },
               {
                 "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "calendarFilter",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -4238,6 +4252,13 @@
               }
             },
             "args": [
+              {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
               {
                 "name": "condition",
                 "type": {
@@ -10762,6 +10783,13 @@
             },
             "args": [
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -10793,6 +10821,13 @@
                       "name": "Any"
                     }
                   }
+                }
+              },
+              {
+                "name": "savedSearch",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]
@@ -15392,6 +15427,13 @@
               },
               {
                 "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "calendarFilter",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -24822,6 +24864,13 @@
                 }
               },
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -25959,6 +26008,13 @@
             },
             "args": [
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -25981,6 +26037,13 @@
               },
               {
                 "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "savedSearch",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -26428,6 +26491,13 @@
             },
             "args": [
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -26794,6 +26864,13 @@
               },
               {
                 "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "calendarFilter",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -27780,6 +27857,13 @@
                 }
               },
               {
+                "name": "calendarFilter",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "condition",
                 "type": {
                   "kind": "SCALAR",
@@ -27818,6 +27902,13 @@
                       "name": "Any"
                     }
                   }
+                }
+              },
+              {
+                "name": "savedSearch",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               }
             ]
