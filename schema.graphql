@@ -3292,11 +3292,7 @@ type Couple {
   """Reads a single `Person` that is related to this `Couple`."""
   man: Person
   manId: BigInt!
-
-  """The partners' first names and surnames, without titles."""
   name: String!
-
-  """The partners' surnames."""
   shortName: String!
   since: Datetime!
   status: RelationshipStatus!
@@ -3329,8 +3325,14 @@ input CoupleCondition {
   """
   membership: PersonMembershipCondition
 
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
   """Match either partner of the couple."""
   personId: BigInt
+
+  """Checks for equality with the object’s `shortName` field."""
+  shortName: String
 
   """Checks for equality with the object’s `since` field."""
   since: Datetime
@@ -3384,9 +3386,13 @@ enum CouplesOrderBy {
   IMAGE_ID_DESC
   MAN_ID_ASC
   MAN_ID_DESC
+  NAME_ASC
+  NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SHORT_NAME_ASC
+  SHORT_NAME_DESC
   SINCE_ASC
   SINCE_DESC
   UNTIL_ASC
@@ -9219,6 +9225,16 @@ enum GenderType {
   WOMAN
 }
 
+type GlobalSearchResult {
+  cohort: Cohort
+  couple: Couple
+  event: Event
+  location: Location
+  person: Person
+  position: Int!
+  score: Float!
+}
+
 """A range of `Int`."""
 type IntRange {
   """The ending bound of our range."""
@@ -13037,6 +13053,15 @@ type Query {
   ): FormResponseConnection
   getCurrentTenant: Tenant
   getCurrentUser(versionId: String): User
+  globalSearchList(
+    """Only read the first `n` values of the set."""
+    first: Int
+    limit: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+    search: String
+  ): [GlobalSearchResult!]!
   invitationInfo(token: UUID): String
   invitationName(token: UUID): String
 

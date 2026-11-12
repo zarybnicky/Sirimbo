@@ -70,3 +70,75 @@ create index if not exists event_saved_search_user_id_idx on event_saved_search 
 --!include functions/create_latest_lesson_payments.sql
 
 comment on table cohort_subscription is '@behavior +list -connection -insert -update -delete -query:resource:connection -query:resource:single';
+
+alter table couple add column if not exists name text;
+alter table couple add column if not exists short_name text;
+
+--!include functions/tg_couple__names.sql
+
+update couple set name = name where name is null or short_name is null;
+alter table couple alter column name set not null;
+alter table couple alter column short_name set not null;
+
+comment on column couple.name is '@behavior -attribute:insert -attribute:update';
+comment on column couple.short_name is '@behavior -attribute:insert -attribute:update';
+
+alter table person add column if not exists search_vector tsvector
+  generated always as (to_tsvector('pg_catalog.simple', app_private.normalize_name(
+    immutable_concat_ws(' ', first_name, last_name)))) stored;
+alter table cohort add column if not exists search_vector tsvector
+  generated always as (to_tsvector('pg_catalog.simple', app_private.normalize_name(name))) stored;
+alter table location add column if not exists search_vector tsvector
+  generated always as (to_tsvector('pg_catalog.simple', app_private.normalize_name(
+    immutable_concat_ws(' ', name, long_name)))) stored;
+alter table event add column if not exists search_vector tsvector
+  generated always as (to_tsvector('pg_catalog.simple', app_private.normalize_name(coalesce(name, '')))) stored;
+alter table couple add column if not exists search_vector tsvector
+  generated always as (to_tsvector('pg_catalog.simple', app_private.normalize_name(name))) stored;
+
+comment on column person.search_vector is '@behavior -*';
+comment on column cohort.search_vector is '@behavior -*';
+comment on column location.search_vector is '@behavior -*';
+comment on column event.search_vector is '@behavior -*';
+comment on column couple.search_vector is '@behavior -*';
+
+create index if not exists couple_search_vector_idx on couple using gin (search_vector);
+create index if not exists person_search_vector_idx on person using gin (search_vector);
+create index if not exists cohort_search_vector_idx on cohort using gin (search_vector);
+create index if not exists location_search_vector_idx on location using gin (search_vector);
+create index if not exists event_search_vector_idx on event using gin (search_vector);
+
+drop function if exists global_search(text, integer);
+drop type if exists global_search_result;
+drop type if exists global_search_kind;
+
+create type global_search_result as (
+  person person,
+  couple couple,
+  cohort cohort,
+  location location,
+  event event,
+  score real,
+  position integer
+);
+
+comment on column global_search_result.score is '@notNull';
+comment on column global_search_result.position is '@notNull';
+
+--!include functions/current_person_ids.sql
+
+create index if not exists event_visibility_idx on event (tenant_id, id)
+  include (is_public, is_visible, manager_person_ids);
+
+select app_private.drop_policies('public.event');
+select app_private.drop_policies('public.event_trainer');
+select app_private.drop_policies('public.event_target_cohort');
+drop function if exists app_private.accessible_event_ids();
+
+--!include functions/accessible_event_ids.sql
+--!include functions/global_search.sql
+--!include policies/event.sql
+--!include policies/event_trainer.sql
+--!include policies/event_target_cohort.sql
+--!include functions/cohort_has_accessible_event.sql
+--!include functions/visible_file_ids.sql

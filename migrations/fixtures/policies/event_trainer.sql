@@ -11,4 +11,4 @@ create policy member_view on event_trainer for select to member
 create policy public_view on event_trainer for select to anonymous
   using (event_id in (select id from event where is_public));
 create policy event_access_view on event_trainer for select to anonymous
-  using (event_id in (select app_private.accessible_event_ids()));
+  using (event_id in (select * from app_private.accessible_event_ids()));

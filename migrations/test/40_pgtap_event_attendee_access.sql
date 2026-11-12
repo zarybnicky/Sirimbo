@@ -151,5 +151,44 @@ SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person WHERE id BETWEEN -90
   ARRAY[-9005,-9001,-9000]::bigint[], 'refresh removes former schedule visibility while preserving own person and active partners');
 RESET ROLE;
 
+INSERT INTO event (id, tenant_id, name, since, until, is_visible, is_public)
+OVERRIDING SYSTEM VALUE VALUES
+  (-9010, -9000, 'Hledání veřejné', now(), now() + interval '1 hour', false, true),
+  (-9011, -9000, 'Hledání členské', now(), now() + interval '1 hour', true, false);
+UPDATE event SET name='Hledání soukromé' WHERE id IN (-9003, -9004);
+SET LOCAL ROLE anonymous;
+SELECT tap.ok(EXISTS (SELECT FROM event WHERE id=-9010),
+  'central event policy grants ordinary public access');
+SELECT tap.ok(NOT EXISTS (SELECT FROM event WHERE id=-9011),
+  'anonymous cannot use the member-visible flag');
+SELECT tap.ok(EXISTS (SELECT FROM app_private.accessible_event_ids() id WHERE id=-9010),
+  'full-access helper retains public events for its other callers');
+SELECT tap.is((SELECT array_agg(id ORDER BY id)
+  FROM app_private.accessible_event_ids('hledani:*'::tsquery) id), ARRAY[-9010]::bigint[],
+  'title filtering grants public matches without exposing private or foreign matches');
+SELECT tap.set_eq('SELECT id FROM event', 'SELECT * FROM app_private.accessible_event_ids(NULL)',
+  'a null title query preserves ordinary anonymous visibility');
+SET LOCAL ROLE member;
+SELECT tap.ok(EXISTS (SELECT FROM event WHERE id=-9011),
+  'central event policy grants ordinary member access');
+SELECT tap.ok(EXISTS (SELECT FROM app_private.accessible_event_ids() id WHERE id=-9011),
+  'full-access helper retains member events for its other callers');
+SELECT tap.ok(NOT EXISTS (SELECT FROM event WHERE id=-9003),
+  'central event policy does not expose unrelated private events');
+SELECT tap.is((SELECT array_agg(id ORDER BY id)
+  FROM app_private.accessible_event_ids('hledani:*'::tsquery) id), ARRAY[-9011,-9010]::bigint[],
+  'member title filtering includes member matches without exposing private or foreign matches');
+SELECT tap.is((SELECT count(*) FROM app_private.accessible_event_ids('zzzneexistujici:*'::tsquery)),
+  0::bigint, 'a title query with no matches returns no event IDs');
+SET LOCAL ROLE trainer;
+SELECT tap.set_eq('SELECT id FROM event WHERE search_vector @@ ''hledani:*''::tsquery',
+  'SELECT * FROM app_private.accessible_event_ids(''hledani:*''::tsquery)',
+  'filtered trainer access matches the event SELECT policies');
+SET LOCAL ROLE administrator;
+SELECT tap.set_eq('SELECT id FROM event WHERE search_vector @@ ''hledani:*''::tsquery',
+  'SELECT * FROM app_private.accessible_event_ids(''hledani:*''::tsquery)',
+  'filtered administrator access matches the tenant-scoped event SELECT policies');
+RESET ROLE;
+
 SELECT * FROM tap.finish(true);
 ROLLBACK;

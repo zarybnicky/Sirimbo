@@ -31,6 +31,7 @@ export const cacheKeyFields = {
   FederationEventOfficial: ['eventId', 'personId', 'role', 'discipline'],
   FederationEventYear: null,
   FederationPeopleFacetsRecord: null,
+  GlobalSearchResult: null,
   IntRange: null,
   IntRangeBound: null,
   LocationImage: ['fileId'],

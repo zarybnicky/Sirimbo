@@ -9,4 +9,4 @@ create policy trainer_select on event_target_cohort to trainer
 create policy member_view on event_target_cohort for select to member
   using (exists (select 1 from event e where e.id = event_target_cohort.event_id));
 create policy event_access_view on event_target_cohort for select to anonymous
-  using (event_id in (select app_private.accessible_event_ids()));
+  using (event_id in (select * from app_private.accessible_event_ids()));

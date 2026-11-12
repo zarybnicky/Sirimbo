@@ -1,5 +1,5 @@
 import { pgClassExpression, LIST_TYPES, sql, sqlValueWithCodec, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
-import { lambda, list, type GrafastFieldConfig } from 'postgraphile/grafast';
+import type { GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 import personMembershipPlugins, { membershipCandidateIds } from './person-membership-condition.ts';
 
@@ -74,46 +74,10 @@ const TenantNamesPlugin = extendSchema((build) => {
   };
 }, 'TenantNamesPlugin');
 
-const CoupleNamesPlugin = extendSchema((build) => {
-  const person = build.input.pgRegistry.pgResources.person;
-
-  function coupleName($couple: PgSelectSingleStep, columns: readonly ('first_name' | 'last_name')[]) {
-    const partners = (['man_id', 'woman_id'] as const).map((column) => {
-      const $person = person.get({ id: $couple.get(column) });
-      return lambda(
-        list(columns.map((name) => $person.get(name))),
-        (parts) => parts.map((part) => part?.trim()).filter(Boolean).join(' '),
-        true,
-      );
-    });
-    return lambda(list(partners), (names) => names.filter(Boolean).join(' - '), true);
-  }
-
-  return {
-    typeDefs: `
-      extend type Couple {
-        "The partners' first names and surnames, without titles."
-        name: String!
-        "The partners' surnames."
-        shortName: String!
-      }
-    `,
-    objects: {
-      Couple: {
-        plans: {
-          name: ($couple) => coupleName($couple, ['first_name', 'last_name']),
-          shortName: ($couple) => coupleName($couple, ['last_name']),
-        },
-      },
-    },
-  };
-}, 'CoupleNamesPlugin');
-
 const plugins: GraphileConfig.Plugin[] = [
   ...personMembershipPlugins,
   PersonFieldsPlugin,
   TenantNamesPlugin,
-  CoupleNamesPlugin,
   addPgTableCondition(
     { schemaName: 'public', tableName: 'person' },
     'birthday',

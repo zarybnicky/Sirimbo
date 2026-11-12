@@ -4,6 +4,7 @@ create policy current_tenant on event as restrictive
   using (tenant_id = (select current_tenant_id()));
 create policy admin_same_tenant on event to administrator
   using (true);
+-- INSERT ... RETURNING needs a row-local grant: the stable ID helper cannot see the new row yet.
 create policy trainer_select on event for select to trainer
   using (cardinality(manager_person_ids) = 0 or manager_person_ids && (select current_person_ids()));
 create policy trainer_insert on event for insert to trainer
@@ -12,9 +13,10 @@ create policy trainer_update on event for update to trainer
   using (app_private.can_trainer_edit_event(id));
 create policy trainer_delete on event for delete to trainer
   using (app_private.can_trainer_edit_event(id));
+-- Let ordinary reads avoid building the full accessible-ID set.
 create policy member_view on event for select to member
   using (is_visible);
 create policy public_view on event for select to anonymous
   using (is_public);
 create policy event_access_view on event for select to anonymous
-  using (id in (select app_private.accessible_event_ids()));
+  using (id in (select * from app_private.accessible_event_ids()));

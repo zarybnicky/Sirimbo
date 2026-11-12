@@ -1,4 +1,4 @@
-create or replace function app_private.accessible_event_ids() returns setof bigint
+create or replace function app_private.accessible_event_ids(title_query tsquery default null) returns setof bigint
 language sql stable security definer
 set search_path = pg_catalog, public, pg_temp
 as $$
@@ -16,9 +16,12 @@ as $$
   -- Scan events once; their primary key already makes the result unique.
   select id from public.event
   where tenant_id = (select public.current_tenant_id())
+    and (title_query is null or search_vector @@ title_query)
     and (
-      is_public
+      (select pg_has_role(current_setting('role'), 'administrator', 'member'))
+      or is_public
       or (is_visible and (select pg_has_role(current_setting('role'), 'member', 'member')))
+      or ((select pg_has_role(current_setting('role'), 'trainer', 'member')) and cardinality(manager_person_ids) = 0)
       or (manager_person_ids && (select current_person_ids()))
       or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
       or id in (select id from attended)

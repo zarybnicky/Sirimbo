@@ -12,6 +12,13 @@ $$;
 COMMENT ON FUNCTION current_couple_ids() IS '@behavior -*';
 GRANT ALL ON FUNCTION current_couple_ids() TO anonymous;
 
+CREATE or replace FUNCTION current_cohort_ids() RETURNS bigint[] LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE AS $$
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '{}'), '[]', '{}')::bigint[];
+$$;
+
+COMMENT ON FUNCTION current_cohort_ids() IS '@behavior -*';
+GRANT ALL ON FUNCTION current_cohort_ids() TO anonymous;
+
 CREATE or replace FUNCTION my_tenants_array() RETURNS bigint[] LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE AS $$
   SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_tenant_ids', true), ''), '{}'), '[]', '{}')::bigint[];
 $$;

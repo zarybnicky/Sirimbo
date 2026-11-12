@@ -2485,9 +2485,7 @@ export type Couple = {
   /** Reads a single `Person` that is related to this `Couple`. */
   man: Maybe<Person>;
   manId: Scalars['BigInt']['output'];
-  /** The partners' first names and surnames, without titles. */
   name: Scalars['String']['output'];
-  /** The partners' surnames. */
   shortName: Scalars['String']['output'];
   since: Scalars['Datetime']['output'];
   status: RelationshipStatus;
@@ -2552,8 +2550,12 @@ export type CoupleCondition = {
   manId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Require at least one partner to match the current-tenant person membership condition. */
   membership?: InputMaybe<PersonMembershipCondition>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
   /** Match either partner of the couple. */
   personId?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `shortName` field. */
+  shortName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `since` field. */
   since?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -2600,9 +2602,13 @@ export type CouplesOrderBy =
   | 'IMAGE_ID_DESC'
   | 'MAN_ID_ASC'
   | 'MAN_ID_DESC'
+  | 'NAME_ASC'
+  | 'NAME_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'SHORT_NAME_ASC'
+  | 'SHORT_NAME_DESC'
   | 'SINCE_ASC'
   | 'SINCE_DESC'
   | 'UNTIL_ASC'
@@ -7163,6 +7169,17 @@ export type GenderType =
   | 'UNSPECIFIED'
   | 'WOMAN';
 
+export type GlobalSearchResult = {
+  __typename?: 'GlobalSearchResult';
+  cohort: Maybe<Cohort>;
+  couple: Maybe<Couple>;
+  event: Maybe<Event>;
+  location: Maybe<Location>;
+  person: Maybe<Person>;
+  position: Scalars['Int']['output'];
+  score: Scalars['Float']['output'];
+};
+
 /** A range of `Int`. */
 export type IntRange = {
   __typename?: 'IntRange';
@@ -9661,6 +9678,7 @@ export type Query = {
   formResponses: Maybe<FormResponseConnection>;
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
+  globalSearchList: Array<GlobalSearchResult>;
   invitationInfo: Maybe<Scalars['String']['output']>;
   invitationName: Maybe<Scalars['String']['output']>;
   /** Get a single `Location`. */
@@ -10463,6 +10481,15 @@ export type QueryFormResponsesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryGetCurrentUserArgs = {
   versionId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGlobalSearchListArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -13712,6 +13739,7 @@ export type GraphCacheKeysConfig = {
   FormResponse?: (data: WithTypename<FormResponse>) => null | string,
   FormResponseConnection?: (data: WithTypename<FormResponseConnection>) => null | string,
   FormResponseEdge?: (data: WithTypename<FormResponseEdge>) => null | string,
+  GlobalSearchResult?: (data: WithTypename<GlobalSearchResult>) => null | string,
   IntRange?: (data: WithTypename<IntRange>) => null | string,
   IntRangeBound?: (data: WithTypename<IntRangeBound>) => null | string,
   Interval?: (data: WithTypename<Interval>) => null | string,
@@ -13911,6 +13939,7 @@ export type GraphCacheResolvers = {
     formResponses?: GraphCacheResolver<WithTypename<Query>, QueryFormResponsesArgs, WithTypename<FormResponseConnection> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, QueryGetCurrentUserArgs, WithTypename<User> | string>,
+    globalSearchList?: GraphCacheResolver<WithTypename<Query>, QueryGlobalSearchListArgs, Array<WithTypename<GlobalSearchResult> | string>>,
     invitationInfo?: GraphCacheResolver<WithTypename<Query>, QueryInvitationInfoArgs, Scalars['String']['output'] | string>,
     invitationName?: GraphCacheResolver<WithTypename<Query>, QueryInvitationNameArgs, Scalars['String']['output'] | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
@@ -15387,6 +15416,15 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<FormResponseEdge>, Record<string, never>, Scalars['Cursor']['output'] | string>,
     node?: GraphCacheResolver<WithTypename<FormResponseEdge>, Record<string, never>, WithTypename<FormResponse> | string>
   },
+  GlobalSearchResult?: {
+    cohort?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, WithTypename<Cohort> | string>,
+    couple?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, WithTypename<Couple> | string>,
+    event?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, WithTypename<Event> | string>,
+    location?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, WithTypename<Location> | string>,
+    person?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, WithTypename<Person> | string>,
+    position?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, Scalars['Int']['output'] | string>,
+    score?: GraphCacheResolver<WithTypename<GlobalSearchResult>, Record<string, never>, Scalars['Float']['output'] | string>
+  },
   IntRange?: {
     end?: GraphCacheResolver<WithTypename<IntRange>, Record<string, never>, WithTypename<IntRangeBound> | string>,
     start?: GraphCacheResolver<WithTypename<IntRange>, Record<string, never>, WithTypename<IntRangeBound> | string>
@@ -16372,6 +16410,7 @@ export type GraphCacheUpdaters = {
     formResponses?: GraphCacheUpdateResolver<{ formResponses: Maybe<WithTypename<FormResponseConnection>> }, QueryFormResponsesArgs>,
     getCurrentTenant?: GraphCacheUpdateResolver<{ getCurrentTenant: Maybe<WithTypename<Tenant>> }, Record<string, never>>,
     getCurrentUser?: GraphCacheUpdateResolver<{ getCurrentUser: Maybe<WithTypename<User>> }, QueryGetCurrentUserArgs>,
+    globalSearchList?: GraphCacheUpdateResolver<{ globalSearchList: Array<WithTypename<GlobalSearchResult>> }, QueryGlobalSearchListArgs>,
     invitationInfo?: GraphCacheUpdateResolver<{ invitationInfo: Maybe<Scalars['String']['output']> }, QueryInvitationInfoArgs>,
     invitationName?: GraphCacheUpdateResolver<{ invitationName: Maybe<Scalars['String']['output']> }, QueryInvitationNameArgs>,
     location?: GraphCacheUpdateResolver<{ location: Maybe<WithTypename<Location>> }, QueryLocationArgs>,
@@ -17930,6 +17969,15 @@ export type GraphCacheUpdaters = {
   FormResponseEdge?: {
     cursor?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseEdge>>, Record<string, never>>,
     node?: GraphCacheUpdateResolver<Maybe<WithTypename<FormResponseEdge>>, Record<string, never>>
+  },
+  GlobalSearchResult?: {
+    cohort?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    couple?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    event?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    location?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    person?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    position?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>,
+    score?: GraphCacheUpdateResolver<Maybe<WithTypename<GlobalSearchResult>>, Record<string, never>>
   },
   IntRange?: {
     end?: GraphCacheUpdateResolver<Maybe<WithTypename<IntRange>>, Record<string, never>>,
