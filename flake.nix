@@ -6,6 +6,9 @@
     forAllSystems = fn: nixpkgs.lib.genAttrs allSystems (system: fn (import nixpkgs {
       inherit system;
       config.allowUnfree = true;
+      config.permittedInsecurePackages = [
+        "pnpm-10.34.0"
+      ];
       overlays = [ self.overlays.default ];
     }));
 
@@ -16,6 +19,13 @@
       graphile-migrate = final.callPackage ./deploy/graphile-migrate {};
       ruian-address-cache = final.callPackage ./deploy/ruian-address-cache.nix {};
       geonames-city-cache = final.callPackage ./deploy/geonames-city-cache.nix {};
+      postgresql_18 = prev.postgresql_18.overrideAttrs (old: {
+        passthru = old.passthru // {
+          pkgs = old.passthru.pkgs // {
+            pg_stat_monitor = final.postgresql_18.pkgs.callPackage ./deploy/pg_stat_monitor.nix {};
+          };
+        };
+      });
 
       rozpisovnik-api = final.callPackage ./deploy/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
@@ -107,6 +117,7 @@
         })
         self.nixosModules.default
         { nixpkgs.overlays = builtins.attrValues self.overlays; }
+        { nixpkgs.config.permittedInsecurePackages = [ "pnpm-10.34.0" ]; }
         ./deploy/container.nix
       ];
     };

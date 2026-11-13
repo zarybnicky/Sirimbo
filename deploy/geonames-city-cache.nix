@@ -1,11 +1,11 @@
 { fetchurl, runCommand, duckdb, unzip }:
 
 let
-  version = "20261112";
+  version = "20261113";
   cities = fetchurl {
-    name = "geonames-cities500-20261112.zip";
+    name = "geonames-cities500-20261113.zip";
     url = "https://download.geonames.org/export/dump/cities500.zip";
-    hash = "sha256-b8tkHZmr5wz4sMOvnvekwCBDCGG8onDXdqMTSCAgHRY=";
+    hash = "sha256-0Y5dttkT/8WqtliQaYFoppT4VSw/QwRvOuPYcMmsggo=";
   };
   countries = fetchurl {
     name = "geonames-countryInfo-20261015.txt";
