@@ -5,13 +5,11 @@ import {
   type CreateEventDefaults,
 } from '@/calendar/eventDefaults';
 import {
-  EventFormOptionsDocument,
   SaveEventsDocument,
   type EventWithTrainerFragment,
 } from '@/graphql/Event';
 import { useAuth, useTenantConfig } from '@/lib/auth';
 import { keyIsNonNull } from '@/lib/truthyFilter';
-import { compareText } from '@/lib/compare';
 import { Checkbox, CheckboxElement } from '@/ui/fields/checkbox';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { RadioButtonGroupElement } from '@/ui/fields/RadioButtonGroupElement';
@@ -24,17 +22,17 @@ import React from 'react';
 import { useSetAtom } from 'jotai';
 import { formPreviewAtom } from '@/calendar/state';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { useMutation, useQuery } from 'urql';
+import { useMutation } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { LocationField } from './LocationField';
 import { ParticipantListElement } from './ParticipantListElement';
 import { TrainerListElement } from './TrainerListElement';
+import { useEventFormOptions } from './useEventFormOptions';
 import {
   EventFormSchema,
   type EventFormInput,
   type EventFormType,
-  type EventParticipantOption,
 } from './types';
 
 const eventTypeOptions = (
@@ -46,16 +44,14 @@ type EventFormProps = CreateEventDefaults & {
   seriesId?: string;
 };
 
-function useEventFormOptions(input: EventFormProps) {
+function useEventFormSetup(input: EventFormProps) {
   const { event } = input;
   const auth = useAuth();
   const { lockEventsByDefault } = useTenantConfig();
   const [now] = React.useState(() => new Date());
-  const [query] = useQuery({
-    query: EventFormOptionsDocument,
-    variables: { eventId: event?.id, withRegistrations: !!event },
+  const query = useEventFormOptions({
+    eventId: event?.id, withRegistrations: !!event,
   });
-  const savedRegistrations = query.data?.registrations;
   const parent = input.parent ?? query.data?.event?.parent;
   const trainers = React.useMemo(() => (query.data?.tenant?.tenantTrainersList ?? [])
     .filter(keyIsNonNull('person'))
@@ -65,52 +61,6 @@ function useEventFormOptions(input: EventFormProps) {
       hidden: !auth.isAdmin && !auth.isMyPerson(person.id),
       disabled: !!parent && !parent.eventTrainersList.some((x) => x.personId === person.id),
     })), [query.data?.tenant?.tenantTrainersList, auth, parent]);
-
-  const participants = React.useMemo(() => {
-    const tenant = query.data?.tenant;
-    const participants = new Map<string, EventParticipantOption>();
-
-    for (const { person } of [
-      ...(savedRegistrations ?? []),
-      ...(tenant?.cohortsList ?? []).flatMap((x) => x.cohortMembershipsList),
-      ...(tenant?.tenantMembershipsList ?? []),
-    ]) {
-      if (!person) continue;
-      participants.set(`person:${person.id}`, {
-        id: `person:${person.id}`,
-        label: person.name + (person.isExternal ? ' (Externí)' : ''),
-        isExternal: person.isExternal,
-        personId: person.id,
-        coupleId: null,
-        personIds: [person.id],
-        person,
-        couple: null,
-      });
-    }
-    for (const couple of [
-      ...(savedRegistrations ?? []).flatMap((x) => x.couple || []),
-      ...(query.data?.couplesList ?? []),
-    ]) {
-      participants.set(`couple:${couple.id}`, {
-        id: `couple:${couple.id}`,
-        label: couple.name,
-        isExternal: ![couple.manId, couple.womanId].some(
-          (id) => !participants.get(`person:${id}`)?.isExternal,
-        ),
-        personId: null,
-        coupleId: couple.id,
-        personIds: [couple.manId, couple.womanId],
-        person: null,
-        couple,
-      });
-    }
-    return new Map(
-      [...participants].toSorted(
-        ([, a], [, b]) =>
-          Number(a.isExternal) - Number(b.isExternal) || compareText(a.label, b.label),
-      ),
-    );
-  }, [query.data?.couplesList, query.data?.tenant, savedRegistrations]);
 
   const defaultValues = React.useMemo(() => {
     if (event) return editEventDefaults(event, query.data, now.getTime());
@@ -132,7 +82,6 @@ function useEventFormOptions(input: EventFormProps) {
   return {
     ...query,
     trainers,
-    participants,
     defaultValues,
   };
 }
@@ -140,7 +89,7 @@ function useEventFormOptions(input: EventFormProps) {
 export function EventForm(input: EventFormProps) {
   const { event } = input;
   const setPreview = useSetAtom(formPreviewAtom);
-  const options = useEventFormOptions(input);
+  const options = useEventFormSetup(input);
   const { defaultValues } = options;
   const mode = event ? 'edit' : 'create';
   const parentId = input.parent?.id ?? event?.parentId ?? input.after?.parentId;

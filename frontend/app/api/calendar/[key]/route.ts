@@ -1,4 +1,5 @@
 import { federationCalendarDays } from '@/calendar/competitions';
+import { savedSearchName } from '@/calendar/savedSearchName';
 import { CalendarDataDocument, type CalendarDataQuery } from '@/graphql/Event';
 import { normalizeClaims } from '@/lib/auth-claims';
 import { executeGraphql } from '@/lib/server/graphql';
@@ -54,7 +55,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
     return { origin, pages };
   }));
 
-  const name = `${search.tenant_name ?? 'Sirimbo'} – ${search.name}`;
+  const name = `${search.tenant_name ?? 'Sirimbo'} – ${savedSearchName(search.name)}`;
   const calendar = ical({ name, prodId: { company: 'Sirimbo', product: 'Calendar', language: 'CS' } });
   let firstEvent = Infinity;
   let lastEvent = -Infinity;

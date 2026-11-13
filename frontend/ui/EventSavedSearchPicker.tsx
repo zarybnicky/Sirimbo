@@ -1,5 +1,6 @@
 import type { EventSearchConditionInput } from '@/graphql';
 import { eventTypes } from '@/calendar/state';
+import { savedSearchName } from '@/calendar/savedSearchName';
 import type { EventSavedSearchFragment } from '@/graphql/Event';
 import { Dialog, DialogContent, DialogTitle } from '@/ui/dialog';
 import {
@@ -71,14 +72,14 @@ export function EventSavedSearchPicker({
     conditionKey(search.condition) === conditionKey(row.condition)));
   const views = [
     ...rows,
-    ...custom.map((search) => ({ ...search, search })),
+    ...custom.map((search) => ({ ...search, name: savedSearchName(search.name), search })),
   ];
 
   return (
     <>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm', className: 'mb-2 self-start' })}>
-          Uložené filtry{selected ? `: ${selected.name}` : ''} <ChevronDown />
+          Uložené filtry{selected ? `: ${savedSearchName(selected.name)}` : ''} <ChevronDown />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
@@ -127,7 +128,7 @@ export function EventSavedSearchPicker({
 
       {editingId !== undefined && (
         <Dialog open onOpenChange={() => setEditingId(undefined)}>
-          <DialogContent>
+          <DialogContent onOpenAutoFocus={(event) => event.preventDefault()}>
             <DialogTitle>{editing ? 'Upravit uložený filtr' : 'Nový uložený filtr'}</DialogTitle>
             <EventSavedSearchForm savedSearch={editing} />
           </DialogContent>
