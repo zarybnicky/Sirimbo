@@ -1,4 +1,3 @@
-import type { EventSavedSearchFragment } from '@/graphql/Event';
 import { CalendarViews } from '@/calendar/CalendarViews';
 import {
   type CalendarFilters,
@@ -19,6 +18,8 @@ import { CalendarDays, List, Plus, Search } from 'lucide-react';
 import { FormError } from '@/ui/form';
 import Link from 'next/link';
 import { format } from 'date-fns/format';
+import { useAtom } from 'jotai';
+import { savedSearchAtom } from '@/calendar/state';
 import { EventSavedSearchPicker } from '@/ui/EventSavedSearchPicker';
 
 const myEventsFilters: CalendarFilters = {
@@ -35,23 +36,23 @@ const myEventsFilters: CalendarFilters = {
 export const MyEventsList = React.memo(function MyEventsList() {
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
-  const [savedSearch, setSavedSearch] = React.useState<EventSavedSearchFragment | null>(null);
+  const [savedSearch, setSavedSearch] = useAtom(savedSearchAtom);
+
   const { calendarEvents, savedSearches, fetching, error } = useCalendarData({
     view: CalendarViews.week,
     date: startDate,
     filters: myEventsFilters,
     savedSearch,
-    withSavedSearches: true,
+    withSavedSearches: auth.isSystemAdmin,
     withFacets: false,
-    withCompetitions: true,
-    withBirthdays: false,
+    withCompetitions:
+      !savedSearch?.condition?.canRegister &&
+      (savedSearch?.condition?.withCompetitions ?? true),
+    withBirthdays:
+      !!savedSearch?.condition?.withBirthdays && !savedSearch.condition.canRegister,
     withOtherClubCompetitors: true,
   });
-  React.useEffect(() => {
-    if (!savedSearch) return;
-    const updated = savedSearches.find((search) => search.id === savedSearch.id);
-    if (updated && updated !== savedSearch) setSavedSearch(updated);
-  }, [savedSearch, savedSearches]);
+
   const eventsByDay = React.useMemo(
     () =>
       [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))].toSorted(
@@ -62,11 +63,15 @@ export const MyEventsList = React.memo(function MyEventsList() {
 
   return (
     <div className="flex flex-col">
-      <EventSavedSearchPicker
-        savedSearches={savedSearches}
-        value={savedSearch?.id ?? null}
-        onChange={(id) => setSavedSearch(savedSearches.find((search) => search.id === id) ?? null)}
-      />
+      {auth.isSystemAdmin && (
+        <EventSavedSearchPicker
+          savedSearches={savedSearches}
+          value={savedSearch?.id ?? null}
+          onChange={(id) =>
+            setSavedSearch(savedSearches.find((x) => x.id === id) ?? null)
+          }
+        />
+      )}
       <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
       <FormError error={error} />
       <div className="text-sm text-neutral-9">
@@ -89,38 +94,42 @@ export const MyEventsList = React.memo(function MyEventsList() {
                   {capitalize(longDayFormatter.format(new Date(date)))}
                 </h4>
                 <div className="flex gap-1">
-                {auth.isTrainer && (
-                  <Dialog modal={false}>
-                    <DialogTrigger.Plain
-                      type="button"
-                      className={buttonCls({ display: 'none', variant: 'none' })}
-                    >
-                      <Plus />
-                    </DialogTrigger.Plain>
-                    <DialogContent className="sm:max-w-xl">
-                      <EventForm date={new Date(date)} after={events.at(-1)} events={events} />
-                    </DialogContent>
-                  </Dialog>
-                )}
-                <Link
-                  href={`/rozpis?v=agenda&date=${format(date, 'yyyy-MM-dd')}`}
-                  className={buttonCls({ display: 'none', variant: 'none' })}
-                >
-                  <span className="relative inline-block size-5 align-middle">
-                    <List className="size-4!" />
-                    <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
-                  </span>
-                </Link>
-                <Link
-                  href={`/rozpis?v=week&date=${format(date, 'yyyy-MM-dd')}`}
-                  className={buttonCls({ display: 'none', variant: 'none' })}
-                >
-                  <span className="relative inline-block size-5 align-middle">
-                    <CalendarDays className="size-4!" />
-                    <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
-                  </span>
-                </Link>
-                  </div>
+                  {auth.isTrainer && (
+                    <Dialog modal={false}>
+                      <DialogTrigger.Plain
+                        type="button"
+                        className={buttonCls({ display: 'none', variant: 'none' })}
+                      >
+                        <Plus />
+                      </DialogTrigger.Plain>
+                      <DialogContent className="sm:max-w-xl">
+                        <EventForm
+                          date={new Date(date)}
+                          after={events.at(-1)}
+                          events={events}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  <Link
+                    href={`/rozpis?v=agenda&date=${format(date, 'yyyy-MM-dd')}`}
+                    className={buttonCls({ display: 'none', variant: 'none' })}
+                  >
+                    <span className="relative inline-block size-5 align-middle">
+                      <List className="size-4!" />
+                      <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                    </span>
+                  </Link>
+                  <Link
+                    href={`/rozpis?v=week&date=${format(date, 'yyyy-MM-dd')}`}
+                    className={buttonCls({ display: 'none', variant: 'none' })}
+                  >
+                    <span className="relative inline-block size-5 align-middle">
+                      <CalendarDays className="size-4!" />
+                      <Search className="absolute right-0 bottom-0 size-2.5! rounded-xs bg-neutral-1 ring-2 ring-neutral-1" />
+                    </span>
+                  </Link>
+                </div>
               </div>
 
               {comps.map((x) => (

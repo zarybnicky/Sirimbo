@@ -12212,6 +12212,14 @@
             "args": []
           },
           {
+            "name": "withBirthdays",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "withCompetitions",
             "type": {
               "kind": "SCALAR",

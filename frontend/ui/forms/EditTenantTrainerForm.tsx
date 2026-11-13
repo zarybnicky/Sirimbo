@@ -156,7 +156,7 @@ export function EditTenantTrainerForm({ id }: { id: string }) {
 
       <div className="flex flex-wrap gap-4">
         <SubmitButton control={control} disabled={!item || !!query.error}>
-          Uložit změny
+          Uložit
         </SubmitButton>
       </div>
     </form>

@@ -126,7 +126,7 @@ export function AddToCohortForm({ personId }: { personId: string }) {
         control={control}
         disabled={!person || !!queryError || query.fetching || cohortQuery.fetching || toAdd.length === 0}
       >
-        Uložit změny
+        Uložit
       </SubmitButton>
     </form>
   );

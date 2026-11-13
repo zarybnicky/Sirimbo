@@ -33,8 +33,6 @@ export function groupCompetitionEvents(
   );
 }
 
-// Both the calendar and ICS use the dates of participations/assignments, which
-// can differ from the federation event's start date.
 export function federationCalendarDays(
   events: NonNullable<CalendarDataQuery['federationEvents']>['nodes'] = [],
 ) {

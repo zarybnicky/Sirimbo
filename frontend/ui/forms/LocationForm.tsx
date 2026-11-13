@@ -221,7 +221,7 @@ export function LocationForm({ id = '' }: { id?: string }) {
       )}
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit</SubmitButton>
       </div>
     </form>
   );

@@ -644,6 +644,7 @@ query CalendarData(
     nodes {
       id name firstName lastName
       date: birthday(since: $since)
+      anniversary: birthday(since: "2000-01-01") @include(if: $withCalendarExport)
     }
   }
   ... @include(if: $withFacets) {
@@ -774,6 +775,7 @@ fragment EventSavedSearch on EventSavedSearch {
     relevantOnly
     canRegister
     withCompetitions
+    withBirthdays
   }
 }
 

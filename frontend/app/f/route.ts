@@ -4,7 +4,7 @@ import { sameOrigin } from '@/lib/server/session';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
 
   const contentType = request.headers.get('content-type');
   const contentLength = request.headers.get('content-length');
-  const byteSize = contentLength && /^\d+$/.test(contentLength) ? Number(contentLength) : undefined;
+  const byteSize =
+    contentLength && /^\d+$/.test(contentLength) ? Number(contentLength) : undefined;
 
   let file: FileRow;
   try {
@@ -52,7 +53,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     if ((error as { code?: string }).code === '42501') {
-      return NextResponse.json({ error: 'Nemáte oprávnění nahrávat soubory' }, { status: 403 });
+      return NextResponse.json(
+        { error: 'Nemáte oprávnění nahrávat soubory' },
+        { status: 403 },
+      );
     }
     console.error('Failed to create file record', error);
     return NextResponse.json({ error: 'Soubor se nepodařilo nahrát' }, { status: 500 });
@@ -81,12 +85,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Soubor se nepodařilo nahrát' }, { status: 502 });
   }
 
-  return NextResponse.json(
-    {
-      id: file.id,
-      name,
-      url: file.url,
-    },
-    { status: 201 },
-  );
+  return NextResponse.json({ id: file.id, name, url: file.url }, { status: 201 });
 }

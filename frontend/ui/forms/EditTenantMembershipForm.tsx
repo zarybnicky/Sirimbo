@@ -79,7 +79,7 @@ export function EditTenantMembershipForm({ id }: { id: string }) {
       <DatePickerElement control={control} name="until" label="Členství do" clearable />
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control} disabled={!item || !!query.error}>Uložit změny</SubmitButton>
+        <SubmitButton control={control} disabled={!item || !!query.error}>Uložit</SubmitButton>
       </div>
     </form>
   );

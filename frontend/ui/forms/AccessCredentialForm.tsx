@@ -139,7 +139,7 @@ export function AccessCredentialForm({
       <DatePickerElement control={control} name="since" label="Platné od" />
       <DatePickerElement control={control} name="until" label="Platné do" clearable />
       <SubmitButton control={control}>
-        {credential ? 'Uložit změny' : 'Přidat kartu'}
+        {credential ? 'Uložit' : 'Přidat'}
       </SubmitButton>
     </form>
   );

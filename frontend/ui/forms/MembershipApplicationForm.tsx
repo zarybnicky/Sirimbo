@@ -359,7 +359,7 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
             control={control}
             variant={data && auth.isAdmin ? 'outline' : undefined}
           >
-            {data ? 'Uložit změny' : 'Odeslat přihlášku'}
+            {data ? 'Uložit' : 'Odeslat přihlášku'}
           </SubmitButton>
         </div>
 

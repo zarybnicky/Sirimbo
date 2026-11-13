@@ -33,7 +33,7 @@ export function EventSeriesForm({
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit)}>
       <FormError error={result.error} />
       <TextFieldElement control={control} name="name" label="Název série" />
-      <SubmitButton control={control}>Uložit změny</SubmitButton>
+      <SubmitButton control={control}>Uložit</SubmitButton>
     </form>
   );
 }

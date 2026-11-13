@@ -72,7 +72,7 @@ export function EditEventDescriptionForm({ id }: { id: string }) {
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <SubmitButton control={control}>Uložit změny</SubmitButton>
+        <SubmitButton control={control}>Uložit</SubmitButton>
       </div>
     </form>
   );

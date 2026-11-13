@@ -156,7 +156,7 @@ export function ArticleForm({ id = '' }: { id?: string }) {
           value="save"
           disabled={!!id && !data}
         >
-          {data?.isVisible ? 'Uložit změny' : 'Uložit koncept'}
+          {data?.isVisible ? 'Uložit' : 'Uložit koncept'}
         </SubmitButton>
 
         <SubmitButton

@@ -1,7 +1,9 @@
 import { atom } from 'jotai';
+import { authAtom, tenantIdAtom } from '@/lib/auth';
 import { atomWithStorage, selectAtom } from 'jotai/utils';
 import type { CalendarViewKey } from './CalendarViews';
 import type { CalendarGroupBy } from './useCalendarData';
+import type { EventSavedSearchFragment } from '@/graphql/Event';
 import type { EventType } from '@/graphql';
 import type { CreateEventDefaults } from './eventDefaults';
 import type {
@@ -31,6 +33,24 @@ export const calendarPreferencesAtom = atomWithStorage<{
   v?: CalendarViewKey;
   groupBy?: CalendarGroupBy;
 }>('calendarPreferences', {});
+
+const savedSearchesAtom = atomWithStorage<
+  Record<string, EventSavedSearchFragment | null>
+>('savedSearches', {}, undefined, { getOnInit: true });
+
+export const savedSearchAtom = atom(
+  (get) => {
+    const { claims } = get(authAtom);
+    return get(savedSearchesAtom)[`${claims?.user_id}:${get(tenantIdAtom)}`] ?? null;
+  },
+  (get, set, search: EventSavedSearchFragment | null) => {
+    const { claims } = get(authAtom);
+    set(savedSearchesAtom, {
+      ...get(savedSearchesAtom),
+      [`${claims?.user_id}:${get(tenantIdAtom)}`]: search,
+    });
+  },
+);
 
 export const isDraggingAtom = atom(false);
 

@@ -24,24 +24,13 @@ begin
       parent_id bigint,
       participant_ids bigint[],
       cohort_id bigint,
+      couple_id bigint,
       only_mine boolean,
       relevant_only boolean,
       can_register boolean,
-      with_competitions boolean
+      with_competitions boolean,
+      with_birthdays boolean
     );
-  end if;
-end;
-$$;
-
--- Preserve existing saved conditions while extending their composite type.
-do $$
-begin
-  if not exists (
-    select 1 from pg_attribute
-    where attrelid = (select typrelid from pg_type where oid = 'event_search_condition'::regtype)
-      and attname = 'couple_id' and not attisdropped
-  ) then
-    alter type event_search_condition add attribute couple_id bigint cascade;
   end if;
 end;
 $$;
@@ -158,10 +147,4 @@ drop function if exists app_private.accessible_event_ids();
 
 --!include views/competition_participation.sql
 --!include views/official_assignment.sql
-drop function if exists federation_calendar(text[], bigint[], text[], date, date, boolean, integer, integer);
-drop function if exists federation_calendar(text[], bigint[], text[], date, date, boolean, boolean, integer, integer);
-drop type if exists federation_calendar_day;
-drop type if exists federation_calendar_official;
-drop type if exists federation_calendar_participation;
-
 --!include functions/competition_suggestions.sql

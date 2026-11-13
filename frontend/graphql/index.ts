@@ -5297,6 +5297,7 @@ export type EventSearchCondition = {
   relevantOnly: Maybe<Scalars['Boolean']['output']>;
   trainerIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   types: Maybe<Array<Maybe<EventType>>>;
+  withBirthdays: Maybe<Scalars['Boolean']['output']>;
   withCompetitions: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -5312,6 +5313,7 @@ export type EventSearchConditionInput = {
   relevantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   types?: InputMaybe<Array<InputMaybe<EventType>>>;
+  withBirthdays?: InputMaybe<Scalars['Boolean']['input']>;
   withCompetitions?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -15232,6 +15234,7 @@ export type GraphCacheResolvers = {
     relevantOnly?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     trainerIds?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Array<Scalars['BigInt']['output'] | string>>,
     types?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Array<EventType | string>>,
+    withBirthdays?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     withCompetitions?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['Boolean']['output'] | string>
   },
   EventSeries?: {
@@ -17818,6 +17821,7 @@ export type GraphCacheUpdaters = {
     relevantOnly?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     trainerIds?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     types?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
+    withBirthdays?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     withCompetitions?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>
   },
   EventSeries?: {

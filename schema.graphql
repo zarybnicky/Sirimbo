@@ -6559,6 +6559,7 @@ type EventSearchCondition {
   relevantOnly: Boolean
   trainerIds: [BigInt]
   types: [EventType]
+  withBirthdays: Boolean
   withCompetitions: Boolean
 }
 
@@ -6574,6 +6575,7 @@ input EventSearchConditionInput {
   relevantOnly: Boolean
   trainerIds: [BigInt]
   types: [EventType]
+  withBirthdays: Boolean
   withCompetitions: Boolean
 }
 

@@ -9,7 +9,7 @@ import { formatCategoryName } from '@/ui/csts';
 import { formatAddress, formatEventName, formatOfficialRole, formatParticipant, listFormatter } from '@/ui/format';
 import { formatDocument } from '@urql/core';
 import { compile } from 'html-to-text';
-import ical, { ICalEventStatus } from 'ical-generator';
+import ical, { ICalEventStatus, ICalEventTransparency } from 'ical-generator';
 import jwt from 'jsonwebtoken';
 import { calendarFeedOwner } from './calendar.queries';
 
@@ -35,12 +35,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
     do {
       const data = await executeGraphql(formatDocument(CalendarDataDocument), {
         savedSearch: search.id,
-        withCompetitions: search.with_competitions ?? false,
+        withCompetitions: !!search.with_competitions && !search.can_register,
         withEvents: pages.length === 0,
         withCalendarExport: true,
         withRegistrationOptions: false,
         withFacets: false,
-        withBirthdays: false,
+        withBirthdays: pages.length === 0 && !!search.with_birthdays && !search.can_register,
         registrationLimit: null,
         offset: pages.length * 300,
       }, {
@@ -56,11 +56,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
 
   const name = `${search.tenant_name ?? 'Sirimbo'} – ${search.name}`;
   const calendar = ical({ name, prodId: { company: 'Sirimbo', product: 'Calendar', language: 'CS' } });
+  let firstEvent = Infinity;
+  let lastEvent = -Infinity;
   const days = new Map<string, CalendarDay & { origin: string }>();
 
   for (const { origin, pages } of calendars) {
     for (const data of pages) {
       for (const event of data.eventsList ?? []) {
+        firstEvent = Math.min(firstEvent, Date.parse(event.since));
+        lastEvent = Math.max(lastEvent, Date.parse(event.until));
         const { location, registrations, eventTrainersList, targetCohortsList } = event;
 
         const viewer = eventTrainersList.some((x) => claims.my_person_ids.includes(x.personId))
@@ -118,6 +122,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
     const start = new Date(`${date}T00:00:00Z`);
     const end = new Date(start);
     end.setUTCDate(end.getUTCDate() + 1);
+    firstEvent = Math.min(firstEvent, start.getTime());
+    lastEvent = Math.max(lastEvent, end.getTime());
 
     const address = [event.streetAddress, event.postalCode, event.city, event.country].filter(Boolean).join(', ');
     const url = `${origin}/federated/${event.federation}/${event.externalId}`;
@@ -145,6 +151,37 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
       status: participations.length > 0 && participations.every((x) => x.cancelled) && officials.length === 0
         ? ICalEventStatus.CANCELLED : ICalEventStatus.CONFIRMED,
     });
+  }
+
+  if (Number.isFinite(firstEvent)) {
+    const birthdays = new Set<string>();
+    const firstDate = new Date(firstEvent);
+    firstDate.setUTCHours(0, 0, 0, 0);
+    const lastYear = new Date(lastEvent).getUTCFullYear();
+    for (const { origin, pages } of calendars) {
+      for (const person of pages[0]?.birthdays?.nodes ?? []) {
+        if (!person.anniversary || birthdays.has(person.id)) continue;
+        birthdays.add(person.id);
+        // The resolver supplies month/day in a leap year, never the birth year.
+        const reference = new Date(`${person.anniversary}T00:00:00Z`);
+        const month = reference.getUTCMonth();
+        for (let year = firstDate.getUTCFullYear(); year <= lastYear; year++) {
+          const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+          const start = new Date(Date.UTC(year, month, Math.min(reference.getUTCDate(), lastDay)));
+          if (start < firstDate || start.getTime() >= lastEvent) continue;
+          const url = `${origin}/clenove/${person.id}`;
+          calendar.createEvent({
+            id: `birthday-${person.id}-${year}@sirimbo`,
+            start,
+            allDay: true,
+            summary: `Narozeniny: ${person.name}`,
+            description: `Zobrazit v aplikaci: ${url}`,
+            url,
+            transparency: ICalEventTransparency.TRANSPARENT,
+          });
+        }
+      }
+    }
   }
 
   const filename = encodeURIComponent(`${name}.ics`).replaceAll(/[!'()*]/g, (x) => `%${x.codePointAt(0)!.toString(16)}`);
