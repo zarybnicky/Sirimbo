@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
-import { getPool, withTransaction } from '@/lib/server/postgresql';
+import { runQuery, withTransaction } from '@/lib/server/postgresql';
 import { z } from 'zod';
+import { accessControlContext, accessControlCredentials, insertAccessControlEvents, setAccessControlTenant } from './access-control.queries';
 
 const EventBatch = z.object({
   events: z
@@ -26,11 +27,7 @@ async function accessContextFor(request: Request) {
   const bearer = request.headers.get('authorization')?.match(/^Bearer (\S+)$/i)?.[1];
   if (!bearer) return;
 
-  const { rows } = await getPool().query<{ tenantId: string }>(
-    `select tenant_id::text as "tenantId" from tenant_settings
-     where settings->>'accessCredentialToken' = $1 limit 2`,
-    [bearer],
-  );
+  const rows = await runQuery(accessControlContext, { token: bearer });
   return rows.length === 1
     ? { tenantId: rows[0]!.tenantId, locationId: '12' }
     : undefined;
@@ -51,26 +48,9 @@ export async function GET(request: Request) {
   if (!context) return unauthorized();
   const { tenantId } = context;
 
-  const { rows } = await withTransaction(async (client) => {
-    await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenantId]);
-    return client.query<{
-      kind: 'MIFARE';
-      code: string;
-      personId: string;
-      personName: string;
-    }>(
-      `select c.kind, c.code, c.person_id::text as "personId", p.name as "personName"
-       from access_credential c
-       join person p on p.id = c.person_id
-       where c.tenant_id = $1 and c.valid_range @> now()
-         and c.person_id in (
-           select person_id from current_tenant_membership
-           union all select person_id from current_tenant_trainer
-           union all select person_id from current_tenant_administrator
-         )
-       order by c.id`,
-      [tenantId],
-    );
+  const rows = await withTransaction(async (client) => {
+    await setAccessControlTenant.run({ tenantId }, client);
+    return accessControlCredentials.run({ tenantId }, client);
   });
   const body = JSON.stringify({
     tenantId,
@@ -121,40 +101,12 @@ export async function POST(request: Request) {
     code: event.code.toUpperCase(),
   }));
   const accepted = await withTransaction(async (client) => {
-    await client.query("select set_config('jwt.claims.tenant_id', $1, true)", [tenantId]);
-    const result = await client.query(
-      `insert into access_event (
-         external_id, device, location_id, kind, code, person_id, occurred_at, allowed, reason
-       )
-       select
-         event.id,
-         event.device,
-         $2::bigint,
-         event.kind::access_credential_kind,
-         event.code,
-         (
-           select credential.person_id
-           from access_credential credential
-           where credential.kind = event.kind::access_credential_kind
-             and credential.code = event.code
-             and credential.valid_range @> event."occurredAt"
-         ),
-         event."occurredAt",
-         event.allowed,
-         event.reason
-       from jsonb_to_recordset($1::jsonb) as event(
-         id text,
-         device text,
-         kind text,
-         code text,
-         "occurredAt" timestamptz,
-         allowed boolean,
-         reason text
-       )
-       on conflict (tenant_id, external_id) do nothing`,
-      [JSON.stringify(events), context.locationId],
-    );
-    return result.rowCount ?? 0;
+    await setAccessControlTenant.run({ tenantId }, client);
+    const [result] = await insertAccessControlEvents.run({
+      events: JSON.stringify(events),
+      locationId: context.locationId,
+    }, client);
+    return result!.accepted;
   });
 
   return Response.json(

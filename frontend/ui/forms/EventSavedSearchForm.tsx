@@ -68,18 +68,14 @@ const Form = z.object({
 function toSavedSearchInput(values: z.output<typeof Form>) {
   const { people, ...search } = values;
   const { types, canRegister } = search.condition;
-  const participantIds = people.flatMap((p) =>
-    p.personId && !p.onlyTeaching ? [p.personId] : [],
-  );
-  const trainerIds = people.flatMap((p) =>
-    p.personId && p.onlyTeaching ? [p.personId] : [],
-  );
+  const participants = people.flatMap((x) => x.personId && !x.onlyTeaching ? x.personId : []);
+  const trainers = people.flatMap((x) => x.personId && x.onlyTeaching ? x.personId : []);
   return {
     ...search,
     condition: {
       ...search.condition,
-      participantIds: participantIds.length > 0 ? participantIds : null,
-      trainerIds: trainerIds.length > 0 ? trainerIds : null,
+      participantIds: participants.length > 0 ? participants : null,
+      trainerIds: trainers.length > 0 ? trainers : null,
       coupleId: people.find((x) => x.coupleId)?.coupleId ?? null,
       types: eventTypes.every((x) => types.includes(x))
         ? null
@@ -159,9 +155,9 @@ export function EventSavedSearchForm({
 
   const availablePeople = useMemo(() => {
     const selected = new Set(
-      people.map((p) => (p.personId ? `person:${p.personId}` : `couple:${p.coupleId}`)),
+      people.map((x) => (x.personId ? `person:${x.personId}` : `couple:${x.coupleId}`)),
     );
-    const hasCouple = people.some((p) => p.coupleId);
+    const hasCouple = people.some((x) => x.coupleId);
     return [...options.participants.values()].filter(
       (x) => !selected.has(x.id) && (!x.coupleId || !hasCouple),
     );
@@ -244,9 +240,7 @@ export function EventSavedSearchForm({
                       <Plus /> Přidat
                     </button>
                   }
-                  options={options.locations.filter(
-                    (location) => !selected.includes(location.id),
-                  )}
+                  options={options.locations.filter((x) => !selected.includes(x.id))}
                   onChange={(id) => {
                     if (id) field.onChange([...selected, id]);
                   }}

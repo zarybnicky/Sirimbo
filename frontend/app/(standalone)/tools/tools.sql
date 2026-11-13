@@ -17,16 +17,12 @@ with base as (
       and c.class = any (:classes!::text[])
 ),
 observed as (
-    select r.person_id, r.period_year, r.discipline, r.class
-    from (
-        select b.*, row_number() over (
-          partition by b.person_id, b.period_year, b.discipline
-          order by b.class_rank desc nulls last, b.date desc nulls last, b.category_id, b.competitor_id
-        ) as rn
-        from base b
-        where b.period_year <= :lastYear!::int
-    ) r
-    where r.rn = 1
+    select distinct on (person_id, period_year, discipline)
+        person_id, period_year, discipline, class
+    from base
+    where period_year <= :lastYear!::int
+    order by person_id, period_year, discipline,
+        class_rank desc nulls last, date desc nulls last, category_id, competitor_id
 ),
 windowed as (
     select
@@ -67,8 +63,10 @@ person_links(from_year, from_state, from_class, to_year, to_state, to_class, dis
             else 'inactive'
         end
     from windowed w
-    cross join lateral generate_series(w.period_year, coalesce(w.next_year, greatest(w.period_year, :lastYear!::int)) - 1) as y(from_year)
-    where w.next_year is not null or w.period_year < :lastYear!::int
+    cross join lateral generate_series(
+        greatest(w.period_year, :firstYear!::int),
+        coalesce(w.next_year, :lastYear!::int) - 1
+    ) as y(from_year)
 ),
 -- with mergeInactive, inactive endpoints lose their class and collapse into one node per year
 merged as (

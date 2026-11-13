@@ -27,10 +27,13 @@ export async function cloneCampAction(
           copyTrainers: values.copyTrainers,
           copyCohorts: values.copyCohorts,
         }, client);
-        const copyId = saved!.id;
-        ids.set(event.id, copyId);
-        await copyEventMetadata.run({ copyId, sourceId: event.id }, client);
+        ids.set(event.id, saved!.id);
       }
+
+      await copyEventMetadata.run({
+        sourceIds: [...ids.keys()],
+        copyIds: [...ids.values()],
+      }, client);
 
       if (values.copyCohorts) {
         await populateEventCohorts.run({ ids: [...ids.values()] }, client);
@@ -46,8 +49,8 @@ export async function cloneCampAction(
 export async function deleteEventRecursiveAction(id: string) {
   try {
     await withRequestPgClient(async (client) => {
-      const deleted = await deleteEventRecursive.run({ id }, client);
-      if (!deleted.some((event) => event.id === id)) {
+      const [result] = await deleteEventRecursive.run({ id }, client);
+      if (!result!.deleted) {
         throw new Error('Událost nebyla nalezena nebo ji nelze odstranit.');
       }
     });

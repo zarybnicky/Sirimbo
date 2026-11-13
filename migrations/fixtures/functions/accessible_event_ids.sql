@@ -1,7 +1,13 @@
-create or replace function app_private.accessible_event_ids(title_query tsquery default null) returns setof bigint
-language sql stable security definer
+create or replace function app_private.accessible_event_ids(
+  title_query tsquery default null, event_ids bigint[] default null
+) returns setof bigint
+language plpgsql stable security definer
 set search_path = pg_catalog, public, pg_temp
+-- Plan for the supplied filters, including index lookups for small ID lists.
+set plan_cache_mode = force_custom_plan
 as $$
+begin
+  return query
   with recursive attended(id) as (
     select event_id from public.event_registration
     where tenant_id = (select public.current_tenant_id())
@@ -13,9 +19,9 @@ as $$
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
-  -- Scan events once; their primary key already makes the result unique.
   select id from public.event
   where tenant_id = (select public.current_tenant_id())
+    and (event_ids is null or id = any(event_ids))
     and (title_query is null or search_vector @@ title_query)
     and (
       (select pg_has_role(current_setting('role'), 'administrator', 'member'))
@@ -26,6 +32,7 @@ as $$
       or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
       or id in (select id from attended)
     );
+end;
 $$;
 
 grant execute on function app_private.accessible_event_ids to anonymous;

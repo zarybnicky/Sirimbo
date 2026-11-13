@@ -75,24 +75,6 @@ fragment PaymentWithDebtors on Payment {
   }
 }
 
-fragment PaymentDetail on Payment {
-  ...PaymentWithDebtors
-  transactions {
-    nodes {
-      id
-      description
-      effectiveDate
-      postingsList {
-        id
-        amount
-        account {
-          ...Account
-        }
-      }
-    }
-  }
-}
-
 fragment Account on Account {
   id
   balance
@@ -109,7 +91,21 @@ fragment Account on Account {
 
 query Payment($id: BigInt!) {
   payment(id: $id) {
-    ...PaymentDetail
+    ...PaymentWithDebtors
+    transactions {
+      nodes {
+        id
+        description
+        effectiveDate
+        postingsList {
+          id
+          amount
+          account {
+            ...Account
+          }
+        }
+      }
+    }
     event {
       ...EventWithTrainer
     }

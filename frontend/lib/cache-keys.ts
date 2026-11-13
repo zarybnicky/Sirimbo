@@ -45,7 +45,7 @@ export const cacheKeyFields = {
   PersonLastActivity: null,
   Price: null,
   RanklistEntry: ['snapshotId', 'competitorId'],
-  ScoreboardRecord: ['personId'],
+  ScoreboardRecord: null,
   TenantSetting: ['tenantId'],
   TransactionFacetsRecord: null,
 } as const satisfies CacheKeyFields;

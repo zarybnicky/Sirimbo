@@ -12,7 +12,7 @@ export async function exportEventRegistrations(client: Client, id: string) {
 
   const { Workbook } = await import('exceljs');
   const workbook = new Workbook();
-  const name = event.name || formatEventName({
+  const name = formatEventName({
     ...event,
     registrations: { nodes: event.registrationsList },
   }) || 'Sheet 1';

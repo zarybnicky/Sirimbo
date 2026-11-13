@@ -5,7 +5,7 @@ fragment LocationOption on Location {
 }
 
 fragment Location on Location {
-  ...LocationOption
+  ...LocationSummary
   tenantId
   longName
   description
@@ -21,15 +21,6 @@ fragment Location on Location {
     file {
       ...File
     }
-  }
-  address {
-    city
-    conscriptionNumber
-    district
-    orientationNumber
-    postalCode
-    region
-    street
   }
 }
 

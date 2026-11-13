@@ -12,6 +12,6 @@
     }
   ],
   "srcDir": ".",
-  "failOnError": false,
+  "failOnError": true,
   "camelCaseColumnNames": false
 }

@@ -136,6 +136,7 @@ select app_private.drop_policies('public.event');
 select app_private.drop_policies('public.event_trainer');
 select app_private.drop_policies('public.event_target_cohort');
 drop function if exists app_private.accessible_event_ids();
+drop function if exists app_private.accessible_event_ids(tsquery);
 
 --!include functions/accessible_event_ids.sql
 --!include functions/global_search.sql

@@ -68,7 +68,7 @@ export interface ICloneCampEventQuery {
   result: ICloneCampEventResult;
 }
 
-const cloneCampEventIR: any = {"usedParamSet":{"parentId":true,"shift":true,"copyTrainers":true,"copyCohorts":true,"sourceId":true},"params":[{"name":"parentId","required":false,"transform":{"type":"scalar"},"locs":[{"a":211,"b":219}]},{"name":"shift","required":true,"transform":{"type":"scalar"},"locs":[{"a":437,"b":443},{"a":481,"b":487}]},{"name":"copyTrainers","required":true,"transform":{"type":"scalar"},"locs":[{"a":593,"b":606}]},{"name":"copyCohorts","required":true,"transform":{"type":"scalar"},"locs":[{"a":811,"b":823}]},{"name":"sourceId","required":true,"transform":{"type":"scalar"},"locs":[{"a":973,"b":982}]}],"statement":"select saved.id::text as \"id!\"\nfrom event source\ncross join lateral save_events(\n  details => jsonb_populate_record(\n    null::event_details_input,\n    to_jsonb(source) || jsonb_build_object(\n      'parent_id', :parentId::bigint,\n      'name', case when source.type = 'lesson' then null else source.name end,\n      'capacity', coalesce(source.capacity, 0),\n      'is_locked', null\n    )),\n  events => array[\n    row(null, source.since + :shift!::text::interval,\n    source.until + :shift!::text::interval,\n    false, '{}'::event_registration_input[])::event_input\n  ],\n  trainers => case when :copyTrainers!::boolean then array(\n    select row(person_id, lessons_offered)::event_trainer_input\n    from event_trainer where event_id = source.id\n  ) else '{}'::event_trainer_input[] end,\n  cohort_ids => case when :copyCohorts!::boolean then array(\n    select cohort_id from event_target_cohort where event_id = source.id\n  ) else '{}'::bigint[] end\n) saved\nwhere source.id = :sourceId!"};
+const cloneCampEventIR: any = {"usedParamSet":{"parentId":true,"shift":true,"copyTrainers":true,"copyCohorts":true,"sourceId":true},"params":[{"name":"parentId","required":false,"transform":{"type":"scalar"},"locs":[{"a":211,"b":219}]},{"name":"shift","required":true,"transform":{"type":"scalar"},"locs":[{"a":615,"b":621},{"a":686,"b":692},{"a":954,"b":960},{"a":998,"b":1004}]},{"name":"copyTrainers","required":true,"transform":{"type":"scalar"},"locs":[{"a":1110,"b":1123}]},{"name":"copyCohorts","required":true,"transform":{"type":"scalar"},"locs":[{"a":1328,"b":1340}]},{"name":"sourceId","required":true,"transform":{"type":"scalar"},"locs":[{"a":1490,"b":1499}]}],"statement":"select saved.id::text as \"id!\"\nfrom event source\ncross join lateral save_events(\n  details => jsonb_populate_record(\n    null::event_details_input,\n    to_jsonb(source) || jsonb_build_object(\n      'parent_id', :parentId::bigint,\n      'name', case when source.type = 'lesson' then null else source.name end,\n      'capacity', coalesce(source.capacity, 0),\n      'is_locked', null,\n      'registration_period', case\n        when source.registration_period is null or isempty(source.registration_period)\n          then source.registration_period\n        else tstzrange(\n          lower(source.registration_period) + :shift!::text::interval,\n          upper(source.registration_period) + :shift!::text::interval,\n          (case when lower_inc(source.registration_period) then '[' else '(' end)\n          || (case when upper_inc(source.registration_period) then ']' else ')' end)\n        )\n      end\n    )),\n  events => array[\n    row(null, source.since + :shift!::text::interval,\n    source.until + :shift!::text::interval,\n    false, '{}'::event_registration_input[])::event_input\n  ],\n  trainers => case when :copyTrainers!::boolean then array(\n    select row(person_id, lessons_offered)::event_trainer_input\n    from event_trainer where event_id = source.id\n  ) else '{}'::event_trainer_input[] end,\n  cohort_ids => case when :copyCohorts!::boolean then array(\n    select cohort_id from event_target_cohort where event_id = source.id\n  ) else '{}'::bigint[] end\n) saved\nwhere source.id = :sourceId!"};
 
 /**
  * Query generated from SQL:
@@ -82,7 +82,17 @@ const cloneCampEventIR: any = {"usedParamSet":{"parentId":true,"shift":true,"cop
  *       'parent_id', :parentId::bigint,
  *       'name', case when source.type = 'lesson' then null else source.name end,
  *       'capacity', coalesce(source.capacity, 0),
- *       'is_locked', null
+ *       'is_locked', null,
+ *       'registration_period', case
+ *         when source.registration_period is null or isempty(source.registration_period)
+ *           then source.registration_period
+ *         else tstzrange(
+ *           lower(source.registration_period) + :shift!::text::interval,
+ *           upper(source.registration_period) + :shift!::text::interval,
+ *           (case when lower_inc(source.registration_period) then '[' else '(' end)
+ *           || (case when upper_inc(source.registration_period) then ']' else ')' end)
+ *         )
+ *       end
  *     )),
  *   events => array[
  *     row(null, source.since + :shift!::text::interval,
@@ -105,8 +115,8 @@ export const cloneCampEvent = new PreparedQuery<ICloneCampEventParams,ICloneCamp
 
 /** 'CopyEventMetadata' parameters type */
 export interface ICopyEventMetadataParams {
-  copyId: NumberOrString;
-  sourceId: NumberOrString;
+  copyIds: NumberOrStringArray;
+  sourceIds: NumberOrStringArray;
 }
 
 /** 'CopyEventMetadata' return type */
@@ -118,7 +128,7 @@ export interface ICopyEventMetadataQuery {
   result: ICopyEventMetadataResult;
 }
 
-const copyEventMetadataIR: any = {"usedParamSet":{"copyId":true,"sourceId":true},"params":[{"name":"copyId","required":true,"transform":{"type":"scalar"},"locs":[{"a":163,"b":170}]},{"name":"sourceId","required":true,"transform":{"type":"scalar"},"locs":[{"a":188,"b":197}]}],"statement":"update event copy\nset summary = source.summary,\n    description = source.description,\n    cover_image_id = source.cover_image_id\nfrom event source where copy.id = :copyId! and source.id = :sourceId!"};
+const copyEventMetadataIR: any = {"usedParamSet":{"sourceIds":true,"copyIds":true},"params":[{"name":"sourceIds","required":true,"transform":{"type":"scalar"},"locs":[{"a":141,"b":151}]},{"name":"copyIds","required":true,"transform":{"type":"scalar"},"locs":[{"a":164,"b":172}]}],"statement":"update event copy\nset summary = source.summary,\n    description = source.description,\n    cover_image_id = source.cover_image_id\nfrom unnest(:sourceIds!::bigint[], :copyIds!::bigint[]) mapping(source_id, copy_id)\njoin event source on source.id = mapping.source_id\nwhere copy.id = mapping.copy_id"};
 
 /**
  * Query generated from SQL:
@@ -127,7 +137,9 @@ const copyEventMetadataIR: any = {"usedParamSet":{"copyId":true,"sourceId":true}
  * set summary = source.summary,
  *     description = source.description,
  *     cover_image_id = source.cover_image_id
- * from event source where copy.id = :copyId! and source.id = :sourceId!
+ * from unnest(:sourceIds!::bigint[], :copyIds!::bigint[]) mapping(source_id, copy_id)
+ * join event source on source.id = mapping.source_id
+ * where copy.id = mapping.copy_id
  * ```
  */
 export const copyEventMetadata = new PreparedQuery<ICopyEventMetadataParams,ICopyEventMetadataResult>(copyEventMetadataIR);
@@ -162,7 +174,7 @@ export const populateEventCohorts = new PreparedQuery<IPopulateEventCohortsParam
 
 /** 'EventSeriesEvents' parameters type */
 export interface IEventSeriesEventsParams {
-  id?: NumberOrString | null | void;
+  id: NumberOrString;
 }
 
 /** 'EventSeriesEvents' return type */
@@ -176,12 +188,12 @@ export interface IEventSeriesEventsQuery {
   result: IEventSeriesEventsResult;
 }
 
-const eventSeriesEventsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":80,"b":82}]}],"statement":"select i.id from event_series s join event i on s.id = i.series_id where s.id = :id"};
+const eventSeriesEventsIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":39,"b":42}]}],"statement":"select id from event where series_id = :id! limit 2"};
 
 /**
  * Query generated from SQL:
  * ```
- * select i.id from event_series s join event i on s.id = i.series_id where s.id = :id
+ * select id from event where series_id = :id! limit 2
  * ```
  */
 export const eventSeriesEvents = new PreparedQuery<IEventSeriesEventsParams,IEventSeriesEventsResult>(eventSeriesEventsIR);
@@ -194,7 +206,7 @@ export interface IDeleteEventRecursiveParams {
 
 /** 'DeleteEventRecursive' return type */
 export interface IDeleteEventRecursiveResult {
-  id: string;
+  deleted: boolean;
 }
 
 /** 'DeleteEventRecursive' query type */
@@ -203,7 +215,7 @@ export interface IDeleteEventRecursiveQuery {
   result: IDeleteEventRecursiveResult;
 }
 
-const deleteEventRecursiveIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":59,"b":62}]}],"statement":"with recursive tree as (\n  select id from event where id = :id!\n  union all\n  select child.id from event child join tree parent on child.parent_id = parent.id\n)\ndelete from event where id in (select id from tree)\nreturning id::text as \"id!\""};
+const deleteEventRecursiveIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":59,"b":62},{"a":293,"b":296}]}],"statement":"with recursive tree as (\n  select id from event where id = :id!\n  union all\n  select child.id from event child join tree parent on child.parent_id = parent.id\n), deleted as (\n  delete from event where id in (select id from tree)\n  returning id\n)\nselect exists(select 1 from deleted where id = :id!) as \"deleted!\""};
 
 /**
  * Query generated from SQL:
@@ -212,9 +224,11 @@ const deleteEventRecursiveIR: any = {"usedParamSet":{"id":true},"params":[{"name
  *   select id from event where id = :id!
  *   union all
  *   select child.id from event child join tree parent on child.parent_id = parent.id
+ * ), deleted as (
+ *   delete from event where id in (select id from tree)
+ *   returning id
  * )
- * delete from event where id in (select id from tree)
- * returning id::text as "id!"
+ * select exists(select 1 from deleted where id = :id!) as "deleted!"
  * ```
  */
 export const deleteEventRecursive = new PreparedQuery<IDeleteEventRecursiveParams,IDeleteEventRecursiveResult>(deleteEventRecursiveIR);

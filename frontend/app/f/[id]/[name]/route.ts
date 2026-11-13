@@ -2,6 +2,7 @@ import { fileBucket, fileStorage } from '@/lib/server/file-storage';
 import { withRequestPgClient } from '@/lib/server/postgresql';
 import { imageWidths } from '@/lib/image-presets';
 import { imageThumbnail } from '@/lib/server/image-thumbnail';
+import { findDownloadFile, type IFindDownloadFileResult } from '../../file.queries';
 import {
   GetObjectCommand,
   HeadObjectCommand,
@@ -15,13 +16,6 @@ export const runtime = 'nodejs';
 
 const cacheHeaders = { 'Cache-Control': 'private, max-age=3600', Vary: 'Cookie' };
 
-type FileRow = {
-  object_key: string;
-  name: string;
-  content_type: string | null;
-  byte_size: string | null;
-};
-
 function requestDate(request: Request, name: string) {
   const value = request.headers.get(name);
   if (!value) return;
@@ -29,7 +23,7 @@ function requestDate(request: Request, name: string) {
   return Number.isNaN(date.valueOf()) ? undefined : date;
 }
 
-function objectInput(request: Request, file: FileRow): GetObjectCommandInput {
+function objectInput(request: Request, file: IFindDownloadFileResult): GetObjectCommandInput {
   return {
     Bucket: fileBucket,
     Key: file.object_key,
@@ -40,7 +34,7 @@ function objectInput(request: Request, file: FileRow): GetObjectCommandInput {
   };
 }
 
-function responseHeaders(file: FileRow, object: GetObjectCommandOutput) {
+function responseHeaders(file: IFindDownloadFileResult, object: GetObjectCommandOutput) {
   const encodedName = encodeURIComponent(file.name)
     .replaceAll("'", '%27')
     .replaceAll('*', '%2A');
@@ -87,11 +81,8 @@ async function findFile(context: RouteContext<'/f/[id]/[name]'>) {
   if (!/^\d+$/.test(id)) return;
 
   return withRequestPgClient(async (client) => {
-    const result = await client.query<FileRow>(
-      `select object_key, name, content_type, byte_size from file where id = $1`,
-      [id],
-    );
-    return result.rows[0];
+    const [file] = await findDownloadFile.run({ id }, client);
+    return file;
   });
 }
 

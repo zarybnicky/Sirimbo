@@ -9,12 +9,10 @@ fragment Cohort on Cohort {
   image {
     ...File
   }
-  id
-  name
+  ...CohortBasic
   location
   isVisible
   isArchived
-  colorRgb
   ordering
   description
   cohortGroupId

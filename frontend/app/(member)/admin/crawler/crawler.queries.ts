@@ -113,37 +113,6 @@ const reprocessCrawlerTargetsIR: any = {"usedParamSet":{"federation":true,"kind"
 export const reprocessCrawlerTargets = new PreparedQuery<IReprocessCrawlerTargetsParams,IReprocessCrawlerTargetsResult>(reprocessCrawlerTargetsIR);
 
 
-/** 'ScheduleCrawler' parameters type */
-export type IScheduleCrawlerParams = void;
-
-/** 'ScheduleCrawler' return type */
-export interface IScheduleCrawlerResult {
-  id: string | null;
-}
-
-/** 'ScheduleCrawler' query type */
-export interface IScheduleCrawlerQuery {
-  params: IScheduleCrawlerParams;
-  result: IScheduleCrawlerResult;
-}
-
-const scheduleCrawlerIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT (graphile_worker.add_job(\n  identifier => 'frontier_schedule',\n  payload => '{}'::json,\n  run_at => now(),\n  job_key => 'frontier_schedule',\n  job_key_mode => 'replace'\n)).id"};
-
-/**
- * Query generated from SQL:
- * ```
- * SELECT (graphile_worker.add_job(
- *   identifier => 'frontier_schedule',
- *   payload => '{}'::json,
- *   run_at => now(),
- *   job_key => 'frontier_schedule',
- *   job_key_mode => 'replace'
- * )).id
- * ```
- */
-export const scheduleCrawler = new PreparedQuery<IScheduleCrawlerParams,IScheduleCrawlerResult>(scheduleCrawlerIR);
-
-
 /** 'CompleteCrawlerJob' parameters type */
 export interface ICompleteCrawlerJobParams {
   jobId: NumberOrString;
@@ -184,7 +153,7 @@ export type IGetRefetchOutlookParams = void;
 /** 'GetRefetchOutlook' return type */
 export interface IGetRefetchOutlookResult {
   count: number;
-  day: string | null;
+  day: string;
   federation: string | null;
 }
 
@@ -194,7 +163,7 @@ export interface IGetRefetchOutlookQuery {
   result: IGetRefetchOutlookResult;
 }
 
-const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WITH bounds AS (\n  SELECT (now() AT TIME ZONE 'UTC')::date AS today\n), counts AS (\n  SELECT\n    CASE WHEN next_fetch_at >= now()\n      THEN (next_fetch_at AT TIME ZONE 'UTC')::date\n    END AS day,\n    federation,\n    count(*)::int AS count\n  FROM crawler.frontier, bounds\n  WHERE fetch_status = 'ok' AND process_status = 'ok'\n    AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'\n  GROUP BY 1, 2\n), buckets AS (\n  SELECT NULL::date AS day\n  UNION ALL\n  SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day\n)\nSELECT buckets.day::text AS \"day?\", counts.federation AS \"federation?\", coalesce(counts.count, 0)::int AS \"count!\"\nFROM buckets\nLEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day\nORDER BY buckets.day NULLS FIRST, counts.federation"};
+const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WITH bounds AS (\n  SELECT (now() AT TIME ZONE 'UTC')::date AS today\n), counts AS (\n  SELECT\n    (next_fetch_at AT TIME ZONE 'UTC')::date AS day,\n    federation,\n    count(*)::int AS count\n  FROM crawler.frontier, bounds\n  WHERE fetch_status = 'ok' AND process_status = 'ok'\n    AND next_fetch_at >= now()\n    AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'\n  GROUP BY 1, 2\n), buckets AS (\n  SELECT today + offset_day AS day FROM bounds, generate_series(0, 29) AS offset_day\n)\nSELECT buckets.day::text AS \"day!\", counts.federation AS \"federation?\", coalesce(counts.count, 0)::int AS \"count!\"\nFROM buckets\nLEFT JOIN counts ON counts.day = buckets.day\nORDER BY buckets.day, counts.federation"};
 
 /**
  * Query generated from SQL:
@@ -203,24 +172,21 @@ const getRefetchOutlookIR: any = {"usedParamSet":{},"params":[],"statement":"WIT
  *   SELECT (now() AT TIME ZONE 'UTC')::date AS today
  * ), counts AS (
  *   SELECT
- *     CASE WHEN next_fetch_at >= now()
- *       THEN (next_fetch_at AT TIME ZONE 'UTC')::date
- *     END AS day,
+ *     (next_fetch_at AT TIME ZONE 'UTC')::date AS day,
  *     federation,
  *     count(*)::int AS count
  *   FROM crawler.frontier, bounds
  *   WHERE fetch_status = 'ok' AND process_status = 'ok'
+ *     AND next_fetch_at >= now()
  *     AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'
  *   GROUP BY 1, 2
  * ), buckets AS (
- *   SELECT NULL::date AS day
- *   UNION ALL
- *   SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day
+ *   SELECT today + offset_day AS day FROM bounds, generate_series(0, 29) AS offset_day
  * )
- * SELECT buckets.day::text AS "day?", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
+ * SELECT buckets.day::text AS "day!", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
  * FROM buckets
- * LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
- * ORDER BY buckets.day NULLS FIRST, counts.federation
+ * LEFT JOIN counts ON counts.day = buckets.day
+ * ORDER BY buckets.day, counts.federation
  * ```
  */
 export const getRefetchOutlook = new PreparedQuery<IGetRefetchOutlookParams,IGetRefetchOutlookResult>(getRefetchOutlookIR);

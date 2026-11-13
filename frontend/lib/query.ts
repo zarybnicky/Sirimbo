@@ -137,7 +137,7 @@ export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
             maxDelayMs: 15_000,
             randomDelay: true,
             maxNumberAttempts: 2,
-            retryIf: (err) => !!err && !!err.networkError,
+            retryIf: (err, operation) => operation.kind === 'query' && !!err.networkError,
           }),
           ssrExchange ?? noopExchange,
           fetchExchange,
@@ -185,29 +185,24 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           id: input.id,
           ...(input.since != null ? { since: input.since } : {}),
           ...(input.until != null ? { until: input.until } : {}),
-          location:
-            input.locationId !== null
-              ? ({
-                  __typename: 'Location' as const,
-                  id: input.locationId,
-                } as Location)
-              : null,
-          locationText:
-            typeof input.locationText === 'string' ? input.locationText : null,
-          eventTrainersList:
-            !input.trainerPersonId || (Array.isArray(trainers) && trainers.length > 1)
-              ? []
-              : [
-                  {
-                    __typename: 'EventTrainer' as const,
-                    id: `optimistic-event-trainer:${input.id}:${input.trainerPersonId}`,
-                    personId: input.trainerPersonId,
-                    person: {
-                      __typename: 'Person' as const,
-                      id: input.trainerPersonId,
-                    } as Person,
-                  } as EventTrainer,
-                ],
+          ...(input.locationId != null
+            ? {
+                location: { __typename: 'Location', id: input.locationId } as Location,
+                locationText: '',
+              }
+            : input.locationText != null
+              ? { location: null, locationText: input.locationText }
+              : {}),
+          ...(input.trainerPersonId != null && Array.isArray(trainers) && trainers.length <= 1
+            ? {
+                eventTrainersList: [{
+                  __typename: 'EventTrainer',
+                  id: `optimistic-event-trainer:${input.id}:${input.trainerPersonId}`,
+                  personId: input.trainerPersonId,
+                  person: { __typename: 'Person', id: input.trainerPersonId } as Person,
+                } as EventTrainer],
+              }
+            : {}),
         } as CalendarEvent,
       };
     },
@@ -226,7 +221,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       createMembershipApplication(_result, _args, cache, _info) {
-        cache.invalidate('Query', 'membershipApplicationsList');
+        invalidateQueryFields(cache, ['membershipApplicationsList']);
       },
       updateMembershipApplication(_result, args, cache, _info) {
         if (args.input.patch.status === 'REJECTED') {
@@ -279,11 +274,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
-      deleteCohort(_result, args, cache, _info) {
-        cache.invalidate({ __typename: 'Cohort', id: args.input.id });
-        invalidateQueryFields(cache, ['people', 'personFacetsList']);
-      },
-
       archiveCohort(_result, args, cache, _info) {
         if (args.input.cohortId)
           cache.invalidate({ __typename: 'Cohort', id: args.input.cohortId });
@@ -291,22 +281,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
 
       deleteAnnouncement(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Announcement', id: args.input.id });
-      },
-
-      setLessonRequest(_result, args, cache, _info) {
-        const registration = {
-          __typename: 'EventRegistration' as const,
-          id: args.input.registrationId,
-        };
-        const eventId = cache.resolve(registration, 'eventId');
-        cache.invalidate(registration);
-        cache.invalidate({
-          __typename: 'EventTrainer',
-          id: args.input.trainerId,
-        });
-        if (typeof eventId === 'string') {
-          cache.invalidate({ __typename: 'Event', id: eventId });
-        }
       },
 
       setEventRegistration(_result, args, cache, _info) {
@@ -337,13 +311,6 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       updateCouple(_result, _args, cache) {
         invalidateQueryFields(cache, ['couplesList']);
-      },
-      createCohortMembership(_result, args, cache, _info) {
-        cache.invalidate({
-          __typename: 'Person',
-          id: args.input.cohortMembership.personId,
-        });
-        invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
       updateCohortMembership(_result, _args, cache) {
         invalidateQueryFields(cache, ['people', 'personFacetsList']);
@@ -457,7 +424,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       syncCohortMemberships(_result, args, cache, _info) {
-        cache.invalidate('Person', args.input.personId!);
+        cache.invalidate({ __typename: 'Person', id: args.input.personId! });
         invalidateQueryFields(cache, ['people', 'personFacetsList']);
       },
 
@@ -490,10 +457,10 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
 
       updateAnnouncement(_result, _args, cache) {
-        for (const field of cache
-          .inspectFields('Query')
-          .filter((field) => field.fieldName === 'announcements'))
-          cache.invalidate('Query', field.fieldName, field.arguments);
+        invalidateQueryFields(cache, ['announcements']);
+      },
+      upsertAnnouncement(_result, _args, cache) {
+        invalidateQueryFields(cache, ['announcements']);
       },
       updatePayment(_result, _args, cache) {
         invalidateQueryFields(cache, [

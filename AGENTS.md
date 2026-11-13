@@ -34,6 +34,12 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 ## Code style preferences
 - Backend and worker code run as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
 
+## Direct SQL queries
+- Use named pgtyped queries in `.sql` files for application SQL executed through `pg`. Use the generated parameter and result types. A handwritten `client.query<Row>(sql, params)` type does not check the SQL against the database.
+- Reserve raw `client.query()` calls for trivial transaction or process commands such as `BEGIN`, `COMMIT`, and `ROLLBACK`. Parameterized data queries and function calls belong in pgtyped too.
+- Group queries by feature or shared operation, not by route or query count. Extend an existing SQL file when it owns the same concern. Keep feature-specific SQL near its callers; put shared operations such as job enqueueing in `frontend/lib/`. Avoid one file per trivial caller and unrelated catch-all query files.
+- Inside a transaction, call the generated query's `.run(params, client)` with that transaction's client. Frontend `runQuery()` uses the pool and does not inherit a caller's transaction or request settings.
+
 ## High-level structure
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). `backend/src/auth.ts` resolves the request tenant, verifies JWTs, and maps their claims to database settings.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.

@@ -53,44 +53,6 @@ fragment Person on Person {
   note
 }
 
-fragment PersonWithLinks on Person {
-  ...Person
-  tenantMembershipsList(orderBy: SINCE_ASC) {
-    ...TenantMembership
-  }
-  cohortMembershipsList(orderBy: SINCE_ASC) {
-    ...CohortMembership
-    cohort {
-      ...Cohort
-    }
-  }
-  tenantAdministratorsList(orderBy: SINCE_ASC) {
-    ...TenantAdministrator
-  }
-  tenantTrainersList(orderBy: SINCE_ASC) {
-    ...TenantTrainer
-  }
-  couplesList {
-    ...Couple
-  }
-  userProxiesList {
-    ...UserProxy
-  }
-  accessCredentialsList(orderBy: CREATED_AT_DESC) {
-    ...AccessCredential
-  }
-  accessEventsList(orderBy: OCCURRED_AT_DESC, first: 20) {
-    ...AccessEvent
-  }
-  personInvitationsList(condition: { usedAt: null }) {
-    id
-    email
-    createdAt
-    lastSentAt
-    accessToken
-  }
-}
-
 query Person($id: BigInt!) {
   person(id: $id) {
     ...Person
@@ -125,7 +87,41 @@ query PersonPayments($id: BigInt!, $withDetails: Boolean! = false) {
 
 query PersonMemberships($id: BigInt!) {
   person(id: $id) {
-    ...PersonWithLinks
+    ...Person
+    tenantMembershipsList(orderBy: SINCE_ASC) {
+      ...TenantMembership
+    }
+    cohortMembershipsList(orderBy: SINCE_ASC) {
+      ...CohortMembership
+      cohort {
+        ...Cohort
+      }
+    }
+    tenantAdministratorsList(orderBy: SINCE_ASC) {
+      ...TenantAdministrator
+    }
+    tenantTrainersList(orderBy: SINCE_ASC) {
+      ...TenantTrainer
+    }
+    couplesList {
+      ...Couple
+    }
+    userProxiesList {
+      ...UserProxy
+    }
+    accessCredentialsList(orderBy: CREATED_AT_DESC) {
+      ...AccessCredential
+    }
+    accessEventsList(orderBy: OCCURRED_AT_DESC, first: 20) {
+      ...AccessEvent
+    }
+    personInvitationsList(condition: { usedAt: null }) {
+      id
+      email
+      createdAt
+      lastSentAt
+      accessToken
+    }
     accountsList(first: 1) {
       id
     }

@@ -22,7 +22,17 @@ cross join lateral save_events(
       'parent_id', :parentId::bigint,
       'name', case when source.type = 'lesson' then null else source.name end,
       'capacity', coalesce(source.capacity, 0),
-      'is_locked', null
+      'is_locked', null,
+      'registration_period', case
+        when source.registration_period is null or isempty(source.registration_period)
+          then source.registration_period
+        else tstzrange(
+          lower(source.registration_period) + :shift!::text::interval,
+          upper(source.registration_period) + :shift!::text::interval,
+          (case when lower_inc(source.registration_period) then '[' else '(' end)
+          || (case when upper_inc(source.registration_period) then ']' else ')' end)
+        )
+      end
     )),
   events => array[
     row(null, source.since + :shift!::text::interval,
@@ -44,19 +54,23 @@ update event copy
 set summary = source.summary,
     description = source.description,
     cover_image_id = source.cover_image_id
-from event source where copy.id = :copyId! and source.id = :sourceId!;
+from unnest(:sourceIds!::bigint[], :copyIds!::bigint[]) mapping(source_id, copy_id)
+join event source on source.id = mapping.source_id
+where copy.id = mapping.copy_id;
 
 /* @name PopulateEventCohorts */
 select app_private.reconcile_event_cohort_registrations(:ids!::bigint[]);
 
 /* @name EventSeriesEvents */
-select i.id from event_series s join event i on s.id = i.series_id where s.id = :id;
+select id from event where series_id = :id! limit 2;
 
 /* @name DeleteEventRecursive */
 with recursive tree as (
   select id from event where id = :id!
   union all
   select child.id from event child join tree parent on child.parent_id = parent.id
+), deleted as (
+  delete from event where id in (select id from tree)
+  returning id
 )
-delete from event where id in (select id from tree)
-returning id::text as "id!";
+select exists(select 1 from deleted where id = :id!) as "deleted!";

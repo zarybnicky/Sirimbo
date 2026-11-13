@@ -34,6 +34,12 @@ BEGIN
       AND p.prokind = 'f'
       AND n.nspname NOT IN ('pg_catalog','information_schema')
       AND n.nspname = ANY (schemas)
+      AND NOT EXISTS (
+        SELECT 1 FROM pg_depend d
+        WHERE d.classid = 'pg_proc'::regclass
+          AND d.objid = p.oid
+          AND d.deptype = 'e'
+      )
   LOOP
     -- Skip polymorphic-argument SQL funcs (can’t construct a deterministic typed call)
     IF EXISTS (

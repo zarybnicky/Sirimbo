@@ -29,7 +29,6 @@ export default async function CrawlerPage() {
   const federations = [
     ...new Set(
       outlook
-        .filter((row) => row.day !== null)
         .map((row) => row.federation)
         .filter((value) => value !== null),
     ),
@@ -52,28 +51,19 @@ export default async function CrawlerPage() {
           ))}
         </div>
         <Histogram
-          data={[...days].flatMap(([day, rows]) =>
-            day
-              ? [
-                  [
-                    day,
-                    rows.reduce((sum, row) => sum + row.count, 0),
-                    rows.flatMap((row) =>
-                      row.federation
-                        ? [
-                            {
-                              label: row.federation,
-                              count: row.count,
-                              className:
-                                federationColors[row.federation] ?? 'fill-neutral-9',
-                            },
-                          ]
-                        : [],
-                    ),
-                  ] as const,
-                ]
-              : [],
-          )}
+          data={[...days].map(([day, rows]) => [
+            day,
+            rows.reduce((sum, row) => sum + row.count, 0),
+            rows.flatMap((row) =>
+              row.federation
+                ? [{
+                    label: row.federation,
+                    count: row.count,
+                    className: federationColors[row.federation] ?? 'fill-neutral-9',
+                  }]
+                : [],
+            ),
+          ] as const)}
           bucketWidth={36}
           formatLabel={(day) => day.slice(8) + '.' + day.slice(5, 7)}
         />

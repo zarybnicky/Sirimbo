@@ -50,15 +50,6 @@ WITH updated AS (
 )
 SELECT count(*)::int AS "count!" FROM updated;
 
-/* @name ScheduleCrawler */
-SELECT (graphile_worker.add_job(
-  identifier => 'frontier_schedule',
-  payload => '{}'::json,
-  run_at => now(),
-  job_key => 'frontier_schedule',
-  job_key_mode => 'replace'
-)).id;
-
 /* @name CompleteCrawlerJob */
 -- complete_jobs() skips locked jobs; this action also removes those.
 DELETE FROM graphile_worker._private_jobs
@@ -74,24 +65,21 @@ WITH bounds AS (
   SELECT (now() AT TIME ZONE 'UTC')::date AS today
 ), counts AS (
   SELECT
-    CASE WHEN next_fetch_at >= now()
-      THEN (next_fetch_at AT TIME ZONE 'UTC')::date
-    END AS day,
+    (next_fetch_at AT TIME ZONE 'UTC')::date AS day,
     federation,
     count(*)::int AS count
   FROM crawler.frontier, bounds
   WHERE fetch_status = 'ok' AND process_status = 'ok'
+    AND next_fetch_at >= now()
     AND next_fetch_at < (today + 30)::timestamp AT TIME ZONE 'UTC'
   GROUP BY 1, 2
 ), buckets AS (
-  SELECT NULL::date AS day
-  UNION ALL
-  SELECT today + offset_day FROM bounds, generate_series(0, 29) AS offset_day
+  SELECT today + offset_day AS day FROM bounds, generate_series(0, 29) AS offset_day
 )
-SELECT buckets.day::text AS "day?", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
+SELECT buckets.day::text AS "day!", counts.federation AS "federation?", coalesce(counts.count, 0)::int AS "count!"
 FROM buckets
-LEFT JOIN counts ON counts.day IS NOT DISTINCT FROM buckets.day
-ORDER BY buckets.day NULLS FIRST, counts.federation;
+LEFT JOIN counts ON counts.day = buckets.day
+ORDER BY buckets.day, counts.federation;
 
 /* @name GetRefetchPolicies */
 WITH counts AS (

@@ -204,22 +204,6 @@ fragment EventWithRegistrations on Event {
   }
 }
 
-fragment EventParticipant on Person {
-  id
-  firstName
-  lastName
-  phone
-  email
-  birthDate
-  taxIdentificationNumber
-  cohortMembershipsList {
-    id
-    cohort {
-      ...CohortBasic
-    }
-  }
-}
-
 query EventParticipantsExport($id: BigInt!) {
   event(id: $id) {
     id
@@ -237,7 +221,19 @@ query EventParticipantsExport($id: BigInt!) {
         id
         parentRegistrationId
         person {
-          ...EventParticipant
+          id
+          firstName
+          lastName
+          phone
+          email
+          birthDate
+          taxIdentificationNumber
+          cohortMembershipsList {
+            id
+            cohort {
+              ...CohortBasic
+            }
+          }
           name
         }
         couple {
@@ -287,17 +283,13 @@ query EventPayments($id: BigInt!) {
   }
 }
 
-fragment EventPage on Event {
-  ...EventWithTrainer
-  description
-  coverImage {
-    ...File
-  }
-}
-
 query EventWithAttendance($id: BigInt!) {
   event(id: $id) {
-    ...EventPage
+    ...EventWithTrainer
+    description
+    coverImage {
+      ...File
+    }
     attendanceRegistrations: registrations(condition: { registrationStatus: ACTIVE }) {
       nodes {
         parentRegistrationId
@@ -500,18 +492,6 @@ query EventList(
   }
 }
 
-fragment CalendarFederationEvent on FederationEvent {
-  ...FederationEventSummary
-  ... @include(if: $withCalendarExport) {
-    status
-    streetAddress
-    postalCode
-    country
-    venueLat
-    venueLng
-  }
-}
-
 fragment CalendarParticipation on CompetitionParticipation {
   ...CompetitionParticipation
   date
@@ -602,7 +582,15 @@ query CalendarData(
   ) @include(if: $withCompetitions) @_required {
     pageInfo { hasNextPage }
     nodes {
-      ...CalendarFederationEvent
+      ...FederationEventSummary
+      ... @include(if: $withCalendarExport) {
+        status
+        streetAddress
+        postalCode
+        country
+        venueLat
+        venueLng
+      }
       selected: participationsList(
         calendarFilter: $filter
         savedSearch: $savedSearch

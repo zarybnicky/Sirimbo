@@ -49,7 +49,9 @@ as $$
   union all
 
   select cover_image_id from event_covers
-  where id = any (array(select * from app_private.accessible_event_ids()));
+  where id = any (array(
+    select * from app_private.accessible_event_ids(null, array(select id from event_covers))
+  ));
 $$;
 
 grant execute on function app_private.visible_file_ids() to anonymous;

@@ -2,7 +2,7 @@ import { runQuery } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { getTenant } from '@/tenant/catalog';
 import { NextResponse, type NextRequest } from 'next/server';
-import { createHandoffOtp, handoffEvent } from './handoff.queries';
+import { createHandoffOtp, handoffEvent } from '@/lib/auth.queries';
 
 export async function GET(request: NextRequest) {
   const { auth, tenant } = await getRequestContext();

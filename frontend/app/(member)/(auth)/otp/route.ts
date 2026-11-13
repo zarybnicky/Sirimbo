@@ -5,7 +5,7 @@ import { runQuery } from '@/lib/server/postgresql';
 import { setSessionCookie } from '@/lib/server/session';
 import { getRequestContext } from '@/lib/server/tenant';
 import { NextResponse, type NextRequest } from 'next/server';
-import { otpDestination } from './otp.queries';
+import { otpDestination } from '@/lib/auth.queries';
 
 export async function GET(request: NextRequest) {
   const { tenant } = await getRequestContext();

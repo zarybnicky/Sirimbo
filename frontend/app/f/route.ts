@@ -5,14 +5,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
 import { type NextRequest, NextResponse } from 'next/server';
-
-export const runtime = 'nodejs';
-
-type FileRow = {
-  id: string;
-  object_key: string;
-  url: string;
-};
+import { createUploadedFile, deleteUploadedFile, markFileUploaded, type ICreateUploadedFileResult } from './file.queries';
 
 export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) {
@@ -39,17 +32,17 @@ export async function POST(request: NextRequest) {
   const byteSize =
     contentLength && /^\d+$/.test(contentLength) ? Number(contentLength) : undefined;
 
-  let file: FileRow;
+  let file: ICreateUploadedFileResult;
   try {
     file = await withRequestPgClient(async (client, settings) => {
       const objectKey = `${settings['jwt.claims.tenant_id']}/${Date.now()}-${name}`;
-      const result = await client.query<FileRow>(
-        `insert into file (object_key, name, content_type, byte_size)
-         values ($1, $2, $3, $4)
-         returning id, object_key, url`,
-        [objectKey, name, contentType, byteSize],
-      );
-      return result.rows[0]!;
+      const [result] = await createUploadedFile.run({
+        objectKey,
+        name,
+        contentType,
+        byteSize,
+      }, client);
+      return result!;
     });
   } catch (error) {
     if ((error as { code?: string }).code === '42501') {
@@ -73,11 +66,11 @@ export async function POST(request: NextRequest) {
       }),
     );
     await withRequestPgClient(async (client) => {
-      await client.query(`update file set uploaded_at = now() where id = $1`, [file.id]);
+      await markFileUploaded.run({ id: file.id }, client);
     });
   } catch (error) {
     await withRequestPgClient(async (client) => {
-      await client.query(`delete from file where id = $1`, [file.id]);
+      await deleteUploadedFile.run({ id: file.id }, client);
     }).catch((cleanupError: unknown) => {
       console.error('Failed to clean up file record', cleanupError);
     });

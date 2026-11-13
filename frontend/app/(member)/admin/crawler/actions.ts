@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { runQuery, withTransaction } from '@/lib/server/postgresql';
 import { getRequestContext } from '@/lib/server/tenant';
 import { revalidatePath } from 'next/cache';
+import { enqueueJob } from '@/lib/jobs.queries';
 import {
   completeCrawlerJob as completeCrawlerJobQuery,
   createRefetchPolicy as createRefetchPolicyQuery,
@@ -13,7 +14,6 @@ import {
   recalculateCrawlerFetchTimes,
   refetchCrawlerErrors,
   reprocessCrawlerTargets,
-  scheduleCrawler,
 } from './crawler.queries';
 
 const actionSchema = z.enum(['refetch-errors', 'reprocess-all']);
@@ -150,7 +150,13 @@ export async function queueCrawlerAction(
       client,
     );
     const count = result!.count;
-    if (count > 0) await scheduleCrawler.run(undefined, client);
+    if (count > 0) {
+      await enqueueJob.run({
+        identifier: 'frontier_schedule',
+        payload: '{}',
+        jobKey: 'frontier_schedule',
+      }, client);
+    }
     return count;
   });
 }
