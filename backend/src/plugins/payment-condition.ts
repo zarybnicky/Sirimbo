@@ -1,11 +1,10 @@
-import { LIST_TYPES, TYPES, pgClassExpression, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
+import { LIST_TYPES, TYPES, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 
 const plugins: GraphileConfig.Plugin[] = [
   extendSchema((build) => ({
     typeDefs: `
       extend type Account { balance: BigFloat }
-      extend type PaymentDebtor { isUnpaid: Boolean }
     `,
     objects: {
       Account: {
@@ -19,16 +18,6 @@ const plugins: GraphileConfig.Plugin[] = [
           },
         },
       },
-      PaymentDebtor: {
-        plans: {
-          isUnpaid($debtor: PgSelectSingleStep) {
-            const $payment = build.input.pgRegistry.pgResources.payment.get({
-              id: $debtor.get('payment_id'),
-            });
-            return pgClassExpression($payment, TYPES.boolean)`${$payment.get('status')} = 'unpaid'`;
-          },
-        },
-      },
     },
   }), 'PaymentFieldsPlugin'),
   addPgTableCondition(
@@ -36,7 +25,7 @@ const plugins: GraphileConfig.Plugin[] = [
     'isUnpaid',
     (build) => ({
       type: build.graphql.GraphQLBoolean,
-      description: 'Checks for equality with the object’s `isUnpaid` field.',
+      description: 'Whether the related payment is unpaid. Null matches an inaccessible payment.',
     }),
     (value, { sql, sqlTableAlias: row, sqlValueWithCodec }) => value == null
       ? sql`not exists (select from public.payment p where p.id = ${row}.payment_id)`

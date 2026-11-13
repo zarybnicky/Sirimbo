@@ -37,6 +37,7 @@ function calendarFilter(
           locationIds: filter.location_ids,
           parentId: filter.parent_id,
           participantIds: filter.participant_ids,
+          coupleId: filter.couple_id,
           cohortId: filter.cohort_id,
           onlyMine: filter.only_mine,
           relevantOnly: filter.relevant_only,
@@ -69,6 +70,7 @@ const savedSearchPlugin = wrapPlans(
             location_ids: filter.locationIds,
             parent_id: filter.parentId,
             participant_ids: filter.participantIds,
+            couple_id: filter.coupleId,
             cohort_id: filter.cohortId,
             only_mine: filter.onlyMine,
             relevant_only: filter.relevantOnly,
@@ -77,22 +79,26 @@ const savedSearchPlugin = wrapPlans(
         }
         if (filter == null) return [native];
 
+        const hasPeopleSelection = filter.participantIds != null || filter.coupleId != null
+          || filter.cohortId != null;
         const participant = {
           personIds: filter.participantIds,
           coupleId: filter.coupleId,
           cohortId: filter.cohortId,
-          onlyMine: filter.onlyMine,
-        };
-        const person = {
-          ids: filter.participantIds,
-          onlyMine: filter.onlyMine,
-          membership: {
-            state: filter.participantIds == null && !filter.onlyMine ? 'current' : undefined,
-            inCohorts: filter.cohortId == null ? undefined : [filter.cohortId],
-          },
+          onlyMine: hasPeopleSelection ? false : filter.onlyMine,
         };
         if (['FederationEventCondition', 'CompetitionParticipationCondition', 'OfficialAssignmentCondition'].includes(conditionType)
           && (filter.withCompetitions === false || filter.canRegister)) participant.personIds = [];
+        const person = {
+          ids: participant.personIds,
+          coupleId: participant.coupleId,
+          onlyMine: participant.onlyMine,
+          membership: {
+            state: participant.personIds == null && participant.coupleId == null && !participant.onlyMine
+              ? 'current' : undefined,
+            inCohorts: participant.cohortId == null ? undefined : [participant.cohortId],
+          },
+        };
         let mapped;
         if (conditionType === 'EventCondition') {
           const eventTypes = (build.getInputTypeByName('EventType') as GraphQLEnumType)
@@ -120,11 +126,13 @@ const savedSearchPlugin = wrapPlans(
         } else if (conditionType === 'FederationEventCondition') {
           mapped = { participant };
         } else if (conditionType === 'OfficialAssignmentCondition') {
-          mapped = { person: participant };
+          mapped = { person };
         } else if (conditionType === 'CompetitionParticipationCondition') {
           mapped = { competitor: participant };
         }
-        return [native, mapped];
+        return conditionType === 'FederationEventCondition' && filter.onlyMine && hasPeopleSelection
+          ? [native, { participant: { onlyMine: true } }, mapped]
+          : [native, mapped];
       },
     ));
 

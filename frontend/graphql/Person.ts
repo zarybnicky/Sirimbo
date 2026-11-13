@@ -76,6 +76,8 @@ export type PersonCondition = {
   /** Checks for equality with the object’s `birthDate` field. */
   birthDate?: string | null | undefined;
   birthday?: DateRangeCondition | null | undefined;
+  /** Match either partner of this couple. */
+  coupleId?: string | null | undefined;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: string | null | undefined;
   /** Checks for equality with the object’s `cstsId` field. */

@@ -1,7 +1,7 @@
 import { pgClassExpression, LIST_TYPES, sql, sqlValueWithCodec, TYPES, type PgSelectSingleStep, type PgSelectStep } from 'postgraphile/@dataplan/pg';
 import type { GrafastFieldConfig } from 'postgraphile/grafast';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
-import personMembershipPlugins, { membershipCandidateIds } from './person-membership-condition.ts';
+import personMembershipPlugins, { membershipCandidateIds, type MembershipCondition } from './person-membership-condition.ts';
 
 const PersonFieldsPlugin = extendSchema((build) => ({
   typeDefs: `
@@ -113,6 +113,23 @@ const plugins: GraphileConfig.Plugin[] = [
       value ? sql`${row}.id = any((select public.current_person_ids())::bigint[])` : null,
   ),
   addPgTableCondition(
+    { schemaName: 'public', tableName: 'person' },
+    'coupleId',
+    (build) => ({
+      description: 'Match either partner of this couple.',
+      type: build.getInputTypeByName('BigInt'),
+    }),
+    (value, { sqlTableAlias: row }) => {
+      if (value == null) return null;
+      const coupleId = sqlValueWithCodec(value, TYPES.bigint);
+      return sql`${row}.id in (
+        select man_id from public.couple where id = ${coupleId}
+        union all
+        select woman_id from public.couple where id = ${coupleId}
+      )`;
+    },
+  ),
+  addPgTableCondition(
     { schemaName: 'public', tableName: 'couple' },
     'personId',
     (build) => ({
@@ -133,7 +150,7 @@ const plugins: GraphileConfig.Plugin[] = [
       type: build.getInputTypeByName('PersonMembershipCondition'),
     }),
     (value, { sqlTableAlias: row }) => {
-      const candidates = membershipCandidateIds(value);
+      const candidates = membershipCandidateIds(value as MembershipCondition | null);
       return candidates ? sql`exists (
         select 1 from (${candidates}) membership
         where membership.person_id in (${row}.man_id, ${row}.woman_id)

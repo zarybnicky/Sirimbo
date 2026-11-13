@@ -1700,8 +1700,6 @@ export type CompetitionCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
   includeCancelled?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Match local people. Without an explicit selection, use current tenant people. */
-  official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `participantsTotal` field. */
   participantsTotal?: InputMaybe<Scalars['Int']['input']>;
@@ -1842,8 +1840,6 @@ export type CompetitionOfficialCondition = {
   externalId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `judgeLabel` field. */
   judgeLabel?: InputMaybe<Scalars['String']['input']>;
-  /** Match local people. Without an explicit selection, use current tenant people. */
-  person?: InputMaybe<PersonCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -5293,6 +5289,7 @@ export type EventSearchCondition = {
   __typename?: 'EventSearchCondition';
   canRegister: Maybe<Scalars['Boolean']['output']>;
   cohortId: Maybe<Scalars['BigInt']['output']>;
+  coupleId: Maybe<Scalars['BigInt']['output']>;
   locationIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   onlyMine: Maybe<Scalars['Boolean']['output']>;
   parentId: Maybe<Scalars['BigInt']['output']>;
@@ -5307,6 +5304,7 @@ export type EventSearchCondition = {
 export type EventSearchConditionInput = {
   canRegister?: InputMaybe<Scalars['Boolean']['input']>;
   cohortId?: InputMaybe<Scalars['BigInt']['input']>;
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   locationIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   onlyMine?: InputMaybe<Scalars['Boolean']['input']>;
   parentId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6465,8 +6463,6 @@ export type FederationEventCondition = {
   location?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Match local people. Without an explicit selection, use current tenant people. */
-  official?: InputMaybe<PersonCondition>;
   officialPersonId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `organizingClubId` field. */
   organizingClubId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6546,8 +6542,6 @@ export type FederationEventOfficialCondition = {
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `grade` field. */
   grade?: InputMaybe<Scalars['String']['input']>;
-  /** Match local people. Without an explicit selection, use current tenant people. */
-  person?: InputMaybe<PersonCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -8580,7 +8574,8 @@ export type OfficialAssignmentCondition = {
   dateRange?: InputMaybe<DateRangeCondition>;
   /** Checks for equality with the object’s `eventId` field. */
   eventId?: InputMaybe<Scalars['BigInt']['input']>;
-  person?: InputMaybe<CompetitionParticipantCondition>;
+  /** Match officials through their linked local person. */
+  person?: InputMaybe<PersonCondition>;
   /** Checks for equality with the object’s `personId` field. */
   personId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
@@ -8745,6 +8740,7 @@ export type PaymentConnection = {
 export type PaymentDebtor = {
   __typename?: 'PaymentDebtor';
   id: Scalars['BigInt']['output'];
+  /** @deprecated Use payment.status. */
   isUnpaid: Maybe<Scalars['Boolean']['output']>;
   /** Reads a single `Payment` that is related to this `PaymentDebtor`. */
   payment: Maybe<Payment>;
@@ -8763,7 +8759,7 @@ export type PaymentDebtor = {
 export type PaymentDebtorCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `isUnpaid` field. */
+  /** Whether the related payment is unpaid. Null matches an inaccessible payment. */
   isUnpaid?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `paymentId` field. */
   paymentId?: InputMaybe<Scalars['BigInt']['input']>;
@@ -9297,6 +9293,8 @@ export type PersonCondition = {
   /** Checks for equality with the object’s `birthDate` field. */
   birthDate?: InputMaybe<Scalars['Date']['input']>;
   birthday?: InputMaybe<DateRangeCondition>;
+  /** Match either partner of this couple. */
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
@@ -15226,6 +15224,7 @@ export type GraphCacheResolvers = {
   EventSearchCondition?: {
     canRegister?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     cohortId?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
+    coupleId?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
     locationIds?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Array<Scalars['BigInt']['output'] | string>>,
     onlyMine?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     parentId?: GraphCacheResolver<WithTypename<EventSearchCondition>, Record<string, never>, Scalars['BigInt']['output'] | string>,
@@ -17811,6 +17810,7 @@ export type GraphCacheUpdaters = {
   EventSearchCondition?: {
     canRegister?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     cohortId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
+    coupleId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     locationIds?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     onlyMine?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,
     parentId?: GraphCacheUpdateResolver<Maybe<WithTypename<EventSearchCondition>>, Record<string, never>>,

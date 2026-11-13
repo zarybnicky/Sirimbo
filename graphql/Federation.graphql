@@ -261,6 +261,7 @@ fragment ResultHighlight on CompetitionResult {
   }
   competition {
     ...Competition
+    event { ...FederationEventSummary }
     finalRound: roundsList(first: 1, condition: { roundKey: "F" }) {
       id
       roundIndex

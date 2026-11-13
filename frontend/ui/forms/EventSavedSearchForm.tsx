@@ -39,6 +39,7 @@ const Form = z.object({
       participantIds: optionalIds,
       parentId: z.string().nullable().prefault(null),
       cohortId: z.string().nullable().prefault(null),
+      coupleId: z.string().nullable().prefault(null),
       onlyMine: z.boolean().nullable().prefault(false),
       relevantOnly: z.boolean().nullable().prefault(false),
       // An unchecked filter means no restriction, rather than unavailable events.
@@ -133,6 +134,16 @@ export function EventSavedSearchForm({ savedSearch }: { savedSearch?: EventSaved
       </div>
       <p className="text-sm text-neutral-11">Výběr lidí zahrnuje jejich účast i výuku.</p>
 
+      <ComboboxElement
+        control={control}
+        name="condition.coupleId"
+        label="Pár"
+        placeholder="Bez omezení"
+        options={[
+          { id: null, label: 'Bez omezení' },
+          ...data?.couplesList?.map((couple) => ({ id: couple.id, label: couple.name })) ?? [],
+        ]}
+      />
       <ComboboxElement
         control={control}
         name="condition.cohortId"

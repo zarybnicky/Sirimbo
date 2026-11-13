@@ -17,7 +17,7 @@ language sql stable as $$
     where person_id = any((select current_person_ids())::bigint[])
   ), cohort_people as (
     select cohort_id, person_id from current_cohort_membership
-    where ((condition).participant_ids is not null
+    where ((condition).participant_ids is not null or (condition).couple_id is not null
         or person_id in (
           select person_id from current_tenant_membership
           union all select person_id from current_tenant_trainer
@@ -27,7 +27,11 @@ language sql stable as $$
     select i.id, i.type, i.location_id,
       array(select person_id from event_trainer where event_id = i.id) as trainers,
       array(select person_id from event_registration
-        where event_id = i.id and registration_status = 'active') as participants
+        where event_id = i.id and registration_status = 'active'
+          and ((condition).couple_id is null or couple_id = (condition).couple_id
+            or parent_registration_id in (
+              select id from event_registration where couple_id = (condition).couple_id
+            ))) as participants
     from event i
     where i.tenant_id = current_tenant_id()
       and start_range is not null
@@ -38,21 +42,26 @@ language sql stable as $$
       and (not coalesce((condition).relevant_only, false) or i.parent_id is null
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine))
+  ), event_people as (
+    select *, case when (condition).couple_id is null then trainers || participants
+      else participants end as selected_people
+    from candidates
+    where (condition).couple_id is null or cardinality(participants) > 0
   ), matches as (
     select *,
       (condition).types is null or type = any((condition).types) as type_matches,
       (condition).trainer_ids is null or trainers && (condition).trainer_ids as trainer_matches,
       (condition).participant_ids is null or case when (condition).cohort_id is null
-        then (trainers || participants) && (condition).participant_ids
-        else (trainers || participants) && array(
+        then selected_people && (condition).participant_ids
+        else selected_people && array(
           select person_id from cohort_people c
           where c.cohort_id = (condition).cohort_id and person_id = any((condition).participant_ids)
         ) end as participant_matches,
-      (condition).cohort_id is null or (trainers || participants) && array(
+      (condition).cohort_id is null or selected_people && array(
         select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
       ) as cohort_matches,
       (condition).location_ids is null or location_id = any((condition).location_ids) as location_matches
-    from candidates
+    from event_people
   ), facets as (
     select m.id, 'type' as facet, upper(m.type::text) as value
     from matches m
@@ -64,7 +73,7 @@ language sql stable as $$
     union all
     select m.id, 'participant', person_id::text
     from matches m
-    cross join lateral unnest(m.trainers || m.participants) person(person_id)
+    cross join lateral unnest(m.selected_people) person(person_id)
     where m.type_matches and m.trainer_matches and m.location_matches and m.cohort_matches
       and ((condition).cohort_id is null or person_id in (
         select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
@@ -77,7 +86,7 @@ language sql stable as $$
     union all
     select m.id, 'cohort', c.cohort_id::text
     from matches m
-    cross join lateral unnest(m.trainers || m.participants) person(person_id)
+    cross join lateral unnest(m.selected_people) person(person_id)
     join cohort_people c using (person_id)
     where m.type_matches and m.trainer_matches and m.location_matches
       and ((condition).participant_ids is null or c.person_id = any((condition).participant_ids))

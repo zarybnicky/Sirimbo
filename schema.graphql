@@ -2206,11 +2206,6 @@ input CompetitionCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
   includeCancelled: Boolean
-
-  """
-  Match local people. Without an explicit selection, use current tenant people.
-  """
-  official: PersonCondition
   officialPersonId: String
 
   """Checks for equality with the object’s `participantsTotal` field."""
@@ -2386,11 +2381,6 @@ input CompetitionOfficialCondition {
 
   """Checks for equality with the object’s `judgeLabel` field."""
   judgeLabel: String
-
-  """
-  Match local people. Without an explicit selection, use current tenant people.
-  """
-  person: PersonCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -6561,6 +6551,7 @@ enum EventSavedSearchesOrderBy {
 type EventSearchCondition {
   canRegister: Boolean
   cohortId: BigInt
+  coupleId: BigInt
   locationIds: [BigInt]
   onlyMine: Boolean
   parentId: BigInt
@@ -6575,6 +6566,7 @@ type EventSearchCondition {
 input EventSearchConditionInput {
   canRegister: Boolean
   cohortId: BigInt
+  coupleId: BigInt
   locationIds: [BigInt]
   onlyMine: Boolean
   parentId: BigInt
@@ -8262,11 +8254,6 @@ input FederationEventCondition {
 
   """Checks for equality with the object’s `name` field."""
   name: String
-
-  """
-  Match local people. Without an explicit selection, use current tenant people.
-  """
-  official: PersonCondition
   officialPersonId: String
 
   """Checks for equality with the object’s `organizingClubId` field."""
@@ -8371,11 +8358,6 @@ input FederationEventOfficialCondition {
 
   """Checks for equality with the object’s `grade` field."""
   grade: String
-
-  """
-  Match local people. Without an explicit selection, use current tenant people.
-  """
-  person: PersonCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -10797,7 +10779,9 @@ input OfficialAssignmentCondition {
 
   """Checks for equality with the object’s `eventId` field."""
   eventId: BigInt
-  person: CompetitionParticipantCondition
+
+  """Match officials through their linked local person."""
+  person: PersonCondition
 
   """Checks for equality with the object’s `personId` field."""
   personId: String
@@ -11016,7 +11000,7 @@ type PaymentConnection {
 
 type PaymentDebtor {
   id: BigInt!
-  isUnpaid: Boolean
+  isUnpaid: Boolean @deprecated(reason: "Use payment.status.")
 
   """Reads a single `Payment` that is related to this `PaymentDebtor`."""
   payment: Payment
@@ -11037,7 +11021,9 @@ input PaymentDebtorCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `isUnpaid` field."""
+  """
+  Whether the related payment is unpaid. Null matches an inaccessible payment.
+  """
   isUnpaid: Boolean
 
   """Checks for equality with the object’s `paymentId` field."""
@@ -11820,6 +11806,9 @@ input PersonCondition {
   """Checks for equality with the object’s `birthDate` field."""
   birthDate: Date
   birthday: DateRangeCondition
+
+  """Match either partner of this couple."""
+  coupleId: BigInt
 
   """Checks for equality with the object’s `createdAt` field."""
   createdAt: Datetime

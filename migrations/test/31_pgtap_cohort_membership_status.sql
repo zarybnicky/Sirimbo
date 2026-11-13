@@ -284,7 +284,7 @@ SELECT tap.ok(NOT EXISTS (
     SELECT coalesce(sum(count), 0)::integer
     FROM event_facets(now(), now() + interval '1 day',
       row(null, null, null, expected.parent_id, null, null,
-        expected.only_mine, expected.relevant_only, null, null)::event_search_condition)
+        expected.only_mine, expected.relevant_only, null, null, null)::event_search_condition)
     WHERE facet = 'type'
   )
 ), 'event facets combine mine, relevant and parent restrictions');

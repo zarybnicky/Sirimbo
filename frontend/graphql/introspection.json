@@ -12136,6 +12136,14 @@
             "args": []
           },
           {
+            "name": "coupleId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "locationIds",
             "type": {
               "kind": "LIST",

@@ -2,12 +2,13 @@ import type { CalendarDataQuery } from '@/graphql/Event';
 import type {
   CompetitionParticipationFragment,
   CompetitionFragment,
+  FederationEventSummaryFragment,
 } from '@/graphql/CompetitionParticipation';
 import type { OfficialRole } from '@/graphql';
 import type { OfficialPersonFragment } from '@/graphql/Federation';
 import { compareText } from '@/lib/compare';
 
-type Competition = CompetitionFragment & { participations: readonly CompetitionParticipationFragment[] };
+type Competition = CompetitionFragment & { event: FederationEventSummaryFragment | null; participations: readonly CompetitionParticipationFragment[] };
 export type CompetitionEntry = CompetitionParticipationFragment & { competition: CompetitionFragment };
 
 export type CompetitionOfficialAssignment = {
@@ -25,6 +26,7 @@ export function groupCompetitionEvents(
     [...Map.groupBy(day, (x) => x.competition.event?.id)].map(([eventId, entries]) => ({
       key: `${date}:${eventId}`,
       date,
+      event: entries[0]!.competition.event,
       name: entries[0]?.competition.event?.name ?? '',
       entries,
     })).toSorted((a, b) => compareText(a.name, b.name)),

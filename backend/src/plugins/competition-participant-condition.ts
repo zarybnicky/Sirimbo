@@ -212,13 +212,6 @@ const plugins: GraphileConfig.Plugin[] = [
     ),
   ),
   addPgTableCondition(
-    { schemaName: 'federated', tableName: 'official_assignment' },
-    'person',
-    (build) => ({ type: build.getInputTypeByName('CompetitionParticipantCondition') }),
-    (value, { sqlTableAlias: row }) => value == null ? null
-      : sql`${row}.person_id = any(array(${federationPeople(value as ParticipantCondition)}))`,
-  ),
-  addPgTableCondition(
     { schemaName: 'federated', tableName: 'competition_participation' },
     'includeCancelledCompetitions',
     (build) => ({ type: build.graphql.GraphQLBoolean }),

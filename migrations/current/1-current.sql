@@ -33,6 +33,19 @@ begin
 end;
 $$;
 
+-- Preserve existing saved conditions while extending their composite type.
+do $$
+begin
+  if not exists (
+    select 1 from pg_attribute
+    where attrelid = (select typrelid from pg_type where oid = 'event_search_condition'::regtype)
+      and attname = 'couple_id' and not attisdropped
+  ) then
+    alter type event_search_condition add attribute couple_id bigint cascade;
+  end if;
+end;
+$$;
+
 create table if not exists event_saved_search (
   id bigint generated always as identity primary key,
   tenant_id bigint not null default current_tenant_id() references tenant(id) on delete cascade,

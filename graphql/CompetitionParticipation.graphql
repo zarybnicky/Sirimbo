@@ -7,19 +7,20 @@ fragment Competition on Competition {
   status
   competitionType
   participantsTotal
-  event {
-    id
-    federation
-    externalId
-    name
-    startDate
-    endDate
-    location
-    city
-  }
   category {
     ...CompetitionCategoryLabel
   }
+}
+
+fragment FederationEventSummary on FederationEvent {
+  id
+  federation
+  externalId
+  name
+  startDate
+  endDate
+  location
+  city
 }
 
 fragment CompetitionParticipation on CompetitionParticipation {
@@ -52,6 +53,7 @@ query Competitions(
     totalCount
     nodes {
       ...Competition
+      event { ...FederationEventSummary }
       participations: participationsList(condition: { competitor: $competitor, competitorId: $competitorId }, orderBy: COMPETITOR_ID_ASC) {
         ...CompetitionParticipation
       }

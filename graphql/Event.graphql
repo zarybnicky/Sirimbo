@@ -501,14 +501,7 @@ query EventList(
 }
 
 fragment CalendarFederationEvent on FederationEvent {
-  id
-  federation
-  externalId
-  name
-  startDate
-  endDate
-  location
-  city
+  ...FederationEventSummary
   ... @include(if: $withCalendarExport) {
     status
     streetAddress
@@ -774,6 +767,7 @@ fragment EventSavedSearch on EventSavedSearch {
     trainerIds
     locationIds
     participantIds
+    coupleId
     parentId
     cohortId
     onlyMine

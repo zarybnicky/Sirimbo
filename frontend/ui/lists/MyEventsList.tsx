@@ -1,3 +1,4 @@
+import type { EventSavedSearchFragment } from '@/graphql/Event';
 import { CalendarViews } from '@/calendar/CalendarViews';
 import {
   type CalendarFilters,
@@ -34,18 +35,23 @@ const myEventsFilters: CalendarFilters = {
 export const MyEventsList = React.memo(function MyEventsList() {
   const auth = useAuth();
   const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
-  const [savedSearchId, setSavedSearchId] = React.useState<string | null>(null);
+  const [savedSearch, setSavedSearch] = React.useState<EventSavedSearchFragment | null>(null);
   const { calendarEvents, savedSearches, fetching, error } = useCalendarData({
     view: CalendarViews.week,
     date: startDate,
     filters: myEventsFilters,
-    savedSearch: savedSearchId,
+    savedSearch,
     withSavedSearches: true,
     withFacets: false,
     withCompetitions: true,
     withBirthdays: false,
     withOtherClubCompetitors: true,
   });
+  React.useEffect(() => {
+    if (!savedSearch) return;
+    const updated = savedSearches.find((search) => search.id === savedSearch.id);
+    if (updated && updated !== savedSearch) setSavedSearch(updated);
+  }, [savedSearch, savedSearches]);
   const eventsByDay = React.useMemo(
     () =>
       [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))].toSorted(
@@ -58,8 +64,8 @@ export const MyEventsList = React.memo(function MyEventsList() {
     <div className="flex flex-col">
       <EventSavedSearchPicker
         savedSearches={savedSearches}
-        value={savedSearchId}
-        onChange={setSavedSearchId}
+        value={savedSearch?.id ?? null}
+        onChange={(id) => setSavedSearch(savedSearches.find((search) => search.id === id) ?? null)}
       />
       <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
       <FormError error={error} />

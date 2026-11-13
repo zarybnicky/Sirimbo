@@ -1,10 +1,14 @@
 import assert from 'node:assert';
-import { sql, TYPES } from 'postgraphile/@dataplan/pg';
+import { sql, TYPES, pgClassExpression, type PgSelectSingleStep } from 'postgraphile/@dataplan/pg';
 import { applyInput, lambda } from 'postgraphile/grafast';
 import { extendSchema } from 'postgraphile/utils';
 
 export const LegacyShimsPlugin = extendSchema((build) => ({
   typeDefs: `
+    extend type PaymentDebtor {
+      isUnpaid: Boolean @deprecated(reason: "Use payment.status.")
+    }
+
     enum EventInstanceRangeScope {
       ALL
       MINE
@@ -28,6 +32,16 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
     }
   `,
   objects: {
+    PaymentDebtor: {
+      plans: {
+        isUnpaid($debtor: PgSelectSingleStep) {
+          const $payment = build.input.pgRegistry.pgResources.payment.get({
+            id: $debtor.get('payment_id'),
+          });
+          return pgClassExpression($payment, TYPES.boolean)`${$payment.get('status')} = 'unpaid'`;
+        },
+      },
+    },
     Query: {
       plans: {
         eventInstancesForRangeList(_root, args) {

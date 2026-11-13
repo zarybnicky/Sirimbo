@@ -4,6 +4,7 @@ import { DotSeparated } from '@/ui/DotSeparated';
 import {
   CompetitionsDocument,
   type CompetitionsQueryVariables,
+  type FederationEventSummaryFragment,
   CompetitionSuggestionEventsDocument,
   CompetitionSuggestionsDocument,
 } from '@/graphql/CompetitionParticipation';
@@ -49,7 +50,7 @@ function entryLabel(entry: CompetitionEntry, competition: boolean) {
 export function CompetitionEventCard({
   entries,
   officials = [],
-  event: suppliedEvent,
+  event,
   date: suppliedDate,
   collapsedEntries = entries,
   collapsedOfficials = officials,
@@ -57,7 +58,7 @@ export function CompetitionEventCard({
   className,
 }: {
   entries: readonly CompetitionEntry[];
-  event?: CompetitionEntry['competition']['event'];
+  event: FederationEventSummaryFragment | null;
   date?: string;
   officials?: readonly CompetitionOfficialAssignment[];
   collapsedEntries?: readonly CompetitionEntry[];
@@ -68,7 +69,6 @@ export function CompetitionEventCard({
   const [open, setOpen] = React.useState(false);
   const [override, setOverride] = React.useState<boolean | null>(null);
   const competition = entries[0]?.competition;
-  const event = suppliedEvent ?? competition?.event;
   const date = suppliedDate ?? competition?.startDate;
   if (!competition && !event) return null;
   const canExpand =
@@ -152,6 +152,7 @@ export function CompetitionEventCard({
         >
           <CompetitionGroupContent
             entries={entries}
+            event={event}
             byCompetition={byCompetition}
             onToggle={index === 0 && canToggle ? () => setOverride(!byCompetition) : undefined}
           />
@@ -183,10 +184,12 @@ export function CompetitionEventCard({
 }
 
 function CompetitionLabel({
+  event,
   entry,
   competition,
   cancelled = entry.cancelled,
 }: {
+  event: FederationEventSummaryFragment | null;
   entry: CompetitionEntry;
   competition: boolean;
   cancelled?: boolean;
@@ -194,7 +197,7 @@ function CompetitionLabel({
   return competition ? (
     <CompetitionLink
       federation={entry.competition.federation}
-      eventId={entry.competition.event?.externalId}
+      eventId={event?.externalId}
       competitionId={entry.competition.externalId}
       className={cn(
         'text-accent-11',
@@ -215,10 +218,12 @@ function CompetitionLabel({
 }
 
 function CompetitionGroupContent({
+  event,
   entries,
   byCompetition,
   onToggle,
 }: {
+  event: FederationEventSummaryFragment | null;
   entries: readonly CompetitionEntry[];
   byCompetition: boolean;
   onToggle?: () => void;
@@ -243,6 +248,7 @@ function CompetitionGroupContent({
         )}
         <span className="min-w-0 flex-1">
           <CompetitionLabel
+            event={event}
             entry={entries[0]!}
             competition={byCompetition}
             cancelled={entries.every((x) => x.cancelled)}
@@ -298,7 +304,7 @@ function CompetitionGroupContent({
                 </div>
               )}
               <div className="min-w-0 font-semibold text-neutral-12">
-                <CompetitionLabel entry={entry} competition={!byCompetition} />
+                <CompetitionLabel event={event} entry={entry} competition={!byCompetition} />
               </div>
               {ranking != null && (
                 <div className="whitespace-nowrap font-semibold tabular-nums text-green-11">
@@ -366,8 +372,8 @@ export function CompetitionHistory({
       ) : fetching ? (
         <p className="text-sm text-neutral-11">Načítám...</p>
       ) : data?.competitions?.nodes.length ? (
-        groupCompetitionEvents(data.competitions.nodes).map(({ key, entries }) => (
-          <CompetitionEventCard key={key} entries={entries} showDate />
+        groupCompetitionEvents(data.competitions.nodes).map(({ key, event, date, entries }) => (
+          <CompetitionEventCard key={key} event={event} date={date} entries={entries} showDate />
         ))
       ) : (
         <p className="text-sm text-neutral-11">Žádné přihlášky ani výsledky soutěží.</p>

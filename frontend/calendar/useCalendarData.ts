@@ -1,7 +1,7 @@
 import { federationCalendarDays } from './competitions';
 import { format } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
-import { CalendarDataDocument, type CalendarDataQueryVariables } from '@/graphql/Event';
+import { CalendarDataDocument, type CalendarDataQueryVariables, type EventSavedSearchFragment } from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
@@ -111,7 +111,7 @@ export function useCalendarData({
   view: CalendarView;
   date: Date;
   filters: CalendarFilters;
-  savedSearch?: string | null;
+  savedSearch?: EventSavedSearchFragment | null;
   withSavedSearches?: boolean;
   parentId?: string;
   availableTrainers?: readonly CalendarTrainer[];
@@ -132,7 +132,7 @@ export function useCalendarData({
 
   const { personIds, cohortId, coupleId } = filters.participants;
   const variables: CalendarDataQueryVariables = {
-    savedSearch,
+    savedSearch: savedSearch?.id,
     filter: savedSearch ? undefined : {
       types: allEventTypes.filter((type) => filters.types.includes(type)),
       trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
@@ -155,17 +155,16 @@ export function useCalendarData({
       withAttendance,
       withCompetitions,
       withBirthdays,
-      withSavedSearches: withSavedSearches || !!savedSearch,
+      withSavedSearches,
       withOtherClubCompetitors: withOtherClubCompetitors && withCompetitions,
       withParticipantOptions: auth.isLoggedIn,
     }),
   });
 
-  const selectedSearch = data?.eventSavedSearchesList?.find((search) => search.id === savedSearch);
-  const people = savedSearch ? selectedSearch?.condition : variables.filter;
+  const people = savedSearch?.condition ?? variables.filter;
   const onlyMine = !!people?.onlyMine;
   const hasPersonFilter = onlyMine || people?.participantIds != null || people?.cohortId != null
-    || (!savedSearch && filters.participants.coupleId != null);
+    || people?.coupleId != null;
 
   const effectiveGroupBy = onlyMine ? 'none'
     : filters.groupBy === 'day-trainer' ? 'trainer'

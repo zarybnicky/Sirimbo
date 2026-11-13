@@ -1,7 +1,6 @@
 import { LIST_TYPES, TYPES, PgCondition } from 'postgraphile/@dataplan/pg';
 import { addPgTableCondition, extendSchema } from 'postgraphile/utils';
 import { sql, type SQL } from 'postgraphile/pg-sql2';
-import { membershipCandidateIds } from './person-membership-condition.ts';
 
 type CategoryProgressCondition = {
   ageGroups?: string[];
@@ -268,51 +267,31 @@ const plugins: GraphileConfig.Plugin[] = [
       )`;
     },
   ),
-  ...(['event', 'competition', 'event_official', 'competition_official'] as const).map(
-    (tableName) =>
-      addPgTableCondition(
-        { schemaName: 'federated', tableName },
-        tableName.endsWith('_official') ? 'person' : 'official',
-        (build) => ({
-          type: build.getInputTypeByName('PersonCondition'),
-          description:
-            'Match local people. Without an explicit selection, use current tenant people.',
-          apply(condition: PgCondition, value) {
-            if (value == null) return;
-            const alias = sql.identifier(Symbol('person'));
-            const person = new PgCondition(
-              {
-                alias,
-                where(predicate: SQL) {
-                  const people = sql`select fp.id from public.person ${alias}
-                join public.person_federation_link link on link.person_id = ${alias}.id
-                join federated.person fp
-                  on (fp.federation, fp.external_id) = (link.federation, link.external_id)
-                where ${predicate}`;
-                  condition.where(
-                    tableName === 'event' || tableName === 'competition'
-                      ? officialPredicate(sql`${condition.alias}.id`, tableName, people)
-                      : sql`${condition.alias}.person_id = any(array(${people}))`,
-                  );
-                },
-              },
-              { mode: 'AND' },
-            );
-            person.where(sql.true);
-            if (
-              value.id == null &&
-              value.ids == null &&
-              !value.onlyMine &&
-              value.membership == null
-            ) {
-              person.where(
-                sql`${person.alias}.id in (${membershipCandidateIds({ state: 'current' })!})`,
-              );
-            }
-            return person;
+  addPgTableCondition(
+    { schemaName: 'federated', tableName: 'official_assignment' },
+    'person',
+    (build) => ({
+      type: build.getInputTypeByName('PersonCondition'),
+      description: 'Match officials through their linked local person.',
+      apply(condition: PgCondition, value) {
+        if (value == null) return;
+        const alias = sql.identifier(Symbol('person'));
+        const person = new PgCondition({
+          alias,
+          where(predicate: SQL) {
+            condition.where(sql`${condition.alias}.person_id = any(array(
+              select fp.id from public.person ${alias}
+              join public.person_federation_link link on link.person_id = ${alias}.id
+              join federated.person fp
+                on (fp.federation, fp.external_id) = (link.federation, link.external_id)
+              where ${predicate}
+            ))`);
           },
-        }),
-      ),
+        }, { mode: 'AND' });
+        person.where(sql.true);
+        return person;
+      },
+    }),
   ),
   ...(['event', 'competition'] as const).map((tableName) =>
     addPgTableCondition(
