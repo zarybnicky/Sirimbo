@@ -22,9 +22,32 @@
     }];
     authentication = "host all all all trust";
     settings = {
-      shared_preload_libraries = "pg_stat_statements,auto_explain";
+      max_connections = 200;
+      shared_buffers = "8GB";
+      effective_cache_size = "24GB";
+      maintenance_work_mem = "2GB";
+      random_page_cost = 1.1;
+      work_mem = "26214kB";
+      min_wal_size = "1GB";
+      max_wal_size = "4GB";
+      max_worker_processes = 16;
+      max_parallel_workers_per_gather = 4;
+      max_parallel_workers = 16;
+      max_parallel_maintenance_workers = 4;
+
+      shared_preload_libraries = [ "pg_stat_statements" "pg_stat_monitor" ];
+      compute_query_id = "on";
+      track_functions = "all";
+      "pg_stat_statements.max" = "10000";
       "pg_stat_statements.track" = "all";
-      max_worker_processes = "20";
+
+      "pg_stat_monitor.pgsm_bucket_time" = "300";
+      "pg_stat_monitor.pgsm_max_buckets" = "288";
+      "pg_stat_monitor.pgsm_query_max_len" = "16384";
+      "pg_stat_monitor.pgsm_normalized_query" = "off";
+      "pg_stat_monitor.pgsm_track_utility" = "off";
+      "pg_stat_monitor.pgsm_track" = "all";
+      "pg_stat_monitor.pgsm_track_planning" = "on";
     };
   };
 
