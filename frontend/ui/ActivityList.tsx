@@ -3,12 +3,12 @@ import { DateNavigator } from '@/calendar/DateNavigator';
 import { ViewPicker } from '@/calendar/ViewPicker';
 import {
   type CalendarFilters,
-  calendarTypeOptions,
   calendarTypes,
   useCalendarData,
 } from '@/calendar/useCalendarData';
 import type { EventRegistrationAttendanceFragment } from '@/graphql/Event';
 import { compareText } from '@/lib/compare';
+import { cn } from '@/lib/cn';
 import { CompetitionEventCard } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
@@ -20,7 +20,7 @@ import { FormError } from '@/ui/form';
 import { buttonCls, cardCls } from '@/ui/style';
 import { add, endOf, startOf } from 'date-arithmetic';
 import { format } from 'date-fns';
-import { Cake, CalendarDays, List, Plus, Search } from 'lucide-react';
+import { Cake, CalendarDays, ChevronDown, List, Plus, Search } from 'lucide-react';
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { EventForm } from './event-form/EventForms';
@@ -72,6 +72,8 @@ export const ActivityList = React.memo(function ActivityList({
   const view = activityViews[viewKey];
   const [types, setTypes] = React.useState(calendarTypes);
   const [trainers, setTrainers] = React.useState<string[]>([]);
+  const [trainersOpen, setTrainersOpen] = React.useState(false);
+  const [typesOpen, setTypesOpen] = React.useState(false);
   const todayMarker = React.useRef<HTMLElement>(null);
   const scrollToToday = React.useRef(false);
   const today = format(new Date(), 'yyyy-MM-dd');
@@ -128,21 +130,51 @@ export const ActivityList = React.memo(function ActivityList({
           {capitalize(view.label(range))}
         </h4>
         <div className="flex flex-wrap gap-1">
-          <FacetFilter
-            label="Trenéři"
-            value={trainers}
-            options={filterOptions.trainers}
-            onChange={setTrainers}
-          />
-          <FacetFilter
-            label="Typy"
-            value={types}
-            defaultValue={calendarTypes}
-            options={calendarTypeOptions}
-            onChange={setTypes}
-          />
+          <button
+            type="button"
+            aria-expanded={trainersOpen}
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setTrainersOpen((open) => !open)}
+          >
+            Trenéři{trainers.length > 0 && ` (${trainers.length})`}
+            <ChevronDown className={cn('size-3', trainersOpen && 'rotate-180')} aria-hidden />
+          </button>
+          <button
+            type="button"
+            aria-expanded={typesOpen}
+            className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            onClick={() => setTypesOpen((open) => !open)}
+          >
+            Typy{types.length !== calendarTypes.length && ' (1)'}
+            <ChevronDown className={cn('size-3', typesOpen && 'rotate-180')} aria-hidden />
+          </button>
         </div>
       </div>
+      {(trainersOpen || typesOpen) && (
+        <div className="mb-3 grid w-full grid-cols-1 gap-x-3 gap-y-2 sm:grid-cols-[max-content_minmax(0,1fr)]">
+          {trainersOpen && (
+            <FacetFilter
+              inline
+              label="Trenéři"
+              allLabel="Všichni"
+              value={trainers}
+              options={filterOptions.trainers}
+              onChange={setTrainers}
+            />
+          )}
+          {typesOpen && (
+            <FacetFilter
+              inline
+              label="Typy"
+              allLabel="Vše"
+              value={types}
+              defaultValue={calendarTypes}
+              options={filterOptions.types}
+              onChange={setTypes}
+            />
+          )}
+        </div>
+      )}
       <FormError error={error} />
       <div className="text-sm text-neutral-9">
         {fetching

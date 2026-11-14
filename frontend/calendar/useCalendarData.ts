@@ -207,11 +207,16 @@ export function useCalendarData({
     });
     const filterOptions = withFacets
       ? {
-          types: calendarTypeOptions.map(({ value, label }) =>
-            value === 'COMPETITION' || value === 'BIRTHDAY'
-              ? { value, label }
-              : option('type', value, label),
-          ),
+          types: calendarTypeOptions
+            .filter(({ value }) =>
+              value !== 'RESERVATION' || !!counts.type?.[value] ||
+              (filters.types.length !== calendarTypes.length && filters.types.includes(value)),
+            )
+            .map(({ value, label }) =>
+              value === 'COMPETITION' || value === 'BIRTHDAY'
+                ? { value, label }
+                : option('type', value, label),
+            ),
           trainers: trainers
             .filter(
               ({ id }) =>
@@ -357,6 +362,7 @@ export function useCalendarData({
     withFacets,
     data,
     filters.trainers,
+    filters.types,
     filters.location,
     filters.participants.personIds,
     filters.participants.cohortId,

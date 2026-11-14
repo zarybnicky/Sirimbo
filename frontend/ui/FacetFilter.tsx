@@ -13,6 +13,7 @@ export function FacetFilter<Value extends string>({
   options,
   onChange,
   inline = false,
+  allLabel,
   maxVisibleOptions = Infinity,
   moreLabel = 'Více',
   children,
@@ -23,6 +24,7 @@ export function FacetFilter<Value extends string>({
   options: readonly { value: Value; label: string; count?: number }[];
   onChange: (value: Value[]) => void;
   inline?: boolean;
+  allLabel?: string;
   maxVisibleOptions?: number;
   moreLabel?: string;
   children?: ReactNode;
@@ -31,6 +33,15 @@ export function FacetFilter<Value extends string>({
   const searchable = options.length > 8;
   const isFiltered =
     value.length !== defaultValue.length || value.some((x) => !defaultValue.includes(x));
+  const allSelected = inline && allLabel !== undefined && !isFiltered;
+  const toggleValue = (selected: Value) => {
+    const next = allSelected
+      ? [selected]
+      : value.includes(selected)
+        ? value.filter((v) => v !== selected)
+        : [...value, selected];
+    onChange(inline && allLabel !== undefined && next.length === 0 ? [...defaultValue] : next);
+  };
   const visibleOptions = options.filter(
     (x, i) => i < maxVisibleOptions || value.includes(x.value),
   );
@@ -87,19 +98,15 @@ export function FacetFilter<Value extends string>({
                   key={option.value}
                   value={option.value}
                   keywords={[option.label]}
-                  aria-checked={value.includes(option.value)}
+                  aria-checked={!allSelected && value.includes(option.value)}
                   className="flex cursor-pointer items-center gap-3 rounded-xs p-3 text-sm text-accent-11 data-[selected=true]:bg-accent-7 data-[selected=true]:text-accent-12"
                   onSelect={() => {
-                    onChange(
-                      value.includes(option.value)
-                        ? value.filter((v) => v !== option.value)
-                        : [...value, option.value],
-                    );
+                    toggleValue(option.value);
                     if (inline) setOpen(false);
                   }}
                 >
                   <Check
-                    className={cn('size-4', !value.includes(option.value) && 'invisible')}
+                    className={cn('size-4', (allSelected || !value.includes(option.value)) && 'invisible')}
                   />
                   {option.label}
                   {option.count != null && (
@@ -131,18 +138,22 @@ export function FacetFilter<Value extends string>({
       <fieldset className="min-w-0">
         {label && <legend className="sr-only">{label}</legend>}
         <div className="flex min-w-0 flex-wrap gap-1">
+          {allLabel !== undefined && (
+            <button
+              type="button"
+              aria-pressed={allSelected}
+              onClick={() => onChange([...defaultValue])}
+              className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
+            >
+              {allLabel}
+            </button>
+          )}
           {visibleOptions.map((option) => (
             <button
               key={option.value}
               type="button"
-              aria-pressed={value.includes(option.value)}
-              onClick={() =>
-                onChange(
-                  value.includes(option.value)
-                    ? value.filter((v) => v !== option.value)
-                    : [...value, option.value],
-                )
-              }
+              aria-pressed={!allSelected && value.includes(option.value)}
+              onClick={() => toggleValue(option.value)}
               className={buttonCls({ display: 'compact', variant: 'facet', size: 'sm' })}
             >
               {option.label}
