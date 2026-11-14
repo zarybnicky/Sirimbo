@@ -2,7 +2,7 @@
 
 import { DefinitionList } from '@/ui/DefinitionList';
 import { RichTextView } from '@/ui/RichTextView';
-import { formatAddress } from '@/ui/format';
+import { formatAddress, fullDateFormatter, numericFullFormatter } from '@/ui/format';
 import { TenantFragment, TenantsDocument } from '@/graphql/Tenant.ts';
 import { useActions } from '@/lib/actions';
 import { tenantActions } from '@/lib/actions/tenant';
@@ -54,7 +54,7 @@ export function Tenants() {
   return (
     <div className="col-full-width grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]">
       <Table
-        columns={['ID', 'Jméno', 'Členové', 'Trenéři', 'Správci']}
+        columns={['ID', 'Jméno', 'Členové', 'Trenéři', 'Správci', 'Vytvořeno']}
         busy={fetching}
         error={error}
       >
@@ -77,6 +77,11 @@ export function Tenants() {
             <td>{tenant.memberships.totalCount}</td>
             <td>{tenant.trainers.totalCount}</td>
             <td>{tenant.administrators.totalCount}</td>
+            <td>
+              {tenant.createdAt
+                ? fullDateFormatter.format(new Date(tenant.createdAt))
+                : '—'}
+            </td>
           </tr>
         ))}
       </Table>
@@ -130,6 +135,9 @@ function TenantCard({ tenant }: Readonly<{ tenant: TenantFragment }>) {
       <DefinitionList
         items={{
           ID: tenant.id,
+          Vytvořeno: tenant.createdAt
+            ? numericFullFormatter.format(new Date(tenant.createdAt))
+            : '—',
           Členové: tenant.memberships.totalCount,
           Trenéři: tenant.trainers.totalCount,
           Správci: tenant.administrators.totalCount,

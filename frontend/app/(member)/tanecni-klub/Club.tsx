@@ -6,7 +6,7 @@ import {
 } from '@/graphql/MembershipApplication';
 import { PageHeader } from '@/ui/PageHeader';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
-import { formatAddress, moneyFormatter } from '@/ui/format';
+import { formatAddress, moneyFormatter, numericFullFormatter } from '@/ui/format';
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { LocationForm } from '@/ui/forms/LocationForm';
 import { useAuth } from '@/lib/auth';
@@ -167,6 +167,9 @@ const ClubInformation = React.memo(function ClubInformation({
           <DefinitionList
             items={{
               ID: club.id,
+              Vytvořeno: club.createdAt
+                ? numericFullFormatter.format(new Date(club.createdAt))
+                : '—',
               Členové: club.memberships.totalCount,
               Trenéři: club.trainers.totalCount,
               Správci: club.administrators.totalCount,

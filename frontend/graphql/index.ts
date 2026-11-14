@@ -11767,6 +11767,7 @@ export type Tenant = {
   cohortSubscriptionsList: Array<CohortSubscription>;
   /** Reads and enables pagination through a set of `Cohort`. */
   cohortsList: Array<Cohort>;
+  createdAt: Maybe<Scalars['Datetime']['output']>;
   cstsId: Maybe<Scalars['Int']['output']>;
   czDic: Scalars['String']['output'];
   czIco: Scalars['String']['output'];
@@ -12303,6 +12304,8 @@ export type TenantAdministratorsOrderBy =
 export type TenantCondition = {
   /** Checks for equality with the object’s `bankAccount` field. */
   bankAccount?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `cstsId` field. */
   cstsId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `czDic` field. */
@@ -12651,6 +12654,8 @@ export type TenantTrainersOrderBy =
 export type TenantsOrderBy =
   | 'BANK_ACCOUNT_ASC'
   | 'BANK_ACCOUNT_DESC'
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
   | 'CSTS_ID_ASC'
   | 'CSTS_ID_DESC'
   | 'CZ_DIC_ASC'
@@ -16142,6 +16147,7 @@ export type GraphCacheResolvers = {
     cohortMembershipsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortMembershipsListArgs, Array<WithTypename<CohortMembership> | string>>,
     cohortSubscriptionsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortSubscriptionsListArgs, Array<WithTypename<CohortSubscription> | string>>,
     cohortsList?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortsListArgs, Array<WithTypename<Cohort> | string>>,
+    createdAt?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     cstsId?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['Int']['output'] | string>,
     czDic?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
     czIco?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String']['output'] | string>,
@@ -18729,6 +18735,7 @@ export type GraphCacheUpdaters = {
     cohortMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortMembershipsListArgs>,
     cohortSubscriptionsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortSubscriptionsListArgs>,
     cohortsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, TenantCohortsListArgs>,
+    createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     cstsId?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czDic?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,
     czIco?: GraphCacheUpdateResolver<Maybe<WithTypename<Tenant>>, Record<string, never>>,

@@ -31205,6 +31205,14 @@
             ]
           },
           {
+            "name": "createdAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "cstsId",
             "type": {
               "kind": "SCALAR",

@@ -14743,6 +14743,7 @@ type Tenant {
     """The method to use when ordering `Cohort`."""
     orderBy: [CohortsOrderBy!]
   ): [Cohort!]!
+  createdAt: Datetime
   cstsId: Int
   czDic: String!
   czIco: String!
@@ -15506,6 +15507,9 @@ input TenantCondition {
   """Checks for equality with the object’s `bankAccount` field."""
   bankAccount: String
 
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
   """Checks for equality with the object’s `cstsId` field."""
   cstsId: Int
 
@@ -15902,6 +15906,8 @@ enum TenantTrainersOrderBy {
 enum TenantsOrderBy {
   BANK_ACCOUNT_ASC
   BANK_ACCOUNT_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
   CSTS_ID_ASC
   CSTS_ID_DESC
   CZ_DIC_ASC

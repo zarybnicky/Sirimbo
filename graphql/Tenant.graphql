@@ -1,6 +1,7 @@
 fragment Tenant on Tenant {
   id
   name
+  createdAt
   cstsId
   bankAccount
   czIco

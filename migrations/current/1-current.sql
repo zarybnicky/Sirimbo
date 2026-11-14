@@ -148,3 +148,25 @@ drop function if exists app_private.accessible_event_ids();
 --!include views/competition_participation.sql
 --!include views/official_assignment.sql
 --!include functions/competition_suggestions.sql
+
+alter table public.tenant add column if not exists created_at timestamptz;
+alter table public.tenant alter column created_at set default now();
+comment on column public.tenant.created_at is '@behavior -attribute:insert -attribute:update';
+
+-- Estimate historical tenant creation from the earliest related record creation.
+update public.tenant t
+set created_at = history.created_at
+from (
+  select tenant_id, min(created_at) as created_at
+  from (
+    select tenant_id, created_at from public.tenant_membership
+    union all
+    select tenant_id, created_at from public.tenant_administrator
+    union all
+    select tenant_id, created_at from public.tenant_trainer
+    union all
+    select tenant_id, created_at from public.event
+  ) records
+  group by tenant_id
+) history
+where t.id = history.tenant_id and t.created_at is null;
