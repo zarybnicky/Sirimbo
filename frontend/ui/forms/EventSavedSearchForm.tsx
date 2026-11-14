@@ -33,45 +33,30 @@ import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'urql';
 import { z } from 'zod';
 
-const optionalIds = z
-  .array(z.string())
-  .nullish()
-  .transform((xs) => (xs?.length ? xs : null));
-
 const Form = z.object({
-  people: z
-    .array(
-      z.object({
-        personId: z.string().nullable(),
-        coupleId: z.string().nullable(),
-        onlyTeaching: z.boolean().prefault(false),
-      }),
-    )
-    .prefault([]),
-  name: z.string().trim(),
-  crossTenant: z.boolean().prefault(false),
-  condition: z
-    .object({
-      types: z.array(z.enum(calendarTypes)),
-      locationIds: optionalIds,
-      parentId: z.string().nullable().prefault(null),
-      cohortId: z.string().nullable().prefault(null),
-      onlyMine: z.boolean().nullable().prefault(false),
-      canRegister: z
-        .boolean()
-        .nullish()
-        .transform((x) => x || null),
-    })
-    .prefault({ types: [...eventTypes] })
-    .transform((condition) => ({
-      ...condition,
-      relevantOnly: !condition.parentId && !condition.locationIds?.length,
-    })),
+  people: z.array(
+    z.object({
+      personId: z.string().nullable(),
+      coupleId: z.string().nullable(),
+      onlyTeaching: z.boolean(),
+    }),
+  ),
+  name: z.string(),
+  crossTenant: z.boolean(),
+  condition: z.object({
+    types: z.array(z.enum(calendarTypes)),
+    locationIds: z.array(z.string()),
+    parentId: z.string().nullable(),
+    cohortId: z.string().nullable(),
+    onlyMine: z.boolean().nullable(),
+    canRegister: z.boolean(),
+  }),
 });
 
-function toSavedSearchInput(values: z.output<typeof Form>) {
-  const { people, ...search } = values;
-  const { types, canRegister } = search.condition;
+type FormValues = z.infer<typeof Form>;
+
+function toSavedSearchInput({ people, name, condition, ...search }: FormValues) {
+  const { types, canRegister, locationIds, parentId } = condition;
   const participants = people.flatMap((x) =>
     x.personId && !x.onlyTeaching ? x.personId : [],
   );
@@ -80,8 +65,12 @@ function toSavedSearchInput(values: z.output<typeof Form>) {
   );
   return {
     ...search,
+    name: name.trim(),
     condition: {
-      ...search.condition,
+      ...condition,
+      locationIds: locationIds.length > 0 ? locationIds : null,
+      canRegister: canRegister || null,
+      relevantOnly: !parentId && locationIds.length === 0,
       participantIds: participants.length > 0 ? participants : null,
       trainerIds: trainers.length > 0 ? trainers : null,
       coupleId: people.find((x) => x.coupleId)?.coupleId ?? null,
@@ -113,7 +102,7 @@ export function EventSavedSearchForm({
   const record =
     createResult.data?.createEventSavedSearch?.eventSavedSearch ?? savedSearch;
   const condition = savedSearch?.condition;
-  const defaultValues = useMemo(() => {
+  const defaultValues = useMemo<FormValues>(() => {
     const condition = savedSearch?.condition;
     return {
       name: savedSearch?.name.startsWith(automaticSearchNamePrefix)
@@ -121,8 +110,10 @@ export function EventSavedSearchForm({
         : (savedSearch?.name ?? ''),
       crossTenant: savedSearch?.crossTenant ?? false,
       condition: {
-        onlyMine: true,
-        ...condition,
+        onlyMine: condition ? condition.onlyMine : true,
+        parentId: condition?.parentId ?? null,
+        cohortId: condition?.cohortId ?? null,
+        canRegister: condition?.canRegister ?? false,
         types: calendarTypes.filter((type) =>
           type === 'COMPETITION'
             ? !condition || condition.withCompetitions
@@ -130,7 +121,7 @@ export function EventSavedSearchForm({
               ? condition?.withBirthdays
               : !condition?.types || condition.types.includes(type),
         ),
-        locationIds: condition?.locationIds?.filter(isTruthy) ?? null,
+        locationIds: condition?.locationIds?.filter(isTruthy) ?? [],
       },
       people: [
         ...[
@@ -155,7 +146,7 @@ export function EventSavedSearchForm({
       ],
     };
   }, [savedSearch]);
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(Form),
     defaultValues,
   });
@@ -163,7 +154,7 @@ export function EventSavedSearchForm({
 
   const hasCouple = people.some((x) => x.coupleId);
 
-  const onSubmit = async (values: z.output<typeof Form>) => {
+  const onSubmit = async (values: FormValues) => {
     const input = toSavedSearchInput(values);
     input.name ||= automaticSearchNamePrefix + suggestSavedSearchName(input, data);
     if (!record) {
@@ -177,9 +168,17 @@ export function EventSavedSearchForm({
     onSuccess();
   };
 
-  const liveValues = useWatch({ control });
+  const [peopleValues, conditionValues, crossTenant] = useWatch({
+    control,
+    name: ['people', 'condition', 'crossTenant'],
+  });
   const placeholder = suggestSavedSearchName(
-    toSavedSearchInput(Form.parse({ ...liveValues, name: '' })),
+    toSavedSearchInput({
+      people: peopleValues,
+      condition: conditionValues,
+      crossTenant,
+      name: '',
+    }),
     data,
   );
 
@@ -263,7 +262,7 @@ export function EventSavedSearchForm({
           )
         }
         emptyText={
-          !liveValues.condition?.onlyMine
+          !conditionValues.onlyMine
             ? 'Bez omezení lidí a párů'
             : auth.persons.length > 0
               ? `Moje osoby: ${listFormatter.format(auth.persons.map((person) => person.name))}`
