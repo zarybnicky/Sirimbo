@@ -56,7 +56,7 @@ export function FacetFilter<Value extends string>({
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content className="z-40" align="start" sideOffset={5}>
+        <Popover.Content className="z-40" sideOffset={5}>
           <Command
             tabIndex={searchable ? -1 : 0}
             aria-label={label || moreLabel}

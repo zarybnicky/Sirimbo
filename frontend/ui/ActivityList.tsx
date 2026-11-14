@@ -55,29 +55,28 @@ export const ActivityList = React.memo(function ActivityList({
 }) {
   const auth = useAuth();
   const [date, setDate] = React.useState(() => new Date());
-  const [filters, setFilters] = React.useState(calendarTypes);
+  const [types, setTypes] = React.useState(calendarTypes);
+  const [trainers, setTrainers] = React.useState<string[]>([]);
   const todayMarker = React.useRef<HTMLElement>(null);
   const scrollToToday = React.useRef(false);
   const today = format(new Date(), 'yyyy-MM-dd');
-  const { range, calendarEvents, fetching, error } = useCalendarData({
+  const { range, calendarEvents, fetching, error, filterOptions } = useCalendarData({
     view: monthView,
     date,
     filters: {
       ...calendarFilters,
       participants: { personIds, cohortId },
-      types: filters,
+      types,
+      trainers,
     },
-    withFacets: false,
     withAttendance: true,
-    withCompetitions: filters.includes('COMPETITION'),
-    withBirthdays: filters.includes('BIRTHDAY'),
+    withCompetitions: types.includes('COMPETITION'),
+    withBirthdays: types.includes('BIRTHDAY'),
     withOtherClubCompetitors: true,
   });
 
   const days = React.useMemo(() => {
-    const grouped = Map.groupBy(calendarEvents, (event) =>
-      format(event.start, 'yyyy-MM-dd'),
-    );
+    const grouped = Map.groupBy(calendarEvents, (e) => format(e.start, 'yyyy-MM-dd'));
     if (
       today >= format(range.since, 'yyyy-MM-dd') &&
       today <= format(range.until, 'yyyy-MM-dd') &&
@@ -113,11 +112,17 @@ export const ActivityList = React.memo(function ActivityList({
           {capitalize(monthView.label(range))}
         </h4>
         <FacetFilter
+          label="Trenéři"
+          value={trainers}
+          options={filterOptions.trainers}
+          onChange={setTrainers}
+        />
+        <FacetFilter
           label="Typy"
-          value={filters}
+          value={types}
           defaultValue={calendarTypes}
           options={calendarTypeOptions}
-          onChange={setFilters}
+          onChange={setTypes}
         />
       </div>
       <FormError error={error} />
