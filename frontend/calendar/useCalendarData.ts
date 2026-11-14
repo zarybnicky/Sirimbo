@@ -1,13 +1,17 @@
 import { federationCalendarDays } from './competitions';
 import { format } from 'date-fns';
 import type { CompetitionParticipantCondition } from '@/graphql';
-import { CalendarDataDocument, type CalendarDataQueryVariables, type EventSavedSearchFragment } from '@/graphql/Event';
+import {
+  CalendarDataDocument,
+  type CalendarDataQueryVariables,
+  type EventSavedSearchFragment,
+} from '@/graphql/Event';
 import { add, startOf } from 'date-arithmetic';
 import React from 'react';
 import { useClient, useQuery } from 'urql';
 import {
-  type CalendarCompetitionEvent,
   type CalendarClubEvent,
+  type CalendarCompetitionEvent,
   type CalendarEvent,
   type CalendarTrainer,
   type DateRange,
@@ -44,7 +48,10 @@ const groupByLabels = {
 };
 export type CalendarGroupBy = keyof typeof groupByLabels;
 export const calendarGroupBy = Object.keys(groupByLabels) as CalendarGroupBy[];
-export const calendarGroupByOptions = calendarGroupBy.map((id) => ({ id, ...groupByLabels[id] }));
+export const calendarGroupByOptions = calendarGroupBy.map((id) => ({
+  id,
+  ...groupByLabels[id],
+}));
 
 export const calendarTypeOptions = [
   ...allEventTypes.map((value) => ({ value, label: formatEventType(value) })),
@@ -133,18 +140,20 @@ export function useCalendarData({
   const { personIds, cohortId, coupleId } = filters.participants;
   const variables: CalendarDataQueryVariables = {
     savedSearch: savedSearch?.id,
-    filter: savedSearch ? undefined : {
-      types: allEventTypes.filter((type) => filters.types.includes(type)),
-      trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
-      locationIds: filters.location.length > 0 ? filters.location : undefined,
-      parentId,
-      participantIds: personIds,
-      coupleId,
-      cohortId,
-      onlyMine: filterOnlyMine,
-      relevantOnly: filters.relevantOnly,
-      canRegister: filters.canRegister ? true : undefined,
-    },
+    filter: savedSearch
+      ? undefined
+      : {
+          types: allEventTypes.filter((type) => filters.types.includes(type)),
+          trainerIds: trainerIds.length > 0 ? trainerIds : undefined,
+          locationIds: filters.location.length > 0 ? filters.location : undefined,
+          parentId,
+          participantIds: personIds,
+          coupleId,
+          cohortId,
+          onlyMine: filterOnlyMine,
+          relevantOnly: filters.relevantOnly,
+          canRegister: filters.canRegister ? true : undefined,
+        },
   };
 
   const [{ data, fetching, error, operation }] = useQuery({
@@ -163,13 +172,19 @@ export function useCalendarData({
 
   const people = savedSearch?.condition ?? variables.filter;
   const onlyMine = !!people?.onlyMine;
-  const hasPersonFilter = onlyMine || people?.participantIds != null || people?.cohortId != null
-    || people?.coupleId != null;
+  const hasPersonFilter =
+    onlyMine ||
+    people?.participantIds != null ||
+    people?.cohortId != null ||
+    people?.coupleId != null;
 
-  const effectiveGroupBy = onlyMine ? 'none'
-    : filters.groupBy === 'day-trainer' ? 'trainer'
-    : filters.groupBy === 'day-room' ? 'room'
-    : filters.groupBy;
+  const effectiveGroupBy = onlyMine
+    ? 'none'
+    : filters.groupBy === 'day-trainer'
+      ? 'trainer'
+      : filters.groupBy === 'day-room'
+        ? 'room'
+        : filters.groupBy;
   const queryVariables = operation?.variables;
 
   React.useEffect(() => {
@@ -207,16 +222,11 @@ export function useCalendarData({
     });
     const filterOptions = withFacets
       ? {
-          types: calendarTypeOptions
-            .filter(({ value }) =>
-              value !== 'RESERVATION' || !!counts.type?.[value] ||
-              (filters.types.length !== calendarTypes.length && filters.types.includes(value)),
-            )
-            .map(({ value, label }) =>
-              value === 'COMPETITION' || value === 'BIRTHDAY'
-                ? { value, label }
-                : option('type', value, label),
-            ),
+          types: calendarTypeOptions.map(({ value, label }) =>
+            value === 'COMPETITION' || value === 'BIRTHDAY'
+              ? { value, label }
+              : option('type', value, label),
+          ),
           trainers: trainers
             .filter(
               ({ id }) =>
@@ -239,7 +249,9 @@ export function useCalendarData({
             )
             .map(({ id, name }) => option('participant', id, name)),
           cohorts: (data?.tenant?.cohortsList ?? [])
-            .filter(({ id }) => !!counts.cohort?.[id] || filters.participants.cohortId === id)
+            .filter(
+              ({ id }) => !!counts.cohort?.[id] || filters.participants.cohortId === id,
+            )
             .map(({ id, name }) => option('cohort', id, name)),
           locations: (data?.tenant?.locationsList ?? [])
             .filter(
@@ -296,21 +308,25 @@ export function useCalendarData({
       });
     }
 
-    const competitions: CalendarCompetitionEvent[] = federationCalendarDays(data?.federationEvents?.nodes).map(
-      ({ date, event, participations, selected, officials }) => ({
-        kind: 'competition',
-        id: `competition:${date}:${event.id}`,
-        title: event.name ?? '',
-        ...calendarDay(date),
-        resourceKeys: effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
-        entries: participations,
-        collapsedEntries: hasPersonFilter ? selected : selected.filter((p) => p.competitor?.isMine),
-        officials,
-        collapsedOfficials: hasPersonFilter ? officials : officials.filter((o) => o.person.isMine),
-        event,
-        date,
-      }),
-    );
+    const competitions: CalendarCompetitionEvent[] = federationCalendarDays(
+      data?.federationEvents?.nodes,
+    ).map(({ date, event, participations, selected, officials }) => ({
+      kind: 'competition',
+      id: `competition:${date}:${event.id}`,
+      title: event.name ?? '',
+      ...calendarDay(date),
+      resourceKeys: effectiveGroupBy === 'none' ? [] : [resourceKey(competitionResource)],
+      entries: participations,
+      collapsedEntries: hasPersonFilter
+        ? selected
+        : selected.filter((p) => p.competitor?.isMine),
+      officials,
+      collapsedOfficials: hasPersonFilter
+        ? officials
+        : officials.filter((o) => o.person.isMine),
+      event,
+      date,
+    }));
     calendarEvents.push(...competitions);
 
     for (const person of data?.birthdays?.nodes ?? []) {
@@ -362,7 +378,6 @@ export function useCalendarData({
     withFacets,
     data,
     filters.trainers,
-    filters.types,
     filters.location,
     filters.participants.personIds,
     filters.participants.cohortId,

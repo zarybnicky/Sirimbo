@@ -176,7 +176,11 @@ export const ActivityList = React.memo(function ActivityList({
               allLabel="Vše"
               value={types}
               defaultValue={calendarTypes}
-              options={filterOptions.types}
+              options={filterOptions.types.filter((option) =>
+                option.value === 'COMPETITION' ||
+                ('count' in option && !!option.count) ||
+                (types.length !== calendarTypes.length && types.includes(option.value)),
+              )}
               onChange={setTypes}
             />
           )}

@@ -17,7 +17,7 @@ test('default and restricted types produce readable titles', () => {
   }), 'Moje volné lekce');
 });
 
-test('the suggestion uses selected names and distinguishes teaching-only rows', () => {
+test('the suggestion uses selected people, couple, cohort, and location names', () => {
   assert.equal(suggestSavedSearchName({
     condition: {
       types: ['LESSON'], participantIds: ['1'], trainerIds: ['2'],
@@ -33,7 +33,7 @@ test('the suggestion uses selected names and distinguishes teaching-only rows', 
       cohortsList: [{ id: '4', name: 'TS1' }],
       locationsList: [{ id: '5', name: 'Velký sál' }],
     },
-  }), 'Lekce – Jan Novák – Eva Malá (výuka) – Petr a Anna – TS1 – Velký sál');
+  }), 'Lekce – Jan Novák – Eva Malá – Petr a Anna – TS1 – Velký sál');
 });
 
 test('the stored automatic name has the same visible label in the app and export', () => {

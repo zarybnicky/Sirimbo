@@ -20,7 +20,7 @@ import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useSetAtom } from 'jotai';
-import { formPreviewAtom } from '@/calendar/state';
+import { eventTypes, formPreviewAtom } from '@/calendar/state';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'urql';
 import { DateTimeRangeField } from './DateTimeRangeField';
@@ -35,9 +35,10 @@ import {
   type EventFormType,
 } from './types';
 
-const eventTypeOptions = (
-  ['LESSON', 'GROUP', 'RESERVATION', 'CAMP', 'HOLIDAY'] as const
-).map((type) => ({ id: type, label: formatEventType(type) }));
+const eventTypeOptions = eventTypes.map((type) => ({
+  id: type,
+  label: formatEventType(type),
+}));
 
 type EventFormProps = CreateEventDefaults & {
   event?: EventWithTrainerFragment;
@@ -237,7 +238,7 @@ export function EventForm(input: EventFormProps) {
         },
         events,
         trainers: values.trainers,
-        cohortIds: values.cohorts.map(({ cohortId }) => cohortId),
+        cohortIds: values.cohortIds,
         series:
           !isSplitting && events.length > 1
             ? seriesId
@@ -313,9 +314,14 @@ export function EventForm(input: EventFormProps) {
           <RadioButtonGroupElement
             control={control}
             name="type"
-            options={eventTypeOptions.filter(
-              (x) => x.id !== 'RESERVATION' || defaultValues.type === 'RESERVATION',
-            )}
+            options={
+              event?.type === 'RESERVATION'
+                ? [
+                    ...eventTypeOptions,
+                    { id: 'RESERVATION', label: formatEventType('RESERVATION') },
+                  ]
+                : eventTypeOptions
+            }
           />
           <TextFieldElement
             control={control}
@@ -332,7 +338,6 @@ export function EventForm(input: EventFormProps) {
             <TrainerListElement control={control} trainers={options.trainers} />
             <ParticipantListElement
               control={control}
-              setValue={setValue}
               options={options.participants}
               cohorts={options.data?.tenant?.cohortsList ?? []}
             />

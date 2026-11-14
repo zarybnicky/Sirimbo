@@ -1,5 +1,14 @@
 import type { CalendarDataQuery, EventWithTrainerFragment } from '@/graphql/Event';
 import type { CompetitionEntry, CompetitionOfficialAssignment } from '@/ui/Competitions';
+import type { EventType } from '@/graphql';
+
+// Selectable types; RESERVATION remains valid for legacy records.
+export const eventTypes = [
+  'LESSON',
+  'GROUP',
+  'CAMP',
+  'HOLIDAY',
+] as const satisfies readonly EventType[];
 
 export type DateRange = {
   since: Date;

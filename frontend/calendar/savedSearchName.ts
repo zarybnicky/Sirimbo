@@ -1,4 +1,5 @@
-import type { EventSearchConditionInput } from '../graphql/index.ts';
+import type { EventSearchConditionInput } from '@/graphql';
+import { eventTypes } from './types.ts';
 
 type Named = { id: string; name: string };
 
@@ -11,8 +12,7 @@ type SearchNameOptions = {
 
 const typeNames = {
   LESSON: 'Lekce',
-  GROUP: 'Společné tréninky',
-  RESERVATION: 'Nabídky lekcí',
+  GROUP: 'Společné',
   CAMP: 'Soustředění',
   HOLIDAY: 'Prázdniny',
 };
@@ -34,10 +34,10 @@ export function suggestSavedSearchName(
   const { condition } = search;
   const types = condition.types?.filter((x) => x != null);
   const categories =
-    types?.length === Object.keys(typeNames).length || !types
+    !types || eventTypes.every((type) => types.includes(type))
       ? ['Události']
       : [
-          ...types.map((x) => typeNames[x]),
+          ...types.filter((x) => x !== 'RESERVATION' && x !== 'HOLIDAY').map((x) => typeNames[x]),
           condition.withCompetitions && 'Soutěže',
           condition.withBirthdays && 'Narozeniny',
         ].filter(Boolean);
@@ -47,11 +47,9 @@ export function suggestSavedSearchName(
   return [
     title,
     ...(options.people?.nodes ?? []).flatMap(({ id, name }) =>
-      condition.trainerIds?.includes(id)
-        ? [`${name} (výuka)`]
-        : condition.participantIds?.includes(id)
-          ? [name]
-          : [],
+      condition.trainerIds?.includes(id) || condition.participantIds?.includes(id)
+        ? [name]
+        : [],
     ),
     options.couplesList?.find((x) => x.id === condition.coupleId)?.name,
     options.tenant?.cohortsList?.find((x) => x.id === condition.cohortId)?.name,

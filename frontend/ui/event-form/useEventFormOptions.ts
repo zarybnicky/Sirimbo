@@ -72,18 +72,17 @@ export function useEventFormOptions(variables: EventFormOptionsQueryVariables) {
         })) ?? [],
       cohorts:
         query.data?.tenant?.cohortsList
-          ?.filter((cohort) => !cohort.isArchived)
-          .map((cohort) => ({ id: cohort.id, label: cohort.name })) ?? [],
-      parents: [
-        { id: null, label: 'Bez omezení' },
-        ...(query.data?.parents?.map((event) => ({
+          ?.map((cohort) => ({
+            id: cohort.id, label: cohort.name, hidden: cohort.isArchived,
+          })) ?? [],
+      parents:
+        query.data?.parents?.map((event) => ({
           id: event.id,
           label: `${event.name || 'Soustředění'} – ${fullDateFormatter.formatRange(
             new Date(event.since),
             new Date(event.until),
           )}`,
-        })) ?? []),
-      ],
+        })) ?? [],
     }),
     [query.data],
   );

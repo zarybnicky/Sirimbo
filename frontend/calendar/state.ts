@@ -4,7 +4,6 @@ import { atomWithStorage, selectAtom } from 'jotai/utils';
 import type { CalendarViewKey } from './CalendarViews';
 import type { CalendarGroupBy } from './useCalendarData';
 import type { EventSavedSearchFragment } from '@/graphql/Event';
-import type { EventType } from '@/graphql';
 import type { CreateEventDefaults } from './eventDefaults';
 import type {
   CalendarClubEvent,
@@ -118,10 +117,4 @@ export const calendarConflictsFor = (instanceId: string | null | undefined) =>
     return conflicts[instanceId] ?? emptyConflicts;
   });
 
-export const eventTypes = [
-  'LESSON',
-  'GROUP',
-  'RESERVATION',
-  'CAMP',
-  'HOLIDAY',
-] as const satisfies readonly EventType[];
+export { eventTypes } from './types.ts';

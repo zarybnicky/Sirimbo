@@ -32,7 +32,7 @@ export const EventFormSchema = z.object({
       }),
     )
     .prefault([]),
-  cohorts: z.array(z.object({ cohortId: z.string() })).prefault([]),
+  cohortIds: z.array(z.string()).prefault([]),
   registrations: z
     .array(
       z.object({

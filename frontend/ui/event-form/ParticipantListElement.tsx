@@ -1,24 +1,24 @@
-import { useWatch, type UseFormSetValue } from 'react-hook-form';
-import type { EventFormControl, EventFormInput, EventParticipantOption } from './types';
+import { useController, useWatch } from 'react-hook-form';
+import type { EventFormControl, EventParticipantOption } from './types';
 import { buttonCls } from '@/ui/style';
 import { Plus, X } from 'lucide-react';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { cn } from '@/lib/cn';
 import type { EventFormOptionsQuery } from '@/graphql/Event';
-import { CohortListElement } from './CohortListElement';
+import { SelectionListElement } from '@/ui/fields/SelectionList';
 
 export function ParticipantListElement({
   control,
-  setValue,
   options,
   cohorts,
 }: {
   control: EventFormControl;
-  setValue: UseFormSetValue<EventFormInput>;
   options: Map<string, EventParticipantOption>;
   cohorts: NonNullable<NonNullable<EventFormOptionsQuery['tenant']>['cohortsList']>;
 }) {
-  const registrations = useWatch({ control, name: 'registrations' }) ?? [];
+  const { field } = useController({ control, name: 'registrations' });
+  const registrations = field.value ?? [];
+  const type = useWatch({ control, name: 'type' });
 
   const active = registrations.filter((x) => !x.isCancelled);
   const selected = new Set(
@@ -63,18 +63,16 @@ export function ParticipantListElement({
       if (index === -1) next.push(row);
       else next[index] = row;
     }
-    setValue('registrations', next, { shouldDirty: true });
+    field.onChange(next);
   };
 
   const removeCohort = (cohortId: string) => {
-    setValue(
-      'registrations',
+    field.onChange(
       registrations.flatMap((r) => {
         if (!r.cohortIds?.includes(cohortId)) return [r];
         const cohortIds = r.cohortIds.filter((id) => id !== cohortId);
         return cohortIds.length > 0 ? [{ ...r, cohortIds }] : [];
       }),
-      { shouldDirty: true },
     );
   };
 
@@ -96,12 +94,25 @@ export function ParticipantListElement({
         })),
       );
     }
-    setValue('registrations', next, { shouldDirty: true });
+    field.onChange(next);
   };
 
   return (
     <>
-      <CohortListElement control={control} cohorts={cohorts} onAdd={addCohort} onRemove={removeCohort} />
+      <SelectionListElement
+        control={control}
+        name="cohortIds"
+        label="Tréninkové skupiny"
+        addLabel="Skupina"
+        hideAdd={type === 'LESSON'}
+        options={cohorts.map(({ id, name, isArchived }) => ({
+          id,
+          label: name,
+          hidden: isArchived,
+        }))}
+        onAdd={addCohort}
+        onRemove={removeCohort}
+      />
       <div className="flex flex-wrap items-baseline gap-2 pt-1">
         <b className="grow">Účastníci ({selected.size})</b>
         {(['couple', 'person'] as const).map((kind) => (
@@ -121,7 +132,8 @@ export function ParticipantListElement({
               .filter((x) => x.id.startsWith(`${kind}:`))
               .map((x) => ({
                 ...x,
-                disabled: selected.has(x.id) || x.personIds.some((p) => couplePeople.has(p)),
+                disabled:
+                  selected.has(x.id) || x.personIds.some((p) => couplePeople.has(p)),
               }))}
             onChange={(id) => {
               if (id) change(id, true);

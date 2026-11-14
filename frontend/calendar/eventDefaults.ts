@@ -162,7 +162,7 @@ export function editEventDefaults(
       personId: trainer.personId,
       lessonsOffered: trainer.lessonsOffered,
     })),
-    cohorts: event.targetCohortsList.map(({ cohortId }) => ({ cohortId })),
+    cohortIds: event.targetCohortsList.map(({ cohortId }) => cohortId),
     registrations: registrations.map((r) => ({
       personId: r.personId,
       coupleId: r.coupleId,

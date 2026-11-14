@@ -1,8 +1,7 @@
-import { ComboboxButton } from '@/ui/fields/Combobox';
+import { SelectionList } from '@/ui/fields/SelectionList';
 import { TextFieldElement } from '@/ui/fields/text';
-import { buttonCls, checkboxInputCls } from '@/ui/style';
-import { Plus, X } from 'lucide-react';
-import { useFieldArray, useWatch } from 'react-hook-form';
+import { Checkbox } from '@/ui/fields/checkbox';
+import { useController, useFieldArray, useWatch } from 'react-hook-form';
 import type { EventFormControl } from '@/ui/event-form/types';
 
 export type EventTrainerOption = {
@@ -19,84 +18,55 @@ export function TrainerListElement({
   control: EventFormControl;
   trainers: EventTrainerOption[];
 }) {
-  const { fields, append, remove, update } = useFieldArray({ name: 'trainers', control });
-  const [type, value] = useWatch({ control, name: ['type', 'trainers'] });
+  const { fields, append, remove } = useFieldArray({ name: 'trainers', control });
+  const type = useWatch({ control, name: 'type' });
 
   return (
-    <>
-      <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-        <b>Trenéři</b>
+    <SelectionList
+      label="Trenéři"
+      addLabel="Trenér"
+      options={trainers}
+      value={fields.map((x) => x.personId)}
+      onAdd={(personId) => append({ personId, lessonsOffered: 0 })}
+      onRemove={remove}
+      renderItem={(_, index) =>
+        !['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
+          <TrainerLessonsField control={control} index={index} />
+        )
+      }
+    />
+  );
+}
 
-        <ComboboxButton
-          align="end"
-          side="top"
-          trigger={
-            <button
-              type="button"
-              className={buttonCls({ size: 'xs', variant: 'outline' })}
-            >
-              <Plus /> Trenér
-            </button>
-          }
-          onChange={(id) => {
-            if (id && !fields.some((trainer) => trainer.personId === id)) {
-              append({ personId: id, lessonsOffered: 0 });
-            }
-          }}
-          options={trainers.filter(
-            (x) => !x.hidden && !fields.some((y) => y.personId === x.id),
-          )}
+function TrainerLessonsField({
+  control,
+  index,
+}: {
+  control: EventFormControl;
+  index: number;
+}) {
+  const { field } = useController({ control, name: `trainers.${index}.lessonsOffered` });
+  const offersLessons = field.value !== 0;
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Checkbox
+        name={`${field.name}.enabled`}
+        label="Požadavky na lekce"
+        checked={offersLessons}
+        onBlur={field.onBlur}
+        onChange={() => field.onChange(offersLessons ? 0 : null)}
+      />
+      {offersLessons && (
+        <TextFieldElement
+          control={control}
+          type="number"
+          name={field.name}
+          placeholder="Bez omezení"
+          className="w-28"
+          min={1}
+          size={1}
         />
-      </div>
-
-      {fields.map((trainer, trainerIndex) => {
-        const currentTrainer = value?.[trainerIndex] ?? trainer;
-        const offersLessons = currentTrainer.lessonsOffered !== 0;
-
-        return (
-          <div className="flex flex-wrap items-center gap-2" key={trainer.id}>
-            <div className="grow">
-              {trainers.find((x) => x.id === trainer.personId)?.label}
-            </div>
-            {!['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
-              <div className="flex flex-wrap items-center gap-2">
-                <label className="flex min-h-9 items-center gap-2 whitespace-nowrap text-sm text-neutral-12">
-                  <input
-                    type="checkbox"
-                    className={checkboxInputCls()}
-                    checked={offersLessons}
-                    onChange={(event) =>
-                      update(trainerIndex, {
-                        personId: currentTrainer.personId,
-                        lessonsOffered: event.currentTarget.checked ? null : 0,
-                      })
-                    }
-                  />
-                  Požadavky na lekce
-                </label>
-                {offersLessons && (
-                  <TextFieldElement
-                    control={control}
-                    type="number"
-                    name={`trainers.${trainerIndex}.lessonsOffered`}
-                    placeholder="Bez omezení"
-                    className="w-28"
-                    min={1}
-                    size={1}
-                  />
-                )}
-              </div>
-            )}
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => remove(trainerIndex)}
-            >
-              <X />
-            </button>
-          </div>
-        );
-      })}
-    </>
+      )}
+    </div>
   );
 }

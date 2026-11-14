@@ -15,7 +15,11 @@ import { isTruthy } from '@/lib/truthyFilter';
 import { useAuth } from '@/lib/auth';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { CheckboxElement } from '@/ui/fields/checkbox';
-import { ComboboxButton, ComboboxElement } from '@/ui/fields/Combobox';
+import {
+  SelectionElement,
+  SelectionList,
+  SelectionListElement,
+} from '@/ui/fields/SelectionList';
 import { TextField, TextFieldElement } from '@/ui/fields/text';
 import { FieldHelper, FormError, useFormResult } from '@/ui/form';
 import { listFormatter } from '@/ui/format';
@@ -23,7 +27,7 @@ import { useEventFormOptions } from '@/ui/event-form/useEventFormOptions';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Copy, Plus, X } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { useMemo } from 'react';
 import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'urql';
@@ -68,8 +72,12 @@ const Form = z.object({
 function toSavedSearchInput(values: z.output<typeof Form>) {
   const { people, ...search } = values;
   const { types, canRegister } = search.condition;
-  const participants = people.flatMap((x) => x.personId && !x.onlyTeaching ? x.personId : []);
-  const trainers = people.flatMap((x) => x.personId && x.onlyTeaching ? x.personId : []);
+  const participants = people.flatMap((x) =>
+    x.personId && !x.onlyTeaching ? x.personId : [],
+  );
+  const trainers = people.flatMap((x) =>
+    x.personId && x.onlyTeaching ? x.personId : [],
+  );
   return {
     ...search,
     condition: {
@@ -153,15 +161,7 @@ export function EventSavedSearchForm({
   });
   const { fields: people, append, remove } = useFieldArray({ control, name: 'people' });
 
-  const availablePeople = useMemo(() => {
-    const selected = new Set(
-      people.map((x) => (x.personId ? `person:${x.personId}` : `couple:${x.coupleId}`)),
-    );
-    const hasCouple = people.some((x) => x.coupleId);
-    return [...options.participants.values()].filter(
-      (x) => !selected.has(x.id) && (!x.coupleId || !hasCouple),
-    );
-  }, [options.participants, people]);
+  const hasCouple = people.some((x) => x.coupleId);
 
   const onSubmit = async (values: z.output<typeof Form>) => {
     const input = toSavedSearchInput(values);
@@ -219,182 +219,70 @@ export function EventSavedSearchForm({
         />
       </div>
 
-      <Controller
+      <SelectionListElement
         control={control}
         name="condition.locationIds"
-        render={({ field, fieldState }) => {
-          const selected = field.value ?? [];
-          return (
-            <fieldset className="grid min-w-0 gap-1">
-              <legend className="sr-only">Místa</legend>
-              <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-                <b aria-hidden>Místa</b>
-                <ComboboxButton
-                  align="end"
-                  side="top"
-                  trigger={
-                    <button
-                      type="button"
-                      className={buttonCls({ size: 'xs', variant: 'outline' })}
-                    >
-                      <Plus /> Přidat
-                    </button>
-                  }
-                  options={options.locations.filter((x) => !selected.includes(x.id))}
-                  onChange={(id) => {
-                    if (id) field.onChange([...selected, id]);
-                  }}
-                />
-              </div>
-              {selected.length === 0 && (
-                <p className="text-sm text-neutral-11">Bez omezení místa</p>
-              )}
-              {selected.map((id) => (
-                <div key={id} className="flex items-center gap-2">
-                  <span className="grow">
-                    {options.locations.find((location) => location.id === id)?.label}
-                  </span>
-                  <button
-                    type="button"
-                    className={buttonCls({ size: 'sm', variant: 'outline' })}
-                    onClick={() =>
-                      field.onChange(selected.filter((value) => value !== id))
-                    }
-                  >
-                    <X />
-                  </button>
-                </div>
-              ))}
-              <FieldHelper error={fieldState.error} />
-            </fieldset>
-          );
-        }}
+        label="Místa"
+        emptyText="Bez omezení místa"
+        options={options.locations}
       />
-
-      <Controller
+      <SelectionElement
         control={control}
         name="condition.cohortId"
-        render={({ field, fieldState }) => (
-          <fieldset className="grid min-w-0 gap-1">
-            <legend className="sr-only">Tréninková skupina</legend>
-            <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-              <b aria-hidden>Tréninková skupina</b>
-              <ComboboxButton
-                align="end"
-                side="top"
-                disabled={!!field.value}
-                trigger={
-                  <button
-                    type="button"
-                    className={buttonCls({ size: 'xs', variant: 'outline' })}
-                  >
-                    <Plus /> Přidat
-                  </button>
-                }
-                options={options.cohorts}
-                onChange={field.onChange}
-              />
-            </div>
-            {field.value ? (
-              <div className="flex items-center gap-2">
-                <span className="grow">
-                  {
-                    data?.tenant?.cohortsList?.find((cohort) => cohort.id === field.value)
-                      ?.name
-                  }
-                </span>
-                <button
-                  type="button"
-                  className={buttonCls({ size: 'sm', variant: 'outline' })}
-                  onClick={() => field.onChange(null)}
-                >
-                  <X />
-                </button>
-              </div>
-            ) : (
-              <p className="text-sm text-neutral-11">Bez omezení skupiny</p>
-            )}
-            <FieldHelper error={fieldState.error} />
-          </fieldset>
-        )}
+        label="Tréninková skupina"
+        emptyText="Bez omezení skupiny"
+        options={options.cohorts}
       />
 
-      <fieldset className="grid min-w-0 gap-1">
-        <legend className="sr-only">Osoby</legend>
-        <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-          <b aria-hidden>Osoby</b>
-          <ComboboxButton
-            align="end"
-            side="top"
-            trigger={
-              <button
-                type="button"
-                className={buttonCls({ size: 'xs', variant: 'outline' })}
-              >
-                <Plus /> Přidat
-              </button>
-            }
-            options={availablePeople}
-            onChange={(id) => {
-              const person = id ? options.participants.get(id) : undefined;
-              if (person)
-                append({
-                  personId: person.personId,
-                  coupleId: person.coupleId,
-                  onlyTeaching: false,
-                });
-            }}
-          />
-        </div>
+      <SelectionList
+        label="Lidé a páry"
+        options={[...options.participants.values()].map((x) => ({
+          ...x,
+          hidden: hasCouple && !!x.coupleId,
+        }))}
+        value={people.map((x) =>
+          x.personId ? `person:${x.personId}` : `couple:${x.coupleId}`,
+        )}
+        onAdd={(id) => {
+          const person = options.participants.get(id);
+          if (person)
+            append({
+              personId: person.personId,
+              coupleId: person.coupleId,
+              onlyTeaching: false,
+            });
+        }}
+        onRemove={remove}
+        renderItem={(_, index) =>
+          people[index]?.personId && (
+            <CheckboxElement
+              control={control}
+              name={`people.${index}.onlyTeaching`}
+              label="Pouze výuka"
+            />
+          )
+        }
+        emptyText={
+          !liveValues.condition?.onlyMine
+            ? 'Bez omezení lidí a párů'
+            : auth.persons.length > 0
+              ? `Moje osoby: ${listFormatter.format(auth.persons.map((person) => person.name))}`
+              : 'Nemáte přiřazené žádné osoby.'
+        }
+      >
         <CheckboxElement
           control={control}
           name="condition.onlyMine"
           label="Pouze moje události"
         />
-        {people.length === 0 && (
-          <p className="text-sm text-neutral-11">
-            {!liveValues.condition?.onlyMine
-              ? 'Bez omezení lidí a párů'
-              : auth.persons.length > 0
-                ? `Moje osoby: ${listFormatter.format(auth.persons.map((p) => p.name))}`
-                : 'Nemáte přiřazené žádné osoby.'}
-          </p>
-        )}
-        {people.map((person, index) => (
-          <div key={person.id} className="flex flex-wrap items-center gap-2">
-            <span className="grow">
-              {
-                options.participants.get(
-                  person.personId
-                    ? `person:${person.personId}`
-                    : `couple:${person.coupleId}`,
-                )?.label
-              }
-            </span>
-            {person.personId && (
-              <CheckboxElement
-                control={control}
-                name={`people.${index}.onlyTeaching`}
-                label="Pouze výuka"
-              />
-            )}
-            <button
-              type="button"
-              className={buttonCls({ size: 'sm', variant: 'outline' })}
-              onClick={() => remove(index)}
-            >
-              <X />
-            </button>
-          </div>
-        ))}
-      </fieldset>
+      </SelectionList>
 
       {condition?.parentId && (
-        <ComboboxElement
+        <SelectionElement
           control={control}
           name="condition.parentId"
           label="Součást soustředění"
-          placeholder="Bez omezení"
+          emptyText="Bez omezení"
           options={options.parents}
         />
       )}

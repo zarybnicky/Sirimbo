@@ -43,8 +43,10 @@ const conditionDefaults = {
 function conditionKey(condition: EventSearchConditionInput) {
   return JSON.stringify(Object.entries(conditionDefaults).map(([field, fallback]) => {
     const key = field as keyof EventSearchConditionInput;
-    const value = key === 'relevantOnly' && condition.onlyMine
-      ? false : condition[key] ?? fallback;
+    const value = key === 'types'
+      ? eventTypes.filter((type) => (condition.types ?? eventTypes).includes(type))
+      : key === 'relevantOnly' && condition.onlyMine
+        ? false : condition[key] ?? fallback;
     return Array.isArray(value) ? [...new Set(value)].toSorted() : value;
   }));
 }
