@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { EventSavedSearchForm } from '@/ui/forms/EventSavedSearchForm';
-import { buttonCls } from '@/ui/style';
 import { Check, ChevronDown, Plus, Settings } from 'lucide-react';
 import React from 'react';
 
@@ -78,8 +77,9 @@ export function EventSavedSearchPicker({
   return (
     <>
       <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger className={buttonCls({ variant: 'outline', size: 'sm', className: 'mb-2 self-start' })}>
-          Uložené filtry{selected ? `: ${savedSearchName(selected.name)}` : ''} <ChevronDown />
+        <DropdownMenuTrigger className="inline-flex items-center gap-2 text-left focus-visible:outline-2 focus-visible:outline-accent-9">
+          {selected ? savedSearchName(selected.name) : 'Moje události'}
+          <ChevronDown className="size-4 shrink-0" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
@@ -99,21 +99,18 @@ export function EventSavedSearchPicker({
               >
                 <Check className={active ? 'size-4 shrink-0' : 'size-4 shrink-0 invisible'} />
                 <span className="grow py-3">{view.name}</span>
-                {view.search && (
-                  <button
-                    type="button"
-                    title="Upravit filtr"
-                    className="self-stretch rounded-r-[3px] border-l border-neutral-4 px-3 hover:bg-accent-5 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-accent-9"
-                    onPointerUp={(event) => event.stopPropagation()}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setEditingId(view.search!.id);
-                      setOpen(false);
-                    }}
-                  >
-                    <Settings className="size-4" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="self-stretch rounded-r-[3px] border-l border-neutral-4 px-3 hover:bg-accent-5 hover:text-accent-12 focus-visible:outline-2 focus-visible:outline-accent-9"
+                  onPointerUp={(event) => event.stopPropagation()}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setEditingId(view.search?.id ?? null);
+                    setOpen(false);
+                  }}
+                >
+                  <Settings className="size-4" />
+                </button>
               </DropdownMenuButton>
             );
           })}

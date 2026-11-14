@@ -326,9 +326,9 @@ export function EventSavedSearchForm({
       />
 
       <fieldset className="grid min-w-0 gap-1">
-        <legend className="sr-only">Lidé a páry</legend>
+        <legend className="sr-only">Osoby</legend>
         <div className="flex flex-wrap items-baseline justify-between gap-2 pt-1">
-          <b aria-hidden>Lidé a páry</b>
+          <b aria-hidden>Osoby</b>
           <ComboboxButton
             align="end"
             side="top"

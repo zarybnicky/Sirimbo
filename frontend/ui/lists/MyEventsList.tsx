@@ -64,19 +64,18 @@ export const MyEventsList = React.memo(function MyEventsList() {
 
   return (
     <div className="flex flex-col">
-      {auth.isSystemAdmin && (
-        <EventSavedSearchPicker
-          savedSearches={savedSearches}
-          value={savedSearch?.id ?? null}
-          onChange={(id) =>
-            setSavedSearch(savedSearches.find((x) => x.id === id) ?? null)
-          }
-        />
-      )}
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h4 className={typographyCls({ variant: 'smallHeading', className: 'grow' })}>
-            Moje události
+            {auth.isSystemAdmin ? (
+              <EventSavedSearchPicker
+                savedSearches={savedSearches}
+                value={savedSearch?.id ?? null}
+                onChange={(id) =>
+                  setSavedSearch(savedSearches.find((x) => x.id === id) ?? null)
+                }
+              />
+            ) : 'Moje události'}
           </h4>
           <DateNavigator
             variant="subtle"
