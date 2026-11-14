@@ -135,7 +135,7 @@ export function PersonComparisonForm() {
       [
         ...(personQuery?.people?.nodes ?? []),
         ...(formerPersonQuery?.people?.nodes ?? []),
-      ].map((person) => [person.id, person]),
+      ].map((x) => [x.id, x]),
     );
     return [...byId.values()];
   }, [personQuery, formerPersonQuery]);

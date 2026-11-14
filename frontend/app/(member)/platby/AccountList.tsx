@@ -62,14 +62,14 @@ export const AccountList = React.memo(function AccountList() {
       busy={fetching}
       error={error}
     >
-      {rows.map((person) => (
-        <tr key={person.id}>
+      {rows.map((p) => (
+        <tr key={p.id}>
           <th scope="row">
-            <EntityLink type="person" entity={person} />
+            <EntityLink type="person" entity={p} />
           </th>
-          {currencies.map((currency) => (
-            <td key={currency} className="whitespace-nowrap text-right">
-              {moneyFormatter.format(person.accountsList.find((x) => x.currency === currency))}
+          {currencies.map((c) => (
+            <td key={c} className="whitespace-nowrap text-right">
+              {moneyFormatter.format(p.accountsList.find((x) => x.currency === c))}
             </td>
           ))}
         </tr>
@@ -95,10 +95,10 @@ async function exportBalanceSheet(
   }));
   worksheet.getRow(1).font = { bold: true };
   worksheet.addRows(
-    people.map((person) =>
+    people.map((p) =>
       columns.map(({ id }) => {
-        if (id === 'name') return person.name;
-        const account = person.accountsList.find((x) => x.currency === id);
+        if (id === 'name') return p.name;
+        const account = p.accountsList.find((x) => x.currency === id);
         return account ? Number(account.balance ?? '0') : null;
       }),
     ),

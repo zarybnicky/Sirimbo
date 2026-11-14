@@ -71,11 +71,11 @@ function useRegistrationCandidates(
   const candidates = [
     ...people
       .filter((x) => !registeredPeople.has(x.id))
-      .map((person) => ({
-        id: `person:${person.id}`,
-        label: person.name + (person.isExternal ? ' (Externí)' : ''),
-        isExternal: person.isExternal,
-        personId: person.id,
+      .map((x) => ({
+        id: `person:${x.id}`,
+        label: x.name + (x.isExternal ? ' (Externí)' : ''),
+        isExternal: x.isExternal,
+        personId: x.id,
         coupleId: null,
       })),
     ...couples

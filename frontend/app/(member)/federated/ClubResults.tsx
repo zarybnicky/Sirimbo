@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { addDays, format, startOfWeek } from 'date-fns';
+import { addDays, format, getWeek, startOfWeek } from 'date-fns';
 import {
   parseAsArrayOf,
   parseAsInteger,
@@ -10,16 +10,17 @@ import {
   useQueryStates,
 } from 'nuqs';
 import { CompetitionResultsDocument } from '@/graphql/CompetitionParticipation';
+import { CalendarViews } from '@/calendar/CalendarViews';
+import { DateNavigator } from '@/calendar/DateNavigator';
 import type { CompetitionResultCondition, CompetitorType } from '@/graphql';
 import { usePaginatedQuery } from '@/lib/usePaginatedQuery';
 import { compareText } from '@/lib/compare';
 import { Pagination } from '@/ui/Pagination';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { WeekPicker } from '@/ui/WeekPicker';
 import { compareCategories, formatCategoryName, formatCompetitorType } from '@/ui/csts';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { formatDateOnly } from '@/ui/format';
-import { inputCls } from '@/ui/style';
+import { inputCls, typographyCls } from '@/ui/style';
 import { FormError } from '@/ui/form';
 import {
   MissingFederationCouples,
@@ -129,16 +130,24 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
   return (
     <>
       {view === 'weekend' ? (
-        <WeekPicker
-          title="Výsledky klubu"
-          startDate={week}
-          onChange={(value) =>
-            void setFilters({
-              week: typeof value === 'function' ? value(week) : value,
-              page: 1,
-            })
-          }
-        />
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h4 className={typographyCls({ variant: 'smallHeading', className: 'grow' })}>
+              Výsledky klubu
+            </h4>
+            <DateNavigator
+              date={week}
+              view={CalendarViews.week}
+              setDate={(date) =>
+                void setFilters({ week: startOfWeek(date, { weekStartsOn: 1 }), page: 1 })
+              }
+            />
+          </div>
+          <div className="mb-2 flex items-center text-neutral-11 text-sm">
+            {CalendarViews.week.label(CalendarViews.week.range(week))}
+            {` (${getWeek(week, { weekStartsOn: 1 })}. týden)`}
+          </div>
+        </div>
       ) : (
         <label className="flex items-center gap-2 text-sm">
           Rok

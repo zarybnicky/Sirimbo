@@ -111,12 +111,14 @@ export function HistogramPeopleDialog({
         <Table columns={['Jméno', 'Věk', 'STT', 'LAT']}>
           {selection?.people
             .toSorted((a, b) => compareText(a.name, b.name))
-            .map((person) => (
-              <tr key={person.id}>
-                <th scope="row"><EntityLink type="person" entity={person} /></th>
-                <td>{formatAgeGroup(person.ageGroup) ?? '?'}</td>
-                <td>{personClass(person, 'Standard')}</td>
-                <td>{personClass(person, 'Latin')}</td>
+            .map((x) => (
+              <tr key={x.id}>
+                <th scope="row">
+                  <EntityLink type="person" entity={x} />
+                </th>
+                <td>{formatAgeGroup(x.ageGroup) ?? '?'}</td>
+                <td>{personClass(x, 'Standard')}</td>
+                <td>{personClass(x, 'Latin')}</td>
               </tr>
             ))}
         </Table>
@@ -250,13 +252,13 @@ export function ClassHistogram({
   discipline: 'Standard' | 'Latin';
   onSelect?: (label: string, people: readonly PersonHistogramFragment[]) => void;
 }) {
-  const classes = people.map((person) => personClass(person, discipline));
+  const classes = people.map((x) => personClass(x, discipline));
   return (
     <Histogram
       label={label}
       data={['?', 'E', 'D', 'C', 'B', 'A', 'M'].map((code) => [
         code,
-        classes.filter((value) => value === code).length,
+        classes.filter((x) => x === code).length,
       ])}
       bucketWidth={18}
       onSelect={

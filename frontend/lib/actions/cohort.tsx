@@ -46,9 +46,7 @@ export const cohortActions = defineActions<CohortActionItem>()([
 
       const emails = [
         ...new Set(
-          (result.data?.people?.nodes ?? [])
-            .map((person) => person.email?.trim()?.toLowerCase())
-            .filter(Boolean),
+          result.data?.people?.nodes.flatMap((x) => x.email?.trim()?.toLowerCase() ?? []),
         ),
       ];
       if (emails.length === 0) {

@@ -236,8 +236,8 @@ export function MissingFederationMembers() {
     <div className="grid gap-3 text-sm">
       <FormError error={query.error ?? tenant.error} />
       {people.length === 0 && <p>Žádní chybějící členové.</p>}
-      {people.map((person) => (
-        <MemberSuggestion key={person.id} person={person} />
+      {people.map((x) => (
+        <MemberSuggestion key={x.id} person={x} />
       ))}
       <Pagination {...query.pagination} />
     </div>
@@ -252,7 +252,7 @@ function MemberSuggestion({
   const [membership, addMembership] = useMutation(CreateTenantMembershipDocument);
   return (
     <div className="flex justify-between gap-2 rounded-md bg-neutral-2 px-3 py-2">
-      <EntityLink type="federation-person" entity={{ federation: 'csts', ...person}}>
+      <EntityLink type="federation-person" entity={{ federation: 'csts', ...person }}>
         {person.canonicalName} · IDT {person.externalId}
       </EntityLink>
 

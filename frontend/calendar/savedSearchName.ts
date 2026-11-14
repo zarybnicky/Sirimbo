@@ -32,12 +32,12 @@ export function suggestSavedSearchName(
   options: SearchNameOptions = {},
 ) {
   const { condition } = search;
-  const types = condition.types?.filter((type) => type != null);
+  const types = condition.types?.filter((x) => x != null);
   const categories =
     types?.length === Object.keys(typeNames).length || !types
       ? ['Události']
       : [
-          ...types.map((type) => typeNames[type]),
+          ...types.map((x) => typeNames[x]),
           condition.withCompetitions && 'Soutěže',
           condition.withBirthdays && 'Narozeniny',
         ].filter(Boolean);
@@ -46,19 +46,19 @@ export function suggestSavedSearchName(
     title = `Moje ${title[0]!.toLocaleLowerCase('cs')}${title.slice(1)}`;
   return [
     title,
-    ...(options.people?.nodes ?? []).flatMap((person) =>
-      condition.trainerIds?.includes(person.id)
-        ? [`${person.name} (výuka)`]
-        : condition.participantIds?.includes(person.id)
-          ? [person.name]
+    ...(options.people?.nodes ?? []).flatMap(({ id, name }) =>
+      condition.trainerIds?.includes(id)
+        ? [`${name} (výuka)`]
+        : condition.participantIds?.includes(id)
+          ? [name]
           : [],
     ),
-    options.couplesList?.find((couple) => couple.id === condition.coupleId)?.name,
-    options.tenant?.cohortsList?.find((cohort) => cohort.id === condition.cohortId)?.name,
-    ...(options.tenant?.locationsList ?? []).flatMap((location) =>
-      condition.locationIds?.includes(location.id) ? [location.name] : [],
+    options.couplesList?.find((x) => x.id === condition.coupleId)?.name,
+    options.tenant?.cohortsList?.find((x) => x.id === condition.cohortId)?.name,
+    ...(options.tenant?.locationsList ?? []).flatMap((x) =>
+      condition.locationIds?.includes(x.id) ? [x.name] : [],
     ),
-    options.parents?.find((parent) => parent.id === condition.parentId)?.name,
+    options.parents?.find((x) => x.id === condition.parentId)?.name,
     search.crossTenant && 'všechny kluby',
   ]
     .filter(Boolean)

@@ -68,11 +68,11 @@ const Form = z.object({
 function toSavedSearchInput(values: z.output<typeof Form>) {
   const { people, ...search } = values;
   const { types, canRegister } = search.condition;
-  const participantIds = people.flatMap((person) =>
-    person.personId && !person.onlyTeaching ? [person.personId] : [],
+  const participantIds = people.flatMap((p) =>
+    p.personId && !p.onlyTeaching ? [p.personId] : [],
   );
-  const trainerIds = people.flatMap((person) =>
-    person.personId && person.onlyTeaching ? [person.personId] : [],
+  const trainerIds = people.flatMap((p) =>
+    p.personId && p.onlyTeaching ? [p.personId] : [],
   );
   return {
     ...search,
@@ -159,13 +159,11 @@ export function EventSavedSearchForm({
 
   const availablePeople = useMemo(() => {
     const selected = new Set(
-      people.map((person) =>
-        person.personId ? `person:${person.personId}` : `couple:${person.coupleId}`,
-      ),
+      people.map((p) => (p.personId ? `person:${p.personId}` : `couple:${p.coupleId}`)),
     );
-    const hasCouple = people.some((person) => person.coupleId);
+    const hasCouple = people.some((p) => p.coupleId);
     return [...options.participants.values()].filter(
-      (option) => !selected.has(option.id) && (!option.coupleId || !hasCouple),
+      (x) => !selected.has(x.id) && (!x.coupleId || !hasCouple),
     );
   }, [options.participants, people]);
 
@@ -364,7 +362,7 @@ export function EventSavedSearchForm({
             {!liveValues.condition?.onlyMine
               ? 'Bez omezení lidí a párů'
               : auth.persons.length > 0
-                ? `Moje osoby: ${listFormatter.format(auth.persons.map((person) => person.name))}`
+                ? `Moje osoby: ${listFormatter.format(auth.persons.map((p) => p.name))}`
                 : 'Nemáte přiřazené žádné osoby.'}
           </p>
         )}
