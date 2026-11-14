@@ -379,15 +379,28 @@ function compare(
       managedCohorts.filter((x) => currentCohortIds.has(x.id)).map((x) => x.name),
     );
 
-    if (
-      new Set(person.externalIds || []).symmetricDifference(new Set(student.ref_keys))
-        .size > 0 ||
-      person.email !== student.email ||
-      person.phone !== student.phone ||
-      person.gender !== student.gender ||
-      (!person.birthDate && !!student.year) ||
-      cohortList.symmetricDifference(courseList).size > 0
-    ) {
+    const patch = personFieldsFromStudent(student, person);
+    const genderLabels: Record<string, string> = { MAN: 'Muž', WOMAN: 'Žena' };
+    const changes = [
+      ['Jméno', person.firstName, patch.firstName],
+      ['Příjmení', person.lastName, patch.lastName],
+      ['E-mail', person.email, patch.email],
+      ['Telefon', person.phone, patch.phone],
+      ['Pohlaví', genderLabels[person.gender] ?? person.gender, genderLabels[patch.gender]],
+      ['Rok narození', birthYear?.toString(), patch.birthDate?.slice(0, 4) ?? birthYear?.toString()],
+      ['Ulice', person.address?.street, patch.address.street],
+      ['Číslo orientační', person.address?.orientationNumber, patch.address.orientationNumber],
+      ['Obec', person.address?.city, patch.address.city],
+      ['PSČ', person.address?.postalCode, patch.address.postalCode],
+      [
+        'Externí ID',
+        [...new Set(person.externalIds?.filter(isTruthy))].toSorted().join(', '),
+        [...new Set(patch.externalIds)].toSorted().join(', '),
+      ],
+      ['Kurzy', [...cohortList].toSorted().join(', '), [...courseList].toSorted().join(', ')],
+    ].filter(([, before, after]) => (before ?? '') !== (after ?? ''));
+
+    if (changes.length > 0) {
       const cohortIds = [...targetCohortIds, ...unmanagedCohortIds];
       tasks.push({ type: 'update', student, person, cohortIds });
       views.push(
@@ -399,7 +412,15 @@ function compare(
               <EntityLink type="person" entity={person}>
                 {person.name} ({birthYear})
               </EntityLink>
-              {' - změnily se detaily osoby, bude aktualizovaná'}
+              {' - osoba bude aktualizována'}
+              <ul className="my-0">
+                {changes.map(([label, before, after]) => (
+                  <li key={label} className="my-0">
+                    {label}: {before || '(neuvedeno)'} → {after || '(neuvedeno)'}
+                  </li>
+                ))}
+                {!person.isMember && <li className="my-0">Členství bude obnoveno</li>}
+              </ul>
             </li>
           </ul>
         </li>,
