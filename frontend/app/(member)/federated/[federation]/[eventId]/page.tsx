@@ -10,7 +10,7 @@ import { formatDateOnly } from '@/ui/format';
 import { getRequestContext } from '@/lib/server/tenant';
 import { executeGraphql } from '@/lib/server/graphql';
 import { FederationEventDocument } from '@/graphql/Federation';
-import { Competitions } from './Tables';
+import { EventTables } from './Tables';
 import { Sources } from '../Sources';
 import { Officials } from './Officials';
 
@@ -88,7 +88,7 @@ export default async function EventPage({ params }: Props) {
         }}
       />
 
-      <Competitions federation={federation} eventId={eventId} />
+      <EventTables federation={federation} eventId={eventId} />
       <Officials
         officials={event.officials.nodes}
         showJudges={event.status === 'PLANNED' || event.status === 'IN_PROGRESS'}

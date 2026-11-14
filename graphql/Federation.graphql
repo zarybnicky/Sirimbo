@@ -598,6 +598,37 @@ query FederationCompetitorFacets(
   }
 }
 
+query FederationEventCompetitors($federation: String!, $eventId: String!) {
+  federationEventByFederationAndExternalId(
+    federation: $federation
+    externalId: $eventId
+  ) {
+    id
+    participationsList(orderBy: [DATE_ASC, COMPETITION_ID_ASC, COMPETITOR_ID_ASC]) {
+      competitionId
+      competitorId
+      cancelled
+      startNumber
+      competitor {
+        id
+        externalId
+        name
+      }
+      competition {
+        id
+        externalId
+        federation
+        competitionType
+        startDate
+        status
+        category {
+          ...CompetitionCategoryLabel
+        }
+      }
+    }
+  }
+}
+
 query FederationEventCompetitions(
   $federation: String!
   $eventId: String!

@@ -1915,6 +1915,7 @@ export type CompetitionParticipation = {
   pointGain: Maybe<Scalars['BigFloat']['output']>;
   ranking: Maybe<Scalars['Int']['output']>;
   rankingTo: Maybe<Scalars['Int']['output']>;
+  startNumber: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -1950,6 +1951,8 @@ export type CompetitionParticipationCondition = {
   ranking?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `rankingTo` field. */
   rankingTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `startNumber` field. */
+  startNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Methods to use when ordering `CompetitionParticipation`. */
@@ -1978,7 +1981,9 @@ export type CompetitionParticipationsOrderBy =
   | 'RANKING_ASC'
   | 'RANKING_DESC'
   | 'RANKING_TO_ASC'
-  | 'RANKING_TO_DESC';
+  | 'RANKING_TO_DESC'
+  | 'START_NUMBER_ASC'
+  | 'START_NUMBER_DESC';
 
 export type CompetitionResult = {
   __typename?: 'CompetitionResult';
@@ -14554,7 +14559,8 @@ export type GraphCacheResolvers = {
     isFinal?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['Boolean']['output'] | string>,
     pointGain?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['BigFloat']['output'] | string>,
     ranking?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['Int']['output'] | string>,
-    rankingTo?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['Int']['output'] | string>
+    rankingTo?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['Int']['output'] | string>,
+    startNumber?: GraphCacheResolver<WithTypename<CompetitionParticipation>, Record<string, never>, Scalars['String']['output'] | string>
   },
   CompetitionResult?: {
     club?: GraphCacheResolver<WithTypename<CompetitionResult>, Record<string, never>, WithTypename<FederationClub> | string>,
@@ -17142,7 +17148,8 @@ export type GraphCacheUpdaters = {
     isFinal?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>,
     pointGain?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>,
     ranking?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>,
-    rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>
+    rankingTo?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>,
+    startNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionParticipation>>, Record<string, never>>
   },
   CompetitionResult?: {
     club?: GraphCacheUpdateResolver<Maybe<WithTypename<CompetitionResult>>, Record<string, never>>,

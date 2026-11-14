@@ -2478,6 +2478,7 @@ type CompetitionParticipation {
   pointGain: BigFloat
   ranking: Int
   rankingTo: Int
+  startNumber: String
 }
 
 """
@@ -2527,6 +2528,9 @@ input CompetitionParticipationCondition {
 
   """Checks for equality with the object’s `rankingTo` field."""
   rankingTo: Int
+
+  """Checks for equality with the object’s `startNumber` field."""
+  startNumber: String
 }
 
 """Methods to use when ordering `CompetitionParticipation`."""
@@ -2556,6 +2560,8 @@ enum CompetitionParticipationsOrderBy {
   RANKING_DESC
   RANKING_TO_ASC
   RANKING_TO_DESC
+  START_NUMBER_ASC
+  START_NUMBER_DESC
 }
 
 type CompetitionResult {

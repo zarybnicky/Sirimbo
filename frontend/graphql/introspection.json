@@ -4988,6 +4988,14 @@
               "name": "Any"
             },
             "args": []
+          },
+          {
+            "name": "startNumber",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
           }
         ],
         "interfaces": []

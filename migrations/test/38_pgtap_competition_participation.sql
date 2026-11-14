@@ -1,7 +1,7 @@
 begin;
 
 set local search_path to public, tap;
-select tap.plan(6);
+select tap.plan(7);
 
 insert into federated.federation (code, name) values ('participation-test', 'Test');
 insert into federated.category (id, name, series, discipline, age_group, class)
@@ -20,10 +20,10 @@ insert into federated.competition_entry (competition_id, competitor_id, cancelle
          (-380001, 'participation-test:cancelled', true),
          (-380001, 'participation-test:both', false),
          (-380001, 'participation-test:cancelled-result', true);
-insert into federated.competition_result (competition_id, competitor_id, ranking)
-  values (-380001, 'participation-test:result', 1),
-         (-380001, 'participation-test:both', 2),
-         (-380001, 'participation-test:cancelled-result', 3);
+insert into federated.competition_result (competition_id, competitor_id, ranking, start_number)
+  values (-380001, 'participation-test:result', 1, '101'),
+         (-380001, 'participation-test:both', 2, '102'),
+         (-380001, 'participation-test:cancelled-result', 3, null);
 
 set local role anonymous;
 select tap.results_eq(
@@ -46,6 +46,15 @@ select tap.results_eq(
   $$select cancelled, ranking from federated.competition_participation
     where competition_id = -380001 and competitor_id = 'participation-test:cancelled-result'$$,
   $$values (true, 3)$$, 'participation retains cancellation together with result fields'
+);
+select tap.results_eq(
+  $$select competitor_id, start_number from federated.competition_participation
+    where competition_id = -380001 order by competitor_id$$,
+  $$values ('participation-test:both'::text, '102'::text),
+           ('participation-test:cancelled', null),
+           ('participation-test:cancelled-result', null),
+           ('participation-test:entry', null), ('participation-test:result', '101')$$,
+  'participation exposes result start numbers and leaves unnumbered entries empty'
 );
 reset role;
 
