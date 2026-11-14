@@ -189,6 +189,10 @@ query PersonList($condition: PersonCondition) {
   people(condition: $condition) {
     nodes {
       ...Person
+      tenantMembershipsList(condition: { status: ACTIVE }) {
+        id
+        tenantId
+      }
       cohortMembershipsList {
         id
         status

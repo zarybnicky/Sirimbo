@@ -1,18 +1,29 @@
 'use client';
 
-import { PersonListDocument } from '@/graphql/Person';
-import { CohortListDocument } from '@/graphql/Cohorts';
+import {
+  CreatePersonDocument,
+  PersonListDocument,
+  UpdatePersonDocument,
+} from '@/graphql/Person';
+import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
+import {
+  CreateTenantMembershipDocument,
+  UpdateTenantMembershipDocument,
+} from '@/graphql/Memberships';
 import { useTenantId } from '@/lib/auth';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { fetchStarlet } from '@/starlet/query';
 import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
-import { useAsync } from 'react-async-hook';
-import { useQuery } from 'urql';
+import { useAsync, useAsyncCallback } from 'react-async-hook';
+import { useMutation, useQuery } from 'urql';
 import { EntityLink } from '@/ui/EntityLink';
+import { DefinitionList } from '@/ui/DefinitionList';
 import { ListHeader } from '@/ui/ListHeader';
 import { SortButton } from '@/ui/SortButton';
 import { Table } from '@/ui/Table';
+import { SubmitButton } from '@/ui/submit';
+import { FormError } from '@/ui/form';
 import { compareText } from '@/lib/compare';
 import { slugify } from '@/lib/slugify';
 import { parseAsBoolean, useQueryState } from 'nuqs';
@@ -20,16 +31,15 @@ import {
   comparePeople,
   groupRegistrations,
   genderLabels,
+  actionLabels,
   type ComparisonPerson,
+  type ComparisonRow,
 } from './person-comparison';
 import { starletSettingsAtom, starletTokenAtom } from './state';
 
 export function PersonComparisonPreview() {
   const tenantId = useTenantId();
-  return <ComparisonPreview key={tenantId} />;
-}
-
-function ComparisonPreview() {
+  const [activeId, setActiveId] = useState<string>();
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
   const [search, setSearch] = useState('');
@@ -38,7 +48,7 @@ function ComparisonPreview() {
     column: 'source' | 'database';
     descending: boolean;
   }>({ column: 'source', descending: false });
-  const [people] = useQuery({
+  const [people, refetchPeople] = useQuery({
     query: PersonListDocument,
     variables: { condition: { membership: { states: [] } } },
   });
@@ -90,12 +100,14 @@ function ComparisonPreview() {
           id: person.id,
           isFormer: person.isExternal,
           isMember: !!person.isMember,
+          membershipId: person.tenantMembershipsList.find((x) => x.tenantId === tenantId)
+            ?.id,
           keepReason,
           unmatchedAction: keepReason
             ? undefined
             : person.cohortIds?.some((id) => id && managedIds.get(id) === false)
-              ? 'Ukončit skupiny evidence'
-              : 'Archivovat',
+              ? 'endGroups'
+              : 'archive',
           firstName: person.firstName,
           lastName: person.lastName,
           birthYear: person.birthDate ? Number(person.birthDate.slice(0, 4)) : null,
@@ -108,6 +120,8 @@ function ComparisonPreview() {
           orientationNumber: person.address?.orientationNumber ?? null,
           city: person.address?.city ?? null,
           postalCode: person.address?.postalCode ?? null,
+          address: person.address ?? undefined,
+          cohortIds: person.cohortIds?.filter((id): id is string => !!id) ?? [],
           groups: person.cohortMembershipsList
             .filter(
               (membership) =>
@@ -118,7 +132,7 @@ function ComparisonPreview() {
             .flatMap((membership) => membership.cohort?.name ?? []),
         };
       });
-  }, [people.data, cohorts.data]);
+  }, [people.data, cohorts.data, tenantId]);
   const rows = useMemo(
     () => comparePeople(source.result ?? [], database),
     [source.result, database],
@@ -141,6 +155,106 @@ function ComparisonPreview() {
           compareText(a.id, b.id)) * (sort.descending ? -1 : 1)
       );
     });
+  const hasActions = visible.some((row) => row.actions.length > 0);
+  const create = useMutation(CreatePersonDocument)[1];
+  const update = useMutation(UpdatePersonDocument)[1];
+  const createMembership = useMutation(CreateTenantMembershipDocument)[1];
+  const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
+  const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
+  const apply = useAsyncCallback(async (row: ComparisonRow) => {
+    const { source, database, actions } = row;
+    if (row.needsReview || actions.length === 0) return;
+    setActiveId(source?.id ?? database?.id);
+    const cohortIds = (database?.cohortIds ?? []).filter(
+      (id) =>
+        !cohorts.data?.cohortsList?.some((c) => c.id === id && c.externalIds?.length),
+    );
+    if (source && (actions.includes('groups') || actions.includes('create'))) {
+      for (const name of source.groups) {
+        const matches = cohorts.data?.cohortsList?.filter(
+          (c) => c.name === name && c.externalIds?.length,
+        );
+        if (!matches?.length) throw new Error(`Nejdříve synchronizujte kurz ${name}.`);
+        cohortIds.push(...matches.map((c) => c.id));
+      }
+    }
+    try {
+      let personId = database?.id;
+      if (source) {
+        const patch = {
+          firstName: source.firstName,
+          lastName: source.lastName,
+          gender: source.gender ?? 'MAN',
+          email: source.email,
+          phone: source.phone,
+          ...(!database?.birthDate && source.birthYear
+            ? { birthDate: `${source.birthYear}-01-01` }
+            : {}),
+          externalIds: [...new Set(source.externalIds)],
+          address: {
+            street: source.street ?? '',
+            orientationNumber: source.orientationNumber ?? '',
+            city: source.city ?? '',
+            postalCode: source.postalCode ?? '',
+            conscriptionNumber: database?.address?.conscriptionNumber ?? '',
+            region: database?.address?.region ?? '',
+            district: database?.address?.district,
+          },
+        };
+        if (!database) {
+          const result = await create({
+            input: {
+              p: {
+                ...patch,
+                nationality: '203',
+                prefixTitle: '',
+                suffixTitle: '',
+                bio: '',
+              },
+              isMember: true,
+              joinDate: new Date().toISOString(),
+            },
+          });
+          if (result.error) throw result.error;
+          personId = result.data?.createPerson?.result?.id;
+          if (!personId) throw new Error('Osobu se nepodařilo vytvořit.');
+        }
+        if (
+          !database ||
+          actions.some((x) => ['rename', 'details', 'externalIds'].includes(x))
+        ) {
+          // create_person omits the address, so it needs a separate update on creation.
+          const result = await update({
+            input: {
+              id: personId!,
+              patch: database ? patch : { address: patch.address },
+            },
+          });
+          if (result.error) throw result.error;
+        }
+        if (actions.includes('renewMembership')) {
+          const result = await createMembership({
+            input: { tenantMembership: { personId: personId!, tenantId } },
+          });
+          if (result.error) throw result.error;
+        }
+      }
+      if (actions.includes('archive') && database?.membershipId) {
+        const result = await updateMembership({
+          input: {
+            id: database.membershipId,
+            patch: { status: 'EXPIRED', until: new Date().toISOString() },
+          },
+        });
+        if (result.error) throw result.error;
+      } else if (actions.some((x) => ['create', 'groups', 'endGroups'].includes(x))) {
+        const result = await syncCohorts({ input: { personId: personId!, cohortIds } });
+        if (result.error) throw result.error;
+      }
+    } finally {
+      refetchPeople({ requestPolicy: 'network-only' });
+    }
+  });
 
   if (!token?.auth_ok) return <p>Pro porovnání se přihlaste do evidence.</p>;
   if (courses.length === 0) return <p>Vyberte kurzy pro porovnání.</p>;
@@ -149,6 +263,7 @@ function ComparisonPreview() {
 
   return (
     <div className="not-prose text-neutral-12">
+      <FormError error={apply.error} />
       <ListHeader
         search={search}
         onSearchChange={setSearch}
@@ -162,7 +277,7 @@ function ComparisonPreview() {
             className="flex items-center gap-2 rounded-sm text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9"
             onClick={() => setShowAll((value) => !value)}
           >
-            <span>K řešení</span>
+            <span>Nesynchronizované</span>
             <span
               aria-hidden
               className="inline-flex h-5 w-9 items-center rounded-full bg-accent-7 p-0.5"
@@ -183,102 +298,111 @@ function ComparisonPreview() {
           <SortButton key="database" column="database" value={sort} onChange={setSort}>
             Databáze ({rows.filter((r) => r.database).length})
           </SortButton>,
-          'Akce',
+          hasActions && 'Akce',
         ]}
         busy={busy}
         error={error}
         empty="Žádné osoby."
-        className="[&_table]:table-fixed [&_thead_th:last-child]:w-28"
       >
-        {!busy &&
-          !error &&
-          visible.map(
-            ({ source, database, reason, needsReview, differences, actions }) => (
-              <tr
-                key={`${source?.id ?? ''}:${database?.id ?? ''}`}
-                className="align-top"
-                title={reason ?? (needsReview ? 'Nejasná shoda' : undefined)}
-              >
-                {[source, database].map((person, side) => {
-                  if (!person) return <td key={side} />;
-                  const name = `${person.lastName} ${person.firstName}`;
-                  return (
-                    <td key={side}>
-                      {side === 1 ? (
-                        <>
-                          <EntityLink type="person" entity={{ id: person.id, name }} />{' '}
-                          <span className="text-xs text-neutral-11">
-                            {!source && reason}
-                          </span>
-                        </>
-                      ) : (
-                        <details>
-                          <summary className="cursor-pointer">
-                            {name}{' '}
-                            <span className="text-xs text-neutral-11">
-                              {person.groups.join(', ')}
-                            </span>
-                          </summary>
-                          {person.registrations?.map((registration) => (
-                            <div key={registration.id} className="my-2 text-xs">
-                              <div className="font-medium">
-                                {registration.course} · {registration.lastName}{' '}
-                                {registration.firstName}
-                              </div>
-                              <dl className="grid grid-cols-[auto_1fr] gap-x-2">
-                                {[
-                                  ['Rok', registration.birthYear],
-                                  [
-                                    'Pohlaví',
-                                    registration.gender &&
-                                      genderLabels[registration.gender],
-                                  ],
-                                  ['E-mail', registration.email],
-                                  ['Telefon', registration.phone],
-                                  ['Ulice', registration.street],
-                                  ['Číslo orientační', registration.orientationNumber],
-                                  ['Obec', registration.city],
-                                  ['PSČ', registration.postalCode],
-                                  ['ID', registration.externalIds.join(', ')],
-                                ]
-                                  .filter(([, value]) => value)
-                                  .map(([label, value]) => (
-                                    <div key={label} className="contents">
-                                      <dt className="text-neutral-11">{label}</dt>
-                                      <dd className="wrap-anywhere">{value}</dd>
-                                    </div>
-                                  ))}
-                              </dl>
-                            </div>
-                          ))}
-                        </details>
-                      )}
-                      {differences
-                        .filter(({ field }) => side === 1 || field !== 'groups')
-                        .map(({ field, label, values }) => (
-                          <div
-                            key={field}
-                            className="text-xs text-neutral-11 wrap-anywhere"
-                          >
-                            {label}: {values[side] || '—'}
+        {visible.map((row) => {
+          const { source, database, reason, differences, actions } = row;
+          return (
+            <tr key={`${source?.id ?? ''}:${database?.id ?? ''}`} className="align-top">
+              <td>
+                {source && (
+                  <>
+                    <details>
+                      <summary className="cursor-pointer">
+                        {source.lastName} {source.firstName}{' '}
+                        <span className="text-xs text-neutral-11">
+                          {source.groups.join(', ')}
+                        </span>
+                      </summary>
+                      {source.registrations?.map((reg) => (
+                        <div key={reg.id} className="my-2 text-xs">
+                          <div className="font-medium">
+                            {reg.firstName} {reg.lastName} ({reg.course})
                           </div>
-                        ))}
-                      {person.conflicts?.map((conflict) => (
-                        <div key={conflict} className="text-xs text-danger-11">
-                          {conflict}
+                          <DefinitionList
+                            className="tabular gap-x-2 [&_dt]:text-neutral-11 [&_dd]:wrap-anywhere"
+                            items={{
+                              Rok: reg.birthYear,
+                              Pohlaví: reg.gender && genderLabels[reg.gender],
+                              'E-mail': reg.email,
+                              Telefon: reg.phone,
+                              Ulice: reg.street,
+                              'Číslo orientační': reg.orientationNumber,
+                              Obec: reg.city,
+                              PSČ: reg.postalCode,
+                              ID: reg.externalIds.join(', '),
+                            }}
+                          />
                         </div>
                       ))}
-                    </td>
-                  );
-                })}
-                <td className="text-xs text-neutral-11">
-                  {actions.map((action) => (
-                    <div key={action}>{action}</div>
+                    </details>
+                    {differences
+                      .filter(({ field }) => field !== 'groups')
+                      .map(({ field, label, values }) => (
+                        <div
+                          key={field}
+                          className="text-xs text-neutral-11 wrap-anywhere"
+                        >
+                          {label}: {values[0] || '—'}
+                        </div>
+                      ))}
+                    {source.conflicts?.map((x) => (
+                      <div key={x} className="text-xs text-danger-11">
+                        {x}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </td>
+              <td>
+                {database && (
+                  <>
+                    <EntityLink
+                      type="person"
+                      entity={{
+                        id: database.id,
+                        name: `${database.lastName} ${database.firstName}`,
+                      }}
+                    />{' '}
+                    <span className="text-xs text-neutral-11">{!source && reason}</span>
+                    {differences.map(({ field, label, values }) => (
+                      <div key={field} className="text-xs text-neutral-11 wrap-anywhere">
+                        {label}: {values[1] || '—'}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </td>
+              {hasActions && (
+                <td className="w-px whitespace-nowrap text-xs text-neutral-11">
+                  {actions.map((x) => (
+                    <div key={x}>{actionLabels[x]}</div>
                   ))}
+                  {actions.length > 0 && (
+                    <SubmitButton
+                      type="button"
+                      size="xs"
+                      variant="outline"
+                      state={
+                        activeId === (source?.id ?? database?.id)
+                          ? apply.status
+                          : undefined
+                      }
+                      disabled={busy || apply.loading || row.needsReview}
+                      onClick={() => apply.execute(row)}
+                    >
+                      Použít
+                    </SubmitButton>
+                  )}
                 </td>
-              </tr>
-            ),
-          )}
+              )}
+            </tr>
+          );
+        })}
       </Table>
     </div>
   );

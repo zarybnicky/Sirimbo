@@ -27,6 +27,8 @@ fragment Announcement on Announcement {
   }
   explicitAttachments: attachments(condition: {inline: false}) {
     nodes {
+      announcementId
+      fileId
       file {
         ...File
       }

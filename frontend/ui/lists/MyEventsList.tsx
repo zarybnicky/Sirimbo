@@ -8,6 +8,7 @@ import {
 import { CompetitionEventCard } from '@/ui/Competitions';
 import { useAuth } from '@/lib/auth';
 import { EventButton } from '@/ui/EventButton';
+import { BirthdayChip } from '@/ui/BirthdayChip';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { startOf } from 'date-arithmetic';
 import * as React from 'react';
@@ -54,11 +55,16 @@ export const MyEventsList = React.memo(function MyEventsList() {
     withOtherClubCompetitors: true,
   });
 
-  const eventsByDay = React.useMemo(
+  const days = React.useMemo(
     () =>
-      [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))].toSorted(
-        ([a], [b]) => a - b,
-      ),
+      [...Map.groupBy(calendarEvents, (x) => +startOf(x.start, 'day'))]
+        .toSorted(([a], [b]) => a - b)
+        .map(([date, items]) => ({
+          date,
+          events: items.filter((x) => x.kind === 'event').map((x) => x.instance),
+          competitions: items.filter((x) => x.kind === 'competition'),
+          birthdays: items.filter((x) => x.kind === 'birthday'),
+        })),
     [calendarEvents],
   );
 
@@ -92,12 +98,10 @@ export const MyEventsList = React.memo(function MyEventsList() {
       <FormError error={error} />
       <div className="text-sm text-neutral-9">
         {fetching ? 'Načítám...' : ''}
-        {!error && !fetching && eventsByDay.length === 0 ? 'Žádné akce tento týden' : ''}
+        {!error && !fetching && days.length === 0 ? 'Žádné akce tento týden' : ''}
       </div>
       <div className="flex flex-wrap flex-col gap-x-2">
-        {eventsByDay.map(([date, items]) => {
-          const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);
-          const comps = items.filter((x) => x.kind === 'competition');
+        {days.map(({ date, events, competitions, birthdays }) => {
           return (
             <div
               key={date}
@@ -106,9 +110,14 @@ export const MyEventsList = React.memo(function MyEventsList() {
               })}
             >
               <div className="ml-2 flex justify-between flex-wrap items-center gap-2">
-                <h4 className="md:text-lg tracking-tight">
-                  {capitalize(longDayFormatter.format(new Date(date)))}
-                </h4>
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-2">
+                  <h4 className="md:text-lg tracking-tight">
+                    {capitalize(longDayFormatter.format(new Date(date)))}
+                  </h4>
+                  {birthdays.map((x) => (
+                    <BirthdayChip key={x.id} person={x.person} />
+                  ))}
+                </div>
                 <div className="flex gap-1">
                   {auth.isTrainer && (
                     <Dialog modal={false}>
@@ -148,7 +157,7 @@ export const MyEventsList = React.memo(function MyEventsList() {
                 </div>
               </div>
 
-              {comps.map((x) => (
+              {competitions.map((x) => (
                 <CompetitionEventCard key={x.id} {...x} className="mx-2 mb-3" />
               ))}
 

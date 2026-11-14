@@ -1,5 +1,18 @@
-import { compareText } from '../../lib/compare.ts';
-import { slugify } from '../../lib/slugify.ts';
+import { compareText } from '@/lib/compare';
+import { slugify } from '@/lib/slugify';
+import type { AddressDomainInput, GenderType } from '@/graphql/index';
+
+export const actionLabels = {
+  rename: 'Změní jméno',
+  details: 'Změní údaje',
+  groups: 'Změní skupiny',
+  renewMembership: 'Obnoví členství',
+  externalIds: 'Změní ID z evidence',
+  create: 'Vytvoří',
+  archive: 'Archivuje',
+  endGroups: 'Ukončí členství ve skupinách z evidence',
+};
+export type ComparisonAction = keyof typeof actionLabels;
 
 export type ComparisonPerson = {
   id: string;
@@ -7,13 +20,14 @@ export type ComparisonPerson = {
   lastName: string;
   birthYear: number | null;
   birthDate?: string | null;
-  gender?: string | null;
+  gender?: GenderType | null;
   email: string | null;
   phone: string | null;
   externalIds: string[];
   groups: string[];
   isFormer?: boolean;
   isMember?: boolean;
+  membershipId?: string;
   conflicts?: string[];
   registrations?: ComparisonPerson[];
   course?: string;
@@ -21,15 +35,17 @@ export type ComparisonPerson = {
   orientationNumber?: string | null;
   city?: string | null;
   postalCode?: string | null;
+  address?: AddressDomainInput;
+  cohortIds?: string[];
   keepReason?: string;
-  unmatchedAction?: string;
+  unmatchedAction?: 'archive' | 'endGroups';
 };
 
 type PersonMatch = {
   source?: ComparisonPerson;
   database?: ComparisonPerson;
   reason?: string;
-  actions: string[];
+  actions: ComparisonAction[];
   needsReview: boolean;
 };
 
@@ -131,7 +147,7 @@ export function comparePeople(source: ComparisonPerson[], database: ComparisonPe
   const processed = new Set<string>();
   const matches: PersonMatch[] = source.map((student) => {
     const candidates = (byName.get(nameKey(student)) ?? []).filter(
-      (person) => !processed.has(person.id),
+      (x) => !processed.has(x.id),
     );
     if (student.conflicts?.length) {
       const years = new Set(student.registrations?.flatMap((x) => x.birthYear ?? []));
@@ -154,13 +170,13 @@ export function comparePeople(source: ComparisonPerson[], database: ComparisonPe
     const byYear = candidates.filter((x) => (x.birthYear ?? 1900) === student.birthYear);
     const missingYear = candidates.filter((x) => (x.birthYear ?? 1900) === 1900);
 
-    const matchesEmail = (person: ComparisonPerson) =>
+    const matchesEmail = (person: { email: string | null }) =>
       !!student.email && person.email?.trim().toLowerCase() === student.email;
     const byEmail = candidates.filter(matchesEmail);
     const external = student.externalIds
       .map((id) => byExternalId.get(id))
-      .find((person) => person && !processed.has(person.id));
-    // An old Starlet identity can survive on a retired duplicate after a rename.
+      .find((x) => x && !processed.has(x.id));
+
     const current =
       external?.isFormer && student.birthYear
         ? candidates.filter((x) => x.isMember && x.birthYear === student.birthYear)
@@ -185,10 +201,10 @@ export function comparePeople(source: ComparisonPerson[], database: ComparisonPe
   for (const person of database) {
     if (processed.has(person.id) || person.isFormer) continue;
     const conflict = source.find(
-      (student) =>
-        student.conflicts?.length &&
-        (nameKey(student) === nameKey(person) ||
-          student.externalIds.some((id) => person.externalIds.includes(id))),
+      (x) =>
+        x.conflicts?.length &&
+        (nameKey(x) === nameKey(person) ||
+          x.externalIds.some((id) => person.externalIds.includes(id))),
     );
     matches.push({
       database: person,
@@ -200,9 +216,12 @@ export function comparePeople(source: ComparisonPerson[], database: ComparisonPe
   return matches.map(planChanges);
 }
 
+export type ComparisonRow = ReturnType<typeof comparePeople>[number];
+
 function planChanges(match: PersonMatch) {
   const { source, database } = match;
   const actions = [...match.actions];
+
   const differences =
     source && database && !source.conflicts?.length
       ? comparisonFields
@@ -214,27 +233,27 @@ function planChanges(match: PersonMatch) {
           }))
           .filter(({ values }) => values[0] !== values[1])
       : [];
+
   if (source && !source.conflicts?.length) {
     if (database) {
       if (
         source.firstName !== database.firstName ||
         source.lastName !== database.lastName
       )
-        actions.push('přejmenovat');
+        actions.push('rename');
       if (
         differences.some(
           ({ field }) =>
             !['firstName', 'lastName', 'groups', 'externalIds'].includes(field),
         )
       )
-        actions.push('upravit údaje');
-      if (differences.some(({ field }) => field === 'groups'))
-        actions.push('upravit skupiny');
-      if (database.isMember === false) actions.push('obnovit členství');
+        actions.push('details');
+      if (differences.some(({ field }) => field === 'groups')) actions.push('groups');
+      if (database.isMember === false) actions.push('renewMembership');
       if (differences.some(({ field }) => field === 'externalIds'))
-        actions.push('upravit vazbu evidence');
+        actions.push('externalIds');
     } else {
-      actions.push('Vytvořit');
+      actions.push('create');
     }
   }
   return { ...match, actions, differences };

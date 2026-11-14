@@ -11,16 +11,16 @@ import { compareText } from '@/lib/compare';
 import { cn } from '@/lib/cn';
 import { CompetitionEventCard } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
+import { BirthdayChip } from '@/ui/BirthdayChip';
 import { AttendanceStatsLink } from '@/ui/AttendanceStats';
 import { attendanceIcons } from '@/ui/EventAttendance';
 import { FacetFilter } from '@/ui/FacetFilter';
-import { LocalPersonLinks } from '@/ui/federation-links';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { FormError } from '@/ui/form';
 import { buttonCls, cardCls } from '@/ui/style';
 import { add, endOf, startOf } from 'date-arithmetic';
 import { format } from 'date-fns';
-import { Cake, CalendarDays, ChevronDown, List, Plus, Search } from 'lucide-react';
+import { CalendarDays, ChevronDown, List, Plus, Search } from 'lucide-react';
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { EventForm } from './event-form/EventForms';
@@ -76,7 +76,7 @@ export const ActivityList = React.memo(function ActivityList({
   const [typesOpen, setTypesOpen] = React.useState(false);
   const todayMarker = React.useRef<HTMLElement>(null);
   const scrollToToday = React.useRef(false);
-  const today = format(new Date(), 'yyyy-MM-dd');
+  const today = +startOf(new Date(), 'day');
   const { range, calendarEvents, fetching, error, filterOptions } = useCalendarData({
     view,
     date,
@@ -93,15 +93,22 @@ export const ActivityList = React.memo(function ActivityList({
   });
 
   const days = React.useMemo(() => {
-    const grouped = Map.groupBy(calendarEvents, (e) => format(e.start, 'yyyy-MM-dd'));
+    const grouped = Map.groupBy(calendarEvents, (e) => +startOf(e.start, 'day'));
     if (
-      today >= format(range.since, 'yyyy-MM-dd') &&
-      today <= format(range.until, 'yyyy-MM-dd') &&
+      today >= +startOf(range.since, 'day') &&
+      today <= +startOf(range.until, 'day') &&
       !grouped.has(today)
     ) {
       grouped.set(today, []);
     }
-    return [...grouped].toSorted(([a], [b]) => a.localeCompare(b));
+    return [...grouped]
+      .toSorted(([a], [b]) => a - b)
+      .map(([date, items]) => ({
+        date,
+        events: items.filter((x) => x.kind === 'event').map((x) => x.instance),
+        competitions: items.filter((x) => x.kind === 'competition'),
+        birthdays: items.filter((x) => x.kind === 'birthday'),
+      }));
   }, [calendarEvents, range, today]);
 
   React.useEffect(() => {
@@ -179,27 +186,30 @@ export const ActivityList = React.memo(function ActivityList({
       <div className="text-sm text-neutral-9">
         {fetching
           ? 'Načítám...'
-          : !error && !days.some(([, xs]) => xs.length)
+          : !error && calendarEvents.length === 0
             ? 'Žádná aktivita v tomto období.'
             : null}
       </div>
       <div className="scroll-mt-20">
-        {days.map(([day, items]) => {
-          const dayDate = new Date(`${day}T00:00:00`);
-          const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);
-          const birthdays = items.filter((x) => x.kind === 'birthday');
+        {days.map(({ date: day, events, competitions, birthdays }) => {
+          const dayDate = new Date(day);
           return (
             <section
               key={day}
               ref={day === today ? todayMarker : undefined}
               className="scroll-mt-20"
             >
-              {items.length > 0 && (
+              {(events.length > 0 || competitions.length > 0 || birthdays.length > 0) && (
                 <div className="mb-2 flex flex-col gap-1">
                   <div className="flex justify-between flex-wrap items-center gap-2">
-                    <h4 className="md:text-lg tracking-tight">
-                      {capitalize(longDayFormatter.format(dayDate))}
-                    </h4>
+                    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-2">
+                      <h4 className="md:text-lg tracking-tight">
+                        {capitalize(longDayFormatter.format(dayDate))}
+                      </h4>
+                      {birthdays.map((x) => (
+                        <BirthdayChip key={x.id} person={x.person} />
+                      ))}
+                    </div>
                     <div className="flex gap-1">
                       {auth.isTrainer && (
                         <Dialog modal={false}>
@@ -219,7 +229,7 @@ export const ActivityList = React.memo(function ActivityList({
                         </Dialog>
                       )}
                       <Link
-                        href={`/rozpis?v=agenda&date=${day}`}
+                        href={`/rozpis?v=agenda&date=${format(day, 'yyyy-MM-dd')}`}
                         className={buttonCls({ display: 'none', variant: 'none' })}
                       >
                         <span className="relative inline-block size-5 align-middle">
@@ -228,7 +238,7 @@ export const ActivityList = React.memo(function ActivityList({
                         </span>
                       </Link>
                       <Link
-                        href={`/rozpis?v=week&date=${day}`}
+                        href={`/rozpis?v=week&date=${format(day, 'yyyy-MM-dd')}`}
                         className={buttonCls({ display: 'none', variant: 'none' })}
                       >
                         <span className="relative inline-block size-5 align-middle">
@@ -239,17 +249,9 @@ export const ActivityList = React.memo(function ActivityList({
                     </div>
                   </div>
 
-                  {birthdays.length > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Cake className="size-4 shrink-0 text-accent-11" />
-                      <LocalPersonLinks people={birthdays.map(({ person }) => person)} />
-                    </div>
-                  )}
-                  {items
-                    .filter((x) => x.kind === 'competition')
-                    .map((x) => (
-                      <CompetitionEventCard key={x.id} {...x} className="mb-0" />
-                    ))}
+                  {competitions.map((x) => (
+                    <CompetitionEventCard key={x.id} {...x} className="mb-0" />
+                  ))}
                   {events.length > 0 && (
                     <div
                       className={cardCls({

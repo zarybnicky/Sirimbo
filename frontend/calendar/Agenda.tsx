@@ -1,16 +1,15 @@
 import { EventConflictsBadge } from '@/calendar/EventConflictsBadge';
-import type { CalendarBirthdayEvent, ViewProps } from '@/calendar/types';
+import type { ViewProps } from '@/calendar/types';
 import type { EventWithTrainerFragment } from '@/graphql/Event';
-import { compareText } from '@/lib/compare';
 import { CompetitionEventCard } from '@/ui/Competitions';
 import { EventButton } from '@/ui/EventButton';
 import { EventSummary } from '@/ui/EventSummary';
+import { BirthdayChip } from '@/ui/BirthdayChip';
 import { capitalize, listFormatter, longDayFormatter } from '@/ui/format';
 import { buttonCls, cardCls } from '@/ui/style';
 import { useAuth } from '@/lib/auth';
 import { startOf } from 'date-arithmetic';
-import { Cake, Plus } from 'lucide-react';
-import Link from 'next/link';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import { useAtomValue } from 'jotai';
 import { dragListenersAtom } from './state';
@@ -19,45 +18,28 @@ function Agenda({ events }: ViewProps): React.ReactNode {
   const auth = useAuth();
   const { onCreate } = useAtomValue(dragListenersAtom);
 
-  const dataByDay = React.useMemo(() => {
-    return [...Map.groupBy(events, (e) => +startOf(e.start, 'day'))]
-      .toSorted(([x], [y]) => x - y)
+  const days = React.useMemo(() => {
+    return [...Map.groupBy(events, (x) => +startOf(x.start, 'day'))]
+      .toSorted(([a], [b]) => a - b)
       .map(([date, items]) => {
-        const events = items.filter((e) => e.kind === 'event').map((e) => e.instance);
-        return [
+        const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);
+        return {
           date,
-          {
-            birthdays: items
-              .filter((e) => e.kind === 'birthday')
-              .toSorted(
-                (x, y) =>
-                  compareText(x.person.lastName, y.person.lastName) ||
-                  compareText(x.person.firstName, y.person.firstName),
-              ),
-            competitions: items.filter((e) => e.kind === 'competition'),
-            groups: events
-              .filter((e) => e.type !== 'LESSON')
-              .toSorted((x, y) => x.since.localeCompare(y.since)),
-            lessons: [
-              ...Map.groupBy(
-                events.filter((e) => e.type === 'LESSON'),
-                (e) =>
-                  e.eventTrainersList
-                    .map((x) => x.personId)
-                    .toSorted()
-                    .join(','),
-              ),
-            ]
-              .map(
-                ([trainers, items]) =>
-                  [
-                    trainers,
-                    items.toSorted((x, y) => x.since.localeCompare(y.since)),
-                  ] as const,
-              )
-              .toSorted((x, y) => x[0].localeCompare(y[0])),
-          },
-        ] as const;
+          events,
+          competitions: items.filter((x) => x.kind === 'competition'),
+          birthdays: items.filter((x) => x.kind === 'birthday'),
+          groups: events.filter((e) => e.type !== 'LESSON'),
+          lessons: [
+            ...Map.groupBy(
+              events.filter((e) => e.type === 'LESSON'),
+              (e) =>
+                e.eventTrainersList
+                  .map((x) => x.personId)
+                  .toSorted()
+                  .join(','),
+            ),
+          ].toSorted((x, y) => x[0].localeCompare(y[0])),
+        };
       });
   }, [events]);
 
@@ -69,7 +51,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
         </div>
       )}
 
-      {dataByDay.map(([date, dateEntry]) => (
+      {days.map(({ date, events, groups, lessons, competitions, birthdays }) => (
         <React.Fragment key={date}>
           <div className="mt-8 mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
             <div className="flex items-center text-xl tracking-tight">
@@ -78,48 +60,35 @@ function Agenda({ events }: ViewProps): React.ReactNode {
                 <button
                   type="button"
                   className={buttonCls({ display: 'none', variant: 'none' })}
-                  onClick={() => onCreate?.({ date: new Date(date) })}
+                  onClick={() => onCreate?.({ date: new Date(date), after: events.at(-1) })}
                 >
                   <Plus />
                 </button>
               )}
             </div>
-            {dateEntry.birthdays.map((x) => (
+            {birthdays.map((x) => (
               <BirthdayChip key={x.id} person={x.person} />
             ))}
           </div>
 
           <div className="flex justify-start items-start flex-wrap gap-2 opacity-90">
-            {dateEntry.competitions.length > 0 && (
+            {competitions.length > 0 && (
               <div className="flex w-full flex-col gap-2 sm:w-72">
-                {dateEntry.competitions.map((x) => (
+                {competitions.map((x) => (
                   <CompetitionEventCard key={x.id} {...x} />
                 ))}
               </div>
             )}
-            {dateEntry.groups.map((instance) => (
-              <GroupLesson key={instance.id} instance={instance} />
+            {groups.map((x) => (
+              <GroupLesson key={x.id} instance={x} />
             ))}
-            {dateEntry.lessons.map(([ids, items]) => (
+            {lessons.map(([ids, items]) => (
               <LessonGroup key={ids} items={items} />
             ))}
           </div>
         </React.Fragment>
       ))}
     </div>
-  );
-}
-
-function BirthdayChip({ person }: { person: CalendarBirthdayEvent['person'] }) {
-  return (
-    <Link
-      href={`/clenove/${person.id}`}
-      title={`Narozeniny: ${person.name}`}
-      className="inline-flex max-w-full items-center gap-1 rounded-sm border border-neutral-6 bg-neutral-2 px-2 py-1 text-xs text-neutral-12 hover:bg-neutral-3 hover:underline"
-    >
-      <Cake className="size-3.5 shrink-0 text-accent-11" />
-      <span className="truncate">{person.name}</span>
-    </Link>
   );
 }
 
