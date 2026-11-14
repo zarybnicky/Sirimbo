@@ -65,6 +65,7 @@ export function EventPageClient({
   );
 
   const subtitleParts = [
+    event.isCancelled && 'Zrušeno',
     dateTimeFormatter.formatRange(new Date(event.since), new Date(event.until)),
     (event.location?.name || event.locationText) && (
       <EntityLink type="event-location" entity={event} />
