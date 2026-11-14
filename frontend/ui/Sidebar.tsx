@@ -10,6 +10,7 @@ import {
 } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
 import { TenantSelect } from '@/ui/TenantSelect';
+import { formatCount, moneyFormatter } from '@/ui/format';
 import { useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -72,6 +73,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
           <div className="space-y-1 pt-3 mr-1 relative">
             {auth.user ? (
               <>
+                <SidebarIdentity />
                 {memberMenu.map((item) => (
                   <SidebarSection key={item.title} item={item} />
                 ))}
@@ -119,6 +121,90 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
         <SidebarResizeHandle />
       </div>
     </>
+  );
+}
+
+function SidebarIdentity() {
+  const { user, persons } = useAuth();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [now] = React.useState(Date.now);
+  const applications = user?.pendingApplications ?? [];
+  const selectedPerson =
+    searchParams?.get('person') ??
+    persons[0]?.id ??
+    (applications.length > 0 ? 'applications' : null);
+  const selectedApplication = searchParams?.get('application') ?? applications[0]?.id;
+
+  return (
+    <div className="grid gap-1.5 pb-3">
+      {persons.map((person) => {
+        const unpaidCount = person.unpaidPayments.length;
+        const overdueCount = person.unpaidPayments.filter(
+          ({ payment }) => payment?.dueAt && new Date(payment.dueAt).getTime() < now,
+        ).length;
+
+        return (
+          <SidebarLink
+            key={person.id}
+            selected={pathname === '/profil' && selectedPerson === person.id}
+            item={{
+              type: 'link',
+              title: person.name,
+              href: `/profil?person=${person.id}`,
+              className: 'rounded-xl py-2 tracking-normal',
+            }}
+            subtitle={
+              <div className="flex flex-col gap-1 no-underline">
+                {person.accountsList.length > 0
+                  ? `Kredit ${person.accountsList.map((x) => moneyFormatter.format(x)).join(' · ')}`
+                  : null}
+                {unpaidCount > 0 &&
+                  [
+                    unpaidCount > overdueCount &&
+                      formatCount(unpaidCount - overdueCount, {
+                        one: 'čekající platba',
+                        few: 'čekající platby',
+                        other: 'čekající plateb',
+                      }),
+                    overdueCount && `${overdueCount} po splatnosti`,
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}
+              </div>
+            }
+          />
+        );
+      })}
+      {persons.length === 0 && (
+        <SidebarLink
+          item={{
+            type: 'link',
+            title: user?.uEmail ?? '',
+            href: '/profil',
+            className: 'rounded-xl py-2 tracking-normal',
+          }}
+          selected={pathname === '/profil' && applications.length === 0}
+        />
+      )}
+      {applications.map((application) => (
+        <SidebarLink
+          key={application.id}
+          item={{
+            type: 'link',
+            title: `${application.firstName} ${application.lastName}`,
+            href: `/profil?person=applications&application=${application.id}`,
+            className: 'rounded-xl py-2 tracking-normal',
+          }}
+          subtitle="Čeká na schválení"
+          selected={
+            pathname === '/profil' &&
+            selectedPerson === 'applications' &&
+            selectedApplication === application.id
+          }
+        />
+      ))}
+    </div>
   );
 }
 
@@ -193,9 +279,11 @@ function SidebarResizeHandle() {
 type SidebarLinkProps = {
   item: MenuLink;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  subtitle?: React.ReactNode;
+  selected?: boolean;
 };
 
-function SidebarLink({ item, onClick }: SidebarLinkProps) {
+function SidebarLink({ item, onClick, subtitle, selected }: SidebarLinkProps) {
   const pathname = usePathname() ?? '';
   const searchParams = useSearchParams();
   const [href, query] = item.href.split('?');
@@ -205,24 +293,31 @@ function SidebarLink({ item, onClick }: SidebarLinkProps) {
       )
     : !searchParams?.has('tab');
   const inPath =
-    !!href &&
-    (href === '/'
-      ? pathname === '/'
-      : pathname === href || pathname.startsWith(`${href}/`)) &&
-    queryMatches;
+    selected ??
+    (!!href &&
+      (href === '/'
+        ? pathname === '/'
+        : pathname === href || pathname.startsWith(`${href}/`)) &&
+      queryMatches);
 
   return (
     <Link
       href={item.href}
       onClick={onClick}
+      aria-current={inPath ? 'page' : undefined}
       className={cn(
         'flex items-center flex-1 mx-2 px-3 py-1.5 rounded-2xl',
         'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
-        inPath ? 'underline font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
         item.className,
+        inPath ? 'font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
       )}
     >
-      {item.title}
+      <span className="min-w-0">
+        <span className={cn('block wrap-anywhere', inPath && 'underline')}>{item.title}</span>
+        {subtitle && (
+          <span className="mt-0.5 block text-xs font-normal opacity-80">{subtitle}</span>
+        )}
+      </span>
     </Link>
   );
 }

@@ -2,7 +2,6 @@ import { atom, createStore, useAtomValue } from 'jotai';
 import { resolveAuth, type JwtClaims, type ResolvedAuth } from '@/lib/auth-claims';
 import { logoutAction } from '@/lib/auth-actions';
 import type { CoupleFragment } from '@/graphql/Memberships';
-import type { PersonFragment } from '@/graphql/Person';
 import type { UserAuthFragment } from '@/graphql/CurrentUser';
 import { defaultTenant, getTenant, TenantCatalogEntry } from '@/tenant/catalog';
 import { getCookie, setCookie } from 'cookies-next/client';
@@ -16,12 +15,8 @@ export const authAtom = atom<RequestAuthState>({ claims: null, user: null });
 export const tenantAtom = atom<TenantCatalogEntry>(defaultTenant);
 
 export interface AuthState extends ResolvedAuth {
-  user: null | {
-    id: string;
-    uLogin: string | null;
-    uEmail: string;
-  };
-  persons: PersonFragment[];
+  user: Pick<UserAuthFragment, 'id' | 'uLogin' | 'uEmail' | 'pendingApplications'> | null;
+  persons: NonNullable<UserAuthFragment['userProxiesList'][number]['person']>[];
   couples: CoupleFragment[];
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;

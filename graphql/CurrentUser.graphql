@@ -2,10 +2,27 @@ fragment UserAuth on User {
   id
   uLogin
   uEmail
+  pendingApplications: membershipApplicationsByCreatedByList(condition: { status: SENT }) {
+    id
+    firstName
+    lastName
+  }
   userProxiesList(condition: { status: ACTIVE }) {
     id
     person {
       ...Person
+      accountsList {
+        id
+        balance
+        currency
+      }
+      unpaidPayments: paymentDebtorsList(condition: { isUnpaid: true }) {
+        id
+        payment {
+          id
+          dueAt
+        }
+      }
       couplesList {
         ...Couple
       }

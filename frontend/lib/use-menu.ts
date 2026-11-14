@@ -83,7 +83,6 @@ const memberMenu: MenuStructItem[] = [
     requireMember: true,
     requirePublicSite: true,
   },
-  { type: 'link', title: 'Profil', href: '/profil' },
   {
     type: 'menu',
     title: 'Tréninky',
