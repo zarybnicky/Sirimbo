@@ -9,19 +9,28 @@ import {
 } from '@/graphql/Cohorts';
 import { SubmitButton } from '@/ui/submit';
 import { useAsyncCallback } from 'react-async-hook';
-import { type JSX, useMemo } from 'react';
+import { useMemo } from 'react';
 import { EntityLink } from '../EntityLink';
+import { FormError } from '@/ui/form';
+import { ListHeader } from '@/ui/ListHeader';
+import { Table } from '@/ui/Table';
 
 type CohortTask =
   | { type: 'create'; name: string; description: string; externalId: string }
   | { type: 'update'; id: string; externalId: string }
   | { type: 'archive'; id: string };
 
+const actionLabels = {
+  create: 'Vytvoří',
+  update: 'Změní ID z evidence',
+  archive: 'Archivuje',
+};
+
 export function CohortComparisonForm() {
-  const [{ data: cohortQuery }] = useQuery({
+  const [cohortQuery] = useQuery({
     query: CohortListDocument,
   });
-  const cohorts = cohortQuery?.cohortsList;
+  const cohorts = cohortQuery.data?.cohortsList;
   const { courses } = useAtomValue(starletSettingsAtom);
 
   const [, create] = useMutation(CreateCohortDocument);
@@ -58,14 +67,41 @@ export function CohortComparisonForm() {
   });
 
   return (
-    <div>
-      <ul>{views}</ul>
-
+    <div className="not-prose text-neutral-12">
+      <FormError error={onSubmit.error} />
       {tasks.length > 0 && (
-        <SubmitButton className="mb-2" action={onSubmit}>
-          Synchronizovat
-        </SubmitButton>
+        <ListHeader
+          actions={
+            <SubmitButton
+              size="sm"
+              action={onSubmit}
+              disabled={cohortQuery.fetching || !!cohortQuery.error}
+            >
+              Synchronizovat vše
+            </SubmitButton>
+          }
+        />
       )}
+      <Table
+        columns={['Evidence', 'Databáze', tasks.length > 0 && 'Akce']}
+        busy={cohortQuery.fetching}
+        error={cohortQuery.error}
+        empty="Žádné kurzy."
+      >
+        {views.map(({ course, cohort, action }) => (
+          <tr key={course?.id ?? cohort!.id} className="align-top">
+            <td>
+              {course && `${course.code}: ${course.name}`}
+            </td>
+            <td>{cohort && <EntityLink type="cohort" entity={cohort} />}</td>
+            {tasks.length > 0 && (
+              <td className="w-px whitespace-nowrap text-xs text-neutral-11">
+                {action && actionLabels[action]}
+              </td>
+            )}
+          </tr>
+        ))}
+      </Table>
     </div>
   );
 }
@@ -79,50 +115,32 @@ function compare(
   }[],
   courses: StarletCourse[],
 ) {
-  const views: JSX.Element[] = [];
+  const views: {
+    course?: StarletCourse;
+    cohort?: (typeof cohorts)[number];
+    action?: CohortTask['type'];
+  }[] = [];
   const tasks: CohortTask[] = [];
 
   for (const { id, code, name } of courses) {
     const cohort = cohorts.find((cohort) => cohort.name === code);
     const needsUpdate = !!cohort && !cohort.externalIds?.includes(id);
+    let action: CohortTask['type'] | undefined;
     if (!cohort) {
       tasks.push({ type: 'create', name: code, description: name, externalId: id });
+      action = 'create';
     } else if (needsUpdate) {
       tasks.push({ type: 'update', id: cohort.id, externalId: id });
+      action = 'update';
     }
-    views.push(
-      <li key={id} className="my-0">
-        {code} - {name}
-        <ul className="my-0">
-          <li className="mt-0">
-            {cohort ? <>
-              ✅{' '}
-              <EntityLink type="cohort" entity={cohort} />
-              {needsUpdate
-                ? ' - změnilo se ID kurzu, bude aktualizováno'
-                : ''}
-            </> : '❌ Tréninková skupina bude vytvořena'}
-          </li>
-        </ul>
-      </li>,
-    );
+    views.push({ course: { id, code, name }, cohort, action });
   }
   for (const cohort of cohorts) {
     if (courses.some((course) => cohort.name === course.code)) continue;
-    if (!cohort.isVisible || !cohort.externalIds || cohort.externalIds.length === 0) continue;
+    if (!cohort.isVisible || !cohort.externalIds || cohort.externalIds.length === 0)
+      continue;
     tasks.push({ type: 'archive', id: cohort.id });
-    views.push(
-      <li key={cohort.id} className="my-0">
-        ❌
-        <ul className="my-0">
-          <li className="mt-0">
-            <EntityLink type="cohort" entity={cohort} />
-            {' '}
-            Tréninková skupina bude archivována
-          </li>
-        </ul>
-      </li>,
-    );
+    views.push({ cohort, action: 'archive' });
   }
 
   return [tasks, views] as const;
