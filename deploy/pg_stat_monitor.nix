@@ -4,28 +4,15 @@
   fetchFromGitHub,
   postgresql,
 }:
-let
-  release =
-    if lib.versionAtLeast postgresql.version "18" then
-      {
-        version = "2.4.0";
-        sha256 = "1jy1jsya35fchxm2di8wwaff9lr5nnw7s3fankwis3bhxzwv22n3";
-      }
-    else
-      {
-        version = "2.1.0";
-        sha256 = "sha256-STJVvvrLVLe1JevNu6u6EftzAWv+X+J8lu66su7Or2s=";
-      };
-in
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   pname = "pg_stat_monitor";
-  inherit (release) version;
+  version = "2.4.0";
 
   src = fetchFromGitHub {
     owner = "percona";
     repo = "pg_stat_monitor";
-    rev = "refs/tags/${release.version}";
-    inherit (release) sha256;
+    rev = "refs/tags/${version}";
+    sha256 = "1jy1jsya35fchxm2di8wwaff9lr5nnw7s3fankwis3bhxzwv22n3";
   };
 
   buildInputs = [ postgresql ] ++ postgresql.buildInputs;
