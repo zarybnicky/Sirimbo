@@ -7,14 +7,8 @@ import { starletSettingsAtom, starletTokenAtom } from './state';
 import { useAtomValue } from 'jotai';
 import { CohortComparisonForm } from './cohort-comparison-form';
 import { PersonComparisonForm } from './person-comparison-form';
-import { PersonComparisonPreview } from './person-comparison-preview';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 
 export function StarletImporter() {
-  const [comparisonPreview, setComparisonPreview] = useQueryState(
-    'comparison',
-    parseAsBoolean.withDefault(false),
-  );
   const token = useAtomValue(starletTokenAtom);
   const { auth, folders, seasons } = useAtomValue(starletSettingsAtom);
 
@@ -80,28 +74,8 @@ export function StarletImporter() {
 
       <CohortComparisonForm />
 
-      <h2 className="flex justify-between">
-        <span>4. Studenti</span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={comparisonPreview}
-          className="not-prose flex items-center self-center gap-2 rounded-sm text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-9"
-          onClick={() => setComparisonPreview((v) => !v)}
-        >
-          <span>Nové porovnání</span>
-          <span
-            aria-hidden
-            className="inline-flex h-5 w-9 items-center rounded-full bg-accent-7 p-0.5"
-          >
-            <span
-              className={`size-4 rounded-full bg-neutral-1 motion-safe:transition-transform ${comparisonPreview ? 'translate-x-4' : 'translate-x-0'}`}
-            />
-          </span>
-        </button>
-      </h2>
-
-      {comparisonPreview ? <PersonComparisonPreview /> : <PersonComparisonForm />}
+      <h2>4. Studenti</h2>
+      <PersonComparisonForm />
     </div>
   );
 }

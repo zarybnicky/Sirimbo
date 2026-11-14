@@ -1,164 +1,59 @@
-import { fetchStarlet } from '@/starlet/query';
-import { Student } from '@/starlet/graphql';
-import { CourseDocument } from '@/starlet/graphql/Query';
-import { slugify } from '@/lib/slugify';
-import { type JSX, useEffect, useMemo, useState } from 'react';
+'use client';
+
 import {
   CreatePersonDocument,
   PersonListDocument,
-  PersonMembershipsDocument,
   UpdatePersonDocument,
 } from '@/graphql/Person';
-import { useClient, useMutation, useQuery } from 'urql';
-import { SubmitButton } from '@/ui/submit';
-import { useAtomValue } from 'jotai';
-import { starletSettingsAtom, starletTokenAtom } from './state';
-import { isTruthy } from '@/lib/truthyFilter';
 import { CohortListDocument, SyncCohortMembershipsDocument } from '@/graphql/Cohorts';
-import { useAsyncCallback } from 'react-async-hook';
 import {
   CreateTenantMembershipDocument,
   UpdateTenantMembershipDocument,
 } from '@/graphql/Memberships';
 import { useTenantId } from '@/lib/auth';
-import { capitalize } from '@/ui/format';
-import { EntityLink } from '../EntityLink';
-
-type QueriedStudent = Pick<
-  Student,
-  | 'key'
-  | 'course_key'
-  | 'sex'
-  | 'ref_key'
-  | 'name'
-  | 'surname'
-  | 'email'
-  | 'phone'
-  | 'year'
-  | 'street'
-  | 'street_no'
-  | 'city'
-  | 'post_code'
-> & {
-  normal_name: string;
-  course_name: string;
-};
-type CleanedCourse = { students: QueriedStudent[] };
-
-type DeduplicatedStudent = {
-  normal_name: string;
-  name: string;
-  surname: string;
-  gender: 'MAN' | 'WOMAN';
-  email: string | null;
-  phone: string | null;
-  year: number | null;
-  street: string | null;
-  street_no: string | null;
-  city: string | null;
-  post_code: string | null;
-  keys: string[];
-  course_keys: string[];
-  course_names: string[];
-  ref_keys: string[];
-};
-
-type Person = {
-  id: string;
-  name: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  birthDate: string | null;
-  email: string | null;
-  phone: string | null;
-  cohortIds: (string | null)[] | null;
-  address: {
-    city: string | null;
-    region: string | null;
-    street: string | null;
-    district: string | null;
-    postalCode: string | null;
-    orientationNumber: string | null;
-    conscriptionNumber: string | null;
-  } | null;
-  externalIds: (string | null)[] | null;
-  isMember: boolean | null;
-  isTrainer: boolean | null;
-  isAdmin: boolean | null;
-};
-
-type PersonTask =
-  | { type: 'create'; student: DeduplicatedStudent; cohortIds: string[] }
-  | { type: 'update'; student: DeduplicatedStudent; person: Person; cohortIds: string[] }
-  | { type: 'archive'; person: Person; cohortIds: string[] };
-
-function personFieldsFromStudent(student: DeduplicatedStudent, person?: Person) {
-  return {
-    firstName: student.name,
-    lastName: student.surname,
-    gender: student.gender,
-    email: student.email,
-    phone: student.phone,
-    ...(!person || (!person.birthDate && student.year)
-      ? { birthDate: student.year ? `${student.year}-01-01` : null }
-      : {}),
-    externalIds: student.ref_keys,
-    address: {
-      ...person?.address,
-      street: student.street ?? '',
-      orientationNumber: student.street_no ?? '',
-      city: student.city ?? '',
-      postalCode: student.post_code ?? '',
-      conscriptionNumber: person?.address?.conscriptionNumber ?? '',
-      region: person?.address?.region ?? '',
-    },
-  };
-}
+import { CourseDocument } from '@/starlet/graphql/Query';
+import { fetchStarlet } from '@/starlet/query';
+import { useAtomValue } from 'jotai';
+import { useMemo, useState } from 'react';
+import { useAsync, useAsyncCallback } from 'react-async-hook';
+import { useMutation, useQuery } from 'urql';
+import { EntityLink } from '@/ui/EntityLink';
+import { DefinitionList } from '@/ui/DefinitionList';
+import { ListHeader } from '@/ui/ListHeader';
+import { SortButton } from '@/ui/SortButton';
+import { Table } from '@/ui/Table';
+import { SubmitButton } from '@/ui/submit';
+import { FormError } from '@/ui/form';
+import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
+import { compareText } from '@/lib/compare';
+import { slugify } from '@/lib/slugify';
+import { parseAsBoolean, useQueryState } from 'nuqs';
+import {
+  comparePeople,
+  groupRegistrations,
+  genderLabels,
+  actionLabels,
+  type ComparisonPerson,
+  type ComparisonRow,
+} from './person-comparison';
+import { starletSettingsAtom, starletTokenAtom } from './state';
 
 export function PersonComparisonForm() {
-  const client = useClient();
   const tenantId = useTenantId();
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
-  const [{ data: personQuery }] = useQuery({
-    query: PersonListDocument,
-    variables: { condition: { membership: { state: 'CURRENT' } } },
-  });
-  const [{ data: formerPersonQuery }] = useQuery({
-    query: PersonListDocument,
-    variables: { condition: { membership: { state: 'FORMER' } } },
-  });
-  const [{ data: cohortQuery }] = useQuery({ query: CohortListDocument });
-  const persons = useMemo(() => {
-    const byId = new Map(
-      [
-        ...(personQuery?.people?.nodes ?? []),
-        ...(formerPersonQuery?.people?.nodes ?? []),
-      ].map((x) => [x.id, x]),
-    );
-    return [...byId.values()];
-  }, [personQuery, formerPersonQuery]);
+  const [search, setSearch] = useState('');
+  const [showAll, setShowAll] = useQueryState('all', parseAsBoolean.withDefault(false));
+  const [sort, setSort] = useState<{
+    column: 'source' | 'database';
+    descending: boolean;
+  }>({ column: 'source', descending: false });
 
-  const [coursesWithStudents, setCoursesWithStudents] = useState<CleanedCourse[]>([]);
-  useEffect(() => {
-    if (!token?.auth_ok) return;
-    fetchCoursesWithStudents(courses.map(({ id }) => id)).then(setCoursesWithStudents);
-  }, [token?.auth_ok, courses]);
-
-  const [students, problematic] = useMemo(
-    () => deduplicateStudents(coursesWithStudents),
-    [coursesWithStudents],
-  );
-  const [tasks, views] = useMemo(
-    () => compare(
-      persons || [],
-      students,
-      cohortQuery?.cohortsList || [],
-      problematic.flatMap(([, candidates]) => candidates),
-    ),
-    [persons, students, cohortQuery?.cohortsList, problematic],
-  );
+  const [people] = useQuery({
+    query: PersonListDocument,
+    variables: { condition: { membership: { states: [] } } },
+  });
+  const [cohorts] = useQuery({ query: CohortListDocument });
 
   const create = useMutation(CreatePersonDocument)[1];
   const update = useMutation(UpdatePersonDocument)[1];
@@ -166,465 +61,321 @@ export function PersonComparisonForm() {
   const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
-  const onSubmit = useAsyncCallback(async () => {
-    for (const task of tasks) {
-      const { cohortIds } = task;
-      let personId: string;
-      if (task.type === 'create') {
-        const { student } = task;
-        const res = await create({
+  const source = useAsync(async () => {
+    if (!token?.auth_ok) return [];
+    const registrations: ComparisonPerson[] = [];
+    for (const course of courses) {
+      const result = await fetchStarlet(CourseDocument, { key: course.id });
+      if (!result.course) throw new Error(`Kurz ${course.code} se nepodařilo načíst.`);
+      for (const student of result.students ?? []) {
+        if (!student) continue;
+        registrations.push({
+          id: `${course.id}:${student.key}`,
+          firstName: student.name?.trim() ?? '',
+          lastName: student.surname?.trim() ?? '',
+          birthYear: student.year ?? null,
+          gender: student.sex ? (student.sex === 'FEMALE' ? 'WOMAN' : 'MAN') : null,
+          email: student.email?.trim().toLowerCase() || null,
+          phone: student.phone?.replaceAll(' ', '').replace(/^\+420/, '') || null,
+          externalIds: student.ref_key ? [student.ref_key] : [],
+          groups: [course.code],
+          course: `${course.code} · ${course.name}`,
+          street: student.street?.trim() || null,
+          orientationNumber: student.street_no?.trim() || null,
+          city: student.city?.trim() || null,
+          postalCode: student.post_code?.replaceAll(' ', '') || null,
+        });
+      }
+    }
+    return groupRegistrations(registrations);
+  }, [token, courses]);
+
+  const busy = source.loading || people.fetching || cohorts.fetching;
+  const error = source.error ?? people.error ?? cohorts.error;
+
+  const database = useMemo(() => {
+    const managedIds = new Map(
+      cohorts.data?.cohortsList?.map((c) => [c.id, !!c.externalIds?.length]),
+    );
+    return (people.data?.people?.nodes ?? [])
+      .toSorted((a, b) => Number(a.isExternal) - Number(b.isExternal))
+      .map((person): ComparisonPerson => {
+        let keepReason: string | undefined;
+        if (person.isAdmin) keepReason = 'správce';
+        else if (person.isTrainer) keepReason = 'trenér';
+        else if (!person.isMember) keepReason = 'nečlen';
+        else if (!person.externalIds?.length) keepReason = 'bez vazby na evidenci';
+        else if (!person.cohortIds?.some((id) => id && managedIds.get(id)))
+          keepReason = 'mimo skupiny evidence';
+        return {
+          id: person.id,
+          isFormer: person.isExternal,
+          isMember: !!person.isMember,
+          membershipId: person.tenantMembershipsList.find((x) => x.tenantId === tenantId)
+            ?.id,
+          keepReason,
+          unmatchedAction: keepReason
+            ? undefined
+            : person.cohortIds?.some((id) => id && managedIds.get(id) === false)
+              ? 'endGroups'
+              : 'archive',
+          firstName: person.firstName,
+          lastName: person.lastName,
+          birthYear: person.birthDate ? Number(person.birthDate.slice(0, 4)) : null,
+          birthDate: person.birthDate,
+          gender: person.gender,
+          email: person.email?.trim().toLowerCase() || null,
+          phone: person.phone?.replaceAll(' ', '').replace(/^\+420/, '') || null,
+          externalIds: person.externalIds?.filter((id): id is string => !!id) ?? [],
+          street: person.address?.street ?? null,
+          orientationNumber: person.address?.orientationNumber ?? null,
+          city: person.address?.city ?? null,
+          postalCode: person.address?.postalCode ?? null,
+          address: person.address ?? undefined,
+          cohortIds: person.cohortIds?.filter((id): id is string => !!id) ?? [],
+          groups: person.cohortMembershipsList
+            .filter(
+              (membership) =>
+                membership.status === 'ACTIVE' &&
+                membership.cohort &&
+                managedIds.get(membership.cohort.id),
+            )
+            .flatMap((membership) => membership.cohort?.name ?? []),
+        };
+      });
+  }, [people.data, cohorts.data, tenantId]);
+
+  const rows = useMemo(
+    () =>
+      comparePeople(
+        source.result ?? [],
+        database,
+        cohorts.data?.cohortsList ?? [],
+        tenantId,
+      ),
+    [source.result, database, cohorts.data, tenantId],
+  );
+
+  const visible = busy ? [] : rows
+    .filter((row) => showAll || row.actions.length > 0 || row.needsReview)
+    .filter((row) =>
+      slugify(
+        [row.source, row.database]
+          .map((x) => (x ? `${x.firstName} ${x.lastName}` : ''))
+          .join(' '),
+      ).includes(slugify(search)),
+    )
+    .toSorted((left, right) => {
+      const a = left[sort.column] ?? left.source ?? left.database!;
+      const b = right[sort.column] ?? right.source ?? right.database!;
+      return (
+        (compareText(a.lastName, b.lastName) ||
+          compareText(a.firstName, b.firstName) ||
+          compareText(a.id, b.id)) * (sort.descending ? -1 : 1)
+      );
+    });
+  const hasActions = visible.some((row) => row.actions.length > 0);
+
+  const [activeId, setActiveId] = useState<string>();
+  const apply = useAsyncCallback(async (selection: ComparisonRow[]) => {
+    const error = selection.find((row) => row.changes?.error)?.changes?.error;
+    if (error) throw new Error(error);
+    for (const row of selection) {
+      const { changes } = row;
+      if (!changes) continue;
+      setActiveId(row.source?.id ?? row.database?.id);
+      let personId = row.database?.id;
+      if (changes.create) {
+        const result = await create({
           input: {
-            p: {
-              ...personFieldsFromStudent(student),
-              nationality: '203',
-              // create_person explicitly inserts these columns, bypassing their defaults.
-              prefixTitle: '',
-              suffixTitle: '',
-              bio: '',
-            },
+            p: changes.create,
             isMember: true,
             joinDate: new Date().toISOString(),
           },
         });
-        if (res.error) throw res.error;
-        const createdId = res.data?.createPerson?.result?.id;
-        if (!createdId) continue;
-        personId = createdId;
-      } else if (task.type === 'update') {
-        const { student, person } = task;
-        personId = person.id;
-        const updateResult = await update({
+        if (result.error) throw result.error;
+        personId = result.data?.createPerson?.result?.id;
+        if (!personId) throw new Error('Osobu se nepodařilo vytvořit.');
+        // create_person omits the address, so it needs a separate update on creation.
+        const addressResult = await update({
+          input: { id: personId, patch: { address: changes.create.address } },
+        });
+        if (addressResult.error) throw addressResult.error;
+      } else if (changes.update) {
+        const result = await update({ input: changes.update });
+        if (result.error) throw result.error;
+      }
+      if (changes.createMembership) {
+        const result = await createMembership({ input: changes.createMembership });
+        if (result.error) throw result.error;
+      }
+      if (changes.expireMembership) {
+        const result = await updateMembership({
           input: {
-            id: person.id,
-            patch: personFieldsFromStudent(student, person),
+            id: changes.expireMembership,
+            patch: { status: 'EXPIRED', until: new Date().toISOString() },
           },
         });
-        if (updateResult.error) throw updateResult.error;
-        if (!person.isMember) {
-          const membershipResult = await createMembership({
-            input: { tenantMembership: { personId: person.id, tenantId } },
-          });
-          if (membershipResult.error) throw membershipResult.error;
-        }
-      } else {
-        personId = task.person.id;
+        if (result.error) throw result.error;
       }
-
-      const syncResult = await syncCohorts({ input: { personId, cohortIds } });
-      if (syncResult.error) throw syncResult.error;
-
-      if (task.type === 'archive' && cohortIds.length === 0) {
-        const membershipsResult = await client
-          .query(PersonMembershipsDocument, { id: personId })
-          .toPromise();
-        if (membershipsResult.error) throw membershipsResult.error;
-        const memberships = membershipsResult.data!;
-        const currentMembership = memberships.person?.tenantMembershipsList.find(
-          (x) => x.tenantId === tenantId && x.status === 'ACTIVE',
-        );
-        if (currentMembership) {
-          const membershipResult = await updateMembership({
-            input: {
-              id: currentMembership.id,
-              patch: {
-                status: 'EXPIRED',
-                until: new Date().toISOString(),
-              },
-            },
-          });
-          if (membershipResult.error) throw membershipResult.error;
-        }
+      if (changes.cohortIds) {
+        const result = await syncCohorts({
+          input: { personId: personId!, cohortIds: changes.cohortIds },
+        });
+        if (result.error) throw result.error;
       }
     }
   });
 
-  if (coursesWithStudents.length === 0) return null;
+  if (!token?.auth_ok) return <p>Pro porovnání se přihlaste do evidence.</p>;
+  if (courses.length === 0) return <p>Vyberte kurzy pro porovnání.</p>;
 
   return (
-    <>
-      <h3>Problémy při sjednocení přihlášek</h3>
-      <ul>
-        {problematic.map(([name, candidates]) => (
-          <li key={name}>
-            {name}
-            {candidates.length > 0 && (
-              <>
-                {' - objeven v '}
-                {candidates.map((x) => x.course_name).join(', ')}
-                <ul>
-                  {Object.entries(
-                    diffObjectsList(candidates),
-                  ).map((x) => (
-                    <li key={x[0]}>
-                      {x[0]}: {JSON.stringify(x[1])}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </li>
-        ))}
-        {problematic.every((x) => x[1].length === 0) && (
-          <li>✅ Všechno v pořádku, nikomu nechybí přístup</li>
-        )}
-      </ul>
-
-      <h3>Osoby bez údajů</h3>
-      <ul>
-        {students
-          .filter((x) => !x.email)
-          .map((x) => (
-            <li key={x.keys.join(',')}>
-              {x.normal_name} ({x.course_names.join(', ')}): chybí e-mail
-            </li>
-          ))}
-        {students
-          .filter((x) => !x.phone)
-          .map((x) => (
-            <li key={x.keys.join(',')}>
-              {x.normal_name} ({x.course_names.join(', ')}): chybí telefon
-            </li>
-          ))}
-        {students
-          .filter((x) => !x.year)
-          .map((x) => (
-            <li key={x.keys.join(',')}>
-              {x.normal_name} ({x.course_names.join(', ')}): chybí rok narození
-            </li>
-          ))}
-      </ul>
-
-      <h3>Výsledné změny k synchronizaci</h3>
-      <ul>
-        {views}
-        {views.length === 0 && <li>✅ Žádné úpravy nejsou potřeba</li>}
-      </ul>
-
-      {tasks.length > 0 && (
-        <SubmitButton className="mb-2" action={onSubmit}>
-          Synchronizovat
-        </SubmitButton>
-      )}
-    </>
-  );
-}
-
-function compare(
-  people: Person[],
-  students: DeduplicatedStudent[],
-  cohorts: {
-    id: string;
-    name: string;
-    isVisible: boolean;
-    externalIds: (string | null)[] | null;
-  }[] = [],
-  unresolvedStudents: QueriedStudent[] = [],
-) {
-  const views: JSX.Element[] = [];
-  const tasks: PersonTask[] = [];
-  const managedCohorts = cohorts.filter((cohort) => cohort.externalIds?.length);
-
-  const peopleByNormalName = new Map<string, Person[]>();
-  const peopleByExternalId = new Map<string, Person>();
-  for (const person of people) {
-    const normalName = getNormalizedName(person.firstName, person.lastName);
-    const people = peopleByNormalName.get(normalName) || [];
-    people.push(person);
-    peopleByNormalName.set(normalName, people);
-    for (const externalId of person.externalIds ?? []) {
-      if (externalId && !peopleByExternalId.has(externalId)) {
-        peopleByExternalId.set(externalId, person);
-      }
-    }
-  }
-
-  const processedPeople = new Set<string>();
-  for (const student of students) {
-    const candidates = (peopleByNormalName.get(student.normal_name) || []).filter(
-      (x) => !processedPeople.has(x.id),
-    );
-
-    const person =
-      student.ref_keys
-        .map((x) => peopleByExternalId.get(x))
-        .find((x) => x && !processedPeople.has(x.id)) ??
-      (candidates.length > 0 ? disambiguateCandidates(student, candidates) : undefined);
-
-    const targetCohortIds = managedCohorts
-      .filter((x) => student.course_names.includes(x.name))
-      .map((x) => x.id);
-
-    if (!person) {
-      tasks.push({ type: 'create', student, cohortIds: targetCohortIds });
-
-      views.push(
-        <li key={student.ref_keys.join(',')} className="my-0">
-          {student.normal_name} ({student.year})
-          <ul className="my-0">
-            <li className="mt-0">❌ Osoba bude vytvořena</li>
-          </ul>
-        </li>,
-      );
-      continue;
-    }
-    processedPeople.add(person.id);
-
-    const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null;
-    const courseList = new Set(student.course_names);
-    const currentCohortIds = new Set(person.cohortIds || []);
-    const unmanagedCohortIds = cohorts
-      .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
-      .map((cohort) => cohort.id);
-    const cohortList = new Set(
-      managedCohorts.filter((x) => currentCohortIds.has(x.id)).map((x) => x.name),
-    );
-
-    const patch = personFieldsFromStudent(student, person);
-    const genderLabels: Record<string, string> = { MAN: 'Muž', WOMAN: 'Žena' };
-    const changes = [
-      ['Jméno', person.firstName, patch.firstName],
-      ['Příjmení', person.lastName, patch.lastName],
-      ['E-mail', person.email, patch.email],
-      ['Telefon', person.phone, patch.phone],
-      ['Pohlaví', genderLabels[person.gender] ?? person.gender, genderLabels[patch.gender]],
-      ['Rok narození', birthYear?.toString(), patch.birthDate?.slice(0, 4) ?? birthYear?.toString()],
-      ['Ulice', person.address?.street, patch.address.street],
-      ['Číslo orientační', person.address?.orientationNumber, patch.address.orientationNumber],
-      ['Obec', person.address?.city, patch.address.city],
-      ['PSČ', person.address?.postalCode, patch.address.postalCode],
-      [
-        'Externí ID',
-        [...new Set(person.externalIds?.filter(isTruthy))].toSorted().join(', '),
-        [...new Set(patch.externalIds)].toSorted().join(', '),
-      ],
-      ['Kurzy', [...cohortList].toSorted().join(', '), [...courseList].toSorted().join(', ')],
-    ].filter(([, before, after]) => (before ?? '') !== (after ?? ''));
-
-    if (changes.length > 0) {
-      const cohortIds = [...targetCohortIds, ...unmanagedCohortIds];
-      tasks.push({ type: 'update', student, person, cohortIds });
-      views.push(
-        <li key={student.ref_keys.join(',')} className="my-0">
-          {student.normal_name} ({student.year})
-          <ul className="my-0">
-            <li className="mt-0">
-              ✅{' '}
-              <EntityLink type="person" entity={person}>
-                {person.name} ({birthYear})
-              </EntityLink>
-              {' - osoba bude aktualizována'}
-              <ul className="my-0">
-                {changes.map(([label, before, after]) => (
-                  <li key={label} className="my-0">
-                    {label}: {before || '(neuvedeno)'} → {after || '(neuvedeno)'}
-                  </li>
-                ))}
-                {!person.isMember && <li className="my-0">Členství bude obnoveno</li>}
-              </ul>
-            </li>
-          </ul>
-        </li>,
-      );
-    }
-  }
-  const unresolvedNames = new Set(unresolvedStudents.map((x) => x.normal_name));
-  const unresolvedRefKeys = new Set(unresolvedStudents.map((x) => x.ref_key ?? []));
-  for (const person of people) {
-    const currentCohortIds = new Set(person.cohortIds || []);
-    if (
-      processedPeople.has(person.id) ||
-      unresolvedNames.has(getNormalizedName(person.firstName, person.lastName)) ||
-      person.externalIds?.some((id) => id && unresolvedRefKeys.has(id)) ||
-      person.isAdmin ||
-      person.isTrainer ||
-      !person.isMember ||
-      !person.externalIds?.length ||
-      !managedCohorts.some((x) => currentCohortIds.has(x.id))
-    ) {
-      continue;
-    }
-    const birthYear = new Date(person.birthDate || '1900-01-01').getFullYear();
-    const unmanagedCohortIds = cohorts
-      .filter((cohort) => !cohort.externalIds?.length && currentCohortIds.has(cohort.id))
-      .map((cohort) => cohort.id);
-
-    tasks.push({ type: 'archive', person, cohortIds: unmanagedCohortIds });
-    views.push(
-      <li key={person.id} className="my-0">
-        ❌
-        <ul className="my-0">
-          <li className="mt-0">
-            <EntityLink type="person" entity={person}>
-              {person.name} ({birthYear})
-            </EntityLink>
-            {unmanagedCohortIds.length > 0
-              ? 'Externě spravovaná členství budou ukončena. Osoba zůstane členem v ostatních skupinách.'
-              : 'Osoba bude archivována'}
-          </li>
-        </ul>
-      </li>,
-    );
-  }
-  return [tasks, views] as const;
-}
-
-function disambiguateCandidates(student: DeduplicatedStudent, candidates: Person[]) {
-  const byBirthYears = candidates.map(
-    (x) => [new Date(x.birthDate || '1900-01-01').getFullYear(), x] as const,
-  );
-  const matchingBirthYear = byBirthYears.filter((x) => x[0] === student.year);
-  const missingBirthYear = byBirthYears.filter((x) => x[0] === 1900);
-  const matchesEmail = (x: Person) =>
-    !!student.email && x.email?.trim().toLowerCase() === student.email;
-  const matchingEmail = candidates.filter(matchesEmail);
-
-  return (
-    (student.year ? matchingBirthYear.find((x) => matchesEmail(x[1]))?.[1] : undefined) ??
-    (student.year ? matchingBirthYear[0]?.[1] : undefined) ??
-    (matchingEmail.length === 1 ? matchingEmail[0] : undefined) ??
-    missingBirthYear.find((x) => matchesEmail(x[1]))?.[1] ??
-    missingBirthYear[0]?.[1] ??
-    (!student.year ? candidates[0] : undefined)
-  );
-}
-
-async function fetchCoursesWithStudents(courses: string[]) {
-  const result: CleanedCourse[] = [];
-
-  for (const key of courses) {
-    const { course, students } = await fetchStarlet(CourseDocument, { key });
-    if (!course) continue;
-
-    const cleanedStudents = [];
-    for (const student of students || []) {
-      if (!student) continue;
-
-      const cleanedStudent: QueriedStudent = {
-        normal_name: getNormalizedName(student.name, student.surname),
-        course_name: course.code!,
-        key: student.key,
-        course_key: student.course_key,
-        sex: student.sex,
-        ref_key: student.ref_key,
-        name: student.name?.trim() ?? null,
-        surname: student.surname?.trim() ?? null,
-        email: student.email?.trim().toLowerCase() ?? null,
-        phone: student.phone?.replaceAll(' ', '').replace(/^\+420/, '') ?? null,
-        year: student.year,
-        street: student.street?.trim() ?? null,
-        street_no: student.street_no?.trim() ?? null,
-        city: student.city?.trim() ?? null,
-        post_code: student.post_code?.replaceAll(' ', '') ?? null,
-      };
-      cleanedStudents.push(cleanedStudent);
-    }
-    result.push({ students: cleanedStudents });
-  }
-  return result;
-}
-
-function deduplicateStudents(courses: CleanedCourse[]) {
-  const studentMap = new Map<string, QueriedStudent[]>();
-  for (const { students } of courses) {
-    for (const student of students) {
-      const existingStudents = studentMap.get(student.normal_name) || [];
-      existingStudents.push(student);
-      studentMap.set(student.normal_name, existingStudents);
-    }
-  }
-
-  const deduplicated: DeduplicatedStudent[] = [];
-  const problematic: [string, QueriedStudent[]][] = [];
-
-  for (const [normalName, candidates] of studentMap.entries()) {
-    if (candidates.length === 0) continue;
-
-    const birthYears = new Set(candidates.map((x) => x.year ?? []));
-    const phones = new Set(candidates.map((x) => x.phone ?? []));
-    const emails = new Set(candidates.map((x) => x.email ?? []));
-
-    if (birthYears.size < 2) {
-      if (phones.size < 2 && emails.size < 2) {
-        // clean merge or a single candidate, pick first in case of address conflict
-        deduplicated.push(mergeCandidates(candidates));
-        if (candidates.length > 1)
-          problematic.push([`${normalName}: více přihlášek studenta sloučeno`, []]);
-      } else {
-        problematic.push([
-          `${normalName}: Stejný rok narození ale jiné kontaktní údaje, nemůžu sloučit`,
-          candidates,
-        ]);
-      }
-    } else if (birthYears.size >= phones.size && birthYears.size >= emails.size) {
-      if (candidates.map((x) => x.year).some((x) => !x)) {
-        // some birth year is falsy, bail
-        problematic.push([
-          `${normalName}: Podle roku narození jiní lidé, ale některým rok narození chybí, nemůžu rozdělit`,
-          candidates,
-        ]);
-      } else {
-        for (const discriminant of birthYears) {
-          deduplicated.push(
-            mergeCandidates(candidates.filter((x) => x.year === discriminant)),
-          );
+    <div className="not-prose text-neutral-12">
+      <FormError error={apply.error} />
+      <ListHeader
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Hledat osobu…"
+        actions={
+          <>
+            <RadioButtonGroup
+              value={showAll ? 'all' : 'actionable'}
+              options={[
+                { id: 'actionable', label: 'Nesynchronizované' },
+                { id: 'all', label: 'Vše' },
+              ]}
+              onValueChange={(value) => setShowAll(value === 'all')}
+            />
+            <SubmitButton
+              type="button"
+              size="sm"
+              variant="outline"
+              state={apply.status}
+              disabled={
+                busy || !!error || apply.loading || !rows.some((row) => row.changes)
+              }
+              onClick={() => apply.execute(rows)}
+            >
+              Použít vše
+            </SubmitButton>
+          </>
         }
-        if (birthYears.size > 1)
-          problematic.push([
-            `${normalName}: konflikt vyřešen rozdělením podle roků narození (${[...birthYears].join(', ')})`,
-            [],
-          ]);
-      }
-    } else {
-      problematic.push([
-        `${normalName}: Konfliktní roky narození a kontaktní údaje, nemůžu rozdělit`,
-        candidates,
-      ]);
-    }
-  }
-
-  deduplicated.sort((x, y) =>
-    `${x.surname}, ${x.name}`.localeCompare(`${y.surname}, ${y.name}`),
+      />
+      <Table
+        columns={[
+          <SortButton key="source" column="source" value={sort} onChange={setSort}>
+            Evidence ({source.result?.length ?? 0})
+          </SortButton>,
+          <SortButton key="database" column="database" value={sort} onChange={setSort}>
+            Databáze ({rows.filter((r) => r.database).length})
+          </SortButton>,
+          hasActions && 'Akce',
+        ]}
+        busy={busy}
+        error={error}
+        empty="Žádné osoby."
+      >
+        {visible.map((row) => {
+          const { source, database, reason, differences, actions } = row;
+          return (
+            <tr key={`${source?.id ?? ''}:${database?.id ?? ''}`} className="align-top">
+              <td>
+                {source && (
+                  <>
+                    <details>
+                      <summary className="cursor-pointer">
+                        {source.lastName} {source.firstName}{' '}
+                        <span className="text-xs text-neutral-11">
+                          {source.groups.join(', ')}
+                        </span>
+                      </summary>
+                      {source.registrations?.map((reg) => (
+                        <div key={reg.id} className="my-2 text-xs">
+                          <div className="font-medium">
+                            {reg.firstName} {reg.lastName} ({reg.course})
+                          </div>
+                          <DefinitionList
+                            className="tabular gap-x-2 [&_dt]:text-neutral-11 [&_dd]:wrap-anywhere"
+                            items={{
+                              Rok: reg.birthYear,
+                              Pohlaví: reg.gender && genderLabels[reg.gender],
+                              'E-mail': reg.email,
+                              Telefon: reg.phone,
+                              Ulice: reg.street,
+                              'Číslo orientační': reg.orientationNumber,
+                              Obec: reg.city,
+                              PSČ: reg.postalCode,
+                              ID: reg.externalIds.join(', '),
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </details>
+                    {differences
+                      .filter(({ field }) => field !== 'groups')
+                      .map(({ field, label, values }) => (
+                        <div
+                          key={field}
+                          className="text-xs text-neutral-11 wrap-anywhere"
+                        >
+                          {label}: {values[0] || '—'}
+                        </div>
+                      ))}
+                    {source.conflicts?.map((x) => (
+                      <div key={x} className="text-xs text-danger-11">
+                        {x}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </td>
+              <td>
+                {database && (
+                  <>
+                    <EntityLink
+                      type="person"
+                      entity={{
+                        id: database.id,
+                        name: `${database.lastName} ${database.firstName}`,
+                      }}
+                    />{' '}
+                    <span className="text-xs text-neutral-11">{!source && reason}</span>
+                    {differences.map(({ field, label, values }) => (
+                      <div key={field} className="text-xs text-neutral-11 wrap-anywhere">
+                        {label}: {values[1] || '—'}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </td>
+              {hasActions && (
+                <td className="w-px whitespace-nowrap text-xs text-neutral-11">
+                  {actions.map((x) => (
+                    <div key={x}>{actionLabels[x]}</div>
+                  ))}
+                  {actions.length > 0 && (
+                    <SubmitButton
+                      type="button"
+                      size="xs"
+                      variant="outline"
+                      state={
+                        activeId === (source?.id ?? database?.id)
+                          ? apply.status
+                          : undefined
+                      }
+                      disabled={busy || !!error || apply.loading || row.needsReview}
+                      onClick={() => apply.execute([row])}
+                    >
+                      Použít
+                    </SubmitButton>
+                  )}
+                </td>
+              )}
+            </tr>
+          );
+        })}
+      </Table>
+    </div>
   );
-
-  return [deduplicated, problematic] as const;
-}
-
-function mergeCandidates(candidates: QueriedStudent[]): DeduplicatedStudent {
-  const sex = candidates.map((x) => x.sex).find(isTruthy);
-  return {
-    normal_name: candidates.map((x) => x.normal_name).find(isTruthy)!,
-    name: candidates.map((x) => x.name).find(isTruthy) || '?',
-    surname: candidates.map((x) => x.surname).find(isTruthy) || '?',
-    gender: sex === 'FEMALE' ? 'WOMAN' : 'MAN',
-    email: candidates.map((x) => x.email).find(isTruthy) || null,
-    phone: candidates.map((x) => x.phone).find(isTruthy) || null,
-    year: candidates.map((x) => x.year).find(isTruthy) || null,
-    street: candidates.map((x) => x.street).find(isTruthy) || null,
-    street_no: candidates.map((x) => x.street_no).find(isTruthy) || null,
-    city: candidates.map((x) => x.city).find(isTruthy) || null,
-    post_code: candidates.map((x) => x.post_code).find(isTruthy) || null,
-    keys: candidates.flatMap((x) => x.key ?? []),
-    course_names: candidates.flatMap((x) => x.course_name ?? []),
-    course_keys: candidates.flatMap((x) => x.course_key ?? []),
-    ref_keys: candidates.flatMap((x) => x.ref_key ?? []),
-  };
-}
-
-function getNormalizedName(name: string | null, surname: string | null): string {
-  return `${capitalize(slugify(name || '').trim())} ${capitalize(slugify(surname || '').trim())}`;
-}
-
-function diffObjectsList(objects: Record<string, unknown>[]) {
-  const diff: Record<string, unknown[]> = {};
-  const keys = new Set(objects.flatMap((obj) => Object.keys(obj)));
-
-  for (const key of keys) {
-    if (['key', 'course_key', 'ref_key', 'comment'].includes(key)) continue;
-    const values = new Set(objects.map((obj) => obj[key]));
-    if (values.size > 1) {
-      diff[key] = [...values];
-    }
-  }
-
-  return diff;
 }

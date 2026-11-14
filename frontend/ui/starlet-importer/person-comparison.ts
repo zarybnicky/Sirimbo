@@ -1,6 +1,14 @@
 import { compareText } from '@/lib/compare';
 import { slugify } from '@/lib/slugify';
-import type { AddressDomainInput, GenderType } from '@/graphql/index';
+import type {
+  AddressDomainInput,
+  CreateTenantMembershipInput,
+  GenderType,
+  PersonInput,
+  PersonPatch,
+  UpdatePersonInput,
+} from '@/graphql/index';
+import type { CohortFragment } from '@/graphql/Cohorts';
 
 export const actionLabels = {
   rename: 'Změní jméno',
@@ -49,19 +57,29 @@ type PersonMatch = {
   needsReview: boolean;
 };
 
+type ComparisonCohort = Pick<CohortFragment, 'id' | 'name' | 'externalIds'>;
+type PersonChanges = {
+  create?: PersonInput;
+  update?: UpdatePersonInput;
+  createMembership?: CreateTenantMembershipInput;
+  expireMembership?: string;
+  cohortIds?: string[];
+  error?: string;
+};
+
 const comparisonFields = [
-  ['firstName', 'Jméno'],
-  ['lastName', 'Příjmení'],
-  ['birthYear', 'Rok narození'],
-  ['gender', 'Pohlaví'],
-  ['email', 'E-mail'],
-  ['phone', 'Telefon'],
-  ['street', 'Ulice'],
-  ['orientationNumber', 'Číslo orientační'],
-  ['city', 'Obec'],
-  ['postalCode', 'PSČ'],
-  ['externalIds', 'Externí ID'],
-  ['groups', 'Skupiny'],
+  ['firstName', 'Jméno', 'rename'],
+  ['lastName', 'Příjmení', 'rename'],
+  ['birthYear', 'Rok narození', 'details'],
+  ['gender', 'Pohlaví', 'details'],
+  ['email', 'E-mail', 'details'],
+  ['phone', 'Telefon', 'details'],
+  ['street', 'Ulice', 'details'],
+  ['orientationNumber', 'Číslo orientační', 'details'],
+  ['city', 'Obec', 'details'],
+  ['postalCode', 'PSČ', 'details'],
+  ['externalIds', 'Externí ID', 'externalIds'],
+  ['groups', 'Skupiny', 'groups'],
 ] as const;
 
 type ComparisonField = (typeof comparisonFields)[number][0];
@@ -136,7 +154,12 @@ export function groupRegistrations(registrations: ComparisonPerson[]) {
   );
 }
 
-export function comparePeople(source: ComparisonPerson[], database: ComparisonPerson[]) {
+export function comparePeople(
+  source: ComparisonPerson[],
+  database: ComparisonPerson[],
+  cohorts: ComparisonCohort[],
+  tenantId: string,
+) {
   const byName = Map.groupBy(database, nameKey);
   const byExternalId = new Map<string, ComparisonPerson>();
   for (const person of database) {
@@ -213,22 +236,24 @@ export function comparePeople(source: ComparisonPerson[], database: ComparisonPe
       actions: !conflict && person.unmatchedAction ? [person.unmatchedAction] : [],
     });
   }
-  return matches.map(planChanges);
+  return matches.map((match) => planChanges(match, cohorts, tenantId));
 }
 
 export type ComparisonRow = ReturnType<typeof comparePeople>[number];
 
-function planChanges(match: PersonMatch) {
+function planChanges(match: PersonMatch, cohorts: ComparisonCohort[], tenantId: string) {
   const { source, database } = match;
-  const actions = [...match.actions];
+  const actions = new Set(match.actions);
+  const changes: PersonChanges = {};
 
   const differences =
     source && database && !source.conflicts?.length
       ? comparisonFields
           .filter(([field]) => field !== 'birthYear' || !database.birthDate)
-          .map(([field, label]) => ({
+          .map(([field, label, action]) => ({
             field,
             label,
+            action,
             values: [comparisonValue(source, field), comparisonValue(database, field)],
           }))
           .filter(({ values }) => values[0] !== values[1])
@@ -236,25 +261,87 @@ function planChanges(match: PersonMatch) {
 
   if (source && !source.conflicts?.length) {
     if (database) {
-      if (
-        source.firstName !== database.firstName ||
-        source.lastName !== database.lastName
-      )
-        actions.push('rename');
-      if (
-        differences.some(
-          ({ field }) =>
-            !['firstName', 'lastName', 'groups', 'externalIds'].includes(field),
-        )
-      )
-        actions.push('details');
-      if (differences.some(({ field }) => field === 'groups')) actions.push('groups');
-      if (database.isMember === false) actions.push('renewMembership');
-      if (differences.some(({ field }) => field === 'externalIds'))
-        actions.push('externalIds');
+      const patch: PersonPatch = {};
+      for (const { field, action } of differences) {
+        actions.add(action);
+        switch (field) {
+          case 'groups':
+            break;
+          case 'birthYear':
+            patch.birthDate = source.birthYear ? `${source.birthYear}-01-01` : null;
+            break;
+          case 'gender':
+            patch.gender = source.gender ?? 'MAN';
+            break;
+          case 'externalIds':
+            patch.externalIds = [...new Set(source.externalIds)];
+            break;
+          case 'street':
+          case 'orientationNumber':
+          case 'city':
+          case 'postalCode':
+            patch.address ??= {
+              street: database.address?.street ?? '',
+              orientationNumber: database.address?.orientationNumber ?? '',
+              city: database.address?.city ?? '',
+              postalCode: database.address?.postalCode ?? '',
+              conscriptionNumber: database.address?.conscriptionNumber ?? '',
+              region: database.address?.region ?? '',
+              district: database.address?.district,
+            };
+            patch.address[field] = source[field] ?? '';
+            break;
+          default:
+            patch[field] = source[field];
+        }
+      }
+      if (Object.keys(patch).length > 0) changes.update = { id: database.id, patch };
+      if (database.isMember === false) {
+        actions.add('renewMembership');
+        changes.createMembership = {
+          tenantMembership: { personId: database.id, tenantId },
+        };
+      }
     } else {
-      actions.push('create');
+      actions.add('create');
+      changes.create = {
+        firstName: source.firstName,
+        lastName: source.lastName,
+        gender: source.gender ?? 'MAN',
+        email: source.email,
+        phone: source.phone,
+        birthDate: source.birthYear ? `${source.birthYear}-01-01` : null,
+        externalIds: [...new Set(source.externalIds)],
+        nationality: '203',
+        prefixTitle: '',
+        suffixTitle: '',
+        bio: '',
+        address: {
+          street: source.street ?? '',
+          orientationNumber: source.orientationNumber ?? '',
+          city: source.city ?? '',
+          postalCode: source.postalCode ?? '',
+          conscriptionNumber: '',
+          region: '',
+        },
+      };
     }
   }
-  return { ...match, actions, differences };
+  if (actions.has('archive')) changes.expireMembership = database?.membershipId;
+  if (actions.has('create') || actions.has('groups') || actions.has('endGroups')) {
+    changes.cohortIds = (database?.cohortIds ?? []).filter(
+      (id) => !cohorts.some((c) => c.id === id && c.externalIds?.length),
+    );
+    for (const name of source?.groups ?? []) {
+      const matches = cohorts.filter((c) => c.name === name && c.externalIds?.length);
+      if (matches.length === 0) changes.error ??= `Nejdříve synchronizujte kurz ${name}.`;
+      changes.cohortIds.push(...matches.map((c) => c.id));
+    }
+  }
+  return {
+    ...match,
+    actions: [...actions],
+    differences,
+    changes: !match.needsReview && Object.keys(changes).length > 0 ? changes : undefined,
+  };
 }
