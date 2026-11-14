@@ -8,8 +8,9 @@ import {
 import { buttonCls } from '@/ui/style';
 import { ChevronDown } from 'lucide-react';
 
-const labels: Record<CalendarViewKey, string> = {
+const labels: Record<CalendarViewKey | 'year', string> = {
   month: 'Měsíc',
+  year: 'Rok',
   week: 'Týden',
   work_week: 'Pracovní dny',
   day: 'Den',
@@ -17,14 +18,14 @@ const labels: Record<CalendarViewKey, string> = {
   range: 'Soustředění',
 };
 
-export function ViewPicker({
+export function ViewPicker<View extends keyof typeof labels>({
   view,
   setView,
-  views = ['month', 'week', 'work_week', 'day', 'agenda'],
+  views,
 }: {
-  view: CalendarViewKey;
-  setView: (view: CalendarViewKey) => void;
-  views?: readonly CalendarViewKey[];
+  view: View;
+  setView: (view: View) => void;
+  views: readonly View[];
 }) {
   if (views.length <= 1) return;
 

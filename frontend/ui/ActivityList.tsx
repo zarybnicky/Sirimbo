@@ -1,5 +1,6 @@
-import { CalendarViews } from '@/calendar/CalendarViews';
+import { type CalendarView, CalendarViews } from '@/calendar/CalendarViews';
 import { DateNavigator } from '@/calendar/DateNavigator';
+import { ViewPicker } from '@/calendar/ViewPicker';
 import {
   type CalendarFilters,
   calendarTypeOptions,
@@ -17,7 +18,7 @@ import { LocalPersonLinks } from '@/ui/federation-links';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { FormError } from '@/ui/form';
 import { buttonCls, cardCls } from '@/ui/style';
-import { endOf, startOf } from 'date-arithmetic';
+import { add, endOf, startOf } from 'date-arithmetic';
 import { format } from 'date-fns';
 import { Cake, CalendarDays, List, Plus, Search } from 'lucide-react';
 import * as React from 'react';
@@ -33,6 +34,18 @@ const monthView = {
     until: endOf(date, 'month'),
   }),
 };
+const activityViews = {
+  month: monthView,
+  year: {
+    ...monthView,
+    range: (date) => ({
+      since: startOf(date, 'year'),
+      until: endOf(date, 'year'),
+    }),
+    nav: (date, dir) => add(date, dir, 'year'),
+    label: ({ since }) => format(since, 'yyyy'),
+  },
+} satisfies Record<'month' | 'year', CalendarView>;
 const calendarFilters: CalendarFilters = {
   groupBy: 'none',
   participants: {},
@@ -55,13 +68,15 @@ export const ActivityList = React.memo(function ActivityList({
 }) {
   const auth = useAuth();
   const [date, setDate] = React.useState(() => new Date());
+  const [viewKey, setView] = React.useState<keyof typeof activityViews>('month');
+  const view = activityViews[viewKey];
   const [types, setTypes] = React.useState(calendarTypes);
   const [trainers, setTrainers] = React.useState<string[]>([]);
   const todayMarker = React.useRef<HTMLElement>(null);
   const scrollToToday = React.useRef(false);
   const today = format(new Date(), 'yyyy-MM-dd');
   const { range, calendarEvents, fetching, error, filterOptions } = useCalendarData({
-    view: monthView,
+    view,
     date,
     filters: {
       ...calendarFilters,
@@ -91,14 +106,14 @@ export const ActivityList = React.memo(function ActivityList({
     if (fetching || error || !scrollToToday.current) return;
     todayMarker.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
     scrollToToday.current = false;
-  }, [date, fetching, error]);
+  }, [date, view, fetching, error]);
 
   return (
     <>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <DateNavigator
           date={date}
-          view={monthView}
+          view={view}
           setDate={(next) => {
             scrollToToday.current = false;
             setDate(next);
@@ -108,33 +123,37 @@ export const ActivityList = React.memo(function ActivityList({
             setDate(new Date());
           }}
         />
+        <ViewPicker view={viewKey} setView={setView} views={['month', 'year']} />
         <h4 className="text-lg tracking-tight flex-1">
-          {capitalize(monthView.label(range))}
+          {capitalize(view.label(range))}
         </h4>
-        <FacetFilter
-          label="Trenéři"
-          value={trainers}
-          options={filterOptions.trainers}
-          onChange={setTrainers}
-        />
-        <FacetFilter
-          label="Typy"
-          value={types}
-          defaultValue={calendarTypes}
-          options={calendarTypeOptions}
-          onChange={setTypes}
-        />
+        <div className="flex flex-wrap gap-1">
+          <FacetFilter
+            label="Trenéři"
+            value={trainers}
+            options={filterOptions.trainers}
+            onChange={setTrainers}
+          />
+          <FacetFilter
+            label="Typy"
+            value={types}
+            defaultValue={calendarTypes}
+            options={calendarTypeOptions}
+            onChange={setTypes}
+          />
+        </div>
       </div>
       <FormError error={error} />
       <div className="text-sm text-neutral-9">
         {fetching
           ? 'Načítám...'
           : !error && !days.some(([, xs]) => xs.length)
-            ? 'Žádná aktivita v tomto měsíci.'
+            ? 'Žádná aktivita v tomto období.'
             : null}
       </div>
       <div className="scroll-mt-20">
         {days.map(([day, items]) => {
+          const dayDate = new Date(`${day}T00:00:00`);
           const events = items.filter((x) => x.kind === 'event').map((x) => x.instance);
           const birthdays = items.filter((x) => x.kind === 'birthday');
           return (
@@ -147,7 +166,7 @@ export const ActivityList = React.memo(function ActivityList({
                 <div className="mb-2 flex flex-col gap-1">
                   <div className="flex justify-between flex-wrap items-center gap-2">
                     <h4 className="md:text-lg tracking-tight">
-                      {capitalize(longDayFormatter.format(new Date(`${day}T00:00:00`)))}
+                      {capitalize(longDayFormatter.format(dayDate))}
                     </h4>
                     <div className="flex gap-1">
                       {auth.isTrainer && (
@@ -160,7 +179,7 @@ export const ActivityList = React.memo(function ActivityList({
                           </DialogTrigger.Plain>
                           <DialogContent className="sm:max-w-xl">
                             <EventForm
-                              date={new Date(date)}
+                              date={dayDate}
                               after={events.at(-1)}
                               events={events}
                             />
@@ -168,7 +187,7 @@ export const ActivityList = React.memo(function ActivityList({
                         </Dialog>
                       )}
                       <Link
-                        href={`/rozpis?v=agenda&date=${format(date, 'yyyy-MM-dd')}`}
+                        href={`/rozpis?v=agenda&date=${day}`}
                         className={buttonCls({ display: 'none', variant: 'none' })}
                       >
                         <span className="relative inline-block size-5 align-middle">
@@ -177,7 +196,7 @@ export const ActivityList = React.memo(function ActivityList({
                         </span>
                       </Link>
                       <Link
-                        href={`/rozpis?v=week&date=${format(date, 'yyyy-MM-dd')}`}
+                        href={`/rozpis?v=week&date=${day}`}
                         className={buttonCls({ display: 'none', variant: 'none' })}
                       >
                         <span className="relative inline-block size-5 align-middle">
