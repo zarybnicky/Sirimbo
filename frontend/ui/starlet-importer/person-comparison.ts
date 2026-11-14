@@ -11,14 +11,14 @@ import type {
 import type { CohortFragment } from '@/graphql/Cohorts';
 
 export const actionLabels = {
-  rename: 'Změní jméno',
-  details: 'Změní údaje',
-  groups: 'Změní skupiny',
-  renewMembership: 'Obnoví členství',
-  externalIds: 'Změní ID z evidence',
-  create: 'Vytvoří',
-  archive: 'Archivuje',
-  endGroups: 'Ukončí členství ve skupinách z evidence',
+  rename: 'Změnit jméno',
+  details: 'Změnit údaje',
+  groups: 'Změnit skupiny',
+  renewMembership: 'Obnovit členství',
+  externalIds: 'Změnit ID z evidence',
+  create: 'Vytvořit',
+  archive: 'Archivovat',
+  endGroups: 'Ukončit členství ve skupinách z evidence',
 };
 export type ComparisonAction = keyof typeof actionLabels;
 
@@ -223,16 +223,17 @@ export function comparePeople(
   });
   for (const person of database) {
     if (processed.has(person.id) || person.isFormer) continue;
-    const conflict = source.find(
+    const conflict = matches.find(
       (x) =>
-        x.conflicts?.length &&
-        (nameKey(x) === nameKey(person) ||
-          x.externalIds.some((id) => person.externalIds.includes(id))),
+        x.needsReview &&
+        x.source &&
+        (nameKey(x.source) === nameKey(person) ||
+          x.source.externalIds.some((id) => person.externalIds.includes(id))),
     );
     matches.push({
       database: person,
       needsReview: false,
-      reason: conflict ? conflict.conflicts?.[0] : person.keepReason,
+      reason: conflict ? conflict.source?.conflicts?.[0] : person.keepReason,
       actions: !conflict && person.unmatchedAction ? [person.unmatchedAction] : [],
     });
   }

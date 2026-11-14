@@ -17,13 +17,14 @@ import { Table } from '@/ui/Table';
 
 type CohortTask =
   | { type: 'create'; name: string; description: string; externalId: string }
-  | { type: 'update'; id: string; externalId: string }
+  | { type: 'update'; id: string; externalId?: string; isVisible?: true }
   | { type: 'archive'; id: string };
 
 const actionLabels = {
-  create: 'Vytvoří',
-  update: 'Změní ID z evidence',
-  archive: 'Archivuje',
+  create: 'Vytvořit',
+  update: 'Změnit ID podle evidence',
+  restore: 'Obnovt z archivu',
+  archive: 'Archivovat',
 };
 
 export function CohortComparisonForm() {
@@ -56,7 +57,10 @@ export function CohortComparisonForm() {
       } else if (task.type === 'update') {
         const result = await update({
           id: task.id,
-          patch: { externalIds: [task.externalId] },
+          patch: {
+            ...(task.externalId ? { externalIds: [task.externalId] } : {}),
+            ...(task.isVisible ? { isVisible: true } : {}),
+          },
         });
         if (result.error) throw result.error;
       } else {
@@ -88,15 +92,14 @@ export function CohortComparisonForm() {
         error={cohortQuery.error}
         empty="Žádné kurzy."
       >
-        {views.map(({ course, cohort, action }) => (
+        {views.map(({ course, cohort, action, idChanged }) => (
           <tr key={course?.id ?? cohort!.id} className="align-top">
-            <td>
-              {course && `${course.code}: ${course.name}`}
-            </td>
+            <td>{course && `${course.code}: ${course.name}`}</td>
             <td>{cohort && <EntityLink type="cohort" entity={cohort} />}</td>
             {tasks.length > 0 && (
               <td className="w-px whitespace-nowrap text-xs text-neutral-11">
                 {action && actionLabels[action]}
+                {action === 'restore' && idChanged && <div>{actionLabels.update}</div>}
               </td>
             )}
           </tr>
@@ -118,22 +121,28 @@ function compare(
   const views: {
     course?: StarletCourse;
     cohort?: (typeof cohorts)[number];
-    action?: CohortTask['type'];
+    action?: CohortTask['type'] | 'restore';
+    idChanged?: boolean;
   }[] = [];
   const tasks: CohortTask[] = [];
 
   for (const { id, code, name } of courses) {
     const cohort = cohorts.find((cohort) => cohort.name === code);
     const needsUpdate = !!cohort && !cohort.externalIds?.includes(id);
-    let action: CohortTask['type'] | undefined;
+    let action: CohortTask['type'] | 'restore' | undefined;
     if (!cohort) {
       tasks.push({ type: 'create', name: code, description: name, externalId: id });
       action = 'create';
-    } else if (needsUpdate) {
-      tasks.push({ type: 'update', id: cohort.id, externalId: id });
-      action = 'update';
+    } else if (needsUpdate || !cohort.isVisible) {
+      tasks.push({
+        type: 'update',
+        id: cohort.id,
+        ...(needsUpdate ? { externalId: id } : {}),
+        ...(!cohort.isVisible ? { isVisible: true } : {}),
+      });
+      action = cohort.isVisible ? 'update' : 'restore';
     }
-    views.push({ course: { id, code, name }, cohort, action });
+    views.push({ course: { id, code, name }, cohort, action, idChanged: needsUpdate });
   }
   for (const cohort of cohorts) {
     if (courses.some((course) => cohort.name === course.code)) continue;
