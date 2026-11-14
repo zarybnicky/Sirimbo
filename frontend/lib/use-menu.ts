@@ -72,7 +72,7 @@ export const topMenu: MenuStructItem[] = [
 const memberMenu: MenuStructItem[] = [
   {
     type: 'link',
-    title: 'Nástěnka',
+    title: 'Přehled',
     href: '/dashboard?tab=myAnnouncements',
   },
   {
@@ -83,20 +83,8 @@ const memberMenu: MenuStructItem[] = [
     requireMember: true,
     requirePublicSite: true,
   },
-  {
-    type: 'menu',
-    title: 'Tréninky',
-    children: [
-      {
-        type: 'link',
-        title: 'Moje tréninky',
-        href: '/rozpis?my=true',
-        requireMember: true,
-      },
-      { type: 'link', title: 'Kalendář', href: '/rozpis' },
-      { type: 'link', title: 'Soutředění', href: '/akce' },
-    ],
-  },
+  { type: 'link', title: 'Kalendář', href: '/rozpis' },
+  { type: 'link', title: 'Soutředění', href: '/akce' },
   {
     type: 'menu',
     title: 'Taneční klub',
