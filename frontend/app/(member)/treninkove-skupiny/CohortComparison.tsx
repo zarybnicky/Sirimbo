@@ -12,11 +12,13 @@ import { Table } from '@/ui/Table';
 import { compareText } from '@/lib/compare';
 import { EntityLink } from '@/ui/EntityLink';
 
+export type HistogramSelection = {
+  title: string;
+  people: readonly PersonHistogramFragment[];
+};
+
 export function CohortComparison({ data }: { data: CohortListQuery | undefined }) {
-  const [selection, setSelection] = useState<{
-    title: string;
-    people: readonly PersonHistogramFragment[];
-  } | null>(null);
+  const [selection, setSelection] = useState<HistogramSelection | null>(null);
 
   const rows = data
     ? [
@@ -89,27 +91,37 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
         ))}
       </Table>
 
-      <Dialog
-        open={selection !== null}
-        onOpenChange={(open) => {
-          if (!open) setSelection(null);
-        }}
-      >
-        <DialogContent>
-          <DialogTitle>{selection?.title}</DialogTitle>
-          <p className="text-sm text-neutral-11">Osob: {selection?.people.length ?? 0}</p>
-          <ul className="space-y-2">
-            {selection?.people
-              .toSorted((a, b) => compareText(a.name, b.name))
-              .map((x) => (
-                <li key={x.id}>
-                  <EntityLink type="person" entity={x} />
-                </li>
-              ))}
-          </ul>
-        </DialogContent>
-      </Dialog>
+      <HistogramPeopleDialog selection={selection} onClose={() => setSelection(null)} />
     </>
+  );
+}
+
+export function HistogramPeopleDialog({
+  selection,
+  onClose,
+}: {
+  selection: HistogramSelection | null;
+  onClose: () => void;
+}) {
+  return (
+    <Dialog open={selection !== null} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent aria-describedby={undefined}>
+        <DialogTitle>{selection?.title}</DialogTitle>
+        <p className="text-sm text-neutral-11">Osob: {selection?.people.length ?? 0}</p>
+        <Table columns={['Jméno', 'Věk', 'STT', 'LAT']}>
+          {selection?.people
+            .toSorted((a, b) => compareText(a.name, b.name))
+            .map((person) => (
+              <tr key={person.id}>
+                <th scope="row"><EntityLink type="person" entity={person} /></th>
+                <td>{formatAgeGroup(person.ageGroup) ?? '?'}</td>
+                <td>{personClass(person, 'Standard')}</td>
+                <td>{personClass(person, 'Latin')}</td>
+              </tr>
+            ))}
+        </Table>
+      </DialogContent>
+    </Dialog>
   );
 }
 

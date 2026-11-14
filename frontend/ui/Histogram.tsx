@@ -38,6 +38,15 @@ export function Histogram({
             <g
               key={value}
               transform={`translate(${x(value)}, 0)`}
+              role={onSelect && count ? 'button' : undefined}
+              tabIndex={onSelect && count ? 0 : undefined}
+              aria-label={onSelect && count ? `${formatTitle(value)}: ${count}` : undefined}
+              onKeyDown={onSelect && count ? (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  onSelect(value);
+                }
+              } : undefined}
               onClick={onSelect && count ? () => onSelect(value) : undefined}
               className={
                 onSelect && count
@@ -46,7 +55,7 @@ export function Histogram({
               }
             >
               <title>{`${formatTitle(value)}: ${count}`}</title>
-              {onSelect && count && (
+              {onSelect && count > 0 && (
                 <rect y={0} width={x.bandwidth()} height={68} fill="transparent" />
               )}
               {(

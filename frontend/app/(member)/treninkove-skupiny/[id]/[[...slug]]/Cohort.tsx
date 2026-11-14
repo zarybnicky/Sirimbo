@@ -29,7 +29,7 @@ import { parseAsString, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
-import { AgeHistogram, ClassHistogram } from '../../CohortComparison';
+import { AgeHistogram, ClassHistogram, HistogramPeopleDialog, type HistogramSelection } from '../../CohortComparison';
 import { EntityLink } from '@/ui/EntityLink';
 
 export function Cohort({
@@ -152,6 +152,9 @@ const CohortMembers = React.memo(function CohortMembers({
     auth.isTrainer ? 'activity' : 'competitive',
   );
   const activityView = auth.isTrainer && view === 'activity';
+  const [selection, setSelection] = React.useState<HistogramSelection | null>(null);
+  const selectBucket = (title: string, people: HistogramSelection['people']) =>
+    setSelection({ title, people });
   const people = members.flatMap((x) => x.person ?? []);
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(personActions, people);
@@ -167,6 +170,7 @@ const CohortMembers = React.memo(function CohortMembers({
           : 'grid-cols-[minmax(0,1fr)_max-content_max-content] min-[500px]:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
       )}
     >
+      <HistogramPeopleDialog selection={selection} onClose={() => setSelection(null)} />
       {auth.isTrainer && (
         <div className="col-span-full justify-self-end">
           <RadioButtonGroup
@@ -181,9 +185,9 @@ const CohortMembers = React.memo(function CohortMembers({
       )}
       {!activityView && (
         <div className="col-span-full flex flex-wrap items-start gap-5">
-          <AgeHistogram label="Věk" people={people} />
-          <ClassHistogram label="STT" people={people} discipline="Standard" />
-          <ClassHistogram label="LAT" people={people} discipline="Latin" />
+          <AgeHistogram label="Věk" people={people} onSelect={selectBucket} />
+          <ClassHistogram label="STT" people={people} discipline="Standard" onSelect={selectBucket} />
+          <ClassHistogram label="LAT" people={people} discipline="Latin" onSelect={selectBucket} />
         </div>
       )}
       {!activityView && (
