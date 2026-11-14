@@ -136,6 +136,7 @@ function ClubResultReport({ view }: { view: 'year' | 'gallery' | 'weekend' }) {
               Výsledky klubu
             </h4>
             <DateNavigator
+              variant="subtle"
               date={week}
               view={CalendarViews.week}
               setDate={(date) =>

@@ -1,4 +1,5 @@
 import { CalendarViews } from '@/calendar/CalendarViews';
+import { DateNavigator } from '@/calendar/DateNavigator';
 import {
   type CalendarFilters,
   calendarTypes,
@@ -7,17 +8,17 @@ import {
 import { CompetitionEventCard } from '@/ui/Competitions';
 import { useAuth } from '@/lib/auth';
 import { EventButton } from '@/ui/EventButton';
-import { WeekPicker } from '@/ui/WeekPicker';
 import { capitalize, longDayFormatter } from '@/ui/format';
 import { startOf } from 'date-arithmetic';
 import * as React from 'react';
-import { buttonCls, cardCls } from '@/ui/style';
+import { buttonCls, cardCls, typographyCls } from '@/ui/style';
 import { Dialog, DialogContent, DialogTrigger } from '@/ui/dialog';
 import { EventForm } from '@/ui/event-form/EventForms';
 import { CalendarDays, List, Plus, Search } from 'lucide-react';
 import { FormError } from '@/ui/form';
 import Link from 'next/link';
 import { format } from 'date-fns/format';
+import { getWeek } from 'date-fns/getWeek';
 import { useAtom } from 'jotai';
 import { savedSearchAtom } from '@/calendar/state';
 import { EventSavedSearchPicker } from '@/ui/EventSavedSearchPicker';
@@ -72,7 +73,23 @@ export const MyEventsList = React.memo(function MyEventsList() {
           }
         />
       )}
-      <WeekPicker title="Moje události" startDate={startDate} onChange={setStartDate} />
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h4 className={typographyCls({ variant: 'smallHeading', className: 'grow' })}>
+            Moje události
+          </h4>
+          <DateNavigator
+            variant="subtle"
+            date={startDate}
+            view={CalendarViews.week}
+            setDate={(date) => setStartDate(startOf(date, 'week', 1))}
+          />
+        </div>
+        <div className="mb-2 flex items-center text-neutral-11 text-sm">
+          {CalendarViews.week.label(CalendarViews.week.range(startDate))}
+          {` (${getWeek(startDate, { weekStartsOn: 1 })}. týden)`}
+        </div>
+      </div>
       <FormError error={error} />
       <div className="text-sm text-neutral-9">
         {fetching ? 'Načítám...' : ''}
