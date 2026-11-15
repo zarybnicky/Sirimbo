@@ -12,14 +12,20 @@ import {
   removeRefetchPolicy as removeRefetchPolicyQuery,
   type IRemoveRefetchPolicyParams,
   recalculateCrawlerFetchTimes,
-  refetchCrawlerErrors,
+  refetchCrawlerTargets,
+  markCrawlerFrontierGone,
+  removeQueuedFrontierFetches,
   reprocessCrawlerTargets,
 } from './crawler.queries';
 
-const actionSchema = z.enum(['refetch-errors', 'reprocess-all']);
+const actionSchema = z.enum(['refetch', 'reprocess', 'mark-gone']);
 const targetSchema = z.object({
   federation: z.string().min(1),
   kind: z.string().min(1),
+  frontierId: z
+    .string()
+    .regex(/^[1-9]\d{0,18}$/)
+    .optional(),
   keyContains: z.string().default(''),
   failureGroup: z
     .object({
@@ -137,12 +143,19 @@ export async function queueCrawlerAction(
 
   const operation = actionSchema.parse(action);
   const params = targetSchema.parse(target);
-  return withTransaction(async (client) => {
-    const query =
-      operation === 'refetch-errors' ? refetchCrawlerErrors : reprocessCrawlerTargets;
+  if (operation === 'mark-gone' && !params.frontierId)
+    throw new Error('Select a single frontier to mark as gone.');
+
+  const count = await withTransaction(async (client) => {
+    const query = {
+      refetch: refetchCrawlerTargets,
+      reprocess: reprocessCrawlerTargets,
+      'mark-gone': markCrawlerFrontierGone,
+    }[operation];
     const [result] = await query.run(
       {
         ...params,
+        frontierId: params.frontierId ?? null,
         failure: params.failureGroup?.failure ?? null,
         httpStatus: params.failureGroup?.httpStatus ?? null,
         errorFingerprint: params.failureGroup?.errorFingerprint ?? null,
@@ -150,13 +163,18 @@ export async function queueCrawlerAction(
       client,
     );
     const count = result!.count;
-    if (count > 0) {
+    if (params.frontierId && count !== 1)
+      throw new Error('Frontier no longer matches this action. Reload the page.');
+    if (params.frontierId && operation !== 'reprocess')
+      await removeQueuedFrontierFetches.run({ id: params.frontierId }, client);
+    if (count > 0 && operation !== 'mark-gone')
       await enqueueJob.run({
         identifier: 'frontier_schedule',
         payload: '{}',
         jobKey: 'frontier_schedule',
       }, client);
-    }
     return count;
   });
+  if (params.frontierId) revalidatePath('/admin/crawler', 'layout');
+  return count;
 }

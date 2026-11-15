@@ -11,6 +11,7 @@ import { Pagination } from '@/ui/Pagination';
 import { formatDateOnly, numericFullFormatter } from '@/ui/format';
 import { Metadata } from 'next';
 import { CrawlerTargets } from '../Crawler';
+import { CrawlerActions } from '../CrawlerActions';
 
 const pageSize = 50;
 
@@ -75,7 +76,18 @@ export default async function FrontierPage({
             href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
           },
         ]}
-      />
+      >
+        <CrawlerActions
+          federation={federation}
+          kind={kind}
+          frontier={{
+            id: frontier.id,
+            fetchStatus: frontier.fetchStatus,
+            lastSuccessfulResponseId: frontier.lastSuccessfulResponseId,
+          }}
+          primary
+        />
+      </PageHeader>
       <DefinitionList
         items={{
           id: frontier.id,

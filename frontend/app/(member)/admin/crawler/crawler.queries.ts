@@ -3,28 +3,29 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type NumberOrString = number | string;
 
-/** 'RefetchCrawlerErrors' parameters type */
-export interface IRefetchCrawlerErrorsParams {
+/** 'RefetchCrawlerTargets' parameters type */
+export interface IRefetchCrawlerTargetsParams {
   errorFingerprint?: string | null | void;
   failure?: string | null | void;
   federation: string;
+  frontierId?: NumberOrString | null | void;
   httpStatus?: number | null | void;
   keyContains: string;
   kind: string;
 }
 
-/** 'RefetchCrawlerErrors' return type */
-export interface IRefetchCrawlerErrorsResult {
+/** 'RefetchCrawlerTargets' return type */
+export interface IRefetchCrawlerTargetsResult {
   count: number;
 }
 
-/** 'RefetchCrawlerErrors' query type */
-export interface IRefetchCrawlerErrorsQuery {
-  params: IRefetchCrawlerErrorsParams;
-  result: IRefetchCrawlerErrorsResult;
+/** 'RefetchCrawlerTargets' query type */
+export interface IRefetchCrawlerTargetsQuery {
+  params: IRefetchCrawlerTargetsParams;
+  result: IRefetchCrawlerTargetsResult;
 }
 
-const refetchCrawlerErrorsIR: any = {"usedParamSet":{"federation":true,"kind":true,"keyContains":true,"failure":true,"httpStatus":true,"errorFingerprint":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":255,"b":266}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":285,"b":290}]},{"name":"keyContains","required":true,"transform":{"type":"scalar"},"locs":[{"a":314,"b":326}]},{"name":"failure","required":false,"transform":{"type":"scalar"},"locs":[{"a":430,"b":437},{"a":575,"b":582}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":634,"b":644}]},{"name":"errorFingerprint","required":false,"transform":{"type":"scalar"},"locs":[{"a":756,"b":772}]}],"statement":"WITH updated AS (\n  UPDATE crawler.frontier f\n  SET fetch_status = 'pending',\n      process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL,\n      error_count = 0,\n      next_fetch_at = now()\n  WHERE f.federation = :federation!\n    AND f.kind = :kind!\n    AND strpos(f.key, :keyContains!) > 0\n    AND (f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')\n    AND (\n      :failure::text IS NULL\n      OR EXISTS (\n        SELECT 1 FROM crawler.frontier_failure ff\n        WHERE ff.id = f.id\n          AND ff.failure = :failure\n          AND ff.http_status IS NOT DISTINCT FROM :httpStatus::integer\n          AND left(regexp_replace(coalesce(nullif(ff.error_text, ''), '-'), '\\s+', ' ', 'g'), 180) = :errorFingerprint::text\n      )\n    )\n  RETURNING f.id\n)\nSELECT count(*)::int AS \"count!\" FROM updated"};
+const refetchCrawlerTargetsIR: any = {"usedParamSet":{"federation":true,"kind":true,"keyContains":true,"frontierId":true,"failure":true,"httpStatus":true,"errorFingerprint":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":255,"b":266}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":285,"b":290}]},{"name":"keyContains","required":true,"transform":{"type":"scalar"},"locs":[{"a":314,"b":326}]},{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":342,"b":352},{"a":380,"b":390},{"a":402,"b":412}]},{"name":"failure","required":false,"transform":{"type":"scalar"},"locs":[{"a":525,"b":532},{"a":670,"b":677}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":729,"b":739}]},{"name":"errorFingerprint","required":false,"transform":{"type":"scalar"},"locs":[{"a":851,"b":867}]}],"statement":"WITH updated AS (\n  UPDATE crawler.frontier f\n  SET fetch_status = 'pending',\n      process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL,\n      error_count = 0,\n      next_fetch_at = now()\n  WHERE f.federation = :federation!\n    AND f.kind = :kind!\n    AND strpos(f.key, :keyContains!) > 0\n    AND (:frontierId::bigint IS NULL OR f.id = :frontierId)\n    AND (:frontierId::bigint IS NOT NULL OR f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')\n    AND (\n      :failure::text IS NULL\n      OR EXISTS (\n        SELECT 1 FROM crawler.frontier_failure ff\n        WHERE ff.id = f.id\n          AND ff.failure = :failure\n          AND ff.http_status IS NOT DISTINCT FROM :httpStatus::integer\n          AND left(regexp_replace(coalesce(nullif(ff.error_text, ''), '-'), '\\s+', ' ', 'g'), 180) = :errorFingerprint::text\n      )\n    )\n  RETURNING f.id\n)\nSELECT count(*)::int AS \"count!\" FROM updated"};
 
 /**
  * Query generated from SQL:
@@ -40,7 +41,8 @@ const refetchCrawlerErrorsIR: any = {"usedParamSet":{"federation":true,"kind":tr
  *   WHERE f.federation = :federation!
  *     AND f.kind = :kind!
  *     AND strpos(f.key, :keyContains!) > 0
- *     AND (f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')
+ *     AND (:frontierId::bigint IS NULL OR f.id = :frontierId)
+ *     AND (:frontierId::bigint IS NOT NULL OR f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')
  *     AND (
  *       :failure::text IS NULL
  *       OR EXISTS (
@@ -56,7 +58,76 @@ const refetchCrawlerErrorsIR: any = {"usedParamSet":{"federation":true,"kind":tr
  * SELECT count(*)::int AS "count!" FROM updated
  * ```
  */
-export const refetchCrawlerErrors = new PreparedQuery<IRefetchCrawlerErrorsParams,IRefetchCrawlerErrorsResult>(refetchCrawlerErrorsIR);
+export const refetchCrawlerTargets = new PreparedQuery<IRefetchCrawlerTargetsParams,IRefetchCrawlerTargetsResult>(refetchCrawlerTargetsIR);
+
+
+/** 'MarkCrawlerFrontierGone' parameters type */
+export interface IMarkCrawlerFrontierGoneParams {
+  federation: string;
+  frontierId?: NumberOrString | null | void;
+  kind: string;
+}
+
+/** 'MarkCrawlerFrontierGone' return type */
+export interface IMarkCrawlerFrontierGoneResult {
+  count: number;
+}
+
+/** 'MarkCrawlerFrontierGone' query type */
+export interface IMarkCrawlerFrontierGoneQuery {
+  params: IMarkCrawlerFrontierGoneParams;
+  result: IMarkCrawlerFrontierGoneResult;
+}
+
+const markCrawlerFrontierGoneIR: any = {"usedParamSet":{"frontierId":true,"federation":true,"kind":true},"params":[{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":206,"b":216}]},{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":247,"b":258}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":271,"b":276}]}],"statement":"WITH updated AS (\n  UPDATE crawler.frontier\n  SET fetch_status = 'gone',\n      process_status = 'ok',\n      last_process_error = NULL,\n      last_process_error_at = NULL,\n      error_count = 0\n  WHERE id = :frontierId::bigint\n    AND federation = :federation! AND kind = :kind!\n  RETURNING id\n)\nSELECT count(*)::int AS \"count!\" FROM updated"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * WITH updated AS (
+ *   UPDATE crawler.frontier
+ *   SET fetch_status = 'gone',
+ *       process_status = 'ok',
+ *       last_process_error = NULL,
+ *       last_process_error_at = NULL,
+ *       error_count = 0
+ *   WHERE id = :frontierId::bigint
+ *     AND federation = :federation! AND kind = :kind!
+ *   RETURNING id
+ * )
+ * SELECT count(*)::int AS "count!" FROM updated
+ * ```
+ */
+export const markCrawlerFrontierGone = new PreparedQuery<IMarkCrawlerFrontierGoneParams,IMarkCrawlerFrontierGoneResult>(markCrawlerFrontierGoneIR);
+
+
+/** 'RemoveQueuedFrontierFetches' parameters type */
+export interface IRemoveQueuedFrontierFetchesParams {
+  id: NumberOrString;
+}
+
+/** 'RemoveQueuedFrontierFetches' return type */
+export type IRemoveQueuedFrontierFetchesResult = void;
+
+/** 'RemoveQueuedFrontierFetches' query type */
+export interface IRemoveQueuedFrontierFetchesQuery {
+  params: IRemoveQueuedFrontierFetchesParams;
+  result: IRemoveQueuedFrontierFetchesResult;
+}
+
+const removeQueuedFrontierFetchesIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":true,"transform":{"type":"scalar"},"locs":[{"a":123,"b":126}]}],"statement":"DELETE FROM graphile_worker._private_jobs j\nUSING crawler.frontier_fetch_job f\nWHERE j.id = f.job_id\n  AND f.frontier_id = :id!::bigint\n  AND j.locked_at IS NULL"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM graphile_worker._private_jobs j
+ * USING crawler.frontier_fetch_job f
+ * WHERE j.id = f.job_id
+ *   AND f.frontier_id = :id!::bigint
+ *   AND j.locked_at IS NULL
+ * ```
+ */
+export const removeQueuedFrontierFetches = new PreparedQuery<IRemoveQueuedFrontierFetchesParams,IRemoveQueuedFrontierFetchesResult>(removeQueuedFrontierFetchesIR);
 
 
 /** 'ReprocessCrawlerTargets' parameters type */
@@ -64,6 +135,7 @@ export interface IReprocessCrawlerTargetsParams {
   errorFingerprint?: string | null | void;
   failure?: string | null | void;
   federation: string;
+  frontierId?: NumberOrString | null | void;
   httpStatus?: number | null | void;
   keyContains: string;
   kind: string;
@@ -80,7 +152,7 @@ export interface IReprocessCrawlerTargetsQuery {
   result: IReprocessCrawlerTargetsResult;
 }
 
-const reprocessCrawlerTargetsIR: any = {"usedParamSet":{"federation":true,"kind":true,"keyContains":true,"failure":true,"httpStatus":true,"errorFingerprint":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":171,"b":182}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":201,"b":206}]},{"name":"keyContains","required":true,"transform":{"type":"scalar"},"locs":[{"a":230,"b":242}]},{"name":"failure","required":false,"transform":{"type":"scalar"},"locs":[{"a":333,"b":340},{"a":478,"b":485}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":537,"b":547}]},{"name":"errorFingerprint","required":false,"transform":{"type":"scalar"},"locs":[{"a":659,"b":675}]}],"statement":"WITH updated AS (\n  UPDATE crawler.frontier f\n  SET process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL\n  WHERE f.federation = :federation!\n    AND f.kind = :kind!\n    AND strpos(f.key, :keyContains!) > 0\n    AND f.fetch_status = 'ok'\n    AND f.process_status <> 'pending'\n    AND (\n      :failure::text IS NULL\n      OR EXISTS (\n        SELECT 1 FROM crawler.frontier_failure ff\n        WHERE ff.id = f.id\n          AND ff.failure = :failure\n          AND ff.http_status IS NOT DISTINCT FROM :httpStatus::integer\n          AND left(regexp_replace(coalesce(nullif(ff.error_text, ''), '-'), '\\s+', ' ', 'g'), 180) = :errorFingerprint::text\n      )\n    )\n  RETURNING f.id\n)\nSELECT count(*)::int AS \"count!\" FROM updated"};
+const reprocessCrawlerTargetsIR: any = {"usedParamSet":{"federation":true,"kind":true,"keyContains":true,"frontierId":true,"failure":true,"httpStatus":true,"errorFingerprint":true},"params":[{"name":"federation","required":true,"transform":{"type":"scalar"},"locs":[{"a":171,"b":182}]},{"name":"kind","required":true,"transform":{"type":"scalar"},"locs":[{"a":201,"b":206}]},{"name":"keyContains","required":true,"transform":{"type":"scalar"},"locs":[{"a":230,"b":242}]},{"name":"frontierId","required":false,"transform":{"type":"scalar"},"locs":[{"a":258,"b":268},{"a":296,"b":306},{"a":398,"b":408}]},{"name":"failure","required":false,"transform":{"type":"scalar"},"locs":[{"a":480,"b":487},{"a":625,"b":632}]},{"name":"httpStatus","required":false,"transform":{"type":"scalar"},"locs":[{"a":684,"b":694}]},{"name":"errorFingerprint","required":false,"transform":{"type":"scalar"},"locs":[{"a":806,"b":822}]}],"statement":"WITH updated AS (\n  UPDATE crawler.frontier f\n  SET process_status = 'pending',\n      last_process_error = NULL,\n      last_process_error_at = NULL\n  WHERE f.federation = :federation!\n    AND f.kind = :kind!\n    AND strpos(f.key, :keyContains!) > 0\n    AND (:frontierId::bigint IS NULL OR f.id = :frontierId)\n    AND f.fetch_status = 'ok'\n    AND f.last_successful_response_id IS NOT NULL\n    AND (:frontierId::bigint IS NOT NULL OR f.process_status <> 'pending')\n    AND (\n      :failure::text IS NULL\n      OR EXISTS (\n        SELECT 1 FROM crawler.frontier_failure ff\n        WHERE ff.id = f.id\n          AND ff.failure = :failure\n          AND ff.http_status IS NOT DISTINCT FROM :httpStatus::integer\n          AND left(regexp_replace(coalesce(nullif(ff.error_text, ''), '-'), '\\s+', ' ', 'g'), 180) = :errorFingerprint::text\n      )\n    )\n  RETURNING f.id\n)\nSELECT count(*)::int AS \"count!\" FROM updated"};
 
 /**
  * Query generated from SQL:
@@ -93,8 +165,10 @@ const reprocessCrawlerTargetsIR: any = {"usedParamSet":{"federation":true,"kind"
  *   WHERE f.federation = :federation!
  *     AND f.kind = :kind!
  *     AND strpos(f.key, :keyContains!) > 0
+ *     AND (:frontierId::bigint IS NULL OR f.id = :frontierId)
  *     AND f.fetch_status = 'ok'
- *     AND f.process_status <> 'pending'
+ *     AND f.last_successful_response_id IS NOT NULL
+ *     AND (:frontierId::bigint IS NOT NULL OR f.process_status <> 'pending')
  *     AND (
  *       :failure::text IS NULL
  *       OR EXISTS (

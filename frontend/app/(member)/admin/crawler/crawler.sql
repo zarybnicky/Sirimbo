@@ -1,4 +1,4 @@
-/* @name RefetchCrawlerErrors */
+/* @name RefetchCrawlerTargets */
 WITH updated AS (
   UPDATE crawler.frontier f
   SET fetch_status = 'pending',
@@ -10,7 +10,8 @@ WITH updated AS (
   WHERE f.federation = :federation!
     AND f.kind = :kind!
     AND strpos(f.key, :keyContains!) > 0
-    AND (f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')
+    AND (:frontierId::bigint IS NULL OR f.id = :frontierId)
+    AND (:frontierId::bigint IS NOT NULL OR f.fetch_status IN ('error', 'transient') OR f.process_status = 'error')
     AND (
       :failure::text IS NULL
       OR EXISTS (
@@ -25,6 +26,27 @@ WITH updated AS (
 )
 SELECT count(*)::int AS "count!" FROM updated;
 
+/* @name MarkCrawlerFrontierGone */
+WITH updated AS (
+  UPDATE crawler.frontier
+  SET fetch_status = 'gone',
+      process_status = 'ok',
+      last_process_error = NULL,
+      last_process_error_at = NULL,
+      error_count = 0
+  WHERE id = :frontierId::bigint
+    AND federation = :federation! AND kind = :kind!
+  RETURNING id
+)
+SELECT count(*)::int AS "count!" FROM updated;
+
+/* @name RemoveQueuedFrontierFetches */
+DELETE FROM graphile_worker._private_jobs j
+USING crawler.frontier_fetch_job f
+WHERE j.id = f.job_id
+  AND f.frontier_id = :id!::bigint
+  AND j.locked_at IS NULL;
+
 /* @name ReprocessCrawlerTargets */
 WITH updated AS (
   UPDATE crawler.frontier f
@@ -34,8 +56,10 @@ WITH updated AS (
   WHERE f.federation = :federation!
     AND f.kind = :kind!
     AND strpos(f.key, :keyContains!) > 0
+    AND (:frontierId::bigint IS NULL OR f.id = :frontierId)
     AND f.fetch_status = 'ok'
-    AND f.process_status <> 'pending'
+    AND f.last_successful_response_id IS NOT NULL
+    AND (:frontierId::bigint IS NOT NULL OR f.process_status <> 'pending')
     AND (
       :failure::text IS NULL
       OR EXISTS (

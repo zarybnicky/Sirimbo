@@ -61,19 +61,22 @@ export const AccountList = React.memo(function AccountList() {
       ))}
       busy={fetching}
       error={error}
+      empty="Žádné kreditové účty"
     >
-      {rows.map((p) => (
-        <tr key={p.id}>
-          <th scope="row">
-            <EntityLink type="person" entity={p} />
-          </th>
-          {currencies.map((c) => (
-            <td key={c} className="whitespace-nowrap text-right">
-              {moneyFormatter.format(p.accountsList.find((x) => x.currency === c))}
-            </td>
-          ))}
-        </tr>
-      ))}
+      {rows
+        .filter((x) => x.accountsList.length > 0)
+        .map((p) => (
+          <tr key={p.id}>
+            <th scope="row">
+              <EntityLink type="person" entity={p} />
+            </th>
+            {currencies.map((c) => (
+              <td key={c} className="whitespace-nowrap text-right">
+                {moneyFormatter.format(p.accountsList.find((x) => x.currency === c))}
+              </td>
+            ))}
+          </tr>
+        ))}
     </Table>
   );
 });
