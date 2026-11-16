@@ -21,6 +21,7 @@ import { addMonths, format } from 'date-fns';
 import type { PaymentGroupItemInput, PaymentStatus } from '@/graphql';
 import { PaymentGroupsDocument, SavePaymentGroupDocument } from '@/graphql/Payment';
 import { cn } from '@/lib/cn';
+import { compareText } from '@/lib/compare';
 import { EntityLink } from '@/ui/EntityLink';
 import { FormError, useFormResult } from '@/ui/form';
 import { compactDateFormatter, moneyFormatter, paymentStatusLabels } from '@/ui/format';
@@ -60,6 +61,8 @@ type Row = { id: string; name: string; isCurrentMember: boolean; cells: Cell[] }
 type Person = {
   id: string;
   name: string;
+  firstName: string;
+  lastName: string;
   ranges: { since: number; until: number }[];
   payments: Record<string, { id: string; amount: string; status: PaymentStatus }>;
 };
@@ -161,7 +164,10 @@ export function PaymentGroups() {
       .filter(
         (x) => !group?.cohort || x.ranges.some((r) => r.since < until && r.until > since),
       )
-      .toSorted((a, b) => a.name.localeCompare(b.name, 'cs'));
+      .toSorted(
+        (a, b) =>
+          compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
+      );
 
     const defaults: Values = { dates: sortedDates, amounts: {} };
     for (const p of sortedPeople) {
@@ -461,7 +467,13 @@ export function PaymentGroups() {
         }}
       >
         <DialogContent>
-          {creating && <ColumnForm initialValues={creating} onAdd={addColumn} />}
+          {creating && (
+            <ColumnForm
+              initialValues={creating}
+              members={group?.cohort ? loaded.people : undefined}
+              onAdd={addColumn}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
@@ -554,9 +566,11 @@ const PaymentTotal = React.memo(function PaymentTotal({
 
 function ColumnForm({
   initialValues,
+  members,
   onAdd,
 }: {
   initialValues: ColumnValues;
+  members?: Person[];
   onAdd: (values: ColumnValues) => boolean;
 }) {
   const { onSuccess } = useFormResult();
@@ -587,6 +601,21 @@ function ColumnForm({
     },
   });
 
+  const dueAt = useWatch({ control, name: 'dueAt' });
+  const time = new Date(`${dueAt}T00:00:00`).getTime();
+  const activeMembers = members && new Set(
+    members
+      .filter((p) => p.ranges.some((r) => r.since <= time && time < r.until))
+      .map((p) => p.id),
+  );
+  const activeGroups = groups
+    .map(([amount, people], index) => ({
+      amount,
+      index,
+      people: activeMembers ? people.filter((id) => activeMembers.has(id)) : people,
+    }))
+    .filter((g) => g.people.length > 0);
+
   const firstAmount = useWatch({ control, name: 'rates.0' });
   React.useLayoutEffect(() => {
     if (firstAmount === undefined) return;
@@ -603,7 +632,7 @@ function ColumnForm({
 
   const onSubmit = handleSubmit((values) => {
     const amounts: Record<string, string> = {};
-    for (const [index, [, people]] of groups.entries()) {
+    for (const { index, people } of activeGroups) {
       for (const personId of people) amounts[personId] = String(values.rates[index]);
     }
     if (!onAdd({ ...initialValues, dueAt: values.dueAt, amounts })) {
@@ -633,7 +662,7 @@ function ColumnForm({
           `Nová částka (${initialValues.currency})`,
         ]}
       >
-        {groups.map(([amount, people], index) => (
+        {activeGroups.map(({ amount, people, index }) => (
           <tr key={amount ?? 'missing'}>
             <td>{people.length}x</td>
             <td>

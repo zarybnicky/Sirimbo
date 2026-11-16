@@ -171,7 +171,7 @@ query PaymentGroups($condition: CohortSubscriptionCondition) {
         id
         since
         until
-        person { id name }
+        person { id name firstName lastName }
       }
     }
     paymentsList {
@@ -181,7 +181,7 @@ query PaymentGroups($condition: CohortSubscriptionCondition) {
       paymentDebtorsList {
         id
         price { amount }
-        person { id name }
+        person { id name firstName lastName }
       }
     }
   }
