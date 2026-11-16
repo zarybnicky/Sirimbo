@@ -1,4 +1,5 @@
 import { atom } from 'jotai';
+import { uiAtom } from '@/lib/ui';
 import { authAtom, tenantIdAtom } from '@/lib/auth';
 import { atomWithStorage, selectAtom } from 'jotai/utils';
 import type { CalendarViewKey } from './CalendarViews';
@@ -33,20 +34,19 @@ export const calendarPreferencesAtom = atomWithStorage<{
   groupBy?: CalendarGroupBy;
 }>('calendarPreferences', {});
 
-const savedSearchesAtom = atomWithStorage<
-  Record<string, EventSavedSearchFragment | null>
->('savedSearches', {}, undefined, { getOnInit: true });
-
 export const savedSearchAtom = atom(
   (get) => {
     const { claims } = get(authAtom);
-    return get(savedSearchesAtom)[`${claims?.user_id}:${get(tenantIdAtom)}`] ?? null;
+    return get(uiAtom).savedSearches?.[`${claims?.user_id}:${get(tenantIdAtom)}`] ?? null;
   },
   (get, set, search: EventSavedSearchFragment | null) => {
     const { claims } = get(authAtom);
-    set(savedSearchesAtom, {
-      ...get(savedSearchesAtom),
-      [`${claims?.user_id}:${get(tenantIdAtom)}`]: search,
+    set(uiAtom, {
+      ...get(uiAtom),
+      savedSearches: {
+        ...get(uiAtom).savedSearches,
+        [`${claims?.user_id}:${get(tenantIdAtom)}`]: search,
+      },
     });
   },
 );
