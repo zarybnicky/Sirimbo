@@ -82,7 +82,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
           end: new Date(event.until),
           created: new Date(event.createdAt!),
           lastModified: new Date(event.updatedAt!),
-          summary: formatEventName(event, viewer, viewer === 'neutral'),
+          summary: `${event.isCancelled ? 'Zrušeno: ' : ''}${formatEventName(event, viewer, viewer === 'neutral')}`,
           description: [
             trainers && `Trenéři: ${trainers}`,
             cohorts && `Tréninkové skupiny: ${cohorts}`,
@@ -128,11 +128,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
 
     const address = [event.streetAddress, event.postalCode, event.city, event.country].filter(Boolean).join(', ');
     const url = `${origin}/federated/${event.federation}/${event.externalId}`;
+    const isCancelled = participations.length > 0 && participations.every((x) => x.cancelled) && officials.length === 0;
 
     calendar.createEvent({
       id: `competition-${event.federation}-${event.externalId}-${date}@sirimbo`,
       start, end, allDay: true,
-      summary: event.name ?? 'Soutěž',
+      summary: `${isCancelled ? 'Odhlášeno: ' : ''}${event.name ?? 'Soutěž'}`,
       description: [
         ...participations.map((entry) => [
           formatCategoryName(entry.competition),
@@ -149,8 +150,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
           ? { lat: event.venueLat, lon: event.venueLng } : undefined,
       } : undefined,
       url,
-      status: participations.length > 0 && participations.every((x) => x.cancelled) && officials.length === 0
-        ? ICalEventStatus.CANCELLED : ICalEventStatus.CONFIRMED,
+      status: isCancelled ? ICalEventStatus.CANCELLED : ICalEventStatus.CONFIRMED,
     });
   }
 
