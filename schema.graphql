@@ -16903,6 +16903,7 @@ type User {
     """The method to use when ordering `Announcement`."""
     orderBy: [AnnouncementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnnouncementConnection!
+  claims: JSON
   createdAt: Datetime!
 
   """Reads and enables pagination through a set of `EventSavedSearch`."""

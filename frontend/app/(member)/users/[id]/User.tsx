@@ -1,12 +1,12 @@
 'use client';
 
+import { normalizeClaims } from '@/lib/auth-claims';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { UserDetailDocument } from '@/graphql/CurrentUser';
 import { useActionMap, useActions } from '@/lib/actions';
 import { personActions } from '@/lib/actions/person';
 import { userProxyActions } from '@/lib/actions/userProxy';
 import { userActions } from '@/lib/actions/user';
-import { ActionGroup } from '@/ui/ActionGroup';
 import { ActionRow } from '@/ui/ActionRow';
 import { formatOpenDateRange, numericFullFormatter } from '@/ui/format';
 import { PageHeader } from '@/ui/PageHeader';
@@ -23,6 +23,7 @@ export function User({ id }: { id: string }) {
   });
 
   const user = data?.user;
+  const claims = normalizeClaims(user?.claims);
   const actions = useActions(userActions, user);
   const pageTitle = user?.uEmail ?? '';
   const people = React.useMemo(() => {
@@ -35,6 +36,7 @@ export function User({ id }: { id: string }) {
   return (
     <>
       <PageHeader
+        actions={actions}
         title={pageTitle}
         breadcrumbLabel="Uživatel"
         breadcrumbs={[{ title: 'Členové', href: '/clenove' }]}
@@ -67,10 +69,28 @@ export function User({ id }: { id: string }) {
             }}
           />
 
+          {claims && (
+            <section className="space-y-3">
+              <h2 className="text-lg font-medium">Oprávnění</h2>
+              <DefinitionList
+                items={{
+                  'Správce systému': claims.is_system_admin ? 'Ano' : 'Ne',
+                  'ID osob': claims.my_person_ids.join(', ') || '—',
+                  'ID klubů': claims.my_tenant_ids.join(', ') || '—',
+                  'ID skupin': claims.my_cohort_ids.join(', ') || '—',
+                  'ID párů': claims.my_couple_ids.join(', ') || '—',
+                  'Host v klubech': claims.guest_tenant_ids.join(', ') || '—',
+                  'Člen v klubech': claims.member_tenant_ids.join(', ') || '—',
+                  'Trenér v klubech': claims.trainer_tenant_ids.join(', ') || '—',
+                  'Administrátor v klubech': claims.admin_tenant_ids.join(', ') || '—',
+                }}
+              />
+            </section>
+          )}
+
           <section>
             <div className="flex justify-between items-baseline flex-wrap gap-4">
               <h2 className="text-lg font-medium">Připojené osoby</h2>
-              <ActionGroup actions={actions} />
             </div>
             {user.userProxiesList.filter(keyIsNonNull('person')).map((item) => (
               <ActionRow

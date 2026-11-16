@@ -35331,6 +35331,14 @@
             ]
           },
           {
+            "name": "claims",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "createdAt",
             "type": {
               "kind": "NON_NULL",

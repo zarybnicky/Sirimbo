@@ -171,3 +171,5 @@ from (
   group by tenant_id
 ) history
 where t.id = history.tenant_id and t.created_at is null;
+
+--!include functions/users_claims.sql

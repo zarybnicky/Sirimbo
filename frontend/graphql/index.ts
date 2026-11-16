@@ -13504,6 +13504,7 @@ export type User = {
   aktualitiesByAtKdo: AktualityConnection;
   /** Reads and enables pagination through a set of `Announcement`. */
   authoredAnnouncements: AnnouncementConnection;
+  claims: Maybe<Scalars['JSON']['output']>;
   createdAt: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `EventSavedSearch`. */
   eventSavedSearchesList: Array<EventSavedSearch>;
@@ -16437,6 +16438,7 @@ export type GraphCacheResolvers = {
     accessCredentialsByCreatedByList?: GraphCacheResolver<WithTypename<User>, UserAccessCredentialsByCreatedByListArgs, Array<WithTypename<AccessCredential> | string>>,
     aktualitiesByAtKdo?: GraphCacheResolver<WithTypename<User>, UserAktualitiesByAtKdoArgs, WithTypename<AktualityConnection> | string>,
     authoredAnnouncements?: GraphCacheResolver<WithTypename<User>, UserAuthoredAnnouncementsArgs, WithTypename<AnnouncementConnection> | string>,
+    claims?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['JSON']['output'] | string>,
     createdAt?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime']['output'] | string>,
     eventSavedSearchesList?: GraphCacheResolver<WithTypename<User>, UserEventSavedSearchesListArgs, Array<WithTypename<EventSavedSearch> | string>>,
     filesByUploadedBy?: GraphCacheResolver<WithTypename<User>, UserFilesByUploadedByArgs, WithTypename<FileConnection> | string>,
@@ -19026,6 +19028,7 @@ export type GraphCacheUpdaters = {
     accessCredentialsByCreatedByList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAccessCredentialsByCreatedByListArgs>,
     aktualitiesByAtKdo?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAktualitiesByAtKdoArgs>,
     authoredAnnouncements?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserAuthoredAnnouncementsArgs>,
+    claims?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     createdAt?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, Record<string, never>>,
     eventSavedSearchesList?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserEventSavedSearchesListArgs>,
     filesByUploadedBy?: GraphCacheUpdateResolver<Maybe<WithTypename<User>>, UserFilesByUploadedByArgs>,

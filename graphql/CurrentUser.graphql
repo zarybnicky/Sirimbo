@@ -50,6 +50,7 @@ query UserList {
 
 query UserDetail($id: BigInt!) {
   user(id: $id) {
+    claims
     id
     uEmail
     uLogin
