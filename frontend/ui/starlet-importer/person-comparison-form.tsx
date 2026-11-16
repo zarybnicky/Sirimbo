@@ -14,13 +14,14 @@ import { useTenantId } from '@/lib/auth';
 import { CourseDocument } from '@/starlet/graphql/Query';
 import { fetchStarlet } from '@/starlet/query';
 import { useAtomValue } from 'jotai';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useAsync, useAsyncCallback } from 'react-async-hook';
 import { useMutation, useQuery } from 'urql';
 import { EntityLink } from '@/ui/EntityLink';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { ListHeader } from '@/ui/ListHeader';
 import { SortButton } from '@/ui/SortButton';
+import { ChevronRight } from 'lucide-react';
 import { Table } from '@/ui/Table';
 import { SubmitButton } from '@/ui/submit';
 import { FormError } from '@/ui/form';
@@ -39,6 +40,7 @@ import {
 import { starletSettingsAtom, starletTokenAtom } from './state';
 
 export function PersonComparisonForm() {
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const tenantId = useTenantId();
   const token = useAtomValue(starletTokenAtom);
   const { courses } = useAtomValue(starletSettingsAtom);
@@ -278,101 +280,133 @@ export function PersonComparisonForm() {
       >
         {visible.map((row) => {
           const { source, database, reason, differences, actions } = row;
+          const rowKey = `${source?.id ?? ''}:${database?.id ?? ''}`;
           return (
-            <tr key={`${source?.id ?? ''}:${database?.id ?? ''}`} className="align-top">
-              <td>
-                {source && (
-                  <>
-                    <details>
-                      <summary className="cursor-pointer">
-                        {source.lastName} {source.firstName}{' '}
-                        <span className="text-xs text-neutral-11">
-                          {source.groups.join(', ')}
-                        </span>
-                      </summary>
-                      {source.registrations?.map((reg) => (
-                        <div key={reg.id} className="my-2 text-xs">
-                          <div className="font-medium">
-                            {reg.firstName} {reg.lastName} ({reg.course})
+            <Fragment key={rowKey}>
+              <tr className="align-top">
+                <td>
+                  {source && (
+                    <>
+                      {source.registrations?.length ? (
+                        <button
+                          type="button"
+                          aria-expanded={expanded.has(rowKey)}
+                          className="inline-flex cursor-pointer items-center gap-1 text-left text-accent-11 [&[aria-expanded=true]>svg]:rotate-90"
+                          onClick={() =>
+                            setExpanded((previous) => {
+                              const next = new Set(previous);
+                              if (next.has(rowKey)) next.delete(rowKey);
+                              else next.add(rowKey);
+                              return next;
+                            })
+                          }
+                        >
+                          <ChevronRight aria-hidden className="size-4 shrink-0" />
+                          {source.lastName} {source.firstName}{' '}
+                          <span className="text-xs text-neutral-11">
+                            {source.groups.join(', ')}
+                          </span>
+                        </button>
+                      ) : (
+                        <>
+                          {source.lastName} {source.firstName}{' '}
+                          <span className="text-xs text-neutral-11">
+                            {source.groups.join(', ')}
+                          </span>
+                        </>
+                      )}
+                      {differences
+                        .filter(({ field }) => field !== 'groups')
+                        .map(({ field, label, values }) => (
+                          <div
+                            key={field}
+                            className="text-xs text-neutral-11 wrap-anywhere"
+                          >
+                            {label}: {values[0] || '—'}
                           </div>
-                          <DefinitionList
-                            className="tabular gap-x-2 [&_dt]:text-neutral-11 [&_dd]:wrap-anywhere"
-                            items={{
-                              Rok: reg.birthYear,
-                              Pohlaví: reg.gender && genderLabels[reg.gender],
-                              'E-mail': reg.email,
-                              Telefon: reg.phone,
-                              Ulice: reg.street,
-                              'Číslo orientační': reg.orientationNumber,
-                              Obec: reg.city,
-                              PSČ: reg.postalCode,
-                              ID: reg.externalIds.join(', '),
-                            }}
-                          />
+                        ))}
+                      {source.conflicts?.map((x) => (
+                        <div key={x} className="text-xs text-danger-11">
+                          {x}
                         </div>
                       ))}
-                    </details>
-                    {differences
-                      .filter(({ field }) => field !== 'groups')
-                      .map(({ field, label, values }) => (
+                    </>
+                  )}
+                </td>
+                <td>
+                  {database && (
+                    <>
+                      <EntityLink
+                        type="person"
+                        entity={{
+                          id: database.id,
+                          name: `${database.lastName} ${database.firstName}`,
+                        }}
+                      />{' '}
+                      <span className="text-xs text-neutral-11">{!source && reason}</span>
+                      {differences.map(({ field, label, values }) => (
                         <div
                           key={field}
                           className="text-xs text-neutral-11 wrap-anywhere"
                         >
-                          {label}: {values[0] || '—'}
+                          {label}: {values[1] || '—'}
                         </div>
                       ))}
-                    {source.conflicts?.map((x) => (
-                      <div key={x} className="text-xs text-danger-11">
-                        {x}
-                      </div>
-                    ))}
-                  </>
-                )}
-              </td>
-              <td>
-                {database && (
-                  <>
-                    <EntityLink
-                      type="person"
-                      entity={{
-                        id: database.id,
-                        name: `${database.lastName} ${database.firstName}`,
-                      }}
-                    />{' '}
-                    <span className="text-xs text-neutral-11">{!source && reason}</span>
-                    {differences.map(({ field, label, values }) => (
-                      <div key={field} className="text-xs text-neutral-11 wrap-anywhere">
-                        {label}: {values[1] || '—'}
-                      </div>
-                    ))}
-                  </>
-                )}
-              </td>
-              {hasActions && (
-                <td className="w-px whitespace-nowrap text-xs text-neutral-11">
-                  {actions.map((x) => (
-                    <div key={x}>{actionLabels[x]}</div>
-                  ))}
-                  {actions.length > 0 && (
-                    <SubmitButton
-                      type="button"
-                      size="xs"
-                      variant="outline"
-                      state={
-                        activeId === (source?.id ?? database?.id)
-                          ? apply.status
-                          : undefined
-                      }
-                      disabled={busy || !!error || apply.loading || row.needsReview}
-                      onClick={() => apply.execute([row])}
-                    >
-                      Použít
-                    </SubmitButton>
+                    </>
                   )}
                 </td>
+                {hasActions && (
+                  <td className="w-px whitespace-nowrap text-xs text-neutral-11">
+                    {actions.map((x) => (
+                      <div key={x}>{actionLabels[x]}</div>
+                    ))}
+                    {actions.length > 0 && (
+                      <SubmitButton
+                        type="button"
+                        size="xs"
+                        variant="outline"
+                        state={
+                          activeId === (source?.id ?? database?.id)
+                            ? apply.status
+                            : undefined
+                        }
+                        disabled={busy || !!error || apply.loading || row.needsReview}
+                        onClick={() => apply.execute([row])}
+                      >
+                        Použít
+                      </SubmitButton>
+                    )}
+                  </td>
+                )}
+              </tr>
+              {expanded.has(rowKey) && !!source?.registrations?.length && (
+                <tr>
+                  <td colSpan={hasActions ? 3 : 2}>
+                    {source?.registrations?.map((reg) => (
+                      <div key={reg.id} className="my-2 text-xs">
+                        <div className="font-medium">
+                          {reg.firstName} {reg.lastName} ({reg.course})
+                        </div>
+                        <DefinitionList
+                          className="tabular gap-x-2 [&_dt]:text-neutral-11 [&_dd]:wrap-anywhere"
+                          items={{
+                            Rok: reg.birthYear,
+                            Pohlaví: reg.gender && genderLabels[reg.gender],
+                            'E-mail': reg.email,
+                            Telefon: reg.phone,
+                            Ulice: reg.street,
+                            'Číslo orientační': reg.orientationNumber,
+                            Obec: reg.city,
+                            PSČ: reg.postalCode,
+                            ID: reg.externalIds.join(', '),
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </td>
+                </tr>
               )}
-            </tr>
+            </Fragment>
           );
         })}
       </Table>

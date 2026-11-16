@@ -1,5 +1,7 @@
 'use client';
 
+import { ChevronRight } from 'lucide-react';
+
 import { formatCategoryName } from '@/ui/csts';
 
 import { Table } from '@/ui/Table';
@@ -16,7 +18,7 @@ import { Tab, TabMenu } from '@/ui/TabMenu';
 import { parseAsString, useQueryState } from 'nuqs';
 import { useQuery } from 'urql';
 import { compareNaturalText, compareText } from '@/lib/compare';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { ListHeader } from '@/ui/ListHeader';
 
 type EventTablesProps = { federation: string; eventId: string };
@@ -43,6 +45,7 @@ export function EventTables(props: EventTablesProps) {
 
 function Competitors({ federation, eventId }: EventTablesProps) {
   const [search, setSearch] = useState('');
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [{ data, fetching, error }] = useQuery({
     query: FederationEventCompetitorsDocument,
     variables: { federation, eventId },
@@ -97,61 +100,82 @@ function Competitors({ federation, eventId }: EventTablesProps) {
         columns={[showStartNumber && 'Start. č.', 'Soutěžící', 'Soutěže']}
       >
         {competitors.map(({ competitorId, competitor, entries, startNumbers }) => (
-          <tr key={competitorId} className="align-top">
-            {showStartNumber && <td>{startNumbers.join(', ')}</td>}
-            <th scope="row">
-              <Link
-                className={cn(
-                  'text-accent-11',
-                  entries.every((entry) => entry.cancelled) ? 'line-through' : 'underline',
-                )}
-                href={`/federated/${federation}/competitors/${competitor.externalId}`}
-                prefetch={false}
-              >
-                {competitor.name || competitorId}
-              </Link>
-            </th>
-            <td>
-              <details>
-                <summary className="cursor-pointer text-accent-11">
+          <Fragment key={competitorId}>
+            <tr className="align-top">
+              {showStartNumber && <td>{startNumbers.join(', ')}</td>}
+              <th scope="row">
+                <Link
+                  className={cn(
+                    'text-accent-11',
+                    entries.every((entry) => entry.cancelled)
+                      ? 'line-through'
+                      : 'underline',
+                  )}
+                  href={`/federated/${federation}/competitors/${competitor.externalId}`}
+                  prefetch={false}
+                >
+                  {competitor.name || competitorId}
+                </Link>
+              </th>
+              <td>
+                <button
+                  type="button"
+                  aria-expanded={expanded.has(competitorId)}
+                  className="inline-flex cursor-pointer items-center gap-1 text-left text-accent-11 [&[aria-expanded=true]>svg]:rotate-90"
+                  onClick={() =>
+                    setExpanded((previous) => {
+                      const next = new Set(previous);
+                      if (next.has(competitorId)) next.delete(competitorId);
+                      else next.add(competitorId);
+                      return next;
+                    })
+                  }
+                >
+                  <ChevronRight aria-hidden className="size-4 shrink-0" />
                   {formatCount(entries.length, {
                     one: 'soutěž',
                     few: 'soutěže',
                     other: 'soutěží',
                   })}
-                </summary>
-                <ul className="mt-1 space-y-1">
-                  {entries.map(
-                    ({ competition, competitionId, cancelled, startNumber }) => (
-                      <li key={competitionId}>
-                        <Link
-                          className={cn(
-                            'text-accent-11 underline',
-                            (cancelled || competition.status === 'CANCELLED') &&
-                              'line-through',
+                </button>
+              </td>
+            </tr>
+            {expanded.has(competitorId) && (
+              <tr>
+                <td colSpan={showStartNumber ? 3 : 2}>
+                  <ul className="mt-1 space-y-1">
+                    {entries.map(
+                      ({ competition, competitionId, cancelled, startNumber }) => (
+                        <li key={competitionId}>
+                          <Link
+                            className={cn(
+                              'text-accent-11 underline',
+                              (cancelled || competition.status === 'CANCELLED') &&
+                                'line-through',
+                            )}
+                            href={`/federated/${federation}/${eventId}/${competition.externalId}`}
+                            prefetch={false}
+                          >
+                            {formatCategoryName(competition) || competition.externalId}
+                          </Link>
+                          {startNumbers.length > 1 && startNumber && (
+                            <span className="ml-2 text-xs text-neutral-11">
+                              č. {startNumber}
+                            </span>
                           )}
-                          href={`/federated/${federation}/${eventId}/${competition.externalId}`}
-                          prefetch={false}
-                        >
-                          {formatCategoryName(competition) || competition.externalId}
-                        </Link>
-                        {startNumbers.length > 1 && startNumber && (
-                          <span className="ml-2 text-xs text-neutral-11">
-                            č. {startNumber}
-                          </span>
-                        )}
-                        {showDate && (
-                          <span className="ml-2 text-xs text-neutral-11">
-                            {formatDateOnly(competition.startDate)}
-                          </span>
-                        )}
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </details>
-            </td>
-          </tr>
+                          {showDate && (
+                            <span className="ml-2 text-xs text-neutral-11">
+                              {formatDateOnly(competition.startDate)}
+                            </span>
+                          )}
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </td>
+              </tr>
+            )}
+          </Fragment>
         ))}
       </Table>
     </>

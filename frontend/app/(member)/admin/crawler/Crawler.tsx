@@ -26,6 +26,7 @@ import {
   CrawlerJobsDocument,
   CrawlerTargetsDocument,
   type CrawlerTargetsQuery,
+  type CrawlerTargetQuery,
 } from '@/graphql/Crawler';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { ListHeader } from '@/ui/ListHeader';
@@ -153,9 +154,7 @@ export function Crawler({
         />
       ) : null}
 
-      <div className="col-feature my-4">
-        {children}
-      </div>
+      <div className="col-feature my-4">{children}</div>
     </>
   );
 }
@@ -267,6 +266,7 @@ export function CrawlerTargets({
 const jobStates = ['queued', 'locked', 'failed'];
 
 export function CrawlerJobs() {
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [states, setStates] = useQueryState(
     'state',
     parseAsArrayOf(parseAsStringLiteral(jobStates)).withDefault(jobStates),
@@ -323,65 +323,88 @@ export function CrawlerJobs() {
         error={result.error}
       >
         {rows.map((row) => (
-          <tr key={row.jobId}>
-            <td>{row.state === 'locked' ? 'running' : row.state}</td>
-            <td>
-              <div className="flex items-center gap-2">
-                <ActionGroup
-                  primary="complete"
-                  iconOnly
-                  actions={[
-                    {
-                      id: 'complete',
-                      key: row.jobId!,
-                      label: 'Mark complete',
-                      icon: Check,
-                      execute: async () => {
-                        try {
-                          await completeCrawlerJob(row.jobId!);
-                          reexecuteQuery({ requestPolicy: 'network-only' });
-                        } catch (error) {
-                          toast.error(
-                            error instanceof Error
-                              ? error.message
-                              : 'Could not complete job.',
-                          );
-                        }
+          <Fragment key={row.jobId!}>
+            <tr>
+              <td>{row.state === 'locked' ? 'running' : row.state}</td>
+              <td>
+                <div className="flex items-center gap-2">
+                  <ActionGroup
+                    primary="complete"
+                    iconOnly
+                    actions={[
+                      {
+                        id: 'complete',
+                        key: row.jobId!,
+                        label: 'Mark complete',
+                        icon: Check,
+                        execute: async () => {
+                          try {
+                            await completeCrawlerJob(row.jobId!);
+                            reexecuteQuery({ requestPolicy: 'network-only' });
+                          } catch (error) {
+                            toast.error(
+                              error instanceof Error
+                                ? error.message
+                                : 'Could not complete job.',
+                            );
+                          }
+                        },
                       },
-                    },
-                  ]}
-                />
-                {row.jobId}
-              </div>
-            </td>
-            <th scope="row" className="font-mono">
-              <Link
-                className="text-accent-11 underline"
-                href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.frontierKey ?? '')}`}
-                prefetch={false}
-              >
-                {row.federation}:{row.kind}
-                {row.frontierKey ? ':' + row.frontierKey : ''}
-              </Link>
-            </th>
-            <td>
-              {row.attempts ?? '-'} / {row.maxAttempts ?? '-'}
-            </td>
-            <td>{row.runAt ? numericFullFormatter.format(new Date(row.runAt)) : '-'}</td>
-            <td>
-              {row.lockedAt ? numericFullFormatter.format(new Date(row.lockedAt)) : '-'}
-            </td>
-            <td className="min-w-64 whitespace-normal break-all">
-              {row.jobError && (
-                <details>
-                  <summary className="cursor-pointer">Error</summary>
+                    ]}
+                  />
+                  {row.jobId}
+                </div>
+              </td>
+              <th scope="row" className="font-mono">
+                <Link
+                  className="text-accent-11 underline"
+                  href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.frontierKey ?? '')}`}
+                  prefetch={false}
+                >
+                  {row.federation}:{row.kind}
+                  {row.frontierKey ? ':' + row.frontierKey : ''}
+                </Link>
+              </th>
+              <td>
+                {row.attempts ?? '-'} / {row.maxAttempts ?? '-'}
+              </td>
+              <td>
+                {row.runAt ? numericFullFormatter.format(new Date(row.runAt)) : '-'}
+              </td>
+              <td>
+                {row.lockedAt ? numericFullFormatter.format(new Date(row.lockedAt)) : '-'}
+              </td>
+              <td className="min-w-64 whitespace-normal break-all">
+                {row.jobError && (
+                  <button
+                    type="button"
+                    aria-expanded={expanded.has(row.jobId!)}
+                    className="inline-flex cursor-pointer items-center gap-1 text-left text-accent-11 [&[aria-expanded=true]>svg]:rotate-90"
+                    onClick={() =>
+                      setExpanded((previous) => {
+                        const next = new Set(previous);
+                        if (next.has(row.jobId!)) next.delete(row.jobId!);
+                        else next.add(row.jobId!);
+                        return next;
+                      })
+                    }
+                  >
+                    <ChevronRight aria-hidden className="size-4 shrink-0" />
+                    Error
+                  </button>
+                )}
+              </td>
+            </tr>
+            {expanded.has(row.jobId!) && !!row.jobError && (
+              <tr>
+                <td colSpan={7}>
                   <pre className="max-h-72 overflow-auto whitespace-pre-wrap">
                     {row.jobError}
                   </pre>
-                </details>
-              )}
-            </td>
-          </tr>
+                </td>
+              </tr>
+            )}
+          </Fragment>
         ))}
       </Table>
     </>
@@ -656,5 +679,116 @@ function Overview({
         </section>
       )}
     </>
+  );
+}
+
+export function CrawlerResponses({
+  frontier,
+  basePath,
+}: {
+  frontier: NonNullable<CrawlerTargetQuery['crawlerTarget']>;
+  basePath: string;
+}) {
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const responses = frontier.responses.nodes;
+  return (
+    <Table
+      columns={[
+        'response',
+        'http',
+        'sys_period',
+        'last observed',
+        'observations',
+        'url / error',
+      ]}
+      className="col-feature"
+      empty="No responses"
+    >
+      {responses.map((response) => (
+        <Fragment key={response.id}>
+          <tr className="align-top">
+            <td className="whitespace-nowrap">
+              {response.contentHash ? (
+                <Link
+                  className="text-accent-11 underline"
+                  href={`${basePath}/responses/${response.id}`}
+                  prefetch={false}
+                >
+                  {response.id}
+                </Link>
+              ) : (
+                response.id
+              )}
+              {response.id === frontier.lastResponseId && <div>latest</div>}
+              {response.id === frontier.lastSuccessfulResponseId && (
+                <div>last successful</div>
+              )}
+            </td>
+            <td>{response.httpStatus ?? '-'}</td>
+            <td className="whitespace-nowrap">
+              {response.sysPeriod?.start?.value ? (
+                <>
+                  <div>
+                    [
+                    {numericFullFormatter.format(
+                      new Date(response.sysPeriod?.start?.value),
+                    )}
+                    ,
+                  </div>
+                  <div>
+                    {response.sysPeriod?.end?.value
+                      ? numericFullFormatter.format(
+                          new Date(response.sysPeriod?.end?.value),
+                        )
+                      : '∞'}
+                    )
+                  </div>
+                </>
+              ) : (
+                <div>
+                  {numericFullFormatter.format(new Date(response.fetchedAt))} (fetched)
+                </div>
+              )}
+            </td>
+            <td className="whitespace-nowrap">
+              {response.lastObservedAt
+                ? numericFullFormatter.format(new Date(response.lastObservedAt))
+                : '-'}
+            </td>
+            <td>{response.observationCount}</td>
+            <td className="min-w-64 break-all">
+              <div>{response.url}</div>
+              {response.error && (
+                <button
+                  type="button"
+                  aria-expanded={expanded.has(response.id)}
+                  className="inline-flex cursor-pointer items-center gap-1 text-left text-accent-11 [&[aria-expanded=true]>svg]:rotate-90"
+                  onClick={() =>
+                    setExpanded((previous) => {
+                      const next = new Set(previous);
+                      if (next.has(response.id)) next.delete(response.id);
+                      else next.add(response.id);
+                      return next;
+                    })
+                  }
+                >
+                  <ChevronRight aria-hidden className="size-4 shrink-0" />
+                  Error
+                </button>
+              )}
+            </td>
+          </tr>
+          {expanded.has(response.id) && !!response.error && (
+            <tr>
+              <td colSpan={6}>
+                <pre className="max-h-72 overflow-auto whitespace-pre-wrap">
+                  {response.error}
+                </pre>
+              </td>
+            </tr>
+          )}
+        </Fragment>
+      ))}
+    </Table>
   );
 }
