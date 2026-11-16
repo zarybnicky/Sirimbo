@@ -20,8 +20,7 @@ import { useMutation, useQuery } from 'urql';
 import { EntityLink } from '@/ui/EntityLink';
 import { DefinitionList } from '@/ui/DefinitionList';
 import { ListHeader } from '@/ui/ListHeader';
-import { SortButton } from '@/ui/SortButton';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, RefreshCw } from 'lucide-react';
 import { Table } from '@/ui/Table';
 import { SubmitButton } from '@/ui/submit';
 import { FormError } from '@/ui/form';
@@ -46,10 +45,6 @@ export function PersonComparisonForm() {
   const { courses } = useAtomValue(starletSettingsAtom);
   const [search, setSearch] = useState('');
   const [showAll, setShowAll] = useQueryState('all', parseAsBoolean.withDefault(false));
-  const [sort, setSort] = useState<{
-    column: 'source' | 'database';
-    descending: boolean;
-  }>({ column: 'source', descending: false });
 
   const [people] = useQuery({
     query: PersonListDocument,
@@ -63,8 +58,9 @@ export function PersonComparisonForm() {
   const updateMembership = useMutation(UpdateTenantMembershipDocument)[1];
   const syncCohorts = useMutation(SyncCohortMembershipsDocument)[1];
 
+  const sourceKey = JSON.stringify([tenantId, token, courses]);
   const source = useAsync(async () => {
-    if (!token?.auth_ok) return [];
+    if (!token?.auth_ok) return;
     const registrations: ComparisonPerson[] = [];
     for (const course of courses) {
       const result = await fetchStarlet(CourseDocument, { key: course.id });
@@ -89,10 +85,11 @@ export function PersonComparisonForm() {
         });
       }
     }
-    return groupRegistrations(registrations);
-  }, [token, courses]);
+    return { key: sourceKey, people: groupRegistrations(registrations) };
+  }, [sourceKey]);
 
-  const busy = source.loading || people.fetching || cohorts.fetching;
+  const busy = source.loading || people.fetching || cohorts.fetching ||
+    (!source.error && source.result?.key !== sourceKey);
   const error = source.error ?? people.error ?? cohorts.error;
 
   const database = useMemo(() => {
@@ -147,18 +144,20 @@ export function PersonComparisonForm() {
       });
   }, [people.data, cohorts.data, tenantId]);
 
-  const rows = useMemo(
-    () =>
-      comparePeople(
-        source.result ?? [],
-        database,
-        cohorts.data?.cohortsList ?? [],
-        tenantId,
-      ),
-    [source.result, database, cohorts.data, tenantId],
-  );
+  const comparison = useMemo(() => {
+    if (busy || error || !source.result || !people.data || !cohorts.data) return;
+    return {
+      tenantId,
+      sourceCount: source.result.people.length,
+      rows: comparePeople(source.result.people, database, cohorts.data.cohortsList ?? [], tenantId),
+    };
+  }, [busy, error, source.result, people.data, cohorts.data, database, tenantId]);
+  const [previousComparison, setPreviousComparison] = useState(comparison);
+  if (comparison && comparison !== previousComparison) setPreviousComparison(comparison);
+  const displayed = comparison ?? (previousComparison?.tenantId === tenantId ? previousComparison : undefined);
+  const rows = displayed?.rows ?? [];
 
-  const visible = busy ? [] : rows
+  const visible = rows
     .filter((row) => showAll || row.actions.length > 0 || row.needsReview)
     .filter((row) =>
       slugify(
@@ -168,12 +167,12 @@ export function PersonComparisonForm() {
       ).includes(slugify(search)),
     )
     .toSorted((left, right) => {
-      const a = left[sort.column] ?? left.source ?? left.database!;
-      const b = right[sort.column] ?? right.source ?? right.database!;
+      const a = left.source ?? left.database!;
+      const b = right.source ?? right.database!;
       return (
-        (compareText(a.lastName, b.lastName) ||
-          compareText(a.firstName, b.firstName) ||
-          compareText(a.id, b.id)) * (sort.descending ? -1 : 1)
+        compareText(a.lastName, b.lastName) ||
+        compareText(a.firstName, b.firstName) ||
+        compareText(a.id, b.id)
       );
     });
   const hasActions = visible.some((row) => row.actions.length > 0);
@@ -241,6 +240,15 @@ export function PersonComparisonForm() {
         searchPlaceholder="Hledat osobu…"
         actions={
           <>
+            <SubmitButton
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={busy || apply.loading}
+              onClick={() => source.execute()}
+            >
+              <RefreshCw className="size-4" />
+            </SubmitButton>
             <RadioButtonGroup
               value={showAll ? 'all' : 'actionable'}
               options={[
@@ -266,12 +274,8 @@ export function PersonComparisonForm() {
       />
       <Table
         columns={[
-          <SortButton key="source" column="source" value={sort} onChange={setSort}>
-            Evidence ({source.result?.length ?? 0})
-          </SortButton>,
-          <SortButton key="database" column="database" value={sort} onChange={setSort}>
-            Databáze ({rows.filter((r) => r.database).length})
-          </SortButton>,
+          `Evidence (${displayed?.sourceCount ?? 0})`,
+          `Databáze (${rows.filter((r) => r.database).length})`,
           hasActions && 'Akce',
         ]}
         busy={busy}
