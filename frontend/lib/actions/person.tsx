@@ -11,6 +11,7 @@ import {
   CreateTenantTrainerDocument,
   CreateUserProxyDocument,
 } from '@/graphql/Memberships';
+import { AddToClubForm } from '@/ui/forms/AddToClubForm';
 import { AddToCohortForm } from '@/ui/forms/AddToCohortForm';
 import { AccessCredentialForm } from '@/ui/forms/AccessCredentialForm';
 import { AddPersonAccessForm } from '@/ui/forms/AddPersonAccessForm';
@@ -26,6 +27,7 @@ export type PersonActionItem = {
   isTrainer: boolean | null;
   isAdmin: boolean | null;
   matchingUserIds?: string[];
+  tenantIds?: (string | null)[] | null;
 };
 
 export const personActions = defineActions<PersonActionItem>()([
@@ -34,7 +36,7 @@ export const personActions = defineActions<PersonActionItem>()([
     group: 'primary',
     label: 'Upravit',
     icon: Pencil,
-    visible: ({ auth, item }) => auth.isAdmin || auth.isMyPerson(item.id),
+    visible: ({ auth, item }) => auth.canManagePerson(item) || auth.isMyPerson(item.id),
     render: ({ item }) => <EditPersonForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-2xl',
@@ -73,12 +75,22 @@ export const personActions = defineActions<PersonActionItem>()([
     render: ({ item }) => <AddToCohortForm personId={item.id} />,
   },
   {
+    id: 'person.addToClub',
+    group: 'add',
+    label: 'Přidat do jiného klubu',
+    icon: UserPlus,
+    requireAdmin: true,
+    visible: ({ auth, item, tenantId }) => auth.canManagePerson(item) &&
+      (auth.isSystemAdmin || auth.adminTenantIds.some((id) => id !== tenantId)),
+    render: ({ item }) => <AddToClubForm personId={item.id} />,
+  },
+  {
     id: 'person.addMember',
     group: 'add',
     label: 'Přidat jako člena',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ item }) => !item.isMember,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isMember,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantMembershipDocument, {
         input: { tenantMembership: { personId: item.id } },
@@ -91,7 +103,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat jako trenéra',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ item }) => !item.isTrainer,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isTrainer,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantTrainerDocument, {
         input: { tenantTrainer: { personId: item.id } },
@@ -104,7 +116,7 @@ export const personActions = defineActions<PersonActionItem>()([
     label: 'Přidat jako správce',
     icon: UserPlus,
     requireAdmin: true,
-    visible: ({ item }) => !item.isAdmin,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.isAdmin,
     execute: async ({ item, mutate }) => {
       await mutate(CreateTenantAdministratorDocument, {
         input: { tenantAdministrator: { personId: item.id } },
@@ -154,7 +166,7 @@ export const personActions = defineActions<PersonActionItem>()([
     icon: Trash2,
     variant: 'danger',
     requireAdmin: true,
-    visible: ({ item }) => !item.externalIds,
+    visible: ({ auth, item }) => auth.canManagePerson(item) && !item.externalIds,
     confirm: ({ item }) =>
       `Opravdu chcete NENÁVRATNĚ smazat uživatele a všechna jeho data "${item?.name}"? Toto udělejte pouze v případě, že jste při vytváření uživatele udělali chybu, finanční údaje dlouholetých členů potřebujeme nechat v evidenci!`,
     execute: async ({ item: { id }, mutate, router }) => {

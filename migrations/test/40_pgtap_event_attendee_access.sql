@@ -79,10 +79,12 @@ SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0:
 RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
 SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SELECT set_config('jwt.claims.admin_tenant_ids', '{-9000}', true);
 SET LOCAL ROLE administrator;
 SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint,
   'admins need neither a registration nor a share link to see participants');
 RESET ROLE;
+SELECT set_config('jwt.claims.admin_tenant_ids', '{}', true);
 UPDATE event_registration SET registration_status='active' WHERE id=-9001;
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 -- Run the installed query on test data only; ROLLBACK restores the original view.
@@ -184,6 +186,7 @@ SET LOCAL ROLE trainer;
 SELECT tap.set_eq('SELECT id FROM event WHERE search_vector @@ ''hledani:*''::tsquery',
   'SELECT * FROM app_private.accessible_event_ids(''hledani:*''::tsquery)',
   'filtered trainer access matches the event SELECT policies');
+SELECT set_config('jwt.claims.admin_tenant_ids', '{-9000}', true);
 SET LOCAL ROLE administrator;
 SELECT tap.set_eq('SELECT id FROM event WHERE search_vector @@ ''hledani:*''::tsquery',
   'SELECT * FROM app_private.accessible_event_ids(''hledani:*''::tsquery)',

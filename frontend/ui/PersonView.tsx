@@ -47,8 +47,8 @@ export const PersonView = React.memo(function PersonView({
     parseAsString.withOptions({ history: 'push' }),
   );
 
-  const isAdminOrCurrentPerson = auth.isAdmin || auth.isMyPerson(id);
   const item = data?.person;
+  const isAdminOrCurrentPerson = auth.isMyPerson(id) || (!!item && auth.canManagePerson(item));
 
   const actions = useActions(personActions, item);
   const sttProgress = getBestCstsProgress(

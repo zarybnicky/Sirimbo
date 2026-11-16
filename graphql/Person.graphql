@@ -23,6 +23,7 @@ fragment PersonBasic on Person {
   isTrainer
   isAdmin
   isExternal
+  tenantIds
 }
 
 fragment Person on Person {

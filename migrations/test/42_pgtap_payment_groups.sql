@@ -7,6 +7,7 @@ SELECT set_config('jwt.claims.tenant_id', '2', true);
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (-9800, 'Debtor', 'Payment group', 'unspecified', ''),
        (-9801, 'Recipient', 'Payment group', 'unspecified', '');
+INSERT INTO tenant_membership (tenant_id, person_id) VALUES (2, -9800), (2, -9801);
 INSERT INTO account (id, person_id, currency) OVERRIDING SYSTEM VALUE
 VALUES (-9800, -9800, 'CZK'), (-9801, -9801, 'CZK');
 INSERT INTO cohort (id, name, color_rgb) OVERRIDING SYSTEM VALUE
@@ -14,6 +15,7 @@ VALUES (-9800, 'Payment group tests', '#000000');
 INSERT INTO cohort_subscription (id, cohort_id, account_id, price) OVERRIDING SYSTEM VALUE
 VALUES (-9800, -9800, -9801, (100, 'CZK')::price);
 
+SELECT set_config('jwt.claims.admin_tenant_ids', '{2}', true);
 SET LOCAL ROLE administrator;
 CREATE TEMP TABLE saved_payment AS
 SELECT * FROM save_payment_group(-9800, ARRAY[(-9800, now() - interval '1 day', 100)::payment_group_item]);

@@ -24,3 +24,9 @@ CREATE or replace FUNCTION my_tenants_array() RETURNS bigint[] LANGUAGE sql STAB
 $$;
 COMMENT ON FUNCTION my_tenants_array() IS '@behavior -*';
 GRANT ALL ON FUNCTION my_tenants_array() TO anonymous;
+
+CREATE or replace FUNCTION current_admin_tenant_ids() RETURNS bigint[] LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE AS $$
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.admin_tenant_ids', true), ''), '{}'), '[]', '{}')::bigint[];
+$$;
+COMMENT ON FUNCTION current_admin_tenant_ids() IS '@behavior -*';
+GRANT ALL ON FUNCTION current_admin_tenant_ids() TO anonymous;

@@ -10,9 +10,19 @@ create or replace function create_person(
   join_date timestamptz
 )
   returns person
-  language plpgsql
+  language plpgsql security definer
+  set search_path = pg_catalog, public, pg_temp
 as $$
 begin
+  if not pg_has_role(current_setting('role'), 'system_admin', 'member') then
+    if not current_tenant_id() = any (current_admin_tenant_ids())
+      or (person_id is not null and not app_private.can_edit_person(person_id)) then
+      raise insufficient_privilege using message = 'Cannot add this person to this club';
+    end if;
+    if person_id is null and (is_member or is_trainer or is_admin) is not true then
+      raise insufficient_privilege using message = 'A new person must have a club relationship';
+    end if;
+  end if;
   if person_id is null then
     insert into person (
       first_name,

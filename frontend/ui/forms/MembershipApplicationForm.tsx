@@ -75,7 +75,7 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
 }) {
   const { onSuccess } = useFormResult();
   const auth = useAuth();
-  const { control, handleSubmit, getValues, setValue } = useForm({
+  const { control, handleSubmit, getValues, setValue, setError } = useForm({
     resolver: zodResolver(Form),
     defaultValues: {
       ...(data
@@ -143,6 +143,10 @@ export const MembershipApplicationForm = React.memo(function MembershipApplicati
 
   const onConfirm = async (values: z.infer<typeof Form>) => {
     if (!data) return;
+    if (!values.isMember && !values.isTrainer && !values.isAdmin) {
+      setError('isMember', { message: 'Vyberte alespoň jednu roli v klubu.' });
+      return;
+    }
 
     const application = ApplicationForm.parse(values);
     const updateResult = await update({ input: { id: data.id, patch: application } });

@@ -20,6 +20,7 @@ export interface AuthState extends ResolvedAuth {
   couples: CoupleFragment[];
   isMyPerson: (id: string | null | undefined) => boolean;
   isMyCouple: (id: string | null | undefined) => boolean;
+  canManagePerson: (person: { tenantIds?: readonly (string | null)[] | null }) => boolean;
   canManageEvent: (event: { managerPersonIds: readonly (string | null)[] }) => boolean;
 }
 
@@ -30,6 +31,7 @@ const defaultAuthState: AuthState = {
   couples: [],
   isMyPerson: () => false,
   isMyCouple: () => false,
+  canManagePerson: () => false,
   canManageEvent: () => false,
 };
 
@@ -78,6 +80,10 @@ const authHelpersAtom = atom<AuthState>((get) => {
     couples: persons.flatMap((x) => x.couplesList || []),
     isMyPerson: (id: string | null | undefined) => !!id && auth.personIds.includes(id),
     isMyCouple: (id: string | null | undefined) => !!id && auth.coupleIds.includes(id),
+    canManagePerson: (person) =>
+      auth.isSystemAdmin || (auth.isAdmin && !!person.tenantIds?.some(
+        (id) => id !== null && auth.adminTenantIds.includes(id),
+      )),
     canManageEvent: (event) =>
       auth.isAdmin ||
       (auth.isTrainer &&

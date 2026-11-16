@@ -7,6 +7,7 @@ const PersonFieldsPlugin = extendSchema((build) => ({
   typeDefs: `
     extend type Person {
       cohortIds: [BigInt]
+      tenantIds: [BigInt]
       isMember: Boolean
       isTrainer: Boolean
       isAdmin: Boolean
@@ -23,6 +24,15 @@ const PersonFieldsPlugin = extendSchema((build) => ({
           $cohorts.where(sql`now() <@ ${$cohorts.alias}.active_range`);
           $cohorts.setInliningForbidden();
           return pgClassExpression($cohorts.single(), LIST_TYPES.bigint)`array_agg(${$cohorts.alias}.cohort_id)`;
+        },
+        tenantIds($person: PgSelectSingleStep) {
+          return pgClassExpression($person, LIST_TYPES.bigint)`array(
+            select tenant_id from public.tenant_membership where person_id = ${$person.get('id')}
+            union
+            select tenant_id from public.tenant_trainer where person_id = ${$person.get('id')}
+            union
+            select tenant_id from public.tenant_administrator where person_id = ${$person.get('id')}
+          )`;
         },
         isMember($person: PgSelectSingleStep) {
           return pgClassExpression($person, TYPES.boolean)`

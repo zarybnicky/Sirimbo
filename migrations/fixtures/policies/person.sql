@@ -1,16 +1,14 @@
 select app_private.drop_policies('public.person');
 
-create policy admin_all on person to administrator using (true);
+create policy system_admin_all on person to system_admin using (true);
+create policy admin_update on person for update to administrator
+  using (app_private.can_edit_person(id));
+create policy admin_delete on person for delete to administrator
+  using (app_private.can_edit_person(id));
 create policy admin_myself on person for update
   using (id = any ((select current_person_ids())::bigint[]));
 create policy view_tenant_or_trainer on person for select
-  using (id in (select app_private.visible_person_ids()));
-create policy view_active_couple_partner on person for select
-  using (id in (
-    select unnest(array[c.man_id, c.woman_id])
-    from couple c
-    where c.status = 'active'
-  ));
+  using (id in (select app_private.visible_person_ids(true)));
 
 create policy event_share_view on person for select to anonymous
   using (id in (

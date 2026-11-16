@@ -34,6 +34,7 @@ import { z } from 'zod';
 import { isTruthy } from '@/lib/truthyFilter';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@/lib/auth';
 import { sanitizeUnicode } from '@/lib/sanitize';
 
 const url = z.preprocess(
@@ -108,6 +109,7 @@ export function CreatePersonDialog({
   const [open, setOpen] = React.useState<'existing' | 'new' | null>(null);
   const [linksExpanded, setLinksExpanded] = React.useState(false);
   const router = useRouter();
+  const auth = useAuth();
   const [createResult, create] = useMutation(CreatePersonDocument);
   const [syncResult, syncCohorts] = useMutation(SyncCohortMembershipsDocument);
 
@@ -120,12 +122,10 @@ export function CreatePersonDialog({
   const personOptions = React.useMemo(
     () =>
       people
-        ?.map((x) => ({
-          id: x.id,
-          label: x.name || '?',
-        }))
+        ?.filter((p) => auth.canManagePerson(p))
+        .map((x) => ({ id: x.id, label: x.name || '?' }))
         .toSorted((x, y) => compareText(x.label, y.label)),
-    [people],
+    [people, auth],
   );
 
   const { control, handleSubmit, getValues, setValue, reset, trigger } = useForm({

@@ -14,6 +14,8 @@ export const coupleActions = defineActions<CoupleFragment>()([
     label: 'Upravit',
     icon: Pencil,
     requireAdmin: true,
+    visible: ({ auth, item }) =>
+      [item.man, item.woman].some((person) => person && auth.canManagePerson(person)),
     render: ({ item }) => <EditCoupleForm id={item.id} />,
     dialogProps: {
       className: 'sm:max-w-2xl',
@@ -24,7 +26,8 @@ export const coupleActions = defineActions<CoupleFragment>()([
     label: 'Ukončit k dnešnímu datu',
     icon: Unplug,
     requireAdmin: true,
-    visible: ({ item }) => item.status === 'ACTIVE',
+    visible: ({ auth, item }) => item.status === 'ACTIVE' &&
+      [item.man, item.woman].some((person) => person && auth.canManagePerson(person)),
     confirm: ({ item }) =>
       `Opravdu chcete partnerství ${item.name} ukončit ke dnešnímu datu?`,
     execute: async ({ item, mutate }) => {
@@ -42,6 +45,8 @@ export const coupleActions = defineActions<CoupleFragment>()([
     icon: Trash2,
     variant: 'danger',
     requireAdmin: true,
+    visible: ({ auth, item }) =>
+      [item.man, item.woman].some((person) => person && auth.canManagePerson(person)),
     confirm:
       'Opravdu chcete pár NENÁVRATNĚ smazat, včetně všech jejich lekcí, ...? Spíše použij variantu ukončení partnerství, ať zůstanou zachována historická data.',
     execute: async ({ item: { id }, mutate, router }) => {

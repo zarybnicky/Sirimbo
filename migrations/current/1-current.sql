@@ -172,4 +172,24 @@ from (
 ) history
 where t.id = history.tenant_id and t.created_at is null;
 
+update membership_application
+set prefix_title = coalesce(prefix_title, ''), suffix_title = coalesce(suffix_title, ''), bio = coalesce(bio, '')
+where prefix_title is null or suffix_title is null or bio is null;
+alter table membership_application
+  alter column prefix_title set default '', alter column prefix_title set not null,
+  alter column suffix_title set default '', alter column suffix_title set not null,
+  alter column bio set default '', alter column bio set not null;
+
 --!include functions/users_claims.sql
+--!include functions/current_person_ids.sql
+--!include functions/can_edit_person.sql
+--!include functions/visible_person_ids.sql
+--!include functions/create_person.sql
+--!include functions/confirm_membership_application.sql
+--!include policies/person.sql
+--!include policies/couple.sql
+drop function if exists app_private.visible_person_ids();
+--!include policies/tenant_membership.sql
+--!include policies/tenant_trainer.sql
+--!include policies/tenant_administrator.sql
+--!include policies/tenant.sql

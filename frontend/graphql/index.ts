@@ -7722,7 +7722,7 @@ export type LoginPayload = {
 
 export type MembershipApplication = {
   __typename?: 'MembershipApplication';
-  bio: Maybe<Scalars['String']['output']>;
+  bio: Scalars['String']['output'];
   birthDate: Maybe<Scalars['Date']['output']>;
   createdAt: Scalars['Datetime']['output'];
   createdBy: Scalars['BigInt']['output'];
@@ -7737,9 +7737,9 @@ export type MembershipApplication = {
   nationality: Scalars['String']['output'];
   note: Scalars['String']['output'];
   phone: Maybe<Scalars['String']['output']>;
-  prefixTitle: Maybe<Scalars['String']['output']>;
+  prefixTitle: Scalars['String']['output'];
   status: ApplicationFormStatus;
-  suffixTitle: Maybe<Scalars['String']['output']>;
+  suffixTitle: Scalars['String']['output'];
   taxIdentificationNumber: Maybe<Scalars['String']['output']>;
   tenantId: Scalars['BigInt']['output'];
   updatedAt: Scalars['Datetime']['output'];
@@ -9050,6 +9050,7 @@ export type Person = {
   tenantAdministrators: TenantAdministratorConnection;
   /** Reads and enables pagination through a set of `TenantAdministrator`. */
   tenantAdministratorsList: Array<TenantAdministrator>;
+  tenantIds: Maybe<Array<Maybe<Scalars['BigInt']['output']>>>;
   /** Reads and enables pagination through a set of `TenantMembership`. */
   tenantMemberships: TenantMembershipConnection;
   /** Reads and enables pagination through a set of `TenantMembership`. */
@@ -15899,6 +15900,7 @@ export type GraphCacheResolvers = {
     taxIdentificationNumber?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Scalars['String']['output'] | string>,
     tenantAdministrators?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsArgs, WithTypename<TenantAdministratorConnection> | string>,
     tenantAdministratorsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantAdministratorsListArgs, Array<WithTypename<TenantAdministrator> | string>>,
+    tenantIds?: GraphCacheResolver<WithTypename<Person>, Record<string, never>, Array<Scalars['BigInt']['output'] | string>>,
     tenantMemberships?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsArgs, WithTypename<TenantMembershipConnection> | string>,
     tenantMembershipsList?: GraphCacheResolver<WithTypename<Person>, PersonTenantMembershipsListArgs, Array<WithTypename<TenantMembership> | string>>,
     tenantTrainers?: GraphCacheResolver<WithTypename<Person>, PersonTenantTrainersArgs, WithTypename<TenantTrainerConnection> | string>,
@@ -18489,6 +18491,7 @@ export type GraphCacheUpdaters = {
     taxIdentificationNumber?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     tenantAdministrators?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantAdministratorsArgs>,
     tenantAdministratorsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantAdministratorsListArgs>,
+    tenantIds?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, Record<string, never>>,
     tenantMemberships?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantMembershipsArgs>,
     tenantMembershipsList?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantMembershipsListArgs>,
     tenantTrainers?: GraphCacheUpdateResolver<Maybe<WithTypename<Person>>, PersonTenantTrainersArgs>,

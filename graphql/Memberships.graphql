@@ -8,6 +8,8 @@ fragment Couple on Couple {
   shortName
   manId
   womanId
+  man { id tenantIds }
+  woman { id tenantIds }
   status
   since
   until
