@@ -5,7 +5,6 @@ import { DotSeparated } from '@/ui/DotSeparated';
 import {
   CohortDocument,
   type CohortFragment,
-  type CohortMemberFragment,
   UpdateCohortDocument,
 } from '@/graphql/Cohorts';
 import { useMutation, useQuery } from 'urql';
@@ -25,19 +24,26 @@ import { CompetitionHistory, CompetitionSuggestions } from '@/ui/Competitions';
 import { ActivityList } from '@/ui/ActivityList';
 import { useAuth } from '@/lib/auth';
 import { Tab, TabMenu } from '@/ui/TabMenu';
-import { parseAsString, useQueryState } from 'nuqs';
+import { parseAsString, parseAsStringLiteral, useQueryState } from 'nuqs';
 import { cn } from '@/lib/cn';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { formatCount, formatPointsAndFinals } from '@/ui/format';
-import { AgeHistogram, ClassHistogram, HistogramPeopleDialog, type HistogramSelection } from '../../CohortComparison';
+import {
+  AgeHistogram,
+  ClassHistogram,
+  HistogramPeopleDialog,
+  type HistogramSelection,
+} from '../../CohortComparison';
+import { loadPersonFilters, usePersonData } from '@/lib/usePersonData';
+import { FormError } from '@/ui/form';
 import { EntityLink } from '@/ui/EntityLink';
 
 export function Cohort({
   initialCohort,
-  initialMembers,
+  initialMemberCount,
 }: {
   initialCohort: CohortFragment;
-  initialMembers: readonly CohortMemberFragment[];
+  initialMemberCount: number;
 }) {
   const [editingImage, setEditingImage] = React.useState(false);
   const [, updateImage] = useMutation(UpdateCohortDocument);
@@ -53,7 +59,7 @@ export function Cohort({
     },
   });
   const cohort = data?.cohort ?? initialCohort;
-  const members = data?.cohort?.cohortMembershipsList ?? initialMembers;
+  const memberCount = data?.cohort?.cohortMembershipsList?.length ?? initialMemberCount;
   const description = React.useMemo(
     () => cohort.description?.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', ''),
     [cohort.description],
@@ -85,17 +91,16 @@ export function Cohort({
         subtitle={
           <DotSeparated>
             {cohort.location || undefined}
-            {formatCount(members.length, { one: 'člen', few: 'členové', other: 'členů' })}
+            {formatCount(memberCount, { one: 'člen', few: 'členové', other: 'členů' })}
           </DotSeparated>
         }
         actions={actions}
       />
 
-
       <TabMenu selected={tab} onSelect={setTab}>
         <Tab id="members" title="Info">
           <RichTextView value={description} />
-          <CohortMembers members={members} />
+          <CohortMembers cohortId={cohort.id} />
         </Tab>
         <Tab id="activity" title="Tréninky" requireMember>
           <ActivityList cohortId={cohort.id} />
@@ -118,7 +123,7 @@ function CategoryList({
   person,
   discipline,
 }: {
-  person: CohortMemberFragment['person'];
+  person: ReturnType<typeof usePersonData>['people'][number];
   discipline: string;
 }) {
   if (!person?.cstsId)
@@ -143,19 +148,28 @@ function CategoryList({
 }
 
 const CohortMembers = React.memo(function CohortMembers({
-  members,
+  cohortId,
 }: {
-  members: readonly CohortMemberFragment[];
+  cohortId: string;
 }) {
   const auth = useAuth();
-  const [view, setView] = React.useState<'activity' | 'competitive'>(
-    auth.isTrainer ? 'activity' : 'competitive',
+  const [view, setView] = useQueryState(
+    'view',
+    parseAsStringLiteral(['activity', 'competitive'])
+      .withDefault('activity')
+      .withOptions({ history: 'push' }),
   );
   const activityView = auth.isTrainer && view === 'activity';
   const [selection, setSelection] = React.useState<HistogramSelection | null>(null);
   const selectBucket = (title: string, people: HistogramSelection['people']) =>
     setSelection({ title, people });
-  const people = members.flatMap((x) => x.person ?? []);
+  const { people, fetching, error } = usePersonData({
+    filters: loadPersonFilters({ cohortId }),
+    withFacets: false,
+    withActivity: activityView,
+    withCompetitive: !activityView,
+  });
+  const members = people.flatMap((person) => person.cohortMembership ?? []);
   const membershipActionMap = useActionMap(cohortMembershipActions, members);
   const memberActionMap = useActionMap(personActions, people);
 
@@ -170,6 +184,12 @@ const CohortMembers = React.memo(function CohortMembers({
           : 'grid-cols-[minmax(0,1fr)_max-content_max-content] min-[500px]:grid-cols-[minmax(0,1fr)_max-content_max-content_max-content]',
       )}
     >
+      {(error || fetching) && (
+        <div className="col-span-full">
+          <FormError error={error} />
+          {fetching && <p role="status">Načítám…</p>}
+        </div>
+      )}
       <HistogramPeopleDialog selection={selection} onClose={() => setSelection(null)} />
       {auth.isTrainer && (
         <div className="col-span-full justify-self-end">
@@ -179,15 +199,27 @@ const CohortMembers = React.memo(function CohortMembers({
               { id: 'activity', label: 'Aktivita' },
               { id: 'competitive', label: 'Soutěžní info' },
             ]}
-            onValueChange={(value) => setView(value as typeof view)}
+            onValueChange={(value) => {
+              if (value === 'activity' || value === 'competitive') void setView(value);
+            }}
           />
         </div>
       )}
       {!activityView && (
         <div className="col-span-full flex flex-wrap items-start gap-5">
           <AgeHistogram label="Věk" people={people} onSelect={selectBucket} />
-          <ClassHistogram label="STT" people={people} discipline="Standard" onSelect={selectBucket} />
-          <ClassHistogram label="LAT" people={people} discipline="Latin" onSelect={selectBucket} />
+          <ClassHistogram
+            label="STT"
+            people={people}
+            discipline="Standard"
+            onSelect={selectBucket}
+          />
+          <ClassHistogram
+            label="LAT"
+            people={people}
+            discipline="Latin"
+            onSelect={selectBucket}
+          />
         </div>
       )}
       {!activityView && (
@@ -203,9 +235,9 @@ const CohortMembers = React.memo(function CohortMembers({
           <div>LAT</div>
         </div>
       )}
-      {members.map(({ id, person }) => (
+      {people.map((person) => (
         <div
-          key={id}
+          key={person.id}
           className="col-span-full grid grid-cols-subgrid items-center gap-x-5 gap-y-3 text-sm"
         >
           <ActionRow
@@ -214,15 +246,13 @@ const CohortMembers = React.memo(function CohortMembers({
               activityView ? 'col-span-1' : 'col-span-full min-[500px]:col-span-1',
             )}
             actions={[
-              ...(person ? memberActionMap.get(person.id)! : []),
-              ...membershipActionMap.get(id)!,
+              ...memberActionMap.get(person.id)!,
+              ...(person.cohortMembership
+                ? membershipActionMap.get(person.cohortMembership.id)!
+                : []),
             ]}
           >
-            {person ? (
-              <EntityLink type="person" entity={person} className="min-w-0 font-bold" />
-            ) : (
-              '?'
-            )}
+            <EntityLink type="person" entity={person} className="min-w-0 font-bold" />
           </ActionRow>
 
           {activityView && person?.lastActivity && (

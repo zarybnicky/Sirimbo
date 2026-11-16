@@ -181,10 +181,35 @@ query PersonAccounts {
   }
 }
 
-query PersonList($condition: PersonCondition) {
+query PersonList(
+  $condition: PersonCondition
+  $withFacets: Boolean! = false
+  $inCohorts: [BigInt!]
+  $isTrainer: Boolean
+  $isAdmin: Boolean
+  $membershipStates: [String!]
+  $withActivity: Boolean! = false
+  $withCompetitive: Boolean! = false
+) {
+  cohortsList(orderBy: [ORDERING_ASC]) @include(if: $withFacets) {
+    id
+    name
+  }
+  personFacetsList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin, membershipStates: $membershipStates) @include(if: $withFacets) {
+    facet
+    value
+    count
+  }
   people(condition: $condition) {
     nodes {
       ...Person
+      lastActivity @include(if: $withActivity) {
+        webAt
+        cardEntryAt
+        trainingAt
+        competitionOn
+      }
+      ...PersonHistogram @include(if: $withCompetitive)
       tenantMembershipsList(condition: { status: ACTIVE }) {
         id
         tenantId
@@ -327,13 +352,5 @@ mutation UpdatePerson($input: UpdatePersonInput!) {
 mutation DeletePerson($id: BigInt!) {
   deletePerson(input: { id: $id }) {
     __typename
-  }
-}
-
-query PersonFacets($inCohorts: [BigInt!], $isTrainer: Boolean, $isAdmin: Boolean, $membershipStates: [String!]) {
-  personFacetsList(inCohorts: $inCohorts, isTrainer: $isTrainer, isAdmin: $isAdmin, membershipStates: $membershipStates) {
-    facet
-    value
-    count
   }
 }

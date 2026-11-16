@@ -19,20 +19,6 @@ fragment Cohort on Cohort {
   externalIds
 }
 
-fragment CohortMember on CohortMembership {
-  ...CohortMembership
-  person {
-    ...PersonBasic
-    lastActivity {
-      webAt
-      cardEntryAt
-      trainingAt
-      competitionOn
-    }
-    ...PersonHistogram
-  }
-}
-
 query CohortList(
   $first: Int
   $offset: Int
@@ -63,7 +49,7 @@ query Cohort($id: BigInt!, $withMembers: Boolean! = false) {
   cohort(id: $id) {
     ...Cohort
     cohortMembershipsList(condition: { status: ACTIVE }) @include(if: $withMembers) {
-      ...CohortMember
+      id
     }
   }
 }

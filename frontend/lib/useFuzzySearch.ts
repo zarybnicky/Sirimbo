@@ -5,6 +5,7 @@ export function useFuzzySearch<T extends { id: string }>(
   data: T[],
   fields: (keyof T & string)[],
   search: string,
+  limit = 50,
 ) {
   return React.useMemo(() => {
     const query = search.trim();
@@ -26,7 +27,7 @@ export function useFuzzySearch<T extends { id: string }>(
 
     return ranked
       .toSorted((a, b) => b.rank - a.rank || a.index - b.index)
-      .slice(0, 50)
+      .slice(0, limit)
       .map(({ item }) => item);
-  }, [fields, data, search]);
+  }, [fields, data, search, limit]);
 }

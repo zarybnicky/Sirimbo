@@ -50,7 +50,7 @@ export default async function CohortPage({ params }: Props) {
   return (
     <Cohort
       initialCohort={cohort}
-      initialMembers={cohort.cohortMembershipsList ?? []}
+      initialMemberCount={cohort.cohortMembershipsList?.length ?? 0}
     />
   );
 }

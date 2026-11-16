@@ -1,92 +1,30 @@
 import { ListItem } from '@/ui/ListItem';
 import { UserRound } from 'lucide-react';
 import { TextField } from '@/ui/fields/text';
-import React from 'react';
-import { PersonFacetsDocument, PersonListDocument } from '@/graphql/Person';
-import { useFuzzySearch } from '@/lib/useFuzzySearch';
-import { useClient, useQuery } from 'urql';
+import { useClient } from 'urql';
 import { ComboboxButton } from '@/ui/fields/Combobox';
 import { FacetFilter } from '@/ui/FacetFilter';
 import { CreatePersonDialog } from '@/ui/CreatePersonDialog';
 import { useAuth } from '@/lib/auth';
 import { buttonCls } from '@/ui/style';
-import { useSessionStorage } from '@/lib/useSessionStorage';
-import { compareText } from '@/lib/compare';
-import { useParams } from 'next/navigation';
-import { useQueryState } from 'nuqs';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useQueryStates } from 'nuqs';
+import { personFilterParsers, usePersonData } from '@/lib/usePersonData';
+import { FormError } from '@/ui/form';
 import { exportNsa } from '../reports/export-nsa';
-import { CohortListDocument } from '@/graphql/Cohorts';
 
 export function PersonList() {
   const id = useParams<{ id?: string }>()?.id;
   const auth = useAuth();
   const client = useClient();
 
-  const [cohort, setCohort] = useSessionStorage('personfilter-cohort');
-  const [isTrainer, setIsTrainer] = useSessionStorage('personfilter-trainer');
-  const [isAdmin, setIsAdmin] = useSessionStorage('personfilter-admin');
-  const [includeFormer, setIncludeFormer] = useSessionStorage(
-    'personfilter-include-former',
-  );
-  const [search, setSearch] = useSessionStorage('personfilter-search', '');
-  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
-
-  const [tab] = useQueryState('tab');
-  const membership = {
-    inCohorts: cohort === 'none' ? [] : cohort ? [cohort] : null,
-    isAdmin: !!isAdmin || null,
-    isTrainer: !!isTrainer || null,
-    state: includeFormer ? ('FORMER' as const) : ('CURRENT' as const),
-  };
-  const [{ data }] = useQuery({
-    query: PersonListDocument,
-    variables: { condition: { membership } },
-  });
-  const [{ data: facetData }] = useQuery({
-    query: PersonFacetsDocument,
-    variables: {
-      inCohorts: membership.inCohorts,
-      isAdmin: membership.isAdmin,
-      isTrainer: membership.isTrainer,
-      membershipStates: [membership.state.toLowerCase()],
-    },
-  });
-  const counts: Record<string, Record<string, number>> | undefined = facetData
-    ? {}
-    : undefined;
-  for (const { facet, value, count } of facetData?.personFacetsList ?? []) {
-    (counts![facet!] ??= {})[value!] = count ?? 0;
-  }
-  const nodes = React.useMemo(() => {
-    return (data?.people?.nodes || [])
-      .toSorted(
-        (a, b) =>
-          compareText(a.lastName, b.lastName) || compareText(a.firstName, b.firstName),
-      )
-      .map((item) => {
-        const activeCohorts = item.cohortMembershipsList.flatMap(
-          (x) => (x.status === 'ACTIVE' && x.cohort) || [],
-        );
-        return {
-          yearOfBirth: item.birthDate
-            ? new Date(item.birthDate).getFullYear()
-            : undefined,
-          cohortNames: activeCohorts.map((x) => x.name).join(', '),
-          cohortColors: activeCohorts.map((x) => x.colorRgb),
-          ...item,
-        };
-      });
-  }, [data]);
-
-  const fuzzy = useFuzzySearch(
-    nodes,
-    ['id', 'name', 'cohortNames', 'phone', 'email', 'yearOfBirth'],
-    search || '',
-  );
-  const filters = [
-    ...(includeFormer ? ['former'] : []),
-    ...(isTrainer ? ['trainer'] : []),
-    ...(isAdmin ? ['admin'] : []),
+  const [filters, setFilters] = useQueryStates(personFilterParsers, { history: 'push' });
+  const { people, filterOptions, error } = usePersonData({ filters });
+  const searchParams = useSearchParams();
+  const flags = [
+    ...(filters.membership === 'former' ? ['former'] : []),
+    ...(filters.isTrainer ? ['trainer'] : []),
+    ...(filters.isAdmin ? ['admin'] : []),
   ];
 
   return (
@@ -108,49 +46,24 @@ export function PersonList() {
 
         <div className="mt-2 w-full flex flex-wrap gap-2 justify-end">
           <ComboboxButton
-            value={cohort}
-            onChange={setCohort}
+            value={filters.cohortId}
+            onChange={(cohortId) => setFilters({ cohortId })}
             placeholder="skupina"
-            options={[
-              {
-                id: 'none',
-                label: 'Bez skupiny',
-                count: counts ? (counts.cohort?.none ?? 0) : undefined,
-              },
-              ...(cohorts?.cohortsList ?? []).map((x) => ({
-                id: x.id,
-                label: x.name,
-                count: counts ? (counts.cohort?.[x.id] ?? 0) : undefined,
-              })),
-            ]}
+            options={filterOptions.cohorts}
           />
 
           <FacetFilter
             inline
             label=""
-            value={filters}
-            options={[
-              {
-                value: 'former',
-                label: 'Bývalí',
-                count: counts ? (counts.state?.former ?? 0) : undefined,
-              },
-              {
-                value: 'trainer',
-                label: 'Trenéři',
-                count: counts ? (counts.trainer?.true ?? 0) : undefined,
-              },
-              {
-                value: 'admin',
-                label: 'Správci',
-                count: counts ? (counts.admin?.true ?? 0) : undefined,
-              },
-            ]}
-            onChange={(values) => {
-              setIncludeFormer(values.includes('former') ? '1' : null);
-              setIsTrainer(values.includes('trainer') ? '1' : null);
-              setIsAdmin(values.includes('admin') ? '1' : null);
-            }}
+            value={flags}
+            options={filterOptions.flags}
+            onChange={(values) =>
+              setFilters({
+                membership: values.includes('former') ? 'former' : 'current',
+                isTrainer: values.includes('trainer'),
+                isAdmin: values.includes('admin'),
+              })
+            }
           />
         </div>
 
@@ -158,16 +71,19 @@ export function PersonList() {
           type="search"
           className="w-full mt-2"
           placeholder="Jméno, email, telefon"
-          value={search || ''}
-          onChange={(e) => setSearch(e.currentTarget.value)}
+          value={filters.search}
+          onChange={(e) =>
+            setFilters({ search: e.currentTarget.value }, { history: 'replace' })
+          }
         />
       </div>
 
       <div className="grow h-full overflow-y-auto scrollbar">
-        {fuzzy.map((item) => (
+        <FormError error={error} />
+        {people.map((item) => (
           <ListItem
             key={item.id}
-            href={tab ? `/clenove/${item.id}?tab=${tab}` : `/clenove/${item.id}`}
+            href={`/clenove/${item.id}${searchParams?.size ? `?${searchParams}` : ''}`}
             title={item.name}
             subtitle={[
               item.yearOfBirth,
