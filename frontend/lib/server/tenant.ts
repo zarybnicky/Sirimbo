@@ -43,7 +43,7 @@ export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
   };
 });
 
-export const getRequestContext = cache(async (): Promise<RequestContext> => {
+export const getRequestContext = cache(async (eventShare?: string): Promise<RequestContext> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   let claims: JwtClaims | null = null;
@@ -72,6 +72,12 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
   const pgSettings: Record<string, string> = {
     role: auth.role,
     'jwt.claims.tenant_id': tenant.id.toString(),
+    'jwt.claims.user_id': '',
+    'jwt.claims.email': '',
+    'jwt.claims.my_person_ids': '{}',
+    'jwt.claims.my_tenant_ids': '{}',
+    'jwt.claims.my_cohort_ids': '{}',
+    'jwt.claims.my_couple_ids': '{}',
   };
 
   if (claims) {
@@ -83,6 +89,9 @@ export const getRequestContext = cache(async (): Promise<RequestContext> => {
       }
     }
   }
+
+  pgSettings['jwt.claims.shared.event_token'] =
+    eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare) ? eventShare : '';
 
   return { token, claims, tenant, auth, pgSettings };
 });

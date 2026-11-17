@@ -8,7 +8,7 @@ SELECT set_config('jwt.claims.tenant_id', '-9500', true);
 SELECT set_config('jwt.claims.user_id', '', true);
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SELECT set_config('jwt.claims.my_tenant_ids', '{}', true);
-SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SELECT set_config('jwt.claims.shared.event_token', '', true);
 
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (-9500, 'Cover', 'Attendee', 'unspecified', '');
@@ -31,6 +31,7 @@ OVERRIDING SYSTEM VALUE VALUES
   (-9500, -9500, -9502, -9500, 'unknown', 'active'),
   (-9501, -9500, -9505, -9500, 'unknown', 'cancelled');
 
+UPDATE event SET share_token = 'test-file-share' WHERE id = -9504;
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM file WHERE id BETWEEN -9510 AND -9500),
   ARRAY[-9506,-9500]::bigint[], 'anonymous sees public files and public event covers only');
@@ -68,17 +69,17 @@ SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM file WHERE id BETWEEN -9510
   ARRAY[-9506,-9500]::bigint[], 'cancellation removes parent and child cover access immediately');
 
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
-SELECT set_config('jwt.claims.shared.event_ids', '{-9504,-9510}', true);
+SELECT set_config('jwt.claims.shared.event_token', 'test-file-share', true);
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM file WHERE id BETWEEN -9510 AND -9500),
   ARRAY[-9506,-9504,-9500]::bigint[], 'sharing grants the selected cover without crossing tenants');
 SELECT tap.is((SELECT count(*) FROM app_private.accessible_event_ids(NULL, ARRAY[-9510]::bigint[])),
-  0::bigint, 'a foreign candidate remains hidden even when its ID is shared');
+  0::bigint, 'a foreign candidate remains hidden with a local share token');
 SELECT set_config('jwt.claims.tenant_id', '-9501', true);
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM file WHERE id BETWEEN -9510 AND -9500),
   ARRAY[-9510]::bigint[], 'switching tenants exposes only that tenant public cover');
 
 SELECT set_config('jwt.claims.tenant_id', '-9500', true);
-SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SELECT set_config('jwt.claims.shared.event_token', '', true);
 SET LOCAL ROLE trainer;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM file WHERE id BETWEEN -9510 AND -9500),
   ARRAY[-9506,-9505,-9504,-9503,-9502,-9501,-9500]::bigint[],

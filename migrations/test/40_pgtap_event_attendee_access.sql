@@ -6,7 +6,7 @@ INSERT INTO tenant (id, name) VALUES (-9000, 'Camp host'), (-9001, 'Home club');
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
 SELECT set_config('jwt.claims.my_person_ids', '{-9000}', true);
 SELECT set_config('jwt.claims.my_tenant_ids', '{}', true);
-SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SELECT set_config('jwt.claims.shared.event_token', '', true);
 INSERT INTO person (id, first_name, last_name, gender, nationality) OVERRIDING SYSTEM VALUE
 VALUES (-9000, 'Visitor', 'Camp', 'unspecified', ''),
        (-9001, 'Peer', 'Camp', 'unspecified', ''),
@@ -55,8 +55,7 @@ SELECT tap.is(
   'sharing includes all descendants, not unrelated or foreign events');
 SELECT tap.is((SELECT count(*) FROM app_private.event_share_claims(-9001, 'test-camp-share')),
   0::bigint, 'a share token does not work in another tenant');
-SELECT set_config('jwt.claims.shared.event_ids', instance_ids::text, true)
-FROM app_private.event_share_claims(-9000, 'test-camp-share');
+SELECT set_config('jwt.claims.shared.event_token', 'test-camp-share', true);
 SELECT set_config('jwt.claims.my_person_ids', '{}', true);
 SET LOCAL ROLE anonymous;
 SELECT tap.is((SELECT array_agg(id ORDER BY id) FROM person), ARRAY[-9003,-9002,-9001,-9000]::bigint[],
@@ -71,6 +70,11 @@ SELECT tap.is((SELECT count(*) FROM event_trainer), 2::bigint,
   'share-only access includes trainer assignments');
 SELECT tap.is((SELECT count(*) FROM event_target_cohort), 1::bigint,
   'share-only access includes target assignments');
+SELECT set_config('jwt.claims.shared.event_token', 'invalid-share', true);
+SELECT tap.is((SELECT count(*) FROM event), 0::bigint, 'invalid share grants no event access');
+SELECT set_config('jwt.claims.shared.event_token', '', true);
+SELECT tap.is((SELECT count(*) FROM event), 0::bigint, 'absent share grants no event access');
+SELECT set_config('jwt.claims.shared.event_token', 'test-camp-share', true);
 SELECT set_config('jwt.claims.tenant_id', '-9001', true);
 SELECT tap.is((SELECT count(*) FROM app_private.accessible_event_ids()), 0::bigint,
   'shared event IDs cannot grant access in another tenant');
@@ -78,7 +82,7 @@ SELECT tap.is((SELECT count(*) FROM person WHERE id BETWEEN -9005 AND -9000), 0:
   'shared event IDs cannot expose people in another tenant');
 RESET ROLE;
 SELECT set_config('jwt.claims.tenant_id', '-9000', true);
-SELECT set_config('jwt.claims.shared.event_ids', '{}', true);
+SELECT set_config('jwt.claims.shared.event_token', '', true);
 SELECT set_config('jwt.claims.admin_tenant_ids', '{-9000}', true);
 SET LOCAL ROLE administrator;
 SELECT tap.is((SELECT count(*) FROM person WHERE id=-9001), 1::bigint,

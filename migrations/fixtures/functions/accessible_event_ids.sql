@@ -29,7 +29,7 @@ begin
       or (is_visible and (select pg_has_role(current_setting('role'), 'member', 'member')))
       or ((select pg_has_role(current_setting('role'), 'trainer', 'member')) and cardinality(manager_person_ids) = 0)
       or (manager_person_ids && (select current_person_ids()))
-      or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
+      or id = any ((select app_private.current_shared_event_ids())::bigint[])
       or id in (select id from attended)
     );
 end;

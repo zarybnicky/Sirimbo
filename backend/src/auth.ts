@@ -97,7 +97,6 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
       'jwt.claims.my_tenant_ids': '{}',
       'jwt.claims.my_cohort_ids': '{}',
       'jwt.claims.my_couple_ids': '{}',
-      'jwt.claims.shared.event_ids': '{}',
   };
   const token = getBearerOrCookie(req);
   const claims = token ? verifySessionToken(token) : undefined;
@@ -123,20 +122,8 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
   }
 
   const eventShare = req.get('x-event-share');
-  if (eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare)) {
-    const {
-      rows: [share],
-    } = await pool.query<{
-      instance_ids: string[];
-    }>('select * from app_private.event_share_claims($1, $2)', [
-      tenantId,
-      eventShare,
-    ]);
-
-    if (share) {
-      settings['jwt.claims.shared.event_ids'] = `{${share.instance_ids.join(',')}}`;
-    }
-  }
+  settings['jwt.claims.shared.event_token'] =
+    eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare) ? eventShare : '';
 
   return settings;
 }
