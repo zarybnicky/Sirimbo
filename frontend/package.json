@@ -84,6 +84,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
+    "@graphql-eslint/eslint-plugin": "^4.4.1",
     "@graphql-typed-document-node/core": "~3.2.0",
     "@pgtyped/cli": "^2.4.3",
     "@serwist/cli": "^9.5.12",

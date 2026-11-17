@@ -8,7 +8,12 @@ import reactHookForm from 'oxlint-plugin-react-hook-form';
 import { importX } from 'eslint-plugin-import-x';
 import tsParser from '@typescript-eslint/parser';
 
-export default defineConfig([
+import * as graphqlPlugin from '@graphql-eslint/eslint-plugin';
+import { Kind, validate } from 'graphql';
+import { queryDepthRule } from '../backend/src/plugins/query-depth.ts';
+import { cacheKeyRule } from './graphql/cache-keys-rule.ts';
+
+const frontendConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   tailwind.configs.recommended,
@@ -106,7 +111,79 @@ export default defineConfig([
       'unicorn/prefer-global-this': 'off',
     },
   },
+]);
 
+export default defineConfig([
+  {
+    files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
+    extends: [frontendConfig],
+  },
+  {
+    files: ['graphql/*.graphql'],
+    languageOptions: {
+      parser: graphqlPlugin.parser,
+    },
+    plugins: {
+      '@graphql-eslint': graphqlPlugin,
+      local: {
+        rules: {
+          'query-validation': {
+            meta: { type: 'problem', schema: [] },
+            create(context) {
+              const schema = graphqlPlugin.requireGraphQLSchema(
+                'local/query-validation',
+                context,
+              );
+              const operations = graphqlPlugin.requireGraphQLOperations(
+                'local/query-validation',
+                context,
+              );
+              const reported = new Set();
+              function check(node) {
+                const definition = node.rawNode();
+                const document = {
+                  kind: Kind.DOCUMENT,
+                  definitions: [definition, ...operations.getFragmentsInUse(definition)],
+                };
+                for (const error of validate(schema, document, [
+                  queryDepthRule,
+                  cacheKeyRule,
+                ])) {
+                  const source = error.nodes[0].loc;
+                  if (source.source.body !== definition.loc.source.body) continue;
+                  const key = `${source.start}:${error.message}`;
+                  if (reported.has(key)) continue;
+                  reported.add(key);
+                  const location = error.locations[0];
+                  context.report({
+                    loc: { line: location.line, column: location.column - 1 },
+                    message: error.message,
+                  });
+                }
+              }
+              return { OperationDefinition: check, FragmentDefinition: check };
+            },
+          },
+        },
+      },
+    },
+    rules: {
+      ...graphqlPlugin.configs['operations-recommended'].rules,
+      '@graphql-eslint/naming-convention': [
+        'error',
+        {
+          ...graphqlPlugin.configs['operations-recommended'].rules['@graphql-eslint/naming-convention'][1],
+          'DirectiveDefinition, Directive': { ignorePattern: '^_required$' },
+        },
+      ],
+      '@graphql-eslint/known-type-names': 'error',
+      '@graphql-eslint/no-one-place-fragments': 'off',
+      '@graphql-eslint/require-selections': 'off',
+      'local/query-validation': 'error',
+
+      '@graphql-eslint/selection-set-depth': 'off',
+    },
+  },
   globalIgnores([
     'public/sw.js',
     'graphql/index.ts',

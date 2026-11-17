@@ -44,7 +44,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). `backend/src/auth.ts` resolves the request tenant, verifies JWTs, and maps their claims to database settings.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
-- `graphql/`: Source `.graphql` operation documents consumed by GraphQL Code Generator. The generated TypeScript bindings land near their usage in `frontend/graphql`.
+- `frontend/graphql/`: GraphQL operation documents, generated TypeScript bindings, and the cache-key lint helper.
 - `e2e/`: Playwright smoke tests and auth fixtures.
 - `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/1-current.sql` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
 - `schema.sql`: pg_dump of the live database, including extensions and RLS policies. Use it together with `schema/split.py` to keep the `schema/` tree synchronized.
@@ -82,7 +82,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 
 ## GraphQL stack
 - PostGraphile auto-exposes the PostgreSQL schema with additional fields and filters from custom plugins (S3 file URLs, current-user helpers, and person membership filters).
-- The frontend consumes the API via URQL. Operation documents reside in `graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Avoid hand-editing generated files!
+- The frontend consumes the API via URQL. Operation documents reside in `frontend/graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Avoid hand-editing generated files!
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
 ## Worker and crawler model
@@ -132,8 +132,8 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`, `pnpm --filter @rozpisovnik/worker typecheck`
 - Run Playwright smoke tests: `pnpm --filter @rozpisovnik/e2e test` (defaults to `PLAYWRIGHT_BASE_URL=http://localhost:5100`).
 - Create a new migration: follow `migrations/current/AGENTS.md`, including its fixture inclusion and testing steps.
-- Add GraphQL documents to the root `graphql/` folder. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`.
-- After changes to `.graphql` documents under `graphql/`, run `pnpm --filter @rozpisovnik/graphql lint`. Run this separately from frontend lint, even if frontend lint fails.
+- Add GraphQL documents to `frontend/graphql/`. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`.
+- Frontend lint includes `.graphql` documents under `frontend/graphql/` and their custom validation rules.
 - After frontend SQL changes, regenerate query bindings with `pnpm --filter @rozpisovnik/web sql:generate`.
 - Leave regenerated files in the working tree for the maintainer to review.
 - Do not hand-patch or revert generated output to restore its previous state or reduce the diff. This includes `frontend/graphql/`, `schema.sql`, `schema/`, `schema.graphql`, and `*.queries.ts`. If output is wrong, fix the source or generator and regenerate it. Follow explicit user instructions for any requested rollback.

@@ -5,7 +5,7 @@ import type {
   SelectionSetNode,
   ValidationRule,
 } from 'graphql';
-import { cacheKeyFields } from '../frontend/lib/cache-keys.ts';
+import { cacheKeyFields } from '../lib/cache-keys.ts';
 
 const keyFields = new Map<string, readonly string[] | null>(
   Object.entries(cacheKeyFields),
@@ -44,7 +44,7 @@ export const cacheKeyRule: ValidationRule = (context) => {
       if (
         condition &&
         condition !== type &&
-        !(isAbstractType(condition) && schema.isSubType(condition, type))
+        (!isAbstractType(condition) || !schema.isSubType(condition, type))
       )
         return [];
       return selectedFields(fragment.selectionSet, type, path, always);
@@ -75,7 +75,7 @@ export const cacheKeyRule: ValidationRule = (context) => {
                 (!field.alias || field.alias.value === key),
             ),
         );
-        if (missing.length)
+        if (missing.length > 0)
           context.reportError(
             new GraphQLError(
               `${type.name} must select unaliased, unconditional cache key fields: ${missing.join(', ')}.`,

@@ -2,7 +2,7 @@
 schema:
   - ${GRAPHQL_SCHEMA:schema.graphql}
   - 'directive @_required on FIELD'
-documents: "graphql/*.graphql"
+documents: "frontend/graphql/*.graphql"
 overwrite: true
 
 config:
@@ -40,7 +40,6 @@ generates:
     presetConfig:
       extension: '.ts'
       baseTypesPath: 'index.ts'
-      folder: '../frontend/graphql'
       fragmentMasking: false
     config:
       strictScalars: true

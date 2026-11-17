@@ -1,6 +1,5 @@
 packages:
   - frontend
-  - graphql
   - worker
   - backend
   - e2e

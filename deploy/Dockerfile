@@ -26,7 +26,7 @@ RUN --mount=type=cache,id=sirimbo-pnpm,target=/pnpm/store,sharing=locked \
 FROM deps AS graphql-validation
 
 COPY graphql.config.yml ./
-COPY graphql/ graphql/
+COPY frontend/graphql/*.graphql frontend/graphql/
 ARG NEXT_PUBLIC_GRAPHQL_BACKEND
 RUN test -n "$NEXT_PUBLIC_GRAPHQL_BACKEND" \
   && GRAPHQL_SCHEMA="${NEXT_PUBLIC_GRAPHQL_BACKEND%/}/graphql" pnpm schema
