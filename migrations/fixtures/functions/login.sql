@@ -15,7 +15,11 @@ begin
     and u.u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex');
 
   if usr is null then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    insert into security_event (user_id, kind, method)
+    values ((select id from users
+      where lower(u_login) = lower(trim(login)) or lower(u_email) = lower(trim(login))
+      limit 1), 'login_failed', 'password');
+    return null;
   end if;
 
   jwt := app_private.create_jwt_token(usr);

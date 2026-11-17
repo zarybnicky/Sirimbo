@@ -20,7 +20,9 @@ begin
     )
   returning t.* into v_token;
   if not found then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    insert into security_event (user_id, kind, method)
+    values ((select user_id from otp_token where access_token = token), 'login_failed', 'otp');
+    return null;
   end if;
   select * into usr from users where id = v_token.user_id;
 

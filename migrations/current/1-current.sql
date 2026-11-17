@@ -194,3 +194,6 @@ drop function if exists app_private.visible_person_ids();
 --!include policies/tenant_trainer.sql
 --!include policies/tenant_administrator.sql
 --!include policies/tenant.sql
+
+--!include functions/login.sql
+--!include functions/otp_login.sql

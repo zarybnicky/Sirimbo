@@ -71,7 +71,7 @@ export async function loginAction(
   try {
     const data = await executeGraphql(LoginDocument, values);
     const result = data.login?.result;
-    if (!result?.jwt) return { error: 'Přihlášení se nezdařilo' };
+    if (!result?.jwt) return { error: 'INVALID_CREDENTIALS' };
 
     await setSessionCookie(result.jwt);
   } catch (error) {

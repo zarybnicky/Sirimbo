@@ -19,7 +19,7 @@ INSERT INTO otp_token (access_token, user_id)
 VALUES ('00000000-0000-4000-8000-000000009402', -9400);
 
 SET LOCAL ROLE anonymous;
-SELECT tap.throws_ok($$SELECT otp_login('00000000-0000-4000-8000-000000009400')$$, '28P01', 'INVALID_CREDENTIALS',
+SELECT tap.ok(otp_login('00000000-0000-4000-8000-000000009400') is null,
   'handoff cannot be redeemed in the source tenant');
 SELECT set_config('jwt.claims.tenant_id', '-9401', true);
 CREATE TEMP TABLE redeemed AS SELECT (otp_login('00000000-0000-4000-8000-000000009400')).jwt AS claims;
@@ -27,7 +27,7 @@ SELECT tap.ok((SELECT (claims).user_id = -9400 AND (claims).tenant_id = -9401
   AND (claims).my_person_ids = ARRAY[-9400]::bigint[]
   AND (claims).admin_tenant_ids = ARRAY[-9400]::bigint[] FROM redeemed),
   'handoff rebuilds identity for the destination without granting admin there');
-SELECT tap.throws_ok($$SELECT otp_login('00000000-0000-4000-8000-000000009400')$$, '28P01', 'INVALID_CREDENTIALS',
+SELECT tap.ok(otp_login('00000000-0000-4000-8000-000000009400') is null,
   'handoff can only be redeemed once');
 SELECT tap.is((SELECT ((otp_login('00000000-0000-4000-8000-000000009402')).jwt).user_id),
   -9400::bigint, 'password-reset OTP still works');
@@ -35,13 +35,13 @@ RESET ROLE;
 UPDATE otp_token SET used_at=null, expires_at=now()-interval '1 second'
 WHERE access_token='00000000-0000-4000-8000-000000009400';
 SET LOCAL ROLE anonymous;
-SELECT tap.throws_ok($$SELECT otp_login('00000000-0000-4000-8000-000000009400')$$, '28P01', 'INVALID_CREDENTIALS',
+SELECT tap.ok(otp_login('00000000-0000-4000-8000-000000009400') is null,
   'expired handoffs cannot be redeemed');
 RESET ROLE;
 UPDATE otp_token SET expires_at=now()+interval '10 minutes', user_id=null
 WHERE access_token='00000000-0000-4000-8000-000000009400';
 SET LOCAL ROLE anonymous;
-SELECT tap.throws_ok($$SELECT otp_login('00000000-0000-4000-8000-000000009400')$$, '28P01', 'INVALID_CREDENTIALS',
+SELECT tap.ok(otp_login('00000000-0000-4000-8000-000000009400') is null,
   'an OTP without a user cannot be redeemed');
 SELECT * FROM tap.finish(true);
 ROLLBACK;
