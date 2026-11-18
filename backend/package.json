@@ -1,18 +1,15 @@
 {
   "name": "@rozpisovnik/backend",
   "version": "1.0.0",
-  "main": "src/index.ts",
   "repository": "https://github.com/zarybnicky/rozpisovnik/",
   "author": "Jakub Zárybnický",
   "license": "MIT",
   "private": true,
   "type": "module",
-  "bin": "./src/index.ts",
   "scripts": {
     "lint": "eslint . --cache",
     "typecheck": "tsc --noEmit",
-    "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",
-    "import:people": "node ./scripts/import_people_from_csv.ts"
+    "import:people": "node ./src/scripts/import_people_from_csv.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1127.0",

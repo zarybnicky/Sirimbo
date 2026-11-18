@@ -27,13 +27,6 @@
         };
       });
 
-      rozpisovnik-api = final.callPackage ./deploy/build-pnpm-package.nix {
-        packageJSON = final.lib.importJSON ./backend/package.json;
-        workspaceFolders = [ "backend" "graphql" ];
-        pnpmDepsHash = builtins.readFile ./backend/pnpm-deps-hash.txt;
-        postInstall = "cp -s $out/share/backend/src/index.ts $out/bin/rozpisovnik-api";
-      };
-
       rozpisovnik-migrations = final.runCommandLocal "rozpisovnik-migrations" {} ''
         mkdir -p $out
         cp -r ${./migrations} $out/migrations
@@ -75,14 +68,12 @@
     packages = forAllSystems (pkgs: {
       inherit (pkgs)
         graphile-migrate
-        rozpisovnik-api
         rozpisovnik-migrations
         ruian-address-cache
         geonames-city-cache;
     });
 
     checks = forAllSystems (pkgs: {
-      rozpisovnik-api = pkgs.rozpisovnik-api;
       module-eval = pkgs.runCommand "my-module-eval-check" { }
         "echo ${builtins.deepSeq self.nixosConfigurations.container.config.system.build.toplevel.outPath "ok"} > $out";
     });

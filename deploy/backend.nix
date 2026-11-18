@@ -91,7 +91,7 @@ in {
   };
 
   config = lib.mkMerge [
-    (lib.mkIf cfg.backend.enable {
+    (lib.mkIf (cfg.backend.enable || cfg.frontend.enable || cfg.migrations.enable) {
       users.users.${cfg.user} = {
         name = cfg.user;
         group = cfg.group;
@@ -110,56 +110,9 @@ in {
         "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
       ];
 
-      systemd.sockets.rozpisovnik-api = {
-        wantedBy = [ "sockets.target" ];
-        listenStreams = [ "127.0.0.1:${toString cfg.backend.port}" ];
-        socketConfig.Accept = false;
-      };
+    })
 
-      systemd.services.rozpisovnik-api = {
-        after = [ "network-online.target" "postgresql.service" "rozpisovnik-api.socket" ];
-        requires = [ "network-online.target" "postgresql.service" "rozpisovnik-api.socket" ];
-        wantedBy = [ "multi-user.target" ];
-
-        stopIfChanged = false; # Socket activated
-
-        environment = config.my.seaweedfs.buckets.olymp.environment // {
-          DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
-          NODE_ENV = if cfg.backend.debug then "development" else "production";
-          PORT = toString cfg.backend.port;
-          DOMAIN = cfg.backend.domain;
-          STATE_DIR = cfg.stateDir;
-          JWT_SECRET = cfg.backend.jwtSecret;
-
-          PGDATABASE = cfg.backend.database;
-          PGHOST = "/run/postgresql";
-
-          SMTP_AUTH = if cfg.smtp.auth then "1" else "";
-          SMTP_TLS = if cfg.smtp.tls then "1" else "";
-          SMTP_HOST = cfg.smtp.host;
-          SMTP_PORT = toString cfg.smtp.port;
-          SMTP_USER = cfg.smtp.user;
-          SMTP_PASS = cfg.smtp.pass;
-
-          OTEL_EXPORTER_OTLP_ENDPOINT = cfg.otel.endpoint;
-          OTEL_EXPORTER_OTLP_HEADERS = "authorization=${cfg.otel.apiKey}";
-          OTEL_SERVICE_NAME = "rozpisovnik-api";
-          HDX_NODE_EXPERIMENTAL_EXCEPTION_CAPTURE = "1";
-          HDX_NODE_BETA_MODE = "1";
-          NODE_OPTIONS = "--require ${pkgs.rozpisovnik-api}/share/backend/node_modules/@hyperdx/node-opentelemetry/build/src/tracing.js";
-        };
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          ExecStart = "${pkgs.rozpisovnik-api}/bin/rozpisovnik-api";
-          WorkingDirectory = "${pkgs.rozpisovnik-api}/share";
-          Restart = "always";
-          RestartSec = "10s";
-          TimeoutStopSec = "30s";
-        };
-      };
-
+    (lib.mkIf cfg.backend.enable {
       services.nginx = {
         enable = true;
         enableReload = true;
@@ -182,7 +135,7 @@ in {
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
           locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
+            proxyPass = "http://127.0.0.1:${toString cfg.frontend.nodePort}";
             proxyWebsockets = true;
           };
         };

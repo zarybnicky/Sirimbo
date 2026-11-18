@@ -64,6 +64,7 @@ const preset: GraphileConfig.Preset = {
     port: Number.parseInt(process.env.PORT || '5200', 10),
     watch: !process.env.POSTGRAPHILE_DONT_WATCH,
     graphiql: isDevelopment,
+    graphiqlOnGraphQLGET: isDevelopment,
     maskError: (error) => error,
   },
   gather: {

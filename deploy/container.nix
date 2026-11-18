@@ -51,7 +51,6 @@
     };
   };
 
-  systemd.services.rozpisovnik-api.environment.POSTGRAPHILE_DONT_WATCH = "1";
 
   my.seaweedfs.buckets.olymp.environment = {
     S3_BUCKET = "public";
