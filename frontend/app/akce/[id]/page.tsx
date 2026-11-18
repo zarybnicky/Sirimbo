@@ -1,6 +1,11 @@
 import { runQuery } from '@/lib/server/postgresql';
 import { notFound, redirect } from 'next/navigation';
 import { eventSeriesEvents } from '@/lib/event-actions.queries';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 type LegacyEventRedirectPageProps = {
   params: Promise<{ id: string }>;

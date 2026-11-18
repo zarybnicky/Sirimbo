@@ -8,6 +8,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function StandaloneLayout({ children }: { children: ReactNode }) {
+export default function ToolsLayout({ children }: { children: ReactNode }) {
   return children;
 }

@@ -1,4 +1,4 @@
-/** Types generated for queries found in "app/(standalone)/tools/tools.sql" */
+/** Types generated for queries found in "app/tools/tools.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
 export type stringArray = (string)[];
