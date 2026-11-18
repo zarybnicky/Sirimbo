@@ -16,7 +16,7 @@ begin
     and t.user_id is not null
     and (
       t.intent = 'password_reset'
-      or (t.intent = 'event_handoff' and t.tenant_id = current_tenant_id())
+      or (t.intent in ('event_handoff', 'tenant_handoff') and t.tenant_id = current_tenant_id())
     )
   returning t.* into v_token;
   if not found then

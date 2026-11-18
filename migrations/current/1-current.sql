@@ -196,4 +196,10 @@ drop function if exists app_private.visible_person_ids();
 --!include policies/tenant.sql
 
 --!include functions/login.sql
+alter table otp_token drop constraint if exists otp_token_intent_check;
+alter table otp_token add constraint otp_token_intent_check check (
+  (intent in ('password_reset', 'tenant_handoff') and event_id is null)
+  or (intent = 'event_handoff' and event_id is not null)
+);
+
 --!include functions/otp_login.sql

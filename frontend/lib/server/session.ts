@@ -7,7 +7,7 @@ import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import { cookies } from 'next/headers';
-import type { NextRequest } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server';
 import { cache } from 'react';
 
 const COOKIE_OPTIONS = {
@@ -39,12 +39,22 @@ export function sameOrigin(request: NextRequest) {
   }
 }
 
-export async function setSessionCookie(token: string) {
-  const store = await cookies();
+export async function setSessionCookie(token: string, response?: NextResponse) {
+  const store = response?.cookies ?? await cookies();
   store.set(SESSION_COOKIE, token, { ...COOKIE_OPTIONS, httpOnly: true });
 }
 
 export async function clearSessionCookie() {
   const store = await cookies();
   store.set(SESSION_COOKIE, '', { ...COOKIE_OPTIONS, httpOnly: true, maxAge: 0 });
+}
+
+export function clearTenantCookie(request: NextRequest, response: NextResponse) {
+  const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? request.nextUrl.host)
+    .split(',', 1)[0]!.trim().split(':', 1)[0]!.toLowerCase();
+  const cookie = 'tenant_id=; Path=/; Max-Age=0; SameSite=Lax';
+  response.headers.append('Set-Cookie', cookie);
+  for (const domain of new Set([host, host.replace(/^www\./, '')])) {
+    response.headers.append('Set-Cookie', `${cookie}; Domain=${domain}`);
+  }
 }

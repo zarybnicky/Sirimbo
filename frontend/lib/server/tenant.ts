@@ -60,7 +60,7 @@ export const getRequestContext = cache(async (eventShare?: string, apiRequest?: 
   return { token, claims, tenant, auth, pgSettings };
 });
 
-async function getRequestHostTenant() {
+export async function getRequestHostTenant() {
   const headerStore = await headers();
   const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
   const hostname =

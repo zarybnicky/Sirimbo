@@ -16,6 +16,12 @@ export function TenantSelect() {
 
   const onChange = React.useCallback(
     (tenantId: string) => {
+      if (process.env.NODE_ENV === 'production') {
+        const { pathname, search, hash } = window.location;
+        const params = new URLSearchParams({ tenant: tenantId, from: pathname + search + hash });
+        window.location.assign(new URL(`/api/auth/handoff?${params}`, window.location.origin));
+        return;
+      }
       setTenantId(tenantId);
       storeRef.resetUrqlClient();
     },

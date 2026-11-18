@@ -32,7 +32,8 @@ export const handoffEvent = new PreparedQuery<IHandoffEventParams,IHandoffEventR
 
 /** 'CreateHandoffOtp' parameters type */
 export interface ICreateHandoffOtpParams {
-  eventId: NumberOrString;
+  eventId?: NumberOrString | null | void;
+  intent: string;
   tenantId: NumberOrString;
   userId: NumberOrString;
 }
@@ -48,13 +49,13 @@ export interface ICreateHandoffOtpQuery {
   result: ICreateHandoffOtpResult;
 }
 
-const createHandoffOtpIR: any = {"usedParamSet":{"userId":true,"tenantId":true,"eventId":true},"params":[{"name":"userId","required":true,"transform":{"type":"scalar"},"locs":[{"a":81,"b":88}]},{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":91,"b":100}]},{"name":"eventId","required":true,"transform":{"type":"scalar"},"locs":[{"a":120,"b":128}]}],"statement":"insert into otp_token (user_id, tenant_id, intent, event_id, expires_at)\nvalues (:userId!, :tenantId!, 'event_handoff', :eventId!, now() + interval '10 minutes')\nreturning access_token"};
+const createHandoffOtpIR: any = {"usedParamSet":{"userId":true,"tenantId":true,"intent":true,"eventId":true},"params":[{"name":"userId","required":true,"transform":{"type":"scalar"},"locs":[{"a":81,"b":88}]},{"name":"tenantId","required":true,"transform":{"type":"scalar"},"locs":[{"a":91,"b":100}]},{"name":"intent","required":true,"transform":{"type":"scalar"},"locs":[{"a":103,"b":110}]},{"name":"eventId","required":false,"transform":{"type":"scalar"},"locs":[{"a":113,"b":120}]}],"statement":"insert into otp_token (user_id, tenant_id, intent, event_id, expires_at)\nvalues (:userId!, :tenantId!, :intent!, :eventId, now() + interval '10 minutes')\nreturning access_token"};
 
 /**
  * Query generated from SQL:
  * ```
  * insert into otp_token (user_id, tenant_id, intent, event_id, expires_at)
- * values (:userId!, :tenantId!, 'event_handoff', :eventId!, now() + interval '10 minutes')
+ * values (:userId!, :tenantId!, :intent!, :eventId, now() + interval '10 minutes')
  * returning access_token
  * ```
  */
