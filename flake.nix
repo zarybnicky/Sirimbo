@@ -29,7 +29,7 @@
 
       rozpisovnik-api = final.callPackage ./deploy/build-pnpm-package.nix {
         packageJSON = final.lib.importJSON ./backend/package.json;
-        workspaceFolders = [ "backend" ];
+        workspaceFolders = [ "backend" "graphql" ];
         pnpmDepsHash = builtins.readFile ./backend/pnpm-deps-hash.txt;
         postInstall = "cp -s $out/share/backend/src/index.ts $out/bin/rozpisovnik-api";
       };

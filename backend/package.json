@@ -12,8 +12,7 @@
     "lint": "eslint . --cache",
     "typecheck": "tsc --noEmit",
     "start": "GRAPHILE_ENV=development NODE_ENV=development DEBUG=graphile-build:warn nodemon -e ts --exec \"node src/index.ts\"",
-    "import:people": "node ./scripts/import_people_from_csv.ts",
-    "test": "NODE_ENV=development GRAPHILE_ENV=development node --test"
+    "import:people": "node ./scripts/import_people_from_csv.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1127.0",
@@ -36,7 +35,8 @@
     "pg": "8.22.0",
     "postgraphile": "~5.1.5",
     "uglify-js": "^3.19.3",
-    "ws": "^8.21.3"
+    "ws": "^8.21.3",
+    "@rozpisovnik/graphql": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

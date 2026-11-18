@@ -28,7 +28,6 @@ s3:
   secretAccessKey: examproctorpocsecretkey000000000000000000000000
 
 runtime:
-  graphqlBackend: https://api.rozpisovnik.cz
   jwtSecret: ""
   sentryDsn: ""
   sentryEnvironment: production

@@ -53,7 +53,7 @@ await graphile.createServ(grafserv).addTo(app, server);
 if (process.env.LISTEN_FDS) {
   server.listen({ fd: 3 });
 } else {
-  server.listen(preset.grafserv?.port ?? 5200);
+  server.listen(graphile.getResolvedPreset().grafserv?.port ?? 5200);
 }
 
 function shutdown() {

@@ -114,10 +114,6 @@ in
                 value = cfg.backend.database;
               }
               {
-                name = "runtime.graphqlBackend";
-                value = "https://api.rozpisovnik.cz";
-              }
-              {
                 name = "runtime.jwtSecret";
                 value = cfg.backend.jwtSecret;
               }
@@ -217,10 +213,6 @@ in
               {
                 name = "postgresql.database";
                 value = cfg.backend.database;
-              }
-              {
-                name = "runtime.graphqlBackend";
-                value = "https://api.rozpisovnik.cz";
               }
               {
                 name = "runtime.jwtSecret";

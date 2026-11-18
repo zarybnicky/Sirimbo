@@ -32,11 +32,11 @@ export const EventFieldsPlugin = extendSchema((build) => ({
       plans: {
         tenantTrainer($trainer: PgSelectSingleStep) {
           const resources = build.input.pgRegistry.pgResources;
-          const $event = resources.event.get({
+          const $event = resources.event!.get({
             id: $trainer.get('event_id'),
             tenant_id: $trainer.get('tenant_id'),
           });
-          const $relationship = resources.tenant_trainer.find({
+          const $relationship = resources.tenant_trainer!.find({
             tenant_id: $event.get('tenant_id'),
             person_id: $trainer.get('person_id'),
           });
@@ -62,7 +62,7 @@ export const EventDetailsPlugin = wrapPlans((build) => {
   // Treat the composite as one value. Its children read the decoded record,
   // so PostgreSQL calculates it once, after sorting and limiting the events.
   const registrationInfoCodec = {
-    ...build.input.pgRegistry.pgResources.event_registration_info.codec,
+    ...build.input.pgRegistry.pgResources.event_registration_info!.codec,
     attributes: undefined,
   };
   return {

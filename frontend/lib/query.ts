@@ -25,11 +25,6 @@ import schema from '@/graphql/introspection.json';
 import { errorTarget } from '@/ui/ErrorNotifier';
 import { cacheKeys } from '@/lib/cache-keys';
 
-const origin =
-  typeof window === 'undefined'
-    ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-    : window.origin;
-
 type ErrorEventTarget = TypedEventTarget<{ error: CustomEvent<CombinedError> }>;
 const errorEmitter = (errorTarget: ErrorEventTarget) =>
   mapExchange({
@@ -115,7 +110,7 @@ const refocusReloadExchange: Exchange =
   };
 
 export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
-  url: `${origin}/graphql`,
+  url: '/graphql',
   requestPolicy: 'cache-and-network',
   preferGetMethod: false,
   exchanges:

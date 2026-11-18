@@ -48,7 +48,7 @@ export async function refreshSessionAction(): Promise<RequestAuthState> {
   const data = await executeGraphql(CurrentUserDocument, {
     versionId: buildId,
     withRefreshJwt: true,
-  });
+  }, { pgSettings: context.pgSettings });
   const auth = {
     claims: normalizeClaims(data.currentClaims),
     user: data.getCurrentUser,

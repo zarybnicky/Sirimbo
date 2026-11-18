@@ -14,7 +14,6 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NEXT_PUBLIC_GRAPHQL_BACKEND: https://api.rozpisovnik.cz
   NEXT_PUBLIC_SENTRY_DSN: https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825
   NEXT_PUBLIC_SENTRY_ENVIRONMENT: staging
 
@@ -39,10 +38,10 @@ jobs:
           docker buildx build \
             --file deploy/Dockerfile \
             --target runner \
+            --allow network.host \
             --no-cache-filter graphql-validation \
             --no-cache="${{ github.event_name == 'workflow_dispatch' }}" \
             --platform linux/amd64 \
-            --build-arg NEXT_PUBLIC_GRAPHQL_BACKEND="${NEXT_PUBLIC_GRAPHQL_BACKEND}" \
             --build-arg NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
             --build-arg NEXT_PUBLIC_SENTRY_ENVIRONMENT="${NEXT_PUBLIC_SENTRY_ENVIRONMENT}" \
             --build-arg SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}" \

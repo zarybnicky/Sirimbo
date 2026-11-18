@@ -1,13 +1,11 @@
-import { CurrentUserDocument } from '@/graphql/CurrentUser';
-import type { RequestAuthState } from '@/lib/auth';
+import 'server-only';
+
 import {
   type JwtClaims,
   normalizeClaims,
   resolveAuth,
   type ResolvedAuth,
 } from '@/lib/auth-claims';
-import { buildId } from '@/lib/build-id';
-import { executeGraphql } from '@/lib/server/graphql';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import {
   defaultTenant,
@@ -27,25 +25,12 @@ export type RequestContext = {
   pgSettings: Record<string, string>;
 };
 
-export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
+export const getRequestContext = cache(async (eventShare?: string, apiRequest?: Request): Promise<RequestContext> => {
   const cookieStore = await cookies();
-
-  if (!cookieStore.has(SESSION_COOKIE)) {
-    return { claims: null, user: null };
-  }
-
-  const data = await executeGraphql(CurrentUserDocument, { versionId: buildId });
-  const claims = normalizeClaims(data.currentClaims);
-
-  return {
-    claims,
-    user: data.getCurrentUser,
-  };
-});
-
-export const getRequestContext = cache(async (eventShare?: string): Promise<RequestContext> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const authorization = apiRequest?.headers.get('authorization');
+  const token = authorization?.toLowerCase().startsWith('bearer ')
+    ? authorization.slice(7)
+    : cookieStore.get(SESSION_COOKIE)?.value;
   let claims: JwtClaims | null = null;
 
   if (token) {
@@ -67,11 +52,27 @@ export const getRequestContext = cache(async (eventShare?: string): Promise<Requ
   }
 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
-  const tenant = cookieTenant ?? (await getRequestHostTenant());
+  const tenant = getTenant(apiRequest?.headers.get('x-tenant-id'))
+    ?? cookieTenant ?? (await getRequestHostTenant());
   const auth = resolveAuth(claims, tenant.id.toString());
+  const pgSettings = claimSettings(claims, tenant.id.toString(), eventShare);
+
+  return { token, claims, tenant, auth, pgSettings };
+});
+
+async function getRequestHostTenant() {
+  const headerStore = await headers();
+  const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
+  const hostname =
+    host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
+
+  return hostToTenant.get(hostname ?? '') ?? defaultTenant;
+}
+
+export function claimSettings(claims: JwtClaims | null, tenantId: string, eventShare?: string): Record<string, string> {
   const pgSettings: Record<string, string> = {
-    role: auth.role,
-    'jwt.claims.tenant_id': tenant.id.toString(),
+    role: resolveAuth(claims, tenantId).role,
+    'jwt.claims.tenant_id': tenantId,
     'jwt.claims.user_id': '',
     'jwt.claims.email': '',
     'jwt.claims.my_person_ids': '{}',
@@ -93,14 +94,5 @@ export const getRequestContext = cache(async (eventShare?: string): Promise<Requ
   pgSettings['jwt.claims.shared.event_token'] =
     eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare) ? eventShare : '';
 
-  return { token, claims, tenant, auth, pgSettings };
-});
-
-async function getRequestHostTenant() {
-  const headerStore = await headers();
-  const host = headerStore.get('x-forwarded-host') ?? headerStore.get('host');
-  const hostname =
-    host?.split(',', 1)[0]?.trim()?.split(':', 1)[0]?.toLowerCase() || null;
-
-  return hostToTenant.get(hostname ?? '') ?? defaultTenant;
+  return pgSettings;
 }

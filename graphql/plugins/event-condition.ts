@@ -25,7 +25,7 @@ function calendarFilter(
   $input: Step,
 ) {
   return $id.withLayerPlan(() => {
-    const $search = build.input.pgRegistry.pgResources.event_saved_search.get({ id: inhibitOnNull($id) });
+    const $search = build.input.pgRegistry.pgResources.event_saved_search!.get({ id: inhibitOnNull($id) });
     return lambda(
       object({ id: $id, filter: trap($search.get('condition'), TRAP_INHIBITED), input: $input }),
       ({ id, filter, input }) => {
@@ -137,7 +137,7 @@ const savedSearchPlugin = wrapPlans(
     ));
 
     if (conditionType === 'EventSearchConditionInput') {
-      const resource = build.input.pgRegistry.pgResources.event_facets;
+      const resource = build.input.pgRegistry.pgResources.event_facets!;
       return resource.execute([
         { step: args.getRaw('startRange'), pgCodec: TYPES.timestamptz },
         { step: args.getRaw('endRange'), pgCodec: TYPES.timestamptz },
@@ -164,7 +164,7 @@ savedSearchPlugin.schema = {
         if (!calendarConditions[`${Self.name}.${scope.fieldName}`]) return args;
         return {
           ...args,
-          condition: { ...args.condition, applyPlan() {} },
+          condition: { ...args.condition!, applyPlan() {} },
           calendarFilter: {
             type: build.getInputTypeByName('CalendarFilterInput'),
             description: 'Apply calendar selectors in addition to the native condition.',

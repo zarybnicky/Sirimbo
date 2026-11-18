@@ -10,7 +10,7 @@ import tsParser from '@typescript-eslint/parser';
 
 import * as graphqlPlugin from '@graphql-eslint/eslint-plugin';
 import { Kind, validate } from 'graphql';
-import { queryDepthRule } from '../backend/src/plugins/query-depth.ts';
+import { queryDepthRule } from '@rozpisovnik/graphql/plugins/query-depth';
 import { cacheKeyRule } from './graphql/cache-keys-rule.ts';
 
 const frontendConfig = defineConfig([

@@ -2,26 +2,37 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { createServer, type Server } from 'node:http';
 import { after, before, test } from 'node:test';
-import cookieParser from 'cookie-parser';
-import express from 'express';
-import jwt from 'jsonwebtoken';
+import { Pool } from 'pg';
+import { makePgService } from 'postgraphile/adaptors/pg';
 import { postgraphile, type PostGraphileInstance } from 'postgraphile';
-import { grafserv } from 'postgraphile/grafserv/express/v4';
-import { authContext, JWT_SECRET } from '../auth.ts';
-import { pool } from '../db.ts';
-import { standalonePreset } from '../graphile.config.ts';
+import { grafserv } from 'postgraphile/grafserv/node';
+import sharedPreset from '../graphile.config.ts';
+
+const pool = new Pool({ statement_timeout: 5000 });
 
 let instance: PostGraphileInstance;
 let server: Server;
 let url: string;
 
 before(async () => {
-  instance = postgraphile(standalonePreset);
+  instance = postgraphile({
+    extends: [sharedPreset],
+    pgServices: [makePgService({ schemas: ['public', 'federated', 'crawler'], pool })],
+    grafserv: { watch: false, graphiql: false },
+    gather: { installWatchFixtures: false },
+    schema: { retryOnInitFail: false },
+    grafast: {
+      context: (ctx) => ({
+        pgSettings: {
+          role: ctx.node!.req.headers['x-test-role'] === 'system_admin' ? 'system_admin' : 'anonymous',
+          'jwt.claims.tenant_id': '1',
+        },
+      }),
+    },
+  });
   await instance.getSchema();
-  const app = express();
-  app.use(express.json(), cookieParser(), authContext());
-  server = createServer(app);
-  await instance.createServ(grafserv).addTo(app, server);
+  server = createServer();
+  await instance.createServ(grafserv).addTo(server);
   server.listen(0, '127.0.0.1');
   await once(server, 'listening');
   const address = server.address();
@@ -38,28 +49,18 @@ after(async () => {
   await pool.end();
 });
 
-async function request<TData = { people: { nodes: Array<{ id: string; isMember: boolean; isTrainer: boolean; isAdmin: boolean; isExternal: boolean }> } }>(
-  query: string,
-  variables = {},
-  claims?: Record<string, unknown>,
-  tenantId = '1',
-) {
+async function request(query: string, variables = {}, role = 'anonymous') {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-tenant-id': tenantId,
-      ...(claims
-        ? {
-            authorization: `Bearer ${jwt.sign(claims, JWT_SECRET, { algorithm: 'HS256' })}`,
-          }
-        : {}),
+      'x-test-role': role,
     },
     body: JSON.stringify({ query, variables }),
   });
   return (await response.json()) as {
     errors?: { message: string }[];
-    data?: TData;
+    data?: Record<string, unknown>;
   };
 }
 
@@ -105,7 +106,7 @@ test('crawler pagination and public aliases remain unrestricted', async () => {
   const result = await request(
     '{ crawlerTargets(first: 301) { nodes { id } } }',
     {},
-    { is_system_admin: true },
+    'system_admin',
   );
   assert.equal(result.errors, undefined);
   const aliases = Array.from({ length: 31 }, (_, i) => `a${i}: __typename`).join(' ');

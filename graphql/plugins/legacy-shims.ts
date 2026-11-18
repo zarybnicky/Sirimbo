@@ -35,7 +35,7 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
     PaymentDebtor: {
       plans: {
         isUnpaid($debtor: PgSelectSingleStep) {
-          const $payment = build.input.pgRegistry.pgResources.payment.get({
+          const $payment = build.input.pgRegistry.pgResources.payment!.get({
             id: $debtor.get('payment_id'),
           });
           return pgClassExpression($payment, TYPES.boolean)`${$payment.get('status')} = 'unpaid'`;
@@ -45,7 +45,7 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
     Query: {
       plans: {
         eventInstancesForRangeList(_root, args) {
-          const $events = build.input.pgRegistry.pgResources.event.find();
+          const $events = build.input.pgRegistry.pgResources.event!.find();
           const $condition = lambda(args.getRaw(), (input) => ({
             type: input.onlyType ?? undefined,
             types: input.onlyTypes,
@@ -67,10 +67,10 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
           // Preserve the old function's tenant restriction and range semantics,
           // including omitted/null bounds and zero-length or reversed windows.
           const row = $events.alias;
-          const start = $events.placeholder(args.$startRange, TYPES.timestamptz);
-          const end = $events.placeholder(args.$endRange, TYPES.timestamptz);
-          const scope = $events.placeholder(args.$scope, TYPES.text);
-          const parent = $events.placeholder(args.$parentId, TYPES.bigint);
+          const start = $events.placeholder(args.$startRange!, TYPES.timestamptz);
+          const end = $events.placeholder(args.$endRange!, TYPES.timestamptz);
+          const scope = $events.placeholder(args.$scope!, TYPES.text);
+          const parent = $events.placeholder(args.$parentId!, TYPES.bigint);
           $events.where(sql`${row}.tenant_id = public.current_tenant_id()`);
           $events.where(sql`(${scope} is not null or ${parent} is not null)`);
           $events.where(sql`${start} is not null
@@ -78,8 +78,8 @@ export const LegacyShimsPlugin = extendSchema((build) => ({
             and app_private.tstzrange_overlaps(${row}.range, tstzrange(
               ${start}, greatest(${start}, coalesce(${end}, 'infinity'::timestamptz)), '[]'))`);
           $events.orderBy({ attribute: 'since', direction: 'ASC' });
-          $events.setFirst(args.$first);
-          $events.setOffset(args.$offset);
+          $events.setFirst(args.$first!);
+          $events.setOffset(args.$offset!);
           return $events;
         },
       },
@@ -106,7 +106,7 @@ export const LegacyRelationAliasesPlugin: GraphileConfig.Plugin = {
             const field = fields[canonical];
             let args = field.args;
             if (Self.name === 'Mutation') {
-              const input = getNamedType(args!.input.type);
+              const input = getNamedType(args!.input!.type);
               assert(isInputObjectType(input));
               // Keep variable declarations using the old input name, including input-field plans.
               args = {

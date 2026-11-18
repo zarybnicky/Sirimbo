@@ -37,7 +37,8 @@ export default compose(
     position: 'bottom-left',
   },
   typedRoutes: true,
-  transpilePackages: ['html-react-parser'],
+  transpilePackages: ['html-react-parser', '@rozpisovnik/graphql'],
+  serverExternalPackages: ['postgraphile', 'grafast', 'grafserv', 'graphile-build', 'graphile-build-pg', 'graphile-config', '@dataplan/pg', 'pg-sql2', 'graphql'],
   agentRules: false,
 
   output: process.env.VERCEL ? undefined : 'standalone',
@@ -70,6 +71,7 @@ export default compose(
 
   async redirects() {
     const redirects: NextRedirect = [
+      { source: '/graphiql', destination: '/graphql', permanent: false },
       { source: '/home', destination: '/', permanent: true },
       { source: '/aktualne', destination: '/clanky', permanent: true },
       { source: '/aktualne/:path*', destination: '/clanky/:path*', permanent: true },
@@ -134,13 +136,8 @@ export default compose(
   },
 
   async rewrites() {
-    const graphqlServer = process.env.GRAPHQL_BACKEND || 'https://api.rozpisovnik.cz';
     return [
-      { source: '/graphql', destination: `${graphqlServer}/graphql` },
-      { source: '/graphiql', destination: `${graphqlServer}/graphiql` },
-      { source: '/starlet/graphql', destination: `${graphqlServer}/graphql` },
-      { source: '/galerie/:path*', destination: `${graphqlServer}/galerie/:path*` },
-      { source: '/system-admin/:path*', destination: `${graphqlServer}/system-admin/:path*` },
+      { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/gallery/:path*' },
     ];
   },
 });

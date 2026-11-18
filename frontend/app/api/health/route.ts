@@ -1,15 +1,42 @@
+import { parse } from 'graphql';
+import { executeGraphql } from '@/lib/server/graphql';
+import { claimSettings } from '@/lib/server/tenant';
+import { defaultTenant } from '@/tenant/catalog';
+
 type DeploymentResponse = {
   ok: boolean;
   deploymentId: string | null;
 };
 
-export function GET() {
+const healthQuery = parse('query Health { getCurrentTenant { id } }');
+let pending: Promise<unknown> | undefined;
+
+export async function GET() {
+  let ok = false;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  try {
+    pending ??= executeGraphql(healthQuery, {}, {
+      pgSettings: claimSettings(null, String(defaultTenant.id)),
+    }).finally(() => { pending = undefined; });
+    await Promise.race([
+      pending,
+      new Promise((_, reject) => {
+        timeout = setTimeout(() => reject(new Error('GraphQL readiness timed out')), 2000);
+      }),
+    ]);
+    ok = true;
+  } catch {
+    // Keep the probe response independent of database or schema error details.
+  } finally {
+    clearTimeout(timeout);
+  }
   return Response.json(
     {
-      ok: true,
+      ok,
       deploymentId: process.env.NEXT_DEPLOYMENT_ID || null,
     } satisfies DeploymentResponse,
     {
+      status: ok ? 200 : 503,
       headers: {
         'Cache-Control': 'private, no-store, max-age=0, must-revalidate',
       },

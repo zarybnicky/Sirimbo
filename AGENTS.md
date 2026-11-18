@@ -41,9 +41,10 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Inside a transaction, call the generated query's `.run(params, client)` with that transaction's client. Frontend `runQuery()` uses the pool and does not inherit a caller's transaction or request settings.
 
 ## High-level structure
-- `backend/`: Express + PostGraphile 5 (Amber preset) server. Custom plugins live in `backend/src/plugins` (S3-backed file URLs, current-user fields, and person membership filters). `backend/src/auth.ts` resolves the request tenant, verifies JWTs, and maps their claims to database settings.
+- `backend/`: Express + PostGraphile 5 (Amber preset) server. Shared PostGraphile configuration and plugins live in `graphql/` (S3-backed file URLs, current-user fields, and person membership filters). `backend/src/auth.ts` resolves the request tenant, verifies JWTs, and maps their claims to database settings.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
+- `graphql/`: Shared PostGraphile configuration, plugins, and schema exporter; applications supply their own database pools.
 - `frontend/graphql/`: GraphQL operation documents, generated TypeScript bindings, and the cache-key lint helper.
 - `e2e/`: Playwright smoke tests and auth fixtures.
 - `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/1-current.sql` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
@@ -57,11 +58,12 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Pages and components should read the active tenant configuration rather than hard-coding IDs. `frontend/lib/query.ts` injects the active `x-tenant-id` header for URQL requests.
 
 ## Backend tenancy model
-- `backend/src/auth.ts` determines the tenant for each request. It:
+- `backend/src/auth.ts` determines the tenant for Express API requests. It:
   - inspects `x-tenant-id` headers or matches `req.hostname`/`origin` against `tenant.origins` in the database,
   - defaults to tenant `1` when nothing matches,
   - builds `pgSettings` so Postgres row-level security sees `jwt.claims.tenant_id`, memberships, and role claims.
-- `backend/src/graphile.config.ts` forwards request `pgSettings` into Grafast/PostGraphile and configures the PostGraphile schema.
+- The Next GraphQL route uses `frontend/lib/server/tenant.ts`: API requests accept bearer tokens and `x-tenant-id`, then fall back to session/tenant cookies and the hostname catalog. SSR uses cookies and the hostname catalog only. Neither path queries the database to build request context.
+- `graphql/graphile.config.ts` configures the shared schema. Next serves `/graphql` through the WHATWG adapter; `frontend/lib/server/graphql.ts` executes server-side operations locally with Grafast. Calendar export supplies owner claim settings directly.
 - `current_tenant_id()` (defined in `migrations/committed/000026.sql`) returns the active tenant ID from the current PostgreSQL session (defaulting to `1`). Nearly every table includes a `tenant_id` column defaulting to this function.
 - `app_private.create_jwt_token(users)`, maintained in `migrations/fixtures/functions/create_jwt_token.sql`, builds claims directly from `user_proxy`, active tenant/cohort memberships, active couples, and system-admin status. The old `auth_details` views and refresh jobs have been removed.
 - `loadUserFromSession` accepts a bearer token or the `rozpisovnik` cookie. It chooses the database role from the token's system-admin flag and tenant-specific role arrays, then copies claims into `jwt.claims.*` settings. The request tenant overrides the token's `tenant_id`; memberships are not reloaded on each request. The web frontend uses session cookies; bearer authentication remains available for external consumers.

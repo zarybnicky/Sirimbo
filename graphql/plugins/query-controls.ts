@@ -21,7 +21,7 @@ function checkQueryLimits(
 ): readonly GraphQLError[] {
   const operation = getOperationAST(document, operationName);
   if (!operation) return [new GraphQLError('Select a single operation.')];
-  const selected = separateOperations(document)[operation.name?.value ?? ''];
+  const selected = separateOperations(document)[operation.name?.value ?? '']!;
   const errors = [...validate(schema, selected, [queryDepthRule])];
   if (errors.length) return errors;
   const values = getVariableValues(

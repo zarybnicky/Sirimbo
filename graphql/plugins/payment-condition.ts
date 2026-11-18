@@ -10,7 +10,7 @@ const plugins: GraphileConfig.Plugin[] = [
       Account: {
         plans: {
           balance($account: PgSelectSingleStep) {
-            const $balances = build.input.pgRegistry.pgResources.account_balances.find({
+            const $balances = build.input.pgRegistry.pgResources.account_balances!.find({
               id: $account.get('id'),
             });
             $balances.setInliningForbidden();

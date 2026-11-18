@@ -56,8 +56,6 @@ spec:
             - name: AWS_EC2_METADATA_DISABLED
               value: "true"
 
-            - name: GRAPHQL_BACKEND
-              value: {{ .Values.runtime.graphqlBackend | quote }}
             - name: JWT_SECRET
               value: {{ .Values.runtime.jwtSecret | quote }}
             - name: NEXT_PUBLIC_SENTRY_ENVIRONMENT
@@ -73,9 +71,10 @@ spec:
               port: http
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
-              path: /api/health
+              path: /api/health/live
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10

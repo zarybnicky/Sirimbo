@@ -1,5 +1,6 @@
 
-import { getRequestAuth, getRequestContext } from '@/lib/server/tenant';
+import { getRequestAuth } from '@/lib/server/session';
+import { getRequestContext } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
 import type { Metadata, Viewport } from 'next';

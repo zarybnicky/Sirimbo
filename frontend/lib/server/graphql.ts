@@ -1,27 +1,53 @@
 import 'server-only';
-
 import { getRequestContext } from '@/lib/server/tenant';
-import { SESSION_COOKIE } from '@/lib/session-cookies';
+import { execute, hookArgs } from 'postgraphile/grafast';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { getOperationAST, print } from 'graphql';
-import { headers as getHeaders } from 'next/headers';
+import { getOperationAST, validate, type DocumentNode, type GraphQLSchema } from 'graphql';
+import path from 'node:path';
+import { postgraphile, type PostGraphileInstance } from 'postgraphile';
+import sharedPreset from '@rozpisovnik/graphql/graphile.config';
+import { makePgService } from 'postgraphile/adaptors/pg';
+import { getPool } from './postgresql';
+import { grafserv } from './grafserv';
 
-type GraphqlError = {
-  message: string;
-};
-
-type GraphqlResponse<TResult> = {
-  data?: TResult;
-  errors?: GraphqlError[];
-};
-
-function graphqlUrl() {
-  const origin =
-    process.env.GRAPHQL_BACKEND ??
-    process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ??
-    `http://localhost:${process.env.PORT || 3000}`;
-  return `${origin.replace(/\/graphql\/?$/, '').replace(/\/$/, '')}/graphql`;
+declare global {
+  var graphile: PostGraphileInstance | undefined;
+  var graphileHandler: ReturnType<ReturnType<typeof grafserv>['createHandler']> | undefined;
 }
+
+// Next re-evaluates this module when server code changes; keep the pool, not the old schema.
+if (process.env.NODE_ENV === 'development') {
+  const instance = globalThis.graphile;
+  const services = instance?.getResolvedPreset().pgServices ?? [];
+  globalThis.graphile = undefined;
+  globalThis.graphileHandler = undefined;
+  void Promise.all([instance?.release(), ...services.map((service) => service.release?.())])
+    // eslint-disable-next-line unicorn/prefer-top-level-await -- Schema initialization can still be waiting for the database.
+    .catch((error) => console.error('Failed to release PostGraphile during hot reload', error));
+}
+
+export function getGraphqlHandler() {
+  return globalThis.graphileHandler ??= getPostGraphile().createServ(grafserv).createHandler();
+}
+
+function getPostGraphile() {
+  return globalThis.graphile ??= postgraphile({
+    extends: [sharedPreset],
+    grafserv: { graphiqlStaticPath: '/graphql/ruru-static/' },
+    pgServices: [makePgService({ schemas: ['public', 'federated', 'crawler'], pool: getPool(), superuserPool: getPool() })],
+    schema: { exportSchemaSDLPath: process.env.NODE_ENV === 'development' ? path.resolve('../schema.graphql') : undefined },
+    grafast: {
+      async context(ctx) {
+        const request = ctx.whatwgv0?.request;
+        if (!request) return { pgSettings: ctx.pgSettings };
+        const { pgSettings } = await getRequestContext(request.headers.get('x-event-share') ?? undefined, request);
+        return { pgSettings };
+      },
+    },
+  });
+}
+
+const validatedDocuments = new WeakMap<GraphQLSchema, WeakSet<DocumentNode>>();
 
 export async function executeGraphql<
   TResult,
@@ -29,52 +55,30 @@ export async function executeGraphql<
 >(
   document: TypedDocumentNode<TResult, TVariables>,
   variables?: TVariables,
-  headers?: Record<string, string>,
+  context?: { pgSettings: Record<string, string> },
 ) {
-  const context = headers?.authorization ? null : await getRequestContext();
-  const incomingHeaders = await getHeaders();
-  const forwardedHeaders: Record<string, string> = {};
-  for (const name of [
-    'user-agent',
-    'accept-language',
-    'origin',
-    'referer',
-    'x-forwarded-for',
-    'x-forwarded-host',
-    'x-forwarded-proto',
-  ]) {
-    const value = incomingHeaders.get(name);
-    if (value) forwardedHeaders[name] = value;
+  const { pgSettings } = context ?? await getRequestContext();
+  const { schema, resolvedPreset } = await getPostGraphile().getSchemaResult();
+  let documents = validatedDocuments.get(schema);
+  if (!documents) validatedDocuments.set(schema, documents = new WeakSet());
+  if (!documents.has(document)) {
+    const errors = validate(schema, document);
+    if (errors.length > 0) throw new Error(errors.map((error) => error.message).join('\n'));
+    documents.add(document);
   }
-  const response = await fetch(graphqlUrl(), {
-    method: 'POST',
-    cache: 'no-store',
-    headers: {
-      'content-type': 'application/json',
-      ...forwardedHeaders,
-      ...(context ? {
-        'x-tenant-id': context.tenant.id.toString(),
-        ...(context.token ? { cookie: `${SESSION_COOKIE}=${context.token}` } : {}),
-      } : {}),
-      ...headers,
-    },
-    body: JSON.stringify({
-      query: print(document),
-      operationName: getOperationAST(document)?.name?.value,
-      variables: variables ?? {},
-    }),
+  const args = await hookArgs({
+    schema, resolvedPreset, requestContext: { pgSettings },
+    document, variableValues: variables ?? {},
+    operationName: getOperationAST(document)?.name?.value,
   });
-
-  if (!response.ok) {
-    throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
-  }
-
-  const result = (await response.json()) as GraphqlResponse<TResult>;
+  const result = await execute(args);
+  if (Symbol.asyncIterator in result) throw new Error('Streaming GraphQL results are not supported here.');
   if (result.errors?.length) {
     throw new Error(result.errors.map((error) => error.message).join('\n'));
   }
   if (!result.data) {
     throw new Error('GraphQL request returned no data.');
   }
-  return result.data;
+  // Grafast returns null-prototype objects; React requires plain objects at client boundaries.
+  return structuredClone(result.data) as TResult;
 }

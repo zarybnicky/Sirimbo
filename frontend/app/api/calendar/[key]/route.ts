@@ -11,7 +11,7 @@ import { formatAddress, formatEventName, formatOfficialRole, formatParticipant, 
 import { formatDocument } from '@urql/core';
 import { compile } from 'html-to-text';
 import ical, { ICalEventStatus, ICalEventTransparency } from 'ical-generator';
-import jwt from 'jsonwebtoken';
+import { claimSettings } from '@/lib/server/tenant';
 import { calendarFeedOwner } from './calendar.queries';
 
 const summaryToText = compile({ wordwrap: false });
@@ -27,7 +27,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
   if (!search) return new Response('Calendar not found', { status: 404 });
 
   const owner = search.claims as Record<string, unknown>;
-  const token = jwt.sign(owner, process.env.JWT_SECRET!, { algorithm: 'HS256' });
   const claims = normalizeClaims(owner)!;
 
   const calendars = await Promise.all((search.tenant_ids ?? []).map(async (tenantId) => {
@@ -45,8 +44,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         registrationLimit: null,
         offset: pages.length * 300,
       }, {
-        authorization: `Bearer ${token}`,
-        'x-tenant-id': tenantId,
+        pgSettings: claimSettings(claims, tenantId),
       });
       pages.push(data);
       hasNextPage = data.federationEvents?.pageInfo.hasNextPage ?? false;

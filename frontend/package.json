@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -p none 'serwist build --watch' 'next dev'",
+    "dev": "GRAPHILE_ENV=development concurrently -p none 'serwist build --watch' 'next dev'",
     "build": "next build && serwist build",
     "start": "next start",
     "lint": "eslint . --cache",
@@ -80,7 +80,10 @@
     "typescript-event-target": "~1.1.2",
     "urql": "~5.0.4",
     "wonka": "^6.3.6",
-    "zod": "~4.4.3"
+    "zod": "~4.4.3",
+    "@rozpisovnik/graphql": "workspace:*",
+    "postgraphile": "~5.1.5",
+    "@whatwg-node/server": "^0.9.64"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",

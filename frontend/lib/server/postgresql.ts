@@ -9,7 +9,7 @@ declare global {
 }
 
 export function getPool(): Pool {
-  globalThis.pool ??= new Pool();
+  globalThis.pool ??= new Pool({ idleTimeoutMillis: 60_000, statement_timeout: 5000 });
   return globalThis.pool;
 }
 

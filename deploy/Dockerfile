@@ -8,7 +8,7 @@ ENV PNPM_HOME=/pnpm
 ENV PATH=/pnpm:$PATH
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN corepack enable && pnpm config set store-dir /pnpm/store
+RUN corepack enable
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
@@ -19,24 +19,32 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY patches/ patches/
 COPY frontend/package.json frontend/package.json
+COPY graphql/package.json graphql/package.json
 
 RUN --mount=type=cache,id=sirimbo-pnpm,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter rozpisovnik --filter @rozpisovnik/web...
+  pnpm install --store-dir /pnpm/store --frozen-lockfile --filter rozpisovnik --filter @rozpisovnik/web...
 
 FROM deps AS graphql-validation
 
 COPY graphql.config.yml ./
 COPY frontend/graphql/*.graphql frontend/graphql/
-ARG NEXT_PUBLIC_GRAPHQL_BACKEND
-RUN test -n "$NEXT_PUBLIC_GRAPHQL_BACKEND" \
-  && GRAPHQL_SCHEMA="${NEXT_PUBLIC_GRAPHQL_BACKEND%/}/graphql" pnpm schema
+COPY graphql/ graphql/
+ARG PGUSER=olymp
+ARG PGDATABASE=olymp
+# The validation step uses the host's local PostgreSQL listener.
+# This key is only used to construct the schema, never to execute mutations.
+RUN --network=host \
+  PGHOST=127.0.0.1 PGUSER="$PGUSER" PGDATABASE="$PGDATABASE" \
+    GRAPHILE_ENV=production JWT_SECRET=schema-validation-only \
+    node graphql/export-schema.ts /repo/schema.graphql \
+  && pnpm schema
 
 FROM deps AS builder
 
+COPY graphql/ graphql/
 COPY frontend/ frontend/
 COPY --from=graphql-validation /repo/frontend/graphql /repo/frontend/graphql
 
-ARG NEXT_PUBLIC_GRAPHQL_BACKEND
 ARG NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT
 ARG SENTRY_AUTH_TOKEN

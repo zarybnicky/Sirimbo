@@ -14,10 +14,11 @@ type PageProps = {
 
 const loadEvent = cache(async (id: string, share: string) => {
   if (!/^\d{1,18}$/.test(id)) return null;
+  const { pgSettings } = await getRequestContext(share);
   const data = await executeGraphql(
     EventWithAttendanceDocument,
     { id },
-    { 'x-event-share': share },
+    { pgSettings },
   );
   return data.event;
 });

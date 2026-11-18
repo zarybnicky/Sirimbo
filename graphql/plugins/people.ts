@@ -18,7 +18,7 @@ const PersonFieldsPlugin = extendSchema((build) => ({
     Person: {
       plans: {
         cohortIds($person: PgSelectSingleStep) {
-          const $cohorts = build.input.pgRegistry.pgResources.cohort_membership.find({
+          const $cohorts = build.input.pgRegistry.pgResources.cohort_membership!.find({
             person_id: $person.get('id'),
           }).clone('aggregate');
           $cohorts.where(sql`now() <@ ${$cohorts.alias}.active_range`);
@@ -62,7 +62,7 @@ const PersonFieldsPlugin = extendSchema((build) => ({
 }), 'PersonFieldsPlugin');
 
 const TenantNamesPlugin = extendSchema((build) => {
-  const tenant = build.input.pgRegistry.pgResources.tenant;
+  const tenant = build.input.pgRegistry.pgResources.tenant!;
   const plans = {
     tenantName($membership: PgSelectSingleStep) {
       const $tenant = tenant.get({ id: $membership.get('tenant_id') });
@@ -177,7 +177,7 @@ const plugins: GraphileConfig.Plugin[] = [
             if (Self.name !== 'Person') return fields;
             const query = build.getTypeByName('Query');
             if (!build.graphql.isObjectType(query)) throw new Error('Expected Query object type.');
-            const canonical = query.toConfig().fields.couplesList;
+            const canonical = query.toConfig().fields.couplesList!;
             const plan = canonical.extensions?.grafast?.plan;
             if (!plan) throw new Error('Expected couplesList plan.');
 

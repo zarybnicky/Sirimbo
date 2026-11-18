@@ -1,8 +1,14 @@
 import 'server-only';
 
+import { CurrentUserDocument } from '@/graphql/CurrentUser';
+import type { RequestAuthState } from '@/lib/auth';
+import { normalizeClaims } from '@/lib/auth-claims';
+import { buildId } from '@/lib/build-id';
+import { executeGraphql } from '@/lib/server/graphql';
 import { SESSION_COOKIE } from '@/lib/session-cookies';
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
+import { cache } from 'react';
 
 const COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === 'production',
@@ -10,6 +16,14 @@ const COOKIE_OPTIONS = {
   path: '/',
   maxAge: 60 * 60 * 24 * 365,
 };
+
+export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
+  const cookieStore = await cookies();
+  if (!cookieStore.has(SESSION_COOKIE)) return { claims: null, user: null };
+
+  const data = await executeGraphql(CurrentUserDocument, { versionId: buildId });
+  return { claims: normalizeClaims(data.currentClaims), user: data.getCurrentUser };
+});
 
 export function sameOrigin(request: NextRequest) {
   const origin = request.headers.get('origin');
