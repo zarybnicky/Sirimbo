@@ -48,14 +48,14 @@ export default async function ResponsePage({
         title={`Response ${response.id}`}
         breadcrumbLabel="Response"
         breadcrumbs={[
-          { title: 'Crawler', href: '/admin/crawler' },
+          { title: 'Crawler', href: '/crawler' },
           {
             title: `${frontier.federation}:${frontier.kind}`,
-            href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
+            href: `/crawler/${frontier.federation}:${frontier.kind}`,
           },
           {
             title: frontierTitle,
-            href: `/admin/crawler/${frontier.federation}:${frontier.kind}:${encodeURIComponent(frontier.key)}`,
+            href: `/crawler/${frontier.federation}:${frontier.kind}:${encodeURIComponent(frontier.key)}`,
           },
         ]}
       />

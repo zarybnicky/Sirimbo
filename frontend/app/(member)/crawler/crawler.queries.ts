@@ -1,4 +1,4 @@
-/** Types generated for queries found in "app/(member)/admin/crawler/crawler.sql" */
+/** Types generated for queries found in "app/(member)/crawler/crawler.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
 export type NumberOrString = number | string;

@@ -49,7 +49,7 @@ export function Sources({
         <p key={source.id}>
           <Link
             className="text-accent-11 underline"
-            href={`/admin/crawler/${federation}:${source.kind}:${encodeURIComponent(source.key)}`}
+            href={`/crawler/${federation}:${source.kind}:${encodeURIComponent(source.key)}`}
             prefetch={false}
           >
             {federation}:{source.kind}:{source.key}

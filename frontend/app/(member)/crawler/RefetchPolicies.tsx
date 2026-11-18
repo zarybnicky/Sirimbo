@@ -90,7 +90,7 @@ export function RefetchPolicies({ policies }: { policies: IGetRefetchPoliciesRes
                       <Plus className="size-3" />
                     </RefetchPolicyEditor>
                     <Link
-                      href={`/admin/crawler/${kind}`}
+                      href={`/crawler/${kind}`}
                       prefetch={false}
                       className="text-accent-11 hover:underline"
                     >

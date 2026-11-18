@@ -106,7 +106,7 @@ export function Crawler({
             key: 'jobs',
             label: 'Jobs',
             icon: ListTodo,
-            href: '/admin/crawler/jobs',
+            href: '/crawler/jobs',
           },
         ]}
       >
@@ -206,7 +206,7 @@ export function CrawlerTargets({
     <>
       <PageHeader
         title={federation + ':' + kind}
-        breadcrumbs={[{ title: 'Crawler', href: '/admin/crawler' }]}
+        breadcrumbs={[{ title: 'Crawler', href: '/crawler' }]}
       >
         {!pending && (
           <CrawlerActions
@@ -279,7 +279,7 @@ export function CrawlerJobs() {
     <>
       <PageHeader
         title="Crawler jobs"
-        breadcrumbs={[{ title: 'Crawler', href: '/admin/crawler' }]}
+        breadcrumbs={[{ title: 'Crawler', href: '/crawler' }]}
       >
         <Refresh loading={result.fetching} reexecuteQuery={reexecuteQuery} />
       </PageHeader>
@@ -358,7 +358,7 @@ export function CrawlerJobs() {
               <th scope="row" className="font-mono">
                 <Link
                   className="text-accent-11 underline"
-                  href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.frontierKey ?? '')}`}
+                  href={`/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.frontierKey ?? '')}`}
                   prefetch={false}
                 >
                   {row.federation}:{row.kind}
@@ -436,7 +436,7 @@ function TargetTable({
             <th scope="row" className="font-mono">
               <Link
                 className="text-accent-11 underline"
-                href={`/admin/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.key)}`}
+                href={`/crawler/${row.federation}:${row.kind}:${encodeURIComponent(row.key)}`}
                 prefetch={false}
               >
                 {row.key || '(root)'}
@@ -564,7 +564,7 @@ function Overview({
                     )}
                     <Link
                       className="text-accent-11 underline"
-                      href={`/admin/crawler/${row.target}`}
+                      href={`/crawler/${row.target}`}
                       prefetch={false}
                     >
                       {row.target}
@@ -667,7 +667,7 @@ function Overview({
                       {index > 0 && ', '}
                       <Link
                         className="text-accent-11 underline"
-                        href={`/admin/crawler/${federation}:${row.kind}`}
+                        href={`/crawler/${federation}:${row.kind}`}
                         prefetch={false}
                       >
                         {row.total === 1 ? row.kind : `${row.kind} (${row.total})`}

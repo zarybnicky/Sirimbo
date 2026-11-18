@@ -149,13 +149,13 @@ const memberMenu: MenuStructItem[] = [
       {
         type: 'link',
         title: 'Tenanti',
-        href: '/admin/tenants',
+        href: '/tenants',
         requireSystemAdmin: true,
       },
       {
         type: 'link',
         title: 'Crawler',
-        href: '/admin/crawler',
+        href: '/crawler',
         requireSystemAdmin: true,
       },
     ],

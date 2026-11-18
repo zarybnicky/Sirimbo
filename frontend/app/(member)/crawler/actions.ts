@@ -72,7 +72,7 @@ export async function createRefetchPolicy(input: z.input<typeof policyCreateSche
     if (result.length !== 1) throw new Error('This offset already exists.');
     await recalculateCrawlerFetchTimes.run(policy, client);
   });
-  revalidatePath('/admin/crawler');
+  revalidatePath('/crawler');
 }
 
 const policyEditSchema = policyCreateSchema.extend({
@@ -109,7 +109,7 @@ export async function updateRefetchPolicy(input: z.input<typeof policyEditSchema
       throw new Error('This interval changed. Reload the page and try again.');
     await recalculateCrawlerFetchTimes.run(edit, client);
   });
-  revalidatePath('/admin/crawler');
+  revalidatePath('/crawler');
 }
 
 export async function removeRefetchPolicy(policy: IRemoveRefetchPolicyParams) {
@@ -119,7 +119,7 @@ export async function removeRefetchPolicy(policy: IRemoveRefetchPolicyParams) {
     await removeRefetchPolicyQuery.run(policy, client);
     await recalculateCrawlerFetchTimes.run(policy, client);
   });
-  revalidatePath('/admin/crawler');
+  revalidatePath('/crawler');
 }
 
 export async function completeCrawlerJob(jobId: string) {
@@ -175,6 +175,6 @@ export async function queueCrawlerAction(
       }, client);
     return count;
   });
-  if (params.frontierId) revalidatePath('/admin/crawler', 'layout');
+  if (params.frontierId) revalidatePath('/crawler', 'layout');
   return count;
 }

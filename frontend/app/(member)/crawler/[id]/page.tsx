@@ -55,7 +55,7 @@ export default async function FrontierPage({
   const job = crawlerFetchJobs?.nodes[0];
   const { totalCount } = frontier.responses;
   const lastPage = Math.max(1, Math.ceil(totalCount / pageSize));
-  const basePath = `/admin/crawler/${federation}:${kind}:${encodeURIComponent(key)}`;
+  const basePath = `/crawler/${federation}:${kind}:${encodeURIComponent(key)}`;
   if (page > lastPage) {
     redirect(lastPage > 1 ? `${basePath}?page=${lastPage}` : basePath);
   }
@@ -68,10 +68,10 @@ export default async function FrontierPage({
         title={title}
         breadcrumbLabel="Frontier"
         breadcrumbs={[
-          { title: 'Crawler', href: '/admin/crawler' },
+          { title: 'Crawler', href: '/crawler' },
           {
             title: `${frontier.federation}:${frontier.kind}`,
-            href: `/admin/crawler/${frontier.federation}:${frontier.kind}`,
+            href: `/crawler/${frontier.federation}:${frontier.kind}`,
           },
         ]}
       >
