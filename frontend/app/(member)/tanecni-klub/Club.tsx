@@ -10,7 +10,8 @@ import { formatAddress, moneyFormatter, numericFullFormatter } from '@/ui/format
 import { MembershipApplicationForm } from '@/ui/forms/MembershipApplicationForm.tsx';
 import { LocationForm } from '@/ui/forms/LocationForm';
 import { useAuth } from '@/lib/auth';
-import { PinIcon } from 'lucide-react';
+import { ChevronLeft, PinIcon } from 'lucide-react';
+import * as Collapsible from '@radix-ui/react-collapsible';
 import Link from 'next/link';
 import Image from '@/ui/Image';
 import { useQuery } from 'urql';
@@ -64,16 +65,6 @@ export function Club() {
         <Tab id="info" title="Informace">
           <ClubInformation club={club} />
         </Tab>
-        <Tab id="trainers" title={`Trenéři (${club.tenantTrainersList.length})`}>
-          <ClubTrainers club={club} />
-        </Tab>
-        <Tab
-          id="administrators"
-          title={`Správci (${club.tenantAdministratorsList.length})`}
-          requireAdmin
-        >
-          <ClubAdministrators club={club} />
-        </Tab>
         {pendingApplications.length > 0 && (
           <Tab
             id="applications"
@@ -112,6 +103,39 @@ const ClubInformation = React.memo(function ClubInformation({
       ) : auth.isAdmin ? (
         <p className="text-sm text-neutral-10">(Nevyplněno)</p>
       ) : null}
+
+      <div className="mt-4 divide-y divide-neutral-4 border-y border-neutral-4">
+        <Collapsible.Root>
+          <h2>
+            <Collapsible.Trigger className="flex w-full items-center justify-between gap-2 rounded py-3 text-left text-lg font-bold hover:bg-neutral-2 focus-visible:outline-2 focus-visible:outline-accent-9 [&[data-state=open]>svg]:-rotate-90">
+              <span>Trenéři ({club.tenantTrainersList.length})</span>
+              <ChevronLeft
+                className="size-6 shrink-0 text-neutral-12 transition-transform"
+                aria-hidden="true"
+              />
+            </Collapsible.Trigger>
+          </h2>
+          <Collapsible.Content className="pb-2">
+            <ClubTrainers club={club} />
+          </Collapsible.Content>
+        </Collapsible.Root>
+        {auth.isAdmin && (
+          <Collapsible.Root>
+            <h2>
+              <Collapsible.Trigger className="flex w-full items-center justify-between gap-2 rounded py-3 text-left text-lg font-bold hover:bg-neutral-2 focus-visible:outline-2 focus-visible:outline-accent-9 [&[data-state=open]>svg]:-rotate-90">
+                <span>Správci ({club.tenantAdministratorsList.length})</span>
+                <ChevronLeft
+                  className="size-6 shrink-0 text-neutral-12 transition-transform"
+                  aria-hidden="true"
+                />
+              </Collapsible.Trigger>
+            </h2>
+            <Collapsible.Content className="pb-2">
+              <ClubAdministrators club={club} />
+            </Collapsible.Content>
+          </Collapsible.Root>
+        )}
+      </div>
 
       <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
         <h2 className="mb-2 text-lg font-bold">Místa</h2>
