@@ -2,7 +2,6 @@ packages:
   - graphql
   - frontend
   - worker
-  - backend
   - e2e
 
 strictPeerDependencies: true

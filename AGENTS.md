@@ -32,7 +32,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Avoid one-line or single-use functions; they usually make this codebase harder to read than an inline expression.
 
 ## Code style preferences
-- Backend and worker code run as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
+- Worker code runs as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
 
 ## Direct SQL queries
 - Use named pgtyped queries in `.sql` files for application SQL executed through `pg`. Use the generated parameter and result types. A handwritten `client.query<Row>(sql, params)` type does not check the SQL against the database.
@@ -41,7 +41,6 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Inside a transaction, call the generated query's `.run(params, client)` with that transaction's client. Frontend `runQuery()` uses the pool and does not inherit a caller's transaction or request settings.
 
 ## High-level structure
-- `backend/`: Retained CSV import utility and package configuration; the Express runtime has been removed. Shared PostGraphile configuration lives in `graphql/`.
 - `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
 - `graphql/`: Shared PostGraphile configuration, plugins, and schema exporter; applications supply their own database pools.
@@ -62,7 +61,7 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - `graphql/graphile.config.ts` configures the shared schema. Next serves `/graphql` through the WHATWG adapter; `frontend/lib/server/graphql.ts` executes server-side operations locally with Grafast. Calendar export supplies owner claim settings directly.
 - `current_tenant_id()` (defined in `migrations/committed/000026.sql`) returns the active tenant ID from the current PostgreSQL session (defaulting to `1`). Nearly every table includes a `tenant_id` column defaulting to this function.
 - `app_private.create_jwt_token(users)`, maintained in `migrations/fixtures/functions/create_jwt_token.sql`, builds claims directly from `user_proxy`, active tenant/cohort memberships, active couples, and system-admin status. The old `auth_details` views and refresh jobs have been removed.
-- `loadUserFromSession` accepts a bearer token or the `rozpisovnik` cookie. It chooses the database role from the token's system-admin flag and tenant-specific role arrays, then copies claims into `jwt.claims.*` settings. The request tenant overrides the token's `tenant_id`; memberships are not reloaded on each request. The web frontend uses session cookies; bearer authentication remains available for external consumers.
+- `getRequestContext` accepts a bearer token or the `rozpisovnik` cookie. It chooses the database role from the token's system-admin flag and tenant-specific role arrays, then copies claims into `jwt.claims.*` settings. The request tenant overrides the token's `tenant_id`; memberships are not reloaded on each request. The web frontend uses session cookies; bearer authentication remains available for external consumers.
 - `frontend/lib/server/tenant.ts` currently uses `ignoreExpiration: true`. JWTs contain a seven-day expiry, but verification does not enforce it - intentionally postponed, will be relevant soon.
 - Request auth passes the event-share token in `jwt.claims.shared.event_token` without a database lookup. SQL policies resolve it through `app_private.current_shared_event_ids()` and `app_private.event_share_claims`, scoped to the request tenant. Frontend `getRequestContext(eventShare?)` accepts an explicit token and stays database-free.
 - When adding claims, update the `jwt_token` composite type, `create_jwt_token`, frontend claim types, and any required anonymous defaults. Check the frontend database-context builder; it maps claim arrays to PostgreSQL array literals.
@@ -123,7 +122,6 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Check external API consumers with `bash check-consumers.sh [schema file or URL] [refs...]`. Defaults to local `schema.graphql` and both the latest published release and `main`. After GraphQL schema changes, run this check against the updated local schema before applying production migrations. Report incompatible operations; do not silently exclude them - a failure in this script is for the programmer to communicate to 3rd party developers or to introduce a temporary ship, not a reason to avoid a change.
 - Run all typechecks: `pnpm -r typecheck`
 - Run all lints: `pnpm -r lint`
-- Type-check/lint the API: `pnpm --filter @rozpisovnik/backend lint`, `pnpm --filter @rozpisovnik/backend typecheck`.
 - Frontend checks use `pnpm --filter @rozpisovnik/web lint`, `pnpm --filter @rozpisovnik/web typecheck`; the Next build is slow.
 - Run queue workers: `pnpm --filter @rozpisovnik/worker start`
 - Run the crawler dev tool: `pnpm crawler --help`
