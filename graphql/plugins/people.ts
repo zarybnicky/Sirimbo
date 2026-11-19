@@ -168,12 +168,28 @@ const plugins: GraphileConfig.Plugin[] = [
     },
   ),
   {
-    name: 'PersonCouplesPlugin',
+    name: 'PeopleRelationsPlugin',
     schema: {
       hooks: {
         GraphQLObjectType_fields: {
           after: ['PgRelationsPlugin'],
           callback(fields, build, { Self }) {
+            if (Self.name === 'CohortMembership') {
+              const cohort = fields.cohort!;
+              const plan = cohort.plan!;
+              return {
+                ...fields,
+                cohort: {
+                  ...cohort,
+                  plan($membership, args, info) {
+                    const $cohort = plan($membership, args, info) as PgSelectSingleStep;
+                    // Batch shared cohorts so their visibility checks run once per cohort.
+                    $cohort.getClassStep().setInliningForbidden();
+                    return $cohort;
+                  },
+                },
+              };
+            }
             if (Self.name !== 'Person') return fields;
             const query = build.getTypeByName('Query');
             if (!build.graphql.isObjectType(query)) throw new Error('Expected Query object type.');
@@ -192,7 +208,11 @@ const plugins: GraphileConfig.Plugin[] = [
                   plan($person, args, info) {
                     const $couples = plan($person, args, info) as PgSelectStep;
                     const personId = $couples.placeholder($person.get('id'));
-                    $couples.where(sql`(${$couples.alias}.man_id = ${personId} or ${$couples.alias}.woman_id = ${personId})`);
+                    // Find partner IDs before ordering; otherwise RLS costs favor a full primary-key scan per person.
+                    $couples.where(sql`${$couples.alias}.id = any(array(
+                      select id from public.couple
+                      where man_id = ${personId} or woman_id = ${personId}
+                    ))`);
                     return $couples;
                   },
                 },
