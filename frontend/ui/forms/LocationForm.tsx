@@ -67,7 +67,7 @@ export function LocationForm({ id = '' }: { id?: string }) {
   );
   const coverOptions = (imageIds.value ?? [])
     .flatMap((id) => filesById.get(id) ?? [])
-    .map((file) => ({ id, label: file.displayName ?? file.name }));
+    .map((file) => ({ id: file.id, label: file.displayName ?? file.name }));
 
   React.useEffect(() => {
     if (!item) return;
