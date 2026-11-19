@@ -148,12 +148,6 @@ const memberMenu: MenuStructItem[] = [
     children: [
       {
         type: 'link',
-        title: 'Tenanti',
-        href: '/tenants',
-        requireSystemAdmin: true,
-      },
-      {
-        type: 'link',
         title: 'Crawler',
         href: '/crawler',
         requireSystemAdmin: true,
