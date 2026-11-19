@@ -24,19 +24,32 @@ export async function logoutAction(): Promise<void> {
   await clearSessionCookie();
 }
 
-export async function logInAsAction(id: string): Promise<AuthActionResult> {
+export async function logInAsAction(id: string): Promise<
+  { error: string } | { redirectTo: string; auth: RequestAuthState }
+> {
   if (typeof id !== 'string' || !id) return { error: 'Chybí ID uživatele' };
 
   try {
-    const { logInAs } = await executeGraphql(LogInAsDocument, { id });
+    const { pgSettings } = await getRequestContext();
+    const { logInAs } = await executeGraphql(LogInAsDocument, { id }, {
+      pgSettings: process.env.NODE_ENV === 'development'
+        ? { ...pgSettings, role: 'system_admin' }
+        : pgSettings,
+    });
     const token = logInAs?.result?.jwt;
     if (!token) return { error: 'Přihlášení selhalo' };
 
     await setSessionCookie(token);
+    return {
+      redirectTo: '/dashboard',
+      auth: {
+        claims: normalizeClaims(logInAs?.result?.usr?.claims),
+        user: logInAs?.result?.usr ?? null,
+      },
+    };
   } catch {
     return { error: 'Přihlášení selhalo' };
   }
-  return { redirectTo: '/dashboard' };
 }
 
 export async function refreshSessionAction(): Promise<RequestAuthState> {

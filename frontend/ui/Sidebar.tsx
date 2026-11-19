@@ -32,7 +32,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
   const memberMenu = useMemberMenu();
   const { SidebarLogo } = getTenantUi(tenantId);
 
-  React.useEffect(() => setIsOpen(false), [pathname, search, setIsOpen]);
+  React.useEffect(() => setIsOpen(false), [pathname, search, auth.userId, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -106,6 +106,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
               ))}
 
             <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
+              <TenantSelect />
               <div>{copyrightLine}</div>
               <div>Verze: {buildId?.slice(0, 7)}</div>
               <div>
@@ -113,7 +114,6 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
                   Právě probíhá ↗︎
                 </Link>
               </div>
-              <TenantSelect />
             </div>
           </div>
         </nav>

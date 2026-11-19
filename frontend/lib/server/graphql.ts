@@ -41,6 +41,9 @@ function getPostGraphile() {
         const request = ctx.whatwgv0?.request;
         if (!request) return { pgSettings: ctx.pgSettings };
         const { pgSettings } = await getRequestContext(request.headers.get('x-event-share') ?? undefined, request);
+        if (process.env.NODE_ENV === 'development' && request.headers.get('x-elevated') === '1') {
+          return { pgSettings: { ...pgSettings, role: 'system_admin' } };
+        }
         return { pgSettings };
       },
     },

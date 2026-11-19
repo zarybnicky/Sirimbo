@@ -76,6 +76,7 @@ mutation LogInAs($id: BigInt!) {
     result {
       jwt
       usr {
+        claims
         ...UserAuth
       }
     }
@@ -133,6 +134,28 @@ mutation RegisterUsingInvitation($input: RegisterUsingInvitationInput!) {
       jwt
       usr {
         ...UserAuth
+      }
+    }
+  }
+}
+
+query DevelopmentUsers {
+  users {
+    nodes {
+      id
+      uEmail
+      claims
+      userProxiesList(condition: { status: ACTIVE }) {
+        id
+        person {
+          id
+          name
+          lastActivity {
+            personId
+            tenantId
+            trainingAt
+          }
+        }
       }
     }
   }
