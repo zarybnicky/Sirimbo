@@ -115,7 +115,7 @@ export function AnnouncementForm({
       const existing = oldAudiences.findIndex((x) => x?.cohortId === cohortId);
       if (existing !== -1) {
         newAudiences.push({ cohortId, id: oldAudiences[existing]!.id });
-        delete oldAudiences[existing];
+        oldAudiences.splice(existing, 1);
       } else {
         newAudiences.push({ cohortId });
       }
@@ -124,7 +124,7 @@ export function AnnouncementForm({
       const existing = oldAudiences.findIndex((x) => x?.audienceRole === audienceRole);
       if (existing !== -1) {
         newAudiences.push({ audienceRole, id: oldAudiences[existing]!.id });
-        delete oldAudiences[existing];
+        oldAudiences.splice(existing, 1);
       } else {
         newAudiences.push({ audienceRole });
       }
