@@ -3,7 +3,7 @@ import { sanitizeReturnURL } from '@/lib/sanitize';
 import { executeGraphql } from '@/lib/server/graphql';
 import { runQuery } from '@/lib/server/postgresql';
 import { clearTenantCookie, setSessionCookie } from '@/lib/server/session';
-import { claimSettings, getRequestContext, getRequestHostTenant } from '@/lib/server/tenant';
+import { resolveClaims, getRequestContext, getRequestHostTenant } from '@/lib/server/tenant';
 import { NextResponse, type NextRequest } from 'next/server';
 import { otpDestination } from '@/lib/auth.queries';
 
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await executeGraphql(OtpLoginDocument, { token }, switchingClub
-      ? { pgSettings: claimSettings(null, otp.tenant_id) }
+      ? resolveClaims(null, otp.tenant_id)
       : undefined);
     const result = data.otpLogin?.result;
     if (!result?.jwt) throw new Error('Invalid OTP');

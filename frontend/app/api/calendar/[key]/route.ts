@@ -11,7 +11,7 @@ import { formatAddress, formatEventName, formatOfficialRole, formatParticipant, 
 import { formatDocument } from '@urql/core';
 import { compile } from 'html-to-text';
 import ical, { ICalEventStatus, ICalEventTransparency } from 'ical-generator';
-import { claimSettings } from '@/lib/server/tenant';
+import { resolveClaims } from '@/lib/server/tenant';
 import { calendarFeedOwner } from './calendar.queries';
 
 const summaryToText = compile({ wordwrap: false });
@@ -43,9 +43,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ key:
         withBirthdays: pages.length === 0 && !!search.with_birthdays && !search.can_register,
         registrationLimit: null,
         offset: pages.length * 300,
-      }, {
-        pgSettings: claimSettings(claims, tenantId),
-      });
+      }, resolveClaims(claims, tenantId));
       pages.push(data);
       hasNextPage = data.federationEvents?.pageInfo.hasNextPage ?? false;
     } while (hasNextPage);

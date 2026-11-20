@@ -19,7 +19,7 @@ export function normalizeClaims(value: Record<string, unknown> | null | undefine
   if (!value) return null;
 
   return Object.fromEntries(
-    Object.entries(value).map(([key, claim]) => [
+    Object.entries(value).filter(([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key)).map(([key, claim]) => [
       key,
       Array.isArray(claim)
         ? claim.map(String)

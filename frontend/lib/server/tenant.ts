@@ -18,7 +18,6 @@ import { cookies, headers } from 'next/headers';
 import { cache } from 'react';
 
 export type RequestContext = {
-  token: string | undefined;
   claims: JwtClaims | null;
   tenant: TenantCatalogEntry;
   auth: ResolvedAuth;
@@ -39,13 +38,7 @@ export const getRequestContext = cache(async (eventShare?: string, apiRequest?: 
         algorithms: ['HS256'],
         ignoreExpiration: true,
       }) as JwtClaims;
-      claims = normalizeClaims(
-        Object.fromEntries(
-          Object.entries(payload).filter(
-            ([key]) => !['exp', 'iat', 'aud', 'iss'].includes(key),
-          ),
-        ),
-      );
+      claims = normalizeClaims(payload);
     } catch (error) {
       if (!(error instanceof jwt.JsonWebTokenError)) throw error;
     }
@@ -54,10 +47,8 @@ export const getRequestContext = cache(async (eventShare?: string, apiRequest?: 
   const cookieTenant = getTenant(cookieStore.get('tenant_id')?.value);
   const tenant = getTenant(apiRequest?.headers.get('x-tenant-id'))
     ?? cookieTenant ?? (await getRequestHostTenant());
-  const auth = resolveAuth(claims, tenant.id.toString());
-  const pgSettings = claimSettings(claims, tenant.id.toString(), eventShare);
-
-  return { token, claims, tenant, auth, pgSettings };
+  eventShare ??= apiRequest?.headers.get('x-event-share') ?? undefined;
+  return { claims, tenant, ...resolveClaims(claims, tenant.id.toString(), eventShare) };
 });
 
 export async function getRequestHostTenant() {
@@ -69,9 +60,14 @@ export async function getRequestHostTenant() {
   return hostToTenant.get(hostname ?? '') ?? defaultTenant;
 }
 
-export function claimSettings(claims: JwtClaims | null, tenantId: string, eventShare?: string): Record<string, string> {
+export function resolveClaims(
+  claims: JwtClaims | null,
+  tenantId: string,
+  eventShare?: string,
+) {
+  const auth = resolveAuth(claims, tenantId);
   const pgSettings: Record<string, string> = {
-    role: resolveAuth(claims, tenantId).role,
+    role: auth.role,
     'jwt.claims.tenant_id': tenantId,
     'jwt.claims.user_id': '',
     'jwt.claims.email': '',
@@ -94,5 +90,5 @@ export function claimSettings(claims: JwtClaims | null, tenantId: string, eventS
   pgSettings['jwt.claims.shared.event_token'] =
     eventShare && /^(?:\d{1,18}|[A-Za-z0-9_-]{32})$/.test(eventShare) ? eventShare : '';
 
-  return pgSettings;
+  return { auth, pgSettings };
 }

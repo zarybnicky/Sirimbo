@@ -11,27 +11,25 @@ import { getPool } from './postgresql';
 import { grafserv } from './grafserv';
 
 declare global {
-  var graphile: PostGraphileInstance | undefined;
-  var graphileHandler: ReturnType<ReturnType<typeof grafserv>['createHandler']> | undefined;
+  var graphqlServer: {
+    instance: PostGraphileInstance;
+    handler: ReturnType<ReturnType<typeof grafserv>['createHandler']>;
+  } | undefined;
 }
 
 // Next re-evaluates this module when server code changes; keep the pool, not the old schema.
 if (process.env.NODE_ENV === 'development') {
-  const instance = globalThis.graphile;
+  const instance = globalThis.graphqlServer?.instance;
   const services = instance?.getResolvedPreset().pgServices ?? [];
-  globalThis.graphile = undefined;
-  globalThis.graphileHandler = undefined;
+  globalThis.graphqlServer = undefined;
   void Promise.all([instance?.release(), ...services.map((service) => service.release?.())])
     // eslint-disable-next-line unicorn/prefer-top-level-await -- Schema initialization can still be waiting for the database.
     .catch((error) => console.error('Failed to release PostGraphile during hot reload', error));
 }
 
-export function getGraphqlHandler() {
-  return globalThis.graphileHandler ??= getPostGraphile().createServ(grafserv).createHandler();
-}
-
-function getPostGraphile() {
-  return globalThis.graphile ??= postgraphile({
+export function getGraphqlServer() {
+  if (globalThis.graphqlServer) return globalThis.graphqlServer;
+  const instance = postgraphile({
     extends: [sharedPreset],
     grafserv: { graphiqlStaticPath: '/graphql/ruru-static/' },
     pgServices: [makePgService({ schemas: ['public', 'federated', 'crawler'], pool: getPool(), superuserPool: getPool() })],
@@ -39,8 +37,8 @@ function getPostGraphile() {
     grafast: {
       async context(ctx) {
         const request = ctx.whatwgv0?.request;
-        if (!request) return { pgSettings: ctx.pgSettings };
-        const { pgSettings } = await getRequestContext(request.headers.get('x-event-share') ?? undefined, request);
+        if (!request) return {};
+        const { pgSettings } = await getRequestContext(undefined, request);
         if (process.env.NODE_ENV === 'development' && request.headers.get('x-elevated') === '1') {
           return { pgSettings: { ...pgSettings, role: 'system_admin' } };
         }
@@ -48,6 +46,7 @@ function getPostGraphile() {
       },
     },
   });
+  return globalThis.graphqlServer = { instance, handler: instance.createServ(grafserv).createHandler() };
 }
 
 const validatedDocuments = new WeakMap<GraphQLSchema, WeakSet<DocumentNode>>();
@@ -61,7 +60,7 @@ export async function executeGraphql<
   context?: { pgSettings: Record<string, string> },
 ) {
   const { pgSettings } = context ?? await getRequestContext();
-  const { schema, resolvedPreset } = await getPostGraphile().getSchemaResult();
+  const { schema, resolvedPreset } = await getGraphqlServer().instance.getSchemaResult();
   let documents = validatedDocuments.get(schema);
   if (!documents) validatedDocuments.set(schema, documents = new WeakSet());
   if (!documents.has(document)) {
@@ -70,10 +69,11 @@ export async function executeGraphql<
     documents.add(document);
   }
   const args = await hookArgs({
-    schema, resolvedPreset, requestContext: { pgSettings },
+    schema, resolvedPreset,
     document, variableValues: variables ?? {},
     operationName: getOperationAST(document)?.name?.value,
   });
+  Object.assign(args.contextValue, { pgSettings });
   const result = await execute(args);
   if (Symbol.asyncIterator in result) throw new Error('Streaming GraphQL results are not supported here.');
   if (result.errors?.length) {

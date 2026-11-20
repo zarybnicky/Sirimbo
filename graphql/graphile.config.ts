@@ -19,12 +19,6 @@ import { EventDetailsPlugin, EventFieldsPlugin } from './plugins/event-details.t
 import { OTELPlugin } from './postgraphile-otel.ts';
 import { ApiInflectionPlugin } from './plugins/api-inflection.ts';
 
-declare global {
-  namespace Grafast {
-    interface RequestContext { pgSettings?: Record<string, string>; }
-  }
-}
-
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const preset: GraphileConfig.Preset = {

@@ -203,3 +203,9 @@ alter table otp_token add constraint otp_token_intent_check check (
 );
 
 --!include functions/otp_login.sql
+
+create or replace function app_private.normalize_name(text)
+returns text
+language sql
+immutable parallel safe strict
+return lower(public.unaccent('public.unaccent'::regdictionary, $1));

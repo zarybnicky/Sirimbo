@@ -1,5 +1,5 @@
 
-import { getRequestAuth } from '@/lib/server/session';
+import { loadCurrentUser } from '@/lib/server/session';
 import { getRequestContext } from '@/lib/server/tenant';
 import { UI_COOKIE } from '@/lib/session-cookies';
 import { Providers } from '@/ui/Providers';
@@ -7,7 +7,6 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
-import { isDeepStrictEqual } from 'node:util';
 
 import '../style/index.css';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
@@ -96,16 +95,11 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [context, auth, cookieStore] = await Promise.all([
+  const [{ tenant }, { auth, stale }, cookieStore] = await Promise.all([
     getRequestContext(),
-    getRequestAuth(),
+    loadCurrentUser(),
     cookies(),
   ]);
-  const { tenant } = context;
-  const initialSessionStale =
-    !!context.claims &&
-    !!auth.claims &&
-    !isDeepStrictEqual(context.claims, auth.claims);
 
   return (
     <html lang="cs" data-tenant={tenant.id} suppressHydrationWarning>
@@ -113,7 +107,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <NuqsAdapter>
           <Providers
             initialAuth={auth}
-            initialSessionStale={initialSessionStale}
+            initialSessionStale={stale}
             initialTenant={tenant}
             initialUiCookie={cookieStore.get(UI_COOKIE)?.value}
           >

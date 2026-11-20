@@ -1,6 +1,6 @@
-import { parse } from 'graphql';
+import { TenantSettingsDocument } from '@/graphql/Tenant';
 import { executeGraphql } from '@/lib/server/graphql';
-import { claimSettings } from '@/lib/server/tenant';
+import { resolveClaims } from '@/lib/server/tenant';
 import { defaultTenant } from '@/tenant/catalog';
 
 type DeploymentResponse = {
@@ -8,16 +8,17 @@ type DeploymentResponse = {
   deploymentId: string | null;
 };
 
-const healthQuery = parse('query Health { getCurrentTenant { id } }');
 let pending: Promise<unknown> | undefined;
 
 export async function GET() {
   let ok = false;
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
-    pending ??= executeGraphql(healthQuery, {}, {
-      pgSettings: claimSettings(null, String(defaultTenant.id)),
-    }).finally(() => { pending = undefined; });
+    pending ??= executeGraphql(
+      TenantSettingsDocument,
+      { tenantId: String(defaultTenant.id) },
+      resolveClaims(null, String(defaultTenant.id)),
+    ).finally(() => { pending = undefined; });
     await Promise.race([
       pending,
       new Promise((_, reject) => {

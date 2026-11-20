@@ -9,6 +9,8 @@ import { SESSION_COOKIE } from '@/lib/session-cookies';
 import { cookies } from 'next/headers';
 import type { NextRequest, NextResponse } from 'next/server';
 import { cache } from 'react';
+import { isDeepStrictEqual } from 'node:util';
+import { getRequestContext } from './tenant';
 
 const COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === 'production',
@@ -17,12 +19,16 @@ const COOKIE_OPTIONS = {
   maxAge: 60 * 60 * 24 * 365,
 };
 
-export const getRequestAuth = cache(async (): Promise<RequestAuthState> => {
-  const cookieStore = await cookies();
-  if (!cookieStore.has(SESSION_COOKIE)) return { claims: null, user: null };
+export const loadCurrentUser = cache(async (withRefreshJwt = false) => {
+  const { claims } = await getRequestContext();
+  if (!claims) {
+    return { auth: { claims: null, user: null } satisfies RequestAuthState, stale: false, refreshJwt: null };
+  }
 
-  const data = await executeGraphql(CurrentUserDocument, { versionId: buildId });
-  return { claims: normalizeClaims(data.currentClaims), user: data.getCurrentUser };
+  const data = await executeGraphql(CurrentUserDocument, { versionId: buildId, withRefreshJwt });
+  const auth: RequestAuthState = { claims: normalizeClaims(data.currentClaims), user: data.getCurrentUser };
+  const stale = !!auth.claims && !isDeepStrictEqual(claims, auth.claims);
+  return { auth, stale, refreshJwt: data.refreshJwt ?? null };
 });
 
 export function sameOrigin(request: NextRequest) {

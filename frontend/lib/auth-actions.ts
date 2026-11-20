@@ -2,7 +2,6 @@
 
 import type { RegisterUsingInvitationInput, RegisterWithoutInvitationInput } from '@/graphql';
 import {
-  CurrentUserDocument,
   LoginDocument,
   LogInAsDocument,
   RegisterUsingInvitationDocument,
@@ -11,12 +10,10 @@ import {
 } from '@/graphql/CurrentUser';
 import type { RequestAuthState } from '@/lib/auth';
 import { normalizeClaims } from '@/lib/auth-claims';
-import { buildId } from '@/lib/build-id';
 import { executeGraphql } from '@/lib/server/graphql';
 import { sanitizeReturnURL } from '@/lib/sanitize';
-import { clearSessionCookie, setSessionCookie } from '@/lib/server/session';
+import { clearSessionCookie, loadCurrentUser, setSessionCookie } from '@/lib/server/session';
 import { getRequestContext } from '@/lib/server/tenant';
-import { isDeepStrictEqual } from 'node:util';
 
 type AuthActionResult = { error: string } | { redirectTo: string };
 
@@ -53,27 +50,8 @@ export async function logInAsAction(id: string): Promise<
 }
 
 export async function refreshSessionAction(): Promise<RequestAuthState> {
-  const context = await getRequestContext();
-  if (!context.claims) {
-    return { claims: null, user: null };
-  }
-
-  const data = await executeGraphql(CurrentUserDocument, {
-    versionId: buildId,
-    withRefreshJwt: true,
-  }, { pgSettings: context.pgSettings });
-  const auth = {
-    claims: normalizeClaims(data.currentClaims),
-    user: data.getCurrentUser,
-  };
-  if (
-    auth.claims &&
-    !isDeepStrictEqual(context.claims, auth.claims) &&
-    typeof data.refreshJwt === 'string'
-  ) {
-    await setSessionCookie(data.refreshJwt);
-  }
-
+  const { auth, stale, refreshJwt } = await loadCurrentUser(true);
+  if (stale && refreshJwt) await setSessionCookie(refreshJwt);
   return auth;
 }
 
