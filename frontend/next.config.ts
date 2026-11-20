@@ -138,10 +138,4 @@ export default compose(
     }
     return redirects;
   },
-
-  async rewrites() {
-    return [
-      { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/gallery/:path*' },
-    ];
-  },
 });
