@@ -27,7 +27,8 @@
     "pgsql-parser": "^18.2.8",
     "prettier": "~3.9.10",
     "typescript": "~6.0.3",
-    "typescript-language-server": "~6.0.3"
+    "typescript-language-server": "~6.0.3",
+    "yargs": "17.7.2"
   },
   "scripts": {
     "check-consumers": "bash check-consumers.sh",
