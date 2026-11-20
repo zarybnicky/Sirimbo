@@ -55,8 +55,6 @@
         env = {
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
-          RUIAN_ADDRESS_SOURCE = pkgs.ruian-address-cache;
-          GEONAMES_CITY_SOURCE = pkgs.geonames-city-cache;
         };
         shellHook = ''
           unset PYTHONPATH

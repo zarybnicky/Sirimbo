@@ -1,5 +1,8 @@
 # syntax=docker/dockerfile:1
 
+ARG DATA_IMAGE
+FROM ${DATA_IMAGE} AS worker-data
+
 FROM node:24-bookworm-slim AS deps
 
 WORKDIR /repo
@@ -41,7 +44,6 @@ ENV HDX_NODE_BETA_MODE=1
 
 COPY --from=deps --chown=65532:65532 /repo/node_modules /app/node_modules
 COPY --from=deps --chown=65532:65532 /repo/worker /app/worker
-# Supplied by --build-context worker-data=... after building the Nix datasets.
-COPY --from=worker-data --chown=65532:65532 / /app/data/
+COPY --from=worker-data --chown=65532:65532 /data/ /app/data/
 
 CMD ["rozpisovnik-worker", "-j", "5"]

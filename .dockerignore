@@ -13,6 +13,10 @@
 !deploy/
 !deploy/Dockerfile
 !deploy/worker.Dockerfile
+!flake.nix
+!flake.lock
+!deploy/*-cache.nix
+!deploy/*-cache.sql
 
 !worker/
 !worker/**
