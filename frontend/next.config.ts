@@ -1,5 +1,5 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
-import { withSentryConfig } from '@sentry/nextjs';
+import { withSentryConfig } from '@sentry/nextjs/config';
 import path from "node:path";
 import { imageWidths } from './lib/image-presets.ts';
 
@@ -45,7 +45,11 @@ export default compose(
   bundlePagesRouterDependencies: true,
   experimental: {
     scrollRestoration: true,
-  },
+    turbopackGc: true,
+    agentFeedback: false,
+    agentUpgrade: false,
+    turbopackPluginRuntimeStrategy: 'workerThreads',
+ },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   outputFileTracingRoot: path.join(import.meta.dirname, '..'),
   outputFileTracingIncludes: {
