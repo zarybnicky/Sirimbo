@@ -13,7 +13,7 @@
     }));
 
   in {
-    nixosModules.default = ./deploy/backend.nix;
+    nixosModules.default = ./deploy/module.nix;
 
     overlays.default = final: prev: {
       graphile-migrate = final.callPackage ./deploy/graphile-migrate {};

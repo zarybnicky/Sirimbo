@@ -1,43 +1,108 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   cfg = config.services.olymp;
+  pkgName = "Sirimbo";
 in
 {
-  options.services.olymp.frontend = {
-    enable = lib.mkEnableOption "Rozpisovnik frontend via ArgoCD";
+  options.services.olymp = {
+    enable = lib.mkEnableOption "${pkgName} via ArgoCD";
 
-    ssl = lib.mkEnableOption "Rozpisovnik frontend enable SSL";
-
-    domains = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      description = "Rozpisovnik frontend domain";
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "olymp";
+      description = "${pkgName} user";
+    };
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "olymp";
+      description = "${pkgName} group";
+    };
+    stateDir = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} state directory";
     };
 
-    nodePort = lib.mkOption {
-      type = lib.types.port;
-      default = 30100;
-      description = "NodePort exposed by the frontend Kubernetes service";
+    jwtSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} JWT secret";
+    };
+    database = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Postgres DB";
     };
 
-    staging = {
-      nodePort = lib.mkOption {
-        type = lib.types.port;
-        default = 30101;
-        description = "NodePort exposed by the frontend staging Kubernetes service";
+    wdsfAuth = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} WDSF Auth, usually 'Basic xxx'";
+    };
+
+    smtp = {
+      auth = lib.mkEnableOption "${pkgName} SMTP auth";
+      tls = lib.mkEnableOption "${pkgName} SMTP TLS";
+      host = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} SMTP host";
       };
+      port = lib.mkOption {
+        type = lib.types.int;
+        description = "${pkgName} SMTP port";
+      };
+      user = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "${pkgName} SMTP username";
+      };
+      pass = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "${pkgName} SMTP password";
+      };
+    };
+
+    otel = {
+      endpoint = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} OTEL_EXPORTER_OTLP_ENDPOINT";
+      };
+      apiKey = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} HYPERDX_API_KEY";
+      };
+    };
+
+    frontend = {
+      ssl = lib.mkEnableOption "${pkgName} enable SSL";
+
       domains = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [ ];
-        description = "Rozpisovnik frontend staging domains";
+        description = "${pkgName} domains";
+      };
+      nodePort = lib.mkOption {
+        type = lib.types.port;
+        default = 30100;
+        description = "NodePort exposed by the frontend Kubernetes service";
+      };
+      staging = {
+        nodePort = lib.mkOption {
+          type = lib.types.port;
+          default = 30101;
+          description = "NodePort exposed by the frontend staging Kubernetes service";
+        };
+        domains = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "${pkgName} staging domains";
+        };
       };
     };
   };
 
-  config = lib.mkIf cfg.frontend.enable {
+  config = lib.mkIf cfg.enable {
     services.nginx = {
       enable = true;
       enableReload = true;
@@ -56,6 +121,9 @@ in
           proxy_buffering off;
         '';
 
+        locations."/gallery".root = cfg.stateDir;
+        locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
+
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString cfg.frontend.nodePort}";
           proxyWebsockets = true;
@@ -70,11 +138,47 @@ in
           proxy_buffering off;
         '';
 
+        locations."/gallery".root = cfg.stateDir;
+        locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
+
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString cfg.frontend.staging.nodePort}";
           proxyWebsockets = true;
         };
       });
+    };
+
+    users.users.${cfg.user} = {
+      name = cfg.user;
+      group = cfg.group;
+      home = cfg.stateDir;
+      description = pkgName;
+      createHome = true;
+      useDefaultShell = true;
+      isSystemUser = true;
+    };
+    users.groups.${cfg.user}.name = cfg.group;
+    systemd.tmpfiles.rules = [
+      "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -"
+      "d ${cfg.stateDir}/gallery 0755 ${cfg.user} ${cfg.user} -"
+      "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
+    ];
+
+    systemd.services.rozpisovnik-migrate = {
+      description = "${pkgName} Migrations";
+      after = [ "network-online.target" "postgresql.service" ];
+      requires = [ "network-online.target" "postgresql.service" ];
+      wantedBy = [ "multi-user.target" ];
+
+      environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.database}";
+      serviceConfig = {
+        User = cfg.user;
+        Group = cfg.group;
+        Type = "oneshot";
+        RemainAfterExit = "true";
+        WorkingDirectory = pkgs.rozpisovnik-migrations;
+        ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
+      };
     };
 
     my.seaweedfs.buckets.olymp.ensure = true;
@@ -111,11 +215,11 @@ in
               }
               {
                 name = "postgresql.database";
-                value = cfg.backend.database;
+                value = cfg.database;
               }
               {
                 name = "runtime.jwtSecret";
-                value = cfg.backend.jwtSecret;
+                value = cfg.jwtSecret;
               }
               {
                 name = "runtime.sentryDsn";
@@ -212,11 +316,11 @@ in
               }
               {
                 name = "postgresql.database";
-                value = cfg.backend.database;
+                value = cfg.database;
               }
               {
                 name = "runtime.jwtSecret";
-                value = cfg.backend.jwtSecret;
+                value = cfg.jwtSecret;
               }
               {
                 name = "runtime.sentryDsn";

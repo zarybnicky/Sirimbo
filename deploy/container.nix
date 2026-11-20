@@ -13,7 +13,6 @@
       plpgsql_check
       hypopg
       pgtap
-      pg_repack
       pg_stat_monitor
     ];
     ensureDatabases = [ "olymp" "olymp_shadow" ];
@@ -63,19 +62,11 @@
 
   services.mailhog.enable = true;
   services.olymp = {
+    enable = true;
     stateDir = "/var/lib/olymp";
+    database = "olymp";
+    jwtSecret = "1111111111";
 
-    migrations.enable = true;
-
-    backend = {
-      enable = true;
-      domain = "olymp-test";
-      debug = true;
-      ssl = false;
-      port = 5200;
-      database = "olymp";
-      jwtSecret = "1111111111";
-    };
     smtp = {
       auth = false;
       tls = false;
