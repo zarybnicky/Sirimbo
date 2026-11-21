@@ -7,7 +7,8 @@ CREATE TABLE public.person_invitation (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     email public.citext NOT NULL,
-    event_id bigint
+    event_id bigint,
+    last_sent_at timestamp with time zone
 );
 
 COMMENT ON TABLE public.person_invitation IS '@behavior +list -connection -update -query:resource:list -query:resource:connection';

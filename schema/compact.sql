@@ -440,7 +440,8 @@ CREATE TABLE public.tenant (
   address public.address_domain,
   description text DEFAULT ''::text NOT NULL,
   bank_account text DEFAULT ''::text NOT NULL,
-  csts_id int
+  csts_id int,
+  created_at timestamp with time zone DEFAULT now()
 );
 
 CREATE TABLE public.accounting_period (
@@ -578,6 +579,22 @@ CREATE TABLE public.dokumenty (
   d_timestamp timestamp with time zone GENERATED ALWAYS AS (updated_at) STORED
 );
 
+CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
+
+CREATE TYPE public.event_search_condition AS (types public.event_type[], trainer_ids bigint[], location_ids bigint[], parent_id bigint, participant_ids bigint[], cohort_id bigint, couple_id bigint, only_mine boolean, relevant_only boolean, can_register boolean, with_competitions boolean, with_birthdays boolean);
+
+CREATE TABLE public.event_saved_search (
+  id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
+    ON DELETE CASCADE,
+  user_id bigint DEFAULT public.current_user_id() NOT NULL REFERENCES public.users (id)
+    ON DELETE CASCADE,
+  name text NOT NULL,
+  condition public.event_search_condition NOT NULL,
+  feed_key uuid DEFAULT gen_random_uuid() UNIQUE,
+  cross_tenant boolean DEFAULT false NOT NULL
+);
+
 CREATE TABLE public.file (
   id bigint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL REFERENCES public.tenant (id)
@@ -638,6 +655,7 @@ CREATE TABLE public.cohort (
   external_ids text[],
   is_archived boolean DEFAULT false NOT NULL,
   image_id bigint,
+  search_vector tsvector GENERATED ALWAYS AS (to_tsvector(CAST('simple' AS regconfig), app_private.normalize_name(name))) STORED,
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, cohort_group_id)
     REFERENCES public.cohort_group (tenant_id, id)
@@ -677,13 +695,12 @@ CREATE TABLE public.location (
   latitude double precision,
   longitude double precision,
   ordering int DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL,
+  search_vector tsvector GENERATED ALWAYS AS (to_tsvector(CAST('simple' AS regconfig), app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[name, long_name])))) STORED,
   UNIQUE (tenant_id, id),
   FOREIGN KEY(tenant_id, cover_image_id)
     REFERENCES public.file (tenant_id, id)
     ON DELETE SET NULL (cover_image_id)
 );
-
-CREATE TYPE public.event_type AS ENUM ('camp', 'lesson', 'reservation', 'holiday', 'group');
 
 CREATE TYPE public.event_stats AS (total int, unknown int, attended int, not_excused int);
 
@@ -724,6 +741,7 @@ CREATE TABLE public.event (
   cover_image_id bigint,
   series_info public.series_info,
   registration_period tstzrange DEFAULT CAST('(,)' AS tstzrange),
+  search_vector tsvector GENERATED ALWAYS AS (to_tsvector(CAST('simple' AS regconfig), app_private.normalize_name(COALESCE(name, ''::text)))) STORED,
   CHECK (
     NOT (has_public_details)
       OR is_public IS TRUE
@@ -794,9 +812,9 @@ CREATE TABLE public.membership_application (
   national_id_number text,
   csts_id int,
   wdsf_id int,
-  prefix_title text,
-  suffix_title text,
-  bio text,
+  prefix_title text DEFAULT ''::text NOT NULL,
+  suffix_title text DEFAULT ''::text NOT NULL,
+  bio text DEFAULT ''::text NOT NULL,
   email public.citext,
   phone text,
   created_by bigint NOT NULL REFERENCES public.users (id)
@@ -823,7 +841,7 @@ CREATE TABLE public.otp_token (
   event_id bigint REFERENCES public.event (id)
     ON DELETE CASCADE,
   CHECK (
-    (intent = 'password_reset'::text
+    (intent = ANY (ARRAY['password_reset'::text, 'tenant_handoff'::text])
       AND event_id IS NULL)
       OR (intent = 'event_handoff'::text
       AND event_id IS NOT NULL)
@@ -862,7 +880,8 @@ CREATE TABLE public.person (
   facebook_url text,
   website_url text,
   image_id bigint REFERENCES public.file (id)
-    ON DELETE SET NULL
+    ON DELETE SET NULL,
+  search_vector tsvector GENERATED ALWAYS AS (to_tsvector(CAST('simple' AS regconfig), app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED
 );
 
 CREATE TYPE public.access_credential_kind AS ENUM ('MIFARE');
@@ -1017,6 +1036,9 @@ CREATE TABLE public.couple (
   status public.relationship_status DEFAULT CAST('active' AS public.relationship_status) NOT NULL,
   image_id bigint REFERENCES public.file (id)
     ON DELETE SET NULL,
+  name text NOT NULL,
+  short_name text NOT NULL,
+  search_vector tsvector GENERATED ALWAYS AS (to_tsvector(CAST('simple' AS regconfig), app_private.normalize_name(name))) STORED,
   CHECK (until > since),
   EXCLUDE USING gist (man_id WITH =, woman_id WITH =, active_range WITH &&)
 );
@@ -1188,7 +1210,8 @@ CREATE TABLE public.person_invitation (
   updated_at timestamp with time zone DEFAULT now() NOT NULL,
   email public.citext NOT NULL,
   event_id bigint REFERENCES public.event (id)
-    ON DELETE SET NULL
+    ON DELETE SET NULL,
+  last_sent_at timestamp with time zone
 );
 
 CREATE TABLE public.scoreboard_manual_adjustment (
@@ -1561,11 +1584,15 @@ CREATE TYPE public.event_series_input AS (id bigint, name text);
 
 CREATE TYPE public.event_trainer_input AS (person_id bigint, lessons_offered int);
 
+CREATE TYPE public.global_search_result AS (person public.person, couple public.couple, cohort public.cohort, location public.location, event public.event, score real, "position" int);
+
 CREATE TYPE public.jwt_token AS (exp int, user_id bigint, tenant_id bigint, email text, my_person_ids bigint[], my_tenant_ids bigint[], my_cohort_ids bigint[], my_couple_ids bigint[], is_system_admin boolean, guest_tenant_ids bigint[], member_tenant_ids bigint[], trainer_tenant_ids bigint[], admin_tenant_ids bigint[]);
 
 CREATE TYPE public.location_details_input AS (id bigint, name text, long_name text, description text, address public.address_domain, show_in_lists boolean, ordering int, latitude double precision, longitude double precision);
 
 CREATE TYPE public.login_result AS (usr public.users, jwt public.jwt_token);
+
+CREATE TYPE public.payment_group_item AS (person_id bigint, due_at timestamp with time zone, amount numeric);
 
 CREATE TYPE public.person_federation_candidates_record AS (id int, name text, age_group text, similarity real, birth_year int, csts_id int, wdsf_id int, is_strong_match boolean);
 

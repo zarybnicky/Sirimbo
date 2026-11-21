@@ -12,10 +12,12 @@ CREATE TABLE public.location (
     long_name text,
     latitude double precision,
     longitude double precision,
-    ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL
+    ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[name, long_name])))) STORED
 );
 
 COMMENT ON TABLE public.location IS '@behavior +list -connection -query:resource:list -query:resource:connection -queryField:resource:connection';
+COMMENT ON COLUMN public.location.search_vector IS '@behavior -*';
 
 GRANT ALL ON TABLE public.location TO anonymous;
 ALTER TABLE public.location ENABLE ROW LEVEL SECURITY;
@@ -35,5 +37,6 @@ CREATE POLICY public_view ON public.location FOR SELECT USING (true);
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.location FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
 
+CREATE INDEX location_search_vector_idx ON public.location USING gin (search_vector);
 CREATE INDEX tenant_location_cover_image_idx ON public.location USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
 CREATE INDEX tenant_location_tenant_id_idx ON public.location USING btree (tenant_id);

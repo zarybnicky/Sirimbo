@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict MOmjn8rnvgyBE2T1T3V2Uc1NelJfMmjjCFjX3VKekgICVhaJ3lEkIq5iD8q6XpO
+\restrict PBYk1MUokAQ6trl9lkDZrF0qOMVd6ac7P5khD3TVcpysjohTgCROVWSHls0tdfu
 
--- Dumped from database version 18.4
--- Dumped by pg_dump version 18.4
+-- Dumped from database version 18.6
+-- Dumped by pg_dump version 18.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -877,6 +877,26 @@ CREATE TYPE public.event_registration_status AS ENUM (
 
 
 --
+-- Name: event_search_condition; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.event_search_condition AS (
+	types public.event_type[],
+	trainer_ids bigint[],
+	location_ids bigint[],
+	parent_id bigint,
+	participant_ids bigint[],
+	cohort_id bigint,
+	couple_id bigint,
+	only_mine boolean,
+	relevant_only boolean,
+	can_register boolean,
+	with_competitions boolean,
+	with_birthdays boolean
+);
+
+
+--
 -- Name: event_series_input; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -937,6 +957,397 @@ CREATE TYPE public.event_trainer_input AS (
 
 
 --
+-- Name: relationship_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.relationship_status AS ENUM (
+    'pending',
+    'active',
+    'expired'
+);
+
+
+--
+-- Name: series_info; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.series_info AS (
+	id bigint,
+	name text,
+	"position" integer,
+	length integer,
+	since timestamp with time zone,
+	until timestamp with time zone
+);
+
+
+--
+-- Name: normalize_name(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.normalize_name(text) RETURNS text
+    LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+    RETURN lower(public.unaccent('public.unaccent'::regdictionary, $1));
+
+
+--
+-- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_tenant_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
+$$;
+
+
+--
+-- Name: FUNCTION current_tenant_id(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_tenant_id() IS '@behavior -*';
+
+
+--
+-- Name: immutable_concat_ws(text, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) RETURNS text
+    LANGUAGE internal IMMUTABLE PARALLEL SAFE
+    AS $$text_concat_ws$$;
+
+
+--
+-- Name: cohort; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cohort (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    cohort_group_id bigint,
+    name text NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    color_rgb text NOT NULL,
+    location text DEFAULT ''::text NOT NULL,
+    is_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL,
+    external_ids text[],
+    is_archived boolean DEFAULT false NOT NULL,
+    image_id bigint,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(name))) STORED
+);
+
+
+--
+-- Name: TABLE cohort; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
+
+
+--
+-- Name: COLUMN cohort.search_vector; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.cohort.search_vector IS '@behavior -*';
+
+
+--
+-- Name: couple; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.couple (
+    id bigint NOT NULL,
+    man_id bigint NOT NULL,
+    woman_id bigint NOT NULL,
+    since timestamp with time zone DEFAULT now() NOT NULL,
+    until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_pary_id bigint,
+    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
+    image_id bigint,
+    name text NOT NULL,
+    short_name text NOT NULL,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(name))) STORED,
+    CONSTRAINT couple_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.couple IS '@behavior +list -connection +query:resource:list -query:resource:connection
+@ref federationCompetitors via:public.couple_federation_link;federated.competitor
+@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
+
+
+--
+-- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.legacy_pary_id IS '@behavior -*';
+
+
+--
+-- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.active_range IS '@behavior -*';
+
+
+--
+-- Name: COLUMN couple.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.name IS '@behavior -attribute:insert -attribute:update';
+
+
+--
+-- Name: COLUMN couple.short_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.short_name IS '@behavior -attribute:insert -attribute:update';
+
+
+--
+-- Name: COLUMN couple.search_vector; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.couple.search_vector IS '@behavior -*';
+
+
+--
+-- Name: event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    since timestamp with time zone NOT NULL,
+    until timestamp with time zone NOT NULL,
+    is_cancelled boolean DEFAULT false NOT NULL,
+    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
+    name text,
+    type public.event_type,
+    location_text text,
+    location_id bigint,
+    is_visible boolean,
+    is_public boolean,
+    manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    stats public.event_stats DEFAULT ROW(0, 0, 0, 0)::public.event_stats NOT NULL,
+    parent_id bigint,
+    capacity integer,
+    capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit NOT NULL,
+    description text,
+    summary text,
+    is_locked boolean,
+    enable_notes boolean,
+    files_legacy text,
+    series_id bigint,
+    has_public_details boolean DEFAULT false NOT NULL,
+    share_token text,
+    cover_image_id bigint,
+    series_info public.series_info,
+    registration_period tstzrange DEFAULT '(,)'::tstzrange,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(COALESCE(name, ''::text)))) STORED,
+    CONSTRAINT event_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
+    CONSTRAINT event_until_gt_since CHECK ((until > since))
+);
+
+
+--
+-- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
+
+
+--
+-- Name: COLUMN event.manager_person_ids; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.manager_person_ids IS '@behavior -attribute:insert -attribute:update';
+
+
+--
+-- Name: COLUMN event.stats; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+
+
+--
+-- Name: COLUMN event.is_locked; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.is_locked IS '@behavior -*';
+
+
+--
+-- Name: COLUMN event.share_token; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
+
+
+--
+-- Name: COLUMN event.series_info; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.series_info IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+
+
+--
+-- Name: COLUMN event.search_vector; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event.search_vector IS '@behavior -*';
+
+
+--
+-- Name: location; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.location (
+    id bigint CONSTRAINT tenant_location_id_not_null NOT NULL,
+    name text CONSTRAINT tenant_location_name_not_null NOT NULL,
+    description text DEFAULT ''::text CONSTRAINT tenant_location_description_not_null NOT NULL,
+    address public.address_domain,
+    show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() CONSTRAINT tenant_location_tenant_id_not_null NOT NULL,
+    created_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_created_at_not_null NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_updated_at_not_null NOT NULL,
+    cover_image_id bigint,
+    is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
+    long_name text,
+    latitude double precision,
+    longitude double precision,
+    ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[name, long_name])))) STORED
+);
+
+
+--
+-- Name: TABLE location; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.location IS '@behavior +list -connection -query:resource:list -query:resource:connection -queryField:resource:connection';
+
+
+--
+-- Name: COLUMN location.search_vector; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.location.search_vector IS '@behavior -*';
+
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL,
+    birth_date date,
+    nationality text NOT NULL,
+    tax_identification_number text,
+    national_id_number text,
+    csts_id integer,
+    wdsf_id integer,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    legacy_user_id bigint,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
+    email public.citext,
+    phone text,
+    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(btrim(prefix_title), ''::text), NULLIF(btrim(first_name), ''::text), NULLIF(btrim(last_name), ''::text),
+CASE
+    WHEN (btrim(suffix_title) = ''::text) THEN NULL::text
+    ELSE (', '::text || btrim(suffix_title))
+END])) STORED NOT NULL,
+    address public.address_domain,
+    external_ids text[],
+    note text DEFAULT ''::text NOT NULL,
+    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED,
+    instagram_username text,
+    tiktok_username text,
+    facebook_url text,
+    website_url text,
+    image_id bigint,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name])))) STORED
+);
+
+
+--
+-- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.person IS '@behavior -insert
+@ref federationPeople via:public.person_federation_link;federated.person
+@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
+@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
+
+
+--
+-- Name: COLUMN person.legacy_user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person.legacy_user_id IS '@behavior -*';
+
+
+--
+-- Name: COLUMN person.search_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person.search_name IS '@behavior -*';
+
+
+--
+-- Name: COLUMN person.search_vector; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.person.search_vector IS '@behavior -*';
+
+
+--
+-- Name: global_search_result; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.global_search_result AS (
+	person public.person,
+	couple public.couple,
+	cohort public.cohort,
+	location public.location,
+	event public.event,
+	score real,
+	"position" integer
+);
+
+
+--
+-- Name: COLUMN global_search_result.score; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.global_search_result.score IS '@notNull';
+
+
+--
+-- Name: COLUMN global_search_result."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.global_search_result."position" IS '@notNull';
+
+
+--
 -- Name: jwt_token; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -979,24 +1390,6 @@ CREATE TYPE public.location_details_input AS (
 	latitude double precision,
 	longitude double precision
 );
-
-
---
--- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_tenant_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  select COALESCE(nullif(current_setting('jwt.claims.tenant_id', true), '')::bigint, 1);
-$$;
-
-
---
--- Name: FUNCTION current_tenant_id(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.current_tenant_id() IS '@behavior -*';
 
 
 --
@@ -1048,6 +1441,17 @@ CREATE TYPE public.login_result AS (
 --
 
 COMMENT ON TYPE public.login_result IS '@name result';
+
+
+--
+-- Name: payment_group_item; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.payment_group_item AS (
+	person_id bigint,
+	due_at timestamp with time zone,
+	amount numeric
+);
 
 
 --
@@ -1128,17 +1532,6 @@ CREATE DOMAIN public.price AS public.price_type
 
 
 --
--- Name: relationship_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.relationship_status AS ENUM (
-    'pending',
-    'active',
-    'expired'
-);
-
-
---
 -- Name: scoreboard_record; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1200,20 +1593,6 @@ CREATE TYPE public.security_event_method AS ENUM (
 
 
 --
--- Name: series_info; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.series_info AS (
-	id bigint,
-	name text,
-	"position" integer,
-	length integer,
-	since timestamp with time zone,
-	until timestamp with time zone
-);
-
-
---
 -- Name: trainer_group_attendance_completion; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1250,13 +1629,16 @@ CREATE TYPE public.transaction_source AS ENUM (
 
 
 --
--- Name: accessible_event_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: accessible_event_ids(tsquery, bigint[]); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
-CREATE FUNCTION app_private.accessible_event_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+CREATE FUNCTION app_private.accessible_event_ids(title_query tsquery DEFAULT NULL::tsquery, event_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF bigint
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    SET plan_cache_mode TO 'force_custom_plan'
     AS $$
+begin
+  return query
   with recursive attended(id) as (
     select event_id from public.event_registration
     where tenant_id = (select public.current_tenant_id())
@@ -1268,16 +1650,20 @@ CREATE FUNCTION app_private.accessible_event_ids() RETURNS SETOF bigint
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
-  -- Scan events once; their primary key already makes the result unique.
   select id from public.event
   where tenant_id = (select public.current_tenant_id())
+    and (event_ids is null or id = any(event_ids))
+    and (title_query is null or search_vector @@ title_query)
     and (
-      is_public
+      (select pg_has_role(current_setting('role'), 'administrator', 'member'))
+      or is_public
       or (is_visible and (select pg_has_role(current_setting('role'), 'member', 'member')))
+      or ((select pg_has_role(current_setting('role'), 'trainer', 'member')) and cardinality(manager_person_ids) = 0)
       or (manager_person_ids && (select current_person_ids()))
-      or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
+      or id = any ((select app_private.current_shared_event_ids())::bigint[])
       or id in (select id from attended)
     );
+end;
 $$;
 
 
@@ -1294,6 +1680,30 @@ CREATE FUNCTION app_private.announcement_status_next(ts timestamp with time zone
     when scheduled_since is not null and ts < scheduled_since then 'scheduled'
     else 'published'
   end::announcement_status;
+$$;
+
+
+--
+-- Name: can_edit_person(bigint); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.can_edit_person(p_person_id bigint) RETURNS boolean
+    LANGUAGE sql STABLE SECURITY DEFINER LEAKPROOF PARALLEL SAFE
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select exists (
+    select 1 from tenant_membership
+    where person_id = p_person_id
+      and tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+    union all
+    select 1 from tenant_trainer
+    where person_id = p_person_id
+      and tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+    union all
+    select 1 from tenant_administrator
+    where person_id = p_person_id
+      and tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+  );
 $$;
 
 
@@ -1337,7 +1747,7 @@ CREATE FUNCTION app_private.cohort_has_accessible_event(p_cohort_id bigint) RETU
       where tenant_id = (select current_tenant_id()) and cohort_id = p_cohort_id
     )
     select 1 from targets
-    where event_id = any (array(select app_private.accessible_event_ids()))
+    where event_id = any (array(select * from app_private.accessible_event_ids()))
   );
 $$;
 
@@ -1466,6 +1876,8 @@ CREATE FUNCTION app_private.create_latest_lesson_payments() RETURNS SETOF public
     LANGUAGE plpgsql
     AS $$
 begin
+  return query select * from app_private.resolve_due_payments();
+
   perform set_config('jwt.claims.tenant_id', '2', true);
   perform set_config('jwt.claims.my_tenant_ids', '[2]', true);
   if not (select row_security_active('event')) then
@@ -1533,6 +1945,24 @@ CREATE FUNCTION app_private.cron_update_memberships() RETURNS void
   SET status = app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status)
   WHERE status IN ('scheduled', 'published')
     AND status IS DISTINCT FROM app_private.announcement_status_next(now(), scheduled_since, scheduled_until, status);
+$$;
+
+
+--
+-- Name: current_shared_event_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.current_shared_event_ids() RETURNS bigint[]
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select case
+    when nullif(current_setting('jwt.claims.shared.event_token', true), '') is not null then
+      coalesce((select instance_ids from app_private.event_share_claims(
+        current_tenant_id(), current_setting('jwt.claims.shared.event_token', true)
+      )), '{}'::bigint[])
+    else '{}'::bigint[]
+  end;
 $$;
 
 
@@ -1691,17 +2121,6 @@ COMMENT ON FUNCTION app_private.is_system_admin(bigint) IS 'Returns true when th
 
 
 --
--- Name: normalize_name(text); Type: FUNCTION; Schema: app_private; Owner: -
---
-
-CREATE FUNCTION app_private.normalize_name(text) RETURNS text
-    LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-    AS $_$
-  select lower(public.unaccent('public.unaccent', $1));
-$_$;
-
-
---
 -- Name: payment_search_ids(text); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -1709,7 +2128,9 @@ CREATE FUNCTION app_private.payment_search_ids(search text) RETURNS SETOF bigint
     LANGUAGE sql STABLE
     AS $$
   with term as not materialized (
-    select lower(trim(search)) as value
+    select lower(trim(search)) as value,
+      (select string_agg(array_to_tsvector(array[token])::text || ':*', ' & ')::tsquery
+       from unnest(tsvector_to_array(to_tsvector('pg_catalog.simple', app_private.normalize_name(search)))) token) as prefix
   )
   select p.id from payment p, term
   where strpos(p.id::text, term.value) > 0
@@ -1718,16 +2139,16 @@ CREATE FUNCTION app_private.payment_search_ids(search text) RETURNS SETOF bigint
   union all
   select p.id from payment p
   join event e on e.id = p.event_id, term
-  where strpos(lower(e.name), term.value) > 0
+  where e.search_vector @@ term.prefix
   union all
   select p.id from payment p
   join cohort_subscription cs on cs.id = p.cohort_subscription_id
   join cohort c on c.id = cs.cohort_id, term
-  where strpos(lower(c.name), term.value) > 0
+  where c.search_vector @@ term.prefix
   union all
   select d.payment_id from payment_debtor d
   join person p on p.id = d.person_id, term
-  where strpos(lower(concat_ws(' ', p.first_name, p.last_name)), term.value) > 0;
+  where p.search_vector @@ term.prefix;
 $$;
 
 
@@ -2366,6 +2787,38 @@ $$;
 
 
 --
+-- Name: resolve_due_payments(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.resolve_due_payments() RETURNS SETOF public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  tenant_ids bigint[] := array(select id from tenant);
+  v_tenant_id bigint;
+  payment_row payment;
+begin
+  if not row_security_active('payment') then
+    set local role to administrator;
+  end if;
+  foreach v_tenant_id in array tenant_ids loop
+    perform set_config('jwt.claims.tenant_id', v_tenant_id::text, true);
+    perform set_config('jwt.claims.my_tenant_ids', json_build_array(v_tenant_id)::text, true);
+    for payment_row in
+      update payment p set status = 'unpaid'
+      where p.tenant_id = v_tenant_id and p.cohort_subscription_id is not null
+        and p.due_at <= now()
+        and (p.status = 'tentative' or (p.status = 'unpaid' and p.is_auto_credit_allowed))
+      returning p.*
+    loop
+      return next coalesce(resolve_payment_with_credit(payment_row), payment_row);
+    end loop;
+  end loop;
+end;
+$$;
+
+
+--
 -- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2839,6 +3292,28 @@ $$;
 
 
 --
+-- Name: tg_couple__names(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_couple__names() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  select
+    concat_ws(' - ', concat_ws(' ', man.first_name, man.last_name), concat_ws(' ', woman.first_name, woman.last_name)),
+    concat_ws(' - ', man.last_name, woman.last_name)
+  into new.name, new.short_name
+  from person man, person woman
+  where man.id = new.man_id and woman.id = new.woman_id
+  -- A concurrent rename must finish before we read, or refresh this couple after our write.
+  for share of man, woman;
+  return new;
+end;
+$$;
+
+
+--
 -- Name: tg_event__delete_payment_on_cancellation(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -3238,6 +3713,22 @@ begin
 
   return NEW;
 end
+$$;
+
+
+--
+-- Name: tg_person__couple_names(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg_person__couple_names() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+begin
+  -- Re-run the couple trigger so formatting has one definition.
+  update couple set name = name where man_id = new.id or woman_id = new.id;
+  return new;
+end;
 $$;
 
 
@@ -3643,7 +4134,9 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
   union all
 
   select cover_image_id from event_covers
-  where id = any (array(select app_private.accessible_event_ids()));
+  where id = any (array(
+    select * from app_private.accessible_event_ids(null, array(select id from event_covers))
+  ));
 $$;
 
 
@@ -3666,26 +4159,60 @@ $$;
 
 
 --
--- Name: visible_person_ids(); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: visible_person_ids(boolean); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
-CREATE FUNCTION app_private.visible_person_ids() RETURNS SETOF bigint
+CREATE FUNCTION app_private.visible_person_ids(include_partners boolean DEFAULT false) RETURNS SETOF bigint
     LANGUAGE sql STABLE SECURITY DEFINER LEAKPROOF PARALLEL SAFE
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
-  select unnest(public.current_person_ids()) union all
-  -- always visible: trainers + admins in current tenant
-  select person_id from public.current_tenant_trainer
+  with related(person_id) as materialized (
+    select unnest(current_person_ids())
+    union all
+    select person_id from tenant_trainer
+    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+      or (tenant_id = (select current_tenant_id()) and status = 'active')
+    union all
+    select person_id from tenant_administrator
+    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+      or (tenant_id = (select current_tenant_id()) and status = 'active')
+    union all
+    select person_id from tenant_membership
+    where tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+      or (tenant_id = (select current_tenant_id()) and status = 'active'
+        and (select current_tenant_id() = any(my_tenants_array())))
+    union all
+    select visible_person_id from app_private.event_people
+    where tenant_id = (select current_tenant_id())
+      and viewer_person_id = any((select current_person_ids())::bigint[])
+  ), visible(person_id) as materialized (
+    select person_id from related
+    union all
+    select p.id from person p
+    where (select cardinality(current_admin_tenant_ids()) > 0)
+      and p.id not in (select person_id from related)
+      and (exists (
+        select from event_registration r
+        where r.person_id = p.id and r.registration_status = 'active'
+          and r.tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+      ) or exists (
+        select from event_trainer t
+        where t.person_id = p.id
+          and t.tenant_id = any ((select current_admin_tenant_ids())::bigint[])
+      ))
+  )
+  select person_id from visible
   union all
-  select person_id from public.current_tenant_administrator
-  union all
-  -- members visible only if viewer is in tenant (any role)
-  select person_id from public.current_tenant_membership
-  where (select public.current_tenant_id() = any(public.my_tenants_array()))
-  union all
-  select visible_person_id from app_private.event_people
-  where tenant_id = (select public.current_tenant_id())
-    and viewer_person_id = any((select public.current_person_ids())::bigint[]);
+  select unnest(array[c.man_id, c.woman_id]) from couple c
+  where include_partners and c.status = 'active'
+    and (c.man_id in (select person_id from visible)
+      or c.woman_id in (select person_id from visible)
+      or c.id in (
+        select couple_id from event_registration
+        where tenant_id = (select current_tenant_id())
+          and registration_status = 'active' and parent_registration_id is null and couple_id is not null
+          and event_id = any ((select app_private.current_shared_event_ids())::bigint[])
+      ));
 $$;
 
 
@@ -4209,33 +4736,6 @@ $$;
 
 
 --
--- Name: cohort; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.cohort (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    cohort_group_id bigint,
-    name text NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
-    color_rgb text NOT NULL,
-    location text DEFAULT ''::text NOT NULL,
-    is_visible boolean DEFAULT true NOT NULL,
-    ordering integer DEFAULT 1 NOT NULL,
-    external_ids text[],
-    is_archived boolean DEFAULT false NOT NULL,
-    image_id bigint
-);
-
-
---
--- Name: TABLE cohort; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
-
-
---
 -- Name: archive_cohort(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4267,15 +4767,6 @@ $$;
 
 
 --
--- Name: immutable_concat_ws(text, text[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) RETURNS text
-    LANGUAGE internal IMMUTABLE PARALLEL SAFE
-    AS $$text_concat_ws$$;
-
-
---
 -- Name: competition; Type: TABLE; Schema: federated; Owner: -
 --
 
@@ -4304,113 +4795,6 @@ CREATE TABLE federated.competition (
 
 COMMENT ON TABLE federated.competition IS '@name competition
 @behavior -insert -update -delete -list';
-
-
---
--- Name: couple; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.couple (
-    id bigint NOT NULL,
-    man_id bigint NOT NULL,
-    woman_id bigint NOT NULL,
-    since timestamp with time zone DEFAULT now() NOT NULL,
-    until timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_pary_id bigint,
-    active_range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    status public.relationship_status DEFAULT 'active'::public.relationship_status NOT NULL,
-    image_id bigint,
-    CONSTRAINT couple_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE couple; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.couple IS '@behavior +list -connection +query:resource:list -query:resource:connection
-@ref federationCompetitors via:public.couple_federation_link;federated.competitor
-@ref federationRanklistEntries via:public.couple_federation_link;federated.competitor;federated.ranklist_entry';
-
-
---
--- Name: COLUMN couple.legacy_pary_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.couple.legacy_pary_id IS '@behavior -*';
-
-
---
--- Name: COLUMN couple.active_range; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.couple.active_range IS '@behavior -*';
-
-
---
--- Name: person; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.person (
-    id bigint NOT NULL,
-    first_name text NOT NULL,
-    last_name text NOT NULL,
-    gender public.gender_type NOT NULL,
-    birth_date date,
-    nationality text NOT NULL,
-    tax_identification_number text,
-    national_id_number text,
-    csts_id integer,
-    wdsf_id integer,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    legacy_user_id bigint,
-    prefix_title text DEFAULT ''::text NOT NULL,
-    suffix_title text DEFAULT ''::text NOT NULL,
-    bio text DEFAULT ''::text NOT NULL,
-    email public.citext,
-    phone text,
-    name text GENERATED ALWAYS AS (public.immutable_concat_ws(' '::text, VARIADIC ARRAY[NULLIF(btrim(prefix_title), ''::text), NULLIF(btrim(first_name), ''::text), NULLIF(btrim(last_name), ''::text),
-CASE
-    WHEN (btrim(suffix_title) = ''::text) THEN NULL::text
-    ELSE (', '::text || btrim(suffix_title))
-END])) STORED NOT NULL,
-    address public.address_domain,
-    external_ids text[],
-    note text DEFAULT ''::text NOT NULL,
-    search_name text GENERATED ALWAYS AS (app_private.normalize_name(public.immutable_concat_ws(' '::text, VARIADIC ARRAY[first_name, last_name]))) STORED,
-    instagram_username text,
-    tiktok_username text,
-    facebook_url text,
-    website_url text,
-    image_id bigint
-);
-
-
---
--- Name: TABLE person; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person IS '@behavior -insert
-@ref federationPeople via:public.person_federation_link;federated.person
-@ref federationCategoryProgresses via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.competitor_category_progress
-@ref federationRanklistEntries via:public.person_federation_link;federated.person;federated.competitor_component;federated.competitor;federated.ranklist_entry';
-
-
---
--- Name: COLUMN person.legacy_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person.legacy_user_id IS '@behavior -*';
-
-
---
--- Name: COLUMN person.search_name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person.search_name IS '@behavior -*';
 
 
 --
@@ -4455,12 +4839,29 @@ COMMENT ON FUNCTION public.competition_suggestions(event_ids bigint[], since dat
 --
 
 CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_member boolean DEFAULT true, is_trainer boolean DEFAULT false, is_admin boolean DEFAULT false, join_date timestamp with time zone DEFAULT now(), cohort_ids bigint[] DEFAULT ARRAY[]::bigint[]) RETURNS public.person
-    LANGUAGE sql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
+declare
+  result person;
+begin
+  if not pg_has_role(current_setting('role'), 'administrator', 'member') then
+    raise insufficient_privilege using message = 'Cannot confirm this application';
+  end if;
+  if (is_member or is_trainer or is_admin) is not true then
+    raise insufficient_privilege using message = 'A new person must have a club relationship';
+  end if;
+  if exists (
+    select from unnest(cohort_ids) selected(id)
+    where not exists (select from cohort where cohort.id = selected.id and tenant_id = current_tenant_id())
+  ) then
+    raise insufficient_privilege using message = 'Cannot add to another club''s cohort';
+  end if;
+
   with application as materialized (
     select *
     from membership_application
-    where id = application_id and status = 'sent'
+    where id = application_id and status = 'sent' and tenant_id = current_tenant_id()
     for update
   ), t_person as (
     insert into person (
@@ -4471,8 +4872,8 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_
     select
       first_name, last_name, gender, birth_date, nationality, tax_identification_number,
       national_id_number, csts_id, wdsf_id,
-      coalesce(prefix_title, ''), coalesce(suffix_title, ''), coalesce(bio, ''),
-      email, phone, coalesce(note, '')
+      prefix_title, suffix_title, bio,
+      email, phone, note
     from application
     returning *
   ), appl as (
@@ -4492,13 +4893,15 @@ CREATE FUNCTION public.confirm_membership_application(application_id bigint, is_
     insert into cohort_membership (cohort_id, person_id, since)
     select cohort_id, t_person.id, join_date
     from t_person
-    cross join unnest(coalesce(cohort_ids, array[]::bigint[])) selected(cohort_id)
+    cross join unnest(cohort_ids) selected(cohort_id)
   ), proxy as (
     insert into user_proxy (person_id, user_id)
     select t_person.id, application.created_by
     from t_person cross join application
   )
-  select * from t_person;
+  select * into result from t_person;
+  return result;
+end
 $$;
 
 
@@ -4569,88 +4972,6 @@ CREATE FUNCTION public.create_credit_transaction_for_person(v_person_id bigint, 
   )
   select * from txn;
 $$;
-
-
---
--- Name: event; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.event (
-    id bigint NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    since timestamp with time zone NOT NULL,
-    until timestamp with time zone NOT NULL,
-    is_cancelled boolean DEFAULT false NOT NULL,
-    range tstzrange GENERATED ALWAYS AS (tstzrange(since, until, '[)'::text)) STORED NOT NULL,
-    name text,
-    type public.event_type,
-    location_text text,
-    location_id bigint,
-    is_visible boolean,
-    is_public boolean,
-    manager_person_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
-    stats public.event_stats DEFAULT ROW(0, 0, 0, 0)::public.event_stats NOT NULL,
-    parent_id bigint,
-    capacity integer,
-    capacity_unit public.event_capacity_unit DEFAULT 'people'::public.event_capacity_unit NOT NULL,
-    description text,
-    summary text,
-    is_locked boolean,
-    enable_notes boolean,
-    files_legacy text,
-    series_id bigint,
-    has_public_details boolean DEFAULT false NOT NULL,
-    share_token text,
-    cover_image_id bigint,
-    series_info public.series_info,
-    registration_period tstzrange DEFAULT '(,)'::tstzrange,
-    CONSTRAINT event_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
-    CONSTRAINT event_until_gt_since CHECK ((until > since))
-);
-
-
---
--- Name: TABLE event; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event IS '@behavior +list -connection -insert';
-
-
---
--- Name: COLUMN event.manager_person_ids; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event.manager_person_ids IS '@behavior -attribute:insert -attribute:update';
-
-
---
--- Name: COLUMN event.stats; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
-
-
---
--- Name: COLUMN event.is_locked; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event.is_locked IS '@behavior -*';
-
-
---
--- Name: COLUMN event.share_token; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
-
-
---
--- Name: COLUMN event.series_info; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.event.series_info IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
 
 
 --
@@ -4758,7 +5079,7 @@ CREATE TABLE public.cohort_subscription (
 -- Name: TABLE cohort_subscription; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.cohort_subscription IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.cohort_subscription IS '@behavior +list -connection -insert -update -delete -query:resource:connection -query:resource:single';
 
 
 --
@@ -4887,9 +5208,19 @@ COMMENT ON FUNCTION public.create_next_cohort_subscription_payment(c public.coho
 --
 
 CREATE FUNCTION public.create_person(person_id bigint, INOUT p public.person, is_member boolean, is_trainer boolean, is_admin boolean, send_invitation boolean, join_date timestamp with time zone) RETURNS public.person
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
     AS $$
 begin
+  if not pg_has_role(current_setting('role'), 'system_admin', 'member') then
+    if not current_tenant_id() = any (current_admin_tenant_ids())
+      or (person_id is not null and not app_private.can_edit_person(person_id)) then
+      raise insufficient_privilege using message = 'Cannot add this person to this club';
+    end if;
+    if person_id is null and (is_member or is_trainer or is_admin) is not true then
+      raise insufficient_privilege using message = 'A new person must have a club relationship';
+    end if;
+  end if;
   if person_id is null then
     insert into person (
       first_name,
@@ -4971,6 +5302,24 @@ COMMENT ON FUNCTION public.current_account_ids() IS '@behavior -*';
 
 
 --
+-- Name: current_admin_tenant_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_admin_tenant_ids() RETURNS bigint[]
+    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
+    AS $$
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.admin_tenant_ids', true), ''), '{}'), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION current_admin_tenant_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_admin_tenant_ids() IS '@behavior -*';
+
+
+--
 -- Name: current_claims(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4982,6 +5331,24 @@ CREATE FUNCTION public.current_claims() RETURNS jsonb
   from users
   where id = nullif(current_setting('jwt.claims.user_id', true), '')::bigint;
 $$;
+
+
+--
+-- Name: current_cohort_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_cohort_ids() RETURNS bigint[]
+    LANGUAGE sql STABLE LEAKPROOF PARALLEL SAFE
+    AS $$
+  SELECT translate(coalesce(nullif(current_setting('jwt.claims.my_cohort_ids', true), ''), '{}'), '[]', '{}')::bigint[];
+$$;
+
+
+--
+-- Name: FUNCTION current_cohort_ids(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.current_cohort_ids() IS '@behavior -*';
 
 
 --
@@ -5058,12 +5425,101 @@ COMMENT ON FUNCTION public.event_approx_price(v_instance public.event) IS '@beha
 
 
 --
--- Name: event_facets(timestamp with time zone, timestamp with time zone, public.event_type[], bigint[], bigint[], bigint, bigint[], boolean, boolean, boolean, bigint); Type: FUNCTION; Schema: public; Owner: -
+-- Name: event_conflicts(timestamp with time zone, timestamp with time zone, public.event_search_condition); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[] DEFAULT NULL::public.event_type[], trainer_ids bigint[] DEFAULT NULL::bigint[], participant_ids bigint[] DEFAULT NULL::bigint[], parent_id bigint DEFAULT NULL::bigint, location_ids bigint[] DEFAULT NULL::bigint[], can_register boolean DEFAULT NULL::boolean, only_mine boolean DEFAULT false, relevant_only boolean DEFAULT false, cohort_id bigint DEFAULT NULL::bigint) RETURNS TABLE(facet text, value text, count integer)
+CREATE FUNCTION public.event_conflicts(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition DEFAULT NULL::public.event_search_condition) RETURNS SETOF public.event_conflict
     LANGUAGE sql STABLE
-    AS $_$
+    AS $$
+  with events as materialized (
+    select * from event e
+    where e.tenant_id = current_tenant_id() and not e.is_cancelled
+      and start_range is not null
+      and app_private.tstzrange_overlaps(e.range, tstzrange(start_range, end_range, '[)'))
+  ), participation as materialized (
+    select e.id as event_id, p.*
+    from events e
+    cross join lateral (
+      select person_id, true as trainer, null::bigint as couple_id
+      from event_trainer where event_id = e.id
+      union all
+      select r.person_id, false, case when (condition).couple_id is not null then (
+        select parent.couple_id from event_registration parent where parent.id = r.parent_registration_id
+      ) end
+      from event_registration r
+      where r.event_id = e.id and r.registration_status = 'active' and r.person_id is not null
+    ) p
+  ), mine as (
+    select event_id from event_registration
+    where person_id = any((select current_person_ids())::bigint[]) and registration_status = 'active'
+    union all
+    select event_id from event_trainer
+    where person_id = any((select current_person_ids())::bigint[])
+  ), selected as (
+    select e.id from events e
+    where ((condition).types is null or e.type = any((condition).types))
+      and ((condition).location_ids is null or e.location_id = any((condition).location_ids))
+      and ((condition).parent_id is null or e.parent_id = (condition).parent_id)
+      and ((condition).can_register is null or (event_registration_info(e::event)).can_register = (condition).can_register)
+      and (not coalesce((condition).only_mine, false) or e.id in (select event_id from mine))
+      and (not coalesce((condition).relevant_only, false) or e.parent_id is null
+        or e.id in (select event_id from mine) or e.parent_id in (select event_id from mine))
+      and ((condition).trainer_ids is null or exists (
+        select 1 from participation p where p.event_id = e.id and p.trainer
+          and p.person_id = any((condition).trainer_ids)
+      ))
+      and ((condition).couple_id is null or exists (
+        select 1 from event_registration r where r.event_id = e.id
+          and r.registration_status = 'active' and r.couple_id = (condition).couple_id
+      ))
+      and (((condition).participant_ids is null and (condition).cohort_id is null) or exists (
+        select 1 from participation p
+        where p.event_id = e.id
+          and ((condition).couple_id is null or p.couple_id = (condition).couple_id)
+          and ((condition).participant_ids is null or p.person_id = any((condition).participant_ids))
+          and ((condition).cohort_id is null or exists (
+            select 1 from current_cohort_membership c
+            where c.cohort_id = (condition).cohort_id and c.person_id = p.person_id
+          ))
+      ))
+  ), pairs as materialized (
+    select a.id as first_id, a.name as first_name, a.since as first_since, a.until as first_until,
+      b.id as second_id, b.name as second_name, b.since as second_since, b.until as second_until
+    from events a
+    join event b on a.id < b.id
+      and b.tenant_id = current_tenant_id() and not b.is_cancelled
+      and app_private.tstzrange_overlaps(b.range, a.range)
+      and a.parent_id is distinct from b.id and b.parent_id is distinct from a.id
+      and greatest(a.since, b.since) < least(a.until, b.until)
+    -- Keep the counterpart even when only one event matches the calendar selectors.
+    where a.id in (select id from selected) or b.id in (select id from selected)
+  )
+  select distinct a.person_id, p.name,
+    pair.first_id, pair.first_name, pair.first_since, pair.first_until,
+    pair.second_id, pair.second_name, pair.second_since, pair.second_until,
+    tstzrange(greatest(pair.first_since, pair.second_since), least(pair.first_until, pair.second_until), '[)')
+  from pairs pair
+  join participation a on a.event_id = pair.first_id
+  join participation b on b.event_id = pair.second_id and b.person_id = a.person_id
+  join person p on p.id = a.person_id
+  order by pair.first_since, pair.first_id, pair.second_since, pair.second_id, a.person_id;
+$$;
+
+
+--
+-- Name: FUNCTION event_conflicts(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_conflicts(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition) IS '@behavior +list -connection';
+
+
+--
+-- Name: event_facets(timestamp with time zone, timestamp with time zone, public.event_search_condition); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition DEFAULT NULL::public.event_search_condition) RETURNS TABLE(facet text, value text, count integer)
+    LANGUAGE sql STABLE
+    AS $$
   with mine as (
     select event_id from event_registration
     where person_id = any((select current_person_ids())::bigint[])
@@ -5073,44 +5529,57 @@ CREATE FUNCTION public.event_facets(start_range timestamp with time zone, end_ra
     where person_id = any((select current_person_ids())::bigint[])
   ), cohort_people as (
     select cohort_id, person_id from current_cohort_membership
-    where (not coalesce(only_mine, false)
-        or person_id = any((select current_person_ids())::bigint[]))
-      and (participant_ids is not null or coalesce(only_mine, false)
-        or person_id in (
-          select person_id from current_tenant_membership
-          union all select person_id from current_tenant_trainer
-          union all select person_id from current_tenant_administrator
-        ))
   ), candidates as materialized (
-    select i.id, i.type, i.location_id,
-      array(select person_id from event_trainer where event_id = i.id) as trainers,
-      array(select person_id from event_registration
-        where event_id = i.id and registration_status = 'active') as participants
+    select i.id, i.type, i.location_id
     from event i
     where i.tenant_id = current_tenant_id()
       and start_range is not null
       and app_private.tstzrange_overlaps(i.range, tstzrange(start_range, end_range, '[)'))
-      and (can_register is null or (event_registration_info(i)).can_register = can_register)
-      and ($6 is null or i.parent_id = $6)
-      and (not coalesce(only_mine, false) or i.id in (select event_id from mine))
-      and (not coalesce(relevant_only, false) or i.parent_id is null
+      and ((condition).can_register is null or (event_registration_info(i)).can_register = (condition).can_register)
+      and ((condition).parent_id is null or i.parent_id = (condition).parent_id)
+      and ((condition).couple_id is null or exists (
+        select 1 from event_registration r where r.event_id = i.id
+          and r.registration_status = 'active' and r.couple_id = (condition).couple_id
+      ))
+      and (not coalesce((condition).only_mine, false) or i.id in (select event_id from mine))
+      and (not coalesce((condition).relevant_only, false) or i.parent_id is null
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine))
+  ), trainers as (
+    select event_id, array_agg(person_id) as ids
+    from event_trainer
+    where event_id = any(array(select id from candidates))
+    group by event_id
+  ), participants as (
+    select r.event_id, array_agg(r.person_id) as ids
+    from event_registration r
+    left join event_registration parent on parent.id = r.parent_registration_id
+    where r.event_id = any(array(select id from candidates))
+      and r.registration_status = 'active' and r.person_id is not null
+      and ((condition).couple_id is null or parent.couple_id = (condition).couple_id)
+    group by r.event_id
+  ), event_people as (
+    select c.*, coalesce(t.ids, '{}') as trainers,
+      case when (condition).couple_id is null then coalesce(t.ids, '{}') || coalesce(p.ids, '{}')
+        else coalesce(p.ids, '{}') end as selected_people
+    from candidates c
+    left join trainers t on t.event_id = c.id
+    left join participants p on p.event_id = c.id
   ), matches as (
     select *,
-      only_types is null or type = any(only_types) as type_matches,
-      trainer_ids is null or trainers && trainer_ids as trainer_matches,
-      participant_ids is null or case when $11 is null
-        then participants && participant_ids
-        else (trainers || participants) && array(
+      (condition).types is null or type = any((condition).types) as type_matches,
+      (condition).trainer_ids is null or trainers && (condition).trainer_ids as trainer_matches,
+      (condition).participant_ids is null or case when (condition).cohort_id is null
+        then selected_people && (condition).participant_ids
+        else selected_people && array(
           select person_id from cohort_people c
-          where c.cohort_id = $11 and person_id = any(participant_ids)
+          where c.cohort_id = (condition).cohort_id and person_id = any((condition).participant_ids)
         ) end as participant_matches,
-      $11 is null or (trainers || participants) && array(
-        select person_id from cohort_people c where c.cohort_id = $11
+      (condition).cohort_id is null or selected_people && array(
+        select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
       ) as cohort_matches,
-      location_ids is null or location_id = any(location_ids) as location_matches
-    from candidates
+      (condition).location_ids is null or location_id = any((condition).location_ids) as location_matches
+    from event_people
   ), facets as (
     select m.id, 'type' as facet, upper(m.type::text) as value
     from matches m
@@ -5122,10 +5591,10 @@ CREATE FUNCTION public.event_facets(start_range timestamp with time zone, end_ra
     union all
     select m.id, 'participant', person_id::text
     from matches m
-    cross join lateral unnest(m.participants) person(person_id)
+    cross join lateral unnest(m.selected_people) person(person_id)
     where m.type_matches and m.trainer_matches and m.location_matches and m.cohort_matches
-      and ($11 is null or person_id in (
-        select person_id from cohort_people c where c.cohort_id = $11
+      and ((condition).cohort_id is null or person_id in (
+        select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
       ))
     union all
     select m.id, 'location', m.location_id::text
@@ -5135,128 +5604,22 @@ CREATE FUNCTION public.event_facets(start_range timestamp with time zone, end_ra
     union all
     select m.id, 'cohort', c.cohort_id::text
     from matches m
-    cross join lateral unnest(m.trainers || m.participants) person(person_id)
+    cross join lateral unnest(m.selected_people) person(person_id)
     join cohort_people c using (person_id)
     where m.type_matches and m.trainer_matches and m.location_matches
-      and (participant_ids is null or c.person_id = any(participant_ids))
+      and ((condition).participant_ids is null or c.person_id = any((condition).participant_ids))
   )
   select facet, value, count(*)::integer
   from (select distinct id, facet, value from facets) events
   group by facet, value;
-$_$;
-
-
---
--- Name: FUNCTION event_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, location_ids bigint[], can_register boolean, only_mine boolean, relevant_only boolean, cohort_id bigint); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, location_ids bigint[], can_register boolean, only_mine boolean, relevant_only boolean, cohort_id bigint) IS '@behavior +list -connection';
-
-
---
--- Name: event_overlaps_attendee_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_conflict
-    LANGUAGE sql STABLE
-    AS $$
-  with instances as (
-    select
-      ea.person_id,
-      p.name as person_name,
-      ei.id as event_id,
-      ei.parent_id,
-      ei.since,
-      ei.until,
-      ei.range,
-      ei.name as event_name
-    from event_registration ea
-    join event ei on ei.id = ea.event_id
-    join person p on p.id = ea.person_id
-    where not ei.is_cancelled
-      and ea.person_id is not null
-      and ea.registration_status = 'active'
-      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
-  )
-  select
-    i1.person_id,
-    i1.person_name,
-    i1.event_id as first_event_id,
-    i1.event_name as first_event_name,
-    i1.since as first_since,
-    i1.until as first_until,
-    i2.event_id as second_event_id,
-    i2.event_name as second_event_name,
-    i2.since as second_since,
-    i2.until as second_until,
-    tstzrange(greatest(i1.since, i2.since), least(i1.until, i2.until), '[]') as overlap_range
-  from instances i1
-  join instances i2 on i1.person_id = i2.person_id
-    and i1.event_id < i2.event_id
-    and i1.parent_id is distinct from i2.event_id
-    and i2.parent_id is distinct from i1.event_id
-    and app_private.tstzrange_overlaps(i1.range, i2.range)
-    and greatest(i1.since, i2.since) < least(i1.until, i2.until);
 $$;
 
 
 --
--- Name: FUNCTION event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION event_facets(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
-
-
---
--- Name: event_overlaps_trainer_report(timestamp with time zone, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) RETURNS SETOF public.event_conflict
-    LANGUAGE sql STABLE
-    AS $$
-  with trainer_instances as (
-    select
-      eit.person_id,
-      p.name as person_name,
-      ei.id as event_id,
-      ei.parent_id,
-      ei.since,
-      ei.until,
-      ei.range,
-      ei.name as event_name
-    from event ei
-    join event_trainer eit on ei.id = eit.event_id
-    join person p on p.id = eit.person_id
-    where not ei.is_cancelled
-      and app_private.tstzrange_overlaps(ei.range, tstzrange(coalesce(p_since, '-infinity'::timestamptz), coalesce(p_until, 'infinity'::timestamptz), '[]'))
-  )
-  select
-    ti1.person_id,
-    ti1.person_name,
-    ti1.event_id as first_event_id,
-    ti1.event_name as first_event_name,
-    ti1.since as first_since,
-    ti1.until as first_until,
-    ti2.event_id as second_event_id,
-    ti2.event_name as second_event_name,
-    ti2.since as second_since,
-    ti2.until as second_until,
-    tstzrange(greatest(ti1.since, ti2.since), least(ti1.until, ti2.until), '[]') as overlap_range
-  from trainer_instances ti1
-  join trainer_instances ti2 on ti1.person_id = ti2.person_id
-    and ti1.event_id < ti2.event_id
-    and ti1.parent_id is distinct from ti2.event_id
-    and ti2.parent_id is distinct from ti1.event_id
-    and app_private.tstzrange_overlaps(ti1.range, ti2.range)
-    and greatest(ti1.since, ti2.since) < least(ti1.until, ti2.until);
-$$;
-
-
---
--- Name: FUNCTION event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) IS '@behavior +list -connection';
+COMMENT ON FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition) IS '@behavior +list -connection';
 
 
 --
@@ -5483,7 +5846,8 @@ CREATE TABLE public.tenant (
     address public.address_domain,
     description text DEFAULT ''::text NOT NULL,
     bank_account text DEFAULT ''::text NOT NULL,
-    csts_id integer
+    csts_id integer,
+    created_at timestamp with time zone DEFAULT now()
 );
 
 
@@ -5492,6 +5856,13 @@ CREATE TABLE public.tenant (
 --
 
 COMMENT ON TABLE public.tenant IS '@behavior +list -connection -insert -delete -singularRelation:resource:single -query:resource:connection';
+
+
+--
+-- Name: COLUMN tenant.created_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant.created_at IS '@behavior -attribute:insert -attribute:update';
 
 
 --
@@ -5536,6 +5907,105 @@ $$;
 --
 
 COMMENT ON FUNCTION public.get_current_user(version_id text) IS '@behavior -*';
+
+
+--
+-- Name: global_search(text, integer, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.global_search(search text, "limit" integer DEFAULT 20, scope text[] DEFAULT NULL::text[]) RETURNS SETOF public.global_search_result
+    LANGUAGE sql STABLE
+    AS $$
+  with input as materialized (
+    select normalized.text, parsed.words, parsed.prefix
+    from (select btrim(regexp_replace(app_private.normalize_name(coalesce(search, '')), '\s+', ' ', 'g')) as text) normalized
+    cross join lateral (
+      select string_agg(array_to_tsvector(array[token])::text, ' & ')::tsquery as words,
+        string_agg(array_to_tsvector(array[token])::text || ':*', ' & ')::tsquery as prefix
+      from unnest(tsvector_to_array(to_tsvector('pg_catalog.simple', normalized.text))) token
+    ) parsed
+    where char_length(normalized.text) >= 3 and parsed.prefix is not null
+  ), person_recency as (
+    -- Rank by the latest club relationship; pending relationships do not count.
+    select person_id, max(coalesce(until, 'infinity'::timestamptz)) as until
+    from (
+      select person_id, until from tenant_membership where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+      union all
+      select person_id, until from tenant_trainer where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+      union all
+      select person_id, until from tenant_administrator where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+    ) relationships
+    group by person_id
+  ), peers as materialized (
+    select person_id from current_cohort_membership
+    where cohort_id = any((select current_cohort_ids())::bigint[])
+  ), event_matches as materialized (
+    select e.*
+    from event e
+    where (scope is null or 'event' = any(scope)) and e.id = any (array(
+      select ids.id from input q
+      cross join lateral app_private.accessible_event_ids(q.prefix) ids(id)
+    ))
+  ), candidates as (
+    select p as person, null::couple as couple, null::cohort as cohort,
+      null::location as location, null::event as event,
+      p.id, p.search_name as normalized_label, p.search_vector,
+      (case when p.id = any((select current_person_ids())::bigint[]) then 20
+        when p.id in (select person_id from peers) then 10 else 0 end
+        + case when r.person_id is null then 0 else 10 / (1 + greatest(0, extract(epoch from now() - r.until)) / 86400 / 365) end)::real as boost
+    from person p
+    left join person_recency r on r.person_id = p.id
+    cross join input q
+    where (scope is null or 'person' = any(scope)) and p.search_vector @@ q.prefix
+    union all
+    select null, c, null, null, null, c.id, app_private.normalize_name(c.name), c.search_vector,
+      case when c.id = any((select current_couple_ids())::bigint[]) then 20 else 0 end
+        + 10 / (1 + greatest(0, extract(epoch from now() - coalesce(c.until, 'infinity'::timestamptz))) / 86400 / 365)
+    from couple c
+    cross join input q
+    where (scope is null or 'couple' = any(scope)) and c.search_vector @@ q.prefix
+    union all
+    select null, null, c, null, null, c.id, app_private.normalize_name(c.name), c.search_vector,
+      case when c.id = any((select current_cohort_ids())::bigint[]) then 20 else 0 end
+        + case when not c.is_archived then 10 else 0 end
+    from cohort c, input q
+    where (scope is null or 'cohort' = any(scope)) and c.search_vector @@ q.prefix
+    union all
+    select null, null, null, l, null, l.id, app_private.normalize_name(l.name), l.search_vector, 0
+    from location l, input q
+    where (scope is null or 'location' = any(scope)) and l.search_vector @@ q.prefix
+    union all
+    select null, null, null, null, e::event, e.id,
+      app_private.normalize_name(e.name), e.search_vector,
+      case when e.manager_person_ids && (select current_person_ids())
+        or (event_registration_info(e::event)).my then 20 else 0 end
+      -- Upcoming/ongoing: up to 10; past: up to 5. Both decay over a 90-day scale.
+      + (case when e.until >= now()
+        then 10 / (1 + greatest(0, extract(epoch from e.since - now())) / 86400 / 90)
+        else 5 / (1 + extract(epoch from now() - e.until) / 86400 / 90) end)::real
+    from event_matches e
+  ), scored as (
+    select c.*,
+      case when btrim(regexp_replace(c.normalized_label, '\s+', ' ', 'g')) = q.text then 0
+        when c.search_vector @@ q.words then 1 else 2 end as match_tier,
+      (c.boost + 5 * ts_rank(c.search_vector, q.prefix, 32)
+        - case when (c.event).type = 'lesson' then 20 else 0 end)::real as score
+    from candidates c, input q
+  )
+  select person, couple, cohort, location, event, score,
+    row_number() over (order by match_tier, score desc, id)::integer
+  from scored
+  order by match_tier, score desc, id
+  limit greatest(0, least(coalesce("limit", 20), 20));
+$$;
+
+
+--
+-- Name: FUNCTION global_search(search text, "limit" integer, scope text[]); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.global_search(search text, "limit" integer, scope text[]) IS '@behavior +list -connection
+@notNull';
 
 
 --
@@ -5607,7 +6077,11 @@ begin
     and u.u_pass = encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex');
 
   if usr is null then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    insert into security_event (user_id, kind, method)
+    values ((select id from users
+      where lower(u_login) = lower(trim(login)) or lower(u_email) = lower(trim(login))
+      limit 1), 'login_failed', 'password');
+    return null;
   end if;
 
   jwt := app_private.create_jwt_token(usr);
@@ -5707,11 +6181,13 @@ begin
     and t.user_id is not null
     and (
       t.intent = 'password_reset'
-      or (t.intent = 'event_handoff' and t.tenant_id = current_tenant_id())
+      or (t.intent in ('event_handoff', 'tenant_handoff') and t.tenant_id = current_tenant_id())
     )
   returning t.* into v_token;
   if not found then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    insert into security_event (user_id, kind, method)
+    values ((select user_id from otp_token where access_token = token), 'login_failed', 'otp');
+    return null;
   end if;
   select * into usr from users where id = v_token.user_id;
 
@@ -6121,9 +6597,9 @@ CREATE TABLE public.membership_application (
     national_id_number text,
     csts_id integer,
     wdsf_id integer,
-    prefix_title text,
-    suffix_title text,
-    bio text,
+    prefix_title text DEFAULT ''::text NOT NULL,
+    suffix_title text DEFAULT ''::text NOT NULL,
+    bio text DEFAULT ''::text NOT NULL,
     email public.citext,
     phone text,
     created_by bigint NOT NULL,
@@ -6149,6 +6625,33 @@ CREATE FUNCTION public.reject_membership_application(application_id bigint) RETU
     LANGUAGE sql
     AS $$
   update membership_application set status='rejected' where id=application_id returning *;
+$$;
+
+
+--
+-- Name: resend_person_invitation(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.resend_person_invitation(invitation_id bigint) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+declare
+  invitation person_invitation;
+begin
+  select * into invitation from person_invitation
+  where id = invitation_id and tenant_id = current_tenant_id()
+  for update;
+
+  if not found then
+    raise exception 'INVITATION_NOT_FOUND' using errcode = 'P0002';
+  end if;
+  if invitation.used_at is not null then
+    raise exception 'INVITATION_ALREADY_USED' using errcode = '22023';
+  end if;
+
+  perform graphile_worker.add_job('send_invitation', json_build_object('id', invitation.id));
+end;
 $$;
 
 
@@ -6591,6 +7094,74 @@ $$;
 --
 
 COMMENT ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) IS '@behavior +list -connection';
+
+
+--
+-- Name: save_payment_group(bigint, public.payment_group_item[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.save_payment_group(group_id bigint, payments public.payment_group_item[]) RETURNS SETOF public.payment
+    LANGUAGE plpgsql
+    AS $$
+declare
+  subscription cohort_subscription;
+  item payment_group_item;
+  payment_row payment;
+  person_row person;
+begin
+  select * into strict subscription from cohort_subscription where id = group_id for update;
+
+  foreach item in array payments loop
+    select p.* into payment_row from payment p join payment_debtor d on d.payment_id = p.id
+    where p.cohort_subscription_id = group_id and p.due_at = item.due_at and d.person_id = item.person_id
+    for update of p;
+
+    if found then
+      update payment_recipient set amount = item.amount
+      where payment_id = payment_row.id and amount is distinct from item.amount;
+      if not found then
+        return next payment_row;
+        continue;
+      end if;
+    else
+      select * into strict person_row from person where id = item.person_id;
+
+      insert into payment (
+        cohort_subscription_id,
+        due_at,
+        status,
+        variable_symbol,
+        specific_symbol,
+        is_auto_credit_allowed
+      ) values (
+        group_id,
+        item.due_at,
+        case when item.due_at > now() then 'tentative'::payment_status else 'unpaid'::payment_status end,
+        regexp_replace(coalesce(nullif(person_row.tax_identification_number, ''), person_row.id::text), '[^0-9]', '', 'g'),
+        '' || (extract(year from item.due_at) - 2000) || extract(month from item.due_at) || extract(day from item.due_at) || group_id,
+        current_tenant_id() = 2
+      )
+      returning * into payment_row;
+
+      insert into payment_debtor (payment_id, person_id) values (payment_row.id, item.person_id);
+      insert into payment_recipient (payment_id, account_id, amount)
+      values (payment_row.id, subscription.account_id, item.amount);
+    end if;
+
+    if payment_row.is_auto_credit_allowed then
+      -- Keep the payment ID while rebuilding its credit transaction and postings.
+      delete from transaction where payment_id = payment_row.id and source = 'auto-credit';
+      update payment set
+        status = case when due_at > now() then 'tentative'::payment_status else 'unpaid'::payment_status end,
+        paid_at = null
+      where id = payment_row.id returning * into payment_row;
+      payment_row := coalesce(resolve_payment_with_credit(payment_row), payment_row);
+    end if;
+
+    return next payment_row;
+  end loop;
+end;
+$$;
 
 
 --
@@ -7161,7 +7732,7 @@ CREATE FUNCTION public.suggested_competition_matches(since date, until date DEFA
       and c.status <> 'cancelled' and e.status <> 'cancelled'
     group by c.federation, c.competition_type, extract(year from c.start_date)::int, cat.id
   ), participations as materialized (
-    select p.*
+    select p.competition_id, p.competitor_id, p.cancelled
     from federated.competition_participation p
     where p.competition_id = any(array(select unnest(competition_ids) from upcoming))
       and p.competitor_id = any(array(select id from scoped_competitors))
@@ -7713,35 +8284,6 @@ $$;
 
 
 --
--- Name: location; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.location (
-    id bigint CONSTRAINT tenant_location_id_not_null NOT NULL,
-    name text CONSTRAINT tenant_location_name_not_null NOT NULL,
-    description text DEFAULT ''::text CONSTRAINT tenant_location_description_not_null NOT NULL,
-    address public.address_domain,
-    show_in_lists boolean DEFAULT false CONSTRAINT tenant_location_is_public_not_null NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() CONSTRAINT tenant_location_tenant_id_not_null NOT NULL,
-    created_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_created_at_not_null NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() CONSTRAINT tenant_location_updated_at_not_null NOT NULL,
-    cover_image_id bigint,
-    is_public boolean GENERATED ALWAYS AS (show_in_lists) STORED,
-    long_name text,
-    latitude double precision,
-    longitude double precision,
-    ordering integer DEFAULT 1 CONSTRAINT tenant_location_ordering_not_null NOT NULL
-);
-
-
---
--- Name: TABLE location; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.location IS '@behavior +list -connection -query:resource:list -query:resource:connection -queryField:resource:connection';
-
-
---
 -- Name: upsert_location(public.location_details_input, bigint[], bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -7817,6 +8359,29 @@ begin
   return result;
 end;
 $$;
+
+
+--
+-- Name: users_claims(public.users); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.users_claims(u public.users) RETURNS jsonb
+    LANGUAGE sql STABLE STRICT SECURITY DEFINER
+    SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    AS $$
+  select to_jsonb(app_private.create_jwt_token(actual_user)) - 'exp' - 'tenant_id'
+  from users actual_user
+  where actual_user.id = u.id
+    and (u.id = current_user_id()
+      or pg_has_role(current_setting('role'), 'administrator', 'member'));
+$$;
+
+
+--
+-- Name: FUNCTION users_claims(u public.users); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.users_claims(u public.users) IS '@behavior +typeField -queryField';
 
 
 --
@@ -8778,14 +9343,34 @@ COMMENT ON TABLE federated.competition_result IS '@name competition_result
 CREATE VIEW federated.competition_participation WITH (security_invoker='true') AS
  SELECT r.competition_id,
     r.competitor_id,
-    COALESCE(e.cancelled, false) AS cancelled
-   FROM (federated.competition_result r
+    COALESCE(e.cancelled, false) AS cancelled,
+    r.ranking,
+    r.ranking_to,
+    r.point_gain,
+    r.final_gain,
+    r.is_final,
+    r.completion_status,
+    c.event_id,
+    c.start_date AS date,
+    r.start_number
+   FROM ((federated.competition_result r
+     JOIN federated.competition c ON ((c.id = r.competition_id)))
      LEFT JOIN federated.competition_entry e USING (competition_id, competitor_id))
 UNION ALL
  SELECT e.competition_id,
     e.competitor_id,
-    e.cancelled
-   FROM federated.competition_entry e
+    e.cancelled,
+    NULL::integer AS ranking,
+    NULL::integer AS ranking_to,
+    NULL::numeric(10,3) AS point_gain,
+    NULL::numeric(10,3) AS final_gain,
+    NULL::boolean AS is_final,
+    NULL::text AS completion_status,
+    c.event_id,
+    c.start_date AS date,
+    NULL::text AS start_number
+   FROM (federated.competition_entry e
+     JOIN federated.competition c ON ((c.id = e.competition_id)))
   WHERE (NOT (EXISTS ( SELECT 1
            FROM federated.competition_result r
           WHERE ((r.competition_id = e.competition_id) AND (r.competitor_id = e.competitor_id)))));
@@ -8797,9 +9382,45 @@ UNION ALL
 
 COMMENT ON VIEW federated.competition_participation IS '@name competition_participation
 @primaryKey competition_id,competitor_id
-@foreignKey (competition_id) references federated.competition (id)|@fieldName competition|@foreignFieldName participations
-@foreignKey (competitor_id) references federated.competitor (id)|@fieldName competitor|@foreignFieldName competitionParticipations
-@behavior -single -list -connection -insert -update -delete';
+@foreignKey (event_id) references federated.event (id)|@fieldName event|@foreignFieldName participations|@notNull
+@foreignKey (competition_id) references federated.competition (id)|@fieldName competition|@foreignFieldName participations|@notNull
+@foreignKey (competitor_id) references federated.competitor (id)|@fieldName competitor|@foreignFieldName competitionParticipations|@notNull
+@behavior -single -list -connection +manyRelation:resource:list -insert -update -delete';
+
+
+--
+-- Name: COLUMN competition_participation.competition_id; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition_participation.competition_id IS '@notNull';
+
+
+--
+-- Name: COLUMN competition_participation.competitor_id; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition_participation.competitor_id IS '@notNull';
+
+
+--
+-- Name: COLUMN competition_participation.cancelled; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition_participation.cancelled IS '@notNull';
+
+
+--
+-- Name: COLUMN competition_participation.event_id; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition_participation.event_id IS '@notNull';
+
+
+--
+-- Name: COLUMN competition_participation.date; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.competition_participation.date IS '@notNull';
 
 
 --
@@ -9277,6 +9898,66 @@ COMMENT ON TABLE federated.judge_score IS '@name judge_score
 --
 
 COMMENT ON COLUMN federated.judge_score.component IS '@behavior +attribute:orderBy';
+
+
+--
+-- Name: official_assignment; Type: VIEW; Schema: federated; Owner: -
+--
+
+CREATE VIEW federated.official_assignment WITH (security_invoker='true') AS
+ SELECT c.event_id,
+    c.start_date AS date,
+    o.person_id,
+    o.role
+   FROM (federated.competition_official o
+     JOIN federated.competition c ON ((c.id = o.competition_id)))
+  WHERE (c.status <> 'cancelled'::federated.event_status)
+UNION
+ SELECT o.event_id,
+    e.start_date AS date,
+    o.person_id,
+    o.role
+   FROM (federated.event_official o
+     JOIN federated.event e ON ((e.id = o.event_id)));
+
+
+--
+-- Name: VIEW official_assignment; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON VIEW federated.official_assignment IS '@name official_assignment
+@primaryKey event_id,date,person_id,role
+@foreignKey (event_id) references federated.event (id)|@fieldName event|@foreignFieldName officialAssignments|@notNull
+@foreignKey (person_id) references federated.person (id)|@fieldName person|@notNull
+@behavior -single -list -connection +manyRelation:resource:list -insert -update -delete';
+
+
+--
+-- Name: COLUMN official_assignment.event_id; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.official_assignment.event_id IS '@notNull';
+
+
+--
+-- Name: COLUMN official_assignment.date; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.official_assignment.date IS '@notNull';
+
+
+--
+-- Name: COLUMN official_assignment.person_id; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.official_assignment.person_id IS '@notNull';
+
+
+--
+-- Name: COLUMN official_assignment.role; Type: COMMENT; Schema: federated; Owner: -
+--
+
+COMMENT ON COLUMN federated.official_assignment.role IS '@notNull';
 
 
 --
@@ -10215,6 +10896,70 @@ ALTER TABLE public.event_registration ALTER COLUMN id ADD GENERATED ALWAYS AS ID
 
 
 --
+-- Name: event_saved_search; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_saved_search (
+    id bigint NOT NULL,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    user_id bigint DEFAULT public.current_user_id() NOT NULL,
+    name text NOT NULL,
+    condition public.event_search_condition NOT NULL,
+    feed_key uuid DEFAULT gen_random_uuid(),
+    cross_tenant boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: TABLE event_saved_search; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.event_saved_search IS '@behavior +list -connection';
+
+
+--
+-- Name: COLUMN event_saved_search.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_saved_search.tenant_id IS '@behavior -attribute:insert -attribute:update';
+
+
+--
+-- Name: COLUMN event_saved_search.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_saved_search.user_id IS '@behavior -attribute:insert -attribute:update';
+
+
+--
+-- Name: COLUMN event_saved_search.condition; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_saved_search.condition IS '@behavior -attribute:filterBy -attribute:orderBy';
+
+
+--
+-- Name: COLUMN event_saved_search.feed_key; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.event_saved_search.feed_key IS '@behavior -attribute:filterBy -attribute:orderBy';
+
+
+--
+-- Name: event_saved_search_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_saved_search ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.event_saved_search_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: event_series; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10421,7 +11166,7 @@ CREATE TABLE public.otp_token (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     intent text DEFAULT 'password_reset'::text NOT NULL,
     event_id bigint,
-    CONSTRAINT otp_token_intent_check CHECK ((((intent = 'password_reset'::text) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
+    CONSTRAINT otp_token_intent_check CHECK ((((intent = ANY (ARRAY['password_reset'::text, 'tenant_handoff'::text])) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
 );
 
 
@@ -10535,7 +11280,8 @@ CREATE TABLE public.person_invitation (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     email public.citext NOT NULL,
-    event_id bigint
+    event_id bigint,
+    last_sent_at timestamp with time zone
 );
 
 
@@ -11888,6 +12634,29 @@ ALTER TABLE ONLY public.event_registration
 
 
 --
+-- Name: event_saved_search event_saved_search_feed_key_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_saved_search
+    ADD CONSTRAINT event_saved_search_feed_key_key UNIQUE (feed_key);
+
+
+--
+-- Name: CONSTRAINT event_saved_search_feed_key_key ON event_saved_search; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT event_saved_search_feed_key_key ON public.event_saved_search IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+
+
+--
+-- Name: event_saved_search event_saved_search_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_saved_search
+    ADD CONSTRAINT event_saved_search_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: event_series event_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12938,6 +13707,13 @@ CREATE INDEX cohort_membership_tenant_status_person_idx ON public.cohort_members
 
 
 --
+-- Name: cohort_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_search_vector_idx ON public.cohort USING gin (search_vector);
+
+
+--
 -- Name: cohort_subscription_account_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12991,6 +13767,13 @@ CREATE INDEX couple_man_active_lookup ON public.couple USING btree (man_id, sinc
 --
 
 CREATE INDEX couple_man_id_idx ON public.couple USING btree (man_id);
+
+
+--
+-- Name: couple_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX couple_search_vector_idx ON public.couple USING gin (search_vector);
 
 
 --
@@ -13134,6 +13917,20 @@ CREATE UNIQUE INDEX event_registration_unit_key ON public.event_registration USI
 
 
 --
+-- Name: event_saved_search_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_saved_search_user_id_idx ON public.event_saved_search USING btree (user_id, tenant_id);
+
+
+--
+-- Name: event_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_search_vector_idx ON public.event USING gin (search_vector);
+
+
+--
 -- Name: event_share_token_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13225,6 +14022,13 @@ CREATE INDEX event_trainer_tenant_person_event_idx ON public.event_trainer USING
 
 
 --
+-- Name: event_visibility_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX event_visibility_idx ON public.event USING btree (tenant_id, id) INCLUDE (is_public, is_visible, manager_person_ids);
+
+
+--
 -- Name: file_public_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13264,6 +14068,13 @@ CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
 --
 
 CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
+
+
+--
+-- Name: location_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX location_search_vector_idx ON public.location USING gin (search_vector);
 
 
 --
@@ -13397,6 +14208,13 @@ CREATE INDEX person_invitation_person_id_idx ON public.person_invitation USING b
 --
 
 CREATE INDEX person_invitation_tenant_id_idx ON public.person_invitation USING btree (tenant_id);
+
+
+--
+-- Name: person_search_vector_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX person_search_vector_idx ON public.person USING gin (search_vector);
 
 
 --
@@ -13764,6 +14582,13 @@ CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federa
 
 
 --
+-- Name: couple _050_names; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _050_names BEFORE INSERT OR UPDATE OF man_id, woman_id, name, short_name ON public.couple FOR EACH ROW EXECUTE FUNCTION app_private.tg_couple__names();
+
+
+--
 -- Name: access_credential _050_relationship_status; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -14090,6 +14915,13 @@ CREATE TRIGGER _300_status BEFORE INSERT OR UPDATE OF status, scheduled_since, s
 --
 
 CREATE TRIGGER _300_trim_login BEFORE INSERT OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION app_private.tg_users__trim_login();
+
+
+--
+-- Name: person _500_couple_names; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _500_couple_names AFTER UPDATE OF first_name, last_name ON public.person FOR EACH ROW WHEN (((old.first_name IS DISTINCT FROM new.first_name) OR (old.last_name IS DISTINCT FROM new.last_name))) EXECUTE FUNCTION app_private.tg_person__couple_names();
 
 
 --
@@ -15878,6 +16710,22 @@ ALTER TABLE ONLY public.event_registration
 
 
 --
+-- Name: event_saved_search event_saved_search_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_saved_search
+    ADD CONSTRAINT event_saved_search_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+
+
+--
+-- Name: event_saved_search event_saved_search_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_saved_search
+    ADD CONSTRAINT event_saved_search_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: event event_series_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16804,13 +17652,6 @@ CREATE POLICY admin_all ON public.cohort_membership TO administrator USING (true
 
 
 --
--- Name: couple admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.couple TO administrator USING (true);
-
-
---
 -- Name: dokumenty admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -16881,13 +17722,6 @@ CREATE POLICY admin_all ON public.location_image TO administrator USING (true);
 
 
 --
--- Name: person admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.person TO administrator USING (true);
-
-
---
 -- Name: person_invitation admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -16909,27 +17743,6 @@ CREATE POLICY admin_all ON public.tenant TO administrator USING ((id = ( SELECT 
 
 
 --
--- Name: tenant_administrator admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_administrator TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_membership admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_membership TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
--- Name: tenant_trainer admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-
-
---
 -- Name: user_proxy admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -16944,6 +17757,41 @@ CREATE POLICY admin_all ON public.users TO administrator USING (true);
 
 
 --
+-- Name: couple admin_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_delete ON public.couple FOR DELETE TO administrator USING ((app_private.can_edit_person(man_id) OR app_private.can_edit_person(woman_id)));
+
+
+--
+-- Name: person admin_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_delete ON public.person FOR DELETE TO administrator USING (app_private.can_edit_person(id));
+
+
+--
+-- Name: tenant_administrator admin_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_delete ON public.tenant_administrator FOR DELETE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: tenant_membership admin_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_delete ON public.tenant_membership FOR DELETE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
+-- Name: tenant_trainer admin_delete; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_delete ON public.tenant_trainer FOR DELETE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+
+
+--
 -- Name: access_credential admin_insert; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -16954,6 +17802,34 @@ CREATE POLICY admin_insert ON public.access_credential FOR INSERT TO administrat
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id)))) OR (EXISTS ( SELECT 1
    FROM public.tenant_administrator r
   WHERE ((r.tenant_id = access_credential.tenant_id) AND (r.person_id = access_credential.person_id))))));
+
+
+--
+-- Name: couple admin_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_insert ON public.couple FOR INSERT TO administrator WITH CHECK ((app_private.can_edit_person(man_id) OR app_private.can_edit_person(woman_id)));
+
+
+--
+-- Name: tenant_administrator admin_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_insert ON public.tenant_administrator FOR INSERT TO administrator WITH CHECK (((tenant_id = ANY (( SELECT public.current_admin_tenant_ids() AS current_admin_tenant_ids)::bigint[])) AND app_private.can_edit_person(person_id)));
+
+
+--
+-- Name: tenant_membership admin_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_insert ON public.tenant_membership FOR INSERT TO administrator WITH CHECK (((tenant_id = ANY (( SELECT public.current_admin_tenant_ids() AS current_admin_tenant_ids)::bigint[])) AND app_private.can_edit_person(person_id)));
+
+
+--
+-- Name: tenant_trainer admin_insert; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_insert ON public.tenant_trainer FOR INSERT TO administrator WITH CHECK (((tenant_id = ANY (( SELECT public.current_admin_tenant_ids() AS current_admin_tenant_ids)::bigint[])) AND app_private.can_edit_person(person_id)));
 
 
 --
@@ -17047,6 +17923,41 @@ CREATE POLICY admin_update ON public.access_credential FOR UPDATE TO administrat
 
 
 --
+-- Name: couple admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.couple FOR UPDATE TO administrator USING ((app_private.can_edit_person(man_id) OR app_private.can_edit_person(woman_id)));
+
+
+--
+-- Name: person admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.person FOR UPDATE TO administrator USING (app_private.can_edit_person(id));
+
+
+--
+-- Name: tenant_administrator admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.tenant_administrator FOR UPDATE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND app_private.can_edit_person(person_id)));
+
+
+--
+-- Name: tenant_membership admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.tenant_membership FOR UPDATE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND app_private.can_edit_person(person_id)));
+
+
+--
+-- Name: tenant_trainer admin_update; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_update ON public.tenant_trainer FOR UPDATE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND app_private.can_edit_person(person_id)));
+
+
+--
 -- Name: access_credential admin_view; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -17065,6 +17976,13 @@ CREATE POLICY admin_view ON public.access_event FOR SELECT TO administrator USIN
 --
 
 CREATE POLICY admin_view ON public.security_event FOR SELECT TO administrator USING (true);
+
+
+--
+-- Name: tenant admin_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_view ON public.tenant FOR SELECT TO administrator USING ((id = ANY (( SELECT public.current_admin_tenant_ids() AS current_admin_tenant_ids)::bigint[])));
 
 
 --
@@ -17374,21 +18292,24 @@ ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 -- Name: event event_access_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY event_access_view ON public.event FOR SELECT TO anonymous USING ((id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY event_access_view ON public.event FOR SELECT TO anonymous USING ((id IN ( SELECT accessible_event_ids.accessible_event_ids
+   FROM app_private.accessible_event_ids() accessible_event_ids(accessible_event_ids))));
 
 
 --
 -- Name: event_target_cohort event_access_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY event_access_view ON public.event_target_cohort FOR SELECT TO anonymous USING ((event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY event_access_view ON public.event_target_cohort FOR SELECT TO anonymous USING ((event_id IN ( SELECT accessible_event_ids.accessible_event_ids
+   FROM app_private.accessible_event_ids() accessible_event_ids(accessible_event_ids))));
 
 
 --
 -- Name: event_trainer event_access_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY event_access_view ON public.event_trainer FOR SELECT TO anonymous USING ((event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY event_access_view ON public.event_trainer FOR SELECT TO anonymous USING ((event_id IN ( SELECT accessible_event_ids.accessible_event_ids
+   FROM app_private.accessible_event_ids() accessible_event_ids(accessible_event_ids))));
 
 
 --
@@ -17404,6 +18325,12 @@ ALTER TABLE public.event_lesson_request ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.event_registration ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event_saved_search; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event_saved_search ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: event_series; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -17415,7 +18342,7 @@ ALTER TABLE public.event_series ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((id IN ( SELECT event_registration.couple_id
    FROM public.event_registration
-  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.parent_registration_id IS NULL) AND (event_registration.couple_id IS NOT NULL) AND (event_registration.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[]))))));
+  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.parent_registration_id IS NULL) AND (event_registration.couple_id IS NOT NULL) AND (event_registration.event_id = ANY (( SELECT app_private.current_shared_event_ids() AS current_shared_event_ids)::bigint[]))))));
 
 
 --
@@ -17424,11 +18351,11 @@ CREATE POLICY event_share_view ON public.couple FOR SELECT TO anonymous USING ((
 
 CREATE POLICY event_share_view ON public.person FOR SELECT TO anonymous USING ((id IN ( SELECT event_registration.person_id
    FROM public.event_registration
-  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.person_id IS NOT NULL) AND (event_registration.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])))
+  WHERE ((event_registration.registration_status = 'active'::public.event_registration_status) AND (event_registration.person_id IS NOT NULL) AND (event_registration.event_id = ANY (( SELECT app_private.current_shared_event_ids() AS current_shared_event_ids)::bigint[])))
 UNION ALL
  SELECT event_trainer.person_id
    FROM public.event_trainer
-  WHERE (event_trainer.event_id = ANY ((( SELECT current_setting('jwt.claims.shared.event_ids'::text, true) AS current_setting))::bigint[])))));
+  WHERE (event_trainer.event_id = ANY (( SELECT app_private.current_shared_event_ids() AS current_shared_event_ids)::bigint[])))));
 
 
 --
@@ -17641,6 +18568,13 @@ CREATE POLICY my_view ON public.access_event FOR SELECT USING ((person_id = ANY 
 ALTER TABLE public.otp_token ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: event_saved_search owner; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY owner ON public.event_saved_search USING ((user_id = ( SELECT public.current_user_id() AS current_user_id))) WITH CHECK ((user_id = ( SELECT public.current_user_id() AS current_user_id)));
+
+
+--
 -- Name: payment; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -17790,6 +18724,20 @@ ALTER TABLE public.security_event ENABLE ROW LEVEL SECURITY;
 --
 
 CREATE POLICY self_view ON public.security_event FOR SELECT TO member USING (((user_id = ( SELECT public.current_user_id() AS current_user_id)) OR (person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[]))));
+
+
+--
+-- Name: couple system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.couple TO system_admin USING (true);
+
+
+--
+-- Name: person system_admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY system_admin_all ON public.person TO system_admin USING (true);
 
 
 --
@@ -17978,15 +18926,6 @@ ALTER TABLE public.user_proxy ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: person view_active_couple_partner; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY view_active_couple_partner ON public.person FOR SELECT USING ((id IN ( SELECT unnest(ARRAY[c.man_id, c.woman_id]) AS unnest
-   FROM public.couple c
-  WHERE (c.status = 'active'::public.relationship_status))));
-
-
---
 -- Name: cohort_membership view_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -18020,7 +18959,7 @@ CREATE POLICY view_shared_person ON public.users FOR SELECT USING ((id = ANY (AR
 -- Name: person view_tenant_or_trainer; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids)));
+CREATE POLICY view_tenant_or_trainer ON public.person FOR SELECT USING ((id IN ( SELECT app_private.visible_person_ids(true) AS visible_person_ids)));
 
 
 --
@@ -18036,16 +18975,16 @@ CREATE POLICY view_visible_instance ON public.event_lesson_request FOR SELECT US
 -- Name: event_registration view_visible_instance; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_visible_instance ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event e
-  WHERE (e.id = event_registration.event_id))));
+CREATE POLICY view_visible_instance ON public.event_registration FOR SELECT USING ((event_id IN ( SELECT event.id
+   FROM public.event)));
 
 
 --
 -- Name: couple view_visible_person; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY view_visible_person ON public.couple FOR SELECT USING (((man_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids)) OR (woman_id IN ( SELECT app_private.visible_person_ids() AS visible_person_ids))));
+CREATE POLICY view_visible_person ON public.couple FOR SELECT USING ((ARRAY[man_id, woman_id] && ( SELECT array_agg(DISTINCT id.id) AS array_agg
+   FROM app_private.visible_person_ids(false) id(id))));
 
 
 --
@@ -18125,10 +19064,59 @@ GRANT SELECT ON TABLE federated.category TO anonymous;
 
 
 --
+-- Name: FUNCTION normalize_name(text); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.normalize_name(text) TO anonymous;
+
+
+--
 -- Name: FUNCTION current_tenant_id(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
+
+
+--
+-- Name: FUNCTION immutable_concat_ws(text, VARIADIC text[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) TO anonymous;
+
+
+--
+-- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.cohort TO anonymous;
+
+
+--
+-- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.couple TO anonymous;
+
+
+--
+-- Name: TABLE event; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.event TO anonymous;
+
+
+--
+-- Name: TABLE location; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.location TO anonymous;
+
+
+--
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
@@ -18181,10 +19169,10 @@ GRANT INSERT(u_email) ON TABLE public.users TO anonymous;
 
 
 --
--- Name: FUNCTION accessible_event_ids(); Type: ACL; Schema: app_private; Owner: -
+-- Name: FUNCTION accessible_event_ids(title_query tsquery, event_ids bigint[]); Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON FUNCTION app_private.accessible_event_ids() TO anonymous;
+GRANT ALL ON FUNCTION app_private.accessible_event_ids(title_query tsquery, event_ids bigint[]) TO anonymous;
 
 
 --
@@ -18192,6 +19180,13 @@ GRANT ALL ON FUNCTION app_private.accessible_event_ids() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION app_private.announcement_status_next(ts timestamp with time zone, scheduled_since timestamp with time zone, scheduled_until timestamp with time zone, current_status public.announcement_status) TO anonymous;
+
+
+--
+-- Name: FUNCTION can_edit_person(p_person_id bigint); Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON FUNCTION app_private.can_edit_person(p_person_id bigint) TO anonymous;
 
 
 --
@@ -18236,13 +19231,6 @@ GRANT ALL ON FUNCTION app_private.ensure_couple_person_registrations(p_registrat
 --
 
 REVOKE ALL ON FUNCTION app_private.event_share_claims(p_tenant_id bigint, p_share text) FROM PUBLIC;
-
-
---
--- Name: FUNCTION normalize_name(text); Type: ACL; Schema: app_private; Owner: -
---
-
-GRANT ALL ON FUNCTION app_private.normalize_name(text) TO anonymous;
 
 
 --
@@ -18382,10 +19370,10 @@ GRANT ALL ON FUNCTION app_private.visible_payment_ids() TO anonymous;
 
 
 --
--- Name: FUNCTION visible_person_ids(); Type: ACL; Schema: app_private; Owner: -
+-- Name: FUNCTION visible_person_ids(include_partners boolean); Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON FUNCTION app_private.visible_person_ids() TO anonymous;
+GRANT ALL ON FUNCTION app_private.visible_person_ids(include_partners boolean) TO anonymous;
 
 
 --
@@ -18484,13 +19472,6 @@ GRANT ALL ON FUNCTION public.announcement_author_name(a public.announcement) TO 
 
 
 --
--- Name: TABLE cohort; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.cohort TO anonymous;
-
-
---
 -- Name: FUNCTION archive_cohort(cohort_id bigint); Type: ACL; Schema: public; Owner: -
 --
 
@@ -18505,31 +19486,10 @@ GRANT ALL ON FUNCTION public.change_password(new_pass text) TO anonymous;
 
 
 --
--- Name: FUNCTION immutable_concat_ws(text, VARIADIC text[]); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.immutable_concat_ws(text, VARIADIC text[]) TO anonymous;
-
-
---
 -- Name: TABLE competition; Type: ACL; Schema: federated; Owner: -
 --
 
 GRANT SELECT ON TABLE federated.competition TO anonymous;
-
-
---
--- Name: TABLE couple; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.couple TO anonymous;
-
-
---
--- Name: TABLE person; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
@@ -18565,13 +19525,6 @@ GRANT ALL ON TABLE public.transaction TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.create_credit_transaction_for_person(v_person_id bigint, v_description text, v_amount numeric, v_currency text, v_date timestamp with time zone) TO anonymous;
-
-
---
--- Name: TABLE event; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.event TO anonymous;
 
 
 --
@@ -18617,10 +19570,24 @@ GRANT ALL ON FUNCTION public.current_account_ids() TO anonymous;
 
 
 --
+-- Name: FUNCTION current_admin_tenant_ids(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_admin_tenant_ids() TO anonymous;
+
+
+--
 -- Name: FUNCTION current_claims(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.current_claims() TO anonymous;
+
+
+--
+-- Name: FUNCTION current_cohort_ids(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_cohort_ids() TO anonymous;
 
 
 --
@@ -18659,24 +19626,17 @@ GRANT ALL ON FUNCTION public.event_approx_price(v_instance public.event) TO anon
 
 
 --
--- Name: FUNCTION event_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, location_ids bigint[], can_register boolean, only_mine boolean, relevant_only boolean, cohort_id bigint); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_conflicts(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, only_types public.event_type[], trainer_ids bigint[], participant_ids bigint[], parent_id bigint, location_ids bigint[], can_register boolean, only_mine boolean, relevant_only boolean, cohort_id bigint) TO anonymous;
-
-
---
--- Name: FUNCTION event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.event_overlaps_attendee_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.event_conflicts(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition) TO anonymous;
 
 
 --
--- Name: FUNCTION event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION event_facets(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.event_overlaps_trainer_report(p_since timestamp with time zone, p_until timestamp with time zone) TO anonymous;
+GRANT ALL ON FUNCTION public.event_facets(start_range timestamp with time zone, end_range timestamp with time zone, condition public.event_search_condition) TO anonymous;
 
 
 --
@@ -18790,6 +19750,13 @@ GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.get_current_user(version_id text) TO anonymous;
+
+
+--
+-- Name: FUNCTION global_search(search text, "limit" integer, scope text[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.global_search(search text, "limit" integer, scope text[]) TO anonymous;
 
 
 --
@@ -19041,6 +20008,13 @@ GRANT INSERT(phone),UPDATE(phone) ON TABLE public.membership_application TO anon
 
 
 --
+-- Name: FUNCTION resend_person_invitation(invitation_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.resend_person_invitation(invitation_id bigint) TO administrator;
+
+
+--
 -- Name: FUNCTION reset_password(email character varying); Type: ACL; Schema: public; Owner: -
 --
 
@@ -19059,6 +20033,13 @@ GRANT ALL ON FUNCTION public.resolve_payment_with_credit(p public.payment) TO an
 --
 
 GRANT ALL ON FUNCTION public.save_events(details public.event_details_input, events public.event_input[], trainers public.event_trainer_input[], cohort_ids bigint[], series public.event_series_input) TO anonymous;
+
+
+--
+-- Name: FUNCTION save_payment_group(group_id bigint, payments public.payment_group_item[]); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.save_payment_group(group_id bigint, payments public.payment_group_item[]) TO administrator;
 
 
 --
@@ -19174,17 +20155,17 @@ GRANT ALL ON FUNCTION public.upsert_article(info public.article_type_input, atta
 
 
 --
--- Name: TABLE location; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.location TO anonymous;
-
-
---
 -- Name: FUNCTION upsert_location(details public.location_details_input, image_ids bigint[], cover_image_id bigint); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.upsert_location(details public.location_details_input, image_ids bigint[], cover_image_id bigint) TO administrator;
+
+
+--
+-- Name: FUNCTION users_claims(u public.users); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.users_claims(u public.users) TO anonymous;
 
 
 --
@@ -19489,6 +20470,13 @@ GRANT SELECT ON TABLE federated.judge_score TO anonymous;
 
 
 --
+-- Name: TABLE official_assignment; Type: ACL; Schema: federated; Owner: -
+--
+
+GRANT SELECT ON TABLE federated.official_assignment TO anonymous;
+
+
+--
 -- Name: TABLE person; Type: ACL; Schema: federated; Owner: -
 --
 
@@ -19766,6 +20754,48 @@ GRANT SELECT,USAGE ON SEQUENCE public.event_lesson_request_id_seq TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.event_registration_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE event_saved_search; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,DELETE ON TABLE public.event_saved_search TO anonymous;
+
+
+--
+-- Name: COLUMN event_saved_search.name; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(name),UPDATE(name) ON TABLE public.event_saved_search TO anonymous;
+
+
+--
+-- Name: COLUMN event_saved_search.condition; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(condition),UPDATE(condition) ON TABLE public.event_saved_search TO anonymous;
+
+
+--
+-- Name: COLUMN event_saved_search.feed_key; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(feed_key),UPDATE(feed_key) ON TABLE public.event_saved_search TO anonymous;
+
+
+--
+-- Name: COLUMN event_saved_search.cross_tenant; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT INSERT(cross_tenant),UPDATE(cross_tenant) ON TABLE public.event_saved_search TO anonymous;
+
+
+--
+-- Name: SEQUENCE event_saved_search_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.event_saved_search_id_seq TO anonymous;
 
 
 --
@@ -20053,5 +21083,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict MOmjn8rnvgyBE2T1T3V2Uc1NelJfMmjjCFjX3VKekgICVhaJ3lEkIq5iD8q6XpO
+\unrestrict PBYk1MUokAQ6trl9lkDZrF0qOMVd6ac7P5khD3TVcpysjohTgCROVWSHls0tdfu
 

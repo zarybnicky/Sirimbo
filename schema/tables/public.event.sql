@@ -29,6 +29,7 @@ CREATE TABLE public.event (
     cover_image_id bigint,
     series_info public.series_info,
     registration_period tstzrange DEFAULT '(,)'::tstzrange,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(COALESCE(name, ''::text)))) STORED,
     CONSTRAINT event_public_details_require_public CHECK (((NOT has_public_details) OR (is_public IS TRUE))),
     CONSTRAINT event_until_gt_since CHECK ((until > since))
 );
@@ -39,6 +40,7 @@ COMMENT ON COLUMN public.event.stats IS '@behavior -attribute:insert -attribute:
 COMMENT ON COLUMN public.event.is_locked IS '@behavior -*';
 COMMENT ON COLUMN public.event.share_token IS '@behavior -*';
 COMMENT ON COLUMN public.event.series_info IS '@behavior -attribute:insert -attribute:update -attribute:filterBy -attribute:orderBy';
+COMMENT ON COLUMN public.event.search_vector IS '@behavior -*';
 
 GRANT ALL ON TABLE public.event TO anonymous;
 ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
@@ -60,7 +62,8 @@ ALTER TABLE ONLY public.event
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY event_access_view ON public.event FOR SELECT TO anonymous USING ((id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY event_access_view ON public.event FOR SELECT TO anonymous USING ((id IN ( SELECT accessible_event_ids.accessible_event_ids
+   FROM app_private.accessible_event_ids() accessible_event_ids(accessible_event_ids))));
 CREATE POLICY member_view ON public.event FOR SELECT TO member USING (is_visible);
 CREATE POLICY public_view ON public.event FOR SELECT TO anonymous USING (is_public);
 CREATE POLICY trainer_delete ON public.event FOR DELETE TO trainer USING (app_private.can_trainer_edit_event(id));
@@ -82,6 +85,7 @@ CREATE TRIGGER _900_refresh_event_people_upd AFTER UPDATE ON public.event REFERE
 CREATE INDEX event_cover_image_idx ON public.event USING btree (tenant_id, cover_image_id) WHERE (cover_image_id IS NOT NULL);
 CREATE INDEX event_parent_id_idx ON public.event USING btree (parent_id);
 CREATE INDEX event_range_idx ON public.event USING gist (range);
+CREATE INDEX event_search_vector_idx ON public.event USING gin (search_vector);
 CREATE UNIQUE INDEX event_share_token_key ON public.event USING btree (share_token) WHERE (share_token IS NOT NULL);
 CREATE INDEX event_since_idx ON public.event USING btree (since);
 CREATE INDEX event_tenant_idx ON public.event USING btree (tenant_id);
@@ -89,3 +93,4 @@ CREATE INDEX event_tenant_range_gist ON public.event USING gist (tenant_id, rang
 CREATE INDEX event_tenant_series_idx ON public.event USING btree (tenant_id, series_id);
 CREATE INDEX event_tenant_since_idx ON public.event USING btree (tenant_id, since);
 CREATE INDEX event_tenant_until_idx ON public.event USING btree (tenant_id, until);
+CREATE INDEX event_visibility_idx ON public.event USING btree (tenant_id, id) INCLUDE (is_public, is_visible, manager_person_ids);

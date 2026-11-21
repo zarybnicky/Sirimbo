@@ -10,10 +10,12 @@ CREATE TABLE public.cohort (
     ordering integer DEFAULT 1 NOT NULL,
     external_ids text[],
     is_archived boolean DEFAULT false NOT NULL,
-    image_id bigint
+    image_id bigint,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, app_private.normalize_name(name))) STORED
 );
 
 COMMENT ON TABLE public.cohort IS '@behavior +list -connection';
+COMMENT ON COLUMN public.cohort.search_vector IS '@behavior -*';
 
 GRANT ALL ON TABLE public.cohort TO anonymous;
 ALTER TABLE public.cohort ENABLE ROW LEVEL SECURITY;
@@ -35,4 +37,5 @@ CREATE POLICY public_view ON public.cohort FOR SELECT TO anonymous USING ((is_vi
 
 CREATE INDEX cohort_cohort_group_id_idx ON public.cohort USING btree (cohort_group_id);
 CREATE INDEX cohort_image_idx ON public.cohort USING btree (tenant_id, image_id) WHERE (image_id IS NOT NULL);
+CREATE INDEX cohort_search_vector_idx ON public.cohort USING gin (search_vector);
 CREATE INDEX cohort_tenant_id_idx ON public.cohort USING btree (tenant_id);

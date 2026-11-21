@@ -1,26 +1,20 @@
-GRANT CONNECT ON DATABASE :DATABASE_NAME TO :DATABASE_OWNER;
-GRANT ALL ON DATABASE :DATABASE_NAME TO :DATABASE_OWNER;
-GRANT TEMP ON DATABASE :DATABASE_NAME TO PUBLIC;
-ALTER user :DATABASE_OWNER with superuser;
-ALTER SCHEMA public OWNER TO :DATABASE_OWNER;
+grant connect on database :DATABASE_NAME to :DATABASE_OWNER;
+grant all on database :DATABASE_NAME to :DATABASE_OWNER;
+grant temp on database :DATABASE_NAME to public;
+alter user :DATABASE_OWNER with superuser;
+alter schema public owner to :DATABASE_OWNER;
 
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
-CREATE EXTENSION IF NOT EXISTS http;
-CREATE EXTENSION IF NOT EXISTS citext;
-CREATE EXTENSION IF NOT EXISTS hypopg;
+create extension if not exists plpgsql with schema pg_catalog;
+create extension if not exists pgcrypto with schema public;
+create extension if not exists http;
+create extension if not exists citext;
+create extension if not exists hypopg;
 
-DROP EXTENSION IF EXISTS plpgsql_check;
-create extension if not exists plpgsql_check;
+drop extension if exists plpgsql_check;
+create extension plpgsql_check;
 
-revoke all on schema public from public;
-alter default privileges revoke all on sequences from public;
-alter default privileges revoke all on functions from public;
-
-grant all on schema public to postgres;
-grant all on schema public to :DATABASE_OWNER;
-
-DO $do$ BEGIN
+do $$
+BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='anonymous') THEN
     CREATE ROLE anonymous;
   END IF;
@@ -30,7 +24,15 @@ DO $do$ BEGIN
   IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='administrator') THEN
     CREATE ROLE administrator;
   END IF;
-END $do$;
+END
+$$;
+
+revoke all on schema public from public;
+alter default privileges revoke all on sequences from public;
+alter default privileges revoke all on functions from public;
+
+grant all on schema public to postgres;
+grant all on schema public to :DATABASE_OWNER;
 
 grant anonymous to member, administrator;
 grant member to administrator;

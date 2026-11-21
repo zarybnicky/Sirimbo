@@ -39,7 +39,9 @@ ALTER TABLE ONLY public.tenant_trainer
 ALTER TABLE ONLY public.tenant_trainer
     ADD CONSTRAINT tenant_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-CREATE POLICY admin_all ON public.tenant_trainer TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY admin_delete ON public.tenant_trainer FOR DELETE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
+CREATE POLICY admin_insert ON public.tenant_trainer FOR INSERT TO administrator WITH CHECK (((tenant_id = ANY (( SELECT public.current_admin_tenant_ids() AS current_admin_tenant_ids)::bigint[])) AND app_private.can_edit_person(person_id)));
+CREATE POLICY admin_update ON public.tenant_trainer FOR UPDATE TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id))) WITH CHECK (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND app_private.can_edit_person(person_id)));
 CREATE POLICY public_view ON public.tenant_trainer FOR SELECT USING (true);
 CREATE POLICY system_admin_all ON public.tenant_trainer TO system_admin USING (true);
 

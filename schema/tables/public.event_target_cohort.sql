@@ -25,7 +25,8 @@ ALTER TABLE ONLY public.event_target_cohort
 
 CREATE POLICY admin_all ON public.event_target_cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
-CREATE POLICY event_access_view ON public.event_target_cohort FOR SELECT TO anonymous USING ((event_id IN ( SELECT app_private.accessible_event_ids() AS accessible_event_ids)));
+CREATE POLICY event_access_view ON public.event_target_cohort FOR SELECT TO anonymous USING ((event_id IN ( SELECT accessible_event_ids.accessible_event_ids
+   FROM app_private.accessible_event_ids() accessible_event_ids(accessible_event_ids))));
 CREATE POLICY member_view ON public.event_target_cohort FOR SELECT TO member USING ((EXISTS ( SELECT 1
    FROM public.event e
   WHERE (e.id = event_target_cohort.event_id))));

@@ -18,7 +18,7 @@ CREATE FUNCTION app_private.cohort_has_accessible_event(p_cohort_id bigint) RETU
       where tenant_id = (select current_tenant_id()) and cohort_id = p_cohort_id
     )
     select 1 from targets
-    where event_id = any (array(select app_private.accessible_event_ids()))
+    where event_id = any (array(select * from app_private.accessible_event_ids()))
   );
 $$;
 

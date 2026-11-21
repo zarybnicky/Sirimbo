@@ -53,9 +53,8 @@ CREATE POLICY delete_my ON public.event_registration FOR DELETE USING (((person_
 CREATE POLICY insert_my ON public.event_registration FOR INSERT WITH CHECK (((person_id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])) OR (couple_id = ANY (( SELECT public.current_couple_ids() AS current_couple_ids)::bigint[]))));
 CREATE POLICY trainer_insert ON public.event_registration FOR INSERT TO trainer WITH CHECK (app_private.can_trainer_edit_event(event_id));
 CREATE POLICY trainer_update ON public.event_registration FOR UPDATE TO trainer USING (app_private.can_trainer_edit_event(event_id));
-CREATE POLICY view_visible_instance ON public.event_registration FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM public.event e
-  WHERE (e.id = event_registration.event_id))));
+CREATE POLICY view_visible_instance ON public.event_registration FOR SELECT USING ((event_id IN ( SELECT event.id
+   FROM public.event)));
 
 CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps('attendance_created_at', 'attendance_updated_at');
 CREATE TRIGGER _200_attendance_timestamps BEFORE INSERT OR UPDATE OF person_id, status, attendance_note ON public.event_registration FOR EACH ROW EXECUTE FUNCTION app_private.tg_event_registration__attendance_timestamps();

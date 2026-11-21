@@ -12,6 +12,7 @@
     extensions = with pkgs.postgresql_18.pkgs; [
       plpgsql_check
       hypopg
+      pgsql-http
       pgtap
       pg_stat_monitor
     ];

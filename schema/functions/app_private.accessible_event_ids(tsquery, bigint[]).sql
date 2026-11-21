@@ -1,7 +1,10 @@
-CREATE FUNCTION app_private.accessible_event_ids() RETURNS SETOF bigint
-    LANGUAGE sql STABLE SECURITY DEFINER
+CREATE FUNCTION app_private.accessible_event_ids(title_query tsquery DEFAULT NULL::tsquery, event_ids bigint[] DEFAULT NULL::bigint[]) RETURNS SETOF bigint
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
     SET search_path TO 'pg_catalog', 'public', 'pg_temp'
+    SET plan_cache_mode TO 'force_custom_plan'
     AS $$
+begin
+  return query
   with recursive attended(id) as (
     select event_id from public.event_registration
     where tenant_id = (select public.current_tenant_id())
@@ -13,16 +16,20 @@ CREATE FUNCTION app_private.accessible_event_ids() RETURNS SETOF bigint
     where child.parent_id is not null
       and child.tenant_id = (select public.current_tenant_id())
   )
-  -- Scan events once; their primary key already makes the result unique.
   select id from public.event
   where tenant_id = (select public.current_tenant_id())
+    and (event_ids is null or id = any(event_ids))
+    and (title_query is null or search_vector @@ title_query)
     and (
-      is_public
+      (select pg_has_role(current_setting('role'), 'administrator', 'member'))
+      or is_public
       or (is_visible and (select pg_has_role(current_setting('role'), 'member', 'member')))
+      or ((select pg_has_role(current_setting('role'), 'trainer', 'member')) and cardinality(manager_person_ids) = 0)
       or (manager_person_ids && (select current_person_ids()))
-      or id = any ((select current_setting('jwt.claims.shared.event_ids', true))::bigint[])
+      or id = any ((select app_private.current_shared_event_ids())::bigint[])
       or id in (select id from attended)
     );
+end;
 $$;
 
-GRANT ALL ON FUNCTION app_private.accessible_event_ids() TO anonymous;
+GRANT ALL ON FUNCTION app_private.accessible_event_ids(title_query tsquery, event_ids bigint[]) TO anonymous;

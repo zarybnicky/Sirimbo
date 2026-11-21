@@ -13,7 +13,7 @@ CREATE TABLE public.cohort_subscription (
     currency text GENERATED ALWAYS AS ((price).currency) STORED
 );
 
-COMMENT ON TABLE public.cohort_subscription IS '@behavior +list -connection -insert -update -delete -query:resource:list -query:resource:connection -query:resource:single';
+COMMENT ON TABLE public.cohort_subscription IS '@behavior +list -connection -insert -update -delete -query:resource:connection -query:resource:single';
 
 GRANT ALL ON TABLE public.cohort_subscription TO anonymous;
 ALTER TABLE public.cohort_subscription ENABLE ROW LEVEL SECURITY;

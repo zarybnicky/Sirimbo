@@ -47,7 +47,9 @@ CREATE FUNCTION app_private.visible_file_ids() RETURNS SETOF bigint
   union all
 
   select cover_image_id from event_covers
-  where id = any (array(select app_private.accessible_event_ids()));
+  where id = any (array(
+    select * from app_private.accessible_event_ids(null, array(select id from event_covers))
+  ));
 $$;
 
 GRANT ALL ON FUNCTION app_private.visible_file_ids() TO anonymous;

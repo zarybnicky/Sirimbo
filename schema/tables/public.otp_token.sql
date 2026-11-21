@@ -9,7 +9,7 @@ CREATE TABLE public.otp_token (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     intent text DEFAULT 'password_reset'::text NOT NULL,
     event_id bigint,
-    CONSTRAINT otp_token_intent_check CHECK ((((intent = 'password_reset'::text) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
+    CONSTRAINT otp_token_intent_check CHECK ((((intent = ANY (ARRAY['password_reset'::text, 'tenant_handoff'::text])) AND (event_id IS NULL)) OR ((intent = 'event_handoff'::text) AND (event_id IS NOT NULL))))
 );
 
 COMMENT ON TABLE public.otp_token IS '@behavior -*';

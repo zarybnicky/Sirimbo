@@ -12,11 +12,13 @@ begin
     and t.user_id is not null
     and (
       t.intent = 'password_reset'
-      or (t.intent = 'event_handoff' and t.tenant_id = current_tenant_id())
+      or (t.intent in ('event_handoff', 'tenant_handoff') and t.tenant_id = current_tenant_id())
     )
   returning t.* into v_token;
   if not found then
-    raise exception 'INVALID_CREDENTIALS' using errcode = '28P01';
+    insert into security_event (user_id, kind, method)
+    values ((select user_id from otp_token where access_token = token), 'login_failed', 'otp');
+    return null;
   end if;
   select * into usr from users where id = v_token.user_id;
 
