@@ -10680,6 +10680,7 @@ export type QueryGlobalSearchListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  scope?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   search?: InputMaybe<Scalars['String']['input']>;
 };
 

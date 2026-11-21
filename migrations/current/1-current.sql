@@ -112,6 +112,7 @@ create index if not exists location_search_vector_idx on location using gin (sea
 create index if not exists event_search_vector_idx on event using gin (search_vector);
 
 drop function if exists global_search(text, integer);
+drop function if exists global_search(text, integer, text[]);
 drop type if exists global_search_result;
 drop type if exists global_search_kind;
 

@@ -27915,6 +27915,16 @@
                 }
               },
               {
+                "name": "scope",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
                 "name": "search",
                 "type": {
                   "kind": "SCALAR",

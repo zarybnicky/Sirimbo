@@ -1,4 +1,4 @@
-create or replace function global_search(search text, "limit" integer default 20)
+create or replace function global_search(search text, "limit" integer default 20, scope text[] default null)
   returns setof global_search_result
   language sql stable
 as $$
@@ -11,17 +11,24 @@ as $$
       from unnest(tsvector_to_array(to_tsvector('pg_catalog.simple', normalized.text))) token
     ) parsed
     where char_length(normalized.text) >= 3 and parsed.prefix is not null
-  ), current_people as (
-    -- Membership affects ranking only; the source tables' RLS controls visibility.
-    select person_id
-    from app_private.person_membership_candidates('current') where in_state
+  ), person_recency as (
+    -- Rank by the latest club relationship; pending relationships do not count.
+    select person_id, max(coalesce(until, 'infinity'::timestamptz)) as until
+    from (
+      select person_id, until from tenant_membership where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+      union all
+      select person_id, until from tenant_trainer where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+      union all
+      select person_id, until from tenant_administrator where tenant_id = current_tenant_id() and status <> 'pending' and since <= now()
+    ) relationships
+    group by person_id
   ), peers as materialized (
     select person_id from current_cohort_membership
     where cohort_id = any((select current_cohort_ids())::bigint[])
   ), event_matches as materialized (
     select e.*
     from event e
-    where e.id = any (array(
+    where (scope is null or 'event' = any(scope)) and e.id = any (array(
       select ids.id from input q
       cross join lateral app_private.accessible_event_ids(q.prefix) ids(id)
     ))
@@ -31,27 +38,28 @@ as $$
       p.id, p.search_name as normalized_label, p.search_vector,
       (case when p.id = any((select current_person_ids())::bigint[]) then 20
         when p.id in (select person_id from peers) then 10 else 0 end
-        + case when p.id in (select person_id from current_people) then 10 else 0 end)::real as boost
+        + case when r.person_id is null then 0 else 10 / (1 + greatest(0, extract(epoch from now() - r.until)) / 86400 / 365) end)::real as boost
     from person p
+    left join person_recency r on r.person_id = p.id
     cross join input q
-    where p.search_vector @@ q.prefix
+    where (scope is null or 'person' = any(scope)) and p.search_vector @@ q.prefix
     union all
     select null, c, null, null, null, c.id, app_private.normalize_name(c.name), c.search_vector,
       case when c.id = any((select current_couple_ids())::bigint[]) then 20 else 0 end
-        + case when c.status = 'active' then 10 else 0 end
+        + 10 / (1 + greatest(0, extract(epoch from now() - coalesce(c.until, 'infinity'::timestamptz))) / 86400 / 365)
     from couple c
     cross join input q
-    where c.search_vector @@ q.prefix
+    where (scope is null or 'couple' = any(scope)) and c.search_vector @@ q.prefix
     union all
     select null, null, c, null, null, c.id, app_private.normalize_name(c.name), c.search_vector,
       case when c.id = any((select current_cohort_ids())::bigint[]) then 20 else 0 end
         + case when not c.is_archived then 10 else 0 end
     from cohort c, input q
-    where c.search_vector @@ q.prefix
+    where (scope is null or 'cohort' = any(scope)) and c.search_vector @@ q.prefix
     union all
     select null, null, null, l, null, l.id, app_private.normalize_name(l.name), l.search_vector, 0
     from location l, input q
-    where l.search_vector @@ q.prefix
+    where (scope is null or 'location' = any(scope)) and l.search_vector @@ q.prefix
     union all
     select null, null, null, null, e::event, e.id,
       app_private.normalize_name(e.name), e.search_vector,
