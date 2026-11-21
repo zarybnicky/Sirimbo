@@ -35,26 +35,26 @@
     };
 
     devShells = forAllSystems (pkgs: {
-      default = pkgs.mkShell {
+      default = pkgs.mkShellNoCC {
         buildInputs = with pkgs; [
           seaweedfs
           mailpit
           prettier
-          nodemon
           graphile-migrate
           pnpm_10
           nodejs_24
           postgresql_18
           sqlfluff
-          pgformatter
           overmind
           playwright-driver
           playwright-driver.browsers
           perlPackages.TAPParserSourceHandlerpgTAP
         ];
         env = {
+          NIXPKGS_FLAKE = ".";
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+          CHROME_DEVTOOLS_MCP_BROWSERS = pkgs.playwright-driver.browsers;
         };
         shellHook = ''
           unset PYTHONPATH
@@ -65,6 +65,9 @@
 
     packages = forAllSystems (pkgs: {
       inherit (pkgs)
+        nodejs
+        ffmpeg
+        playwright-driver
         graphile-migrate
         rozpisovnik-migrations
         ruian-address-cache

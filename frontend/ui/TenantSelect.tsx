@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { authAtom, storeRef, useAuth, tenantIdAtom } from '@/lib/auth';
+import { authAtom, storeRef, useAuth, useTenantId, tenantIdAtom } from '@/lib/auth';
 import { normalizeClaims, resolveAuth } from '@/lib/auth-claims';
 import { logInAsAction } from '@/lib/auth-actions';
 import { DevelopmentUsersDocument } from '@/graphql/CurrentUser';
@@ -67,13 +67,14 @@ export function TenantSelect() {
           options={options}
         />
       )}
-      {isElevated && <DevelopmentIdentity tenantId={tenantId} />}
+      {isElevated && <DevelopmentIdentity />}
     </>
   );
 }
 
-function DevelopmentIdentity({ tenantId }: { tenantId: string }) {
+function DevelopmentIdentity() {
   const auth = useAuth();
+  const tenantId = useTenantId();
   const router = useRouter();
   const [recently] = React.useState(() => Date.now() - 90 * 86_400_000);
 
