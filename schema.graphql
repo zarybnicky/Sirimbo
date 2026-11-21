@@ -12955,6 +12955,24 @@ type Query {
 
   """Get a single `Event`."""
   event(id: BigInt!): Event
+  eventConflictsList(
+    """Apply calendar selectors in addition to the native condition."""
+    calendarFilter: CalendarFilterInput
+    condition: EventSearchConditionInput
+    endRange: Datetime
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """
+    Apply one of your saved searches within the current tenant, replacing calendarFilter.
+    """
+    savedSearch: BigInt
+    startRange: Datetime
+  ): [EventConflict!]
   eventFacetsList(
     """Apply calendar selectors in addition to the native condition."""
     calendarFilter: CalendarFilterInput
@@ -12974,24 +12992,6 @@ type Query {
     startRange: Datetime
   ): [EventFacetsRecord!]
   eventInstancesForRangeList(endRange: Datetime, first: Int, locationIds: [BigInt], offset: Int, onlyType: EventType, onlyTypes: [EventType], parentId: BigInt, participantIds: [BigInt], scope: EventInstanceRangeScope = ALL, startRange: Datetime, trainerIds: [BigInt]): [Event!] @deprecated(reason: "Use eventsList with filters.")
-  eventOverlapsAttendeeReportList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    pSince: Datetime
-    pUntil: Datetime
-  ): [EventConflict!]
-  eventOverlapsTrainerReportList(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-    pSince: Datetime
-    pUntil: Datetime
-  ): [EventConflict!]
 
   """Get a single `EventRegistration`."""
   eventRegistration(id: BigInt!): EventRegistration

@@ -209,3 +209,8 @@ returns text
 language sql
 immutable parallel safe strict
 return lower(public.unaccent('public.unaccent'::regdictionary, $1));
+
+--!include functions/event_conflicts.sql
+
+drop function if exists event_overlaps_attendee_report(timestamptz, timestamptz);
+drop function if exists event_overlaps_trainer_report(timestamptz, timestamptz);

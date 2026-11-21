@@ -67,6 +67,7 @@ export type CalendarFilters = {
   types: (typeof calendarTypes)[number][];
   relevantOnly: boolean;
   canRegister: boolean;
+  conflicts?: boolean;
   location: string[];
   columns: 'all' | null;
 };
@@ -129,6 +130,7 @@ export function useCalendarData({
   withOtherClubCompetitors?: boolean;
 }) {
   const auth = useAuth();
+  const onlyConflicts = filters.conflicts;
   const filterOnlyMine = auth.isLoggedIn && !!filters.participants.onlyMine;
   const showAllResources = filters.columns === 'all';
   const client = useClient();
@@ -161,6 +163,7 @@ export function useCalendarData({
     variables: prepareVariables(range, {
       ...variables,
       withFacets,
+      withConflicts: auth.isLoggedIn,
       withAttendance,
       withCompetitions,
       withBirthdays,
@@ -270,7 +273,11 @@ export function useCalendarData({
       return key;
     };
 
-    const events = (data?.eventsList ?? []) as CalendarClubEvent['instance'][];
+    const conflicts = data?.eventConflictsList ?? [];
+    const conflictingIds = new Set(conflicts.flatMap(({ first, second }) => [first?.id, second?.id]));
+    const events = (data?.eventsList ?? []).filter(
+      (event) => !onlyConflicts || conflictingIds.has(event.id),
+    ) as CalendarClubEvent['instance'][];
     for (const instance of events) {
       let eventResources: Resource[] = [];
       if (effectiveGroupBy === 'trainer') {
@@ -358,7 +365,8 @@ export function useCalendarData({
     return {
       range,
       events,
-      calendarEvents,
+      calendarEvents: onlyConflicts ? calendarEvents.filter((event) => event.kind === 'event') : calendarEvents,
+      conflicts,
       savedSearches: data?.eventSavedSearchesList ?? [],
       fetching,
       error,
@@ -377,6 +385,7 @@ export function useCalendarData({
     availableTrainers,
     withFacets,
     data,
+    onlyConflicts,
     filters.trainers,
     filters.location,
     filters.participants.personIds,

@@ -107,6 +107,7 @@ export function Calendar({
   const [filters, setFilters] = useQueryStates(
     {
       my: parseAsBoolean.withDefault(defaultOnlyMine),
+      conflicts: parseAsBoolean.withDefault(false),
       canRegister: parseAsBoolean.withDefault(false),
       v: parseAsStringLiteral(availableViews).withDefault(defaultView),
       columns: parseAsStringLiteral(columnModes),
@@ -145,7 +146,7 @@ export function Calendar({
     viewInput === 'range' ? rangeView! : CalendarViews[viewInput];
   const setDragListeners = useSetAtom(dragListenersAtom);
 
-  const { fetching, range, events, calendarEvents, resources, filterOptions } =
+  const { fetching, range, events, calendarEvents, resources, filterOptions, conflicts } =
     useCalendarData({
       view,
       date,
@@ -312,6 +313,16 @@ export function Calendar({
           >
             Pouze volné
           </button>
+          {auth.isLoggedIn && (
+            <button
+              type="button"
+              aria-pressed={filters.conflicts}
+              className={buttonCls({ variant: filters.conflicts ? 'primary' : 'outline', size: 'sm' })}
+              onClick={() => void setFilters((previous) => ({ conflicts: !previous.conflicts }))}
+            >
+              Pouze konfliktní
+            </button>
+          )}
           <FacetFilter
             label="Trenéři"
             value={filters.trainers}
@@ -359,7 +370,7 @@ export function Calendar({
         viewElement
       )}
 
-      {auth.isLoggedIn && <CalendarConflictsIndicator range={range} />}
+      {auth.isLoggedIn && <CalendarConflictsIndicator conflicts={conflicts} fetching={fetching} />}
 
       {auth.isTrainer && (
         <Dialog

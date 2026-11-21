@@ -18,12 +18,3 @@ fragment EventConflict on EventConflict {
     ...EventWithTrainer
   }
 }
-
-query EventConflictsReport($since: Datetime!, $until: Datetime) {
-  attendeeConflicts: eventOverlapsAttendeeReportList(pSince: $since, pUntil: $until) @_required {
-    ...EventConflict
-  }
-  trainerConflicts: eventOverlapsTrainerReportList(pSince: $since, pUntil: $until) @_required {
-    ...EventConflict
-  }
-}

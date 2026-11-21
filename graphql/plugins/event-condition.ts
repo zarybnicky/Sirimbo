@@ -17,6 +17,7 @@ const calendarConditions: Record<string, string> = {
   'FederationEvent.officialAssignmentsList': 'OfficialAssignmentCondition',
   'Event.registrationsList': 'EventRegistrationCondition',
   'Query.eventFacetsList': 'EventSearchConditionInput',
+  'Query.eventConflictsList': 'EventSearchConditionInput',
 };
 
 function calendarFilter(
@@ -52,9 +53,9 @@ function calendarFilter(
 const savedSearchPlugin = wrapPlans(
   ({ Self, scope }, build) => {
     const conditionType = calendarConditions[`${Self.name}.${scope.fieldName}`];
-    return conditionType ? { conditionType, build, isConnection: scope.isPgFieldConnection } : null;
+    return conditionType ? { conditionType, build, fieldName: scope.fieldName, isConnection: scope.isPgFieldConnection } : null;
   },
-  ({ conditionType, build, isConnection }) => (plan, _source, args) => {
+  ({ conditionType, build, fieldName, isConnection }) => (plan, _source, args) => {
     const $filter = calendarFilter(build, args.getRaw('savedSearch'), args.getRaw('calendarFilter'));
     const $native = conditionType === 'EventSearchConditionInput'
       ? bakedInput(args.typeAt('condition'), args.getRaw('condition')) : args.getRaw('condition');
@@ -137,7 +138,7 @@ const savedSearchPlugin = wrapPlans(
     ));
 
     if (conditionType === 'EventSearchConditionInput') {
-      const resource = build.input.pgRegistry.pgResources.event_facets!;
+      const resource = build.input.pgRegistry.pgResources[fieldName === 'eventConflictsList' ? 'event_conflicts' : 'event_facets']!;
       return resource.execute([
         { step: args.getRaw('startRange'), pgCodec: TYPES.timestamptz },
         { step: args.getRaw('endRange'), pgCodec: TYPES.timestamptz },

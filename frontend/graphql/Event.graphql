@@ -506,6 +506,7 @@ query CalendarData(
   $since: Date
   $until: Date
   $withFacets: Boolean! = true
+  $withConflicts: Boolean! = false
   $start: Datetime
   $end: Datetime
   $withParticipantOptions: Boolean! = false
@@ -519,6 +520,9 @@ query CalendarData(
   $withOtherClubCompetitors: Boolean! = false
   $withBirthdays: Boolean! = true
 ) {
+  eventConflictsList(startRange: $start, endRange: $end, calendarFilter: $filter, savedSearch: $savedSearch) @include(if: $withConflicts) {
+    ...EventConflict
+  }
   eventSavedSearchesList(orderBy: [NAME_ASC, ID_ASC]) @include(if: $withSavedSearches) {
     ...EventSavedSearch
   }

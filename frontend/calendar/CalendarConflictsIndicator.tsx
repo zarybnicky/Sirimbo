@@ -1,6 +1,5 @@
 import {
   type EventConflictFragment,
-  EventConflictsReportDocument,
 } from '@/graphql/EventConflicts';
 import { dateTimeFormatter, formatEventName } from '@/ui/format';
 import {
@@ -13,28 +12,16 @@ import {
 import { Spinner } from '@/ui/Spinner';
 import { AlertTriangle } from 'lucide-react';
 import React from 'react';
-import { useQuery } from 'urql';
 import { useSetAtom } from 'jotai';
 import { calendarConflictsAtom, type CalendarEventConflict } from './state';
-import { DateRange } from './types';
 
 type Props = {
-  range: DateRange;
+  conflicts: EventConflictFragment[];
+  fetching: boolean;
 };
 
-export function CalendarConflictsIndicator({ range }: Props) {
-  const [{ data, fetching }] = useQuery({
-    query: EventConflictsReportDocument,
-    variables: { since: range.since.toISOString(), until: range.until.toISOString() },
-  });
+export function CalendarConflictsIndicator({ conflicts, fetching }: Props) {
   const setEventConflicts = useSetAtom(calendarConflictsAtom);
-
-  const conflicts = React.useMemo(() => {
-    return [
-      ...(data?.trainerConflicts ?? []),
-      ...(data?.attendeeConflicts ?? []),
-    ].toSorted((a, b) => (a.first?.since ?? '').localeCompare(b.first?.since ?? ''));
-  }, [data?.attendeeConflicts, data?.trainerConflicts]);
 
   const conflictsByEvent = React.useMemo(() => {
     const map: Record<string, CalendarEventConflict[]> = {};
@@ -66,7 +53,7 @@ export function CalendarConflictsIndicator({ range }: Props) {
   }, [conflictsByEvent, setEventConflicts]);
   React.useEffect(() => () => setEventConflicts({}), [setEventConflicts]);
 
-  if (!data || conflicts.length === 0) {
+  if (conflicts.length === 0) {
     return null;
   }
 

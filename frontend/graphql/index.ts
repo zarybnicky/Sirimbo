@@ -9813,11 +9813,10 @@ export type Query = {
   dancesList: Maybe<Array<Dance>>;
   /** Get a single `Event`. */
   event: Maybe<Event>;
+  eventConflictsList: Maybe<Array<EventConflict>>;
   eventFacetsList: Maybe<Array<EventFacetsRecord>>;
   /** @deprecated Use eventsList with filters. */
   eventInstancesForRangeList: Maybe<Array<Event>>;
-  eventOverlapsAttendeeReportList: Maybe<Array<EventConflict>>;
-  eventOverlapsTrainerReportList: Maybe<Array<EventConflict>>;
   /** Get a single `EventRegistration`. */
   eventRegistration: Maybe<EventRegistration>;
   /** Reads and enables pagination through a set of `EventRegistration`. */
@@ -10398,6 +10397,18 @@ export type QueryEventArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEventConflictsListArgs = {
+  calendarFilter?: InputMaybe<CalendarFilterInput>;
+  condition?: InputMaybe<EventSearchConditionInput>;
+  endRange?: InputMaybe<Scalars['Datetime']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  savedSearch?: InputMaybe<Scalars['BigInt']['input']>;
+  startRange?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryEventFacetsListArgs = {
   calendarFilter?: InputMaybe<CalendarFilterInput>;
   condition?: InputMaybe<EventSearchConditionInput>;
@@ -10422,24 +10433,6 @@ export type QueryEventInstancesForRangeListArgs = {
   scope?: InputMaybe<EventInstanceRangeScope>;
   startRange?: InputMaybe<Scalars['Datetime']['input']>;
   trainerIds?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryEventOverlapsAttendeeReportListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  pSince?: InputMaybe<Scalars['Datetime']['input']>;
-  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryEventOverlapsTrainerReportListArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  pSince?: InputMaybe<Scalars['Datetime']['input']>;
-  pUntil?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 
@@ -14114,10 +14107,9 @@ export type GraphCacheResolvers = {
     danceProgramsList?: GraphCacheResolver<WithTypename<Query>, QueryDanceProgramsListArgs, Array<WithTypename<DanceProgram> | string>>,
     dancesList?: GraphCacheResolver<WithTypename<Query>, QueryDancesListArgs, Array<WithTypename<Dance> | string>>,
     event?: GraphCacheResolver<WithTypename<Query>, QueryEventArgs, WithTypename<Event> | string>,
+    eventConflictsList?: GraphCacheResolver<WithTypename<Query>, QueryEventConflictsListArgs, Array<WithTypename<EventConflict> | string>>,
     eventFacetsList?: GraphCacheResolver<WithTypename<Query>, QueryEventFacetsListArgs, Array<WithTypename<EventFacetsRecord> | string>>,
     eventInstancesForRangeList?: GraphCacheResolver<WithTypename<Query>, QueryEventInstancesForRangeListArgs, Array<WithTypename<Event> | string>>,
-    eventOverlapsAttendeeReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsAttendeeReportListArgs, Array<WithTypename<EventConflict> | string>>,
-    eventOverlapsTrainerReportList?: GraphCacheResolver<WithTypename<Query>, QueryEventOverlapsTrainerReportListArgs, Array<WithTypename<EventConflict> | string>>,
     eventRegistration?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationArgs, WithTypename<EventRegistration> | string>,
     eventRegistrations?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsArgs, WithTypename<EventRegistrationConnection> | string>,
     eventRegistrationsList?: GraphCacheResolver<WithTypename<Query>, QueryEventRegistrationsListArgs, Array<WithTypename<EventRegistration> | string>>,
@@ -16622,10 +16614,9 @@ export type GraphCacheUpdaters = {
     danceProgramsList?: GraphCacheUpdateResolver<{ danceProgramsList: Maybe<Array<WithTypename<DanceProgram>>> }, QueryDanceProgramsListArgs>,
     dancesList?: GraphCacheUpdateResolver<{ dancesList: Maybe<Array<WithTypename<Dance>>> }, QueryDancesListArgs>,
     event?: GraphCacheUpdateResolver<{ event: Maybe<WithTypename<Event>> }, QueryEventArgs>,
+    eventConflictsList?: GraphCacheUpdateResolver<{ eventConflictsList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventConflictsListArgs>,
     eventFacetsList?: GraphCacheUpdateResolver<{ eventFacetsList: Maybe<Array<WithTypename<EventFacetsRecord>>> }, QueryEventFacetsListArgs>,
     eventInstancesForRangeList?: GraphCacheUpdateResolver<{ eventInstancesForRangeList: Maybe<Array<WithTypename<Event>>> }, QueryEventInstancesForRangeListArgs>,
-    eventOverlapsAttendeeReportList?: GraphCacheUpdateResolver<{ eventOverlapsAttendeeReportList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventOverlapsAttendeeReportListArgs>,
-    eventOverlapsTrainerReportList?: GraphCacheUpdateResolver<{ eventOverlapsTrainerReportList: Maybe<Array<WithTypename<EventConflict>>> }, QueryEventOverlapsTrainerReportListArgs>,
     eventRegistration?: GraphCacheUpdateResolver<{ eventRegistration: Maybe<WithTypename<EventRegistration>> }, QueryEventRegistrationArgs>,
     eventRegistrations?: GraphCacheUpdateResolver<{ eventRegistrations: Maybe<WithTypename<EventRegistrationConnection>> }, QueryEventRegistrationsArgs>,
     eventRegistrationsList?: GraphCacheUpdateResolver<{ eventRegistrationsList: Maybe<Array<WithTypename<EventRegistration>>> }, QueryEventRegistrationsListArgs>,
