@@ -1,7 +1,9 @@
 create or replace function app_private.payment_search_ids(search text)
 returns setof bigint language sql stable as $$
   with term as not materialized (
-    select lower(trim(search)) as value
+    select lower(trim(search)) as value,
+      (select string_agg(array_to_tsvector(array[token])::text || ':*', ' & ')::tsquery
+       from unnest(tsvector_to_array(to_tsvector('pg_catalog.simple', app_private.normalize_name(search)))) token) as prefix
   )
   select p.id from payment p, term
   where strpos(p.id::text, term.value) > 0
@@ -10,16 +12,16 @@ returns setof bigint language sql stable as $$
   union all
   select p.id from payment p
   join event e on e.id = p.event_id, term
-  where strpos(lower(e.name), term.value) > 0
+  where e.search_vector @@ term.prefix
   union all
   select p.id from payment p
   join cohort_subscription cs on cs.id = p.cohort_subscription_id
   join cohort c on c.id = cs.cohort_id, term
-  where strpos(lower(c.name), term.value) > 0
+  where c.search_vector @@ term.prefix
   union all
   select d.payment_id from payment_debtor d
   join person p on p.id = d.person_id, term
-  where strpos(lower(concat_ws(' ', p.first_name, p.last_name)), term.value) > 0;
+  where p.search_vector @@ term.prefix;
 $$;
 grant execute on function app_private.payment_search_ids to anonymous;
 

@@ -216,3 +216,5 @@ return lower(public.unaccent('public.unaccent'::regdictionary, $1));
 
 drop function if exists event_overlaps_attendee_report(timestamptz, timestamptz);
 drop function if exists event_overlaps_trainer_report(timestamptz, timestamptz);
+
+--!include functions/payment_facets.sql
