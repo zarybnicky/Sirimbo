@@ -57,7 +57,7 @@ const DropdownMenuContentWrapper = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        'min-w-55 bg-neutral-2 rounded-md p-1.25 z-30 flex flex-col',
+        'min-w-55 bg-neutral-2 rounded-md p-1.25 z-40 flex flex-col',
         'shadow-[0px_10px_38px_-10px_rgba(22,23,24,0.35),0px_10px_20px_-15px_rgba(22,23,24,0.2)] will-change-[opacity,transform]',
         'data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade',
         'max-h-[calc(var(--radix-dropdown-menu-content-available-height))]',

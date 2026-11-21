@@ -64,7 +64,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
           'w-3/4 sm:w-1/2 md:w-1/3',
           'lg:w-(--sidebar-width,14rem) xl:w-(--sidebar-width,16rem)',
           '2xl:w-(--sidebar-width,18rem) min-[1920px]:w-(--sidebar-width,20rem)',
-          'z-50 lg:z-10 flex-none transition-transform duration-200 ease-in-out',
+          'z-30 lg:z-10 flex-none transition-transform duration-200 ease-in-out',
           'bg-accent-1 text-neutral-12 lg:bg-accent-9 lg:text-white',
           'max-h-screen min-h-screen',
         )}

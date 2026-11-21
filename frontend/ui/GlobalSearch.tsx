@@ -2,7 +2,7 @@
 
 import { GlobalSearchDocument, type GlobalSearchQuery } from '@/graphql/Search';
 import { useAuth } from '@/lib/auth';
-import { useMemberMenu } from '@/lib/use-menu';
+import { DanceCouple, useMemberMenu } from '@/lib/use-menu';
 import { usePlatform } from '@/lib/usePlatform';
 import { getEntityLink } from '@/ui/EntityLink';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
@@ -24,13 +24,15 @@ import {
   CalendarDays,
   CircleUserRound,
   UserRound,
-  UsersRound,
+  UserGroup,
   MapPin,
   PanelsTopLeft,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
+
+const previewRoutes = new Set(['/profil', '/login', '/rozpis', '/clenove']);
 
 export function GlobalSearch({
   mobile = false,
@@ -114,11 +116,12 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
   const menu = useMemberMenu();
 
   const [search, setSearch] = React.useState('');
+  const query = search.trim();
   const [debounced, setDebounced] = React.useState('');
   React.useEffect(() => {
-    const timer = setTimeout(() => setDebounced(search.trim()), 100);
+    const timer = setTimeout(() => setDebounced(query), 100);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [query]);
 
   const [{ data, fetching, error }, retry] = useQuery({
     query: GlobalSearchDocument,
@@ -134,18 +137,22 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
       icon: CircleUserRound,
     },
     ...menu.flatMap((item) => (item.type === 'menu' ? item.children : [item])),
-  ].filter(
-    ({ href, title }, index, items) =>
-      items.findIndex((x) => x.href === href) === index &&
-      (search.trim()
-        ? rankItem(title, search.trim()).passed
-        : ['/profil', '/login', '/rozpis', '/clenove'].includes(href.split('?', 1)[0]!)),
-  );
-  const current = search.trim() === debounced;
+  ]
+    .flatMap((item) => {
+      if (query) {
+        const { passed, rank } = rankItem(item.title, query);
+        return passed ? { ...item, rank } : [];
+      }
+      return previewRoutes.has(item.href.split('?', 1)[0]!) ? { ...item, rank: 0 } : [];
+    })
+    .toSorted((a, b) => b.rank - a.rank);
+
+  const current = query === debounced;
   const results =
     current && debounced.length >= 3 && !fetching && !error
       ? (data?.globalSearchList.toSorted((a, b) => a.position - b.position) ?? [])
       : [];
+
   const navigate = (href: string) => {
     close();
     router.push(href);
@@ -209,14 +216,14 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
             : 'max-h-[65dvh] overflow-y-auto overscroll-contain p-2'
         }
       >
-        {!search.trim() && (
+        {!query && (
           <p className="px-3 pt-3 pb-4 text-sm text-neutral-11">
             Hledejte lidi, páry, skupiny nebo události.
           </p>
         )}
         {navigation.length > 0 && (
           <Command.Group
-            heading={search.trim() ? 'Přejít na' : 'Návrhy'}
+            heading={query ? 'Přejít na' : 'Návrhy'}
             className="**:[[cmdk-group-heading]]:px-3 **:[[cmdk-group-heading]]:py-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:text-neutral-11"
           >
             {navigation.map(({ href, title, icon: Icon = PanelsTopLeft }) => (
@@ -258,9 +265,9 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
             })}
           </Command.Group>
         )}
-        {search.trim() && (
-          <div role="status" className="text-sm text-neutral-11 p-3">
-            {search.trim().length < 3 ? (
+        {query && (
+          <div role="status" className="text-sm text-neutral-11 p-3 empty:hidden">
+            {query.length < 3 ? (
               'Napište alespoň 3 znaky.'
             ) : !current || fetching ? (
               'Hledám…'
@@ -307,7 +314,7 @@ function getSearchResultSummary(result: GlobalSearchQuery['globalSearchList'][nu
     const couple = result.couple;
     return {
       ...getEntityLink('couple', couple),
-      icon: UsersRound,
+      icon: DanceCouple,
       detail: [formatAgeGroup(couple.ageGroup), formatOpenDateRange(couple)]
         .filter(Boolean)
         .join(', '),
@@ -317,7 +324,7 @@ function getSearchResultSummary(result: GlobalSearchQuery['globalSearchList'][nu
     const cohort = result.cohort;
     return {
       ...getEntityLink('cohort', cohort),
-      icon: UsersRound,
+      icon: UserGroup,
       detail: [
         cohort.isArchived && 'Archivovaná',
         !cohort.isVisible && 'Neveřejná',

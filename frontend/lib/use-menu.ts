@@ -24,7 +24,7 @@ import {
   UserRound,
 } from 'lucide-react';
 
-const DanceCouple = createLucideIcon('dance-couple', [
+export const DanceCouple = createLucideIcon('dance-couple', [
   ['circle', { cx: 8, cy: 5, r: 2, key: 'left-head' }],
   ['circle', { cx: 16, cy: 6, r: 2, key: 'right-head' }],
   [

@@ -154,7 +154,7 @@ function DevelopmentIdentity() {
                       <ChevronDown />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="z-60">
+                  <DropdownMenuContent align="end">
                     {users.map((user) => (
                       <DropdownMenuButton key={user.id} onSelect={() => login.execute(user.id)}>
                         <span>

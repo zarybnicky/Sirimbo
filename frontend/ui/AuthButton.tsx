@@ -47,12 +47,18 @@ export function AuthButton() {
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
               {item.children.map((item) => (
                 <DropdownMenuLink key={item.href} href={item.href}>
+                  {item.icon && (
+                    <item.icon className="size-4 shrink-0 opacity-80" aria-hidden />
+                  )}
                   {item.title}
                 </DropdownMenuLink>
               ))}
             </React.Fragment>
           ) : (
             <DropdownMenuLink key={item.href} href={item.href}>
+              {item.icon && (
+                <item.icon className="size-4 shrink-0 opacity-80" aria-hidden />
+              )}
               {item.title}
             </DropdownMenuLink>
           ),
