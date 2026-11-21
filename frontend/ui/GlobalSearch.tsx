@@ -12,7 +12,6 @@ import {
   dateTimeFormatter,
   formatAddress,
   formatCount,
-  formatEventType,
   formatOpenDateRange,
 } from '@/ui/format';
 import { formatAgeGroup } from '@/ui/csts';
@@ -347,7 +346,7 @@ function getSearchResultSummary(result: GlobalSearchQuery['globalSearchList'][nu
       ...getEntityLink('event', event),
       detail: [
         event.isCancelled && 'Zrušeno',
-        dateTimeFormatter.format(new Date(event.since)),
+        dateTimeFormatter.formatRange(new Date(event.since), new Date(event.until)),
         event.location?.name || event.locationText,
       ]
         .filter(Boolean)

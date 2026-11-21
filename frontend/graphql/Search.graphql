@@ -40,6 +40,7 @@ query GlobalSearch($search: String!) {
       name
       type
       since
+      until
       isCancelled
       location { id name }
       locationText
