@@ -1,5 +1,7 @@
 import { AttendanceStats } from '@/ui/AttendanceStats';
+import { format } from 'date-fns';
 import {
+  CalendarDays,
   CalendarPlus,
   CheckSquare,
   Copy,
@@ -75,6 +77,18 @@ export const eventActions = defineActions<EventWithTrainerFragment>()([
     dialogProps: {
       className: 'sm:max-w-xl',
       onOpenAutoFocus: preventDefault,
+    },
+  },
+  {
+    id: 'event.showInCalendar',
+    label: 'Zobrazit v kalendáři',
+    icon: CalendarDays,
+    href: ({ item }) => {
+      const date = format(new Date(item.since), 'yyyy-MM-dd');
+      const agenda = `v=agenda&date=${date}#event-${item.id}`;
+      return item.parentId
+        ? `/termin/${item.parentId}?tab=schedule&my=false&${agenda}`
+        : `/rozpis?${agenda}`;
     },
   },
   {

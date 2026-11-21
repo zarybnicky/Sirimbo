@@ -16,6 +16,7 @@ import { AttendanceStatsLink } from '@/ui/AttendanceStats';
 
 export function EventButton({
   event,
+  id,
   viewer,
   viewerId,
   showDate,
@@ -23,6 +24,7 @@ export function EventButton({
   suffix,
 }: {
   event: EventWithTrainerFragment;
+  id?: string;
   showDate?: boolean;
   viewer: EventViewer | 'auto';
   viewerId?: string;
@@ -49,6 +51,7 @@ export function EventButton({
 
   return (
     <div
+      id={id}
       className={cn(
         'group flex flex-col gap-1 rounded-lg',
         'leading-4 text-sm tabular-nums cursor-pointer appearance-none',

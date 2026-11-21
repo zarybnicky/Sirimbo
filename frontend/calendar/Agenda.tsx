@@ -43,6 +43,15 @@ function Agenda({ events }: ViewProps): React.ReactNode {
       });
   }, [events]);
 
+  React.useEffect(() => {
+    const { hash, pathname, search } = window.location;
+    if (!/^#event-\d+$/.test(hash)) return;
+    const target = document.querySelector(hash);
+    if (!target) return;
+    target.scrollIntoView({ block: 'nearest' });
+    window.history.replaceState(window.history.state, '', pathname + search);
+  }, [days]);
+
   return (
     <div className="col-full-width p-4 lg:pb-8">
       {!events?.length && (
@@ -95,6 +104,7 @@ function Agenda({ events }: ViewProps): React.ReactNode {
 function GroupLesson({ instance }: { instance: EventWithTrainerFragment }) {
   return (
     <div
+      id={`event-${instance.id}`}
       className={cardCls({
         className:
           'relative group min-w-[200px] w-full sm:w-72 rounded-lg border-accent-7 border' +
@@ -163,7 +173,7 @@ function LessonGroup({ items }: { items: EventWithTrainerFragment[] }) {
             {loc !== prevLoc && !!loc && (
               <div className="ml-2.5 not-first:mt-1 text-sm text-accent-11">{loc}</div>
             )}
-            <EventButton event={instance} viewer="trainer" />
+            <EventButton id={`event-${instance.id}`} event={instance} viewer="trainer" />
           </React.Fragment>
         );
       })}
