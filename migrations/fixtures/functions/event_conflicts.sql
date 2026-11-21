@@ -16,9 +16,10 @@ language sql stable as $$
       select person_id, true as trainer, null::bigint as couple_id
       from event_trainer where event_id = e.id
       union all
-      select r.person_id, false, parent.couple_id
+      select r.person_id, false, case when (condition).couple_id is not null then (
+        select parent.couple_id from event_registration parent where parent.id = r.parent_registration_id
+      ) end
       from event_registration r
-      left join event_registration parent on parent.id = r.parent_registration_id
       where r.event_id = e.id and r.registration_status = 'active' and r.person_id is not null
     ) p
   ), mine as (
@@ -54,23 +55,27 @@ language sql stable as $$
             where c.cohort_id = (condition).cohort_id and c.person_id = p.person_id
           ))
       ))
-  ), instances as materialized (
-    select e.id, e.name, e.since, e.until, e.range, e.parent_id, p.person_id
-    from events e join (select distinct event_id, person_id from participation) p on p.event_id = e.id
+  ), pairs as materialized (
+    select a.id as first_id, a.name as first_name, a.since as first_since, a.until as first_until,
+      b.id as second_id, b.name as second_name, b.since as second_since, b.until as second_until
+    from events a
+    join event b on a.id < b.id
+      and b.tenant_id = current_tenant_id() and not b.is_cancelled
+      and app_private.tstzrange_overlaps(b.range, a.range)
+      and a.parent_id is distinct from b.id and b.parent_id is distinct from a.id
+      and greatest(a.since, b.since) < least(a.until, b.until)
+    -- Keep the counterpart even when only one event matches the calendar selectors.
+    where a.id in (select id from selected) or b.id in (select id from selected)
   )
-  select a.person_id, p.name,
-    a.id, a.name, a.since, a.until,
-    b.id, b.name, b.since, b.until,
-    tstzrange(greatest(a.since, b.since), least(a.until, b.until), '[)')
-  from instances a
-  join instances b on a.person_id = b.person_id and a.id < b.id
-    and a.parent_id is distinct from b.id and b.parent_id is distinct from a.id
-    and app_private.tstzrange_overlaps(a.range, b.range)
-    and greatest(a.since, b.since) < least(a.until, b.until)
+  select distinct a.person_id, p.name,
+    pair.first_id, pair.first_name, pair.first_since, pair.first_until,
+    pair.second_id, pair.second_name, pair.second_since, pair.second_until,
+    tstzrange(greatest(pair.first_since, pair.second_since), least(pair.first_until, pair.second_until), '[)')
+  from pairs pair
+  join participation a on a.event_id = pair.first_id
+  join participation b on b.event_id = pair.second_id and b.person_id = a.person_id
   join person p on p.id = a.person_id
-  -- Keep the counterpart even when only one event matches the calendar selectors.
-  where a.id in (select id from selected) or b.id in (select id from selected)
-  order by a.since, a.id, b.since, b.id, a.person_id;
+  order by pair.first_since, pair.first_id, pair.second_since, pair.second_id, a.person_id;
 $$;
 comment on function event_conflicts is '@behavior +list -connection';
 grant execute on function event_conflicts to anonymous;
