@@ -23,6 +23,7 @@ import { useSetAtom } from 'jotai';
 import { eventTypes, formPreviewAtom } from '@/calendar/state';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useMutation } from 'urql';
+import { EventOverlapWarning, useEventOverlaps } from './EventOverlapWarning';
 import { DateTimeRangeField } from './DateTimeRangeField';
 import { InstanceListElement } from './InstanceListElement';
 import { LocationField } from './LocationField';
@@ -162,6 +163,17 @@ export function EventForm(input: EventFormProps) {
     lessonRanges.length >= 2 &&
     instances.length === 1;
   const isSplitting = canSplit && splitLessons;
+  const trainerIds = (trainers ?? []).map((x) => x.personId);
+  const participantIds = (registrations ?? []).filter((x) => !x.isCancelled).flatMap(
+    (x) => x.personId ? [x.personId] : participants.get(`couple:${x.coupleId}`)?.personIds ?? [],
+  );
+  const overlaps = useEventOverlaps(isSplitting
+    ? lessonRanges.map(({ since, until }) => ({
+        since: since.toISOString(), until: until.toISOString(),
+        people: [...trainerIds, ...(participants.get(splitIds[since.toISOString()] ?? '')?.personIds ?? [])],
+      }))
+    : instances.map((instance) => ({ ...instance, people: [...trainerIds, ...participantIds] })), parentId);
+
 
   React.useEffect(() => {
     if (!canSplit && splitLessons) {
@@ -263,10 +275,11 @@ export function EventForm(input: EventFormProps) {
               control={control}
               locations={data?.tenant?.locationsList ?? []}
             />
-            <TrainerListElement control={control} trainers={trainerOptions} />
+            <TrainerListElement control={control} trainers={trainerOptions}
+              conflicts={overlaps.byPerson} />
           </fieldset>
           <div className="grid gap-1 rounded-md border border-neutral-4 bg-neutral-2 p-2">
-            {lessonRanges.map((range) => {
+            {lessonRanges.map((range, index) => {
               const key = range.since.toISOString();
               return (
                 <div
@@ -276,7 +289,8 @@ export function EventForm(input: EventFormProps) {
                   <span className="text-neutral-11">
                     {shortTimeFormatter.formatRange(range.since, range.until)}
                   </span>
-                  <div className="sm:justify-self-end">
+                  <div className="flex items-center gap-2">
+                    <EventOverlapWarning lines={overlaps.byInstance[index]} />
                     <ComboboxButton
                       disabled={!ready}
                       value={splitIds[key] ?? null}
@@ -317,16 +331,18 @@ export function EventForm(input: EventFormProps) {
             label={mode === 'create' ? 'Název (nepovinný)' : 'Název'}
             placeholder={namePlaceholder}
           />
-          <InstanceListElement control={control} />
+          <InstanceListElement control={control} conflicts={overlaps.byInstance} />
           <fieldset disabled={!ready} className="min-w-0 space-y-2">
             <LocationField
               control={control}
               locations={data?.tenant?.locationsList ?? []}
             />
-            <TrainerListElement control={control} trainers={trainerOptions} />
+            <TrainerListElement control={control} trainers={trainerOptions}
+              conflicts={overlaps.byPerson} />
             <ParticipantListElement
               control={control}
               options={participants}
+              conflicts={overlaps.byPerson}
               cohorts={data?.tenant?.cohortsList ?? []}
             />
           </fieldset>

@@ -2435,7 +2435,7 @@ enum CompetitionOfficialsOrderBy {
 }
 
 """
-Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators.
+Intersect local person, couple, and cohort selectors. For federation queries without explicit selectors, use current tenant members, trainers, and administrators.
 """
 input CompetitionParticipantCondition {
   """Require a current member of this local cohort."""

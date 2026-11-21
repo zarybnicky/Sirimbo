@@ -1,3 +1,4 @@
+import { EventOverlapWarning } from './EventOverlapWarning';
 import type { EventFormControl } from '@/ui/event-form/types';
 import { buttonCls } from '@/ui/style';
 import { add } from 'date-arithmetic';
@@ -5,7 +6,7 @@ import { Plus, X } from 'lucide-react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { DateTimeRangeField } from './DateTimeRangeField';
 
-export function InstanceListElement({ control }: { control: EventFormControl }) {
+export function InstanceListElement({ control, conflicts }: { control: EventFormControl; conflicts?: string[][] }) {
   const { fields, append, remove } = useFieldArray({ name: 'instances', control });
   const instances = useWatch({ control, name: 'instances' });
 
@@ -44,12 +45,13 @@ export function InstanceListElement({ control }: { control: EventFormControl }) 
       </div>
 
       {fields.map((instance, index) => (
-        <div className="flex flex-wrap items-start gap-2" key={instance.id}>
+        <div className="flex flex-wrap items-center gap-2" key={instance.id}>
           <DateTimeRangeField
             control={control}
             nameSince={`instances.${index}.since`}
             nameUntil={`instances.${index}.until`}
           />
+          {fields.length > 1 && <EventOverlapWarning lines={conflicts?.[index]} />}
           {!instance.itemId && fields.length > 1 && (
             <button
               type="button"

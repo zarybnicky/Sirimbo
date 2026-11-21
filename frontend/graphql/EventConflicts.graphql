@@ -18,3 +18,31 @@ fragment EventConflict on EventConflict {
     ...EventWithTrainer
   }
 }
+
+query EventFormOverlaps($people: [BigInt!], $range: EventRangeCondition!) {
+  eventsList(condition: {participant: {personIds: $people}, overlaps: $range, isCancelled: false}, orderBy: SINCE_ASC) {
+    id
+    parentId
+    name
+    type
+    since
+    until
+    eventTrainersList {
+      id
+      personId
+      person { id name }
+    }
+    registrations(condition: {parentRegistrationId: null, registrationStatus: ACTIVE}, first: 3) {
+      nodes {
+        id
+        person { id name }
+        couple { id shortName }
+      }
+    }
+    registrationsList(condition: {participant: {personIds: $people}, registrationStatus: ACTIVE}) {
+      id
+      personId
+      person { id name }
+    }
+  }
+}

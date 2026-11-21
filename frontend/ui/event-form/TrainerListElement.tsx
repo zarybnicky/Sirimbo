@@ -1,3 +1,4 @@
+import { EventOverlapWarning } from './EventOverlapWarning';
 import { SelectionList } from '@/ui/fields/SelectionList';
 import { TextFieldElement } from '@/ui/fields/text';
 import { Checkbox } from '@/ui/fields/checkbox';
@@ -14,9 +15,11 @@ export type EventTrainerOption = {
 export function TrainerListElement({
   control,
   trainers,
+  conflicts,
 }: {
   control: EventFormControl;
   trainers: EventTrainerOption[];
+  conflicts?: Record<string, string[]>;
 }) {
   const { fields, append, remove } = useFieldArray({ name: 'trainers', control });
   const type = useWatch({ control, name: 'type' });
@@ -29,11 +32,13 @@ export function TrainerListElement({
       value={fields.map((x) => x.personId)}
       onAdd={(personId) => append({ personId, lessonsOffered: 0 })}
       onRemove={remove}
-      renderItem={(_, index) =>
-        !['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
+      renderItem={(id, index) => <>
+        <EventOverlapWarning lines={conflicts?.[id]} />
+        {!['LESSON', 'GROUP'].includes(type ?? 'LESSON') && (
           <TrainerLessonsField control={control} index={index} />
-        )
-      }
+        )}
+      </>}
+
     />
   );
 }

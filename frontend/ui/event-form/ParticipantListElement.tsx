@@ -1,3 +1,4 @@
+import { EventOverlapWarning } from './EventOverlapWarning';
 import { useController, useWatch } from 'react-hook-form';
 import type { EventFormControl, EventParticipantOption } from './types';
 import { buttonCls } from '@/ui/style';
@@ -11,8 +12,10 @@ export function ParticipantListElement({
   control,
   options,
   cohorts,
+  conflicts,
 }: {
   control: EventFormControl;
+  conflicts?: Record<string, string[]>;
   options: Map<string, EventParticipantOption>;
   cohorts: NonNullable<NonNullable<EventFormOptionsQuery['tenant']>['cohortsList']>;
 }) {
@@ -158,6 +161,7 @@ export function ParticipantListElement({
                   </span>
                 )}
               </div>
+              <EventOverlapWarning lines={(personId ? [personId] : options.get(id)?.personIds ?? []).flatMap((id) => conflicts?.[id] ?? [])} />
               <button
                 type="button"
                 className={buttonCls({ size: 'sm', variant: 'outline' })}

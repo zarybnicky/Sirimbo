@@ -6,7 +6,7 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-/** Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators. */
+/** Intersect local person, couple, and cohort selectors. For federation queries without explicit selectors, use current tenant members, trainers, and administrators. */
 export type CompetitionParticipantCondition = {
   /** Require a current member of this local cohort. */
   cohortId?: string | null | undefined;
