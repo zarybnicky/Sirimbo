@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       formatCategoryName(competition) || competitionId,
       round.roundLabel || round.roundKey,
       formatDateOnly(competition.startDate),
-    ].join(' · '),
+    ].join(' '),
     robots: { index: false, follow: false },
   };
 }

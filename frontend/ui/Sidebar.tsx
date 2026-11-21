@@ -159,7 +159,7 @@ function SidebarIdentity() {
             subtitle={
               <div className="flex flex-col gap-1 no-underline">
                 {person.accountsList.length > 0
-                  ? `Kredit ${person.accountsList.map((x) => moneyFormatter.format(x)).join(' · ')}`
+                  ? `Kredit ${person.accountsList.map((x) => moneyFormatter.format(x)).join(', ')}`
                   : null}
                 {unpaidCount > 0 &&
                   [

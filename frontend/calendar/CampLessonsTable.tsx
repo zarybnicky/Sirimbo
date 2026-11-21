@@ -173,9 +173,7 @@ export const CampLessonsTable = React.memo(function CampLessonsTable({
       error={query.error}
     >
       {rows.map((row) => {
-        const detail = row.nested
-          ? ['samostatně', row.note].filter(Boolean).join(' · ')
-          : row.note;
+        const detail = [row.nested && '(samostatně)', row.note].filter(Boolean).join(', ')
         const cells = [...row.cells.values()];
 
         return (

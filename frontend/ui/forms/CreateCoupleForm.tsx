@@ -65,7 +65,7 @@ export function CreateCoupleForm({
             formatAgeGroup(person.ageGroup),
           ]
             .filter(Boolean)
-            .join(' · '),
+            .join(', '),
         },
       ]),
     ).values(),

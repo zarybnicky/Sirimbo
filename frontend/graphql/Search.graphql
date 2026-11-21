@@ -1,10 +1,48 @@
 query GlobalSearch($search: String!) {
   globalSearchList(search: $search, limit: 20) {
     position
-    person { id name }
-    couple { id name }
-    cohort { id name }
-    location { id name }
-    event { id name since isCancelled }
+    person {
+      id
+      name
+      isMember
+      isTrainer
+      isAdmin
+      isExternal
+      ageGroup
+      cohortMembershipsList(condition: { status: ACTIVE }) {
+        id
+        since
+        until
+        cohort { id name }
+      }
+      couplesList(condition: { status: ACTIVE }) {
+        id
+        man { id name }
+        woman { id name }
+      }
+    }
+    couple { id name ageGroup since until }
+    cohort {
+      id
+      name
+      isArchived
+      isVisible
+      location
+      cohortMembershipsList(condition: { status: ACTIVE }) { id since until }
+    }
+    location {
+      id
+      name
+      address { street conscriptionNumber orientationNumber district postalCode city region }
+    }
+    event {
+      id
+      name
+      type
+      since
+      isCancelled
+      location { id name }
+      locationText
+    }
   }
 }

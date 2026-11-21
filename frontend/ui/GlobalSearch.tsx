@@ -1,6 +1,6 @@
 'use client';
 
-import { GlobalSearchDocument } from '@/graphql/Search';
+import { GlobalSearchDocument, type GlobalSearchQuery } from '@/graphql/Search';
 import { useAuth } from '@/lib/auth';
 import { useMemberMenu } from '@/lib/use-menu';
 import { getEntityLink } from '@/ui/EntityLink';
@@ -8,7 +8,14 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { buttonCls, inputCls } from '@/ui/style';
 import { useFormResult } from '@/ui/form';
-import { dateTimeFormatter } from '@/ui/format';
+import {
+  dateTimeFormatter,
+  formatAddress,
+  formatCount,
+  formatEventType,
+  formatOpenDateRange,
+} from '@/ui/format';
+import { formatAgeGroup } from '@/ui/csts';
 import { rankItem } from '@tanstack/match-sorter-utils';
 import { Command } from 'cmdk';
 import {
@@ -96,15 +103,17 @@ export function GlobalSearch({
 
 function SearchContents({ mobile = false }: { mobile?: boolean }) {
   const { onSuccess: close } = useFormResult();
+  const auth = useAuth();
+  const router = useRouter();
+  const menu = useMemberMenu();
+
   const [search, setSearch] = React.useState('');
   const [debounced, setDebounced] = React.useState('');
-  const router = useRouter();
-  const auth = useAuth();
-  const menu = useMemberMenu();
   React.useEffect(() => {
-    const timer = setTimeout(() => setDebounced(search.trim()), 180);
+    const timer = setTimeout(() => setDebounced(search.trim()), 100);
     return () => clearTimeout(timer);
   }, [search]);
+
   const [{ data, fetching, error }, retry] = useQuery({
     query: GlobalSearchDocument,
     variables: { search: debounced },
@@ -119,13 +128,11 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
     },
     ...menu.flatMap((item) => (item.type === 'link' ? [item] : item.children)),
   ].filter(
-    (item, index, items) =>
-      items.findIndex((x) => x.href === item.href) === index &&
+    ({ href, title }, index, items) =>
+      items.findIndex((x) => x.href === href) === index &&
       (search.trim()
-        ? rankItem(item.title, search.trim()).passed
-        : ['/profil', '/login', '/rozpis', '/clenove'].includes(
-            item.href.split('?', 1)[0]!,
-          )),
+        ? rankItem(title, search.trim()).passed
+        : ['/profil', '/login', '/rozpis', '/clenove'].includes(href.split('?', 1)[0]!)),
   );
   const current = search.trim() === debounced;
   const results =
@@ -144,13 +151,25 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
       'gap-3 rounded-xs p-3 text-sm cursor-pointer hover:bg-accent-5 active:bg-accent-6 data-[selected=true]:bg-accent-5 data-[selected=true]:text-accent-12 data-[selected=true]:active:bg-accent-6',
   });
   return (
-    <Command shouldFilter={false} label="Hledat v klubu" className={mobile ? 'h-full' : undefined}>
-      <div className={mobile
-        ? "flex h-full items-center gap-2 p-3"
-        : "flex items-center gap-2 border-b border-neutral-4 p-3"}>
-        <div className={mobile
-          ? "relative min-w-0 flex-1 group-data-[state=open]/search:animate-searchExpand group-data-[state=closed]/search:animate-searchCollapse motion-reduce:animate-none"
-          : "relative min-w-0 flex-1"}>
+    <Command
+      shouldFilter={false}
+      label="Hledat v klubu"
+      className={mobile ? 'h-full' : undefined}
+    >
+      <div
+        className={
+          mobile
+            ? 'flex h-full items-center gap-2 p-3'
+            : 'flex items-center gap-2 border-b border-neutral-4 p-3'
+        }
+      >
+        <div
+          className={
+            mobile
+              ? 'relative min-w-0 flex-1 group-data-[state=open]/search:animate-searchExpand group-data-[state=closed]/search:animate-searchCollapse motion-reduce:animate-none'
+              : 'relative min-w-0 flex-1'
+          }
+        >
           <Search
             aria-hidden
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-accent-10"
@@ -176,9 +195,13 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
           </DialogPrimitive.Close>
         )}
       </div>
-      <Command.List className={mobile
-        ? "absolute inset-x-0 top-full max-h-[65dvh] overflow-y-auto overscroll-contain border-t border-neutral-4 bg-neutral-1 p-2 text-neutral-12 shadow-lg group-data-[state=open]/search:animate-slideDownAndFade motion-reduce:animate-none"
-        : "max-h-[65dvh] overflow-y-auto overscroll-contain p-2"}>
+      <Command.List
+        className={
+          mobile
+            ? 'absolute inset-x-0 top-full max-h-[65dvh] overflow-y-auto overscroll-contain border-t border-neutral-4 bg-neutral-1 p-2 text-neutral-12 shadow-lg group-data-[state=open]/search:animate-slideDownAndFade motion-reduce:animate-none'
+            : 'max-h-[65dvh] overflow-y-auto overscroll-contain p-2'
+        }
+      >
         {!search.trim() && (
           <p className="px-3 pt-3 pb-4 text-sm text-neutral-11">
             Hledejte lidi, páry, skupiny nebo události.
@@ -217,43 +240,19 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
             className="**:[[cmdk-group-heading]]:px-3 **:[[cmdk-group-heading]]:py-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:text-neutral-11"
           >
             {results.map((result) => {
-              let link: { title: string; href: string };
-              let detail: string;
-              if (result.person) {
-                link = getEntityLink('person', result.person);
-                detail = 'Člověk';
-              } else if (result.couple) {
-                link = getEntityLink('couple', result.couple);
-                detail = 'Pár';
-              } else if (result.cohort) {
-                link = getEntityLink('cohort', result.cohort);
-                detail = 'Tréninková skupina';
-              } else if (result.location) {
-                link = getEntityLink('location', result.location);
-                detail = 'Místo';
-              } else if (result.event) {
-                link = getEntityLink('event', result.event);
-                detail = `${result.event.isCancelled ? 'Zrušeno · ' : ''}${dateTimeFormatter.format(new Date(result.event.since))}`;
-              } else return null;
+              const summary = getSearchResultSummary(result);
+              if (!summary) return null;
+              const { title, href, detail, icon: Icon } = summary;
               return (
                 <Command.Item
-                  key={link.href}
-                  value={link.href}
-                  onSelect={() => navigate(link.href)}
+                  key={href}
+                  value={href}
+                  onSelect={() => navigate(href)}
                   className={itemClass}
                 >
-                  {React.createElement(
-                    result.person
-                      ? UserRound
-                      : result.location
-                        ? MapPin
-                        : result.event
-                          ? CalendarDays
-                          : UsersRound,
-                    { className: 'size-4 shrink-0 text-neutral-11', 'aria-hidden': true },
-                  )}
+                  <Icon className="size-4 shrink-0 text-neutral-11" aria-hidden />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate">{link.title}</span>
+                    <span className="block truncate">{title}</span>
                     <span className="block text-xs text-neutral-11">{detail}</span>
                   </span>
                 </Command.Item>
@@ -283,4 +282,78 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
       </div>
     </Command>
   );
+}
+
+function getSearchResultSummary(result: GlobalSearchQuery['globalSearchList'][number]) {
+  if (result.person) {
+    const person = result.person;
+    return {
+      ...getEntityLink('person', person),
+      icon: UserRound,
+      detail: [
+        person.isAdmin && 'Správce',
+        person.isTrainer && 'Trenér',
+        person.isMember && 'Člen',
+        person.isExternal && 'Externí',
+        formatAgeGroup(person.ageGroup),
+        ...person.cohortMembershipsList.map((x) => x.cohort?.name),
+        ...person.couplesList
+          .flatMap((x) => [x.man, x.woman])
+          .flatMap((x) => (x && x.id !== person.id ? `tančí s ${x.name}` : [])),
+      ]
+        .filter(Boolean)
+        .join(', '),
+    };
+  }
+  if (result.couple) {
+    const couple = result.couple;
+    return {
+      ...getEntityLink('couple', couple),
+      icon: UsersRound,
+      detail: [formatAgeGroup(couple.ageGroup), formatOpenDateRange(couple)]
+        .filter(Boolean)
+        .join(', '),
+    };
+  }
+  if (result.cohort) {
+    const cohort = result.cohort;
+    return {
+      ...getEntityLink('cohort', cohort),
+      icon: UsersRound,
+      detail: [
+        cohort.isArchived && 'Archivovaná',
+        !cohort.isVisible && 'Neveřejná',
+        formatCount(cohort.cohortMembershipsList.length, {
+          one: 'člen',
+          few: 'členové',
+          other: 'členů',
+        }),
+        cohort.location,
+      ]
+        .filter(Boolean)
+        .join(', '),
+    };
+  }
+  if (result.location) {
+    return {
+      ...getEntityLink('location', result.location),
+      detail: formatAddress(result.location.address) || 'Místo',
+      icon: MapPin,
+    };
+  }
+  if (result.event) {
+    const event = result.event;
+    return {
+      ...getEntityLink('event', event),
+      detail: [
+        event.isCancelled && 'Zrušeno',
+        dateTimeFormatter.format(new Date(event.since)),
+        event.location?.name || event.locationText,
+      ]
+        .filter(Boolean)
+        .join(', '),
+      icon: CalendarDays,
+    };
+  }
+  return null;
 }
