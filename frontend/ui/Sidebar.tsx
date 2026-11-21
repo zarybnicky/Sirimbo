@@ -86,7 +86,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
                     onClick={signOut}
                     className={cn(
                       'flex items-center flex-1 px-3 py-1.5 rounded-2xl',
-                      'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
+                      'text-sm font-medium tracking-wider hover:bg-accent-10 hover:text-white',
                     )}
                   >
                     Odhlásit se
@@ -309,7 +309,7 @@ function SidebarLink({ item, onClick, subtitle, selected }: SidebarLinkProps) {
       aria-current={inPath ? 'page' : undefined}
       className={cn(
         'flex items-center flex-1 mx-2 px-3 py-1.5 rounded-2xl',
-        'text-sm tracking-wider hover:bg-accent-10 hover:text-white',
+        'text-sm font-medium tracking-wider hover:bg-accent-10 hover:text-white',
         item.className,
         inPath ? 'font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
       )}
