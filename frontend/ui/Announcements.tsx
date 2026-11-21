@@ -1,5 +1,4 @@
 import { AnnouncementCard } from '@/ui/AnnouncementCard';
-import { Pagination } from '@/ui/Pagination';
 import { RadioButtonGroup } from '@/ui/fields/RadioButtonGroupElement';
 import { cn } from '@/lib/cn';
 import { AnnouncementsDocument } from '@/graphql/Announcement';
@@ -10,7 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
-import { ArrowUpDown, Check } from 'lucide-react';
+import { ArrowUpDown, Check, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
 import { useQuery } from 'urql';
 
@@ -64,7 +64,6 @@ export function AnnouncementSortControls({
 }
 
 export const MyAnnouncements = React.memo(function MyAnnouncements() {
-  const [page, setPage] = React.useState(1);
   const [state, setState] = React.useState('current');
   const [sort, setSort] = React.useState<SortOption>('updated');
 
@@ -72,7 +71,6 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
     query: AnnouncementsDocument,
     variables: {
       first: 5,
-      offset: (page - 1) * 5,
       condition: {
         isSticky: false,
         status: state === 'archive' ? 'ARCHIVED' : 'PUBLISHED',
@@ -87,25 +85,14 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex gap-2 flex-wrap grow-0 h-min justify-between items-center relative">
-        <h2 className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })} >
+        <h2
+          className={typographyCls({ variant: 'smallHeading', className: 'mt-0 grow' })}
+        >
           Aktuality
         </h2>
 
-        <RadioButtonGroup
-          value={state}
-          options={options}
-          onValueChange={(value) => {
-            setState(value);
-            setPage(1);
-          }}
-        />
-        <AnnouncementSortControls
-          sort={sort}
-          onChange={(value) => {
-            setSort(value);
-            setPage(1);
-          }}
-        />
+        <RadioButtonGroup value={state} options={options} onValueChange={setState} />
+        <AnnouncementSortControls sort={sort} onChange={setSort} />
       </div>
 
       <div className="space-y-2">
@@ -114,13 +101,20 @@ export const MyAnnouncements = React.memo(function MyAnnouncements() {
         ))}
       </div>
 
-      {!!data?.announcements?.totalCount && (
-        <Pagination
-          total={data.announcements.totalCount}
-          limit={5}
-          page={page}
-          onPageChange={setPage}
-        />
+      {!!data?.announcements?.nodes?.length && (
+        <div className="flex justify-end">
+          <Link
+            href="/nastenka"
+            className={buttonCls({
+              display: 'listItem',
+              variant: 'none',
+              className: 'w-auto text-accent-9 font-bold',
+            })}
+          >
+            Zobrazit vše
+            <ChevronRight />
+          </Link>
+        </div>
       )}
     </div>
   );

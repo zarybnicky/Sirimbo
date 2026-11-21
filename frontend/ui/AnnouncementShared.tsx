@@ -5,13 +5,13 @@ import { DotSeparated } from '@/ui/DotSeparated';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { badgeCls } from '@/ui/style';
 
-const STATUS_LABEL: Partial<Record<AnnouncementStatus, string>> = {
+export const STATUS_LABEL: Partial<Record<AnnouncementStatus, string>> = {
   DRAFT: 'Koncept',
   SCHEDULED: 'Naplánováno',
   ARCHIVED: 'Archivováno',
 };
 
-export function AnnouncementStatusBadge({
+function AnnouncementStatusBadge({
   status,
   className,
 }: {

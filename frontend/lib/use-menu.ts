@@ -75,6 +75,7 @@ const memberMenu: MenuStructItem[] = [
     title: 'Přehled',
     href: '/dashboard?tab=myAnnouncements',
   },
+  { type: 'link', title: 'Nástěnka', href: '/nastenka', requireMember: true },
   {
     type: 'link',
     title: 'Stálá nástěnka',
@@ -111,7 +112,6 @@ const memberMenu: MenuStructItem[] = [
     type: 'menu',
     title: 'Správa',
     children: [
-      { type: 'link', title: 'Nástěnka', href: '/nastenka', requireTrainer: true },
       { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
       {
         type: 'link',

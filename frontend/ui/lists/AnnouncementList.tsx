@@ -1,35 +1,50 @@
 import { ListItem } from '@/ui/ListItem';
+import { ComboboxButton } from '@/ui/fields/Combobox';
 import { TextField } from '@/ui/fields/text';
 import { useAuth } from '@/lib/auth';
-import {
-  AnnouncementsDocument,
-  type AnnouncementsQueryVariables,
-} from '@/graphql/Announcement';
+import { AnnouncementsDocument, type AnnouncementStatus } from '@/graphql/Announcement';
 import { numericDateWithYearFormatter, numericFullFormatter } from '@/ui/format';
 import { AnnouncementAudienceBadges } from '@/ui/AnnouncementAudienceBadges';
+import { STATUS_LABEL } from '@/ui/AnnouncementShared';
 import { buttonCls } from '@/ui/style';
 import { SubmitButton } from '@/ui/submit';
+import { Pin, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useQuery } from 'urql';
 import { useFuzzySearch } from '@/lib/useFuzzySearch';
 import { AnnouncementSortControls, type SortOption } from '@/ui/Announcements';
-import { AnnouncementStatusBadge } from '@/ui/AnnouncementShared';
+import { AnnouncementsOrderBy } from '@/graphql';
+import { DotSeparated } from '../DotSeparated';
+
+const memberStatuses = [
+  { id: null, label: 'Všechny' },
+  { id: 'PUBLISHED', label: 'Aktuální' },
+  { id: 'ARCHIVED', label: 'Archiv' },
+];
+const trainerStatuses = [
+  { id: null, label: 'Všechny' },
+  { id: 'DRAFT', label: 'Koncepty' },
+  { id: 'SCHEDULED', label: 'Naplánované' },
+  { id: 'PUBLISHED', label: 'Aktuální' },
+  { id: 'ARCHIVED', label: 'Archiv' },
+];
 
 export function AnnouncementList() {
   const currentId = useParams<{ id?: string }>()?.id;
   const pathname = usePathname() ?? '';
   const auth = useAuth();
   const [search, setSearch] = React.useState('');
-  const [pages, setPages] = React.useState<(number | undefined)[]>([undefined]);
+  const [pages, setPages] = React.useState<(string | undefined)[]>([undefined]);
   const [sort, setSort] = React.useState<SortOption>('created');
+  const [status, setStatus] = React.useState<AnnouncementStatus | null>('PUBLISHED');
 
-  const orderBy = React.useMemo<AnnouncementsQueryVariables['orderBy']>(() => {
-    return [sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC'];
+  const orderBy = React.useMemo<AnnouncementsOrderBy>(() => {
+    return sort === 'created' ? 'CREATED_AT_DESC' : 'UPDATED_AT_DESC';
   }, [sort]);
 
-  const handleLoadMore = React.useCallback((endCursor: number) => {
+  const handleLoadMore = React.useCallback((endCursor: string) => {
     setPages((xs) => [...xs, endCursor]);
   }, []);
 
@@ -42,13 +57,23 @@ export function AnnouncementList() {
           <Link
             href="/nastenka/add"
             className={buttonCls({
-              size: 'sm',
+              size: 'icon',
               variant: pathname.endsWith('/add') ? 'primary' : 'outline',
             })}
           >
-            Přidat příspěvek
+            <Plus />
           </Link>
         )}
+        <ComboboxButton
+          value={status}
+          placeholder="Všechny stavy"
+          options={auth.isTrainer ? trainerStatuses : memberStatuses}
+          searchable={false}
+          onChange={(value) => {
+            setStatus((value ?? null) as AnnouncementStatus | null);
+            setPages([undefined]);
+          }}
+        />
         <AnnouncementSortControls
           sort={sort}
           onChange={(value) => {
@@ -69,10 +94,11 @@ export function AnnouncementList() {
       <div className="grow h-full overflow-y-auto scrollbar">
         {pages.map((cursor, index) => (
           <AnnouncementListPage
-            key={cursor || ''}
+            key={cursor ?? status ?? 'all'}
             cursor={cursor}
             currentId={currentId}
             search={search}
+            status={status}
             orderBy={orderBy}
             onLoadMore={index === pages.length - 1 ? handleLoadMore : undefined}
           />
@@ -83,99 +109,90 @@ export function AnnouncementList() {
 }
 
 interface AnnouncementListPageProps {
-  cursor?: number;
+  cursor?: string;
   search: string;
   currentId?: string;
-  orderBy: AnnouncementsQueryVariables['orderBy'];
-  onLoadMore?: (endCursor: number) => void;
+  status: AnnouncementStatus | null;
+  orderBy: AnnouncementsOrderBy;
+  onLoadMore?: (endCursor: string) => void;
 }
 
 function AnnouncementListPage({
   cursor,
   search,
   currentId,
+  status,
   orderBy,
   onLoadMore,
 }: AnnouncementListPageProps) {
-  const [{ data, fetching }] = useQuery({
+  const [{ data, error, fetching }] = useQuery({
     query: AnnouncementsDocument,
-    variables: { first: 50, cursor, orderBy },
+    variables: { first: 50, cursor, orderBy, condition: status ? { status } : undefined },
   });
 
-  const handleLoadMore = React.useCallback(() => {
-    const endCursor = data?.announcements?.pageInfo?.endCursor;
-    if (endCursor && onLoadMore) {
-      onLoadMore(endCursor);
-    }
-  }, [data, onLoadMore]);
+  const pageInfo = data?.announcements?.pageInfo;
+  const items = useFuzzySearch(data?.announcements?.nodes ?? [], ['id', 'title'], search);
 
-  const hasMore = !!data?.announcements?.pageInfo.hasNextPage;
+  if (!data && fetching) {
+    return <div className="p-4 text-center">Načítám...</div>;
+  }
+  if (error) {
+    return <p className="p-4 text-sm text-neutral-11">Příspěvky se nepodařilo načíst.</p>;
+  }
+  if (!cursor && data?.announcements?.totalCount === 0) {
+    return <p className="p-4 text-sm text-neutral-11">Žádné příspěvky.</p>;
+  }
 
-  const nodes = React.useMemo(() => {
-    return (data?.announcements?.nodes || []).map((item) => ({
-      id: item.id,
-      title: item.title,
-      status: item.status,
-      subtitle: (
-        <div className="flex flex-wrap justify-between items-baseline gap-4">
-          <div className="flex flex-col gap-1">
-            {item.authorName && <div>{item.authorName}</div>}
-            <div className="flex items-center gap-1 text-xs">
-              <time
-                dateTime={item.createdAt}
-                title={numericFullFormatter.format(new Date(item.createdAt))}
-              >
-                {numericDateWithYearFormatter.format(new Date(item.createdAt))}
-              </time>
-              {item.updatedAt !== null && (
-                <>
-                  <span>-</span>
+  return (
+    <>
+      {items.map((item) => (
+        <ListItem
+          key={item.id}
+          href={`/nastenka/${item.id}`}
+          selected={currentId === item.id}
+          wrap
+          title={
+            <div className="flex flex-wrap items-center gap-2 font-medium">
+              {item.isSticky && (
+                <span title="Stálý příspěvek">
+                  <Pin className="size-3.5 rotate-45" />
+                </span>
+              )}
+              <span>{item.title}</span>
+            </div>
+          }
+          subtitle={
+            <div className="flex flex-wrap justify-between items-baseline gap-4 text-xs">
+              <DotSeparated>
+                {item.authorName && <div>{item.authorName}</div>}
+                <time
+                  dateTime={item.createdAt}
+                  title={numericFullFormatter.format(new Date(item.createdAt))}
+                >
+                  {numericDateWithYearFormatter.format(new Date(item.createdAt))}
+                </time>
+                {item.updatedAt !== null && (
                   <time
                     dateTime={item.updatedAt}
                     title={numericFullFormatter.format(new Date(item.updatedAt))}
                   >
                     Upraveno
                   </time>
-                </>
-              )}
-            </div>
-          </div>
-          <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
-        </div>
-      ),
-      href: `/nastenka/${item.id}`,
-    }));
-  }, [data]);
-
-  const fuzzy = useFuzzySearch(nodes, ['id', 'title'], search);
-
-  if (!data && fetching) {
-    return <div className="p-4 text-center">Načítám...</div>;
-  }
-
-  return (
-    <>
-      {fuzzy.map((item) => (
-        <ListItem
-          key={item.id}
-          href={item.href}
-          selected={currentId === item.id}
-          wrap
-          title={
-            <div className="flex flex-wrap items-center gap-2">
-              <span>{item.title}</span>
-              <AnnouncementStatusBadge
-                status={item.status}
-                className={currentId === item.id ? 'border-white/50 bg-white/15 text-white' : undefined}
-              />
+                )}
+                {STATUS_LABEL[item.status]}
+              </DotSeparated>
+              <AnnouncementAudienceBadges audiences={item.announcementAudiences.nodes} />
             </div>
           }
-          subtitle={item.subtitle}
         />
       ))}
-      {hasMore && onLoadMore && (
+      {pageInfo?.hasNextPage && pageInfo.endCursor && onLoadMore && (
         <div className="p-2 flex justify-center">
-          <SubmitButton type="button" disabled={fetching} onClick={handleLoadMore}>
+          <SubmitButton
+            type="button"
+            disabled={fetching}
+            onClick={() => onLoadMore(pageInfo.endCursor)}
+          >
             Načíst starší...
           </SubmitButton>
         </div>
