@@ -44,7 +44,7 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
         )}
 
         <GlobalSearch mobile>
-          <div className="flex items-stretch justify-between min-h-12 md:min-h-16 p-2 transition-opacity motion-reduce:transition-none group-has-[[role=dialog][data-state=open]]:opacity-0">
+          <div className="col-start-1 row-start-1 flex items-stretch justify-between min-h-12 md:min-h-16 p-2 transition-opacity duration-200 motion-reduce:transition-none group-has-[[role=dialog][data-state=open]]:opacity-0 [&>:not(:last-child)]:transition-transform [&>:not(:last-child)]:duration-200 motion-reduce:[&>:not(:last-child)]:transition-none group-has-[[role=dialog][data-state=open]]:[&>:not(:last-child)]:-translate-x-3">
             <button
               className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
               onClick={() => setIsOpen((x) => !x)}

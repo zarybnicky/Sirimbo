@@ -13,7 +13,7 @@ import { rankItem } from '@tanstack/match-sorter-utils';
 import { Command } from 'cmdk';
 import {
   Search,
-  ArrowLeft,
+  X,
   CalendarDays,
   UserRound,
   UsersRound,
@@ -52,7 +52,7 @@ export function GlobalSearch({
   return (
     <div
       ref={container}
-      className={mobile ? 'group relative lg:hidden' : 'hidden lg:block px-2 pb-3'}
+      className={mobile ? 'group relative grid lg:hidden' : 'hidden lg:block px-2 pb-3'}
     >
       <Dialog>
         {mobile ? (
@@ -75,7 +75,7 @@ export function GlobalSearch({
         {mobile ? (
           <DialogPrimitive.Content
             aria-describedby={undefined}
-            className="absolute inset-x-0 top-0 bg-neutral-1 text-neutral-12 shadow-lg data-[state=open]:animate-slideDownAndFade data-[state=closed]:animate-overlayHide motion-reduce:animate-none"
+            className="group/search relative col-start-1 row-start-1 min-w-0 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide [animation-duration:220ms] motion-reduce:animate-none"
           >
             <DialogTitle className="sr-only">Hledat v klubu</DialogTitle>
             <SearchContents mobile />
@@ -144,9 +144,13 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
       'gap-3 rounded-xs p-3 text-sm cursor-pointer hover:bg-accent-5 active:bg-accent-6 data-[selected=true]:bg-accent-5 data-[selected=true]:text-accent-12 data-[selected=true]:active:bg-accent-6',
   });
   return (
-    <Command shouldFilter={false} label="Hledat v klubu">
-      <div className="flex items-center gap-2 border-b border-neutral-4 p-3">
-        <div className="relative min-w-0 flex-1">
+    <Command shouldFilter={false} label="Hledat v klubu" className={mobile ? 'h-full' : undefined}>
+      <div className={mobile
+        ? "flex h-full items-center gap-2 p-3"
+        : "flex items-center gap-2 border-b border-neutral-4 p-3"}>
+        <div className={mobile
+          ? "relative min-w-0 flex-1 group-data-[state=open]/search:animate-searchExpand group-data-[state=closed]/search:animate-searchCollapse motion-reduce:animate-none"
+          : "relative min-w-0 flex-1"}>
           <Search
             aria-hidden
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-accent-10"
@@ -160,19 +164,21 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
         </div>
         {mobile && (
           <DialogPrimitive.Close
-            aria-label="Zpět"
+            aria-label="Zavřít hledání"
             className={buttonCls({
               display: 'compact',
               variant: 'none',
-              size: 'icon',
-              className: 'order-first hover:bg-accent-5 active:bg-accent-6',
+              size: 'lg',
+              className: 'hover:bg-white/10 active:bg-white/20',
             })}
           >
-            <ArrowLeft />
+            <X />
           </DialogPrimitive.Close>
         )}
       </div>
-      <Command.List className="max-h-[65dvh] overflow-y-auto overscroll-contain p-2">
+      <Command.List className={mobile
+        ? "absolute inset-x-0 top-full max-h-[65dvh] overflow-y-auto overscroll-contain border-t border-neutral-4 bg-neutral-1 p-2 text-neutral-12 shadow-lg group-data-[state=open]/search:animate-slideDownAndFade motion-reduce:animate-none"
+        : "max-h-[65dvh] overflow-y-auto overscroll-contain p-2"}>
         {!search.trim() && (
           <p className="px-3 pt-3 pb-4 text-sm text-neutral-11">
             Hledejte lidi, páry, skupiny nebo události.
