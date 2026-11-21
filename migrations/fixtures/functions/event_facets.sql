@@ -18,12 +18,7 @@ language sql stable as $$
   ), cohort_people as (
     select cohort_id, person_id from current_cohort_membership
   ), candidates as materialized (
-    select i.id, i.type, i.location_id,
-      array(select person_id from event_trainer where event_id = i.id) as trainers,
-      array(select r.person_id from event_registration r
-        left join event_registration parent on parent.id = r.parent_registration_id
-        where r.event_id = i.id and r.registration_status = 'active' and r.person_id is not null
-          and ((condition).couple_id is null or parent.couple_id = (condition).couple_id)) as participants
+    select i.id, i.type, i.location_id
     from event i
     where i.tenant_id = current_tenant_id()
       and start_range is not null
@@ -38,10 +33,26 @@ language sql stable as $$
       and (not coalesce((condition).relevant_only, false) or i.parent_id is null
         or i.id in (select event_id from mine)
         or i.parent_id in (select event_id from mine))
+  ), trainers as (
+    select event_id, array_agg(person_id) as ids
+    from event_trainer
+    where event_id = any(array(select id from candidates))
+    group by event_id
+  ), participants as (
+    select r.event_id, array_agg(r.person_id) as ids
+    from event_registration r
+    left join event_registration parent on parent.id = r.parent_registration_id
+    where r.event_id = any(array(select id from candidates))
+      and r.registration_status = 'active' and r.person_id is not null
+      and ((condition).couple_id is null or parent.couple_id = (condition).couple_id)
+    group by r.event_id
   ), event_people as (
-    select *, case when (condition).couple_id is null then trainers || participants
-      else participants end as selected_people
-    from candidates
+    select c.*, coalesce(t.ids, '{}') as trainers,
+      case when (condition).couple_id is null then coalesce(t.ids, '{}') || coalesce(p.ids, '{}')
+        else coalesce(p.ids, '{}') end as selected_people
+    from candidates c
+    left join trainers t on t.event_id = c.id
+    left join participants p on p.event_id = c.id
   ), matches as (
     select *,
       (condition).types is null or type = any((condition).types) as type_matches,
