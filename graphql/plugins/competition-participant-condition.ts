@@ -26,6 +26,7 @@ declare global {
 function personPredicate(
   column: SQL,
   { personIds, onlyMine, coupleId, cohortId }: ParticipantCondition,
+  tenantMembers = false,
 ): SQL | null {
   if (personIds?.length === 0) return sql`false`;
 
@@ -41,7 +42,7 @@ function personPredicate(
         ', ',
       )})`,
     );
-  if (personIds == null && coupleId == null && !onlyMine)
+  if (tenantMembers && personIds == null && coupleId == null && cohortId == null && !onlyMine)
     people.push(
       sql`${column} in (
         select person_id from public.current_tenant_membership
@@ -65,7 +66,7 @@ function participantPredicate(
   scope?: ParticipantCondition | null,
 ): SQL | null {
   if (scope == null) return null;
-  const people = personPredicate(sql`link.person_id`, scope);
+  const people = personPredicate(sql`link.person_id`, scope, true);
   // Evaluate each scope once; array predicates push into both UNION branches.
   const predicates = [];
   if (people)
@@ -95,7 +96,7 @@ function datePredicate(column: SQL, date?: DateCondition | null): SQL | null {
 }
 
 function federationPeople(scope: ParticipantCondition): SQL {
-  const people = personPredicate(sql`link.person_id`, scope) ?? sql.true;
+  const people = personPredicate(sql`link.person_id`, scope, true) ?? sql.true;
   const couple = scope.coupleId == null ? sql.true : sql`link.person_id in (
     select man_id from public.couple where id = ${sqlValueWithCodec(scope.coupleId, TYPES.bigint)}
     union all
@@ -111,8 +112,9 @@ function registrationPredicate(row: SQL, scope: ParticipantCondition): SQL {
   if (scope.coupleId != null) {
     const coupleId = sqlValueWithCodec(scope.coupleId, TYPES.bigint);
     predicates.push(sql`(${row}.couple_id = ${coupleId}
-      or ${row}.parent_registration_id in (
-        select id from public.event_registration where couple_id = ${coupleId}
+      or exists (
+        select 1 from public.event_registration parent
+        where parent.id = ${row}.parent_registration_id and parent.couple_id = ${coupleId}
       ))`);
   }
   const filters = predicates.filter((predicate) => predicate !== null);
@@ -124,7 +126,7 @@ const plugins: GraphileConfig.Plugin[] = [
     typeDefs: `
       extend type FederationCompetitor { isMine: Boolean! }
       extend type FederationPerson { isMine: Boolean! }
-      """Intersect local person, couple, and cohort selectors. Without person or couple IDs, use current tenant members, trainers, and administrators."""
+      """Intersect local person, couple, and cohort selectors. For federation queries without explicit selectors, use current tenant members, trainers, and administrators."""
       input CompetitionParticipantCondition {
         """Local person IDs. An empty list matches nobody."""
         personIds: [BigInt!]

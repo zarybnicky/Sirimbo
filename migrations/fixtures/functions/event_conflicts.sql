@@ -4,75 +4,59 @@ create or replace function event_conflicts(
   condition event_search_condition default null
 ) returns setof event_conflict
 language sql stable as $$
-  with mine as (
-    select event_id from event_registration
-    where person_id = any((select current_person_ids())::bigint[])
-      and registration_status = 'active'
-    union all
-    select event_id from event_trainer
-    where person_id = any((select current_person_ids())::bigint[])
-  ), cohort_people as (
-    select cohort_id, person_id from current_cohort_membership
-    where ((condition).participant_ids is not null or (condition).couple_id is not null
-        or person_id in (
-          select person_id from current_tenant_membership
-          union all select person_id from current_tenant_trainer
-          union all select person_id from current_tenant_administrator
-        ))
-  ), candidates as (
-    select i.id, i.type, i.location_id,
-      array(select person_id from event_trainer where event_id = i.id) as trainers,
-      array(select person_id from event_registration
-        where event_id = i.id and registration_status = 'active'
-          and ((condition).couple_id is null or couple_id = (condition).couple_id
-            or parent_registration_id in (
-              select id from event_registration where couple_id = (condition).couple_id
-            ))) as participants
-    from event i
-    where i.tenant_id = current_tenant_id()
-      and start_range is not null
-      and app_private.tstzrange_overlaps(i.range, tstzrange(start_range, end_range, '[)'))
-      and ((condition).can_register is null or (event_registration_info(i)).can_register = (condition).can_register)
-      and ((condition).parent_id is null or i.parent_id = (condition).parent_id)
-      and (not coalesce((condition).only_mine, false) or i.id in (select event_id from mine))
-      and (not coalesce((condition).relevant_only, false) or i.parent_id is null
-        or i.id in (select event_id from mine)
-        or i.parent_id in (select event_id from mine))
-  ), event_people as (
-    select *, case when (condition).couple_id is null then trainers || participants
-      else participants end as selected_people
-    from candidates
-    where (condition).couple_id is null or cardinality(participants) > 0
-  ), matches as (
-    select *,
-      (condition).types is null or type = any((condition).types) as type_matches,
-      (condition).trainer_ids is null or trainers && (condition).trainer_ids as trainer_matches,
-      (condition).participant_ids is null or case when (condition).cohort_id is null
-        then selected_people && (condition).participant_ids
-        else selected_people && array(
-          select person_id from cohort_people c
-          where c.cohort_id = (condition).cohort_id and person_id = any((condition).participant_ids)
-        ) end as participant_matches,
-      (condition).cohort_id is null or selected_people && array(
-        select person_id from cohort_people c where c.cohort_id = (condition).cohort_id
-      ) as cohort_matches,
-      (condition).location_ids is null or location_id = any((condition).location_ids) as location_matches
-    from event_people
-  ), selected as (
-    select id from matches
-    where type_matches and trainer_matches and participant_matches and cohort_matches and location_matches
-  ), instances as materialized (
-    select e.id, e.name, e.since, e.until, e.range, e.parent_id, p.person_id
-    from event e
-    cross join lateral (
-      select person_id from event_trainer where event_id = e.id
-      union
-      select person_id from event_registration
-      where event_id = e.id and registration_status = 'active' and person_id is not null
-    ) p
+  with events as materialized (
+    select * from event e
     where e.tenant_id = current_tenant_id() and not e.is_cancelled
       and start_range is not null
       and app_private.tstzrange_overlaps(e.range, tstzrange(start_range, end_range, '[)'))
+  ), participation as materialized (
+    select e.id as event_id, p.*
+    from events e
+    cross join lateral (
+      select person_id, true as trainer, null::bigint as couple_id
+      from event_trainer where event_id = e.id
+      union all
+      select r.person_id, false, parent.couple_id
+      from event_registration r
+      left join event_registration parent on parent.id = r.parent_registration_id
+      where r.event_id = e.id and r.registration_status = 'active' and r.person_id is not null
+    ) p
+  ), mine as (
+    select event_id from event_registration
+    where person_id = any((select current_person_ids())::bigint[]) and registration_status = 'active'
+    union all
+    select event_id from event_trainer
+    where person_id = any((select current_person_ids())::bigint[])
+  ), selected as (
+    select e.id from events e
+    where ((condition).types is null or e.type = any((condition).types))
+      and ((condition).location_ids is null or e.location_id = any((condition).location_ids))
+      and ((condition).parent_id is null or e.parent_id = (condition).parent_id)
+      and ((condition).can_register is null or (event_registration_info(e::event)).can_register = (condition).can_register)
+      and (not coalesce((condition).only_mine, false) or e.id in (select event_id from mine))
+      and (not coalesce((condition).relevant_only, false) or e.parent_id is null
+        or e.id in (select event_id from mine) or e.parent_id in (select event_id from mine))
+      and ((condition).trainer_ids is null or exists (
+        select 1 from participation p where p.event_id = e.id and p.trainer
+          and p.person_id = any((condition).trainer_ids)
+      ))
+      and ((condition).couple_id is null or exists (
+        select 1 from event_registration r where r.event_id = e.id
+          and r.registration_status = 'active' and r.couple_id = (condition).couple_id
+      ))
+      and (((condition).participant_ids is null and (condition).cohort_id is null) or exists (
+        select 1 from participation p
+        where p.event_id = e.id
+          and ((condition).couple_id is null or p.couple_id = (condition).couple_id)
+          and ((condition).participant_ids is null or p.person_id = any((condition).participant_ids))
+          and ((condition).cohort_id is null or exists (
+            select 1 from current_cohort_membership c
+            where c.cohort_id = (condition).cohort_id and c.person_id = p.person_id
+          ))
+      ))
+  ), instances as materialized (
+    select e.id, e.name, e.since, e.until, e.range, e.parent_id, p.person_id
+    from events e join (select distinct event_id, person_id from participation) p on p.event_id = e.id
   )
   select a.person_id, p.name,
     a.id, a.name, a.since, a.until,

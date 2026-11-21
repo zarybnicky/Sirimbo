@@ -17,27 +17,23 @@ language sql stable as $$
     where person_id = any((select current_person_ids())::bigint[])
   ), cohort_people as (
     select cohort_id, person_id from current_cohort_membership
-    where ((condition).participant_ids is not null or (condition).couple_id is not null
-        or person_id in (
-          select person_id from current_tenant_membership
-          union all select person_id from current_tenant_trainer
-          union all select person_id from current_tenant_administrator
-        ))
   ), candidates as materialized (
     select i.id, i.type, i.location_id,
       array(select person_id from event_trainer where event_id = i.id) as trainers,
-      array(select person_id from event_registration
-        where event_id = i.id and registration_status = 'active'
-          and ((condition).couple_id is null or couple_id = (condition).couple_id
-            or parent_registration_id in (
-              select id from event_registration where couple_id = (condition).couple_id
-            ))) as participants
+      array(select r.person_id from event_registration r
+        left join event_registration parent on parent.id = r.parent_registration_id
+        where r.event_id = i.id and r.registration_status = 'active' and r.person_id is not null
+          and ((condition).couple_id is null or parent.couple_id = (condition).couple_id)) as participants
     from event i
     where i.tenant_id = current_tenant_id()
       and start_range is not null
       and app_private.tstzrange_overlaps(i.range, tstzrange(start_range, end_range, '[)'))
       and ((condition).can_register is null or (event_registration_info(i)).can_register = (condition).can_register)
       and ((condition).parent_id is null or i.parent_id = (condition).parent_id)
+      and ((condition).couple_id is null or exists (
+        select 1 from event_registration r where r.event_id = i.id
+          and r.registration_status = 'active' and r.couple_id = (condition).couple_id
+      ))
       and (not coalesce((condition).only_mine, false) or i.id in (select event_id from mine))
       and (not coalesce((condition).relevant_only, false) or i.parent_id is null
         or i.id in (select event_id from mine)
@@ -46,7 +42,6 @@ language sql stable as $$
     select *, case when (condition).couple_id is null then trainers || participants
       else participants end as selected_people
     from candidates
-    where (condition).couple_id is null or cardinality(participants) > 0
   ), matches as (
     select *,
       (condition).types is null or type = any((condition).types) as type_matches,
