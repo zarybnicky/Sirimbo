@@ -21,7 +21,8 @@ type TimeGridEventProps = {
   className?: string;
   event: CalendarClubEvent;
   isBackgroundEvent?: boolean;
-  slotMetrics: TimeSlotMetrics;
+  slotMetrics?: TimeSlotMetrics;
+  draggable?: boolean;
 };
 
 function TimeGridEvent({
@@ -30,6 +31,7 @@ function TimeGridEvent({
   event,
   isBackgroundEvent,
   slotMetrics,
+  draggable = true,
 }: TimeGridEventProps) {
   const auth = useAuth();
   const { useTrainerInitials } = useTenantConfig();
@@ -40,14 +42,14 @@ function TimeGridEvent({
     [event],
   );
   const [currentDragSubject] = useAtom(selectAtom(dragSubjectAtom, getCurrentEvent));
-  const canEdit = auth.canManageEvent(event.instance);
+  const canEdit = draggable && auth.canManageEvent(event.instance);
 
-  const startsBeforeDay = slotMetrics.startsBeforeDay(event.start);
-  const startsBefore = slotMetrics.startsBefore(event.start);
+  const startsBeforeDay = slotMetrics?.startsBeforeDay(event.start);
+  const startsBefore = slotMetrics?.startsBefore(event.start);
   const continuesPrior = startsBeforeDay || startsBefore;
 
-  const startsAfterDay = slotMetrics.startsAfterDay(event.end);
-  const startsAfter = slotMetrics.startsAfter(event.end);
+  const startsAfterDay = slotMetrics?.startsAfterDay(event.end);
+  const startsAfter = slotMetrics?.startsAfter(event.end);
   const continuesAfter = startsAfterDay || startsAfter;
 
   const onTouchOrMouse = React.useCallback(

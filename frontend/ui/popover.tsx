@@ -20,7 +20,7 @@ function PopoverPortal({
     <PopoverPrimitive.Portal {...props}>
       <div
         className={cn(
-          'fixed inset-0 z-30 flex items-start justify-center sm:items-center',
+          'fixed inset-0 z-40 flex items-start justify-center sm:items-center',
           className,
         )}
       >
