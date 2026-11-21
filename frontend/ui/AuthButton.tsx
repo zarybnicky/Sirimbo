@@ -42,11 +42,7 @@ export function AuthButton() {
 
       <DropdownMenuContent align="end">
         {memberMenu.map((item) =>
-          item.type === 'link' ? (
-            <DropdownMenuLink key={item.href} href={item.href}>
-              {item.title}
-            </DropdownMenuLink>
-          ) : (
+          item.type === 'menu' ? (
             <React.Fragment key={item.title}>
               <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
               {item.children.map((item) => (
@@ -55,6 +51,10 @@ export function AuthButton() {
                 </DropdownMenuLink>
               ))}
             </React.Fragment>
+          ) : (
+            <DropdownMenuLink key={item.href} href={item.href}>
+              {item.title}
+            </DropdownMenuLink>
           ),
         )}
         <DropdownMenuButton onClick={signOut}>Odhlásit se</DropdownMenuButton>

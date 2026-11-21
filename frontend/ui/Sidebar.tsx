@@ -74,8 +74,8 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
           <div className="space-y-1 pt-3 lg:pt-5 mr-1 relative">
             {auth.user ? (
               <>
-                <GlobalSearch />
                 <SidebarIdentity />
+                <GlobalSearch />
                 {memberMenu.map((item) => (
                   <SidebarSection key={item.title} item={item} />
                 ))}
@@ -95,16 +95,14 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
                 <div className="h-8" />
               </>
             ) : (
-              <SidebarLink
-                item={{ type: 'link', title: 'Přihlásit se', href: '/login' }}
-              />
+              <SidebarLink item={{ title: 'Přihlásit se', href: '/login' }} />
             )}
 
             {publicSite &&
               (showTopMenu ? (
                 topMenu.map((item) => <SidebarSection key={item.title} item={item} />)
               ) : (
-                <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
+                <SidebarLink item={{ title: 'Veřejná sekce', href: '/' }} />
               ))}
 
             <div className="mt-4 text-xs text-neutral-11 lg:text-white p-4 grid gap-2">
@@ -140,69 +138,77 @@ function SidebarIdentity() {
 
   return (
     <div className="grid gap-1.5 pb-3">
-      {persons.map((person) => {
-        const unpaidCount = person.unpaidPayments.length;
-        const overdueCount = person.unpaidPayments.filter(
-          ({ payment }) => payment?.dueAt && new Date(payment.dueAt).getTime() < now,
-        ).length;
-
-        return (
-          <SidebarLink
-            key={person.id}
-            selected={pathname === '/profil' && selectedPerson === person.id}
-            item={{
-              type: 'link',
-              title: person.name,
-              href: `/profil?person=${person.id}`,
-              className: 'rounded-xl py-2 tracking-normal',
-            }}
-            subtitle={
-              <div className="flex flex-col gap-1 no-underline">
-                {person.accountsList.length > 0
-                  ? `Kredit ${person.accountsList.map((x) => moneyFormatter.format(x)).join(', ')}`
-                  : null}
-                {unpaidCount > 0 &&
-                  [
-                    unpaidCount > overdueCount &&
-                      formatCount(unpaidCount - overdueCount, {
-                        one: 'čekající platba',
-                        few: 'čekající platby',
-                        other: 'čekající plateb',
-                      }),
-                    overdueCount && `${overdueCount} po splatnosti`,
-                  ]
-                    .filter(Boolean)
-                    .join(', ')}
-              </div>
-            }
-          />
-        );
-      })}
-      {persons.length === 0 && (
+      {persons.length === 0 ? (
         <SidebarLink
           item={{
-            type: 'link',
             title: user?.uEmail ?? '',
             href: '/profil',
             className: 'rounded-xl py-2 tracking-normal',
           }}
           selected={pathname === '/profil' && applications.length === 0}
         />
+      ) : (
+        persons.map(({ id, accountsList, name, unpaidPayments }) => {
+          const unpaidCount = unpaidPayments.length;
+          const overdueCount = unpaidPayments.filter(
+            (x) => x.payment?.dueAt && new Date(x.payment.dueAt).getTime() < now,
+          ).length;
+
+          return (
+            <SidebarLink
+              key={id}
+              selected={pathname === '/profil' && selectedPerson === id}
+              item={{
+                title: name,
+                href: `/profil?person=${id}`,
+                className: 'rounded-xl py-2 tracking-normal',
+              }}
+              subtitle={
+                <div className="flex flex-col gap-1 no-underline">
+                  {accountsList.length > 0 && (
+                    <span>
+                      Kredit{' '}
+                      {accountsList.map((x) => moneyFormatter.format(x)).join(', ')}
+                    </span>
+                  )}
+
+                  {unpaidCount > overdueCount && (
+                    <span>
+                      {formatCount(unpaidCount - overdueCount, {
+                        one: 'čekající platba',
+                        few: 'čekající platby',
+                        other: 'čekající plateb',
+                      })}
+                    </span>
+                  )}
+                  {overdueCount > 0 && (
+                    <span>
+                      {formatCount(overdueCount, {
+                        one: 'platba po splatnosti',
+                        few: 'platby po splatnosti',
+                        other: 'plateb po splatnosti',
+                      })}
+                    </span>
+                  )}
+                </div>
+              }
+            />
+          );
+        })
       )}
-      {applications.map((application) => (
+      {applications.map(({ id, firstName, lastName }) => (
         <SidebarLink
-          key={application.id}
+          key={id}
           item={{
-            type: 'link',
-            title: `${application.firstName} ${application.lastName}`,
-            href: `/profil?person=applications&application=${application.id}`,
+            title: `${firstName} ${lastName}`,
+            href: `/profil?person=applications&application=${id}`,
             className: 'rounded-xl py-2 tracking-normal',
           }}
           subtitle="Čeká na schválení"
           selected={
             pathname === '/profil' &&
             selectedPerson === 'applications' &&
-            selectedApplication === application.id
+            selectedApplication === id
           }
         />
       ))}
@@ -234,12 +240,25 @@ function SidebarResizeHandle() {
   return (
     <div
       role="separator"
+      aria-label="Šířka postranního menu"
       aria-orientation="vertical"
       tabIndex={0}
       className={cn(
         'group absolute inset-y-0 left-full ml-0.5 hidden w-2 lg:block',
         'touch-none select-none cursor-col-resize outline-hidden',
       )}
+      onKeyDown={(event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        const sidebar = event.currentTarget.parentElement;
+        if (!sidebar) return;
+
+        event.preventDefault();
+        const width = clampSidebarWidth(
+          sidebar.getBoundingClientRect().width + (event.key === 'ArrowRight' ? 16 : -16),
+        );
+        sidebar.style.setProperty('--sidebar-width', `${width}px`);
+        setWidth(width);
+      }}
       onPointerDown={(event) => {
         if (event.button !== 0) return;
         const parent = event.currentTarget.parentElement;
@@ -288,6 +307,7 @@ type SidebarLinkProps = {
 function SidebarLink({ item, onClick, subtitle, selected }: SidebarLinkProps) {
   const pathname = usePathname() ?? '';
   const searchParams = useSearchParams();
+  const { icon: Icon } = item;
   const [href, query] = item.href.split('?');
   const queryMatches = query
     ? [...new URLSearchParams(query)].every(
@@ -308,14 +328,19 @@ function SidebarLink({ item, onClick, subtitle, selected }: SidebarLinkProps) {
       onClick={onClick}
       aria-current={inPath ? 'page' : undefined}
       className={cn(
-        'flex items-center flex-1 mx-2 px-3 py-1.5 rounded-2xl',
+        'flex items-center gap-2 flex-1 mx-2 px-3 py-1.5 rounded-2xl',
         'text-sm font-medium tracking-wider hover:bg-accent-10 hover:text-white',
         item.className,
         inPath ? 'font-bold bg-neutral-11 text-white lg:bg-accent-10' : '',
       )}
     >
+      {Icon && (
+        <Icon aria-hidden className="mt-0.5 size-4 shrink-0 self-start opacity-80" />
+      )}
       <span className="min-w-0">
-        <span className={cn('block wrap-anywhere', inPath && 'underline')}>{item.title}</span>
+        <span className={cn('block wrap-anywhere', inPath && 'underline')}>
+          {item.title}
+        </span>
         {subtitle && (
           <span className="mt-0.5 block text-xs font-normal opacity-80">{subtitle}</span>
         )}
@@ -325,7 +350,7 @@ function SidebarLink({ item, onClick, subtitle, selected }: SidebarLinkProps) {
 }
 
 function SidebarSection({ item }: { item: MenuStructItem }) {
-  if (item.type === 'link') {
+  if (item.type !== 'menu') {
     return <SidebarLink item={item} />;
   }
   if (item.children.length <= 0) {

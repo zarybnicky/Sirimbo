@@ -3,6 +3,7 @@
 import { GlobalSearchDocument, type GlobalSearchQuery } from '@/graphql/Search';
 import { useAuth } from '@/lib/auth';
 import { useMemberMenu } from '@/lib/use-menu';
+import { usePlatform } from '@/lib/usePlatform';
 import { getEntityLink } from '@/ui/EntityLink';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -21,6 +22,7 @@ import {
   Search,
   X,
   CalendarDays,
+  CircleUserRound,
   UserRound,
   UsersRound,
   MapPin,
@@ -38,6 +40,7 @@ export function GlobalSearch({
   children?: React.ReactNode;
 }) {
   const container = React.useRef<HTMLDivElement>(null);
+  const platform = usePlatform();
   React.useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (
@@ -73,9 +76,13 @@ export function GlobalSearch({
                 'gap-2 rounded-2xl px-3 py-1.5 text-sm tracking-wider hover:bg-accent-10 hover:text-white active:bg-accent-11 active:text-white data-[state=open]:bg-accent-10',
             })}
           >
-            <Search aria-hidden className="size-4 shrink-0" />
+            <Search aria-hidden className="size-4 shrink-0 opacity-80" />
             <span>Hledat</span>
-            <kbd className="ml-auto text-xs tracking-normal opacity-60">⌘ / Ctrl K</kbd>
+            {platform !== null && (
+              <kbd className="ml-auto whitespace-nowrap text-xs tracking-normal opacity-60">
+                {/^(Mac|iPhone|iPad|iPod)/u.test(platform) ? '⌘ K' : 'Ctrl K'}
+              </kbd>
+            )}
           </DialogTrigger.Plain>
         )}
         {mobile ? (
@@ -124,8 +131,9 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
     {
       title: auth.isLoggedIn ? 'Můj profil' : 'Přihlásit se',
       href: auth.isLoggedIn ? '/profil' : '/login',
+      icon: CircleUserRound,
     },
-    ...menu.flatMap((item) => (item.type === 'link' ? [item] : item.children)),
+    ...menu.flatMap((item) => (item.type === 'menu' ? item.children : [item])),
   ].filter(
     ({ href, title }, index, items) =>
       items.findIndex((x) => x.href === href) === index &&
@@ -211,24 +219,15 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
             heading={search.trim() ? 'Přejít na' : 'Návrhy'}
             className="**:[[cmdk-group-heading]]:px-3 **:[[cmdk-group-heading]]:py-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:text-neutral-11"
           >
-            {navigation.map((item) => (
+            {navigation.map(({ href, title, icon: Icon = PanelsTopLeft }) => (
               <Command.Item
-                key={item.href}
-                value={item.href}
-                onSelect={() => navigate(item.href)}
+                key={href}
+                value={href}
+                onSelect={() => navigate(href)}
                 className={itemClass}
               >
-                {React.createElement(
-                  item.href.startsWith('/rozpis') || item.href === '/akce'
-                    ? CalendarDays
-                    : item.href.startsWith('/profil') || item.href === '/login'
-                      ? UserRound
-                      : ['/clenove', '/pary', '/treninkove-skupiny'].includes(item.href)
-                        ? UsersRound
-                        : PanelsTopLeft,
-                  { className: 'size-4 shrink-0 text-neutral-11', 'aria-hidden': true },
-                )}
-                {item.title}
+                <Icon className="size-4 shrink-0 text-neutral-11" aria-hidden />
+                {title}
               </Command.Item>
             ))}
           </Command.Group>
@@ -269,7 +268,7 @@ function SearchContents({ mobile = false }: { mobile?: boolean }) {
               <button onClick={() => retry({ requestPolicy: 'network-only' })}>
                 Hledání se nezdařilo. Zkusit znovu
               </button>
-            ) : results.length === 0 ? (
+            ) : results.length === 0 && navigation.length === 0 ? (
               'Nic jsme nenašli.'
             ) : null}
           </div>

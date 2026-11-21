@@ -3,11 +3,44 @@ import { canAccess, type AccessRequirements, type ResolvedAuth } from '@/lib/aut
 import type { TenantConfig } from '@/tenant/types';
 import { useAtomValue } from 'jotai';
 import { calendarPreferencesAtom } from '@/calendar/state';
+import {
+  Broom,
+  CalendarDays,
+  Clipboard,
+  Coins,
+  createLucideIcon,
+  Crown,
+  FileInput,
+  Footprints,
+  Globe,
+  KeyRound,
+  type LucideIcon,
+  Mail,
+  Newspaper,
+  Pin,
+  Star,
+  University,
+  UserGroup,
+  UserRound,
+} from 'lucide-react';
+
+const DanceCouple = createLucideIcon('dance-couple', [
+  ['circle', { cx: 8, cy: 5, r: 2, key: 'left-head' }],
+  ['circle', { cx: 16, cy: 6, r: 2, key: 'right-head' }],
+  [
+    'path',
+    {
+      d: 'm3 9 5 2 4-1 4 2 5-3M8 11l-1 5-3 4m3-4 4 4m5-8 1 4 4 4m-4-4-3 4',
+      key: 'pose',
+    },
+  ],
+]);
 
 export type MenuLink = AccessRequirements & {
-  type: 'link';
+  type?: never;
   title: string;
   href: string;
+  icon?: LucideIcon;
   className?: string;
 };
 
@@ -26,28 +59,28 @@ function filterMenu(
 ): MenuStructItem[] {
   const result: MenuStructItem[] = [];
   for (const item of items) {
-    if (item.type === 'link') {
-      if (canAccess(auth, tenant, item)) result.push(item);
-    } else {
+    if (item.type === 'menu') {
       const children = item.children.filter((x) => canAccess(auth, tenant, x));
       if (children.length > 0) result.push({ ...item, children });
+    } else if (canAccess(auth, tenant, item)) {
+      result.push(item);
     }
   }
   return result;
 }
 
 export const topMenu: MenuStructItem[] = [
-  { type: 'link', title: 'Domů', href: '/' },
+  { title: 'Domů', href: '/' },
   {
     type: 'menu',
     title: 'Klub',
     children: [
-      { type: 'link', title: 'O nás', href: '/o-nas' },
-      { type: 'link', title: 'Kde trénujeme', href: '/kde-trenujeme' },
-      { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
-      { type: 'link', title: 'Trenéři', href: '/treneri' },
-      { type: 'link', title: 'Výhody členství', href: '/vyhody-clenstvi' },
-      { type: 'link', title: 'Galerie mistrů', href: '/galerie-mistru' },
+      { title: 'O nás', href: '/o-nas' },
+      { title: 'Kde trénujeme', href: '/kde-trenujeme' },
+      { title: 'Tréninkové programy', href: '/treninkove-programy' },
+      { title: 'Trenéři', href: '/treneri' },
+      { title: 'Výhody členství', href: '/vyhody-clenstvi' },
+      { title: 'Galerie mistrů', href: '/galerie-mistru' },
     ],
   },
   {
@@ -55,55 +88,78 @@ export const topMenu: MenuStructItem[] = [
     title: 'Nabízíme',
     children: [
       {
-        type: 'link',
         title: 'Přípravka tanečního sportu',
         href: 'https://nabor.tkolymp.cz',
       },
-      { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
-      { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
+      { title: 'Vystoupení na akcích', href: '/vystoupeni' },
+      { title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
     ],
   },
-  { type: 'link', title: 'Aktuality', href: '/clanky' },
-  { type: 'link', title: 'Galerie', href: '/galerie' },
-  { type: 'link', title: 'Akce', href: '/akce' },
-  { type: 'link', title: 'Kontakt', href: '/kontakt' },
+  { title: 'Aktuality', href: '/clanky' },
+  { title: 'Galerie', href: '/galerie' },
+  { title: 'Akce', href: '/akce' },
+  { title: 'Kontakt', href: '/kontakt' },
 ];
 
 const memberMenu: MenuStructItem[] = [
   {
-    type: 'link',
     title: 'Přehled',
     href: '/dashboard?tab=myAnnouncements',
+    icon: Star,
   },
-  { type: 'link', title: 'Nástěnka', href: '/nastenka', requireMember: true },
   {
-    type: 'link',
+    title: 'Nástěnka',
+    href: '/nastenka',
+    icon: Mail,
+    requireMember: true,
+  },
+  {
     title: 'Stálá nástěnka',
     className: 'lg:hidden',
     href: '/dashboard?tab=stickyAnnouncements',
+    icon: Pin,
     requireMember: true,
     requirePublicSite: true,
   },
-  { type: 'link', title: 'Kalendář', href: '/rozpis' },
-  { type: 'link', title: 'Soutředění', href: '/akce' },
+  { title: 'Kalendář', href: '/rozpis', icon: CalendarDays },
+  { title: 'Soustředění', href: '/akce', icon: Footprints },
   {
     type: 'menu',
     title: 'Taneční klub',
     children: [
-      { type: 'link', title: 'Klub', href: '/tanecni-klub', requireMember: true },
       {
-        type: 'link',
-        title: 'Tréninkové skupiny',
-        href: '/treninkove-skupiny',
+        title: 'Klub',
+        href: '/tanecni-klub',
+        icon: University,
         requireMember: true,
       },
-      { type: 'link', title: 'Páry', href: '/pary', requireMember: true },
-      { type: 'link', title: 'Členové', href: '/clenove', requireMember: true },
-      { type: 'link', title: 'Žebříček', href: '/zebricek', requireMember: true },
       {
-        type: 'link',
+        title: 'Tréninkové skupiny',
+        href: '/treninkove-skupiny',
+        icon: UserGroup,
+      },
+      {
+        title: 'Páry',
+        href: '/pary',
+        icon: DanceCouple,
+        requireMember: true,
+      },
+      {
+        title: 'Členové',
+        href: '/clenove',
+        icon: UserRound,
+        requireMember: true,
+      },
+      {
+        title: 'Žebříček',
+        href: '/zebricek',
+        icon: Crown,
+        requireMember: true,
+      },
+      {
         title: 'Soutěžní data',
         href: '/federated',
+        icon: Globe,
         requireMember: true,
       },
     ],
@@ -112,44 +168,43 @@ const memberMenu: MenuStructItem[] = [
     type: 'menu',
     title: 'Správa',
     children: [
-      { type: 'link', title: 'Platby', href: '/platby', requireAdmin: true },
       {
-        type: 'link',
+        title: 'Platby',
+        href: '/platby',
+        icon: Coins,
+        requireAdmin: true,
+      },
+      {
         title: 'Články',
         href: '/aktuality',
+        icon: Newspaper,
         requireTrainer: true,
         requirePublicSite: true,
       },
       {
-        type: 'link',
         title: 'Vyplněné formuláře',
         href: '/crm',
+        icon: Clipboard,
         requireAdmin: true,
         requirePublicSite: true,
       },
       {
-        type: 'link',
         title: 'Přístupy',
         href: '/pristupy',
+        icon: KeyRound,
         requireAdmin: true,
       },
       {
-        type: 'link',
         title: 'Import z evidence',
         href: '/starlet-import',
+        icon: FileInput,
         requireAdmin: true,
         requireStarletImport: true,
       },
-    ],
-  },
-  {
-    type: 'menu',
-    title: 'Systém',
-    children: [
       {
-        type: 'link',
         title: 'Crawler',
         href: '/crawler',
+        icon: Broom,
         requireSystemAdmin: true,
       },
     ],
@@ -163,13 +218,8 @@ export function useMemberMenu(): MenuStructItem[] {
   const params = new URLSearchParams(preferences);
   const calendarHref = `/rozpis${params.size > 0 ? `?${params}` : ''}`;
   return filterMenu(memberMenu, auth, tenant).map((item) =>
-    item.type === 'menu'
-      ? {
-          ...item,
-          children: item.children.map((link) =>
-            link.href === '/rozpis' ? { ...link, href: calendarHref } : link,
-          ),
-        }
+    item.type !== 'menu' && item.href === '/rozpis'
+      ? { ...item, href: calendarHref }
       : item,
   );
 }

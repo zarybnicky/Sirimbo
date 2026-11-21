@@ -48,6 +48,7 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
             <button
               className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
               onClick={() => setIsOpen((x) => !x)}
+              aria-label={isOpen ? 'Zavřít menu' : 'Otevřít menu'}
               aria-controls="app-navigation"
               aria-expanded={isOpen}
             >
@@ -76,7 +77,7 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
 }
 
 function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: string }) {
-  const links = item.type === 'link' ? [item] : item.children;
+  const links = item.type === 'menu' ? item.children : [item];
   const inPath = links.some(({ href }) => {
     const [path] = href.split('?');
     if (!path) return false;
@@ -94,7 +95,7 @@ function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: s
       : 'text-[#f3f3f3] drop-shadow-sm',
   );
 
-  if (item.type === 'link') {
+  if (item.type !== 'menu') {
     return (
       <Link href={item.href} className={`${classes} ${item.className}`}>
         {item.title}
