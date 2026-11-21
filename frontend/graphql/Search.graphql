@@ -1,0 +1,10 @@
+query GlobalSearch($search: String!) {
+  globalSearchList(search: $search, limit: 20) {
+    position
+    person { id name }
+    couple { id name }
+    cohort { id name }
+    location { id name }
+    event { id name since isCancelled }
+  }
+}

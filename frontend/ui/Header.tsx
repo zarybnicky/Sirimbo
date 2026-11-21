@@ -1,3 +1,5 @@
+import { GlobalSearch } from '@/ui/GlobalSearch';
+import { DialogTrigger } from '@/ui/dialog';
 import { cn } from '@/lib/cn';
 import { type MenuStructItem, topMenu } from '@/lib/use-menu';
 import { getTenantUi } from '@/tenant/ui';
@@ -9,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/ui/dropdown';
 import { buttonCls } from '@/ui/style';
-import { useAuth, useTenantId } from '@/lib/auth';
-import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
+import { useTenantId } from '@/lib/auth';
+import { ChevronDown, Menu as MenuIcon, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -24,7 +26,6 @@ type Props = {
 
 export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
   const pathname = usePathname() ?? '';
-  const auth = useAuth();
   const tenantId = useTenantId();
   const { DesktopLogo, MobileLogo, SocialIcons } = getTenantUi(tenantId);
 
@@ -42,27 +43,33 @@ export function Header({ homeHref, isOpen, setIsOpen, showTopMenu }: Props) {
           </div>
         )}
 
-        <div className="flex lg:hidden items-stretch justify-between min-h-12 md:min-h-16 p-2">
-          <button
-            className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            onClick={() => setIsOpen((x) => !x)}
-            aria-controls="app-navigation"
-            aria-expanded={isOpen}
-          >
-            <MenuIcon aria-hidden="true" />
-          </button>
+        <GlobalSearch mobile>
+          <div className="flex items-stretch justify-between min-h-12 md:min-h-16 p-2 transition-opacity motion-reduce:transition-none group-has-[[role=dialog][data-state=open]]:opacity-0">
+            <button
+              className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
+              onClick={() => setIsOpen((x) => !x)}
+              aria-controls="app-navigation"
+              aria-expanded={isOpen}
+            >
+              <MenuIcon aria-hidden="true" />
+            </button>
 
-          <div className="grow flex items-center">
-            <MobileLogo href={homeHref} />
+            <div className="grow flex items-center">
+              <MobileLogo href={homeHref} />
+            </div>
+
+            <DialogTrigger.Plain
+              aria-label="Hledat"
+              className={buttonCls({
+                className: 'm-1 hover:bg-white/10 active:bg-white/20',
+                size: 'lg',
+                variant: 'none',
+              })}
+            >
+              <Search aria-hidden="true" />
+            </DialogTrigger.Plain>
           </div>
-
-          <Link
-            className={buttonCls({ className: 'm-1', size: 'lg', variant: 'none' })}
-            href={auth.isLoggedIn ? '/profil' : '/login'}
-          >
-            <Account aria-hidden="true" />
-          </Link>
-        </div>
+        </GlobalSearch>
       </div>
     </header>
   );
@@ -73,7 +80,9 @@ function DesktopMenuItem({ item, pathname }: { item: MenuStructItem; pathname: s
   const inPath = links.some(({ href }) => {
     const [path] = href.split('?');
     if (!path) return false;
-    return path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(`${path}/`);
+    return path === '/'
+      ? pathname === '/'
+      : pathname === path || pathname.startsWith(`${path}/`);
   });
 
   const classes = cn(

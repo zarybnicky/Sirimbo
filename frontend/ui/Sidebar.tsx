@@ -1,3 +1,4 @@
+import { GlobalSearch } from '@/ui/GlobalSearch';
 import { signOut, useAuth, useTenantConfig, useTenantId } from '@/lib/auth';
 import { buildId } from '@/lib/build-id';
 import { cn } from '@/lib/cn';
@@ -73,6 +74,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
           <div className="space-y-1 pt-3 mr-1 relative">
             {auth.user ? (
               <>
+                <GlobalSearch />
                 <SidebarIdentity />
                 {memberMenu.map((item) => (
                   <SidebarSection key={item.title} item={item} />
