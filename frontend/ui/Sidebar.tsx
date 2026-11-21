@@ -71,7 +71,7 @@ export function Sidebar({ homeHref, isOpen, setIsOpen, showTopMenu }: SidebarPro
       >
         <nav id="app-navigation" className="h-screen overflow-y-auto scrollbar">
           {!showTopMenu && <SidebarLogo href={homeHref} />}
-          <div className="space-y-1 pt-3 mr-1 relative">
+          <div className="space-y-1 pt-3 lg:pt-5 mr-1 relative">
             {auth.user ? (
               <>
                 <GlobalSearch />

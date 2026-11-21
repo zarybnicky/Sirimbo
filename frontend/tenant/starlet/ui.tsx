@@ -8,7 +8,7 @@ export function SidebarLogo() {
       <Link
         href="/dashboard"
         aria-label="Nástěnka"
-        className="h-28 pt-3 pl-2 pr-4 mx-auto"
+        className="min-w-0 pt-3 pl-2 pr-4 mx-auto"
       >
         <Image alt="" src={LogoIcon} sizes="256px" />
       </Link>
