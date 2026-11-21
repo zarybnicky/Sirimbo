@@ -75,6 +75,21 @@ export const EventDetailsPlugin = wrapPlans((build) => {
       },
     },
     EventRegistration: {
+      lastAttended(_plan, $source) {
+        const $registration = $source as PgSelectSingleStep;
+        // Inline the lookup so PostgreSQL can plan it with the registrations,
+        // instead of invoking a SQL function (and its RLS queries) per row.
+        return pgClassExpression($registration, TYPES.timestamptz)`(
+          select max(attended.since)
+          from public.event_registration r
+          join public.event current on current.id = ${$registration.get('event_id')}
+          join public.event attended on attended.id = r.event_id
+          where current.series_id is not null
+            and attended.series_id = current.series_id
+            and r.person_id = ${$registration.get('person_id')}
+            and r.status = 'attended'
+        )`;
+      },
       couple(plan, $source) {
         const $registration = $source as PgSelectSingleStep;
         const $couple = plan() as PgSelectSingleStep;

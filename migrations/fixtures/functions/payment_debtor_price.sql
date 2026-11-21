@@ -20,9 +20,9 @@ where payment_recipient.payment_id = p.payment_id
     where d.id = p.id and d.payment_id = p.payment_id
       and d.tenant_id = (select current_tenant_id())
       and (
-        (select pg_has_role(coalesce(nullif(current_setting('role'), 'none'), session_user), 'administrator', 'member'))
+        (select pg_has_role(current_setting('role'), 'administrator', 'member'))
         or (
-          (select pg_has_role(coalesce(nullif(current_setting('role'), 'none'), session_user), 'member', 'member'))
+          (select pg_has_role(current_setting('role'), 'member', 'member'))
           and d.person_id = any ((select current_person_ids())::bigint[])
         )
       )
