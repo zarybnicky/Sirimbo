@@ -100,6 +100,7 @@ export function PersonList() {
               .join(', ')}
             selected={id === item.id}
             imageUrl={item.image?.url}
+            avatarName={item.name}
             icon={<UserRound className="size-5" />}
             colors={item.cohortColors.length > 0 ? item.cohortColors : ['#fff']}
           />

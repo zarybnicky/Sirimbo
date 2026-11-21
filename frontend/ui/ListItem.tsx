@@ -10,6 +10,7 @@ export function ListItem({
   subtitle,
   selected = false,
   imageUrl,
+  avatarName,
   icon,
   colors = [],
   wrap = false,
@@ -19,10 +20,17 @@ export function ListItem({
   subtitle?: ReactNode;
   selected?: boolean;
   imageUrl?: string | null;
+  avatarName?: string | null;
   icon?: ReactNode;
   colors?: readonly string[];
   wrap?: boolean;
 }) {
+  const names = avatarName?.trim().split(/\s+/).filter(Boolean) ?? [];
+  const initials = (names.length > 1 ? [names[0], names.at(-1)] : names)
+    .map((name) => [...(name ?? '')][0] ?? '')
+    .join('')
+    .toUpperCase();
+
   return (
     <Link
       href={href}
@@ -38,7 +46,7 @@ export function ListItem({
         ),
       })}
     >
-      {(imageUrl || icon) && (
+      {(imageUrl || initials || icon) && (
         <span
           aria-hidden="true"
           className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-neutral-3 text-neutral-10"
@@ -51,6 +59,8 @@ export function ListItem({
               height={40}
               className="size-10 object-cover"
             />
+          ) : initials ? (
+            <span className="text-lg text-neutral-11/70">{initials}</span>
           ) : (
             icon
           )}
