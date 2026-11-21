@@ -223,7 +223,7 @@ const ClubTrainers = React.memo(function ClubTrainers({ club }: { club: ClubData
     <>
       {club.tenantTrainersList.filter(keyIsNonNull('person')).map((item) => (
         <ActionRow key={item.id} actions={trainerActionMap.get(item.id)!}>
-          <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm py-1">
+          <div className="grow gap-3 align-baseline flex flex-wrap justify-between text-sm">
             <EntityLink
               type="person"
               entity={item.person}

@@ -12,7 +12,7 @@ export function ListItem({
   imageUrl,
   avatarName,
   icon,
-  colors = [],
+  colors,
   wrap = false,
 }: {
   href: LinkProps['href'];
@@ -42,7 +42,7 @@ export function ListItem({
         className: cn(
           'm-1 mt-0 flex items-center gap-2 rounded-lg border p-1.5 px-2 text-sm',
           selected && 'border-transparent',
-          colors.length > 0 && 'pl-5',
+          colors && 'pl-5',
         ),
       })}
     >
@@ -79,7 +79,7 @@ export function ListItem({
           </div>
         )}
       </div>
-      {colors.length > 0 && (
+      {colors?.length ? (
         <div
           aria-hidden="true"
           className="absolute inset-y-0 left-0 flex w-3 flex-col overflow-hidden rounded-l-lg shadow-xs"
@@ -88,7 +88,7 @@ export function ListItem({
             <div key={`${color}-${index}`} className="min-h-0 flex-1" style={{ backgroundColor: color }} />
           ))}
         </div>
-      )}
+      ) : null}
     </Link>
   );
 }

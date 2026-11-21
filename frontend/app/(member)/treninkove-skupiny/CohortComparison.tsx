@@ -49,16 +49,16 @@ export function CohortComparison({ data }: { data: CohortListQuery | undefined }
         {rows.map((row) => (
           <tr key={row.id ?? row.name}>
             <th scope="row">
-              {row.id ? (
-                <EntityLink
-                  type="cohort"
-                  entity={row}
-                  className="block border-l-4 pl-2 underline"
-                  style={{ borderColor: row.color ?? undefined }}
-                />
-              ) : (
-                row.name
-              )}
+              <div
+                className="border-l-4 pl-2"
+                style={{ borderColor: row.color ?? 'transparent' }}
+              >
+                {row.id ? (
+                  <EntityLink type="cohort" entity={row} className="block" />
+                ) : (
+                  row.name
+                )}
+              </div>
             </th>
             <td>{row.people.length}</td>
             <td>
