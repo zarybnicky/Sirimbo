@@ -30,6 +30,10 @@ ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_image_fk FOREIGN KEY (tenant_id, image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (image_id);
 ALTER TABLE ONLY public.cohort
     ADD CONSTRAINT cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT cohort_tenant_id_id_key ON public.cohort IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+COMMENT ON CONSTRAINT cohort_cohort_group_fkey ON public.cohort IS '@fieldName cohortGroup
+@foreignFieldName cohorts';
+COMMENT ON CONSTRAINT cohort_image_fk ON public.cohort IS '@fieldName image';
 
 CREATE POLICY admin_all ON public.cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

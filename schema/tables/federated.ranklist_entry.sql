@@ -18,6 +18,7 @@ ALTER TABLE ONLY federated.ranklist_entry
     ADD CONSTRAINT ranklist_entry_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
 ALTER TABLE ONLY federated.ranklist_entry
     ADD CONSTRAINT ranklist_entry_snapshot_id_fkey FOREIGN KEY (snapshot_id) REFERENCES federated.ranklist_snapshot(id);
+COMMENT ON CONSTRAINT ranklist_entry_competitor_id_fkey ON federated.ranklist_entry IS '@foreignFieldName ranklistEntries';
 
 CREATE INDEX ranklist_entry_competitor_id_idx ON federated.ranklist_entry USING btree (competitor_id);
 CREATE INDEX ranklist_entry_snapshot_id_ranking_idx ON federated.ranklist_entry USING btree (snapshot_id, ranking);

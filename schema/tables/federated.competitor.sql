@@ -38,6 +38,9 @@ ALTER TABLE ONLY federated.competitor
     ADD CONSTRAINT competitor_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
 ALTER TABLE ONLY federated.competitor
     ADD CONSTRAINT competitor_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+COMMENT ON CONSTRAINT competitor_age_group_code_fkey ON federated.competitor IS '@fieldName ageGroupDetails
+@backwardBehavior -single -list -connection';
+COMMENT ON CONSTRAINT competitor_federation_fkey ON federated.competitor IS '@foreignFieldName competitors';
 
 CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.competitor FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
 

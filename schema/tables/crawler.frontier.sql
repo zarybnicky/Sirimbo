@@ -31,6 +31,8 @@ ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_response_id_fkey FOREIGN KEY (last_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
 ALTER TABLE ONLY crawler.frontier
     ADD CONSTRAINT frontier_last_successful_response_id_fkey FOREIGN KEY (last_successful_response_id) REFERENCES crawler.json_response(id) ON DELETE SET NULL;
+COMMENT ON CONSTRAINT frontier_last_response_id_fkey ON crawler.frontier IS '@foreignFieldName targetsWithLatestResponse';
+COMMENT ON CONSTRAINT frontier_last_successful_response_id_fkey ON crawler.frontier IS '@foreignFieldName targetsWithLastSuccessfulResponse';
 
 CREATE POLICY system_admin_read ON crawler.frontier FOR SELECT TO system_admin USING (true);
 

@@ -8,3 +8,5 @@ CREATE TYPE federated.competition_type AS ENUM (
     'g_cup',
     'unknown'
 );
+
+COMMENT ON TYPE federated.competition_type IS '@name competition_type';

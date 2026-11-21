@@ -7,3 +7,5 @@ CREATE TYPE federated.competitor_type AS ENUM (
     'group',
     'team'
 );
+
+COMMENT ON TYPE federated.competitor_type IS '@name competitor_type';

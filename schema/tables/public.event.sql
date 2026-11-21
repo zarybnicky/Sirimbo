@@ -59,6 +59,14 @@ ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_series_fkey FOREIGN KEY (tenant_id, series_id) REFERENCES public.event_series(tenant_id, id) ON UPDATE CASCADE ON DELETE SET NULL (series_id);
 ALTER TABLE ONLY public.event
     ADD CONSTRAINT event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_tenant_id_id_key ON public.event IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+COMMENT ON CONSTRAINT event_cover_image_fk ON public.event IS '@fieldName coverImage';
+COMMENT ON CONSTRAINT event_location_fkey ON public.event IS '@fieldName location
+@foreignFieldName events';
+COMMENT ON CONSTRAINT event_parent_id_fkey ON public.event IS '@fieldName parent
+@foreignFieldName childEvents';
+COMMENT ON CONSTRAINT event_series_fkey ON public.event IS '@fieldName series
+@foreignFieldName events';
 
 CREATE POLICY admin_same_tenant ON public.event TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

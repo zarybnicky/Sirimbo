@@ -22,3 +22,5 @@ CREATE TYPE federated.person_license_discipline AS ENUM (
     'unknown',
     'esports'
 );
+
+COMMENT ON TYPE federated.person_license_discipline IS '@name person_license_discipline';

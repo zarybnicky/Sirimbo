@@ -4,3 +4,5 @@ CREATE TYPE federated.gender AS ENUM (
     'other',
     'unknown'
 );
+
+COMMENT ON TYPE federated.gender IS '@name gender';

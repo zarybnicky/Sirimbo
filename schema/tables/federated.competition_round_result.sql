@@ -20,6 +20,9 @@ ALTER TABLE ONLY federated.competition_round_result
     ADD CONSTRAINT competition_round_result_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
 ALTER TABLE ONLY federated.competition_round_result
     ADD CONSTRAINT competition_round_result_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT competition_round_result_competitor_id_fkey ON federated.competition_round_result IS '@foreignFieldName roundResults';
+COMMENT ON CONSTRAINT competition_round_result_round_id_fkey ON federated.competition_round_result IS '@foreignFieldName results
+@backwardBehavior +list -connection';
 
 CREATE INDEX competition_round_result_competitor_id_idx ON federated.competition_round_result USING btree (competitor_id);
 CREATE INDEX competition_round_result_round_id_overall_ranking_idx ON federated.competition_round_result USING btree (round_id, overall_ranking);

@@ -31,22 +31,19 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Prefer compact, elegant code that keeps the local control flow easy to read. Extract functions only when they name a real concept, isolate complex behavior, or remove meaningful duplication.
 - Avoid one-line or single-use functions; they usually make this codebase harder to read than an inline expression.
 
-## Code style preferences
-- Worker code runs as TypeScript on Node 24 with `erasableSyntaxOnly`; keep local imports explicit with `.ts` extensions.
-
 ## Direct SQL queries
 - Use named pgtyped queries in `.sql` files for application SQL executed through `pg`. Use the generated parameter and result types. A handwritten `client.query<Row>(sql, params)` type does not check the SQL against the database.
-- Reserve raw `client.query()` calls for trivial transaction or process commands such as `BEGIN`, `COMMIT`, and `ROLLBACK`. Parameterized data queries and function calls belong in pgtyped too.
-- Group queries by feature or shared operation, not by route or query count. Extend an existing SQL file when it owns the same concern. Keep feature-specific SQL near its callers; put shared operations such as job enqueueing in `frontend/lib/`. Avoid one file per trivial caller and unrelated catch-all query files.
+- Reserve raw `client.query()` calls for trivial transaction or process commands such as `BEGIN`, `COMMIT`, `SET`, or `ROLLBACK`. Parameterized data queries and function calls belong in pgtyped too.
+- Keep feature-specific SQL near its callers; put shared operations such as job enqueueing in `frontend/lib/`. Avoid one file per trivial caller and unrelated catch-all query files.
 - Inside a transaction, call the generated query's `.run(params, client)` with that transaction's client. Frontend `runQuery()` uses the pool and does not inherit a caller's transaction or request settings.
 
 ## High-level structure
-- `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`, feature-specific modules in folders such as `frontend/calendar`, `frontend/scoreboard`, and `frontend/lib`. Tenant-specific overrides live in `frontend/tenant`.
+- `frontend/`: Next.js 16 App Router app using TypeScript, Tailwind, and URQL. Shared UI primitives are in `frontend/ui`, routes in `frontend/app`. Tenant-specific overrides live in `frontend/tenant`.
 - `worker/`: Graphile Worker package. Queue tasks live in `worker/tasks`, MJML email templates in `worker/templates`, and the federated dance-data crawler/frontier system in `worker/crawler`.
 - `graphql/`: Shared PostGraphile configuration, plugins, and schema exporter; applications supply their own database pools.
 - `frontend/graphql/`: GraphQL operation documents, generated TypeScript bindings, and the cache-key lint helper.
 - `e2e/`: Playwright smoke tests and auth fixtures.
-- `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/1-current.sql` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
+- `migrations/`: Graphile Migrate directory layout. `committed/` holds historical migrations, `current/` is the scratchpad for new idempotent changes, `fixtures/` contains repeatable helper SQL/PLpgSQL objects, and `initial_schema.sql` mirrors the baseline dump.
 - `schema.sql`: pg_dump of the live database, including extensions and RLS policies. Use it together with `schema/split.py` to keep the `schema/` tree synchronized.
 - `schema/`: Auto-split DDL organized by domain/type/table/function/view for review purposes only.
 
@@ -79,8 +76,8 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Supporting functions (examples under `schema/functions/public.*.sql`) expose helper queries like `filtered_people`, `create_missing_cohort_subscription_payments`, and `get_current_tenant()`; many assume `current_tenant_id()` is set.
 
 ## GraphQL stack
-- PostGraphile auto-exposes the PostgreSQL schema with additional fields and filters from custom plugins (S3 file URLs, current-user helpers, and person membership filters).
-- The frontend consumes the API via URQL. Operation documents reside in `frontend/graphql/*.graphql`, and typed documents live alongside feature code in `frontend/graphql`. Avoid hand-editing generated files!
+- PostGraphile auto-exposes the PostgreSQL schema with additional fields and filters from custom plugins (e.g. custom filters, performance tuned fields that were slow as direct SQL functions, the event search/saved search machinery, and various ways of representing person relationships).
+- The frontend consumes the API via URQL. Operation documents reside in `frontend/graphql/*.graphql`, and the generated typed documents next to them. Avoid hand-editing generated files!
 - `graphql.config.yml` and `graphql-starlet.config.yml` configure code generation for different tenant bundles.
 
 ## Worker and crawler model
@@ -123,15 +120,14 @@ This document is for fellow ChatGPT/Codex-style agents working in this repositor
 - Check external API consumers with `bash check-consumers.sh [schema file or URL] [refs...]`. Defaults to local `schema.graphql` and both the latest published release and `main`. After GraphQL schema changes, run this check against the updated local schema before applying production migrations. Report incompatible operations; do not silently exclude them - a failure in this script is for the programmer to communicate to 3rd party developers or to introduce a temporary ship, not a reason to avoid a change.
 - Run all typechecks: `pnpm -r typecheck`
 - Run all lints: `pnpm -r lint`
-- Frontend checks use `pnpm --filter @rozpisovnik/web lint`, `pnpm --filter @rozpisovnik/web typecheck`; the Next build is slow.
+- Frontend checks use lint and typecheck - not the Next.js build which is slow.
 - Run queue workers: `pnpm --filter @rozpisovnik/worker start`
 - Run the crawler dev tool: `pnpm crawler --help`
-- Type-check/lint the worker: `pnpm --filter @rozpisovnik/worker lint`, `pnpm --filter @rozpisovnik/worker typecheck`
 - Run Playwright smoke tests: `pnpm --filter @rozpisovnik/e2e test` (defaults to `PLAYWRIGHT_BASE_URL=http://localhost:5100`).
 - Create a new migration: follow `migrations/current/AGENTS.md`, including its fixture inclusion and testing steps.
-- Add GraphQL documents to `frontend/graphql/`. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`.
+- Change GraphQL documents in `frontend/graphql/`. Regenerate bindings with `pnpm schema` or `pnpm schema-starlet`, or wait for the watcher to regenerate them.
 - Frontend lint includes `.graphql` documents under `frontend/graphql/` and their custom validation rules.
-- After frontend SQL changes, regenerate query bindings with `pnpm --filter @rozpisovnik/web sql:generate`.
+- After frontend SQL changes, wait for the watcher to regenerate them, or run `pnpm --filter @rozpisovnik/web sql:generate`.
 - Leave regenerated files in the working tree for the maintainer to review.
 - Do not hand-patch or revert generated output to restore its previous state or reduce the diff. This includes `frontend/graphql/`, `schema.sql`, `schema/`, `schema.graphql`, and `*.queries.ts`. If output is wrong, fix the source or generator and regenerate it. Follow explicit user instructions for any requested rollback.
 

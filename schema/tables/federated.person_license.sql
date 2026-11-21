@@ -22,5 +22,7 @@ ALTER TABLE ONLY federated.person_license
     ADD CONSTRAINT person_license_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
 ALTER TABLE ONLY federated.person_license
     ADD CONSTRAINT person_license_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT person_license_federation_fkey ON federated.person_license IS '@foreignFieldName licenses';
+COMMENT ON CONSTRAINT person_license_person_id_fkey ON federated.person_license IS '@foreignFieldName licenses';
 
 CREATE INDEX person_license_federation_person_id_idx ON federated.person_license USING btree (federation, person_id);

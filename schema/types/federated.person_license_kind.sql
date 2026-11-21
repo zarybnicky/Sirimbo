@@ -11,3 +11,5 @@ CREATE TYPE federated.person_license_kind AS ENUM (
     'head_judge',
     'official'
 );
+
+COMMENT ON TYPE federated.person_license_kind IS '@name person_license_kind';

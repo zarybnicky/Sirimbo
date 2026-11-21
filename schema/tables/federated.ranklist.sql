@@ -18,3 +18,4 @@ ALTER TABLE ONLY federated.ranklist
     ADD CONSTRAINT ranklist_category_id_fkey FOREIGN KEY (category_id) REFERENCES federated.category(id);
 ALTER TABLE ONLY federated.ranklist
     ADD CONSTRAINT ranklist_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+COMMENT ON CONSTRAINT ranklist_federation_fkey ON federated.ranklist IS '@foreignFieldName ranklists';

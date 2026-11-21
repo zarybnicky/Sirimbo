@@ -25,6 +25,9 @@ ALTER TABLE ONLY public.event_lesson_request
     ADD CONSTRAINT event_lesson_request_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_lesson_request
     ADD CONSTRAINT event_lesson_request_trainer_id_fkey FOREIGN KEY (trainer_id) REFERENCES public.event_trainer(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_lesson_request_registration_id_fkey ON public.event_lesson_request IS '@foreignFieldName lessonRequests';
+COMMENT ON CONSTRAINT event_lesson_request_tenant_id_fkey ON public.event_lesson_request IS '@foreignFieldName lessonRequests';
+COMMENT ON CONSTRAINT event_lesson_request_trainer_id_fkey ON public.event_lesson_request IS '@foreignFieldName lessonRequests';
 
 CREATE POLICY admin_all ON public.event_lesson_request TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_lesson_request AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

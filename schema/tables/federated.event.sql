@@ -45,6 +45,10 @@ ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_federation_organizing_club_id_fkey FOREIGN KEY (federation, organizing_club_id) REFERENCES federated.federation_club(federation, id);
 ALTER TABLE ONLY federated.event
     ADD CONSTRAINT event_organizing_club_id_fkey FOREIGN KEY (organizing_club_id) REFERENCES federated.federation_club(id);
+COMMENT ON CONSTRAINT event_federation_id_key ON federated.event IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT event_federation_fkey ON federated.event IS '@foreignFieldName events';
+COMMENT ON CONSTRAINT event_federation_organizing_club_id_fkey ON federated.event IS '@behavior -single -connection -list';
+COMMENT ON CONSTRAINT event_organizing_club_id_fkey ON federated.event IS '@foreignFieldName events';
 
 CREATE INDEX event_federation_location_country_range_idx ON federated.event USING gist (federation, location, country, range);
 CREATE INDEX event_federation_start_date_idx ON federated.event USING btree (federation, start_date);

@@ -7,3 +7,5 @@ CREATE TYPE federated.score_component AS ENUM (
     'ajs_cp',
     'ajs_reduction'
 );
+
+COMMENT ON TYPE federated.score_component IS '@name score_component';

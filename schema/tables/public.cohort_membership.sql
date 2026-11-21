@@ -28,6 +28,8 @@ ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_membership
     ADD CONSTRAINT cohort_membership_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT cohort_membership_cohort_fkey ON public.cohort_membership IS '@fieldName cohort
+@foreignFieldName cohortMemberships';
 
 CREATE POLICY admin_all ON public.cohort_membership TO administrator USING (true);
 CREATE POLICY my_tenant ON public.cohort_membership AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

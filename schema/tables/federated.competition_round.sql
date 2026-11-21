@@ -26,6 +26,10 @@ ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
 ALTER TABLE ONLY federated.competition_round
     ADD CONSTRAINT competition_round_dance_program_id_fkey FOREIGN KEY (dance_program_id) REFERENCES federated.dance_program(id);
+COMMENT ON CONSTRAINT competition_round_id_competition_id_key ON federated.competition_round IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT competition_round_id_dance_program_id_key ON federated.competition_round IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT competition_round_competition_id_fkey ON federated.competition_round IS '@foreignFieldName rounds
+@backwardBehavior +list -connection';
 
 CREATE INDEX competition_round_competition_id_round_key_idx ON federated.competition_round USING btree (competition_id, round_key);
 CREATE INDEX competition_round_dance_program_id_idx ON federated.competition_round USING btree (dance_program_id);

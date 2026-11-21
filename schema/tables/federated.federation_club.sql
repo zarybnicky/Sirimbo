@@ -21,3 +21,5 @@ ALTER TABLE ONLY federated.federation_club
     ADD CONSTRAINT federation_club_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY federated.federation_club
     ADD CONSTRAINT federation_club_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+COMMENT ON CONSTRAINT federation_club_federation_id_key ON federated.federation_club IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT federation_club_federation_fkey ON federated.federation_club IS '@foreignFieldName clubs';

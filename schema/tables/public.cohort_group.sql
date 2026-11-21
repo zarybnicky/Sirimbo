@@ -18,6 +18,7 @@ ALTER TABLE ONLY public.cohort_group
     ADD CONSTRAINT cohort_group_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.cohort_group
     ADD CONSTRAINT cohort_group_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT cohort_group_tenant_id_id_key ON public.cohort_group IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
 
 CREATE POLICY admin_all ON public.cohort_group TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort_group AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

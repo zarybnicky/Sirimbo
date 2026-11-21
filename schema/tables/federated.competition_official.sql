@@ -18,6 +18,8 @@ ALTER TABLE ONLY federated.competition_official
     ADD CONSTRAINT competition_official_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id) ON DELETE CASCADE;
 ALTER TABLE ONLY federated.competition_official
     ADD CONSTRAINT competition_official_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+COMMENT ON CONSTRAINT competition_official_competition_id_fkey ON federated.competition_official IS '@foreignFieldName officials';
+COMMENT ON CONSTRAINT competition_official_person_id_fkey ON federated.competition_official IS '@foreignFieldName competitionOfficialAssignments';
 
 CREATE INDEX competition_official_competition_id_external_id_idx ON federated.competition_official USING btree (competition_id, external_id) WHERE (external_id IS NOT NULL);
 CREATE INDEX competition_official_competition_id_role_idx ON federated.competition_official USING btree (competition_id, role);

@@ -38,6 +38,7 @@ ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_man_id_fkey FOREIGN KEY (man_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.couple
     ADD CONSTRAINT couple_woman_id_fkey FOREIGN KEY (woman_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT couple_image_fk ON public.couple IS '@fieldName image';
 
 CREATE POLICY admin_delete ON public.couple FOR DELETE TO administrator USING ((app_private.can_edit_person(man_id) OR app_private.can_edit_person(woman_id)));
 CREATE POLICY admin_insert ON public.couple FOR INSERT TO administrator WITH CHECK ((app_private.can_edit_person(man_id) OR app_private.can_edit_person(woman_id)));

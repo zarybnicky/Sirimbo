@@ -25,6 +25,8 @@ ALTER TABLE ONLY crawler.json_response
     ADD CONSTRAINT json_response_content_hash_fkey FOREIGN KEY (content_hash) REFERENCES crawler.json_response_cache(content_hash);
 ALTER TABLE ONLY crawler.json_response
     ADD CONSTRAINT json_response_frontier_id_fkey FOREIGN KEY (frontier_id) REFERENCES crawler.frontier(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT json_response_content_hash_fkey ON crawler.json_response IS '@foreignFieldName responses';
+COMMENT ON CONSTRAINT json_response_frontier_id_fkey ON crawler.json_response IS '@foreignFieldName responses';
 
 CREATE POLICY system_admin_read ON crawler.json_response FOR SELECT TO system_admin USING (true);
 

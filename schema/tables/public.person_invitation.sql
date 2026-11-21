@@ -27,6 +27,7 @@ ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.person_invitation
     ADD CONSTRAINT person_invitation_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT person_invitation_event_id_fkey ON public.person_invitation IS '@behavior -*';
 
 CREATE POLICY admin_all ON public.person_invitation TO administrator USING (true);
 CREATE POLICY current_tenant ON public.person_invitation AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

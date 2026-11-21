@@ -24,6 +24,10 @@ ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.posting
     ADD CONSTRAINT posting_transaction_fkey FOREIGN KEY (tenant_id, transaction_id) REFERENCES public.transaction(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT posting_account_fkey ON public.posting IS '@fieldName account
+@foreignFieldName postings';
+COMMENT ON CONSTRAINT posting_transaction_fkey ON public.posting IS '@fieldName transaction
+@foreignFieldName postings';
 
 CREATE POLICY admin_manage ON public.posting TO administrator USING (true);
 CREATE POLICY current_tenant ON public.posting AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

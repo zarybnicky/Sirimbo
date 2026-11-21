@@ -31,6 +31,8 @@ ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
 ALTER TABLE ONLY public.access_event
     ADD CONSTRAINT access_event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+COMMENT ON CONSTRAINT access_event_location_fkey ON public.access_event IS '@fieldName location
+@foreignFieldName accessEvents';
 
 CREATE POLICY admin_view ON public.access_event FOR SELECT TO administrator USING (true);
 CREATE POLICY current_tenant ON public.access_event AS RESTRICTIVE USING ((tenant_id = public.current_tenant_id()));

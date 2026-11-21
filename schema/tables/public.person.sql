@@ -49,6 +49,7 @@ ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_image_fk FOREIGN KEY (image_id) REFERENCES public.file(id) ON DELETE SET NULL;
+COMMENT ON CONSTRAINT person_image_fk ON public.person IS '@fieldName image';
 
 CREATE POLICY admin_delete ON public.person FOR DELETE TO administrator USING (app_private.can_edit_person(id));
 CREATE POLICY admin_myself ON public.person FOR UPDATE USING ((id = ANY (( SELECT public.current_person_ids() AS current_person_ids)::bigint[])));

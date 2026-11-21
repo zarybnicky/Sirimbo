@@ -13,3 +13,5 @@ CREATE TYPE public.jwt_token AS (
 	trainer_tenant_ids bigint[],
 	admin_tenant_ids bigint[]
 );
+
+COMMENT ON TYPE public.jwt_token IS '@jwt';

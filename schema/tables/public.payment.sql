@@ -39,6 +39,9 @@ ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_tenant_id_accounting_period_fkey FOREIGN KEY (tenant_id, accounting_period_id) REFERENCES public.accounting_period(tenant_id, id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.payment
     ADD CONSTRAINT payment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT payment_tenant_id_id_key ON public.payment IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+COMMENT ON CONSTRAINT payment_event_id_fkey ON public.payment IS '@fieldName event
+@foreignFieldName payments';
 
 CREATE POLICY admin_manage ON public.payment TO administrator USING (true);
 CREATE POLICY current_tenant ON public.payment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

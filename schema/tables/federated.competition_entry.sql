@@ -21,6 +21,11 @@ ALTER TABLE ONLY federated.competition_entry
     ADD CONSTRAINT competition_entry_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES federated.competition(id);
 ALTER TABLE ONLY federated.competition_entry
     ADD CONSTRAINT competition_entry_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+COMMENT ON CONSTRAINT competition_entry_club_id_fkey ON federated.competition_entry IS '@fieldName club
+@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+COMMENT ON CONSTRAINT competition_entry_competition_id_fkey ON federated.competition_entry IS '@foreignFieldName entries
+@backwardBehavior +list';
+COMMENT ON CONSTRAINT competition_entry_competitor_id_fkey ON federated.competition_entry IS '@foreignFieldName competitionEntries';
 
 CREATE TRIGGER _900_refresh_competitor_activity_delete AFTER DELETE ON federated.competition_entry REFERENCING OLD TABLE AS oldtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_competitor_activity__refresh();
 CREATE TRIGGER _900_refresh_competitor_activity_insert AFTER INSERT ON federated.competition_entry REFERENCING NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_competitor_activity__refresh();

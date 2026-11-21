@@ -16,5 +16,7 @@ ALTER TABLE ONLY federated.competitor_component
     ADD CONSTRAINT competitor_component_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id) ON DELETE CASCADE;
 ALTER TABLE ONLY federated.competitor_component
     ADD CONSTRAINT competitor_component_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+COMMENT ON CONSTRAINT competitor_component_competitor_id_fkey ON federated.competitor_component IS '@foreignFieldName components';
+COMMENT ON CONSTRAINT competitor_component_person_id_fkey ON federated.competitor_component IS '@foreignFieldName competitorComponents';
 
 CREATE INDEX competitor_component_person_id_idx ON federated.competitor_component USING btree (person_id);

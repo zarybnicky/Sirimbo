@@ -19,5 +19,7 @@ ALTER TABLE ONLY federated.competitor_club_affiliation
     ADD CONSTRAINT competitor_club_affiliation_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
 ALTER TABLE ONLY federated.competitor_club_affiliation
     ADD CONSTRAINT competitor_club_affiliation_competitor_id_fkey FOREIGN KEY (competitor_id) REFERENCES federated.competitor(id);
+COMMENT ON CONSTRAINT competitor_club_affiliation_club_id_fkey ON federated.competitor_club_affiliation IS '@foreignFieldName competitorAffiliations';
+COMMENT ON CONSTRAINT competitor_club_affiliation_competitor_id_fkey ON federated.competitor_club_affiliation IS '@foreignFieldName clubAffiliations';
 
 CREATE INDEX competitor_club_affiliation_club_id_valid_from_valid_to_idx ON federated.competitor_club_affiliation USING btree (club_id, valid_from, valid_to);

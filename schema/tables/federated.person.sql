@@ -40,6 +40,11 @@ ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
 ALTER TABLE ONLY federated.person
     ADD CONSTRAINT person_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+COMMENT ON CONSTRAINT person_age_group_code_fkey ON federated.person IS '@fieldName ageGroupDetails
+@backwardBehavior -single -list -connection';
+COMMENT ON CONSTRAINT person_club_id_fkey ON federated.person IS '@fieldName club
+@behavior -manyRelation:resource:connection -manyRelation:resource:list';
+COMMENT ON CONSTRAINT person_federation_fkey ON federated.person IS '@foreignFieldName people';
 
 CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.person FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
 

@@ -17,6 +17,8 @@ ALTER TABLE ONLY federated.dance_program_dance
     ADD CONSTRAINT dance_program_dance_dance_code_fkey FOREIGN KEY (dance_code) REFERENCES federated.dance(code);
 ALTER TABLE ONLY federated.dance_program_dance
     ADD CONSTRAINT dance_program_dance_program_id_fkey FOREIGN KEY (program_id) REFERENCES federated.dance_program(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT dance_program_dance_dance_code_fkey ON federated.dance_program_dance IS '@foreignFieldName dancePrograms';
+COMMENT ON CONSTRAINT dance_program_dance_program_id_fkey ON federated.dance_program_dance IS '@foreignFieldName dances';
 
 CREATE INDEX dance_program_dance_dance_code_idx ON federated.dance_program_dance USING btree (dance_code);
 CREATE INDEX dance_program_dance_program_id_idx ON federated.dance_program_dance USING btree (program_id);

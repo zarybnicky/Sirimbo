@@ -9,3 +9,5 @@ CREATE TYPE federated.person_license_status AS ENUM (
     'unknown',
     'temporary'
 );
+
+COMMENT ON TYPE federated.person_license_status IS '@name person_license_status';

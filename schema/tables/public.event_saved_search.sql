@@ -29,6 +29,7 @@ ALTER TABLE ONLY public.event_saved_search
     ADD CONSTRAINT event_saved_search_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_saved_search
     ADD CONSTRAINT event_saved_search_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_saved_search_feed_key_key ON public.event_saved_search IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
 
 CREATE POLICY owner ON public.event_saved_search USING ((user_id = ( SELECT public.current_user_id() AS current_user_id))) WITH CHECK ((user_id = ( SELECT public.current_user_id() AS current_user_id)));
 

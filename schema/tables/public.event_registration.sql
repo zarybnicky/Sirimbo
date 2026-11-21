@@ -46,6 +46,11 @@ ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_target_cohort_id_fkey FOREIGN KEY (target_cohort_id) REFERENCES public.cohort(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 ALTER TABLE ONLY public.event_registration
     ADD CONSTRAINT event_registration_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_registration_created_by_fkey ON public.event_registration IS '@behavior -*';
+COMMENT ON CONSTRAINT event_registration_event_id_fkey ON public.event_registration IS '@fieldName event
+@foreignFieldName registrations';
+COMMENT ON CONSTRAINT event_registration_parent_registration_id_fkey ON public.event_registration IS '@fieldName parentRegistration
+@foreignFieldName childRegistrations';
 
 CREATE POLICY admin_all ON public.event_registration TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_registration AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

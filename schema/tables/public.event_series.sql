@@ -17,6 +17,9 @@ ALTER TABLE ONLY public.event_series
     ADD CONSTRAINT event_series_tenant_id_id_key UNIQUE (tenant_id, id);
 ALTER TABLE ONLY public.event_series
     ADD CONSTRAINT event_series_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_series_tenant_id_id_key ON public.event_series IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+COMMENT ON CONSTRAINT event_series_tenant_id_fkey ON public.event_series IS '@fieldName tenant
+@foreignFieldName eventSeries';
 
 CREATE POLICY admin_all ON public.event_series TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_series AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

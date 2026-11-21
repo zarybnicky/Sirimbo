@@ -15,6 +15,10 @@ ALTER TABLE ONLY public.location_image
     ADD CONSTRAINT tenant_location_image_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.location_image
     ADD CONSTRAINT tenant_location_image_location_fk FOREIGN KEY (tenant_id, location_id) REFERENCES public.location(tenant_id, id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT tenant_location_image_file_fk ON public.location_image IS '@fieldName file
+@foreignFieldName locationImageRecords';
+COMMENT ON CONSTRAINT tenant_location_image_location_fk ON public.location_image IS '@fieldName location
+@foreignFieldName images';
 
 CREATE POLICY admin_all ON public.location_image TO administrator USING (true);
 CREATE POLICY current_tenant ON public.location_image AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

@@ -27,6 +27,11 @@ ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
 ALTER TABLE ONLY federated.category
     ADD CONSTRAINT category_base_dance_program_id_fkey FOREIGN KEY (base_dance_program_id) REFERENCES federated.dance_program(id);
+COMMENT ON CONSTRAINT category_age_group_code_fkey ON federated.category IS '@fieldName ageGroupDetails
+@foreignFieldName categories
+@foreignSimpleFieldName categories
+@backwardBehavior +list -connection';
+COMMENT ON CONSTRAINT category_base_dance_program_id_fkey ON federated.category IS '@foreignFieldName categories';
 
 CREATE TRIGGER _resolve_age_group BEFORE INSERT OR UPDATE OF age_group ON federated.category FOR EACH ROW EXECUTE FUNCTION app_private.tg_resolve_age_group();
 

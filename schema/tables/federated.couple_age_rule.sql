@@ -18,3 +18,7 @@ ALTER TABLE ONLY federated.couple_age_rule
     ADD CONSTRAINT couple_age_rule_pkey PRIMARY KEY (age_group_code, division);
 ALTER TABLE ONLY federated.couple_age_rule
     ADD CONSTRAINT couple_age_rule_age_group_code_fkey FOREIGN KEY (age_group_code) REFERENCES federated.age_group(code);
+COMMENT ON CONSTRAINT couple_age_rule_age_group_code_fkey ON federated.couple_age_rule IS '@fieldName ageGroupDetails
+@foreignFieldName coupleRules
+@foreignSimpleFieldName coupleRules
+@backwardBehavior +list -connection';

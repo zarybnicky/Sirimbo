@@ -26,6 +26,10 @@ ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_cohort_fkey FOREIGN KEY (tenant_id, cohort_id) REFERENCES public.cohort(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.cohort_subscription
     ADD CONSTRAINT cohort_subscription_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT cohort_subscription_account_fkey ON public.cohort_subscription IS '@fieldName account
+@foreignFieldName cohortSubscriptions';
+COMMENT ON CONSTRAINT cohort_subscription_cohort_fkey ON public.cohort_subscription IS '@fieldName cohort
+@foreignFieldName cohortSubscriptions';
 
 CREATE POLICY admin_manage ON public.cohort_subscription TO administrator USING (true);
 CREATE POLICY current_tenant ON public.cohort_subscription AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

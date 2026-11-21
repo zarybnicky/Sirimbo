@@ -19,3 +19,7 @@ ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_dance_program_id_dance_code_fkey FOREIGN KEY (dance_program_id, dance_code) REFERENCES federated.dance_program_dance(program_id, dance_code);
 ALTER TABLE ONLY federated.round_dance
     ADD CONSTRAINT round_dance_round_id_dance_program_id_fkey FOREIGN KEY (round_id, dance_program_id) REFERENCES federated.competition_round(id, dance_program_id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT round_dance_round_id_dance_order_dance_code_key ON federated.round_dance IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT round_dance_dance_program_id_dance_code_fkey ON federated.round_dance IS '@foreignFieldName roundDances';
+COMMENT ON CONSTRAINT round_dance_round_id_dance_program_id_fkey ON federated.round_dance IS '@foreignFieldName dances
+@backwardBehavior +list -connection';

@@ -21,3 +21,6 @@ ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey FOREIGN KEY (round_id, dance_order, dance_code) REFERENCES federated.round_dance(round_id, dance_order, dance_code) ON DELETE CASCADE DEFERRABLE;
 ALTER TABLE ONLY federated.judge_score
     ADD CONSTRAINT judge_score_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT judge_score_round_id_dance_order_dance_code_fkey ON federated.judge_score IS '@foreignFieldName judgeScores';
+COMMENT ON CONSTRAINT judge_score_round_id_fkey ON federated.judge_score IS '@foreignFieldName judgeScores
+@backwardBehavior +list -connection';

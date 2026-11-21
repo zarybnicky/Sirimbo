@@ -12,6 +12,11 @@ CREATE TYPE public.event_conflict AS (
 	overlap_range tstzrange
 );
 
+COMMENT ON TYPE public.event_conflict IS '
+@foreignKey (person_id) references person (id)
+@foreignKey (first_event_id) references event (id)|@fieldName firstEvent
+@foreignKey (second_event_id) references event (id)|@fieldName secondEvent
+';
 COMMENT ON COLUMN public.event_conflict.person_id IS '@notNull';
 COMMENT ON COLUMN public.event_conflict.first_event_id IS '@notNull';
 COMMENT ON COLUMN public.event_conflict.second_event_id IS '@notNull';

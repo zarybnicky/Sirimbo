@@ -28,6 +28,7 @@ ALTER TABLE ONLY public.file
     ADD CONSTRAINT file_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.file
     ADD CONSTRAINT file_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(id) ON DELETE SET NULL;
+COMMENT ON CONSTRAINT file_tenant_id_id_key ON public.file IS '@behavior -query:resource:single';
 
 CREATE POLICY admin_all ON public.file TO administrator USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
 CREATE POLICY uploader_manage ON public.file USING (((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)) AND (uploaded_by = ( SELECT public.current_user_id() AS current_user_id))));

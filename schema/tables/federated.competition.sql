@@ -39,6 +39,13 @@ ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_event_id_fkey FOREIGN KEY (federation, event_id) REFERENCES federated.event(federation, id);
 ALTER TABLE ONLY federated.competition
     ADD CONSTRAINT competition_federation_fkey FOREIGN KEY (federation) REFERENCES federated.federation(code);
+COMMENT ON CONSTRAINT competition_federation_id_key ON federated.competition IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT competition_id_category_id_key ON federated.competition IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT competition_id_event_id_key ON federated.competition IS '@behavior -query:resource:single';
+COMMENT ON CONSTRAINT competition_event_id_fkey ON federated.competition IS '@foreignFieldName competitions
+@backwardBehavior +list';
+COMMENT ON CONSTRAINT competition_federation_event_id_fkey ON federated.competition IS '@behavior -single -connection -list';
+COMMENT ON CONSTRAINT competition_federation_fkey ON federated.competition IS '@foreignFieldName competitions';
 
 CREATE TRIGGER _900_refresh_competitor_activity_dates AFTER UPDATE ON federated.competition REFERENCING OLD TABLE AS oldtable NEW TABLE AS newtable FOR EACH STATEMENT EXECUTE FUNCTION app_private.tg_competition_dates__refresh_competitor_activity();
 

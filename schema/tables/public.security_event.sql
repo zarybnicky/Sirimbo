@@ -25,6 +25,8 @@ ALTER TABLE ONLY public.security_event
     ADD CONSTRAINT security_event_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.security_event
     ADD CONSTRAINT security_event_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+COMMENT ON CONSTRAINT security_event_actor_user_id_fkey ON public.security_event IS '@behavior -manyRelation:resource:list -manyRelation:resource:connection';
+COMMENT ON CONSTRAINT security_event_tenant_id_fkey ON public.security_event IS '@behavior -manyRelation:resource:list -manyRelation:resource:connection';
 
 CREATE POLICY admin_view ON public.security_event FOR SELECT TO administrator USING (true);
 CREATE POLICY current_tenant ON public.security_event AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

@@ -52,7 +52,7 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
     ):
         continue  # SKIP
 
-    if object_type in ("TABLE", "FUNCTION", "VIEW", "ROW SECURITY", "DOMAIN", "TYPE"):
+    if object_type in ("TABLE", "FUNCTION", "VIEW", "ROW SECURITY", "DOMAIN", "TYPE", "OPERATOR"):
         per_table[schema + "." + name][object_type].append(entry)
         continue
 
@@ -70,8 +70,13 @@ for group in re.split(r"^-- Name: ", source, flags=re.MULTILINE)[1:]:
         if acl_type in ("SCHEMA", "SEQUENCE", "EXTENSION"):
             continue
 
-        if acl_type in ("TABLE", "VIEW"):
+        if acl_type in ("TABLE", "VIEW", "DOMAIN", "TYPE"):
             per_table[schema + "." + acl_target][object_type].append(entry)
+            continue
+
+        if acl_type == "CONSTRAINT":
+            constraint_name, constraint_target = acl_target.rsplit(" ON ", 1)
+            per_table[schema + "." + constraint_target]["CONSTRAINT COMMENT"].append(entry)
             continue
 
         if acl_type == "FUNCTION":
@@ -118,23 +123,30 @@ os.makedirs("schema/functions")
 if os.path.exists("schema/views"):
    shutil.rmtree("schema/views")
 os.makedirs("schema/views")
+if os.path.exists("schema/operators"):
+   shutil.rmtree("schema/operators")
+os.makedirs("schema/operators")
 
 for object_name, objects in per_table.items():
-    object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "domain"
-    main_objects = objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"]
+    object_type = "type" if objects["TYPE"] else "view" if objects["VIEW"] else "function" if objects["FUNCTION"] else "table" if objects["TABLE"] else "operator" if objects["OPERATOR"] else "domain"
+    main_objects = objects["VIEW"] + objects["FUNCTION"] + objects["TABLE"] + objects["DOMAIN"] + objects["TYPE"] + objects["OPERATOR"]
     if not main_objects:
-      print(f"Skipped object without a definition:\t{object_name}")
-      continue
+      # Extension-owned functions can have grants without a dumped definition.
+      if "(" in object_name and objects["ACL"]:
+        object_type = "function"
+      else:
+        print(f"Skipped object without a definition:\t{object_name}")
+        continue
     if len(main_objects) > 1:
       print(f"Skipped object with multiple definitions:\t{object_name}")
       continue
-    schema = main_objects[0].split('.')[0].split(' ')[-1]
     source = itertools.chain(
         objects["TABLE"],
         objects["FUNCTION"],
         objects["VIEW"],
         objects["DOMAIN"],
         objects["TYPE"],
+        objects["OPERATOR"],
         [""],
         objects["COMMENT"],
         [""],
@@ -143,6 +155,7 @@ for object_name, objects in per_table.items():
         [""],
         objects["CONSTRAINT"],
         objects["FK CONSTRAINT"],
+        objects["CONSTRAINT COMMENT"],
         [""],
         objects["POLICY"],
         [""],

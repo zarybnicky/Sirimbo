@@ -22,6 +22,8 @@ ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_target_cohort
     ADD CONSTRAINT event_target_cohort_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_target_cohort_event_id_fkey ON public.event_target_cohort IS '@fieldName event
+@foreignFieldName targetCohorts';
 
 CREATE POLICY admin_all ON public.event_target_cohort TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_target_cohort AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

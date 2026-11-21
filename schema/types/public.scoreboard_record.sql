@@ -8,3 +8,6 @@ CREATE TYPE public.scoreboard_record AS (
 	total_score bigint,
 	ranking bigint
 );
+
+COMMENT ON TYPE public.scoreboard_record IS '@foreignKey (person_id) references person (id)
+@foreignKey (cohort_id) references cohort (id)';

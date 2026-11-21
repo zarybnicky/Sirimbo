@@ -30,6 +30,9 @@ ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_cover_image_fk FOREIGN KEY (tenant_id, cover_image_id) REFERENCES public.file(tenant_id, id) ON DELETE SET NULL (cover_image_id);
 ALTER TABLE ONLY public.location
     ADD CONSTRAINT tenant_location_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+COMMENT ON CONSTRAINT tenant_location_tenant_id_id_key ON public.location IS '@behavior -query:resource:single -constraint:resource:update -constraint:resource:delete';
+COMMENT ON CONSTRAINT tenant_location_cover_image_fk ON public.location IS '@fieldName coverImage
+@behavior -manyRelation:resource:list -manyRelation:resource:connection';
 
 CREATE POLICY admin_all ON public.location TO administrator USING (true);
 CREATE POLICY current_tenant ON public.location AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

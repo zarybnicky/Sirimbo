@@ -16,6 +16,12 @@ ALTER TABLE ONLY public.article_attachment
     ADD CONSTRAINT article_attachment_article_fk FOREIGN KEY (tenant_id, aktuality_id) REFERENCES public.aktuality(tenant_id, id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.article_attachment
     ADD CONSTRAINT article_attachment_file_fk FOREIGN KEY (tenant_id, file_id) REFERENCES public.file(tenant_id, id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT article_attachment_article_fk ON public.article_attachment IS '
+@fieldName article
+@foreignFieldName attachments';
+COMMENT ON CONSTRAINT article_attachment_file_fk ON public.article_attachment IS '
+@fieldName file
+@foreignFieldName articleAttachments';
 
 CREATE POLICY admin_all ON public.article_attachment TO administrator USING (true);
 CREATE POLICY current_tenant ON public.article_attachment AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));

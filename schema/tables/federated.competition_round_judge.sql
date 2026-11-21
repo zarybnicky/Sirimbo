@@ -18,5 +18,8 @@ ALTER TABLE ONLY federated.competition_round_judge
     ADD CONSTRAINT competition_round_judge_person_judge_id_fkey FOREIGN KEY (person_judge_id) REFERENCES federated.person(id);
 ALTER TABLE ONLY federated.competition_round_judge
     ADD CONSTRAINT competition_round_judge_round_id_fkey FOREIGN KEY (round_id) REFERENCES federated.competition_round(id) ON DELETE CASCADE;
+COMMENT ON CONSTRAINT competition_round_judge_person_judge_id_fkey ON federated.competition_round_judge IS '@foreignFieldName roundJudgeAssignments';
+COMMENT ON CONSTRAINT competition_round_judge_round_id_fkey ON federated.competition_round_judge IS '@foreignFieldName judges
+@backwardBehavior +list -connection';
 
 CREATE INDEX competition_round_judge_judge ON federated.competition_round_judge USING btree (person_judge_id);

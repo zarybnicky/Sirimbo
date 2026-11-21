@@ -8,3 +8,5 @@ CREATE TYPE public.trainer_group_attendance_completion AS (
 	total_attendances integer,
 	pending_attendances integer
 );
+
+COMMENT ON TYPE public.trainer_group_attendance_completion IS '@foreignKey (person_id) references person (id)';

@@ -19,6 +19,8 @@ ALTER TABLE ONLY federated.person_club_membership
     ADD CONSTRAINT person_club_membership_club_id_fkey FOREIGN KEY (club_id) REFERENCES federated.federation_club(id);
 ALTER TABLE ONLY federated.person_club_membership
     ADD CONSTRAINT person_club_membership_person_id_fkey FOREIGN KEY (person_id) REFERENCES federated.person(id);
+COMMENT ON CONSTRAINT person_club_membership_club_id_fkey ON federated.person_club_membership IS '@foreignFieldName personMemberships';
+COMMENT ON CONSTRAINT person_club_membership_person_id_fkey ON federated.person_club_membership IS '@foreignFieldName clubMemberships';
 
 CREATE INDEX person_club_membership_club_id_valid_from_valid_to_idx ON federated.person_club_membership USING btree (club_id, valid_from, valid_to);
 CREATE INDEX person_club_membership_person_id_valid_from_valid_to_idx ON federated.person_club_membership USING btree (person_id, valid_from, valid_to);

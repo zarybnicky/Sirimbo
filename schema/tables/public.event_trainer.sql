@@ -23,6 +23,8 @@ ALTER TABLE ONLY public.event_trainer
     ADD CONSTRAINT event_trainer_tenant_id_event_id_fkey FOREIGN KEY (tenant_id, event_id) REFERENCES public.event(tenant_id, id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.event_trainer
     ADD CONSTRAINT event_trainer_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id) ON UPDATE CASCADE ON DELETE CASCADE;
+COMMENT ON CONSTRAINT event_trainer_tenant_id_event_id_fkey ON public.event_trainer IS '@fieldName event
+@foreignFieldName eventTrainers';
 
 CREATE POLICY admin_all ON public.event_trainer TO administrator USING (true);
 CREATE POLICY current_tenant ON public.event_trainer AS RESTRICTIVE USING ((tenant_id = ( SELECT public.current_tenant_id() AS current_tenant_id)));
