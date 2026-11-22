@@ -68,8 +68,8 @@
 - `users` + `user_proxy`: authentication identities linked to `person` records; JWT creation relies on `app_private.create_jwt_token`.
 - `person`, `couple`, `cohort`, `event_*`, `payment_*`: core CRM/scheduling/accounting tables, each row-secured by tenant.
 - `tenant_settings`: key/value settings scoped by tenant.
-- `app_private.tenant_relation`: maintained role and cohort summaries per `(tenant_id, person_id)`. Read summaries here; use source tables for writes, history, dates, and pricing. Its maintenance fixture is `migrations/fixtures/functions/tenant_relation.sql`.
-- `app_private.current_tenant_relation`: current-tenant rows with current roles, replacing the three `current_tenant_*` role views. Role flags exclude cohort-only relations. Empty rows can exist, so row existence alone does not establish membership.
+- `app_private.tenant_relation`: maintained role, cohort, and event-participation summaries per `(tenant_id, person_id)`. Read summaries here; use source tables for writes, history, dates, and pricing. Its maintenance fixture is `migrations/fixtures/functions/tenant_relation.sql`.
+- `app_private.current_tenant_relation`: current-tenant rows with current roles, replacing the three `current_tenant_*` role views. Role flags exclude cohort-only and event-only relations. Empty rows can exist, so row existence alone does not establish membership.
 - Membership `status` is authoritative; date triggers and scheduled maintenance keep it current.
 - Supporting functions under `schema/functions/public.*.sql` expose helpers such as `filtered_people`, `create_missing_cohort_subscription_payments`, and `get_current_tenant()`. Many assume `current_tenant_id()` is set.
 

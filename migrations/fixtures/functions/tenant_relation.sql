@@ -37,6 +37,12 @@ begin
       coalesce(array_agg(distinct cohort_id order by cohort_id) filter (where status = 'expired'), '{}')
     from cohort_membership
     where tenant_id = target_tenant_id and person_id = target_person_id
+  ), has_event_participation = exists (
+    select from event_registration
+    where tenant_id = target_tenant_id and person_id = target_person_id and registration_status = 'active'
+    union all
+    select from event_trainer
+    where tenant_id = target_tenant_id and person_id = target_person_id
   ) where tenant_id = target_tenant_id and person_id = target_person_id;
 end;
 $$;

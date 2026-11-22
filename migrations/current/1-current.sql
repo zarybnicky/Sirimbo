@@ -1,4 +1,4 @@
-lock table tenant_membership, tenant_trainer, tenant_administrator, cohort_membership
+lock table tenant_membership, tenant_trainer, tenant_administrator, cohort_membership, event_registration, event_trainer
   in share row exclusive mode;
 
 do $$ begin
@@ -40,11 +40,15 @@ create table if not exists app_private.tenant_relation (
   pending_roles tenant_role[] not null default '{}',
   current_cohort_ids bigint[] not null default '{}',
   expired_cohort_ids bigint[] not null default '{}',
+  has_event_participation boolean not null default false,
   has_roles boolean generated always as (current_roles <> '{}' or expired_roles <> '{}' or pending_roles <> '{}') stored,
   is_current boolean generated always as (current_roles <> '{}') stored,
   is_former boolean generated always as (current_roles = '{}' and expired_roles <> '{}') stored,
   primary key (tenant_id, person_id)
 );
+
+alter table app_private.tenant_relation
+  add column if not exists has_event_participation boolean not null default false;
 
 create index if not exists tenant_relation_person_idx
   on app_private.tenant_relation (person_id, tenant_id);
@@ -66,7 +70,9 @@ drop trigger if exists _600_tenant_relation_update on cohort_membership;
 drop function if exists app_private.tg_tenant_membership__on_status();
 
 --!include functions/tenant_relation.sql
---!include functions/tg_cohort_membership__on_status.sql
+--!include functions/tg_event_people__refresh.sql
+--!include functions/cron_update_memberships.sql
+--!include functions/tg_cohort_membership__refresh.sql
 --!include functions/security_events.sql
 
 select app_private.rebuild_tenant_relation(tenant_id, person_id)
@@ -75,6 +81,8 @@ from (
   union select tenant_id, person_id from tenant_trainer
   union select tenant_id, person_id from tenant_administrator
   union select tenant_id, person_id from cohort_membership
+  union select tenant_id, person_id from event_registration where person_id is not null and registration_status = 'active'
+  union select tenant_id, person_id from event_trainer
   union select tenant_id, person_id from app_private.tenant_relation
 ) pairs order by tenant_id, person_id;
 

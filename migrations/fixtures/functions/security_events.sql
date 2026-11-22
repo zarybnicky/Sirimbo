@@ -29,13 +29,13 @@ begin
     values (new.person_id, tg_argv[0]::security_event_kind, 'manual', new.since);
   elsif tg_op = 'UPDATE'
      and new.status is distinct from old.status
-     and new.status in ('active', 'expired') then
+     and (new.status in ('active', 'expired') or old.status = 'active') then
     insert into security_event (person_id, kind, method, effective_at)
     values (
       new.person_id,
       (case when new.status = 'active' then tg_argv[0] else tg_argv[1] end)::security_event_kind,
       (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
-      case when new.status = 'active' then new.since else new.until end
+      case new.status when 'active' then new.since when 'expired' then new.until else now() end
     );
   end if;
   return new;
@@ -61,13 +61,13 @@ begin
     values (new.person_id, 'access_credential_issued', 'manual', new.since);
   elsif tg_op = 'UPDATE'
      and new.status is distinct from old.status
-     and new.status in ('active', 'expired') then
+     and (new.status in ('active', 'expired') or old.status = 'active') then
     insert into security_event (person_id, kind, method, effective_at)
     values (
       new.person_id,
       (case when new.status = 'active' then 'access_credential_issued' else 'access_credential_ended' end)::security_event_kind,
       (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
-      case when new.status = 'active' then new.since else new.until end
+      case new.status when 'active' then new.since when 'expired' then new.until else now() end
     );
   end if;
   return new;
@@ -93,14 +93,14 @@ begin
     values (new.user_id, new.person_id, 'person_linked', 'manual', new.since);
   elsif tg_op = 'UPDATE'
      and new.status is distinct from old.status
-     and new.status in ('active', 'expired') then
+     and (new.status in ('active', 'expired') or old.status = 'active') then
     insert into security_event (user_id, person_id, kind, method, effective_at)
     values (
       new.user_id,
       new.person_id,
       (case when new.status = 'active' then 'person_linked' else 'person_unlinked' end)::security_event_kind,
       (case when current_user_id() is null then 'scheduled' else 'manual' end)::security_event_method,
-      case when new.status = 'active' then new.since else new.until end
+      case new.status when 'active' then new.since when 'expired' then new.until else now() end
     );
   end if;
   return new;

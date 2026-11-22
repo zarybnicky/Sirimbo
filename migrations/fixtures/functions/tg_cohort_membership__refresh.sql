@@ -1,4 +1,6 @@
-create or replace function app_private.tg_cohort_membership__on_status()
+drop trigger if exists _500_on_status on cohort_membership;
+
+create or replace function app_private.tg_cohort_membership__refresh()
   returns trigger language plpgsql
   security definer
   set search_path = pg_catalog, public, app_private, pg_temp
@@ -48,8 +50,10 @@ begin
 end;
 $$;
 
-grant all on function app_private.tg_cohort_membership__on_status to trainer;
+grant all on function app_private.tg_cohort_membership__refresh to trainer;
 
-create or replace trigger _500_on_status
+create or replace trigger _500_refresh_relations
   after insert or update or delete on cohort_membership
-  for each row execute function app_private.tg_cohort_membership__on_status();
+  for each row execute function app_private.tg_cohort_membership__refresh();
+
+drop function if exists app_private.tg_cohort_membership__on_status();
