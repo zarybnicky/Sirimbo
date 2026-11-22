@@ -9,7 +9,6 @@ export type JwtClaims = {
   my_cohort_ids: string[];
   my_couple_ids: string[];
   is_system_admin: boolean;
-  guest_tenant_ids: string[];
   member_tenant_ids: string[];
   trainer_tenant_ids: string[];
   admin_tenant_ids: string[];
@@ -35,7 +34,6 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: stri
   const isTrainer =
     isAdmin || (claims?.trainer_tenant_ids?.includes(tenantId) ?? false);
   const isMember = claims?.member_tenant_ids?.includes(tenantId) ?? false;
-  const isGuest = claims?.guest_tenant_ids?.includes(tenantId) ?? false;
 
   const role = isSystemAdmin
     ? 'system_admin'
@@ -56,7 +54,6 @@ export function resolveAuth(claims: JwtClaims | null | undefined, tenantId: stri
     adminTenantIds: claims?.admin_tenant_ids ?? [],
     cohortIds: claims?.my_cohort_ids ?? [],
     coupleIds: claims?.my_couple_ids ?? [],
-    isGuest,
     isMember,
     isTrainer,
     isAdmin,

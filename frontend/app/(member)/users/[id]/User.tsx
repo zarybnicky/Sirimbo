@@ -79,7 +79,6 @@ export function User({ id }: { id: string }) {
                   'ID klubů': claims.my_tenant_ids.join(', ') || '—',
                   'ID skupin': claims.my_cohort_ids.join(', ') || '—',
                   'ID párů': claims.my_couple_ids.join(', ') || '—',
-                  'Host v klubech': claims.guest_tenant_ids.join(', ') || '—',
                   'Člen v klubech': claims.member_tenant_ids.join(', ') || '—',
                   'Trenér v klubech': claims.trainer_tenant_ids.join(', ') || '—',
                   'Administrátor v klubech': claims.admin_tenant_ids.join(', ') || '—',
