@@ -45,7 +45,12 @@ CROSS JOIN LATERAL plpgsql_check_function_tb(
   oldtable => t.tgoldtable,
   newtable => t.tgnewtable,
   fatal_errors := false,
-  all_warnings := true
+  other_warnings => true,
+  performance_warnings => true,
+  extra_warnings => true,
+  security_warnings => true,
+  compatibility_warnings => true,
+  extra_security_warnings_level => 0
 ) AS pcf
 WHERE l.lanname = 'plpgsql'
   AND n.nspname NOT IN ('pg_catalog','information_schema')
